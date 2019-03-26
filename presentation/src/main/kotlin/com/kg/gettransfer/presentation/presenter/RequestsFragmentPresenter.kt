@@ -10,6 +10,7 @@ import com.kg.gettransfer.domain.model.sortDescendant
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterActive
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
+import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -21,16 +22,23 @@ import com.kg.gettransfer.presentation.view.Screens
 import timber.log.Timber
 
 @InjectViewState
-class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
+class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>(), CounterEventListener {
+
     lateinit var categoryName: String
 
-    private lateinit var transferIds: List<Long>
+    private var transfers: List<TransferModel>? = null
 
     @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
         getTransfers()
-        transferIds = systemInteractor.transferIds
+        countEventsInteractor.addCounterListener(this)
+    }
+
+    @CallSuper
+    override fun detachView(view: RequestsFragmentView?) {
+        super.detachView(view)
+        countEventsInteractor.removeCounterListener(this)
     }
 
     private fun getTransfers() {
@@ -54,13 +62,25 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
             RequestsView.CATEGORY_COMPLETED -> transfers.filterCompleted()
             else                            -> transfers
         }
-
-        val filteredSorted = filtered.sortedByDescending {
+        this.transfers = filtered.sortedByDescending {
             it.dateToLocal
+        }.map { transferMapper.toView(it) }
+        with(countEventsInteractor) {
+            updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
         }
+        if (this.transfers != null) viewState.setRequests(this.transfers!!)
+    }
 
-        viewState.setRequests(filteredSorted.map { transferMapper.toView(it) })
-        viewState.setCountEvents(transferIds)
+    private fun updateEvents(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>) {
+        if(transfers != null) {
+            for (i in 0 until transfers!!.size) {
+                val transfer = transfers!![i]
+                if (mapCountNewEvents[transfer.id] != null) {
+                    val eventsCount = mapCountNewEvents.getValue(transfer.id) - (mapCountViewedOffers[transfer.id] ?: 0)
+                    if (eventsCount > 0) transfer.eventsCount = eventsCount
+                }
+            }
+        }
     }
 
     fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int) {
@@ -72,8 +92,12 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
         }
     }
 
-    override fun onNewOffer(offer: Offer): OfferModel {
-        utils.launchSuspend{ viewState.setCountEvents(transferIds) }
-        return super.onNewOffer(offer)
+    override fun updateCounter() {
+        utils.launchSuspend{
+            with(countEventsInteractor) {
+                updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
+            }
+        }
+        viewState.notifyData()
     }
 }

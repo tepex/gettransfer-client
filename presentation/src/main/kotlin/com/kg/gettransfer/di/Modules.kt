@@ -102,6 +102,7 @@ val domainModule = module {
     single { ReviewInteractor(get()) }
     single { ChatInteractor(get()) }
     single { CoordinateInteractor(get()) }
+    single { CountEventsInteractor(get()) }
 }
 
 val mappersModule = module {

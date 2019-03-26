@@ -1,5 +1,6 @@
 package com.kg.gettransfer.data.repository
 
+import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.ds.*
 
@@ -22,6 +23,7 @@ class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>)
     : BaseRepository(), TransferRepository {
 
+    private val preferencesCache = get<PreferencesCache>()
     private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
 
@@ -93,8 +95,51 @@ class TransferRepositoryImpl(
             factory.retrieveDataStore(fromRemote).getAllTransfers()
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addAllTransfers(it) }
-        return Result(result.entity?.map { transferMapper.fromEntity(it) }?: emptyList(),
+        return Result(result.entity?.let { mapTransfersList(it) }?: emptyList(),
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
+    }
+
+    private fun mapTransfersList(transfersList: List<TransferEntity>): List<Transfer> {
+        val mapCountNewMessages = preferencesCache.mapCountNewMessages.toMutableMap()
+        val mapCountNewOffers = preferencesCache.mapCountNewOffers.toMutableMap()
+
+        var eventsCount = 0
+        val mappedTransfers = transfersList.map {
+            transferMapper.fromEntity(it).apply {
+                eventsCount += checkNewMessagesAndOffersCount(this, mapCountNewMessages, mapCountNewOffers)
+            }
+        }
+        preferencesCache.eventsCount = eventsCount
+
+        preferencesCache.mapCountNewMessages = mapCountNewMessages
+        preferencesCache.mapCountNewOffers = mapCountNewOffers
+
+        return mappedTransfers
+    }
+
+    private fun checkNewMessagesAndOffersCount(transfer: Transfer, mapCountNewMessages: MutableMap<Long, Int>, mapCountNewOffers: MutableMap<Long, Int>): Int {
+        var eventsCount = 0
+        if (transfer.unreadMessagesCount > 0) {
+            mapCountNewMessages[transfer.id] = transfer.unreadMessagesCount
+            eventsCount += transfer.unreadMessagesCount
+        } else if (mapCountNewMessages[transfer.id] != null) {
+            mapCountNewMessages.remove(transfer.id)
+        }
+
+        if (transfer.status == Transfer.Status.NEW && transfer.offersCount > 0) {
+            val newOffers = transfer.offersCount
+            val viewedOffers = preferencesCache.mapCountViewedOffers[transfer.id]
+            mapCountNewOffers[transfer.id] = newOffers
+            eventsCount += newOffers - (viewedOffers ?: 0)
+        } else if (mapCountNewOffers[transfer.id] != null) {
+            mapCountNewOffers.remove(transfer.id)
+            val mapCountViewedOffer = preferencesCache.mapCountViewedOffers.toMutableMap()
+            if (mapCountViewedOffer[transfer.id] != null) {
+                mapCountViewedOffer.remove(transfer.id)
+                preferencesCache.mapCountViewedOffers = mapCountViewedOffer
+            }
+        }
+        return eventsCount
     }
 
     override suspend fun getTransfersArchive(): Result<List<Transfer>> {

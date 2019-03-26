@@ -3,7 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.eventListeners.ChatEventListener
-import com.kg.gettransfer.domain.eventListeners.SystemEventListener
+import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.domain.model.Chat
 import com.kg.gettransfer.domain.model.Message
 import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
@@ -22,7 +22,7 @@ import java.util.Calendar
 import org.slf4j.Logger
 
 @InjectViewState
-class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventListener {
+class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventListener {
     private val log: Logger by inject { parametersOf("GTR-socket") }
 
     private val chatMapper: ChatMapper by inject()
@@ -46,7 +46,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
     @CallSuper
     override fun attachView(view: ChatView) {
         super.attachView(view)
-        systemInteractor.addListener(this)
+        systemInteractor.addSocketListener(this)
         utils.launchSuspend {
             val transferCachedResult = utils.asyncAwait { transferInteractor.getTransfer(transferId, false, userRole) }
             val chatCachedResult = utils.asyncAwait { chatInteractor.getChat(transferId, true) }
@@ -82,7 +82,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
     fun onLeaveRoom(){
         chatInteractor.onLeaveRoom(transferId)
         chatInteractor.eventChatReceiver = null
-        systemInteractor.removeListener(this)
+        systemInteractor.removeSocketListener(this)
     }
 
     /*override fun doingSomethingAfterSendingNewMessagesCached() {
@@ -125,7 +125,10 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         }
     }
 
-    fun readMessage(messageId: Long) = chatInteractor.readMessage(transferId, messageId)
+    fun readMessage(messageId: Long) {
+        chatInteractor.readMessage(transferId, messageId)
+        decreaseEventsMessagesCounter(transferId)
+    }
 
     override fun onNewMessageEvent(message: Message) {
         log.error("new message: id = ${message.id}")

@@ -24,8 +24,19 @@ import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.eventListeners.SystemEventListener
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.eventListeners.SocketEventListener
+
+import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.MobileConfig
+import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.PushTokenType
+import com.kg.gettransfer.domain.model.Location
+import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.User
+import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -47,7 +58,7 @@ class SystemRepositoryImpl(
     private val mobileConfMapper = get<MobileConfigMapper>()
     private val locationMapper   = get<LocationMapper>()
 
-    private val listeners = mutableSetOf<SystemEventListener>()
+    private val socketListeners = mutableSetOf<SocketEventListener>()
 
     init {
         preferencesCache.addListener(this)
@@ -108,14 +119,6 @@ class SystemRepositoryImpl(
     override var addressHistory: List<GTAddress>
         get() = preferencesCache.addressHistory.map { addressMapper.fromEntity(it) }
         set(value) { preferencesCache.addressHistory = value.map { addressMapper.toEntity(it) } }
-
-    override var eventsCount: Int
-        get() = preferencesCache.eventsCount
-        set(value) { preferencesCache.eventsCount = value }
-
-    override var transferIds: List<Long>
-        get() = preferencesCache.transferIds
-        set(value) { preferencesCache.transferIds = value }
 
     override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
@@ -251,8 +254,8 @@ class SystemRepositoryImpl(
         }
     }
 
-    override fun addListener(listener: SystemEventListener)    { listeners.add(listener) }
-    override fun removeListener(listener: SystemEventListener) { listeners.remove(listener) }
+    override fun addSocketListener(listener: SocketEventListener)    { socketListeners.add(listener) }
+    override fun removeSocketListener(listener: SocketEventListener) { socketListeners.remove(listener) }
 
     /* Socket */
 
@@ -260,8 +263,8 @@ class SystemRepositoryImpl(
     override fun connectionChanged() = socketDataStore.changeConnection(endpointMapper.toEntity(endpoint), accessToken)
     override fun disconnectSocket()  = socketDataStore.disconnectSocket()
 
-    fun notifyAboutConnection()    = listeners.forEach { it.onSocketConnected() }
-    fun notifyAboutDisconnection() = listeners.forEach { it.onSocketDisconnected() }
+    fun notifyAboutConnection()    = socketListeners.forEach { it.onSocketConnected() }
+    fun notifyAboutDisconnection() = socketListeners.forEach { it.onSocketDisconnected() }
 
 
 

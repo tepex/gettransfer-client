@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
@@ -39,7 +40,7 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class MainPresenter : BasePresenter<MainView>() {
+class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
 
@@ -69,7 +70,14 @@ class MainPresenter : BasePresenter<MainView>() {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
         systemInteractor.initGeocoder()
-        if (systemInteractor.account.user.loggedIn) { registerPushToken(); checkReview() }
+        if (systemInteractor.account.user.loggedIn) {
+            registerPushToken()
+            checkReview()
+            utils.launchSuspend{
+                utils.asyncAwait{ transferInteractor.getAllTransfers() }
+                setCountEvents(countEventsInteractor.eventsCount)
+            }
+        }
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
@@ -78,13 +86,20 @@ class MainPresenter : BasePresenter<MainView>() {
     @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
+        countEventsInteractor.addCounterListener(this)
+        if (systemInteractor.account.user.loggedIn) { setCountEvents(countEventsInteractor.eventsCount) }
         Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
         if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
         viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)
         routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
         viewState.setTripMode(routeInteractor.hourlyDuration)
-        setCountEvents(systemInteractor.eventsCount)
+    }
+
+    @CallSuper
+    override fun detachView(view: MainView?) {
+        super.detachView(view)
+        countEventsInteractor.removeCounterListener(this)
     }
 
     private fun setCountEvents(count: Int) {
@@ -92,11 +107,9 @@ class MainPresenter : BasePresenter<MainView>() {
         if (count > 0) viewState.setCountEvents(count)
     }
 
-    override fun onNewOffer(offer: Offer): OfferModel {
-        utils.launchSuspend{ setCountEvents(systemInteractor.eventsCount) }
-        return super.onNewOffer(offer)
+    override fun updateCounter() {
+        utils.launchSuspend{ setCountEvents(countEventsInteractor.eventsCount) }
     }
-
 
     @CallSuper
     override fun systemInitialized() {

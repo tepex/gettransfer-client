@@ -23,7 +23,6 @@ import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
-import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
 
@@ -33,6 +32,7 @@ import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import kotlinx.android.synthetic.main.fragment_requests.*
 
 import timber.log.Timber
+import android.support.v7.widget.RecyclerView
 
 /**
  * @TODO: Выделить BaseFragment
@@ -96,9 +96,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     override fun setError(e: DatabaseException) =
             (activity as BaseView).setError(e)
 
-    override fun setCountEvents(transferIds: List<Long>) {
-        if (transferIds.isNotEmpty()) {
-            rvAdapter.updateEvents(transferIds)
-        }
+    override fun notifyData() {
+        activity?.runOnUiThread { rvAdapter.notifyDataSetChanged() }
     }
 }

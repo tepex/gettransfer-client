@@ -126,4 +126,6 @@ val dataModule = module {
     single { CoordinateSocketDataStoreOutput(get()) }
     single <CoordinateDataStoreReceiver> { CoordinateSocketDataStoreInput() }
     single { CoordinateRepositoryImpl(get()) } bind CoordinateRepository::class
+
+    single { CountEventsRepositoryImpl() } bind CountEventsRepository::class
 }

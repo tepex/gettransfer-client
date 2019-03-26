@@ -78,6 +78,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             editableFields        = type.editableFields,
             airlineCard           = type.airlineCard,
             paymentPercentages    = type.paymentPercentages,
+            unreadMessagesCount   = type.unreadMessagesCount,
 /* ================================================== */
 /* ================================================== */
             statusCategory = type.checkStatusCategory(),

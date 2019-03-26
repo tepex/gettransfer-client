@@ -15,8 +15,10 @@ interface PreferencesCache {
     var selectedField: String
     var addressHistory: List<GTAddressEntity>
     var appEnters: Int
+    var mapCountNewOffers: Map<Long, Int>
+    var mapCountNewMessages: Map<Long, Int>
+    var mapCountViewedOffers: Map<Long, Int>
     var eventsCount: Int
-    var transferIds: List<Long>
     val endpoints: List<EndpointEntity>
     var driverCoordinatesInBackGround: Int
     var offerViewExpanded: Boolean

@@ -8,7 +8,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
-import com.kg.gettransfer.domain.eventListeners.SystemEventListener
+import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
@@ -46,10 +46,11 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
+
 import java.util.Calendar
 
 @InjectViewState
-class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SystemEventListener {
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SocketEventListener {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
     private val coordinateInteractor: CoordinateInteractor by inject()
@@ -78,7 +79,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
-        systemInteractor.addListener(this)
+        systemInteractor.addSocketListener(this)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
            fetchData { transferInteractor.getTransfer(transferId) }
@@ -140,7 +141,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         super.detachView(view)
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
         isCameraUpdatedForCoordinates = false
-        systemInteractor.removeListener(this)
+        systemInteractor.removeSocketListener(this)
     }
 
     private fun allowOfferInfo(transfer: TransferModel): Boolean {

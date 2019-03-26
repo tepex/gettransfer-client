@@ -63,6 +63,7 @@ dependencies {
 	implementation libs.kotlin
 	implementation libs.coroutines
 	implementation libs.serialization
+    implementation libs.gson
 	implementation project(":data")
 	implementation project(":domain")
 

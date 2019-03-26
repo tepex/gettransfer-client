@@ -58,6 +58,7 @@ data class TransferModel(
     val editableFields: List<String>?, /* not used */
     val airlineCard: String?,
     val paymentPercentages: List<Int>?,
+    val unreadMessagesCount: Int,
 /* ================================================== */
 /* ================================================== */
     val statusCategory: String,
