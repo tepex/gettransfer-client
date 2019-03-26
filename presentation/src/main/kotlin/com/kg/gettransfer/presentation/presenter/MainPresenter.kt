@@ -87,7 +87,11 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     override fun attachView(view: MainView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
-        if (systemInteractor.account.user.loggedIn) { setCountEvents(countEventsInteractor.eventsCount) }
+        if (systemInteractor.account.user.loggedIn) {
+            setCountEvents(countEventsInteractor.eventsCount)
+        } else {
+            viewState.showBadge(false)
+        }
         Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
         if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
         viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
