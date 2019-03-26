@@ -25,10 +25,8 @@ import kotlinx.android.synthetic.main.view_region.view.*
 class SupportActivity : BaseActivity(), SupportView {
 
     companion object {
-        const val FB_PACKAGE = "com.facebook.katana"
         const val VIBER_PACKAGE = "com.viber.voip"
-        const val FACEBOOK_URL = "https://www.facebook.com/gettransfer"
-        const val FACEBOOK_URI = "fb://facewebmodal/f?href="
+        const val FACEBOOK_URL = "http://m.me/548999978590475"
         const val VIBER_URL = "https://viber.me/GetTransferSupport"
         const val VIBER_URI = "viber://pa?chatURI=GetTransferSupport"
         const val TELEGRAM_URL = "https://t.me/gettransfersupportbot"
@@ -111,16 +109,9 @@ class SupportActivity : BaseActivity(), SupportView {
         sheetRegion.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun facebookClick() {
-        val intent: Intent = try {
-            packageManager.getPackageInfo(FB_PACKAGE, 0)
-            Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URI + FACEBOOK_URL))
-                    .apply { setPackage(FB_PACKAGE) }
-        } catch (e: PackageManager.NameNotFoundException) {
-            Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL))
-        }
-        startActivity(intent)
-    }
+    private fun facebookClick() =
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL)))
+
 
     private fun whatsAppClick() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(""))
@@ -138,10 +129,8 @@ class SupportActivity : BaseActivity(), SupportView {
         startActivity(intent)
     }
 
-    private fun telegramClick() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(TELEGRAM_URL))
-        startActivity(intent)
-    }
+    private fun telegramClick() =
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TELEGRAM_URL)))
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar as Toolbar)
