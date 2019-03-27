@@ -32,14 +32,12 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
 
     lateinit var categoryName: String
 
-    private var transfers: List<TransferModel>? = null
     private lateinit var transferIds: List<Long>
 
     @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
         getTransfers()
-        transfers?.let { viewState.setRequests(it) }
         transferIds = systemInteractor.transferIds
     }
 
@@ -64,7 +62,12 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
             RequestsView.CATEGORY_COMPLETED -> transfers.filterCompleted()
             else                            -> transfers
         }
-        viewState.setRequests(filtered.sortDescendant().map { transferMapper.toView(it) })
+
+        val filteredSorted = filtered.sortedByDescending {
+            it.dateToLocal
+        }
+
+        viewState.setRequests(filteredSorted.map { transferMapper.toView(it) })
         viewState.setCountEvents(transferIds)
     }
 
