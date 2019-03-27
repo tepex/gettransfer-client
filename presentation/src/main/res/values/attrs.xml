@@ -24,7 +24,6 @@
 
     <declare-styleable name="AboutItem" parent="EditableView">
         <attr name="title_about_item" format="string" />
-        <attr name="text_about_item" format="string" />
         <attr name="img_about_item" format="reference" />
     </declare-styleable>
 

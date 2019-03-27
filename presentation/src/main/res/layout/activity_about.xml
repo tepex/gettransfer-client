@@ -23,81 +23,56 @@
 		android:id="@+id/viewpager"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
+		android:layout_marginTop="@dimen/about_activity_view_pager_margin_top"
+		android:layout_marginBottom="32dp"
+		app:layout_constraintBottom_toTopOf="@+id/btnNext"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/btnClose"
-		app:layout_constraintBottom_toTopOf="@+id/pageIndicator"
-		android:layout_marginBottom="8dp"
-		android:layout_marginTop="@dimen/about_activity_view_pager_margin_top">
-		
-		<com.kg.gettransfer.presentation.ui.AboutItem
-            android:id="@+id/item_0"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			app:title_about_item="@string/LNG_PRESENTATION_TITLE_0"
-			app:text_about_item="@string/LNG_PRESENTATION_DESC_0"
-			app:img_about_item="@drawable/img_onboarding_0"/>
+		app:layout_constraintTop_toBottomOf="@+id/btnClose">
 
 		<com.kg.gettransfer.presentation.ui.AboutItem
-            android:id="@+id/item_1"
+			android:id="@+id/item_0"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-
-			app:title_about_item="@string/LNG_PRESENTATION_TITLE_1"
-			app:text_about_item="@string/LNG_PRESENTATION_DESC_1"
-			app:img_about_item="@drawable/img_onboarding_1"/>
+			app:img_about_item="@drawable/onboarding_0"
+			app:title_about_item="@string/LNG_PRESENTATION_TITLE_0" />
 
 		<com.kg.gettransfer.presentation.ui.AboutItem
-            android:id="@+id/item_2"
+			android:id="@+id/item_1"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-
-			app:title_about_item="@string/LNG_PRESENTATION_TITLE_2"
-			app:text_about_item="@string/LNG_PRESENTATION_DESC_2"
-			app:img_about_item="@drawable/img_onboarding_2"/>
-
-		<com.kg.gettransfer.presentation.ui.AboutItem
-            android:id="@+id/item_3"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-
-			app:title_about_item="@string/LNG_PRESENTATION_TITLE_3"
-			app:text_about_item="@string/LNG_PRESENTATION_DESC_3"
-			app:img_about_item="@drawable/img_onboarding_3"/>
-
+			app:img_about_item="@drawable/onboarding_1"
+			app:title_about_item="@string/LNG_PRESENTATION_TITLE_1" />
 	</android.support.v4.view.ViewPager>
 
 	<com.rd.PageIndicatorView
 		android:id="@+id/pageIndicator"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="4dp"
-		app:piv_animationType="fill"
-		app:piv_interactiveAnimation="true"
-		app:piv_selectedColor="@color/ic_unselected"
-		app:piv_unselectedColor="@color/ic_unselected"
-		app:piv_viewPager="@id/viewpager"
-		app:piv_radius="@dimen/about_activity_indicator_radius"
-		android:layout_marginBottom="48dp"
+		android:layout_marginBottom="32dp"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintBottom_toTopOf="@+id/btnNext"/>
+		app:piv_animationType="fill"
+		app:piv_interactiveAnimation="true"
+		app:piv_radius="@dimen/about_activity_indicator_radius"
+		app:piv_selectedColor="@color/color_gtr_yellow"
+		app:piv_unselectedColor="@color/color_gtr_light_grey"
+		app:piv_viewPager="@id/viewpager" />
 
 	<Button
 		android:id="@+id/btnNext"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/about_activity_button_height"
-		android:background="@drawable/btn_get_transfer"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
+		android:background="@drawable/bg_rounded_22_yellow"
 		android:layout_marginBottom="@dimen/about_activity_button_margin_bottom"
 		android:layout_marginStart="@dimen/about_activity_button_margin_start_end"
 		android:layout_marginEnd="@dimen/about_activity_button_margin_start_end"
-		android:textAllCaps="true"
-		android:textSize="@dimen/about_activity_button_text_size"
-		android:textColor="@color/colorWhite"
-		android:fontFamily="@font/sf_pro_text_regular"
-		android:text="@string/LNG_NEXT"/>
+		style="@style/sf_font_semi_bold_15_sp"
+		android:text="@string/LNG_NEXT"
+		android:textAllCaps="false"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintBottom_toTopOf="@+id/pageIndicator"/>
 
 </android.support.constraint.ConstraintLayout>	

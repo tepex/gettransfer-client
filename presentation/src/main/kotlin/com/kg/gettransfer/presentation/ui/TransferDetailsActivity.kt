@@ -68,6 +68,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.
 import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_comment.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_driver_languages.view.*
+import kotlinx.android.synthetic.main.view_transfer_details_field.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.view.*
 import kotlinx.android.synthetic.main.view_transport_conveniences.view.*

@@ -180,13 +180,6 @@
     <string name="LNG_ABOUNT_DESC_2">You always know your carrier.\nAll carriers are carefully selected.</string>
     <string name="LNG_PRESENTATION_TITLE_0">Best price guarantee</string>
     <string name="LNG_PRESENTATION_TITLE_1">No hidden costs</string>
-    <string name="LNG_PRESENTATION_TITLE_2">Free waiting time</string>
-    <string name="LNG_PRESENTATION_TITLE_3">Safe transfers</string>
-    <string name="LNG_PRESENTATION_DESC_0">We return the difference in price</string>
-    <string name="LNG_PRESENTATION_DESC_1">Taxes, tolls and gratuity included</string>
-    <string name="LNG_PRESENTATION_DESC_2">We allow free waiting time of 60 minutes at airports, all other locations include a free 15 minutes waiting time.</string>
-    <string name="LNG_PRESENTATION_DESC_3">You always know your carrier.\nAll carriers are carefully selected.</string>
-    <string name="LNG_PRESENTATION_FINAL_BUTTON">START</string>
     <string name="LNG_SEARCH_POPULAR_PLACES">Popular places</string>
     <string name="LNG_SEARCH_RECENT_PLACES">Recent Places</string>
     <string name="LNG_SEARCH_POPULAR_AIRPORT">Airport</string>

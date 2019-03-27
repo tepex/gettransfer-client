@@ -40,6 +40,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
 import kotlinx.android.synthetic.main.view_transfer_details_comment.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.*
 import kotlinx.android.synthetic.main.view_communication_button.*
+import kotlinx.android.synthetic.main.view_transfer_details_field.*
 
 class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsView {
     @InjectPresenter
