@@ -197,7 +197,10 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private fun processOffers() {
         sortOffers()
-        countEventsInteractor.mapCountNewOffers[transferId]?.let { increaseViewedOffersCounter(transferId, it) }
+        with (countEventsInteractor) {
+            val countNewOffers = (mapCountNewOffers[transferId] ?: 0) - (mapCountViewedOffers[transferId] ?: 0)
+            if (countNewOffers > 0) increaseViewedOffersCounter(transferId, countNewOffers)
+        }
         viewState.setOffers(offers)
         viewState.setSortState(sortCategory, sortHigherToLower)
     }
