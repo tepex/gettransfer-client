@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.Toolbar
+import android.view.MotionEvent
 import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -111,8 +112,20 @@ class SupportActivity : BaseActivity(), SupportView {
     }
 
     private fun setupBottomSheet() {
+        _tintBackground = tintBackground
         sheetRegion = BottomSheetBehavior.from(sheetSupport)
         hideSheetRegion()
+        sheetRegion.setBottomSheetCallback(bottomSheetCallback)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (sheetRegion.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if(hideBottomSheet(sheetRegion, sheetSupport, BottomSheetBehavior.STATE_HIDDEN, event))
+                    return true
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
     private fun showBottomSheetRegion() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -311,10 +311,22 @@
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
-    <include
-        android:id="@+id/sheetSupport"
-        layout="@layout/bottom_sheet_support"
-        app:layout_anchor="@+id/scrollView"
-        app:layout_anchorGravity="bottom|center" />
-</android.support.design.widget.CoordinatorLayout>
+    <View
+        android:id="@+id/tintBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone"/>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <include
+            android:id="@+id/sheetSupport"
+            layout="@layout/bottom_sheet_support" />
+    </android.support.design.widget.CoordinatorLayout>
+
+</FrameLayout>
 
