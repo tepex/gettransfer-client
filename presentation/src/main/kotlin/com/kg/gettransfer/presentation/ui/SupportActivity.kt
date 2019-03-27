@@ -10,6 +10,7 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Region
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.presenter.SupportPresenter
@@ -25,11 +26,11 @@ import kotlinx.android.synthetic.main.view_region.view.*
 class SupportActivity : BaseActivity(), SupportView {
 
     companion object {
-        const val VIBER_PACKAGE = "com.viber.voip"
-        const val FACEBOOK_URL = "http://m.me/548999978590475"
-        const val VIBER_URL = "https://viber.me/GetTransferSupport"
-        const val VIBER_URI = "viber://pa?chatURI=GetTransferSupport"
-        const val TELEGRAM_URL = "https://t.me/gettransfersupportbot"
+        private const val VIBER_PACKAGE = "com.viber.voip"
+        private const val FACEBOOK_URL = "http://m.me/548999978590475"
+        private const val VIBER_URL = "https://viber.me/GetTransferSupport"
+        private const val VIBER_URI = "viber://pa?chatURI=GetTransferSupport"
+        private const val TELEGRAM_URL = "https://t.me/gettransfersupportbot"
     }
 
     @InjectPresenter
@@ -46,19 +47,28 @@ class SupportActivity : BaseActivity(), SupportView {
         setContentView(R.layout.activity_support)
         setupToolbar()
         setupBottomSheet()
-        showEuropeanRegion()
+        presenter.checkRegion()
         fabFacebook.setOnClickListener { facebookClick() }
 //        fabWhatsapp.setOnClickListener { whatsAppClick() }
         fabViber.setOnClickListener { viberClick() }
         fabTelegram.setOnClickListener { telegramClick() }
         fabEmail.setOnClickListener { presenter.sendEmail(null, null) }
         region.setOnClickListener { showBottomSheetRegion() }
-        america.setOnClickListener { showAmericanRegion() }
-        europe.setOnClickListener { showEuropeanRegion() }
-        asia.setOnClickListener { showAsianRegion() }
+        america.setOnClickListener {
+            presenter.setRegion(Region.AMERICA)
+            showAmericanRegion()
+        }
+        europe.setOnClickListener {
+            presenter.setRegion(Region.EUROPE)
+            showEuropeanRegion()
+        }
+        asia.setOnClickListener {
+            presenter.setRegion(Region.ASIA)
+            showAsianRegion()
+        }
     }
 
-    private fun showAsianRegion() {
+    override fun showAsianRegion() {
         tvRegion.text = getString(R.string.LNG_REGION_NAMES_ASIA)
         asia.ivCheck.isVisible = true
         america.ivCheck.isVisible = false
@@ -72,7 +82,7 @@ class SupportActivity : BaseActivity(), SupportView {
         europeanPhones.isGone = true
     }
 
-    private fun showAmericanRegion() {
+    override fun showAmericanRegion() {
         tvRegion.text = getString(R.string.LNG_REGION_NAMES_AMERICA)
         america.ivCheck.isVisible = true
         europe.ivCheck.isVisible = false
@@ -86,7 +96,7 @@ class SupportActivity : BaseActivity(), SupportView {
         asianPhones.isGone = true
     }
 
-    private fun showEuropeanRegion() {
+    override fun showEuropeanRegion() {
         tvRegion.text = getString(R.string.LNG_REGION_NAMES_EUROPE)
         europe.ivCheck.isVisible = true
         america.ivCheck.isVisible = false
