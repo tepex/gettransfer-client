@@ -52,9 +52,9 @@ open class TransferEntity(
     @SerialName(REFUNDED_PRICE)          val refundedPrice: MoneyEntity?,
     @SerialName(CAMPAIGN)                val campaign: String?,
 /* ================================================== */
-    @SerialName(EDITABLE_FIELDS)         val editableFields: List<String>,
+    @SerialName(EDITABLE_FIELDS)         val editableFields: List<String>?,
     @SerialName(AIRLINE_CARD)            val airlineCard: String?,
-    @SerialName(PAYMENT_PERCENTAGES)     val paymentPercentages: List<Int>,
+    @SerialName(PAYMENT_PERCENTAGES)     val paymentPercentages: List<Int>?,
     @SerialName(UNREAD_MESSAGES_COUNT)   val unreadMessagesCount: Int
 ) {
     companion object {

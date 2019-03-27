@@ -36,6 +36,7 @@ import kotlinx.coroutines.Job
 
 import kotlinx.serialization.json.JSON
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import org.koin.standalone.get
 import org.koin.standalone.inject
@@ -52,6 +53,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
     protected val systemInteractor: SystemInteractor by inject()
+    protected val transferMapper: TransferMapper by inject()
     protected val offerMapper: OfferMapper by inject()
     protected val offerEntityMapper: com.kg.gettransfer.data.mapper.OfferMapper by inject()
     protected val notificationManager: GTNotificationManager by inject()

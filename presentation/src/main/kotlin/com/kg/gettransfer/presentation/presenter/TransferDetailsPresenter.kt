@@ -15,14 +15,27 @@ import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.Coordinate
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.ui.icons.CarIconResourceProvider
 import com.kg.gettransfer.presentation.delegate.CoordinateRequester
-import com.kg.gettransfer.presentation.mapper.*
+import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
+import com.kg.gettransfer.presentation.mapper.CityPointMapper
+import com.kg.gettransfer.presentation.mapper.PointMapper
 
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.CityPointModel
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -33,9 +46,7 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
-
-import timber.log.Timber
-import java.util.*
+import java.util.Calendar
 
 @InjectViewState
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SystemEventListener {
@@ -45,7 +56,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     private val profileMapper: ProfileMapper by inject()
     private val routeMapper: RouteMapper by inject()
-    private val transferMapper: TransferMapper by inject()
     private val reviewRateMapper: ReviewRateMapper by inject()
     private val cityPointMapper: CityPointMapper by inject()
     private val pointMapper: PointMapper by inject()

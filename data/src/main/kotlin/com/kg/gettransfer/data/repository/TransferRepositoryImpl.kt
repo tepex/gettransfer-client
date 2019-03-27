@@ -10,7 +10,6 @@ import com.kg.gettransfer.data.mapper.TransferNewMapper
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.data.model.TransferEntity
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.TransferRepository
@@ -18,7 +17,6 @@ import com.kg.gettransfer.domain.repository.TransferRepository
 import java.util.Date
 
 import org.koin.standalone.get
-import org.koin.standalone.inject
 
 class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>)
@@ -73,21 +71,21 @@ class TransferRepositoryImpl(
         return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT, result.error?.let { ExceptionMapper.map(it) })
     }
 
-    override suspend fun getTransfer(id: Long): Result<Transfer> {
+    override suspend fun getTransfer(id: Long, role: String): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).getTransfer(id)
+            factory.retrieveDataStore(fromRemote).getTransfer(id, role)
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT,
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
 
-    override suspend fun getTransferCached(id: Long): Result<Transfer> {
+    override suspend fun getTransferCached(id: Long, role: String): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
-            factory.retrieveCacheDataStore().getTransfer(id)
+            factory.retrieveCacheDataStore().getTransfer(id, role)
         }
         return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT, null,
-                result.error != null && result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
+                result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
     }
 
     override suspend fun getAllTransfers(): Result<List<Transfer>> {

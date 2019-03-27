@@ -4,8 +4,6 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.domain.model.sortDescendant
@@ -13,23 +11,17 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterActive
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
 
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
-
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.Screens
 
-import org.koin.standalone.inject
-
 import timber.log.Timber
 
 @InjectViewState
 class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
-    private val transferMapper: TransferMapper by inject()
-
     lateinit var categoryName: String
 
     private lateinit var transferIds: List<Long>

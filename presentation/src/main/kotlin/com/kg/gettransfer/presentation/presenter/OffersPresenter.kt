@@ -1,8 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-import android.util.Log
-
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.ApiException
@@ -10,11 +8,11 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
-import com.kg.gettransfer.presentation.model.*
-
-import com.kg.gettransfer.presentation.ui.SystemUtils
+import com.kg.gettransfer.presentation.model.OfferItem
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.BookNowOfferModel
+import com.kg.gettransfer.presentation.model.CarrierModel
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
@@ -28,7 +26,6 @@ import timber.log.Timber
 
 @InjectViewState
 class OffersPresenter : BasePresenter<OffersView>() {
-    private val transferMapper: TransferMapper by inject()
     private val transportTypeMapper: TransportTypeMapper by inject()
 
     internal var transferId = 0L
@@ -140,14 +137,14 @@ class OffersPresenter : BasePresenter<OffersView>() {
                                 it.id,
                                 offer.id,
                                 it.dateRefund,
-                                it.paymentPercentages,
+                                it.paymentPercentages!!,
                                 null))
                     is BookNowOfferModel ->
                         router.navigateTo(Screens.PaymentOffer(
                                 it.id,
                         null,
                                 it.dateRefund,
-                                it.paymentPercentages,
+                                it.paymentPercentages!!,
                                 offer.transportType.id.toString()))
                 }
             }

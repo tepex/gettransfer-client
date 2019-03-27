@@ -4,10 +4,8 @@ import android.util.Patterns
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Account.Companion.GROUP_CARRIER_DRIVER
 import com.kg.gettransfer.domain.model.Account.Companion.GROUP_MANAGER_VIEW_TRANSFERS
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.ui.LoginActivity
 
@@ -16,12 +14,8 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.standalone.inject
-
 @InjectViewState
 class LoginPresenter : BasePresenter<LoginView>() {
-    private val transferMapper: TransferMapper by inject()
-
     private var password: String? = null
 
     internal var email: String? = null
@@ -75,7 +69,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
 
                                 router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                                 router.navigateTo(Screens.PaymentOffer(transferId, offerId, transferModel.dateRefund,
-                                        transferModel.paymentPercentages, null))
+                                        transferModel.paymentPercentages!!, null))
                             }
                 }
             }
