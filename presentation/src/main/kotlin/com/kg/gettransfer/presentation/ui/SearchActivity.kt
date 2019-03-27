@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar
 import android.transition.Fade
 import android.transition.Slide
 
-import android.view.View
 import android.widget.Toast
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -23,18 +22,14 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
-import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
-
-import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.android.synthetic.main.a_b_view.*
 import kotlinx.android.synthetic.main.a_b_view.view.*
@@ -42,8 +37,8 @@ import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.search_address.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.search_form.view.*
-import kotlinx.android.synthetic.main.toolbar_search_address.*
-import kotlinx.android.synthetic.main.toolbar_search_address.view.*
+import kotlinx.android.synthetic.main.toolbar_nav_back.*
+import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 
 class SearchActivity : BaseActivity(), SearchView {
 
@@ -120,6 +115,7 @@ class SearchActivity : BaseActivity(), SearchView {
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
+        toolbar.toolbar_title.text = getString(R.string.LNG_SEARCH)
     }
 
     fun onSearchFieldEmpty(isTo: Boolean) {

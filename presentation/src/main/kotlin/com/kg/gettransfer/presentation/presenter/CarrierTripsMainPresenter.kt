@@ -47,6 +47,7 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     fun onAboutClick()          = router.navigateTo(Screens.About(false))
     fun readMoreClick()         = viewState.showReadMoreDialog()
     fun onSettingsClick()       = router.navigateTo(Screens.Settings)
+    fun onSupportClick()        = router.navigateTo(Screens.Support)
     fun onPassengerModeClick()  = router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
     fun onTransfersClick()      = router.navigateTo(Screens.CarrierTransfers)
 

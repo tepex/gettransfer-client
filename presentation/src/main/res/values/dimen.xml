@@ -190,6 +190,7 @@
 	<dimen name="input_height">22dp</dimen>
 
 	<dimen name="divider_margin_start">16dp</dimen>
+	<dimen name="divider_margin_end">16dp</dimen>
 
 	<!-- Search address -->
 	<dimen name="address_item_size">16sp</dimen>

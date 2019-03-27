@@ -3,6 +3,7 @@ package com.kg.gettransfer.data
 import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.GTAddressEntity
 import com.kg.gettransfer.data.model.OfferEntity
+import com.kg.gettransfer.domain.model.Region
 
 interface PreferencesCache {
     var accessToken: String
@@ -21,6 +22,7 @@ interface PreferencesCache {
     val endpoints: List<EndpointEntity>
     var driverCoordinatesInBackGround: Int
     var offerViewExpanded: Boolean
+    var region: Region
 
     fun logout()
     fun addListener(listener: PreferencesListener)

@@ -25,18 +25,7 @@ import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.SystemEventListener
-
-import com.kg.gettransfer.domain.model.Endpoint
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.MobileConfig
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.PushTokenType
-import com.kg.gettransfer.domain.model.Location
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.User
-import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -127,6 +116,10 @@ class SystemRepositoryImpl(
     override var transferIds: List<Long>
         get() = preferencesCache.transferIds
         set(value) { preferencesCache.transferIds = value }
+
+    override var region: Region
+        get() = preferencesCache.region
+        set(value) { preferencesCache.region = value }
 
     override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))

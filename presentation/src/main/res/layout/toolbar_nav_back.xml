@@ -27,11 +27,9 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:id="@+id/toolbar_title"
-			android:textSize="17sp"
-			android:text="@string/search"
+			tools:text="Title"
 			android:gravity="center"
-			android:fontFamily="@font/sf_pro_text_bold"
-			android:textColor="@android:color/black" />
+			style="@style/sf_font_semi_bold_17_sp" />
 
 	</android.support.v7.widget.Toolbar>
 </android.support.design.widget.AppBarLayout>

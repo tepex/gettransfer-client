@@ -176,9 +176,12 @@
                 <data android:scheme="${applicationId}.braintree" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.ui.PaypalConnectionActivity"
-            android:resizeableActivity="false">
-        </activity>
+        <activity
+            android:name=".presentation.ui.PaypalConnectionActivity"
+            android:resizeableActivity="false" />
+        <activity
+            android:name=".presentation.ui.SupportActivity"
+            android:resizeableActivity="false" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

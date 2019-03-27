@@ -26,10 +26,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/text_top_margin_top"
             tools:text="Please, wait"
-            android:textSize="15sp"
             android:layout_gravity="center"
             android:text="@string/LNG_PLEASE_WAIT"
-            style="@style/sf_font_semi_bold"/>
+            style="@style/sf_font_semi_bold_15_sp"/>
 
         <TextView
             android:layout_width="wrap_content"

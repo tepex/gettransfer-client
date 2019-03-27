@@ -26,7 +26,7 @@
                 android:gravity="start|center_vertical"
                 android:layout_marginStart="8dp"
                 android:layout_width="wrap_content"
-                android:layout_height="22dp"/>
+                android:layout_height="wrap_content"/>
 
         <ImageView
                 android:id="@+id/img_car_photo_tiny"
