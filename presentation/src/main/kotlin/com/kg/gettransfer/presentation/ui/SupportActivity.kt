@@ -71,44 +71,38 @@ class SupportActivity : BaseActivity(), SupportView {
 
     override fun showAsianRegion() {
         tvRegion.text = getString(R.string.LNG_REGION_NAMES_ASIA)
-        asia.ivCheck.isVisible = true
-        america.ivCheck.isVisible = false
-        europe.ivCheck.isVisible = false
-        showAsianPhones()
-    }
-
-    private fun showAsianPhones() {
-        asianPhones.isVisible = true
-        americanPhones.isGone = true
-        europeanPhones.isGone = true
+        setAsianVisibility(true)
+        setAmericanVisibility(false)
+        setEuropeanVisibility(false)
     }
 
     override fun showAmericanRegion() {
         tvRegion.text = getString(R.string.LNG_REGION_NAMES_AMERICA)
-        america.ivCheck.isVisible = true
-        europe.ivCheck.isVisible = false
-        asia.ivCheck.isVisible = false
-        showAmericanPhones()
-    }
-
-    private fun showAmericanPhones() {
-        americanPhones.isVisible = true
-        europeanPhones.isGone = true
-        asianPhones.isGone = true
+        setAmericanVisibility(true)
+        setEuropeanVisibility(false)
+        setAsianVisibility(false)
     }
 
     override fun showEuropeanRegion() {
         tvRegion.text = getString(R.string.LNG_REGION_NAMES_EUROPE)
-        europe.ivCheck.isVisible = true
-        america.ivCheck.isVisible = false
-        asia.ivCheck.isVisible = false
-        showEuropeanPhones()
+        setEuropeanVisibility(true)
+        setAmericanVisibility(false)
+        setAsianVisibility(false)
     }
 
-    private fun showEuropeanPhones() {
-        europeanPhones.isVisible = true
-        americanPhones.isGone = true
-        asianPhones.isGone = true
+    private fun setAmericanVisibility(show: Boolean) {
+        america.ivCheck.isVisible = show
+        americanPhones.isVisible = show
+    }
+
+    private fun setEuropeanVisibility(show: Boolean) {
+        europe.ivCheck.isVisible = show
+        europeanPhones.isVisible = show
+    }
+
+    private fun setAsianVisibility(show: Boolean) {
+        asia.ivCheck.isVisible = show
+        asianPhones.isVisible = show
     }
 
     private fun setupBottomSheet() {
