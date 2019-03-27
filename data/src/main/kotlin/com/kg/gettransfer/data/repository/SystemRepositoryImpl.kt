@@ -37,6 +37,7 @@ import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.Region
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -151,15 +152,13 @@ class SystemRepositoryImpl(
         }
 
         var error: ApiException? = null
-        if(account === NO_ACCOUNT) {
-            val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
-                factory.retrieveDataStore(fromRemote).getAccount() }
-            result.entity?.let {
-                if(result.error == null) factory.retrieveCacheDataStore().setAccount(it)
-                account = accountMapper.fromEntity(it)
-            }
-            result.error?.let { error = ExceptionMapper.map(it) }
+        val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).getAccount() }
+        result.entity?.let {
+            if(result.error == null) factory.retrieveCacheDataStore().setAccount(it)
+            account = accountMapper.fromEntity(it)
         }
+        result.error?.let { error = ExceptionMapper.map(it) }
         isInitialized = true
         return Result(account, error)
     }
