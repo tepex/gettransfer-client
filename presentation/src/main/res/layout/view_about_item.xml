@@ -1,43 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <TextView
-        android:id="@+id/field_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/about_item_description_margin_start"
-        android:layout_marginEnd="@dimen/about_item_description_margin_end"
-        android:textAllCaps="true"
-        android:textSize="@dimen/about_item_title_text_size"
-        android:textColor="@color/colorTextBlack"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:text="@string/LNG_PRESENTATION_TITLE_0"
-        android:layout_gravity="center"
-        android:gravity="center"/>
-
-    <TextView
-        android:id="@+id/field_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/about_item_description_margin_start"
-        android:layout_marginTop="@dimen/about_item_description_margin_top"
-        android:layout_marginEnd="@dimen/about_item_description_margin_end"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/LNG_PRESENTATION_DESC_0"
-        android:textColor="@color/colorTextBlack"
-        android:textSize="@dimen/about_item_description_text_size" />
 
     <ImageView
         android:id="@+id/field_img"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/img_onboarding_2" />
+        android:layout_marginTop="10dp"
+        app:srcCompat="@drawable/onboarding_0" />
+
+    <TextView
+        android:id="@+id/field_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:layout_marginStart="@dimen/about_item_description_margin_start"
+        android:layout_marginEnd="@dimen/about_item_description_margin_end"
+        android:text="@string/LNG_PRESENTATION_TITLE_0"
+        android:layout_gravity="center"
+        android:gravity="center"
+        style="@style/sf_font_semi_bold_17_sp"/>
 
 </LinearLayout>
