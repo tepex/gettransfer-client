@@ -175,7 +175,7 @@
 			android:fontFamily="@font/sf_pro_text_regular"
 			android:text="@string/LNG_SEND"
 			android:textColor="@color/colorWhite"
-			android:textSize="@dimen/create_transfer_additionals_top_text_size"
+			android:textSize="14sp"
 			app:backgroundTint="@color/color_gtr_green"
 			app:cornerRadius="22dp"
 			app:icon="@drawable/ic_check_circle"

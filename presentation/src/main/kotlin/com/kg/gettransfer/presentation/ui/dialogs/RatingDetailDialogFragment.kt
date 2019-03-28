@@ -1,7 +1,8 @@
-package com.kg.gettransfer.presentation.ui
+package com.kg.gettransfer.presentation.ui.dialogs
 
 import android.os.Bundle
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
 
 
 class RatingDetailDialogFragment : BaseBottomSheetDialogFragment() {
