@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="28dp"
-                android:text="@string/LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE"
+                android:text="@string/LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSENGER"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ivGermany" />
 
@@ -242,7 +242,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="30dp"
-                android:text="@string/LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSENGER"
+                android:text="@string/LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fabFacebook" />
 
@@ -269,64 +269,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/include" />
 
             <include
-                android:id="@+id/region"
-                layout="@layout/layout_select_region"
+                android:id="@+id/phones"
+                layout="@layout/layout_phones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvCallUs" />
-
-            <include
-                android:id="@+id/europeanPhones"
-                layout="@layout/european_phones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/region"
-                android:visibility="gone"/>
-
-            <include
-                android:id="@+id/americanPhones"
-                layout="@layout/american_phones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/region"
-                android:visibility="gone"/>
-
-            <include
-                android:id="@+id/asianPhones"
-                layout="@layout/asian_phones"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/region"
-                android:visibility="gone"/>
-
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
-
-    <View
-        android:id="@+id/tintBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#99000000"
-        android:visibility="gone"/>
-
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
-
-        <include
-            android:id="@+id/sheetSupport"
-            layout="@layout/bottom_sheet_support" />
-    </android.support.design.widget.CoordinatorLayout>
-
 </FrameLayout>
 

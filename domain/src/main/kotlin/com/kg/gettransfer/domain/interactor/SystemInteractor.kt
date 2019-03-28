@@ -120,10 +120,6 @@ class SystemInteractor(
         get() = systemRepository.transferIds
         set(value) { systemRepository.transferIds = value }
 
-    var region: Region
-        get() = systemRepository.region
-        set(value) { systemRepository.region = value }
-
     suspend fun coldStart() = systemRepository.coldStart()
 
     fun initGeocoder() = geoRepository.initGeocoder(locale)

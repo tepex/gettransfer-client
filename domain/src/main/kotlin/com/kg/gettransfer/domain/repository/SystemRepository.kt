@@ -24,7 +24,6 @@ interface SystemRepository {
     var appEnters: Int
     var eventsCount : Int
     var transferIds: List<Long>
-    var region: Region
 
     suspend fun coldStart(): Result<Account>
     suspend fun putAccount(account: Account): Result<Account>

@@ -469,26 +469,20 @@
     <string name="LNG_PAYMENT_INSTALL_PAYPAL">Install PayPal app or browser to pay</string>
 
     <string name="LNG_CUSTOMER_SUPPORT_SPEAK_YOUR_LANG">"We speak"</string>
-    <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSENGER">""Write us"</string>
-    <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE">"Write us a message"</string>
+    <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSENGER">"Write us a message"</string>
+    <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE">"Write us"</string>
     <string name="LNG_CUSTOMER_SUPPORT_CALL_BY_PHONE">"Call us"</string>
-    <string name="LNG_CUSTOMER_SUPPORT_REGION">"Your region"</string>
-    <string name="LNG_REGION_NAMES_EUROPE">"Europe"</string>
-    <string name="LNG_REGION_NAMES_AMERICA">"America"</string>
-    <string name="LNG_REGION_NAMES_ASIA">"Asia"</string>
     <string name="LNG_COUNTRY_NAMES_GB">"Great Britain"</string>
     <string name="LNG_COUNTRY_NAMES_USA_CA">USA, California</string>
     <string name="LNG_COUNTRY_NAMES_USA_FL">USA, Florida</string>
     <string name="LNG_COUNTRY_NAMES_SW">Switzerland</string>
     <string name="LNG_COUNTRY_NAMES_CY">Cyprus</string>
     <string name="LNG_COUNTRY_NAMES_RU">Russia</string>
-    <string name="LNG_COUNTRY_NAMES_RU2">Russia toll-free</string>
     <string name="LNG_COUNTRY_NAMES_ZH">China</string>
     <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
     <string name="switzerland_phone" translatable="false">+41 22 518 04 00</string>
     <string name="cyprus_phone" translatable="false">+357 24 022300</string>
     <string name="russia_phone" translatable="false">+7 495 414 23 87</string>
-    <string name="russia_free_phone" translatable="false">8 800 350 96 81</string>
     <string name="florida_phone" translatable="false">+1 786 870 1567</string>
     <string name="california_phone" translatable="false">+1 628 239 0028</string>
     <string name="china_phone" translatable="false">+852 5803 1035</string>

@@ -117,10 +117,6 @@ class SystemRepositoryImpl(
         get() = preferencesCache.transferIds
         set(value) { preferencesCache.transferIds = value }
 
-    override var region: Region
-        get() = preferencesCache.region
-        set(value) { preferencesCache.region = value }
-
     override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
 

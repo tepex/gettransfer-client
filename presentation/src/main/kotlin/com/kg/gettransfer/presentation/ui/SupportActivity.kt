@@ -4,25 +4,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.Toolbar
-import android.view.MotionEvent
-import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Region
-import com.kg.gettransfer.extensions.isGone
-import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.presenter.SupportPresenter
 import com.kg.gettransfer.presentation.view.SupportView
 import kotlinx.android.synthetic.main.activity_support.*
-import kotlinx.android.synthetic.main.bottom_sheet_support.*
-import kotlinx.android.synthetic.main.layout_select_region.*
 import kotlinx.android.synthetic.main.layout_write_us.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
-import kotlinx.android.synthetic.main.view_region.view.*
 
 class SupportActivity : BaseActivity(), SupportView {
 
@@ -36,7 +27,6 @@ class SupportActivity : BaseActivity(), SupportView {
 
     @InjectPresenter
     internal lateinit var presenter: SupportPresenter
-    private lateinit var sheetRegion: BottomSheetBehavior<View>
 
     @ProvidePresenter
     fun createSettingsPresenter() = SupportPresenter()
@@ -47,83 +37,11 @@ class SupportActivity : BaseActivity(), SupportView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_support)
         setupToolbar()
-        setupBottomSheet()
-        presenter.checkRegion()
         fabFacebook.setOnClickListener { facebookClick() }
 //        fabWhatsapp.setOnClickListener { whatsAppClick() }
         fabViber.setOnClickListener { viberClick() }
         fabTelegram.setOnClickListener { telegramClick() }
         fabEmail.setOnClickListener { presenter.sendEmail(null, null) }
-        region.setOnClickListener { showBottomSheetRegion() }
-        america.setOnClickListener {
-            presenter.setRegion(Region.AMERICA)
-            showAmericanRegion()
-        }
-        europe.setOnClickListener {
-            presenter.setRegion(Region.EUROPE)
-            showEuropeanRegion()
-        }
-        asia.setOnClickListener {
-            presenter.setRegion(Region.ASIA)
-            showAsianRegion()
-        }
-    }
-
-    override fun showAsianRegion() {
-        tvRegion.text = getString(R.string.LNG_REGION_NAMES_ASIA)
-        setAsianVisibility(true)
-        setAmericanVisibility(false)
-        setEuropeanVisibility(false)
-    }
-
-    override fun showAmericanRegion() {
-        tvRegion.text = getString(R.string.LNG_REGION_NAMES_AMERICA)
-        setAmericanVisibility(true)
-        setEuropeanVisibility(false)
-        setAsianVisibility(false)
-    }
-
-    override fun showEuropeanRegion() {
-        tvRegion.text = getString(R.string.LNG_REGION_NAMES_EUROPE)
-        setEuropeanVisibility(true)
-        setAmericanVisibility(false)
-        setAsianVisibility(false)
-    }
-
-    private fun setAmericanVisibility(show: Boolean) {
-        america.ivCheck.isVisible = show
-        americanPhones.isVisible = show
-    }
-
-    private fun setEuropeanVisibility(show: Boolean) {
-        europe.ivCheck.isVisible = show
-        europeanPhones.isVisible = show
-    }
-
-    private fun setAsianVisibility(show: Boolean) {
-        asia.ivCheck.isVisible = show
-        asianPhones.isVisible = show
-    }
-
-    private fun setupBottomSheet() {
-        _tintBackground = tintBackground
-        sheetRegion = BottomSheetBehavior.from(sheetSupport)
-        hideSheetRegion()
-        sheetRegion.setBottomSheetCallback(bottomSheetCallback)
-    }
-
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            if (sheetRegion.state == BottomSheetBehavior.STATE_EXPANDED) {
-                if(hideBottomSheet(sheetRegion, sheetSupport, BottomSheetBehavior.STATE_HIDDEN, event))
-                    return true
-            }
-        }
-        return super.dispatchTouchEvent(event)
-    }
-
-    private fun showBottomSheetRegion() {
-        sheetRegion.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun facebookClick() =
@@ -154,14 +72,5 @@ class SupportActivity : BaseActivity(), SupportView {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
         toolbar.toolbar_title.text = getString(R.string.LNG_CUSTOMER_SUPPORT)
-    }
-
-    override fun onBackPressed() {
-        if (sheetRegion.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetRegion()
-        else super.onBackPressed()
-    }
-
-    private fun hideSheetRegion() {
-        sheetRegion.state = BottomSheetBehavior.STATE_HIDDEN
     }
 }

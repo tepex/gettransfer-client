@@ -5,7 +5,6 @@ import android.content.Context
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
 import com.kg.gettransfer.data.model.*
-import com.kg.gettransfer.domain.model.Region
 import com.kg.gettransfer.domain.repository.CarrierTripRepository.Companion.BG_COORDINATES_NOT_ASKED
 
 import kotlinx.serialization.list
@@ -34,7 +33,6 @@ class PreferencesImpl(context: Context,
         @JvmField val TRANSFER_IDS      = "transfer_ids"
         @JvmField val DRIVER_IN_BG      = "back_ground_coordinates"
         @JvmField val OFFERS_VIEW       = "offers_view"
-        @JvmField val REGION            = "region"
 
         const val FIRST_ACCESS         = 0
         const val IMMUTABLE            = -1   // user did rate app
@@ -204,18 +202,6 @@ class PreferencesImpl(context: Context,
         set(value) {
             with(configsPrefs.edit()) {
                 putString(TRANSFER_IDS, JSON.stringify(Long.serializer().list, value))
-                apply()
-            }
-        }
-
-    override var region: Region
-        get() {
-            val region = configsPrefs.getString(REGION, Region.EUROPE.name)
-            return enumValueOf(region)
-        }
-        set(value) {
-            with(configsPrefs.edit()) {
-                putString(REGION, value.name)
                 apply()
             }
         }
