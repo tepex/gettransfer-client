@@ -9,7 +9,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.PushTokenType
 import com.kg.gettransfer.domain.model.Location
 import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.Region
 
 interface SystemRepository {
     val isInitialized: Boolean

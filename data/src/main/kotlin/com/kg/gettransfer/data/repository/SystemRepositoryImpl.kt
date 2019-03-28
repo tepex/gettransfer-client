@@ -37,7 +37,6 @@ import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.model.Profile
-import com.kg.gettransfer.domain.model.Region
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
