@@ -15,12 +15,12 @@
 	<TextView
 		android:id="@+id/title"
 		style="@style/nav_item_title"
-		android:text="@string/LNG_CUSTOMER_SUBTITLE_SUPPORT"
+		android:text="@string/LNG_CUSTOMER_SUPPORT"
 		android:layout_toEndOf="@+id/ivSupport"/>
 
 	<TextView
 		style="@style/nav_item_subtitle"
-		android:text="@string/LNG_CUSTOMER_SUPPORT"
+		android:text="@string/LNG_CUSTOMER_SUBTITLE_SUPPORT"
 		android:layout_below="@+id/title"
 		android:layout_toEndOf="@+id/ivSupport"/>
 </RelativeLayout>
