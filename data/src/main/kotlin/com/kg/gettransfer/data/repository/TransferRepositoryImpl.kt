@@ -119,11 +119,13 @@ class TransferRepositoryImpl(
 
     private fun checkNewMessagesAndOffersCount(transfer: Transfer, mapCountNewMessages: MutableMap<Long, Int>, mapCountNewOffers: MutableMap<Long, Int>): Int {
         var eventsCount = 0
-        if (transfer.unreadMessagesCount > 0) {
-            mapCountNewMessages[transfer.id] = transfer.unreadMessagesCount
-            eventsCount += transfer.unreadMessagesCount
-        } else if (mapCountNewMessages[transfer.id] != null) {
-            mapCountNewMessages.remove(transfer.id)
+        if (transfer.showOfferInfo) {
+            if (transfer.unreadMessagesCount > 0) {
+                mapCountNewMessages[transfer.id] = transfer.unreadMessagesCount
+                eventsCount += transfer.unreadMessagesCount
+            } else if (mapCountNewMessages[transfer.id] != null) {
+                mapCountNewMessages.remove(transfer.id)
+            }
         }
 
         if (transfer.status == Transfer.Status.NEW && transfer.offersCount > 0) {
@@ -214,7 +216,8 @@ class TransferRepositoryImpl(
                 editableFields      = emptyList<String>(),
                 airlineCard         = null,
                 paymentPercentages  = emptyList<Int>(),
-                unreadMessagesCount = 0
+                unreadMessagesCount = 0,
+                showOfferInfo       = false
             )
     }
 }

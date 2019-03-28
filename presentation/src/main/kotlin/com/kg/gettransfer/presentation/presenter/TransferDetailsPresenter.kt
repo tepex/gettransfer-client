@@ -114,8 +114,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                             val offer = it.first()
                             offerModel = offerMapper.toView(offer)
                             reviewInteractor.offerIdForReview = offer.id
-                            if (allowOfferInfo(transferModel))
-                                viewState.setOffer(offerModel, transferModel.countChilds)
+                            if (transferModel.showOfferInfo) viewState.setOffer(offerModel, transferModel.countChilds)
                             offer
                         }
                         else null
@@ -142,25 +141,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
         isCameraUpdatedForCoordinates = false
         systemInteractor.removeSocketListener(this)
-    }
-
-    private fun allowOfferInfo(transfer: TransferModel): Boolean {
-        if(transfer.status != Transfer.Status.NEW &&
-                transfer.status != Transfer.Status.CANCELED &&
-                transfer.status != Transfer.Status.OUTDATED) {
-            val waitDetailsDate = (transfer.dateTimeReturn ?: transfer.dateTime).let {
-                val calendar = Calendar.getInstance()
-                calendar.time = it
-                calendar.apply {
-                    add(Calendar.MINUTE, transfer.time ?: transfer.duration?.let { dur -> Utils.convertHoursToMinutes(dur) } ?: 0)
-                    add(Calendar.MINUTE, Utils.convertHoursToMinutes(24))
-                }
-                calendar.time
-            }
-            if (transfer.status == Transfer.Status.PERFORMED ||
-                    waitDetailsDate.after(Calendar.getInstance().time)) return true
-        }
-        return false
     }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }

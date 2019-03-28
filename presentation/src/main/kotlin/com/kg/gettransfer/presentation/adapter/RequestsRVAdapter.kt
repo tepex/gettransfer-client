@@ -37,7 +37,7 @@ class RequestsRVAdapter(
         }
 
         private fun showEvents(item: TransferModel) {
-            if (item.eventsCount == 0) tvEventsCount.isVisible = false
+            if (item.eventsCount == 0 || !item.showOfferInfo) tvEventsCount.isVisible = false
             else {
                 tvEventsCount.isVisible = true
                 tvEventsCount.text = item.eventsCount.toString()

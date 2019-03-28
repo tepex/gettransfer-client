@@ -1,16 +1,15 @@
 package com.kg.gettransfer.data.mapper
 
-import com.kg.gettransfer.data.model.MoneyEntity
 import com.kg.gettransfer.data.model.TransferEntity
 
-import com.kg.gettransfer.domain.model.CityPoint
-import com.kg.gettransfer.domain.model.Money
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransportType
 
 import java.text.DateFormat
 
 import org.koin.standalone.get
+import java.util.Date
+import java.util.Calendar
 
 /**
  * Map a [TransferEntity] to and from a [Transfer] instance when data is moving between this later and the Domain layer.
@@ -75,11 +74,37 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             editableFields      = type.editableFields,
             airlineCard         = type.airlineCard,
             paymentPercentages  = type.paymentPercentages,
-            unreadMessagesCount = type.unreadMessagesCount
+            unreadMessagesCount = type.unreadMessagesCount,
+            showOfferInfo       = allowOfferInfo(type, dateFormat.get().parse(type.dateReturnLocal ?: type.dateToLocal))
         )
 
     /**
      * Map a [Transfer] instance to a [TransferEntity] instance.
      */
     override fun toEntity(type: Transfer): TransferEntity { throw UnsupportedOperationException() }
+
+    companion object {
+        private const val HOURS_TO_SHOWING_OFFER_INFO = 24
+
+        private fun allowOfferInfo(transfer: TransferEntity, date: Date): Boolean {
+            if(transfer.status != Transfer.Status.NEW.name &&
+                    transfer.status != Transfer.Status.CANCELED.name&&
+                    transfer.status != Transfer.Status.OUTDATED.name) {
+                val waitDetailsDate = date.let {
+                    val calendar = Calendar.getInstance()
+                    calendar.time = it
+                    calendar.apply {
+                        add(Calendar.MINUTE, transfer.time ?: transfer.duration?.let { dur -> convertHoursToMinutes(dur) } ?: 0)
+                        add(Calendar.MINUTE, convertHoursToMinutes(HOURS_TO_SHOWING_OFFER_INFO))
+                    }
+                    calendar.time
+                }
+                if (transfer.status == Transfer.Status.PERFORMED.name ||
+                        waitDetailsDate.after(Calendar.getInstance().time)) return true
+            }
+            return false
+        }
+
+        private fun convertHoursToMinutes(hours: Int) = hours * 60
+    }
 }
