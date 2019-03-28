@@ -195,6 +195,12 @@
         <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
     </style>
 
+    <style name="transfer_details_secondary_text">
+        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textSize">@dimen/bottom_sheet_offer_details_text_size_17sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
     <style name="tv_transfer_details_header_main" parent="transfer_details_main_text"/>
 
     <style name="tv_transfer_details_header_sub">
@@ -245,13 +251,11 @@
 
 
     <style name="DialogStyle" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
     </style>
 
     <!-- https://stackoverflow.com/questions/41591733/bottom-sheet-landscape-issue -->
     <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="behavior_peekHeight">512dp</item>
         <item name="android:background">@drawable/back_top_rounded</item>
     </style>
 </resources>
