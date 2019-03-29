@@ -59,9 +59,9 @@ open class TransferEntityMapper : EntityMapper<TransferCached, TransferEntity> {
                     refundedPrice         = type.refundedPrice?.let { moneyMapper.fromCached(it) },
                     campaign              = type.campaign,
                     /* ================================================== */
-                    editableFields        = type.editableFields.list,
+                    editableFields        = type.editableFields?.list,
                     airlineCard           = type.airlineCard,
-                    paymentPercentages    = type.paymentPercentages.list,
+                    paymentPercentages    = type.paymentPercentages?.list,
                     unreadMessagesCount   = type.unreadMessagesCount
             )
 
@@ -111,9 +111,9 @@ open class TransferEntityMapper : EntityMapper<TransferCached, TransferEntity> {
                     refundedPrice         = type.refundedPrice?.let { moneyMapper.toCached(it) },
                     campaign              = type.campaign,
                     /* ================================================== */
-                    editableFields        = StringList(type.editableFields),
+                    editableFields        = type.editableFields?.let { StringList(it) },
                     airlineCard           = type.airlineCard,
-                    paymentPercentages    = IntList(type.paymentPercentages),
+                    paymentPercentages    = type.paymentPercentages?.let { IntList(it) },
                     unreadMessagesCount   = type.unreadMessagesCount
             )
 }

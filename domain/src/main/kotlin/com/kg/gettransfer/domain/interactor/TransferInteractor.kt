@@ -12,10 +12,10 @@ class TransferInteractor(private val repository: TransferRepository) {
         return repository.createTransfer(transferNew)
     }
 
-    suspend fun getTransfer(id: Long, fromCache: Boolean = false) =
+    suspend fun getTransfer(id: Long, fromCache: Boolean = false, role: String = "passenger") =
             when(fromCache) {
-                false -> repository.getTransfer(id)
-                true -> repository.getTransferCached(id)
+                false -> repository.getTransfer(id, role)
+                true -> repository.getTransferCached(id, role)
             }
 
     suspend fun cancelTransfer(id: Long, reason: String) = repository.cancelTransfer(id, reason)

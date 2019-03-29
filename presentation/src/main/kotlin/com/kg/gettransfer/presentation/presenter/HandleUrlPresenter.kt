@@ -4,14 +4,11 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.prefs.PreferencesImpl
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.presentation.view.Screens
-import org.koin.standalone.inject
 
 @InjectViewState
 class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
-    private val transferMapper: TransferMapper by inject()
 
     fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) {
         if (!isLoggedIn())
@@ -31,7 +28,7 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
                                 router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
                                 router.navigateTo(Screens.PaymentOffer(
                                         transferId, offerId, transferModel.dateRefund,
-                                        transferModel.paymentPercentages, bookNowTransportId))
+                                        transferModel.paymentPercentages!!, bookNowTransportId))
                             }
                         }
             }

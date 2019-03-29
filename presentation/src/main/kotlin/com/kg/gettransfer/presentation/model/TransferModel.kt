@@ -55,9 +55,9 @@ data class TransferModel(
     val refundedPrice: String?,
     val campaign: String?,
 /* ================================================== */
-    val editableFields: List<String>, /* not used */
+    val editableFields: List<String>?, /* not used */
     val airlineCard: String?,
-    val paymentPercentages: List<Int>,
+    val paymentPercentages: List<Int>?,
 /* ================================================== */
 /* ================================================== */
     val statusCategory: String,

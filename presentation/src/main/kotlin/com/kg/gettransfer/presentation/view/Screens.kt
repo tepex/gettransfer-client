@@ -31,8 +31,8 @@ object Screens {
     @JvmField val OFFERS = "offers"
 
     @JvmField val CARRIER_MODE = "carrier_mode"
-    @JvmField val REG_CARRIER = "registration_carrier"
     @JvmField val PASSENGER_MODE = "passenger_mode"
+    @JvmField val REG_CARRIER = "registration_carrier"
     @JvmField val CLOSE_AFTER_LOGIN = "close_after_login"
 
     @JvmField val CARRIER_TRIPS_TYPE_VIEW_CALENDAR = "carrier_trips_type_calendar"
@@ -184,9 +184,10 @@ object Screens {
         }
     }
 
-    data class Chat(val transferId: Long) : SupportAppScreen() {
+    data class Chat(val transferId: Long, val tripId: Long? = null) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, ChatActivity::class.java).apply {
             putExtra(ChatView.EXTRA_TRANSFER_ID, transferId)
+            tripId?.let { putExtra(ChatView.EXTRA_TRIP_ID, it) }
         }
     }
 

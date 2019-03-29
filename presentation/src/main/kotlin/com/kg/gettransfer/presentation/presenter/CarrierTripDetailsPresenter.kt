@@ -123,6 +123,6 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
     }
 
     fun onChatClick(){
-        router.navigateTo(Screens.Chat(transferId))
+        router.navigateTo(Screens.Chat(transferId, tripId))
     }
 }

@@ -4,8 +4,6 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.domain.model.sortDescendant
@@ -13,9 +11,7 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterActive
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
 
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
-
 import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
@@ -23,8 +19,6 @@ import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
-
-import org.koin.standalone.inject
 
 import timber.log.Timber
 

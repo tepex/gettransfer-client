@@ -6,52 +6,79 @@
     android:layout_height="wrap_content">
 
     <com.kg.gettransfer.presentation.ui.custom.ContactsView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:icon_country="@drawable/ic_china"
-        app:phone="@string/china_phone"
-        app:title_country="@string/LNG_COUNTRY_NAMES_ZH" />
-
-    <com.kg.gettransfer.presentation.ui.custom.ContactsView
+        android:id="@+id/cyPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:icon_country="@drawable/ic_cyprus"
         app:phone="@string/cyprus_phone"
-        app:title_country="@string/LNG_COUNTRY_NAMES_CY" />
-
+        app:title_country="@string/LNG_COUNTRY_NAMES_CY"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <com.kg.gettransfer.presentation.ui.custom.ContactsView
+        android:id="@+id/gbPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:icon_country="@drawable/ic_uk"
         app:phone="@string/uk_phone"
-        app:title_country="@string/LNG_COUNTRY_NAMES_GB" />
+        app:title_country="@string/LNG_COUNTRY_NAMES_GB"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <com.kg.gettransfer.presentation.ui.custom.ContactsView
+        android:id="@+id/hkPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:icon_country="@drawable/ic_hong_kong"
+        app:phone="@string/china_phone"
+        app:title_country="@string/LNG_CITY_NAMES_HONG_KONG"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.ContactsView
+        android:id="@+id/ruPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:icon_country="@drawable/ic_russia"
         app:phone="@string/russia_phone"
-        app:title_country="@string/LNG_COUNTRY_NAMES_RU" />
+        app:title_country="@string/LNG_COUNTRY_NAMES_RU"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <com.kg.gettransfer.presentation.ui.custom.ContactsView
+        android:id="@+id/swPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:icon_country="@drawable/ic_switzerland"
         app:phone="@string/switzerland_phone"
-        app:title_country="@string/LNG_COUNTRY_NAMES_SW" />
+        app:title_country="@string/LNG_COUNTRY_NAMES_SW"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <com.kg.gettransfer.presentation.ui.custom.ContactsView
+        android:id="@+id/usPhone1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:icon_country="@drawable/ic_usa"
         app:phone="@string/florida_phone"
-        app:title_country="@string/LNG_COUNTRY_NAMES_USA_FL" />
+        app:title_country="@string/LNG_COUNTRY_NAMES_USA_CA"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"/>
 
     <com.kg.gettransfer.presentation.ui.custom.ContactsView
+        android:id="@+id/usPhone2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:icon_country="@drawable/ic_usa"
         app:phone="@string/california_phone"
-        app:title_country="@string/LNG_COUNTRY_NAMES_USA_CA" />
+        app:title_country="@string/LNG_COUNTRY_NAMES_USA_CA"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"/>
 </LinearLayout>

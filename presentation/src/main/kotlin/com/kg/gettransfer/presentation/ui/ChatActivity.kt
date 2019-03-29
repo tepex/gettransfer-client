@@ -5,12 +5,12 @@ import com.kg.gettransfer.R
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.adapter.ChatAdapter
+import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.ChatModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -18,6 +18,7 @@ import com.kg.gettransfer.presentation.presenter.ChatPresenter
 import com.kg.gettransfer.presentation.view.ChatView
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import java.util.Date
 
 class ChatActivity : BaseActivity(), ChatView {
     @InjectPresenter
@@ -32,6 +33,7 @@ class ChatActivity : BaseActivity(), ChatView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = intent.getLongExtra(ChatView.EXTRA_TRANSFER_ID, 0)
+        presenter.tripId = intent.getLongExtra(ChatView.EXTRA_TRIP_ID, 0)
 
         setContentView(R.layout.activity_chat)
 
@@ -42,12 +44,6 @@ class ChatActivity : BaseActivity(), ChatView {
                 messageText.setText("")
             }
         }
-        /*rvMessages.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                (rvMessages.layoutManager as LinearLayoutManager).let { presenter.readMessages(it.findFirstVisibleItemPosition(), it.findLastVisibleItemPosition()) }
-            }
-        })*/
     }
 
     @CallSuper
@@ -56,26 +52,46 @@ class ChatActivity : BaseActivity(), ChatView {
         presenter.onLeaveRoom()
     }
 
-    override fun initToolbar(transfer: TransferModel?, offer: OfferModel?) {
+    override fun setToolbar(transfer: TransferModel, offer: OfferModel?, isShowChevron: Boolean) {
+        transfer.let {
+            initToolbar(offer?.driver?.name ?: it.nameSign ?: offer?.carrier?.profile?.name, offer?.phoneToCall)
+            if (it.id != ChatPresenter.NO_ID) {
+                initTransferInfoLayout(it.from, it.dateTime, it.id, isShowChevron)
+            }
+        }
+    }
+
+    override fun setToolbar(carrierTrip: CarrierTripModel) {
+        val userProfile = carrierTrip.passenger?.profile
+        initToolbar(userProfile?.name, userProfile?.phone)
+        carrierTrip.base.let {
+            if (it.id != ChatPresenter.NO_ID) {
+                initTransferInfoLayout(it.from, it.dateLocal, it.transferId, true)
+            }
+        }
+    }
+
+    private fun initToolbar(userName: String?, userPhone: String?) {
         (toolbar as Toolbar).apply {
             layoutChatTitle.isVisible = true
             chatTitleButtonBack.setOnClickListener { presenter.onBackCommandClick() }
-            val titleDriverName = offer?.driver?.name?: offer?.carrier?.profile?.name?: ""
-            if(titleDriverName.isNotEmpty()) textDriverName.text = getString(R.string.LNG_CHAT_WITH).plus(" ").plus(titleDriverName)
-            offer?.phoneToCall?.let { phone ->
+            userName?.let { textDriverName.text = getString(R.string.LNG_CHAT_WITH).plus(" ").plus(it) }
+            userPhone?.let { phone ->
                 titleBtnCall.isVisible = true
                 titleBtnCall.setOnClickListener { presenter.callPhone(phone) }
             }
         }
-        transfer?.let {
-            layoutTransferInfo.apply {
-                isVisible = true
-                textTransferInfoFrom.text = it.from
-                textTransferInfoDate.text = getString(R.string.chat_transfer_date_transfer_id_format,
-                        SystemUtils.formatDateTime(it.dateTime),
-                        getString(R.string.LNG_TRANSFER).plus(" №${it.id}"))
-                setOnClickListener { presenter.onTransferInfoClick() }
-            }
+    }
+
+    private fun initTransferInfoLayout(from: String, date: Date, transferId: Long, isShowChevron: Boolean) {
+        imgChevron.isVisible = isShowChevron
+        layoutTransferInfo.apply {
+            isVisible = true
+            textTransferInfoFrom.text = from
+            textTransferInfoDate.text = getString(R.string.chat_transfer_date_transfer_id_format,
+                    SystemUtils.formatDateTime(date),
+                    getString(R.string.LNG_TRANSFER).plus(" №$transferId"))
+            setOnClickListener { presenter.onTransferInfoClick() }
         }
     }
 

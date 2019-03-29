@@ -472,11 +472,11 @@
     <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE">"Write us"</string>
     <string name="LNG_CUSTOMER_SUPPORT_CALL_BY_PHONE">"Call us"</string>
     <string name="LNG_COUNTRY_NAMES_GB">"Great Britain"</string>
-    <string name="LNG_COUNTRY_NAMES_USA_CA">USA, California</string>
-    <string name="LNG_COUNTRY_NAMES_USA_FL">USA, Florida</string>
+    <string name="LNG_COUNTRY_NAMES_USA_CA">USA</string>
     <string name="LNG_COUNTRY_NAMES_SW">Switzerland</string>
     <string name="LNG_COUNTRY_NAMES_CY">Cyprus</string>
     <string name="LNG_COUNTRY_NAMES_RU">Russia</string>
+    <string name="LNG_CITY_NAMES_HONG_KONG">Hong Kong</string>
     <string name="LNG_COUNTRY_NAMES_ZH">China</string>
     <string name="transfer_upcoming">Upcoming</string>
     <string name="transfer_past">Past</string>

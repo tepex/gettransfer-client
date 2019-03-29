@@ -47,8 +47,8 @@ class TransferRemoteImpl : TransferRemote {
         return transferMapper.fromRemote(response.data?.transfer!!)
     }
 
-    override suspend fun getTransfer(id: Long): TransferEntity {
-        val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id) { _id -> core.api.getTransfer(_id) }
+    override suspend fun getTransfer(id: Long, role: String): TransferEntity {
+        val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id) { _id -> core.api.getTransfer(_id, role) }
         return transferMapper.fromRemote(response.data?.transfer!!)
     }
 

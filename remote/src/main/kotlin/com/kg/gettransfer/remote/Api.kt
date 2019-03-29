@@ -94,7 +94,8 @@ interface Api {
 
     @GET("$API_TRANSFERS/{id}")
     fun getTransfer(
-        @Path("id") id: Long
+        @Path("id") id: Long,
+        @Query("role") role: String
     ): Deferred<ResponseModel<TransferWrapperModel>>
 
     @POST("$API_TRANSFERS/{id}/cancel")

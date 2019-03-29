@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -23,7 +22,6 @@ import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.model.ReviewRateModel
@@ -47,7 +45,6 @@ class MainPresenter : BasePresenter<MainView>() {
 
     private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
-    private val transferMapper: TransferMapper by inject()
     private val routeMapper: RouteMapper by inject()
     private val reviewRateMapper: ReviewRateMapper by inject()
 

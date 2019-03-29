@@ -53,9 +53,9 @@ data class Transfer(
     val refundedPrice: Money?,
     val campaign: String?,
 /* ================================================== */
-    val editableFields: List<String>, /* not used */
+    val editableFields: List<String>?, /* not used */
     val airlineCard: String?,
-    val paymentPercentages: List<Int>,
+    val paymentPercentages: List<Int>?,
     val unreadMessagesCount: Int
 ) : Serializable, Entity() {
 

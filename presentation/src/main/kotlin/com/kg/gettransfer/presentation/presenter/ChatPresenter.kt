@@ -6,13 +6,14 @@ import com.kg.gettransfer.domain.eventListeners.ChatEventListener
 import com.kg.gettransfer.domain.eventListeners.SystemEventListener
 import com.kg.gettransfer.domain.model.Chat
 import com.kg.gettransfer.domain.model.Message
+import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
 import com.kg.gettransfer.presentation.mapper.ChatMapper
 import com.kg.gettransfer.presentation.mapper.MessageMapper
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.model.ChatModel
 import com.kg.gettransfer.presentation.model.MessageModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.view.ChatView
 import com.kg.gettransfer.presentation.view.Screens
 import org.koin.core.parameter.parametersOf
@@ -24,31 +25,49 @@ import org.slf4j.Logger
 class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventListener {
     private val log: Logger by inject { parametersOf("GTR-socket") }
 
-    private val transferMapper: TransferMapper by inject()
     private val chatMapper: ChatMapper by inject()
     private val messageMapper: MessageMapper by inject()
+    private val carrierTripMapper: CarrierTripMapper by inject()
 
     private lateinit var chatModel: ChatModel
     private var transferModel: TransferModel? = null
     private var offerModel: OfferModel? = null
+    private var carrierTripModel: CarrierTripModel? = null
 
     internal var transferId = 0L
+    internal var tripId = 0L
+
+    private val userRole = when (systemInteractor.lastMode) {
+        Screens.PASSENGER_MODE -> ROLE_PASSENGER
+        Screens.CARRIER_MODE -> ROLE_CARRIER
+        else -> throw UnsupportedOperationException()
+    }
 
     @CallSuper
     override fun attachView(view: ChatView) {
         super.attachView(view)
         systemInteractor.addListener(this)
         utils.launchSuspend {
-            val transferCachedResult = utils.asyncAwait { transferInteractor.getTransfer(transferId, true) }
-            val offerCachedResult = utils.asyncAwait { offerInteractor.getOffers(transferId, true) }
+            val transferCachedResult = utils.asyncAwait { transferInteractor.getTransfer(transferId, false, userRole) }
             val chatCachedResult = utils.asyncAwait { chatInteractor.getChat(transferId, true) }
 
             transferModel = transferMapper.toView(transferCachedResult.model)
-            offerModel = offerCachedResult.model.firstOrNull()?.let { offerMapper.toView(it) }
             chatModel = chatMapper.toView(chatCachedResult.model)
-
-            viewState.initToolbar(transferModel, offerModel)
             chatModel.let { viewState.setChat(it) }
+
+            if (tripId != NO_ID) {
+                val carrierTripCachedResult = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
+                carrierTripModel = carrierTripMapper.toView(carrierTripCachedResult.model)
+                if (carrierTripModel != null && carrierTripModel!!.base.id != NO_ID) {
+                    viewState.setToolbar(carrierTripModel!!)
+                } else {
+                    transferModel?.let { viewState.setToolbar(it, null, false) }
+                }
+            } else {
+                val offerCachedResult = utils.asyncAwait { offerInteractor.getOffers(transferId) }
+                offerModel = offerCachedResult.model.firstOrNull()?.let { offerMapper.toView(it) }
+                transferModel?.let { viewState.setToolbar(it, offerModel, tripId == NO_ID && userRole == ROLE_PASSENGER) }
+            }
         }
         getChatFromRemote()
         onJoinRoom()
@@ -57,10 +76,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
     private fun onJoinRoom(){
         chatInteractor.eventChatReceiver = this
         chatInteractor.onJoinRoom(transferId)
-        /*utils.launchSuspend {
-            val result = utils.asyncAwait { chatInteractor.sendMessageFromQueue(transferId) }
-            if (result.model > 0) getChatFromRemote()
-        }*/
         utils.launchSuspend { utils.asyncAwait { chatInteractor.sendMessageFromQueue(transferId) } }
     }
 
@@ -84,7 +99,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
     private fun initChatModel(chatResult: Chat){
         if(chatModel.currentAccountId == NO_ID) {
             chatModel = chatMapper.toView(chatResult)
-            viewState.initToolbar(transferModel, offerModel)
             viewState.setChat(chatModel)
         } else {
             val oldMessagesSize = chatModel.messages.size
@@ -103,7 +117,13 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
         sendAnalytics(MESSAGE_OUT)
     }
 
-    fun onTransferInfoClick(){ router.navigateTo(Screens.Details(transferId)) }
+    fun onTransferInfoClick(){
+        if (tripId != NO_ID) {
+            router.navigateTo(Screens.TripDetails(tripId, transferId))
+        } else if (userRole != ROLE_CARRIER) {
+            router.navigateTo(Screens.Details(transferId))
+        }
+    }
 
     fun readMessage(messageId: Long) = chatInteractor.readMessage(transferId, messageId)
 
@@ -137,6 +157,9 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SystemEventL
     companion object {
         const val MESSAGE_IN  = "message_in"
         const val MESSAGE_OUT = "message_out"
+
+        const val ROLE_CARRIER = "carrier"
+        const val ROLE_PASSENGER = "passenger"
 
         const val NO_ID       = 0L
     }

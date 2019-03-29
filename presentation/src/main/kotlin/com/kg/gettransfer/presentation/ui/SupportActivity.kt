@@ -11,9 +11,11 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.SupportPresenter
 import com.kg.gettransfer.presentation.view.SupportView
 import kotlinx.android.synthetic.main.activity_support.*
+import kotlinx.android.synthetic.main.layout_phones.*
 import kotlinx.android.synthetic.main.layout_write_us.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
+import kotlinx.android.synthetic.main.view_contacts.view.*
 
 class SupportActivity : BaseActivity(), SupportView {
 
@@ -42,6 +44,13 @@ class SupportActivity : BaseActivity(), SupportView {
         fabViber.setOnClickListener { viberClick() }
         fabTelegram.setOnClickListener { telegramClick() }
         fabEmail.setOnClickListener { presenter.sendEmail(null, null) }
+        cyPhone.setOnClickListener { presenter.callPhone(cyPhone.tvPhone.text.toString()) }
+        gbPhone.setOnClickListener { presenter.callPhone(gbPhone.tvPhone.text.toString()) }
+        hkPhone.setOnClickListener { presenter.callPhone(hkPhone.tvPhone.text.toString()) }
+        ruPhone.setOnClickListener { presenter.callPhone(ruPhone.tvPhone.text.toString()) }
+        swPhone.setOnClickListener { presenter.callPhone(swPhone.tvPhone.text.toString()) }
+        usPhone1.setOnClickListener { presenter.callPhone(usPhone1.tvPhone.text.toString()) }
+        usPhone2.setOnClickListener { presenter.callPhone(usPhone2.tvPhone.text.toString()) }
     }
 
     private fun facebookClick() =

@@ -64,6 +64,14 @@ class CarrierTripRepositoryImpl(
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
 
+    override suspend fun getCarrierTripCached(id: Long): Result<CarrierTrip> {
+        val result: ResultEntity<CarrierTripEntity?> = retrieveCacheEntity {
+            factory.retrieveCacheDataStore().getCarrierTrip(id)
+        }
+        return Result(result.entity?.let { carrierTripMapper.fromEntity(it) }?: DEFAULT, null,
+                result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
+    }
+
     override suspend fun clearCarrierTripsCache() {
         factory.retrieveCacheDataStore().clearCariierTripsCache()
     }

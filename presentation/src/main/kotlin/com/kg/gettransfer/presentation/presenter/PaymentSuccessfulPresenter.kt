@@ -7,7 +7,6 @@ import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.RouteMapper
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -22,7 +21,6 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     private val routeInteractor: RouteInteractor by inject()
 
     private val routeMapper: RouteMapper by inject()
-    private val transferMapper: TransferMapper by inject()
 
     internal var offerId = 0L
     internal var transferId = 0L
