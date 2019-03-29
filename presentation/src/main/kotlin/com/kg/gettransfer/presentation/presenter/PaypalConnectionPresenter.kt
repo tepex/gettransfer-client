@@ -23,7 +23,6 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
 
     internal var paymentId = 0L
     internal var nonce = ""
-    internal var transferId = 0L
     internal var offerId = 0L
     internal var percentage = PaymentRequestModel.FULL_PRICE
     internal var bookNowTransportId: String? = null
@@ -68,13 +67,17 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
 
     private fun showFailedPayment() {
         router.exit()
-        router.navigateTo(Screens.PaymentError(transferId))
+        transfer?.let {
+            router.navigateTo(Screens.PaymentError(it.id))
+        }
         logEvent(Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {
         router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
-        router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
+        transfer?.let {
+            router.navigateTo(Screens.PaymentSuccess(it.id, offerId))
+        }
         logEventEcommercePurchase()
     }
 
@@ -89,7 +92,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
         if (percentage == OfferModel.PRICE_30) price *= PaymentOfferPresenter.PRICE_30
 
         val purchase = analytics.EcommercePurchase(
-                transferId.toString(),
+                transfer?.id.toString(),
                 transfer?.promoCode,
                 routeInteractor.duration,
                 PaymentRequestModel.PAYPAL,

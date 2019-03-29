@@ -315,7 +315,7 @@ object Screens {
                 Intent(context, PaypalConnectionActivity::class.java).apply {
                     putExtra(PaypalConnectionView.EXTRA_PAYMENT_ID, paymentId)
                     putExtra(PaypalConnectionView.EXTRA_NONCE, nonce)
-                    putExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, transfer)
+                    putExtra(PaypalConnectionView.EXTRA_TRANSFER, transfer)
                     putExtra(PaypalConnectionView.EXTRA_OFFER_ID, offerId)
                     putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
                     putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
