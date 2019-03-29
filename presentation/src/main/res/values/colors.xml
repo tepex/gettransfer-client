@@ -153,4 +153,5 @@
     <color name="color_gtr_red">#FF3B30</color>
 
     <color name="color_gtr_chat_not_my_message_back">#E7F1FD</color>
+    <color name="color_grey_48">#48000000</color>
 </resources>

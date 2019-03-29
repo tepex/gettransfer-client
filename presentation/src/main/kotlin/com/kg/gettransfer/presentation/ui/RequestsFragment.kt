@@ -72,8 +72,15 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     override fun setRequests(transfers: List<TransferModel>) {
+
+        val layout = when(presenter.transferType) {
+            RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> R.layout.view_transfer_request_info_enabled
+            RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> R.layout.view_transfer_request_info_disabled
+            else -> R.layout.view_transfer_request_info_enabled
+        }
+
         noTransfersText.isVisible = transfers.isEmpty()
-        rvAdapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
+        rvAdapter = RequestsRVAdapter(transfers, layout) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
         rvRequests.adapter = rvAdapter
     }
 

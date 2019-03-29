@@ -107,7 +107,7 @@
         android:layout_height="@dimen/view_transfer_info_markers_size"
         android:layout_marginStart="@dimen/view_transfer_info_markers_margin_start"
         android:layout_marginTop="@dimen/view_transfer_info_markers_margin_top"
-        android:background="@drawable/back_circle_marker_filled"
+        android:background="@drawable/back_circle_marker_filled_orange"
         android:gravity="center"
         android:text="@string/transfer_start_sign"
         android:textColor="@android:color/white"
@@ -126,7 +126,7 @@
         app:layout_constraintEnd_toEndOf="@+id/tvMarkerFrom"
         app:layout_constraintStart_toStartOf="@+id/tvMarkerFrom"
         app:layout_constraintTop_toBottomOf="@+id/tvMarkerFrom"
-        app:srcCompat="@drawable/ic_markers_line_18dp" />
+        app:srcCompat="@drawable/ic_markers_line_orange_18dp" />
 
     <LinearLayout
         android:id="@+id/ivReturnIcon"
@@ -141,11 +141,12 @@
         <ImageView
             android:layout_width="10dp"
             android:layout_height="18dp"
-            app:srcCompat="@drawable/ic_request_arrow_down_18dp" />
+            app:srcCompat="@drawable/ic_request_arrow_down_orange_18dp" />
         <ImageView
             android:layout_width="10dp"
             android:layout_height="18dp"
-            app:srcCompat="@drawable/ic_request_arrow_up_18dp"/>
+            app:srcCompat="@drawable/ic_request_arrow_down_orange_18dp"
+            android:rotation="180"/>
     </LinearLayout>
 
     <FrameLayout
@@ -163,7 +164,7 @@
             android:layout_width="@dimen/view_transfer_info_markers_size"
             android:layout_height="@dimen/view_transfer_info_markers_size"
             android:layout_marginTop="1dp"
-            android:background="@drawable/back_circle_marker_filled"
+            android:background="@drawable/back_circle_marker_filled_orange"
             android:gravity="center"
             android:visibility="visible"
             android:text="@string/transfer_end_sign"
@@ -183,7 +184,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="-16dp"
                 android:layout_toEndOf="@+id/ivHourlyPoint"
-                android:background="@drawable/back_hours_info"
+                android:background="@drawable/back_hours_info_orange"
                 android:fontFamily="@font/sf_pro_text_semibold"
                 android:gravity="center"
                 android:paddingStart="22dp"
@@ -197,7 +198,7 @@
                 android:layout_width="@dimen/view_transfer_info_markers_hourly_size"
                 android:layout_height="@dimen/view_transfer_info_markers_hourly_size"
                 android:gravity="center"
-                app:srcCompat="@drawable/ic_hourly" />
+                app:srcCompat="@drawable/ic_hourly_orange_24dp" />
 
         </RelativeLayout>
 

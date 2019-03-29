@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.adapter
 
+import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
 
 import android.view.View
@@ -13,17 +14,20 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.ui.TransferRequestItem
 
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.view_transfer_request_info.*
+import kotlinx.android.synthetic.main.view_transfer_request_info_enabled.*
 
 class RequestsRVAdapter(
     private val transfers: List<TransferModel>,
+    @LayoutRes private val layout: Int,
     private val listener: ItemClickListener
 ) : RecyclerView.Adapter<RequestsRVAdapter.ViewHolder>() {
 
     override fun getItemCount() = transfers.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            RequestsRVAdapter.ViewHolder(TransferRequestItem(parent.context).containerView)
+            RequestsRVAdapter.ViewHolder(
+                    TransferRequestItem(parent.context, layout).containerView
+            )
 
     override fun onBindViewHolder(holder: RequestsRVAdapter.ViewHolder, pos: Int) =
         holder.bind(transfers.get(pos), listener)
