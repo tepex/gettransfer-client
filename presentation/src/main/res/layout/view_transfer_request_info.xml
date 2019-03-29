@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/colorBtnGreen"
+        android:textColor="@color/color_gtr_green"
         android:textSize="@dimen/view_transfer_info_small_text_size"
         app:layout_constraintEnd_toEndOf="@+id/tvFrom"
         app:layout_constraintStart_toStartOf="@+id/tvFrom"
@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/colorBtnGreen"
+        android:textColor="@color/color_gtr_green"
         android:textSize="@dimen/view_transfer_info_small_text_size"
         android:layout_marginStart="8dp"
         app:layout_constraintEnd_toEndOf="@+id/tvFrom"
@@ -110,7 +110,7 @@
         android:background="@drawable/back_circle_marker_filled"
         android:gravity="center"
         android:text="@string/transfer_start_sign"
-        android:textColor="@color/colorTextBlack"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/transfer_start_end_sign_marker_text_size"
         android:fontFamily="@font/sf_pro_text_semibold"
         app:layout_constraintStart_toStartOf="parent"
@@ -120,13 +120,13 @@
         android:id="@+id/ivMarkersLine"
         android:layout_width="5dp"
         android:layout_height="0dp"
+        android:layout_marginTop="1dp"
         android:layerType="software"
         app:layout_constraintBottom_toTopOf="@+id/fl_bottom_point_view"
         app:layout_constraintEnd_toEndOf="@+id/tvMarkerFrom"
         app:layout_constraintStart_toStartOf="@+id/tvMarkerFrom"
         app:layout_constraintTop_toBottomOf="@+id/tvMarkerFrom"
-        android:layout_marginTop="1dp"
-        app:srcCompat="@drawable/a_b_group" />
+        app:srcCompat="@drawable/ic_markers_line_18dp" />
 
     <LinearLayout
         android:id="@+id/ivReturnIcon"
@@ -141,11 +141,11 @@
         <ImageView
             android:layout_width="10dp"
             android:layout_height="18dp"
-            android:src="@drawable/return_down" />
+            app:srcCompat="@drawable/ic_request_arrow_down_18dp" />
         <ImageView
             android:layout_width="10dp"
             android:layout_height="18dp"
-            app:srcCompat="@drawable/return_up"/>
+            app:srcCompat="@drawable/ic_request_arrow_up_18dp"/>
     </LinearLayout>
 
     <FrameLayout
@@ -167,15 +167,14 @@
             android:gravity="center"
             android:visibility="visible"
             android:text="@string/transfer_end_sign"
-            android:textColor="@color/colorTextBlack"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/transfer_start_end_sign_marker_text_size"
             android:fontFamily="@font/sf_pro_text_semibold"/>
 
         <RelativeLayout
             android:id="@+id/rl_hourly_info"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_duration"
@@ -191,15 +190,14 @@
                 android:paddingEnd="8dp"
                 android:paddingBottom="1dp"
                 android:text="8 hours"
-                android:textColor="@color/colorTextBlack" />
+                android:textColor="@android:color/white" />
+
             <ImageView
                 android:id="@+id/ivHourlyPoint"
                 android:layout_width="@dimen/view_transfer_info_markers_hourly_size"
                 android:layout_height="@dimen/view_transfer_info_markers_hourly_size"
                 android:gravity="center"
-                android:background="@drawable/back_stroke_img"
-                android:src="@drawable/ic_hourly"
-                />
+                app:srcCompat="@drawable/ic_hourly" />
 
         </RelativeLayout>
 
@@ -208,8 +206,8 @@
 
     <ImageView
         android:id="@+id/chevron"
-        android:layout_width="@dimen/view_transfer_info_chevron_size"
-        android:layout_height="@dimen/view_transfer_info_chevron_size"
+        android:layout_width="@dimen/margin24"
+        android:layout_height="@dimen/margin24"
         android:layout_marginEnd="@dimen/view_transfer_info_chevron_margin_end"
         android:src="@drawable/ic_arrow_down"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -228,15 +226,17 @@
     <TextView
         android:id="@+id/tvEventsCount"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
+        android:layout_height="@dimen/margin24"
         android:background="@drawable/bg_circle_red"
         android:textColor="@android:color/white"
+        android:paddingLeft="@dimen/margin4"
+        android:paddingRight="@dimen/margin4"
+        android:paddingStart="@dimen/margin4"
+        android:paddingEnd="@dimen/margin4"
         app:layout_constraintBottom_toBottomOf="@+id/chevron"
         app:layout_constraintEnd_toStartOf="@+id/chevron"
         app:layout_constraintTop_toTopOf="@+id/chevron"
         tools:text="10"
-        android:gravity="center"
-        android:visibility="gone"/>
+        android:gravity="center"/>
 
 </android.support.constraint.ConstraintLayout>
