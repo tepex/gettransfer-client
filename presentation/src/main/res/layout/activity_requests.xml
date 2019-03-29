@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorBtnRed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
@@ -48,8 +48,7 @@
             android:layout_marginEnd="@dimen/activity_requests_text_network_availability_margin_start_end"
             android:layout_marginTop="@dimen/activity_requests_text_network_availability_margin_top_bottom"
             android:layout_marginBottom="@dimen/activity_requests_text_network_availability_margin_top_bottom"
-            android:text="@string/LNG_OFFLINE_MESSAGE"
-            android:visibility="gone"/>
+            android:text="@string/LNG_OFFLINE_MESSAGE"/>
 
     </LinearLayout>
 
