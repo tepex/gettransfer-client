@@ -15,7 +15,7 @@
 		android:layout_gravity="center"
 		android:id="@+id/toolbar_title"
 		android:textSize="@dimen/toolbar_title_text_size"
-		android:fontFamily="@font/sf_pro_text_bold"
+		android:fontFamily="@font/sf_pro_text_semibold"
 		android:textColor="@android:color/black"/>
 
 	<android.support.constraint.ConstraintLayout
