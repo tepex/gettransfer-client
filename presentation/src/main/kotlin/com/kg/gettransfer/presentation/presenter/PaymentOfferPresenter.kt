@@ -46,7 +46,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
     internal lateinit var params: PaymentOfferView.Params
-    private var transfer: Transfer? = null
+    private var cachedTransfer: Transfer? = null
     private var url: String? = null
     internal var braintreeToken = ""
     private var paymentId = 0L
@@ -87,7 +87,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         val transferResult = utils.asyncAwait { transferInteractor.getTransfer(params.transferId) }
         transferResult.error?.let { checkResultError(it) }
         if (transferResult.error == null || (transferResult.error != null && transferResult.fromCache)) {
-            transfer = transferResult.model
+            cachedTransfer = transferResult.model
             if (params.bookNowTransportId != null) {
                 if (transferResult.model.bookNowOffers.isNotEmpty()) {
                     val filteredBookNow = transferResult.model.bookNowOffers.filterKeys { it.toString() == params.bookNowTransportId }
@@ -113,10 +113,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
 //            fetchResult { transferInteractor.getTransfer(params.transferId) }
 //                    .also {
-//                        it.hasData()?.let { transfer ->
+//                        it.hasData()?.let { cachedTransfer ->
 //                            paymentRequest = PaymentRequestModel(params.transferId, null, params.bookNowTransportId)
-//                            if (transfer.bookNowOffers.isNotEmpty()) {
-//                                val filteredBookNow = transfer.bookNowOffers.filterKeys { id -> id.toString() == params.bookNowTransportId }
+//                            if (cachedTransfer.bookNowOffers.isNotEmpty()) {
+//                                val filteredBookNow = cachedTransfer.bookNowOffers.filterKeys { id -> id.toString() == params.bookNowTransportId }
 //                                if (filteredBookNow.isNotEmpty()) bookNowOffer = filteredBookNow.values.first()
 //                            }
 //                            viewState.setBookNowOffer(bookNowOffer)
@@ -209,7 +209,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         viewState.blockInterface(true, true)
         router.navigateTo(
                 Screens.PayPalConnection(
-                        paymentId, nonce, params.transferId,
+                        paymentId, nonce, cachedTransfer!!,
                         params.offerId, paymentRequest.percentage, params.bookNowTransportId))
     }
 
@@ -226,8 +226,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private fun logEventBeginCheckout() {
         val offerType = if (offer != null ) Analytics.REGULAR else Analytics.NOW
         val requestType = when {
-            transfer?.duration != null -> Analytics.TRIP_HOURLY
-            transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
+            cachedTransfer?.duration != null -> Analytics.TRIP_HOURLY
+            cachedTransfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
         }
         var price = 0.0
@@ -237,7 +237,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
         val beginCheckout = analytics.BeginCheckout(
                 paymentRequest.percentage,
-                transferInteractor.transferNew?.promoCode,
+                cachedTransfer?.promoCode,
                 routeInteractor.duration,
                 selectedPayment,
                 offerType,

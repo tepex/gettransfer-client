@@ -20,6 +20,8 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
+import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
+import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
 
 import org.koin.standalone.inject
@@ -27,10 +29,12 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
+class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation
+                                tt: Int) : BasePresenter<RequestsFragmentView>() {
     private val transferMapper: TransferMapper by inject()
 
-    lateinit var categoryName: String
+    @RequestsView.TransferTypeAnnotation
+    var transferType = tt
 
     private lateinit var transferIds: List<Long>
 
@@ -44,26 +48,21 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
     private fun getTransfers() {
         utils.launchSuspend {
             viewState.blockInterface(true)
-            /*
-            val result = when(categoryName) {
-                RequestsActivity.CATEGORY_ACTIVE    -> utils.asyncAwait { transferInteractor.getActiveTransfers() }
-                RequestsActivity.CATEGORY_COMPLETED -> utils.asyncAwait { transferInteractor.getCompletedTransfers() }
-                else                                -> utils.asyncAwait { transferInteractor.getArchivedTransfers() }
+
+            val result = when(transferType) {
+                TRANSFER_ACTIVE    -> fetchData { transferInteractor.getTransfersActive() }
+                TRANSFER_ARCHIVE -> fetchData { transferInteractor.getTransfersArchive() }
+                else                                -> fetchData { transferInteractor.getTransfersActive() }
             }
-            */
-            fetchData { transferInteractor.getAllTransfers() }?.let { showTransfers(it) }
+
+            result?.let { showTransfers(it) }
             viewState.blockInterface(false)
         }
     }
 
     private fun showTransfers(transfers: List<Transfer>) {
-        val filtered = when (categoryName) {
-            RequestsView.CATEGORY_ACTIVE    -> transfers.filterActive()
-            RequestsView.CATEGORY_COMPLETED -> transfers.filterCompleted()
-            else                            -> transfers
-        }
 
-        val filteredSorted = filtered.sortedByDescending {
+        val filteredSorted = transfers.sortedByDescending {
             it.dateToLocal
         }
 

@@ -435,9 +435,8 @@
     <string name="LNG_EMAIL">Email</string>
     <string name="LNG_PHONE">Phone</string>
     <string name="LNG_TRIP_ON_MY_WAY">On my way</string>
-    <string name="LNG_TRIPS_EMPTY_ACTIVE">you have no active transfers</string>
-    <string name="LNG_TRIPS_EMPTY_ALL">you have no transfers</string>
-    <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no completed transfers</string>
+    <string name="LNG_TRIPS_EMPTY_UPCOMING">you have no upcoming transfers</string>
+    <string name="LNG_TRIPS_EMPTY_PAST">you have no past transfers</string>
     <string name="LNG_LIST"><u>List</u></string>
     <string name="LNG_NEW_CHAT_MESSAGE">Write the message</string>
     <string name="LNG_NEW_PASSENGER_CHAT_TITLE">Passenger message</string>
@@ -479,6 +478,8 @@
     <string name="LNG_COUNTRY_NAMES_CY">Cyprus</string>
     <string name="LNG_COUNTRY_NAMES_RU">Russia</string>
     <string name="LNG_COUNTRY_NAMES_ZH">China</string>
+    <string name="transfer_upcoming">Upcoming</string>
+    <string name="transfer_past">Past</string>
     <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
     <string name="switzerland_phone" translatable="false">+41 22 518 04 00</string>
     <string name="cyprus_phone" translatable="false">+357 24 022300</string>

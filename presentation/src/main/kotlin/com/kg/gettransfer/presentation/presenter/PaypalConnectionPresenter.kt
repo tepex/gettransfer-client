@@ -6,6 +6,7 @@ import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.RouteInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.view.PaypalConnectionView
@@ -26,6 +27,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
     internal var offerId = 0L
     internal var percentage = PaymentRequestModel.FULL_PRICE
     internal var bookNowTransportId: String? = null
+    internal var transfer: Transfer? = null
 
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
@@ -35,11 +37,10 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
         super.attachView(view)
         utils.launchSuspend {
             offer = offerInteractor.getOffer(offerId)
-            val transfer = transferInteractor.transfer
             if (offer == null) {
                 transfer?.let {
-                    if (transfer.bookNowOffers.isNotEmpty()) {
-                        val filteredBookNow = transfer.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
+                    if (it.bookNowOffers.isNotEmpty()) {
+                        val filteredBookNow = it.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
                         if (filteredBookNow.isNotEmpty()) {
                             bookNowOffer = filteredBookNow.values.first()
                         }
@@ -78,7 +79,6 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
     }
 
     private fun logEventEcommercePurchase() {
-        val transfer = transferInteractor.transfer
         val offerType = if (offer != null) Analytics.REGULAR else Analytics.NOW
         val requestType = when {
             transfer?.duration != null -> Analytics.TRIP_HOURLY
@@ -90,7 +90,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
 
         val purchase = analytics.EcommercePurchase(
                 transferId.toString(),
-                transferInteractor.transferNew?.promoCode,
+                transfer?.promoCode,
                 routeInteractor.duration,
                 PaymentRequestModel.PAYPAL,
                 offerType,

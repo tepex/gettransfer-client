@@ -29,6 +29,7 @@ import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
+import com.kg.gettransfer.presentation.view.RequestsView
 
 import kotlinx.android.synthetic.main.fragment_requests.*
 
@@ -42,22 +43,16 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     internal lateinit var presenter: RequestsFragmentPresenter
 
     @ProvidePresenter
-    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter()
+    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(arguments!!.getInt(TRANSFER_TYPE_ARG))
 
     private lateinit var rvAdapter: RequestsRVAdapter
 
     companion object {
-        @JvmField val CATEGORY = "category"
+        @JvmField val TRANSFER_TYPE_ARG = "TRANSFER_TYPE_ARG"
 
-        fun newInstance(categoryName: String) = RequestsFragment().apply {
-            arguments = Bundle().apply { putString(CATEGORY, categoryName) }
+        fun newInstance(@RequestsView.TransferTypeAnnotation categoryName: Int) = RequestsFragment().apply {
+            arguments = Bundle().apply { putInt(TRANSFER_TYPE_ARG, categoryName) }
         }
-    }
-
-    @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        presenter.categoryName = arguments!!.getString(CATEGORY)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -66,7 +61,14 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        noTransfersText.text = getCategoryRequestsNoTransfersText(presenter.categoryName)
+
+        val transferName = when(presenter.transferType) {
+            RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> getString(R.string.LNG_TRIPS_EMPTY_UPCOMING)
+            RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> getString(R.string.LNG_TRIPS_EMPTY_PAST)
+            else -> getString(R.string.transfer_upcoming)
+        }
+
+        noTransfersText.text = transferName
         rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
@@ -74,12 +76,6 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         noTransfersText.isVisible = transfers.isEmpty()
         rvAdapter = RequestsRVAdapter(transfers) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
         rvRequests.adapter = rvAdapter
-    }
-
-    private fun getCategoryRequestsNoTransfersText(category: String): String {
-        val nameRes = R.string::class.members.find( { it.name == "LNG_TRIPS_EMPTY_${category.toUpperCase()}" } )
-        val stringRes: Int? = (nameRes?.call() as Int?)
-        return stringRes?.let { getString(stringRes) } ?: ""
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) =

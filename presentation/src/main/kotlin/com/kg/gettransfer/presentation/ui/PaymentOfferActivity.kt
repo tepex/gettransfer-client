@@ -105,14 +105,14 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
                 when (percentage) {
                     OfferModel.FULL_PRICE -> {
                         payFullPriceButton.isVisible = true
-                        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE)
+                        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE.toString())
                         fullPrice.text = offer.price.base.def
                         payFullPriceButton.setOnClickListener { changePaymentSettings(it) }
                     }
                     OfferModel.PRICE_30 -> {
                         payThirdOfPriceButton.isVisible = true
-                        payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.PRICE_30)
-                        thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, OfferModel.PRICE_70, offer.price.percentage30)
+                        payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.PRICE_30.toString())
+                        thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, OfferModel.PRICE_70.toString(), offer.price.percentage30)
                         payThirdOfPriceButton.setOnClickListener { changePaymentSettings(it) }
                     }
                 }
@@ -123,7 +123,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun setBookNowOffer(bookNowOffer: BookNowOffer?) {
         payFullPriceButton.isVisible = true
-        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE)
+        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE.toString())
         fullPriceCheckIcon.isVisible = false
         payThirdOfPriceButton.isVisible = false
         fullPrice.text = bookNowOffer?.base?.def

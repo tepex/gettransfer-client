@@ -112,7 +112,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
 
         val purchase = analytics.EcommercePurchase(
                 transferId.toString(),
-                transferInteractor.transferNew?.promoCode,
+                transfer?.promoCode,
                 routeInteractor.duration,
                 paymentType,
                 offerType,

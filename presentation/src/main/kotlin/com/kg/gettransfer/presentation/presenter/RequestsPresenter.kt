@@ -11,12 +11,6 @@ import com.kg.gettransfer.utilities.Analytics
 @InjectViewState
 class RequestsPresenter : BasePresenter<RequestsView>() {
 
-    @CallSuper
-    override fun attachView(view: RequestsView) {
-        super.attachView(view)
-        transferInteractor.deleteAllTransfersList()
-    }
-
     fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_FILTER] = value

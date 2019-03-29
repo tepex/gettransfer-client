@@ -97,7 +97,7 @@ val domainModule = module {
     single { SystemInteractor(get(), get(), get()) }
     single { RouteInteractor(get(), get()) }
     single { CarrierTripInteractor(get()) }
-    single { TransferInteractor(get()) }
+    factory { TransferInteractor(get()) }
     single { PromoInteractor(get()) }
     single { ReviewInteractor(get()) }
     single { ChatInteractor(get()) }

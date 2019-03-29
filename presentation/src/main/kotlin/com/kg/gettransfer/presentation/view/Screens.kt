@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.ui.*
 
 import kotlinx.serialization.json.JSON
@@ -307,13 +308,13 @@ object Screens {
     }
 
     data class PayPalConnection(val paymentId: Long, val nonce: String,
-                                val transferId: Long, val offerId: Long?,
+                                val transfer: Transfer, val offerId: Long?,
                                 val percentage: Int, val bookNowTransportId: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
                 Intent(context, PaypalConnectionActivity::class.java).apply {
                     putExtra(PaypalConnectionView.EXTRA_PAYMENT_ID, paymentId)
                     putExtra(PaypalConnectionView.EXTRA_NONCE, nonce)
-                    putExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, transferId)
+                    putExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, transfer)
                     putExtra(PaypalConnectionView.EXTRA_OFFER_ID, offerId)
                     putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
                     putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)

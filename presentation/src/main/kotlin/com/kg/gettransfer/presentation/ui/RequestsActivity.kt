@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -21,6 +22,8 @@ import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView
+import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
+import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 
 import kotlinx.android.synthetic.main.activity_requests.*
 import kotlinx.android.synthetic.main.toolbar.view.*
@@ -45,33 +48,35 @@ class RequestsActivity: BaseActivity(), RequestsView {
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_RIDES)
         //toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorYellow))
 
-        val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
+        val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager, this)
 
         viewNetworkNotAvailable = textNetworkNotAvailable
-
-        val fragmentRequestsActive = RequestsFragment.newInstance(RequestsView.CATEGORY_ACTIVE)
-        requestsVPAdapter.addFragment(fragmentRequestsActive, getString(R.string.LNG_RIDES_ACTIVE))
-        val fragmentRequestsAll = RequestsFragment.newInstance(RequestsView.CATEGORY_ALL)
-        requestsVPAdapter.addFragment(fragmentRequestsAll, getString(R.string.LNG_RIDES_ALL))
-        val fragmentRequestsCompleted = RequestsFragment.newInstance(RequestsView.CATEGORY_COMPLETED)
-        requestsVPAdapter.addFragment(fragmentRequestsCompleted, getString(R.string.LNG_RIDES_COMPLETED))
 
         vpRequests.adapter = requestsVPAdapter
         tabs.setupWithViewPager(vpRequests)
         setListenersForLog()
     }
 
-    private class RequestsViewPagerAdapter(manager: FragmentManager): FragmentPagerAdapter(manager) {
-        val fragments = mutableListOf<Fragment>()
-        val titles = mutableListOf<String>()
+    private class RequestsViewPagerAdapter(manager: FragmentManager,
+                                           ctx: Context): FragmentPagerAdapter(manager) {
 
-        override fun getItem(position: Int) = fragments.get(position)
-        override fun getCount() = fragments.size
-        override fun getPageTitle(position: Int) = titles.get(position)
+        private val context = ctx
 
-        fun addFragment(fragment: Fragment, title: String) {
-            fragments.add(fragment)
-            titles.add(title)
+        override fun getItem(position: Int): Fragment {
+            when(position) {
+                TRANSFER_ACTIVE -> return RequestsFragment.newInstance(TRANSFER_ACTIVE)
+                TRANSFER_ARCHIVE -> return RequestsFragment.newInstance(TRANSFER_ARCHIVE)
+                else -> return RequestsFragment.newInstance(TRANSFER_ACTIVE)
+            }
+        }
+
+        override fun getCount() = 2
+        override fun getPageTitle(position: Int): CharSequence? {
+            when(position) {
+                TRANSFER_ACTIVE -> return context.getString(R.string.transfer_upcoming)
+                TRANSFER_ARCHIVE -> return context.getString(R.string.transfer_past)
+                else -> return context.getString(R.string.transfer_upcoming)
+            }
         }
     }
 
@@ -81,9 +86,8 @@ class RequestsActivity: BaseActivity(), RequestsView {
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
                 when(p0) {
-                    0 -> sendEventLog(RequestsView.CATEGORY_ACTIVE)
-                    1 -> sendEventLog(RequestsView.CATEGORY_ALL)
-                    2 -> sendEventLog(RequestsView.CATEGORY_COMPLETED)
+                    TRANSFER_ACTIVE -> sendEventLog(getString(R.string.transfer_upcoming))
+                    TRANSFER_ARCHIVE -> sendEventLog(getString(R.string.transfer_past))
                 }
             }
         })
