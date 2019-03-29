@@ -106,11 +106,27 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
             presenter.openMainScreen()
-            showWebView(url)
+            downloadVoucher(url)
         } else EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
                 RC_WRITE_FILE, *perms)
+    }
+
+    private fun downloadVoucher(url: String) {
+        webView.loadUrl(url)
+        webView.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+            val request = DownloadManager.Request(Uri.parse(url)).apply {
+                allowScanningByMediaScanner()
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                setDestinationInExternalPublicDir(
+                        Environment.DIRECTORY_DOWNLOADS,
+                        URLUtil.guessFileName(url, contentDisposition, mimetype))
+            }
+            val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            dm.enqueue(request)
+            longToast(getString(R.string.LNG_DOWNLOADING))
+        }
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
@@ -125,7 +141,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
 
     private fun onPermissionDenied() {
         presenter.openMainScreen()
-        toast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
     }
 
     override fun onRationaleAccepted(requestCode: Int) {}
@@ -144,18 +160,6 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 view?.loadUrl(url)
                 return true;            }
-        }
-        webView.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
-            val request = DownloadManager.Request(Uri.parse(url)).apply {
-                allowScanningByMediaScanner()
-                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                setDestinationInExternalPublicDir(
-                        Environment.DIRECTORY_DOWNLOADS,
-                        URLUtil.guessFileName(url, contentDisposition, mimetype))
-            }
-            val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-            dm.enqueue(request)
-            longToast(getString(R.string.LNG_DOWNLOADING))
         }
         webView.loadUrl(url)
     }
