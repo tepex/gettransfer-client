@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
+import com.kg.gettransfer.data.mapper.TransferMapper
 
 import com.kg.gettransfer.domain.model.Offer
 
@@ -19,14 +20,13 @@ import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
+import org.koin.standalone.inject
 
 import timber.log.Timber
 
 @InjectViewState
 class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation
                                 tt: Int) : BasePresenter<RequestsFragmentView>() {
-    private val transferMapper: TransferMapper by inject()
-
     @RequestsView.TransferTypeAnnotation
     var transferType = tt
 
