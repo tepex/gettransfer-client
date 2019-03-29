@@ -98,7 +98,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                     if (transferModel.status.checkOffers)
                                         offer = it }
                         val showRate = offer?.isRated()?.not() ?: false
-                        viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
+                        viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), true)
                         setTransferType(transfer)
                     }
             viewState.blockInterface(false)
