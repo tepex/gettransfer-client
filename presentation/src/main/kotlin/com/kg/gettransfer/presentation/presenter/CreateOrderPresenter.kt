@@ -18,7 +18,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.PromoInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 
 import com.kg.gettransfer.domain.model.DestDuration
 import com.kg.gettransfer.domain.model.DestPoint
@@ -27,6 +27,7 @@ import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
 import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.extensions.simpleFormat
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
@@ -58,7 +59,7 @@ import timber.log.Timber
 
 @InjectViewState
 class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
 
     private val currencyMapper = get<CurrencyMapper>()
@@ -98,6 +99,33 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         startDate.date = currentDate.time
     }
 
+
+    @CallSuper
+    override fun attachView(view: CreateOrderView) {
+        super.attachView(view)
+        viewState.setCurrencies(currencies)
+        val i = systemInteractor.currentCurrencyIndex
+        if (i != -1) setCurrency(i)
+
+        viewState.setUser(user, systemInteractor.account.user.loggedIn)
+        viewState.setHintForDateTimeTransfer(orderInteractor.hourlyDuration == null)
+        transportTypes?.let { viewState.setTransportTypes(it) }
+        checkOrderDateTime()
+    }
+
+    private fun checkOrderDateTime() =
+            with(orderInteractor) {
+                orderStartTime?.let { setPredefinedDate(it, true) }
+                orderReturnTime?.let { setPredefinedDate(it, false) }
+            }
+
+    private fun setPredefinedDate(date: Date, field: Boolean) =
+        viewState.setDateTimeTransfer(date.simpleFormat(),
+                !date.after(getCurrentDatePlusMinimumHours().time),
+                field)
+                .also { isTimeSetByUser = true }
+
+
     private fun getCurrentDatePlusMinimumHours(): Calendar {
         val calendar = Calendar.getInstance(systemInteractor.locale)
         /* Server must send current locale time */
@@ -107,7 +135,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun initMapAndPrices() {
-        routeInteractor.apply {
+        with(orderInteractor) {
             if (from == null || (to == null && hourlyDuration == null)) {
                 Timber.w("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
                 return
@@ -118,8 +146,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             }
         }
 
-        val from = routeInteractor.from!!.cityPoint
-        val to = routeInteractor.to!!.cityPoint
+        val from = orderInteractor.from!!.cityPoint
+        val to = orderInteractor.to!!.cityPoint
         if (from.point == null || to.point == null) {
             Timber.w("NPE! from: $from, to: $to")
             viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
@@ -128,7 +156,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             var route: RouteInfo? = null
-            fetchData { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
+            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
                     ?.let {
                         route = it
                         duration = it.duration
@@ -155,15 +183,15 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun initPrices(returnWay: Boolean){
-        val from = routeInteractor.from!!.cityPoint
-        val to = routeInteractor.to!!.cityPoint
+        val from = orderInteractor.from!!.cityPoint
+        val to = orderInteractor.to!!.cityPoint
         if (from.point == null || to.point == null) {
             Timber.w("NPE! from: $from, to: $to")
             viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
             return
         }
         utils.launchSuspend {
-            fetchData { routeInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.currencyCode) }
+            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.currencyCode) }
                     ?.let { setTransportTypePrices(it.prices) }
         }
     }
@@ -181,7 +209,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         if (transportTypes == null)
             transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
         viewState.setTransportTypes(transportTypes!!)
-        routeInteractor.from?.let { from ->
+        orderInteractor.from?.let { from ->
             from.cityPoint.point?.let { p ->
                 val point = LatLng(p.latitude, p.longitude)
                 track = Utils.getCameraUpdateForPin(point)
@@ -195,16 +223,16 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             returnDate = TripDate(startDate.date).apply { date.time + DATE_OFFSET }
             initPrices(true)
         }
-        val fieldDate = if (isStartDate) startDate.also { isTimeSetByUser = true } else { returnDate!!}         //enable get transfer only if startDate was set manually
+        val fieldDate = if (isStartDate) startDate.also { isTimeSetByUser = true } else { returnDate!!}   //!!      //enable get transfer only if startDate was set manually
         currentDate = getCurrentDatePlusMinimumHours()
         if (newDate.after(currentDate.time)) {
-            isAfterMinHours = false
+            isAfterMinHours = false 
             fieldDate.date = newDate
         } else {
             isAfterMinHours = true
             fieldDate.date = currentDate.time
         }
-        viewState.setDateTimeTransfer(SystemUtils.formatDateTime(fieldDate.date), isAfterMinHours, isStartDate)
+        viewState.setDateTimeTransfer(SystemUtils.formatDateTime(fieldDate.date), isAfterMinHours, isStartDate) //!!...
         if (isStartDate) routeModel?.let {
             it.dateTime = SystemUtils.formatDateTime(fieldDate.date)
             viewState.setRoute(polyline!!, it, true)
@@ -217,25 +245,13 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         initPrices(false)
     }
 
-    @CallSuper
-    override fun attachView(view: CreateOrderView) {
-        super.attachView(view)
-        viewState.setCurrencies(currencies)
-        val i = systemInteractor.currentCurrencyIndex
-        if (i != -1) setCurrency(i)
-
-        viewState.setUser(user, systemInteractor.account.user.loggedIn)
-        viewState.setHintForDateTimeTransfer(routeInteractor.hourlyDuration == null)
-        transportTypes?.let { viewState.setTransportTypes(it) }
-    }
-
     fun changeCurrency(selected: Int) {
         if (selected < currencies.size) {
             val currencyModel = currencies[selected]
             systemInteractor.currency = currencyModel.delegate
             setCurrency(selected)
             saveAccount()
-            if (routeInteractor.hourlyDuration == null)
+            if (orderInteractor.hourlyDuration == null)
                 initPrices(returnDate != null)
         }
     }
@@ -316,11 +332,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         if (currentDate.time.after(startDate.date)) startDate.date = currentDate.time
         if (!checkFieldsForRequest()) return
 
-        val from = routeInteractor.from!!
-        val to = routeInteractor.to
+        val from = orderInteractor.from!!
+        val to = orderInteractor.to
         val transferNew = TransferNew(
             from.cityPoint,
-            if (routeInteractor.hourlyDuration != null) DestDuration(routeInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
+            if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
             Trip(startDate.date, flightNumber),
             returnDate?.let { Trip(if (it.date.after(startDate.date)) it.date else Date(startDate.date.time + DATE_OFFSET) , flightNumberReturn) },
             transportTypes!!.filter { it.checked }.map { it.id },
@@ -456,10 +472,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         bundle.putInt(Analytics.NUMBER_OF_PASSENGERS, passengers)
         map[Analytics.NUMBER_OF_PASSENGERS] = passengers
 
-        bundle.putString(Analytics.ORIGIN, routeInteractor.from?.primary)
-        map[Analytics.ORIGIN] = routeInteractor.from?.primary
-        bundle.putString(Analytics.DESTINATION, routeInteractor.to?.primary)
-        map[Analytics.DESTINATION] = routeInteractor.to?.primary
+        bundle.putString(Analytics.ORIGIN, orderInteractor.from?.primary)
+        map[Analytics.ORIGIN] = orderInteractor.from?.primary
+        bundle.putString(Analytics.DESTINATION, orderInteractor.to?.primary)
+        map[Analytics.DESTINATION] = orderInteractor.to?.primary
 
         bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
         map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()

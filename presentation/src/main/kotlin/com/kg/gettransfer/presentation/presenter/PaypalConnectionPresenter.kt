@@ -3,7 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
@@ -19,7 +19,7 @@ import timber.log.Timber
 class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
 
     private val paymentInteractor: PaymentInteractor by inject()
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     internal var paymentId = 0L
     internal var nonce = ""
@@ -92,7 +92,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
         val purchase = analytics.EcommercePurchase(
                 transferId.toString(),
                 transfer?.promoCode,
-                routeInteractor.duration,
+                orderInteractor.duration,
                 PaymentRequestModel.PAYPAL,
                 offerType,
                 requestType,

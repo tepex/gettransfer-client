@@ -18,8 +18,11 @@
 	<dimen name="margin_for_area_behind_rounded_corners">-8dp</dimen>
 
 	<dimen name="transfer_start_end_sign_marker_text_size">14sp</dimen>
+	
+	<!--Main Activity, Fragments-->
+	<dimen name="switchers_vertical_margin">16dp</dimen>
 
-	<!--Hourly picker-->
+	<!--Hourly picker and switcher-->
 	<dimen name="hourly_bottom_sheet_height">250dp</dimen>
 	<dimen name="hourly_bottom_sheet_height_peek">@dimen/hourly_bottom_sheet_height</dimen>
 	<dimen name="divider_height">0.5dp</dimen>
@@ -28,7 +31,10 @@
 	<dimen name="hourly_title_text_size">17sp</dimen>
 	<dimen name="action_done_padding">8dp</dimen>
 	<dimen name="action_done_text_size">15sp</dimen>
-
+	<dimen name="view_hourly_switcher_margin_bottom">10dp</dimen>
+	<dimen name="view_hourly_switcher_margin_end">5dp</dimen>
+	<dimen name="view_hourly_switcher_elevation">8dp</dimen>
+	<dimen name="view_hourly_switcher_padding">5dp</dimen>
 
 
 
@@ -255,6 +261,12 @@
 	<dimen name="view_transfer_info_btn_cancel_request_padding_top_bottom">5dp</dimen>
 
 	<dimen name="transfer_main_info_container_vertical_padding">10dp</dimen>
+
+	<!--order_field-->
+	<dimen name="order_field_padding">16dp</dimen>
+	<dimen name="icon_sizes">32dp</dimen>
+	<dimen name="title_margin_start">8dp</dimen>
+	<dimen name="order_title_text_size">17sp</dimen>
 
 	<!--activity_transfer_details-->
 	<dimen name="activity_transfer_details_behaviour_peek_height">385dp</dimen>

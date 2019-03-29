@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:background="@color/colorBackgroundGray"
+                xmlns:app="http://schemas.android.com/apk/res-auto" android:focusable="true">
+
+    <ImageView
+            android:id="@+id/btnShowDrawerFragment"
+            android:layout_width="@dimen/activity_main_buttons_size"
+            android:layout_height="@dimen/activity_main_buttons_size"
+            app:srcCompat="@drawable/ic_menu"
+            android:background="@drawable/back_circle_white_buttons"
+            android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
+            android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
+            android:clickable="true"
+            android:focusable="true"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.SwitcherView
+            android:id="@+id/switcher_map_"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            android:layout_marginTop="@dimen/switchers_vertical_margin"
+            app:switcher_title="Map"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.SwitcherView
+            android:id="@+id/switcher_hourly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/switcher_map_"
+            android:layout_marginTop="@dimen/switchers_vertical_margin"
+
+            app:switcher_title="Per hour"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.SearchFormView
+            android:id="@+id/request_search_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:isInverseInvisible="true"
+            android:layout_marginTop="@dimen/switchers_vertical_margin"
+            android:layout_below="@+id/switcher_hourly"/>
+
+    <ImageView
+            android:id="@+id/ivSetMyLocation"
+            android:layout_width="@dimen/pin_clickable_width"
+            android:layout_height="@dimen/pin_clickable_height"
+            android:padding="@dimen/pin_iv_padding"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/request_search_panel"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="6dp"
+            app:srcCompat="@drawable/ic_pin_orange_border"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.OrderFieldView
+            android:id="@+id/order_time_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/request_search_panel"
+            android:layout_marginTop="@dimen/switchers_vertical_margin"
+
+            app:order_title="@string/LNG_RIDE_DATE"
+            app:icon="@drawable/ic_start_time"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.OrderFieldView
+            android:id="@+id/return_time_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/order_time_view"
+
+            app:order_title="@string/LNG_RIDE_RETURN_TRANSFER"
+            app:icon="@drawable/ic_start_time"/>
+
+    <View
+            android:id="@+id/field_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/create_transfer_divider_height"
+
+            android:layout_below="@+id/order_time_view"
+            android:layout_marginStart="@dimen/divider_margin_start"
+            android:layout_marginEnd="@dimen/divider_margin_end"
+            android:background="@color/colorDividerGray"
+
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+            android:id="@+id/btnNextFragment"
+            android:layout_width="@dimen/general_button_width"
+            android:layout_height="@dimen/general_button_height"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/btn_next_main_margin_16dp"
+            android:background="@drawable/btn_bg_rounded"
+            android:enabled="false"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/LNG_NEXT"
+
+            android:textColor="@color/colorWhite" />
+
+</RelativeLayout>

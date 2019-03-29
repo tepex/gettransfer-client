@@ -129,10 +129,10 @@
 						android:layout_height="@dimen/activity_main_buttons_size"
 						app:srcCompat="@drawable/ic_my_location"
 						android:background="@drawable/back_circle_white_buttons"
-						app:layout_constraintTop_toBottomOf="@+id/layoutTextNetworkNotAvailable"
-						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/btnShowDrawerLayout"
+						app:layout_constraintStart_toStartOf="parent"
 						android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
-						android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
+						android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
 						android:clickable="true"
 						android:focusable="true"
 						android:elevation="2dp"/>
@@ -200,11 +200,27 @@
 					android:layout_gravity="end"/>
 			</LinearLayout>
 
+
 		</RelativeLayout>
+
+		<FrameLayout
+				android:id="@+id/fragmentContainer"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+
+		<com.kg.gettransfer.presentation.ui.custom.SwitcherView
+				android:id="@+id/switcher_map"
+				android:layout_gravity="end"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				app:switcher_title="Map"
+		android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
+		android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"/>
 
 		<include
 			android:id="@+id/hourly_sheet"
-			layout="@layout/view_hourly_picker" />
+			layout="@layout/view_hourly_picker"
+			tools:visibility="gone"/>
 
 
 		<ProgressBar android:id="@+id/progress"
@@ -219,6 +235,7 @@
 
 	<include
 		android:id="@+id/navView"
-		layout="@layout/view_navigation" />
+		layout="@layout/view_navigation"
+		tools:visibility="gone"/>
 
 </android.support.v4.widget.DrawerLayout>

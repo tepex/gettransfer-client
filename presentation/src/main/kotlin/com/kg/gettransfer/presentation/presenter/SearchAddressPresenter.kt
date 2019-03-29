@@ -4,11 +4,9 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.model.LatLngBounds
 
-import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
@@ -19,7 +17,7 @@ import timber.log.Timber
 
 @InjectViewState
 class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     /* Cache. @TODO */
     private var lastRequest: String? = null
@@ -46,7 +44,7 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
         }
 
         utils.launchSuspend {
-            fetchData(checkLoginError = false){ routeInteractor.getAutocompletePredictions(prediction, latLonPair) }
+            fetchData(checkLoginError = false){ orderInteractor.getAutocompletePredictions(prediction, latLonPair) }
                     ?.let {
                         lastResult = it
                         lastRequest = prediction
@@ -55,12 +53,12 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
     }
 
     fun onClearAddress(isTo: Boolean) {
-        if (isTo) routeInteractor.to = null else routeInteractor.from = null
+        if (isTo) orderInteractor.to = null else orderInteractor.from = null
     }
 
     fun returnAddress(isTo: Boolean) {
         viewState.returnLastAddress(
-            if (isTo) routeInteractor.to?.cityPoint?.name ?: "" else routeInteractor.from?.cityPoint?.name ?: ""
+            if (isTo) orderInteractor.to?.cityPoint?.name ?: "" else orderInteractor.from?.cityPoint?.name ?: ""
         )
     }
 

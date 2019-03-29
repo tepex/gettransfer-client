@@ -39,6 +39,7 @@ object Screens {
 
     @JvmField val PAYMENT_OFFER = "payment_offer"
     @JvmField val RATE_TRANSFER = "rate_transfer"
+    const val RETURN_MAIN       = "return"
 
     private const val EMAIL_DATA = "mailto:"
     private const val DIAL_SCHEME = "tel"
@@ -160,12 +161,17 @@ object Screens {
         }
     }
 
-    data class FindAddress(val from: String, val to: String, val isClickTo: Boolean?, val bounds: LatLngBounds) :
+    data class FindAddress(val from: String,
+                           val to: String,
+                           val isClickTo: Boolean?,
+                           val bounds: LatLngBounds,
+                           val returnMain: Boolean = false) :
         SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, SearchActivity::class.java).apply {
             putExtra(SearchView.EXTRA_ADDRESS_FROM, from)
             putExtra(SearchView.EXTRA_ADDRESS_TO, to)
             putExtra(SearchView.EXTRA_BOUNDS, bounds)
+            putExtra(RETURN_MAIN, returnMain)
             isClickTo?.let { putExtra(SearchView.EXTRA_IS_CLICK_TO, it) }
         }
     }

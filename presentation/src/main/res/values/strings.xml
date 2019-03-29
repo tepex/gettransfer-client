@@ -88,6 +88,7 @@
     <string name="LNG_OPEN">Open</string>
     <string name="LNG_COPY">Copy</string>
     <string name="LNG_NEXT">Next</string>
+    <string name="LNG_LOADING">Loading…</string>
     <string name="LNG_ERROR">Error</string>
     <string name="LNG_ERROR_DATE">Please select transfer date</string>
     <string name="LNG_ERROR_RETURN_DATE">Invalid return date</string>

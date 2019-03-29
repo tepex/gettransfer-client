@@ -13,7 +13,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
@@ -41,7 +41,8 @@ import timber.log.Timber
 
 @InjectViewState
 class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
+
     private val reviewInteractor: ReviewInteractor by inject()
 
     private val pointMapper: PointMapper by inject()
@@ -93,11 +94,12 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
             viewState.showBadge(false)
         }
         Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
-        if (routeInteractor.from != null) setLastLocation() else updateCurrentLocation()
+        setOwnLocation()
         viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)
-        routeInteractor.from?.address?.let { viewState.setAddressFrom(it) }
-        viewState.setTripMode(routeInteractor.hourlyDuration)
+        orderInteractor.from?.address?.let { viewState.setAddressFrom(it) }
+        viewState.setTripMode(orderInteractor.hourlyDuration)
+        setCountEvents(systemInteractor.eventsCount)
     }
 
     @CallSuper
@@ -106,13 +108,23 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         countEventsInteractor.removeCounterListener(this)
     }
 
+    fun setOwnLocation() {
+        if (orderInteractor.from != null) setLastLocation() else updateCurrentLocation()
+    }
+
     private fun setCountEvents(count: Int) {
         viewState.showBadge(count > 0)
         if (count > 0) viewState.setCountEvents(count)
     }
 
+
     override fun updateCounter() {
         utils.launchSuspend{ setCountEvents(countEventsInteractor.eventsCount) }
+
+    override fun onNewOffer(offer: Offer): OfferModel {
+        utils.launchSuspend { setCountEvents(systemInteractor.eventsCount) }
+        return super.onNewOffer(offer)
+
     }
 
     @CallSuper
@@ -132,8 +144,8 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         systemInteractor.selectedField = field
 
         val pointSelectedField: Point? = when (field) {
-            FIELD_FROM -> routeInteractor.from?.cityPoint?.point
-            FIELD_TO -> routeInteractor.to?.cityPoint?.point
+            FIELD_FROM -> orderInteractor.from?.cityPoint?.point
+            FIELD_TO -> orderInteractor.to?.cityPoint?.point
             else -> null
         }
         var latLngPointSelectedField: LatLng? = null
@@ -155,22 +167,21 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private fun setLastLocation() {
         viewState.blockInterface(true)
-        setPointAddress(routeInteractor.from!!)
+        setPointAddress(orderInteractor.from!!)
     }
 
     private suspend fun updateCurrentLocationAsync(): Result<GTAddress> {
         //viewState.blockInterface(true)
         viewState.blockSelectedField(true, systemInteractor.selectedField)
-        fetchResultOnly { routeInteractor.getCurrentAddress() }
+        fetchResultOnly { orderInteractor.getCurrentAddress() }
                 .also {
                     if (it.error != null) {
                         viewState.setError(it.error!!)
-                        val locationResult = fetchResultOnly { systemInteractor.getMyLocation() }
-                        logIpapiRequest()
-                        if (locationResult.error == null
-                                && locationResult.model.latitude != null
-                                && locationResult.model.longitude != null)
-                            setLocation(locationResult.model)
+                        with(fetchResultOnly { systemInteractor.getMyLocation() }) {
+                            logIpapiRequest()
+                            if (error == null && model.latitude != null && model.longitude != null)
+                                setLocation(model)
+                        }
                     }
                     else setPointAddress(it.model)
                     return it
@@ -181,7 +192,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         val point = Point(location.latitude!!, location.longitude!!)
         val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude!!, location.longitude!!)).build()
         val latLonPair = getLatLonPair(lngBounds)
-        val result = fetchResultOnly { routeInteractor.getAddressByLocation(true, point, latLonPair) }
+        val result = fetchResultOnly { orderInteractor.getAddressByLocation(true, point, latLonPair) }
         if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model, false)
     }
 
@@ -226,7 +237,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
             val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
 
             utils.launchSuspend {
-                fetchData { routeInteractor.getAddressByLocation(
+                fetchData { orderInteractor.getAddressByLocation(
                         systemInteractor.selectedField == FIELD_FROM,
                         pointMapper.fromLatLng(lastPoint!!),
                         latLonPair) }
@@ -234,7 +245,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                             currentLocation = it.cityPoint.name!!
                             setAddressInSelectedField(currentLocation)
                         }
-
                 viewState.blockInterface(false)
             }
         } else {
@@ -261,7 +271,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     fun enablePinAnimation() { isMarkerAnimating = false }
 
     fun tripModeSwitched(hourly: Boolean) {
-        routeInteractor.apply {
+        orderInteractor.apply {
             hourlyDuration = if (hourly) hourlyDuration?: MIN_HOURLY else null
         }
         if(systemInteractor.selectedField == FIELD_TO) changeUsedField(FIELD_FROM)
@@ -269,26 +279,27 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     fun tripDurationSelected(hours: Int) {
-        routeInteractor.hourlyDuration = hours
+        orderInteractor.hourlyDuration = hours
     }
 
-    fun isHourly() = routeInteractor.hourlyDuration != null
+    fun isHourly() = orderInteractor.hourlyDuration != null
 
     fun setAddressFields() {
-        viewState.setAddressFrom(routeInteractor.from?.address ?: "")
-        viewState.setAddressTo(routeInteractor.to?.address ?: "")
+        viewState.setAddressFrom(orderInteractor.from?.address ?: "")
+        viewState.setAddressTo(orderInteractor.to?.address ?: "")
         viewState.initSearchForm()
     }
 
-    fun onSearchClick(from: String, to: String, bounds: LatLngBounds) { navigateToFindAddress(from, to, bounds) }
+    fun onSearchClick(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false)
+    { navigateToFindAddress(from, to, bounds, returnBack) }
     fun onNextClick  (from: String, to: String, bounds: LatLngBounds) { navigateToFindAddress(from, to, bounds) }
 
-    private fun navigateToFindAddress(from: String, to: String, bounds: LatLngBounds) {
-        routeInteractor.from?.let { router.navigateTo(Screens.FindAddress(from, to, isClickTo, bounds)) }
+    private fun navigateToFindAddress(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false) {
+        orderInteractor.from?.let { router.navigateTo(Screens.FindAddress(from, to, isClickTo, bounds, returnBack)) }
     }
 
     fun onNextClick() {
-        if (routeInteractor.isCanCreateOrder())
+        if (orderInteractor.isCanCreateOrder())
             router.navigateTo(Screens.CreateOrder)
     }
 
@@ -443,7 +454,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     private suspend fun createRouteModel(transfer: Transfer): RouteModel {
-        val route = routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.currencyCode).model
+        val route = orderInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.currencyCode).model
         return routeMapper.getView(
             route.distance,
             route.polyLines,

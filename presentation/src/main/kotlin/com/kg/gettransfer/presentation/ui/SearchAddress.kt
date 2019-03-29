@@ -91,11 +91,9 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
             else {
                 setClearButtonVisibility()
                 parent.presenter.isTo = isTo
-                if(text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE) {
+                if(text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE)
                     presenter.requestAddressListByPrediction(text.trim())
-                } else {
-                    parent.onSearchFieldEmpty(isTo)
-                }
+                else parent.onSearchFieldEmpty(isTo)
             }
         }
         addressField.addTextChangedListener(this)

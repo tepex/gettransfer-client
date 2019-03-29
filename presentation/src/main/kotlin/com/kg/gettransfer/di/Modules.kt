@@ -26,6 +26,7 @@ import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.encrypt.EncryptPassImpl
+import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 
 import com.kg.gettransfer.presentation.mapper.*
 
@@ -95,7 +96,7 @@ val domainModule = module {
     single { OfferInteractor(get()) }
     single { PaymentInteractor(get()) }
     single { SystemInteractor(get(), get(), get()) }
-    single { RouteInteractor(get(), get()) }
+    single { OrderInteractor(get(), get()) }
     single { CarrierTripInteractor(get()) }
     single { TransferInteractor(get()) }
     single { PromoInteractor(get()) }
@@ -148,6 +149,7 @@ val androidModule = module {
     single { Analytics(androidApplication().applicationContext, get(), get()) }
     single { PhoneNumberUtil.createInstance(get<Context>()) }
     single { GTNotificationManager(androidApplication().applicationContext) }
+    single { DateTimeDelegate() }
 }
 
 val testModule = module {

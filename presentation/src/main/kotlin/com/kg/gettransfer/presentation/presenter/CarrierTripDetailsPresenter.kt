@@ -5,8 +5,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
-import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.CarrierTrip
 
 import com.kg.gettransfer.domain.model.CarrierTripBase
@@ -23,13 +22,12 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.remote.model.TripModel
 
 import org.koin.standalone.inject
 
 @InjectViewState
 class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     private val carrierTripMapper: CarrierTripMapper by inject()
     private val routeMapper: RouteMapper by inject()
@@ -68,7 +66,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
 
     private suspend fun setTripType(tripBase: CarrierTripBase) {
         if (tripBase.to != null && tripBase.to!!.point != null) {
-            fetchData { routeInteractor.getRouteInfo(tripBase.from.point!!,
+            fetchData { orderInteractor.getRouteInfo(tripBase.from.point!!,
                     tripBase.to!!.point!!,
                     true,
                     false,

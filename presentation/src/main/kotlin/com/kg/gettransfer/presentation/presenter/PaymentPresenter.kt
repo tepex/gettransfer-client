@@ -3,7 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
@@ -30,7 +30,7 @@ import timber.log.Timber
 class PaymentPresenter : BasePresenter<PaymentView>() {
     private val paymentInteractor: PaymentInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
@@ -113,7 +113,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         val purchase = analytics.EcommercePurchase(
                 transferId.toString(),
                 transfer?.promoCode,
-                routeInteractor.duration,
+                orderInteractor.duration,
                 paymentType,
                 offerType,
                 requestType,

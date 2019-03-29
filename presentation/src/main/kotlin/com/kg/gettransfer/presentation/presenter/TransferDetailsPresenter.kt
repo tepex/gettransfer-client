@@ -14,12 +14,16 @@ import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.Coordinate
+
+import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.domain.model.*
+
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.ui.icons.CarIconResourceProvider
@@ -49,9 +53,12 @@ import org.koin.standalone.inject
 
 import java.util.Calendar
 
+import java.util.*
+
+
 @InjectViewState
-class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SocketEventListener {
-    private val routeInteractor: RouteInteractor by inject()
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SystemEventListener {
+    private val orderInteractor: OrderInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
     private val coordinateInteractor: CoordinateInteractor by inject()
 
@@ -123,7 +130,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private suspend fun setTransferType(transfer: Transfer) {
         if (transfer.to != null) {
             fetchResult {
-                routeInteractor.getRouteInfo(transfer.from.point!!,
+                orderInteractor.getRouteInfo(transfer.from.point!!,
                         transfer.to!!.point!!,
                         true,
                         false,
@@ -148,11 +155,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun onCancelRequestClicked() { viewState.showAlertCancelRequest() }
 
     fun onRepeatTransferClicked() {
-        fromPoint?.let { routeInteractor.from = GTAddress(cityPointMapper.fromView(it), null, null, null, null) }
-        toPoint?.let { routeInteractor.to = GTAddress(cityPointMapper.fromView(it), null, null, null, null) }
-        hourlyDuration?.let { routeInteractor.hourlyDuration = it }
+        fromPoint?.let { orderInteractor.from = GTAddress(cityPointMapper.fromView(it), null, null, null, null) }
+        toPoint?.let { orderInteractor.to = GTAddress(cityPointMapper.fromView(it), null, null, null, null) }
+        hourlyDuration?.let { orderInteractor.hourlyDuration = it }
 
-        if (routeInteractor.isCanCreateOrder()) router.navigateTo(Screens.CreateOrder)
+        if (orderInteractor.isCanCreateOrder()) router.navigateTo(Screens.CreateOrder)
     }
 
     fun onChatClick(){

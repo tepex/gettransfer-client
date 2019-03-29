@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.graphics.Color
 
 import android.os.Build
@@ -8,6 +9,7 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.app.FragmentTransaction
 
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
@@ -44,10 +46,11 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
+import com.kg.gettransfer.presentation.view.MainRequestView
 import com.kg.gettransfer.presentation.view.MainView
+import kotlinx.android.synthetic.main.a_b_orange_view.*
+import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 
-import kotlinx.android.synthetic.main.a_b_view.*
-import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_item_requests.view.*
 import kotlinx.android.synthetic.main.search_address.view.*
@@ -59,6 +62,7 @@ import kotlinx.android.synthetic.main.view_navigation.view.*
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
+import kotlinx.android.synthetic.main.view_switcher.*
 import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -67,8 +71,13 @@ import timber.log.Timber
 class MainActivity : BaseGoogleMapActivity(), MainView {
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
+    var requestView: MainRequestView? = null
+    set(value) {
+        field = value
+        value?.let { setRequestView() }
+    }
 
-    private lateinit var drawer: DrawerLayout
+    lateinit var drawer: DrawerLayout
     //private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var hourlySheet: BottomSheetBehavior<View>
 
@@ -134,9 +143,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         presenter.setAddressFields()
 
         initNavigation()
-        initHourly()
 
+
+        switchMain(withMap = false, firstAttach = true)
         switch_mode.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
+        switcher_map.switch_mode_.setOnCheckedChangeListener { _, isChecked -> switchMain(isChecked) }
+
+        initHourly()
 
         isFirst = savedInstanceState == null
 
@@ -162,12 +175,40 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         enableBtnNext()
     }
 
-    private fun performClick(clickedTo: Boolean) {
-        presenter.isClickTo = clickedTo
-        processGoogleMap(true) { presenter.onSearchClick(searchFrom.text, searchTo.text, it.projection.visibleRegion.latLngBounds) }
+    @SuppressLint("CommitTransaction")
+    private fun switchMain(withMap: Boolean, firstAttach: Boolean = false) {
+        with(supportFragmentManager.beginTransaction()) {
+            if (!firstAttach)setAnimation(withMap, this)
+            if (!withMap) add(R.id.fragmentContainer, MainRequestFragment())
+            else supportFragmentManager.fragments.firstOrNull()?.let { remove(it) }
+        }?.commit()
     }
 
-    private fun showNumberPicker(show: Boolean) {
+    private fun setRequestView () {
+        val addressTo = if (rl_searchForm.isVisible) searchTo.text else null
+        val duration = if (rl_hourly.isVisible) tvCurrent_hours.text.toString() else null
+        requestView?.setView(searchFrom.text, addressTo, duration)
+    }
+
+    @SuppressLint("PrivateResource")
+    private fun setAnimation(opens: Boolean, transaction: FragmentTransaction) =
+            transaction.apply {
+                val first = if(opens) R.anim.abc_fade_in else R.anim.abc_fade_in
+                val second = if(opens) R.anim.abc_fade_out else R.anim.abc_fade_out
+                setCustomAnimations(first, second)
+            }
+
+    fun performClick(clickedTo: Boolean, returnBack: Boolean = false) {
+        presenter.isClickTo = clickedTo
+        processGoogleMap(true) {
+            presenter.onSearchClick(searchFrom.text,
+                    searchTo.text,
+                    it.projection.visibleRegion.latLngBounds,
+                    returnBack)
+        }
+    }
+
+    fun showNumberPicker(show: Boolean) {
         hourlySheet.state = if (show) BottomSheetBehavior.STATE_COLLAPSED else BottomSheetBehavior.STATE_HIDDEN
         onPickerExpanded(show)
     }
@@ -187,7 +228,8 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     @CallSuper
     override fun onBackPressed() {
-        presenter.onBackClick()
+ //       if (supportFragmentManager.fragments.isEmpty())
+            presenter.onBackClick()
     }
 
     @CallSuper
@@ -245,9 +287,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             maxValue = displayedValues.size - 1
             wrapSelectorWheel = false
             tvCurrent_hours.text = displayedValues[0]
+            requestView?.setNumberPickerValue(displayedValues[0])
             setOnValueChangedListener { _, _, newVal ->
                 presenter.tripDurationSelected(HourlyValuesHelper.durationValues[newVal])
                 tvCurrent_hours.text = displayedValues[newVal]
+                requestView?.setNumberPickerValue(displayedValues[newVal])
+
             }
         }
         tv_okBtn.setOnClickListener { showNumberPicker(false) }
@@ -330,14 +375,14 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        if (block) searchFrom.text = getString(R.string.search_start)
+        if (block) searchFrom.text = getString(R.string.LNG_LOADING)
     }
 
     override fun blockSelectedField(block: Boolean, field: String) {
         if (block) {
             when (field) {
-                MainPresenter.FIELD_FROM -> searchFrom.text = getString(R.string.search_start)
-                MainPresenter.FIELD_TO -> searchTo.text = getString(R.string.search_start)
+                MainPresenter.FIELD_FROM -> searchFrom.text = getString(R.string.LNG_LOADING)
+                MainPresenter.FIELD_TO -> searchTo.text = getString(R.string.LNG_LOADING)
             }
         }
     }
@@ -353,21 +398,33 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun setAddressFrom(address: String) {
-        searchFrom.text = address
-        enableBtnNext()
-        icons_container.a_point.setImageDrawable(ContextCompat.getDrawable(
-            this,
-            if (address.isNotEmpty()) R.drawable.a_point_filled else R.drawable.a_point_empty
-        ))
+        if (address != searchFrom.text) {
+            searchFrom.text = address
+            setRequestView()
+            enableBtnNext()
+            setPointsView(tv_a_point, address.isNotEmpty())
+        }
     }
 
     override fun setAddressTo(address: String) {
-        searchTo.text = address
-        enableBtnNext()
-        icons_container.b_point.setImageDrawable(ContextCompat.getDrawable(
-            this,
-            if (address.isNotEmpty()) R.drawable.b_point_filled else R.drawable.b_point_empty
-        ))
+        if (address != searchTo.text) {
+            searchTo.text = address
+            enableBtnNext()
+            setRequestView()
+            setPointsView(tv_b_point, address.isNotEmpty())
+        }
+    }
+
+    fun setPointsView(textView: TextView, empty: Boolean) {
+        with(textView) {
+            background = if (empty) {
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.colorWhite))
+                ContextCompat.getDrawable(this@MainActivity, R.drawable.back_circle_marker_orange_filled)
+            } else {
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.colorTextBlack))
+                ContextCompat.getDrawable(this@MainActivity, R.drawable.back_orange_empty)
+            }
+        }
     }
 
     private fun enableBtnNext() {
@@ -411,11 +468,16 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     private fun setAlpha(alpha: Float) {
         searchFrom.alpha = alpha
-        a_point.alpha    = alpha
+        tv_a_point.alpha    = alpha
     }
 
     override fun onBackClick() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
+        when {
+            drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
+            hourlySheet.state == BottomSheetBehavior.STATE_HIDDEN -> showNumberPicker(false)
+            else -> super.onBackPressed()
+        }
+//        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
     }
 
     override fun showReadMoreDialog() {
@@ -424,16 +486,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun changeFields(hourly: Boolean) {
-        hourly.let {
-            rl_hourly.isVisible    = it
-            hourly_point.isVisible = it
-            rl_searchForm.isGone   = it
-            b_point.isGone         = it
-        }
-
+        rl_hourly.isVisible    = hourly
+        hourly_point.isVisible = hourly
+        rl_searchForm.isGone   = hourly
+        tv_b_point.isGone      = hourly
+        link_line.isInvisible  = hourly
         enableBtnNext()
-//        AnimationHelper(this).hourlyAnim(viewOut, imgOut, viewIn, imgIn)
-        link_line.isInvisible = hourly
     }
 
     override fun setTripMode(duration: Int?) {
@@ -528,13 +586,8 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     override fun cancelReview() = closePopUp()
 
     override fun showBadge(show: Boolean) {
-        if (show) {
-            tvEventsCount.isVisible = true
-            navRequests.tvEventsCount.isVisible = true
-        } else {
-            tvEventsCount.isVisible = false
-            navRequests.tvEventsCount.isVisible = false
-        }
+        tvEventsCount.isVisible = show
+        navRequests.tvEventsCount.isVisible = show
     }
 
     override fun setCountEvents(count: Int) {

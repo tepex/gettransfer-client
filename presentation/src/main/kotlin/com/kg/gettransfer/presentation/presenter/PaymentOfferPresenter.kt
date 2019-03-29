@@ -10,7 +10,7 @@ import com.braintreepayments.api.models.PayPalRequest
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
@@ -39,7 +39,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private val paymentInteractor: PaymentInteractor by inject()
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
 
@@ -240,7 +240,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         val beginCheckout = analytics.BeginCheckout(
                 paymentRequest.percentage,
                 currentTransfer?.promoCode,
-                routeInteractor.duration,
+                orderInteractor.duration,
                 selectedPayment,
                 offerType,
                 requestType,

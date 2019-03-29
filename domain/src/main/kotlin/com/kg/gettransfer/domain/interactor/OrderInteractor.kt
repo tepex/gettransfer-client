@@ -7,13 +7,16 @@ import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
+import java.util.*
 
-class RouteInteractor(private val geoRepository: GeoRepository, private val routeRepository: RouteRepository) {
+class OrderInteractor(private val geoRepository: GeoRepository, private val routeRepository: RouteRepository) {
 
-    var from: GTAddress?     = null
-    var to: GTAddress?       = null
-    var hourlyDuration: Int? = null   //nullable to check if transfer is hourly
-    var duration: Int?       = null
+    var from: GTAddress?       = null
+    var to: GTAddress?         = null
+    var hourlyDuration: Int?   = null   //nullable to check if transfer is hourly
+    var duration: Int?         = null
+    var orderStartTime: Date?  = null
+    var orderReturnTime: Date? = null
 
     var noPointPlaces: List<GTAddress> = emptyList()
 

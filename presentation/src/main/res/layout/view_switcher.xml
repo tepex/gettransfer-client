@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+
+              android:background="@drawable/transfer_mode_background"
+              android:padding="@dimen/view_hourly_switcher_padding">
+
+    <TextView
+            android:id="@+id/switch_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/LNG_PER_HOUR"
+            android:layout_gravity="start|center_vertical"/>
+
+    <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_mode_"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:theme="@style/SwitchCompatStyle"
+            android:layout_gravity="end"/>
+
+</LinearLayout>

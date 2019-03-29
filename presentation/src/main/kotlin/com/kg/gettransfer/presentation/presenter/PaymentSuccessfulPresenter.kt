@@ -3,7 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.model.LatLng
 
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.RouteMapper
@@ -18,7 +18,7 @@ import org.koin.standalone.inject
 
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     private val routeMapper: RouteMapper by inject()
 
@@ -36,7 +36,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             else {
                 if (transfer.to != null) {
                     val r = utils.asyncAwait {
-                        routeInteractor
+                        orderInteractor
                             .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.currencyCode)
                     }
                     r.cacheError?.let { viewState.setError(it) }

@@ -51,7 +51,7 @@
         android:id="@+id/tvMarkerFrom"
         android:layout_width="@dimen/views_carrier_trips_info_layout_markers_size"
         android:layout_height="@dimen/views_carrier_trips_info_layout_markers_size"
-        android:background="@drawable/back_circle_marker_driver_filled"
+        android:background="@drawable/back_circle_marker_orange_filled"
         android:gravity="center"
         android:text="@string/transfer_start_sign"
         android:textColor="@color/colorWhite"
@@ -72,7 +72,7 @@
         app:layout_constraintEnd_toEndOf="@+id/tvMarkerFrom"
         app:layout_constraintStart_toStartOf="@+id/tvMarkerFrom"
         app:layout_constraintTop_toBottomOf="@+id/tvMarkerFrom"
-        app:srcCompat="@drawable/a_b_driver" />
+        app:srcCompat="@drawable/a_b_orange" />
 
     <FrameLayout
         android:id="@+id/fl_bottom_point_view"
@@ -87,7 +87,7 @@
             android:id="@+id/tvMarkerTo"
             android:layout_width="@dimen/views_carrier_trips_info_layout_markers_size"
             android:layout_height="@dimen/views_carrier_trips_info_layout_markers_size"
-            android:background="@drawable/back_circle_marker_driver_filled"
+            android:background="@drawable/back_circle_marker_orange_filled"
             android:gravity="center"
             android:layout_gravity="center_vertical"
             android:text="@string/transfer_end_sign"

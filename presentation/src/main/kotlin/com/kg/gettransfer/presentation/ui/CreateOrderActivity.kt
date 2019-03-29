@@ -247,8 +247,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         }, CreateOrderActivity.KEYBOARD_WAIT_DELAY)
     }
 
-
-
     private fun showDatePickerDialog(field: Boolean) {
         val currentDate = presenter.currentDate
         calendar.time = presenter.startDate.date
@@ -326,10 +324,11 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setDateTimeTransfer(dateTimeString: String, isAfterMinHours: Boolean, startField: Boolean) {
-        (if (startField) transfer_date_time_field else transfer_return_date_field.also { showReturnFlight(SHOW) }).let {
-            if (isAfterMinHours) it.field_input.setText(getTextForMinDate())
-            else it.field_input.setText(dateTimeString)
-        }
+        (if (startField) transfer_date_time_field else transfer_return_date_field.also { showReturnFlight(SHOW) })
+                .let {
+                    if (isAfterMinHours) it.field_input.setText(getTextForMinDate())
+                    else it.field_input.setText(dateTimeString)
+                }
     }
 
     override fun setHintForDateTimeTransfer(withReturnWay: Boolean) {
