@@ -10,10 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarGridAdapter
 import com.kg.gettransfer.presentation.adapter.ClickOnDateHandler
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import kotlinx.android.synthetic.main.carrier_trips_calendar_month_fragment.*
+import org.koin.android.ext.android.inject
+import java.lang.UnsupportedOperationException
+import java.time.DayOfWeek
 import java.util.Calendar
 import java.util.Date
 
@@ -32,6 +36,7 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
 
     private var mAdapterCarrierTripsCalendar: CarrierTripsCalendarGridAdapter? = null
     private val cal = Calendar.getInstance()
+    private val systemInteractor: SystemInteractor by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +57,18 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
         val dayValueInCells = ArrayList<Date>()
         val mCal = cal.clone() as Calendar
         mCal.set(Calendar.DAY_OF_MONTH, 1)
-        val firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) - 1
+        println("FIRST_DAY_OF_WEEK = ${systemInteractor.firstDayOfWeek}")
+        val firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) +
+                when(systemInteractor.firstDayOfWeek) {
+                    DayOfWeek.MONDAY.ordinal    -> -1
+                    DayOfWeek.TUESDAY.ordinal   -> -2
+                    DayOfWeek.WEDNESDAY.ordinal -> -3
+                    DayOfWeek.THURSDAY.ordinal  -> +3
+                    DayOfWeek.FRIDAY.ordinal    -> +2
+                    DayOfWeek.SATURDAY.ordinal  -> +1
+                    DayOfWeek.SUNDAY.ordinal    ->  0
+                    else -> throw UnsupportedOperationException()
+                }
         mCal.add(Calendar.DAY_OF_MONTH, -firstDayOfTheMonth)
         var i = 0
         if(layoutDaysOfWeek != null && layoutDaysOfWeek.childCount > 0) layoutDaysOfWeek.removeAllViews()

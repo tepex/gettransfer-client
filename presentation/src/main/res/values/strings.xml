@@ -45,6 +45,7 @@
     <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string>
 
     <string name="share">Share</string>
+    <string name="debug">Debug</string>
     <string name="endpoint">Endpoint</string>
     <string name="logs">Logs</string>
     <string name="LNG_SEARCH">Search</string>
@@ -438,7 +439,8 @@
     <string name="LNG_TRIPS_EMPTY_ACTIVE">you have no active transfers</string>
     <string name="LNG_TRIPS_EMPTY_ALL">you have no transfers</string>
     <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no completed transfers</string>
-    <string name="LNG_LIST"><u>List</u></string>
+    <string name="LNG_CALENDAR">Calendar</string>
+    <string name="LNG_LIST">List</string>
     <string name="LNG_NEW_CHAT_MESSAGE">Write the message</string>
     <string name="LNG_NEW_PASSENGER_CHAT_TITLE">Passenger message</string>
     <string name="LNG_NEW_DRIVER_CHAT_TITLE">Carrier message</string>
@@ -447,6 +449,9 @@
     <string name="LNG_DETAILS_REPEAT_ROUTE">Repeat transfer</string>
     <string name="LNG_SEND_COORDINATES_IN_BACKGROUND">Send coordinates in background</string>
     <string name="LNG_CHAT_WITH">Chat with</string>
+    <string name="LNG_DISTANCE_IN_MILES">Distance in miles</string>
+    <string name="LNG_CALENDAR_MODE">Calendar mode</string>
+    <string name="LNG_FIRST_DAY_OF_WEEK">First day of week</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

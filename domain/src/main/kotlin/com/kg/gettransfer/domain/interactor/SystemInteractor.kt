@@ -85,6 +85,10 @@ class SystemInteractor(
         get() = systemRepository.lastCarrierTripsTypeView
         set(value) { systemRepository.lastCarrierTripsTypeView = value }
 
+    var firstDayOfWeek: Int
+        get() = systemRepository.firstDayOfWeek
+        set(value) { systemRepository.firstDayOfWeek = value }
+
     var isFirstLaunch: Boolean
         get() = systemRepository.isFirstLaunch
         set(value) { systemRepository.isFirstLaunch = value }

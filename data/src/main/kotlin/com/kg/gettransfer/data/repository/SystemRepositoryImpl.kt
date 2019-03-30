@@ -83,6 +83,10 @@ class SystemRepositoryImpl(
         get() = preferencesCache.lastCarrierTripsTypeView
         set(value) { preferencesCache.lastCarrierTripsTypeView = value }
 
+    override var firstDayOfWeek: Int
+        get() = preferencesCache.firstDayOfWeek
+        set(value) { preferencesCache.firstDayOfWeek = value }
+
     override var isFirstLaunch: Boolean
         get() = preferencesCache.isFirstLaunch
         set(value) { preferencesCache.isFirstLaunch = value }

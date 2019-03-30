@@ -115,6 +115,7 @@ val mappersModule = module {
     single { CurrencyMapper() }
     single { DistanceUnitMapper() }
     single { EndpointMapper() }
+    single { DayOfWeekMapper() }
     single { LocaleMapper() }
     single { MoneyMapper() }
     single { OfferMapper() }

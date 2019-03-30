@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
@@ -21,7 +22,9 @@ class CarrierTripsListFragmentPresenter : BasePresenter<CarrierTripsListFragment
 
     private var tripsRVItems: List<CarrierTripsRVItemModel>? = null
 
-    override fun onFirstViewAttach() {
+    @CallSuper
+    override fun attachView(view: CarrierTripsListFragmentView) {
+        super.attachView(view)
         utils.launchSuspend {
             viewState.blockInterface(true)
 

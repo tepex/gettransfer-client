@@ -9,6 +9,7 @@ interface PreferencesCache {
     var userPassword: String
     var lastMode: String
     var lastCarrierTripsTypeView: String
+    var firstDayOfWeek: Int
     var isFirstLaunch: Boolean
     var isOnboardingShowed: Boolean
     var endpoint: EndpointEntity

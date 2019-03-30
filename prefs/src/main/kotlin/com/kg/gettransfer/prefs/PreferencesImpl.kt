@@ -24,6 +24,7 @@ class PreferencesImpl(context: Context,
         @JvmField val USER_PASSWORD       = "user_password"
         @JvmField val LAST_MODE           = "last_mode"
         @JvmField val CARRIER_TYPE_VIEW   = "last_carrier_trips_type_view"
+        @JvmField val FIRST_DAY_OF_WEEK   = "first_day_of_week"
         @JvmField val FIRST_LAUNCH        = "first_launch"
         @JvmField val ONBOARDING          = "onboarding"
         @JvmField val SELECTED_FIELD      = "selected_field"
@@ -112,6 +113,15 @@ class PreferencesImpl(context: Context,
         set(value) {
             with(configsPrefs.edit()){
                 putString(CARRIER_TYPE_VIEW, value)
+                apply()
+            }
+        }
+
+    override var firstDayOfWeek: Int
+        get() = configsPrefs.getInt(FIRST_DAY_OF_WEEK, 0)
+        set(value) {
+            with(configsPrefs.edit()){
+                putInt(FIRST_DAY_OF_WEEK, value)
                 apply()
             }
         }
