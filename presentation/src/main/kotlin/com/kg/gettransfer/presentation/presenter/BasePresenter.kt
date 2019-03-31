@@ -213,8 +213,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         } else {
             with(countEventsInteractor) {
                 mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
-                    if (this[chatBadgeEvent.transferId] != null) {
-                        eventsCount -= this[chatBadgeEvent.transferId]!!
+                    this[chatBadgeEvent.transferId]?.let {
+                        eventsCount -= it
                         remove(chatBadgeEvent.transferId)
                     }
                 }

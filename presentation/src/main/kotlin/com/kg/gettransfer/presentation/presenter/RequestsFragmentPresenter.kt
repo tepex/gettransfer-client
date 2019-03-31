@@ -68,18 +68,19 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>(), Counter
         with(countEventsInteractor) {
             updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
         }
-        if (this.transfers != null) viewState.setRequests(this.transfers!!)
+        this.transfers?.let { viewState.setRequests(it) }
     }
 
     private fun updateEvents(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>) {
-        if(transfers != null) {
-            for (i in 0 until transfers!!.size) {
-                val transfer = transfers!![i]
-                if (mapCountNewEvents[transfer.id] != null) {
-                    val eventsCount = mapCountNewEvents.getValue(transfer.id) - (mapCountViewedOffers[transfer.id] ?: 0)
+        transfers = transfers?.let { transfersList ->
+            for (i in 0 until transfersList.size) {
+                val transfer = transfersList[i]
+                mapCountNewEvents[transfer.id]?.let {
+                    val eventsCount = it - (mapCountViewedOffers[transfer.id] ?: 0)
                     if (eventsCount > 0) transfer.eventsCount = eventsCount
                 }
             }
+            transfersList
         }
     }
 
