@@ -23,6 +23,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		}
 
 	internal var currentCommonRating = 0F
+	internal var currentComment = ""
 
 	internal var hintComment: String = ""
 
@@ -31,6 +32,10 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		viewState.setRatingCommon(currentCommonRating)
 		updateSecondaryRatings()
 		viewState.showProgress(false)
+		if (currentComment.isNotEmpty())
+			viewState.showComment(currentComment)
+		else
+			viewState.showComment(hintComment)
 	}
 
 	fun onClickSend(list: List<ReviewRateModel>, comment: String, commonRating: Float) = utils.launchSuspend {

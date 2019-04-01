@@ -233,7 +233,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             }
         } else
             offer?.let {
-                viewState.showDetailRate(rating, it.id)
+                viewState.showDetailRate(rating, it.id, it.passengerFeedback.orEmpty())
             }
     }
 

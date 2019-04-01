@@ -510,12 +510,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 
-    override fun showDetailRate(tappedRate: Float, offerId: Long) {
+    override fun showDetailRate(tappedRate: Float, offerId: Long, feedback: String) {
         RatingDetailDialogFragment
-            .newInstance(
-                offerId,
-                tappedRate
-            ).show(supportFragmentManager, RATE_DIALOG_TAG)
+            .newInstance(offerId, tappedRate, feedback)
+            .show(supportFragmentManager, RATE_DIALOG_TAG)
     }
 
     override fun askRateInPlayMarket() {
