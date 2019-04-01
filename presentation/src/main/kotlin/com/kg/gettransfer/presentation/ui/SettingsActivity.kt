@@ -38,7 +38,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
-        Utils.convertDpToPixels(this, 8f).toInt().let {
+        Utils.dpToPxInt(this, 8f).let {
             settingsBtnLogout.btnName.setPadding(0, it, 0, 0)
             settingsBtnSupport.btnName.setPadding(0, it, 0, 0)
         }
@@ -123,7 +123,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
         with(settingsLanguage.field_text) {
             text = locale
             setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(this@SettingsActivity, Utils.getLanguageImage(code)), null)
-            compoundDrawablePadding = Utils.convertDpToPixels(this@SettingsActivity, 8f).toInt()
+            compoundDrawablePadding = Utils.dpToPxInt(this@SettingsActivity, 8f)
         }
     }
     /*override fun setDistanceUnit(distanceUnit: String) { tvSelectedDistanceUnits.text = distanceUnit }*/

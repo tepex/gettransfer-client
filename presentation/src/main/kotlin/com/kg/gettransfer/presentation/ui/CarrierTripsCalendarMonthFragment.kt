@@ -58,17 +58,7 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
         val mCal = cal.clone() as Calendar
         mCal.set(Calendar.DAY_OF_MONTH, 1)
         println("FIRST_DAY_OF_WEEK = ${systemInteractor.firstDayOfWeek}")
-        val firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) +
-                when(systemInteractor.firstDayOfWeek) {
-                    DayOfWeek.MONDAY.ordinal    -> -1
-                    DayOfWeek.TUESDAY.ordinal   -> -2
-                    DayOfWeek.WEDNESDAY.ordinal -> -3
-                    DayOfWeek.THURSDAY.ordinal  -> +3
-                    DayOfWeek.FRIDAY.ordinal    -> +2
-                    DayOfWeek.SATURDAY.ordinal  -> +1
-                    DayOfWeek.SUNDAY.ordinal    ->  0
-                    else -> throw UnsupportedOperationException()
-                }
+        val firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) + getOffsetToFirstDayOfWeek()
         mCal.add(Calendar.DAY_OF_MONTH, -firstDayOfTheMonth)
         var i = 0
         if(layoutDaysOfWeek != null && layoutDaysOfWeek.childCount > 0) layoutDaysOfWeek.removeAllViews()
@@ -91,6 +81,18 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
         mAdapterCarrierTripsCalendar = CarrierTripsCalendarGridAdapter(context!!, dayValueInCells, selectedDate, cal, calendarItems, listener)
         gridViewCalendar?.adapter = mAdapterCarrierTripsCalendar
     }
+
+    private fun getOffsetToFirstDayOfWeek() =
+            when(systemInteractor.firstDayOfWeek) {
+                DayOfWeek.MONDAY.ordinal    -> -1
+                DayOfWeek.TUESDAY.ordinal   -> -2
+                DayOfWeek.WEDNESDAY.ordinal -> -3
+                DayOfWeek.THURSDAY.ordinal  -> +3
+                DayOfWeek.FRIDAY.ordinal    -> +2
+                DayOfWeek.SATURDAY.ordinal  -> +1
+                DayOfWeek.SUNDAY.ordinal    ->  0
+                else -> throw UnsupportedOperationException()
+            }
 
     fun selectDate(selectedDate: String){
         mAdapterCarrierTripsCalendar!!.selectDate(selectedDate)

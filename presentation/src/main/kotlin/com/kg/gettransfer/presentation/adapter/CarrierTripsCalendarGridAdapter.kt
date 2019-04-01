@@ -84,7 +84,7 @@ class CarrierTripsCalendarGridAdapter(context: Context,
 
     private fun setIndicatorWidth(dp: Float, indicatorView: View){
         val lp = indicatorView.layoutParams
-        lp.width = Utils.convertDpToPixels(context, dp).toInt()
+        lp.width = Utils.dpToPxInt(context, dp)
         indicatorView.layoutParams = lp
         indicatorView.isVisible = true
     }
