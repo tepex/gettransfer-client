@@ -196,7 +196,20 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     override fun onNewOfferEvent(offer: Offer) {
         onNewOffer(offer.also {
             it.vehicle.photos = it.vehicle.photos.map { photo -> "${systemInteractor.endpoint.url}$photo" }
-            increaseEventsOffersCounter(it.transferId)
+            utils.launchSuspend {
+                val result = utils.asyncAwait { offerInteractor.getOffers(offer.transferId, true) }
+                if (result.model.find { offerCached -> offerCached.id == offer.id } != null) {
+                    countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
+                        countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
+                            if (countNewOffers == countViewedOffers && countViewedOffers > 0) {
+                                decreaseViewedOffersCounter(offer.transferId)
+                            }
+                        }
+                    }
+                } else {
+                    increaseEventsOffersCounter(it.transferId)
+                }
+            }
         })
     }
 
@@ -249,10 +262,16 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 mapCountNewOffers = increaseMapCounter(transferId, mapCountNewOffers)
             }
 
-    protected fun increaseViewedOffersCounter(transferId: Long, count: Int) =
+    protected fun increaseViewedOffersCounter(transferId: Long, plusCount: Int) =
             with(countEventsInteractor) {
-                eventsCount -= count
-                mapCountViewedOffers = increaseMapCounter(transferId, mapCountViewedOffers, count)
+                eventsCount -= plusCount
+                mapCountViewedOffers = increaseMapCounter(transferId, mapCountViewedOffers, null, plusCount)
+            }
+
+    private fun decreaseViewedOffersCounter(transferId: Long) =
+            with(countEventsInteractor) {
+                eventsCount += 1
+                mapCountViewedOffers = decreaseMapCounter(transferId, mapCountViewedOffers)
             }
 
     private fun increaseEventsMessagesCounter(transferId: Long, count: Int) =
@@ -266,9 +285,9 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 mapCountNewMessages = decreaseMapCounter(transferId, mapCountNewMessages)
             }
 
-    private fun increaseMapCounter(transferId: Long, map: Map<Long, Int>, count: Int? = null)
+    private fun increaseMapCounter(transferId: Long, map: Map<Long, Int>, count: Int? = null, plussedCount: Int? = null)
             = map.toMutableMap().apply {
-                put(transferId, count ?: map[transferId]?.plus(1) ?: 1)
+                put(transferId, count ?: map[transferId]?.plus(plussedCount ?: 1) ?: 1)
             }
 
     private fun decreaseMapCounter(transferId: Long, map: Map<Long, Int>)
