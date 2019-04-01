@@ -76,6 +76,8 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
             window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
         }
 
+        viewNetworkNotAvailable = textNetworkNotAvailable
+
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_TRIPS, false, true)
         drawer = drawerLayout as DrawerLayout
         toggle = ActionBarDrawerToggle(this, drawer, toolbar as Toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
