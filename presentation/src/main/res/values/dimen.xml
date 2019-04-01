@@ -719,4 +719,18 @@
 	<dimen name="margin24">24dp</dimen>
 	<dimen name="margin18">18dp</dimen>
 
+
+	<!--new settings-->
+	<dimen name="settings_field_text_size">17sp</dimen>
+	<dimen name="settings_field_height">64dp</dimen>
+	<dimen name="settings_field_title_margin_start">16dp</dimen>
+	<dimen name="settings_field_layout_btns_margin_end">16dp</dimen>
+	<dimen name="settings_field_text_margin_start_end">12dp</dimen>
+	<dimen name="activity_settings_debug_title_text_size">15sp</dimen>
+	<dimen name="activity_settings_debug_title_margin_start">16dp</dimen>
+	<dimen name="activity_settings_debug_title_margin_bottom">8dp</dimen>
+	<dimen name="activity_settings_layout_debug_margin_top">32dp</dimen>
+	<dimen name="activity_settings_layout_btns_margin_bottom">24dp</dimen>
+	<dimen name="activity_settings_padding_bottom">150dp</dimen>
+
 </resources>

@@ -1,7 +1,15 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.eventListeners.SystemEventListener
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.eventListeners.SocketEventListener
+
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.PushTokenType
+import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.MobileConfig
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
@@ -77,6 +85,10 @@ class SystemInteractor(
         get() = systemRepository.lastCarrierTripsTypeView
         set(value) { systemRepository.lastCarrierTripsTypeView = value }
 
+    var firstDayOfWeek: Int
+        get() = systemRepository.firstDayOfWeek
+        set(value) { systemRepository.firstDayOfWeek = value }
+
     var isFirstLaunch: Boolean
         get() = systemRepository.isFirstLaunch
         set(value) { systemRepository.isFirstLaunch = value }
@@ -111,14 +123,6 @@ class SystemInteractor(
     var distanceUnit: DistanceUnit
         get() = account.distanceUnit
         set(value) { account.distanceUnit = value }
-
-    var eventsCount: Int
-        get() = systemRepository.eventsCount
-        set(value) {systemRepository.eventsCount = value}
-
-    var transferIds: List<Long>
-        get() = systemRepository.transferIds
-        set(value) { systemRepository.transferIds = value }
 
     suspend fun coldStart() = systemRepository.coldStart()
 
@@ -159,8 +163,8 @@ class SystemInteractor(
 
     suspend fun getMyLocation() = systemRepository.getMyLocation()
 
-    fun addListener(listener: SystemEventListener)    { systemRepository.addListener(listener) }
-    fun removeListener(listener: SystemEventListener) { systemRepository.removeListener(listener) }
+    fun addSocketListener(listener: SocketEventListener)    { systemRepository.addSocketListener(listener) }
+    fun removeSocketListener(listener: SocketEventListener) { systemRepository.removeSocketListener(listener) }
 
     companion object {
         private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )

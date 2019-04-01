@@ -56,7 +56,8 @@ data class Transfer(
     val editableFields: List<String>?, /* not used */
     val airlineCard: String?,
     val paymentPercentages: List<Int>?,
-    val unreadMessagesCount: Int
+    val unreadMessagesCount: Int,
+    var showOfferInfo: Boolean
 ) : Serializable, Entity() {
 
     fun checkStatusCategory() = when (status) {

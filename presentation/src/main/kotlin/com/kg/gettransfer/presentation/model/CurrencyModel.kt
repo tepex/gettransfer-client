@@ -12,7 +12,7 @@ class CurrencyModel(val delegate: Currency) : CharSequence {
             "THB" -> "฿"
             else  -> delegate.symbol
         }
-    var name = "${delegate.displayName} ($symbol)"
+    var name = "${delegate.displayName} $symbol"
     override val length = name.length
 
     override fun toString(): String = name

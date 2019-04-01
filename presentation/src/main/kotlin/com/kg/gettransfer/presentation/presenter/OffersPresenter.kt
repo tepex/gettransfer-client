@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
+
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.ApiException
@@ -196,20 +197,12 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private fun processOffers() {
         sortOffers()
-        decreaseCountEvents()
+        with (countEventsInteractor) {
+            val countNewOffers = (mapCountNewOffers[transferId] ?: 0) - (mapCountViewedOffers[transferId] ?: 0)
+            if (countNewOffers > 0) increaseViewedOffersCounter(transferId, countNewOffers)
+        }
         viewState.setOffers(offers)
         viewState.setSortState(sortCategory, sortHigherToLower)
-    }
-
-    private fun decreaseCountEvents() {
-        var transferIds = systemInteractor.transferIds
-        if (transferIds.isNotEmpty()) {
-            transferIds = transferIds.toMutableList().apply { removeAll { (it == transferId) } }
-            val seenOffers = systemInteractor.transferIds.size - transferIds.size
-            val eventsCount = systemInteractor.eventsCount
-            systemInteractor.eventsCount = eventsCount - seenOffers
-            systemInteractor.transferIds = transferIds
-        }
     }
 
     private fun sortOffers() {

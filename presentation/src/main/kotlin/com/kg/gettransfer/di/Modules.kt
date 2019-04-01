@@ -102,6 +102,7 @@ val domainModule = module {
     single { ReviewInteractor(get()) }
     single { ChatInteractor(get()) }
     single { CoordinateInteractor(get()) }
+    single { CountEventsInteractor(get()) }
 }
 
 val mappersModule = module {
@@ -114,6 +115,7 @@ val mappersModule = module {
     single { CurrencyMapper() }
     single { DistanceUnitMapper() }
     single { EndpointMapper() }
+    single { DayOfWeekMapper() }
     single { LocaleMapper() }
     single { MoneyMapper() }
     single { OfferMapper() }

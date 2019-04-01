@@ -11,6 +11,7 @@ import com.kg.gettransfer.domain.model.sortDescendant
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterActive
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
+import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -26,27 +27,33 @@ import timber.log.Timber
 
 @InjectViewState
 class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation
-                                tt: Int) : BasePresenter<RequestsFragmentView>() {
+                                tt: Int) : BasePresenter<RequestsFragmentView>(), CounterEventListener {
     @RequestsView.TransferTypeAnnotation
     var transferType = tt
 
-    private lateinit var transferIds: List<Long>
+    private var transfers: List<TransferModel>? = null
 
     @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
         getTransfers()
-        transferIds = systemInteractor.transferIds
+        countEventsInteractor.addCounterListener(this)
+    }
+
+    @CallSuper
+    override fun detachView(view: RequestsFragmentView?) {
+        super.detachView(view)
+        countEventsInteractor.removeCounterListener(this)
     }
 
     private fun getTransfers() {
         utils.launchSuspend {
             viewState.blockInterface(true)
 
-            val result = when(transferType) {
-                TRANSFER_ACTIVE    -> fetchData { transferInteractor.getTransfersActive() }
-                TRANSFER_ARCHIVE -> fetchData { transferInteractor.getTransfersArchive() }
-                else                                -> fetchData { transferInteractor.getTransfersActive() }
+            val result = when(categoryName) {
+                RequestsActivity.CATEGORY_ACTIVE    -> utils.asyncAwait { transferInteractor.getActiveTransfers() }
+                RequestsActivity.CATEGORY_COMPLETED -> utils.asyncAwait { transferInteractor.getCompletedTransfers() }
+                else                                -> utils.asyncAwait { transferInteractor.getArchivedTransfers() }
             }
 
             result?.let { showTransfers(it) }
@@ -58,10 +65,24 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation
 
         val filteredSorted = transfers.sortedByDescending {
             it.dateToLocal
+        }.map { transferMapper.toView(it) }
+        with(countEventsInteractor) {
+            updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
         }
+        this.transfers?.let { viewState.setRequests(it) }
+    }
 
-        viewState.setRequests(filteredSorted.map { transferMapper.toView(it) })
-        viewState.setCountEvents(transferIds)
+    private fun updateEvents(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>) {
+        transfers = transfers?.let { transfersList ->
+            for (i in 0 until transfersList.size) {
+                val transfer = transfersList[i]
+                mapCountNewEvents[transfer.id]?.let {
+                    val eventsCount = it - (mapCountViewedOffers[transfer.id] ?: 0)
+                    if (eventsCount > 0) transfer.eventsCount = eventsCount
+                }
+            }
+            transfersList
+        }
     }
 
     fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int) {
@@ -73,8 +94,12 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation
         }
     }
 
-    override fun onNewOffer(offer: Offer): OfferModel {
-        utils.launchSuspend{ viewState.setCountEvents(transferIds) }
-        return super.onNewOffer(offer)
+    override fun updateCounter() {
+        utils.launchSuspend{
+            with(countEventsInteractor) {
+                updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
+            }
+        }
+        viewState.notifyData()
     }
 }

@@ -8,7 +8,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
-import com.kg.gettransfer.domain.eventListeners.SystemEventListener
+import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
@@ -46,10 +46,11 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
+
 import java.util.Calendar
 
 @InjectViewState
-class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SystemEventListener {
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SocketEventListener {
     private val routeInteractor: RouteInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
     private val coordinateInteractor: CoordinateInteractor by inject()
@@ -78,7 +79,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
-        systemInteractor.addListener(this)
+        systemInteractor.addSocketListener(this)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
            fetchData { transferInteractor.getTransfer(transferId) }
@@ -113,8 +114,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                             val offer = it.first()
                             offerModel = offerMapper.toView(offer)
                             reviewInteractor.offerIdForReview = offer.id
-                            if (allowOfferInfo(transferModel))
-                                viewState.setOffer(offerModel, transferModel.countChilds)
+                            if (transferModel.showOfferInfo) viewState.setOffer(offerModel, transferModel.countChilds)
                             offer
                         }
                         else null
@@ -140,26 +140,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         super.detachView(view)
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
         isCameraUpdatedForCoordinates = false
-        systemInteractor.removeListener(this)
-    }
-
-    private fun allowOfferInfo(transfer: TransferModel): Boolean {
-        if(transfer.status != Transfer.Status.NEW &&
-                transfer.status != Transfer.Status.CANCELED &&
-                transfer.status != Transfer.Status.OUTDATED) {
-            val waitDetailsDate = (transfer.dateTimeReturn ?: transfer.dateTime).let {
-                val calendar = Calendar.getInstance()
-                calendar.time = it
-                calendar.apply {
-                    add(Calendar.MINUTE, transfer.time ?: transfer.duration?.let { dur -> Utils.convertHoursToMinutes(dur) } ?: 0)
-                    add(Calendar.MINUTE, Utils.convertHoursToMinutes(24))
-                }
-                calendar.time
-            }
-            if (transfer.status == Transfer.Status.PERFORMED ||
-                    waitDetailsDate.after(Calendar.getInstance().time)) return true
-        }
-        return false
+        systemInteractor.removeSocketListener(this)
     }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }

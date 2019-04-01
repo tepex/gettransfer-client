@@ -3,17 +3,18 @@ package com.kg.gettransfer.presentation.presenter
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
+import com.kg.gettransfer.BuildConfig
 
-import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
-import com.kg.gettransfer.presentation.mapper.DistanceUnitMapper
+import com.kg.gettransfer.presentation.mapper.DayOfWeekMapper
 import com.kg.gettransfer.presentation.mapper.EndpointMapper
 import com.kg.gettransfer.presentation.mapper.LocaleMapper
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.DistanceUnitModel
+import com.kg.gettransfer.presentation.model.DayOfWeekModel
 import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView
@@ -24,18 +25,22 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.get
+import java.time.DayOfWeek
 import java.util.Locale
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var currencies: List<CurrencyModel>
     private lateinit var locales: List<LocaleModel>
-    private lateinit var distanceUnits: List<DistanceUnitModel>
+    //private lateinit var distanceUnits: List<DistanceUnitModel>
     private lateinit var endpoints: List<EndpointModel>
+    private lateinit var calendarModes: List<String>
+    private lateinit var daysOfWeek: List<DayOfWeekModel>
 
     private val localeMapper       = get<LocaleMapper>()
     private val currencyMapper     = get<CurrencyMapper>()
-    private val distanceUnitMapper = get<DistanceUnitMapper>()
+    //private val distanceUnitMapper = get<DistanceUnitMapper>()
+    private val dayOfWeekMapper    = get<DayOfWeekMapper>()
     private val endpointMapper     = get<EndpointMapper>()
     private val reviewInteractor   = get<ReviewInteractor>()
 
@@ -56,24 +61,47 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     override fun attachView(view: SettingsView) {
         super.attachView(view)
         if (restart) initConfigs()
+        initGeneralSettings()
+        if (isDriverMode) { initCarrierSettings() }
+        if (BuildConfig.FLAVOR == "dev") { initDebugSettings() }
+    }
+
+    private fun initGeneralSettings(){
+        viewState.initGeneralSettingsLayout()
 
         viewState.setCurrencies(currencies)
-        viewState.setLocales(locales)
-        viewState.setDistanceUnits(distanceUnits)
-
-        viewState.setEndpoints(endpoints)
-
-        val locale = systemInteractor.locale
-        val localeModel = locales.find { it.delegate.language == locale.getLanguage() }
-        viewState.setLocale(localeModel?.name ?: "")
-
         val currency = systemInteractor.currency
         val currencyModel = currencies.find { it.delegate == currency }
         viewState.setCurrency(currencyModel?.name ?: "")
-        viewState.setDistanceUnit(systemInteractor.distanceUnit.name)
 
-        viewState.setEndpoint(endpointMapper.toView(systemInteractor.endpoint))
+        viewState.setLocales(locales)
+        val locale = systemInteractor.locale
+        val localeModel = locales.find { it.delegate.language == locale.language }
+        viewState.setLocale(localeModel?.name ?: "", locale.language)
+
+        viewState.setDistanceUnit(systemInteractor.distanceUnit == DistanceUnit.mi)
+
         viewState.setLogoutButtonEnabled(systemInteractor.account.user.loggedIn)
+    }
+
+    private fun initCarrierSettings(){
+        viewState.initCarrierLayout()
+
+        viewState.setCalendarModes(calendarModes)
+        if (systemInteractor.lastCarrierTripsTypeView.isEmpty()) {
+            systemInteractor.lastCarrierTripsTypeView = Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR
+        }
+        viewState.setCalendarMode(systemInteractor.lastCarrierTripsTypeView)
+
+        viewState.setDaysOfWeek(daysOfWeek)
+        viewState.setFirstDayOfWeek(daysOfWeek[systemInteractor.firstDayOfWeek].name)
+    }
+
+    private fun initDebugSettings() {
+        viewState.initDebugLayout()
+
+        viewState.setEndpoints(endpoints)
+        viewState.setEndpoint(endpointMapper.toView(systemInteractor.endpoint))
     }
 
     fun changeCurrency(selected: Int) {
@@ -88,7 +116,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         localeWasChanged = true
         val localeModel = locales.get(selected)
         systemInteractor.locale = localeModel.delegate
-        viewState.setLocale(localeModel.name)
+        viewState.setLocale(localeModel.name, localeModel.locale)
         if (systemInteractor.account.user.loggedIn) putAccount()
         else saveNoAccount()
         logEvent(Analytics.LANGUAGE_PARAM, localeModel.name)
@@ -96,8 +124,21 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         Locale.setDefault(systemInteractor.locale)
         initConfigs()
         viewState.setCurrencies(currencies)
+        viewState.setCalendarModes(calendarModes)
 
         return systemInteractor.locale
+    }
+
+    fun changeFirstDayOfWeek(selected: Int) {
+        with(daysOfWeek[selected]) {
+            systemInteractor.firstDayOfWeek = delegate.ordinal
+            viewState.setFirstDayOfWeek(name)
+        }
+    }
+
+    fun changeCalendarMode(selected: String) {
+        systemInteractor.lastCarrierTripsTypeView = selected
+        viewState.setCalendarMode(selected)
     }
 
     private fun putAccount() = utils.launchSuspend {
@@ -113,13 +154,13 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         if (result.error == null) viewState.restartApp()
     }
 
-    fun changeDistanceUnit(selected: Int) {
+    /*fun changeDistanceUnit(selected: Int) {
         val distanceUnit = distanceUnits.get(selected)
         systemInteractor.distanceUnit = distanceUnit.delegate
         viewState.setDistanceUnit(distanceUnit.name)
         saveAccount()
         logEvent(Analytics.UNITS_PARAM, distanceUnit.name)
-    }
+    }*/
 
     fun changeEndpoint(selected: Int) {
         val endpoint = endpoints.get(selected)
@@ -146,6 +187,14 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             router.exit()
         }
         logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
+    }
+
+    fun onDistanceUnitSwitched(isChecked: Boolean) {
+        systemInteractor.distanceUnit = when (isChecked) {
+            true  -> DistanceUnit.mi
+            false -> DistanceUnit.km
+        }.apply { logEvent(Analytics.UNITS_PARAM, name) }
+        saveAccount()
     }
 
     fun onLogsClicked() = router.navigateTo(Screens.ShareLogs)
@@ -178,7 +227,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             }
         }
         locales = systemInteractor.locales.map { localeMapper.toView(it) }
-        distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
+        //distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
+        calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
+        daysOfWeek = DayOfWeek.values().toList().map { dayOfWeekMapper.toView(it) }
         restart = false
     }
 

@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain.eventListeners
 
-interface SystemEventListener {
+interface SocketEventListener {
     fun onSocketConnected()
     fun onSocketDisconnected()
 }

@@ -33,6 +33,7 @@ import com.kg.gettransfer.presentation.view.RequestsView
 import kotlinx.android.synthetic.main.fragment_requests.*
 
 import timber.log.Timber
+import android.support.v7.widget.RecyclerView
 
 /**
  * @TODO: Выделить BaseFragment
@@ -98,9 +99,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     override fun setError(e: DatabaseException) =
             (activity as BaseView).setError(e)
 
-    override fun setCountEvents(transferIds: List<Long>) {
-        if (transferIds.isNotEmpty()) {
-            rvAdapter.updateEvents(transferIds)
-        }
+    override fun notifyData() {
+        activity?.runOnUiThread { rvAdapter.notifyDataSetChanged() }
     }
 }

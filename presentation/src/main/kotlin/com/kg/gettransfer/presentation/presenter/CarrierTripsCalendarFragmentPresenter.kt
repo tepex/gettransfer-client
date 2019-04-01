@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.model.CarrierTripBase
@@ -19,7 +20,9 @@ class CarrierTripsCalendarFragmentPresenter : BasePresenter<CarrierTripsCalendar
 
     var selectedDate = SystemUtils.formatDateWithoutTime(Calendar.getInstance().time)
 
-    override fun onFirstViewAttach() {
+    @CallSuper
+    override fun attachView(view: CarrierTripsCalendarFragmentView) {
+        super.attachView(view)
         utils.launchSuspend {
             viewState.blockInterface(true)
             fetchData { carrierTripInteractor.getCarrierTrips() }

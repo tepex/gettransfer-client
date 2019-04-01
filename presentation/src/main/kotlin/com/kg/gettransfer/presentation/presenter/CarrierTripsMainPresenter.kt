@@ -19,7 +19,9 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
         systemInteractor.lastMode = Screens.CARRIER_MODE
         checkLoggedIn()
         viewState.initNavigation(profileMapper.toView(systemInteractor.account.user.profile))
-        changeTypeView(systemInteractor.lastCarrierTripsTypeView)
+        if (systemInteractor.lastCarrierTripsTypeView.isEmpty()) {
+            systemInteractor.lastCarrierTripsTypeView = Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR
+        }
         checkBackGroundCoordinateAcceptance()
     }
 
@@ -27,6 +29,7 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     override fun attachView(view: CarrierTripsMainView) {
         super.attachView(view)
         checkLoggedIn()
+        changeTypeView(systemInteractor.lastCarrierTripsTypeView)
     }
 
     @CallSuper

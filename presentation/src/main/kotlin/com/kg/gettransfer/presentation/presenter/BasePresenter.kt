@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.util.Log
 
 import com.arellomobile.mvp.MvpPresenter
 
@@ -13,11 +12,7 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.eventListeners.ChatBadgeEventListener
 import com.kg.gettransfer.domain.eventListeners.OfferEventListener
-import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
-import com.kg.gettransfer.domain.interactor.ChatInteractor
-import com.kg.gettransfer.domain.interactor.OfferInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.ChatBadgeEvent
 import com.kg.gettransfer.domain.model.Offer
@@ -34,7 +29,6 @@ import com.kg.gettransfer.utilities.GTNotificationManager
 
 import kotlinx.coroutines.Job
 
-import kotlinx.serialization.json.JSON
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 
@@ -45,7 +39,6 @@ import org.koin.standalone.KoinComponent
 import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
-import kotlin.reflect.jvm.reflect
 
 open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener, ChatBadgeEventListener, KoinComponent {
     protected val compositeDisposable = Job()
@@ -61,6 +54,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val transferInteractor: TransferInteractor by inject()
     protected val carrierTripInteractor: CarrierTripInteractor by inject()
     protected val chatInteractor: ChatInteractor by inject()
+    protected val countEventsInteractor: CountEventsInteractor by inject()
 
     //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
@@ -202,7 +196,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     override fun onNewOfferEvent(offer: Offer) {
         onNewOffer(offer.also {
             it.vehicle.photos = it.vehicle.photos.map { photo -> "${systemInteractor.endpoint.url}$photo" }
-            increaseEventsCounter(it.transferId)
+            increaseEventsOffersCounter(it.transferId)
         })
     }
 
@@ -210,11 +204,20 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         if(!chatBadgeEvent.clearBadge) {
             utils.launchSuspend {
                 val result = utils.asyncAwait { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
-                utils.asyncAwait { offerInteractor.getOffers(chatBadgeEvent.transferId) }
+                increaseEventsMessagesCounter(chatBadgeEvent.transferId, result.model.unreadMessagesCount)
                 notificationManager.showNewMessageNotification(
                         chatBadgeEvent.transferId,
                         result.model.unreadMessagesCount,
                         systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) < 0)
+            }
+        } else {
+            with(countEventsInteractor) {
+                mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
+                    this[chatBadgeEvent.transferId]?.let {
+                        eventsCount -= it
+                        remove(chatBadgeEvent.transferId)
+                    }
+                }
             }
         }
     }
@@ -240,10 +243,43 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
 
     fun openSocketConnection() { systemInteractor.openSocketConnection() }
 
-    private fun increaseEventsCounter(transferId: Long) =
-            with(systemInteractor) {
-                eventsCount++
-                transferIds = transferIds.toMutableList().apply { add(transferId) }
+    private fun increaseEventsOffersCounter(transferId: Long) =
+            with(countEventsInteractor) {
+                eventsCount += 1
+                mapCountNewOffers = increaseMapCounter(transferId, mapCountNewOffers)
+            }
+
+    protected fun increaseViewedOffersCounter(transferId: Long, count: Int) =
+            with(countEventsInteractor) {
+                eventsCount -= count
+                mapCountViewedOffers = increaseMapCounter(transferId, mapCountViewedOffers, count)
+            }
+
+    private fun increaseEventsMessagesCounter(transferId: Long, count: Int) =
+            with(countEventsInteractor) {
+                eventsCount = eventsCount + count - (mapCountNewMessages[transferId] ?: 0)
+                mapCountNewMessages = increaseMapCounter(transferId, mapCountNewMessages, count)
+            }
+
+    protected fun decreaseEventsMessagesCounter(transferId: Long) =
+            with(countEventsInteractor) {
+                mapCountNewMessages = decreaseMapCounter(transferId, mapCountNewMessages)
+            }
+
+    private fun increaseMapCounter(transferId: Long, map: Map<Long, Int>, count: Int? = null)
+            = map.toMutableMap().apply {
+                put(transferId, count ?: map[transferId]?.plus(1) ?: 1)
+            }
+
+    private fun decreaseMapCounter(transferId: Long, map: Map<Long, Int>)
+            = map.toMutableMap().apply {
+                if (this[transferId] != null) {
+                    if (map.getValue(transferId) > 1) {
+                        put(transferId, map.getValue(transferId) - 1)
+                    } else {
+                        remove(transferId)
+                    }
+                }
             }
 
     fun onDriverModeExit() =

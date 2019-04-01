@@ -1,6 +1,8 @@
 package com.kg.gettransfer.prefs
 
 import android.content.Context
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
@@ -9,34 +11,37 @@ import com.kg.gettransfer.domain.repository.CarrierTripRepository.Companion.BG_C
 
 import kotlinx.serialization.list
 import kotlinx.serialization.json.JSON
-import kotlinx.serialization.serializer
 
 class PreferencesImpl(context: Context,
                       override val endpoints: List<EndpointEntity>,
                       private val encryptPass: EncryptPass): PreferencesCache {
     companion object {
-        @JvmField val INVALID_TOKEN     = "invalid_token"
-        @JvmField val ACCESS_TOKEN      = "token"
-        @JvmField val INVALID_EMAIL     = ""
-        @JvmField val USER_EMAIL        = "user_email"
-        @JvmField val INVALID_PASSWORD  = ""
-        @JvmField val USER_PASSWORD     = "user_password"
-        @JvmField val LAST_MODE         = "last_mode"
-        @JvmField val CARRIER_TYPE_VIEW = "last_carrier_trips_type_view"
-        @JvmField val FIRST_LAUNCH      = "first_launch"
-        @JvmField val ONBOARDING        = "onboarding"
-        @JvmField val SELECTED_FIELD    = "selected_field"
-        @JvmField val ENDPOINT          = "endpoint"
-        @JvmField val ADDRESS_HISTORY   = "history"
-        @JvmField val APP_ENTERS_COUNT  = "enters_count"
-        @JvmField val EVENTS_COUNT      = "events_count"
-        @JvmField val TRANSFER_IDS      = "transfer_ids"
-        @JvmField val DRIVER_IN_BG      = "back_ground_coordinates"
-        @JvmField val OFFERS_VIEW       = "offers_view"
+        @JvmField val INVALID_TOKEN       = "invalid_token"
+        @JvmField val ACCESS_TOKEN        = "token"
+        @JvmField val INVALID_EMAIL       = ""
+        @JvmField val USER_EMAIL          = "user_email"
+        @JvmField val INVALID_PASSWORD    = ""
+        @JvmField val USER_PASSWORD       = "user_password"
+        @JvmField val LAST_MODE           = "last_mode"
+        @JvmField val CARRIER_TYPE_VIEW   = "last_carrier_trips_type_view"
+        @JvmField val FIRST_DAY_OF_WEEK   = "first_day_of_week"
+        @JvmField val FIRST_LAUNCH        = "first_launch"
+        @JvmField val ONBOARDING          = "onboarding"
+        @JvmField val SELECTED_FIELD      = "selected_field"
+        @JvmField val ENDPOINT            = "endpoint"
+        @JvmField val ADDRESS_HISTORY     = "history"
+        @JvmField val APP_ENTERS_COUNT    = "enters_count"
 
-        const val FIRST_ACCESS         = 0
-        const val IMMUTABLE            = -1   // user did rate app
-              var counterUpdated       = false
+        @JvmField val MAP_NEW_OFFERS      = "map_new_offers"
+        @JvmField val MAP_NEW_MESSAGES    = "map_new_messages"
+        @JvmField val MAP_VIEWED_MESSAGES = "map_viewed_messages"
+        @JvmField val EVENTS_COUNT        = "count_new_offers"
+        @JvmField val DRIVER_IN_BG        = "back_ground_coordinates"
+        @JvmField val OFFERS_VIEW         = "offers_view"
+
+        const val FIRST_ACCESS   = 0
+        const val IMMUTABLE      = -1   // user did rate app
+              var counterUpdated = false
     }
     
     private val listeners = mutableSetOf<PreferencesListener>()
@@ -48,6 +53,8 @@ class PreferencesImpl(context: Context,
     private var _userEmail    = INVALID_EMAIL
     private var _userPassword = INVALID_PASSWORD
     private var _endpoint: EndpointEntity? = null
+
+    inline fun <reified T> genericType() = object: TypeToken<T>() {}.type
 
     override var accessToken: String
         get() {
@@ -106,6 +113,15 @@ class PreferencesImpl(context: Context,
         set(value) {
             with(configsPrefs.edit()){
                 putString(CARRIER_TYPE_VIEW, value)
+                apply()
+            }
+        }
+
+    override var firstDayOfWeek: Int
+        get() = configsPrefs.getInt(FIRST_DAY_OF_WEEK, 0)
+        set(value) {
+            with(configsPrefs.edit()){
+                putInt(FIRST_DAY_OF_WEEK, value)
                 apply()
             }
         }
@@ -185,26 +201,33 @@ class PreferencesImpl(context: Context,
 
         }
 
+    override var mapCountNewOffers: Map<Long, Int>
+        get() = getMap(MAP_NEW_OFFERS)
+        set(value) { setMap(value, MAP_NEW_OFFERS) }
+
+    override var mapCountNewMessages: Map<Long, Int>
+        get() = getMap(MAP_NEW_MESSAGES)
+        set(value) { setMap(value, MAP_NEW_MESSAGES) }
+
+    override var mapCountViewedOffers: Map<Long, Int>
+        get() = getMap(MAP_VIEWED_MESSAGES)
+        set(value) { setMap(value, MAP_VIEWED_MESSAGES) }
+
     override var eventsCount: Int
         get() = configsPrefs.getInt(EVENTS_COUNT, 0)
-        set(value) {
-            with(configsPrefs.edit()) {
-                putInt(EVENTS_COUNT, value)
-                apply()
-            }
-        }
+        set(value) { configsPrefs.edit().putInt(EVENTS_COUNT, value).apply() }
 
-    override var transferIds: List<Long>
-        get() {
-            val json = configsPrefs.getString(TRANSFER_IDS, null)
-            return if (json != null) JSON.parse(Long.serializer().list, json) else emptyList()
+    private fun getMap(key: String): Map<Long, Int> {
+        val json = configsPrefs.getString(key, null)
+        return if (json != null) Gson().fromJson(json, genericType<Map<Long, Int>>()) else emptyMap()
+    }
+
+    private fun setMap(value: Map<Long, Int>, key: String) {
+        with(configsPrefs.edit()) {
+            putString(key, Gson().toJson(value))
+            apply()
         }
-        set(value) {
-            with(configsPrefs.edit()) {
-                putString(TRANSFER_IDS, JSON.stringify(Long.serializer().list, value))
-                apply()
-            }
-        }
+    }
 
     override fun logout() {
         _accessToken  = INVALID_TOKEN

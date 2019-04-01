@@ -31,10 +31,8 @@ internal object SystemUtils : KoinComponent {
 
     fun formatDistance(context: Context, _distance: Int?, withDistanceText: Boolean): String {
         if (_distance == null) return ""
-        val du = systemInteractor.distanceUnit
-        val distance = if(du == DistanceUnit.mi) DistanceUnit.km2Mi(_distance) else _distance
-        return if (withDistanceText) context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $distance ").plus(du.name)
-        else distance.toString().plus(" ${du.name}")
+        return if (withDistanceText) context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $_distance ").plus(systemInteractor.distanceUnit.name)
+        else _distance.toString().plus(" ${systemInteractor.distanceUnit.name}")
     }
 
     fun formatMessageDateTimePattern(date: Date) = getFormattedDate(MESSAGE_DATE_TIME_PATTERN, date)

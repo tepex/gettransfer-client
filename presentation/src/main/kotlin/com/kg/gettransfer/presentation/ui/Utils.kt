@@ -139,12 +139,27 @@ object Utils : KoinComponent {
         listener: (Int) -> Unit
     ) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
 
-    fun setDistanceUnitsDialogListener(
+    /*fun setDistanceUnitsDialogListener(
         context: Context,
         view: View,
         items: List<CharSequence>,
         listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_DISTANCE_UNIT, items, listener) }
+    ) { setModelsDialogListener(context, view, R.string.LNG_DISTANCE_UNIT, items, listener) }*/
+
+    fun setFirstDayOfWeekDialogListener(
+            context: Context,
+            view: View,
+            items: List<CharSequence>,
+            listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, R.string.LNG_FIRST_DAY_OF_WEEK, items, listener) }
+
+    fun setCalendarModesDialogListener(
+            context: Context,
+            view: View,
+            items: List<CharSequence>,
+            @StringRes titleId: Int,
+            listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, titleId, items, listener) }
 
     fun setEndpointsDialogListener(
         context: Context,

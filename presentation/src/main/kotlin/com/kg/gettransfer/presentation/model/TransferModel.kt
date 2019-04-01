@@ -6,7 +6,6 @@ import com.kg.gettransfer.domain.model.Transfer.Status
 import com.kg.gettransfer.domain.model.TransportType
 
 import java.util.Date
-import java.util.Locale
 
 data class TransferModel(
     val id: Long,
@@ -58,11 +57,13 @@ data class TransferModel(
     val editableFields: List<String>?, /* not used */
     val airlineCard: String?,
     val paymentPercentages: List<Int>?,
+    val unreadMessagesCount: Int,
 /* ================================================== */
 /* ================================================== */
     val statusCategory: String,
     val timeToTransfer: Int,
-    var eventsCount: Int = 0
+    var eventsCount: Int = 0,
+    var showOfferInfo: Boolean
 ) {
     fun isBookNow() = paidPercentage != 0 && bookNow != null
 }

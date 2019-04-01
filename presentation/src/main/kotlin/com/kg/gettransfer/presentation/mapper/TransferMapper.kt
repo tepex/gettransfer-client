@@ -78,10 +78,12 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             editableFields        = type.editableFields,
             airlineCard           = type.airlineCard,
             paymentPercentages    = type.paymentPercentages,
+            unreadMessagesCount   = type.unreadMessagesCount,
 /* ================================================== */
 /* ================================================== */
             statusCategory = type.checkStatusCategory(),
-            timeToTransfer = ((type.dateToLocal.time - Calendar.getInstance().timeInMillis).absoluteValue / 60_000).toInt()
+            timeToTransfer = ((type.dateToLocal.time - Calendar.getInstance().timeInMillis).absoluteValue / 60_000).toInt(),
+            showOfferInfo  = type.showOfferInfo
             //checkOffers = type.checkOffers
         )
     }
