@@ -197,17 +197,18 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         onNewOffer(offer.also {
             it.vehicle.photos = it.vehicle.photos.map { photo -> "${systemInteractor.endpoint.url}$photo" }
             utils.launchSuspend {
-                val result = utils.asyncAwait { offerInteractor.getOffers(offer.transferId, true) }
-                if (result.model.find { offerCached -> offerCached.id == offer.id } != null) {
-                    countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
-                        countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
-                            if (countNewOffers == countViewedOffers && countViewedOffers > 0) {
-                                decreaseViewedOffersCounter(offer.transferId)
+                fetchDataOnly { offerInteractor.getOffers(offer.transferId, true) }?.let { offersCached ->
+                    if (offersCached.find { offerCached -> offerCached.id == offer.id } != null) {
+                        countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
+                            countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
+                                if (countNewOffers == countViewedOffers && countViewedOffers > 0) {
+                                    decreaseViewedOffersCounter(offer.transferId)
+                                }
                             }
                         }
+                    } else {
+                        increaseEventsOffersCounter(it.transferId)
                     }
-                } else {
-                    increaseEventsOffersCounter(it.transferId)
                 }
             }
         })
@@ -216,12 +217,13 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
         if(!chatBadgeEvent.clearBadge) {
             utils.launchSuspend {
-                val result = utils.asyncAwait { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
-                increaseEventsMessagesCounter(chatBadgeEvent.transferId, result.model.unreadMessagesCount)
-                notificationManager.showNewMessageNotification(
-                        chatBadgeEvent.transferId,
-                        result.model.unreadMessagesCount,
-                        systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) < 0)
+                fetchDataOnly { transferInteractor.getTransfer(chatBadgeEvent.transferId) }?.let {transfer ->
+                    increaseEventsMessagesCounter(chatBadgeEvent.transferId, transfer.unreadMessagesCount)
+                    notificationManager.showNewMessageNotification(
+                            chatBadgeEvent.transferId,
+                            transfer.unreadMessagesCount,
+                            systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) < 0)
+                }
             }
         } else {
             with(countEventsInteractor) {
