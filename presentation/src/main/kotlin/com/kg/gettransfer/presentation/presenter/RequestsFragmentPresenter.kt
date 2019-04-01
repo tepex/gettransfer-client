@@ -50,10 +50,10 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation
         utils.launchSuspend {
             viewState.blockInterface(true)
 
-            val result = when(categoryName) {
-                RequestsActivity.CATEGORY_ACTIVE    -> utils.asyncAwait { transferInteractor.getActiveTransfers() }
-                RequestsActivity.CATEGORY_COMPLETED -> utils.asyncAwait { transferInteractor.getCompletedTransfers() }
-                else                                -> utils.asyncAwait { transferInteractor.getArchivedTransfers() }
+            val result = when(transferType) {
+                TRANSFER_ACTIVE    -> fetchData { transferInteractor.getTransfersActive() }
+                TRANSFER_ARCHIVE -> fetchData { transferInteractor.getTransfersArchive() }
+                else                                -> fetchData { transferInteractor.getTransfersActive() }
             }
 
             result?.let { showTransfers(it) }
@@ -62,8 +62,7 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation
     }
 
     private fun showTransfers(transfers: List<Transfer>) {
-
-        val filteredSorted = transfers.sortedByDescending {
+        this.transfers = transfers.sortedByDescending {
             it.dateToLocal
         }.map { transferMapper.toView(it) }
         with(countEventsInteractor) {

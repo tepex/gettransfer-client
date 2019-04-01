@@ -443,7 +443,6 @@
     <string name="LNG_LIST">List</string>
     <string name="LNG_TRIPS_EMPTY_UPCOMING">you have no upcoming transfers</string>
     <string name="LNG_TRIPS_EMPTY_PAST">you have no past transfers</string>
-    <string name="LNG_LIST"><u>List</u></string>
     <string name="LNG_NEW_CHAT_MESSAGE">Write the message</string>
     <string name="LNG_NEW_PASSENGER_CHAT_TITLE">Passenger message</string>
     <string name="LNG_NEW_DRIVER_CHAT_TITLE">Carrier message</string>
