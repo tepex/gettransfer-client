@@ -94,6 +94,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
             viewState.showBadge(false)
         }
         Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
+        if (systemInteractor.withPointOnMap) viewState.openMapToSetPoint()
         setOwnLocation()
         viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)

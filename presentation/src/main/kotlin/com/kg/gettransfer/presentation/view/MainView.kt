@@ -34,4 +34,5 @@ interface MainView: BaseView {
     fun thanksForRate()
     fun showBadge(show: Boolean)
     fun setCountEvents(count: Int)
+    fun openMapToSetPoint()
 }

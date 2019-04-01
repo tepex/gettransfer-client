@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 
 import android.support.v7.widget.LinearLayoutManager
@@ -33,9 +34,8 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SearchView
 
 import com.kg.gettransfer.utilities.Analytics
+import kotlinx.android.synthetic.main.a_b_orange_view.*
 import kotlinx.android.synthetic.main.a_b_orange_view.view.*
-import kotlinx.android.synthetic.main.a_b_view.*
-import kotlinx.android.synthetic.main.a_b_view.view.*
 import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.search_address.*
 import kotlinx.android.synthetic.main.search_form.*
@@ -133,7 +133,7 @@ class SearchActivity : BaseActivity(), SearchView {
                         .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack)) }
         else     searchForm.icons_container.tv_a_point.background =
                 ContextCompat.getDrawable(this, R.drawable.back_orange_empty)
-                        .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack)) }
+                        .also { icons_container.tv_a_point.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack)) }
     }
 
     override fun onBackPressed() {
@@ -163,7 +163,7 @@ class SearchActivity : BaseActivity(), SearchView {
     override fun hideAddressTo() {
         searchTo.isGone  = true
         link_line.isGone = true
-        b_point.isGone   = true
+        tv_b_point.isGone   = true
         separator.isGone = true
     }
 
@@ -192,7 +192,7 @@ class SearchActivity : BaseActivity(), SearchView {
         if (isTo) searchForm.icons_container.tv_b_point.background =
                 ContextCompat.getDrawable(this, R.drawable.back_circle_marker_orange_filled)
                 .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(this, R.color.colorWhite)) }
-        else      searchForm.icons_container.tv_a_point.background =
+        else searchForm.icons_container.tv_a_point.background =
                 ContextCompat.getDrawable(this, R.drawable.back_circle_marker_orange_filled)
                         .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(this, R.color.colorWhite)) }
     }
@@ -205,5 +205,9 @@ class SearchActivity : BaseActivity(), SearchView {
         (rv_addressList.adapter as AddressAdapter).removeItem(address)
         Toast.makeText(this, message, Toast.LENGTH_LONG)
                 .show()
+    }
+
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+        Utils.showError(this, false, getString(errId))
     }
 }

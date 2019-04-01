@@ -8,6 +8,7 @@ import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
 import java.util.*
+import kotlin.math.absoluteValue
 
 class OrderInteractor(private val geoRepository: GeoRepository, private val routeRepository: RouteRepository) {
 
@@ -20,8 +21,6 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
 
     var noPointPlaces: List<GTAddress> = emptyList()
 
-    //suspend fun getCurrentLocation() = geoRepository.getCurrentLocation()
-
     fun getCurrentAddress() = geoRepository.getCurrentAddress()
 
     fun getAddressByLocation(isFrom: Boolean, point: Point, pair: Pair<Point, Point>): Result<GTAddress> {
@@ -31,35 +30,11 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
         return result
     }
 
-    fun isConcreteObjects() = from?.isConcreteObject() ?: false && to?.isConcreteObject() ?: false
-
     fun getAutocompletePredictions(prediction: String, pointsPair: Pair<Point, Point>?) =
             Result(geoRepository.
                     getAutocompletePredictions(prediction, pointsPair)
                     .model.filter { noPointPlaces.none { n -> it.cityPoint.placeId == n.cityPoint.placeId }}) // if result has addresses without point,
                                                                                                               // exclude such from result
-    fun updateDestinationPoint(): Result<Point> {
-        var result = updateStartPoint()
-        if (result.error != null) return result
-
-        if (to!!.cityPoint.point == null) {
-            to!!.cityPoint.placeId?.let { // GAA-479 TODO: Check this case!
-                result = geoRepository.getLatLngByPlaceId(it)
-                if (result.error != null) return result
-                to!!.cityPoint.point = result.model
-            }
-        }
-        return result
-    }
-
-    private fun updateStartPoint(): Result<Point> {
-        if (from!!.cityPoint.point == null) {
-            val result = geoRepository.getLatLngByPlaceId(from!!.cityPoint.placeId!!)
-            if (result.error != null) return result
-            from!!.cityPoint.point = result.model
-        }
-        return Result(from!!.cityPoint.point!!)
-    }
 
     fun updatePoint(isTo: Boolean): Result<Point> {
         (if (isTo) to else from).let {
@@ -79,7 +54,21 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
         return routeInfo
     }
 
-    fun addressFieldsNotNull() = (from != null && to != null && from != to)
+    fun isAddressesValid(alertBlock: (Boolean) -> Boolean) = (from != null && to != null && alertBlock(isFineDistance()))
 
-    fun isCanCreateOrder() = (from?.cityPoint != null && (to?.cityPoint != null || hourlyDuration != null))
+    private fun isFineDistance() =
+    if (from!!.cityPoint.point != null && to!!.cityPoint.point != null)
+        (from!!.lat!! - to!!.lat!!).absoluteValue > MIN_LAT_DIFF ||
+                (from!!.lon!! - to!!.lon!!).absoluteValue > MIN_LON_DIFF
+    else false
+    //0.002 lat
+    //0.003 lon
+
+    fun isCanCreateOrder() = (from?.cityPoint != null &&
+            ((to?.cityPoint != null && isFineDistance()) || hourlyDuration != null))
+
+    companion object {
+        const val MIN_LAT_DIFF = 0.002
+        const val MIN_LON_DIFF = 0.003
+    }
 }

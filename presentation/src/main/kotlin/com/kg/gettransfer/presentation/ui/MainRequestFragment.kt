@@ -19,8 +19,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.create_order_field.view.*
 import kotlinx.android.synthetic.main.fragment_main_request.*
 import kotlinx.android.synthetic.main.search_form.view.*
-import kotlinx.android.synthetic.main.view_create_order_field.*
+
 import kotlinx.android.synthetic.main.view_switcher.view.*
+import org.jetbrains.anko.longToast
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 
@@ -59,17 +60,16 @@ class MainRequestFragment :
             searchTo.setUneditable()
         }
 
-        View.OnClickListener { openPicker(FIELD_START) }.also {
-            order_time_view.setOnClickListener(it)
-        }
-        View.OnClickListener { openPicker(FIELD_RETURN) }.also {
-            return_time_view.setOnClickListener(it)
-        }
+        order_time_view.setOnClickListener { openPicker(FIELD_START) }
+        return_time_view.setOnClickListener{ dateReturnClickListenerDisabled }
 
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
         btnNextFragment.setOnClickListener       { mPresenter.onNextClick() }
         ivSetMyLocation.setOnClickListener       { mPresenter.setOwnLocation() }
     }
+
+    private val dateReturnClickListenerEnabled  = { openPicker(FIELD_RETURN) }
+    private val dateReturnClickListenerDisabled = { mParent.longToast("Choose start time") }
 
     private fun initDateTimeFields() =
         with(dateDelegate) {
@@ -90,6 +90,8 @@ class MainRequestFragment :
             tv_b_point.isGone      = hourly
             link_line.isInvisible  = hourly
         }
+        return_time_view.isGone = hourly
+        field_divider.isGone    = hourly
         enableBtnNext()
     }
 
@@ -130,6 +132,8 @@ class MainRequestFragment :
     override fun setFieldDate(date: String, field: Boolean) {
         val dateField = if (field == FIELD_START) order_time_view else return_time_view
         dateField.hint_title.text = date
+        if (field == FIELD_START && date.isNotEmpty())
+            return_time_view.setOnClickListener { dateReturnClickListenerEnabled }
     }
 
     companion object {

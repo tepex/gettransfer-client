@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:id="@+id/search"
-	android:transitionName="@string/searchTransitionName"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:descendantFocusability="beforeDescendants"
-	android:focusableInTouchMode="true"
-	android:layout_gravity="center_horizontal|top"
-	android:background="@android:color/white">
+				xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+				android:id="@+id/search"
+				android:transitionName="@string/searchTransitionName"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:descendantFocusability="beforeDescendants"
+				android:focusableInTouchMode="true"
+				android:layout_gravity="center_horizontal|top"
+				android:background="@android:color/white">
 
     <include
         android:id="@+id/icons_container"
@@ -73,13 +73,14 @@
 				android:id="@+id/tvCurrent_hours"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="6 hours"
 				android:layout_below="@+id/hourly_title"
 				android:paddingBottom="@dimen/search_main_paddingBottom"
 
 				android:fontFamily="@font/sf_pro_text_semibold"
 				android:textColor="@color/colorTextBlack"
-				android:textSize="@dimen/search_main_textSize"/>
+				android:textSize="@dimen/search_main_textSize"
+
+				tools:text="2 hours"/>
 
 		<ImageView
 				android:layout_width="wrap_content"
@@ -102,12 +103,12 @@
 		android:layout_marginEnd="@dimen/inverse_btn_margin_end">
 
 		<ImageView
-			android:id="@+id/ivInverseWay"
-			android:layout_width="@dimen/image_inverse_size"
-			android:layout_height="@dimen/image_inverse_size"
-			app:srcCompat="@drawable/ic_inverse"
-			style="@style/BorderlessBackground"
-			android:clickable="true" />
+				android:id="@+id/ivInverseWay"
+				android:layout_width="@dimen/image_inverse_size"
+				android:layout_height="@dimen/image_inverse_size"
+				app:srcCompat="@drawable/ic_inverse"
+				style="@style/BorderlessBackground"
+				android:clickable="true" android:focusable="true"/>
 	</FrameLayout>
 
 

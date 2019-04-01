@@ -355,6 +355,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         btnMyLocation.isVisible = false
     }
 
+    override fun openMapToSetPoint() {
+        switcher_map.switch_mode_.isChecked = true
+    }
+
     override fun setMarkerElevation(up: Boolean, elevation: Float) {
         val px = -1 * Utils.convertDpToPixels(this, elevation)
         mMarker.animate()
@@ -474,7 +478,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     override fun onBackClick() {
         when {
             drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
-            hourlySheet.state == BottomSheetBehavior.STATE_HIDDEN -> showNumberPicker(false)
+            hourlySheet.state == BottomSheetBehavior.STATE_COLLAPSED -> showNumberPicker(false)
             else -> super.onBackPressed()
         }
 //        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
@@ -492,6 +496,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         tv_b_point.isGone      = hourly
         link_line.isInvisible  = hourly
         enableBtnNext()
+        if (!hourly) showNumberPicker(false)
     }
 
     override fun setTripMode(duration: Int?) {

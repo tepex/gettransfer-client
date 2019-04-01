@@ -23,8 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:visibility="invisible"
-            android:layout_marginTop="@dimen/switchers_vertical_margin"
-            app:switcher_title="Map"/>
+            android:layout_marginTop="@dimen/switchers_vertical_margin"/>
 
     <com.kg.gettransfer.presentation.ui.custom.SwitcherView
             android:id="@+id/switcher_hourly"
@@ -34,7 +33,7 @@
             android:layout_below="@+id/switcher_map_"
             android:layout_marginTop="@dimen/switchers_vertical_margin"
 
-            app:switcher_title="Per hour"/>
+            app:switcher_title="@string/LNG_PER_HOUR"/>
 
     <com.kg.gettransfer.presentation.ui.custom.SearchFormView
             android:id="@+id/request_search_panel"

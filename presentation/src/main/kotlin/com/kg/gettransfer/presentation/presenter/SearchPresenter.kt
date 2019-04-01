@@ -96,7 +96,12 @@ class SearchPresenter : BasePresenter<SearchView>() {
                 }
             }
 
-    private fun checkFields() = orderInteractor.addressFieldsNotNull()
+    private fun checkFields() =
+        orderInteractor.isAddressesValid {
+            viewState.setError(false, R.string.LNG_FIELD_ERROR_MATCH_ADDRESSES)
+            it
+        }
+
 
     private fun createRouteForOrder() {
         systemInteractor.addressHistory = listOf(orderInteractor.from!!, orderInteractor.to!!)
@@ -108,6 +113,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
     fun selectFinishPointOnMap() {
         logButtons(Analytics.POINT_ON_MAP_CLICKED)
         systemInteractor.selectedField = if (isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
+        systemInteractor.withPointOnMap = true
         router.exit()
     }
 
