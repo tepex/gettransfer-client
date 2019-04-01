@@ -26,8 +26,7 @@ import org.koin.standalone.inject
 import timber.log.Timber
 
 @InjectViewState
-class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation
-                                tt: Int) : BasePresenter<RequestsFragmentView>(), CounterEventListener {
+class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) : BasePresenter<RequestsFragmentView>(), CounterEventListener {
     @RequestsView.TransferTypeAnnotation
     var transferType = tt
 
@@ -50,13 +49,11 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation
         utils.launchSuspend {
             viewState.blockInterface(true)
 
-            val result = when(transferType) {
-                TRANSFER_ACTIVE    -> fetchData { transferInteractor.getTransfersActive() }
-                TRANSFER_ARCHIVE -> fetchData { transferInteractor.getTransfersArchive() }
-                else                                -> fetchData { transferInteractor.getTransfersActive() }
-            }
-
+            var result = fetchData { transferInteractor.getTransfers(transferType == TRANSFER_ACTIVE, true) }
             result?.let { showTransfers(it) }
+            result = fetchData { transferInteractor.getTransfers(transferType == TRANSFER_ACTIVE, false) }
+            result?.let { showTransfers(it) }
+
             viewState.blockInterface(false)
         }
     }
@@ -72,15 +69,13 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation
     }
 
     private fun updateEvents(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>) {
-        transfers = transfers?.let { transfersList ->
-            for (i in 0 until transfersList.size) {
-                val transfer = transfersList[i]
+        transfers = transfers?.also { transfersList ->
+            transfersList.forEach {transfer->
                 mapCountNewEvents[transfer.id]?.let {
                     val eventsCount = it - (mapCountViewedOffers[transfer.id] ?: 0)
                     if (eventsCount > 0) transfer.eventsCount = eventsCount
                 }
             }
-            transfersList
         }
     }
 
