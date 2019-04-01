@@ -162,6 +162,24 @@ class TransferRepositoryImpl(
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
 
+    override suspend fun getTransfersActiveCached(): Result<List<Transfer>> {
+        val result: ResultEntity<List<TransferEntity>?> = retrieveCacheEntity {
+            factory.retrieveCacheDataStore().getTransfersActive()
+        }
+
+        return Result(result.entity?.map { transferMapper.fromEntity(it) }?: emptyList(),
+                result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
+    }
+
+    override suspend fun getTransfersArchiveCached(): Result<List<Transfer>> {
+        val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { retrieveCacheEntity ->
+            factory.retrieveCacheDataStore().getTransfersArchive()
+        }
+
+        return Result(result.entity?.map { transferMapper.fromEntity(it) }?: emptyList(),
+                result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
+    }
+
     override fun clearTransfersCache() {
         factory.retrieveCacheDataStore().clearTransfersCache()
     }

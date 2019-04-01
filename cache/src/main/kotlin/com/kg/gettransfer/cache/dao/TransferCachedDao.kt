@@ -22,6 +22,9 @@ interface TransferCachedDao {
     @Query("SELECT * FROM ${TransferEntity.ENTITY_NAME} WHERE ${TransferEntity.STATUS} = 'new' OR ${TransferEntity.STATUS} = 'draft' OR ${TransferEntity.STATUS} = 'performed' ORDER BY ${TransferEntity.ID} DESC")
     fun getTransfersActive(): List<TransferCached>
 
+    @Query("SELECT * FROM ${TransferEntity.ENTITY_NAME} WHERE ${TransferEntity.STATUS} = 'completed' OR ${TransferEntity.STATUS} = 'canceled' OR ${TransferEntity.STATUS} = 'not_completed' OR ${TransferEntity.STATUS} = 'rejected' OR ${TransferEntity.STATUS} = 'pending_confirmation' OR ${TransferEntity.STATUS} = 'outdated' ORDER BY ${TransferEntity.ID} DESC")
+    fun getTransfersArchive(): List<TransferCached>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(transfers: List<TransferCached>)
 
