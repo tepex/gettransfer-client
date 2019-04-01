@@ -32,6 +32,7 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/switcher_map_"
             android:layout_marginTop="@dimen/switchers_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
 
             app:switcher_title="@string/LNG_PER_HOUR"/>
 
@@ -70,8 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/order_time_view"
 
-            app:order_title="@string/LNG_RIDE_RETURN_TRANSFER"
-            app:icon="@drawable/ic_start_time"/>
+            app:order_title="@string/LNG_RIDE_DATE_RETURN"
+            app:icon="@drawable/ic_return_time"/>
 
     <View
             android:id="@+id/field_divider"

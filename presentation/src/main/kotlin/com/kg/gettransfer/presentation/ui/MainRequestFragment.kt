@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -65,7 +66,7 @@ class MainRequestFragment :
 
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
         btnNextFragment.setOnClickListener       { mPresenter.onNextClick() }
-        ivSetMyLocation.setOnClickListener       { mPresenter.setOwnLocation() }
+        ivSetMyLocation.setOnClickListener       { mPresenter.updateCurrentLocation() }
     }
 
     private val dateReturnClickListenerEnabled  = { openPicker(FIELD_RETURN) }
@@ -101,7 +102,6 @@ class MainRequestFragment :
     }
 
     override fun onDestroy() {
-        mParent.requestView = null
         super.onDestroy()
     }
 

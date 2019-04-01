@@ -213,7 +213,7 @@
 				android:layout_gravity="end"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				app:switcher_title="Map"
+				app:switcher_title="@string/LNG_MAP"
 		android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
 		android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"/>
 

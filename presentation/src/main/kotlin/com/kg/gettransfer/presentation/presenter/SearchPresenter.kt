@@ -96,12 +96,12 @@ class SearchPresenter : BasePresenter<SearchView>() {
                 }
             }
 
-    private fun checkFields() =
-        orderInteractor.isAddressesValid {
-            viewState.setError(false, R.string.LNG_FIELD_ERROR_MATCH_ADDRESSES)
-            it
-        }
-
+    private fun checkFields(): Boolean {
+        val isAddressesValid = orderInteractor.isAddressesValid()
+        val isDistanceValid = orderInteractor.hourlyDuration?.let { true } ?: orderInteractor.isDistanceFine()
+        if (!isDistanceValid) viewState.setError(false, R.string.LNG_FIELD_ERROR_MATCH_ADDRESSES)
+        return isAddressesValid && isDistanceValid
+    }
 
     private fun createRouteForOrder() {
         systemInteractor.addressHistory = listOf(orderInteractor.from!!, orderInteractor.to!!)

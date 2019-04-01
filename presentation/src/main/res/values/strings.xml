@@ -214,6 +214,7 @@
     <string name="LNG_RIDE_LOGIN_CARRIER">Sign in for сarrier</string>
     <string name="LNG_NEW_OFFER_MESSAGE">You got new offer on your request</string>
     <string name="LNG_NEW_OFFER_TITLE">New offer</string>
+    <string name="LNG_MAP">Map</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL_CHILD">children</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL_PERSON">persons</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL_COMMENT">comment</string>
@@ -470,6 +471,7 @@
     <string name="new_offers">New offers</string>
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
     <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">I want to order a return transfer</string>
+    <string name="LNG_RIDE_DATE_RETURN">Return date and time</string>
     <string name="LNG_OFFERS_SUPPORT">GetTransfer Support</string>
     <string name="LNG_BOOK_NOW_PAYMENT_SUCCEESS">We will send you e-mail with carrier information</string>
     <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION">Download booking voucher?</string>

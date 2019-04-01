@@ -54,18 +54,19 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
         return routeInfo
     }
 
-    fun isAddressesValid(alertBlock: (Boolean) -> Boolean) = (from != null && to != null && alertBlock(isFineDistance()))
+    fun isAddressesValid() =
+            (from != null && (to != null || hourlyDuration != null ))
 
-    private fun isFineDistance() =
-    if (from!!.cityPoint.point != null && to!!.cityPoint.point != null)
-        (from!!.lat!! - to!!.lat!!).absoluteValue > MIN_LAT_DIFF ||
-                (from!!.lon!! - to!!.lon!!).absoluteValue > MIN_LON_DIFF
+    fun isDistanceFine() =
+            if (from!!.cityPoint.point != null && to!!.cityPoint.point != null)
+                (from!!.lat!! - to!!.lat!!).absoluteValue > MIN_LAT_DIFF ||
+                        (from!!.lon!! - to!!.lon!!).absoluteValue > MIN_LON_DIFF
     else false
     //0.002 lat
     //0.003 lon
 
     fun isCanCreateOrder() = (from?.cityPoint != null &&
-            ((to?.cityPoint != null && isFineDistance()) || hourlyDuration != null))
+            ((to?.cityPoint != null && isDistanceFine()) || hourlyDuration != null))
 
     companion object {
         const val MIN_LAT_DIFF = 0.002

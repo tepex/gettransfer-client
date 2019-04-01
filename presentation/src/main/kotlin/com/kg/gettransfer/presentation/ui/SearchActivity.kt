@@ -194,7 +194,7 @@ class SearchActivity : BaseActivity(), SearchView {
                 .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(this, R.color.colorWhite)) }
         else searchForm.icons_container.tv_a_point.background =
                 ContextCompat.getDrawable(this, R.drawable.back_circle_marker_orange_filled)
-                        .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(this, R.color.colorWhite)) }
+                        .also { icons_container.tv_a_point.setTextColor(ContextCompat.getColor(this, R.color.colorWhite)) }
     }
 
     override fun setFocus(isToField: Boolean) {
