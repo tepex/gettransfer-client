@@ -1,6 +1,5 @@
 package com.kg.gettransfer.domain.model
 
-import java.io.Serializable
 import java.util.Date
 
 
@@ -58,7 +57,7 @@ data class Transfer(
     val paymentPercentages: List<Int>?,
     val unreadMessagesCount: Int,
     var showOfferInfo: Boolean
-) : Serializable, Entity() {
+) : Entity() {
 
     fun checkStatusCategory() = when (status) {
         Status.NEW       -> STATUS_CATEGORY_ACTIVE

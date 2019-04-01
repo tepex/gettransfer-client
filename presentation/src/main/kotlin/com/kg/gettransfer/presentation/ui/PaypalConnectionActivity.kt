@@ -10,7 +10,6 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.presenter.PaypalConnectionPresenter
 import com.kg.gettransfer.presentation.view.PaypalConnectionView
@@ -33,7 +32,7 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
         super.onCreate(savedInstanceState)
         presenter.paymentId = intent.getLongExtra(PaypalConnectionView.EXTRA_PAYMENT_ID, 0L)
         presenter.nonce = intent.getStringExtra(PaypalConnectionView.EXTRA_NONCE)
-        presenter.transfer = intent.getSerializableExtra(PaypalConnectionView.EXTRA_TRANSFER) as Transfer
+        presenter.transferId = intent.getLongExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, 0L)
         presenter.offerId = intent.getLongExtra(PaypalConnectionView.EXTRA_OFFER_ID, 0L)
         presenter.percentage = intent.getIntExtra(PaypalConnectionView.EXTRA_PERCENTAGE, PaymentRequestModel.FULL_PRICE)
         presenter.bookNowTransportId = intent.getStringExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID)

@@ -23,10 +23,11 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
 
     internal var paymentId = 0L
     internal var nonce = ""
+    internal var transferId = 0L
+    internal var transfer: Transfer? = null
     internal var offerId = 0L
     internal var percentage = PaymentRequestModel.FULL_PRICE
     internal var bookNowTransportId: String? = null
-    internal var transfer: Transfer? = null
 
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
@@ -36,6 +37,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
         super.attachView(view)
         utils.launchSuspend {
             offer = offerInteractor.getOffer(offerId)
+            transfer = fetchData { transferInteractor.getTransfer(transferId, true) }
             if (offer == null) {
                 transfer?.let {
                     if (it.bookNowOffers.isNotEmpty()) {
@@ -67,17 +69,13 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
 
     private fun showFailedPayment() {
         router.exit()
-        transfer?.let {
-            router.navigateTo(Screens.PaymentError(it.id))
-        }
+        router.navigateTo(Screens.PaymentError(transferId))
         logEvent(Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {
         router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
-        transfer?.let {
-            router.navigateTo(Screens.PaymentSuccess(it.id, offerId))
-        }
+        router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
         logEventEcommercePurchase()
     }
 
@@ -92,7 +90,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
         if (percentage == OfferModel.PRICE_30) price *= PaymentOfferPresenter.PRICE_30
 
         val purchase = analytics.EcommercePurchase(
-                transfer?.id.toString(),
+                transferId.toString(),
                 transfer?.promoCode,
                 routeInteractor.duration,
                 PaymentRequestModel.PAYPAL,

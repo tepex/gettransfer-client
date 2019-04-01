@@ -1,14 +1,12 @@
 package com.kg.gettransfer.domain.model
 
-import java.io.Serializable
-
 data class TransportType(
     val id: ID,
     val paxMax: Int,
     val luggageMax: Int
 ) {
 
-    enum class ID: Serializable {
+    enum class ID {
         ECONOMY, COMFORT, PREMIUM, MINIBUS, BUS, HELICOPTER, LIMOUSINE, BUSINESS, VAN, SUV, UNKNOWN;
 
         override fun toString() = name.toLowerCase()
