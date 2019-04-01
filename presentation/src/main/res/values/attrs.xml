@@ -73,12 +73,12 @@
         <attr name="phone" format="string"/>
     </declare-styleable>
 
-<<<<<<< HEAD
+
     <declare-styleable name="SettingsField">
         <attr name="settingsTitle" format="string"/>
         <attr name="isSwitchField" format="boolean"/>
     </declare-styleable>
-=======
+
     <declare-styleable name="SwitcherView">
         <attr name="switcher_title" format="string"/>
     </declare-styleable>
@@ -93,5 +93,4 @@
     </declare-styleable>
 
 
->>>>>>> todo onBackPressed
 </resources>

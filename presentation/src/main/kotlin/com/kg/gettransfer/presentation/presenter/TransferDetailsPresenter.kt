@@ -57,7 +57,7 @@ import java.util.*
 
 
 @InjectViewState
-class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SystemEventListener {
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SocketEventListener {
     private val orderInteractor: OrderInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
     private val coordinateInteractor: CoordinateInteractor by inject()

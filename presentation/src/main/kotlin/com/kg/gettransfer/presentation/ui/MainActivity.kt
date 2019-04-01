@@ -74,7 +74,9 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     var requestView: MainRequestView? = null
     set(value) {
         field = value
-        value?.let { setRequestView() }
+        value?.let {
+            initHourly()
+            setRequestView() }
     }
 
     lateinit var drawer: DrawerLayout
@@ -149,7 +151,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         switch_mode.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
         switcher_map.switch_mode_.setOnCheckedChangeListener { _, isChecked -> switchMain(isChecked) }
 
-        initHourly()
+      //  initHourly()
 
         isFirst = savedInstanceState == null
 

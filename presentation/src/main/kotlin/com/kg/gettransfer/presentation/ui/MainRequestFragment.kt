@@ -60,8 +60,8 @@ class MainRequestFragment :
             searchTo.setUneditable()
         }
 
-        order_time_view.setOnClickListener { openPicker(FIELD_START) }
-        return_time_view.setOnClickListener{ dateReturnClickListenerDisabled }
+        order_time_view.setOnClickListener  { openPicker(FIELD_START) }
+        return_time_view.setOnClickListener { dateReturnClickListenerDisabled }
 
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
         btnNextFragment.setOnClickListener       { mPresenter.onNextClick() }
