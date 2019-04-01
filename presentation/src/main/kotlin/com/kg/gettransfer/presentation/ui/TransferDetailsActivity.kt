@@ -576,8 +576,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         yourRateMark.tripRate.rating = averageRate
     }
 
-    override fun onRatingChanged(averageRating: Float) {
-        presenter.ratingChanged(averageRating)
+    override fun onRatingChanged(averageRating: Float, comment: String) {
+        presenter.ratingChanged(averageRating, comment)
     }
 
     override fun onClickGoToStore() {
