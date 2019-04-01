@@ -229,7 +229,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                     viewState.askRateInPlayMarket()
                     logReviewRequest()
                 }
-                else viewState.showYourRateMark(true, rating)
+                viewState.disableRate()
+                viewState.showYourRateMark(true, rating)
             }
         } else
             offer?.let {
@@ -329,6 +330,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getVehicleIcon(offerModel.vehicle)
 
     fun ratingChanged(averageRating: Float) {
+        viewState.disableRate()
         viewState.showYourRateMark(true, averageRating)
     }
 

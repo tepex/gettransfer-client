@@ -1,43 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:orientation="horizontal"
+	android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="@dimen/rate_your_transfer_height"
+	android:layout_height="wrap_content"
 	android:paddingStart="@dimen/view_transfer_details_field_container_horizontal_padding"
 	android:paddingEnd="@dimen/view_transfer_details_field_container_horizontal_padding"
 	android:gravity="end">
 
-	<TextView
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:text="@string/LNG_RIDE_YOUR_MARK"
-		style="@style/transfer_details_main_text"
-		android:gravity="start"
-		android:layout_gravity="center"
-		android:layout_weight="1"/>
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/rate_your_rate_mark_height"
+		android:orientation="horizontal">
 
-	<com.willy.ratingbar.ScaleRatingBar
-		android:id="@+id/tripRate"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-		app:srb_drawableEmpty="@drawable/ic_star_empty"
-		app:srb_drawableFilled="@drawable/ic_star_filled"
-		app:srb_minimumStars="@integer/stars_minimum"
-		app:srb_numStars="@integer/stars_number"
-		app:srb_rating="@integer/default_stars_num"
-		app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
-		app:srb_starPadding="@dimen/rating_bar_stars_padding"
-		app:srb_starWidth="@dimen/rating_bar_stars_enabled_width"
-		app:srb_isIndicator="true"
-		/>
+		<TextView
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="@string/LNG_RIDE_YOUR_MARK"
+			style="@style/transfer_details_main_text"
+			android:gravity="start"
+			android:layout_gravity="center"
+			android:layout_weight="1"/>
 
-	<android.support.v7.widget.AppCompatImageView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		app:srcCompat="@drawable/ic_arrow_right"
-		android:layout_gravity="center"
-		/>
+		<com.willy.ratingbar.ScaleRatingBar
+			android:id="@+id/tripRate"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			app:srb_drawableEmpty="@drawable/ic_star_empty"
+			app:srb_drawableFilled="@drawable/ic_star_filled"
+			app:srb_minimumStars="@integer/stars_minimum"
+			app:srb_numStars="@integer/stars_number"
+			app:srb_rating="@integer/default_stars_num"
+			app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
+			app:srb_starPadding="@dimen/rating_bar_stars_padding"
+			app:srb_starWidth="@dimen/rating_bar_stars_enabled_width"
+			app:srb_isIndicator="true"
+			/>
+
+		<android.support.v7.widget.AppCompatImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:srcCompat="@drawable/ic_arrow_right"
+			android:layout_gravity="center"
+			/>
+
+	</LinearLayout>
+
+	<View
+		android:id="@+id/divider_transfer_details_field"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/activity_transfer_details_field_horizontal_divider_height"
+		android:layout_marginTop="@dimen/view_transfer_details_field_container_vertical_padding"
+		android:background="@color/color_transfer_details_horizontal_divider_new"
+		app:layout_constraintTop_toBottomOf="@+id/field_text"/>
 
 </LinearLayout>

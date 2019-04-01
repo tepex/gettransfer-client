@@ -376,7 +376,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         val url = getString(R.string.market_link) + getString(R.string.app_package)
         startActivityForResult(
             Intent(Intent.ACTION_VIEW).apply {
-                closePopUp()
                 data = Uri.parse(url)
                 addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             }, PLAY_MARKET_RATE)
