@@ -151,7 +151,7 @@ object Utils : KoinComponent {
             view: View,
             items: List<CharSequence>,
             listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_FIRST_DAY_OF_WEEK, items, listener) }
+    ) { setModelsDialogListener(context, view, R.string.LNG_WEEK_FIRST_DAY, items, listener) }
 
     fun setCalendarModesDialogListener(
             context: Context,
