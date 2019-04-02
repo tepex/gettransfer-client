@@ -23,21 +23,10 @@ class TransferInteractor(private val repository: TransferRepository) {
         if(allTransfers != null) allTransfers!!.map { if(it.id == transfer!!.id) it.status = cancelledTransfer.status }*/
 
     suspend fun getAllTransfers() = repository.getAllTransfers()
-    suspend fun getTransfers(active: Boolean, cached: Boolean) =
-            when(active){
-                true -> {
-                    when(cached){
-                        true -> repository.getTransfersActiveCached()
-                        false -> repository.getTransfersActive()
-                    }
-                }
-                false -> {
-                    when(cached){
-                        true -> repository.getTransfersArchiveCached()
-                        false -> repository.getTransfersArchive()
-                    }
-                }
-            }
+    suspend fun getTransfersActiveCached() = repository.getTransfersActiveCached()
+    suspend fun getTransfersActive() = repository.getTransfersActive()
+    suspend fun getTransfersArchiveCached() = repository.getTransfersArchiveCached()
+    suspend fun getTransfersArchive() = repository.getTransfersArchive()
 
     fun clearTransfersCache(): Result<Unit> {
         repository.clearTransfersCache()
