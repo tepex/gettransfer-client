@@ -338,7 +338,7 @@
     <string name="LNG_DRIVE_RATING">Drive</string>
     <string name="LNG_FAIR_RATING">Fair</string>
     <string name="LNG_RIDE_PAYMENT_DETAILS">Payment Details</string>
-    <string name="LNG_RIDE_PAYMENT_PAID">Payed</string>
+    <string name="LNG_RIDE_PAYMENT_PAID">Paid</string>
     <string name="LNG_RIDE_PAYMENT_REMAINS">Remains to pay</string>
     <string name="LNG_RIDE_PAYMENT_SUMM">Price</string>
     <string name="LNG_RIDE_PAYMENT_COST">Price</string>
@@ -458,6 +458,8 @@
     <string name="LNG_DISTANCE_IN_MILES">Distance in miles</string>
     <string name="LNG_CALENDAR_MODE">Calendar mode</string>
     <string name="LNG_FIRST_DAY_OF_WEEK">First day of week</string>
+    <string name="LNG_RIDE_PAYMENT_RIDE_COST">Ride cost</string>
+    <string name="LNG_RIDE_PAYMENT_PAID_DETAILS">Paid %s%%</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

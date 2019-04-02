@@ -35,21 +35,23 @@
             android:id="@+id/transfer_details_main"
             app:distance_title="@string/LNG_RIDE_DISTANCE"
             app:time_title="@string/LNG_RIDE_TIME"
-            app:price_title="@string/LNG_RIDE_PAYMENT_COST"
+            app:price_title="@string/LNG_RIDE_PRICE_YOUR"
             android:visibility="visible"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="@dimen/bottom_sheet_transfer_details_main_margin_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
         <TextView
             android:id="@+id/tv_bookNow_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="17sp"
-            android:visibility="gone"
-            android:textColor="@color/color_transfer_details_text_green"
-            android:layout_marginTop="8dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:textColor="@color/color_gtr_green"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:layout_marginTop="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
+            android:paddingStart="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
+            android:paddingEnd="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
+            android:layout_marginBottom="@dimen/bottom_sheet_transfer_details_book_now_margin_bottom"
             android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"/>
 
         <include

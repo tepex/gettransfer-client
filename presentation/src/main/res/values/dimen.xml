@@ -272,6 +272,7 @@
 	<dimen name="activity_transfer_details_behaviour_peek_height">385dp</dimen>
 	<dimen name="activity_transfer_details_text_size_17sp">17sp</dimen>
 	<dimen name="activity_transfer_details_text_size_13sp">13sp</dimen>
+	<dimen name="activity_transfer_details_text_size_12sp">12sp</dimen>
 	<dimen name="activity_transfer_details_margin_start_end_16dp">16dp</dimen>
 	<dimen name="activity_transfer_details_title_height">38dp</dimen>
 	<dimen name="activity_transfer_details_horizontal_divider_height">0.5dp</dimen>
@@ -286,6 +287,8 @@
 	<dimen name="view_transfer_details_field_divider_margin_top">11dp</dimen>
 	<dimen name="view_transfer_details_field_container_horizontal_padding">16dp</dimen>
 	<dimen name="view_transfer_details_field_container_vertical_padding">22dp</dimen>
+    <dimen name="view_transfer_details_field_title_max_width">220dp</dimen>
+    <dimen name="view_transfer_details_field_more_info_margin_top">4dp</dimen>
 
 	<dimen name="view_transfer_details_transport_type_item_padding_start_end">16dp</dimen>
 	<dimen name="view_transfer_details_transport_type_item_padding_top_bottom">11dp</dimen>
@@ -314,6 +317,7 @@
 	<dimen name="view_transfer_details_about_transport_car_color_image_size">24dp</dimen>
 	<dimen name="view_transfer_details_about_transport_transport_type_height">44dp</dimen>
 
+    <dimen name="bottom_sheet_transfer_details_main_margin_top">14dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_width">110dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_height">5dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_top_bottom">11dp</dimen>
@@ -326,6 +330,9 @@
 	<dimen name="bottom_sheet_transfer_details_support_bottom_layout_buttons_padding_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom">4dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end">12dp</dimen>
+    <dimen name="bottom_sheet_transfer_details_book_now_margin_top">16dp</dimen>
+    <dimen name="bottom_sheet_transfer_details_book_now_margin_bottom">8dp</dimen>
+    <dimen name="bottom_sheet_transfer_details_book_now_padding_start_end">16dp</dimen>
 
 	<dimen name="view_transfer_details_info_line_min_height">60dp</dimen>
 	<dimen name="view_transfer_details_info_padding_top_bottom_6dp">6dp</dimen>

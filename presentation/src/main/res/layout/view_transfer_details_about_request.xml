@@ -57,6 +57,16 @@
             android:visibility="gone"/>
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+        android:id="@+id/full_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:title_transfer_details="@string/LNG_RIDE_PAYMENT_RIDE_COST"
+        tools:input_transfer_details="5000₽"
+        tools:visibility="visible"
+        android:visibility="gone"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/promo_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

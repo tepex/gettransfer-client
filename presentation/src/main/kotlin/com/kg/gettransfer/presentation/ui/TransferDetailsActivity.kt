@@ -244,56 +244,49 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
             transfer_details_main.tv_distance_dash.isVisible = false
         } else {
             transfer_details_main.tv_time.text = HourlyValuesHelper.getValue(transfer.duration ?: 0, this)
-          //  textDistance.text = getString(R.string.LNG_TIME_RIDE)
-          //  tvDuration.text = Utils.formatDuration(this, transfer.duration!!)
-          //  tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
         }
- //       if (transfer.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transfer.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED)
-        transfer_details_main.tv_price_title.text = getString(R.string.LNG_TOTAL_PRICE).plus(" ${transfer.price?:""}")
-        transfer.remainsToPay?.let {
-            transfer_details_main.tv_price.text = transfer.remainsToPay
-            transfer_details_main.tv_price_dash.isVisible = false
+        when(transfer.statusCategory) {
+            Transfer.STATUS_CATEGORY_ACTIVE -> { transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) } }
+            Transfer.STATUS_CATEGORY_CONFIRMED -> {
+                if(transfer.remainsToPay != null) {
+                    setRemainToPayInfo(transfer.remainsToPay, getString(R.string.LNG_RIDE_PAYMENT_REMAINS))
+                } else {
+                    setRemainToPayInfo(getString(R.string.LNG_RIDE_PAYMENT_PAID))
+                }
+                setFullPrice(transfer.price ?: "", transfer.paidPercentage)
+            }
+            Transfer.STATUS_CATEGORY_FINISHED -> { setRemainToPayInfo(transfer.price ?: "", getString(R.string.LNG_RIDE_PAYMENT_COST)) }
+            Transfer.STATUS_CATEGORY_UNFINISHED -> { transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) } }
         }
         setBookNow(transfer)
-        //setTransferStatus(transfer)
+    }
 
-//        when (transfer.statusCategory) {
-//            Transfer.STATUS_CATEGORY_UNFINISHED -> {
-//                transfer_details_header.booking_info.text = transfer.statusName?.let {
-//                    getString(R.string.LNG_TRANSFER_WAS)
-//                            .plus(" ")
-//                            .plus(getString(transfer.statusName).toLowerCase())
-//                }
-//                transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(this, R.color.color_transfer_details_text_red))
-//               // tvTransferCancelledOrInProgress.isVisible = true
-//            }
-//            Transfer.STATUS_CATEGORY_ACTIVE -> {
-//                layoutRequestSentOrCompletedDate.isVisible = true
-//                textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT)
-//                val transferCreateDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.createdAt, false)
-//                tvRequestSentOrCompletedDate.text = transferCreateDateTimePair.first
-//                        .plus(" ${getString(R.string.LNG_TRANSFER_AT)} ")
-//                        .plus(transferCreateDateTimePair.second)
-//            }
-//            Transfer.STATUS_CATEGORY_FINISHED -> {
-//                layoutRequestSentOrCompletedDate.isVisible = true
-//                textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT)
-//                val transferCreateDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.createdAt, false)
-//                tvRequestSentOrCompletedDate.text = transferCreateDateTimePair.first
-//                        .plus(" ${getString(R.string.LNG_TRANSFER_AT)} ")
-//                        .plus(transferCreateDateTimePair.second)
-//            }
-//            Transfer.STATUS_CATEGORY_CONFIRMED -> {
-//                if(transfer.dateTime.after(Calendar.getInstance().time)){
-//                    layoutTransferWillStartTime.isVisible = true
-//                    tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
-//                } else {
-//                    tvTransferCancelledOrInProgress.text = getString(R.string.LNG_TRANSFER_IN_PROGRESS)
-//                    tvTransferCancelledOrInProgress.setTextColor(ContextCompat.getColor(this, R.color.color_transfer_details_text_green))
-//                    tvTransferCancelledOrInProgress.isVisible = true
-//                }
-//            }
-//        }
+    private fun setPassengerOfferedPrice(price: String) {
+        transfer_details_main.apply {
+            tv_price.text = price
+            tv_price_dash.isVisible = false
+        }
+    }
+
+    private fun setRemainToPayInfo(remainsToPay: String, title: String? = null) {
+        transfer_details_main.apply {
+            tv_price.text = remainsToPay
+            tv_price_dash.isVisible = false
+            if (title != null) {
+                tv_price_title.text = title
+            } else {
+                tv_price_title.isVisible = false
+            }
+        }
+    }
+
+    private fun setFullPrice(price: String, paymentPercentages: Int) {
+        full_price.apply {
+            isVisible = true
+            field_text.text = price
+            field_more_text.isVisible = true
+            field_more_text.text = getString(R.string.LNG_RIDE_PAYMENT_PAID_DETAILS, paymentPercentages.toString())
+        }
     }
 
     private fun setBookNow(transfer: TransferModel){

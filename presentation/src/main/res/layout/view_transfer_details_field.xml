@@ -1,57 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/view_transfer_details_field_container_horizontal_padding"
+    android:paddingEnd="@dimen/view_transfer_details_field_container_horizontal_padding">
+
+    <TextView
+        android:id="@+id/field_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/view_transfer_details_field_container_horizontal_padding"
-        android:paddingEnd="@dimen/view_transfer_details_field_container_horizontal_padding"
-        android:paddingTop="@dimen/view_transfer_details_field_container_vertical_padding">
+        android:layout_marginTop="@dimen/view_transfer_details_field_container_vertical_padding"
+        android:ellipsize="end"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:lines="1"
+        android:maxWidth="@dimen/view_transfer_details_field_title_max_width"
+        android:text="Phone"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/activity_transfer_details_text_size_17sp"
+        app:layout_constraintEnd_toStartOf="@id/layout_field_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!--<ImageView-->
-            <!--android:id="@+id/field_icon"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:layout_constraintBottom_toBottomOf="@+id/field_title"-->
-            <!--app:layout_constraintEnd_toStartOf="@+id/field_title"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="@+id/field_title"/>-->
+    <LinearLayout
+        android:id="@+id/layout_field_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/view_transfer_details_field_text_margin_start"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/field_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/field_title"
+        app:layout_constraintTop_toTopOf="@+id/field_title">
 
-    <TextView
-            android:id="@+id/field_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:text="Phone"
-            android:textColor="@color/colorGrey"
-            android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-            android:maxWidth="220dp"
-            android:lines="1"
-            android:ellipsize="end"
-            app:layout_constraintEnd_toStartOf="@id/field_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
+        <TextView
             android:id="@+id/field_text"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/view_transfer_details_field_text_margin_start"
             android:fontFamily="@font/sf_pro_text_regular"
             android:gravity="end"
             android:text="+7 900 123 56 78"
             android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/field_title"
-            app:layout_constraintTop_toTopOf="@+id/field_title"/>
+            android:textSize="@dimen/activity_transfer_details_text_size_17sp" />
+
+        <TextView
+            android:id="@+id/field_more_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/view_transfer_details_field_more_info_margin_top"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:gravity="end"
+            android:text="оплачено 100%"
+            android:textColor="@color/color_gtr_grey"
+            android:textSize="@dimen/activity_transfer_details_text_size_12sp"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
     <View
-            android:id="@+id/divider_transfer_details_field"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/activity_transfer_details_field_horizontal_divider_height"
-            android:layout_marginTop="@dimen/view_transfer_details_field_container_vertical_padding"
-            android:background="@color/color_transfer_details_horizontal_divider_new"
-            app:layout_constraintTop_toBottomOf="@+id/field_text"/>
+        android:id="@+id/divider_transfer_details_field"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_transfer_details_field_horizontal_divider_height"
+        android:layout_marginTop="@dimen/view_transfer_details_field_container_vertical_padding"
+        android:background="@color/color_transfer_details_horizontal_divider_new"
+        app:layout_constraintTop_toBottomOf="@+id/field_title" />
 
 </android.support.constraint.ConstraintLayout>
