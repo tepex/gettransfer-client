@@ -457,7 +457,7 @@
     <string name="LNG_CHAT_WITH">Chat with</string>
     <string name="LNG_DISTANCE_IN_MILES">Distance in miles</string>
     <string name="LNG_CALENDAR_MODE">Calendar mode</string>
-    <string name="LNG_FIRST_DAY_OF_WEEK">First day of week</string>
+    <string name="LNG_WEEK_FIRST_DAY">First week day</string>
     <string name="LNG_RIDE_PAYMENT_RIDE_COST">Ride cost</string>
     <string name="LNG_RIDE_PAYMENT_PAID_DETAILS">Paid %s%%</string>
     <!-- tags for api params-->
