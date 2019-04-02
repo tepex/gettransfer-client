@@ -25,6 +25,7 @@ import org.jetbrains.anko.longToast
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 
+//TODO add presenter
 class MainRequestFragment :
         MvpAppCompatFragment(),
         KoinComponent,
@@ -61,15 +62,15 @@ class MainRequestFragment :
         }
 
         order_time_view.setOnClickListener  { openPicker(FIELD_START) }
-        return_time_view.setOnClickListener { dateReturnClickListenerDisabled }
+        return_time_view.setOnClickListener (dateReturnClickListenerDisabled)
 
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
         btnNextFragment.setOnClickListener       { mPresenter.onNextClick() }
         ivSetMyLocation.setOnClickListener       { mPresenter.updateCurrentLocation() }
     }
 
-    private val dateReturnClickListenerEnabled  = { openPicker(FIELD_RETURN) }
-    private val dateReturnClickListenerDisabled = { mParent.longToast("Choose start time") }
+    private val dateReturnClickListenerEnabled  = View.OnClickListener { openPicker(FIELD_RETURN) }
+    private val dateReturnClickListenerDisabled = View.OnClickListener { mParent.longToast("Choose start time") }
 
     private fun initDateTimeFields() =
         with(dateDelegate) {
@@ -118,7 +119,6 @@ class MainRequestFragment :
                         if (searchField == searchFrom) tv_a_point else tv_b_point,
                         address.isNotEmpty())
             }
-
 
     override fun setNumberPickerValue(duration: String) {
         request_search_panel.tvCurrent_hours.text = duration
