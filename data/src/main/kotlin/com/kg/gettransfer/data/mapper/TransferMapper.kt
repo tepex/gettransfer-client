@@ -87,10 +87,10 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
         private const val HOURS_TO_SHOWING_OFFER_INFO = 24
 
         private fun allowOfferInfo(transfer: TransferEntity, date: Date): Boolean {
-            if (transfer.status != Transfer.Status.NEW.name &&
-                    transfer.status != Transfer.Status.CANCELED.name &&
-                    transfer.status != Transfer.Status.OUTDATED.name &&
-                    transfer.status != Transfer.Status.PERFORMED.name) {
+            if (transfer.status != Transfer.Status.NEW.name.toLowerCase() &&
+                    transfer.status != Transfer.Status.CANCELED.name.toLowerCase() &&
+                    transfer.status != Transfer.Status.OUTDATED.name.toLowerCase() &&
+                    transfer.status != Transfer.Status.PERFORMED.name.toLowerCase()) {
 
                 val calendar = Calendar.getInstance()
                 calendar.apply {
@@ -100,7 +100,7 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
                 }
                 return calendar.time.after(Calendar.getInstance().time)
             }
-            return transfer.status == Transfer.Status.PERFORMED.name
+            return transfer.status == Transfer.Status.PERFORMED.name.toLowerCase()
         }
 
         private fun convertHoursToMinutes(hours: Int) = hours * 60
