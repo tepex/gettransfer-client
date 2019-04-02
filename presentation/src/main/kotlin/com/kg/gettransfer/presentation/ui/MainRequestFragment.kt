@@ -101,7 +101,7 @@ class MainRequestFragment :
                 (request_search_panel.searchTo.text.isNotEmpty() || switcher_hourly.switch_mode_.isChecked)
     }
 
-    override fun setView(addressFrom: String?, addressTo: String?, duration: String?) {
+    override fun setView(addressFrom: String?, addressTo: String?, duration: String?, networkAvailable: Boolean) {
         addressFrom?.let { editAddressField(request_search_panel.searchFrom, it) }
         addressTo?.let { editAddressField(request_search_panel.searchTo, it) }
         duration?.let {
@@ -129,6 +129,10 @@ class MainRequestFragment :
         dateField.hint_title.text = date
         if (field == FIELD_START && date.isNotEmpty())
             return_time_view.setOnClickListener { dateReturnClickListenerEnabled }
+    }
+
+    override fun onNetworkWarning(disconnected: Boolean) {
+        tv_internet_warning.isVisible = disconnected
     }
 
     companion object {

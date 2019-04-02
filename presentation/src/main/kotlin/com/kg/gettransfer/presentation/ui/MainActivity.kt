@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 
 import android.os.Build
@@ -164,6 +165,11 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
+    override fun setNetworkAvailability(context: Context) =
+            super.setNetworkAvailability(context)
+                .also { requestView?.onNetworkWarning(!it) }
+
+
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -189,7 +195,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private fun setRequestView () {
         val addressTo = if (rl_searchForm.isVisible) searchTo.text else null
         val duration = if (rl_hourly.isVisible) tvCurrent_hours.text.toString() else null
-        requestView?.setView(searchFrom.text, addressTo, duration)
+        requestView?.setView(searchFrom.text, addressTo, duration, viewNetworkNotAvailable?.isVisible ?: false)
     }
 
     @SuppressLint("PrivateResource")

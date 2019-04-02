@@ -22,6 +22,11 @@
 	<!--Main Activity, Fragments-->
 	<dimen name="switchers_vertical_margin">16dp</dimen>
 
+	<dimen name="internet_warning_horizontal_text_padding">12dp</dimen>
+	<dimen name="internet_warning_vertical_text_padding">8dp</dimen>
+	<dimen name="internet_warning_horizontal_text_size">12sp</dimen>
+	<dimen name="internet_warning_horizontal_text_margin_top">32dp</dimen>
+
 	<!--Hourly picker and switcher-->
 	<dimen name="hourly_bottom_sheet_height">250dp</dimen>
 	<dimen name="hourly_bottom_sheet_height_peek">@dimen/hourly_bottom_sheet_height</dimen>
