@@ -32,47 +32,32 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		viewState.setRatingCommon(currentCommonRating)
 		updateSecondaryRatings()
 		viewState.showProgress(false)
-		if (currentComment.isNotEmpty())
-			viewState.showComment(currentComment)
-		else
-			viewState.showComment(hintComment)
+		viewState.showComment(if (currentComment.isNotEmpty()) currentComment else hintComment)
 	}
 
 	fun onClickSend(list: List<ReviewRateModel>, comment: String, commonRating: Float) = utils.launchSuspend {
 		viewState.showProgress(true)
 		viewState.blockInterface(true)
-		fetchResult(WITHOUT_ERROR) {
+		fetchResult {
 			reviewInteractor.sendRates(
-				list.map { reviewRateMapper.fromView(it) },
-				if (comment == hintComment)
-					""
-				else
-					comment
-			)
+				list.map { reviewRateMapper.fromView(it) }, getFeedBackText(comment))
 		}.also { result ->
 			logAverageRate(list.map { it.rateValue }.average())
 			logDetailRate(list, comment)
 			viewState.blockInterface(false)
 			viewState.showProgress(false)
-			result.error?.let {
-				viewState.setError(it)
-			} ?: viewState.exitAndReportSuccess(
-				commonRating,
-				if (comment == hintComment)
-					""
-				else
-					comment
-			)
+			result.isSuccess()
+					?.let {
+						viewState.exitAndReportSuccess(
+								commonRating,
+								getFeedBackText(comment)
+						)
+					}
 		}
 	}
 
 	fun onClickComment(currentComment: String) {
-		viewState.showCommentEditor(
-			if (currentComment != hintComment)
-				currentComment
-			else
-				""
-		)
+		viewState.showCommentEditor(getFeedBackText(currentComment))
 	}
 
 	fun commentChanged(newComment: String) {
@@ -119,4 +104,8 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		bundle.putString(Analytics.REVIEW_COMMENT, comment)
 		analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
 	}
+
+	private fun getFeedBackText(text: String) =
+			if (text == hintComment) ""
+			else text
 }
