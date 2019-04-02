@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -99,10 +98,6 @@ class MainRequestFragment :
     private fun enableBtnNext() {
         btnNextFragment.isEnabled = request_search_panel.searchFrom.text.isNotEmpty() &&
                 (request_search_panel.searchTo.text.isNotEmpty() || switcher_hourly.switch_mode_.isChecked)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun setView(addressFrom: String?, addressTo: String?, duration: String?) {

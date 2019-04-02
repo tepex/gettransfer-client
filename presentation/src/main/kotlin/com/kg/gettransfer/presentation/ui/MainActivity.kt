@@ -18,7 +18,6 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
-import android.util.Log
 
 import android.view.Gravity
 import android.view.View
@@ -184,7 +183,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             if (!firstAttach)setAnimation(withMap, this)
             if (!withMap) add(R.id.fragmentContainer, MainRequestFragment())
             else supportFragmentManager.fragments.firstOrNull()?.let { requestView = null;remove(it) }
-
         }?.commit()
     }
 
