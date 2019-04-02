@@ -49,10 +49,27 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) : 
         utils.launchSuspend {
             viewState.blockInterface(true)
 
-            var result = fetchData { transferInteractor.getTransfers(transferType == TRANSFER_ACTIVE, true) }
-            result?.let { showTransfers(it) }
-            result = fetchData { transferInteractor.getTransfers(transferType == TRANSFER_ACTIVE, false) }
-            result?.let { showTransfers(it) }
+            when(transferType){
+                TRANSFER_ACTIVE -> {
+                    fetchData { transferInteractor.getTransfersActiveCached() }?.let {
+                        showTransfers(it)
+                    }
+
+                    fetchData { transferInteractor.getTransfersActive() }?.let {
+                        showTransfers(it)
+                    }
+                }
+
+                TRANSFER_ARCHIVE -> {
+                    fetchData { transferInteractor.getTransfersArchiveCached() }?.let {
+                        showTransfers(it)
+                    }
+
+                    fetchData { transferInteractor.getTransfersArchive() }?.let {
+                        showTransfers(it)
+                    }
+                }
+            }
 
             viewState.blockInterface(false)
         }
