@@ -29,7 +29,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     private val messageMapper: MessageMapper by inject()
     private val carrierTripMapper: CarrierTripMapper by inject()
 
-    private lateinit var chatModel: ChatModel
+    private var chatModel: ChatModel? = null
     private var transferModel: TransferModel? = null
     private var offerModel: OfferModel? = null
     private var carrierTripModel: CarrierTripModel? = null
@@ -53,7 +53,9 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
             transferModel = transferMapper.toView(transferCachedResult.model)
             chatModel = chatMapper.toView(chatCachedResult.model)
-            chatModel.let { viewState.setChat(it) }
+            chatModel?.let { viewState.setChat(it) }
+
+            getChatFromRemote()
 
             if (tripId != NO_ID) {
                 val carrierTripCachedResult = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
@@ -69,7 +71,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
                 transferModel?.let { viewState.setToolbar(it, offerModel, tripId == NO_ID && userRole == ROLE_PASSENGER) }
             }
         }
-        getChatFromRemote()
         onJoinRoom()
     }
 
@@ -97,21 +98,23 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     }
 
     private fun initChatModel(chatResult: Chat){
-        if(chatModel.currentAccountId == NO_ID) {
+        if(chatModel == null || chatModel!!.currentAccountId == NO_ID) {
             chatModel = chatMapper.toView(chatResult)
-            viewState.setChat(chatModel)
+            chatModel?.let { viewState.setChat(it) }
         } else {
-            val oldMessagesSize = chatModel.messages.size
-            chatModel.messages = chatResult.messages.map { messageMapper.toView(it) }
-            viewState.notifyData()
-            if(chatResult.messages.size > oldMessagesSize) viewState.scrollToEnd()
+            chatModel?.apply {
+                val oldMessagesSize = messages.size
+                messages = chatResult.messages.map { messageMapper.toView(it) }
+                viewState.notifyData()
+                if(chatResult.messages.size > oldMessagesSize) viewState.scrollToEnd()
+            }
         }
     }
 
     fun onSentClick(text: String){
         val time = Calendar.getInstance().time
-        val newMessage = MessageModel(0, chatModel.currentAccountId, transferId, time, null, text, time.time)
-        chatModel.messages = chatModel.messages.plus(newMessage)
+        val newMessage = MessageModel(0, chatModel?.currentAccountId ?: NO_ID, transferId, time, null, text, time.time)
+        chatModel?.apply { messages = messages.plus(newMessage) }
         viewState.scrollToEnd()
         utils.launchSuspend { fetchResult { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
         sendAnalytics(MESSAGE_OUT)
@@ -135,12 +138,12 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         utils.launchSuspend{
             fetchResult { chatInteractor.getChat(transferId, true) }
                     .also { if (it.fromCache) initChatModel(it.model) }
-            if (isIdValid(message)) sendAnalytics(MESSAGE_IN)
+            chatModel?.currentAccountId?.let { if (isIdValid(message, it)) sendAnalytics(MESSAGE_IN) }
         }
     }
 
     override fun onMessageReadEvent(message: Message) {
-        chatModel.messages.find { it.id == message.id }?.readAt = message.readAt
+        chatModel?.messages?.find { it.id == message.id }?.readAt = message.readAt
         viewState.notifyData()
     }
 
@@ -153,9 +156,9 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     private fun sendAnalytics(event: String) =
         analytics.logEvent(event, createEmptyBundle(), emptyMap())
 
-    private fun isIdValid(message: Message) =
-            message.accountId != chatModel.currentAccountId &&
-                    chatModel.currentAccountId != NO_ID
+    private fun isIdValid(message: Message, currentAccountId: Long) =
+            message.accountId != currentAccountId &&
+                    currentAccountId != NO_ID
 
     companion object {
         const val MESSAGE_IN  = "message_in"
