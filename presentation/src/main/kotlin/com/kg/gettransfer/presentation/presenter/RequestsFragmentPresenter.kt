@@ -47,13 +47,16 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) : 
 
     private fun getTransfers() {
         utils.launchSuspend {
-            viewState.blockInterface(true)
-
             when(transferType){
                 TRANSFER_ACTIVE -> {
+
+                    viewState.blockInterface(true)
+
                     fetchData { transferInteractor.getTransfersActiveCached() }?.let {
                         showTransfers(it)
                     }
+
+                    viewState.blockInterface(false)
 
                     fetchData { transferInteractor.getTransfersActive() }?.let {
                         showTransfers(it)
@@ -61,17 +64,20 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) : 
                 }
 
                 TRANSFER_ARCHIVE -> {
+
+                    viewState.blockInterface(true)
+
                     fetchData { transferInteractor.getTransfersArchiveCached() }?.let {
                         showTransfers(it)
                     }
+
+                    viewState.blockInterface(false)
 
                     fetchData { transferInteractor.getTransfersArchive() }?.let {
                         showTransfers(it)
                     }
                 }
             }
-
-            viewState.blockInterface(false)
         }
     }
 
