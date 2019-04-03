@@ -108,7 +108,7 @@
             android:id="@+id/bottomCommunicationButtons"
             layout="@layout/view_communication_buttons"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/bottom_sheet_carrier_trip_details_free_space_height" />
 
     </LinearLayout>
 
