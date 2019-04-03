@@ -273,6 +273,9 @@
 	<dimen name="title_margin_start">8dp</dimen>
 	<dimen name="order_title_text_size">17sp</dimen>
 
+	<dimen name="order_field_height">64dp</dimen>
+	<dimen name="arrow_margin_end">16dp</dimen>
+
 	<!--activity_transfer_details-->
 	<dimen name="activity_transfer_details_behaviour_peek_height">385dp</dimen>
 	<dimen name="activity_transfer_details_text_size_17sp">17sp</dimen>

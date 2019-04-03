@@ -10,7 +10,6 @@
 	<TextView
 		android:id="@+id/sub_title"
 		android:layout_width="0dp"
-		android:text="Pickup"
 		android:maxLines="1"
 		android:ellipsize="end"
 		app:layout_constraintStart_toStartOf="parent"

@@ -133,6 +133,9 @@ class SystemInteractor(
 
     fun initGeocoder() = geoRepository.initGeocoder(locale)
 
+    val isGpsEnabled
+        get() = geoRepository.isGpsEnabled
+
     var appEntersForMarketRate: Int
         get()  = systemRepository.appEnters
         set(value) { systemRepository.appEnters = value }

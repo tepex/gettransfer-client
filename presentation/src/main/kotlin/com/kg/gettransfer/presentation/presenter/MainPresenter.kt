@@ -171,21 +171,18 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         setPointAddress(orderInteractor.from!!)
     }
 
-    private suspend fun updateCurrentLocationAsync(): Result<GTAddress> {
+    private suspend fun updateCurrentLocationAsync() {
         //viewState.blockInterface(true)
         viewState.blockSelectedField(true, systemInteractor.selectedField)
-        fetchResultOnly { orderInteractor.getCurrentAddress() }
-                .also {
-                    if (it.error != null) {
-                        viewState.setError(it.error!!)
-                        with(fetchResultOnly { systemInteractor.getMyLocation() }) {
-                            logIpapiRequest()
-                            if (error == null && model.latitude != null && model.longitude != null)
-                                setLocation(model)
-                        }
-                    } else setPointAddress(it.model)
-                    return it
-                }
+        if (systemInteractor.isGpsEnabled)
+            fetchDataOnly { orderInteractor.getCurrentAddress() }
+                    ?.let {  setPointAddress(it)}
+        else
+            with(fetchResultOnly { systemInteractor.getMyLocation() }) {
+                logIpapiRequest()
+                if (error == null && model.latitude != null && model.longitude != null)
+                    setLocation(model)
+            }
     }
 
     private suspend fun setLocation(location: Location) {

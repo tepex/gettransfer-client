@@ -4,6 +4,7 @@ import android.content.Context
 
 import android.location.Geocoder
 import android.location.Location
+import android.location.LocationManager
 
 import com.google.android.gms.common.data.DataBufferUtils
 
@@ -37,6 +38,10 @@ class GeoRepositoryImpl(private val context: Context): GeoRepository {
     private val locationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     private val gdClient = Places.getGeoDataClient(context)
     private val pdClient = Places.getPlaceDetectionClient(context)
+
+    override val isGpsEnabled: Boolean
+        get() = (context.getSystemService(Context.LOCATION_SERVICE)
+                as LocationManager).isProviderEnabled(LocationManager.GPS_PROVIDER)
 
     override fun initGeocoder(locale: Locale) {
         geocoder = Geocoder(context, locale)

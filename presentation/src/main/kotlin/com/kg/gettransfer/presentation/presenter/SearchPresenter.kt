@@ -77,7 +77,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
     private fun pointReady(notZeroPoint: Boolean, isDoubleClickOnRoute: Boolean, isSuitableType: Boolean) {
         if (!notZeroPoint) return
         if(isSuitableType || isDoubleClickOnRoute) {
-            if (checkFields() && isTo) createRouteForOrder()
+            if (checkFields() && (isTo || orderInteractor.hourlyDuration != null)) createRouteForOrder()
             else if (!isTo) {
                 viewState.setFocus(true)
                 orderInteractor.to?.let {
@@ -105,7 +105,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
     }
 
     private fun createRouteForOrder() {
-        systemInteractor.addressHistory = listOf(orderInteractor.from!!, orderInteractor.to!!)
+        fillHistory()
         if (backwards) router.exit()
         else router.replaceScreen(Screens.CreateOrder)
         logButtons(Analytics.REQUEST_FORM)
@@ -149,6 +149,11 @@ class SearchPresenter : BasePresenter<SearchView>() {
             return false
         }
         return true
+    }
+
+    private fun fillHistory() {
+        systemInteractor.addressHistory = mutableListOf(orderInteractor.from!!)
+                .apply { orderInteractor.to?.let { add(it) } }
     }
 
     companion object {

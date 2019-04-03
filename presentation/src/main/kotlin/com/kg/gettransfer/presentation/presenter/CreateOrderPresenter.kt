@@ -115,8 +115,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun checkOrderDateTime() =
             with(orderInteractor) {
-                orderStartTime?.let { setPredefinedDate(it, true) }
-                orderReturnTime?.let { setPredefinedDate(it, false) }
+                orderStartTime?.let {
+                    setPredefinedDate(it, true)
+                    startDate.date = it
+                }
+                orderReturnTime?.let {
+                    setPredefinedDate(it, false)
+                    returnDate = TripDate(it)
+                }
             }
 
     private fun setPredefinedDate(date: Date, field: Boolean) =

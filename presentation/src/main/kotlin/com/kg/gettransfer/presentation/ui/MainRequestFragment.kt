@@ -55,6 +55,8 @@ class MainRequestFragment :
         with(request_search_panel) {
             searchFrom.sub_title.text = mParent.getString(R.string.LNG_FIELD_SOURCE_PICKUP)
             searchTo.sub_title.text = mParent.getString(R.string.LNG_FIELD_DESTINATION)
+            searchFrom.setPadding(0, 0, Utils.dpToPxInt(mParent, 26F), 0)
+            searchTo.setPadding(0, 0, Utils.dpToPxInt(mParent, 26F), 0)
         }
     }
 

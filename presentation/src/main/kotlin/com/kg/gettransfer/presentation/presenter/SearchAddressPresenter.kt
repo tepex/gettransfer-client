@@ -37,14 +37,14 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
 
         Timber.d("------ request list for prediction $prediction")
         var latLonPair: Pair<Point, Point>? = null
-        if (mBounds != null) {
-            val nePoint = Point(mBounds!!.northeast.latitude, mBounds!!.northeast.longitude)
-            val swPoint = Point(mBounds!!.southwest.latitude, mBounds!!.southwest.longitude)
+        mBounds?.let {
+            val nePoint = Point(it.northeast.latitude, it.northeast.longitude)
+            val swPoint = Point(it.southwest.latitude, it.southwest.longitude)
             latLonPair = Pair(nePoint, swPoint)
         }
 
         utils.launchSuspend {
-            fetchData(checkLoginError = false){ orderInteractor.getAutocompletePredictions(prediction, latLonPair) }
+            fetchData(checkLoginError = false) { orderInteractor.getAutocompletePredictions(prediction, latLonPair) }
                     ?.let {
                         lastResult = it
                         lastRequest = prediction
@@ -54,12 +54,6 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
 
     fun onClearAddress(isTo: Boolean) {
         if (isTo) orderInteractor.to = null else orderInteractor.from = null
-    }
-
-    fun returnAddress(isTo: Boolean) {
-        viewState.returnLastAddress(
-            if (isTo) orderInteractor.to?.cityPoint?.name ?: "" else orderInteractor.from?.cityPoint?.name ?: ""
-        )
     }
 
     companion object {

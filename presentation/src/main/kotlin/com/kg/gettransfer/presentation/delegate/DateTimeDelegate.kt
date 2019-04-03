@@ -20,12 +20,14 @@ class DateTimeDelegate: KoinComponent {
     private var currentData: Calendar
     var startDate: TripDate = TripDate(Date())
     var returnDate: TripDate? = null
+    private val futureHour
+        get() = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
     val startOrderedTime
         get() = orderInteractor.orderStartTime?.simpleFormat()
     val returnOrderedTime
         get() = orderInteractor.orderReturnTime?.simpleFormat()
 
-    private val futureHour = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
+
     init {
         currentData = getCurrentDatePlusMinimumHours()
     }

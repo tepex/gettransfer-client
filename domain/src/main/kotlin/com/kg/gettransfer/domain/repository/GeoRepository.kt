@@ -14,4 +14,5 @@ interface GeoRepository {
     fun getCurrentAddress(): Result<GTAddress>
     fun getAutocompletePredictions(prediction: String, points: Pair<Point, Point>?): Result<List<GTAddress>>
     fun getLatLngByPlaceId(placeId: String): Result<Point>
+    val isGpsEnabled: Boolean
 }
