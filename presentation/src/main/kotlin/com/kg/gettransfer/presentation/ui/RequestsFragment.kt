@@ -65,7 +65,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         val transferName = when(presenter.transferType) {
             RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> getString(R.string.LNG_TRIPS_EMPTY_ACTIVE)
             RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> getString(R.string.LNG_TRIPS_EMPTY_COMPLETED)
-            else -> getString(R.string.LNG_TRIPS_EMPTY_ACTIVE)
+            else -> throw UnsupportedOperationException()
         }
 
         noTransfersText.text = transferName
@@ -77,7 +77,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         val layout = when(presenter.transferType) {
             RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> R.layout.view_transfer_request_info_enabled
             RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> R.layout.view_transfer_request_info_disabled
-            else -> R.layout.view_transfer_request_info_enabled
+            else -> throw UnsupportedOperationException()
         }
 
         noTransfersText.isVisible = transfers.isEmpty()

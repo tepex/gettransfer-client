@@ -69,7 +69,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
             when(position) {
                 TRANSFER_ACTIVE -> return RequestsFragment.newInstance(TRANSFER_ACTIVE)
                 TRANSFER_ARCHIVE -> return RequestsFragment.newInstance(TRANSFER_ARCHIVE)
-                else -> return RequestsFragment.newInstance(TRANSFER_ACTIVE)
+                else -> throw UnsupportedOperationException()
             }
         }
 
@@ -78,7 +78,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
             when(position) {
                 TRANSFER_ACTIVE -> return context.getString(R.string.LNG_RIDES_ACTIVE)
                 TRANSFER_ARCHIVE -> return context.getString(R.string.LNG_RIDES_COMPLETED)
-                else -> return context.getString(R.string.LNG_RIDES_ACTIVE)
+                else -> throw UnsupportedOperationException()
             }
         }
     }
