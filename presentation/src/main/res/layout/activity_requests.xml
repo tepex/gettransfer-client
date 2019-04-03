@@ -55,7 +55,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/vpRequests"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/margin0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/divider_bottom_view"
         app:layout_constraintBottom_toBottomOf="parent">
