@@ -279,9 +279,7 @@
     <string name="LNG_PAYMENT_COMISSION2">Commission %s%%.\nRefund is available before %s</string>
     <string name="LNG_PAYMENT_PAY">Pay</string>
     <string name="LNG_RIDE_CANT_CREATE">Can\'t create transfer</string>
-    <string name="LNG_RIDES_ACTIVE">Active</string>
     <string name="LNG_RIDES_ALL">All</string>
-    <string name="LNG_RIDES_COMPLETED">Completed</string>
     <string name="LNG_TIME_RIDE">Hourly transfer</string>
     <string name="LNG_WAIT_FOR_OFFERS">Please wait for offers</string>
     <string name="LNG_BOOK_OFFER">Please book car and driver</string>
@@ -441,13 +439,13 @@
     <string name="LNG_EMAIL">Email</string>
     <string name="LNG_PHONE">Phone</string>
     <string name="LNG_TRIP_ON_MY_WAY">On my way</string>
-    <string name="LNG_TRIPS_EMPTY_ACTIVE">you have no active transfers</string>
+    <string name="LNG_RIDES_ACTIVE">Upcoming</string>
+    <string name="LNG_RIDES_COMPLETED">Past</string>
+    <string name="LNG_TRIPS_EMPTY_ACTIVE">you have no upcoming transfers</string>
+    <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no past transfers</string>
     <string name="LNG_TRIPS_EMPTY_ALL">you have no transfers</string>
-    <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no completed transfers</string>
     <string name="LNG_CALENDAR">Calendar</string>
     <string name="LNG_LIST">List</string>
-    <string name="LNG_TRIPS_EMPTY_UPCOMING">you have no upcoming transfers</string>
-    <string name="LNG_TRIPS_EMPTY_PAST">you have no past transfers</string>
     <string name="LNG_NEW_CHAT_MESSAGE">Write the message</string>
     <string name="LNG_NEW_PASSENGER_CHAT_TITLE">Passenger message</string>
     <string name="LNG_NEW_DRIVER_CHAT_TITLE">Carrier message</string>
@@ -494,8 +492,7 @@
     <string name="LNG_COUNTRY_NAMES_RU">Russia</string>
     <string name="LNG_CITY_NAMES_HONG_KONG">Hong Kong</string>
     <string name="LNG_COUNTRY_NAMES_ZH">China</string>
-    <string name="transfer_upcoming">Upcoming</string>
-    <string name="transfer_past">Past</string>
+
     <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
     <string name="switzerland_phone" translatable="false">+41 22 518 04 00</string>
     <string name="cyprus_phone" translatable="false">+357 24 022300</string>

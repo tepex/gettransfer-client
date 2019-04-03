@@ -73,9 +73,9 @@ class RequestsActivity: BaseActivity(), RequestsView {
         override fun getCount() = 2
         override fun getPageTitle(position: Int): CharSequence? {
             when(position) {
-                TRANSFER_ACTIVE -> return context.getString(R.string.transfer_upcoming)
-                TRANSFER_ARCHIVE -> return context.getString(R.string.transfer_past)
-                else -> return context.getString(R.string.transfer_upcoming)
+                TRANSFER_ACTIVE -> return context.getString(R.string.LNG_RIDES_ACTIVE)
+                TRANSFER_ARCHIVE -> return context.getString(R.string.LNG_RIDES_COMPLETED)
+                else -> return context.getString(R.string.LNG_RIDES_ACTIVE)
             }
         }
     }
@@ -86,8 +86,8 @@ class RequestsActivity: BaseActivity(), RequestsView {
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
                 when(p0) {
-                    TRANSFER_ACTIVE -> sendEventLog(getString(R.string.transfer_upcoming))
-                    TRANSFER_ARCHIVE -> sendEventLog(getString(R.string.transfer_past))
+                    TRANSFER_ACTIVE -> sendEventLog(getString(R.string.LNG_RIDES_ACTIVE))
+                    TRANSFER_ARCHIVE -> sendEventLog(getString(R.string.LNG_RIDES_COMPLETED))
                 }
             }
         })

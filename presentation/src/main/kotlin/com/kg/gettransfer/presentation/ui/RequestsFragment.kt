@@ -63,9 +63,9 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         super.onViewCreated(view, savedInstanceState)
 
         val transferName = when(presenter.transferType) {
-            RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> getString(R.string.LNG_TRIPS_EMPTY_UPCOMING)
-            RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> getString(R.string.LNG_TRIPS_EMPTY_PAST)
-            else -> getString(R.string.transfer_upcoming)
+            RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> getString(R.string.LNG_TRIPS_EMPTY_ACTIVE)
+            RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> getString(R.string.LNG_TRIPS_EMPTY_COMPLETED)
+            else -> getString(R.string.LNG_TRIPS_EMPTY_ACTIVE)
         }
 
         noTransfersText.text = transferName
