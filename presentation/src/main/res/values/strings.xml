@@ -71,7 +71,7 @@
     <string name="market_link">market://details?id=</string>
     <string name="app_package">com.gettransfer</string>
 
-    <string name="carrier_trip_date_format">(%1$s)</string>
+    <string name="text_in_parentheses">(%1$s)</string>
     <string name="chat_transfer_date_transfer_id_format">%1$s (%2$s)</string>
 
     <string name="X_SIGN">X</string>

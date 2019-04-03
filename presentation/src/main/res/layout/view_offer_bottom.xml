@@ -40,8 +40,8 @@
     <include
             android:id="@+id/btn_book"
             android:layout_alignParentEnd="true"
-            android:layout_height="wrap_content"
-            android:layout_width="128dp"
+            android:layout_height="@dimen/view_offer_bs_btn_book_height"
+            android:layout_width="@dimen/view_offer_bs_btn_book_width"
             android:layout_marginStart="20dp"
             layout="@layout/btn_book"/>
 

@@ -224,7 +224,10 @@
     </style>
 
     <style name="offerCard" parent="Base.CardView">
-        <item name="android:layout_margin">@dimen/card_view_margin</item>
+        <item name="android:layout_marginTop">@dimen/card_view_margin_top_bottom</item>
+        <item name="android:layout_marginBottom">@dimen/card_view_margin_top_bottom</item>
+        <item name="android:layout_marginStart">@dimen/card_view_margin_start_end</item>
+        <item name="android:layout_marginEnd">@dimen/card_view_margin_start_end</item>
         <item name="cardCornerRadius">@dimen/card_view_corners</item>
     </style>
 

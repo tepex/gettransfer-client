@@ -41,7 +41,7 @@ class CarrierTripsCalendarRVAdapter(
             }
             textFromPointName.text = item.from
             textTime.text = SystemUtils.formatTime(item.dateLocal)
-            textDate.text = context.getString(R.string.carrier_trip_date_format, SystemUtils.formatDate(item.dateLocal))
+            textDate.text = context.getString(R.string.text_in_parentheses, SystemUtils.formatDate(item.dateLocal))
             setOnClickListener { listener(item.id, item.transferId) }
         }
     }

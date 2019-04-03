@@ -4,6 +4,7 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.FitCenter
@@ -96,7 +97,7 @@ object OfferItemBindDelegate {
                     }
             bindRating(view_rating_tiny, offer.carrier.ratings, offer.carrier.approved)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
-            offer.price.withoutDiscount?.let { tv_price_no_discount.strikeText = it.preferred ?: it.def }
+            offer.price.withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
             tv_price_final.text = offer.price.base.preferred ?: offer.price.base.def
         }
     }
@@ -104,13 +105,20 @@ object OfferItemBindDelegate {
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) {
         with(view) {
             tv_car_model_tiny.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
-            tv_car_model_tiny.setTextSize(TypedValue.COMPLEX_UNIT_SP, BOOK_NOW_TITLE_SIZE)
+            tv_car_model_tiny.setTextSize(TypedValue.COMPLEX_UNIT_SP, context.resources.getDimension(R.dimen.view_offer_book_now_title_text_size))
             tv_car_class_tiny.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
             bindMainPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
             bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
-            offer.withoutDiscount?.let { tv_price_no_discount.strikeText = it.preferred ?: it.def }
+            offer.withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
             tv_price_final.text = offer.base.preferred ?: offer.base.def
+        }
+    }
+
+    private fun setStrikePriceText(textView: TextView, price: String) {
+        textView.apply {
+            strikeText = context.getString(R.string.text_in_parentheses, price)
+            isVisible = true
         }
     }
 
@@ -133,9 +141,8 @@ object OfferItemBindDelegate {
             with(rateView) {
                 if (rating.average != null && rating.average != NO_RATING) {
                     imgApproved.isVisible     = approved
-                    tv_drivers_rate.text      = "(".plus(rating.average).plus(")")
-                    tv_drivers_rate.isVisible = true
-                    imgStar.isVisible         = true
+                    tv_drivers_rate.text      = context.getString(R.string.text_in_parentheses, rating.average.toString())
+                    isVisible = true
                     return@with RATE_SHOWN
                 }
                 return@with !RATE_SHOWN
@@ -166,7 +173,7 @@ object OfferItemBindDelegate {
                         if (path != null) it.load(path)
                         else it.load(resource) }
                     .apply(RequestOptions().transforms(getTransform(path),
-                            RoundedCorners(Utils.dpToPxInt(parent.context, PHOTO_CORNER))))
+                            RoundedCorners(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))))
                     .into(view)
 
     private fun getTransform(path: String?) =
@@ -175,7 +182,5 @@ object OfferItemBindDelegate {
 
 
     private const val NO_RATING     = 0.0F
-    private const val PHOTO_CORNER  = 8F
     private const val RATE_SHOWN    = true
-    private const val BOOK_NOW_TITLE_SIZE = 9F
 }

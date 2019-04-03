@@ -544,7 +544,43 @@
 
 	<!--view_offer-->
 	<dimen name="offer_list_rv_padding">4dp</dimen>
-	<dimen name="card_view_margin">4dp</dimen>
+	<dimen name="card_view_margin_top_bottom">4dp</dimen>
+	<dimen name="card_view_margin_start_end">4dp</dimen>
+    <dimen name="card_view_padding_top_end">8dp</dimen>
+    <dimen name="view_offer_car_model_margin_start_end">8dp</dimen>
+    <dimen name="view_offer_price_no_discount_margin_end">8dp</dimen>
+    <dimen name="view_offer_car_img_width">72dp</dimen>
+    <dimen name="view_offer_car_img_height">40dp</dimen>
+    <dimen name="view_offer_car_img_margin_top">2dp</dimen>
+    <dimen name="view_offer_car_img_margin_start">-3dp</dimen>
+    <dimen name="view_offer_btn_book_width">104dp</dimen>
+    <dimen name="view_offer_btn_book_height">32dp</dimen>
+    <dimen name="view_offer_btn_book_margin_top">6dp</dimen>
+    <dimen name="view_offer_btn_book_margin_bottom">8dp</dimen>
+    <dimen name="view_offer_car_info_margin_start">8dp</dimen>
+    <dimen name="view_offer_languages_container_margin">8dp</dimen>
+    <dimen name="view_offer_btn_book_text_size">17sp</dimen>
+	<dimen name="view_offer_language_icon_width">14dp</dimen>
+	<dimen name="view_offer_language_icon_height">8dp</dimen>
+	<dimen name="view_offer_language_icon_start_end_margin">2dp</dimen>
+	<dimen name="view_offer_language_icon_top_bottom_margin">4dp</dimen>
+	<dimen name="view_offer_book_now_title_text_size">9sp</dimen>
+	<dimen name="view_offer_photo_corner">8dp</dimen>
+    <dimen name="view_offer_text_size_10sp">10sp</dimen>
+    <dimen name="view_offer_text_size_12sp">12sp</dimen>
+    <dimen name="view_offer_text_size_15sp">15sp</dimen>
+    <dimen name="view_offer_text_size_16sp">16sp</dimen>
+
+    <dimen name="view_offer_bs_btn_book_width">128dp</dimen>
+    <dimen name="view_offer_bs_btn_book_height">32dp</dimen>
+
+    <dimen name="view_offer_rating_text_size">12sp</dimen>
+    <dimen name="view_offer_rating_img_size">12dp</dimen>
+    <dimen name="view_offer_rating_margins">3dp</dimen>
+
+
+
+
 	<dimen name="card_view_corners">8dp</dimen>
 	<dimen name="view_offer_padding_top_bottom">10dp</dimen>
 	<dimen name="view_offer_margin">4dp</dimen>
