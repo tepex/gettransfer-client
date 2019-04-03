@@ -52,7 +52,8 @@
             android:paddingStart="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
             android:paddingEnd="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
             android:layout_marginBottom="@dimen/bottom_sheet_transfer_details_book_now_margin_bottom"
-            android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"/>
+            android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"
+            android:visibility="gone"/>
 
         <include
             android:id="@+id/view_rate_ride"

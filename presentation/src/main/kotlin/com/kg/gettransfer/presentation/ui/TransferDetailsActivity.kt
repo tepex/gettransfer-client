@@ -330,11 +330,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     private fun initAboutRequestView(transfer: TransferModel, userProfile: ProfileModel) {
    //     booking_number.field_text.text = transfer.id.toString()
-        with (userProfile) {
+        /*with (userProfile) {
             name?.let { initField(passenger_name, it) }
             email?.let { initField(passenger_email, it) }
             phone?.let { initField(passenger_phone, it) }
-        }
+        }*/
+        userProfile.name?.let { initField(passenger_name, it) }
         with(transfer) {
             flightNumber?.let { initField(flight_number, it) }
             dateTimeReturn?.let { initField(back_trip, SystemUtils.formatDateTime(it)) }
@@ -425,7 +426,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         }
 
         offer.carrier.let { carrier ->
-            carrier.profile?.name?.let { name -> carrier_name.field_text.text = name }
+            carrier.profile?.name?.let { name ->
+                carrier_name.field_text.text = name
+                carrier_name.isVisible = true
+            }
             carrier.profile?.phone?.let { phone ->
                 carrier_phone.field_text.text = phone
                 carrier_phone.isVisible = true

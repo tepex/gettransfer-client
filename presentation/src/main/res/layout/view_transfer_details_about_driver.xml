@@ -36,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:title_transfer_details="@string/LNG_CARRIER"
+            tools:input_transfer_details="Antarctica Travel"
             android:visibility="gone"
             tools:visibility="visible"/>
 

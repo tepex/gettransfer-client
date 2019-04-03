@@ -217,7 +217,7 @@
     <string name="LNG_MAP">Map</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL_CHILD">children</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL_PERSON">persons</string>
-    <string name="LNG_RIDE_SETTINGS_OPTIONAL_COMMENT">comment</string>
+    <string name="LNG_RIDE_SETTINGS_OPTIONAL_COMMENT">Comment</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL">Additional</string>
     <string name="LNG_RIDE_DISTANCE">Distance</string>
     <string name="LNG_RIDE_DURATION">Duration</string>
