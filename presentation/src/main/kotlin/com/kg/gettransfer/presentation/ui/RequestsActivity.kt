@@ -46,7 +46,10 @@ class RequestsActivity: BaseActivity(), RequestsView {
         setContentView(R.layout.activity_requests)
 
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_RIDES)
-        //toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.colorYellow))
+
+        supportActionBar?.apply {
+            setHomeAsUpIndicator(R.drawable.ic_home_back_24dp)
+        }
 
         val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager, this)
 
