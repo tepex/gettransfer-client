@@ -30,7 +30,7 @@
                 android:layout_marginEnd="@dimen/view_offer_car_model_margin_start_end"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textSize="@dimen/view_offer_text_size_16sp"
+                android:textSize="@dimen/view_offer_text_size_14sp"
                 app:layout_constraintEnd_toStartOf="@+id/tv_price_no_discount"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
