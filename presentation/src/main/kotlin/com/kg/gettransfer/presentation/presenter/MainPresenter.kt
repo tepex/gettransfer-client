@@ -95,12 +95,12 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
         Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
         if (systemInteractor.withPointOnMap) viewState.openMapToSetPoint()
-        setOwnLocation()
+        if (!setAddressFields()) setOwnLocation()
         viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)
-        orderInteractor.from?.address?.let { viewState.setAddressFrom(it) }
         viewState.setTripMode(orderInteractor.hourlyDuration)
         setCountEvents(countEventsInteractor.eventsCount)
+
     }
 
     @CallSuper
@@ -109,7 +109,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         countEventsInteractor.removeCounterListener(this)
     }
 
-    fun setOwnLocation() {
+    private fun setOwnLocation() {
         if (orderInteractor.from != null) setLastLocation() else updateCurrentLocation()
     }
 
@@ -289,10 +289,13 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun isHourly() = orderInteractor.hourlyDuration != null
 
-    fun setAddressFields() {
-        viewState.setAddressFrom(orderInteractor.from?.address ?: "")
-        viewState.setAddressTo(orderInteractor.to?.address ?: "")
-        viewState.initSearchForm()
+    fun setAddressFields(): Boolean {
+        with(orderInteractor) {
+            viewState.setAddressTo(to?.address ?: EMPTY_ADDRESS)
+            return from.also {
+                viewState.setAddressFrom(it?.address ?: EMPTY_ADDRESS)
+            } != null
+        }
     }
 
     fun onSearchClick(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false) {
@@ -550,6 +553,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 companion object {
     const val FIELD_FROM = "field_from"
     const val FIELD_TO = "field_to"
+    const val EMPTY_ADDRESS = ""
 
     const val MIN_HOURLY = 2
     const val ONE_SEC_DELAY = 1000L

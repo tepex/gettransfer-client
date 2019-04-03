@@ -16,8 +16,10 @@ import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.presentation.view.MainRequestView
 import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_search.view.*
 import kotlinx.android.synthetic.main.create_order_field.view.*
 import kotlinx.android.synthetic.main.fragment_main_request.*
+import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form.view.*
 
 import kotlinx.android.synthetic.main.view_switcher.view.*
@@ -44,8 +46,16 @@ class MainRequestFragment :
         mParent = activity as MainActivity
         mPresenter = mParent.presenter
         mParent.requestView = this
+        initSearchForm()
         initClickListeners()
         initDateTimeFields()
+    }
+
+    private fun initSearchForm() {
+        with(request_search_panel) {
+            searchFrom.sub_title.text = mParent.getString(R.string.LNG_FIELD_SOURCE_PICKUP)
+            searchTo.sub_title.text = mParent.getString(R.string.LNG_FIELD_DESTINATION)
+        }
     }
 
     private fun initClickListeners() {
@@ -74,7 +84,10 @@ class MainRequestFragment :
 
     private fun initDateTimeFields() =
         with(dateDelegate) {
-            startOrderedTime?.let { order_time_view.hint_title.text = it }
+            startOrderedTime?.let {
+                order_time_view.hint_title.text = it
+                return_time_view.setOnClickListener(dateReturnClickListenerEnabled)
+            }
             returnOrderedTime?.let { return_time_view.hint_title.text = it }
             enableBtnNext()
         }
@@ -128,7 +141,7 @@ class MainRequestFragment :
         val dateField = if (field == FIELD_START) order_time_view else return_time_view
         dateField.hint_title.text = date
         if (field == FIELD_START && date.isNotEmpty())
-            return_time_view.setOnClickListener { dateReturnClickListenerEnabled }
+            return_time_view.setOnClickListener(dateReturnClickListenerEnabled)
     }
 
     override fun onNetworkWarning(disconnected: Boolean) {

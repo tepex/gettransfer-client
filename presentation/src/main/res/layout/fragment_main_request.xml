@@ -103,7 +103,7 @@
 
     <TextView
             android:id="@+id/tv_internet_warning"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/return_time_view"
             android:layout_marginTop="@dimen/internet_warning_horizontal_text_margin_top"
@@ -114,11 +114,11 @@
             android:textSize="@dimen/internet_warning_horizontal_text_size"
             android:textColor="@color/colorWhite"
             android:gravity="center"
-            android:fontFamily="@font/sf_pro_text_semibold"
+            android:fontFamily="@font/sf_pro_text_regular"
             android:layout_centerHorizontal="true"
             android:visibility="gone"
             android:text="@string/LNG_OFFLINE_MESSAGE"
-            android:background="@drawable/bg_rounded_alert"
+            android:background="@color/color_error"
             tools:visibility="visible"/>
 
 

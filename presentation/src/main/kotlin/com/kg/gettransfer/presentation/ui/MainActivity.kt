@@ -144,6 +144,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         })
 
         presenter.setAddressFields()
+        initSearchForm()
 
         initNavigation()
 
@@ -404,7 +405,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         if (e.isNotFound()) super.setError(e)
     }
 
-    override fun initSearchForm() {
+    fun initSearchForm() {
         searchFrom.sub_title.text = getString(R.string.LNG_FIELD_SOURCE_PICKUP)
         searchTo.sub_title.text   = getString(R.string.LNG_FIELD_DESTINATION)
     }

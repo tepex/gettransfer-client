@@ -14,7 +14,6 @@ import com.kg.gettransfer.presentation.model.TransferModel
 interface MainView: BaseView {
     fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean = true)
     fun moveCenterMarker(point: LatLng)
-    fun initSearchForm()
     fun setAddressFrom(address: String)
     fun setAddressTo(address: String)
     fun setProfile(profile: ProfileModel)
