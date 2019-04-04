@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
 
 import android.os.Bundle
 
@@ -15,7 +14,6 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 
 import com.google.android.gms.maps.CameraUpdate
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.*
@@ -141,8 +139,8 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
             Timber.w("Polyline model is empty for route: $routeModel")
             return
         }
-        val aBitmap = if (driverMode) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
-        val bBitmap = if (driverMode) R.drawable.ic_map_label_b_driver else R.drawable.ic_map_label_b
+        val aBitmap = R.drawable.ic_map_label_a_orange
+        val bBitmap = R.drawable.ic_map_label_b_orange
 
         processGoogleMap(false) {
             val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, aBitmap)
@@ -162,8 +160,8 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
             return
         }
 
-        val aBitmap = if (driverMode) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
-        val bBitmap = if (driverMode) R.drawable.ic_map_label_b_driver else R.drawable.ic_map_label_b
+        val aBitmap = R.drawable.ic_map_label_a_orange
+        val bBitmap = R.drawable.ic_map_label_b_orange
 
         processGoogleMap(false) {
             val bmPinA = getPinBitmapWithoutInfo(aBitmap)
@@ -213,7 +211,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     }
 
     protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate, driver: Boolean = false) {
-        val markerRes = if (driver) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
+        val markerRes = R.drawable.ic_map_label_a_orange
         val bmPinA = getPinBitmap(placeName, info, markerRes)
         val startMakerOptions = MarkerOptions()
                 .position(point)
@@ -223,7 +221,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     }
 
     protected fun setPinForHourlyWithoutInfo(point: LatLng, cameraUpdate: CameraUpdate) {
-        val bmPinA = getPinBitmapWithoutInfo(R.drawable.ic_map_label_a)
+        val bmPinA = getPinBitmapWithoutInfo(R.drawable.ic_map_label_a_orange)
         val startMakerOptions = MarkerOptions()
                 .position(point)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))

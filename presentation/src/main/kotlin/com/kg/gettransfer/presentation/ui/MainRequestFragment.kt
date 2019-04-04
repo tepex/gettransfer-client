@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -116,6 +117,11 @@ class MainRequestFragment :
                 (request_search_panel.searchTo.text.isNotEmpty() || switcher_hourly.switch_mode_.isChecked)
     }
 
+    private fun setReturnTimeIcon(hasDate: Boolean = true) {
+        val image = if (hasDate) R.drawable.ic_start_time else R.drawable.ic_return_time
+        return_time_view.img_icon.setImageDrawable(ContextCompat.getDrawable(mParent, image))
+    }
+
     override fun setView(addressFrom: String?, addressTo: String?, duration: String?, networkAvailable: Boolean) {
         addressFrom?.let { editAddressField(request_search_panel.searchFrom, it) }
         addressTo?.let { editAddressField(request_search_panel.searchTo, it) }
@@ -144,6 +150,9 @@ class MainRequestFragment :
         dateField.hint_title.text = date
         if (field == FIELD_START && date.isNotEmpty())
             return_time_view.setOnClickListener(dateReturnClickListenerEnabled)
+        else if (field == FIELD_RETURN)
+            setReturnTimeIcon(date.isNotEmpty())
+
     }
 
     override fun onNetworkWarning(disconnected: Boolean) {

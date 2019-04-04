@@ -82,9 +82,11 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         drawer = drawerLayout as DrawerLayout
         toggle = ActionBarDrawerToggle(this, drawer, toolbar as Toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 
-        (toolbar as Toolbar).carrierTripsChangingTypeViewButtons.isVisible = true
-        (toolbar as Toolbar).buttonListView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_LIST) }
-        (toolbar as Toolbar).buttonCalendarView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR) }
+        with(toolbar as Toolbar) {
+            carrierTripsChangingTypeViewButtons.isVisible = true
+            buttonListView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_LIST) }
+            buttonCalendarView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR) }
+        }
         setViewColor((toolbar as Toolbar), R.color.colorWhite)
         initNavigation()
         startCoordinateService()

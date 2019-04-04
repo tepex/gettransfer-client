@@ -343,7 +343,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
             .plus(getString(R.string.LNG_HOUR_FEW))
 
             private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
-        val imgRes = if (count == minimum) R.drawable.ic_circle_minus else R.drawable.ic_minus_enabled
+        val imgRes = if (count == minimum) R.drawable.ic_minus_item else R.drawable.btn_minus_enabled
         view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }
 

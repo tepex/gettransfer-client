@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_root_offers"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBackgroundGray">
+                xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/layout_root_offers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorBackgroundGray">
 
     <include
             android:id="@+id/toolbar"
@@ -56,7 +56,7 @@
                         android:id="@+id/fl_drivers_count_text"
                         android:layout_width="match_parent"
                         android:visibility="gone"
-                        android:background="@color/colorYellow"
+                        android:background="@color/colorPrimary"
                         android:layout_height="@dimen/activity_offers_drivers_connecting_text_height">
                     <ProgressBar
                         android:layout_width="24dp"
@@ -75,8 +75,8 @@
                         android:gravity="center"
                         android:paddingStart="50dp"
                         android:paddingEnd="50dp"
-                        android:text="Соединяем с 33 ближайшими перевозчиками"
-                        android:textColor="@color/colorTextBlack" />
+                        tools:text="Соединяем с 33 ближайшими перевозчиками"
+                        android:textColor="@color/colorWhite" />
                 </FrameLayout>
 
                 <android.support.constraint.ConstraintLayout
@@ -84,7 +84,7 @@
                         android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/activity_offers_excellent_price_layout_height"
-                        android:background="@color/colorYellow">
+                        android:background="@color/colorPrimary">
 
                     <ImageView
                             android:id="@+id/ivLock"
@@ -114,6 +114,7 @@
                                 style="@style/black_regular"
                                 android:textSize="@dimen/activity_offers_excellent_price_text_size"
                                 android:gravity="center"
+                                android:textColor="@color/colorWhite"
                                 android:text="@string/LNG_OFFERS_PROMO_MESSAGE"/>
 
                         <!--<TextView-->

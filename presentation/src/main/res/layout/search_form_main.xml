@@ -58,7 +58,7 @@
                     android:padding="@dimen/pin_iv_padding"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    app:srcCompat="@drawable/ic_pin_default"/>
+                    app:srcCompat="@drawable/btn_pin_location"/>
 
             </RelativeLayout>
             <RelativeLayout

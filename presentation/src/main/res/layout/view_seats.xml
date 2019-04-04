@@ -52,7 +52,7 @@
             android:layout_width="@dimen/circle_plus_height"
             android:layout_height="@dimen/circle_plus_height"
 
-            app:srcCompat="@drawable/ic_circle_minus" />
+            app:srcCompat="@drawable/ic_minus_item" />
 
         <TextView
             android:id="@+id/person_count"
@@ -74,7 +74,7 @@
             android:layout_width="@dimen/circle_minus_height"
             android:layout_height="@dimen/circle_minus_height"
 
-            app:srcCompat="@drawable/ic_circle_plus" />
+            app:srcCompat="@drawable/ic_plus_item" />
 
 
     </LinearLayout>

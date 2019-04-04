@@ -162,7 +162,7 @@
                 android:layout_marginTop="@dimen/nav_footer_stamp_top"
                 android:background="@null"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/ic_best_price" />
+                app:srcCompat="@drawable/ic_best_price_logo" />
 
             <TextView
                 android:id="@+id/navMessage"

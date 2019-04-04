@@ -459,18 +459,18 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun selectFieldFrom() {
-        mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_empty))
+        mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.point_orange))
         switchButtons(false)
         setAlpha(ALPHA_FULL)
-        ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pin_default))
+        ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.btn_pin_location))
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.START)
     }
 
     override fun setFieldTo() {
-        mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b))
+        mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b_orange))
         switchButtons(true)
         setAlpha(ALPHA_DISABLED)
-        ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_pin_chosen))
+        ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.btn_pin_enabled))
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
     }
 
