@@ -63,6 +63,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
         vpRequests.adapter = requestsVPAdapter
         tabs.setupWithViewPager(vpRequests)
         setListenersForLog()
+        blockInterface(true, true)
     }
 
     override fun setNetworkAvailability(context: Context): Boolean {

@@ -60,6 +60,7 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
+        super.blockInterface(block, useSpinner)
         if (block) tvLoginError.isVisible = false
     }
 

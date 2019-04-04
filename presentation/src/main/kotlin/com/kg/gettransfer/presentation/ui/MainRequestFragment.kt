@@ -171,7 +171,5 @@ class MainRequestFragment :
     companion object {
         const val FIELD_START  = true
         const val FIELD_RETURN = false
-
-        var hourlyInit = false
     }
 }

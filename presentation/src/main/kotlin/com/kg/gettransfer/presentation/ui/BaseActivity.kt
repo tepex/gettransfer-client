@@ -306,6 +306,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     private fun hideLoading() {
+        if (!loadingFragment.isAdded) return
         supportFragmentManager.beginTransaction().apply {
             remove(loadingFragment)
             commit()

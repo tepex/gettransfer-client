@@ -270,8 +270,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     private fun initHourly() {
-        if (MainRequestFragment.hourlyInit) return
-        MainRequestFragment.hourlyInit = true
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
         hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN
         with(np_hours) {

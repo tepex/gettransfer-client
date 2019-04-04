@@ -36,8 +36,6 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     fun getTransfers(available: Boolean?) {
         utils.launchSuspend {
 
-            viewState.blockInterface(true)
-
             when(transferType){
                 TRANSFER_ACTIVE -> {
                     if(available != true) {
@@ -63,8 +61,8 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
                     }
                 }
             }
-
-            viewState.blockInterface(false)
+            if (transferType == TRANSFER_ARCHIVE)
+                viewState.blockInterface(false)
         }
     }
 
