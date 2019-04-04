@@ -140,6 +140,8 @@ class SystemInteractor(
         get()  = systemRepository.appEnters
         set(value) { systemRepository.appEnters = value }
 
+    var startScreenOrder = false //for analytics
+
     suspend fun logout() = systemRepository.logout()
 
     suspend fun registerPushToken(token: String): Result<Unit> {

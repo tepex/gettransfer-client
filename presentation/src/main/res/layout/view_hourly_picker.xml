@@ -44,7 +44,7 @@
             android:padding="@dimen/action_done_padding"
             android:textSize="@dimen/action_done_text_size"
             android:text="@string/LNG_DONE"
-            android:textColor="@color/colorBtnGreen" />
+            android:textColor="@color/color_gtr_green" />
 
 
     </RelativeLayout>

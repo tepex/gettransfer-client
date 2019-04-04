@@ -116,7 +116,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
@@ -128,7 +127,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         _mapView = mapView
         _btnCenter = btnMyLocation
         initMapView(savedInstanceState)
-
         viewNetworkNotAvailable = textNetworkNotAvailable
 
         btnShowDrawerLayout.setOnClickListener { drawer.openDrawer(Gravity.START) }
@@ -145,15 +143,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
         presenter.setAddressFields()
         initSearchForm()
-
         initNavigation()
 
 
         switchMain(withMap = false, firstAttach = true)
         switch_mode.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
         switcher_map.switch_mode_.setOnCheckedChangeListener { _, isChecked -> switchMain(isChecked) }
-
-      //  initHourly()
 
         isFirst = savedInstanceState == null
 
@@ -168,8 +163,9 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     override fun setNetworkAvailability(context: Context) =
             super.setNetworkAvailability(context)
-                .also { requestView?.onNetworkWarning(!it) }
-
+                .also {
+                    requestView?.onNetworkWarning(!it)
+                }
 
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -196,7 +192,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private fun setRequestView () {
         val addressTo = if (rl_searchForm.isVisible) searchTo.text else null
         val duration = if (rl_hourly.isVisible) tvCurrent_hours.text.toString() else null
-        requestView?.setView(searchFrom.text, addressTo, duration, viewNetworkNotAvailable?.isVisible ?: false)
+        requestView?.let {
+            with(it) {
+                setView(searchFrom.text, addressTo, duration, !(viewNetworkNotAvailable?.isVisible ?: false))
+                setBadge(tvEventsCount.text.toString())
+                showBadge(tvEventsCount.text.isNotEmpty())
+            }
+        }
     }
 
     @SuppressLint("PrivateResource")
@@ -236,10 +238,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     @CallSuper
-    override fun onBackPressed() {
- //       if (supportFragmentManager.fragments.isEmpty())
-            presenter.onBackClick()
-    }
+    override fun onBackPressed() = presenter.onBackClick()
 
     @CallSuper
     protected override fun onStop() {
@@ -247,28 +246,11 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         super.onStop()
     }
 
-    /** @see {@link android.support.v7.app.ActionBarDrawerToggle} *//*
-    @CallSuper
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        toggle.onConfigurationChanged(newConfig)
-    }
-
-    *//** @see {@link android.support.v7.app.ActionBarDrawerToggle} *//*
-    override fun onOptionsItemSelected(item: MenuItem) = toggle.onOptionsItemSelected(item)*/
-
     private fun initNavigation() {
-        //val versionName = packageManager.getPackageInfo(packageName, 0).versionName
         val versionName = BuildConfig.VERSION_NAME
         val versionCode = BuildConfig.VERSION_CODE
         (navFooterVersion as TextView).text =
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
-        //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
-        setViewColor(navViewHeader, R.color.colorPrimary)
-        setViewColor(layoutAccountInfo, R.color.colorPrimary)
-        navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
-        navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
-        navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack))
         navHeaderMode.isVisible = false
 
         readMoreListener.let {
@@ -301,7 +283,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 presenter.tripDurationSelected(HourlyValuesHelper.durationValues[newVal])
                 tvCurrent_hours.text = displayedValues[newVal]
                 requestView?.setNumberPickerValue(displayedValues[newVal])
-
             }
         }
         tv_okBtn.setOnClickListener { showNumberPicker(false) }
@@ -352,9 +333,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                     val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
                     it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
                     isFirst = false
-                    //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 }
-                //else googleMap.moveCamera(CameraUpdateFactory.newLatLng(point))
                 else {
                     if (withAnimation) it.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                     else it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
@@ -490,7 +469,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             hourlySheet.state == BottomSheetBehavior.STATE_COLLAPSED -> showNumberPicker(false)
             else -> super.onBackPressed()
         }
-//        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START) else super.onBackPressed()
     }
 
     override fun showReadMoreDialog() {
@@ -602,11 +580,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     override fun showBadge(show: Boolean) {
         tvEventsCount.isVisible = show
         navRequests.tvEventsCount.isVisible = show
+        requestView?.showBadge(show)
     }
 
     override fun setCountEvents(count: Int) {
         tvEventsCount.text = count.toString()
         navRequests.tvEventsCount.text = count.toString()
+        requestView?.setBadge(count.toString())
     }
 
     companion object {

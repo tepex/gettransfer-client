@@ -546,6 +546,10 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
     }
 
+    fun onStartScreenOrderNote() {
+        systemInteractor.startScreenOrder = true
+    }
+
 
 companion object {
     const val FIELD_FROM = "field_from"

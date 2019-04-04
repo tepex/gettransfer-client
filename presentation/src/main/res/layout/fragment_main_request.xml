@@ -6,24 +6,44 @@
                 android:background="@color/colorBackgroundGray"
                 xmlns:app="http://schemas.android.com/apk/res-auto" android:focusable="true">
 
-    <ImageView
-            android:id="@+id/btnShowDrawerFragment"
-            android:layout_width="@dimen/activity_main_buttons_size"
-            android:layout_height="@dimen/activity_main_buttons_size"
-            app:srcCompat="@drawable/ic_menu"
-            android:background="@drawable/back_circle_white_buttons"
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
-            android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end">
+
+        <ImageView
+                android:id="@+id/btnShowDrawerFragment"
+                android:layout_width="@dimen/activity_main_buttons_size"
+                android:layout_height="@dimen/activity_main_buttons_size"
+                app:srcCompat="@drawable/ic_menu"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:clickable="true"
+                android:focusable="true"/>
+
+        <TextView
+                android:id="@+id/tvEventsCountFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                tools:text="15"
+                android:background="@drawable/bg_circle_red"
+                android:visibility="gone"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="@+id/btnShowDrawerFragment"
+                app:layout_constraintTop_toTopOf="@+id/btnShowDrawerFragment"/>
+    </android.support.constraint.ConstraintLayout>
+
 
     <com.kg.gettransfer.presentation.ui.custom.SwitcherView
             android:id="@+id/switcher_map_"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:switcher_title="@string/LNG_MAP"
             android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            android:layout_marginTop="@dimen/switchers_vertical_margin"/>
+            android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
+            android:layout_marginTop="@dimen/activity_main_buttons_margin_top"/>
 
     <com.kg.gettransfer.presentation.ui.custom.SwitcherView
             android:id="@+id/switcher_hourly"

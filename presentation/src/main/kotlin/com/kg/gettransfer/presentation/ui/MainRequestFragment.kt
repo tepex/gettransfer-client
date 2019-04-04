@@ -17,13 +17,12 @@ import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.presentation.view.MainRequestView
 import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_search.view.*
 import kotlinx.android.synthetic.main.create_order_field.view.*
 import kotlinx.android.synthetic.main.fragment_main_request.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form.view.*
+import kotlinx.android.synthetic.main.view_switcher.*
 
-import kotlinx.android.synthetic.main.view_switcher.view.*
 import org.jetbrains.anko.longToast
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
@@ -47,12 +46,12 @@ class MainRequestFragment :
         mParent = activity as MainActivity
         mPresenter = mParent.presenter
         mParent.requestView = this
-        initSearchForm()
+        initUi()
         initClickListeners()
         initDateTimeFields()
     }
 
-    private fun initSearchForm() {
+    private fun initUi() {
         with(request_search_panel) {
             searchFrom.sub_title.text = mParent.getString(R.string.LNG_FIELD_SOURCE_PICKUP)
             searchTo.sub_title.text = mParent.getString(R.string.LNG_FIELD_DESTINATION)
@@ -74,11 +73,16 @@ class MainRequestFragment :
             searchTo.setUneditable()
         }
 
+        switcher_map_.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
+            mParent.switcher_map.switch_mode_.performClick()
+            switcher_map_.isInvisible = true
+        }
+
         order_time_view.setOnClickListener  { openPicker(FIELD_START) }
-        return_time_view.setOnClickListener (dateReturnClickListenerDisabled)
+        return_time_view.setOnClickListener (dateReturnClickListenerEnabled)
 
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
-        btnNextFragment.setOnClickListener       { mPresenter.onNextClick() }
+        btnNextFragment.setOnClickListener       { mPresenter.onNextClick(); mPresenter.onStartScreenOrderNote() }
         ivSetMyLocation.setOnClickListener       { mPresenter.updateCurrentLocation() }
     }
 
@@ -118,7 +122,7 @@ class MainRequestFragment :
     }
 
     private fun setReturnTimeIcon(hasDate: Boolean = true) {
-        val image = if (hasDate) R.drawable.ic_start_time else R.drawable.ic_return_time
+        val image = if (hasDate) R.drawable.ic_calendar_return else R.drawable.ic_return_time
         return_time_view.img_icon.setImageDrawable(ContextCompat.getDrawable(mParent, image))
     }
 
@@ -130,7 +134,16 @@ class MainRequestFragment :
             switcher_hourly.switch_mode_.isChecked = true
             request_search_panel.tvCurrent_hours.text = duration
         }
+        tv_internet_warning.isVisible = !networkAvailable
         enableBtnNext()
+    }
+
+    override fun setBadge(count: String) {
+        tvEventsCountFragment.text = count
+    }
+
+    override fun showBadge(show: Boolean) {
+        tvEventsCountFragment.isVisible = show
     }
 
     private fun editAddressField(searchField: SearchAddress, address: String) =
@@ -148,11 +161,7 @@ class MainRequestFragment :
     override fun setFieldDate(date: String, field: Boolean) {
         val dateField = if (field == FIELD_START) order_time_view else return_time_view
         dateField.hint_title.text = date
-        if (field == FIELD_START && date.isNotEmpty())
-            return_time_view.setOnClickListener(dateReturnClickListenerEnabled)
-        else if (field == FIELD_RETURN)
-            setReturnTimeIcon(date.isNotEmpty())
-
+        if (field == FIELD_RETURN) setReturnTimeIcon(date.isNotEmpty())
     }
 
     override fun onNetworkWarning(disconnected: Boolean) {

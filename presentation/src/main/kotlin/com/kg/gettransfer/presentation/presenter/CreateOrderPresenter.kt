@@ -118,6 +118,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 orderStartTime?.let {
                     setPredefinedDate(it, true)
                     startDate.date = it
+                    isTimeSetByUser = true
                 }
                 orderReturnTime?.let {
                     setPredefinedDate(it, false)
@@ -129,7 +130,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         viewState.setDateTimeTransfer(date.simpleFormat(),
                 !date.after(getCurrentDatePlusMinimumHours().time),
                 field)
-                .also { isTimeSetByUser = true }
 
 
     private fun getCurrentDatePlusMinimumHours(): Calendar {
@@ -362,8 +362,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val logResult = fetchResultOnly { systemInteractor.putAccount() }
 
             if (result.error == null && logResult.error == null) {
-                logCreateTransfer(Analytics.RESULT_SUCCESS)
-                logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
+                logGetOffers()
                 router.replaceScreen(Screens.Offers(result.model.id))
             } else if (result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
@@ -519,6 +518,21 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         analytics.logEventToYandex(value, map)
         analytics.logEventToAppsFlyer(AFInAppEventType.ADD_TO_CART, afMap)
     }
+
+    private fun logStartScreenOrder() {
+        val pair = Pair(Analytics.ORDER_CREATED_FROM, if (systemInteractor.startScreenOrder) Analytics.FROM_FORM else Analytics.FROM_MAP)
+        analytics.logEvent(Analytics.EVENT_TRANSFER, Bundle().apply {
+            putString(pair.first, pair.second)
+        }, mapOf(pair))
+    }
+
+
+    private fun logGetOffers() {
+        logCreateTransfer(Analytics.RESULT_SUCCESS)
+        logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
+        logStartScreenOrder()
+    }
+
 
     companion object {
         private const val MIN_PASSENGERS = 0

@@ -151,6 +151,10 @@ class Analytics(
         const val DRIVER_TYPE = "driver"
         const val PASSENGER_TYPE = "passenger"
         const val CARRIER_TYPE = "carrier"
+
+        const val ORDER_CREATED_FROM = "create_from"
+        const val FROM_MAP           = "map"
+        const val FROM_FORM          = "form"
     }
 
     fun logEvent(event: String, bundle: Bundle, map: Map<String, Any?>) {
