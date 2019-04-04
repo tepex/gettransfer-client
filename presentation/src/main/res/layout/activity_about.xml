@@ -56,7 +56,7 @@
 		app:piv_animationType="fill"
 		app:piv_interactiveAnimation="true"
 		app:piv_radius="@dimen/about_activity_indicator_radius"
-		app:piv_selectedColor="@color/color_gtr_yellow"
+		app:piv_selectedColor="@color/color_gtr_green"
 		app:piv_unselectedColor="@color/color_gtr_light_grey"
 		app:piv_viewPager="@id/viewpager" />
 
@@ -64,13 +64,14 @@
 		android:id="@+id/btnNext"
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/about_activity_button_height"
-		android:background="@drawable/bg_rounded_22_yellow"
+		android:background="@drawable/bg_rounded_22_green"
 		android:layout_marginBottom="@dimen/about_activity_button_margin_bottom"
 		android:layout_marginStart="@dimen/about_activity_button_margin_start_end"
 		android:layout_marginEnd="@dimen/about_activity_button_margin_start_end"
 		style="@style/sf_font_semi_bold_15_sp"
 		android:text="@string/LNG_NEXT"
 		android:textAllCaps="false"
+		android:textColor="@android:color/white"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintBottom_toTopOf="@+id/pageIndicator"/>
