@@ -1,18 +1,19 @@
 package com.kg.gettransfer.presentation.model
 
-import java.util.Currency
+import com.kg.gettransfer.domain.model.Currency
 
 class CurrencyModel(val delegate: Currency) : CharSequence {
-    val code = delegate.currencyCode
-    val symbol: String
-        /* Dirty hack for ruble, Yuan ¥, THB ฿ */
+    val code = delegate.code
+    val symbol = delegate.symbol
+    /*val symbol: String
+        *//* Dirty hack for ruble, Yuan ¥, THB ฿ *//*
         get() = when(code) {
             "RUB" -> "\u20BD"
             "CNY" -> "¥"
             "THB" -> "฿"
             else  -> delegate.symbol
-        }
-    var name = "${delegate.displayName} $symbol"
+        }*/
+    var name = "${java.util.Currency.getInstance(delegate.code).displayName} $symbol"
     override val length = name.length
 
     override fun toString(): String = name

@@ -51,11 +51,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     val isBackGroundAccepted get() =
         carrierTripInteractor.bgCoordinatesPermission != CarrierTripsMainView.BG_COORDINATES_REJECTED
 
-    companion object {
+    /*companion object {
         private const val CURRENCY_GBP = "GBP"
         private const val LOCALE_RU = "ru"
         private const val GBP_RU = "Фунт стерлингов"
-    }
+    }*/
 
     @CallSuper
     override fun attachView(view: SettingsView) {
@@ -219,12 +219,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private fun initConfigs() {
         endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
         currencies = systemInteractor.currencies.map {
-            currencyMapper.toView(it).apply {
-                if (it.currencyCode == CURRENCY_GBP) {
+            currencyMapper.toView(it)/*.apply {
+                if (it.code == CURRENCY_GBP) {
                     if (systemInteractor.locale.language == LOCALE_RU)
                         this.name = "$GBP_RU ($symbol)"
                 }
-            }
+            }*/
         }
         locales = systemInteractor.locales.map { localeMapper.toView(it) }
         //distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }

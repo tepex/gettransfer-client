@@ -14,6 +14,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import org.koin.standalone.inject
 import timber.log.Timber
+import java.util.Currency
 
 @InjectViewState
 class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
@@ -96,8 +97,8 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
                 PaymentRequestModel.PAYPAL,
                 offerType,
                 requestType,
-                systemInteractor.currency,
-                systemInteractor.currency.currencyCode,
+                Currency.getInstance(systemInteractor.currency.code),
+                systemInteractor.currency.code,
                 price)
         purchase.sendAnalytics()
     }

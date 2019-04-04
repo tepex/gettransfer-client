@@ -162,7 +162,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             var route: RouteInfo? = null
-            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.currencyCode) }
+            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.code) }
                     ?.let {
                         route = it
                         duration = it.duration
@@ -197,7 +197,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             return
         }
         utils.launchSuspend {
-            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.currencyCode) }
+            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.code) }
                     ?.let { setTransportTypePrices(it.prices) }
         }
     }

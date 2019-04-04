@@ -10,12 +10,12 @@ import com.kg.gettransfer.domain.model.PushTokenType
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.MobileConfig
+import com.kg.gettransfer.domain.model.Currency
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.LoggingRepository
 import com.kg.gettransfer.domain.repository.SystemRepository
 
-import java.util.Currency
 import java.util.Locale
 
 class SystemInteractor(
@@ -67,7 +67,7 @@ class SystemInteractor(
         get() = systemRepository.configs.supportedDistanceUnits
 
     val currencies: List<Currency> /* Dirty hack. GAA-298 */
-        get() = systemRepository.configs.supportedCurrencies.filter { currenciesFilterList.contains(it.currencyCode) }
+        get() = systemRepository.configs.supportedCurrencies//.filter { currenciesFilterList.contains(it.currencyCode) }
 
     var pushToken: String? = null
         private set
@@ -122,7 +122,7 @@ class SystemInteractor(
         }
 
     var currency: Currency
-        get() = if (currencies.contains(account.currency)) account.currency else Currency.getInstance("USD")
+        get() = if (currencies.contains(account.currency)) account.currency else Currency("USD", "\$")
         set(value) { account.currency = value }
 
     var distanceUnit: DistanceUnit
@@ -175,7 +175,7 @@ class SystemInteractor(
     fun removeSocketListener(listener: SocketEventListener) { systemRepository.removeSocketListener(listener) }
 
     companion object {
-        private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
+        //private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
         private val localesFilterList = arrayOf("en", "ru", "de", "es", "it", "pt", "fr", "zh")
     }
 }

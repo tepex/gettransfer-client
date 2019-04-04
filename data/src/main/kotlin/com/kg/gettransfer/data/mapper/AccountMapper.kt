@@ -4,9 +4,9 @@ import com.kg.gettransfer.data.model.AccountEntity
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
 
-import java.util.Currency
 import java.util.Locale
 
 import org.koin.standalone.get
@@ -26,7 +26,7 @@ open class AccountMapper : Mapper<AccountEntity, Account> {
         Account(
             user = userMapper.fromEntity(type.user),
             locale = configs.availableLocales.find { it.language == type.locale } ?: Locale.getDefault(),
-            currency = configs.supportedCurrencies.find { it.currencyCode == type.currency } ?: Currency.getInstance("USD"),
+            currency = configs.supportedCurrencies.find { it.code == type.currency } ?: Currency("USD", "\$"),
             distanceUnit = type.distanceUnit?.let { DistanceUnit.valueOf(it) } ?: DistanceUnit.km,
             groups = type.groups ?: emptyList<String>(),
             carrierId = type.carrierId
@@ -39,7 +39,7 @@ open class AccountMapper : Mapper<AccountEntity, Account> {
         AccountEntity(
             user = userMapper.toEntity(type.user),
             locale = type.locale.language,
-            currency = type.currency.currencyCode,
+            currency = type.currency.code,
             distanceUnit = type.distanceUnit.name,
             groups = type.groups,
             carrierId = type.carrierId

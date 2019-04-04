@@ -40,7 +40,6 @@ import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
-import java.util.Currency
 import java.util.Locale
 
 import org.koin.standalone.get
@@ -277,7 +276,7 @@ class SystemRepositoryImpl(
         private val NO_ACCOUNT = Account(
             user         = User(Profile(null, null, null)),
             locale       = Locale.getDefault(),
-            currency     = Currency.getInstance(Locale.getDefault()),
+            currency     = java.util.Currency.getInstance(Locale.getDefault()).let { com.kg.gettransfer.domain.model.Currency(it.currencyCode, it.symbol) },
             distanceUnit = DistanceUnit.km,
             groups       = emptyList<String>(),
             carrierId    = null

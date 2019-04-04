@@ -25,6 +25,7 @@ import io.sentry.Sentry
 import org.koin.standalone.inject
 
 import timber.log.Timber
+import java.util.Currency
 
 @InjectViewState
 class PaymentPresenter : BasePresenter<PaymentView>() {
@@ -106,7 +107,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
             transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
         }
-        val currency = systemInteractor.currency.currencyCode
+        val currency = systemInteractor.currency.code
         var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
         if (percentage == OfferModel.PRICE_30) price *= PRICE_30
 
@@ -117,7 +118,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 paymentType,
                 offerType,
                 requestType,
-                systemInteractor.currency,
+                Currency.getInstance(systemInteractor.currency.code),
                 currency,
                 price)
         purchase.sendAnalytics()

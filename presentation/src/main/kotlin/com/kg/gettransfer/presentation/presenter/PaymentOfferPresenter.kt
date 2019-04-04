@@ -247,7 +247,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 selectedPayment,
                 offerType,
                 requestType,
-                systemInteractor.currency.currencyCode,
+                systemInteractor.currency.code,
                 price)
         beginCheckout.sendAnalytics()
     }
