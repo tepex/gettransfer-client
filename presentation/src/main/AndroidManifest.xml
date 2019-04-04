@@ -183,11 +183,6 @@
             android:name=".presentation.ui.SupportActivity"
             android:resizeableActivity="false" />
 
-        <activity android:name=".presentation.ui.TextFieldActivity"
-            android:theme="@style/TransparentActivityTheme"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/file_provider_authority"

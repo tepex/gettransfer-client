@@ -255,23 +255,10 @@
 
     <style name="DialogStyle" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
-        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
     <!-- https://stackoverflow.com/questions/41591733/bottom-sheet-landscape-issue -->
     <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/back_top_rounded</item>
-    </style>
-
-    <style name="TransparentActivityTheme" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowMinWidthMajor">100%</item>
-        <item name="windowMinWidthMinor">100%</item>
-    </style>
-
-    <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.Dialog">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 </resources>

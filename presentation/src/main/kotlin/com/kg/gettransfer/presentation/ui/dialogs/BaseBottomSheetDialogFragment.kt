@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui.dialogs
 
-import android.app.Dialog
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialogFragment
@@ -9,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kg.gettransfer.R
-import android.util.DisplayMetrics
 
 
 abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
@@ -27,24 +25,21 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
 		return inflater.inflate(layout, container, false)
 	}
 
-	override fun setupDialog(dialog: Dialog?, style: Int) {
-		super.setupDialog(dialog, style)
-		dialog?.run {
-			setOnShowListener {
-				(view?.parent as? View)?.let {
-					val displaymetrics = DisplayMetrics()
-					activity?.getWindowManager()?.defaultDisplay?.getMetrics(displaymetrics)
-					val height = displaymetrics.heightPixels
-					BottomSheetBehavior.from(it).apply { peekHeight = height }
-				}
-			}
-		}
-	}
-
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		initUi(savedInstanceState)
 		initUx(savedInstanceState)
+	}
+
+	override fun onStart() {
+		super.onStart()
+		(view?.parent as? View)?.let {
+			BottomSheetBehavior.from(it)
+				.run {
+					state = BottomSheetBehavior.STATE_EXPANDED
+					peekHeight = it.height
+				}
+		}
 	}
 
 	protected open fun initUi(savedInstanceState: Bundle?) {}
