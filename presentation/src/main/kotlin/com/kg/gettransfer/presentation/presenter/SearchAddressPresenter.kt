@@ -4,11 +4,9 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.model.LatLngBounds
 
-import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
@@ -19,7 +17,7 @@ import timber.log.Timber
 
 @InjectViewState
 class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     /* Cache. @TODO */
     private var lastRequest: String? = null
@@ -39,33 +37,23 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
 
         Timber.d("------ request list for prediction $prediction")
         var latLonPair: Pair<Point, Point>? = null
-        if (mBounds != null) {
-            val nePoint = Point(mBounds!!.northeast.latitude, mBounds!!.northeast.longitude)
-            val swPoint = Point(mBounds!!.southwest.latitude, mBounds!!.southwest.longitude)
+        mBounds?.let {
+            val nePoint = Point(it.northeast.latitude, it.northeast.longitude)
+            val swPoint = Point(it.southwest.latitude, it.southwest.longitude)
             latLonPair = Pair(nePoint, swPoint)
         }
 
         utils.launchSuspend {
-            val result = utils.asyncAwait { routeInteractor.getAutocompletePredictions(prediction, latLonPair) }
-            if (result.error != null) {
-                Timber.e(result.error!!)
-                viewState.setError(result.error!!)
-            } else {
-                lastResult = result.model
-                lastRequest = prediction
-                viewState.setAddressList(result.model)
-            }
+            fetchData(checkLoginError = false) { orderInteractor.getAutocompletePredictions(prediction, latLonPair) }
+                    ?.let {
+                        lastResult = it
+                        lastRequest = prediction
+                        viewState.setAddressList(it) }
         }
     }
 
     fun onClearAddress(isTo: Boolean) {
-        if (isTo) routeInteractor.to = null else routeInteractor.from = null
-    }
-
-    fun returnAddress(isTo: Boolean) {
-        viewState.returnLastAddress(
-            if (isTo) routeInteractor.to?.cityPoint?.name ?: "" else routeInteractor.from?.cityPoint?.name ?: ""
-        )
+        if (isTo) orderInteractor.to = null else orderInteractor.from = null
     }
 
     companion object {

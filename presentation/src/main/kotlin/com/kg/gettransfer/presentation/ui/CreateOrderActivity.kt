@@ -109,6 +109,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         }
 
         _mapView = mapView
+        _btnCenter = btnCenterRoute
         initMapView(savedInstanceState)
 
         initFieldsViews()
@@ -246,8 +247,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
         }, CreateOrderActivity.KEYBOARD_WAIT_DELAY)
     }
 
-
-
     private fun showDatePickerDialog(field: Boolean) {
         val currentDate = presenter.currentDate
         calendar.time = presenter.startDate.date
@@ -325,10 +324,11 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     }
 
     override fun setDateTimeTransfer(dateTimeString: String, isAfterMinHours: Boolean, startField: Boolean) {
-        (if (startField) transfer_date_time_field else transfer_return_date_field.also { showReturnFlight(SHOW) }).let {
-            if (isAfterMinHours) it.field_input.setText(getTextForMinDate())
-            else it.field_input.setText(dateTimeString)
-        }
+        (if (startField) transfer_date_time_field else transfer_return_date_field.also { showReturnFlight(SHOW) })
+                .let {
+                    if (isAfterMinHours) it.field_input.setText(getTextForMinDate())
+                    else it.field_input.setText(dateTimeString)
+                }
     }
 
     override fun setHintForDateTimeTransfer(withReturnWay: Boolean) {
@@ -343,7 +343,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
             .plus(getString(R.string.LNG_HOUR_FEW))
 
             private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
-        val imgRes = if (count == minimum) R.drawable.ic_circle_minus else R.drawable.ic_minus_enabled
+        val imgRes = if (count == minimum) R.drawable.ic_minus_item else R.drawable.btn_minus_enabled
         view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }
 
@@ -391,10 +391,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
         if (isDateChanged) clearMarkersAndPolylines()
         setPolyline(polyline, routeModel)
+        btnCenterRoute.isVisible = false
     }
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) =
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
+        btnCenterRoute.isVisible = false
+    }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 

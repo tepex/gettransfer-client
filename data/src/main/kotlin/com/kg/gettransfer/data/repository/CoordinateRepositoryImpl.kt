@@ -1,6 +1,6 @@
 package com.kg.gettransfer.data.repository
 
-import com.kg.gettransfer.data.ds.IO.CoordinateSocketDataStoreOutput
+import com.kg.gettransfer.data.ds.io.CoordinateSocketDataStoreOutput
 import com.kg.gettransfer.data.mapper.CoordinateMapper
 import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor

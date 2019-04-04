@@ -1,10 +1,10 @@
 package com.kg.gettransfer.common
 
 import android.app.TimePickerDialog
+import android.content.Context
 import android.widget.TimePicker
-import com.kg.gettransfer.presentation.ui.CreateOrderActivity
 
-class BoundTimePickerDialog(context: CreateOrderActivity,
+class BoundTimePickerDialog(context: Context,
                             callBack: (TimePicker, Int, Int) -> Unit,
                             hourOfDay: Int,
                             minute: Int,

@@ -24,7 +24,6 @@
 
     <declare-styleable name="AboutItem" parent="EditableView">
         <attr name="title_about_item" format="string" />
-        <attr name="text_about_item" format="string" />
         <attr name="img_about_item" format="reference" />
     </declare-styleable>
 
@@ -67,5 +66,31 @@
             <enum name="stateHidden" value="6"/>
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="ContactsView">
+        <attr name="icon_country" format="reference"/>
+        <attr name="title_country" format="string"/>
+        <attr name="phone" format="string"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="SettingsField">
+        <attr name="settingsTitle" format="string"/>
+        <attr name="isSwitchField" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="SwitcherView">
+        <attr name="switcher_title" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="SearchFormView">
+        <attr name="isInverseInvisible" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="OrderFieldView">
+        <attr name="order_title" format="string"/>
+        <attr name="icon" format="reference"/>
+    </declare-styleable>
+
 
 </resources>

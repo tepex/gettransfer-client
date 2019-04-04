@@ -12,9 +12,8 @@ import com.kg.gettransfer.presentation.model.TransferModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
 interface MainView: BaseView {
-    fun setMapPoint(point: LatLng, withAnimation: Boolean)
+    fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean = true)
     fun moveCenterMarker(point: LatLng)
-    fun initSearchForm()
     fun setAddressFrom(address: String)
     fun setAddressTo(address: String)
     fun setProfile(profile: ProfileModel)
@@ -34,4 +33,5 @@ interface MainView: BaseView {
     fun thanksForRate()
     fun showBadge(show: Boolean)
     fun setCountEvents(count: Int)
+    fun openMapToSetPoint()
 }

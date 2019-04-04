@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
@@ -24,6 +25,7 @@ import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavi
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripDetailsPresenter
+import com.kg.gettransfer.presentation.ui.custom.CommunicationButton
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
@@ -39,6 +41,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
 import kotlinx.android.synthetic.main.view_transfer_details_comment.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.*
 import kotlinx.android.synthetic.main.view_communication_button.*
+import kotlinx.android.synthetic.main.view_transfer_details_field.*
 
 class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsView {
     @InjectPresenter
@@ -70,14 +73,24 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         }
 
         _mapView = mapView
+        _btnCenter = btnCenterRoute
         initMapView(savedInstanceState)
         setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
         (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
         setViewColor((toolbar as Toolbar), R.color.colorWhite)
 
-        bsCarrierTripDetails = BottomSheetTripleStatesBehavior.from(sheetCarrierTripDetails)
-        bsCarrierTripDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+        initBottomSheetDetails()
         setOnClickListeners()
+    }
+
+    private fun initBottomSheetDetails() {
+        bsCarrierTripDetails = BottomSheetTripleStatesBehavior.from(sheetCarrierTripDetails)
+
+        val lp = sheetCarrierTripDetails.layoutParams as CoordinatorLayout.LayoutParams
+        lp.height = getHeightForBottomSheetDetails()
+        sheetCarrierTripDetails.layoutParams = lp
+
+        bsCarrierTripDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
 
     private fun setOnClickListeners() {
@@ -129,10 +142,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                 Pair(getString(R.string.LNG_OPEN), CarrierTripDetailsPresenter.OPERATION_OPEN))
         val operationsName: List<CharSequence> = operations.map { it.first }
         with(item) {
-            base.comment?.let {
-                comment_view.tv_comment_text.text = it
-                comment_view.isVisible = true
-            }
+            layoutPassengersChilds.isVisible = item.countPassengers != null || item.base.countChild > 0
             with(transfer_details_view_seats) {
                 item.countPassengers?.let {
                     tv_countPassengers.text = getString(R.string.X_SIGN).plus("$it")
@@ -145,30 +155,38 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                     tvCountChildren.isVisible = true
                 }
             }
-            flightNumber?.let { initField(flight_number, it) }
-            passenger?.profile?.let { profile ->
-                profile.name?.let { initField(passenger_name, it) }
-                profile.email?.let {email ->
-                    initField(passenger_email, email)
-                    topCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
-                    topCommunicationButtons.btnChat.isVisible = true
-                    bottomCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
-                    bottomCommunicationButtons.btnChat.isVisible = true
-                    Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
-                        presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
-                }
-                profile.phone?.let { phone ->
-                    initField(passenger_phone, phone)
-                    topCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
-                    topCommunicationButtons.btnCall.isVisible = true
-                    bottomCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
-                    bottomCommunicationButtons.btnCall.isVisible = true
-                    Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
-                        presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
-                }
-            }
             base.vehicle.let { initField(car_model_field, it.registrationNumber, it.name) }
+
+            if(showPassengerInfo) {
+                base.comment?.let {
+                    comment_view.tv_comment_text.text = it
+                    comment_view.isVisible = true
+                }
+                flightNumber?.let { initField(flight_number, it) }
+                passenger?.profile?.let { profile ->
+                    profile.name?.let { initField(passenger_name, it) }
+                    profile.email?.let {email ->
+                        initField(passenger_email, email)
+                        Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
+                            presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
+                    }
+                    profile.phone?.let { phone ->
+                        initField(passenger_phone, phone)
+                        initCommunicationButton(topCommunicationButtons.btnCall) { presenter.callPhone(phone) }
+                        initCommunicationButton(bottomCommunicationButtons.btnCall) { presenter.callPhone(phone) }
+                        Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
+                            presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
+                    }
+                }
+                initCommunicationButton(topCommunicationButtons.btnChat) { presenter.onChatClick() }
+                initCommunicationButton(bottomCommunicationButtons.btnChat) { presenter.onChatClick() }
+            }
         }
+    }
+
+    private fun initCommunicationButton(btn: CommunicationButton, listener: () -> Unit) {
+        btn.setOnClickListener { listener() }
+        btn.isVisible = true
     }
 
     private fun initField(field: TransferDetailsField, text: String, title: String? = null){
@@ -177,13 +195,14 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         field.isVisible = true
     }
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
-            setPolyline(polyline, routeModel, true)
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
+        setPolyline(polyline, routeModel, true)
+        btnCenterRoute.isVisible = false
+    }
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
-        processGoogleMap(false) {
-            setPinForHourlyTransfer(placeName, info, point, cameraUpdate, true)
-        }
+        processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate, true) }
+        btnCenterRoute.isVisible = false
     }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)

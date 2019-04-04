@@ -7,7 +7,7 @@ import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
-import com.kg.gettransfer.data.ds.IO.SystemSocketDataStoreOutput
+import com.kg.gettransfer.data.ds.io.SystemSocketDataStoreOutput
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 
 import com.kg.gettransfer.data.mapper.ConfigsMapper
@@ -24,7 +24,7 @@ import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.eventListeners.SystemEventListener
+import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
@@ -34,16 +34,12 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.PushTokenType
 import com.kg.gettransfer.domain.model.Location
 import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.PaypalCredentials
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.CardGateways
 import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
-import java.util.Currency
 import java.util.Locale
 
 import org.koin.standalone.get
@@ -61,7 +57,7 @@ class SystemRepositoryImpl(
     private val mobileConfMapper = get<MobileConfigMapper>()
     private val locationMapper   = get<LocationMapper>()
 
-    private val listeners = mutableSetOf<SystemEventListener>()
+    private val socketListeners = mutableSetOf<SocketEventListener>()
 
     init {
         preferencesCache.addListener(this)
@@ -85,6 +81,10 @@ class SystemRepositoryImpl(
     override var lastCarrierTripsTypeView: String
         get() = preferencesCache.lastCarrierTripsTypeView
         set(value) { preferencesCache.lastCarrierTripsTypeView = value }
+
+    override var firstDayOfWeek: Int
+        get() = preferencesCache.firstDayOfWeek
+        set(value) { preferencesCache.firstDayOfWeek = value }
 
     override var isFirstLaunch: Boolean
         get() = preferencesCache.isFirstLaunch
@@ -123,14 +123,6 @@ class SystemRepositoryImpl(
         get() = preferencesCache.addressHistory.map { addressMapper.fromEntity(it) }
         set(value) { preferencesCache.addressHistory = value.map { addressMapper.toEntity(it) } }
 
-    override var eventsCount: Int
-        get() = preferencesCache.eventsCount
-        set(value) { preferencesCache.eventsCount = value }
-
-    override var transferIds: List<Long>
-        get() = preferencesCache.transferIds
-        set(value) { preferencesCache.transferIds = value }
-
     override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
 
@@ -162,15 +154,13 @@ class SystemRepositoryImpl(
         }
 
         var error: ApiException? = null
-        if(account === NO_ACCOUNT) {
-            val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
-                factory.retrieveDataStore(fromRemote).getAccount() }
-            result.entity?.let {
-                if(result.error == null) factory.retrieveCacheDataStore().setAccount(it)
-                account = accountMapper.fromEntity(it)
-            }
-            result.error?.let { error = ExceptionMapper.map(it) }
+        val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).getAccount() }
+        result.entity?.let {
+            if(result.error == null) factory.retrieveCacheDataStore().setAccount(it)
+            account = accountMapper.fromEntity(it)
         }
+        result.error?.let { error = ExceptionMapper.map(it) }
         isInitialized = true
         return Result(account, error)
     }
@@ -265,8 +255,8 @@ class SystemRepositoryImpl(
         }
     }
 
-    override fun addListener(listener: SystemEventListener)    { listeners.add(listener) }
-    override fun removeListener(listener: SystemEventListener) { listeners.remove(listener) }
+    override fun addSocketListener(listener: SocketEventListener)    { socketListeners.add(listener) }
+    override fun removeSocketListener(listener: SocketEventListener) { socketListeners.remove(listener) }
 
     /* Socket */
 
@@ -274,8 +264,8 @@ class SystemRepositoryImpl(
     override fun connectionChanged() = socketDataStore.changeConnection(endpointMapper.toEntity(endpoint), accessToken)
     override fun disconnectSocket()  = socketDataStore.disconnectSocket()
 
-    fun notifyAboutConnection()    = listeners.forEach { it.onSocketConnected() }
-    fun notifyAboutDisconnection() = listeners.forEach { it.onSocketDisconnected() }
+    fun notifyAboutConnection()    = socketListeners.forEach { it.onSocketConnected() }
+    fun notifyAboutDisconnection() = socketListeners.forEach { it.onSocketDisconnected() }
 
 
 
@@ -286,7 +276,7 @@ class SystemRepositoryImpl(
         private val NO_ACCOUNT = Account(
             user         = User(Profile(null, null, null)),
             locale       = Locale.getDefault(),
-            currency     = Currency.getInstance(Locale.getDefault()),
+            currency     = java.util.Currency.getInstance(Locale.getDefault()).let { com.kg.gettransfer.domain.model.Currency(it.currencyCode, it.symbol) },
             distanceUnit = DistanceUnit.km,
             groups       = emptyList<String>(),
             carrierId    = null

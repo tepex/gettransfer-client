@@ -26,13 +26,14 @@ import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.encrypt.EncryptPassImpl
+import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 
 import com.kg.gettransfer.presentation.mapper.*
 
 import com.kg.gettransfer.utilities.Analytics
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import com.kg.gettransfer.utilities.NotificationManager
+import com.kg.gettransfer.utilities.GTNotificationManager
 
 import kotlinx.coroutines.Dispatchers
 
@@ -95,13 +96,14 @@ val domainModule = module {
     single { OfferInteractor(get()) }
     single { PaymentInteractor(get()) }
     single { SystemInteractor(get(), get(), get()) }
-    single { RouteInteractor(get(), get()) }
+    single { OrderInteractor(get(), get()) }
     single { CarrierTripInteractor(get()) }
     single { TransferInteractor(get()) }
     single { PromoInteractor(get()) }
     single { ReviewInteractor(get()) }
     single { ChatInteractor(get()) }
     single { CoordinateInteractor(get()) }
+    single { CountEventsInteractor(get()) }
 }
 
 val mappersModule = module {
@@ -114,6 +116,7 @@ val mappersModule = module {
     single { CurrencyMapper() }
     single { DistanceUnitMapper() }
     single { EndpointMapper() }
+    single { DayOfWeekMapper() }
     single { LocaleMapper() }
     single { MoneyMapper() }
     single { OfferMapper() }
@@ -145,7 +148,8 @@ val androidModule = module {
     single { AppEventsLogger.newLogger(androidApplication().applicationContext) }
     single { Analytics(androidApplication().applicationContext, get(), get()) }
     single { PhoneNumberUtil.createInstance(get<Context>()) }
-    single { NotificationManager(androidApplication().applicationContext) }
+    single { GTNotificationManager(androidApplication().applicationContext) }
+    factory { DateTimeDelegate() }
 }
 
 val testModule = module {

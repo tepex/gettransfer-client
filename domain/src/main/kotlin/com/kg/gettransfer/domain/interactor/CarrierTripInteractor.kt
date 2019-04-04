@@ -16,7 +16,11 @@ class CarrierTripInteractor(private val repository: CarrierTripRepository) {
     }
 
     suspend fun getCarrierTrips() = repository.getCarrierTrips()
-    suspend fun getCarrierTrip(id: Long) = repository.getCarrierTrip(id)
+    suspend fun getCarrierTrip(id: Long, fromCache: Boolean = false) =
+            when (fromCache) {
+                false -> repository.getCarrierTrip(id)
+                true -> repository.getCarrierTripCached(id)
+            }
 
     suspend fun clearCarrierTripsCache(): Result<Unit> {
         repository.clearCarrierTripsCache()

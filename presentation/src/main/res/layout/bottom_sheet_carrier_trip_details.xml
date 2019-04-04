@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:clipToPadding="true"
-    android:layout_marginTop="?android:attr/actionBarSize"
     android:background="@color/colorWhite"
     app:anchorPoint="@dimen/bottom_sheet_carrier_trip_details_bs_anchor_point"
     app:behavior_hideable="false"
@@ -54,6 +53,7 @@
                 android:visibility="gone"/>
 
             <RelativeLayout
+                android:id="@+id/layoutPassengersChilds"
                 android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

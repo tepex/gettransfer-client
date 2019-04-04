@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.ui.helpers
 
+import android.content.Context
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.ceil
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.ui.Utils
@@ -10,21 +12,20 @@ object LanguageDrawer {
 
     fun drawSingleLine(layout: LinearLayout, languages: List<LocaleModel>) {
         layout.removeAllViews()
-        val lp = LayoutHelper.createLinearParams(LEFT_MARGIN, TOP_MARGIN, RIGHT_MARGIN, BOTTOM_MARGIN)
         languages.forEach {
             layout.addView(ImageView(layout.context).apply {
                 setImageResource(Utils.getLanguageImage(it.delegate.language))
-                layoutParams = lp
+                layoutParams = getLayoutParamsWithMargin(layout.context)
             })
         }
     }
 
     fun drawMultipleLine (container: LinearLayout, rowNumber: Int = ITEM_COLUMNS, languages: List<LocaleModel>) {
         container.removeAllViews()
-        val lp = LayoutHelper.createLinearParams(LEFT_MARGIN, TOP_MARGIN, RIGHT_MARGIN, BOTTOM_MARGIN)
-        lp.width = Utils.dpToPxInt(container.context, 14f)
-        lp.height = Utils.dpToPxInt(container.context, 8f)
-     //   lp.gravity = Gravity.START
+        val lp = getLayoutParamsWithMargin(container.context)
+        val resources = container.context.resources
+        lp.width = resources.getDimensionPixelSize(R.dimen.view_offer_language_icon_width)
+        lp.height = resources.getDimensionPixelSize(R.dimen.view_offer_language_icon_height)
         for (row in 0 until languages.size.ceil(rowNumber)) {
             val layout = LayoutHelper.createLinear(container.context)
             for (col in 0 until rowNumber) {
@@ -39,11 +40,12 @@ object LanguageDrawer {
         }
     }
 
-    private const val LEFT_MARGIN   = 8
-    private const val RIGHT_MARGIN  = 8
-    private const val TOP_MARGIN    = 4
-    private const val BOTTOM_MARGIN = 4
+    private fun getLayoutParamsWithMargin(context: Context): LinearLayout.LayoutParams{
+        val resources = context.resources
+        val startEndMargin = resources.getDimensionPixelSize(R.dimen.view_offer_language_icon_start_end_margin)
+        val topBottomMargin = resources.getDimensionPixelSize(R.dimen.view_offer_language_icon_top_bottom_margin)
+        return LayoutHelper.createLinearParams(startEndMargin, topBottomMargin, startEndMargin, topBottomMargin)
+    }
 
-
-    private const val ITEM_COLUMNS  = 3
+    private const val ITEM_COLUMNS = 3
 }

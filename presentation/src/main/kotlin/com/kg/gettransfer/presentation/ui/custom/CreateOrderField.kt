@@ -18,7 +18,7 @@ class CreateOrderField @JvmOverloads constructor(
         init {
             containerView = LayoutInflater.from(context).inflate(R.layout.view_create_order_field, this, true)
 
-            if(attrs != null) {
+        if(attrs != null) {
                 val ta      = context.obtainStyledAttributes(attrs, R.styleable.CreateOrderField)
                 field_title.text        = ta.getString(R.styleable.CreateOrderField_title)
                 field_input.hint        = ta.getString(R.styleable.CreateOrderField_hint)

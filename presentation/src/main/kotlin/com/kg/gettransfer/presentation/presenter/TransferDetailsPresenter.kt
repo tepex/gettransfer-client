@@ -8,21 +8,38 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
-import com.kg.gettransfer.domain.eventListeners.SystemEventListener
+import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.Coordinate
+
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.*
+
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.ui.icons.CarIconResourceProvider
 import com.kg.gettransfer.presentation.delegate.CoordinateRequester
-import com.kg.gettransfer.presentation.mapper.*
+import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
+import com.kg.gettransfer.presentation.mapper.CityPointMapper
+import com.kg.gettransfer.presentation.mapper.PointMapper
 
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.CityPointModel
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -34,22 +51,25 @@ import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
 
-import timber.log.Timber
+import java.util.Calendar
+
+import java.util.*
+
 
 @InjectViewState
-class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SystemEventListener {
-    private val routeInteractor: RouteInteractor by inject()
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SocketEventListener {
+    private val orderInteractor: OrderInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
     private val coordinateInteractor: CoordinateInteractor by inject()
 
     private val profileMapper: ProfileMapper by inject()
     private val routeMapper: RouteMapper by inject()
-    private val transferMapper: TransferMapper by inject()
     private val reviewRateMapper: ReviewRateMapper by inject()
     private val cityPointMapper: CityPointMapper by inject()
     private val pointMapper: PointMapper by inject()
 
     private lateinit var transferModel: TransferModel
+    private lateinit var offerModel: OfferModel
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
@@ -66,44 +86,60 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
-        systemInteractor.addListener(this)
+        systemInteractor.addSocketListener(this)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
-            else {
-                val transfer = result.model
-                transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
-                transfer.from.let { fromPoint = cityPointMapper.toView(it) }
-                transfer.to?.let { toPoint = cityPointMapper.toView(it) }
-                hourlyDuration = transfer.duration
-
-                transferModel = transferMapper.toView(transfer)
-                var offer: Offer? = null
-
-                if (transferModel.status.checkOffers) {
-                    val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-                    if ((offersResult.error == null || (offersResult.error != null && offersResult.fromCache)) && offersResult.model.size == 1){
-                        offer = offersResult.model.first()
-                        reviewInteractor.offerIdForReview = offer.id
-                        if (!transfer.isCompletedTransfer()) viewState.setOffer(offerMapper.toView(offer), transferModel.countChilds)
+           fetchData { transferInteractor.getTransfer(transferId) }
+                    ?.let { transfer ->
+                        setTransferFields(transfer)
+                        var offer: Offer? = null
+                        setOffer(transfer.id)
+                                ?.let {
+                                    if (transferModel.status.checkOffers)
+                                        offer = it }
+                        val showRate = offer?.isRated()?.not() ?: false
+                        viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
+                        setTransferType(transfer)
                     }
-                }
-
-                val showRate = offer?.isRated()?.not()?:false
-                viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
-
-                if (transfer.to != null) {
-                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, true, false, systemInteractor.currency.currencyCode) }
-                    r.cacheError?.let { viewState.setError(it) }
-                    setRouteTransfer(transfer, r.model)
-                } else if (transfer.duration != null) setHourlyTransfer(transfer)
-
-            }
             viewState.blockInterface(false)
-
         }
+    }
+
+    private fun setTransferFields(transfer: Transfer) {
+        transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
+        transfer.from.let { fromPoint = cityPointMapper.toView(it) }
+        transfer.to?.let { toPoint = cityPointMapper.toView(it) }
+        hourlyDuration = transfer.duration
+
+        transferModel = transferMapper.toView(transfer)
+    }
+
+    private suspend fun setOffer(transferId: Long) =
+            fetchData { offerInteractor.getOffers(transferId) }
+                    ?.let {
+                        if (it.size == 1) {
+                            val offer = it.first()
+                            offerModel = offerMapper.toView(offer)
+                            reviewInteractor.offerIdForReview = offer.id
+                            if (transferModel.showOfferInfo) viewState.setOffer(offerModel, transferModel.countChilds)
+                            offer
+                        }
+                        else null
+                    }
+
+    private suspend fun setTransferType(transfer: Transfer) {
+        if (transfer.to != null) {
+            fetchResult {
+                orderInteractor.getRouteInfo(transfer.from.point!!,
+                        transfer.to!!.point!!,
+                        true,
+                        false,
+                        systemInteractor.currency.code)
+            }.also {
+                it.cacheError?.let { e -> viewState.setError(e) }
+                setRouteTransfer(transfer, it.model)
+            }
+        } else if (transfer.duration != null) setHourlyTransfer(transfer)
     }
 
     @CallSuper
@@ -111,7 +147,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         super.detachView(view)
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
         isCameraUpdatedForCoordinates = false
-        systemInteractor.removeListener(this)
+        systemInteractor.removeSocketListener(this)
     }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
@@ -119,11 +155,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun onCancelRequestClicked() { viewState.showAlertCancelRequest() }
 
     fun onRepeatTransferClicked() {
-        fromPoint?.let { routeInteractor.from = GTAddress(cityPointMapper.fromView(it), null, null, null, null) }
-        toPoint?.let { routeInteractor.to = GTAddress(cityPointMapper.fromView(it), null, null, null, null) }
-        hourlyDuration?.let { routeInteractor.hourlyDuration = it }
+        fromPoint?.let { orderInteractor.from = GTAddress(cityPointMapper.fromView(it), null, transferModel.from, null, null) }
+        toPoint?.let { orderInteractor.to = GTAddress(cityPointMapper.fromView(it), null, transferModel.to, null, null) }
+        hourlyDuration?.let { orderInteractor.hourlyDuration = it }
 
-        if (routeInteractor.isCanCreateOrder()) router.navigateTo(Screens.CreateOrder)
+        if (orderInteractor.isCanCreateOrder()) router.navigateTo(Screens.CreateOrder)
     }
 
     fun onChatClick(){
@@ -163,11 +199,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         if (!isCancel) return
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.cancelTransfer(transferId, "") }
-            if (result.error != null) {
-                Timber.e(result.error!!)
-                viewState.setError(result.error!!)
-            } else viewState.recreateActivity()
+            fetchData { transferInteractor.cancelTransfer(transferId, "") }
+                    ?.let { viewState.recreateActivity() }
             viewState.blockInterface(false)
         }
     }
@@ -199,13 +232,19 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun sendReview(list: List<ReviewRateModel>, feedBackComment: String) = utils.launchSuspend {
-        val result = utils.asyncAwait {
-            reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, feedBackComment)
-        }
-        logAverageRate(list.map { it.rateValue }.average())
-        logDetailRate(list, feedBackComment)
-        if (result.error != null) { /* some error for analytics */ }
-        viewState.thanksForRate()
+        fetchResult(WITHOUT_ERROR) {
+            reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) },
+                    feedBackComment) }
+                .also {
+                    it.error?.let { /* some error for analytics */ }
+                    logAverageRate(list.map { it.rateValue }.average())
+                    logDetailRate(list, feedBackComment)
+                    viewState.thanksForRate()
+                }
+//        logAverageRate(list.map { it.rateValue }.average())
+//        logDetailRate(list, feedBackComment)
+//        if (result.error != null) { /* some error for analytics */ }
+//        viewState.thanksForRate()
     }
 
     fun onRateInStore() {
@@ -281,7 +320,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getCarIcon(offerModel.vehicle)
+    fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getVehicleIcon(offerModel.vehicle)
 
     override fun onSocketConnected() {
         coordinateRequester.request()

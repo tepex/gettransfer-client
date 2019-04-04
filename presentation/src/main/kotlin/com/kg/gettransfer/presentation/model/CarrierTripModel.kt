@@ -7,7 +7,8 @@ data class CarrierTripModel(
     val flightNumber: String?,
     val paidSum: String?, /*may be null only from cache*/
     val totalPrice: TotalPriceModel?, /*may be null only from cache*/
-    val passenger: PassengerAccountModel? /*may be null only from cache*/
+    val passenger: PassengerAccountModel?, /*may be null only from cache*/
+    val showPassengerInfo: Boolean
 )
 
 data class TotalPriceModel(

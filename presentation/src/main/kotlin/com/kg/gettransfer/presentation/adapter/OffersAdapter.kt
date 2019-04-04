@@ -92,7 +92,7 @@ class OffersAdapter(private val offers: MutableList<OfferItem>,
         const val OFFER_NO_PHOTO = 2
         const val OFFER_TINY = 3
 
-        var viewType: PRESENTATION = PRESENTATION.EXPANDED
+        var viewType: PRESENTATION = PRESENTATION.TINY
         enum class PRESENTATION {
             EXPANDED, TINY
         }

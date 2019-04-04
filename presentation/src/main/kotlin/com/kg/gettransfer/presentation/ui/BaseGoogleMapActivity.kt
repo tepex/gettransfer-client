@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
 
 import android.os.Bundle
 
@@ -15,7 +14,6 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 
 import com.google.android.gms.maps.CameraUpdate
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.*
@@ -23,6 +21,7 @@ import com.google.android.gms.maps.model.*
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -44,6 +43,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     private lateinit var googleMapJob: Job
     protected lateinit var _mapView: MapView
     private lateinit var googleMap: GoogleMap
+    protected lateinit var _btnCenter: ImageView
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
@@ -116,8 +116,14 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     protected open suspend fun customizeGoogleMaps(gm: GoogleMap) {
         gm.uiSettings.isRotateGesturesEnabled = false
         gm.uiSettings.isTiltGesturesEnabled = false
+        gm.uiSettings.isMyLocationButtonEnabled = false
         gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
         gm.setPadding(0, 0, 0, LABEL_VERTICAL_POSITION)
+        gm.setOnCameraMoveStartedListener {
+            if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                _btnCenter.isVisible = true
+            }
+        }
     }
 
     protected fun processGoogleMap(ignore: Boolean, block: (GoogleMap) -> Unit) {
@@ -133,8 +139,8 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
             Timber.w("Polyline model is empty for route: $routeModel")
             return
         }
-        val aBitmap = if (driverMode) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
-        val bBitmap = if (driverMode) R.drawable.ic_map_label_b_driver else R.drawable.ic_map_label_b
+        val aBitmap = R.drawable.ic_map_label_a_orange
+        val bBitmap = R.drawable.ic_map_label_b_orange
 
         processGoogleMap(false) {
             val bmPinA = getPinBitmap(routeModel.from, routeModel.dateTime, aBitmap)
@@ -154,8 +160,8 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
             return
         }
 
-        val aBitmap = if (driverMode) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
-        val bBitmap = if (driverMode) R.drawable.ic_map_label_b_driver else R.drawable.ic_map_label_b
+        val aBitmap = R.drawable.ic_map_label_a_orange
+        val bBitmap = R.drawable.ic_map_label_b_orange
 
         processGoogleMap(false) {
             val bmPinA = getPinBitmapWithoutInfo(aBitmap)
@@ -205,7 +211,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     }
 
     protected fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate, driver: Boolean = false) {
-        val markerRes = if (driver) R.drawable.ic_map_label_a_driver else R.drawable.ic_map_label_a
+        val markerRes = R.drawable.ic_map_label_a_orange
         val bmPinA = getPinBitmap(placeName, info, markerRes)
         val startMakerOptions = MarkerOptions()
                 .position(point)
@@ -215,7 +221,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     }
 
     protected fun setPinForHourlyWithoutInfo(point: LatLng, cameraUpdate: CameraUpdate) {
-        val bmPinA = getPinBitmapWithoutInfo(R.drawable.ic_map_label_a)
+        val bmPinA = getPinBitmapWithoutInfo(R.drawable.ic_map_label_a_orange)
         val startMakerOptions = MarkerOptions()
                 .position(point)
                 .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
@@ -243,6 +249,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
 
     protected fun showTrack (track: CameraUpdate) {
         googleMap.animateCamera(track)
+        _btnCenter.isVisible = false
     }
 
     private fun createBitmapFromView(v: View): Bitmap {

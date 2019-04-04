@@ -140,7 +140,7 @@ class ApiCore : KoinComponent {
             val msg = try {
                 gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
             } catch (je: JsonSyntaxException) {
-                val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.let { it.groupValues } }
+                val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.groupValues }
                 log.warn("${e.message} matchResult: $matchResult", je)
                 matchResult?.getOrNull(1)
             }

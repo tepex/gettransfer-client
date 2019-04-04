@@ -8,7 +8,6 @@ data class CarrierTripBaseModel(
         val from: String,
         val to: String?,
         val dateLocal: Date,
-        val dateTime: String,
         val duration: Int?,
         val distance: Int?,
         val time: Int?,

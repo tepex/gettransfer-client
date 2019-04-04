@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
+import com.kg.gettransfer.domain.model.CarrierTripBase
 import com.kg.gettransfer.presentation.mapper.CarrierTripsCalendarItemsMapper
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
@@ -18,19 +20,21 @@ class CarrierTripsCalendarFragmentPresenter : BasePresenter<CarrierTripsCalendar
 
     var selectedDate = SystemUtils.formatDateWithoutTime(Calendar.getInstance().time)
 
-    override fun onFirstViewAttach() {
+    @CallSuper
+    override fun attachView(view: CarrierTripsCalendarFragmentView) {
+        super.attachView(view)
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
-            else {
-                carrierTripsCalendarItems = carrierTripsCalendarItemsMapper.toCalendarView(result.model)
-                viewState.setCalendarIndicators(carrierTripsCalendarItems!!)
-                onDateClick(selectedDate)
-            }
+            fetchData { carrierTripInteractor.getCarrierTrips() }
+                    ?.let { setCalendar(it) }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun setCalendar(list: List<CarrierTripBase>) {
+        carrierTripsCalendarItems = carrierTripsCalendarItemsMapper.toCalendarView(list)
+        viewState.setCalendarIndicators(carrierTripsCalendarItems!!)
+        onDateClick(selectedDate)
     }
 
     fun onDateClick(date: String){

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,38 +9,32 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/margin44"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_transfer_info_divider_height"
-        android:background="@color/colorTextBlack"
-        android:layout_below="@+id/toolbar"/>
-
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabMode="fixed"
+        android:layout_height="@dimen/margin44"
         app:tabGravity="fill"
-        android:background="@color/colorPrimary"
-        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+        app:tabIndicatorColor="@color/color_gtr_orange"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/color_gtr_orange"
+        app:tabTextAppearance="@style/TabLayoutTextStyle"
         app:tabTextColor="@color/colorTextBlack"
-        app:tabSelectedTextColor="@color/colorTextBlack"
-        app:tabIndicatorColor="@color/colorTextBlack"
-        android:layout_below="@+id/divider"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider_top_view"/>
 
     <LinearLayout
         android:id="@+id/layoutTextNetworkNotAvailable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="@color/colorBtnRed"
-        android:layout_below="@+id/tabs">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:id="@+id/textNetworkNotAvailable"
@@ -54,17 +48,35 @@
             android:layout_marginEnd="@dimen/activity_requests_text_network_availability_margin_start_end"
             android:layout_marginTop="@dimen/activity_requests_text_network_availability_margin_top_bottom"
             android:layout_marginBottom="@dimen/activity_requests_text_network_availability_margin_top_bottom"
-            android:text="@string/LNG_OFFLINE_MESSAGE"
-            android:visibility="gone"/>
+            android:text="@string/LNG_OFFLINE_MESSAGE"/>
 
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vpRequests"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/layoutTextNetworkNotAvailable">
+        android:layout_height="@dimen/margin0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/divider_bottom_view"
+        app:layout_constraintBottom_toBottomOf="parent">
 
     </android.support.v4.view.ViewPager>
 
-</RelativeLayout>
+    <View
+        android:id="@+id/divider_top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin4"
+        android:background="@drawable/requests_view_tab_dividers"
+        android:rotation="180"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+
+    <View
+        android:id="@+id/divider_bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin4"
+        android:background="@drawable/requests_view_tab_dividers"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabs" />
+
+</android.support.constraint.ConstraintLayout>

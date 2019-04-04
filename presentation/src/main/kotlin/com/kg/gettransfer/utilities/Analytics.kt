@@ -2,6 +2,8 @@ package com.kg.gettransfer.utilities
 
 import android.content.Context
 import android.os.Bundle
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
 
 import com.facebook.appevents.AppEventsConstants
@@ -10,12 +12,11 @@ import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
 
 import com.kg.gettransfer.domain.model.ReviewRate
+import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
-
-import java.math.BigDecimal
 
 import java.util.Currency
 
@@ -142,10 +143,18 @@ class Analytics(
         const val RESULT_SUCCESS   = "success"
         const val RESULT_FAIL      = "fail"
 
+        const val PAYMENT_TYPE = "payment_type"
+        const val CARD = "card"
+        const val PAYPAL = "paypal"
+
         const val USER_TYPE = "usertype"
         const val DRIVER_TYPE = "driver"
         const val PASSENGER_TYPE = "passenger"
         const val CARRIER_TYPE = "carrier"
+
+        const val ORDER_CREATED_FROM = "create_from"
+        const val FROM_MAP           = "map"
+        const val FROM_FORM          = "form"
     }
 
     fun logEvent(event: String, bundle: Bundle, map: Map<String, Any?>) {
@@ -166,17 +175,6 @@ class Analytics(
     fun logEventToAppsFlyer(event: String, data: Map<String, Any?>?) =
         AppsFlyerLib.getInstance().trackEvent(context, event, data)
 
-    fun logEventEcommerce(event: String, bundle: Bundle, map: Map<String, Any?>) {
-        logEventToFirebase(event, bundle)
-        logEventToYandex(event, map)
-    }
-
-    fun logEventEcommercePurchaseFB(bundle: Bundle, price: BigDecimal, currency: Currency)
-            = facebook.logPurchase(price, currency, bundle)
-
-    fun logEventBeginCheckoutFB(bundle: Bundle, price: Double) =
-        facebook.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, price, bundle)
-
     fun requestResult(positive: Boolean) =
         if (positive) REVIEW_APP_ACCEPTED else REVIEW_APP_REJECTED
 
@@ -184,6 +182,154 @@ class Analytics(
         ReviewRate.RateType.PUNCTUALITY.type -> "punctuality"
         ReviewRate.RateType.VEHICLE.type     -> "vehicle"
         else                                 -> "driver"
+    }
+
+    inner class EcommercePurchase(private val transactionId: String,
+                                  private val promocode: String?,
+                                  private val hours: Int?,
+                                  private var paymentType: String,
+                                  private val offerType: String,
+                                  private val requestType: String,
+                                  private val currency: Currency,
+                                  private val currencyCode: String,
+                                  private val price: Double) {
+
+        fun sendAnalytics() {
+            paymentType = if (paymentType == PaymentRequestModel.PLATRON) CARD else PAYPAL
+            sendToFirebase()
+            sendToFacebook()
+            sendToYandex()
+            sendToAppsFlyer()
+            logEvent(RESULT_SUCCESS)
+        }
+
+        private fun logEvent(value: String) {
+            val map = mutableMapOf<String, Any>()
+            val bundle = Bundle()
+
+            map[STATUS] = value
+            bundle.putString(STATUS, value)
+            logEvent(EVENT_MAKE_PAYMENT, bundle, map)
+        }
+
+        private fun sendToAppsFlyer() {
+            val map = mutableMapOf<String, Any?>()
+            map[TRANSACTION_ID] = transactionId
+            map[PROMOCODE] = promocode
+            hours?.let { map[HOURS] = it }
+            map[PAYMENT_TYPE] = paymentType
+            map[OFFER_TYPE] = offerType
+            map[TRIP_TYPE] = requestType
+            map[AFInAppEventParameterName.CURRENCY] = currencyCode
+            map[AFInAppEventParameterName.REVENUE] = price
+            logEventToAppsFlyer(AFInAppEventType.PURCHASE, map)
+        }
+
+        private fun sendToYandex() {
+            val map = mutableMapOf<String, Any?>()
+            map[TRANSACTION_ID] = transactionId
+            map[PROMOCODE] = promocode
+            hours?.let { map[HOURS] = it }
+            map[PAYMENT_TYPE] = paymentType
+            map[OFFER_TYPE] = offerType
+            map[TRIP_TYPE] = requestType
+            map[CURRENCY] = currencyCode
+            map[VALUE] = price
+            logEventToYandex(EVENT_ECOMMERCE_PURCHASE, map)
+        }
+
+        private fun sendToFacebook() {
+            val bundle = Bundle()
+            bundle.putString(TRANSACTION_ID, transactionId)
+            bundle.putString(PROMOCODE, promocode)
+            hours?.let { bundle.putInt(Analytics.HOURS, it) }
+            bundle.putString(PAYMENT_TYPE, paymentType)
+            bundle.putString(OFFER_TYPE, offerType)
+            bundle.putString(TRIP_TYPE, requestType)
+            facebook.logPurchase(price.toBigDecimal(), currency, bundle)
+        }
+
+        private fun sendToFirebase() {
+            val bundle = Bundle()
+            bundle.putString(TRANSACTION_ID, transactionId)
+            bundle.putString(PROMOCODE, promocode)
+            hours?.let { bundle.putInt(Analytics.HOURS, it) }
+            bundle.putString(PAYMENT_TYPE, paymentType)
+            bundle.putString(OFFER_TYPE, offerType)
+            bundle.putString(TRIP_TYPE, requestType)
+            bundle.putString(CURRENCY, currencyCode)
+            bundle.putDouble(VALUE, price)
+            logEventToFirebase(EVENT_ECOMMERCE_PURCHASE, bundle)
+        }
+    }
+
+    inner class BeginCheckout(private val share: Int,
+                              private val promocode: String?,
+                              private val hours: Int?,
+                              private var paymentType: String,
+                              private val offerType: String,
+                              private val requestType: String,
+                              private val currencyCode: String,
+                              private val price: Double) {
+
+        fun sendAnalytics() {
+            paymentType = if (paymentType == PaymentRequestModel.PLATRON) CARD else PAYPAL
+            sendToFirebase()
+            sendToFacebook()
+            sendToYandex()
+            sendToAppsFlyer()
+        }
+
+        private fun sendToAppsFlyer() {
+            val map = mutableMapOf<String, Any?>()
+            map[SHARE] = share
+            map[PROMOCODE] = promocode
+            hours?.let { map[HOURS] = it }
+            map[PAYMENT_TYPE] = paymentType
+            map[OFFER_TYPE] = offerType
+            map[TRIP_TYPE] = requestType
+            map[AFInAppEventParameterName.CURRENCY] = currencyCode
+            map[AFInAppEventParameterName.PRICE] = price
+            logEventToAppsFlyer(AFInAppEventType.INITIATED_CHECKOUT, map)
+        }
+
+        private fun sendToYandex() {
+            val map = mutableMapOf<String, Any?>()
+            map[SHARE] = share
+            map[PROMOCODE] = promocode
+            hours?.let { map[HOURS] = it }
+            map[PAYMENT_TYPE] = paymentType
+            map[OFFER_TYPE] = offerType
+            map[TRIP_TYPE] = requestType
+            map[CURRENCY] = currencyCode
+            map[VALUE] = price
+            logEventToYandex(EVENT_BEGIN_CHECKOUT, map)
+        }
+
+        private fun sendToFacebook() {
+            val bundle = Bundle()
+            bundle.putInt(SHARE, share)
+            bundle.putString(PROMOCODE, promocode)
+            hours?.let { bundle.putInt(Analytics.HOURS, it) }
+            bundle.putString(PAYMENT_TYPE, paymentType)
+            bundle.putString(OFFER_TYPE, offerType)
+            bundle.putString(TRIP_TYPE, requestType)
+            bundle.putString(CURRENCY, currencyCode)
+            facebook.logEvent(AppEventsConstants.EVENT_NAME_INITIATED_CHECKOUT, price, bundle)
+        }
+
+        private fun sendToFirebase() {
+            val bundle = Bundle()
+            bundle.putInt(SHARE, share)
+            bundle.putString(PROMOCODE, promocode)
+            hours?.let { bundle.putInt(Analytics.HOURS, it) }
+            bundle.putString(PAYMENT_TYPE, paymentType)
+            bundle.putString(OFFER_TYPE, offerType)
+            bundle.putString(TRIP_TYPE, requestType)
+            bundle.putString(CURRENCY, currencyCode)
+            bundle.putDouble(VALUE, price)
+            logEventToFirebase(EVENT_BEGIN_CHECKOUT, bundle)
+        }
     }
 
     fun logProfile(attribute: String) {

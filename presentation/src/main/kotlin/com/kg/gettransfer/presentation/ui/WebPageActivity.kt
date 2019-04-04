@@ -58,11 +58,11 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         webView.webViewClient = object: WebViewClient() {}
 
         when(intent.getStringExtra(WebPageView.EXTRA_SCREEN)) {
-            WebPageView.SCREEN_LICENSE      -> initActivity(R.string.LNG_RIDE_OFFERT_TITLE, WebPageView.INIT_WITH_STRING, createLicenceUrl())
-            WebPageView.SCREEN_REG_CARRIER  -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.registration_carrier_url)
-            WebPageView.SCREEN_CARRIER      -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, R.string.carrier_mode)
-            WebPageView.SCREEN_RESTORE_PASS -> initActivity(R.string.LNG_LOGIN_RECOVERY_PASSWORD, WebPageView.INIT_WITH_STRING, createRestorePassUrl())
-            WebPageView.SCREEN_TRANSFERS    -> initActivity(R.string.api_url_prod, WebPageView.INIT_WITH_STRING, createTransferUrl())
+            WebPageView.SCREEN_LICENSE      -> initActivity(R.string.LNG_RIDE_OFFERT_TITLE, createUrlWithLocale(presenter.termsUrl))
+            WebPageView.SCREEN_REG_CARRIER  -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, createUrlWithLocale(getString(R.string.api_url_carrier_new)))
+            WebPageView.SCREEN_CARRIER      -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, createUrlWithLocale(getString(R.string.api_url_carrier)))
+            WebPageView.SCREEN_RESTORE_PASS -> initActivity(R.string.LNG_LOGIN_RECOVERY_PASSWORD, createUrlWithLocale(getString(R.string.api_url_restore_password)))
+            WebPageView.SCREEN_TRANSFERS    -> initActivity(null, createUrlWithLocale(getString(R.string.api_url_transfers)), presenter.baseUrl)
         }
     }
 
@@ -78,13 +78,9 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         super.onPause()
     }
 
-    override fun initActivity(@StringRes title: Int, @StringRes url: Int, strUrl: String?) {
-        (toolbar as Toolbar).toolbar_title.text = getString(title)
-        strUrl?.let {
-            webView.loadUrl(it)
-            return
-        }
-        webView.loadUrl(getString(url))
+    override fun initActivity(@StringRes title: Int?, strUrl: String, stringTitle: String?) {
+        (toolbar as Toolbar).toolbar_title.text = stringTitle ?: title?.let { getString(it) }
+        webView.loadUrl(strUrl)
     }
 
     override fun onBackPressed() {
@@ -92,16 +88,6 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
         else presenter.onBackCommandClick()
     }
 
-    private fun createLicenceUrl() =
-            SystemUtils.gtUrlWithLocale(this)
-                    .plus(presenter.termsUrl)
-
-    private fun createRestorePassUrl() =
-            SystemUtils.gtUrlWithLocale(this)
-                    .plus(getString(R.string.api_restore_password))
-
-    private fun createTransferUrl() =
-            SystemUtils.gtUrlWithLocale(this)
-                    .plus(getString(R.string.api_url_transfers))
-
+    private fun createUrlWithLocale(path: String) =
+            SystemUtils.getUrlWithLocale().plus(path)
 }

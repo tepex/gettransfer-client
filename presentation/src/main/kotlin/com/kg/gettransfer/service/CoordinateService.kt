@@ -2,13 +2,10 @@ package com.kg.gettransfer.service
 
 import android.app.Service
 import android.content.Intent
-import android.os.IBinder
-import android.util.Log
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.Coordinate
 import kotlinx.coroutines.*
 import org.koin.standalone.KoinComponent
@@ -19,7 +16,7 @@ class CoordinateService: Service(), KoinComponent {
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     private val coordinateInteractor: CoordinateInteractor by inject()
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
     private var serviceAlive = false
 
     override fun onBind(intent: Intent?) = null
@@ -38,8 +35,8 @@ class CoordinateService: Service(), KoinComponent {
     private fun coordinateProcess(){
         if (serviceAlive) {
             utils.launchSuspend {
-                utils.asyncAwait { routeInteractor.getCurrentAddress() }
-                        .isNotError()
+                utils.asyncAwait { orderInteractor.getCurrentAddress() }
+                        .isSuccess()
                         ?.let { it.cityPoint.point }
                         ?.let { coordinateInteractor.sendOwnCoordinates(Coordinate(lat = it.latitude, lon = it.longitude)) }
                 delay(DELAY)

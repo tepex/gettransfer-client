@@ -8,4 +8,5 @@ interface PaymentSuccessfulView: BaseView {
     fun setRoute(polyline: PolylineModel)
     fun setRemainTime(days: Int, hours: Int, minutes: Int)
     fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate)
+    fun initCallButton()
 }

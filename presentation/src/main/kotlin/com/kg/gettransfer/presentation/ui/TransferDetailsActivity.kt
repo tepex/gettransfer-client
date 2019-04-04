@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.os.Handler
 
 import android.support.annotation.CallSuper
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
-import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -55,7 +55,6 @@ import kotlinx.android.synthetic.main.view_communication_buttons.view.*
 
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
-import kotlinx.android.synthetic.main.view_transfer_details_about_transport.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //don't delete
 
 
@@ -65,13 +64,15 @@ import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
 import kotlinx.android.synthetic.main.view_seats_number.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.view.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_comment.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_driver_languages.view.*
+import kotlinx.android.synthetic.main.view_transfer_details_field.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.view.*
 import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
-import java.util.Calendar
+import java.util.*
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
@@ -93,15 +94,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         setContentView(R.layout.activity_transfer_details)
 
-        topCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_CUSTOMER_SUPPORT).replace(" ", "\n")
-        bottomCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_CUSTOMER_SUPPORT).replace(" ", "\n")
+        topCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT).replace(" ", "\n")
+        bottomCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT).replace(" ", "\n")
         topCommunicationButtons.btnRepeatTransfer.btnName.text = getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
         bottomCommunicationButtons.btnRepeatTransfer.btnName.text = getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
         topCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
         bottomCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
-
-        topCommunicationButtons.btnSupport.btnImg.backgroundTintList = ContextCompat.getColorStateList(this, R.color.color_gtr_yellow)
-        bottomCommunicationButtons.btnSupport.btnImg.backgroundTintList = ContextCompat.getColorStateList(this, R.color.color_gtr_yellow)
 
         /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = Color.WHITE
@@ -117,13 +115,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         }
 
         _mapView = mapView
+        _btnCenter = btnCenterRoute
         initMapView(savedInstanceState)
         setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
         (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
 
-        bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
-        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
-
+        initBottomSheetDetails()
         //initTextFields()
         setClickListeners()
     }
@@ -131,6 +128,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun onStop() {
         super.onStop()
         clearMarker()
+    }
+
+    private fun initBottomSheetDetails() {
+        bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
+
+        val lp = sheetTransferDetails.layoutParams as CoordinatorLayout.LayoutParams
+        lp.height = getHeightForBottomSheetDetails()
+        sheetTransferDetails.layoutParams = lp
+
+        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
 
     /*override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -174,8 +181,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         booking_info.text = when (transfer.status) {
             Transfer.Status.NEW -> {
-                if (transfer.offersCount > 0) getString(R.string.LNG_BOOK_OFFER)
-                else getString(R.string.LNG_WAIT_FOR_OFFERS)
+                val suff = if (transfer.offersCount > 0) R.string.LNG_BOOK_OFFER
+                else R.string.LNG_WAIT_FOR_OFFERS
+                getString(R.string.LNG_TRANSFER)
+                        .plus(" #${transfer.id} ")
+                        .plus(getString(suff))
             }
             Transfer.Status.PERFORMED -> {
                 if (transfer.dateTime.after(Calendar.getInstance().time)) getString(R.string.LNG_TRANSFER)
@@ -183,7 +193,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                         .plus(getString(R.string.LNG_WILL_START_IN))
                         .plus(" ")
                         .plus(Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer)))
-                else getString(R.string.LNG_TRANSFER_IN_PROGRESS)
+                else getString(R.string.LNG_TRANSFER)
+                        .plus(" #${transfer.id} ")
+                        .plus(getString(R.string.LNG_IN_PROGRESS))
             }
             else -> transfer.statusName?.let { getString(R.string.LNG_TRANSFER_WAS)
                     .plus(" ")
@@ -194,7 +206,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(this@TransferDetailsActivity, R.color.color_transfer_details_text_red))
 
         val status = transfer.statusCategory
-        if (status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
+        if (status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED || status == Transfer.STATUS_CATEGORY_CONFIRMED) {
             initTableLayoutTransportTypes(transfer.transportTypes)
             layoutTransportTypes.isVisible = true
         }
@@ -204,8 +216,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         }
 
         if (status == Transfer.STATUS_CATEGORY_ACTIVE) {
-            topCommunicationButtons.btnCancel.isVisible = true
-            bottomCommunicationButtons.btnCancel.isVisible = true
+            topCommunicationButtons.btnCancel.isVisible = !transfer.isBookNow()
+            bottomCommunicationButtons.btnCancel.isVisible = !transfer.isBookNow()
         }
         if (status == Transfer.STATUS_CATEGORY_FINISHED || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
             topCommunicationButtons.btnRepeatTransfer.isVisible = true
@@ -226,62 +238,67 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             transfer_details_main.tv_distance_dash.isVisible = false
         } else {
             transfer_details_main.tv_time.text = HourlyValuesHelper.getValue(transfer.duration ?: 0, this)
-          //  textDistance.text = getString(R.string.LNG_TIME_RIDE)
-          //  tvDuration.text = Utils.formatDuration(this, transfer.duration!!)
-          //  tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
         }
- //       if (transfer.statusCategory == Transfer.STATUS_CATEGORY_ACTIVE || transfer.statusCategory == Transfer.STATUS_CATEGORY_UNFINISHED)
-        transfer_details_main.tv_price_title.text = getString(R.string.LNG_TOTAL_PRICE).plus(" ${transfer.price?:""}")
-        transfer.remainsToPay?.let {
-            transfer_details_main.tv_price.text = transfer.remainsToPay
-            transfer_details_main.tv_price_dash.isVisible = false
-        }
+        setPrices(transfer)
         setBookNow(transfer)
-        //setTransferStatus(transfer)
+    }
 
-//        when (transfer.statusCategory) {
-//            Transfer.STATUS_CATEGORY_UNFINISHED -> {
-//                transfer_details_header.booking_info.text = transfer.statusName?.let {
-//                    getString(R.string.LNG_TRANSFER_WAS)
-//                            .plus(" ")
-//                            .plus(getString(transfer.statusName).toLowerCase())
-//                }
-//                transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(this, R.color.color_transfer_details_text_red))
-//               // tvTransferCancelledOrInProgress.isVisible = true
-//            }
-//            Transfer.STATUS_CATEGORY_ACTIVE -> {
-//                layoutRequestSentOrCompletedDate.isVisible = true
-//                textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT)
-//                val transferCreateDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.createdAt, false)
-//                tvRequestSentOrCompletedDate.text = transferCreateDateTimePair.first
-//                        .plus(" ${getString(R.string.LNG_TRANSFER_AT)} ")
-//                        .plus(transferCreateDateTimePair.second)
-//            }
-//            Transfer.STATUS_CATEGORY_FINISHED -> {
-//                layoutRequestSentOrCompletedDate.isVisible = true
-//                textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT)
-//                val transferCreateDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.createdAt, false)
-//                tvRequestSentOrCompletedDate.text = transferCreateDateTimePair.first
-//                        .plus(" ${getString(R.string.LNG_TRANSFER_AT)} ")
-//                        .plus(transferCreateDateTimePair.second)
-//            }
-//            Transfer.STATUS_CATEGORY_CONFIRMED -> {
-//                if(transfer.dateTime.after(Calendar.getInstance().time)){
-//                    layoutTransferWillStartTime.isVisible = true
-//                    tvTransferWillStartTime.text = Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer))
-//                } else {
-//                    tvTransferCancelledOrInProgress.text = getString(R.string.LNG_TRANSFER_IN_PROGRESS)
-//                    tvTransferCancelledOrInProgress.setTextColor(ContextCompat.getColor(this, R.color.color_transfer_details_text_green))
-//                    tvTransferCancelledOrInProgress.isVisible = true
-//                }
-//            }
-//        }
+    private fun setPrices(transfer: TransferModel) {
+        when(transfer.statusCategory) {
+            Transfer.STATUS_CATEGORY_ACTIVE -> { setActiveCategoryPrices(transfer) }
+            Transfer.STATUS_CATEGORY_CONFIRMED -> { transfer.let { setPricesForPaidTransfer(it.remainsToPay, it.price, it.paidPercentage) } }
+            Transfer.STATUS_CATEGORY_FINISHED -> { setRemainToPayInfo(transfer.price ?: "", getString(R.string.LNG_RIDE_PAYMENT_COST)) }
+            Transfer.STATUS_CATEGORY_UNFINISHED -> { transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) } }
+        }
+    }
+
+    private fun setActiveCategoryPrices(transfer: TransferModel) {
+        if (transfer.isBookNow()) {
+            transfer.let { setPricesForPaidTransfer(it.remainsToPay, it.price, it.paidPercentage) }
+        } else {
+            transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) }
+        }
+    }
+
+    private fun setPricesForPaidTransfer(remainsToPay: String?, price: String?, paidPercentage: Int) {
+        if(remainsToPay != null && remainsToPay != "0") {
+            setRemainToPayInfo(remainsToPay, getString(R.string.LNG_RIDE_PAYMENT_REMAINS))
+        } else {
+            setRemainToPayInfo(getString(R.string.LNG_RIDE_PAYMENT_PAID))
+        }
+        setFullPrice(price ?: "", paidPercentage)
+    }
+
+    private fun setPassengerOfferedPrice(price: String) {
+        transfer_details_main.apply {
+            tv_price.text = price
+            tv_price_dash.isVisible = false
+        }
+    }
+
+    private fun setRemainToPayInfo(remainsToPay: String, title: String? = null) {
+        transfer_details_main.apply {
+            tv_price.text = remainsToPay
+            tv_price_dash.isVisible = false
+            if (title != null) {
+                tv_price_title.text = title
+            } else {
+                tv_price_title.isVisible = false
+            }
+        }
+    }
+
+    private fun setFullPrice(price: String, paymentPercentages: Int) {
+        full_price.apply {
+            isVisible = true
+            field_text.text = price
+            field_more_text.isVisible = true
+            field_more_text.text = getString(R.string.LNG_RIDE_PAYMENT_PAID_DETAILS, paymentPercentages.toString())
+        }
     }
 
     private fun setBookNow(transfer: TransferModel){
-        if (transfer.paidPercentage != 0 && transfer.bookNow != null) {
-            tv_bookNow_info.isVisible = true
-        }
+        tv_bookNow_info.isVisible = transfer.isBookNow()
     }
 
     /*private fun setTransferStatus(transfer: TransferModel) {
@@ -321,11 +338,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
     private fun initAboutRequestView(transfer: TransferModel, userProfile: ProfileModel) {
    //     booking_number.field_text.text = transfer.id.toString()
-        with (userProfile) {
+        /*with (userProfile) {
             name?.let { initField(passenger_name, it) }
             email?.let { initField(passenger_email, it) }
             phone?.let { initField(passenger_phone, it) }
-        }
+        }*/
+        userProfile.name?.let { initField(passenger_name, it) }
         with(transfer) {
             flightNumber?.let { initField(flight_number, it) }
             dateTimeReturn?.let { initField(back_trip, SystemUtils.formatDateTime(it)) }
@@ -342,9 +360,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
         with(transfer_details_view_seats) {
             tv_countPassengers.text = getString(R.string.X_SIGN).plus("${transfer.countPassengers}")
-            tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
-            imgChildSeats.isVisible =  transfer.countChilds > 0
-            tvCountChildren.isVisible = transfer.countChilds > 0
+            imgPassengers.isVisible = true
+            tv_countPassengers.isVisible = true
+            if(transfer.countChilds > 0) {
+                tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
+                imgChildSeats.isVisible =  true
+                tvCountChildren.isVisible = true
+            }
         }
     }
 
@@ -371,7 +393,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         initAboutTransportView(offer, childSeats)
         layoutAboutTransport.isVisible = true
 
+        initChatButton()
+
         initCarMarker(offer)
+    }
+
+    private fun initChatButton() {
+        topCommunicationButtons.btnChat.setOnClickListener { presenter.onChatClick() }
+        bottomCommunicationButtons.btnChat.setOnClickListener { presenter.onChatClick() }
+        topCommunicationButtons.btnChat.isVisible = true
+        bottomCommunicationButtons.btnChat.isVisible = true
     }
 
     private fun initAboutDriverView(offer: OfferModel) {
@@ -399,15 +430,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 driver_email.isVisible = true
                 Utils.setSelectOperationListener(this, driver_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
-                topCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
-                bottomCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
-                topCommunicationButtons.btnChat.isVisible = true
-                bottomCommunicationButtons.btnChat.isVisible = true
             }
         }
 
         offer.carrier.let { carrier ->
-            carrier.profile?.name?.let { name -> carrier_name.field_text.text = name }
+            carrier.profile?.name?.let { name ->
+                carrier_name.field_text.text = name
+                carrier_name.isVisible = true
+            }
             carrier.profile?.phone?.let { phone ->
                 carrier_phone.field_text.text = phone
                 carrier_phone.isVisible = true
@@ -461,11 +491,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         else carPhoto.setImageDrawable(ContextCompat.getDrawable(this, offerModel.vehicle.transportType.imageId!!))
     }
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) =
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
         setPolyline(polyline, routeModel)
+        btnCenterRoute.isVisible = false
+    }
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) =
+    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
+        btnCenterRoute.isVisible = false
+    }
 
     override fun copyText(text: String) {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager

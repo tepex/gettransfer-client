@@ -2,9 +2,9 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.ChatDataStore
 import com.kg.gettransfer.data.ds.ChatDataStoreCache
-import com.kg.gettransfer.data.ds.ChatDataStoreIO
 import com.kg.gettransfer.data.ds.ChatDataStoreRemote
 import com.kg.gettransfer.data.ds.DataStoreFactory
+import com.kg.gettransfer.data.ds.io.ChatSocketDataStoreOutput
 import com.kg.gettransfer.data.mapper.ChatBadgeEventMapper
 import com.kg.gettransfer.data.mapper.ChatMapper
 import com.kg.gettransfer.data.mapper.ExceptionMapper
@@ -26,7 +26,7 @@ import java.util.Date
 
 class ChatRepositoryImpl(
         private val factory: DataStoreFactory<ChatDataStore, ChatDataStoreCache, ChatDataStoreRemote>,
-        private val chatDataStoreIO: ChatDataStoreIO
+        private val chatDataStoreIO: ChatSocketDataStoreOutput
 ) : BaseRepository(), ChatRepository {
 
     private val chatMapper = get<ChatMapper>()
@@ -108,7 +108,9 @@ class ChatRepositoryImpl(
     internal fun onNewMessageEvent(message: MessageEntity) {
         factory.retrieveCacheDataStore().addMessage(message)
         val newMessages = factory.retrieveCacheDataStore().getNewMessagesForTransfer(message.transferId)
-        val messageFromCache = newMessages.find { it.accountId == message.accountId && it.text == message.text }
+        val messageFromCache = newMessages.find {
+            (it.accountId == message.accountId || it.accountId == DEFAULT_MESSAGE.accountId) && it.text == message.text
+        }
         messageFromCache?.let { factory.retrieveCacheDataStore().deleteNewMessageFromCache(it.id) }
         sendMessageFromQueue(message.transferId)
         chatReceiver.onNewMessageEvent(messageMapper.fromEntity(message))

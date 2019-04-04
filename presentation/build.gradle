@@ -12,7 +12,6 @@ ext {
     moxy_version               = "1.5.5"
     cicerone_version           = "4.0.2"
     circle_indicator_version   = "1.2.2"
-    vp_indicator_version       = "2.4.1"
     hockey_version             = "5.1.1"
     firebase_core_version      = "16.0.6"
     firebase_iid_version       = "17.0.4"
@@ -34,6 +33,8 @@ ext {
     installreferrer_version    = "1.0"
     life_cycle_version         = "1.1.1"
     easy_permissions_version   = "2.0.1"
+    braintree_version          = "2.22.0"
+    drop_in_version            = "3.7.1"
 }
 
 android {
@@ -209,9 +210,6 @@ dependencies {
     // Cicerone
     implementation "ru.terrakok.cicerone:cicerone:$cicerone_version"
 
-    // ViewPagerIndicator
-    implementation "com.github.JakeWharton:ViewPagerIndicator:$vp_indicator_version"
-
     // Logger
     implementation libs.timber
     implementation "at.favre.lib:slf4j-timber:$slf4j_timber_version"
@@ -276,6 +274,10 @@ dependencies {
     //Vector drawable
     implementation "com.android.support:support-vector-drawable:$support_version"
     implementation "com.android.support:animated-vector-drawable:$support_version"
+
+    //Braintree
+    implementation "com.braintreepayments.api:braintree:$braintree_version" //don't update until migration to AndroidX
+    implementation "com.braintreepayments.api:drop-in:$drop_in_version" //don't update until migration to AndroidX
 }
 
 def getBuildNumber() {

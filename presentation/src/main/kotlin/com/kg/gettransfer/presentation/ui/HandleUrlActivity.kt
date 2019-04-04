@@ -70,24 +70,27 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
                 path.equals(PASSENGER_CABINET) -> appLinkData?.fragment?.let {
                     if (it.startsWith(TRANSFERS)) {
                         if (it.contains(CHOOSE_OFFER_ID)) {
-                            val transferId = it.substring(it.indexOf(SLASH) + 1, it.indexOf(QUESTION)).toLong()
-                            val offerId = it.substring(it.lastIndexOf(EQUAL) + 1, it.length).toLong()
-                            presenter.openOffer(transferId, offerId)
+                            val transferId = it.substring(it.indexOf(SLASH) + 1, it.indexOf(QUESTION)).toLongOrNull()
+                            val offerId = it.substring(it.lastIndexOf(EQUAL) + 1, it.length).toLongOrNull()
+                            var bookNowTransportId: String? = null
+                            if (offerId == null) bookNowTransportId = it.substring(it.lastIndexOf(EQUAL) + 1, it.length)
+
+                            transferId?.let { id -> presenter.openOffer(id, offerId, bookNowTransportId) }
                             return
                         } else if (it.contains(OPEN_CHAT)) {
                             val chatId = it.substring(it.indexOf(SLASH) + 1, it.indexOf(QUESTION))
                             presenter.openChat(chatId)
                             return
                         }
-                        val transferId = it.substring(it.indexOf(SLASH) + 1).toLong()
-                        presenter.openTransfer(transferId)
+                        val transferId = it.substring(it.indexOf(SLASH) + 1).toLongOrNull()
+                        transferId?.let { id -> presenter.openTransfer(id) }
                         return
                     }
                 }
                 path?.startsWith(PASSENGER_RATE)!! -> {
-                    val transferId = appLinkData.lastPathSegment?.toLong()
-                    val rate = appLinkData.getQueryParameter(RATE)?.toInt()
-                    presenter.rateTransfer(transferId!!, rate!!)
+                    val transferId = appLinkData.lastPathSegment?.toLongOrNull()
+                    val rate = appLinkData.getQueryParameter(RATE)?.toIntOrNull()
+                    if (transferId != null && rate != null) presenter.rateTransfer(transferId, rate)
                     return
                 }
                 path.contains(VOUCHER) -> {
@@ -103,11 +106,27 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
             presenter.openMainScreen()
-            showWebView(url)
+            downloadVoucher(url)
         } else EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
                 RC_WRITE_FILE, *perms)
+    }
+
+    private fun downloadVoucher(url: String) {
+        webView.loadUrl(url)
+        webView.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+            val request = DownloadManager.Request(Uri.parse(url)).apply {
+                allowScanningByMediaScanner()
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                setDestinationInExternalPublicDir(
+                        Environment.DIRECTORY_DOWNLOADS,
+                        URLUtil.guessFileName(url, contentDisposition, mimetype))
+            }
+            val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            dm.enqueue(request)
+            longToast(getString(R.string.LNG_DOWNLOADING))
+        }
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
@@ -122,7 +141,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
 
     private fun onPermissionDenied() {
         presenter.openMainScreen()
-        toast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
     }
 
     override fun onRationaleAccepted(requestCode: Int) {}
@@ -141,18 +160,6 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 view?.loadUrl(url)
                 return true;            }
-        }
-        webView.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
-            val request = DownloadManager.Request(Uri.parse(url)).apply {
-                allowScanningByMediaScanner()
-                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                setDestinationInExternalPublicDir(
-                        Environment.DIRECTORY_DOWNLOADS,
-                        URLUtil.guessFileName(url, contentDisposition, mimetype))
-            }
-            val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-            dm.enqueue(request)
-            longToast(getString(R.string.LNG_DOWNLOADING))
         }
         webView.loadUrl(url)
     }

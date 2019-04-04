@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
+import android.support.annotation.LayoutRes
 
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
@@ -15,17 +16,18 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
+import kotlinx.android.synthetic.main.view_transfer_request_info_enabled.view.*
 
 import java.util.Calendar
 
 class TransferRequestItem @JvmOverloads constructor(
         context: Context,
+        @LayoutRes layout: Int,
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer {
 
-    override val containerView = LayoutInflater.from(context).inflate(R.layout.view_transfer_request_info, this, true)
+    override val containerView = LayoutInflater.from(context).inflate(layout, this, true)
 
     fun setInfo(item: TransferModel) {
         tvTransferRequestNumber.text = context.getString(R.string.LNG_RIDE_NUMBER).plus(item.id)
@@ -47,7 +49,7 @@ class TransferRequestItem @JvmOverloads constructor(
         tvTransferRequestStatus.setTextColor(ContextCompat.getColor(context,
                 when (item.status) {
                     Transfer.Status.OUTDATED  -> R.color.color_transfer_details_text_red
-                    Transfer.Status.PERFORMED -> R.color.color_transfer_details_text_green
+                    Transfer.Status.PERFORMED -> R.color.color_gtr_green
                     else                      -> R.color.colorTransferRequestText
                 }))
         tvFrom.text = item.from

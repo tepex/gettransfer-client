@@ -1,73 +1,90 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
-
-import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.model.Offer
-
-import com.kg.gettransfer.domain.model.sortDescendant
+import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.Transfer.Companion.filterActive
-import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
-
-import com.kg.gettransfer.presentation.mapper.TransferMapper
-import com.kg.gettransfer.presentation.model.OfferModel
-
 import com.kg.gettransfer.presentation.model.TransferModel
-
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
+import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
+import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
-
-import org.koin.standalone.inject
-
 import timber.log.Timber
 
 @InjectViewState
-class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
-    private val transferMapper: TransferMapper by inject()
-
-    lateinit var categoryName: String
+class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
+        BasePresenter<RequestsFragmentView>(), CounterEventListener {
+    @RequestsView.TransferTypeAnnotation
+    var transferType = tt
 
     private var transfers: List<TransferModel>? = null
-    private lateinit var transferIds: List<Long>
 
     @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
-        getTransfers()
-        transfers?.let { viewState.setRequests(it) }
-        transferIds = systemInteractor.transferIds
+        viewState.showTransfers()
+        countEventsInteractor.addCounterListener(this)
     }
 
-    private fun getTransfers() {
+    @CallSuper
+    override fun detachView(view: RequestsFragmentView?) {
+        super.detachView(view)
+        countEventsInteractor.removeCounterListener(this)
+    }
+
+    fun getTransfers(available: Boolean?) {
         utils.launchSuspend {
-            viewState.blockInterface(true)
-            /*
-            val result = when(categoryName) {
-                RequestsActivity.CATEGORY_ACTIVE    -> utils.asyncAwait { transferInteractor.getActiveTransfers() }
-                RequestsActivity.CATEGORY_COMPLETED -> utils.asyncAwait { transferInteractor.getCompletedTransfers() }
-                else                                -> utils.asyncAwait { transferInteractor.getArchivedTransfers() }
+
+            when(transferType){
+                TRANSFER_ACTIVE -> {
+                    if(available != true) {
+                        fetchData { transferInteractor.getTransfersActiveCached() }?.let {
+                            showTransfers(it)
+                        }
+                    } else {
+                        fetchData { transferInteractor.getTransfersActive() }?.let {
+                            showTransfers(it)
+                        }
+                    }
+                }
+
+                TRANSFER_ARCHIVE -> {
+                    if(available != true) {
+                        fetchData { transferInteractor.getTransfersArchiveCached() }?.let {
+                            showTransfers(it)
+                        }
+                    } else {
+                        fetchData { transferInteractor.getTransfersArchive() }?.let {
+                            showTransfers(it)
+                        }
+                    }
+                }
             }
-            */
-            val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!) else showTransfers(result.model)
-            viewState.blockInterface(false)
+            if (transferType == TRANSFER_ARCHIVE)
+                viewState.blockInterface(false)
         }
     }
 
     private fun showTransfers(transfers: List<Transfer>) {
-        val filtered = when (categoryName) {
-            RequestsView.CATEGORY_ACTIVE    -> transfers.filterActive()
-            RequestsView.CATEGORY_COMPLETED -> transfers.filterCompleted()
-            else                            -> transfers
+        this.transfers = transfers.sortedByDescending {
+            it.dateToLocal
+        }.map { transferMapper.toView(it) }
+        with(countEventsInteractor) {
+            updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
         }
-        viewState.setRequests(filtered.sortDescendant().map { transferMapper.toView(it) })
-        viewState.setCountEvents(transferIds)
+        this.transfers?.let { viewState.setRequests(it) }
+    }
+
+    private fun updateEvents(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>) {
+        transfers = transfers?.also { transfersList ->
+            transfersList.forEach {transfer->
+                mapCountNewEvents[transfer.id]?.let {
+                    val eventsCount = it - (mapCountViewedOffers[transfer.id] ?: 0)
+                    if (eventsCount > 0) transfer.eventsCount = eventsCount
+                }
+            }
+        }
     }
 
     fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int) {
@@ -79,8 +96,12 @@ class RequestsFragmentPresenter : BasePresenter<RequestsFragmentView>() {
         }
     }
 
-    override fun onNewOffer(offer: Offer): OfferModel {
-        utils.launchSuspend{ viewState.setCountEvents(transferIds) }
-        return super.onNewOffer(offer)
+    override fun updateCounter() {
+        utils.launchSuspend{
+            with(countEventsInteractor) {
+                updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
+            }
+        }
+        viewState.notifyData()
     }
 }

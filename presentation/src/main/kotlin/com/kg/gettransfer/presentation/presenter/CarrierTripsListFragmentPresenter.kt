@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
@@ -21,17 +22,19 @@ class CarrierTripsListFragmentPresenter : BasePresenter<CarrierTripsListFragment
 
     private var tripsRVItems: List<CarrierTripsRVItemModel>? = null
 
-    override fun onFirstViewAttach() {
+    @CallSuper
+    override fun attachView(view: CarrierTripsListFragmentView) {
+        super.attachView(view)
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrips() }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
-            else {
-                val carrierTripsRVItemsList = carrierTripsListItemsMapper.toRecyclerView(result.model)
-                tripsRVItems = carrierTripsRVItemsList.itemsList
-                viewState.setTrips(tripsRVItems!!, carrierTripsRVItemsList.startTodayPosition, carrierTripsRVItemsList.endTodayPosition)
-            }
+
+            fetchData { carrierTripInteractor.getCarrierTrips() }
+                    ?.let {
+                        val carrierTripsRVItemsList = carrierTripsListItemsMapper.toRecyclerView(it)
+                        tripsRVItems = carrierTripsRVItemsList.itemsList
+                        viewState.setTrips(tripsRVItems!!, carrierTripsRVItemsList.startTodayPosition, carrierTripsRVItemsList.endTodayPosition)
+                    }
+
             viewState.blockInterface(false)
         }
     }

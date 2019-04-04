@@ -37,9 +37,9 @@ class TripAddressesInfoView @JvmOverloads constructor(
     private fun changeViewForHourlyTransfer(isHourlyTransfer: Boolean) {
         rl_hourly_info.isVisible = isHourlyTransfer
         tvMarkerTo.isVisible = !isHourlyTransfer
+        ivMarkersLine.isVisible = !isHourlyTransfer
         if (isHourlyTransfer) {
             tvTripTo.text = ""
-            //tripDistance.text = ""
         }
     }
 }

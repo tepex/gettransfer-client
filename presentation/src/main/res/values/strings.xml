@@ -8,10 +8,11 @@
     <string name="api_url_demo">https://stgtr.org</string>
     <string name="api_key_prod">3fe0f9208622274f1a21e78037eea83e</string>
     <string name="api_url_prod">https://gettransfer.com</string>
-    <string name="api_url_payment">/terms_of_use</string>
-    <string name="api_url_transfers">/carrier/cabinet/transfers</string>
 
-    <string name="api_restore_password">/forgot_password</string>
+    <string name="api_url_transfers">/carrier/cabinet/transfers</string>
+    <string name="api_url_restore_password">/forgot_password</string>
+    <string name="api_url_carrier_new">/carrier/new</string>
+    <string name="api_url_carrier">/carrier</string>
 
     <!-- FCM -->
     <string name="new_offer_notification_channel_id" translatable="false">new_offer_channel</string>
@@ -44,9 +45,10 @@
     <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string>
 
     <string name="share">Share</string>
+    <string name="debug">Debug</string>
     <string name="endpoint">Endpoint</string>
     <string name="logs">Logs</string>
-    <string name="search">Search</string>
+    <string name="LNG_SEARCH">Search</string>
     <string name="reset_onboarding">Reset onboarding</string>
     <string name="reset_rate">Reset play market rate</string>
     <string name="clear_access_token">Clear access token</string>
@@ -69,6 +71,9 @@
     <string name="market_link">market://details?id=</string>
     <string name="app_package">com.gettransfer</string>
 
+    <string name="text_in_parentheses">(%1$s)</string>
+    <string name="chat_transfer_date_transfer_id_format">%1$s (%2$s)</string>
+
     <string name="X_SIGN">X</string>
 
 
@@ -79,10 +84,11 @@
     <string name="LNG_CHOOSE">Select</string>
     <string name="LNG_BOOK">Book</string>
     <string name="LNG_CLEAR">Clear</string>
-    <string name="LNG_DONE"><u>Done</u></string>
+    <string name="LNG_DONE">Done</string>
     <string name="LNG_OPEN">Open</string>
     <string name="LNG_COPY">Copy</string>
     <string name="LNG_NEXT">Next</string>
+    <string name="LNG_LOADING">Loading…</string>
     <string name="LNG_ERROR">Error</string>
     <string name="LNG_ERROR_DATE">Please select transfer date</string>
     <string name="LNG_ERROR_RETURN_DATE">Invalid return date</string>
@@ -147,6 +153,7 @@
     <string name="LNG_MENU_TITLE_TRANSFERS">Transfers</string>
     <string name="LNG_MENU_SUBTITLE_TRANSFERS">Make offer</string>
     <string name="LNG_MENU_SUBTITLE_TRIPS">Upcoming transfers</string>
+    <string name="LNG_CUSTOMER_SUBTITLE_SUPPORT">Contact us</string>
     <string name="LNG_READMORE"><u>Read more</u></string>
     <string name="LNG_BESTPRICES">Best prices for transfers\nbetween airports and cities\nworldwide</string>
     <string name="LNG_LANGUAGE">Application language</string>
@@ -175,13 +182,6 @@
     <string name="LNG_ABOUNT_DESC_2">You always know your carrier.\nAll carriers are carefully selected.</string>
     <string name="LNG_PRESENTATION_TITLE_0">Best price guarantee</string>
     <string name="LNG_PRESENTATION_TITLE_1">No hidden costs</string>
-    <string name="LNG_PRESENTATION_TITLE_2">Free waiting time</string>
-    <string name="LNG_PRESENTATION_TITLE_3">Safe transfers</string>
-    <string name="LNG_PRESENTATION_DESC_0">We return the difference in price</string>
-    <string name="LNG_PRESENTATION_DESC_1">Taxes, tolls and gratuity included</string>
-    <string name="LNG_PRESENTATION_DESC_2">We allow free waiting time of 60 minutes at airports, all other locations include a free 15 minutes waiting time.</string>
-    <string name="LNG_PRESENTATION_DESC_3">You always know your carrier.\nAll carriers are carefully selected.</string>
-    <string name="LNG_PRESENTATION_FINAL_BUTTON">START</string>
     <string name="LNG_SEARCH_POPULAR_PLACES">Popular places</string>
     <string name="LNG_SEARCH_RECENT_PLACES">Recent Places</string>
     <string name="LNG_SEARCH_POPULAR_AIRPORT">Airport</string>
@@ -214,9 +214,10 @@
     <string name="LNG_RIDE_LOGIN_CARRIER">Sign in for сarrier</string>
     <string name="LNG_NEW_OFFER_MESSAGE">You got new offer on your request</string>
     <string name="LNG_NEW_OFFER_TITLE">New offer</string>
+    <string name="LNG_MAP">Map</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL_CHILD">children</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL_PERSON">persons</string>
-    <string name="LNG_RIDE_SETTINGS_OPTIONAL_COMMENT">comment</string>
+    <string name="LNG_RIDE_SETTINGS_OPTIONAL_COMMENT">Comment</string>
     <string name="LNG_RIDE_SETTINGS_OPTIONAL">Additional</string>
     <string name="LNG_RIDE_DISTANCE">Distance</string>
     <string name="LNG_RIDE_DURATION">Duration</string>
@@ -268,17 +269,16 @@
     <string name="LNG_PAYMENT_SETTINGS">Payment options</string>
     <string name="LNG_PAYMENT_TERMS">Terms</string>
     <string name="LNG_PAYMENT_TERM_NOW">Pay %s%% now</string>
-    <string name="LNG_PAYMENT_TERM_LATER">%s%% (%s) later to the driver</string>
+    <string name="LNG_PAYMENT_TERM_LATER">(%s later to the driver)</string>
     <string name="LNG_PAYMENT_METHOD">Method of payment</string>
     <string name="LNG_PAYMENT_METHOD_CARD">Credit Card</string>
     <string name="LNG_PAYMENT_METHOD_PAYPAL">Pay Pal</string>
     <string name="LNG_SOON">Soon</string>
-    <string name="LNG_PAYMENT_COMISSION">Commission 3%%.\nRefund is available before %s</string>
+    <string name="LNG_PAYMENT_COMISSION">Commission 2%%.\nRefund is available before %s</string>
+    <string name="LNG_PAYMENT_COMISSION2">Commission %s%%.\nRefund is available before %s</string>
     <string name="LNG_PAYMENT_PAY">Pay</string>
     <string name="LNG_RIDE_CANT_CREATE">Can\'t create transfer</string>
-    <string name="LNG_RIDES_ACTIVE">Active</string>
     <string name="LNG_RIDES_ALL">All</string>
-    <string name="LNG_RIDES_COMPLETED">Completed</string>
     <string name="LNG_TIME_RIDE">Hourly transfer</string>
     <string name="LNG_WAIT_FOR_OFFERS">Please wait for offers</string>
     <string name="LNG_BOOK_OFFER">Please book car and driver</string>
@@ -336,7 +336,7 @@
     <string name="LNG_DRIVE_RATING">Drive</string>
     <string name="LNG_FAIR_RATING">Fair</string>
     <string name="LNG_RIDE_PAYMENT_DETAILS">Payment Details</string>
-    <string name="LNG_RIDE_PAYMENT_PAID">Payed</string>
+    <string name="LNG_RIDE_PAYMENT_PAID">Paid</string>
     <string name="LNG_RIDE_PAYMENT_REMAINS">Remains to pay</string>
     <string name="LNG_RIDE_PAYMENT_SUMM">Price</string>
     <string name="LNG_RIDE_PAYMENT_COST">Price</string>
@@ -436,16 +436,26 @@
     <string name="LNG_EMAIL">Email</string>
     <string name="LNG_PHONE">Phone</string>
     <string name="LNG_TRIP_ON_MY_WAY">On my way</string>
-    <string name="LNG_TRIPS_EMPTY_ACTIVE">you have no active transfers</string>
+    <string name="LNG_RIDES_ACTIVE">Upcoming</string>
+    <string name="LNG_RIDES_COMPLETED">Past</string>
+    <string name="LNG_TRIPS_EMPTY_ACTIVE">you have no upcoming transfers</string>
+    <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no past transfers</string>
     <string name="LNG_TRIPS_EMPTY_ALL">you have no transfers</string>
-    <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no completed transfers</string>
-    <string name="LNG_LIST"><u>List</u></string>
+    <string name="LNG_CALENDAR">Calendar</string>
+    <string name="LNG_LIST">List</string>
     <string name="LNG_NEW_CHAT_MESSAGE">Write the message</string>
     <string name="LNG_NEW_PASSENGER_CHAT_TITLE">Passenger message</string>
     <string name="LNG_NEW_DRIVER_CHAT_TITLE">Carrier message</string>
     <string name="LNG_UNREAD_MESSAGES_COUNT">%s unread messages</string>
     <string name="LNG_RIDE_CLIENT_NAME">Name</string>
     <string name="LNG_DETAILS_REPEAT_ROUTE">Repeat transfer</string>
+    <string name="LNG_SEND_COORDINATES_IN_BACKGROUND">Send coordinates in background</string>
+    <string name="LNG_CHAT_WITH">Chat with</string>
+    <string name="LNG_DISTANCE_IN_MILES">Distance in miles</string>
+    <string name="LNG_CALENDAR_MODE">Calendar mode</string>
+    <string name="LNG_WEEK_FIRST_DAY">First week day</string>
+    <string name="LNG_RIDE_PAYMENT_RIDE_COST">Ride cost</string>
+    <string name="LNG_RIDE_PAYMENT_PAID_DETAILS">Paid %s%%</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
@@ -456,6 +466,7 @@
     <string name="new_offers">New offers</string>
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
     <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">I want to order a return transfer</string>
+    <string name="LNG_RIDE_DATE_RETURN">Return date and time</string>
     <string name="LNG_OFFERS_SUPPORT">GetTransfer Support</string>
     <string name="LNG_BOOK_NOW_PAYMENT_SUCCEESS">We will send you e-mail with carrier information</string>
     <string name="LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION">Download booking voucher?</string>
@@ -464,7 +475,28 @@
     <string name="LNG_LOCATION_ACCESS">Allow access to your location</string>
     <string name="LNG_PLEASE_WAIT_OFFERS">Soon offers from carriers will be here</string>
     <string name="LNG_PLEASE_WAIT">Please wait</string>
+    <string name="LNG_PLEASE_WAIT_PAYPAL">we are connecting to PayPal…</string>
+    <string name="LNG_PAYMENT_INSTALL_PAYPAL">Install PayPal app or browser to pay</string>
 
+    <string name="LNG_CUSTOMER_SUPPORT_SPEAK_YOUR_LANG">"We speak"</string>
+    <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSENGER">"Write us a message"</string>
+    <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE">"Write us"</string>
+    <string name="LNG_CUSTOMER_SUPPORT_CALL_BY_PHONE">"Call us"</string>
+    <string name="LNG_COUNTRY_NAMES_GB">"Great Britain"</string>
+    <string name="LNG_COUNTRY_NAMES_USA_CA">USA</string>
+    <string name="LNG_COUNTRY_NAMES_SW">Switzerland</string>
+    <string name="LNG_COUNTRY_NAMES_CY">Cyprus</string>
+    <string name="LNG_COUNTRY_NAMES_RU">Russia</string>
+    <string name="LNG_CITY_NAMES_HONG_KONG">Hong Kong</string>
+    <string name="LNG_COUNTRY_NAMES_ZH">China</string>
+
+    <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
+    <string name="switzerland_phone" translatable="false">+41 22 518 04 00</string>
+    <string name="cyprus_phone" translatable="false">+357 24 022300</string>
+    <string name="russia_phone" translatable="false">+7 495 414 23 87</string>
+    <string name="florida_phone" translatable="false">+1 786 870 1567</string>
+    <string name="california_phone" translatable="false">+1 628 239 0028</string>
+    <string name="china_phone" translatable="false">+852 5803 1035</string>
 
     <plurals name="days">
         <item quantity="one">@string/LNG_DAY</item>

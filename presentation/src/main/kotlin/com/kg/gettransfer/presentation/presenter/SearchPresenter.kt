@@ -8,7 +8,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
 
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.model.PopularPlace
@@ -22,16 +22,17 @@ import org.koin.standalone.inject
 
 @InjectViewState
 class SearchPresenter : BasePresenter<SearchView>() {
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     internal var isTo = false
+    var backwards: Boolean = false
 
     @CallSuper
     override fun attachView(view: SearchView) {
         super.attachView(view)
-        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", true, !isTo)
-        if (routeInteractor.hourlyDuration == null)
-            viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", true, isTo)
+        viewState.setAddressFrom(orderInteractor.from?.cityPoint?.name ?: "", true, !isTo)
+        if (orderInteractor.hourlyDuration == null)
+            viewState.setAddressTo(orderInteractor.to?.cityPoint?.name ?: "", true, isTo)
         else viewState.hideAddressTo()
         onSearchFieldEmpty()
     }
@@ -49,18 +50,18 @@ class SearchPresenter : BasePresenter<SearchView>() {
         val isDoubleClickOnRoute: Boolean
         if (isTo) {
             viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, placeType == ROUTE_TYPE, true)
-            isDoubleClickOnRoute = routeInteractor.to == selected
-            routeInteractor.to = selected
+            isDoubleClickOnRoute = orderInteractor.to == selected
+            orderInteractor.to = selected
         } else {
             viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, placeType == ROUTE_TYPE, true)
-            isDoubleClickOnRoute = routeInteractor.from == selected
-            routeInteractor.from = selected
+            isDoubleClickOnRoute = orderInteractor.from == selected
+            orderInteractor.from = selected
         }
 
         if (placeType != NO_TYPE) {
             viewState.updateIcon(isTo)
             utils.launchSuspend {
-                utils.async { routeInteractor.updatePoint(isTo) }
+                utils.async { orderInteractor.updatePoint(isTo) }
                         .await()
                         .model.also {
                     pointReady(checkZeroPoint(it, selected), isDoubleClickOnRoute, placeType == SUITABLE_TYPE) }
@@ -76,10 +77,10 @@ class SearchPresenter : BasePresenter<SearchView>() {
     private fun pointReady(notZeroPoint: Boolean, isDoubleClickOnRoute: Boolean, isSuitableType: Boolean) {
         if (!notZeroPoint) return
         if(isSuitableType || isDoubleClickOnRoute) {
-            if (checkFields() && isTo) createRouteForOrder()
+            if (checkFields() && (isTo || orderInteractor.hourlyDuration != null)) createRouteForOrder()
             else if (!isTo) {
                 viewState.setFocus(true)
-                routeInteractor.to?.let {
+                orderInteractor.to?.let {
                     viewState.setAddressTo(it.primary ?: it.cityPoint.name!!, true, true)
                 }
             }
@@ -95,17 +96,25 @@ class SearchPresenter : BasePresenter<SearchView>() {
                 }
             }
 
-    private fun checkFields() = routeInteractor.addressFieldsNotNull()
+    private fun checkFields(): Boolean {
+        val isAddressesValid = orderInteractor.isAddressesValid()
+        if (!isAddressesValid) return false
+        val isDistanceValid = orderInteractor.hourlyDuration?.let { true } ?: orderInteractor.isDistanceFine()
+        if (!isDistanceValid) viewState.setError(false, R.string.LNG_FIELD_ERROR_MATCH_ADDRESSES)
+        return isDistanceValid
+    }
 
     private fun createRouteForOrder() {
-        systemInteractor.addressHistory = listOf(routeInteractor.from!!, routeInteractor.to!!)
-        router.replaceScreen(Screens.CreateOrder)
+        fillHistory()
+        if (backwards) router.exit()
+        else router.replaceScreen(Screens.CreateOrder)
         logButtons(Analytics.REQUEST_FORM)
     }
 
     fun selectFinishPointOnMap() {
         logButtons(Analytics.POINT_ON_MAP_CLICKED)
         systemInteractor.selectedField = if (isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
+        systemInteractor.withPointOnMap = true
         router.exit()
     }
 
@@ -114,7 +123,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
         analytics.logEventToYandex(event, null)
     }
 
-    fun isHourly() = routeInteractor.hourlyDuration != null
+    fun isHourly() = orderInteractor.hourlyDuration != null
 
     @CallSuper
     override fun onBackCommandClick() {
@@ -124,22 +133,27 @@ class SearchPresenter : BasePresenter<SearchView>() {
     fun inverseWay() {
         logButtons(Analytics.SWAP_CLICKED)
         isTo = !isTo
-        val copyTo = routeInteractor.to
-        routeInteractor.to = routeInteractor.from
-        routeInteractor.from = copyTo
-        viewState.setAddressFrom(routeInteractor.from?.cityPoint?.name ?: "", false, false)
-        viewState.setAddressTo(routeInteractor.to?.cityPoint?.name ?: "", false, false)
+        val copyTo = orderInteractor.to
+        orderInteractor.to = orderInteractor.from
+        orderInteractor.from = copyTo
+        viewState.setAddressFrom(orderInteractor.from?.cityPoint?.name ?: "", false, false)
+        viewState.setAddressTo(orderInteractor.to?.cityPoint?.name ?: "", false, false)
         viewState.setFocus(isTo)
     }
 
     private fun checkZeroPoint(point: Point, address: GTAddress): Boolean {
         if (point.latitude == NO_POINT && point.longitude == NO_POINT) {
-            routeInteractor.noPointPlaces += address
-            if (isTo) routeInteractor.to else routeInteractor.from = null
+            orderInteractor.noPointPlaces += address
+            if (isTo) orderInteractor.to else orderInteractor.from = null
             viewState.onAddressError(R.string.LNG_LOOKUP_ERROR, address, isTo)
             return false
         }
         return true
+    }
+
+    private fun fillHistory() {
+        systemInteractor.addressHistory = mutableListOf(orderInteractor.from!!)
+                .apply { orderInteractor.to?.let { add(it) } }
     }
 
     companion object {

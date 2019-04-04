@@ -139,12 +139,27 @@ object Utils : KoinComponent {
         listener: (Int) -> Unit
     ) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
 
-    fun setDistanceUnitsDialogListener(
+    /*fun setDistanceUnitsDialogListener(
         context: Context,
         view: View,
         items: List<CharSequence>,
         listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_DISTANCE_UNIT, items, listener) }
+    ) { setModelsDialogListener(context, view, R.string.LNG_DISTANCE_UNIT, items, listener) }*/
+
+    fun setFirstDayOfWeekDialogListener(
+            context: Context,
+            view: View,
+            items: List<CharSequence>,
+            listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, R.string.LNG_WEEK_FIRST_DAY, items, listener) }
+
+    fun setCalendarModesDialogListener(
+            context: Context,
+            view: View,
+            items: List<CharSequence>,
+            @StringRes titleId: Int,
+            listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, titleId, items, listener) }
 
     fun setEndpointsDialogListener(
         context: Context,
@@ -258,6 +273,8 @@ object Utils : KoinComponent {
         val hours = min / 60
         return Triple(hours / 24, hours % 24, min % 60)
     }
+
+    fun convertHoursToMinutes(hours: Int) = hours * 60
 
     fun formatDuration(context: Context, duration: Int): String {
         val days = duration / 24
@@ -401,8 +418,11 @@ object Utils : KoinComponent {
     @Suppress("UNUSED_PARAMETER")
     fun formatPrice(context: Context, price: String) = "($price)"
 
+    private fun displayMetrics(context: Context) =
+            context.resources.displayMetrics
+
     fun convertDpToPixels(context: Context, dp: Float) =
-        dp * context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
+        dp * displayMetrics(context).densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
 
     fun dpToPxInt(context: Context, dp: Float) =
             convertDpToPixels(context, dp).toInt()

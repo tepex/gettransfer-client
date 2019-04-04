@@ -30,8 +30,8 @@ object Screens {
     @JvmField val OFFERS = "offers"
 
     @JvmField val CARRIER_MODE = "carrier_mode"
-    @JvmField val REG_CARRIER = "registration_carrier"
     @JvmField val PASSENGER_MODE = "passenger_mode"
+    @JvmField val REG_CARRIER = "registration_carrier"
     @JvmField val CLOSE_AFTER_LOGIN = "close_after_login"
 
     @JvmField val CARRIER_TRIPS_TYPE_VIEW_CALENDAR = "carrier_trips_type_calendar"
@@ -39,6 +39,7 @@ object Screens {
 
     @JvmField val PAYMENT_OFFER = "payment_offer"
     @JvmField val RATE_TRANSFER = "rate_transfer"
+    const val RETURN_MAIN       = "return"
 
     private const val EMAIL_DATA = "mailto:"
     private const val DIAL_SCHEME = "tel"
@@ -160,12 +161,17 @@ object Screens {
         }
     }
 
-    data class FindAddress(val from: String, val to: String, val isClickTo: Boolean?, val bounds: LatLngBounds) :
+    data class FindAddress(val from: String,
+                           val to: String,
+                           val isClickTo: Boolean?,
+                           val bounds: LatLngBounds,
+                           val returnMain: Boolean = false) :
         SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, SearchActivity::class.java).apply {
             putExtra(SearchView.EXTRA_ADDRESS_FROM, from)
             putExtra(SearchView.EXTRA_ADDRESS_TO, to)
             putExtra(SearchView.EXTRA_BOUNDS, bounds)
+            putExtra(RETURN_MAIN, returnMain)
             isClickTo?.let { putExtra(SearchView.EXTRA_IS_CLICK_TO, it) }
         }
     }
@@ -183,9 +189,10 @@ object Screens {
         }
     }
 
-    data class Chat(val transferId: Long) : SupportAppScreen() {
+    data class Chat(val transferId: Long, val tripId: Long? = null) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, ChatActivity::class.java).apply {
             putExtra(ChatView.EXTRA_TRANSFER_ID, transferId)
+            tripId?.let { putExtra(ChatView.EXTRA_TRIP_ID, it) }
         }
     }
 
@@ -197,8 +204,8 @@ object Screens {
             }
     }
 
-    data class Payment(val transferId: Long, val offerId: Long?, val url: String, val percentage: Int,
-                       val bookNowTransportId: String?) :
+    data class Payment(val transferId: Long, val offerId: Long?, val url: String?, val percentage: Int,
+                       val bookNowTransportId: String?, val paymentType: String) :
         SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentActivity::class.java).apply {
             putExtra(PaymentView.EXTRA_TRANSFER_ID, transferId)
@@ -206,6 +213,7 @@ object Screens {
             putExtra(PaymentView.EXTRA_URL, url)
             putExtra(PaymentView.EXTRA_PERCENTAGE, percentage)
             putExtra(PaymentView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId ?: "")
+            putExtra(PaymentView.EXTRA_PAYMENT_TYPE, paymentType)
         }
     }
 
@@ -303,5 +311,23 @@ object Screens {
                 context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isNotEmpty()
         if (!canSendEmail!!) context.toast(context.getString(R.string.no_email_apps))
         return canSendEmail!!
+    }
+
+    data class PayPalConnection(val paymentId: Long, val nonce: String,
+                                val transferId: Long, val offerId: Long?,
+                                val percentage: Int, val bookNowTransportId: String?) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) =
+                Intent(context, PaypalConnectionActivity::class.java).apply {
+                    putExtra(PaypalConnectionView.EXTRA_PAYMENT_ID, paymentId)
+                    putExtra(PaypalConnectionView.EXTRA_NONCE, nonce)
+                    putExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, transferId)
+                    putExtra(PaypalConnectionView.EXTRA_OFFER_ID, offerId)
+                    putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
+                    putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
+                }
+    }
+
+    object Support : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, SupportActivity::class.java)
     }
 }

@@ -101,7 +101,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/activity_carrier_trip_bottom_buttons_layout_shadow_height"
-            android:background="@drawable/shadow"/>
+            android:background="@drawable/shadow_top"/>
 
         <include
             android:id="@+id/bottomCommunicationButtons"

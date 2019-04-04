@@ -3,11 +3,10 @@ package com.kg.gettransfer.presentation.presenter
 import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.model.LatLng
 
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.RouteMapper
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -19,13 +18,13 @@ import org.koin.standalone.inject
 
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     private val routeMapper: RouteMapper by inject()
-    private val transferMapper: TransferMapper by inject()
 
     internal var offerId = 0L
     internal var transferId = 0L
+    private var phoneToCall: String? = null
 
     fun setMapRoute() {
         utils.launchSuspend {
@@ -37,8 +36,8 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             else {
                 if (transfer.to != null) {
                     val r = utils.asyncAwait {
-                        routeInteractor
-                            .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.currencyCode)
+                        orderInteractor
+                            .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.code)
                     }
                     r.cacheError?.let { viewState.setError(it) }
                     if (r.error == null || (r.error != null && r.fromCache)) {
@@ -60,6 +59,9 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                 val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
                 viewState.setRemainTime(days, hours, minutes)
             }
+            utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+            phoneToCall = offerInteractor.getOffer(offerId)?.phoneToCall
+            if (phoneToCall != null) viewState.initCallButton()
             viewState.blockInterface(false)
         }
     }
@@ -71,7 +73,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     }
 
     fun onCallClick() {
-        offerInteractor.getOffer(offerId)?.phoneToCall?.let { callPhone(it) }
+        phoneToCall?.let { callPhone(it) }
     }
 
     fun onDetailsClick() {

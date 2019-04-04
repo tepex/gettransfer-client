@@ -1,5 +1,6 @@
 package com.kg.gettransfer.data.repository
 
+import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.ds.*
 
@@ -10,7 +11,6 @@ import com.kg.gettransfer.data.mapper.TransferNewMapper
 import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.data.model.TransferEntity
-import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.TransferRepository
@@ -18,12 +18,12 @@ import com.kg.gettransfer.domain.repository.TransferRepository
 import java.util.Date
 
 import org.koin.standalone.get
-import org.koin.standalone.inject
 
 class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>)
     : BaseRepository(), TransferRepository {
 
+    private val preferencesCache = get<PreferencesCache>()
     private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
 
@@ -73,21 +73,21 @@ class TransferRepositoryImpl(
         return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT, result.error?.let { ExceptionMapper.map(it) })
     }
 
-    override suspend fun getTransfer(id: Long): Result<Transfer> {
+    override suspend fun getTransfer(id: Long, role: String): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).getTransfer(id)
+            factory.retrieveDataStore(fromRemote).getTransfer(id, role)
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT,
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
 
-    override suspend fun getTransferCached(id: Long): Result<Transfer> {
+    override suspend fun getTransferCached(id: Long, role: String): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
-            factory.retrieveCacheDataStore().getTransfer(id)
+            factory.retrieveCacheDataStore().getTransfer(id, role)
         }
         return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT, null,
-                result.error != null && result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
+                result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
     }
 
     override suspend fun getAllTransfers(): Result<List<Transfer>> {
@@ -95,8 +95,53 @@ class TransferRepositoryImpl(
             factory.retrieveDataStore(fromRemote).getAllTransfers()
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addAllTransfers(it) }
-        return Result(result.entity?.map { transferMapper.fromEntity(it) }?: emptyList(),
+        return Result(result.entity?.let { mapTransfersList(it) }?: emptyList(),
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
+    }
+
+    private fun mapTransfersList(transfersList: List<TransferEntity>): List<Transfer> {
+        val mapCountNewMessages = preferencesCache.mapCountNewMessages.toMutableMap()
+        val mapCountNewOffers = preferencesCache.mapCountNewOffers.toMutableMap()
+
+        var eventsCount = 0
+        val mappedTransfers = transfersList.map {
+            transferMapper.fromEntity(it).apply {
+                eventsCount += checkNewMessagesAndOffersCount(this, mapCountNewMessages, mapCountNewOffers)
+            }
+        }
+        preferencesCache.eventsCount = eventsCount
+
+        preferencesCache.mapCountNewMessages = mapCountNewMessages
+        preferencesCache.mapCountNewOffers = mapCountNewOffers
+
+        return mappedTransfers
+    }
+
+    private fun checkNewMessagesAndOffersCount(transfer: Transfer, mapCountNewMessages: MutableMap<Long, Int>, mapCountNewOffers: MutableMap<Long, Int>): Int {
+        var eventsCount = 0
+        if (transfer.showOfferInfo) {
+            if (transfer.unreadMessagesCount > 0) {
+                mapCountNewMessages[transfer.id] = transfer.unreadMessagesCount
+                eventsCount += transfer.unreadMessagesCount
+            } else if (mapCountNewMessages[transfer.id] != null) {
+                mapCountNewMessages.remove(transfer.id)
+            }
+        }
+
+        if (transfer.status == Transfer.Status.NEW && transfer.offersCount > 0) {
+            val newOffers = transfer.offersCount
+            val viewedOffers = preferencesCache.mapCountViewedOffers[transfer.id]
+            mapCountNewOffers[transfer.id] = newOffers
+            eventsCount += newOffers - (viewedOffers ?: 0)
+        } else if (mapCountNewOffers[transfer.id] != null) {
+            mapCountNewOffers.remove(transfer.id)
+            val mapCountViewedOffer = preferencesCache.mapCountViewedOffers.toMutableMap()
+            if (mapCountViewedOffer[transfer.id] != null) {
+                mapCountViewedOffer.remove(transfer.id)
+                preferencesCache.mapCountViewedOffers = mapCountViewedOffer
+            }
+        }
+        return eventsCount
     }
 
     override suspend fun getTransfersArchive(): Result<List<Transfer>> {
@@ -113,6 +158,24 @@ class TransferRepositoryImpl(
             factory.retrieveDataStore(fromRemote).getTransfersActive()
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addAllTransfers(it) }
+        return Result(result.entity?.map { transferMapper.fromEntity(it) }?: emptyList(),
+                result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
+    }
+
+    override suspend fun getTransfersActiveCached(): Result<List<Transfer>> {
+        val result: ResultEntity<List<TransferEntity>?> = retrieveCacheEntity {
+            factory.retrieveCacheDataStore().getTransfersActive()
+        }
+
+        return Result(result.entity?.map { transferMapper.fromEntity(it) }?: emptyList(),
+                result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
+    }
+
+    override suspend fun getTransfersArchiveCached(): Result<List<Transfer>> {
+        val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { retrieveCacheEntity ->
+            factory.retrieveCacheDataStore().getTransfersArchive()
+        }
+
         return Result(result.entity?.map { transferMapper.fromEntity(it) }?: emptyList(),
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
@@ -171,7 +234,8 @@ class TransferRepositoryImpl(
                 editableFields      = emptyList<String>(),
                 airlineCard         = null,
                 paymentPercentages  = emptyList<Int>(),
-                unreadMessagesCount = 0
+                unreadMessagesCount = 0,
+                showOfferInfo       = false
             )
     }
 }

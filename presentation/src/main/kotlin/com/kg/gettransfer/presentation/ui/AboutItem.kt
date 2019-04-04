@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.ContextCompat
 
 import android.util.AttributeSet
 
@@ -18,15 +19,16 @@ import kotlinx.android.synthetic.main.view_about_item.*
 class AboutItem @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr), LayoutContainer {
-    override val containerView: View
+    override val containerView: View =
+            LayoutInflater.from(context).inflate(R.layout.view_about_item, this, true)
+
     init {
-        containerView = LayoutInflater.from(context).inflate(R.layout.view_about_item, this, true)
 
         if(attrs != null) {
             val ta           = context.obtainStyledAttributes(attrs, R.styleable.AboutItem)
-            field_title.text = ta.getString(R.styleable.AboutItem_title_about_item)
-            field_text.text  = ta.getString(R.styleable.AboutItem_text_about_item)
-            field_img.setImageDrawable(ta.getDrawable(R.styleable.AboutItem_img_about_item))
+            tvTitle.text = ta.getString(R.styleable.AboutItem_title_about_item)
+            val drawableResId = ta.getResourceId(R.styleable.AboutItem_img_about_item, -1)
+            ivOnboard.setImageDrawable(ContextCompat.getDrawable(context, drawableResId))
             ta.recycle()
         }
     }

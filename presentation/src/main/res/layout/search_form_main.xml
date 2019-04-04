@@ -18,7 +18,7 @@
         
         <include
             android:id="@+id/icons_container"
-            layout="@layout/a_b_view"
+            layout="@layout/a_b_orange_view"
             android:layout_gravity="bottom"
             android:layout_width="@dimen/search_marginStart"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                     android:padding="@dimen/pin_iv_padding"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    app:srcCompat="@drawable/ic_pin_default"/>
+                    app:srcCompat="@drawable/btn_pin_location"/>
 
             </RelativeLayout>
             <RelativeLayout
@@ -80,7 +80,6 @@
                     android:id="@+id/tvCurrent_hours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="6 hours"
                     android:layout_below="@+id/hourly_title"
                     android:paddingBottom="@dimen/search_main_paddingBottom"
 

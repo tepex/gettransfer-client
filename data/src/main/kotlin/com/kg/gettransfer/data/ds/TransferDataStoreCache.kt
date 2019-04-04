@@ -18,7 +18,7 @@ open class TransferDataStoreCache: TransferDataStore {
     fun addTransfer(transfer: TransferEntity) = cache.insertTransfer(transfer)
     fun addAllTransfers(transfers: List<TransferEntity>) = cache.insertAllTransfers(transfers)
     
-    override suspend fun getTransfer(id: Long) = cache.getTransfer(id)
+    override suspend fun getTransfer(id: Long, role: String) = cache.getTransfer(id)
     override suspend fun getAllTransfers() = cache.getAllTransfers()
     override suspend fun getTransfersArchive() = cache.getTransfersArchive()
     override suspend fun getTransfersActive() = cache.getTransfersActive()

@@ -6,18 +6,13 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.MvpPresenter
 
 import com.google.firebase.iid.FirebaseInstanceId
-import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.eventListeners.ChatBadgeEventListener
 import com.kg.gettransfer.domain.eventListeners.OfferEventListener
-import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
-import com.kg.gettransfer.domain.interactor.ChatInteractor
-import com.kg.gettransfer.domain.interactor.OfferInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.ChatBadgeEvent
 import com.kg.gettransfer.domain.model.Offer
@@ -30,10 +25,12 @@ import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_CO
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.NotificationManager
+import com.kg.gettransfer.utilities.GTNotificationManager
 
 import kotlinx.coroutines.Job
-import kotlinx.serialization.json.JSON
+
+import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.presentation.mapper.TransferMapper
 
 import org.koin.standalone.get
 import org.koin.standalone.inject
@@ -49,13 +46,15 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
     protected val systemInteractor: SystemInteractor by inject()
+    protected val transferMapper: TransferMapper by inject()
     protected val offerMapper: OfferMapper by inject()
     protected val offerEntityMapper: com.kg.gettransfer.data.mapper.OfferMapper by inject()
-    protected val notificationManager: NotificationManager by inject()
+    protected val notificationManager: GTNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()
     protected val carrierTripInteractor: CarrierTripInteractor by inject()
     protected val chatInteractor: ChatInteractor by inject()
+    protected val countEventsInteractor: CountEventsInteractor by inject()
 
     //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
@@ -72,9 +71,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     override fun onFirstViewAttach() {
         if (systemInteractor.isInitialized) return
         utils.launchSuspend {
-            val result = utils.asyncAwait { systemInteractor.coldStart() }
-            if(result.error != null) viewState.setError(result.error!!)
-            else systemInitialized()
+            fetchData { systemInteractor.coldStart() }
+                    ?.let { systemInitialized() }
         }
     }
 
@@ -84,13 +82,20 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         chatInteractor.eventChatBadgeReceiver = this
     }
 
-    protected fun checkResultError(error: ApiException) {
+    /*
+    return false if error handled, true otherwise
+     */
+
+    protected fun checkResultError(error: ApiException): Boolean {
         if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser() )) {
             openedLoginScreenForUnauthorizedUser = true
             login(Screens.CLOSE_AFTER_LOGIN, systemInteractor.account.user.profile.email, false)
+            return false
         } else if (openedLoginScreenForUnauthorizedUser) {
             logout()
+            return false
         }
+        return true
     }
 
     private fun logout(){
@@ -144,11 +149,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         utils.launchSuspend {
             var transferID: Long? = null
             if (transferId == null) {
-
-                val transfers = utils.asyncAwait { transferInteractor.getAllTransfers() }
-                if (transfers.model.isNotEmpty()) {
-                    transferID = transfers.model.first().id
-                }
+                fetchData { transferInteractor.getAllTransfers() }
+                        ?.let { if (it.isNotEmpty()) transferID = it.first().id }
             } else transferID = transferId
 
             router.navigateTo(
@@ -170,8 +172,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 it.result?.token?.let {
                     Timber.d("[FCM token]: $it")
                     utils.launchSuspend {
-                        val result = utils.asyncAwait { systemInteractor.registerPushToken(it) }
-                        if (result.error != null) viewState.setError(result.error!!)
+                        fetchResult { systemInteractor.registerPushToken(it) }
                     }
                 }
             } else Timber.w("getInstanceId failed", it.exception)
@@ -195,19 +196,43 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     override fun onNewOfferEvent(offer: Offer) {
         onNewOffer(offer.also {
             it.vehicle.photos = it.vehicle.photos.map { photo -> "${systemInteractor.endpoint.url}$photo" }
-            increaseEventsCounter(it.transferId)
+            utils.launchSuspend {
+                fetchDataOnly { offerInteractor.getOffers(offer.transferId, true) }?.let { offersCached ->
+                    if (offersCached.find { offerCached -> offerCached.id == offer.id } != null) {
+                        countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
+                            countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
+                                if (countNewOffers == countViewedOffers && countViewedOffers > 0) {
+                                    decreaseViewedOffersCounter(offer.transferId)
+                                }
+                            }
+                        }
+                    } else {
+                        increaseEventsOffersCounter(it.transferId)
+                    }
+                }
+            }
         })
     }
 
     override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
         if(!chatBadgeEvent.clearBadge) {
             utils.launchSuspend {
-                val result = utils.asyncAwait { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
-                utils.asyncAwait { offerInteractor.getOffers(chatBadgeEvent.transferId) }
-                notificationManager.showNewMessageNotification(
-                        chatBadgeEvent.transferId,
-                        result.model.unreadMessagesCount,
-                        systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) < 0)
+                fetchDataOnly { transferInteractor.getTransfer(chatBadgeEvent.transferId) }?.let {transfer ->
+                    increaseEventsMessagesCounter(chatBadgeEvent.transferId, transfer.unreadMessagesCount)
+                    notificationManager.showNewMessageNotification(
+                            chatBadgeEvent.transferId,
+                            transfer.unreadMessagesCount,
+                            systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) < 0)
+                }
+            }
+        } else {
+            with(countEventsInteractor) {
+                mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
+                    this[chatBadgeEvent.transferId]?.let {
+                        eventsCount -= it
+                        remove(chatBadgeEvent.transferId)
+                    }
+                }
             }
         }
     }
@@ -233,14 +258,111 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
 
     fun openSocketConnection() { systemInteractor.openSocketConnection() }
 
-    private fun increaseEventsCounter(transferId: Long) =
-            with(systemInteractor) {
-                eventsCount++
-                transferIds = transferIds.toMutableList().apply { add(transferId) }
+    private fun increaseEventsOffersCounter(transferId: Long) =
+            with(countEventsInteractor) {
+                eventsCount += 1
+                mapCountNewOffers = increaseMapCounter(transferId, mapCountNewOffers)
             }
 
-    companion object AnalyticProps {
+    protected fun increaseViewedOffersCounter(transferId: Long, plusCount: Int) =
+            with(countEventsInteractor) {
+                eventsCount -= plusCount
+                mapCountViewedOffers = increaseMapCounter(transferId, mapCountViewedOffers, null, plusCount)
+            }
+
+    private fun decreaseViewedOffersCounter(transferId: Long) =
+            with(countEventsInteractor) {
+                eventsCount += 1
+                mapCountViewedOffers = decreaseMapCounter(transferId, mapCountViewedOffers)
+            }
+
+    private fun increaseEventsMessagesCounter(transferId: Long, count: Int) =
+            with(countEventsInteractor) {
+                eventsCount = eventsCount + count - (mapCountNewMessages[transferId] ?: 0)
+                mapCountNewMessages = increaseMapCounter(transferId, mapCountNewMessages, count)
+            }
+
+    protected fun decreaseEventsMessagesCounter(transferId: Long) =
+            with(countEventsInteractor) {
+                mapCountNewMessages = decreaseMapCounter(transferId, mapCountNewMessages)
+            }
+
+    private fun increaseMapCounter(transferId: Long, map: Map<Long, Int>, count: Int? = null, plussedCount: Int? = null)
+            = map.toMutableMap().apply {
+                put(transferId, count ?: map[transferId]?.plus(plussedCount ?: 1) ?: 1)
+            }
+
+    private fun decreaseMapCounter(transferId: Long, map: Map<Long, Int>)
+            = map.toMutableMap().apply {
+                if (this[transferId] != null) {
+                    if (map.getValue(transferId) > 1) {
+                        put(transferId, map.getValue(transferId) - 1)
+                    } else {
+                        remove(transferId)
+                    }
+                }
+            }
+
+    fun onDriverModeExit() =
+        with(systemInteractor) { if (lastMode == Screens.CARRIER_MODE) closeSocketConnection() }
+
+
+    /*
+    First - work with error: check login error. CheckResultError returns
+    false if error is handled and no need to show info to user.
+    Next - show error for user with default viewState method. We can do it
+    in child presenter if indicate "processError" = true (use "SHOW_ERROR" from Companion)
+    Default:
+     - DEFAULT_ERROR: if want to call only viewState.setError()
+     - CHECK_CACHE: when want to show error also after check data in cache
+     */
+    protected suspend fun <M>fetchResult(processError: Boolean = DEFAULT_ERROR,
+                                         withCacheCheck: Boolean = CHECK_CACHE,
+                                         checkLoginError: Boolean = true,
+                                         block: suspend () -> Result<M>) =
+            utils.asyncAwait { block() }
+                .also {
+                    it.error
+                            ?.let { e -> if (checkLoginError) checkResultError(e) else true }
+                            ?.let { handle -> if (!handle) return@also
+                                if (withCacheCheck) !it.fromCache else true }
+                            ?.let { resultCheck ->
+                                if (!processError && resultCheck) viewState.setError(it.error!!)
+                                Timber.e(it.error!!) }
+                }
+
+
+    /*
+    Method to fetch only data without result if no need to have error object in client class.
+    As we unwrap return data safely in client class, so it's possible to use it without care.
+     */
+    protected suspend fun <D>fetchData(processError: Boolean = DEFAULT_ERROR,
+                                       withCacheCheck: Boolean = CHECK_CACHE,
+                                       checkLoginError: Boolean = true,
+                                       block: suspend () -> Result<D>) =
+            with(fetchResult(processError, withCacheCheck, checkLoginError) { block() }) {
+                if (error == null || withCacheCheck && fromCache) model else null
+            }
+    /*
+    Optional methods for easy request with only suspend block and without params to handle
+    errors.
+     */
+    protected suspend fun<R>fetchResultOnly(block: suspend () -> Result<R>) =
+            fetchResult(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
+
+    protected suspend fun <D>fetchDataOnly(block: suspend () -> Result<D>) =
+            fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
+
+
+    companion object {
         const val SINGLE_CAPACITY = 1
         const val DOUBLE_CAPACITY = 2
+
+        const val SHOW_ERROR         = true   //when you want to handle error in child presenter
+        const val DEFAULT_ERROR      = false
+        const val WITHOUT_ERROR      = true   //the same as SHOW_ERROR, but when you will not show error even in child presenter
+        const val CHECK_CACHE        = true
+        const val NO_CACHE_CHECK     = false
     }
+
 }

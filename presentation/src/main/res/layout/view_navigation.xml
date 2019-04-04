@@ -17,7 +17,7 @@
             android:id="@+id/navViewHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorWhite"
             android:paddingTop="@dimen/status_bar_height">
 
             <ImageView
@@ -35,40 +35,50 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/nav_header_share_end"
-                android:layout_marginTop="@dimen/nav_header_logo_start"
+                android:layout_marginTop="@dimen/nav_header_share_top"
                 android:layout_alignParentEnd="true"
                 android:contentDescription="Share"
                 android:focusable="false"
                 android:tint="@android:color/black"
                 app:srcCompat="@android:drawable/ic_menu_share" />
 
-            <TextView
-                android:id="@+id/navHeaderMode"
-                style="@style/nav_item_subtitle"
-                android:layout_marginStart="@dimen/nav_header_logo_start"
-                android:layout_below="@+id/navHeaderLogo"
-                android:textSize="12sp"
-                android:visibility="gone"
+            <RelativeLayout
+                android:id="@+id/layoutAccountInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:layout_below="@+id/navHeaderLogo">
 
-                tools:text="Driver mode"
-                tools:visibility="visible"/>
+                <TextView
+                    android:id="@+id/navHeaderMode"
+                    style="@style/nav_item_subtitle"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginStart="@dimen/nav_header_logo_start"
+                    android:textSize="@dimen/nav_header_mode_text_size"
+                    android:visibility="gone"
+                    tools:text="@string/LNG_MENU_TITLE_DRIVE"
+                    tools:visibility="visible"/>
 
-            <TextView
-                android:id="@+id/navHeaderName"
-                style="@style/nav_item_title"
-                android:layout_marginStart="@dimen/nav_header_logo_start"
-                android:visibility="visible"
-                android:layout_below="@+id/navHeaderMode"
-                tools:text="Maluta Skuratov"/>
+                <TextView
+                    android:id="@+id/navHeaderName"
+                    style="@style/nav_item_title"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginStart="@dimen/nav_header_logo_start"
+                    android:visibility="visible"
+                    android:layout_below="@+id/navHeaderMode"
+                    tools:text="Maluta Skuratov"/>
 
-            <TextView
-                android:id="@+id/navHeaderEmail"
-                style="@style/nav_item_subtitle"
-                android:layout_below="@+id/navHeaderName"
-                android:layout_marginBottom="6dp"
-                android:layout_marginStart="@dimen/nav_header_logo_start"
-                android:visibility="visible"
-                tools:text="android.studio@android.com"/>
+                <TextView
+                    android:id="@+id/navHeaderEmail"
+                    style="@style/nav_item_subtitle"
+                    android:textColor="@color/colorWhite"
+                    android:layout_below="@+id/navHeaderName"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginStart="@dimen/nav_header_logo_start"
+                    android:visibility="visible"
+                    tools:text="android.studio@android.com"/>
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -115,6 +125,11 @@
                 android:layout_height="wrap_content"
                 layout="@layout/nav_item_settings"/>
 
+            <include android:id="@+id/navSupport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/nav_item_support"/>
+
             <include android:id="@+id/navAbout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -143,22 +158,26 @@
 
             <ImageButton
                 android:id="@+id/navFooterStamp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/best_price_logo_image_height"
+                android:layout_height="@dimen/best_price_logo_image_width"
                 android:layout_above="@+id/navMessage"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
+                android:layout_marginTop="@dimen/nav_footer_stamp_top"
                 android:background="@null"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/ic_best_price" />
+                app:srcCompat="@drawable/ic_best_price_logo" />
 
             <TextView
                 android:id="@+id/navMessage"
-                style="@style/nav_item_title"
+                style="@style/sf_font_semi_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/nav_footer_title_horizontal_padding"
+                android:paddingEnd="@dimen/nav_footer_title_horizontal_padding"
                 android:layout_above="@+id/navFooterVersion"
+                android:textSize="@dimen/nav_footer_title_text_size"
                 android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
-                android:layout_marginStart="22dp"
-                android:layout_marginEnd="22dp"
                 android:gravity="center_horizontal"
                 android:text="@string/LNG_BESTPRICES" />
 

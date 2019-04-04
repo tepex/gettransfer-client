@@ -23,7 +23,7 @@
             android:layout_width="30.7dp"
             android:layout_height="30.7dp"
             android:layout_margin="@dimen/point_map_icon_margin"
-            app:srcCompat="@drawable/ic_pin_default" />
+            app:srcCompat="@drawable/ic_pin_orange_border" />
 
         <TextView
             android:layout_width="wrap_content"

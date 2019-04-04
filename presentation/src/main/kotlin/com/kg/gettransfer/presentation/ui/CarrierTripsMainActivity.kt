@@ -53,6 +53,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
                 R.id.navCarrierTrips     -> onCarrierTripsClick()
                 R.id.navAbout            -> onAboutClick()
                 R.id.navSettings         -> onSettingsClick()
+                R.id.navSupport          -> onSupportClick()
                 R.id.navPassengerMode    -> onPassengerModeClick()
                 R.id.navCarrierTransfers -> onTransfersClick()
                 else -> Timber.d("No route")
@@ -75,13 +76,17 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
             window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
         }
 
+        viewNetworkNotAvailable = textNetworkNotAvailable
+
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_TRIPS, false, true)
         drawer = drawerLayout as DrawerLayout
         toggle = ActionBarDrawerToggle(this, drawer, toolbar as Toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 
-        (toolbar as Toolbar).carrierTripsChangingTypeViewButtons.isVisible = true
-        (toolbar as Toolbar).buttonListView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_LIST) }
-        (toolbar as Toolbar).buttonCalendarView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR) }
+        with(toolbar as Toolbar) {
+            carrierTripsChangingTypeViewButtons.isVisible = true
+            buttonListView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_LIST) }
+            buttonCalendarView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR) }
+        }
         setViewColor((toolbar as Toolbar), R.color.colorWhite)
         initNavigation()
         startCoordinateService()
@@ -127,14 +132,16 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
 
         navCarrierTrips.setOnClickListener(itemsNavigationViewListener)
         navSettings.setOnClickListener(itemsNavigationViewListener)
+        navSupport.setOnClickListener(itemsNavigationViewListener)
         navAbout.setOnClickListener(itemsNavigationViewListener)
         navPassengerMode.setOnClickListener(itemsNavigationViewListener)
         navCarrierTransfers.setOnClickListener(itemsNavigationViewListener)
 
-        setViewColor(navViewHeader, R.color.primaryDriver)
-        navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-        navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-        navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+    //    setViewColor(navViewHeader, R.color.colorWhite)
+    //    setViewColor(layoutAccountInfo, R.color.primaryDriver)
+//        navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+//        navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
+//        navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
     }
 
     override fun initNavigation(profile: ProfileModel) {

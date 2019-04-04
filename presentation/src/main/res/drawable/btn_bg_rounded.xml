@@ -2,6 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_enabled="false" android:drawable="@drawable/btn_rounded_disable" />
-    <item android:state_enabled="true" android:drawable="@drawable/btn_rounded_enable" />
+    <item android:state_enabled="true" android:drawable="@drawable/bg_green_rounded" />
 
 </selector>

@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/views_carrier_trips_info_layout_padding_end"
-    android:paddingEnd="@dimen/views_carrier_trips_info_layout_padding_end">
+    android:paddingStart="@dimen/views_carrier_trips_addresses_layout_padding_start_end"
+    android:paddingEnd="@dimen/views_carrier_trips_addresses_layout_padding_start_end">
 
     <TextView
         android:id="@+id/tvTripFrom"
@@ -51,7 +51,7 @@
         android:id="@+id/tvMarkerFrom"
         android:layout_width="@dimen/views_carrier_trips_info_layout_markers_size"
         android:layout_height="@dimen/views_carrier_trips_info_layout_markers_size"
-        android:background="@drawable/back_circle_marker_driver_filled"
+        android:background="@drawable/back_circle_marker_orange_filled"
         android:gravity="center"
         android:text="@string/transfer_start_sign"
         android:textColor="@color/colorWhite"
@@ -72,7 +72,7 @@
         app:layout_constraintEnd_toEndOf="@+id/tvMarkerFrom"
         app:layout_constraintStart_toStartOf="@+id/tvMarkerFrom"
         app:layout_constraintTop_toBottomOf="@+id/tvMarkerFrom"
-        app:srcCompat="@drawable/a_b_driver" />
+        app:srcCompat="@drawable/a_b_orange" />
 
     <FrameLayout
         android:id="@+id/fl_bottom_point_view"
@@ -87,8 +87,9 @@
             android:id="@+id/tvMarkerTo"
             android:layout_width="@dimen/views_carrier_trips_info_layout_markers_size"
             android:layout_height="@dimen/views_carrier_trips_info_layout_markers_size"
-            android:background="@drawable/back_circle_marker_driver_filled"
+            android:background="@drawable/back_circle_marker_orange_filled"
             android:gravity="center"
+            android:layout_gravity="center_vertical"
             android:text="@string/transfer_end_sign"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/transfer_start_end_sign_marker_text_size"
@@ -99,6 +100,7 @@
             android:id="@+id/rl_hourly_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/views_carrier_trips_info_layout_hourly_img_margin_start"
             android:visibility="gone">
 
             <TextView
@@ -114,15 +116,16 @@
                 android:paddingStart="@dimen/views_carrier_trips_info_layout_hourly_duration_text_padding_start"
                 android:paddingEnd="@dimen/views_carrier_trips_info_layout_hourly_duration_text_padding_end"
                 android:paddingBottom="@dimen/views_carrier_trips_info_layout_hourly_duration_text_padding_bottom"
-                android:textColor="@color/colorTextBlack" />
+                android:textSize="@dimen/views_carrier_trips_info_layout_hourly_duration_text_size"
+                android:textColor="@color/colorWhite"
+                android:text="8 hours"/>
 
             <ImageView
                 android:id="@+id/ivHourlyPoint"
                 android:layout_width="@dimen/views_carrier_trips_info_layout_markers_hourly_size"
                 android:layout_height="@dimen/views_carrier_trips_info_layout_markers_hourly_size"
-                android:background="@drawable/back_stroke_img"
                 android:gravity="center"
-                android:src="@drawable/ic_hourly_driver" />
+                app:srcCompat="@drawable/ic_hourly_driver_vector" />
 
         </RelativeLayout>
 

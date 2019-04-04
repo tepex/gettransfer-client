@@ -1,114 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                    xmlns:tools="http://schemas.android.com/tools"
-                                    android:orientation="horizontal"
-                                    style="@style/offerCard"
-                                    android:padding="0dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-    android:paddingTop="8dp">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/btn_container">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/offerCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-        <TextView
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="0dp"
+        android:paddingTop="@dimen/card_view_padding_top_end"
+        android:paddingEnd="@dimen/card_view_padding_top_end">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_car_name_and_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
                 android:id="@+id/tv_car_model_tiny"
-                tools:text="Mercedes-Benz E-Class"
                 style="@style/black_semiBold"
-                android:textSize="16sp"
-                android:layout_marginStart="8dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_offer_car_model_margin_start_end"
+                android:layout_marginEnd="@dimen/view_offer_car_model_margin_start_end"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textSize="@dimen/view_offer_text_size_14sp"
+                app:layout_constraintEnd_toStartOf="@+id/tv_price_no_discount"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Mercedes-Benz E-Class" />
+
+            <TextView
+                android:id="@+id/tv_price_no_discount"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/view_offer_price_no_discount_margin_end"
+                android:layout_weight="1"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:textColor="@color/color_gtr_red"
+                android:textSize="@dimen/view_offer_text_size_10sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_price_final"
+                app:layout_constraintEnd_toStartOf="@+id/tv_price_final"
+                app:layout_constraintTop_toTopOf="@+id/tv_price_final"
+                tools:text="(330.00p)" />
+
+            <TextView
+                android:id="@+id/tv_price_final"
+                style="@style/black_semiBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:lines="1"
+                android:textSize="@dimen/view_offer_text_size_15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="220.00p" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <include
+            android:id="@+id/btn_book_tiny"
+            layout="@layout/btn_book"
+            android:layout_width="@dimen/view_offer_btn_book_width"
+            android:layout_height="@dimen/view_offer_btn_book_height"
+            android:layout_marginTop="@dimen/view_offer_btn_book_margin_top"
+            android:layout_marginBottom="@dimen/view_offer_btn_book_margin_bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_car_name_and_price" />
 
         <ImageView
-                android:id="@+id/img_car_photo_tiny"
-                android:layout_width="72dp"
-                android:layout_marginStart="-3dp"
-                android:layout_height="40dp"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
-                android:layout_below="@id/tv_car_model_tiny"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/ic_transport_type_comfort"/>
+            android:id="@+id/img_car_photo_tiny"
+            android:layout_width="@dimen/view_offer_car_img_width"
+            android:layout_height="@dimen/view_offer_car_img_height"
+            android:layout_marginStart="@dimen/view_offer_car_img_margin_start"
+            android:layout_marginTop="@dimen/view_offer_car_img_margin_top"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_rounded_bn_photo"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_transport_type_comfort"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_car_name_and_price"
+            app:layout_constraintVertical_bias="1.0" />
 
-        <TextView
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_car_info"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/view_offer_car_info_margin_start"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/img_car_photo_tiny"
+            app:layout_constraintTop_toTopOf="@+id/img_car_photo_tiny">
+
+            <TextView
                 android:id="@+id/tv_car_class_tiny"
+                style="@style/black_regular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textSize="12sp"
-                tools:text="Business"
-                style="@style/black_regular"
-                android:layout_below="@id/tv_car_model_tiny"
-                android:layout_toEndOf="@id/img_car_photo_tiny"
-        />
+                android:textSize="@dimen/view_offer_text_size_12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Business" />
+
+            <include
+                android:id="@+id/view_rating_tiny"
+                layout="@layout/view_offer_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_car_class_tiny" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <LinearLayout
-                android:id="@+id/languages_container_tiny"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/tv_car_class_tiny"
-                android:layout_alignTop="@+id/tv_car_class_tiny"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="6dp"
-                android:orientation="vertical"/>
-
-        <include
-            android:id="@+id/view_rating_tiny"
+            android:id="@+id/languages_container_tiny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_toEndOf="@id/img_car_photo_tiny"
-            android:layout_below="@id/tv_car_class_tiny"
-            layout="@layout/view_offer_rating"/>
+            android:layout_marginStart="@dimen/view_offer_languages_container_margin"
+            android:layout_marginEnd="@dimen/view_offer_languages_container_margin"
+            android:gravity="top|end"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@+id/btn_book_tiny"
+            app:layout_constraintTop_toTopOf="@+id/layout_car_info" />
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
-    <RelativeLayout
-            android:id="@+id/btn_container"
-            android:layout_width="146dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-
-            android:layout_alignParentEnd="true">
-        <LinearLayout
-                android:id="@+id/ll_prices"
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <TextView
-                    android:id="@+id/tv_price_no_discount"
-                    tools:text="(330.00p)"
-                    android:visibility="invisible"
-
-                    android:textSize="10sp"
-                    android:layout_width="45dp"
-                    android:layout_height="wrap_content"/>
-            <TextView
-                    android:id="@+id/tv_price_final"
-                    tools:text="220.00p"
-                    style="@style/black_semiBold"
-                    android:textSize="15sp"
-                    android:layout_marginStart="12dp"
-                    android:lines="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <include
-                android:id="@+id/btn_book_tiny"
-                layout="@layout/btn_book"
-                android:layout_marginTop="4dp"
-                android:layout_below="@id/ll_prices"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-    </RelativeLayout>
-  </RelativeLayout>
 </android.support.v7.widget.CardView>

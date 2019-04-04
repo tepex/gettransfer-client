@@ -12,6 +12,10 @@ data class GTAddress(
      * Check for concrete address type.
      * [Types][com.google.android.gms.location.places.Place]
      */
+    val lat: Double?
+    get() = cityPoint.point?.latitude
+    val lon: Double?
+    get() = cityPoint.point?.longitude
 
     fun isConcreteObject() = if (placeTypes == null || placeTypes.isEmpty()) false
         else placeTypes.any { (it in 1..999) || it == TYPE_STREET_ADDRESS }

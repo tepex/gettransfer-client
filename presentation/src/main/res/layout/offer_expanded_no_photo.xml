@@ -53,7 +53,8 @@
 
             <include
                     android:id="@+id/view_offer_rate_noPhoto"
-                    layout="@layout/view_offer_rating"/>
+                    layout="@layout/view_offer_rating"
+                    android:visibility="gone"/>
 
             <include
                     android:id="@+id/driver_abilities_noPhoto"

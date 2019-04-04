@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_root_offers"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+                xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/layout_root_offers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorBackgroundGray">
 
     <include
             android:id="@+id/toolbar"
@@ -56,7 +56,7 @@
                         android:id="@+id/fl_drivers_count_text"
                         android:layout_width="match_parent"
                         android:visibility="gone"
-                        android:background="@color/colorYellow"
+                        android:background="@color/colorPrimary"
                         android:layout_height="@dimen/activity_offers_drivers_connecting_text_height">
                     <ProgressBar
                         android:layout_width="24dp"
@@ -75,8 +75,8 @@
                         android:gravity="center"
                         android:paddingStart="50dp"
                         android:paddingEnd="50dp"
-                        android:text="Соединяем с 33 ближайшими перевозчиками"
-                        android:textColor="@color/colorTextBlack" />
+                        tools:text="Соединяем с 33 ближайшими перевозчиками"
+                        android:textColor="@color/colorWhite" />
                 </FrameLayout>
 
                 <android.support.constraint.ConstraintLayout
@@ -84,7 +84,7 @@
                         android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/activity_offers_excellent_price_layout_height"
-                        android:background="@color/colorYellow">
+                        android:background="@color/colorPrimary">
 
                     <ImageView
                             android:id="@+id/ivLock"
@@ -100,6 +100,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/activity_offers_excellent_price_layout_margin_start"
+                        android:layout_marginEnd="@dimen/activity_offers_excellent_price_layout_margin_end"
                         android:gravity="center"
                         android:orientation="vertical"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -114,6 +115,7 @@
                                 style="@style/black_regular"
                                 android:textSize="@dimen/activity_offers_excellent_price_text_size"
                                 android:gravity="center"
+                                android:textColor="@color/colorWhite"
                                 android:text="@string/LNG_OFFERS_PROMO_MESSAGE"/>
 
                         <!--<TextView-->
@@ -134,26 +136,26 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/activity_offers_sorted_layout_height"
                         android:orientation="horizontal"
-                        android:background="@color/colorBack"
                         android:gravity="center"
                         android:paddingTop="@dimen/activity_offers_sorted_layout_padding_top_bottom"
                         android:paddingBottom="@dimen/activity_offers_sorted_layout_padding_top_bottom"
                         android:paddingStart="@dimen/activity_offers_sorted_layout_padding_start"
                         android:paddingEnd="@dimen/activity_offers_sorted_layout_padding_start_end">
 
-                    <ImageView
-                            android:id="@+id/img_changeListType"
-                            android:layout_width="30dp"
-                            android:layout_height="25dp"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
-                            android:layout_gravity="center_vertical"
-                            app:srcCompat="@drawable/ic_offers_expanded"/>
+                    <!--<ImageView-->
+                            <!--android:id="@+id/img_changeListType"-->
+                            <!--android:layout_width="30dp"-->
+                            <!--android:layout_height="25dp"-->
+                            <!--android:paddingStart="5dp"-->
+                            <!--android:paddingEnd="5dp"-->
+                            <!--android:layout_gravity="center_vertical"-->
+                            <!--app:srcCompat="@drawable/ic_offers_expanded"/>-->
 
 
                     <RelativeLayout
                             android:id="@+id/sortYear"
-                            android:layout_width="@dimen/sort_buttons_width"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:layout_marginStart="5dp"
                             android:background="@drawable/back_sorted_layouts">
@@ -164,7 +166,6 @@
                                 android:layout_height="wrap_content"
                                 style="@style/black_regular"
                                 android:layout_marginEnd="-8dp"
-                                android:paddingEnd="6dp"
                                 android:layout_centerInParent="true"
                                 android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
                                 android:text="@string/LNG_FILTER_YEAR"/>
@@ -176,13 +177,14 @@
                                 android:layout_toEndOf="@id/tv_year_sort_title"
                                 android:layout_centerVertical="true"
                                 app:srcCompat="@drawable/ic_triangle"
-                                android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
+                                android:layout_marginStart="10dp"
                                 android:visibility="invisible"/>
                     </RelativeLayout>
 
                     <RelativeLayout
                             android:id="@+id/sortRating"
-                            android:layout_width="@dimen/sort_buttons_width"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:layout_marginStart="@dimen/activity_offers_sorted_layout_center_element_margin_side"
                             android:layout_marginEnd="@dimen/activity_offers_sorted_layout_center_element_margin_side"
@@ -211,7 +213,8 @@
 
                     <RelativeLayout
                             android:id="@+id/sortPrice"
-                            android:layout_width="@dimen/sort_buttons_width"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
                             android:layout_height="match_parent"
                             android:orientation="horizontal"
                             android:background="@drawable/back_sorted_layouts">
@@ -237,11 +240,6 @@
                     </RelativeLayout>
 
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/activity_offers_divider_height"
-                    android:background="@color/colorDividerGray" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rvOffers"

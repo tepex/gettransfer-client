@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.braintreepayments.api.dropin.DropInRequest
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -18,6 +19,8 @@ interface PaymentOfferView : BaseView {
     fun setOffer(offer: OfferModel, paymentPercentages: List<Int>)
     fun setBookNowOffer(bookNowOffer: BookNowOffer?)
     fun showOfferError()
+    fun setCommission(paymentCommission: String)
+    fun startPaypal(dropInRequest: DropInRequest)
 
     companion object {
         val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"

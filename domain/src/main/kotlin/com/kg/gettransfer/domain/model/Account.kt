@@ -1,6 +1,5 @@
 package com.kg.gettransfer.domain.model
 
-import java.util.Currency
 import java.util.Locale
 
 data class Account(
@@ -14,5 +13,6 @@ data class Account(
 
     companion object {
         const val GROUP_CARRIER_DRIVER = "carrier/driver"
+        const val GROUP_MANAGER_VIEW_TRANSFERS = "manager/view_transfers"
     }
 }

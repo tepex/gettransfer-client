@@ -34,6 +34,7 @@ import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
+import com.kg.gettransfer.presentation.ui.helpers.ScrollGalleryInflater
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
@@ -76,16 +77,17 @@ class OffersActivity : BaseActivity(), OffersView {
         initBottomSheet()
         initClickListeners()
         viewNetworkNotAvailable = textNetworkNotAvailable
+        intent.getStringExtra(OffersView.EXTRA_ORIGIN)?.let { presenter.isViewRoot = true }
     }
 
     private fun initClickListeners() {
         sortYear.setOnClickListener                       { presenter.changeSortType(Sort.YEAR) }
         sortRating.setOnClickListener                     { presenter.changeSortType(Sort.RATING) }
         sortPrice.setOnClickListener                      { presenter.changeSortType(Sort.PRICE) }
-        img_changeListType.setOnClickListener             {
-            presenter.itemsExpanded = !presenter.itemsExpanded!!
-            changeViewType()
-        }
+//        img_changeListType.setOnClickListener             {
+//            presenter.itemsExpanded = !presenter.itemsExpanded!!
+//            changeViewType()
+//        }
     }
 
     private fun initToolBar() =
@@ -144,9 +146,9 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun initAdapter() {
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        OffersAdapter.viewType =
-                if (presenter.itemsExpanded!!) PRESENTATION.EXPANDED  //typealias
-                else PRESENTATION.TINY
+//        OffersAdapter.viewType =
+//                if (presenter.itemsExpanded!!) PRESENTATION.EXPANDED  //typealias
+//                else PRESENTATION.TINY
     }
     override fun setOffers(offers: List<OfferItem>) {
         hideSheetOfferDetails()
@@ -169,9 +171,9 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun changeViewType() {
-        (rvOffers.adapter as OffersAdapter).changeItemRepresentation()
-        (if (presenter.itemsExpanded!!) R.drawable.ic_offers_expanded
-        else R.drawable.ic_offers_tiny).also { img_changeListType.setImageResource(it) }
+//        (rvOffers.adapter as OffersAdapter).changeItemRepresentation()
+//        (if (presenter.itemsExpanded!!) R.drawable.ic_offers_expanded
+//        else R.drawable.ic_offers_tiny).also { img_changeListType.setImageResource(it) }
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
@@ -206,7 +208,7 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun showBottomSheetOfferDetails(offer: OfferItem) {
         when(offer) {
             is OfferModel -> {
-                setVehicleName(offer.vehicle.name)
+                setVehicleName(vehicle = offer.vehicle)
                 Utils.initCarrierLanguages(languages_container_bs, offer.carrier.languages)
                 setCapacity(offer.vehicle.transportType)
                 with(offer_conditions_bs) {
@@ -216,32 +218,18 @@ class OffersActivity : BaseActivity(), OffersView {
                 }
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)
-                offer.vehicle.photos.firstOrNull()
-                        ?.let {
-                            Glide.with(this)
-                                    .load(it)
-                                    .apply(RequestOptions().transforms(FitCenter(),
-                                            RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
-                                    .into(offer_bs_main_photo)
-                        }
-                        .also {
-                            offer_bs_main_photo.isVisible = it != null
-                        }
+                addOfferPhotos(offer.vehicle.photos)
                 setRating(offer.carrier)
             }
             is BookNowOfferModel -> {
-                setVehicleName(getString(TransportTypeMapper.getModelsById(offer.transportType.id)))
+                setVehicleName(nameById = getString(TransportTypeMapper.getModelsById(offer.transportType.id)))
                 Utils.initCarrierLanguages(languages_container_bs, listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
                 setCapacity(offer.transportType)
                 setPrice(offer.base.preferred ?: offer.base.def)
                 setWithoutDiscount(offer.withoutDiscount)
                 view_offer_rating_bs.isVisible = false
                 offer_ratingDivider_bs.isVisible = false
-                Glide.with(this)
-                        .load(TransportTypeMapper.getImageById(offer.transportType.id))
-                        .apply(RequestOptions().transforms(FitCenter(),
-                                RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
-                        .into(offer_bs_main_photo)
+                addSinglePhoto(resId = TransportTypeMapper.getImageById(offer.transportType.id))
             }
         }
 
@@ -260,29 +248,44 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
-//    private fun setBookNowPhoto(transportTypeId: TransportType.ID) {
-//        constraintPhotos.visibility = View.GONE
-//        ivBookNowPhoto.visibility = View.VISIBLE
-//        ivBookNowPhoto.setImageResource(TransportTypeMapper.getImageById(transportTypeId))
-//    }
+    private fun addOfferPhotos(paths: List<String>){
+        photos_container_bs.removeAllViews()
+        iv_offer_bs_booknow.isVisible = false
+        val hasPhotos = paths.isNotEmpty()
+        sv_photo.isVisible = hasPhotos
+        if (hasPhotos) {
+            if (paths.size == 1) {
+                addSinglePhoto(path = paths.first())
+            }
+            else {
+                inflatePhotoScrollView(paths.size)
+                for (i in 0 until photos_container_bs.childCount) {
+                    Glide.with(this)
+                            .load(paths[i])
+                            .apply(RequestOptions().transforms(FitCenter(),
+                                    RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
+                            .into(photos_container_bs.getChildAt(i) as ImageView)
+                }
+            }
+        }
+    }
 
-//    private fun setOfferCarPhoto(offer: OfferModel) {
-//        if (offer.vehicle.photos.isNotEmpty()) {
-//            vpVehiclePhotos.adapter = VehiclePhotosVPAdapter(supportFragmentManager, offer.vehicle.photos)
-//            checkNumberOfPhoto(0, offer.vehicle.photos.size)
-//
-//            if (offer.vehicle.photos.size > 1) {
-//                previousImageButton.setOnClickListener { vpVehiclePhotos.currentItem = vpVehiclePhotos.currentItem - 1 }
-//                nextImageButton.setOnClickListener { vpVehiclePhotos.currentItem = vpVehiclePhotos.currentItem + 1 }
-//                vpVehiclePhotos.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-//                    override fun onPageScrollStateChanged(p0: Int) {}
-//                    override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
-//                    override fun onPageSelected(p0: Int) { checkNumberOfPhoto(p0, offer.vehicle.photos.size) }
-//                })
-//            }
-//        }
-//        layoutPhotos.isVisible = offer.vehicle.photos.isNotEmpty()
-//    }
+    private fun addSinglePhoto(resId: Int = 0, path: String? = null) {
+        sv_photo.isVisible = false
+        iv_offer_bs_booknow.isVisible = true
+        Glide.with(this)
+                .let {
+                    if (path != null) it.load(path)
+                    else it.load(resId)
+                }
+                .apply(RequestOptions().transforms(FitCenter(),
+                        RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
+                .into(iv_offer_bs_booknow)
+    }
+
+    private fun inflatePhotoScrollView(imagesCount: Int) {
+        ScrollGalleryInflater.addImageViews(imagesCount, photos_container_bs)
+    }
 
     private fun setPrice(price: String) {
         offer_bottom_bs.tv_current_price.text = price
@@ -295,15 +298,21 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
-    private fun setVehicleName(name: String) {
-        tv_car_model_bs.text = name
+    private fun setVehicleName(nameById: String? = null, vehicle: VehicleModel? = null) {
+        if (nameById == null && vehicle == null) throw IllegalArgumentException()
+        tv_car_model_bs.text =
+                nameById ?:
+                        vehicle!!.color?.let { Utils.getVehicleNameWithColor(this, vehicle.name, it) } ?:
+                        vehicle!!.name
     }
 
     private fun setRating(carrier: CarrierModel) {
-        if (!presenter.hasAnyRate(carrier)) return
-        offer_ratingDivider_bs.isVisible = true
+        val hasRating = presenter.hasAnyRate(carrier)
+        offer_ratingDivider_bs.isVisible = hasRating
+        view_offer_rating_bs.isVisible = hasRating
+        if (!hasRating) return
+
         with(carrier) {
-            view_offer_rating_bs.isVisible = true
 
             view_offer_rating_bs.ratingBarDriver.visibleRating = ratings.driver ?: NO_RATE
             ratingDriver.isVisible = view_offer_rating_bs.ratingBarDriver.visibleRating != NO_RATE
@@ -318,13 +327,6 @@ class OffersActivity : BaseActivity(), OffersView {
             tvTopSelection.isVisible = approved
         }
     }
-
-//    private fun checkNumberOfPhoto(currentPos: Int, size: Int) {
-//        numberOfPhoto.isVisible = size > 1
-//        previousImageButton.isVisible = currentPos > 0
-//        nextImageButton.isVisible = currentPos < size - 1
-//        numberOfPhoto.text = "${currentPos + 1}/$size"
-//    }
 
     private fun hideSheetOfferDetails() { bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN }
 
@@ -344,7 +346,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     companion object {
-        const val PHOTO_CORNER = 16F
+        const val PHOTO_CORNER = 7F
         const val NO_RATE      = 0f
     }
 }

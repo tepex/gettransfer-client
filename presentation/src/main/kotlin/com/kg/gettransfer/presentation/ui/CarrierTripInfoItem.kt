@@ -7,12 +7,10 @@ import android.support.v4.content.ContextCompat
 
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.TextView
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
-import com.kg.gettransfer.presentation.model.TotalPriceModel
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import kotlinx.android.extensions.LayoutContainer
@@ -26,7 +24,7 @@ class CarrierTripInfoItem @JvmOverloads constructor(
 
     override val containerView = LayoutInflater.from(context).inflate(R.layout.view_carrier_trip_info_layout, this, true)
 
-    fun setInfo(item: CarrierTripBaseModel, totalPrice: TotalPriceModel? = null, showDetails: Boolean = false) {
+    fun setInfo(item: CarrierTripBaseModel) {
         val transferStatus = when (item.tripStatus) {
             CarrierTripBaseModel.FUTURE_TRIP -> context.getString(R.string.LNG_WILL_START_IN).plus(" ")
                     .plus(Utils.durationToString(context, Utils.convertDuration(item.timeToTransfer)))
@@ -36,75 +34,30 @@ class CarrierTripInfoItem @JvmOverloads constructor(
         }
         setColorStyle(item.tripStatus)
 
-        transferId.text = context.getString(R.string.LNG_TRANSFER).plus(" #${item.transferId}").plus(" ${transferStatus?: ""}")
-        tripDateTime.text = item.dateTime
+        textDateTime.text = SystemUtils.formatDateTimeWithShortMonth(item.dateLocal)
+        textTransferStatus.text = context.getString(R.string.LNG_TRANSFER).plus(" #${item.transferId}").plus(" ${transferStatus?: ""}")
         tvTripFrom.text = item.from
 
         if (item.to != null) {
-            if (showDetails) {
-                item.distance?.let {
-                    setDistance(bsTvDistance, it)
-                    bsLayoutDistance.isVisible = true
-                }
-                item.time?.let {
-                    setDuration(bsTvDuration, it, false)
-                    bsLayoutDuration.isVisible = true
-                }
-            } else {
-                setDistance(tripDistance, item.distance)
+            item.distance?.let {
+                textDistance.text = SystemUtils.formatDistance(context, it, false)
+                textDistance.isVisible = true
             }
             tvTripTo.text = item.to
             changeViewForHourlyTransfer(false)
         } else if (item.duration != null) {
-            if (showDetails) {
-                setDuration(bsTvDuration, item.duration, true)
-                bsLayoutDuration.isVisible = true
-            } else {
-                setPrice(tripPrice, item.price)
-                setDuration(tripDistance, item.duration, true)
-            }
-            setDuration(tv_duration, item.duration, true)
+            tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
             changeViewForHourlyTransfer(true)
         }
 
-        if (showDetails) {
-            setPrice(bsTvPrice, item.price, bsTvTotalPrice, totalPrice)
-            tripDistance.isVisible = false
-            tripPrice.isVisible = false
-            layoutDistanceDurationPrice.isVisible = true
-        } else {
-            setPrice(tripPrice, item.price)
-            vehicleName.text = item.vehicle.name
-            vehicleNumber.text = item.vehicle.registrationNumber
-            imgChildSeats.isVisible = item.countChild > 0
-            imgComment.isVisible = item.comment != null
-            layoutVehicleInfo.isVisible = true
+        vehiceName.text = item.vehicle.name
+        vehiceNumber.text = item.vehicle.registrationNumber
+        textCountChild.text = context.getString(R.string.X_SIGN).plus(" ${item.countChild}")
+        (item.countChild > 0).let {
+            imgCountChild.isVisible = it
+            textCountChild.isVisible = it
         }
-    }
-
-    private fun setDistance(textView: TextView, distance: Int?) {
-        textView.text = SystemUtils.formatDistance(context, distance, false)
-    }
-
-    private fun setDuration(textView: TextView, duration: Int?, isHourlyTransfer: Boolean) {
-        textView.text = when (isHourlyTransfer) {
-            true -> HourlyValuesHelper.getValue(duration!!, context)
-            false -> Utils.durationToString(context, Utils.convertDuration(duration?: 0))
-        }
-    }
-
-    private fun setPrice(textViewPrice: TextView, price: String, textViewTotalPrice: TextView? = null, totalPrice: TotalPriceModel? = null) {
-        if (textViewTotalPrice != null){
-            var textTotalPrice = context.getString(R.string.LNG_TOTAL_PRICE).toUpperCase().plus(": $price")
-            totalPrice?.let {
-                textViewPrice.text = it.remainsToPay
-                textTotalPrice = textTotalPrice.plus("\n(${100 - it.paidPercentage}% ")
-                        .plus(context.getString(R.string.LNG_RIDE_NOT_PAID)).plus(")")
-            }
-            textViewTotalPrice.text = textTotalPrice
-        } else {
-            textViewPrice.text = price
-        }
+        imgComment.isVisible = item.comment != null
     }
 
     private fun setColorStyle(tripStatus: String) {
@@ -115,28 +68,52 @@ class CarrierTripInfoItem @JvmOverloads constructor(
         }
     }
 
-    private fun setStyleCanceled() {
-        transferId.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_gray))
-        tripDateTime.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_gray))
-        tripDateTime.background = null
-        tripPrice.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_gray))
-        tripDistance.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_gray))
+    private fun setStyleActive() {
+        ContextCompat.getColor(context, R.color.colorTextBlack).let {
+            textDateTime.setTextColor(it)
+            textDistance.setTextColor(it)
+            tvTripFrom.setTextColor(it)
+            tvTripTo.setTextColor(it)
+            vehiceNumber.setTextColor(it)
+            imgCountChild.setColorFilter(it)
+            textCountChild.setTextColor(it)
+            imgComment.setColorFilter(it)
+        }
+        ivMarkersLine.setColorFilter(ContextCompat.getColor(context, R.color.color_gtr_orange))
+        textTransferStatus.setTextColor(ContextCompat.getColor(context, R.color.color_gtr_green))
+        tvMarkerFrom.isEnabled = true
+        tvMarkerTo.isEnabled = true
+        tv_duration.isEnabled = true
+        ivHourlyPoint.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_hourly_driver_vector))
     }
 
-    private fun setStyleActive() {
-        transferId.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_green))
-        tripDateTime.setTextColor(ContextCompat.getColor(context, R.color.colorWhite))
-        tripDateTime.background = ContextCompat.getDrawable(context, R.drawable.back_carrier_trips_items_date)
-        tripPrice.setTextColor(ContextCompat.getColor(context, R.color.color_driver_mode_text_green))
-        tripDistance.setTextColor(ContextCompat.getColor(context, R.color.colorTextBlack))
+    private fun setStyleCanceled() {
+        ContextCompat.getColor(context, R.color.color_gtr_grey).let {
+            textDateTime.setTextColor(it)
+            textDistance.setTextColor(it)
+            textTransferStatus.setTextColor(it)
+            tvTripFrom.setTextColor(it)
+            tvTripTo.setTextColor(it)
+            vehiceNumber.setTextColor(it)
+            textCountChild.setTextColor(it)
+        }
+        ContextCompat.getColor(context, R.color.color_gtr_light_grey).let {
+            ivMarkersLine.setColorFilter(it)
+            imgCountChild.setColorFilter(it)
+            imgComment.setColorFilter(it)
+        }
+        tvMarkerFrom.isEnabled = false
+        tvMarkerTo.isEnabled = false
+        tv_duration.isEnabled = false
+        ivHourlyPoint.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_hourly_driver_vector_gray))
     }
 
     private fun changeViewForHourlyTransfer(isHourlyTransfer: Boolean) {
         rl_hourly_info.isVisible = isHourlyTransfer
         tvMarkerTo.isVisible = !isHourlyTransfer
+        ivMarkersLine.isVisible = !isHourlyTransfer
         if (isHourlyTransfer) {
             tvTripTo.text = ""
-            //tripDistance.text = ""
         }
     }
 }

@@ -1,16 +1,15 @@
 package com.kg.gettransfer.data.mapper
 
-import com.kg.gettransfer.data.model.MoneyEntity
 import com.kg.gettransfer.data.model.TransferEntity
 
-import com.kg.gettransfer.domain.model.CityPoint
-import com.kg.gettransfer.domain.model.Money
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransportType
 
 import java.text.DateFormat
 
 import org.koin.standalone.get
+import java.util.Date
+import java.util.Calendar
 
 /**
  * Map a [TransferEntity] to and from a [Transfer] instance when data is moving between this later and the Domain layer.
@@ -75,11 +74,33 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             editableFields      = type.editableFields,
             airlineCard         = type.airlineCard,
             paymentPercentages  = type.paymentPercentages,
-            unreadMessagesCount = type.unreadMessagesCount
+            unreadMessagesCount = type.unreadMessagesCount,
+            showOfferInfo       = allowOfferInfo(type, dateFormat.get().parse(type.dateReturnLocal ?: type.dateToLocal))
         )
 
     /**
      * Map a [Transfer] instance to a [TransferEntity] instance.
      */
     override fun toEntity(type: Transfer): TransferEntity { throw UnsupportedOperationException() }
+
+    companion object {
+        private const val HOURS_TO_SHOWING_OFFER_INFO = 24
+
+        private fun allowOfferInfo(transfer: TransferEntity, date: Date): Boolean {
+            if (transfer.status != Transfer.Status.NEW.name.toLowerCase() &&
+                    transfer.status != Transfer.Status.CANCELED.name.toLowerCase() &&
+                    transfer.status != Transfer.Status.OUTDATED.name.toLowerCase() &&
+                    transfer.status != Transfer.Status.PERFORMED.name.toLowerCase()) {
+
+                val calendar = Calendar.getInstance()
+                calendar.apply {
+                    time = date
+                    add(Calendar.MINUTE, transfer.time ?: transfer.duration?.times(60) ?: 0)
+                    add(Calendar.MINUTE, HOURS_TO_SHOWING_OFFER_INFO.times(60))
+                }
+                return calendar.time.after(Calendar.getInstance().time)
+            }
+            return transfer.status == Transfer.Status.PERFORMED.name.toLowerCase()
+        }
+    }
 }

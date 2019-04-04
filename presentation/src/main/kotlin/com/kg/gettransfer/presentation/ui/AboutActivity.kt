@@ -40,6 +40,11 @@ class AboutActivity : BaseActivity(), AboutView {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
+    companion object {
+        private const val COUNT_PAGE = 2
+        private const val DEFAULT_PAGE = 1
+    }
+
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +56,8 @@ class AboutActivity : BaseActivity(), AboutView {
         viewpager.adapter = adapter
         viewpager.offscreenPageLimit = adapter.count - 1
 
-        pageIndicator.count = 4
-        pageIndicator.setSelected(1)
+        pageIndicator.count = COUNT_PAGE
+        pageIndicator.setSelected(DEFAULT_PAGE)
 
         btnClose.setOnClickListener {
             presenter.closeAboutActivity()
@@ -70,7 +75,7 @@ class AboutActivity : BaseActivity(), AboutView {
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
                 pageIndicator.setSelected(p0)
-                if (p0 == viewpager.childCount - 1) btnNext.text = getString(R.string.LNG_PRESENTATION_FINAL_BUTTON)
+                if (p0 == viewpager.childCount - 1) btnNext.text = getString(R.string.LNG_OK)
                 else btnNext.text = getString(R.string.LNG_NEXT)
             }
         })
@@ -86,7 +91,7 @@ class AboutActivity : BaseActivity(), AboutView {
     override fun setError(e: DatabaseException) {}
 
     inner class AboutAdapter : PagerAdapter() {
-        private val pages = arrayOf<AboutItem>(item_0, item_1, item_2, item_3)
+        private val pages = arrayOf<AboutItem>(item_0, item_1)
 
         override fun getCount() = pages.size
         override fun isViewFromObject(v: View, o: Any) = v == o

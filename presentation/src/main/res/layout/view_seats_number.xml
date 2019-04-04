@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="horizontal"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:gravity="center">
 
 
     <ImageView
             android:id="@+id/imgPassengers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_passenger_without_padding"/>
+            app:srcCompat="@drawable/ic_passenger"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     <TextView
             android:id="@+id/tv_countPassengers"
@@ -20,8 +24,10 @@
             android:textSize="@dimen/activity_transfer_details_text_size_17sp"
             android:textColor="@color/colorTextBlack"
             android:fontFamily="@font/sf_pro_text_regular"
+            android:visibility="gone"
 
-            tools:text=" X 3"/>
+            tools:text=" X 3"
+            tools:visibility="visible"/>
 
     <ImageView
             android:id="@+id/imgChildSeats"

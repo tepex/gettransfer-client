@@ -5,8 +5,8 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
-import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
-import com.kg.gettransfer.domain.interactor.RouteInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.domain.model.CarrierTrip
 
 import com.kg.gettransfer.domain.model.CarrierTripBase
 import com.kg.gettransfer.domain.model.RouteInfo
@@ -17,6 +17,7 @@ import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.ui.SystemUtils
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
@@ -26,7 +27,7 @@ import org.koin.standalone.inject
 
 @InjectViewState
 class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
-    private val routeInteractor: RouteInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     private val carrierTripMapper: CarrierTripMapper by inject()
     private val routeMapper: RouteMapper by inject()
@@ -49,26 +50,31 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
     override fun onFirstViewAttach() {
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val result = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }
-            result.error?.let { checkResultError(it) }
-            if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
-            else {
-                val tripInfo = result.model
-                tripModel = carrierTripMapper.toView(tripInfo)
-                viewState.setTripInfo(tripModel)
-
-                val baseTripInfo = tripInfo.base
-                if (baseTripInfo.to != null && baseTripInfo.to!!.point != null) {
-                    val r = utils.asyncAwait { routeInteractor.getRouteInfo(baseTripInfo.from.point!!, baseTripInfo.to!!.point!!, true, false, systemInteractor.currency.currencyCode) }
-                    r.cacheError?.let { viewState.setError(it) }
-                    if (r.error == null || (r.error != null && r.fromCache)) {
-                        setRouteTransfer(baseTripInfo,r.model)
+            fetchData { carrierTripInteractor.getCarrierTrip(tripId) }
+                    ?.let { tripInfo ->
+                        setTrip(tripInfo)
+                        setTripType(tripInfo.base)
                     }
-                } else if (baseTripInfo.duration != null) {
-                   setHourlyTransfer(baseTripInfo)
-                }
-            }
             viewState.blockInterface(false)
+        }
+    }
+
+    private fun setTrip(trip: CarrierTrip) {
+        tripModel = carrierTripMapper.toView(trip)
+        viewState.setTripInfo(tripModel)
+    }
+
+    private suspend fun setTripType(tripBase: CarrierTripBase) {
+        if (tripBase.to != null && tripBase.to!!.point != null) {
+            fetchData { orderInteractor.getRouteInfo(tripBase.from.point!!,
+                    tripBase.to!!.point!!,
+                    true,
+                    false,
+                    systemInteractor.currency.code) }
+                    ?.let { setRouteTransfer(tripBase, it) }
+        }
+        else if (tripBase.duration != null) {
+            setHourlyTransfer(tripBase)
         }
     }
 
@@ -80,7 +86,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
                 baseTrip.to!!.name!!,
                 baseTrip.from.point!!,
                 baseTrip.to!!.point!!,
-                tripModel.base.dateTime
+                SystemUtils.formatDateTime(tripModel.base.dateLocal)
         )
         routeModel?.let {
             polyline = Utils.getPolyline(it)
@@ -94,7 +100,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
         track = Utils.getCameraUpdateForPin(point)
         viewState.setPinHourlyTransfer(
                 tripModel.base.from,
-                tripModel.base.dateTime,
+                SystemUtils.formatDateTime(tripModel.base.dateLocal),
                 point,
                 track!!
         )
@@ -115,6 +121,6 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
     }
 
     fun onChatClick(){
-        router.navigateTo(Screens.Chat(transferId))
+        router.navigateTo(Screens.Chat(transferId, tripId))
     }
 }

@@ -57,7 +57,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             remainsToPay          = type.remainsToPay?.def,
             paidPercentage        = type.paidPercentage,
             watertaxi             = type.watertaxi,
-            bookNowOffers         = type.bookNowOffers?.map { entry ->
+            bookNowOffers         = type.bookNowOffers.map { entry ->
                 bookNowOfferMapper.toView(entry.value).apply {
                     transportType = transportTypesModels.find { it.id === entry.key }!!
                 }
@@ -78,10 +78,12 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             editableFields        = type.editableFields,
             airlineCard           = type.airlineCard,
             paymentPercentages    = type.paymentPercentages,
+            unreadMessagesCount   = type.unreadMessagesCount,
 /* ================================================== */
 /* ================================================== */
             statusCategory = type.checkStatusCategory(),
-            timeToTransfer = ((type.dateToLocal.time - Calendar.getInstance().timeInMillis).absoluteValue / 60_000).toInt()
+            timeToTransfer = ((type.dateToLocal.time - Calendar.getInstance().timeInMillis).absoluteValue / 60_000).toInt(),
+            showOfferInfo  = type.showOfferInfo
             //checkOffers = type.checkOffers
         )
     }
