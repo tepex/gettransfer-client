@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:gravity="center_horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal">
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
         android:id="@+id/btnChat"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:btn_name="@string/LNG_PAYMENT_CHAT"
-        app:btn_img="@drawable/ic_chat_yellow"
         android:layout_weight="1"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:btn_img="@drawable/ic_chat_yellow"
+        app:btn_name="@string/LNG_PAYMENT_CHAT" />
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
-            android:id="@+id/btnCall"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:btn_name="@string/LNG_PAYMENT_CALL"
-            app:btn_img="@drawable/ic_call"
-            android:layout_weight="1"
-            android:visibility="gone"/>
+        android:id="@+id/btnCall"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:btn_img="@drawable/ic_call"
+        app:btn_name="@string/LNG_PAYMENT_CALL" />
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
-            android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:btn_name="@string/LNG_CANCEL_REQUEST"
-            app:btn_img="@drawable/ic_cancel"
-            app:btn_color="@color/color_gtr_red"
-            android:layout_weight="1"
-            android:visibility="gone"/>
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:btn_color="@color/color_gtr_red"
+        app:btn_img="@drawable/ic_cancel"
+        app:btn_name="@string/LNG_CANCEL_REQUEST" />
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
         android:id="@+id/btnSupport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:btn_name="@string/LNG_OFFERS_SUPPORT"
-        app:btn_img="@drawable/ic_support"
         android:layout_weight="1"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        app:btn_img="@drawable/ic_support"
+        app:btn_name="@string/LNG_OFFERS_SUPPORT" />
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
-            android:id="@+id/btnRepeatTransfer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:btn_name="@string/LNG_DETAILS_REPEAT_ROUTE"
-            app:btn_img="@drawable/ic_repeat"
-            android:layout_weight="1"
-            android:visibility="gone"/>
+        android:id="@+id/btnRepeatTransfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:btn_img="@drawable/ic_repeat"
+        app:btn_name="@string/LNG_DETAILS_REPEAT_ROUTE" />
 
 </LinearLayout>
