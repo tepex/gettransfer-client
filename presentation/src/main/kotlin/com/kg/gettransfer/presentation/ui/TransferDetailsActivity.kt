@@ -171,7 +171,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
 //        btnSupportBottom.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
 //        btnCancel.setOnClickListener        { presenter.onCancelRequestClicked() }
-        tripRate.setOnRatingChangeListener  { _, fl -> presenter.rateTrip(fl, true) }
+        tripRate.setOnRatingChangeListener  { _, fl -> disableRate(); presenter.rateTrip(fl, true) }
         topCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         bottomCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         topCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
@@ -522,11 +522,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 
     override fun showDetailRate(tappedRate: Float, offerId: Long, feedback: String) {
-        if (supportFragmentManager.fragments.firstOrNull { it.tag == RATE_DIALOG_TAG} == null) {
-            RatingDetailDialogFragment
-                .newInstance(offerId, tappedRate, feedback)
-                .show(supportFragmentManager, RATE_DIALOG_TAG)
-        }
+        RatingDetailDialogFragment
+            .newInstance(offerId, tappedRate, feedback)
+            .show(supportFragmentManager, RATE_DIALOG_TAG)
     }
 
     override fun askRateInPlayMarket() {
@@ -545,7 +543,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun closeRateWindow() = closePopUp()
 
-    override fun disableRate() {
+    private fun disableRate() {
         view_rate_ride.isGone = true
         tripRate.setOnRatingChangeListener(null)
     }

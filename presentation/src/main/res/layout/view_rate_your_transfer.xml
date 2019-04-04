@@ -22,8 +22,7 @@
         app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
         app:srb_starPadding="@dimen/rating_bar_stars_padding"
         app:srb_starWidth="@dimen/rating_bar_stars_enabled_width"
-        app:srb_stepSize="1"
-        app:srb_clearRatingEnabled="false"/>
+        app:srb_stepSize="1"/>
 
     <TextView
         android:layout_width="match_parent"
