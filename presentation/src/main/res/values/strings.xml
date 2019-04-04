@@ -269,7 +269,7 @@
     <string name="LNG_PAYMENT_SETTINGS">Payment options</string>
     <string name="LNG_PAYMENT_TERMS">Terms</string>
     <string name="LNG_PAYMENT_TERM_NOW">Pay %s%% now</string>
-    <string name="LNG_PAYMENT_TERM_LATER">%s%% (%s) later to the driver</string>
+    <string name="LNG_PAYMENT_TERM_LATER">(%s later to the driver)</string>
     <string name="LNG_PAYMENT_METHOD">Method of payment</string>
     <string name="LNG_PAYMENT_METHOD_CARD">Credit Card</string>
     <string name="LNG_PAYMENT_METHOD_PAYPAL">Pay Pal</string>

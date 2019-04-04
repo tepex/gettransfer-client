@@ -112,7 +112,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
                     OfferModel.PRICE_30 -> {
                         payThirdOfPriceButton.isVisible = true
                         payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.PRICE_30.toString())
-                        thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, OfferModel.PRICE_70.toString(), offer.price.percentage30)
+                        thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, offer.price.percentage30)
                         payThirdOfPriceButton.setOnClickListener { changePaymentSettings(it) }
                     }
                 }
