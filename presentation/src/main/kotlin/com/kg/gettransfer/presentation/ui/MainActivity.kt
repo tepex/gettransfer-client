@@ -270,6 +270,8 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     private fun initHourly() {
+        if (MainRequestFragment.hourlyInit) return
+        MainRequestFragment.hourlyInit = true
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
         hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN
         with(np_hours) {
@@ -277,8 +279,8 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             minValue = 0
             maxValue = displayedValues.size - 1
             wrapSelectorWheel = false
-            tvCurrent_hours.text = displayedValues[0]
-            requestView?.setNumberPickerValue(displayedValues[0])
+            tvCurrent_hours.text = displayedValues[value]
+            requestView?.setNumberPickerValue(displayedValues[value])
             setOnValueChangedListener { _, _, newVal ->
                 presenter.tripDurationSelected(HourlyValuesHelper.durationValues[newVal])
                 tvCurrent_hours.text = displayedValues[newVal]
