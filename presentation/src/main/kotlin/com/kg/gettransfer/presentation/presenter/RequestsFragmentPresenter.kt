@@ -13,7 +13,8 @@ import com.kg.gettransfer.presentation.view.Screens
 import timber.log.Timber
 
 @InjectViewState
-class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) : BasePresenter<RequestsFragmentView>(), CounterEventListener {
+class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
+        BasePresenter<RequestsFragmentView>(), CounterEventListener {
     @RequestsView.TransferTypeAnnotation
     var transferType = tt
 
@@ -22,7 +23,7 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) : 
     @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
-        getTransfers()
+        viewState.showTransfers()
         countEventsInteractor.addCounterListener(this)
     }
 
@@ -32,39 +33,38 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) : 
         countEventsInteractor.removeCounterListener(this)
     }
 
-    private fun getTransfers() {
+    fun getTransfers(available: Boolean?) {
         utils.launchSuspend {
+
+            viewState.blockInterface(true)
+
             when(transferType){
                 TRANSFER_ACTIVE -> {
-
-                    viewState.blockInterface(true)
-
-                    fetchData { transferInteractor.getTransfersActiveCached() }?.let {
-                        showTransfers(it)
-                    }
-
-                    viewState.blockInterface(false)
-
-                    fetchData { transferInteractor.getTransfersActive() }?.let {
-                        showTransfers(it)
+                    if(available != true) {
+                        fetchData { transferInteractor.getTransfersActiveCached() }?.let {
+                            showTransfers(it)
+                        }
+                    } else {
+                        fetchData { transferInteractor.getTransfersActive() }?.let {
+                            showTransfers(it)
+                        }
                     }
                 }
 
                 TRANSFER_ARCHIVE -> {
-
-                    viewState.blockInterface(true)
-
-                    fetchData { transferInteractor.getTransfersArchiveCached() }?.let {
-                        showTransfers(it)
-                    }
-
-                    viewState.blockInterface(false)
-
-                    fetchData { transferInteractor.getTransfersArchive() }?.let {
-                        showTransfers(it)
+                    if(available != true) {
+                        fetchData { transferInteractor.getTransfersArchiveCached() }?.let {
+                            showTransfers(it)
+                        }
+                    } else {
+                        fetchData { transferInteractor.getTransfersArchive() }?.let {
+                            showTransfers(it)
+                        }
                     }
                 }
             }
+
+            viewState.blockInterface(false)
         }
     }
 

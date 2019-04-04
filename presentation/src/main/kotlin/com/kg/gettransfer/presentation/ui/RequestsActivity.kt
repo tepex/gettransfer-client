@@ -18,15 +18,14 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
-
 import kotlinx.android.synthetic.main.activity_requests.*
-import kotlinx.android.synthetic.main.toolbar.view.*
 
 class RequestsActivity: BaseActivity(), RequestsView {
 
@@ -38,6 +37,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
 
     override fun getPresenter(): RequestsPresenter = presenter
     private fun sendEventLog(param: String) = presenter.logEvent(param)
+    private var requestsVPAdapter: RequestsViewPagerAdapter?  = null
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,34 +51,42 @@ class RequestsActivity: BaseActivity(), RequestsView {
             setHomeAsUpIndicator(R.drawable.ic_home_back_24dp)
         }
 
-        val requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager, this)
+        requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
 
         viewNetworkNotAvailable = textNetworkNotAvailable
+
+        val fragmentRequestsActive = RequestsFragment.newInstance(TRANSFER_ACTIVE)
+        requestsVPAdapter?.addFragment(fragmentRequestsActive, getString(R.string.LNG_RIDES_ACTIVE))
+        val fragmentRequestsAll = RequestsFragment.newInstance(TRANSFER_ARCHIVE)
+        requestsVPAdapter?.addFragment(fragmentRequestsAll, getString(R.string.LNG_RIDES_COMPLETED))
 
         vpRequests.adapter = requestsVPAdapter
         tabs.setupWithViewPager(vpRequests)
         setListenersForLog()
     }
 
-    private class RequestsViewPagerAdapter(manager: FragmentManager,
-                                           ctx: Context): FragmentPagerAdapter(manager) {
+    override fun setNetworkAvailability(context: Context): Boolean {
+        val available = super.setNetworkAvailability(context)
+        requestsVPAdapter?.setNetworkAvailability(available)
+        return available
+    }
 
-        private val context = ctx
+    private class RequestsViewPagerAdapter(manager: FragmentManager): FragmentPagerAdapter(manager) {
+        val fragments = mutableListOf<RequestsFragment>()
+        val titles = mutableListOf<String>()
 
-        override fun getItem(position: Int): Fragment {
-            when(position) {
-                TRANSFER_ACTIVE -> return RequestsFragment.newInstance(TRANSFER_ACTIVE)
-                TRANSFER_ARCHIVE -> return RequestsFragment.newInstance(TRANSFER_ARCHIVE)
-                else -> throw UnsupportedOperationException()
-            }
+        override fun getItem(position: Int) = fragments.get(position)
+        override fun getCount() = fragments.size
+        override fun getPageTitle(position: Int) = titles.get(position)
+
+        fun addFragment(fragment: RequestsFragment, title: String) {
+            fragments.add(fragment)
+            titles.add(title)
         }
 
-        override fun getCount() = 2
-        override fun getPageTitle(position: Int): CharSequence? {
-            when(position) {
-                TRANSFER_ACTIVE -> return context.getString(R.string.LNG_RIDES_ACTIVE)
-                TRANSFER_ARCHIVE -> return context.getString(R.string.LNG_RIDES_COMPLETED)
-                else -> throw UnsupportedOperationException()
+        fun setNetworkAvailability(available: Boolean) {
+            fragments.forEach {
+                it.setNetworkAvailability(available)
             }
         }
     }

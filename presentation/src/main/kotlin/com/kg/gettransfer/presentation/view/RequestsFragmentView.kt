@@ -9,4 +9,5 @@ import com.kg.gettransfer.presentation.model.TransferModel
 interface RequestsFragmentView: BaseView {
     fun setRequests(transfers: List<TransferModel>)
     fun notifyData()
+    fun showTransfers()
 }

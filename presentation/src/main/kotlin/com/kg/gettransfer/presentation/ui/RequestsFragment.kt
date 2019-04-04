@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -46,6 +47,8 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(arguments!!.getInt(TRANSFER_TYPE_ARG))
 
     private lateinit var rvAdapter: RequestsRVAdapter
+
+    var networkAvailable:Boolean? = null
 
     companion object {
         @JvmField val TRANSFER_TYPE_ARG = "TRANSFER_TYPE_ARG"
@@ -101,5 +104,18 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     override fun notifyData() {
         activity?.runOnUiThread { rvAdapter.notifyDataSetChanged() }
+    }
+
+    override fun showTransfers(){
+        if(::presenter.isInitialized){
+            presenter.getTransfers(networkAvailable)
+        }
+    }
+
+    fun setNetworkAvailability(available: Boolean){
+        if(networkAvailable != available) {
+            networkAvailable = available
+            showTransfers()
+        }
     }
 }
