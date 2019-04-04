@@ -25,6 +25,7 @@ import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavi
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripDetailsPresenter
+import com.kg.gettransfer.presentation.ui.custom.CommunicationButton
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
@@ -141,10 +142,6 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                 Pair(getString(R.string.LNG_OPEN), CarrierTripDetailsPresenter.OPERATION_OPEN))
         val operationsName: List<CharSequence> = operations.map { it.first }
         with(item) {
-            base.comment?.let {
-                comment_view.tv_comment_text.text = it
-                comment_view.isVisible = true
-            }
             layoutPassengersChilds.isVisible = item.countPassengers != null || item.base.countChild > 0
             with(transfer_details_view_seats) {
                 item.countPassengers?.let {
@@ -158,30 +155,38 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                     tvCountChildren.isVisible = true
                 }
             }
-            flightNumber?.let { initField(flight_number, it) }
-            passenger?.profile?.let { profile ->
-                profile.name?.let { initField(passenger_name, it) }
-                profile.email?.let {email ->
-                    initField(passenger_email, email)
-                    topCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
-                    topCommunicationButtons.btnChat.isVisible = true
-                    bottomCommunicationButtons.btnChat.setOnClickListener { /*presenter.sendEmail(email, null)*/ presenter.onChatClick() }
-                    bottomCommunicationButtons.btnChat.isVisible = true
-                    Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
-                        presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
-                }
-                profile.phone?.let { phone ->
-                    initField(passenger_phone, phone)
-                    topCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
-                    topCommunicationButtons.btnCall.isVisible = true
-                    bottomCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
-                    bottomCommunicationButtons.btnCall.isVisible = true
-                    Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
-                        presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
-                }
-            }
             base.vehicle.let { initField(car_model_field, it.registrationNumber, it.name) }
+
+            if(showPassengerInfo) {
+                base.comment?.let {
+                    comment_view.tv_comment_text.text = it
+                    comment_view.isVisible = true
+                }
+                flightNumber?.let { initField(flight_number, it) }
+                passenger?.profile?.let { profile ->
+                    profile.name?.let { initField(passenger_name, it) }
+                    profile.email?.let {email ->
+                        initField(passenger_email, email)
+                        Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
+                            presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
+                    }
+                    profile.phone?.let { phone ->
+                        initField(passenger_phone, phone)
+                        initCommunicationButton(topCommunicationButtons.btnCall) { presenter.callPhone(phone) }
+                        initCommunicationButton(bottomCommunicationButtons.btnCall) { presenter.callPhone(phone) }
+                        Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
+                            presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
+                    }
+                }
+                initCommunicationButton(topCommunicationButtons.btnChat) { presenter.onChatClick() }
+                initCommunicationButton(bottomCommunicationButtons.btnChat) { presenter.onChatClick() }
+            }
         }
+    }
+
+    private fun initCommunicationButton(btn: CommunicationButton, listener: () -> Unit) {
+        btn.setOnClickListener { listener() }
+        btn.isVisible = true
     }
 
     private fun initField(field: TransferDetailsField, text: String, title: String? = null){
