@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,7 @@ import com.kg.gettransfer.R
 import android.util.DisplayMetrics
 
 
-abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
+abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
 	protected abstract val layout: Int
 

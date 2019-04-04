@@ -41,7 +41,6 @@ import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
@@ -211,7 +210,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
             initTableLayoutTransportTypes(transfer.transportTypes)
             layoutTransportTypes.isVisible = true
         }
-        (showRate).let {
+        (status == Transfer.STATUS_CATEGORY_FINISHED && showRate).let {
             view_rate_ride.isVisible = it
             if (it) presenter.logTransferReviewRequested()
         }
@@ -517,21 +516,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 
     override fun showDetailRate(tappedRate: Float) {
-        /*val popUpView = showPopUpWindow(R.layout.view_rate_dialog, transferDetailsParent)
+        val popUpView = showPopUpWindow(R.layout.view_rate_dialog, transferDetailsParent)
         popUpView.main_rate.isScrollable = false
         popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
         popUpView.send_feedBack.setOnClickListener {
             closePopUp()
             presenter.sendReview(Utils.createListOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
         }
-        setupDetailRatings(tappedRate, popUpView)*/
-
-        RatingDetailDialogFragment
-            .newInstance(
-                intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0),
-                tappedRate
-            ).show(supportFragmentManager, "asdsa")
-
+        setupDetailRatings(tappedRate, popUpView)
     }
 
     override fun askRateInPlayMarket() {

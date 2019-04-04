@@ -53,14 +53,3 @@ fun WebView.setUserAgent() {
     val sbAgent = StringBuilder(userAgent).insert(wvIndex + 2, "; GetTransfer")
     this.settings.userAgentString = sbAgent.toString()
 }
-
-fun View.show(isShow: Boolean, isGone: Boolean = true) {
-    visibility = if (isShow)
-        View.VISIBLE
-    else {
-        if (isGone)
-            View.GONE
-        else
-            View.INVISIBLE
-    }
-}
