@@ -95,14 +95,12 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
                 val calendar = Calendar.getInstance()
                 calendar.apply {
                     time = date
-                    add(Calendar.MINUTE, transfer.time ?: transfer.duration?.let { dur -> convertHoursToMinutes(dur) } ?: 0)
-                    add(Calendar.MINUTE, convertHoursToMinutes(HOURS_TO_SHOWING_OFFER_INFO))
+                    add(Calendar.MINUTE, transfer.time ?: transfer.duration?.times(60) ?: 0)
+                    add(Calendar.MINUTE, HOURS_TO_SHOWING_OFFER_INFO.times(60))
                 }
                 return calendar.time.after(Calendar.getInstance().time)
             }
             return transfer.status == Transfer.Status.PERFORMED.name.toLowerCase()
         }
-
-        private fun convertHoursToMinutes(hours: Int) = hours * 60
     }
 }
