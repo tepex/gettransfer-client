@@ -34,7 +34,6 @@
         app:layout_constrainedWidth="true"
         style="@style/sf_font_grey"/>
 
-
     <TextView
         android:id="@+id/tvPhone"
         android:layout_width="wrap_content"

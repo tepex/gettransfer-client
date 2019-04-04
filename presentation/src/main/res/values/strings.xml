@@ -396,8 +396,6 @@
     <string name="LNG_PAYMENT_CAR_CONDITIONAL">car condition</string>
     <string name="LNG_PAYMENT_ADD_COMMENT_YOUR_TRANSFER">Add some comment about your transfer</string>
     <string name="LNG_PAYMENT_THANK_RATING">Thank you for rating!</string>
-    <string name="LNG_PAYMENT_LEAVE_COMMENT">Please leave your comment about transfer:</string>
-    <string name="LNG_PAYMENT_YOUR_COMMENT">Your comment</string>
     <string name="LNG_PAYMENT_TRANSFER_NUMBER">Transfer number</string>
     <string name="LNG_TRANSFER_TITLE">Transfer paid</string>
     <string name="LNG_RIDE_ABOUT_REQUEST">About request</string>
