@@ -57,6 +57,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     @CallSuper
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
+        systemInteractor.paymentCommission.let {
+            viewState.setCommission(if (it % 1.0 == 0.0) it.toInt().toString() else it.toString())
+        }
         viewState.blockInterface(false)
         utils.launchSuspend {
             getOffers()
