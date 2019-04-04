@@ -105,7 +105,7 @@ object OfferItemBindDelegate {
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) {
         with(view) {
             tv_car_model_tiny.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
-            tv_car_model_tiny.setTextSize(TypedValue.COMPLEX_UNIT_SP, BOOK_NOW_TITLE_SIZE)
+            tv_car_model_tiny.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.view_offer_book_now_title_text_size))
             tv_car_class_tiny.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
             bindMainPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
             bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING)
@@ -140,8 +140,8 @@ object OfferItemBindDelegate {
     private fun bindRating(rateView: View, rating: RatingsModel, approved: Boolean = false): Boolean =
             with(rateView) {
                 if (rating.average != null && rating.average != NO_RATING) {
-                    imgApproved.isVisible     = approved
-                    tv_drivers_rate.text      = context.getString(R.string.text_in_parentheses, rating.average.toString())
+                    imgApproved.isVisible = approved
+                    tv_drivers_rate.text  = rating.average.toString().replace(".", ",")
                     isVisible = true
                     return@with RATE_SHOWN
                 }
@@ -181,7 +181,6 @@ object OfferItemBindDelegate {
             else FitCenter()
 
 
-    private const val NO_RATING           = 0.0F
-    private const val RATE_SHOWN          = true
-    private const val BOOK_NOW_TITLE_SIZE = 9F
+    private const val NO_RATING  = 0.0F
+    private const val RATE_SHOWN = true
 }
