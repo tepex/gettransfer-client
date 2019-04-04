@@ -15,12 +15,11 @@ interface TransferDetailsView: BaseView, RouteView {
     fun showAlertCancelRequest()
     fun copyText(text: String)
     fun recreateActivity()
-    fun showDetailRate(tappedRate: Float, offerId: Long)
+    fun showDetailRate(tappedRate: Float)
     fun closeRateWindow()
     fun askRateInPlayMarket()
     fun showRateInPlayMarket()
     fun thanksForRate()
-    fun showYourRateMark(isShow: Boolean, averageRate: Float = 0f)
 
     fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)
     fun updateCamera(latLngList: List<LatLng>)

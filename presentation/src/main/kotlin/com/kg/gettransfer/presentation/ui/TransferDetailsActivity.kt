@@ -42,7 +42,6 @@ import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
-import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
@@ -62,6 +61,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.
 
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
+import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
 import kotlinx.android.synthetic.main.view_seats_number.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.view.*
@@ -73,12 +73,9 @@ import kotlinx.android.synthetic.main.view_transfer_details_field.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.view.*
 import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
-import kotlinx.android.synthetic.main.view_your_rate_mark.view.tripRate
 import java.util.*
 
-class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
-        RatingDetailDialogFragment.OnRatingChangeListener,
-        StoreDialogFragment.OnStoreListener {
+class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
 
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
@@ -127,7 +124,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         initBottomSheetDetails()
         //initTextFields()
         setClickListeners()
-
     }
 
     override fun onStop() {
@@ -171,12 +167,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
 //        btnSupportBottom.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
 //        btnCancel.setOnClickListener        { presenter.onCancelRequestClicked() }
-        tripRate.setOnRatingChangeListener  { _, fl -> disableRate(); presenter.rateTrip(fl, true) }
+        tripRate.setOnRatingChangeListener  { _, fl -> disableRate(); presenter.rateTrip(fl) }
         topCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         bottomCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         topCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
         bottomCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
-        yourRateMark.setOnClickListener { presenter.rateTrip(yourRateMark.tripRate.rating , false) }
     }
 
     override fun setTransfer(transfer: TransferModel, userProfile: ProfileModel, showRate: Boolean) {
@@ -521,16 +516,31 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 
-    override fun showDetailRate(tappedRate: Float, offerId: Long) {
+    override fun showDetailRate(tappedRate: Float) {
+        /*val popUpView = showPopUpWindow(R.layout.view_rate_dialog, transferDetailsParent)
+        popUpView.main_rate.isScrollable = false
+        popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
+        popUpView.send_feedBack.setOnClickListener {
+            closePopUp()
+            presenter.sendReview(Utils.createListOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
+        }
+        setupDetailRatings(tappedRate, popUpView)*/
+
         RatingDetailDialogFragment
             .newInstance(
-                offerId,
+                intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0),
                 tappedRate
-            ).show(supportFragmentManager, RATE_DIALOG_TAG)
+            ).show(supportFragmentManager, "asdsa")
+
     }
 
     override fun askRateInPlayMarket() {
-        StoreDialogFragment.newInstance().show(supportFragmentManager, STORE_DIALOG_TAG)
+        view_rate_ride.isGone = true
+        showPopUpWindow(R.layout.view_rate_in_store, transferDetailsParent).apply {
+            tv_reject_store.setOnClickListener { closePopUp() }
+            tv_agree_store.setOnClickListener { presenter.onRateInStore() }
+        }
+
     }
 
     override fun thanksForRate() {
@@ -539,6 +549,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
             isVisible = true
             Handler().postDelayed( { isVisible = false }, THANKS_DELAY)
         }
+
     }
 
     override fun showRateInPlayMarket() = redirectToPlayMarket()
@@ -582,19 +593,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         }
     }
 
-    override fun showYourRateMark(isShow: Boolean, averageRate: Float) {
-        yourRateMark.show(isShow)
-        yourRateMark.tripRate.rating = averageRate
-    }
-
-    override fun onRatingChanged(averageRating: Float) {
-        presenter.ratingChanged(averageRating)
-    }
-
-    override fun onClickGoToStore() {
-        presenter.onRateInStore()
-    }
-
     private fun clearMarker() {
         mCarMarker?.remove()
     }
@@ -603,8 +601,5 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         const val TRANSPORT_TYPES_COLUMNS = 2
 
         const val THANKS_DELAY = 3000L
-
-        const val RATE_DIALOG_TAG = "rate_dialog_tag"
-        const val STORE_DIALOG_TAG = "store_dialog_tag"
     }
 }

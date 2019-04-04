@@ -82,7 +82,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private var driverCoordinate: DriverCoordinate? = null
     private var isCameraUpdatedForCoordinates = false
     private var startCoordinate: LatLng? = null
-    private var offer: Offer? = null
 
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
@@ -98,10 +97,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                 ?.let {
                                     if (transferModel.status.checkOffers)
                                         offer = it }
-                        val isRated = offer?.isRated() ?: false
-                        val showRate = offer?.ratings != null && !isRated
-                        viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
-                        viewState.showYourRateMark(isRated, offer?.ratings?.averageRating ?: 0f)
+                        val showRate = offer?.isRated()?.not() ?: false
+                        viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), true)
                         setTransferType(transfer)
                     }
             viewState.blockInterface(false)
@@ -220,8 +217,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    fun rateTrip(rating: Float, isNeedCheckStoreRate: Boolean) {
-        if (rating.toInt() == ReviewInteractor.MAX_RATE && isNeedCheckStoreRate) {
+    fun rateTrip(rating: Float) {
+        if (rating.toInt() == ReviewInteractor.MAX_RATE) {
             with(reviewInteractor) {
                 utils.launchSuspend { sendTopRate() }
                 logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
@@ -229,12 +226,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                     viewState.askRateInPlayMarket()
                     logReviewRequest()
                 }
-                else viewState.showYourRateMark(true, rating)
+                else viewState.thanksForRate()
             }
-        } else
-            offer?.let {
-                viewState.showDetailRate(rating, it.id)
-            }
+        } else viewState.showDetailRate(rating)
     }
 
     fun sendReview(list: List<ReviewRateModel>, feedBackComment: String) = utils.launchSuspend {
@@ -327,10 +321,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getVehicleIcon(offerModel.vehicle)
-
-    fun ratingChanged(averageRating: Float) {
-        viewState.showYourRateMark(true, averageRating)
-    }
 
     override fun onSocketConnected() {
         coordinateRequester.request()
