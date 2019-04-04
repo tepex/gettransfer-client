@@ -166,8 +166,8 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		//empty
 	}
 
-	override fun exitAndReportSuccess(averageRating: Float, comment: String) {
-		ratingListener?.onRatingChanged(averageRating, comment)
+	override fun exitAndReportSuccess(averageRating: Float) {
+		ratingListener?.onRatingChanged(averageRating)
 		dismiss()
 	}
 
@@ -192,7 +192,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	}
 
 	interface OnRatingChangeListener {
-		fun onRatingChanged(averageRating: Float, comment: String)
+		fun onRatingChanged(averageRating: Float)
 	}
 
 }

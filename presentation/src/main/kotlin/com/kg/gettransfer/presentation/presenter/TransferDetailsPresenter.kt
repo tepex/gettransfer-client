@@ -84,8 +84,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private var startCoordinate: LatLng? = null
     private var offer: Offer? = null
 
-	private var userFeedback: String = ""
-
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
@@ -100,7 +98,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                 ?.let {
                                     if (transferModel.status.checkOffers)
                                         offer = it }
-						userFeedback = offer?.passengerFeedback.orEmpty()
                         val isRated = offer?.isRated() ?: false
                         val showRate = offer?.ratings != null && !isRated
                         viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
@@ -237,7 +234,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             }
         } else
             offer?.let {
-                viewState.showDetailRate(rating, it.id, userFeedback)
+                viewState.showDetailRate(rating, it.id, it.passengerFeedback.orEmpty())
             }
     }
 
@@ -332,10 +329,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getVehicleIcon(offerModel.vehicle)
 
-    fun ratingChanged(averageRating: Float, userFeedback: String) {
+    fun ratingChanged(averageRating: Float) {
         viewState.disableRate()
         viewState.showYourRateMark(true, averageRating)
-		this.userFeedback = userFeedback
     }
 
     override fun onSocketConnected() {

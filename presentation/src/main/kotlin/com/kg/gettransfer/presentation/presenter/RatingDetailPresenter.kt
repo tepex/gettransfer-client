@@ -57,13 +57,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 			viewState.showProgress(false)
 			result.error?.let {
 				viewState.setError(it)
-			} ?: viewState.exitAndReportSuccess(
-				commonRating,
-				if (comment == hintComment)
-					""
-				else
-					comment
-			)
+			} ?: viewState.exitAndReportSuccess(commonRating)
 		}
 	}
 

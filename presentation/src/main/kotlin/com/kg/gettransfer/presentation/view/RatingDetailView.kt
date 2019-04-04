@@ -25,5 +25,5 @@ interface RatingDetailView : BaseView {
 	fun showCommentEditor(comment: String)
 
 	@StateStrategyType(OneExecutionStateStrategy::class)
-	fun exitAndReportSuccess(averageRating: Float, comment: String)
+	fun exitAndReportSuccess(averageRating: Float)
 }
