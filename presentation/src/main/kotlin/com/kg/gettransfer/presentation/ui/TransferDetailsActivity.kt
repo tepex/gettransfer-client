@@ -245,20 +245,34 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         } else {
             transfer_details_main.tv_time.text = HourlyValuesHelper.getValue(transfer.duration ?: 0, this)
         }
+        setPrices(transfer)
+        setBookNow(transfer)
+    }
+
+    private fun setPrices(transfer: TransferModel) {
         when(transfer.statusCategory) {
-            Transfer.STATUS_CATEGORY_ACTIVE -> { transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) } }
-            Transfer.STATUS_CATEGORY_CONFIRMED -> {
-                if(transfer.remainsToPay != null) {
-                    setRemainToPayInfo(transfer.remainsToPay, getString(R.string.LNG_RIDE_PAYMENT_REMAINS))
-                } else {
-                    setRemainToPayInfo(getString(R.string.LNG_RIDE_PAYMENT_PAID))
-                }
-                setFullPrice(transfer.price ?: "", transfer.paidPercentage)
-            }
+            Transfer.STATUS_CATEGORY_ACTIVE -> { setActiveCategoryPrices(transfer) }
+            Transfer.STATUS_CATEGORY_CONFIRMED -> { transfer.let { setPricesForPaidTransfer(it.remainsToPay, it.price, it.paidPercentage) } }
             Transfer.STATUS_CATEGORY_FINISHED -> { setRemainToPayInfo(transfer.price ?: "", getString(R.string.LNG_RIDE_PAYMENT_COST)) }
             Transfer.STATUS_CATEGORY_UNFINISHED -> { transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) } }
         }
-        setBookNow(transfer)
+    }
+
+    private fun setActiveCategoryPrices(transfer: TransferModel) {
+        if (transfer.isBookNow()) {
+            transfer.let { setPricesForPaidTransfer(it.remainsToPay, it.price, it.paidPercentage) }
+        } else {
+            transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) }
+        }
+    }
+
+    private fun setPricesForPaidTransfer(remainsToPay: String?, price: String?, paidPercentage: Int) {
+        if(remainsToPay != null && remainsToPay != "0") {
+            setRemainToPayInfo(remainsToPay, getString(R.string.LNG_RIDE_PAYMENT_REMAINS))
+        } else {
+            setRemainToPayInfo(getString(R.string.LNG_RIDE_PAYMENT_PAID))
+        }
+        setFullPrice(price ?: "", paidPercentage)
     }
 
     private fun setPassengerOfferedPrice(price: String) {
