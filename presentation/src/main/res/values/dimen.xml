@@ -579,7 +579,7 @@
 
     <dimen name="view_offer_rating_text_size">12sp</dimen>
     <dimen name="view_offer_rating_img_size">12dp</dimen>
-    <dimen name="view_offer_rating_margins">3dp</dimen>
+    <dimen name="view_offer_rating_margins">4dp</dimen>
 
 
 

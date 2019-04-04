@@ -7,21 +7,21 @@
     android:gravity="center"
     android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/imgStar"
-        android:layout_width="@dimen/view_offer_rating_img_size"
-        android:layout_height="@dimen/view_offer_rating_img_size"
-        app:srcCompat="@drawable/ic_star_filled" />
-
     <TextView
         android:id="@+id/tv_drivers_rate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/view_offer_rating_margins"
-        android:fontFamily="@font/sf_pro_text_regular"
+        android:fontFamily="@font/roboto_bold"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/view_offer_rating_text_size"
-        tools:text="(4.3)" />
+        tools:text="4,3" />
+
+    <ImageView
+        android:id="@+id/imgStar"
+        android:layout_width="@dimen/view_offer_rating_img_size"
+        android:layout_height="@dimen/view_offer_rating_img_size"
+        android:layout_marginStart="@dimen/view_offer_rating_margins"
+        app:srcCompat="@drawable/ic_star_filled" />
 
     <ImageView
         android:id="@+id/imgApproved"
