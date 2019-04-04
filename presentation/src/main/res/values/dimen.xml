@@ -528,13 +528,14 @@
 	
 	<!--activity_offers-->
 	<dimen name="activity_offers_divider_height">0.5dp</dimen>
-	<dimen name="activity_offers_excellent_price_text_size">12sp</dimen>
+	<dimen name="activity_offers_excellent_price_text_size">13sp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_margin_start">9dp</dimen>
+	<dimen name="activity_offers_excellent_price_layout_margin_end">36dp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_height">56dp</dimen>
 	<dimen name="activity_offers_drivers_connecting_text_height">56dp</dimen>
-	<dimen name="activity_offers_iv_lock_width">19dp</dimen>
-	<dimen name="activity_offers_iv_lock_height">25dp</dimen>
-	<dimen name="activity_offers_iv_lock_margin_start">20dp</dimen>
+	<dimen name="activity_offers_iv_lock_width">24dp</dimen>
+	<dimen name="activity_offers_iv_lock_height">24dp</dimen>
+	<dimen name="activity_offers_iv_lock_margin_start">16dp</dimen>
 	<dimen name="activity_offers_sorted_layout_height">56dp</dimen>
 	<dimen name="activity_offers_sorted_layout_padding_top_bottom">10dp</dimen>
 	<dimen name="activity_offers_sorted_layout_padding_start">5dp</dimen>
