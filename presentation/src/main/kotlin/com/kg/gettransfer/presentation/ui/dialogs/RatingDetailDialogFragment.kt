@@ -35,8 +35,14 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	private val offerId: Long
 		get() = arguments?.getLong(OFFER_ID) ?: 0L
 
-	private val currentRating: Float
-		get() = arguments?.getFloat(CURRENT_RATING) ?: 0F
+	private val vehicleRating: Float
+		get() = arguments?.getFloat(VEHICLE_RATING) ?: 0F
+
+	private val driverRating: Float
+		get() = arguments?.getFloat(DRIVER_RATING) ?: 0F
+
+	private val punctualityRating: Float
+		get() = arguments?.getFloat(PUNCTUALITY_RATING) ?: 0F
 
 	private val currentComment: String
 		get() = arguments?.getString(CURRENT_COMMENT) ?: ""
@@ -73,7 +79,9 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		presenter.offerId = offerId
-		presenter.currentCommonRating = currentRating
+		presenter.vehicleRating = vehicleRating
+		presenter.driverRating = driverRating
+		presenter.punctualityRating = punctualityRating
 		presenter.hintComment = getString(R.string.LNG_PAYMENT_YOUR_COMMENT)
 		presenter.currentComment = currentComment
 	}
@@ -166,8 +174,8 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		//empty
 	}
 
-	override fun exitAndReportSuccess(averageRating: Float, comment: String) {
-		ratingListener?.onRatingChanged(averageRating, comment)
+	override fun exitAndReportSuccess(list: List<ReviewRateModel>, comment: String) {
+		ratingListener?.onRatingChanged(list, comment)
 		dismiss()
 	}
 
@@ -179,20 +187,30 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 
 	companion object {
 		private const val OFFER_ID = "offer id"
-		private const val CURRENT_RATING = "current rating"
+		private const val VEHICLE_RATING = "vehicle rating"
+		private const val DRIVER_RATING = "driver rating"
+		private const val PUNCTUALITY_RATING = "punctuality rating"
 		private const val CURRENT_COMMENT = "current comment"
 
-		fun newInstance(transferId: Long, currentRating: Float, feedback: String) = RatingDetailDialogFragment().apply {
+		fun newInstance(
+				vehicle: Float,
+				driver: Float,
+				punctuality: Float,
+				transferId: Long,
+				feedback: String
+		) = RatingDetailDialogFragment().apply {
 			arguments = Bundle().apply {
 				putLong(OFFER_ID, transferId)
-				putFloat(CURRENT_RATING, currentRating)
+				putFloat(VEHICLE_RATING, vehicle)
+				putFloat(DRIVER_RATING, driver)
+				putFloat(PUNCTUALITY_RATING, punctuality)
 				putString(CURRENT_COMMENT, feedback)
 			}
 		}
 	}
 
 	interface OnRatingChangeListener {
-		fun onRatingChanged(averageRating: Float, comment: String)
+		fun onRatingChanged(list: List<ReviewRateModel>, comment: String)
 	}
 
 }

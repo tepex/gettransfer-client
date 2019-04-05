@@ -34,6 +34,7 @@ import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
@@ -463,10 +464,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 
-    override fun showDetailRate(tappedRate: Float, offerId: Long, feedback: String) {
+    override fun showDetailRate(vehicle: Float, driver: Float, punctuality: Float, offerId: Long, feedback: String) {
         if (supportFragmentManager.fragments.firstOrNull { it.tag == RATE_DIALOG_TAG} == null) {
             RatingDetailDialogFragment
-                .newInstance(offerId, tappedRate, feedback)
+                .newInstance(vehicle, driver, punctuality, offerId, feedback)
                 .show(supportFragmentManager, RATE_DIALOG_TAG)
         }
     }
@@ -529,8 +530,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         yourRateMark.tripRate.rating = averageRate
     }
 
-    override fun onRatingChanged(averageRating: Float, comment: String) {
-        presenter.ratingChanged(averageRating, comment)
+    override fun onRatingChanged(list: List<ReviewRateModel>, comment: String) {
+        presenter.ratingChanged(list, comment)
     }
 
     override fun onClickGoToStore() {

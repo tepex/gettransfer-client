@@ -22,6 +22,10 @@ import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.Coordinate
 
 import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
+import com.kg.gettransfer.domain.model.ReviewRate.RateType.PUNCTUALITY
+import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
 
 
 import com.kg.gettransfer.prefs.PreferencesImpl
@@ -79,8 +83,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private var startCoordinate: LatLng? = null
     private var offer: Offer? = null
 
-	private var userFeedback: String = ""
-
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
@@ -94,8 +96,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                 ?.let {
                                     if (transferModel.status.checkOffers)
                                         offer = it }
-						userFeedback = offer?.passengerFeedback.orEmpty()
-
                         val isRated = offer?.isRated() ?: false
                         val showRate = offer?.ratings != null && !isRated
                         viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
@@ -232,7 +232,13 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             }
         } else
             offer?.let {
-                viewState.showDetailRate(rating, it.id, userFeedback)
+                viewState.showDetailRate(
+                    it.ratings?.vehicle ?: 0f,
+                    it.ratings?.driver ?: 0f,
+                    it.ratings?.fair ?: 0f,
+                    it.id,
+                    it.passengerFeedback.orEmpty()
+                )
             }
     }
 
@@ -327,10 +333,17 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getVehicleIcon(offerModel.vehicle)
 
-    fun ratingChanged(averageRating: Float, userFeedback: String) {
+    fun ratingChanged(list: List<ReviewRateModel>, userFeedback: String) {
         viewState.disableRate()
-        viewState.showYourRateMark(true, averageRating)
-		this.userFeedback = userFeedback
+        viewState.showYourRateMark(true, list.sumBy { it.rateValue }/list.size.toFloat())
+        offer = offer?.copy(
+            ratings = offer?.ratings?.copy(
+                vehicle = list.firstOrNull{ it.rateType == VEHICLE }?.rateValue?.toFloat() ?: 0f,
+                driver = list.firstOrNull{ it.rateType == DRIVER }?.rateValue?.toFloat() ?: 0f,
+                fair = list.firstOrNull{ it.rateType == PUNCTUALITY }?.rateValue?.toFloat() ?: 0f
+            ),
+            passengerFeedback = userFeedback
+        )
     }
 
     override fun onSocketConnected() {

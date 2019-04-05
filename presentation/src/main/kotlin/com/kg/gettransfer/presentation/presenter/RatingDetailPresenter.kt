@@ -22,15 +22,21 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 			field = value
 		}
 
-	internal var currentCommonRating = 0F
+	internal var vehicleRating = 0F
+	internal var driverRating = 0F
+	internal var punctualityRating = 0F
 	internal var currentComment = ""
 
 	internal var hintComment: String = ""
 
 	override fun onFirstViewAttach() {
 		super.onFirstViewAttach()
-		viewState.setRatingCommon(currentCommonRating)
-		updateSecondaryRatings()
+
+		viewState.setRatingVehicle(vehicleRating)
+		viewState.setRatingDriver(driverRating)
+		viewState.setRatingPunctuality(punctualityRating)
+		onSecondaryRatingsChanged(vehicleRating, driverRating, punctualityRating)
+
 		viewState.showProgress(false)
 		viewState.showComment(if (currentComment.isNotEmpty()) currentComment else hintComment)
 	}
@@ -49,7 +55,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 			result.isSuccess()
 					?.let {
 						viewState.exitAndReportSuccess(
-								commonRating,
+								list,
 								getFeedBackText(comment)
 						)
 					}
@@ -70,19 +76,18 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	}
 
 	fun onCommonRatingChanged(rating: Float) {
-		currentCommonRating = rating
-		updateSecondaryRatings()
+		updateSecondaryRatings(rating)
 	}
 
 	fun onSecondaryRatingsChanged(vararg rating: Float) {
-		currentCommonRating = rating.sum() / rating.size
+		val currentCommonRating = rating.sum() / rating.size
 		viewState.setRatingCommon(currentCommonRating)
 	}
 
-	private fun updateSecondaryRatings() {
-		viewState.setRatingVehicle(currentCommonRating)
-		viewState.setRatingDriver(currentCommonRating)
-		viewState.setRatingPunctuality(currentCommonRating)
+	private fun updateSecondaryRatings(rating: Float) {
+		viewState.setRatingVehicle(rating)
+		viewState.setRatingDriver(rating)
+		viewState.setRatingPunctuality(rating)
 	}
 
 	private fun logAverageRate(rate: Double) =

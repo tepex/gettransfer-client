@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.view
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 
 
 interface RatingDetailView : BaseView {
@@ -25,5 +26,5 @@ interface RatingDetailView : BaseView {
 	fun showCommentEditor(comment: String)
 
 	@StateStrategyType(OneExecutionStateStrategy::class)
-	fun exitAndReportSuccess(averageRating: Float, comment: String)
+	fun exitAndReportSuccess(list: List<ReviewRateModel>, comment: String)
 }
