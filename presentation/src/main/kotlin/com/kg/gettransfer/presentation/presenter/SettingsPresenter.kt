@@ -12,11 +12,8 @@ import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.DayOfWeekMapper
 import com.kg.gettransfer.presentation.mapper.EndpointMapper
 import com.kg.gettransfer.presentation.mapper.LocaleMapper
+import com.kg.gettransfer.presentation.model.*
 
-import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.DayOfWeekModel
-import com.kg.gettransfer.presentation.model.EndpointModel
-import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 
 import com.kg.gettransfer.presentation.view.Screens
@@ -25,7 +22,6 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.get
-import java.time.DayOfWeek
 import java.util.Locale
 
 @InjectViewState
@@ -36,6 +32,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var endpoints: List<EndpointModel>
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
+    private lateinit var daysOfWeek1: List<DayOfWeekModel1>
 
     private val localeMapper       = get<LocaleMapper>()
     private val currencyMapper     = get<CurrencyMapper>()
@@ -93,8 +90,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
         viewState.setCalendarMode(systemInteractor.lastCarrierTripsTypeView)
 
-        viewState.setDaysOfWeek(daysOfWeek)
-        viewState.setFirstDayOfWeek(daysOfWeek[systemInteractor.firstDayOfWeek].name)
+        viewState.setDaysOfWeek(daysOfWeek1)
+        viewState.setFirstDayOfWeek(daysOfWeek1[systemInteractor.firstDayOfWeek].name)
     }
 
     private fun initDebugSettings() {
@@ -130,8 +127,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun changeFirstDayOfWeek(selected: Int) {
-        with(daysOfWeek[selected]) {
-            systemInteractor.firstDayOfWeek = delegate.ordinal
+        with(daysOfWeek1[selected]) {
+            systemInteractor.firstDayOfWeek = delegate.day
             viewState.setFirstDayOfWeek(name)
         }
     }
@@ -229,7 +226,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         locales = systemInteractor.locales.map { localeMapper.toView(it) }
         //distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
-        daysOfWeek = DayOfWeek.values().toList().map { dayOfWeekMapper.toView(it) }
+     //   daysOfWeek = GTDayOfWeek.values().toList().map { dayOfWeekMapper.toView(it) }
+        daysOfWeek1 = com.kg.gettransfer.presentation.ui.days.GTDayOfWeek.getWeekDays().map { DayOfWeekModel1(it) }
         restart = false
     }
 

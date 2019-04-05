@@ -111,7 +111,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
     /*override fun setDistanceUnits(distanceUnits: List<DistanceUnitModel>) =
             Utils.setDistanceUnitsDialogListener(this, layoutSettingsDistanceUnits, distanceUnits) { presenter.changeDistanceUnit(it) }*/
 
-    override fun setDaysOfWeek(daysOfWeek: List<DayOfWeekModel>) =
+    override fun setDaysOfWeek(daysOfWeek: List<CharSequence>) =
             Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { presenter.changeFirstDayOfWeek(it) }
 
     override fun setEndpoints(endpoints: List<EndpointModel>) =

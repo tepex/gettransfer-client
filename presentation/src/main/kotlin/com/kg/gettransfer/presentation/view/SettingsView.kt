@@ -16,7 +16,7 @@ interface SettingsView : BaseView {
     fun setEndpoints(endpoints: List<EndpointModel>)
     fun setDistanceUnit(inMiles: Boolean)
     fun setCalendarModes(calendarModesKeys: List<String>)
-    fun setDaysOfWeek(daysOfWeek: List<DayOfWeekModel>)
+    fun setDaysOfWeek(daysOfWeek: List<CharSequence>)
 
     fun setCurrency(currency: String)
     fun setLocale(locale: String, code: String)

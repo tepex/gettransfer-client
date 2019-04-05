@@ -14,6 +14,7 @@ import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarGridAdapter
 import com.kg.gettransfer.presentation.adapter.ClickOnDateHandler
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
+import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
 import kotlinx.android.synthetic.main.carrier_trips_calendar_month_fragment.*
 import org.koin.android.ext.android.inject
 import java.lang.UnsupportedOperationException
@@ -58,7 +59,7 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
         val mCal = cal.clone() as Calendar
         mCal.set(Calendar.DAY_OF_MONTH, 1)
         println("FIRST_DAY_OF_WEEK = ${systemInteractor.firstDayOfWeek}")
-        val firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) + getOffsetToFirstDayOfWeek()
+        val firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) + getOffset()
         mCal.add(Calendar.DAY_OF_MONTH, -firstDayOfTheMonth)
         var i = 0
         if(layoutDaysOfWeek != null && layoutDaysOfWeek.childCount > 0) layoutDaysOfWeek.removeAllViews()
@@ -93,6 +94,10 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
                 DayOfWeek.SUNDAY.ordinal    ->  0
                 else -> throw UnsupportedOperationException()
             }
+
+    private fun getOffset() =
+            GTDayOfWeek.getWeekDays().find { it.day == systemInteractor.firstDayOfWeek }
+                    ?.getOffset() ?: throw UnsupportedOperationException()
 
     fun selectDate(selectedDate: String){
         mAdapterCarrierTripsCalendar!!.selectDate(selectedDate)
