@@ -9,7 +9,7 @@
 		android:layout_height="wrap_content">
 
 		<android.support.v7.widget.AppCompatImageView
-			android:id="@+id/appCompatImageView"
+			android:id="@+id/ivClose"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="16dp"
@@ -20,7 +20,7 @@
 			android:background="?attr/selectableItemBackgroundBorderless"/>
 
 		<com.willy.ratingbar.ScaleRatingBar
-			android:id="@+id/main_rate"
+			android:id="@+id/commonRate"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_horizontal"
@@ -30,13 +30,13 @@
 			android:gravity="center_horizontal"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/appCompatImageView"
+			app:layout_constraintTop_toBottomOf="@+id/ivClose"
 			app:srb_clickable="false"
 			app:srb_drawableEmpty="@drawable/ic_star_empty"
 			app:srb_drawableFilled="@drawable/ic_star_filled"
 			app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
 			app:srb_starWidth="@dimen/rating_bar_stars_enabled_width"
-			app:srb_stepSize="0.5" />
+			app:srb_stepSize="1" />
 
 		<TextView
 			android:id="@+id/tvRateTitle"
@@ -49,7 +49,7 @@
 			android:text="@string/LNG_PAYMENT_THANK_RATING"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/main_rate"
+			app:layout_constraintTop_toBottomOf="@+id/commonRate"
 			style="@style/transfer_details_main_text" />
 
 		<TextView
@@ -68,7 +68,7 @@
 
 
 		<com.kg.gettransfer.presentation.ui.custom.RateField
-			android:id="@+id/driver_rate"
+			android:id="@+id/driverRate"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="32dp"
@@ -91,10 +91,10 @@
 			android:background="@color/color_transfer_details_horizontal_divider"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/driver_rate" />
+			app:layout_constraintTop_toBottomOf="@+id/driverRate" />
 
 		<com.kg.gettransfer.presentation.ui.custom.RateField
-			android:id="@+id/punctuality_rate"
+			android:id="@+id/punctualityRate"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="32dp"
@@ -117,10 +117,10 @@
 			android:background="@color/color_transfer_details_horizontal_divider"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/punctuality_rate" />
+			app:layout_constraintTop_toBottomOf="@+id/punctualityRate" />
 
 		<com.kg.gettransfer.presentation.ui.custom.RateField
-			android:id="@+id/vehicle_rate"
+			android:id="@+id/vehicleRate"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="32dp"
@@ -144,11 +144,11 @@
 			android:text="@string/LNG_PAYMENT_LEAVE_COMMENT"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/vehicle_rate"
+			app:layout_constraintTop_toBottomOf="@+id/vehicleRate"
 			style="@style/transfer_details_main_text" />
 
 		<TextView
-			android:id="@+id/tvYourComment"
+			android:id="@+id/tvComment"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="32dp"
@@ -156,13 +156,15 @@
 			android:layout_marginTop="8dp"
 			android:drawableBottom="@drawable/sh_divider_gray_1dp"
 			android:drawableEnd="@drawable/ic_arrow_right"
-			android:drawablePadding="24dp"
+			android:drawablePadding="16dp"
 			android:paddingTop="16dp"
 			android:text="@string/LNG_PAYMENT_YOUR_COMMENT"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/tvCommentTitle"
-			style="@style/transfer_details_secondary_text" />
+			style="@style/transfer_details_secondary_text"
+			android:maxLines="1"
+			android:ellipsize="end"/>
 
 		<android.support.design.button.MaterialButton
 			android:id="@+id/btnSend"
@@ -183,7 +185,20 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/tvYourComment" />
+			app:layout_constraintTop_toBottomOf="@+id/tvComment" />
+
+		<ProgressBar
+			android:id="@+id/progressBar"
+			android:layout_width="24dp"
+			android:layout_height="24sp"
+			app:layout_constraintBottom_toBottomOf="@+id/btnSend"
+			app:layout_constraintEnd_toEndOf="@+id/btnSend"
+			app:layout_constraintStart_toStartOf="@+id/btnSend"
+			app:layout_constraintTop_toTopOf="@+id/btnSend"
+			android:indeterminate="true"
+			android:indeterminateDrawable="@drawable/progress_rotate"
+			android:indeterminateDuration="1200"
+			android:visibility="gone"/>
 
 	</android.support.constraint.ConstraintLayout>
 

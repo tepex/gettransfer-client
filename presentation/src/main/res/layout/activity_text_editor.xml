@@ -10,7 +10,7 @@
 	android:background="@drawable/back_top_rounded">
 
 	<android.support.v7.widget.AppCompatEditText
-		android:id="@+id/etPopupComment"
+		android:id="@+id/editText"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:minHeight="216dp"
@@ -18,7 +18,6 @@
 		android:fontFamily="@font/sf_pro_text_regular"
 		android:gravity="top"
 		android:hint="@string/LNG_COMMENT_PLACEHOLDER"
-		android:imeOptions="actionDone"
 		android:inputType="textMultiLine"
 		android:paddingStart="32dp"
 		android:paddingEnd="32dp"

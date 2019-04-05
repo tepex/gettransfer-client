@@ -184,7 +184,7 @@
             android:name=".presentation.ui.SupportActivity"
             android:resizeableActivity="false" />
 
-        <activity android:name=".presentation.ui.TextFieldActivity"
+        <activity android:name=".presentation.ui.TextEditorActivity"
             android:theme="@style/TransparentActivityTheme"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"/>
