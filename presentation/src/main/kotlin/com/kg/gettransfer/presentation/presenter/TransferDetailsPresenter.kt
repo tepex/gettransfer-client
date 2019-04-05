@@ -90,7 +90,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
            fetchData { transferInteractor.getTransfer(transferId) }
                     ?.let { transfer ->
                         setTransferFields(transfer)
-                        var offer: Offer? = null
                         setOffer(transfer.id)
                                 ?.let {
                                     if (transferModel.status.checkOffers)
