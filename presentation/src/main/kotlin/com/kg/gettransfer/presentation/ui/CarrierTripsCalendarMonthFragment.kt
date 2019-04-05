@@ -96,8 +96,8 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
             }
 
     private fun getOffset() =
-            GTDayOfWeek.getWeekDays().find { it.day == systemInteractor.firstDayOfWeek }
-                    ?.getOffset() ?: throw UnsupportedOperationException()
+            (GTDayOfWeek.getWeekDays().find { it.day == systemInteractor.firstDayOfWeek } ?:
+                    GTDayOfWeek.getWeekDays().first()).getOffset()
 
     fun selectDate(selectedDate: String){
         mAdapterCarrierTripsCalendar!!.selectDate(selectedDate)

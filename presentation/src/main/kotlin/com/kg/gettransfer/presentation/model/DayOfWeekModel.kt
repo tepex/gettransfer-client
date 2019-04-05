@@ -14,7 +14,7 @@ class DayOfWeekModel(val delegate: DayOfWeek) : CharSequence {
 }
 
 class DayOfWeekModel1(val delegate: com.kg.gettransfer.presentation.ui.days.GTDayOfWeek) : CharSequence {
-    private val nameLowerCase = DateFormatSymbols.getInstance().weekdays[delegate.day + 1]
+    private val nameLowerCase = DateFormatSymbols.getInstance().weekdays[delegate.day]
     val name = nameLowerCase.substring(0, 1).toUpperCase().plus(nameLowerCase.substring(1))
     override val length = name.length
 

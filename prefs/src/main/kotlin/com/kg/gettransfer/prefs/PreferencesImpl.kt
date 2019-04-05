@@ -118,7 +118,7 @@ class PreferencesImpl(context: Context,
         }
 
     override var firstDayOfWeek: Int
-        get() = configsPrefs.getInt(FIRST_DAY_OF_WEEK, 0)
+        get() = configsPrefs.getInt(FIRST_DAY_OF_WEEK, 1)
         set(value) {
             with(configsPrefs.edit()){
                 putInt(FIRST_DAY_OF_WEEK, value)

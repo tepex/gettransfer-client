@@ -13,6 +13,7 @@ import com.kg.gettransfer.presentation.mapper.DayOfWeekMapper
 import com.kg.gettransfer.presentation.mapper.EndpointMapper
 import com.kg.gettransfer.presentation.mapper.LocaleMapper
 import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
 
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 
@@ -91,7 +92,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setCalendarMode(systemInteractor.lastCarrierTripsTypeView)
 
         viewState.setDaysOfWeek(daysOfWeek1)
-        viewState.setFirstDayOfWeek(daysOfWeek1[systemInteractor.firstDayOfWeek].name)
+        viewState.setFirstDayOfWeek(daysOfWeek1[systemInteractor.firstDayOfWeek - 1].name)
     }
 
     private fun initDebugSettings() {
@@ -227,7 +228,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         //distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
      //   daysOfWeek = GTDayOfWeek.values().toList().map { dayOfWeekMapper.toView(it) }
-        daysOfWeek1 = com.kg.gettransfer.presentation.ui.days.GTDayOfWeek.getWeekDays().map { DayOfWeekModel1(it) }
+        daysOfWeek1 = GTDayOfWeek.getWeekDays().map { DayOfWeekModel1(it) }
         restart = false
     }
 
