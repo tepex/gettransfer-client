@@ -21,6 +21,7 @@ interface TransferDetailsView: BaseView, RouteView {
     fun showRateInPlayMarket()
     fun thanksForRate()
     fun showYourRateMark(isShow: Boolean, averageRate: Float = 0f)
+    fun disableRate()
 
     fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)
     fun updateCamera(latLngList: List<LatLng>)

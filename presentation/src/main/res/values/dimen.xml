@@ -638,6 +638,7 @@
 	<dimen name="book_now_photo_corner_radius">5dp</dimen>
 
 	<dimen name="rate_your_transfer_height">154dp</dimen>
+	<dimen name="rate_your_rate_mark_height">100dp</dimen>
 
 	<dimen name="general_button_width">300dp</dimen>
 	<dimen name="general_button_height">44dp</dimen>
