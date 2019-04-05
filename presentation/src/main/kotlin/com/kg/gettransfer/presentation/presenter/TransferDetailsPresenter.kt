@@ -22,7 +22,6 @@ import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.Coordinate
 
 import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.model.*
 
 
 import com.kg.gettransfer.prefs.PreferencesImpl
@@ -50,10 +49,6 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
-
-import java.util.Calendar
-
-import java.util.*
 
 
 @InjectViewState
@@ -97,7 +92,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                 ?.let {
                                     if (transferModel.status.checkOffers)
                                         offer = it }
-                        val showRate = offer?.isRated()?.not() ?: false
+                        val showRate = offer?.isTransferAvailableForRate() ?: false
                         viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
                         setTransferType(transfer)
                     }

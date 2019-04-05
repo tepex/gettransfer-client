@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
-import android.os.Handler
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -17,6 +16,7 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
+import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
 import com.kg.gettransfer.prefs.PreferencesImpl
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
@@ -34,6 +34,7 @@ import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import kotlinx.coroutines.delay
 
 import org.koin.standalone.inject
 
@@ -364,20 +365,23 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private fun showRateForLastTrip() {     //get all completed transfers -> get last transfer -> get offer -> showRate view
         utils.launchSuspend {
-            val result = utils.asyncAwait { transferInteractor.getAllTransfers() }
-
-            if (result.error != null) viewState.setError(result.error!!)
-            else result.isSuccess()?.let {
-                getLastTransfer(it.filterCompleted())
-                        ?.let { transfer -> checkToShowReview(transfer) }
-            }
+            fetchResultOnly { transferInteractor.getAllTransfers() }
+                    .isSuccess()
+                    ?.let {
+                        getLastTransfer(it.filterRateable())
+                                ?.let { lastTransfer -> checkToShowReview(lastTransfer) }
+                    }
         }
     }
 
     private fun checkReview() =
             with(reviewInteractor) {
                 if (!isReviewSuggested) showRateForLastTrip()
-                else if (shouldAskRateInMarket) Handler().postDelayed({ viewState.askRateInPlayMarket() }, ONE_SEC_DELAY)
+                else if (shouldAskRateInMarket)
+                    utils.launchSuspend {
+                        delay(ONE_SEC_DELAY)
+                        viewState.askRateInPlayMarket()
+                    }
             }
 
     private fun getLastTransfer(transfers: List<Transfer>) =
@@ -386,11 +390,11 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                     .firstOrNull()
 
     private suspend fun checkToShowReview(transfer: Transfer) =
-            utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
+            fetchResultOnly { offerInteractor.getOffers(transfer.id) }
                     .isSuccess()
                     ?.firstOrNull()
                     ?.let { offer ->
-                        if (!offer.isRated()) {
+                        if (offer.isTransferAvailableForRate()) {
                             val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
                             reviewInteractor.offerIdForReview = offer.id
                             viewState.openReviewForLastTrip(

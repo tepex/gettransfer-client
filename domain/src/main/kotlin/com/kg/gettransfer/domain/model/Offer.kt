@@ -25,7 +25,7 @@ data class Offer(
         else                           -> null
     }
 
-    fun isRated(): Boolean {
+    fun isTransferAvailableForRate(): Boolean {
         ratings?.apply {
             return vehicle != NO_RATE && driver != NO_RATE && fair != NO_RATE
         }

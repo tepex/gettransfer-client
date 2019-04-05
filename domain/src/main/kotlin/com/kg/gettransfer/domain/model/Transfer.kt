@@ -102,5 +102,10 @@ data class Transfer(
         fun List<Transfer>.filterArchived() = filter {
             it.status != Status.COMPLETED || it.status != Status.NOT_COMPLETED
         }
+
+        fun List<Transfer>.filterRateable() =
+                filterCompleted() +
+                        filter { it.status == Status.COMPLETED ||
+                                it.status == Status.NOT_COMPLETED }
     }
 }
