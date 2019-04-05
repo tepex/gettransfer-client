@@ -1,4 +1,4 @@
-package com.kg.gettransfer.presentation.ui
+package com.kg.gettransfer.presentation.ui.dialogs
 
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
