@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
@@ -28,6 +29,17 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		initUi(savedInstanceState)
 		initUx(savedInstanceState)
+	}
+
+	override fun onStart() {
+		super.onStart()
+		(view?.parent as? View)?.let {
+			BottomSheetBehavior.from(it)
+				.run {
+					state = BottomSheetBehavior.STATE_EXPANDED
+					peekHeight = it.height
+				}
+		}
 	}
 
 	protected open fun initUi(savedInstanceState: Bundle?) {}
