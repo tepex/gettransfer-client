@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui.dialogs
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -8,7 +9,9 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.extensions.show
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.presenter.RatingDetailPresenter
 import com.kg.gettransfer.presentation.ui.TextEditorActivity
 import com.kg.gettransfer.presentation.ui.Utils
@@ -29,11 +32,13 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 
 	override val layout: Int = R.layout.dialog_fragment_rating_detail
 
-	private val transferId: Long
-		get() = arguments?.getLong(TRANSFER_ID) ?: 0L
+	private val offerId: Long
+		get() = arguments?.getLong(OFFER_ID) ?: 0L
 
 	private val currentRating: Float
 		get() = arguments?.getFloat(CURRENT_RATING) ?: 0F
+
+	private var ratingListener: OnRatingChangeListener? = null
 
 	private val commonRateListener = BaseRatingBar.OnRatingChangeListener { baseRatingBar, fl ->
 		presenter.onCommonRatingChanged(fl)
@@ -57,9 +62,14 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	@ProvidePresenter
 	fun providePresenter() = RatingDetailPresenter()
 
+	override fun onAttach(context: Context?) {
+		super.onAttach(context)
+		ratingListener = (activity as? OnRatingChangeListener)
+	}
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		presenter.transferId = transferId
+		presenter.offerId = offerId
 		presenter.currentCommonRating = currentRating
 		presenter.hintComment = getString(R.string.LNG_PAYMENT_YOUR_COMMENT)
 	}
@@ -67,7 +77,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	override fun initUx(savedInstanceState: Bundle?) {
 		super.initUx(savedInstanceState)
 		btnSend.setOnClickListener {
-
+			presenter.onClickSend(createListOfDetailedRates(), tvComment.text.toString(), commonRate.rating)
 		}
 		ivClose.setOnClickListener { dismiss() }
 		tvComment.setOnClickListener { presenter.onClickComment(tvComment.text.toString()) }
@@ -117,10 +127,11 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	}
 
 	override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-		commonRate.isEnabled = block
-		vehicleRate.isEnabled = block
-		driverRate.isEnabled = block
-		punctualityRate.isEnabled = block
+		commonRate.setIsIndicator(!block)
+		vehicleRate.rate_bar.setIsIndicator(!block)
+		driverRate.rate_bar.setIsIndicator(!block)
+		punctualityRate.rate_bar.setIsIndicator(!block)
+		tvComment.isEnabled = !block
 	}
 
 	override fun showComment(comment: String) {
@@ -151,16 +162,31 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		//empty
 	}
 
+	override fun exitAndReportSuccess(averageRating: Float) {
+		ratingListener?.onRatingChanged(averageRating)
+		dismiss()
+	}
+
+	private fun createListOfDetailedRates() = listOf(
+		ReviewRateModel(ReviewRate.RateType.DRIVER, driverRate.rate_bar.rating.toInt()),
+		ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, punctualityRate.rate_bar.rating.toInt()),
+		ReviewRateModel(ReviewRate.RateType.VEHICLE, vehicleRate.rate_bar.rating.toInt())
+	)
+
 	companion object {
-		private const val TRANSFER_ID = "transfer id"
+		private const val OFFER_ID = "offer id"
 		private const val CURRENT_RATING = "current rating"
 
 		fun newInstance(transferId: Long, currentRating: Float) = RatingDetailDialogFragment().apply {
 			arguments = Bundle().apply {
-				putLong(TRANSFER_ID, transferId)
+				putLong(OFFER_ID, transferId)
 				putFloat(CURRENT_RATING, currentRating)
 			}
 		}
+	}
+
+	interface OnRatingChangeListener {
+		fun onRatingChanged(averageRating: Float)
 	}
 
 }

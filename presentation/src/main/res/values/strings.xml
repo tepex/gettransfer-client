@@ -266,6 +266,7 @@
     <string name="LNG_DATE_IN_HOURS">In</string>
     <string name="LNG_RIDE_FROM">from:</string>
     <string name="LNG_RIDE_YOU_HAPPY_TRANSFER">Are you satisfied with the ride?</string>
+    <string name="LNG_RIDE_YOUR_MARK">Your mark</string>
     <string name="LNG_PAYMENT_SETTINGS">Payment options</string>
     <string name="LNG_PAYMENT_TERMS">Terms</string>
     <string name="LNG_PAYMENT_TERM_NOW">Pay %s%% now</string>

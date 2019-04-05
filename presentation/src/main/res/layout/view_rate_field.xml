@@ -34,5 +34,7 @@
         app:srb_starWidth="@dimen/detail_rate_bar_stars_enabled_width"
         app:srb_starPadding="@dimen/rating_bar_stars_padding"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        app:srb_clearRatingEnabled="false"
+        app:srb_minimumStars="1"/>
 </RelativeLayout>
