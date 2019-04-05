@@ -23,6 +23,7 @@
         app:srb_starPadding="@dimen/rating_bar_stars_padding"
         app:srb_starWidth="@dimen/rating_bar_stars_enabled_width"
         app:srb_stepSize="1"
+        app:srb_scrollable="false"
         app:srb_clearRatingEnabled="false"/>
 
     <TextView

@@ -219,16 +219,28 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun rateTrip(rating: Float, isNeedCheckStoreRate: Boolean) {
-        if (rating.toInt() == ReviewInteractor.MAX_RATE && isNeedCheckStoreRate) {
-            with(reviewInteractor) {
-                utils.launchSuspend { sendTopRate() }
-                logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
-                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
-                    viewState.askRateInPlayMarket()
-                    logReviewRequest()
+        if (isNeedCheckStoreRate) {
+            if (rating.toInt() == ReviewInteractor.MAX_RATE) {
+                with(reviewInteractor) {
+                    utils.launchSuspend { sendTopRate() }
+                    logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
+                    if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
+                        viewState.askRateInPlayMarket()
+                        logReviewRequest()
+                    }
+                    viewState.disableRate()
+                    viewState.showYourRateMark(true, rating)
                 }
-                viewState.disableRate()
-                viewState.showYourRateMark(true, rating)
+            } else {
+                offer?.let {
+                    viewState.showDetailRate(
+                        rating,
+                        rating,
+                        rating,
+                        it.id,
+                        it.passengerFeedback.orEmpty()
+                    )
+                }
             }
         } else
             offer?.let {
