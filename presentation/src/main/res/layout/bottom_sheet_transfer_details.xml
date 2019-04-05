@@ -61,11 +61,6 @@
             android:visibility="gone" />
 
         <include
-            android:id="@+id/yourRateMark"
-            layout="@layout/view_your_rate_mark"
-            android:visibility="gone" />
-
-        <include
             android:id="@+id/thanks_for_rate"
             layout="@layout/view_thanks_for_rate_small"
             android:visibility="gone" />
