@@ -15,7 +15,7 @@ interface TransferDetailsView: BaseView, RouteView {
     fun showAlertCancelRequest()
     fun copyText(text: String)
     fun recreateActivity()
-    fun showDetailRate(tappedRate: Float, offerId: Long)
+    fun showDetailRate(tappedRate: Float, offerId: Long, feedback: String)
     fun closeRateWindow()
     fun askRateInPlayMarket()
     fun showRateInPlayMarket()

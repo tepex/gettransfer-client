@@ -38,6 +38,9 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	private val currentRating: Float
 		get() = arguments?.getFloat(CURRENT_RATING) ?: 0F
 
+	private val currentComment: String
+		get() = arguments?.getString(CURRENT_COMMENT) ?: ""
+
 	private var ratingListener: OnRatingChangeListener? = null
 
 	private val commonRateListener = BaseRatingBar.OnRatingChangeListener { baseRatingBar, fl ->
@@ -72,6 +75,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		presenter.offerId = offerId
 		presenter.currentCommonRating = currentRating
 		presenter.hintComment = getString(R.string.LNG_PAYMENT_YOUR_COMMENT)
+		presenter.currentComment = currentComment
 	}
 
 	override fun initUx(savedInstanceState: Bundle?) {
@@ -176,11 +180,13 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	companion object {
 		private const val OFFER_ID = "offer id"
 		private const val CURRENT_RATING = "current rating"
+		private const val CURRENT_COMMENT = "current comment"
 
-		fun newInstance(transferId: Long, currentRating: Float) = RatingDetailDialogFragment().apply {
+		fun newInstance(transferId: Long, currentRating: Float, feedback: String) = RatingDetailDialogFragment().apply {
 			arguments = Bundle().apply {
 				putLong(OFFER_ID, transferId)
 				putFloat(CURRENT_RATING, currentRating)
+				putString(CURRENT_COMMENT, feedback)
 			}
 		}
 	}
