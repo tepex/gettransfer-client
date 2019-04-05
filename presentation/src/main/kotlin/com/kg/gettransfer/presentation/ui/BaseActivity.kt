@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable
 
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
@@ -23,13 +24,8 @@ import android.support.v7.widget.Toolbar
 
 import android.util.DisplayMetrics
 import android.util.TypedValue
+import android.view.*
 
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 
 import android.widget.LinearLayout
@@ -83,6 +79,9 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected open var navigator = SupportAppNavigator(this, Screens.NOT_USED)
 
     protected var viewNetworkNotAvailable: View? = null
+
+    private var displayCutout: DisplayCutout? = null
+    private var cutoutOffset: Int = 0
 
     protected lateinit var _tintBackground: View
     protected val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -334,6 +333,14 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun clearDim(parent: ViewGroup) = parent.overlay.clear()
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            displayCutout = window?.decorView?.rootWindowInsets?.displayCutout
+            displayCutout.let { cutoutOffset = displayCutout?.safeInsetTop!! }
+        }
+    }
+
     protected fun getHeightForBottomSheetDetails(): Int {
         val displayMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -347,7 +354,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         val statusBarResource = resources.getIdentifier("status_bar_height", "dimen", "android")
         val statusBarHeight = if(statusBarResource > 0) resources.getDimensionPixelSize(statusBarResource) else 0
 
-        return screenHeight - actionBarHeight - statusBarHeight
+        return if (displayCutout != null) (screenHeight - actionBarHeight - statusBarHeight) + cutoutOffset
+        else screenHeight - actionBarHeight - statusBarHeight
     }
 
     protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View {

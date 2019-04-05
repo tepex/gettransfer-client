@@ -46,7 +46,8 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
-import kotlinx.android.synthetic.main.toolbar.view.*
+import kotlinx.android.synthetic.main.toolbar_nav_back.*
+import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
 import kotlinx.android.synthetic.main.transfer_details_header.view.*
 import kotlinx.android.synthetic.main.view_about_item.*
@@ -101,28 +102,34 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         topCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
         bottomCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
 
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.statusBarColor = Color.WHITE
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        } else {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            viewGradient.isVisible = false
-        }*/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
-        }
+        setupStatusBar()
 
         _mapView = mapView
         _btnCenter = btnCenterRoute
         initMapView(savedInstanceState)
-        setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
-        (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
-
-        initBottomSheetDetails()
+        setupToolbar()
         //initTextFields()
         setClickListeners()
+    }
+
+    private fun setupStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
+        }
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar as Toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
+        toolbar.toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS)
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        initBottomSheetDetails()
     }
 
     override fun onStop() {

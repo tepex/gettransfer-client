@@ -32,7 +32,8 @@ import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
 
 import kotlinx.android.synthetic.main.activity_carrier_trip_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_carrier_trip_details.*
-import kotlinx.android.synthetic.main.toolbar.view.*
+import kotlinx.android.synthetic.main.toolbar_nav_back.*
+import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
 import kotlinx.android.synthetic.main.view_about_item.*
 import kotlinx.android.synthetic.main.view_communication_buttons.view.*
@@ -66,21 +67,35 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         topCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_CUSTOMER_SUPPORT).replace(" ", "\n")
         bottomCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_CUSTOMER_SUPPORT).replace(" ", "\n")
 
+        setupStatusBar()
+
+        _mapView = mapView
+        _btnCenter = btnCenterRoute
+        initMapView(savedInstanceState)
+        setupToolbar()
+
+        setOnClickListeners()
+    }
+
+    private fun setupStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
         }
+    }
 
-        _mapView = mapView
-        _btnCenter = btnCenterRoute
-        initMapView(savedInstanceState)
-        setToolbar(toolbar as Toolbar, TOOLBAR_NO_TITLE)
-        (toolbar as Toolbar).toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS).plus(" #${presenter.transferId}")
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar as Toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
+        toolbar.toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS)
         setViewColor((toolbar as Toolbar), R.color.colorWhite)
+    }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
         initBottomSheetDetails()
-        setOnClickListeners()
     }
 
     private fun initBottomSheetDetails() {

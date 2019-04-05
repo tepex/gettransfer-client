@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        android:clipToPadding="true"
-        android:background="@color/colorWhite"
-        app:anchorPoint="@dimen/bottom_sheet_carrier_trip_details_bs_anchor_point"
-        app:behavior_hideable="false"
-        app:behavior_peekHeight="@dimen/bottom_sheet_carrier_trip_details_bs_peek_height"
-        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior"
-        android:fitsSystemWindows="true"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    app:anchorPoint="@dimen/bottom_sheet_carrier_trip_details_bs_anchor_point"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="@dimen/bottom_sheet_carrier_trip_details_bs_peek_height"
+    app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/back_top_rounded"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <View
             android:layout_width="@dimen/bottom_sheet_transfer_details_swiped_view_width"
@@ -29,92 +29,97 @@
 
         <include
             android:id="@+id/transfer_details_header"
-            layout="@layout/transfer_details_header"/>
+            layout="@layout/transfer_details_header" />
 
         <com.kg.gettransfer.presentation.ui.custom.TransferMainInfoView
             android:id="@+id/transfer_details_main"
-            app:distance_title="@string/LNG_RIDE_DISTANCE"
-            app:time_title="@string/LNG_RIDE_TIME"
-            app:price_title="@string/LNG_RIDE_PRICE_YOUR"
-            android:visibility="visible"
-            android:layout_marginTop="@dimen/bottom_sheet_transfer_details_main_margin_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bottom_sheet_transfer_details_main_margin_top"
+            android:visibility="visible"
+            app:distance_title="@string/LNG_RIDE_DISTANCE"
+            app:price_title="@string/LNG_RIDE_PRICE_YOUR"
+            app:time_title="@string/LNG_RIDE_TIME" />
 
         <TextView
             android:id="@+id/tv_bookNow_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:textColor="@color/color_gtr_green"
-            android:fontFamily="@font/sf_pro_text_regular"
             android:layout_marginTop="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
+            android:layout_marginBottom="@dimen/bottom_sheet_transfer_details_book_now_margin_bottom"
+            android:fontFamily="@font/sf_pro_text_regular"
             android:paddingStart="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
             android:paddingEnd="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
-            android:layout_marginBottom="@dimen/bottom_sheet_transfer_details_book_now_margin_bottom"
             android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"
-            android:visibility="gone"/>
+            android:textColor="@color/color_gtr_green"
+            android:textSize="17sp"
+            android:visibility="gone" />
 
         <include
             android:id="@+id/view_rate_ride"
             layout="@layout/view_rate_your_transfer"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/yourRateMark"
+            layout="@layout/view_your_rate_mark"
+            android:visibility="gone" />
 
         <include
             android:id="@+id/thanks_for_rate"
             layout="@layout/view_thanks_for_rate_small"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
             android:id="@+id/back_trip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:title_transfer_details="@string/LNG_RIDE_RETURN_TRANSFER"/>
+            app:title_transfer_details="@string/LNG_RIDE_RETURN_TRANSFER" />
 
         <include
             android:id="@+id/layoutAboutTransport"
             layout="@layout/view_transfer_details_about_transport_new"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/layoutAboutDriver"
             layout="@layout/view_transfer_details_about_driver"
-            tools:visibility="visible"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <RelativeLayout
-            android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
             <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title_transfer_details="@string/LNG_RIDE_PASSENGERS"
-                app:input_transfer_details=""/>
+                app:input_transfer_details=""
+                app:title_transfer_details="@string/LNG_RIDE_PASSENGERS" />
 
             <com.kg.gettransfer.presentation.ui.custom.SeatsView
                 android:id="@+id/transfer_details_view_seats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_marginEnd="16dp" />
 
         </RelativeLayout>
 
         <include
             android:id="@+id/comment_view"
             layout="@layout/view_transfer_details_comment"
-            tools:visibility="visible"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/layoutAboutRequest"
             layout="@layout/view_transfer_details_about_request"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/layoutTransportTypes"
@@ -128,18 +133,18 @@
                 android:id="@+id/flexboxTransportTypes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom"
-                android:paddingBottom="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom"
                 android:paddingStart="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end"
+                android:paddingTop="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom"
                 android:paddingEnd="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end"
-                app:flexWrap="wrap"
-                android:visibility="visible"/>
+                android:paddingBottom="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom"
+                android:visibility="visible"
+                app:flexWrap="wrap" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_sheet_carrier_trip_details_free_space_height"/>
+            android:layout_height="@dimen/bottom_sheet_carrier_trip_details_free_space_height" />
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
