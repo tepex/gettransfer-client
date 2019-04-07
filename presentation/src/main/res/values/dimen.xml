@@ -14,6 +14,8 @@
 	<dimen name="activity_main_buttons_margin_top">14dp</dimen>
 	<dimen name="activity_main_buttons_margin_start_end">8dp</dimen>
 	<dimen name="activity_main_gradient_layout_height">48dp</dimen>
+	<dimen name="activity_main_events_count_margin_bottom">34dp</dimen>
+	<dimen name="activity_main_events_count_padding_start_end">4dp</dimen>
 
 	<dimen name="margin_for_area_behind_rounded_corners">-8dp</dimen>
 

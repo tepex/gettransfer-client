@@ -79,44 +79,54 @@
 
 					</LinearLayout>
 
-					<ImageView
-						android:id="@+id/btnShowDrawerLayout"
-						android:layout_width="@dimen/activity_main_buttons_size"
-						android:layout_height="@dimen/activity_main_buttons_size"
-						app:srcCompat="@drawable/ic_menu"
-						android:background="@drawable/back_circle_white_buttons"
+					<FrameLayout
+						android:id="@+id/layoutButtonMenuAndBack"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
 						app:layout_constraintTop_toBottomOf="@+id/layoutTextNetworkNotAvailable"
 						app:layout_constraintStart_toStartOf="parent"
 						android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
-						android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
-						android:clickable="true"
-						android:focusable="true"/>
+						android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end">
+
+						<ImageView
+							android:id="@+id/btnShowDrawerLayout"
+							android:layout_width="@dimen/activity_main_buttons_size"
+							android:layout_height="@dimen/activity_main_buttons_size"
+							app:layout_constraintTop_toTopOf="parent"
+							app:layout_constraintStart_toStartOf="parent"
+							app:srcCompat="@drawable/ic_menu"
+							android:background="@drawable/back_circle_white_buttons"
+							android:clickable="true"
+							android:focusable="true"/>
+
+						<ImageView
+							android:id="@+id/btnBack"
+							android:layout_width="@dimen/activity_main_buttons_size"
+							android:layout_height="@dimen/activity_main_buttons_size"
+							app:layout_constraintTop_toTopOf="parent"
+							app:layout_constraintStart_toStartOf="parent"
+							app:srcCompat="@drawable/ic_back"
+							android:background="@drawable/back_circle_white_buttons"
+							android:clickable="true"
+							android:focusable="true"
+							android:visibility="gone"/>
+
+					</FrameLayout>
 
 					<TextView
 						android:id="@+id/tvEventsCount"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:textColor="@android:color/white"
-						tools:text="15"
 						android:background="@drawable/bg_circle_red"
-						android:visibility="gone"
 						android:gravity="center"
-						app:layout_constraintEnd_toEndOf="@+id/btnShowDrawerLayout"
-						app:layout_constraintTop_toTopOf="@+id/btnShowDrawerLayout"/>
-
-					<ImageView
-						android:id="@+id/btnBack"
-						android:layout_width="@dimen/activity_main_buttons_size"
-						android:layout_height="@dimen/activity_main_buttons_size"
-						app:srcCompat="@drawable/ic_back"
-						android:background="@drawable/back_circle_white_buttons"
-						app:layout_constraintTop_toBottomOf="@+id/layoutTextNetworkNotAvailable"
-						app:layout_constraintStart_toStartOf="parent"
-						android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
-						android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
-						android:clickable="true"
-						android:focusable="true"
-						android:visibility="gone"/>
+						android:textColor="@android:color/white"
+						android:visibility="gone"
+						app:layout_constraintEnd_toEndOf="@+id/layoutButtonMenuAndBack"
+						app:layout_constraintBottom_toBottomOf="@+id/layoutButtonMenuAndBack"
+						android:layout_marginBottom="@dimen/activity_main_events_count_margin_bottom"
+						android:paddingStart="@dimen/activity_main_events_count_padding_start_end"
+						android:paddingEnd="@dimen/activity_main_events_count_padding_start_end"
+						tools:text="15" />
 
 					<ImageView
 						android:id="@+id/btnMyLocation"
@@ -124,7 +134,7 @@
 						android:layout_height="@dimen/activity_main_buttons_size"
 						app:srcCompat="@drawable/ic_my_location"
 						android:background="@drawable/back_circle_white_buttons"
-						app:layout_constraintTop_toBottomOf="@+id/btnShowDrawerLayout"
+						app:layout_constraintTop_toBottomOf="@+id/layoutButtonMenuAndBack"
 						app:layout_constraintStart_toStartOf="parent"
 						android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
 						android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
