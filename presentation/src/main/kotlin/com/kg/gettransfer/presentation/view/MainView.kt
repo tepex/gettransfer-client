@@ -12,7 +12,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
 interface MainView: BaseView {
-    fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean = true)
+    fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean)
     fun moveCenterMarker(point: LatLng)
     fun setAddressFrom(address: String)
     fun setAddressTo(address: String)

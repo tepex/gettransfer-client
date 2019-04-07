@@ -340,7 +340,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 }
             }
         }
-        btnMyLocation.isVisible = false
+        btnMyLocation.isVisible = showBtnMyLocation
     }
 
     override fun openMapToSetPoint() {

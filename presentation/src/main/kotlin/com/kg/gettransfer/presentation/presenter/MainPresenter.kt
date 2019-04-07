@@ -53,6 +53,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
+    private var lastCurrentLocation: LatLng? = null
     private var minDistance: Int = 30
 
     private var available: Boolean = false
@@ -158,7 +159,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
         if (latLngPointSelectedField != null) {
             idleAndMoveCamera = false
-            viewState.setMapPoint(latLngPointSelectedField, false)
+            viewState.setMapPoint(latLngPointSelectedField, false, showBtnMyLocation(latLngPointSelectedField))
         }
     }
 
@@ -177,7 +178,10 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         viewState.blockSelectedField(true, systemInteractor.selectedField)
         if (systemInteractor.isGpsEnabled)
             fetchDataOnly { orderInteractor.getCurrentAddress() }
-                    ?.let {  setPointAddress(it)}
+                    ?.let {
+                        lastCurrentLocation = it.cityPoint.point?.let { point -> pointMapper.toLatLng(point) }
+                        setPointAddress(it)
+                    }
         else
             with(fetchResultOnly { systemInteractor.getMyLocation() }) {
                 logIpapiRequest()
@@ -191,18 +195,20 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude!!, location.longitude!!)).build()
         val latLonPair = getLatLonPair(lngBounds)
         val result = fetchResultOnly { orderInteractor.getAddressByLocation(true, point, latLonPair) }
-        if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model, false)
+        if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model)
     }
 
-    private fun setPointAddress(currentAddress: GTAddress, showBtnMyLocation: Boolean = true) {
+    private fun setPointAddress(currentAddress: GTAddress) {
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
-        viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation)
+        viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation(lastAddressPoint))
         //viewState.setAddressFrom(currentAddress.cityPoint.name!!)
         setAddressInSelectedField(currentAddress.cityPoint.name!!)
 
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
     }
+
+    private fun showBtnMyLocation(point: LatLng) = lastCurrentLocation == null || point != lastCurrentLocation
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
         if (idleAndMoveCamera) {
