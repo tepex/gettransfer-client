@@ -50,7 +50,6 @@ class SupportActivity : BaseActivity(), SupportView {
         ruPhone.setOnClickListener { presenter.callPhone(ruPhone.tvPhone.text.toString()) }
         swPhone.setOnClickListener { presenter.callPhone(swPhone.tvPhone.text.toString()) }
         usPhone1.setOnClickListener { presenter.callPhone(usPhone1.tvPhone.text.toString()) }
-        usPhone2.setOnClickListener { presenter.callPhone(usPhone2.tvPhone.text.toString()) }
     }
 
     private fun facebookClick() =

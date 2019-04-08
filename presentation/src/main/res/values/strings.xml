@@ -495,7 +495,6 @@
     <string name="cyprus_phone" translatable="false">+357 24 022300</string>
     <string name="russia_phone" translatable="false">+7 495 414 23 87</string>
     <string name="florida_phone" translatable="false">+1 786 870 1567</string>
-    <string name="california_phone" translatable="false">+1 628 239 0028</string>
     <string name="china_phone" translatable="false">+852 5803 1035</string>
 
     <plurals name="days">

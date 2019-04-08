@@ -70,15 +70,4 @@
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"/>
-
-    <com.kg.gettransfer.presentation.ui.custom.ContactsView
-        android:id="@+id/usPhone2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:icon_country="@drawable/ic_usa"
-        app:phone="@string/california_phone"
-        app:title_country="@string/LNG_COUNTRY_NAMES_USA_CA"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"/>
 </LinearLayout>
