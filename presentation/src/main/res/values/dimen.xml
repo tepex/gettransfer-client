@@ -530,14 +530,16 @@
 	
 	<!--activity_offers-->
 	<dimen name="activity_offers_divider_height">0.5dp</dimen>
-	<dimen name="activity_offers_excellent_price_text_size">13sp</dimen>
+	<dimen name="activity_offers_excellent_price_text_size">12sp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_margin_start">9dp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_margin_end">36dp</dimen>
-	<dimen name="activity_offers_excellent_price_layout_height">56dp</dimen>
+	<dimen name="activity_offers_excellent_price_layout_height">55dp</dimen>
 	<dimen name="activity_offers_drivers_connecting_text_height">56dp</dimen>
-	<dimen name="activity_offers_iv_lock_width">24dp</dimen>
-	<dimen name="activity_offers_iv_lock_height">24dp</dimen>
-	<dimen name="activity_offers_iv_lock_margin_start">16dp</dimen>
+	<dimen name="activity_offers_iv_lock_width">22dp</dimen>
+	<dimen name="activity_offers_iv_lock_height">22dp</dimen>
+	<dimen name="activity_offers_iv_lock_margin_start">17dp</dimen>
+	<dimen name="activity_offers_iv_lock_margin_end">12dp</dimen>
+	<dimen name="offers_tv_excellent_price_margin_end">12dp</dimen>
 	<dimen name="activity_offers_sorted_layout_height">40dp</dimen>
 	<dimen name="activity_offers_sorted_layout_padding_top_bottom">8dp</dimen>
 	<dimen name="activity_offers_sorted_layout_padding_start">5dp</dimen>
