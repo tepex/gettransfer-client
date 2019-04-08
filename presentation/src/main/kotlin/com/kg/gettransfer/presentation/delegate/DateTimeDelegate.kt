@@ -32,9 +32,12 @@ class DateTimeDelegate: KoinComponent {
         currentData = getCurrentDatePlusMinimumHours()
     }
 
-     fun validate(errorAction: () -> Unit) =
+     fun validateWith(errorAction: (Boolean) -> Unit) =
              compareDates()
-                     .also { if (!it) errorAction() }
+                     .also { if (!it) errorAction(it) }
+
+    fun validate() =
+            validateWith {  }
 
     private fun compareDates() =
             orderInteractor.run {

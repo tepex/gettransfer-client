@@ -385,7 +385,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private fun checkFieldsForRequest(): Boolean {
         val errorField = when {
             !isTimeSetByUser                                  -> FieldError.TIME_NOT_SELECTED
-            dateDelegate.validate {  }                        -> FieldError.RETURN_TIME
+            !dateDelegate.validate()                          -> FieldError.RETURN_TIME
             !Utils.checkEmail(user.profile.email)             -> FieldError.EMAIL_FIELD
             !Utils.checkPhone(user.profile.phone!!)           -> FieldError.PHONE_FIELD
             transportTypes!!.none { it.checked }              -> FieldError.TRANSPORT_FIELD
