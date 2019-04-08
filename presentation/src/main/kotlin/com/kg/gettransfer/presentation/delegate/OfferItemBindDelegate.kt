@@ -93,7 +93,7 @@ object OfferItemBindDelegate {
             offer.vehicle.photos.firstOrNull()
                     .also {
                         if (it != null) bindMainPhoto(img_car_photo_tiny, view, path = it)
-                        else bindMainPhoto(img_car_photo_tiny, view, resource = R.drawable.ic_empty_car)
+                        else bindMainPhoto(img_car_photo_tiny, view, resource = R.drawable.ic_empty_car_economy)
                     }
             bindRating(view_rating_tiny, offer.carrier.ratings, offer.carrier.approved)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
