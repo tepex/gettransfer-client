@@ -92,13 +92,12 @@ object OfferItemBindDelegate {
             tv_car_class_tiny.text = offer.vehicle.transportType.nameId?.let { context.getString(it) ?: "" }
             offer.vehicle.photos.firstOrNull()
                     .also {
-                        if (it != null) bindMainPhoto(
+                        bindMainPhoto(
                                 img_car_photo_tiny,
-                                view, path = it,
-                                resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id))
-                        else bindMainPhoto(
-                                img_car_photo_tiny, view,
-                                resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id))
+                                view,
+                                path = it,
+                                resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id)
+                        )
                     }
             bindRating(view_rating_tiny, offer.carrier.ratings, offer.carrier.approved)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
