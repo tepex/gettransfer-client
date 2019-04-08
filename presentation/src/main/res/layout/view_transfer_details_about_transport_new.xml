@@ -21,6 +21,6 @@
             android:id="@+id/carPhoto"
             android:layout_width="match_parent"
             android:layout_height="@dimen/view_transfer_details_about_transport_car_photo_height_new"
-            android:src="@drawable/ic_transport_type_unknown"/>
+            android:src="@drawable/ic_transport_type_economy"/>
 
 </LinearLayout>

@@ -36,7 +36,13 @@ open class TransportTypeMapper : Mapper<TransportTypeModel, TransportType> {
         @DrawableRes
         fun getImageById(id: TransportType.ID): Int {
             val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_$id" } )
-            return (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_unknown
+            return (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_economy
+        }
+
+        @DrawableRes
+        fun getEmptyImageById(id: TransportType.ID): Int {
+            val imageRes = R.drawable::class.members.find( { it.name == "ic_empty_car_$id" } )
+            return (imageRes?.call() as Int?) ?: R.drawable.ic_empty_car_economy
         }
 
         @StringRes
