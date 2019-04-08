@@ -34,6 +34,7 @@ import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
+import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.ScrollGalleryInflater
 
 import com.kg.gettransfer.presentation.view.OffersView
@@ -132,6 +133,8 @@ class OffersActivity : BaseActivity(), OffersView {
                 .let { from ->
                     transferModel.to?.let {
                         from.plus(" - ").plus(it)
+                    } ?: transferModel.duration?.let {
+                        from.plus(" - ").plus(HourlyValuesHelper.getValue(it, this))
                     } ?: from
                 }
         toolbar.tv_subtitle.text = SystemUtils.formatDateTime(transferModel.dateTime)
