@@ -28,6 +28,8 @@
         tools:text="5"
         android:background="@drawable/bg_circle_red"
         android:layout_toEndOf="@+id/title"
+        android:paddingStart="@dimen/activity_main_events_count_padding_start_end"
+        android:paddingEnd="@dimen/activity_main_events_count_padding_start_end"
         android:gravity="center"
         android:visibility="gone"/>
 
