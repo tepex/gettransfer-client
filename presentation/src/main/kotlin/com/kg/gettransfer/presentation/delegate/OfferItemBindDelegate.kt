@@ -92,7 +92,10 @@ object OfferItemBindDelegate {
             tv_car_class_tiny.text = offer.vehicle.transportType.nameId?.let { context.getString(it) ?: "" }
             offer.vehicle.photos.firstOrNull()
                     .also {
-                        if (it != null) bindMainPhoto(img_car_photo_tiny, view, path = it)
+                        if (it != null) bindMainPhoto(
+                                img_car_photo_tiny,
+                                view, path = it,
+                                resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id))
                         else bindMainPhoto(
                                 img_car_photo_tiny, view,
                                 resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id))
@@ -174,7 +177,7 @@ object OfferItemBindDelegate {
                     .let {
                         if (path != null) it.load(path)
                         else it.load(resource) }
-                    .apply(RequestOptions().transforms(getTransform(path),
+                    .apply(RequestOptions().error(resource).placeholder(resource).transforms(getTransform(path),
                             RoundedCorners(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))))
                     .into(view)
 
