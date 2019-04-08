@@ -32,6 +32,16 @@ class DateTimeDelegate: KoinComponent {
         currentData = getCurrentDatePlusMinimumHours()
     }
 
+     fun validate(errorAction: () -> Unit) =
+             compareDates()
+                     .also { if (!it) errorAction() }
+
+    private fun compareDates() =
+            orderInteractor.run {
+                if (hourlyDuration != null) true
+                else orderReturnTime?.after(orderStartTime) ?: true  //true if hourly or return date not defined
+            }
+
     fun chooseOrderTime(context: Context, fieldStart: Boolean, screen: DateTimeScreen) =
         DateTimePickerHelper.showDatePickerDialog(context, currentData, object : DateTimeHandler {
             override fun onDateChosen(date: Date) { handleDateChoice(date, fieldStart) }
@@ -63,7 +73,10 @@ class DateTimeDelegate: KoinComponent {
         currentData = getCurrentDatePlusMinimumHours()
         val resultDate = if (date.after(currentData.time)) date else currentData.time
         with(orderInteractor) {
-            if (field == START_DATE) orderStartTime = resultDate
+            if (field == START_DATE){
+                orderStartTime = resultDate
+                currentData.time = startDate.date
+            }
             else orderReturnTime = resultDate
         }
         return resultDate

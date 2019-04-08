@@ -28,6 +28,7 @@ import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.extensions.simpleFormat
+import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
@@ -61,6 +62,7 @@ import timber.log.Timber
 class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val orderInteractor: OrderInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
+    private val dateDelegate: DateTimeDelegate  = get()
 
     private val currencyMapper = get<CurrencyMapper>()
     private val routeMapper = get<RouteMapper>()
@@ -383,7 +385,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private fun checkFieldsForRequest(): Boolean {
         val errorField = when {
             !isTimeSetByUser                                  -> FieldError.TIME_NOT_SELECTED
-            returnDate?.date?.before(startDate.date) ?:false  -> FieldError.RETURN_TIME
+            dateDelegate.validate {  }                        -> FieldError.RETURN_TIME
             !Utils.checkEmail(user.profile.email)             -> FieldError.EMAIL_FIELD
             !Utils.checkPhone(user.profile.phone!!)           -> FieldError.PHONE_FIELD
             transportTypes!!.none { it.checked }              -> FieldError.TRANSPORT_FIELD

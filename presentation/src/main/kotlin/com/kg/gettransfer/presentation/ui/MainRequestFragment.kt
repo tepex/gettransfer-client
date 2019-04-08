@@ -14,6 +14,7 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
+import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.MainRequestView
 import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -82,10 +83,23 @@ class MainRequestFragment :
         return_time_view.setOnClickListener (dateReturnClickListenerEnabled)
 
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
-        btnNextFragment.setOnClickListener       { mPresenter.onNextClick(); mPresenter.onStartScreenOrderNote() }
+        btnNextFragment.setOnClickListener       { onNextClick() }
         ivSetMyLocation.setOnClickListener       { mPresenter.updateCurrentLocation() }
     }
 
+    private fun onNextClick() {
+        if (dateDelegate.validate { dateErrorBlock() })
+        {
+            mPresenter.onNextClick()
+            mPresenter.onStartScreenOrderNote()
+        }
+    }
+
+    private val dateErrorBlock = { Utils.getAlertDialogBuilder(mParent)
+            .setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
+            .setMessage(getString(CreateOrderView.FieldError.RETURN_TIME.stringId))
+            .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
+            .show() }
     private val dateReturnClickListenerEnabled  = View.OnClickListener { openPicker(FIELD_RETURN) }
     private val dateReturnClickListenerDisabled = View.OnClickListener { mParent.longToast("Choose start time") }
 
@@ -119,6 +133,7 @@ class MainRequestFragment :
     private fun enableBtnNext() {
         btnNextFragment.isEnabled = request_search_panel.searchFrom.text.isNotEmpty() &&
                 (request_search_panel.searchTo.text.isNotEmpty() || switcher_hourly.switch_mode_.isChecked)
+                && dateDelegate.startOrderedTime != null
     }
 
     private fun setReturnTimeIcon(hasDate: Boolean = true) {
@@ -162,6 +177,7 @@ class MainRequestFragment :
         val dateField = if (field == FIELD_START) order_time_view else return_time_view
         dateField.hint_title.text = date
         if (field == FIELD_RETURN) setReturnTimeIcon(date.isNotEmpty())
+        enableBtnNext()
     }
 
     override fun onNetworkWarning(disconnected: Boolean) {

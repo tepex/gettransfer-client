@@ -149,7 +149,7 @@ val androidModule = module {
     single { Analytics(androidApplication().applicationContext, get(), get()) }
     single { PhoneNumberUtil.createInstance(get<Context>()) }
     single { GTNotificationManager(androidApplication().applicationContext) }
-    factory { DateTimeDelegate() }
+    single { DateTimeDelegate() }
 }
 
 val testModule = module {
