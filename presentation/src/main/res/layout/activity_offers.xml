@@ -156,7 +156,7 @@
                             android:id="@+id/sortYear"
                             android:layout_width="match_parent"
                             android:layout_weight="1"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/btn_offer_sort_height"
                             android:layout_marginStart="5dp"
                             android:background="@drawable/back_sorted_layouts">
 
@@ -185,7 +185,7 @@
                             android:id="@+id/sortRating"
                             android:layout_width="match_parent"
                             android:layout_weight="1"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/btn_offer_sort_height"
                             android:layout_marginStart="@dimen/activity_offers_sorted_layout_center_element_margin_side"
                             android:layout_marginEnd="@dimen/activity_offers_sorted_layout_center_element_margin_side"
                             android:background="@drawable/back_sorted_layouts">
@@ -215,7 +215,7 @@
                             android:id="@+id/sortPrice"
                             android:layout_width="match_parent"
                             android:layout_weight="1"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/btn_offer_sort_height"
                             android:orientation="horizontal"
                             android:background="@drawable/back_sorted_layouts">
 

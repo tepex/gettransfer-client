@@ -538,8 +538,8 @@
 	<dimen name="activity_offers_iv_lock_width">24dp</dimen>
 	<dimen name="activity_offers_iv_lock_height">24dp</dimen>
 	<dimen name="activity_offers_iv_lock_margin_start">16dp</dimen>
-	<dimen name="activity_offers_sorted_layout_height">56dp</dimen>
-	<dimen name="activity_offers_sorted_layout_padding_top_bottom">10dp</dimen>
+	<dimen name="activity_offers_sorted_layout_height">40dp</dimen>
+	<dimen name="activity_offers_sorted_layout_padding_top_bottom">8dp</dimen>
 	<dimen name="activity_offers_sorted_layout_padding_start">5dp</dimen>
 	<dimen name="activity_offers_sorted_layout_padding_start_end">16dp</dimen>
 	<dimen name="activity_offers_sorted_layout_left_right_elements_margin_side">18dp</dimen>
@@ -634,6 +634,8 @@
 	<dimen name="toolbar_chat_title_margin_end">16dp</dimen>
     <dimen name="toolbar_chat_driver_name_margin_start_end">16dp</dimen>
     <dimen name="toolbar_transfer_start_date_margin_top">2dp</dimen>
+
+	<dimen name="btn_offer_sort_height">24dp</dimen>
 
 	<!--bottom_sheet_offer_details-->
 	<dimen name="bottom_sheet_offer_details_top_view_width">100dp</dimen>
