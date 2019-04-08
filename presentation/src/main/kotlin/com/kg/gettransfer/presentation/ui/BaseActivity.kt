@@ -337,8 +337,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         super.onAttachedToWindow()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             displayCutout = window?.decorView?.rootWindowInsets?.displayCutout
-            if (displayCutout != null)
-                cutoutOffset = displayCutout?.safeInsetTop!!
+            displayCutout?.let { cutoutOffset = displayCutout?.safeInsetTop!! }
         }
     }
 
