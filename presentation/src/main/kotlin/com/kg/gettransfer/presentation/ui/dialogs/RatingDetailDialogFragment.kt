@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.ui.dialogs
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -48,6 +50,8 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		get() = arguments?.getString(CURRENT_COMMENT) ?: ""
 
 	private var ratingListener: OnRatingChangeListener? = null
+
+	private var isExitWithResult = false
 
 	private val commonRateListener = BaseRatingBar.OnRatingChangeListener { baseRatingBar, fl ->
 		presenter.onCommonRatingChanged(fl)
@@ -97,7 +101,6 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		vehicleRate.rate_bar.setOnRatingChangeListener(vehicleRateListener)
 		driverRate.rate_bar.setOnRatingChangeListener(driverRateListener)
 		punctualityRate.rate_bar.setOnRatingChangeListener(punctualityRateListener)
-
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -176,6 +179,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 
 	override fun exitAndReportSuccess(list: List<ReviewRateModel>, comment: String) {
 		ratingListener?.onRatingChanged(list, comment)
+		isExitWithResult = true
 		dismiss()
 	}
 
@@ -184,6 +188,12 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, punctualityRate.rate_bar.rating.toInt()),
 		ReviewRateModel(ReviewRate.RateType.VEHICLE, vehicleRate.rate_bar.rating.toInt())
 	)
+
+	override fun onDismiss(dialog: DialogInterface?) {
+		super.onDismiss(dialog)
+		if (!isExitWithResult)
+			ratingListener?.onRatingChangeCancelled()
+	}
 
 	companion object {
 		private const val OFFER_ID = "offer id"
@@ -211,6 +221,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 
 	interface OnRatingChangeListener {
 		fun onRatingChanged(list: List<ReviewRateModel>, comment: String)
+		fun onRatingChangeCancelled()
 	}
 
 }

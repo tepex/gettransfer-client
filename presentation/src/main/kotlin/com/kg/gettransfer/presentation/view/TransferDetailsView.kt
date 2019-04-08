@@ -10,7 +10,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface TransferDetailsView: BaseView, RouteView {
-    fun setTransfer(transfer: TransferModel, userProfile: ProfileModel, showRate: Boolean)
+    fun setTransfer(transfer: TransferModel, userProfile: ProfileModel)
     fun setOffer(offer: OfferModel, childSeats: Int)
     fun showAlertCancelRequest()
     fun copyText(text: String)
@@ -20,8 +20,11 @@ interface TransferDetailsView: BaseView, RouteView {
     fun askRateInPlayMarket()
     fun showRateInPlayMarket()
     fun thanksForRate()
+    fun showCommonRating(isShow: Boolean, averageRate: Float = 0f)
     fun showYourRateMark(isShow: Boolean, averageRate: Float = 0f)
-    fun disableRate()
+    fun showYourComment(isShow: Boolean, comment: String = "")
+    fun showYourDataProgress(isShow: Boolean)
+    fun showCommentEditor(comment: String)
 
     fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)
     fun updateCamera(latLngList: List<LatLng>)

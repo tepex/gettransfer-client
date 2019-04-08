@@ -72,6 +72,24 @@
 >>>>>>> Revert "5"
 
         <include
+            android:id="@+id/yourComment"
+            layout="@layout/view_your_comment"
+            android:visibility="gone"
+            />
+
+        <ProgressBar
+            android:id="@+id/pbYourData"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress_rotate"
+            android:indeterminateDuration="1200"
+            android:visibility="gone"
+            />
+
+        <include
             android:id="@+id/thanks_for_rate"
             layout="@layout/view_thanks_for_rate_small"
 <<<<<<< HEAD

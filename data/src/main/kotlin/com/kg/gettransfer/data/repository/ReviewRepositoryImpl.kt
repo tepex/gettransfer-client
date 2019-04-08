@@ -23,4 +23,12 @@ class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRe
             Result(Unit)
         } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
     }
+
+    override suspend fun sendComment(offerId: Long, comment: String): Result<Unit> {
+        return try {
+            remote.sendFeedBackComment(offerId, comment)
+            Result(Unit)
+        } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
+    }
+
 }

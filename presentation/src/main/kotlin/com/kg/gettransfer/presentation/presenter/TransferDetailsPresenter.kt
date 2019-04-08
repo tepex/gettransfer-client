@@ -96,10 +96,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                 ?.let {
                                     if (transferModel.status.checkOffers)
                                         offer = it }
-                        val isRated = offer?.isRated() ?: false
-                        val showRate = offer?.ratings != null && !isRated
-                        viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile), showRate)
-                        viewState.showYourRateMark(isRated, offer?.ratings?.averageRating ?: 0f)
+                        viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile))
+
+                        updateRatingState()
                         setTransferType(transfer)
                     }
             viewState.blockInterface(false)
@@ -228,9 +227,15 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                         viewState.askRateInPlayMarket()
                         logReviewRequest()
                     }
-                    viewState.disableRate()
-                    viewState.showYourRateMark(true, rating)
                 }
+                offer = offer?.copy(
+                    ratings = offer?.ratings?.copy(
+                        vehicle = rating,
+                        driver = rating,
+                        fair = rating
+                    )
+                )
+                updateRatingState()
             } else {
                 offer?.let {
                     viewState.showDetailRate(
@@ -346,8 +351,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getVehicleIcon(offerModel.vehicle)
 
     fun ratingChanged(list: List<ReviewRateModel>, userFeedback: String) {
-        viewState.disableRate()
-        viewState.showYourRateMark(true, list.sumBy { it.rateValue }/list.size.toFloat())
         offer = offer?.copy(
             ratings = offer?.ratings?.copy(
                 vehicle = list.firstOrNull{ it.rateType == VEHICLE }?.rateValue?.toFloat() ?: 0f,
@@ -356,6 +359,39 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             ),
             passengerFeedback = userFeedback
         )
+        updateRatingState()
+    }
+
+    fun ratingChangeCancelled() {
+        updateRatingState()
+    }
+
+    fun clickComment(comment: String) {
+        viewState.showCommentEditor(comment)
+    }
+
+    fun commentChanged(comment: String) {
+        offer?.let {
+            viewState.showYourDataProgress(true)
+			utils.launchSuspend {
+				fetchResult { reviewInteractor.sendComment(it.id, comment) }
+					.also {
+                        if (it.error == null) {
+                            offer = offer?.copy(passengerFeedback = comment)
+                            updateRatingState()
+                        }
+                        viewState.showYourDataProgress(false)
+					}
+			}
+        }
+    }
+
+    private fun updateRatingState() {
+        val isRated = offer?.isRated() ?: false
+        val showRate = offer?.ratings != null && !isRated
+        viewState.showCommonRating(showRate)
+        viewState.showYourRateMark(isRated, offer?.ratings?.averageRating ?: 0f)
+        viewState.showYourComment(isRated, offer?.passengerFeedback.orEmpty())
     }
 
     override fun onSocketConnected() {

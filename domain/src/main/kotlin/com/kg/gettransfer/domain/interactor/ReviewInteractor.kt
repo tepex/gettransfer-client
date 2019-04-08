@@ -20,6 +20,10 @@ class ReviewInteractor(private val repository: ReviewRepository) {
         return response
     }
 
+    suspend fun sendComment(offerId: Long, comment: String): Result<Unit> {
+        return repository.sendComment(offerId, comment)
+    }
+
     suspend fun sendTopRate() =
         sendRates(
             arrayListOf(

@@ -1,6 +1,8 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 
 import android.os.Build
 import android.os.Bundle
@@ -75,7 +77,9 @@ import kotlinx.android.synthetic.main.view_transfer_details_field.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.view.*
 import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
-import kotlinx.android.synthetic.main.view_your_rate_mark.view.tripRate
+import kotlinx.android.synthetic.main.view_your_comment.view.tvComment
+import kotlinx.android.synthetic.main.view_your_comment.view.tvTitile
+import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
 import java.util.*
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
@@ -169,10 +173,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         bottomCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         topCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
         bottomCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
-        yourRateMark.setOnClickListener { presenter.rateTrip(yourRateMark.tripRate.rating , false) }
+        yourRateMark.setOnClickListener { presenter.rateTrip(yourRateMark.rbYourRateMark.rating , false) }
+        yourComment.setOnClickListener { presenter.clickComment(yourComment.tvComment.text.toString()) }
     }
 
-    override fun setTransfer(transfer: TransferModel, userProfile: ProfileModel, showRate: Boolean) {
+    override fun setTransfer(transfer: TransferModel, userProfile: ProfileModel) {
         initInfoView(transfer)
         initAboutRequestView(transfer, userProfile)
         topCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
@@ -209,10 +214,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         if (status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED || status == Transfer.STATUS_CATEGORY_CONFIRMED) {
             initTableLayoutTransportTypes(transfer.transportTypes)
             layoutTransportTypes.isVisible = true
-        }
-        (showRate).let {
-            view_rate_ride.isVisible = it
-            if (it) presenter.logTransferReviewRequested()
         }
 
         if (status == Transfer.STATUS_CATEGORY_ACTIVE) {
@@ -488,10 +489,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun closeRateWindow() = closePopUp()
 
-    override fun disableRate() {
-        view_rate_ride.isGone = true
-        tripRate.setOnRatingChangeListener(null)
-    }
 
     private fun setupDetailRatings(rateForFill: Float, v: View){
         rateForFill.let {
@@ -525,13 +522,55 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         }
     }
 
+    override fun showCommonRating(isShow: Boolean, averageRate: Float) {
+        view_rate_ride.isVisible = isShow
+        if (isShow) presenter.logTransferReviewRequested()
+    }
+
     override fun showYourRateMark(isShow: Boolean, averageRate: Float) {
+        yourRateMark.rbYourRateMark.setOnRatingChangeListener(null)
         yourRateMark.show(isShow)
-        yourRateMark.tripRate.rating = averageRate
+        yourRateMark.rbYourRateMark.rating = averageRate
+        yourRateMark.rbYourRateMark.setOnRatingChangeListener { baseRatingBar, fl -> presenter.rateTrip(fl , true) }
+    }
+
+	override fun showYourComment(isShow: Boolean, comment: String) {
+		if (comment.isEmpty())
+			yourComment.tvTitile.text = getString(R.string.LNG_PAYMENT_LEAVE_COMMENT)
+		else
+			yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
+		yourComment.tvComment.text = comment
+		yourComment.show(isShow)
+	}
+
+    override fun showCommentEditor(comment: String) {
+        Intent(this, TextEditorActivity::class.java).apply {
+            putExtra(TextEditorActivity.TEXT_FOR_CORRECTING, comment)
+            startActivityForResult(this, TextEditorActivity.REQUEST_CODE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == TextEditorActivity.REQUEST_CODE) {
+            data?.let {
+                presenter.commentChanged(it.getStringExtra(TextEditorActivity.CORRECTED_TEXT).orEmpty())
+            }
+        }
+    }
+
+    override fun showYourDataProgress(isShow: Boolean) {
+        pbYourData.show(isShow)
+        yourComment.show(!isShow)
+        yourRateMark.show(!isShow)
     }
 
     override fun onRatingChanged(list: List<ReviewRateModel>, comment: String) {
         presenter.ratingChanged(list, comment)
+    }
+
+    override fun onRatingChangeCancelled() {
+        presenter.ratingChangeCancelled()
     }
 
     override fun onClickGoToStore() {
