@@ -10,7 +10,7 @@ object LayoutHelper {
             LinearLayout(context)
                     .apply {
                         orientation = if (horizontal) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
-                        gravity = Gravity.START
+                        gravity = Gravity.END
                     }
 
     fun createLinearParams(l: Int, t: Int, r: Int, b: Int, width: Int? = null, height: Int? = null) =

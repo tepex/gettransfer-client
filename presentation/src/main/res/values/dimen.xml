@@ -564,9 +564,10 @@
     <dimen name="view_offer_btn_book_margin_top">6dp</dimen>
     <dimen name="view_offer_btn_book_margin_bottom">8dp</dimen>
     <dimen name="view_offer_car_info_margin_start">8dp</dimen>
-    <dimen name="view_offer_languages_container_margin">8dp</dimen>
+    <dimen name="view_offer_languages_container_margin_start">8dp</dimen>
+    <dimen name="view_offer_languages_container_margin_end">7dp</dimen>
     <dimen name="view_offer_btn_book_text_size">14sp</dimen>
-	<dimen name="view_offer_language_icon_width">14dp</dimen>
+	<dimen name="view_offer_language_icon_width">12dp</dimen>
 	<dimen name="view_offer_language_icon_height">8dp</dimen>
 	<dimen name="view_offer_language_icon_start_end_margin">2dp</dimen>
 	<dimen name="view_offer_language_icon_top_bottom_margin">4dp</dimen>

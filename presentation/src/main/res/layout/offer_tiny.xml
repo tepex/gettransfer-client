@@ -125,9 +125,8 @@
             android:id="@+id/languages_container_tiny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/view_offer_languages_container_margin"
-            android:layout_marginEnd="@dimen/view_offer_languages_container_margin"
-            android:gravity="top|end"
+            android:layout_marginStart="@dimen/view_offer_languages_container_margin_start"
+            android:layout_marginEnd="@dimen/view_offer_languages_container_margin_end"
             android:orientation="vertical"
             app:layout_constraintEnd_toStartOf="@+id/btn_book_tiny"
             app:layout_constraintTop_toTopOf="@+id/layout_car_info" />
