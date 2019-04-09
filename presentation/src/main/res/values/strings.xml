@@ -295,6 +295,7 @@
     <string name="LNG_TRANSPORT_BUS">Bus</string>
     <string name="LNG_TRANSPORT_HELICOPTER">Helicopter</string>
     <string name="LNG_TRANSPORT_LIMOUSINE">Limousine</string>
+    <string name="LNG_TRANSPORT_VIP">VIP</string>
     <string name="LNG_TRANSPORT_BUSINESS">Business</string>
     <string name="LNG_TRANSPORT_VAN">Van</string>
     <string name="LNG_TRANSPORT_ECONOMY_MODELS">Economy</string>
@@ -305,6 +306,7 @@
     <string name="LNG_TRANSPORT_BUS_MODELS">Bus</string>
     <string name="LNG_TRANSPORT_HELICOPTER_MODELS">Helicopter</string>
     <string name="LNG_TRANSPORT_LIMOUSINE_MODELS">Limousine</string>
+    <string name="LNG_TRANSPORT_VIP_MODELS">VIP</string>
     <string name="LNG_TRANSPORT_BUSINESS_MODELS">Business</string>
     <string name="LNG_TRANSPORT_VAN_MODELS">Van</string>
     <string name="LNG_TRANSPORT_EXAMPLES_ECONOMY"><b>Ford Focus, VW Jetta, Kia Rio, Hyundai Solaris, Chevrolet Cruze, LADA Granta, Honda Civic, Skoda rapid, Opel Astra and BMW 1-series.</b>\nFor a comfortable trip in any city of the world at the best price.\n- Personal driver \n- Fixed price\n- Without extra payment for luggage</string>
@@ -314,6 +316,7 @@
     <string name="LNG_TRANSPORT_EXAMPLES_BUS"><b>Mercedes-Benz Travego, Volvo 9700, Iveco FBI 83 LR, Toyota Coaster, Mercedes-Benz Intouro</b>\nFor safe transferring of big groups of people to events, conferences and weddings, as well as for taking people from airports and railway stations.\n- Conditioner\n- Spacious luggage compartment</string>
     <string name="LNG_TRANSPORT_EXAMPLES_HELICOPTER"><b>Robinson R44, Eurocopter EC130 T2</b>\nFor business meetings and rapid flights from Moscow and Moscow regions, among airports and hotels with landing areas.\n- Safe flights \n- Tested technology\n- High speed</string>
     <string name="LNG_TRANSPORT_EXAMPLES_LIMOUSINE"><b>Hummer H2, Lincoln Town Car, Cadillac Escalade</b>\nFor taking people from any airport or railway station to hotels or other places of destination, for romantic trips, all kinds of celebrations.\n- Beverages on request\n- Spacious cabin\n- Audio system</string>
+    <string name="LNG_TRANSPORT_EXAMPLES_VIP"><b>Mercedes V-class, Viano, Vito, Opel Vivaro, Renault Traffic and others.</b>\n- Dress-code for the driver\n- Fixed price\n- Without extra payment for luggage</string>
     <string name="LNG_TRANSPORT_EXAMPLES_BUSINESS"><b>BMW 3-series, Honda Accord, Lexus IS, Hyundai Equus Toyota Camry, Mercedes E-class, Audi a6, BMW 5-series</b> \nFor transferring passengers to events, business meetings and appointments.\n- Dress-code for the driver\n- Fixed price\n- Without extra payment for luggage</string>
     <string name="LNG_TRANSPORT_EXAMPLES_VAN"><b>Toyota Alphard, Ford S-MAX, Chrysler Voyager, Honda Stream, Volkswagen Sharan, Mercedes Vito, Mercedes V-class, Volkswagen Transporter</b>\nFor long-time excursions around the city, transferring foreign colleagues to conferences and seminars.\n- Conditioner \n- Comfortable cabin</string>
     <string name="LNG_TRANSPORT_EXAMPLES_SUV"><b>Chevrolet Tahoe, Volkswagen Tiguan, Hyundai Creta, Nissan X-Trail</b>\nFor off-road trips, safe transferring between cities and ski resorts\n- Fixed price\n- Spacious luggage compartment</string>

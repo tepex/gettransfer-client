@@ -7,14 +7,15 @@ data class TransportType(
 ) {
 
     enum class ID {
-        ECONOMY, COMFORT, PREMIUM, MINIBUS, BUS, HELICOPTER, LIMOUSINE, BUSINESS, VAN, SUV, UNKNOWN;
+        ECONOMY, COMFORT, PREMIUM, MINIBUS, BUS, HELICOPTER, LIMOUSINE, VIP, BUSINESS, VAN, SUV, UNKNOWN;
 
         override fun toString() = name.toLowerCase()
 
         companion object {
             fun parse(id: String): ID {
                 return try {
-                    enumValueOf<ID>(id.toUpperCase())
+                    if (id == LIMOUSINE.name.toLowerCase()) VIP
+                    else enumValueOf<ID>(id.toUpperCase())
                 } catch(e: IllegalArgumentException) { UNKNOWN }
             }
         }
@@ -28,7 +29,7 @@ data class TransportType(
                 TransportType(ID.MINIBUS, 16, 16),
                 TransportType(ID.BUS, 50, 50),
                 TransportType(ID.HELICOPTER, 5, 2),
-                TransportType(ID.LIMOUSINE, 20, 10),
+                TransportType(ID.VIP, 3, 3),
                 TransportType(ID.BUSINESS, 3, 3),
                 TransportType(ID.VAN, 8, 6),
                 TransportType(ID.SUV, 5, 5)
