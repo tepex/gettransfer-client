@@ -230,9 +230,9 @@
     <string name="LNG_RIDE_NAME">Your name</string>
     <string name="LNG_RIDE_NAME_PLACEHOLDER">Driver will meet you with a name sign</string>
     <string name="LNG_RIDE_EMAIL">Enter email</string>
-    <string name="LNG_RIDE_EMAIL_PLACEHOLDER">*Email</string>
+    <string name="LNG_RIDE_EMAIL_PLACEHOLDER">Email</string>
     <string name="LNG_RIDE_PHONE">Enter phone number</string>
-    <string name="LNG_RIDE_PHONE_PLACEHOLDER">*Phone</string>
+    <string name="LNG_RIDE_PHONE_PLACEHOLDER">Phone</string>
     <string name="LNG_RIDE_CHILDREN">Child seats</string>
     <string name="LNG_RIDE_FLIGHT">Example: BA 2243</string>
     <string name="LNG_RIDE_FLIGHT_BACK">Flight back</string>
@@ -471,7 +471,7 @@
     <string name="offer_channel_description">@string/offer_channel_name</string>
     <string name="new_offers">New offers</string>
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
-    <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">I want to order a return transfer</string>
+    <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">Add a return transfer</string>
     <string name="LNG_RIDE_DATE_RETURN">Return date and time</string>
     <string name="LNG_OFFERS_SUPPORT">GetTransfer Support</string>
     <string name="LNG_BOOK_NOW_PAYMENT_SUCCEESS">We will send you e-mail with carrier information</string>

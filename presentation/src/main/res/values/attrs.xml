@@ -10,7 +10,6 @@
     </declare-styleable>
 
     <declare-styleable name="CreateOrderField" parent="EditableView">
-        <attr name="title" format="string" />
         <attr name="hint"/>
         <attr name="icon_img" format="reference" />
         <attr name="isFocusable" format="boolean"/>

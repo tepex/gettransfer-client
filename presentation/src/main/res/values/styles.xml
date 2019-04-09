@@ -245,4 +245,9 @@
     <style name="sf_font_grey" parent="sf_font">
         <item name="android:textColor">@color/colorGrey</item>
     </style>
+    
+    <style name="editTextHintCreateOrder" parent="TextAppearance.AppCompat">
+        <item name="android:textColorHint">@color/black_a30</item>
+        <item name="colorControlActivated">@color/black_a30</item>
+    </style>
 </resources>

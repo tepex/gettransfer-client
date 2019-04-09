@@ -226,7 +226,7 @@
             android:id="@+id/imgCountChild"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_child_seats_carrier"
+            app:srcCompat="@drawable/ic_child_seat"
             android:visibility="gone"/>
 
         <TextView
