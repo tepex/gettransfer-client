@@ -25,14 +25,14 @@ data class TransportType(
         val DEFAULT_TRANSPORT_TYPES = arrayListOf<TransportType>(
                 TransportType(ID.ECONOMY, 3, 3),
                 TransportType(ID.COMFORT, 3, 3),
+                TransportType(ID.BUSINESS, 3, 3),
                 TransportType(ID.PREMIUM, 3, 3),
+                TransportType(ID.VIP, 3, 3),
+                TransportType(ID.SUV, 5, 5),
+                TransportType(ID.VAN, 8, 6),
                 TransportType(ID.MINIBUS, 16, 16),
                 TransportType(ID.BUS, 50, 50),
-                TransportType(ID.HELICOPTER, 5, 2),
-                TransportType(ID.VIP, 3, 3),
-                TransportType(ID.BUSINESS, 3, 3),
-                TransportType(ID.VAN, 8, 6),
-                TransportType(ID.SUV, 5, 5)
+                TransportType(ID.HELICOPTER, 5, 2)
         )
     }
 }
