@@ -12,7 +12,34 @@
         android:layout_height="@dimen/margin44"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/layoutTextNetworkNotAvailable"/>
+
+    <LinearLayout
+        android:id="@+id/layoutTextNetworkNotAvailable"
+        android:layout_width="@dimen/margin0"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBtnRed"
+        app:layout_constraintBottom_toTopOf="@+id/tabs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <TextView
+            android:id="@+id/textNetworkNotAvailable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_requests_text_network_availability_margin_start_end"
+            android:layout_marginTop="@dimen/activity_requests_text_network_availability_margin_top_bottom"
+            android:layout_marginEnd="@dimen/activity_requests_text_network_availability_margin_start_end"
+            android:layout_marginBottom="@dimen/activity_requests_text_network_availability_margin_top_bottom"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:gravity="center"
+            android:text="@string/LNG_OFFLINE_MESSAGE"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/activity_requests_text_size_12sp" />
+
+    </LinearLayout>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
@@ -25,32 +52,7 @@
         app:tabTextAppearance="@style/TabLayoutTextStyle"
         app:tabTextColor="@color/colorTextBlack"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider_top_view"/>
-
-    <LinearLayout
-        android:id="@+id/layoutTextNetworkNotAvailable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorBtnRed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <TextView
-            android:id="@+id/textNetworkNotAvailable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/activity_requests_text_size_12sp"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:gravity="center"
-            android:layout_marginStart="@dimen/activity_requests_text_network_availability_margin_start_end"
-            android:layout_marginEnd="@dimen/activity_requests_text_network_availability_margin_start_end"
-            android:layout_marginTop="@dimen/activity_requests_text_network_availability_margin_top_bottom"
-            android:layout_marginBottom="@dimen/activity_requests_text_network_availability_margin_top_bottom"
-            android:text="@string/LNG_OFFLINE_MESSAGE"/>
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/layoutTextNetworkNotAvailable"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vpRequests"
@@ -69,7 +71,7 @@
         android:background="@drawable/requests_view_tab_dividers"
         android:rotation="180"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+        app:layout_constraintBottom_toTopOf="@+id/tabs"/>
 
     <View
         android:id="@+id/divider_bottom_view"
