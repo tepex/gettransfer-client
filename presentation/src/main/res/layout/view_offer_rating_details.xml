@@ -1,124 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutTopSelection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/offer_rating_padding"
+        android:paddingBottom="@dimen/offer_rating_padding"
+        android:visibility="gone">
+
+        <TextView
             android:id="@+id/tvTopSelection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/LNG_TOP_RATED"
             android:fontFamily="@font/sf_pro_text_regular"
+            android:text="@string/LNG_TOP_RATED"
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+        <ImageView
             android:id="@+id/ivLikeDriver"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/offer_rating_iv_like_size"
+            android:layout_height="@dimen/offer_rating_iv_like_size"
+            app:layout_constraintBottom_toBottomOf="@id/tvTopSelection"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/tvTopSelection"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/ic_like_button" tools:layout_editor_absoluteY="6dp"
-            tools:layout_editor_absoluteX="348dp"/>
+            app:srcCompat="@drawable/ic_like_button"/>
 
+    </android.support.constraint.ConstraintLayout>
 
-    <TextView
-            android:id="@+id/ratingDriver"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bottom_sheet_offer_details_ratings_texts_margin_top"
-            style="@style/black_regular"
-            android:text="@string/LNG_DRIVER"
-            android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTopSelection"/>
+    <com.kg.gettransfer.presentation.ui.custom.RatingFieldView
+        android:id="@+id/ratingDriver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:rating_title="@string/LNG_DRIVER"
+        android:visibility="gone"/>
 
-    <com.willy.ratingbar.ScaleRatingBar
-            android:id="@+id/ratingBarDriver"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/ratingDriver"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ratingDriver"
-            app:srb_clickable="false"
-            app:srb_drawableEmpty="@drawable/ic_star_empty"
-            app:srb_drawableFilled="@drawable/ic_star_filled"
-            app:srb_isIndicator="true"
-            android:visibility="invisible"
-            app:srb_minimumStars="@integer/stars_minimum"
-            app:srb_numStars="@integer/stars_number"
-            app:srb_rating="2"
-            app:srb_starHeight="@dimen/rating_bar_stars_height_width"
-            app:srb_starPadding="@dimen/rating_bar_stars_padding"
-            app:srb_starWidth="@dimen/rating_bar_stars_height_width"
-            app:srb_stepSize="0.1"/>
+    <com.kg.gettransfer.presentation.ui.custom.RatingFieldView
+        android:id="@+id/ratingPunctuality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:rating_title="@string/LNG_PUNCTUALITY"
+        android:visibility="gone"/>
 
-    <TextView
-            android:id="@+id/ratingPunctuality"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bottom_sheet_offer_details_ratings_texts_margin_top"
-            style="@style/black_regular"
-            android:text="@string/LNG_PUNCTUALITY"
-            android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratingDriver"/>
+    <com.kg.gettransfer.presentation.ui.custom.RatingFieldView
+        android:id="@+id/ratingVehicle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:rating_title="@string/LNG_VEHICLE"
+        android:visibility="gone"/>
 
-    <com.willy.ratingbar.ScaleRatingBar
-            android:id="@+id/ratingBarPunctuality"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/bottom_sheet_offer_details_rating_bar_punctuality_margin_start"
-            app:layout_constraintBottom_toBottomOf="@+id/ratingPunctuality"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ratingPunctuality"
-            app:srb_clickable="false"
-            app:srb_drawableEmpty="@drawable/ic_star_empty"
-            app:srb_drawableFilled="@drawable/ic_star_filled"
-            app:srb_isIndicator="true"
-            android:visibility="invisible"
-            app:srb_minimumStars="@integer/stars_minimum"
-            app:srb_numStars="@integer/stars_number"
-            app:srb_rating="2"
-            app:srb_starHeight="@dimen/rating_bar_stars_height_width"
-            app:srb_starPadding="@dimen/rating_bar_stars_padding"
-            app:srb_starWidth="@dimen/rating_bar_stars_height_width"
-            app:srb_stepSize="0.1"/>
-
-    <TextView
-            android:id="@+id/ratingVehicle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bottom_sheet_offer_details_ratings_texts_margin_top"
-            style="@style/black_regular"
-            android:text="@string/LNG_VEHICLE"
-            android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratingPunctuality"/>
-
-    <com.willy.ratingbar.ScaleRatingBar
-            android:id="@+id/ratingBarVehicle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/ratingVehicle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ratingVehicle"
-            app:srb_clickable="false"
-            app:srb_drawableEmpty="@drawable/ic_star_empty"
-            app:srb_drawableFilled="@drawable/ic_star_filled"
-            app:srb_isIndicator="true"
-            android:visibility="invisible"
-            app:srb_minimumStars="@integer/stars_minimum"
-            app:srb_numStars="@integer/stars_number"
-            app:srb_rating="2"
-            app:srb_starHeight="@dimen/rating_bar_stars_height_width"
-            app:srb_starPadding="@dimen/rating_bar_stars_padding"
-            app:srb_starWidth="@dimen/rating_bar_stars_height_width"
-            app:srb_stepSize="0.1"/>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

@@ -1,48 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" xmlns:tools="http://schemas.android.com/tools">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-            android:layout_centerVertical="true"
-            android:orientation="horizontal"
-            android:gravity="bottom|center_horizontal"
-            android:layout_toStartOf="@id/btn_book"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <TextView
-                android:id="@+id/tv_old_price"
-                android:textColor="@color/colorRed"
-                tools:text="990.00 P"
-                android:textSize="11sp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:visibility="gone"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:layout_marginStart="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        <TextView
-                android:id="@+id/tv_current_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="17sp"
-                android:gravity="center"
-                android:layout_marginStart="11dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/sf_pro_text_semibold"
-                android:textColor="@color/colorTextBlack"
-                tools:text="888.00 Р"/>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_old_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/bottom_sheet_offer_details_old_price_margin_end"
+        android:layout_weight="1"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="end"
+        android:textColor="@color/colorRed"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_11sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_current_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="990.00 P" />
+
+    <TextView
+        android:id="@+id/tv_current_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/bottom_sheet_offer_details_current_price_margin_end"
+        android:layout_weight="1"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:gravity="center"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_book"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="888.00 Р" />
 
 
     <include
-            android:id="@+id/btn_book"
-            android:layout_alignParentEnd="true"
-            android:layout_height="@dimen/view_offer_bs_btn_book_height"
-            android:layout_width="@dimen/view_offer_bs_btn_book_width"
-            android:layout_marginStart="20dp"
-            layout="@layout/btn_book"/>
+        android:id="@+id/btn_book"
+        layout="@layout/btn_book"
+        android:layout_width="@dimen/view_offer_bs_btn_book_width"
+        android:layout_height="@dimen/view_offer_bs_btn_book_height"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

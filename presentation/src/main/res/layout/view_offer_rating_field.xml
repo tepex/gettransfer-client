@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/offer_rating_padding"
+    android:paddingBottom="@dimen/offer_rating_padding">
+
+    <TextView
+        android:id="@+id/titleRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/black_regular"
+        android:text="@string/LNG_DRIVER"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.willy.ratingbar.ScaleRatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srb_clickable="false"
+        app:srb_drawableEmpty="@drawable/ic_star_empty"
+        app:srb_drawableFilled="@drawable/ic_star_filled"
+        app:srb_isIndicator="true"
+        android:visibility="invisible"
+        app:srb_minimumStars="@integer/stars_minimum"
+        app:srb_numStars="@integer/stars_number"
+        app:srb_rating="2"
+        app:srb_starHeight="@dimen/rating_bar_stars_height_width"
+        app:srb_starPadding="@dimen/rating_bar_stars_padding"
+        app:srb_starWidth="@dimen/rating_bar_stars_height_width"
+        app:srb_stepSize="0.1"/>
+
+    <TextView
+        android:id="@+id/ratingNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ratingBar"
+        android:layout_marginEnd="@dimen/offer_rating_number_margin_end"
+        android:textColor="@color/colorTextBlack"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_15sp"/>
+
+</android.support.constraint.ConstraintLayout>

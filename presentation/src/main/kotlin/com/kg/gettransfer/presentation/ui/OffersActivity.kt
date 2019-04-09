@@ -34,6 +34,7 @@ import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
+import com.kg.gettransfer.presentation.ui.custom.RatingFieldView
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.ScrollGalleryInflater
 
@@ -51,6 +52,7 @@ import kotlinx.android.synthetic.main.vehicle_items.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 import kotlinx.android.synthetic.main.view_offer_conditions.view.*
 import kotlinx.android.synthetic.main.view_offer_rating_details.*
+import kotlinx.android.synthetic.main.view_offer_rating_field.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 import timber.log.Timber
@@ -214,10 +216,11 @@ class OffersActivity : BaseActivity(), OffersView {
                 setVehicleName(vehicle = offer.vehicle)
                 Utils.initCarrierLanguages(languages_container_bs, offer.carrier.languages)
                 setCapacity(offer.vehicle.transportType)
-                with(offer_conditions_bs) {
-                    vehicle_conveniences.imgFreeWater.isVisible = offer.refreshments
-                    vehicle_conveniences.imgFreeWiFi.isVisible = offer.wifi
-                    vehicle_conveniences.imgCharge.isVisible = offer.charger
+                with(offer_conditions_bs.vehicle_conveniences) {
+                    imgFreeWater.isVisible = offer.refreshments
+                    imgFreeWiFi.isVisible = offer.wifi
+                    imgCharge.isVisible = offer.charger
+                    isVisible = offer.refreshments || offer.wifi || offer.charger
                 }
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)
@@ -315,19 +318,19 @@ class OffersActivity : BaseActivity(), OffersView {
         view_offer_rating_bs.isVisible = hasRating
         if (!hasRating) return
 
-        with(carrier) {
+        carrier.ratings.let { ratings ->
+            ratings.driver?.let { if (it != NO_RATE) setRating(it, ratingDriver) }
+            ratings.fair?.let { if (it != NO_RATE) setRating(it, ratingPunctuality) }
+            ratings.vehicle?.let { if (it != NO_RATE) setRating(it, ratingVehicle) }
+        }
+        layoutTopSelection.isVisible = carrier.approved
+    }
 
-            view_offer_rating_bs.ratingBarDriver.visibleRating = ratings.driver ?: NO_RATE
-            ratingDriver.isVisible = view_offer_rating_bs.ratingBarDriver.visibleRating != NO_RATE
-
-            view_offer_rating_bs.ratingBarPunctuality.visibleRating = ratings.fair ?: NO_RATE
-            ratingPunctuality.isVisible = view_offer_rating_bs.ratingBarDriver.visibleRating != NO_RATE
-
-            view_offer_rating_bs.ratingBarVehicle.visibleRating = ratings.vehicle ?: NO_RATE
-            ratingVehicle.isVisible = view_offer_rating_bs.ratingBarVehicle.visibleRating != NO_RATE
-
-            view_offer_rating_bs.ivLikeDriver.isVisible = approved
-            tvTopSelection.isVisible = approved
+    private fun setRating(rate: Float, ratingLayout: RatingFieldView) {
+        with(ratingLayout) {
+            ratingBar.visibleRating = rate
+            ratingNumber.text = rate.toString().replace(".", ",")
+            isVisible = true
         }
     }
 

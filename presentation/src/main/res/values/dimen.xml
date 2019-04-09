@@ -646,9 +646,11 @@
 	<dimen name="bottom_sheet_offer_details_top_view_margin_top">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_elements_margin_start">14dp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_17sp">17sp</dimen>
+	<dimen name="bottom_sheet_offer_details_text_size_15sp">15sp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_14sp">14sp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_13sp">13sp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_12sp">12sp</dimen>
+	<dimen name="bottom_sheet_offer_details_text_size_11sp">11sp</dimen>
 	<dimen name="bottom_sheet_offer_details_layout_languages_height">29dp</dimen>
 	<dimen name="bottom_sheet_offer_details_layout_languages_margin_start">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_carrier_id_margin_top">22dp</dimen>
@@ -656,7 +658,7 @@
 	<dimen name="bottom_sheet_offer_details_rating_bar_punctuality_margin_start">10dp</dimen>
 	<dimen name="bottom_sheet_offer_details_iv_like_margin_end">10dp</dimen>
 	<dimen name="bottom_sheet_offer_details_iv_like_margin_start">8dp</dimen>
-	<dimen name="bottom_sheet_offer_details_vehicle_name_margin_top">8dp</dimen>
+	<dimen name="bottom_sheet_offer_details_vehicle_name_margin_top">22dp</dimen>
 	<dimen name="bottom_sheet_offer_details_layout_vehicle_info_margin_top">10dp</dimen>
 	<dimen name="bottom_sheet_offer_details_iv_baggage_margin_start">12dp</dimen>
 	<dimen name="bottom_sheet_offer_details_tv_count_baggage_margin_start">5dp</dimen>
@@ -676,6 +678,14 @@
 	<dimen name="bottom_sheet_offer_details_prices_margin">5dp</dimen>
 	<dimen name="bottom_sheet_offer_details_dimen1_margin_top">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_indicator_size">16dp</dimen>
+	<dimen name="bottom_sheet_offer_details_margin_16dp">16dp</dimen>
+	<dimen name="bottom_sheet_offer_details_padding_bottom">24dp</dimen>
+	<dimen name="bottom_sheet_offer_details_swipe_view_margin_top">25dp</dimen>
+	<dimen name="bottom_sheet_offer_details_languages_container_margin_start">7dp</dimen>
+	<dimen name="bottom_sheet_offer_details_sv_photo_height">225dp</dimen>
+	<dimen name="bottom_sheet_offer_details_iv_offer_bs_booknow_height">225dp</dimen>
+	<dimen name="bottom_sheet_offer_details_current_price_margin_end">20dp</dimen>
+	<dimen name="bottom_sheet_offer_details_old_price_margin_end">20dp</dimen>
 
 	<!--rating_ui-->
 	<dimen name="rating_bar_stars_height_width">12dp</dimen>
@@ -804,5 +814,18 @@
 	<dimen name="activity_settings_layout_debug_margin_top">32dp</dimen>
 	<dimen name="activity_settings_layout_btns_margin_bottom">24dp</dimen>
 	<dimen name="activity_settings_padding_bottom">150dp</dimen>
+
+	<!--vehicle_items-->
+	<dimen name="vehicle_items_margin_end">6dp</dimen>
+	<dimen name="vehicle_items_height">14dp</dimen>
+	<dimen name="vehicle_items_water_width">12dp</dimen>
+	<dimen name="vehicle_items_wifi_width">23dp</dimen>
+	<dimen name="vehicle_items_charge_width">12dp</dimen>
+	<dimen name="vehicle_items_green_width">16dp</dimen>
+
+	<!--offer_rating-->
+	<dimen name="offer_rating_padding">5dp</dimen>
+	<dimen name="offer_rating_iv_like_size">16dp</dimen>
+	<dimen name="offer_rating_number_margin_end">8dp</dimen>
 
 </resources>

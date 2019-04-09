@@ -92,5 +92,7 @@
         <attr name="icon" format="reference"/>
     </declare-styleable>
 
-
+    <declare-styleable name="RatingFieldView">
+        <attr name="rating_title" format="string"/>
+    </declare-styleable>
 </resources>
