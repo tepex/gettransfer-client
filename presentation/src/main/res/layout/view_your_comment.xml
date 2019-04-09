@@ -10,7 +10,7 @@
 
 	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="64dp"
 		android:orientation="horizontal"
 		android:paddingTop="16dp"
 		android:paddingBottom="16dp">
@@ -36,7 +36,7 @@
 			android:paddingStart="8dp"
 			android:paddingEnd="8dp"
 			android:drawableRight="@drawable/ic_arrow_right"
-			style="@style/transfer_details_secondary_text"/>
+			style="@style/transfer_details_main_text"/>
 
 	</LinearLayout>
 
