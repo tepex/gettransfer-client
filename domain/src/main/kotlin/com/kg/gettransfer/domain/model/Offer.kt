@@ -27,9 +27,9 @@ data class Offer(
 
     fun isTransferAvailableForRate(): Boolean {
         ratings?.apply {
-            return vehicle != NO_RATE && driver != NO_RATE && fair != NO_RATE
+            return vehicle == NO_RATE && driver == NO_RATE && fair == NO_RATE
         }
-        return false
+        return true
     }
 
     companion object {

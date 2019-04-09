@@ -226,7 +226,7 @@
     <string name="LNG_RIDE_PRICE_YOUR">Your price</string>
     <string name="LNG_RIDE_DATE">Transfer date and time</string>
     <string name="LNG_RIDE_PASSENGERS">Passengers</string>
-    <string name="LNG_RIDE_lUGGAGE">Luggage</string>
+    <string name="LNG_RIDE_LUGGAGE">Luggage</string>
     <string name="LNG_RIDE_NAME">Your name</string>
     <string name="LNG_RIDE_NAME_PLACEHOLDER">Driver will meet you with a name sign</string>
     <string name="LNG_RIDE_EMAIL">Enter email</string>

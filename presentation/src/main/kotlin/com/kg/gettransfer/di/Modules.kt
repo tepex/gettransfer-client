@@ -34,6 +34,7 @@ import com.kg.gettransfer.utilities.Analytics
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import com.kg.gettransfer.utilities.GTNotificationManager
+import com.kg.gettransfer.utilities.MainState
 
 import kotlinx.coroutines.Dispatchers
 
@@ -150,6 +151,7 @@ val androidModule = module {
     single { PhoneNumberUtil.createInstance(get<Context>()) }
     single { GTNotificationManager(androidApplication().applicationContext) }
     single { DateTimeDelegate() }
+    single { MainState() }
 }
 
 val testModule = module {

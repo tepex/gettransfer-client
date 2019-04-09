@@ -17,12 +17,14 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SearchView
 
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.MainState
 
 import org.koin.standalone.inject
 
 @InjectViewState
 class SearchPresenter : BasePresenter<SearchView>() {
     private val orderInteractor: OrderInteractor by inject()
+    private val nState: MainState by inject()
 
     internal var isTo = false
     var backwards: Boolean = false
@@ -114,7 +116,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
     fun selectFinishPointOnMap() {
         logButtons(Analytics.POINT_ON_MAP_CLICKED)
         systemInteractor.selectedField = if (isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
-        systemInteractor.withPointOnMap = true
+        nState.currentState = MainState.CHOOSE_POINT_ON_MAP
         router.exit()
     }
 

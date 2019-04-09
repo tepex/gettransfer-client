@@ -49,6 +49,8 @@ import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainRequestView
 import com.kg.gettransfer.presentation.view.MainView
+import com.kg.gettransfer.presentation.view.MainView.Companion.MAP_SCREEN
+import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import kotlinx.android.synthetic.main.a_b_orange_view.*
 import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 
@@ -59,7 +61,6 @@ import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_last_trip_rate.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
-import kotlinx.android.synthetic.main.view_navigation.view.*
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_in_store.view.*
@@ -79,9 +80,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             initHourly()
             setRequestView() }
     }
+    var screenType = REQUEST_SCREEN
+    set(value) {
+        field = value
+        presenter.screenType = value
+    }
 
     lateinit var drawer: DrawerLayout
-    //private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var hourlySheet: BottomSheetBehavior<View>
 
     private var isFirst = true
@@ -148,7 +153,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
         switchMain(withMap = false, firstAttach = true)
         switch_mode.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
-        switcher_map.switch_mode_.setOnCheckedChangeListener { _, isChecked -> switchMain(isChecked) }
+        switcher_map.switch_mode_.setOnCheckedChangeListener { _, isChecked -> screenModeChanged(isChecked) }
 
         isFirst = savedInstanceState == null
 
@@ -161,12 +166,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
-    override fun setNetworkAvailability(context: Context) =
-            super.setNetworkAvailability(context)
-                .also {
-                    requestView?.onNetworkWarning(!it)
-                }
-
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -178,6 +177,17 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         rl_hourly.setOnClickListener  { showNumberPicker(true) }
         btnNext.setOnClickListener    { presenter.onNextClick() }
         enableBtnNext()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.setScreenState(requestView != null)
+    }
+
+    private fun screenModeChanged(isChecked: Boolean) {
+        screenType = if (isChecked) MAP_SCREEN else REQUEST_SCREEN
+        switchMain(isChecked)
+        defineNavigationStrategy()
     }
 
     @SuppressLint("CommitTransaction")
@@ -320,7 +330,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         presenter.updateCurrentLocation()
     }
 
-    /* MainView */
+    override fun recreateRequestFragment() {
+        switchMain(false, true)
+    }
+
     override fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean) {
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
         processGoogleMap(false) {
@@ -344,7 +357,14 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun openMapToSetPoint() {
-        switcher_map.switch_mode_.isChecked = true
+        switchMain(true)
+        setSwitchersVisibility(false)
+        defineNavigationStrategy()
+    }
+
+    private fun setSwitchersVisibility(visible: Boolean) {
+        switcher_map.isVisible = visible
+        switch_panel.isVisible = visible
     }
 
     override fun setMarkerElevation(up: Boolean, elevation: Float) {
@@ -421,6 +441,30 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     private fun enableBtnNext() {
         btnNext.isEnabled = searchFrom.text.isNotEmpty() && (searchTo.text.isNotEmpty() || presenter.isHourly())
+    }
+
+    private fun defineNavigationStrategy() {
+        if (screenType == REQUEST_SCREEN) definePointSelectionStrategy()
+        else defineMapModeStrategy()
+    }
+
+    /*
+    Is used when in no-map mode, but in SearchPresenter selectFinishPointOnMap() was called
+     */
+    private fun definePointSelectionStrategy() {
+        btnNext.setOnClickListener {
+            switchMain(false)
+            setSwitchersVisibility(true)
+        }
+        btnBack.setOnClickListener {
+            performClick(true, true)
+            setSwitchersVisibility(true)
+        }
+    }
+
+    private fun defineMapModeStrategy() {
+        btnNext.setOnClickListener { presenter.onNextClick() }
+        btnBack.setOnClickListener { presenter.onBackClick() }
     }
 
     override fun setProfile(profile: ProfileModel) {
@@ -588,6 +632,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         navRequests.tvEventsCount.text = count.toString()
         requestView?.setBadge(count.toString())
     }
+
+    override fun setNetworkAvailability(context: Context) =
+            super.setNetworkAvailability(context)
+                    .also { requestView?.onNetworkWarning(!it) }
 
     companion object {
         @JvmField val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)

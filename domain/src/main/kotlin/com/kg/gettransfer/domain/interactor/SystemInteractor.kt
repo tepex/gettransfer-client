@@ -101,11 +101,6 @@ class SystemInteractor(
         get() = systemRepository.selectedField
         set(value) { systemRepository.selectedField = value }
 
-    var withPointOnMap: Boolean = false
-    get() = field.also {
-        if (it) field = false
-    }
-
     var endpoint: Endpoint
         get() = systemRepository.endpoint
         set(value) { systemRepository.endpoint = value }

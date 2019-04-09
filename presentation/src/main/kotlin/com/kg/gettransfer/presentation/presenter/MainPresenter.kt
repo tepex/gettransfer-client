@@ -31,9 +31,12 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
 import com.kg.gettransfer.presentation.view.MainView
+import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.MainState
+import com.kg.gettransfer.utilities.ScreenNavigationState
 import kotlinx.coroutines.delay
 
 import org.koin.standalone.inject
@@ -43,13 +46,15 @@ import timber.log.Timber
 @InjectViewState
 class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     private val orderInteractor: OrderInteractor by inject()
-
     private val reviewInteractor: ReviewInteractor by inject()
+    private val nState: MainState by inject()  //to keep info about navigation
 
     private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
     private val routeMapper: RouteMapper by inject()
     private val reviewRateMapper: ReviewRateMapper by inject()
+
+    var screenType = REQUEST_SCREEN
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
@@ -96,19 +101,29 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
             viewState.showBadge(false)
         }
         Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
-        if (systemInteractor.withPointOnMap) viewState.openMapToSetPoint()
         if (!setAddressFields()) setOwnLocation()
         viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
         changeUsedField(systemInteractor.selectedField)
         viewState.setTripMode(orderInteractor.hourlyDuration)
-        setCountEvents(countEventsInteractor.eventsCount)
-
     }
 
     @CallSuper
     override fun detachView(view: MainView?) {
         super.detachView(view)
         countEventsInteractor.removeCounterListener(this)
+    }
+
+    fun setScreenState(hasRequestView: Boolean) {
+        when {
+            nState.currentState == MainState.CHOOSE_POINT_ON_MAP ->
+            {
+                viewState.openMapToSetPoint()
+                nState.currentState = ScreenNavigationState.NO_STATE
+            }
+
+            screenType == REQUEST_SCREEN && !hasRequestView      ->
+                viewState.recreateRequestFragment()
+        }
     }
 
     private fun setOwnLocation() {
@@ -304,10 +319,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun onSearchClick(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false) {
         navigateToFindAddress(from, to, bounds, returnBack)
-    }
-
-    fun onNextClick(from: String, to: String, bounds: LatLngBounds) {
-        navigateToFindAddress(from, to, bounds)
     }
 
     private fun navigateToFindAddress(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false) {
@@ -560,13 +571,12 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         systemInteractor.startScreenOrder = true
     }
 
-
-companion object {
-    const val FIELD_FROM = "field_from"
-    const val FIELD_TO = "field_to"
+    companion object {
+    const val FIELD_FROM    = "field_from"
+    const val FIELD_TO      = "field_to"
     const val EMPTY_ADDRESS = ""
 
-    const val MIN_HOURLY = 2
+    const val MIN_HOURLY    = 2
     const val ONE_SEC_DELAY = 1000L
-}
+    }
 }

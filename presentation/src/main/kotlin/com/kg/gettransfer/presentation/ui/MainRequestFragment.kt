@@ -76,7 +76,6 @@ class MainRequestFragment :
 
         switcher_map_.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
             mParent.switcher_map.switch_mode_.performClick()
-            switcher_map_.isInvisible = true
         }
 
         order_time_view.setOnClickListener  { openPicker(FIELD_START) }

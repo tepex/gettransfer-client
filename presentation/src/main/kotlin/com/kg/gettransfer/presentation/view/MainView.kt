@@ -34,4 +34,10 @@ interface MainView: BaseView {
     fun showBadge(show: Boolean)
     fun setCountEvents(count: Int)
     fun openMapToSetPoint()
+    fun recreateRequestFragment()
+
+    companion object {
+        const val MAP_SCREEN     = 1
+        const val REQUEST_SCREEN = 2
+    }
 }
