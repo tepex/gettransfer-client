@@ -14,8 +14,7 @@ data class TransportType(
         companion object {
             fun parse(id: String): ID {
                 return try {
-                    if (id == LIMOUSINE.name.toLowerCase()) VIP
-                    else enumValueOf<ID>(id.toUpperCase())
+                    enumValueOf<ID>(id.toUpperCase())
                 } catch(e: IllegalArgumentException) { UNKNOWN }
             }
         }
@@ -27,7 +26,7 @@ data class TransportType(
                 TransportType(ID.COMFORT, 3, 3),
                 TransportType(ID.BUSINESS, 3, 3),
                 TransportType(ID.PREMIUM, 3, 3),
-                TransportType(ID.VIP, 3, 3),
+                TransportType(ID.LIMOUSINE, 3, 3),
                 TransportType(ID.SUV, 5, 5),
                 TransportType(ID.VAN, 8, 6),
                 TransportType(ID.MINIBUS, 16, 16),

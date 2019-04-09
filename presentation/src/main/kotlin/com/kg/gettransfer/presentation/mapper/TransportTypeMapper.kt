@@ -29,31 +29,36 @@ open class TransportTypeMapper : Mapper<TransportTypeModel, TransportType> {
     companion object {
         @StringRes
         fun getNameById(id: TransportType.ID): Int {
-            val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_${id.name}" } )
+            val nameId = (if (id == TransportType.ID.LIMOUSINE) TransportType.ID.VIP else id).name
+            val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_$nameId" } )
             return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_ECONOMY
         }
 
         @DrawableRes
         fun getImageById(id: TransportType.ID): Int {
-            val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_$id" } )
+            val nameId = if (id == TransportType.ID.LIMOUSINE) TransportType.ID.VIP else id
+            val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_$nameId" } )
             return (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_economy
         }
 
         @DrawableRes
         fun getEmptyImageById(id: TransportType.ID): Int {
-            val imageRes = R.drawable::class.members.find( { it.name == "ic_empty_car_$id" } )
+            val nameId = if (id == TransportType.ID.LIMOUSINE) TransportType.ID.VIP else id
+            val imageRes = R.drawable::class.members.find( { it.name == "ic_empty_car_$nameId" } )
             return (imageRes?.call() as Int?) ?: R.drawable.ic_empty_car_economy
         }
 
         @StringRes
         fun getDescriptionById(id: TransportType.ID): Int {
-            val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_EXAMPLES_${id.name}" } )
+            val nameId = (if (id == TransportType.ID.LIMOUSINE) TransportType.ID.VIP else id).name
+            val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_EXAMPLES_$nameId" } )
             return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
         }
 
         @StringRes
         fun getModelsById(id: TransportType.ID): Int {
-            val modelRes = R.string::class.members.find({it.name == "LNG_TRANSPORT_${id.name}_MODELS"})
+            val nameId = (if (id == TransportType.ID.LIMOUSINE) TransportType.ID.VIP else id).name
+            val modelRes = R.string::class.members.find({it.name == "LNG_TRANSPORT_${nameId}_MODELS"})
             return (modelRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_ECONOMY_MODELS
         }
     }
