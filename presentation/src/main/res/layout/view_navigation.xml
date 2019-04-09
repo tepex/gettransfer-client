@@ -87,6 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/navViewHeader"
+            android:background="@color/colorWhite"
             android:orientation="vertical">
 
             <include android:id="@+id/navLogin"

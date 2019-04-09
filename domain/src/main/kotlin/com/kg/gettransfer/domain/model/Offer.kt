@@ -29,7 +29,7 @@ data class Offer(
         ratings?.apply {
             return vehicle == NO_RATE && driver == NO_RATE && fair == NO_RATE
         }
-        return true
+        return false
     }
 
     companion object {
