@@ -10,7 +10,7 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface SettingsView : BaseView {
-    fun setCurrencies(currencies: List<CurrencyModel>)
+    //fun setCurrencies(currencies: List<CurrencyModel>)
     fun setLocales(locales: List<LocaleModel>)
     //fun setDistanceUnits(distanceUnits: List<DistanceUnitModel>)
     fun setEndpoints(endpoints: List<EndpointModel>)
@@ -18,7 +18,7 @@ interface SettingsView : BaseView {
     fun setCalendarModes(calendarModesKeys: List<String>)
     fun setDaysOfWeek(daysOfWeek: List<CharSequence>)
 
-    fun setCurrency(currency: String)
+    fun setCurrency(currency: String, hideCurrenciesFragment: Boolean = false)
     fun setLocale(locale: String, code: String)
     //fun setDistanceUnit(distanceUnit: String)
     fun setCalendarMode(calendarModeKey: String)
@@ -30,5 +30,6 @@ interface SettingsView : BaseView {
     fun initCarrierLayout()
     fun initDebugLayout()
 
+    fun showCurrenciesFragment(show: Boolean)
     fun restartApp()
 }

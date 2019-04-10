@@ -459,6 +459,9 @@
     <string name="LNG_WEEK_FIRST_DAY">First week day</string>
     <string name="LNG_RIDE_PAYMENT_RIDE_COST">Ride cost</string>
     <string name="LNG_RIDE_PAYMENT_PAID_DETAILS">Paid %s%%</string>
+    <string name="LNG_CURRENCIES_CHOOSE">Choose a currency</string>
+    <string name="LNG_CURRENCIES_POPULAR">Popular currencies in your country</string>
+    <string name="LNG_CURRENCIES_ALL">All currencies</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

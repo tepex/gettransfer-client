@@ -93,9 +93,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     @CallSuper
     override fun attachView(view: CreateOrderView) {
         super.attachView(view)
-        viewState.setCurrencies(currencies)
+        /*viewState.setCurrencies(currencies)
         val i = systemInteractor.currentCurrencyIndex
-        if (i != -1) setCurrency(i)
+        if (i != -1) setCurrency(i)*/
+        setCurrency()
+
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
         transportTypes?.let { viewState.setTransportTypes(it) }
         checkOrderDateTime()
@@ -211,7 +213,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         initPrices(false)
     }
 
-    fun changeCurrency(selected: Int) {
+    /*fun changeCurrency(selected: Int) {
         if (selected < currencies.size) {
             val currencyModel = currencies[selected]
             systemInteractor.currency = currencyModel.delegate
@@ -220,13 +222,25 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             if (orderInteractor.hourlyDuration == null)
                 initPrices(dateDelegate.returnDate != null)
         }
-    }
+    }*/
 
-    private fun setCurrency(selected: Int){
+    /*private fun setCurrency(selected: Int){
         if (selected < currencies.size) {
             selectedCurrency = selected
             viewState.setCurrency(currencies[selected].symbol)
         }
+    }*/
+
+    override fun currencyChanged() {
+        setCurrency(true)
+        if (orderInteractor.hourlyDuration == null)
+            initPrices(dateDelegate.returnDate != null)
+    }
+
+    private fun setCurrency(hideCurrencies: Boolean = false) {
+        val currency = systemInteractor.currency.let { currencyMapper.toView(it) }
+        viewState.setCurrency(currency.symbol, hideCurrencies)
+        selectedCurrency = currencies.indexOf(currency)
     }
 
     fun changePassengers(count: Int) {

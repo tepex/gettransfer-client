@@ -19,11 +19,11 @@ import com.kg.gettransfer.utilities.Analytics
 interface CreateOrderView : BaseView, RouteView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setFairPrice(price: String?, time: String?)
-    fun setCurrencies(currencies: List<CurrencyModel>)
+    //fun setCurrencies(currencies: List<CurrencyModel>)
     fun setUser(user: UserModel, isLoggedIn: Boolean)
     fun setPassengers(count: Int)
     fun setChildren(count: Int)
-    fun setCurrency(currency: String)
+    fun setCurrency(currency: String, hideCurrencies: Boolean)
     fun setDateTimeTransfer(dateTimeString: String, startField: Boolean)
     fun setHintForDateTimeTransfer(withReturnWay: Boolean)
     fun setComment(comment: String)

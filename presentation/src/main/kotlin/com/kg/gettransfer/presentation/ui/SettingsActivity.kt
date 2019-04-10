@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_communication_button.*
 import kotlinx.android.synthetic.main.view_settings_field.view.*
 import java.lang.UnsupportedOperationException
@@ -44,7 +46,27 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
+    @SuppressLint("CommitTransaction")
+    override fun showCurrenciesFragment(show: Boolean) {
+        with(supportFragmentManager.beginTransaction()) {
+            if (show) {
+                presenter.currenciesFragmentIsShowing = true
+                add(R.id.currenciesFragment, SelectCurrencyFragment())
+            }
+            else {
+                presenter.currenciesFragmentIsShowing = false
+                supportFragmentManager.fragments.firstOrNull()?.let { remove(it) }
+            }
+        }?.commit()
+        setTitleText(show)
+    }
+
+    private fun setTitleText(currenciesFragmentIsShowing: Boolean) {
+        toolbar.toolbar_title.text = getString(if (currenciesFragmentIsShowing) R.string.LNG_CURRENCIES_CHOOSE else R.string.LNG_MENU_TITLE_SETTINGS)
+    }
+
     override fun initGeneralSettingsLayout() {
+        settingsCurrency.setOnClickListener { showCurrenciesFragment(true) }
         settingsBtnLogout.setOnClickListener { presenter.onLogout() }
         settingsBtnSupport.setOnClickListener { presenter.sendEmail(null, null) }
     }
@@ -100,8 +122,8 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
-    override fun setCurrencies(currencies: List<CurrencyModel>) =
-            Utils.setCurrenciesDialogListener(this, settingsCurrency, currencies) { presenter.changeCurrency(it) }
+    /*override fun setCurrencies(currencies: List<CurrencyModel>) =
+            Utils.setCurrenciesDialogListener(this, settingsCurrency, currencies) { presenter.changeCurrency(it) }*/
 
     override fun setLocales(locales: List<LocaleModel>) =
             Utils.setLocalesDialogListener(this, settingsLanguage, locales) {
@@ -117,7 +139,11 @@ class SettingsActivity : BaseActivity(), SettingsView {
     override fun setEndpoints(endpoints: List<EndpointModel>) =
             Utils.setEndpointsDialogListener(this, settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
 
-    override fun setCurrency(currency: String) { settingsCurrency.field_text.text = currency }
+    override fun setCurrency(currency: String, hideCurrenciesFragment: Boolean) {
+        settingsCurrency.field_text.text = currency
+        if(hideCurrenciesFragment) showCurrenciesFragment(false)
+    }
+
     override fun setLocale(locale: String, code: String) {
         settingsLanguage.field_text.text = locale
         with(settingsLanguage.field_text) {

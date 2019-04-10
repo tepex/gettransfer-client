@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 
 import android.graphics.Color
@@ -76,6 +77,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     private lateinit var bsOrder: BottomSheetBehavior<View>
     private lateinit var bsTransport: BottomSheetBehavior<View>
+    private lateinit var bsCurrencies: BottomSheetBehavior<View>
     private lateinit var popupWindowComment: PopupWindow
 
     private var defaultPromoText: String? = null
@@ -121,6 +123,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvTransferType.isNestedScrollingEnabled = false
 
+        setCurrenciesFragment()
+
         initChangeTextListeners()
         initClickListeners()
         initPromoSection()
@@ -128,32 +132,44 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         initBottomSheets()
     }
 
+    @SuppressLint("CommitTransaction")
+    private fun setCurrenciesFragment() {
+        supportFragmentManager.beginTransaction().add(R.id.currenciesFragment, SelectCurrencyFragment()).commit()
+    }
+
+    val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN && bsOrder.state == BottomSheetBehavior.STATE_HIDDEN)
+                _tintBackground.isVisible = false
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            if (bsOrder.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                _tintBackground.isVisible = true
+                _tintBackground.alpha = slideOffset
+            }
+        }
+    }
+
     private fun initBottomSheets() {
         bsOrder = BottomSheetBehavior.from(sheetOrder)
         bsTransport = BottomSheetBehavior.from(sheetTransport)
+        bsCurrencies = BottomSheetBehavior.from(sheetCurrencies)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
+        bsCurrencies.state = BottomSheetBehavior.STATE_HIDDEN
 
         _tintBackground = tintBackground
         bsOrder.setBottomSheetCallback(bottomSheetCallback)
-        bsTransport.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_HIDDEN && bsOrder.state == BottomSheetBehavior.STATE_HIDDEN)
-                    _tintBackground.isVisible = false
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                if (bsOrder.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                    _tintBackground.isVisible = true
-                    _tintBackground.alpha = slideOffset
-                }
-            }
-        })
+        bsTransport.setBottomSheetCallback(bsCallback)
+        bsCurrencies.setBottomSheetCallback(bsCallback)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
             if (bsTransport.state == BottomSheetBehavior.STATE_EXPANDED) {
                 if(hideBottomSheet(bsTransport, sheetTransport, BottomSheetBehavior.STATE_HIDDEN, event)) return true
+            } else if (bsCurrencies.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if(hideBottomSheet(bsCurrencies, sheetCurrencies, BottomSheetBehavior.STATE_HIDDEN, event)) return true
             } else if (bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) {
                 if(hideBottomSheet(bsOrder, sheetOrder, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
             }
@@ -161,7 +177,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         return super.dispatchTouchEvent(event)
     }
 
-    private fun hideSheetTransport() { bsTransport.state = BottomSheetBehavior.STATE_HIDDEN }
+    private fun hideBottomSheet(bottomSheet: BottomSheetBehavior<View>) { bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN }
 
     private fun toggleSheetOrder() {
         if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
@@ -203,8 +219,16 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         presenter.initMapAndPrices()
     }
 
-    override fun setCurrencies(currencies: List<CurrencyModel>) =
-        Utils.setCurrenciesDialogListener(this, fl_currency, currencies) { presenter.changeCurrency(it) }
+    /*override fun setCurrencies(currencies: List<CurrencyModel>) =
+        Utils.setCurrenciesDialogListener(this, fl_currency, currencies) { presenter.changeCurrency(it) }*/
+
+    /*override fun setCurrencies(all: List<CurrencyModel>, popular: List<CurrencyModel>, selected: CurrencyModel) {
+        currenciesFragment.setCurrencies(all, popular, selected) {
+            bsCurrencies.state = BottomSheetBehavior.STATE_HIDDEN
+            presenter.changeCurrency(it)
+        }
+        bsCurrencies.state = BottomSheetBehavior.STATE_EXPANDED
+    }*/
 
 
     private fun showPopupWindowComment() {
@@ -288,7 +312,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         checkMinusButton(count, 0, child_seats.img_minus_seat)
     }
 
-    override fun setCurrency(currency: String) { tv_currency.text = currency }
+    override fun setCurrency(currency: String, hideCurrencies: Boolean) {
+        tv_currency.text = currency
+        if(hideCurrencies) hideBottomSheet(bsCurrencies)
+    }
     override fun setComment(comment: String)   { comment_field.field_input.setText(comment) }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
@@ -377,10 +404,11 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     @CallSuper
     override fun onBackPressed() {
         when {
-            isKeyBoardOpened                                        -> hideKeyboard()
-            bsTransport.state == BottomSheetBehavior.STATE_EXPANDED -> hideSheetTransport()
-            bsOrder.state     == BottomSheetBehavior.STATE_EXPANDED -> toggleSheetOrder()
-            else                                                    -> super.onBackPressed()
+            isKeyBoardOpened                                         -> hideKeyboard()
+            bsTransport.state == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet(bsTransport)
+            bsCurrencies.state == BottomSheetBehavior.STATE_EXPANDED -> hideBottomSheet(bsCurrencies)
+            bsOrder.state     == BottomSheetBehavior.STATE_EXPANDED  -> toggleSheetOrder()
+            else                                                     -> super.onBackPressed()
         }
     }
 
@@ -459,7 +487,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         btnGetOffers.setOnClickListener                     { presenter.onGetTransferClick() }
         btnCenterRoute.setOnClickListener                   { presenter.onCenterRouteClick() }
         btnBack.setOnClickListener                          { presenter.onBackClick() }
-        btnOk.setOnClickListener                            { hideSheetTransport() }
+        btnOk.setOnClickListener                            { hideBottomSheet(bsTransport) }
+
+        fl_currency.setOnClickListener { bsCurrencies.state = BottomSheetBehavior.STATE_EXPANDED }
     }
 
     private fun fieldTouched(viewForFocus: EditText) {

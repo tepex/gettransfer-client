@@ -27,7 +27,7 @@ import java.util.Locale
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
-    private lateinit var currencies: List<CurrencyModel>
+    //private lateinit var currencies: List<CurrencyModel>
     private lateinit var locales: List<LocaleModel>
     //private lateinit var distanceUnits: List<DistanceUnitModel>
     private lateinit var endpoints: List<EndpointModel>
@@ -42,6 +42,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val endpointMapper     = get<EndpointMapper>()
     private val reviewInteractor   = get<ReviewInteractor>()
 
+    internal var currenciesFragmentIsShowing = false
     private var localeWasChanged = false
     private var restart = true
     val isDriverMode get() =
@@ -67,10 +68,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private fun initGeneralSettings(){
         viewState.initGeneralSettingsLayout()
 
-        viewState.setCurrencies(currencies)
+        /*viewState.setCurrencies(currencies)
         val currency = systemInteractor.currency
         val currencyModel = currencies.find { it.delegate == currency }
-        viewState.setCurrency(currencyModel?.name ?: "")
+        viewState.setCurrency(currencyModel?.name ?: "")*/
+        viewState.setCurrency(systemInteractor.currency.let { currencyMapper.toView(it) }.name)
 
         viewState.setLocales(locales)
         val locale = systemInteractor.locale
@@ -102,11 +104,17 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setEndpoint(endpointMapper.toView(systemInteractor.endpoint))
     }
 
-    fun changeCurrency(selected: Int) {
+    /*fun changeCurrency(selected: Int) {
         val currencyModel = currencies.get(selected)
         systemInteractor.currency = currencyModel.delegate
         viewState.setCurrency(currencyModel.name)
         saveAccount()
+        logEvent(Analytics.CURRENCY_PARAM, currencyModel.code)
+    }*/
+
+    override fun currencyChanged() {
+        val currencyModel = systemInteractor.currency.let { currencyMapper.toView(it) }
+        viewState.setCurrency(currencyModel.name, true)
         logEvent(Analytics.CURRENCY_PARAM, currencyModel.code)
     }
 
@@ -121,7 +129,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
         Locale.setDefault(systemInteractor.locale)
         initConfigs()
-        viewState.setCurrencies(currencies)
+        //viewState.setCurrencies(currencies)
         viewState.setCalendarModes(calendarModes)
 
         return systemInteractor.locale
@@ -208,6 +216,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     @CallSuper
     override fun onBackCommandClick() {
+        if (currenciesFragmentIsShowing) {
+            viewState.showCurrenciesFragment(false)
+            return
+        }
         if (localeWasChanged) {
             localeWasChanged = false
             router.navigateTo(Screens.ChangeMode(systemInteractor.lastMode))
@@ -216,14 +228,14 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun initConfigs() {
         endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
-        currencies = systemInteractor.currencies.map {
-            currencyMapper.toView(it)/*.apply {
+        /*currencies = systemInteractor.currencies.map {
+            currencyMapper.toView(it)*//*.apply {
                 if (it.code == CURRENCY_GBP) {
                     if (systemInteractor.locale.language == LOCALE_RU)
                         this.name = "$GBP_RU ($symbol)"
                 }
-            }*/
-        }
+            }*//*
+        }*/
         locales = systemInteractor.locales.map { localeMapper.toView(it) }
         //distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
