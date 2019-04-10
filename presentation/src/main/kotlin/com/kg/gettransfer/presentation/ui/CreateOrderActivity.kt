@@ -458,7 +458,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             transfer_return_date_field.setOnClickListener(it)
             transfer_return_date_field.field_input.setOnClickListener(it)
         }
-        fl_DeleteReturnDate.setOnClickListener              { presenter.clearReturnDate(); showReturnFlight(HIDE) }
+        fl_DeleteReturnDate.setOnClickListener              { presenter.clearReturnDate()
+            showReturnFlight(HIDE)
+        }
         passengers_seats.img_plus_seat.setOnClickListener   { presenter.changePassengers(1) }
         passengers_seats.img_minus_seat.setOnClickListener  { presenter.changePassengers(-1) }
         child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
@@ -518,12 +520,22 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     val showReturnFlight: (show: Boolean) -> Unit = { show ->
         flight_numberReturn_field.isVisible = show
         fl_DeleteReturnDate.isVisible       = show
-        flight_divider.isVisible            = show
-        flight_numberReturn_field.field_divider.isVisible = !show
-        flight_number_field.field_divider.isVisible = !show
         if (!show) {
             transfer_return_date_field.field_input.text?.clear()
             flight_numberReturn_field.field_input.text?.clear()
-        }
+            transfer_return_date_field.input_layout.hint = getString(R.string.LNG_RIDE_DATE_RETURN_PLACEHOLDER)
+        } else transfer_return_date_field.input_layout.hint = getString(R.string.LNG_RIDE_RETURN_TRANSFER)
+        changeReturnTransferIcon(show)
+    }
+
+    private fun changeReturnTransferIcon(show: Boolean) {
+        if (show)
+            Utils.setDrawables(
+                    transfer_return_date_field.field_input,
+                    R.drawable.ic_calendar, 0, 0, 0)
+
+        else Utils.setDrawables(
+                transfer_return_date_field.field_input,
+                        R.drawable.ic_plus, 0, R.drawable.ic_arrow_right, 0)
     }
 }

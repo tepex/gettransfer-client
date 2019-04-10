@@ -167,7 +167,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="24dp"
+                    android:layout_marginEnd="16dp"
                     app:srcCompat="@drawable/ic_close_x"
                     android:visibility="gone"/>
             </RelativeLayout>
@@ -236,15 +236,6 @@
                 android:visibility="gone"
                 app:hint="@string/LNG_RIDE_RETURN_FLIGHT_PLACEHOLDER"
                 app:icon_img="@drawable/ic_return_flight" />
-
-            <View
-                android:id="@+id/flight_divider"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/create_transfer_divider_height"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="20dp"
-                android:background="@color/create_order_fields_divider"
-                android:visibility="gone" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"

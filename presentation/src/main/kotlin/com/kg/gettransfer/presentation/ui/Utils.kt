@@ -34,6 +34,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -460,6 +461,18 @@ object Utils : KoinComponent {
         ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, view.punctuality_rate.rate_bar.rating.toInt()),
         ReviewRateModel(ReviewRate.RateType.VEHICLE, view.vehicle_rate.rate_bar.rating.toInt())
     )
+
+    fun setDrawables(textView: TextView,
+                     @DrawableRes start: Int,
+                     @DrawableRes top: Int,
+                     @DrawableRes end: Int,
+                     @DrawableRes bottom: Int) =
+            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
+
+    fun setDrawables(textView: TextView, start: Drawable?,
+                     top: Drawable?, end: Drawable?,
+                     bottom: Drawable?) =
+            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

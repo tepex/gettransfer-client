@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import com.kg.gettransfer.presentation.ui.Utils
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_create_order_field_new.*
 
@@ -19,16 +20,16 @@ class CreateOrderField @JvmOverloads constructor(
                     .inflate(R.layout.view_create_order_field_new, this, true)
 
     init {
-        if(attrs != null) {
-                val ta      = context.obtainStyledAttributes(attrs, R.styleable.CreateOrderField)
-                input_layout.hint        = ta.getString(R.styleable.CreateOrderField_hint)
-                field_input.isFocusable = ta.getBoolean(R.styleable.CreateOrderField_isFocusable, true)
-                field_input.inputType   = ta.getInteger(R.styleable.CreateOrderField_inputType, InputType.TYPE_CLASS_TEXT)
-                val drawableResId = ta.getResourceId(R.styleable.CreateOrderField_icon_img, -1)
-                field_input.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                        ContextCompat.getDrawable(context, drawableResId), null,
-                        ContextCompat.getDrawable(context, R.drawable.ic_arrow_right), null)
-                ta.recycle()
-            }
+        if (attrs != null) {
+            val ta = context.obtainStyledAttributes(attrs, R.styleable.CreateOrderField)
+            input_layout.hint = ta.getString(R.styleable.CreateOrderField_hint)
+            field_input.isFocusable = ta.getBoolean(R.styleable.CreateOrderField_isFocusable, true)
+            field_input.inputType = ta.getInteger(R.styleable.CreateOrderField_inputType, InputType.TYPE_CLASS_TEXT)
+            val drawableResId = ta.getResourceId(R.styleable.CreateOrderField_icon_img, -1)
+
+            Utils.setDrawables(field_input, ContextCompat.getDrawable(context, drawableResId), null,
+                    ContextCompat.getDrawable(context, R.drawable.ic_arrow_right), null)
+            ta.recycle()
         }
+    }
 }
