@@ -74,6 +74,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     private var defaultPromoText: String? = null
 
+    private var phoneCode: Int = 0
 
     companion object {
 
@@ -293,7 +294,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
-        val imgRes = if (count == minimum) R.drawable.ic_minus_item else R.drawable.btn_minus_enabled
+        val imgRes = if (count == minimum) R.drawable.ic_minus_disabled else R.drawable.ic_minus
         view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }
 
@@ -328,10 +329,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {
         user_name_field.field_input.setText(user.profile.name ?: "")
         if (user.profile.phone != null) phone_field.field_input.setText(user.profile.phone)
-        else {
-            val phoneCode = Utils.getPhoneCodeByCountryIso(this)
-            phone_field.field_input.setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
-        }
+        else phoneCode = Utils.getPhoneCodeByCountryIso(this)
+
         email_field.field_input.setText(user.profile.email ?: "")
 
         if (isLoggedIn) email_field.field_input.isEnabled = false
@@ -432,7 +431,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
         email_field.field_input.onTextChanged            { presenter.setEmail(it.trim()) }
         phone_field.field_input.onTextChanged            {
-            if (it.isEmpty()) {
+            if (it.isEmpty() && phone_field.field_input.isFocused) {
                 phone_field.field_input.setText("+")
                 phone_field.field_input.setSelection(1)
             }
@@ -468,7 +467,16 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input)  }
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
         email_field.setOnClickListener                      { fieldTouched(email_field.field_input) }
-        phone_field.setOnClickListener                      { fieldTouched(phone_field.field_input)}
+        phone_field.field_input.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) setPhoneCode()
+            else {
+                val phone = phone_field.field_input.text?.trim()
+                phone?.let {
+                    if (phone.length == 1)
+                        phone_field.field_input.text?.clear()
+                }
+            }
+        }
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
         promo_field.setOnClickListener                      { fieldTouched(promo_field.field_input) }
         comment_field.setOnClickListener                    { showPopupWindowComment()
@@ -485,6 +493,14 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         btnOk.setOnClickListener                            { hideBottomSheet(bsTransport) }
 
         fl_currency.setOnClickListener { bsCurrencies.state = BottomSheetBehavior.STATE_EXPANDED }
+    }
+
+    private fun setPhoneCode() {
+        val phone = phone_field.field_input.text?.trim()
+        phone?.let {
+            if (phone.isEmpty())
+                phone_field.field_input.setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+        }
     }
 
     private fun fieldTouched(viewForFocus: EditText) {
