@@ -10,14 +10,14 @@ import android.view.View
 import android.widget.LinearLayout
 import com.kg.gettransfer.presentation.ui.Utils
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.view_create_order_field_new.*
+import kotlinx.android.synthetic.main.view_create_order_field.*
 
 class CreateOrderField @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
         LinearLayout(context, attrs, defStyleAttr), LayoutContainer {
     override val containerView: View =
             LayoutInflater.from(context)
-                    .inflate(R.layout.view_create_order_field_new, this, true)
+                    .inflate(R.layout.view_create_order_field, this, true)
 
     init {
         if (attrs != null) {

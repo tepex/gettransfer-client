@@ -1,75 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingEnd="20dp"
-    android:paddingStart="0dp"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="12dp"
     tools:context=".presentation.ui.custom.CreateOrderField">
 
-
-    <ImageView
-        android:id="@+id/field_icon"
-        android:layout_width="@dimen/icons_width_create_request"
-        android:layout_height="@dimen/icons_width_create_request"
-
-        android:layout_marginStart="@dimen/icons_margin_start"
-        android:layout_marginTop="@dimen/icons_margin_top"
-        android:layout_marginBottom="@dimen/icons_margin_bottom"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        app:srcCompat="@drawable/ic_comment"/>
-
-    <TextView
-        android:id="@+id/field_title"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_marginStart="@dimen/text_range_to_icon"
-        android:layout_marginTop="@dimen/title_margin_top"
-
-        android:textSize="@dimen/view_transfer_info_small_text_size"
-        android:text="Offer your price"
-
-        app:layout_constraintLeft_toRightOf="@+id/field_icon"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <EditText
-        android:id="@+id/field_input"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-
-        android:layout_marginStart="@dimen/text_range_to_icon"
         android:layout_marginBottom="@dimen/input_margin_bottom"
-        android:background="@null"
-        android:ellipsize="end"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:gravity="start|bottom"
-        android:hint="450"
-        android:textColorHint="@color/black_a10"
-        android:imeOptions="actionNext"
-        android:singleLine="true"
-        android:textColor="@color/colorTextBlack"
-        android:textSize="@dimen/create_transfer_additionals_top_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/field_icon"
-        app:layout_constraintTop_toBottomOf="@+id/field_title" />
+        android:gravity="center"
+        app:hintEnabled="true"
+        app:hintAnimationEnabled="true"
+        tools:hint="450"
+        android:theme="@style/editTextHintCreateOrder">
 
-
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/field_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="6dp"
+            android:background="@null"
+            android:drawableStart="@drawable/ic_comment"
+            android:drawableEnd="@drawable/ic_arrow_right"
+            android:drawablePadding="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:gravity="start|center"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/create_transfer_additionals_top_text_size"/>
+    </android.support.design.widget.TextInputLayout>
 
     <View
         android:id="@+id/field_divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/create_transfer_divider_height"
-
+        android:layout_marginTop="12dp"
         android:layout_marginStart="@dimen/divider_margin_start"
-        android:background="@color/create_order_fields_divider"
+        android:background="@color/create_order_fields_divider" />
 
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

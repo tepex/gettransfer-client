@@ -60,14 +60,12 @@
         <ImageView
             android:id="@+id/ivPassanger"
             android:adjustViewBounds="true"
-            android:scaleType="centerInside"
-
-            android:layout_width="7dp"
+            android:layout_width="14dp"
             android:layout_height="14dp"
             android:layout_marginTop="3dp"
             app:layout_constraintStart_toStartOf="@+id/ivTransferType"
             app:layout_constraintTop_toBottomOf="@+id/ivTransferType"
-            app:srcCompat="@drawable/passengers_num_ic" />
+            app:srcCompat="@drawable/ic_passenger_small" />
 
         <TextView
             android:id="@+id/tvNumberPersonsTransfer"
@@ -90,7 +88,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/tvNumberPersonsTransfer"
             app:layout_constraintStart_toEndOf="@+id/tvNumberPersonsTransfer"
             app:layout_constraintTop_toTopOf="@+id/tvNumberPersonsTransfer"
-            app:srcCompat="@drawable/luggage_num_ic" />
+            app:srcCompat="@drawable/ic_luggage" />
 
         <TextView
             android:id="@+id/tvCountBaggage"

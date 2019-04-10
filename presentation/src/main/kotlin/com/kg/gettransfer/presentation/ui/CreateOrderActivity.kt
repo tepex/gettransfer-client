@@ -58,7 +58,7 @@ import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.* //don't delete
-import kotlinx.android.synthetic.main.view_create_order_field_new.view.*
+import kotlinx.android.synthetic.main.view_create_order_field.view.*
 import kotlinx.android.synthetic.main.view_seats.view.*
 import org.koin.android.ext.android.inject
 
@@ -362,13 +362,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         }
         promo_field.field_input.setTextColor(ContextCompat.getColor(this, colorRes))
         promo_field.field_input.hint = text
-        img_okResult.isVisible = discountInfo != null
+//        img_okResult.isVisible = discountInfo != null
     }
 
     override fun resetPromoView() {
         promo_field.field_input.hint = defaultPromoText
         promo_field.field_input.setTextColor(ContextCompat.getColor(this, R.color.colorTextLightGray))
-        img_okResult.isVisible = false
+//        img_okResult.isVisible = false
     }
 
     override fun showEmptyFieldError(@StringRes stringId: Int) {
