@@ -84,23 +84,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     internal var cost: Double? = null
 
-    private var isAfterMinHours = true
     private var isTimeSetByUser = false
-    internal lateinit var currentDate: Calendar
-    internal var futureHour = 0
-    internal var startDate: TripDate = TripDate(Date())
-    internal var returnDate: TripDate? = null
 
     private var flightNumber: String? = null
     private var flightNumberReturn: String? = null
     private var comment: String? = null
-
-    override fun onFirstViewAttach() {
-        futureHour = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
-        currentDate = getCurrentDatePlusMinimumHours()
-        startDate.date = currentDate.time
-    }
-
 
     @CallSuper
     override fun attachView(view: CreateOrderView) {
@@ -108,9 +96,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         viewState.setCurrencies(currencies)
         val i = systemInteractor.currentCurrencyIndex
         if (i != -1) setCurrency(i)
-
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
-        viewState.setHintForDateTimeTransfer(orderInteractor.hourlyDuration == null)
         transportTypes?.let { viewState.setTransportTypes(it) }
         checkOrderDateTime()
     }
@@ -118,29 +104,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private fun checkOrderDateTime() =
             with(orderInteractor) {
                 orderStartTime?.let {
-                    setPredefinedDate(it, true)
-                    startDate.date = it
-                    isTimeSetByUser = true
-                }
-                orderReturnTime?.let {
-                    setPredefinedDate(it, false)
-                    returnDate = TripDate(it)
-                }
+                    viewState.setDateTimeTransfer(it.simpleFormat(), true)
+                    isTimeSetByUser = true }
+                        ?: viewState.setHintForDateTimeTransfer(orderInteractor.hourlyDuration == null)
+
+                orderReturnTime?.let { viewState.setDateTimeTransfer(it.simpleFormat(), false) }
             }
-
-    private fun setPredefinedDate(date: Date, field: Boolean) =
-        viewState.setDateTimeTransfer(date.simpleFormat(),
-                !date.after(getCurrentDatePlusMinimumHours().time),
-                field)
-
-
-    private fun getCurrentDatePlusMinimumHours(): Calendar {
-        val calendar = Calendar.getInstance(systemInteractor.locale)
-        /* Server must send current locale time */
-        calendar.add(Calendar.HOUR_OF_DAY, futureHour)
-        calendar.add(Calendar.MINUTE, CreateOrderView.FUTURE_MINUTE)
-        return calendar
-    }
 
     fun initMapAndPrices() {
         with(orderInteractor) {
@@ -178,7 +147,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     to.name!!,
                     from.point!!,
                     to.point!!,
-                    SystemUtils.formatDateTime(startDate.date)
+                    dateDelegate.run { startOrderedTime ?: getCurrentDatePlusMinimumHours().time.simpleFormat() }
             )
 
             routeModel?.let {
@@ -226,29 +195,18 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    fun changeDate(newDate: Date, isStartDate: Boolean) {
-        if (!isStartDate && returnDate == null) {
-            returnDate = TripDate(startDate.date).apply { date.time + DATE_OFFSET }
-            initPrices(true)
-        }
-        val fieldDate = if (isStartDate) startDate.also { isTimeSetByUser = true } else { returnDate!!}   //!!      //enable get transfer only if startDate was set manually
-        currentDate = getCurrentDatePlusMinimumHours()
-        if (newDate.after(currentDate.time)) {
-            isAfterMinHours = false 
-            fieldDate.date = newDate
-        } else {
-            isAfterMinHours = true
-            fieldDate.date = currentDate.time
-        }
-        viewState.setDateTimeTransfer(SystemUtils.formatDateTime(fieldDate.date), isAfterMinHours, isStartDate) //!!...
-        if (isStartDate) routeModel?.let {
-            it.dateTime = SystemUtils.formatDateTime(fieldDate.date)
-            viewState.setRoute(polyline!!, it, true)
+    fun changeDate(isStartDate: Boolean) {
+        if (isStartDate) {
+            isTimeSetByUser = true
+            routeModel?.let {
+                it.dateTime = dateDelegate.startOrderedTime!!  //value came from DateDelegate, so start_time was set
+                viewState.setRoute(polyline!!, it, true)
+            }
         }
     }
 
     fun clearReturnDate() {
-        returnDate = null
+        dateDelegate.returnDate = null
         flightNumberReturn = null
         initPrices(false)
     }
@@ -260,7 +218,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             setCurrency(selected)
             saveAccount()
             if (orderInteractor.hourlyDuration == null)
-                initPrices(returnDate != null)
+                initPrices(dateDelegate.returnDate != null)
         }
     }
 
@@ -336,8 +294,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun showLicenceAgreement() = router.navigateTo(Screens.LicenceAgree)
 
     fun onGetTransferClick() {
+        /*
         currentDate = getCurrentDatePlusMinimumHours()
         if (currentDate.time.after(startDate.date)) startDate.date = currentDate.time
+        */
         if (!checkFieldsForRequest()) return
 
         val from = orderInteractor.from!!
@@ -345,8 +305,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val transferNew = TransferNew(
             from.cityPoint,
             if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
-            Trip(startDate.date, flightNumber),
-            returnDate?.let { Trip(if (it.date.after(startDate.date)) it.date else Date(startDate.date.time + DATE_OFFSET) , flightNumberReturn) },
+            Trip(dateDelegate.startDate.date, flightNumber),
+            dateDelegate.returnDate?.let { Trip(it.date, flightNumberReturn) },
             transportTypes!!.filter { it.checked }.map { it.id },
             passengers,
             children,
@@ -492,7 +452,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         when {
             duration != null -> Analytics.TRIP_HOURLY
-            returnDate != null -> Analytics.TRIP_ROUND
+            dateDelegate.returnDate != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
         }.let {
             bundle.putString(Analytics.TRIP_TYPE, it)
@@ -541,6 +501,5 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         private const val MIN_CHILDREN   = 0
 
         private const val INVALID_CURRENCY_INDEX = -1
-        private const val DATE_OFFSET = 1000 * 60 * 5 // 5 minutes
     }
 }

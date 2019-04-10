@@ -27,6 +27,7 @@ internal object SystemUtils : KoinComponent {
     private const val DAY_OF_WEEK_PATTERN = "EEE"
     private const val TIME_PATTERN = "HH:mm"
     private const val MONTH_YEAR_PATTERN = "LLLL yyyy"
+    private const val FULL_DATE_SECONDS = "yyyy-MM-dd HH:mm:ss"
     private const val SLASH = "/"
 
     fun formatDistance(context: Context, _distance: Int?, withDistanceText: Boolean): String {
@@ -46,6 +47,7 @@ internal object SystemUtils : KoinComponent {
     fun formatShortNameDayOfWeek(date: Date) = getFormattedDate(DAY_OF_WEEK_PATTERN, date)
     fun formatTime(date: Date) = getFormattedDate(TIME_PATTERN, date)
     fun formatMonthYear(date: Date) = getFormattedDate(MONTH_YEAR_PATTERN, date)
+    fun formatSeconds(date: Date) = getFormattedDate(FULL_DATE_SECONDS, date)
 
     private fun getFormattedDate(pattern: String, date: Date) = SimpleDateFormat(pattern, systemInteractor.locale).format(date)
 

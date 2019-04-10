@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.delegate
 
 import android.content.Context
+import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.extensions.simpleFormat
@@ -20,6 +21,10 @@ class DateTimeDelegate: KoinComponent {
     private var currentData: Calendar
     var startDate: TripDate = TripDate(Date())
     var returnDate: TripDate? = null
+    set(value) {
+        field = value
+        if (value == null) orderInteractor.orderReturnTime = null
+    }
     private val futureHour
         get() = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
     val startOrderedTime
@@ -50,13 +55,12 @@ class DateTimeDelegate: KoinComponent {
             override fun onDateChosen(date: Date) { handleDateChoice(date, fieldStart) }
             override fun onTimeChosen(date: Date) {
                 handleTimeChoice(date, fieldStart).also {
-                    screen.setFieldDate(SystemUtils.formatDateTime(it), fieldStart)
+                        screen.setFieldDate(getDisplayText(date, context), fieldStart)
                 }
             }
         })
 
-
-    private fun getCurrentDatePlusMinimumHours(): Calendar {
+    fun getCurrentDatePlusMinimumHours(): Calendar {
         val calendar = Calendar.getInstance(systemInteractor.locale)
         /* Server must send current locale time */
         calendar.add(Calendar.HOUR_OF_DAY, futureHour)
@@ -71,12 +75,12 @@ class DateTimeDelegate: KoinComponent {
 
     private fun handleTimeChoice(date: Date, field: Boolean): Date {
         if (field == RETURN_DATE && returnDate == null)
-            returnDate = TripDate(startDate.date).apply { date.time + DATE_OFFSET }
+            returnDate = TripDate(startDate.date).apply { date.time += DATE_OFFSET }
 
         currentData = getCurrentDatePlusMinimumHours()
         val resultDate = if (date.after(currentData.time)) date else currentData.time
         with(orderInteractor) {
-            if (field == START_DATE){
+            if (field == START_DATE) {
                 orderStartTime = resultDate
                 currentData.time = startDate.date
             }
@@ -85,11 +89,21 @@ class DateTimeDelegate: KoinComponent {
         return resultDate
     }
 
+    private fun getDisplayText(date: Date, context: Context) =
+            if (date.after(getCurrentDatePlusMinimumHours().time)) date.simpleFormat()
+            else getTextForMinDate(context)
+
+    fun getTextForMinDate(context: Context) = context.getString(R.string.LNG_DATE_IN_HOURS)
+            .plus(" ")
+            .plus(futureHour)
+            .plus(" ")
+            .plus(context.getString(R.string.LNG_HOUR_FEW))
+
     companion object {
         /* Пока сервевер не присылает минимальный временной промежуток до заказа */
         private const val FUTURE_MINUTE = 5
-        private const val START_DATE  = true
-        private const val RETURN_DATE = false
+        const val START_DATE  = true
+        const val RETURN_DATE = false
         private const val DATE_OFFSET = 1000 * 60 * 5 // 5 minutes
     }
 }

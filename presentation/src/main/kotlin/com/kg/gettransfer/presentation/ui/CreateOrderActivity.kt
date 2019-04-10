@@ -43,9 +43,12 @@ import com.kg.gettransfer.common.BoundTimePickerDialog
 import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
+import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
+import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
+import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
@@ -64,12 +67,12 @@ import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.* //don't delete
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
 import kotlinx.android.synthetic.main.view_seats.view.*
+import org.koin.android.ext.android.inject
 
-class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
+class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeScreen {
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
-
-    private val calendar = Calendar.getInstance()
+    private val dateDelegate: DateTimeDelegate by inject()
 
     private lateinit var bsOrder: BottomSheetBehavior<View>
     private lateinit var bsTransport: BottomSheetBehavior<View>
@@ -241,108 +244,36 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView {
             })
         }
 
-        Handler().postDelayed({
+        presenter.delayedLaunch(KEYBOARD_WAIT_DELAY) {
             popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
             layoutPopupView.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.show_popup))
-        }, CreateOrderActivity.KEYBOARD_WAIT_DELAY)
+        }
     }
 
     private fun showDatePickerDialog(field: Boolean) {
-        val currentDate = presenter.currentDate
-        calendar.time = presenter.startDate.date
-
-        val boundDatePickerDialog = BoundDatePickerDialog(this,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH),
-                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                    calendar.set(year, monthOfYear, dayOfMonth)
-                    if (field)
-                        presenter.startDate.date = calendar.time
-                    else presenter.returnDate?.let { it.date = calendar.time }
-                    val calendarWithoutTime = Calendar.getInstance()
-                    calendarWithoutTime.set(year, monthOfYear, dayOfMonth, 0, 0)
-                    when {
-                        calendarWithoutTime.time.after(currentDate.time) -> showTimePickerDialog(
-                                -1,
-                                24,
-                                calendar.get(Calendar.HOUR_OF_DAY),
-                                calendar.get(Calendar.MINUTE),
-                                field)
-
-                        calendar.time.after(currentDate.time) ->
-                            showTimePickerDialog(currentDate.get(Calendar.HOUR_OF_DAY),
-                                    currentDate.get(Calendar.MINUTE),
-                                    calendar.get(Calendar.HOUR_OF_DAY),
-                                    calendar.get(Calendar.MINUTE),
-                                    field)
-
-                        else -> showTimePickerDialog(
-                                currentDate.get(Calendar.HOUR_OF_DAY),
-                                currentDate.get(Calendar.MINUTE),
-                                currentDate.get(Calendar.HOUR_OF_DAY),
-                                currentDate.get(Calendar.MINUTE),
-                                field)
-                    }
-                })
-
-        if (Build.VERSION.SDK_INT < 21) {
-            boundDatePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
-            boundDatePickerDialog.setMin(
-                currentDate.get(Calendar.YEAR),
-                currentDate.get(Calendar.MONTH),
-                currentDate.get(Calendar.DAY_OF_MONTH)
-            )
-        } else {
-            boundDatePickerDialog.datePicker.minDate = currentDate.timeInMillis
-        }
-        boundDatePickerDialog.show()
+        dateDelegate.chooseOrderTime(this, field, this)
     }
 
-    private fun showTimePickerDialog(minHour: Int, minMinute: Int, setHour: Int, setMinute: Int, field: Boolean) {
-        /*val timePickerDialog = TimePickerDialog(this, { _, hour, minute ->
-            calendar.set(Calendar.HOUR_OF_DAY, hour)
-            calendar.set(Calendar.MINUTE, minute)
-            presenter.changeDate(calendar.time)
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true)
-        timePickerDialog.show() */
-
-        BoundTimePickerDialog(
-            this,
-            { _, hour, minute ->
-                calendar.set(Calendar.HOUR_OF_DAY, hour)
-                calendar.set(Calendar.MINUTE, minute)
-                presenter.changeDate(calendar.time, field)
-            },
-            setHour,
-            setMinute,
-            true
-        ).apply {
-            setMin(minHour, minMinute)
-            show()
-        }
+    //DateTimeScreen interface method
+    override fun setFieldDate(date: String, field: Boolean) {
+        presenter.changeDate(field)
+        (if (field == START_DATE) transfer_date_time_field
+        else transfer_return_date_field.also { showReturnFlight(SHOW) })
+                .apply { field_input.setText(date) }
     }
 
-    override fun setDateTimeTransfer(dateTimeString: String, isAfterMinHours: Boolean, startField: Boolean) {
-        (if (startField) transfer_date_time_field else transfer_return_date_field.also { showReturnFlight(SHOW) })
-                .let {
-                    if (isAfterMinHours) it.field_input.setText(getTextForMinDate())
-                    else it.field_input.setText(dateTimeString)
-                }
+    override fun setDateTimeTransfer(dateTimeString: String, startField: Boolean) {
+        (if (startField) transfer_date_time_field
+        else transfer_return_date_field.also { showReturnFlight(SHOW) })
+                .also { it.field_input.setText(dateTimeString) }
     }
 
     override fun setHintForDateTimeTransfer(withReturnWay: Boolean) {
-        transfer_date_time_field.field_input.hint = getTextForMinDate()
+        transfer_date_time_field.field_input.hint = dateDelegate.getTextForMinDate(this)
         rl_returnWayTime.isVisible = withReturnWay
     }
 
-    private fun getTextForMinDate() = getString(R.string.LNG_DATE_IN_HOURS)
-            .plus(" ")
-            .plus(presenter.futureHour)
-            .plus(" ")
-            .plus(getString(R.string.LNG_HOUR_FEW))
-
-            private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
+    private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
         val imgRes = if (count == minimum) R.drawable.ic_minus_item else R.drawable.btn_minus_enabled
         view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }

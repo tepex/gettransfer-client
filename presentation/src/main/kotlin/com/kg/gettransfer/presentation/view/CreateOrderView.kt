@@ -24,7 +24,7 @@ interface CreateOrderView : BaseView, RouteView {
     fun setPassengers(count: Int)
     fun setChildren(count: Int)
     fun setCurrency(currency: String)
-    fun setDateTimeTransfer(dateTimeString: String, isAfterMinHours: Boolean, startField: Boolean)
+    fun setDateTimeTransfer(dateTimeString: String, startField: Boolean)
     fun setHintForDateTimeTransfer(withReturnWay: Boolean)
     fun setComment(comment: String)
     fun setGetTransferEnabled(enabled: Boolean)

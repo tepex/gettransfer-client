@@ -11,7 +11,10 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.simpleFormat
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
+import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.RETURN_DATE
+import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.presentation.view.CreateOrderView
@@ -24,7 +27,6 @@ import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.view_switcher.*
 
-import org.jetbrains.anko.longToast
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 
@@ -62,10 +64,16 @@ class MainRequestFragment :
     }
 
     private fun initClickListeners() {
+        //Switchers
         switcher_hourly.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
             mParent.switch_mode.isChecked = isChecked
             tripModeSwitched(isChecked)
         }
+        switcher_map_.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
+            mParent.switcher_map.switch_mode_.performClick()
+        }
+
+        //Address panel
         with(request_search_panel) {
             rl_hourly.setOnClickListener  { mParent.showNumberPicker(true) }
             searchFrom.setOnClickListener { mParent.performClick(false, true) }
@@ -74,21 +82,18 @@ class MainRequestFragment :
             searchTo.setUneditable()
         }
 
-        switcher_map_.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
-            mParent.switcher_map.switch_mode_.performClick()
-        }
+        //Time
+        order_time_view.setOnClickListener  { openPicker(START_DATE) }
+        return_time_view.setOnClickListener { openPicker(RETURN_DATE) }
 
-        order_time_view.setOnClickListener  { openPicker(FIELD_START) }
-        return_time_view.setOnClickListener (dateReturnClickListenerEnabled)
-
+        //Buttons
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
         btnNextFragment.setOnClickListener       { onNextClick() }
         ivSetMyLocation.setOnClickListener       { mPresenter.updateCurrentLocation() }
     }
 
     private fun onNextClick() {
-        if (dateDelegate.validateWith { dateErrorBlock() })
-        {
+        if (dateDelegate.validateWith { dateErrorBlock() }) {
             mPresenter.onNextClick()
             mPresenter.onStartScreenOrderNote()
         }
@@ -99,14 +104,12 @@ class MainRequestFragment :
             .setMessage(getString(CreateOrderView.FieldError.RETURN_TIME.stringId))
             .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
             .show() }
-    private val dateReturnClickListenerEnabled  = View.OnClickListener { openPicker(FIELD_RETURN) }
-    private val dateReturnClickListenerDisabled = View.OnClickListener { mParent.longToast("Choose start time") }
 
     private fun initDateTimeFields() =
         with(dateDelegate) {
             startOrderedTime?.let {
                 order_time_view.hint_title.text = it
-                return_time_view.setOnClickListener(dateReturnClickListenerEnabled)
+                return_time_view.setOnClickListener { openPicker(RETURN_DATE) }
             }
             returnOrderedTime?.let { return_time_view.hint_title.text = it }
             enableBtnNext()
@@ -173,18 +176,13 @@ class MainRequestFragment :
     }
 
     override fun setFieldDate(date: String, field: Boolean) {
-        val dateField = if (field == FIELD_START) order_time_view else return_time_view
+        val dateField = if (field == START_DATE) order_time_view else return_time_view
         dateField.hint_title.text = date
-        if (field == FIELD_RETURN) setReturnTimeIcon(date.isNotEmpty())
+        if (field == RETURN_DATE) setReturnTimeIcon(date.isNotEmpty())
         enableBtnNext()
     }
 
     override fun onNetworkWarning(disconnected: Boolean) {
         tv_internet_warning.isVisible = disconnected
-    }
-
-    companion object {
-        const val FIELD_START  = true
-        const val FIELD_RETURN = false
     }
 }

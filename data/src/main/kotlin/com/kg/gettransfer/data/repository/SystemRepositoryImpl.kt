@@ -276,7 +276,7 @@ class SystemRepositoryImpl(
         private val NO_ACCOUNT = Account(
             user         = User(Profile(null, null, null)),
             locale       = Locale.getDefault(),
-            currency     = java.util.Currency.getInstance(Locale.getDefault()).let { com.kg.gettransfer.domain.model.Currency(it.currencyCode, it.symbol) },
+            currency     = defineNoAccountCurrency(),
             distanceUnit = DistanceUnit.km,
             groups       = emptyList<String>(),
             carrierId    = null
@@ -286,6 +286,14 @@ class SystemRepositoryImpl(
             orderMinimumMinutes = 120,
             termsUrl            = "terms_of_use"
         )
-        //private const val API_URL_LOCATION = "https://ipapi.co"
+
+        private fun defineNoAccountCurrency() =
+                java.util.Currency.getInstance(Locale.getDefault()).let {
+                    com.kg.gettransfer.domain.model.Currency(it.currencyCode, it.symbol)
+                            .let { dc ->
+                                if (CONFIGS_DEFAULT.supportedCurrencies.contains(dc)) dc
+                                else CONFIGS_DEFAULT.supportedCurrencies.first { c -> c.code == "USD" }
+                            }
+                }
     }
 }
