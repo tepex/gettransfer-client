@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
@@ -49,6 +50,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
     @SuppressLint("CommitTransaction")
     override fun showCurrenciesFragment(show: Boolean) {
         with(supportFragmentManager.beginTransaction()) {
+            setAnimation(show, this)
             if (show) {
                 presenter.currenciesFragmentIsShowing = true
                 add(R.id.currenciesFragment, SelectCurrencyFragment())
@@ -60,6 +62,13 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }?.commit()
         setTitleText(show)
     }
+
+    @SuppressLint("PrivateResource")
+    private fun setAnimation(opens: Boolean, transaction: FragmentTransaction) =
+            transaction.apply {
+                val anim = if(opens) R.anim.enter_from_right else R.anim.exit_to_right
+                setCustomAnimations(anim, anim)
+            }
 
     private fun setTitleText(currenciesFragmentIsShowing: Boolean) {
         toolbar.toolbar_title.text = getString(if (currenciesFragmentIsShowing) R.string.LNG_CURRENCIES_CHOOSE else R.string.LNG_MENU_TITLE_SETTINGS)
