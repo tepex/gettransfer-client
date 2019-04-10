@@ -38,7 +38,6 @@
         android:layout_below="@+id/rvTransferType"
         android:fillViewport="true">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,7 +55,6 @@
                 android:layout_height="@dimen/create_transfer_divider_height"
                 android:background="@color/colorDividerGray" />
 
-
             <LinearLayout
                 android:id="@+id/cl_offer_price"
                 android:layout_width="match_parent"
@@ -68,7 +66,6 @@
                     android:id="@+id/fl_currency"
                     android:layout_width="49dp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="16dp"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <TextView
@@ -99,39 +96,13 @@
 
                 </android.support.constraint.ConstraintLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                    android:id="@+id/price_field_input"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:hint="@string/LNG_RIDE_PRICE"
-                    android:theme="@style/editTextHintCreateOrder">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/price_field_input"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:drawableEnd="@drawable/ic_arrow_right"
-                        android:fontFamily="@font/sf_pro_text_semibold"
-                        android:inputType="numberDecimal"
-                        android:textColor="@color/colorTextBlack"
-                        android:textColorHint="@color/black_a10"
-                        android:textSize="@dimen/create_transfer_additionals_top_text_size" />
-                </android.support.design.widget.TextInputLayout>
-
-
-                <View
-                    android:id="@+id/price_divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/create_transfer_divider_height"
-
-                    android:layout_marginStart="@dimen/divider_margin_start"
-                    android:layout_marginEnd="@dimen/divider_margin_start"
-                    android:background="@color/create_order_fields_divider"
-
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
+                    android:layout_height="match_parent"
+                    app:hint="@string/LNG_RIDE_PRICE"
+                    app:icon_img="@android:drawable/btn_star_big_on"
+                    app:inputType="@integer/inputType_number"/>
             </LinearLayout>
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
@@ -157,8 +128,7 @@
                     app:hint="@string/LNG_RIDE_DATE_RETURN_PLACEHOLDER"
                     app:icon_img="@drawable/ic_plus"
                     app:inputType="@integer/inputType_NoSuggestion"
-                    app:isFocusable="false"
-                    app:title="Return transfer" />
+                    app:isFocusable="false" />
 
                 <ImageView
                     android:id="@+id/fl_DeleteReturnDate"
@@ -212,7 +182,6 @@
                 app:hint="@string/LNG_RIDE_PHONE_PLACEHOLDER"
                 app:icon_img="@drawable/ic_phone"
                 app:inputType="@integer/inputType_Phone" />
-
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/email_field"
@@ -308,11 +277,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
-
-
         </LinearLayout>
-
-
     </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
@@ -343,5 +308,4 @@
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/create_transfer_additionals_top_text_size" />
     </LinearLayout>
-
 </RelativeLayout>

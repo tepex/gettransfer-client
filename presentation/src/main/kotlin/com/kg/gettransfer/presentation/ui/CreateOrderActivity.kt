@@ -413,6 +413,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
         passengers_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passenger_small))
         child_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_child_seat))
+        Utils.setDrawables(price_field_input.field_input, 0, 0, R.drawable.ic_arrow_right, 0)
 
         /* titles */
         passengers_seats.seat_title.text = getString(R.string.LNG_RIDE_PASSENGERS)
@@ -424,8 +425,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     private fun initChangeTextListeners() {
-        price_field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
-        price_field_input.setOnFocusChangeListener  { _, hasFocus ->
+        price_field_input.field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
+        price_field_input.field_input.setOnFocusChangeListener  { _, hasFocus ->
             if (hasFocus) presenter.logTransferSettingsEvent(OFFER_PRICE_FOCUSED)
         }
         user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
@@ -466,7 +467,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
         child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
 
-        cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input)  }
+        cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input.field_input)  }
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
         email_field.setOnClickListener                      { fieldTouched(email_field.field_input) }
         phone_field.field_input.setOnFocusChangeListener { v, hasFocus ->
