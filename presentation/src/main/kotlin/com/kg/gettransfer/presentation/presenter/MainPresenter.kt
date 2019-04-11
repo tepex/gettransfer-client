@@ -116,10 +116,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     fun setScreenState(hasRequestView: Boolean) {
         when {
             nState.currentState == MainState.CHOOSE_POINT_ON_MAP ->
-            {
                 viewState.openMapToSetPoint()
-                nState.currentState = ScreenNavigationState.NO_STATE
-            }
 
             screenType == REQUEST_SCREEN && !hasRequestView      ->
                 viewState.recreateRequestFragment()
@@ -318,6 +315,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     fun onSearchClick(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false) {
+        nState.currentState = ScreenNavigationState.NO_STATE
         navigateToFindAddress(from, to, bounds, returnBack)
     }
 
@@ -474,7 +472,9 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     fun onBackClick() {
-        if (systemInteractor.selectedField == FIELD_TO) switchUsedField() else viewState.onBackClick()
+        if (systemInteractor.selectedField == FIELD_TO) switchUsedField()
+        else viewState.onBackClick(nState.currentState == MainState.CHOOSE_POINT_ON_MAP,
+                isClickTo ?: true)
     }
 
     fun onShareClick() {

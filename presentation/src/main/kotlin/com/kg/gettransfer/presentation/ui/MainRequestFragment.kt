@@ -11,7 +11,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.extensions.simpleFormat
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.RETURN_DATE
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
@@ -84,7 +83,6 @@ class MainRequestFragment :
 
         //Time
         order_time_view.setOnClickListener  { openPicker(START_DATE) }
-        return_time_view.setOnClickListener { openPicker(RETURN_DATE) }
 
         //Buttons
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
@@ -111,7 +109,10 @@ class MainRequestFragment :
                 order_time_view.hint_title.text = it
                 return_time_view.setOnClickListener { openPicker(RETURN_DATE) }
             }
-            returnOrderedTime?.let { return_time_view.hint_title.text = it }
+            returnOrderedTime?.let {
+                return_time_view.hint_title.text = it
+                setReturnTimeIcon()
+            }
             enableBtnNext()
         }
 
@@ -179,6 +180,7 @@ class MainRequestFragment :
         val dateField = if (field == START_DATE) order_time_view else return_time_view
         dateField.hint_title.text = date
         if (field == RETURN_DATE) setReturnTimeIcon(date.isNotEmpty())
+        else return_time_view.setOnClickListener { openPicker(RETURN_DATE) }
         enableBtnNext()
     }
 

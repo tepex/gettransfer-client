@@ -92,23 +92,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0)
-
         setContentView(R.layout.activity_transfer_details)
-
-        topCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT).replace(" ", "\n")
-        bottomCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT).replace(" ", "\n")
-        topCommunicationButtons.btnRepeatTransfer.btnName.text = getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
-        bottomCommunicationButtons.btnRepeatTransfer.btnName.text = getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
-        topCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
-        bottomCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
-
         setupStatusBar()
 
         _mapView = mapView
         _btnCenter = btnCenterRoute
         initMapView(savedInstanceState)
         setupToolbar()
-        //initTextFields()
+        initButtonTitles()
         setClickListeners()
     }
 
@@ -125,6 +116,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
         toolbar.toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS)
+    }
+
+    private fun initButtonTitles() {
+        topCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT).replace(" ", "\n")
+        bottomCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT).replace(" ", "\n")
+        topCommunicationButtons.btnRepeatTransfer.btnName.text = getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
+        bottomCommunicationButtons.btnRepeatTransfer.btnName.text = getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
+        topCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
+        bottomCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
     }
 
     override fun onAttachedToWindow() {
@@ -147,26 +147,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
 
-    /*override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            if (bsTransferDetails.state == BottomSheetBehavior.STATE_EXPANDED) {
-                if(hideBottomSheet(bsTransferDetails, sheetTransferDetails, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
-            }
-        }
-        return super.dispatchTouchEvent(event)
-    }*/
-
-    /*private fun initTextFields() {
-        tvTransferCancelledOrInProgress.text = getString(R.string.LNG_RIDE_REQUEST_FOR).plus(" ").plus(getString(R.string.LNG_RIDE_TRANSFER_CANCELLED))
-        textTransferWillStartTime.text = getString(R.string.LNG_TRANSFER_START).plus(":")
-        textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT).plus(":")
-        textYourPrice.text = getString(R.string.LNG_RIDE_PRICE_YOUR).plus(":")
-        textNotPaid.text = getString(R.string.LNG_RIDE_NOT_PAID).plus(":")
-        textPrice.text = getString(R.string.LNG_RIDE_PAYMENT_COST).plus(":")
-        textDistance.text = getString(R.string.LNG_RIDE_DISTANCE).plus(":")
-        textDuration.text = getString(R.string.LNG_RIDE_TIME).plus(":")
-        textRequestSentOrCompletedDate.text = getString(R.string.LNG_RIDE_REQUEST_WAS_SENT).plus(":")
-    }*/
 
     private fun setClickListeners() {
         btnBack.setOnClickListener          { presenter.onBackCommandClick() }
@@ -205,6 +185,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                         .plus(getString(R.string.LNG_IN_PROGRESS))
             }
             else -> transfer.statusName?.let { getString(R.string.LNG_TRANSFER_WAS)
+                    .plus(" #${transfer.id} ")
                     .plus(" ")
                     .plus(getString(transfer.statusName).toLowerCase()) }
         }
@@ -308,48 +289,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
         tv_bookNow_info.isVisible = transfer.isBookNow()
     }
 
-    /*private fun setTransferStatus(transfer: TransferModel) {
-        with(transfer_details_header.booking_info) {
-            when (transfer.status) {
-                Transfer.Status.NEW -> {
-                    text = "Заявка #"
-                            .plus(transfer.id)
-                            .plus(" выберите перевозчика")
-                }
-                Transfer.Status.REJECTED -> {
-                    setTextColor(ContextCompat.getColor(this@TransferDetailsActivity, R.color.color_transfer_details_text_red))
-                    text = "Заявка #"
-                            .plus(transfer.id)
-                            .plus(" отменена")
-                }
-                Transfer.Status.PERFORMED -> {
-                    text = "Трансфер #"
-                            .plus(transfer.id)
-                            .plus(" начнется через ")
-                            .plus(Utils.durationToString(this@TransferDetailsActivity, Utils.convertDuration(transfer.timeToTransfer)))
-                }
-                Transfer.Status.PENDING_CONFIRMATION -> {
-                    text = "Трансфер #"
-                            .plus(transfer.id)
-                            .plus(" выполняется")
-                }
-                Transfer.Status.CANCELED -> {
-                    text = "Трансфер #"
-                            .plus(transfer.id)
-                            .plus(" завершен")
-                }
-                else -> return
-            }
-        }
-    }*/
-
     private fun initAboutRequestView(transfer: TransferModel, userProfile: ProfileModel) {
-   //     booking_number.field_text.text = transfer.id.toString()
-        /*with (userProfile) {
-            name?.let { initField(passenger_name, it) }
-            email?.let { initField(passenger_email, it) }
-            phone?.let { initField(passenger_phone, it) }
-        }*/
         userProfile.name?.let { initField(passenger_name, it) }
         with(transfer) {
             flightNumber?.let { initField(flight_number, it) }
@@ -481,16 +421,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                 }
             }
         }
-
-
-//        if (childSeats > 0) {
-//            child_seats_field.field_text.text = childSeats.toString()
-//            child_seats_field.isVisible = true
-//        }
-
-  //      ivManyPhotos.isVisible = offerModel.vehicle.photos.size > 1
-
-
         if (offerModel.vehicle.photos.isNotEmpty()) {
             Glide.with(this).load(offerModel.vehicle.photos.first()).into(carPhoto)
             carPhoto.scaleType = ImageView.ScaleType.CENTER_CROP

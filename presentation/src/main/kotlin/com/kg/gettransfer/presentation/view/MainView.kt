@@ -22,7 +22,7 @@ interface MainView: BaseView {
     fun blockSelectedField(block: Boolean, field: String)
     fun selectFieldFrom()
     fun setFieldTo()
-    fun onBackClick()
+    fun onBackClick(isAddressNavigating: Boolean, isTo: Boolean)
     fun showReadMoreDialog()
     fun setTripMode(duration: Int?)
     fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?)

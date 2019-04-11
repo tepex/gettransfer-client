@@ -507,9 +507,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         tv_a_point.alpha    = alpha
     }
 
-    override fun onBackClick() {
+    override fun onBackClick(isAddressNavigating: Boolean, isTo: Boolean) {
         when {
             drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
+            screenType == MainView.REQUEST_SCREEN && isAddressNavigating -> {
+                performClick(isTo, true)
+                setSwitchersVisibility(true)
+            }
             hourlySheet.state == BottomSheetBehavior.STATE_COLLAPSED -> showNumberPicker(false)
             else -> super.onBackPressed()
         }
