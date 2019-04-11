@@ -55,7 +55,7 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
         val carNumber = offer.vehicle.registrationNumber
         val carColor = offer.vehicle.color
         layout.setViewVisibility(R.id.tvCarInfo, View.VISIBLE)
-        layout.setTextViewText(R.id.tvCarInfo, "$carName $carNumber $carColor")
+        layout.setTextViewText(R.id.tvCarInfo, "$carName $carNumber ${carColor ?: ""}")
         layout.setTextViewText(R.id.tvTitle, context.getString(R.string.LNG_NEW_OFFER_TITLE))
         layout.setTextViewText(R.id.tvContent, context.getString(R.string.LNG_NEW_OFFER_MESSAGE))
 
