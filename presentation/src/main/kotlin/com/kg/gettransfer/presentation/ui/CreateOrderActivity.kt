@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 
 import android.graphics.Color
 
@@ -22,8 +21,6 @@ import android.text.InputFilter
 import android.text.InputType //don't delete
 import android.text.TextUtils //don't delete
 
-
-
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo //don't delete
@@ -37,9 +34,6 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.common.BoundDatePickerDialog
-
-import com.kg.gettransfer.common.BoundTimePickerDialog
 
 import com.kg.gettransfer.extensions.*
 
@@ -58,8 +52,6 @@ import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
 import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
-
-import java.util.Calendar
 
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
@@ -166,12 +158,15 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
-            if (bsTransport.state == BottomSheetBehavior.STATE_EXPANDED) {
-                if(hideBottomSheet(bsTransport, sheetTransport, BottomSheetBehavior.STATE_HIDDEN, event)) return true
-            } else if (bsCurrencies.state == BottomSheetBehavior.STATE_EXPANDED) {
-                if(hideBottomSheet(bsCurrencies, sheetCurrencies, BottomSheetBehavior.STATE_HIDDEN, event)) return true
-            } else if (bsOrder.state == BottomSheetBehavior.STATE_EXPANDED) {
-                if(hideBottomSheet(bsOrder, sheetOrder, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
+            when {
+                bsTransport.state == BottomSheetBehavior.STATE_EXPANDED ->
+                    if(hideBottomSheet(bsTransport, sheetTransport, BottomSheetBehavior.STATE_HIDDEN, event)) return true
+
+                bsCurrencies.state == BottomSheetBehavior.STATE_EXPANDED ->
+                    if(hideBottomSheet(bsCurrencies, sheetCurrencies, BottomSheetBehavior.STATE_HIDDEN, event)) return true
+
+                bsOrder.state == BottomSheetBehavior.STATE_EXPANDED ->
+                    if(hideBottomSheet(bsOrder, sheetOrder, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
             }
         }
         return super.dispatchTouchEvent(event)

@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,28 +40,26 @@ class SelectCurrencyFragment : MvpAppCompatFragment(), SelectCurrencyView {
     }
 
     override fun setCurrencies(all: List<CurrencyModel>, popular: List<CurrencyModel>, selected: CurrencyModel) {
-        rvAllCurrencies.adapter = CurrenciesListAdapter(all, selected) {
+        setRecyclerViewAdapter(rvAllCurrencies, all, selected)
+        setRecyclerViewAdapter(rvPopularCurrencies, popular, selected)
+    }
+
+    private fun setRecyclerViewAdapter(recyclerView: RecyclerView, list: List<CurrencyModel>, selected: CurrencyModel) {
+        recyclerView.adapter = CurrenciesListAdapter(list, selected) {
             presenter.changeCurrency(it)
-            setNewSelectedCurrency(it)
-        }
-        rvPopularCurrencies.adapter = CurrenciesListAdapter(popular, selected) {
-            presenter.changeCurrency(it)
-            setNewSelectedCurrency(it)
+            changeSelectedCurrency(it)
         }
     }
 
-    private fun setNewSelectedCurrency(newSelectedCurrency: CurrencyModel) {
-        (rvAllCurrencies.adapter as CurrenciesListAdapter).setNewSelectedCurrency(newSelectedCurrency)
-        (rvPopularCurrencies.adapter as CurrenciesListAdapter).setNewSelectedCurrency(newSelectedCurrency)
-        activity?.runOnUiThread {
-            (rvAllCurrencies.adapter as CurrenciesListAdapter).apply {
-                setNewSelectedCurrency(newSelectedCurrency)
-                notifyDataSetChanged()
-            }
-            (rvPopularCurrencies.adapter as CurrenciesListAdapter).apply {
-                setNewSelectedCurrency(newSelectedCurrency)
-                notifyDataSetChanged()
-            }
+    private fun changeSelectedCurrency(newSelectedCurrency: CurrencyModel) {
+        setNewSelectedCurrency(rvAllCurrencies, newSelectedCurrency)
+        setNewSelectedCurrency(rvPopularCurrencies, newSelectedCurrency)
+    }
+
+    private fun setNewSelectedCurrency(recyclerView: RecyclerView, newSelectedCurrency: CurrencyModel) {
+        (recyclerView.adapter as CurrenciesListAdapter).apply {
+            setNewSelectedCurrency(newSelectedCurrency)
+            notifyDataSetChanged()
         }
     }
 
