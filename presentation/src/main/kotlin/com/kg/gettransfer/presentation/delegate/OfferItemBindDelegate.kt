@@ -112,7 +112,7 @@ object OfferItemBindDelegate {
             tv_car_model_tiny.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.view_offer_book_now_title_text_size))
             tv_car_class_tiny.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
             bindMainPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
-            bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING)
+            bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING, true)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
             offer.withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
             tv_price_final.text = offer.base.preferred ?: offer.base.def
@@ -143,13 +143,16 @@ object OfferItemBindDelegate {
 
     private fun bindRating(rateView: View, rating: RatingsModel, approved: Boolean = false): Boolean =
             with(rateView) {
+                imgApproved.isVisible = approved
                 if (rating.average != null && rating.average != NO_RATING) {
-                    imgApproved.isVisible = approved
                     tv_drivers_rate.text  = rating.average.toString().replace(".", ",")
+                    tv_drivers_rate.isVisible = true
+                    imgStar.isVisible = true
                     isVisible = true
                     return@with RATE_SHOWN
                 }
-                return@with !RATE_SHOWN
+                isVisible = approved
+                return@with approved
             }
 
     private fun bindLanguages(singleLineContainer: LinearLayout? = null, multiLineContainer: LinearLayout? = null, languages: List<LocaleModel>) {
