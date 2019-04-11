@@ -23,4 +23,11 @@ class CountEventsInteractor(private val countEventsRepository: CountEventsReposi
 
     fun addCounterListener(listener: CounterEventListener) { countEventsRepository.addCounterListener(listener) }
     fun removeCounterListener(listener: CounterEventListener) { countEventsRepository.removeCounterListener(listener) }
+
+    fun clearCountEvents() {
+        mapCountNewOffers = emptyMap()
+        mapCountNewMessages = emptyMap()
+        mapCountViewedOffers = emptyMap()
+        eventsCount = 0
+    }
 }

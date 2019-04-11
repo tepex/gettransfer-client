@@ -101,14 +101,20 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
 
     private fun logout(){
         utils.launchSuspend {
-            utils.asyncAwait { systemInteractor.unregisterPushToken() }
-            utils.asyncAwait { systemInteractor.logout() }
-
-            utils.asyncAwait { transferInteractor.clearTransfersCache() }
-            utils.asyncAwait { offerInteractor.clearOffersCache() }
-            utils.asyncAwait { carrierTripInteractor.clearCarrierTripsCache() }
+            clearAllCachedData()
             router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
         }
+    }
+
+    protected suspend fun clearAllCachedData() {
+        utils.asyncAwait { systemInteractor.unregisterPushToken() }
+        utils.asyncAwait { systemInteractor.logout() }
+
+        utils.asyncAwait { transferInteractor.clearTransfersCache() }
+        utils.asyncAwait { offerInteractor.clearOffersCache() }
+        utils.asyncAwait { carrierTripInteractor.clearCarrierTripsCache() }
+
+        countEventsInteractor.clearCountEvents()
     }
 
     /*fun checkNewMessagesCached() {

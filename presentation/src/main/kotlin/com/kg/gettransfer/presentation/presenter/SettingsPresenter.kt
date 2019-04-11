@@ -184,12 +184,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun onLogout() {
         utils.launchSuspend {
-            utils.asyncAwait { systemInteractor.unregisterPushToken() }
-            utils.asyncAwait { systemInteractor.logout() }
-
-            utils.asyncAwait { transferInteractor.clearTransfersCache() }
-            utils.asyncAwait { offerInteractor.clearOffersCache() }
-            utils.asyncAwait { carrierTripInteractor.clearCarrierTripsCache() }
+            clearAllCachedData()
             router.exit()
         }
         logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
