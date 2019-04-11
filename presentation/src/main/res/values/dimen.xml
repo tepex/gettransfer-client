@@ -682,7 +682,7 @@
 	<dimen name="bottom_sheet_offer_details_padding_bottom">24dp</dimen>
 	<dimen name="bottom_sheet_offer_details_swipe_view_margin_top">25dp</dimen>
 	<dimen name="bottom_sheet_offer_details_languages_container_margin_start">7dp</dimen>
-	<dimen name="bottom_sheet_offer_details_sv_photo_height">225dp</dimen>
+	<dimen name="bottom_sheet_offer_details_sv_photo_height">152dp</dimen>
 	<dimen name="bottom_sheet_offer_details_iv_offer_bs_booknow_height">225dp</dimen>
 	<dimen name="bottom_sheet_offer_details_current_price_margin_end">20dp</dimen>
 	<dimen name="bottom_sheet_offer_details_old_price_margin_end">20dp</dimen>
