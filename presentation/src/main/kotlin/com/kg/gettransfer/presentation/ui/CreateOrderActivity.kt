@@ -187,7 +187,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         with(promo_field) {
             field_input.filters = arrayOf(InputFilter.AllCaps())
             field_input.setOnFocusChangeListener { _, hasFocus -> if (!hasFocus) presenter.checkPromoCode() }
-            defaultPromoText = field_input.hint?.toString()
+            defaultPromoText = input_layout.hint?.toString()
         }
     }
 
@@ -354,21 +354,20 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 
     override fun setPromoResult(discountInfo: String?) {
-        @ColorRes var colorRes = R.color.color_error
+        @ColorRes var colorText = R.color.color_error
         var text = getString(R.string.LNG_RIDE_PROMOCODE_INVALID)
+
         discountInfo?.let {
-            colorRes = R.color.promo_valid
+            colorText = R.color.colorGreen
             text = it
         }
-        promo_field.field_input.setTextColor(ContextCompat.getColor(this, colorRes))
-        promo_field.field_input.hint = text
-//        img_okResult.isVisible = discountInfo != null
+        promo_field.field_input.setTextColor(ContextCompat.getColor(this, colorText))
+        promo_field.input_layout.hint = text
     }
 
     override fun resetPromoView() {
-        promo_field.field_input.hint = defaultPromoText
+        promo_field.input_layout.hint = defaultPromoText
         promo_field.field_input.setTextColor(ContextCompat.getColor(this, R.color.colorTextLightGray))
-//        img_okResult.isVisible = false
     }
 
     override fun showEmptyFieldError(@StringRes stringId: Int) {
@@ -408,18 +407,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     //TODO create custom view for new bottom sheet
     private fun initFieldsViews() {
-
-        /* icons */
-
         passengers_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passenger_small))
         child_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_child_seat))
         Utils.setDrawables(price_field_input.field_input, 0, 0, R.drawable.ic_arrow_right, 0)
 
-        /* titles */
         passengers_seats.seat_title.text = getString(R.string.LNG_RIDE_PASSENGERS)
         child_seats.seat_title.text = getString(R.string.LNG_RIDE_CHILDREN)
 
-        /* editable fields */
         passengers_seats.person_count.text = getString(R.string.passenger_number_default)
         child_seats.person_count.text      = getString(R.string.child_number_default)
     }
@@ -481,7 +475,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             }
         }
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
-        promo_field.setOnClickListener                      { fieldTouched(promo_field.field_input) }
         comment_field.setOnClickListener                    { showPopupWindowComment()
             presenter.logTransferSettingsEvent(COMMENT_INPUT)
         }
@@ -537,6 +530,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
         else Utils.setDrawables(
                 transfer_return_date_field.field_input,
-                        R.drawable.ic_plus, 0, R.drawable.ic_arrow_right, 0)
+                R.drawable.ic_plus, 0, R.drawable.ic_arrow_right, 0)
     }
 }
