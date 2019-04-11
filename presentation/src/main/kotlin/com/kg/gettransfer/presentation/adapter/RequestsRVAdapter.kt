@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 
 import android.view.View
 import android.view.ViewGroup
+import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.extensions.isVisible
 
@@ -41,8 +42,9 @@ class RequestsRVAdapter(
         }
 
         private fun showEvents(item: TransferModel) {
-            if (item.eventsCount == 0 || !item.showOfferInfo) tvEventsCount.isVisible = false
-            else {
+            if (item.eventsCount == 0 || (!item.showOfferInfo && item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE)) {
+                tvEventsCount.isVisible = false
+            } else {
                 tvEventsCount.isVisible = true
                 tvEventsCount.text = item.eventsCount.toString()
             }
