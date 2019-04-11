@@ -58,7 +58,8 @@ data class Transfer(
     val airlineCard: String?,
     val paymentPercentages: List<Int>?,
     val unreadMessagesCount: Int,
-    var showOfferInfo: Boolean
+    var showOfferInfo: Boolean,
+    var eventsCount:Int = 0
 ) : Entity() {
 
     fun checkStatusCategory() = when (status) {

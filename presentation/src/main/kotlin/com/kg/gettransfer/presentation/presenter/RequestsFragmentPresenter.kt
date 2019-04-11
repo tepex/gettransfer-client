@@ -15,10 +15,17 @@ import timber.log.Timber
 @InjectViewState
 class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         BasePresenter<RequestsFragmentView>(), CounterEventListener {
+
+    companion object {
+        private const val PAGE_SIZE = 4
+    }
+
     @RequestsView.TransferTypeAnnotation
     var transferType = tt
 
-    private var transfers: List<TransferModel>? = null
+    private var transfers: List<Transfer>? = null
+    private var recordCount = 0
+    private var updating = false
 
     @CallSuper
     override fun attachView(view: RequestsFragmentView) {
@@ -40,11 +47,17 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
                 TRANSFER_ACTIVE -> {
                     if(available != true) {
                         fetchData { transferInteractor.getTransfersActiveCached() }?.let {
-                            showTransfers(it)
+                            transfers = it.sortedByDescending {
+                                it.dateToLocal
+                            }
+                            updateTransfers()
                         }
                     } else {
                         fetchData { transferInteractor.getTransfersActive() }?.let {
-                            showTransfers(it)
+                            transfers = it.sortedByDescending {
+                                it.dateToLocal
+                            }
+                            updateTransfers()
                         }
                     }
                 }
@@ -52,11 +65,17 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
                 TRANSFER_ARCHIVE -> {
                     if(available != true) {
                         fetchData { transferInteractor.getTransfersArchiveCached() }?.let {
-                            showTransfers(it)
+                            transfers = it.sortedByDescending {
+                                it.dateToLocal
+                            }
+                            updateTransfers()
                         }
                     } else {
                         fetchData { transferInteractor.getTransfersArchive() }?.let {
-                            showTransfers(it)
+                            transfers = it.sortedByDescending {
+                                it.dateToLocal
+                            }
+                            updateTransfers()
                         }
                     }
                 }
@@ -66,14 +85,37 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         }
     }
 
-    private fun showTransfers(transfers: List<Transfer>) {
-        this.transfers = transfers.sortedByDescending {
-            it.dateToLocal
-        }.map { transferMapper.toView(it) }
-        with(countEventsInteractor) {
-            updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
+    fun updateTransfersSuspend() {
+        if(!updating) {
+            updating = true
+            utils.launchSuspend {
+                updateTransfers()
+            }
         }
-        this.transfers?.let { viewState.setRequests(it) }
+    }
+
+    protected fun updateTransfers() {
+        transfers?.let {
+            if(recordCount < it.size) {
+                val end = Math.min(PAGE_SIZE, it.size - recordCount)
+                val viewModel =
+                        it.subList(recordCount, recordCount + end)
+                                .map { transferMapper.toView(it) }
+                with(countEventsInteractor) {
+                    updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
+                }
+
+                viewState.updateTransfers(viewModel)
+                viewState.setScrollListener()
+
+                recordCount += PAGE_SIZE
+                if (recordCount >= it.size) {
+                    recordCount = it.size
+                }
+
+                updating = false
+            }
+        }
     }
 
     private fun updateEvents(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>) {

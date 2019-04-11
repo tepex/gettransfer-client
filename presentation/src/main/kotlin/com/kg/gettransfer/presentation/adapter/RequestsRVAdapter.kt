@@ -16,10 +16,11 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_request_info_enabled.*
 
 class RequestsRVAdapter(
-    private val transfers: List<TransferModel>,
     @LayoutRes private val layout: Int,
     private val listener: ItemClickListener
 ) : RecyclerView.Adapter<RequestsRVAdapter.ViewHolder>() {
+
+    private val transfers = mutableListOf<TransferModel>()
 
     override fun getItemCount() = transfers.size
 
@@ -49,6 +50,11 @@ class RequestsRVAdapter(
                 tvEventsCount.text = item.eventsCount.toString()
             }
         }
+    }
+
+    fun updateTransfers(tr: List<TransferModel>){
+        transfers.addAll(tr)
+        notifyDataSetChanged()
     }
 }
 

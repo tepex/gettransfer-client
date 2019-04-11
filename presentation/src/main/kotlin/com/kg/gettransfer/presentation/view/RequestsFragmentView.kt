@@ -7,7 +7,8 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface RequestsFragmentView: BaseView {
-    fun setRequests(transfers: List<TransferModel>)
+    fun updateTransfers(transfers: List<TransferModel>)
     fun notifyData()
     fun showTransfers()
+    fun setScrollListener()
 }

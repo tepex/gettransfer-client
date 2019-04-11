@@ -36,6 +36,8 @@ import kotlinx.android.synthetic.main.fragment_requests.*
 import timber.log.Timber
 import android.support.v7.widget.RecyclerView
 
+
+
 /**
  * @TODO: Выделить BaseFragment
  */
@@ -73,9 +75,6 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
         noTransfersText.text = transferName
         rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-    }
-
-    override fun setRequests(transfers: List<TransferModel>) {
 
         val layout = when(presenter.transferType) {
             RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> R.layout.view_transfer_request_info_enabled
@@ -83,9 +82,27 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
             else -> throw UnsupportedOperationException()
         }
 
-        noTransfersText.isVisible = transfers.isEmpty()
-        rvAdapter = RequestsRVAdapter(transfers, layout) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
+        rvAdapter = RequestsRVAdapter(layout) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
         rvRequests.adapter = rvAdapter
+    }
+
+    override fun setScrollListener() {
+        rvRequests.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if(!rvRequests.canScrollVertically(1)){
+                    presenter.updateTransfersSuspend()
+                }
+            }
+        })
+    }
+
+    override fun updateTransfers(transfers: List<TransferModel>) {
+        noTransfersText.isVisible = transfers.isEmpty()
+        rvAdapter.updateTransfers(transfers)
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) =
