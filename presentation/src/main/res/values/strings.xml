@@ -21,7 +21,7 @@
     <!-- logs -->
     <string name="logs_file_name">Logs.txt</string>
     <string name="limited_logs_file_name">LimitedLogFile.txt</string>
-    <string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
+    <string name="file_provider_authority">com.kg.gettransfer.fileprovider</string>
     <string name="share_extra_subject">GTR Logs</string>
     <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
 
