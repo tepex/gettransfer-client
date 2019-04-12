@@ -195,7 +195,9 @@ class TransferRepositoryImpl(
                 from            = CityPoint(null, null, null),
                 to              = null,
                 dateToLocal     = Date(),
+                dateToTZ        = Date(),
                 dateReturnLocal = null,
+                dateReturnTZ    = null,
                 flightNumber    = null,
 /* ================================================== */
                 flightNumberReturn    = null,

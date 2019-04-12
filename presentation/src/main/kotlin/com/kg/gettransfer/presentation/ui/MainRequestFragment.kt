@@ -103,6 +103,13 @@ class MainRequestFragment :
             .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
             .show() }
 
+    override fun onResume() {
+        super.onResume()
+        initDateTimeFields()
+        order_time_view.hint_title.text = dateDelegate.startOrderedTime ?: getText(R.string.LNG_RIDE_DATE)
+        return_time_view.hint_title.text = dateDelegate.returnOrderedTime ?: getText(R.string.LNG_RIDE_DATE)
+    }
+
     private fun initDateTimeFields() =
         with(dateDelegate) {
             startOrderedTime?.let {

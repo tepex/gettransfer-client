@@ -175,7 +175,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView {
                         .plus(getString(suff))
             }
             Transfer.Status.PERFORMED -> {
-                if (transfer.dateTime.after(Calendar.getInstance().time)) getString(R.string.LNG_TRANSFER)
+                if (transfer.dateTimeTZ.after(Date())) getString(R.string.LNG_TRANSFER)
                         .plus(" #${transfer.id} ")
                         .plus(getString(R.string.LNG_WILL_START_IN))
                         .plus(" ")

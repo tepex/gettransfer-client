@@ -18,6 +18,7 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
     private val cityPointMapper    = get<CityPointMapper>()
     private val bookNowOfferMapper = get<BookNowOfferMapper>()
     private val moneyMapper        = get<MoneyMapper>()
+    private val dateFormatTZ        = get<ThreadLocal<DateFormat>>("iso_date_TZ")
     private val dateFormat         = get<ThreadLocal<DateFormat>>("iso_date")
 
 
@@ -35,7 +36,9 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             from            = cityPointMapper.fromEntity(type.from),
             to              = type.to?.let { cityPointMapper.fromEntity(it) },
             dateToLocal     = dateFormat.get().parse(type.dateToLocal),
+            dateToTZ        = dateFormatTZ.get().parse(type.dateToLocal),
             dateReturnLocal = type.dateReturnLocal?.let { dateFormat.get().parse(it) },
+            dateReturnTZ    = type.dateReturnLocal?.let { dateFormatTZ.get().parse(it) },
             flightNumber    = type.flightNumber,
 /* ================================================== */
             flightNumberReturn    = type.flightNumberReturn,

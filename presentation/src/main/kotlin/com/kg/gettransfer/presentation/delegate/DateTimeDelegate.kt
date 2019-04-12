@@ -5,8 +5,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.extensions.simpleFormat
-import com.kg.gettransfer.presentation.model.TripDate
-import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeHandler
 import com.kg.gettransfer.presentation.ui.helpers.DateTimePickerHelper
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
@@ -18,12 +16,16 @@ class DateTimeDelegate: KoinComponent {
     val systemInteractor: SystemInteractor = get()
     val orderInteractor: OrderInteractor = get()
 
-    private var currentData: Calendar
-    var startDate: TripDate = TripDate(Date())
-    var returnDate: TripDate? = null
+    lateinit var currentData: Calendar
+    var startDate: Date = Date()
     set(value) {
         field = value
-        if (value == null) orderInteractor.orderReturnTime = null
+        orderInteractor.orderStartTime = value
+    }
+    var returnDate: Date? = null
+    set(value) {
+        field = value
+        orderInteractor.orderReturnTime = value
     }
     private val futureHour
         get() = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
@@ -32,11 +34,6 @@ class DateTimeDelegate: KoinComponent {
     val returnOrderedTime
         get() = orderInteractor.orderReturnTime?.simpleFormat()
 
-
-    init {
-        currentData = getCurrentDatePlusMinimumHours()
-    }
-
      fun validateWith(errorAction: (Boolean) -> Unit) =
              compareDates()
                      .also { if (!it) errorAction(it) }
@@ -44,14 +41,14 @@ class DateTimeDelegate: KoinComponent {
     fun validate() =
             validateWith {  }
 
-    private fun compareDates() =
+    private fun compareDates() =                                          //check exactly what is in domain
             orderInteractor.run {
                 if (hourlyDuration != null) true
                 else orderReturnTime?.after(orderStartTime) ?: true  //true if hourly or return date not defined
             }
 
     fun chooseOrderTime(context: Context, fieldStart: Boolean, screen: DateTimeScreen) =
-        DateTimePickerHelper.showDatePickerDialog(context, currentData, object : DateTimeHandler {
+        DateTimePickerHelper.showDatePickerDialog(context, getCurrentDateForField(fieldStart), object : DateTimeHandler {
             override fun onDateChosen(date: Date) { handleDateChoice(date, fieldStart) }
             override fun onTimeChosen(date: Date) {
                 handleTimeChoice(date, fieldStart).also {
@@ -59,6 +56,12 @@ class DateTimeDelegate: KoinComponent {
                 }
             }
         })
+
+    private fun getCurrentDateForField(startsField: Boolean): Calendar {
+        if (startsField) currentData = getCurrentDatePlusMinimumHours()
+        else currentData.time = Date(startDate.time + DATE_OFFSET)
+        return currentData
+    }
 
     fun getCurrentDatePlusMinimumHours(): Calendar {
         val calendar = Calendar.getInstance(systemInteractor.locale)
@@ -69,25 +72,18 @@ class DateTimeDelegate: KoinComponent {
     }
 
     private fun handleDateChoice(date: Date, field: Boolean) {
-        if (field == START_DATE) startDate.date = date
-        else returnDate = TripDate(date)
+        if (field == START_DATE) startDate = date
+        else returnDate = date
     }
 
-    private fun handleTimeChoice(date: Date, field: Boolean): Date {
-        if (field == RETURN_DATE && returnDate == null)
-            returnDate = TripDate(startDate.date).apply { date.time += DATE_OFFSET }
-
-        currentData = getCurrentDatePlusMinimumHours()
-        val resultDate = if (date.after(currentData.time)) date else currentData.time
-        with(orderInteractor) {
-            if (field == START_DATE) {
-                orderStartTime = resultDate
-                currentData.time = startDate.date
-            }
-            else orderReturnTime = resultDate
+    private fun handleTimeChoice(date: Date, startField: Boolean): Date =
+        getCurrentDatePlusMinimumHours().run {
+            (if (date.after(time)) date else time)
+                    .also {
+                        if (startField) startDate = it
+                        else returnDate = it
+                    }
         }
-        return resultDate
-    }
 
     private fun getDisplayText(date: Date, context: Context) =
             if (date.after(getCurrentDatePlusMinimumHours().time)) date.simpleFormat()
@@ -98,6 +94,12 @@ class DateTimeDelegate: KoinComponent {
             .plus(futureHour)
             .plus(" ")
             .plus(context.getString(R.string.LNG_HOUR_FEW))
+
+    fun resetAfterOrder() {
+        currentData.time = startDate
+        returnDate = null
+    }
+
 
     companion object {
         /* Пока сервевер не присылает минимальный временной промежуток до заказа */

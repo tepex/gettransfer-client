@@ -308,10 +308,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun showLicenceAgreement() = router.navigateTo(Screens.LicenceAgree)
 
     fun onGetTransferClick() {
-        /*
-        currentDate = getCurrentDatePlusMinimumHours()
-        if (currentDate.time.after(startDate.date)) startDate.date = currentDate.time
-        */
         if (!checkFieldsForRequest()) return
 
         val from = orderInteractor.from!!
@@ -319,8 +315,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val transferNew = TransferNew(
             from.cityPoint,
             if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
-            Trip(dateDelegate.startDate.date, flightNumber),
-            dateDelegate.returnDate?.let { Trip(it.date, flightNumberReturn) },
+            Trip(dateDelegate.startDate, flightNumber),
+            dateDelegate.returnDate?.let { Trip(it, flightNumberReturn) },
             transportTypes!!.filter { it.checked }.map { it.id },
             passengers,
             children,
@@ -339,6 +335,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
             if (result.error == null && logResult.error == null) {
                 logGetOffers()
+                dateDelegate.resetAfterOrder()
                 router.replaceScreen(Screens.Offers(result.model.id))
             } else if (result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)

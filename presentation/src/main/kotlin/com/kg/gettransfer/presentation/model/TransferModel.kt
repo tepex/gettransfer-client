@@ -18,7 +18,9 @@ data class TransferModel(
     val from: String,
     val to: String?,
     val dateTime: Date,
+    val dateTimeTZ: Date,
     val dateTimeReturn: Date?,
+    val dateTimeReturnTZ: Date?,
     val flightNumber: String?,
 /* ================================================== */
     val flightNumberReturn: String?,

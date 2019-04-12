@@ -15,6 +15,7 @@ import java.util.Calendar
 import kotlin.math.absoluteValue
 
 import org.koin.standalone.get
+import java.util.*
 
 open class TransferMapper : Mapper<TransferModel, Transfer> {
     private val bookNowOfferMapper  = get<BookNowOfferMapper>()
@@ -35,7 +36,9 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             from           = type.from.name ?: "",
             to             = type.to?.name,
             dateTime       = type.dateToLocal,
+            dateTimeTZ     = type.dateToTZ,
             dateTimeReturn = type.dateReturnLocal,
+            dateTimeReturnTZ = type.dateReturnTZ,
             flightNumber   = type.flightNumber,
 /* ================================================== */
             flightNumberReturn    = type.flightNumberReturn,
@@ -82,7 +85,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
 /* ================================================== */
 /* ================================================== */
             statusCategory = type.checkStatusCategory(),
-            timeToTransfer = ((type.dateToLocal.time - Calendar.getInstance().timeInMillis).absoluteValue / 60_000).toInt(),
+            timeToTransfer = ((type.dateToTZ.time - Date().time).absoluteValue / 60_000).toInt(),
             showOfferInfo  = type.showOfferInfo
             //checkOffers = type.checkOffers
         )

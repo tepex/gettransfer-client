@@ -37,6 +37,12 @@ val dataModule = module {
         }
     }
 
+    single<ThreadLocal<DateFormat>>("iso_date_TZ") {
+        object: ThreadLocal<DateFormat>() {
+            override protected fun initialValue(): DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
+        }
+    }
+
     single { AddressMapper() }
     single { ProfileMapper() }
     single { LocaleMapper() }

@@ -16,7 +16,9 @@ data class Transfer(
     val from: CityPoint,
     val to: CityPoint?,
     val dateToLocal: Date,
+    val dateToTZ: Date,
     val dateReturnLocal: Date?,
+    val dateReturnTZ: Date?,
     val flightNumber: String?,
 /* ================================================== */
     val flightNumberReturn: String?,
