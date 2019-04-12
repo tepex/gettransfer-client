@@ -169,7 +169,7 @@
     <string name="LNG_LOGIN_EMAIL">Enter email</string>
     <string name="LNG_LOGIN_PASSWORD">Enter password</string>
     <string name="LNG_LOGIN_REQUIRED">Please login to continue</string>
-    <string name="LNG_LOGIN_FORGOT_PASSWORD">Forgot your password?</string>
+    <string name="LNG_LOGIN_FORGOT_PASSWORD"><u>Forgot your password?</u></string>
     <string name="LNG_LOGIN_RECOVERY_PASSWORD">Password recovery</string>
     <string name="LNG_LOGIN_RECOVERY_PASSWORD_CHECK_INBOX">Check your inbox</string>
     <string name="LNG_LOGIN_RECOVERY_PASSWORD_SUCCESFUL_MESSAGE">A link to change your password has been sent to your email</string>
