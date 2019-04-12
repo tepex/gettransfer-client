@@ -98,12 +98,13 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         transfers?.let {
             if(recordCount < it.size) {
                 val end = Math.min(PAGE_SIZE, it.size - recordCount)
-                val viewModel =
-                        it.subList(recordCount, recordCount + end)
-                                .map { transferMapper.toView(it) }
-                with(countEventsInteractor) {
-                    updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
-                }
+                val viewModel = it.subList(recordCount, recordCount + end)
+                        .map { transferMapper.toView(it) }
+                        .let {
+                            with(countEventsInteractor) {
+                                updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers, it)
+                            }
+                        }
 
                 viewState.updateTransfers(viewModel)
                 viewState.setScrollListener()
@@ -118,9 +119,9 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         }
     }
 
-    private fun updateEvents(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>) {
-        transfers = transfers?.also { transfersList ->
-            transfersList.forEach {transfer->
+    private fun updateEvents(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>, transfersList: List<TransferModel>): List<TransferModel> {
+        return transfersList.also { list ->
+            list.forEach {transfer->
                 mapCountNewEvents[transfer.id]?.let {
                     val eventsCount = it - (mapCountViewedOffers[transfer.id] ?: 0)
                     if (eventsCount > 0) transfer.eventsCount = eventsCount
@@ -139,11 +140,12 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     }
 
     override fun updateCounter() {
-        utils.launchSuspend{
+        updateTransfers()
+        /*utils.launchSuspend{
             with(countEventsInteractor) {
                 updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
             }
         }
-        viewState.notifyData()
+        viewState.notifyData()*/
     }
 }
