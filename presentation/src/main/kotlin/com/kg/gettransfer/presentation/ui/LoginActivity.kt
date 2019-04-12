@@ -4,6 +4,7 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
+import android.support.v4.content.ContextCompat
 
 import android.view.View
 
@@ -46,8 +47,12 @@ class LoginActivity : BaseActivity(), LoginView {
 
         setContentView(R.layout.activity_login)
 
-        etEmail.onTextChanged         { presenter.setEmail(it.trim()) }
-        etPassword.onTextChanged      { presenter.setPassword(it.trim()) }
+        etEmail.onTextChanged {
+            presenter.setEmail(it.trim())
+        }
+        etPassword.onTextChanged {
+            presenter.setPassword(it.trim())
+        }
         btnLogin.setOnClickListener   { presenter.onLoginClick() }
         homeButton.setOnClickListener { presenter.onHomeClick() }
 

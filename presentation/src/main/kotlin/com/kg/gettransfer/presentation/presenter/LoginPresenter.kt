@@ -86,8 +86,22 @@ class LoginPresenter : BasePresenter<LoginView>() {
 
     fun onHomeClick() = router.exit()
 
-    fun setEmail(email: String) { this.email = if (email.isEmpty()) null else email }
-    fun setPassword(password: String) { this.password = if (password.isEmpty()) null else password }
+    fun setEmail(email: String) {
+        this.email = if (email.isEmpty()) null else email
+        enableLoginButton()
+    }
+
+    fun setPassword(password: String) {
+        this.password = if (password.isEmpty()) null else password
+        enableLoginButton()
+    }
+
+    private fun enableLoginButton() =
+        viewState.enableBtnLogin(!isEmptyFields())
+
+    private fun isEmptyFields(): Boolean {
+        return email == null || password == null
+    }
 
     private fun checkFields(): Boolean {
         val checkEmail = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()

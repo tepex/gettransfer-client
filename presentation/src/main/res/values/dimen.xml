@@ -848,4 +848,7 @@
 	<dimen name="bs_currencies_swipe_view_margin_top">12dp</dimen>
 	<dimen name="bs_currencies_fragment_margin_top">9dp</dimen>
 
+	<!-- login -->
+
+
 </resources>

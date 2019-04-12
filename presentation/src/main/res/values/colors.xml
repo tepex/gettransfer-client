@@ -68,7 +68,7 @@
     <color name="create_order_fields_divider">#FF8e8e93</color>
     <color name="bg_gray">#EEEEEE</color>
 
-    <color name="btn_login_disable">#BDBDBD</color>
+    <color name="btn_login_disable">@color/color_gtr_light_grey</color>
     <color name="btn_login_enable">#98B71B</color>
 
     <color name="color_error">#FFFF3B30</color>

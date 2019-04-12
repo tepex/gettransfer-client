@@ -250,4 +250,11 @@
         <item name="android:textColorHint">@color/black_a30</item>
         <item name="colorControlActivated">@color/black_a30</item>
     </style>
+
+    <style name="editTextLogin" parent="editTextHintCreateOrder">
+        <item name="android:textCursorDrawable">@drawable/login_cursor</item>
+        <item name="android:textColor">@color/colorTextBlack</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
 </resources>
