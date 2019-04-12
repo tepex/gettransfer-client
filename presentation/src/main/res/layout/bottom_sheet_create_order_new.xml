@@ -99,7 +99,7 @@
                     <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                         android:id="@+id/price_field_input"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         app:hint="@string/LNG_RIDE_PRICE"
                         app:icon_img="@android:drawable/btn_star_big_on"
                         app:inputType="@integer/inputType_number" />
@@ -109,7 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/create_transfer_divider_height"
                     android:layout_marginStart="32dp"
-                    android:layout_marginEnd="@dimen/divider_margin_start"
+                    android:layout_marginEnd="@dimen/divider_margin_end"
                     android:background="@color/create_order_fields_divider"
                     android:layout_gravity="bottom"/>
             </FrameLayout>

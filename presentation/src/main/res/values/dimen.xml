@@ -187,7 +187,7 @@
 	<dimen name="icons_margin_top">19dp</dimen>
 	<dimen name="icons_margin_bottom">19dp</dimen>
 
-	<dimen name="plus_minus_margin_bottom">18dp</dimen>
+	<dimen name="plus_minus_margin_bottom">12dp</dimen>
 	<dimen name="number_seats_horizontal_margin">16dp</dimen>
 	<dimen name="number_height">22dp</dimen>
 	<dimen name="number_width">14dp</dimen>
@@ -200,11 +200,12 @@
 	<dimen name="title_margin_top">8dp</dimen>
 	<dimen name="title_height">20dp</dimen>
 
-	<dimen name="input_margin_bottom">12dp</dimen>
+	<dimen name="input_margin_bottom">5dp</dimen>
 	<dimen name="input_height">22dp</dimen>
 
 	<dimen name="divider_margin_start">16dp</dimen>
 	<dimen name="divider_margin_end">16dp</dimen>
+    <dimen name="divider_create_order_margin_top">12dp</dimen>
 
 	<!-- Search address -->
 	<dimen name="address_item_size">16sp</dimen>
