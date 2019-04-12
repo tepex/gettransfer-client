@@ -86,7 +86,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnSupport"
         app:layout_constraintTop_toTopOf="@+id/btnSupport"
-        app:srcCompat="@drawable/ic_try_again" />
+        app:srcCompat="@drawable/ic_repeat" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnSupport"
@@ -94,7 +94,7 @@
         android:layout_height="87dp"
         android:layout_marginTop="57dp"
         android:layout_marginBottom="8dp"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorWhite"
         app:fabSize="normal"
         app:layout_constraintBottom_toTopOf="@+id/tvSupport"
         app:layout_constraintEnd_toEndOf="@+id/tvSupport"
