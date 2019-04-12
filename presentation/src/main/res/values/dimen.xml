@@ -807,6 +807,7 @@
 	<dimen name="settings_field_text_size">17sp</dimen>
 	<dimen name="settings_field_height">64dp</dimen>
 	<dimen name="settings_field_title_margin_start">16dp</dimen>
+	<dimen name="settings_field_title_margin_end">12dp</dimen>
 	<dimen name="settings_field_layout_btns_margin_end">16dp</dimen>
 	<dimen name="settings_field_text_margin_start_end">12dp</dimen>
 	<dimen name="activity_settings_debug_title_text_size">15sp</dimen>

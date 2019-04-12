@@ -33,24 +33,23 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/activity_settings_padding_bottom">
 
-            <com.kg.gettransfer.presentation.ui.custom.SettingsField
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                 android:id="@+id/settingsCurrency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:settingsTitle="@string/LNG_CURRENCY"/>
+                app:settingsTitlePicker="@string/LNG_CURRENCY"/>
 
-            <com.kg.gettransfer.presentation.ui.custom.SettingsField
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                 android:id="@+id/settingsLanguage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:settingsTitle="@string/LNG_LANGUAGE"/>
+                app:settingsTitlePicker="@string/LNG_LANGUAGE"/>
 
-            <com.kg.gettransfer.presentation.ui.custom.SettingsField
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldSwitch
                 android:id="@+id/settingsDistanceUnit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:settingsTitle="@string/LNG_DISTANCE_IN_MILES"
-                app:isSwitchField="true"/>
+                app:settingsTitleSwitch="@string/LNG_DISTANCE_IN_MILES"/>
 
             <LinearLayout
                 android:id="@+id/layoutCarrierSettings"
@@ -59,24 +58,23 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsField
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldSwitch
                     android:id="@+id/settingsCoordinatesInBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitle="@string/LNG_SEND_COORDINATES_IN_BACKGROUND"
-                    app:isSwitchField="true"/>
+                    app:settingsTitleSwitch="@string/LNG_SEND_COORDINATES_IN_BACKGROUND"/>
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsField
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                     android:id="@+id/settingsCalendarMode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitle="@string/LNG_CALENDAR_MODE" />
+                    app:settingsTitlePicker="@string/LNG_CALENDAR_MODE" />
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsField
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                     android:id="@+id/settingsFirstDayOfWeek"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitle="@string/LNG_WEEK_FIRST_DAY" />
+                    app:settingsTitlePicker="@string/LNG_WEEK_FIRST_DAY" />
 
             </LinearLayout>
 
@@ -99,35 +97,35 @@
                     android:textAllCaps="true"
                     android:text="@string/debug"/>
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsField
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                     android:id="@+id/settingsEndpoint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitle="@string/endpoint" />
+                    app:settingsTitlePicker="@string/endpoint" />
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsField
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                     android:id="@+id/settingsLogs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitle="@string/logs" />
+                    app:settingsTitlePicker="@string/logs" />
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsField
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                     android:id="@+id/settingsResetOnboarding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitle="@string/reset_onboarding" />
+                    app:settingsTitlePicker="@string/reset_onboarding" />
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsField
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                     android:id="@+id/settingsResetRate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitle="@string/reset_rate" />
+                    app:settingsTitlePicker="@string/reset_rate" />
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsField
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                     android:id="@+id/settingsClearAccessToken"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitle="@string/clear_access_token" />
+                    app:settingsTitlePicker="@string/clear_access_token" />
 
             </LinearLayout>
         </LinearLayout>

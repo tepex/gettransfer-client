@@ -23,7 +23,8 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_communication_button.*
-import kotlinx.android.synthetic.main.view_settings_field.view.*
+import kotlinx.android.synthetic.main.view_settings_field_picker.view.*
+import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
 import java.lang.UnsupportedOperationException
 
 class SettingsActivity : BaseActivity(), SettingsView {

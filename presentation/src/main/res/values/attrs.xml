@@ -73,9 +73,12 @@
     </declare-styleable>
 
 
-    <declare-styleable name="SettingsField">
-        <attr name="settingsTitle" format="string"/>
-        <attr name="isSwitchField" format="boolean"/>
+    <declare-styleable name="SettingsFieldPicker">
+        <attr name="settingsTitlePicker" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="SettingsFieldSwitch">
+        <attr name="settingsTitleSwitch" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="SwitcherView">

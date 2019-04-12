@@ -18,29 +18,15 @@
         android:fontFamily="@font/sf_pro_text_regular"
         android:textColor="@color/color_gtr_grey"/>
 
-    <LinearLayout
-        android:id="@+id/layoutButtons"
+    <ImageView
+        android:id="@+id/field_chevron"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_chevron_right"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/field_divider"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="@dimen/settings_field_layout_btns_margin_end"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:id="@+id/field_chevron"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_chevron_right" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/switch_button"
-            android:theme="@style/SwitchCompatStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
+        android:layout_marginEnd="@dimen/settings_field_layout_btns_margin_end"/>
 
     <TextView
         android:id="@+id/field_text"
@@ -49,7 +35,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/field_divider"
         app:layout_constraintStart_toEndOf="@+id/field_title"
-        app:layout_constraintEnd_toStartOf="@+id/layoutButtons"
+        app:layout_constraintEnd_toStartOf="@+id/field_chevron"
         android:layout_marginStart="@dimen/settings_field_text_margin_start_end"
         android:layout_marginEnd="@dimen/settings_field_text_margin_start_end"
         android:textSize="@dimen/settings_field_text_size"
