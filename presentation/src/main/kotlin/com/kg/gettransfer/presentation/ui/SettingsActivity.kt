@@ -124,6 +124,23 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
+    override fun setEmailNotifications(enabled: Boolean) {
+        with(settingsEmailNotif) {
+            setOnClickListener {
+                with(it.switch_button) {
+                    isChecked = !isChecked
+                    presenter.onEmailNotificationSwitched(isChecked)
+                }
+            }
+            switch_button.apply {
+                isChecked = enabled
+                setOnCheckedChangeListener { _, isChecked ->
+                    presenter.onEmailNotificationSwitched(isChecked)
+                }
+            }
+        }
+    }
+
     override fun setCalendarModes(calendarModesKeys: List<String>) {
         val calendarModes = calendarModesKeys.map { Pair<CharSequence, String>(getCalendarModeName(it), it) }
         val calendarModesNames = calendarModes.map { it.first }

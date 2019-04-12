@@ -80,7 +80,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setLocale(localeModel?.name ?: "", locale.language)
 
         viewState.setDistanceUnit(systemInteractor.distanceUnit == DistanceUnit.mi)
-
+        viewState.setEmailNotifications(systemInteractor.isEmailNotificationEnabled)
         viewState.setLogoutButtonEnabled(systemInteractor.account.user.loggedIn)
     }
 
@@ -195,6 +195,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             true  -> DistanceUnit.mi
             false -> DistanceUnit.km
         }.apply { logEvent(Analytics.UNITS_PARAM, name) }
+        saveAccount()
+    }
+
+    fun onEmailNotificationSwitched(isChecked: Boolean) {
+        systemInteractor.isEmailNotificationEnabled = isChecked
         saveAccount()
     }
 

@@ -124,6 +124,18 @@ class SystemInteractor(
         get() = account.distanceUnit
         set(value) { account.distanceUnit = value }
 
+    var isEmailNotificationEnabled: Boolean
+        get() = account.isEmailNotificationEnabled()
+    set(value) {
+        account.groups =
+                account.groups
+                        .toMutableList()
+                        .apply {
+                            if (value) add(Account.GROUP_EMAIL_NOTIFICATION_PASSENGER)
+                            else remove(Account.GROUP_EMAIL_NOTIFICATION_PASSENGER)
+                        }
+    }
+
     suspend fun coldStart() = systemRepository.coldStart()
 
     fun initGeocoder() = geoRepository.initGeocoder(locale)

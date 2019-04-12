@@ -15,6 +15,7 @@ interface SettingsView : BaseView {
     //fun setDistanceUnits(distanceUnits: List<DistanceUnitModel>)
     fun setEndpoints(endpoints: List<EndpointModel>)
     fun setDistanceUnit(inMiles: Boolean)
+    fun setEmailNotifications(enabled: Boolean)
     fun setCalendarModes(calendarModesKeys: List<String>)
     fun setDaysOfWeek(daysOfWeek: List<CharSequence>)
 

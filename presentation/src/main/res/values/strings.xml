@@ -455,6 +455,7 @@
     <string name="LNG_SEND_COORDINATES_IN_BACKGROUND">Send coordinates in background</string>
     <string name="LNG_CHAT_WITH">Chat with</string>
     <string name="LNG_DISTANCE_IN_MILES">Distance in miles</string>
+    <string name="LNG_EMAIL_NOTIFICATIONS">Email notifications</string>
     <string name="LNG_CALENDAR_MODE">Calendar mode</string>
     <string name="LNG_WEEK_FIRST_DAY">First week day</string>
     <string name="LNG_RIDE_PAYMENT_RIDE_COST">Ride cost</string>
