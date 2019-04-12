@@ -51,12 +51,12 @@
                 android:layout_height="wrap_content"
                 app:settingsTitleSwitch="@string/LNG_DISTANCE_IN_MILES"/>
 
-            <com.kg.gettransfer.presentation.ui.custom.SettingsField
-                    android:id="@+id/settingsEmailNotif"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:settingsTitle="@string/LNG_EMAIL_NOTIFICATIONS"
-                    app:isSwitchField="true"/>
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldSwitch
+                android:id="@+id/settingsEmailNotif"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:settingsTitleSwitch="@string/LNG_EMAIL_NOTIFICATIONS"
+            />
 
             <LinearLayout
                 android:id="@+id/layoutCarrierSettings"
