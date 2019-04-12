@@ -7,14 +7,17 @@
     
     <TextView
         android:id="@+id/currencySymbol"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/currency_item_symbol_text_size"
         style="@style/black_semiBold"
+        android:gravity="center"
+        android:lines="1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="@dimen/currency_item_symbol_margin_start"
+        app:layout_constraintEnd_toStartOf="@+id/currencyName"
+        android:layout_marginEnd="@dimen/currency_item_symbol_margin_end"
         android:text="£"/>
 
     <TextView
@@ -26,7 +29,7 @@
         android:fontFamily="@font/sf_pro_text_regular"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/currencySymbol"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imgSelected"
         android:layout_marginStart="@dimen/currency_item_name_margin_start"
         android:layout_marginEnd="@dimen/currency_item_name_margin_end"

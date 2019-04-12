@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.adapter
 
+import android.support.v4.widget.TextViewCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -31,8 +32,9 @@ class CurrenciesListAdapter(
             LayoutContainer {
 
         fun bind(currency: CurrencyModel, isSelected: Boolean, listener: SelectCurrencyListener) = with(containerView) {
+            TextViewCompat.setAutoSizeTextTypeWithDefaults(currencySymbol, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM)
             currencySymbol.text = currency.symbol
-            currencyName.text = currency.name
+            currencyName.text = currency.nameWithoutSymbol
             imgSelected.isVisible = isSelected
             setOnClickListener { listener(currency) }
         }

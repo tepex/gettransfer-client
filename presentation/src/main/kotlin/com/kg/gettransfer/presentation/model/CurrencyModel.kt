@@ -13,7 +13,8 @@ class CurrencyModel(val delegate: Currency) : CharSequence {
             "THB" -> "฿"
             else  -> delegate.symbol
         }*/
-    var name = "${java.util.Currency.getInstance(delegate.code).displayName} $symbol"
+    var nameWithoutSymbol: String = java.util.Currency.getInstance(delegate.code).displayName
+    var name = "$nameWithoutSymbol $symbol"
     override val length = name.length
 
     override fun toString(): String = name
