@@ -187,7 +187,7 @@
                 <ImageView
                     android:layout_width="@dimen/transfer_types_image_person_width"
                     android:layout_height="@dimen/transfer_types_image_person_height"
-                    app:srcCompat="@drawable/ic_passenger_small"/>
+                    app:srcCompat="@drawable/ic_passenger_without_padding"/>
 
                 <TextView
                     android:id="@+id/tvCountPersons"

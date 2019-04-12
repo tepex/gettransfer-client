@@ -287,6 +287,7 @@
 	<dimen name="activity_transfer_details_text_size_17sp">17sp</dimen>
 	<dimen name="activity_transfer_details_text_size_13sp">13sp</dimen>
 	<dimen name="activity_transfer_details_text_size_12sp">12sp</dimen>
+	<dimen name="activity_transfer_details_text_size_11sp">11sp</dimen>
 	<dimen name="activity_transfer_details_margin_start_end_16dp">16dp</dimen>
 	<dimen name="activity_transfer_details_title_height">38dp</dimen>
 	<dimen name="activity_transfer_details_horizontal_divider_height">0.5dp</dimen>
@@ -308,8 +309,17 @@
 	<dimen name="view_transfer_details_transport_type_item_padding_top_bottom">11dp</dimen>
 	<dimen name="view_transfer_details_transport_type_item_margin">4dp</dimen>
 	<dimen name="view_transfer_details_transport_type_item_img_passenger_margin_start">8dp</dimen>
-	<dimen name="view_transfer_details_transport_type_item_texts_margin_start">4dp</dimen>
-	<dimen name="view_transfer_details_transport_type_item_img_baggage_margin_start">5dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_img_passenger_width">7dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_img_passenger_height">9dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_texts_margin_start">3dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_img_baggage_margin_start">6dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_img_baggage_width">10dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_img_baggage_height">9dp</dimen>
+	<dimen name="view_transport_capacity_img_passenger_width">10dp</dimen>
+	<dimen name="view_transport_capacity_img_passenger_height">12dp</dimen>
+	<dimen name="view_transport_capacity_img_baggage_width">13dp</dimen>
+	<dimen name="view_transport_capacity_img_baggage_height">12dp</dimen>
+	<dimen name="view_transport_capacity_text_margin_start">4dp</dimen>
 
 	<dimen name="view_transfer_details_communicate_buttons_height">68dp</dimen>
 	<dimen name="view_transfer_details_communicate_buttons_padding_top">16dp</dimen>

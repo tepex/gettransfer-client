@@ -10,8 +10,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/view_transfer_details_transport_type_item_margin"
             android:orientation="horizontal"
-            android:gravity="center"
-    >
+            android:gravity="center">
 
         <!--<TextView-->
         <!--android:id="@+id/transportTypeItemName"-->
@@ -23,10 +22,10 @@
         <!--android:text="Business"/>-->
 
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/view_transfer_details_transport_type_item_img_passenger_width"
+                android:layout_height="@dimen/view_transfer_details_transport_type_item_img_passenger_height"
                 android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_img_passenger_margin_start"
-                app:srcCompat="@drawable/ic_passenger_small"/>
+                app:srcCompat="@drawable/ic_passenger_without_padding"/>
 
         <TextView
                 android:id="@+id/transportType_сountPassengers"
@@ -35,13 +34,13 @@
                 android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_texts_margin_start"
                 android:textColor="@color/colorTextBlack"
                 android:fontFamily="@font/sf_pro_text_regular"
-                android:textSize="@dimen/activity_transfer_details_text_size_13sp"
+                android:textSize="@dimen/activity_transfer_details_text_size_11sp"
                 android:text="X 3"/>
 
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_baggage_small"
+                android:layout_width="@dimen/view_transfer_details_transport_type_item_img_baggage_width"
+                android:layout_height="@dimen/view_transfer_details_transport_type_item_img_baggage_height"
+                app:srcCompat="@drawable/ic_baggage"
                 android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_img_baggage_margin_start"/>
 
         <TextView
@@ -51,7 +50,7 @@
                 android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_texts_margin_start"
                 android:textColor="@color/colorTextBlack"
                 android:fontFamily="@font/sf_pro_text_regular"
-                android:textSize="@dimen/activity_transfer_details_text_size_13sp"
+                android:textSize="@dimen/activity_transfer_details_text_size_11sp"
                 android:text="X 3"/>
 
     </LinearLayout>

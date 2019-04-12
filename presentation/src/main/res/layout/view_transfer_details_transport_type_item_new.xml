@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/bg_transfer_details_transport_type_item"
+        android:gravity="center_horizontal"
         android:padding="8dp"
         android:paddingTop="11dp">
 
