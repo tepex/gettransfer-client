@@ -4,17 +4,13 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
-
-import android.view.View
+import android.text.InputType
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.*
-import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 
@@ -36,6 +32,8 @@ class LoginActivity : BaseActivity(), LoginView {
         const val INVALID_PASSWORD  = 2
     }
 
+    private var passwordVisible = false
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +51,46 @@ class LoginActivity : BaseActivity(), LoginView {
         etPassword.onTextChanged {
             presenter.setPassword(it.trim())
         }
+        etPassword.setOnFocusChangeListener { v, hasFocus -> changePasswordToggle(hasFocus) }
+        ivPasswordToggle.setOnClickListener { togglePassword() }
         btnLogin.setOnClickListener   { presenter.onLoginClick() }
         homeButton.setOnClickListener { presenter.onHomeClick() }
 
         etEmail.setText(presenter.email)
         btnForgotPassword.setOnClickListener { presenter.onPassForgot() }
+    }
+
+    private fun togglePassword() {
+        if (passwordVisible) {
+            passwordVisible = false
+            hidePassword()
+        } else {
+            passwordVisible = true
+            showPassword()
+        }
+    }
+
+    private fun showPassword() {
+        ivPasswordToggle.setImageResource(R.drawable.ic_eye)
+        etPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+        etPassword.text?.length?.let { etPassword.setSelection(it) }
+    }
+
+    private fun hidePassword() {
+        ivPasswordToggle.setImageResource(R.drawable.ic_eye_off)
+        etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        etPassword.text?.length?.let { etPassword.setSelection(it) }
+    }
+
+    private fun changePasswordToggle(hasFocus: Boolean) {
+        if (hasFocus && passwordVisible)
+            ivPasswordToggle.setImageResource(R.drawable.ic_eye)
+        else if (!hasFocus && passwordVisible)
+            ivPasswordToggle.setImageResource(R.drawable.ic_eye_inactive)
+        else if (hasFocus && !passwordVisible)
+            ivPasswordToggle.setImageResource(R.drawable.ic_eye_off)
+        else
+            ivPasswordToggle.setImageResource(R.drawable.ic_eye_off_inactive)
     }
 
     override fun enableBtnLogin(enable: Boolean) {
