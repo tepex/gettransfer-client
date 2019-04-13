@@ -83,14 +83,12 @@ class LoginActivity : BaseActivity(), LoginView {
     }
 
     private fun changePasswordToggle(hasFocus: Boolean) {
-        if (hasFocus && passwordVisible)
-            ivPasswordToggle.setImageResource(R.drawable.ic_eye)
-        else if (!hasFocus && passwordVisible)
-            ivPasswordToggle.setImageResource(R.drawable.ic_eye_inactive)
-        else if (hasFocus && !passwordVisible)
-            ivPasswordToggle.setImageResource(R.drawable.ic_eye_off)
-        else
-            ivPasswordToggle.setImageResource(R.drawable.ic_eye_off_inactive)
+        when {
+            hasFocus && passwordVisible -> ivPasswordToggle.setImageResource(R.drawable.ic_eye)
+            !hasFocus && passwordVisible -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_inactive)
+            hasFocus && !passwordVisible -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_off)
+            else -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_off_inactive)
+        }
     }
 
     override fun enableBtnLogin(enable: Boolean) {
