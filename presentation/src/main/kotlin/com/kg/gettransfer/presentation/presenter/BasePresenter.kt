@@ -67,7 +67,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         router.exit()
     }
 
-    protected fun login(nextScreen: String, email: String?, noHistory: Boolean = true) = router.navigateTo(Screens.Login(nextScreen, email, noHistory))
+    protected fun login(nextScreen: String, email: String?) = router.navigateTo(Screens.Login(nextScreen, email))
 
     override fun onFirstViewAttach() {
         if (systemInteractor.isInitialized) return
@@ -90,7 +90,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected fun checkResultError(error: ApiException): Boolean {
         if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser() )) {
             openedLoginScreenForUnauthorizedUser = true
-            login(Screens.CLOSE_AFTER_LOGIN, systemInteractor.account.user.profile.email, false)
+            login(Screens.CLOSE_AFTER_LOGIN, systemInteractor.account.user.profile.email)
             return false
         } else if (openedLoginScreenForUnauthorizedUser) {
             logout()

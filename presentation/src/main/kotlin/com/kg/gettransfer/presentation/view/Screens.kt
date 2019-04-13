@@ -96,10 +96,9 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
     }
 
-    open class Login(val nextScreen: String, val email: String?, val noHistory: Boolean) : SupportAppScreen() {
+    open class Login(val nextScreen: String, val email: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
-            if (noHistory) addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-            else addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, nextScreen)
             putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
         }
