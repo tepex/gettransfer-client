@@ -849,6 +849,29 @@
 	<dimen name="bs_currencies_fragment_margin_top">9dp</dimen>
 
 	<!-- login -->
-
+	<dimen name="login_layout_constraintGuide_begin">16dp</dimen>
+	<dimen name="login_layout_constraintGuide_end">16dp</dimen>
+	<dimen name="login_ivBack_marginTop">24dp</dimen>
+	<dimen name="login_logo_width">144dp</dimen>
+	<dimen name="login_logo_height">120dp</dimen>
+	<dimen name="login_layout_email_marginTop">8dp</dimen>
+	<dimen name="login_input_layout_drawable_padding">8dp</dimen>
+	<dimen name="login_etEmail_padding_start">16dp</dimen>
+	<dimen name="login_etEmail_padding_top">3dp</dimen>
+	<dimen name="login_etEmail_padding_end">16dp</dimen>
+	<dimen name="login_etEmail_padding_bottom">10dp</dimen>
+	<dimen name="login_password_layout_margin_top">8dp</dimen>
+	<dimen name="login_etPassword_padding_start">20dp</dimen>
+	<dimen name="login_etPassword_padding_top">3dp</dimen>
+	<dimen name="login_etPassword_padding_end">20dp</dimen>
+	<dimen name="login_etPassword_padding_bottom">10dp</dimen>
+	<dimen name="login_password_toggle__margin_top">6dp</dimen>
+	<dimen name="login_btnLogin_margin_top">16dp</dimen>
+	<dimen name="login_btnLogin_margin_start">20dp</dimen>
+	<dimen name="login_btnLogin_margin_end">20dp</dimen>
+	<dimen name="login_forgot_password_margin_start">12dp</dimen>
+	<dimen name="login_forgot_password_margin_top">16dp</dimen>
+	<dimen name="login_error_margin_start">8dp</dimen>
+	<dimen name="login_error_margin_bottom">8dp</dimen>
 
 </resources>

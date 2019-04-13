@@ -54,10 +54,10 @@ class LoginActivity : BaseActivity(), LoginView {
         etPassword.setOnFocusChangeListener { v, hasFocus -> changePasswordToggle(hasFocus) }
         ivPasswordToggle.setOnClickListener { togglePassword() }
         btnLogin.setOnClickListener   { presenter.onLoginClick() }
-        homeButton.setOnClickListener { presenter.onHomeClick() }
+        ivBack.setOnClickListener { presenter.onBackClick() }
 
         etEmail.setText(presenter.email)
-        btnForgotPassword.setOnClickListener { presenter.onPassForgot() }
+        tvForgotPassword.setOnClickListener { presenter.onPassForgot() }
     }
 
     private fun togglePassword() {

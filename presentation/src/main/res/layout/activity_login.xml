@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite">
@@ -11,29 +10,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
+        app:layout_constraintGuide_begin="@dimen/login_layout_constraintGuide_begin" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="20dp" />
+        app:layout_constraintGuide_end="@dimen/login_layout_constraintGuide_end" />
 
     <ImageView
-        android:id="@+id/homeButton"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="24dp"
+        android:id="@+id/ivBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/login_ivBack_marginTop"
         app:srcCompat="@drawable/chevron_left"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="@id/guide_left" />
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="144dp"
-        android:layout_height="120dp"
+        android:layout_width="@dimen/login_logo_width"
+        android:layout_height="@dimen/login_logo_height"
         android:layout_centerHorizontal="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/guide_left"
@@ -44,7 +42,7 @@
         android:id="@+id/emailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/login_layout_email_marginTop"
         android:theme="@style/editTextLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,14 +55,14 @@
             android:layout_below="@+id/icon"
             android:background="@null"
             android:drawableStart="@drawable/ic_account_wrapper"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/login_input_layout_drawable_padding"
             android:ems="10"
             android:hint="@string/LNG_LOGIN_EMAIL"
             android:inputType="textEmailAddress"
-            android:paddingStart="20dp"
-            android:paddingTop="3dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="10dp" />
+            android:paddingStart="@dimen/login_etEmail_padding_start"
+            android:paddingTop="@dimen/login_etEmail_padding_top"
+            android:paddingEnd="@dimen/login_etEmail_padding_end"
+            android:paddingBottom="@dimen/login_etEmail_padding_bottom" />
     </android.support.design.widget.TextInputLayout>
 
     <View
@@ -82,7 +80,7 @@
         android:id="@+id/passwordLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/login_password_layout_margin_top"
         android:theme="@style/editTextLogin"
         app:layout_constraintEnd_toStartOf="@+id/ivPasswordToggle"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,14 +92,14 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:drawableStart="@drawable/ic_lock_black"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/login_input_layout_drawable_padding"
             android:ems="10"
             android:hint="@string/LNG_LOGIN_PASSWORD"
             android:inputType="textPassword"
-            android:paddingStart="20dp"
-            android:paddingTop="3dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="10dp" />
+            android:paddingStart="@dimen/login_etPassword_padding_start"
+            android:paddingTop="@dimen/login_etPassword_padding_top"
+            android:paddingEnd="@dimen/login_etPassword_padding_end"
+            android:paddingBottom="@dimen/login_etPassword_padding_bottom" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -109,7 +107,7 @@
         android:id="@+id/ivPasswordToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="@dimen/login_password_toggle__margin_top"
         app:srcCompat="@drawable/ic_eye_off_inactive"
         app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintEnd_toStartOf="@+id/guide_right"
@@ -132,31 +130,34 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="@dimen/general_button_height"
+        android:layout_marginStart="@dimen/login_btnLogin_margin_start"
+        android:layout_marginTop="@dimen/login_btnLogin_margin_top"
+        android:layout_marginEnd="@dimen/login_btnLogin_margin_end"
         android:background="@drawable/btn_bg_rounded"
         android:enabled="false"
-        android:layout_marginTop="16dp"
         android:text="@string/LNG_LOGIN_BUTTON"
         android:textColor="@color/colorWhite"
-        app:layout_constraintTop_toBottomOf="@+id/passwordLayout"
-        app:layout_constraintLeft_toLeftOf="@id/guide_left"
-        app:layout_constraintRight_toRightOf="@id/guide_right"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
 
     <TextView
-        android:id="@+id/btnForgotPassword"
+        android:id="@+id/tvForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/login_forgot_password_margin_start"
+        android:layout_marginTop="@dimen/login_forgot_password_margin_top"
         android:text="@string/LNG_LOGIN_FORGOT_PASSWORD"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
-        app:layout_constraintLeft_toLeftOf="@id/guide_left"/>
+        app:layout_constraintStart_toStartOf="@+id/btnLogin"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
 
     <TextView
         android:id="@+id/tvLoginError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="@dimen/login_error_margin_start"
+        android:layout_marginBottom="@dimen/login_error_margin_bottom"
         android:text="@string/LNG_BAD_CREDENTIALS_ERROR"
         android:textColor="@color/color_error"
         android:textSize="13sp"

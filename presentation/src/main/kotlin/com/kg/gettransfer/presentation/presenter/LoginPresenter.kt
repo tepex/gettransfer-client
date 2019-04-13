@@ -84,7 +84,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
         analytics.logEvent(Analytics.EVENT_LOGIN, createStringBundle(Analytics.STATUS, result), map)
     }
 
-    fun onHomeClick() = router.exit()
+    fun onBackClick() = router.exit()
 
     fun setEmail(email: String) {
         this.email = if (email.isEmpty()) null else email
