@@ -362,14 +362,6 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected suspend fun <D>fetchDataOnly(block: suspend () -> Result<D>) =
             fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
-    fun delayedLaunch( delayMilliSec: Long, block: () -> Unit) {
-        utils.launchSuspend {
-            delay(delayMilliSec * 1000)
-            block()
-        }
-    }
-
-
     companion object {
         const val SINGLE_CAPACITY = 1
         const val DOUBLE_CAPACITY = 2

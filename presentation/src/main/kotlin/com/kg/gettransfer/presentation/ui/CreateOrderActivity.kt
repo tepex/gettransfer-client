@@ -263,11 +263,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                 false
             })
         }
-
-        presenter.delayedLaunch(KEYBOARD_WAIT_DELAY) {
+        Handler().postDelayed({
             popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
             layoutPopupView.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.show_popup))
-        }
+        }, CreateOrderActivity.KEYBOARD_WAIT_DELAY)
     }
 
     private fun showDatePickerDialog(field: Boolean) {
@@ -475,10 +474,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             }
         }
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
-        comment_field.setOnClickListener                    { showPopupWindowComment()
+        comment_field.field_input.setOnClickListener        { showPopupWindowComment()
             presenter.logTransferSettingsEvent(COMMENT_INPUT)
         }
-        comment_field.field_input.setOnClickListener        { showPopupWindowComment() }
 
         tvAgreement1.setOnClickListener                     { presenter.showLicenceAgreement() }
         switchAgreement.setOnCheckedChangeListener          { _, isChecked -> presenter.setAgreeLicence(isChecked) }
