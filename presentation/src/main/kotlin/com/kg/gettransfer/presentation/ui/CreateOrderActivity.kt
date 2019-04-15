@@ -292,7 +292,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun setHintForDateTimeTransfer(withReturnWay: Boolean) {
-        transfer_date_time_field.field_input.setText(dateDelegate.getTextForMinDate(this))
+        transfer_date_time_field.input_layout.hint = getString(R.string.LNG_RIDE_DATE)
     }
 
     private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
