@@ -111,6 +111,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                         ?: viewState.setHintForDateTimeTransfer(orderInteractor.hourlyDuration == null)
 
                 orderReturnTime?.let { viewState.setDateTimeTransfer(it.simpleFormat(), false) }
+                        ?: viewState.setTripType(hourlyDuration == null)
             }
 
     fun initMapAndPrices() {

@@ -18,6 +18,7 @@ import com.kg.gettransfer.utilities.Analytics
 @StateStrategyType (OneExecutionStateStrategy::class)
 interface CreateOrderView : BaseView, RouteView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
+    fun setTripType(withReturnWay: Boolean)
     fun setFairPrice(price: String?, time: String?)
     //fun setCurrencies(currencies: List<CurrencyModel>)
     fun setUser(user: UserModel, isLoggedIn: Boolean)
