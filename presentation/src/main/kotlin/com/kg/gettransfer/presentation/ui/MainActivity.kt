@@ -313,6 +313,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 gm.setOnCameraMoveStartedListener(null)
             }
         }*/
+    }
+
+    override fun enablePinAnimation() {
+        super.enablePinAnimation()
         presenter.enablePinAnimation()
     }
 

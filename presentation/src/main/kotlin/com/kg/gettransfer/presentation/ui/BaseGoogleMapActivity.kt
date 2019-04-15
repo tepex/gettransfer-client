@@ -122,9 +122,12 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         gm.setOnCameraMoveStartedListener {
             if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 _btnCenter.isVisible = true
+                enablePinAnimation()
             }
         }
     }
+
+    protected open fun enablePinAnimation() {}
 
     protected fun processGoogleMap(ignore: Boolean, block: (GoogleMap) -> Unit) {
         if(!googleMapJob.isCompleted && ignore) return
