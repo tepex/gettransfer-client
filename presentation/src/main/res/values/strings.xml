@@ -502,6 +502,7 @@
     <string name="LNG_COUNTRY_NAMES_RU">Russia</string>
     <string name="LNG_CITY_NAMES_HONG_KONG">Hong Kong</string>
     <string name="LNG_COUNTRY_NAMES_ZH">China</string>
+    <string name="LNG_RIDE_PAY_CHARGE">You will be charged %s, equivalent\nto %s</string>
 
     <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
     <string name="switzerland_phone" translatable="false">+41 22 518 04 00</string>

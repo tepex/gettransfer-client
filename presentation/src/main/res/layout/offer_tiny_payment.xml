@@ -65,17 +65,6 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <include
-            android:id="@+id/btn_book_tiny"
-            layout="@layout/btn_book"
-            android:layout_width="@dimen/view_offer_btn_book_width"
-            android:layout_height="@dimen/view_offer_btn_book_height"
-            android:layout_marginTop="@dimen/view_offer_btn_book_margin_top"
-            android:layout_marginBottom="@dimen/view_offer_btn_book_margin_bottom"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_car_name_and_price" />
-
         <ImageView
             android:id="@+id/img_car_photo_tiny"
             android:layout_width="@dimen/view_offer_car_img_width"
