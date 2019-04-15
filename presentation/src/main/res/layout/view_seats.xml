@@ -12,6 +12,7 @@
 
         android:layout_marginStart="@dimen/icons_margin_start"
 
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

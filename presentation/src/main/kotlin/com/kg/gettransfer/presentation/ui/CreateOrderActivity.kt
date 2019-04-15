@@ -288,7 +288,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun setHintForDateTimeTransfer(withReturnWay: Boolean) {
-        transfer_date_time_field.field_input.hint = dateDelegate.getTextForMinDate(this)
+        transfer_date_time_field.field_input.setText(dateDelegate.getTextForMinDate(this))
         rl_returnWayTime.isVisible = withReturnWay
     }
 
