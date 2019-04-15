@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
+    android:paddingTop="@dimen/view_communication_button_container_top_padding"
     android:orientation="horizontal">
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton

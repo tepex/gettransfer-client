@@ -107,8 +107,10 @@ class MainRequestFragment :
     override fun onResume() {
         super.onResume()
         initDateTimeFields()
-        order_time_view.hint_title.text = dateDelegate.startOrderedTime ?: getText(R.string.LNG_RIDE_DATE)
-        return_time_view.hint_title.text = dateDelegate.returnOrderedTime ?: getText(R.string.LNG_RIDE_DATE)
+        with(dateDelegate) {
+            if (startOrderedTime == null) order_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)
+            if (returnOrderedTime == null) return_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)
+        }
     }
 
     private fun initDateTimeFields() =
@@ -119,7 +121,7 @@ class MainRequestFragment :
             }
             returnOrderedTime?.let {
                 return_time_view.hint_title.text = it
-                setReturnTimeIcon(false)
+                setReturnTimeIcon(true)
             }
             enableBtnNext()
         }

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/back_top_rounded"
     android:clickable="true"
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp"
     app:behavior_hideable="true"
     app:behavior_skipCollapsed="true"
+
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <View
@@ -15,65 +19,63 @@
         android:layout_width="110dp"
         android:layout_height="5dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/rectangle_swipe_down"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/tvTypeTransfer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view"
-        tools:text="Economy" />
+        tools:text="Economy"/>
 
     <ImageView
         android:id="@+id/ivTypeTransfer"
-        android:layout_width="247dp"
-        android:layout_height="106dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTypeTransfer" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTypeTransfer"/>
 
     <TextView
         android:id="@+id/tvPrice"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="22dp"
+
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         android:textColor="@color/colorTextBlack"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/ivTypeTransfer"
-        app:layout_constraintTop_toBottomOf="@+id/ivTypeTransfer"
-        tools:text="From $32" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintTop_toTopOf="@+id/tvTypeTransfer"
+        tools:text="From $32"/>
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/tvPrice"
-        app:layout_constraintTop_toBottomOf="@+id/tvPrice"
-        app:srcCompat="@drawable/ic_passenger" />
+        app:layout_constraintStart_toStartOf="@+id/ivTypeTransfer"
+        app:layout_constraintTop_toBottomOf="@+id/ivTypeTransfer"
+        app:srcCompat="@drawable/ic_pass_transport_details"/>
 
     <TextView
         android:id="@+id/tvPassengers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="@string/LNG_RIDE_PASSENGERS"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/tvPrice" />
+        app:layout_constraintTop_toTopOf="@+id/imageView4"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView4"/>
 
     <TextView
         android:id="@+id/tvCountPassengers"
@@ -82,26 +84,29 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="@+id/ivTypeTransfer"
-        app:layout_constraintTop_toBottomOf="@+id/tvPrice"
-        tools:text="3" />
+        app:layout_constraintTop_toTopOf="@+id/tvPassengers"
+        tools:text="3"/>
 
     <ImageView
         android:id="@+id/imageView5"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginTop="8dp"
+
         app:layout_constraintStart_toStartOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@+id/imageView4"
-        app:srcCompat="@drawable/ic_luggage" />
+        app:srcCompat="@drawable/ic_lugg_transport_details"/>
 
     <TextView
         android:id="@+id/tvLuggage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+
+
         android:text="@string/LNG_RIDE_LUGGAGE"
         app:layout_constraintStart_toStartOf="@+id/tvPassengers"
-        app:layout_constraintTop_toBottomOf="@+id/tvPassengers" />
+        app:layout_constraintTop_toTopOf="@+id/imageView5"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"/>
 
     <TextView
         android:id="@+id/tvCountLuggage"
@@ -110,8 +115,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="@+id/ivTypeTransfer"
-        app:layout_constraintTop_toTopOf="@+id/tvLuggage"
-        tools:text="3" />
+        app:layout_constraintTop_toTopOf="@+id/imageView5"
+        tools:text="3"/>
 
     <TextView
         android:id="@+id/tvCars"
@@ -120,26 +125,22 @@
         android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="@+id/imageView5"
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
-        app:layout_constraintEnd_toEndOf="parent"
         android:textSize="@dimen/car_type_description"
         android:fontFamily="@font/sf_pro_text_regular"
         android:textColor="@color/hockeyapp_text_black"
 
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"/>
+/>
 
     <Button
         android:id="@+id/btnOk"
-        android:layout_width="@dimen/get_offers_btn_height"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/btn_bg_rounded"
         android:text="@android:string/ok"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -31,6 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="@dimen/view_communication_button_name_margins"
+        android:layout_marginTop="@dimen/view_communication_button_name_margin_top"
         android:gravity="center_horizontal"
         android:textColor="@color/color_gtr_grey"
         android:fontFamily="@font/sf_pro_text_regular"

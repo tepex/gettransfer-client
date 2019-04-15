@@ -334,7 +334,7 @@
     <dimen name="bottom_sheet_transfer_details_main_margin_top">14dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_width">110dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_height">5dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_top_bottom">11dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_top_bottom">16dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_height">44dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_margin_top_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_margin_start_end">30dp</dimen>
@@ -630,7 +630,7 @@
 	<dimen name="general_button_width">300dp</dimen>
 	<dimen name="general_button_height">44dp</dimen>
 	<dimen name="rounded_rectangle_width">110dp</dimen>
-	<dimen name="rounded_rectangle_height">5dp</dimen>
+	<dimen name="rounded_rectangle_height">3dp</dimen>
 
 	<dimen name="toolbar_title_text_size">18sp</dimen>
 	<dimen name="toolbar_nav_title_text_size">15sp</dimen>
@@ -785,7 +785,9 @@
 	<dimen name="view_transfer_details_comment_text_margin_top">10dp</dimen>
 	<dimen name="view_transfer_details_comment_divider_margin_top">20dp</dimen>
 
+	<dimen name="view_communication_button_container_top_padding">12dp</dimen>
 	<dimen name="view_communication_button_name_margins">8dp</dimen>
+	<dimen name="view_communication_button_name_margin_top">4dp</dimen>
 	<dimen name="view_communication_button_img_size">64dp</dimen>
 
 	<dimen name="activity_carrier_trip_details_top_buttons_margin_bottom">8dp</dimen>
