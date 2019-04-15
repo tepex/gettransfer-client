@@ -100,7 +100,7 @@
                         android:layout_marginEnd="@dimen/offers_tv_excellent_price_margin_end"
                         android:ellipsize="end"
                         android:gravity="center"
-                        android:lines="2"
+                        android:lines="3"
                         android:text="@string/LNG_OFFERS_PROMO_MESSAGE"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/activity_offers_excellent_price_text_size" />

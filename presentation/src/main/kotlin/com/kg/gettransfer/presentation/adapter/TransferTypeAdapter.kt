@@ -43,7 +43,11 @@ class TransferTypeAdapter(
             tvNumberPersonsTransfer.text = Utils.formatPersons(context, item.paxMax)
             tvCountBaggage.text          = Utils.formatLuggage(context, item.luggageMax)
 
-            if (item.price == null) rl_price.isVisible = false else tvPriceFrom.text = item.price.min
+            if (item.price == null) rl_price.isVisible = false
+            item.price?.let {
+                from.textSize = getTextSize(it.min).toFloat()
+                tvPriceFrom.text = item.price.min
+            }
 
             ivTransferType.setImageResource(item.imageId!!)
             cbTransferType.isChecked = item.checked
@@ -75,7 +79,15 @@ class TransferTypeAdapter(
             cardTransferType.cardElevation = elevation.float
             cardTransferType.radius        = radius.float
         }
+
+        private fun getTextSize(text: String) =    //change title 'from:' text size depending on price characters count
+                when (text.length) {
+                    in 0..13 -> 12
+                    in 14..15 -> 10
+                    else -> 8
+                }
     }
+
 }
 
 typealias ChangeListener = (TransportTypeModel, Boolean) -> Unit

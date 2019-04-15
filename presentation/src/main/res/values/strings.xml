@@ -355,7 +355,8 @@
     <string name="LNG_CANCEL_CONFIRM">Are you sure to cancel your transfer?</string>
     <string name="LNG_CANCEL_RIDE">Cancel transfer</string>
     <string name="LNG_CANCEL_REQUEST"><u>Cancel request</u></string>
-    <string name="LNG_OFFERS_PROMO_MESSAGE"><b>Fix an excellent price for your trip now</b>\nPrices can grow, book now to guarantee best price</string>
+    <string name="LNG_OFFERS_PROMO_MESSAGE"><b>Зафиксируйте лучшие цены для вашей поездки</b>
+        Расценки могут вырасти, забронируйте сейчас для гарантии лучшей цены</string>
     <string name="LNG_FILTER_YEAR">Year made</string>
     <string name="LNG_FILTER_RATING">Rating</string>
     <string name="LNG_FILTER_PRICE">Price</string>
@@ -453,6 +454,7 @@
     <string name="LNG_RIDE_CLIENT_NAME">Name</string>
     <string name="LNG_DETAILS_REPEAT_ROUTE">Repeat transfer</string>
     <string name="LNG_SEND_COORDINATES_IN_BACKGROUND">Send coordinates in background</string>
+    <string name="LNG_SEND_COORDINATES_IN_BACKGROUND_MESSAGE">Does you allow?</string>
     <string name="LNG_CHAT_WITH">Chat with</string>
     <string name="LNG_DISTANCE_IN_MILES">Distance in miles</string>
     <string name="LNG_EMAIL_NOTIFICATIONS">Email notifications</string>

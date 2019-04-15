@@ -88,14 +88,33 @@
             app:order_title="@string/LNG_RIDE_DATE"
             app:icon="@drawable/ic_start_time"/>
 
-    <com.kg.gettransfer.presentation.ui.custom.OrderFieldView
-            android:id="@+id/return_time_view"
+    <RelativeLayout
+            android:id="@+id/rl_returnTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/order_time_view"
+            android:layout_below="@+id/order_time_view">
+        <com.kg.gettransfer.presentation.ui.custom.OrderFieldView
+                android:id="@+id/return_time_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-            app:order_title="@string/LNG_RIDE_DATE_RETURN"
-            app:icon="@drawable/ic_return_time"/>
+
+                app:order_title="@string/LNG_RIDE_DATE_RETURN"
+                app:icon="@drawable/ic_return_time"/>
+
+
+        <ImageView
+                android:id="@+id/fl_DeleteReturnDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                app:srcCompat="@drawable/ic_close_x"
+                android:visibility="gone"/>
+    </RelativeLayout>
+
 
     <View
             android:id="@+id/field_divider"
@@ -128,7 +147,7 @@
             android:id="@+id/tv_internet_warning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/return_time_view"
+            android:layout_below="@id/rl_returnTime"
             android:layout_marginTop="@dimen/internet_warning_horizontal_text_margin_top"
             android:paddingTop="@dimen/internet_warning_vertical_text_padding"
             android:paddingBottom="@dimen/internet_warning_vertical_text_padding"

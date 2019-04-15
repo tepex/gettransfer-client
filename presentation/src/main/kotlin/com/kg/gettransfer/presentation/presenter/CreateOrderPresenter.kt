@@ -85,6 +85,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     internal var cost: Double? = null
 
     private var isTimeSetByUser = false
+    set(value) {
+        field = value
+        if (value) viewState.enableReturnTimeChoose()
+    }
 
     private var flightNumber: String? = null
     private var flightNumberReturn: String? = null

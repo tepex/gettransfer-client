@@ -14,7 +14,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout"
-        android:paddingBottom="8dp"
+
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground">
@@ -125,7 +125,7 @@
         <RelativeLayout
             android:id="@+id/rl_price"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="31dp"
             android:layout_marginTop="9dp"
             app:layout_constraintTop_toBottomOf="@+id/tvNumberPersonsTransfer">
 
@@ -143,8 +143,10 @@
                 android:id="@+id/from"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/transfer_types_cost_title"
+                android:textSize="6sp"
                 android:text="@string/LNG_RIDE_FROM"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
                 android:fontFamily="@font/sf_pro_text_regular"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"
@@ -152,16 +154,22 @@
 
             <TextView
                 android:id="@+id/tvPriceFrom"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical|end"
                 android:layout_marginTop="8dp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="@dimen/transport_time_server_price_min_text_size"
+                app:autoSizeMaxTextSize="@dimen/transport_time_server_price_max_text_size"
+                app:autoSizeStepGranularity="2sp"
                 android:fontFamily="@font/sf_pro_text_semibold"
-                android:textSize="@dimen/transfer_types_cost"
                 android:textColor="@color/color_gtr_green"
                 android:layout_alignParentEnd="true"
-                tools:text="from $1" />
+                android:layout_toEndOf="@+id/from"
+                tools:text="$11111111111000111000" />
 
         </RelativeLayout>
 

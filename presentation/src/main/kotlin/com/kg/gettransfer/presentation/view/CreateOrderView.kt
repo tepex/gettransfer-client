@@ -27,6 +27,7 @@ interface CreateOrderView : BaseView, RouteView {
     fun setCurrency(currency: String, hideCurrencies: Boolean)
     fun setDateTimeTransfer(dateTimeString: String, startField: Boolean)
     fun setHintForDateTimeTransfer(withReturnWay: Boolean)
+    fun enableReturnTimeChoose()
     fun setComment(comment: String)
     fun setGetTransferEnabled(enabled: Boolean)
     fun setPromoResult(discountInfo: String?)

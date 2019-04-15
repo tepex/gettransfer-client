@@ -449,12 +449,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             transfer_date_time_field.field_input.setOnClickListener(it)
         }
 
-        View.OnClickListener {
-            showDatePickerDialog(FIELD_RETURN)
-        }.let {
-            transfer_return_date_field.setOnClickListener(it)
-            transfer_return_date_field.field_input.setOnClickListener(it)
-        }
         fl_DeleteReturnDate.setOnClickListener              { presenter.clearReturnDate()
             showReturnFlight(HIDE)
         }
@@ -490,6 +484,15 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         btnOk.setOnClickListener                            { hideBottomSheet(bsTransport) }
 
         fl_currency.setOnClickListener { bsCurrencies.state = BottomSheetBehavior.STATE_EXPANDED }
+    }
+
+    override fun enableReturnTimeChoose() {
+        View.OnClickListener {
+            showDatePickerDialog(FIELD_RETURN)
+        }.let {
+            transfer_return_date_field.setOnClickListener(it)
+            transfer_return_date_field.field_input.setOnClickListener(it)
+        }
     }
 
     private fun setPhoneCode() {

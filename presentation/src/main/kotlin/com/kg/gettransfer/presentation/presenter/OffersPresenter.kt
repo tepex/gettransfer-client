@@ -258,6 +258,10 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
             }
 
+    fun updateBanners() {
+        viewState.setBannersVisible(offers.isNotEmpty())
+    }
+
     enum class SortType {
         RATING_ASC, RATING_DESC,
         PRICE_ASC, PRICE_DESC,

@@ -118,13 +118,6 @@ class OffersActivity : BaseActivity(), OffersView {
         return super.dispatchTouchEvent(event)
     }
 
-    override fun setNetworkAvailability(context: Context): Boolean{
-        val available = super.setNetworkAvailability(context)
-        presenter.checkNewOffers()
-        offer_bottom_bs.btn_book.isEnabled = !textNetworkNotAvailable.isVisible
-        return available
-    }
-
     private fun navigateBackWithTransition() {
         presenter.onBackCommandClick()
         overridePendingTransition(R.anim.transition_l2r, R.anim.transition_r2l)
@@ -168,6 +161,10 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
+    override fun setBannersVisible(hasOffers: Boolean) {
+        if (hasOffers) cl_fixPrice.isVisible = true
+        else fl_drivers_count_text.isVisible = true
+    }
 
     private fun setAnimation() {
         noOffers.isVisible = true
@@ -349,6 +346,18 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun setError(e: ApiException) {
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, true, e.details)
+    }
+
+    override fun setNetworkAvailability(context: Context): Boolean{
+        val available = super.setNetworkAvailability(context)
+        presenter.checkNewOffers()
+        offer_bottom_bs.btn_book.isEnabled = !textNetworkNotAvailable.isVisible
+        if (available) presenter.updateBanners()
+        else {
+            cl_fixPrice.isVisible = false
+            fl_drivers_count_text.isVisible = false
+        }
+        return available
     }
 
     companion object {

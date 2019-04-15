@@ -88,6 +88,7 @@ class MainRequestFragment :
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
         btnNextFragment.setOnClickListener       { onNextClick() }
         ivSetMyLocation.setOnClickListener       { mPresenter.updateCurrentLocation() }
+        fl_DeleteReturnDate.setOnClickListener   { clearReturnDate() }
     }
 
     private fun onNextClick() {
@@ -118,7 +119,7 @@ class MainRequestFragment :
             }
             returnOrderedTime?.let {
                 return_time_view.hint_title.text = it
-                setReturnTimeIcon()
+                setReturnTimeIcon(false)
             }
             enableBtnNext()
         }
@@ -135,7 +136,7 @@ class MainRequestFragment :
             tv_b_point.isGone      = hourly
             link_line.isInvisible  = hourly
         }
-        return_time_view.isGone = hourly
+        rl_returnTime.isGone    = hourly
         field_divider.isGone    = hourly
         enableBtnNext()
     }
@@ -149,6 +150,14 @@ class MainRequestFragment :
     private fun setReturnTimeIcon(hasDate: Boolean = true) {
         val image = if (hasDate) R.drawable.ic_calendar_return else R.drawable.ic_return_time
         return_time_view.img_icon.setImageDrawable(ContextCompat.getDrawable(mParent, image))
+        fl_DeleteReturnDate.isVisible = hasDate
+        return_time_view.img_arrow.isVisible = !hasDate
+    }
+
+    private fun clearReturnDate() {
+        dateDelegate.returnDate = null
+        return_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)
+        setReturnTimeIcon(false)
     }
 
     override fun setView(addressFrom: String?, addressTo: String?, duration: String?, networkAvailable: Boolean) {
