@@ -4,6 +4,7 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.braintreepayments.api.dropin.DropInRequest
 import com.kg.gettransfer.domain.model.BookNowOffer
+import com.kg.gettransfer.presentation.model.BookNowOfferModel
 
 import com.kg.gettransfer.presentation.model.OfferModel
 
@@ -17,7 +18,7 @@ import kotlinx.serialization.Serializable
 interface PaymentOfferView : BaseView {
 
     fun setOffer(offer: OfferModel, paymentPercentages: List<Int>)
-    fun setBookNowOffer(bookNowOffer: BookNowOffer?)
+    fun setBookNowOffer(bookNowOffer: BookNowOfferModel?)
     fun showOfferError()
     fun setCommission(paymentCommission: String)
     fun startPaypal(dropInRequest: DropInRequest)

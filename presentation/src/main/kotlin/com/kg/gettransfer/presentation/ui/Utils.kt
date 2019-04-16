@@ -35,6 +35,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.FitCenter
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -47,6 +52,7 @@ import com.google.maps.android.PolyUtil
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.ReviewRate
+import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
@@ -473,6 +479,19 @@ object Utils : KoinComponent {
                      top: Drawable?, end: Drawable?,
                      bottom: Drawable?) =
             textView.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
+
+    fun bindMainOfferPhoto(view: ImageView, parent: View, path: String? = null, resource: Int = 0) =
+            Glide.with(parent)
+                    .let {
+                        if (path != null) it.load(path)
+                        else it.load(resource) }
+                    .apply(RequestOptions()
+                            .error(resource)
+                            .placeholder(resource)
+                            .transforms(path?.let { CenterCrop() } ?: FitCenter(),
+                            RoundedCorners(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))))
+                    .into(view)
+
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

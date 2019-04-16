@@ -30,6 +30,7 @@ import com.kg.gettransfer.utilities.GTNotificationManager
 import kotlinx.coroutines.Job
 
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.presentation.mapper.BookNowOfferMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 import kotlinx.coroutines.delay
 
@@ -49,6 +50,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val systemInteractor: SystemInteractor by inject()
     protected val transferMapper: TransferMapper by inject()
     protected val offerMapper: OfferMapper by inject()
+    protected val bookNowOfferMapper: BookNowOfferMapper by inject()
     protected val offerEntityMapper: com.kg.gettransfer.data.mapper.OfferMapper by inject()
     protected val notificationManager: GTNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()

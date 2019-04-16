@@ -2,14 +2,8 @@ package com.kg.gettransfer.presentation.delegate
 
 import android.util.TypedValue
 import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.FitCenter
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.strikeText
@@ -47,7 +41,7 @@ object OfferItemBindDelegate {
             bindRating(view_offer_rate, offer.carrier.ratings, offer.carrier.approved).also { offer_rating_bg.isVisible = it }
             bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = offer.carrier.languages)
             bindPrice(offer_bottom, offer.price.base, offer.price.withoutDiscount)
-            bindMainPhoto(imgOffer_mainPhoto, view, path = offer.vehicle.photos.first())
+            Utils.bindMainOfferPhoto(imgOffer_mainPhoto, view, path = offer.vehicle.photos.first())
             return@with
         }
 
@@ -59,7 +53,7 @@ object OfferItemBindDelegate {
             bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
             bindRating(view_offer_rate, RatingsModel.BOOK_NOW_RATING).also { offer_rating_bg.isVisible = true }
             bindPrice(offer_bottom, offer.base)
-            bindMainPhoto(imgOffer_mainPhoto, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
+            Utils.bindMainOfferPhoto(imgOffer_mainPhoto, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
         }
     }
 
@@ -92,7 +86,7 @@ object OfferItemBindDelegate {
             tv_car_class_tiny.text = offer.vehicle.transportType.nameId?.let { context.getString(it) ?: "" }
             offer.vehicle.photos.firstOrNull()
                     .also {
-                        bindMainPhoto(
+                        Utils.bindMainOfferPhoto(
                                 img_car_photo_tiny,
                                 view,
                                 path = it,
@@ -111,7 +105,7 @@ object OfferItemBindDelegate {
             tv_car_model_tiny.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
             tv_car_model_tiny.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.view_offer_book_now_title_text_size))
             tv_car_class_tiny.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
-            bindMainPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
+            Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
             bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING, true)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
             offer.withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
@@ -141,7 +135,7 @@ object OfferItemBindDelegate {
                 /* imgGreen.isVisible = offer.green */
             }
 
-    private fun bindRating(rateView: View, rating: RatingsModel, approved: Boolean = false): Boolean =
+    internal fun bindRating(rateView: View, rating: RatingsModel, approved: Boolean = false): Boolean =
             with(rateView) {
                 imgApproved.isVisible = approved
                 if (rating.average != null && rating.average != NO_RATING) {
@@ -155,7 +149,7 @@ object OfferItemBindDelegate {
                 return@with approved
             }
 
-    private fun bindLanguages(singleLineContainer: LinearLayout? = null, multiLineContainer: LinearLayout? = null, languages: List<LocaleModel>) {
+    internal fun bindLanguages(singleLineContainer: LinearLayout? = null, multiLineContainer: LinearLayout? = null, languages: List<LocaleModel>) {
 
         if (singleLineContainer == null && multiLineContainer == null)
             throw IllegalArgumentException("One of containers must not be null in ${this::class.java.name}")
@@ -173,20 +167,6 @@ object OfferItemBindDelegate {
                     tv_old_price.isVisible = true
                 }
             }
-
-    private fun bindMainPhoto(view: ImageView, parent: View, path: String? = null, resource: Int = 0) =
-            Glide.with(parent)
-                    .let {
-                        if (path != null) it.load(path)
-                        else it.load(resource) }
-                    .apply(RequestOptions().error(resource).placeholder(resource).transforms(getTransform(path),
-                            RoundedCorners(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))))
-                    .into(view)
-
-    private fun getTransform(path: String?) =
-            if (path != null) CenterCrop()
-            else FitCenter()
-
 
     private const val NO_RATING  = 0.0F
     private const val RATE_SHOWN = true

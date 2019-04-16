@@ -98,7 +98,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                         bookNowOffer = filteredBookNow.values.first()
                     }
                 }
-                viewState.setBookNowOffer(bookNowOffer)
+                viewState.setBookNowOffer(bookNowOffer?.let { bookNowOfferMapper.toView(it) })
             }
         } else {
             viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
