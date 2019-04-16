@@ -208,7 +208,7 @@ object Utils : KoinComponent {
     fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
         //fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
 
-    fun checkPhone(phone: String): Boolean {
+    fun checkPhone(phone: String?): Boolean {
         try {
             /*return if(!PHONE_PATTERN.matcher(phone.trim()).matches()) false
             else phoneUtil.isValidNumber(phoneUtil.parse(phone, null))*/

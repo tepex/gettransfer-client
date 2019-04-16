@@ -9,6 +9,7 @@ import com.appsflyer.AFInAppEventType
 
 import com.arellomobile.mvp.InjectViewState
 import com.facebook.appevents.AppEventsConstants
+import com.google.android.gms.common.util.Strings
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
@@ -378,10 +379,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */
     private fun checkFields() {
         if (transportTypes == null) return
-        val typesHasSelected = transportTypes!!.any { it.checked }
-        val actionEnabled = typesHasSelected &&
-                            Patterns.EMAIL_ADDRESS.matcher(user.profile.email!!).matches() &&
-                            Utils.checkPhone(user.profile.phone!!) &&
+        val typesHasSelected = transportTypes?.any { it.checked }
+        val actionEnabled = typesHasSelected == true &&
+                            !Strings.isEmptyOrWhitespace(user.profile.email) &&
+                            Patterns.EMAIL_ADDRESS.matcher(user.profile.email).matches() &&
+                            Utils.checkPhone(user.profile.phone) &&
                             user.termsAccepted
         viewState.setGetTransferEnabled(actionEnabled)
     }
