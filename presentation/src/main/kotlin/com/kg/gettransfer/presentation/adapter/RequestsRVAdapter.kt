@@ -21,6 +21,7 @@ class RequestsRVAdapter(
 ) : RecyclerView.Adapter<RequestsRVAdapter.ViewHolder>() {
 
     private val transfers = mutableListOf<TransferModel>()
+    private var eventsCount = mapOf<Long, Int>()
 
     override fun getItemCount() = transfers.size
 
@@ -29,31 +30,38 @@ class RequestsRVAdapter(
                     TransferRequestItem(parent.context, layout).containerView
             )
 
-    override fun onBindViewHolder(holder: RequestsRVAdapter.ViewHolder, pos: Int) =
-        holder.bind(transfers[pos], listener)
+    override fun onBindViewHolder(holder: RequestsRVAdapter.ViewHolder, pos: Int) {
+        val transfer = transfers[pos]
+        holder.bind(transfer, eventsCount[transfer.id] ?: 0, listener)
+    }
 
     class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bind(item: TransferModel, listener: ItemClickListener) = with(containerView) {
+        fun bind(item: TransferModel, eventsCount: Int, listener: ItemClickListener) = with(containerView) {
             (this as TransferRequestItem).setInfo(item)
-            showEvents(item)
+            showEvents(item, eventsCount)
             setOnClickListener { listener(item) }
         }
 
-        private fun showEvents(item: TransferModel) {
-            if (item.eventsCount == 0 || (!item.showOfferInfo && item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE)) {
+        private fun showEvents(item: TransferModel, eventsCount: Int) {
+            if (eventsCount == 0 || (!item.showOfferInfo && item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE)) {
                 tvEventsCount.isVisible = false
             } else {
                 tvEventsCount.isVisible = true
-                tvEventsCount.text = item.eventsCount.toString()
+                tvEventsCount.text = eventsCount.toString()
             }
         }
     }
 
-    fun updateTransfers(tr: List<TransferModel>){
+    fun updateTransfers(tr: List<TransferModel>) {
         transfers.addAll(tr)
+        notifyDataSetChanged()
+    }
+
+    fun updateEvents(eventsCount: Map<Long, Int>) {
+        this.eventsCount = eventsCount
         notifyDataSetChanged()
     }
 }

@@ -105,6 +105,10 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         rvAdapter?.updateTransfers(transfers)
     }
 
+    override fun updateEvents(eventsCount: Map<Long, Int>) {
+        rvAdapter?.updateEvents(eventsCount)
+    }
+
     override fun blockInterface(block: Boolean, useSpinner: Boolean) =
         (activity as BaseView).blockInterface(block, useSpinner)
 

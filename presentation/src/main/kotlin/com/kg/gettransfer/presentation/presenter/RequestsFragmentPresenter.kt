@@ -24,6 +24,7 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     var transferType = tt
 
     private var transfers: List<Transfer>? = null
+    private var eventsCount: Map<Long, Int>? = null
     private var recordCount = 0
     private var updating = false
 
@@ -98,15 +99,10 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         transfers?.let {
             if(recordCount < it.size) {
                 val end = Math.min(PAGE_SIZE, it.size - recordCount)
-                val viewModel = it.subList(recordCount, recordCount + end)
-                        .map { transferMapper.toView(it) }
-                        .let {
-                            with(countEventsInteractor) {
-                                updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers, it)
-                            }
-                        }
+                val viewModel = it.subList(recordCount, recordCount + end).map { transferMapper.toView(it) }
 
                 viewState.updateTransfers(viewModel)
+                updateEventsCount()
                 viewState.setScrollListener()
 
                 recordCount += PAGE_SIZE
@@ -119,15 +115,22 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         }
     }
 
-    private fun updateEvents(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>, transfersList: List<TransferModel>): List<TransferModel> {
-        return transfersList.also { list ->
-            list.forEach {transfer->
-                mapCountNewEvents[transfer.id]?.let {
-                    val eventsCount = it - (mapCountViewedOffers[transfer.id] ?: 0)
-                    if (eventsCount > 0) transfer.eventsCount = eventsCount
-                }
+    private fun updateEventsCount() {
+        eventsCount = with(countEventsInteractor) {
+            getEventsCount(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
+        }
+        eventsCount?.let { viewState.updateEvents(it) }
+    }
+
+    private fun getEventsCount(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>): Map<Long, Int> {
+        val eventsMap = mutableMapOf<Long, Int>()
+        transfers?.forEach { transfer->
+            mapCountNewEvents[transfer.id]?.let {
+                val eventsCount = it - (mapCountViewedOffers[transfer.id] ?: 0)
+                if (eventsCount > 0) eventsMap[transfer.id] = eventsCount
             }
         }
+        return eventsMap
     }
 
     fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int) {
@@ -140,12 +143,6 @@ class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     }
 
     override fun updateCounter() {
-        updateTransfers()
-        /*utils.launchSuspend{
-            with(countEventsInteractor) {
-                updateEvents(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
-            }
-        }
-        viewState.notifyData()*/
+        updateEventsCount()
     }
 }
