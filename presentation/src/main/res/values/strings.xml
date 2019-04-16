@@ -289,6 +289,7 @@
     <string name="LNG_TRANSFER_WILL_START">Transfer will start in</string>
     <string name="LNG_PENDING_PAYMENT">Transfer payment pending</string>
     <string name="LNG_RIDE_NUMBER">Transfer request #</string>
+    <string name="LNG_SELECT_CHILDREN_SEATS">Выберите детские кресла</string>
     <string name="LNG_TOP_RATED">Top selection</string>
     <string name="LNG_TRANSPORT_ECONOMY">Economy</string>
     <string name="LNG_TRANSPORT_COMFORT">Comfort</string>

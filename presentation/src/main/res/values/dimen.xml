@@ -211,6 +211,13 @@
 	<dimen name="divider_margin_end">16dp</dimen>
     <dimen name="divider_create_order_margin_top">12dp</dimen>
 
+	<dimen name="seat_container_top_padding">22dp</dimen>
+	<dimen name="seat_container_bottom_padding">12dp</dimen>
+	<dimen name="seat_type_cell_padding_start">16dp</dimen>
+	<dimen name="seat_type_cell_padding_end">20dp</dimen>
+	<dimen name="seat_count_controller_margin_top">24dp</dimen>
+	<dimen name="seat_count_controller_margin_bottom">16dp</dimen>
+
 	<!-- Search address -->
 	<dimen name="address_item_size">16sp</dimen>
 	<dimen name="address_secondary_item_size">12sp</dimen>

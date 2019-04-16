@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.util.Log
 
 import android.util.Patterns
 import com.appsflyer.AFInAppEventParameterName
@@ -102,7 +103,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val i = systemInteractor.currentCurrencyIndex
         if (i != -1) setCurrency(i)*/
         setCurrency()
-
         viewState.setUser(user, systemInteractor.account.user.loggedIn)
         transportTypes?.let { viewState.setTransportTypes(it) }
         checkOrderDateTime()

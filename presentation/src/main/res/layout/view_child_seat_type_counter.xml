@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:paddingTop="@dimen/seat_container_top_padding"
+                android:paddingBottom="@dimen/seat_container_bottom_padding"
+                android:paddingStart="@dimen/seat_type_cell_padding_start"
+                android:paddingEnd="@dimen/seat_type_cell_padding_end">
+    <TextView
+        android:id="@+id/child_seat_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Infant carrier"/>
+
+    <TextView
+        android:id="@+id/child_seat_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/child_seat_title"
+        tools:text="Up to 10kg, 6 mount"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/sh_divider_1dp"
+    android:layout_below="@+id/child_seat_description"/>
+
+    <include
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/seat_count_controller_margin_top"
+        android:layout_marginBottom="@dimen/seat_count_controller_margin_bottom"
+        android:layout_alignParentEnd="true"
+        layout="@layout/view_count_controller"/>
+
+</RelativeLayout>

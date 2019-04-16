@@ -35,7 +35,7 @@ import kotlinx.android.synthetic.main.fragment_requests.*
 
 import timber.log.Timber
 import android.support.v7.widget.RecyclerView
-
+import android.util.Log
 
 
 /**
