@@ -92,7 +92,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     private fun setButton() {
-        val image = ImageSpan(this, R.drawable.credit_card)
+        val image = ImageSpan(this, R.drawable.ic_credit_card)
         val string = SpannableString(getString(R.string.LNG_PAYMENT_PAY))
         val title = SpannableString("  $string")
         title.setSpan(image, 0, 1, 0)

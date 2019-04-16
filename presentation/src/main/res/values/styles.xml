@@ -70,6 +70,16 @@
         <item name="android:fontFamily">@font/sf_pro_display_regular</item>
     </style>
 
+    <style name="sf_font_pro_display_regular_black">
+        <item name="android:textColor">@color/color_gtr_black</item>
+        <item name="android:fontFamily">@font/sf_pro_display_regular</item>
+    </style>
+
+    <style name="sf_pro_display_semibold">
+        <item name="android:textColor">@color/color_gtr_black</item>
+        <item name="android:fontFamily">@font/sf_pro_display_semibold</item>
+    </style>
+
 
     <style name="nav_item">
         <item name="android:layout_width">match_parent</item>
