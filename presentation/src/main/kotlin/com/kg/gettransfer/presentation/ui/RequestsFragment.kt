@@ -48,7 +48,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     @ProvidePresenter
     fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(arguments!!.getInt(TRANSFER_TYPE_ARG))
 
-    private lateinit var rvAdapter: RequestsRVAdapter
+    private var rvAdapter: RequestsRVAdapter? = null
 
     var networkAvailable:Boolean? = null
 
@@ -102,7 +102,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     override fun updateTransfers(transfers: List<TransferModel>) {
         noTransfersText.isVisible = transfers.isEmpty()
-        rvAdapter.updateTransfers(transfers)
+        rvAdapter?.updateTransfers(transfers)
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) =
@@ -120,7 +120,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
             (activity as BaseView).setError(e)
 
     override fun notifyData() {
-        activity?.runOnUiThread { rvAdapter.notifyDataSetChanged() }
+        activity?.runOnUiThread { rvAdapter?.notifyDataSetChanged() }
     }
 
     override fun showTransfers(){
