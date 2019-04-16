@@ -27,7 +27,6 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.PaymentMethodNonce
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
@@ -37,8 +36,9 @@ import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 
-import kotlinx.android.synthetic.main.activity_payment_offer_new.*
+import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
+import kotlinx.android.synthetic.main.toolbar_nav.view.*
 
 import kotlinx.serialization.json.JSON
 import org.jetbrains.anko.longToast
@@ -68,14 +68,22 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         super.onCreate(savedInstanceState)
         presenter.params = JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
-        setContentView(R.layout.activity_payment_offer_new)
+        setContentView(R.layout.activity_payment_offer)
         setButton()
-
-        setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT_SETTINGS)
+        initToolbar()
         tv_payment_agreement.setOnClickListener { presenter.onAgreementClicked() }
         btnGetPayment.setOnClickListener { presenter.getPayment() }
         rbCard.setOnClickListener { changePayment(it, PaymentRequestModel.PLATRON) }
         rbPaypal.setOnClickListener { changePayment(it, PaymentRequestModel.PAYPAL) }
+    }
+
+    private fun initToolbar() {
+        with(toolbar) {
+            setSupportActionBar(this as Toolbar)
+            tv_title.text = getString(R.string.LNG_PAYMENT_SETTINGS)
+            btn_back.setOnClickListener { presenter.onBackCommandClick() }
+            btn_forward.isVisible = false
+        }
     }
 
     private fun changePayment(view: View, payment: String) {
