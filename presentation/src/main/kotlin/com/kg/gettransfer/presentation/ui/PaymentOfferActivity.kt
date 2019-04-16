@@ -28,7 +28,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.BookNowOffer
-import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
@@ -36,7 +36,7 @@ import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 
-import kotlinx.android.synthetic.main.activity_payment_offer.*
+import kotlinx.android.synthetic.main.activity_payment_offer_new.*
 
 import kotlinx.serialization.json.JSON
 import org.jetbrains.anko.longToast
@@ -66,25 +66,25 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         super.onCreate(savedInstanceState)
         presenter.params = JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
-        setContentView(R.layout.activity_payment_offer)
+        setContentView(R.layout.activity_payment_offer_new)
         setButton()
 
         setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT_SETTINGS)
         tv_payment_agreement.setOnClickListener { presenter.onAgreementClicked() }
         btnGetPayment.setOnClickListener { presenter.getPayment() }
-        creditCardButton.setOnClickListener { changePayment(PaymentRequestModel.PLATRON) }
-        payPalButton.setOnClickListener { changePayment(PaymentRequestModel.PAYPAL) }
+        rbCard.setOnClickListener { changePayment(it, PaymentRequestModel.PLATRON) }
+        rbPaypal.setOnClickListener { changePayment(it, PaymentRequestModel.PAYPAL) }
     }
 
-    private fun changePayment(payment: String) {
-        when (payment) {
-            PaymentRequestModel.PLATRON -> {
-                ivCheckCard.isVisible = true
-                ivCheckPayPal.isVisible = false
+    private fun changePayment(view: View, payment: String) {
+        when (view.id) {
+            R.id.rbCard -> {
+                rbCard.isChecked = true
+                rbPaypal.isChecked = false
             }
-            PaymentRequestModel.PAYPAL -> {
-                ivCheckCard.isVisible = false
-                ivCheckPayPal.isVisible = true
+            R.id.rbPaypal -> {
+                rbPaypal.isChecked = true
+                rbCard.isChecked = false
             }
         }
         presenter.selectedPayment = payment
@@ -101,32 +101,40 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>) {
         if (paymentPercentages.isNotEmpty()) {
-            paymentPercentages.forEach { percentage ->
-                when (percentage) {
-                    OfferModel.FULL_PRICE -> {
-                        payFullPriceButton.isVisible = true
-                        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE.toString())
-                        fullPrice.text = offer.price.base.def
-                        payFullPriceButton.setOnClickListener { changePaymentSettings(it) }
-                    }
-                    OfferModel.PRICE_30 -> {
-                        payThirdOfPriceButton.isVisible = true
-                        payThirdOfPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.PRICE_30.toString())
-                        thirdOfPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, offer.price.percentage30)
-                        payThirdOfPriceButton.setOnClickListener { changePaymentSettings(it) }
+            if (paymentPercentages.size == 1) hidePaymentPercentage()
+            else {
+                paymentPercentages.forEach { percentage ->
+                    when (percentage) {
+                        OfferModel.FULL_PRICE -> {
+                            rbPay100.text = getString(R.string.LNG_PAYMENT_TERM_PAY, OfferModel.FULL_PRICE.toString())
+                            tvFullPrice.text = offer.price.base.preferred.plus(R.string.LNG_PAYMENT_TERM_NOW)
+                            rbPay100.setOnClickListener { changePaymentSettings(it) }
+                        }
+                        OfferModel.PRICE_30 -> {
+                            rbPay30.text = getString(R.string.LNG_PAYMENT_TERM_PAY, OfferModel.PRICE_30.toString())
+                            tvThirdOfPrice.text = offer.price.percentage30.plus(R.string.LNG_PAYMENT_TERM_NOW)
+                            tvLaterPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, offer.price.percentage70)
+                            rbPay30.setOnClickListener { changePaymentSettings(it) }
+                        }
                     }
                 }
             }
             selectPaymentPercentage(selectedPercentage)
         }
+        setPriceInfo(offer.price.base.preferred, offer.price.base.def)
+    }
+
+    private fun setPriceInfo(preferredPrice: String?, default: String?) {
+        tvPriceInfo.text = getString(R.string.LNG_RIDE_PAY_CHARGE, preferredPrice, default)
     }
 
     override fun setBookNowOffer(bookNowOffer: BookNowOffer?) {
-        payFullPriceButton.isVisible = true
-        payFullPriceTitle.text = getString(R.string.LNG_PAYMENT_TERM_NOW, OfferModel.FULL_PRICE.toString())
-        fullPriceCheckIcon.isVisible = false
-        payThirdOfPriceButton.isVisible = false
-        fullPrice.text = bookNowOffer?.base?.def
+        hidePaymentPercentage()
+        setPriceInfo(bookNowOffer?.base?.preferred, bookNowOffer?.base?.def)
+    }
+
+    private fun hidePaymentPercentage() {
+        groupPrice.isVisible = false
     }
 
     override fun showOfferError() {
@@ -135,30 +143,29 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun setCommission(paymentCommission: String) {
         presenter.params.dateRefund?.let {
-            commission.text = getString(R.string.LNG_PAYMENT_COMISSION2, paymentCommission, SystemUtils.formatDateTime(it))
+            tvCommission.text = getString(R.string.LNG_PAYMENT_COMISSION2, paymentCommission, SystemUtils.formatDateTime(it))
         }
     }
 
     private fun changePaymentSettings(view: View?) {
         when (view?.id) {
-            R.id.payFullPriceButton    -> selectPaymentPercentage(PaymentRequestModel.FULL_PRICE)
-            R.id.payThirdOfPriceButton -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
+            R.id.rbPay100 -> selectPaymentPercentage(PaymentRequestModel.FULL_PRICE)
+            R.id.rbPay30  -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
         }
     }
 
     private fun selectPaymentPercentage(selectedPercentage: Int) {
         when (selectedPercentage) {
             PaymentRequestModel.FULL_PRICE -> {
-                fullPriceCheckIcon.isVisible = true
-                thirdOfPriceCheckIcon.isVisible = false
-                presenter.changePrice(PaymentRequestModel.FULL_PRICE)
+                rbPay100.isChecked = true
+                rbPay30.isChecked = false
             }
             PaymentRequestModel.PRICE_30 -> {
-                thirdOfPriceCheckIcon.isVisible = true
-                fullPriceCheckIcon.isVisible = false
-                presenter.changePrice(PaymentRequestModel.PRICE_30)
+                rbPay100.isChecked = false
+                rbPay30.isChecked = true
             }
         }
+        presenter.changePrice(selectedPercentage)
         this.selectedPercentage = selectedPercentage
     }
 
@@ -188,7 +195,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
                     val nonce = result.paymentMethodNonce?.nonce
                     presenter.confirmPayment(nonce!!)
                 }
-                RESULT_CANCELED -> changePayment(PaymentRequestModel.PAYPAL)
+                RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.PAYPAL)
                 else -> {
                     val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR) as Exception
                     Timber.e(error)
@@ -234,6 +241,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     override fun onCancel(requestCode: Int) {
-        changePayment(PaymentRequestModel.PAYPAL)
+        presenter.changePayment(PaymentRequestModel.PAYPAL)
     }
 }
