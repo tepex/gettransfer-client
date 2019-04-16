@@ -328,6 +328,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 PERMISSION_REQUEST, *PERMISSIONS)
     }
 
+    override fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit) {
+        block(EasyPermissions.hasPermissions(this, *PERMISSIONS))
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)

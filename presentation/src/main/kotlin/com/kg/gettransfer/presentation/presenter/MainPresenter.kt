@@ -175,7 +175,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
     }
 
-    fun updateCurrentLocation() = utils.launchSuspend {
+    fun updateCurrentLocation() {
         updateCurrentLocationAsync()
         logButtons(Analytics.MY_PLACE_CLICKED)
     }
@@ -185,21 +185,25 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         setPointAddress(orderInteractor.from!!)
     }
 
-    private suspend fun updateCurrentLocationAsync() {
+    private fun updateCurrentLocationAsync() {
         //viewState.blockInterface(true)
         viewState.blockSelectedField(true, systemInteractor.selectedField)
-        if (systemInteractor.isGpsEnabled)
-            fetchDataOnly { orderInteractor.getCurrentAddress() }
-                    ?.let {
-                        lastCurrentLocation = it.cityPoint.point?.let { point -> pointMapper.toLatLng(point) }
-                        setPointAddress(it)
+        viewState.defineAddressRetrieving { withGps ->
+            utils.launchSuspend {
+                if (systemInteractor.isGpsEnabled && withGps)
+                    fetchDataOnly { orderInteractor.getCurrentAddress() }
+                            ?.let {
+                                lastCurrentLocation = it.cityPoint.point?.let { point -> pointMapper.toLatLng(point) }
+                                setPointAddress(it)
+                            }
+                else
+                    with(fetchResultOnly { systemInteractor.getMyLocation() }) {
+                        logIpapiRequest()
+                        if (error == null && model.latitude != null && model.longitude != null)
+                            setLocation(model)
                     }
-        else
-            with(fetchResultOnly { systemInteractor.getMyLocation() }) {
-                logIpapiRequest()
-                if (error == null && model.latitude != null && model.longitude != null)
-                    setLocation(model)
             }
+        }
     }
 
     private suspend fun setLocation(location: Location) {
