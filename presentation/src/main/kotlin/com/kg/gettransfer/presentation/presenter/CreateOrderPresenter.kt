@@ -364,8 +364,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             !isTimeSetByUser                                  -> FieldError.TIME_NOT_SELECTED
             !dateDelegate.validate()                          -> FieldError.RETURN_TIME
             !Utils.checkEmail(user.profile.email)             -> FieldError.EMAIL_FIELD
-            !Utils.checkPhone(user.profile.phone!!)           -> FieldError.PHONE_FIELD
-            transportTypes!!.none { it.checked }              -> FieldError.TRANSPORT_FIELD
+            !Utils.checkPhone(user.profile.phone)             -> FieldError.PHONE_FIELD
+            transportTypes?.none { it.checked } == true       -> FieldError.TRANSPORT_FIELD
             passengers == 0                                   -> FieldError.PASSENGERS_COUNT
             !user.termsAccepted                               -> FieldError.TERMS_ACCEPTED_FIELD
             else                                              -> FieldError.UNKNOWN
