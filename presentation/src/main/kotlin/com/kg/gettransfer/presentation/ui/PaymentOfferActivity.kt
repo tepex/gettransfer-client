@@ -33,12 +33,13 @@ import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
+import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 
 import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
-import kotlinx.android.synthetic.main.toolbar_nav.view.*
+import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
 
 import kotlinx.serialization.json.JSON
 import org.jetbrains.anko.longToast
@@ -80,9 +81,9 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     private fun initToolbar() {
         with(toolbar) {
             setSupportActionBar(this as Toolbar)
-            tv_title.text = getString(R.string.LNG_PAYMENT_SETTINGS)
-            btn_back.setOnClickListener { presenter.onBackCommandClick() }
-            btn_forward.isVisible = false
+            tvTitle.text = getString(R.string.LNG_PAYMENT_SETTINGS)
+            btnBack.setOnClickListener { presenter.onBackCommandClick() }
+            tvSubTitle.isSelected = true
         }
     }
 
@@ -289,5 +290,17 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun onCancel(requestCode: Int) {
         presenter.changePayment(PaymentRequestModel.PAYPAL)
+    }
+
+    override fun setToolbarTitle(transferModel: TransferModel) {
+        toolbar.tvSubTitle.text = transferModel.from
+                .let { from ->
+                    transferModel.to?.let {
+                        from.plus(" - ").plus(it)
+                    } ?: transferModel.duration?.let {
+                        from.plus(" - ").plus(HourlyValuesHelper.getValue(it, this))
+                    } ?: from
+                }
+        toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
     }
 }

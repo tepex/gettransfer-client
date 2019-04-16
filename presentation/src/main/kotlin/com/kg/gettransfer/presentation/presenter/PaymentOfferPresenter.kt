@@ -100,6 +100,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 }
                 viewState.setBookNowOffer(bookNowOffer?.let { bookNowOfferMapper.toView(it) })
             }
+            viewState.setToolbarTitle(transferMapper.toView(transferResult.model))
         } else {
             viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
         }

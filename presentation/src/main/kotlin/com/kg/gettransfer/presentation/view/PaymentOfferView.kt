@@ -7,6 +7,7 @@ import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.utilities.DateSerializer
 
@@ -22,6 +23,7 @@ interface PaymentOfferView : BaseView {
     fun showOfferError()
     fun setCommission(paymentCommission: String)
     fun startPaypal(dropInRequest: DropInRequest)
+    fun setToolbarTitle(transferModel: TransferModel)
 
     companion object {
         val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"
