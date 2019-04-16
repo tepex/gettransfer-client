@@ -381,8 +381,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         if (transportTypes == null) return
         val typesHasSelected = transportTypes?.any { it.checked }
         val actionEnabled = typesHasSelected == true &&
-                            !Strings.isEmptyOrWhitespace(user.profile.email) &&
-                            Patterns.EMAIL_ADDRESS.matcher(user.profile.email).matches() &&
+                            Utils.checkEmail(user.profile.email) &&
                             Utils.checkPhone(user.profile.phone) &&
                             user.termsAccepted
         viewState.setGetTransferEnabled(actionEnabled)
