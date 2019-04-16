@@ -206,7 +206,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             with(it) {
                 setView(searchFrom.text, addressTo, duration, !(viewNetworkNotAvailable?.isVisible ?: false))
                 setBadge(tvEventsCount.text.toString())
-                showBadge(tvEventsCount.text.isNotEmpty())
+                showBadge(tvEventsCount.isVisible)
             }
         }
     }
