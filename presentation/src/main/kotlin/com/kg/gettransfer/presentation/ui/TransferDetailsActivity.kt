@@ -139,12 +139,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         initBottomSheetDetails()
-<<<<<<< HEAD
-=======
         //initTextFields()
         setClickListeners()
-
->>>>>>> Revert "5"
     }
 
     override fun onStop() {
@@ -531,7 +527,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         yourRateMark.rbYourRateMark.setOnRatingChangeListener(null)
         yourRateMark.show(isShow)
         yourRateMark.rbYourRateMark.rating = averageRate
-        yourRateMark.rbYourRateMark.setOnRatingChangeListener { baseRatingBar, fl -> presenter.rateTrip(fl , true) }
+        yourRateMark.rbYourRateMark.setOnRatingChangeListener { _, fl -> presenter.rateTrip(fl , true) }
     }
 
 	override fun showYourComment(isShow: Boolean, comment: String) {

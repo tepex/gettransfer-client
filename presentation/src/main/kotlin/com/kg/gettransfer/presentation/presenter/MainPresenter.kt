@@ -409,7 +409,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                     .isSuccess()
                     ?.firstOrNull()
                     ?.let { offer ->
-                        if (offer.isTransferAvailableForRate()) {
+                        if (!offer.isOfferRatedByUser()) {
                             val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
                             reviewInteractor.offerIdForReview = offer.id
                             viewState.openReviewForLastTrip(

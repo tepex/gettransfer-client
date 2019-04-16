@@ -25,12 +25,13 @@ data class Offer(
         else                           -> null
     }
 
-    fun isTransferAvailableForRate(): Boolean {
-        ratings?.apply {
-            return vehicle == NO_RATE && driver == NO_RATE && fair == NO_RATE
-        }
-        return false
-    }
+    fun isRateAvailable() = ratings != null   //call this first
+
+    fun isOfferRatedByUser() =                //call after check
+        ratings?.run {
+     //       vehicle == NO_RATE && driver == NO_RATE && fair == NO_RATE
+            vehicle != null && driver != NO_RATE && fair != NO_RATE
+        } ?: true
 
     companion object {
         const val STATUS_NEW       = "new"

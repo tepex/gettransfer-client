@@ -22,10 +22,10 @@ import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.Coordinate
 
 import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.PUNCTUALITY
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
+import com.kg.gettransfer.extensions.isValid
 
 
 import com.kg.gettransfer.prefs.PreferencesImpl
@@ -387,9 +387,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     private fun updateRatingState() {
-        val isRated = offer?.isRated() ?: false
-        val showRate = offer?.ratings != null && !isRated
-        viewState.showCommonRating(showRate)
+        val available = offer?.isRateAvailable() ?: false
+        val isRated   = offer?.isOfferRatedByUser() ?: false && offer?.ratings?.averageRating.isValid()
+        viewState.showCommonRating(available && !isRated)
         viewState.showYourRateMark(isRated, offer?.ratings?.averageRating ?: 0f)
         viewState.showYourComment(isRated, offer?.passengerFeedback.orEmpty())
     }

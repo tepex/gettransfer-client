@@ -58,9 +58,6 @@
         <include
             android:id="@+id/view_rate_ride"
             layout="@layout/view_rate_your_transfer"
-<<<<<<< HEAD
-            android:visibility="gone" />
-=======
             android:visibility="gone"
             />
 
@@ -69,7 +66,6 @@
             layout="@layout/view_your_rate_mark"
             android:visibility="gone"
             />
->>>>>>> Revert "5"
 
         <include
             android:id="@+id/yourComment"
@@ -92,12 +88,9 @@
         <include
             android:id="@+id/thanks_for_rate"
             layout="@layout/view_thanks_for_rate_small"
-<<<<<<< HEAD
-            android:visibility="gone" />
-=======
             android:visibility="gone"
            />
->>>>>>> Revert "5"
+
 
         <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
             android:id="@+id/back_trip"
