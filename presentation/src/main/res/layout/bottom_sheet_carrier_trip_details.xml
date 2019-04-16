@@ -23,8 +23,8 @@
             <View
                 android:layout_width="@dimen/bottom_sheet_transfer_details_swiped_view_width"
                 android:layout_height="@dimen/bottom_sheet_transfer_details_swiped_view_height"
-                android:layout_marginTop="@dimen/bottom_sheet_transfer_details_swiped_view_margin_top_bottom"
-                android:layout_marginBottom="@dimen/bottom_sheet_transfer_details_swiped_view_margin_top_bottom"
+                android:layout_marginTop="@dimen/bottom_sheet_transfer_details_swiped_view_margin_top"
+                android:layout_marginBottom="@dimen/bottom_sheet_transfer_details_swiped_view_margin_bottom"
                 android:background="@drawable/rectangle_swipe_down" />
 
             <include

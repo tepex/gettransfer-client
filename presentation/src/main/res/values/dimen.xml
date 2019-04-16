@@ -345,7 +345,8 @@
     <dimen name="bottom_sheet_transfer_details_main_margin_top">14dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_width">110dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_height">5dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_top_bottom">16dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_top">11dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_bottom">15dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_height">44dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_margin_top_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_margin_start_end">30dp</dimen>
@@ -364,7 +365,7 @@
 	<dimen name="view_transfer_details_info_padding_top_bottom_10dp">10dp</dimen>
 	<dimen name="view_transfer_details_info_items_margin_start_end">16dp</dimen>
 	<dimen name="view_transfer_details_header_container_padding_horizontal">16dp</dimen>
-	<dimen name="view_transfer_details_header_container_padding_top">11dp</dimen>
+	<dimen name="view_transfer_details_header_container_padding_top">10dp</dimen>
 	<dimen name="view_transfer_details_info_transfer_date_margin_start">5dp</dimen>
 	<dimen name="view_transfer_details_info_texts_margin_start_3dp">3dp</dimen>
 	<dimen name="view_transfer_details_info_texts_margin_top_5dp">5dp</dimen>
@@ -796,7 +797,7 @@
 	<dimen name="view_transfer_details_comment_text_margin_top">10dp</dimen>
 	<dimen name="view_transfer_details_comment_divider_margin_top">20dp</dimen>
 
-	<dimen name="view_communication_button_container_top_padding">12dp</dimen>
+	<dimen name="view_communication_button_container_top_padding">8dp</dimen>
 	<dimen name="view_communication_button_name_margins">8dp</dimen>
 	<dimen name="view_communication_button_name_margin_top">4dp</dimen>
 	<dimen name="view_communication_button_img_size">64dp</dimen>
@@ -809,7 +810,7 @@
 	<dimen name="bottom_sheet_carrier_trip_details_trip_info_item_margin_top">20dp</dimen>
 	<dimen name="bottom_sheet_carrier_trip_details_trip_info_item_margin_bottom">24dp</dimen>
 	<dimen name="bottom_sheet_carrier_trip_details_view_seats_margin_end">16dp</dimen>
-	<dimen name="bottom_sheet_carrier_trip_details_free_space_height">140dp</dimen>
+	<dimen name="bottom_sheet_carrier_trip_details_free_space_height">130dp</dimen>
 
 	<dimen name="margin4">4dp</dimen>
 	<dimen name="margin44">44dp</dimen>
