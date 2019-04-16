@@ -18,7 +18,8 @@ private fun getType(id: TransportType.ID) =
             TransportType.ID.ECONOMY,
             TransportType.ID.COMFORT,
             TransportType.ID.PREMIUM     -> SedanTransport
-            TransportType.ID.LIMOUSINE   -> LimousineTransport
+            TransportType.ID.LIMOUSINE,
+            TransportType.ID.VIP         -> LimousineTransport
             TransportType.ID.MINIBUS,
             TransportType.ID.VAN         -> MinibusTransport
             TransportType.ID.SUV         -> SuvTransport
