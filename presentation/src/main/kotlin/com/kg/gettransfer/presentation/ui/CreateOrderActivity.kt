@@ -10,7 +10,6 @@ import android.os.Handler
 
 import android.support.annotation.CallSuper
 import android.support.annotation.ColorRes
-import android.support.annotation.IdRes
 import android.support.annotation.StringRes
 
 import android.support.design.widget.BottomSheetBehavior
@@ -61,7 +60,6 @@ import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.* //don't delete
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
-import kotlinx.android.synthetic.main.view_seats.*
 import kotlinx.android.synthetic.main.view_seats.view.*
 import org.koin.android.ext.android.inject
 
@@ -78,6 +76,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     private var defaultPromoText: String? = null
 
     private var phoneCode: Int = 0
+
+    private var hasErrorFields = false
+    private var errorFieldView: View? = null
 
     companion object {
 
@@ -322,6 +323,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
             presenter.onTransportChosen()
+            checkErrorField(rvTransferType)
             if (showInfo) transportTypeClicked(transportType)
         }
     }
@@ -341,8 +343,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         if (isLoggedIn) email_field.field_input.isEnabled = false
         layoutAgreement.isGone = user.termsAccepted
     }
-
-    override fun setGetTransferEnabled(enabled: Boolean) {}
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
         if (isDateChanged) clearMarkersAndPolylines()
@@ -384,13 +384,29 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun highLightErrorField(errorField: FieldError) {
+        hasErrorFields = true
         when (errorField) {
-            FieldError.TRANSPORT_FIELD -> highLightErrorField(rvTransferType)
-            FieldError.TIME_NOT_SELECTED -> highLightErrorField(transfer_date_time_field)
-            FieldError.RETURN_TIME -> highLightErrorField(transfer_return_date_field)
+            FieldError.TRANSPORT_FIELD -> {
+                highLightErrorField(rvTransferType)
+                errorFieldView = rvTransferType
+            }
+            FieldError.TIME_NOT_SELECTED -> {
+                highLightErrorField(transfer_date_time_field)
+                errorFieldView = transfer_date_time_field
+            }
+            FieldError.RETURN_TIME -> {
+                highLightErrorField(transfer_return_date_field)
+                errorFieldView = transfer_return_date_field
+            }
             FieldError.PASSENGERS_COUNT -> highLightErrorField(passengers_seats)
-            FieldError.PHONE_FIELD -> highLightErrorField(phone_field)
-            FieldError.EMAIL_FIELD -> highLightErrorField(email_field)
+            FieldError.PHONE_FIELD -> {
+                highLightErrorField(phone_field)
+                errorFieldView = phone_field
+            }
+            FieldError.EMAIL_FIELD -> {
+                highLightErrorField(email_field)
+                errorFieldView = email_field
+            }
             FieldError.TERMS_ACCEPTED_FIELD -> highLightErrorField(layoutAgreement)
             else -> return
         }
@@ -400,6 +416,15 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         view.setBackgroundResource(R.drawable.background_create_order_error)
         scrollContent.smoothScrollTo(0, view.bottom)
     }
+
+    private fun checkErrorField(view: View) {
+        if (hasErrorFields) {
+            hasErrorFields = false
+            clearHighLightErrorField(view)
+        }
+    }
+
+    private fun clearHighLightErrorField(view: View?) = view?.setBackgroundResource(0)
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
         bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
@@ -472,7 +497,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         fl_DeleteReturnDate.setOnClickListener              { presenter.clearReturnDate()
             showReturnFlight(HIDE)
         }
-        passengers_seats.img_plus_seat.setOnClickListener   { presenter.changePassengers(1) }
+        passengers_seats.img_plus_seat.setOnClickListener   {
+            checkErrorField(passengers_seats)
+            presenter.changePassengers(1)
+        }
         passengers_seats.img_minus_seat.setOnClickListener  { presenter.changePassengers(-1) }
         child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
         child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
@@ -496,9 +524,15 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         }
 
         tvAgreement1.setOnClickListener                     { presenter.showLicenceAgreement() }
-        switchAgreement.setOnCheckedChangeListener          { _, isChecked -> presenter.setAgreeLicence(isChecked) }
+        switchAgreement.setOnCheckedChangeListener          {
+            _, isChecked -> presenter.setAgreeLicence(isChecked)
+            checkErrorField(layoutAgreement)
+        }
 
-        btnGetOffers.setOnClickListener                     { presenter.onGetTransferClick() }
+        btnGetOffers.setOnClickListener                     {
+            clearHighLightErrorField(errorFieldView)
+            presenter.onGetTransferClick()
+        }
         btnCenterRoute.setOnClickListener                   { presenter.onCenterRouteClick() }
         btnBack.setOnClickListener                          { presenter.onBackClick() }
         btnOk.setOnClickListener                            { hideBottomSheet(bsTransport) }

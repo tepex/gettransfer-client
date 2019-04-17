@@ -258,17 +258,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun setName(name: String) {
         user.profile.name = name
-        checkFields()
     }
 
     fun setEmail(email: String) {
         user.profile.email = email
-        checkFields()
     }
 
     fun setPhone(phone: String) {
         user.profile.phone = phone
-        checkFields()
     }
 
     fun changeChildren(count: Int) {
@@ -308,7 +305,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun setAgreeLicence(agreeLicence: Boolean) {
         user.termsAccepted = agreeLicence
         systemInteractor.account.user.termsAccepted = true
-        checkFields()
     }
 
     fun showLicenceAgreement() = router.navigateTo(Screens.LicenceAgree)
@@ -377,19 +373,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         return false
     }
 
-    /* @TODO: Добавить реакцию на некорректное значение в поле. Отображать, где и что введено некорректно. */
-    private fun checkFields() {
-        if (transportTypes == null) return
-        val typesHasSelected = transportTypes?.any { it.checked }
-        val actionEnabled = typesHasSelected == true &&
-                            Utils.checkEmail(user.profile.email) &&
-                            Utils.checkPhone(user.profile.phone) &&
-                            user.termsAccepted
-        viewState.setGetTransferEnabled(actionEnabled)
-    }
-
     fun onTransportChosen() {
-        checkFields()
         try {
             val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
             val checkedTransport = transportTypes?.filter { it.checked }

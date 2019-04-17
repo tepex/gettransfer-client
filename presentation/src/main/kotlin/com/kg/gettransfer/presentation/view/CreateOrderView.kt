@@ -29,7 +29,6 @@ interface CreateOrderView : BaseView, RouteView {
     fun setHintForDateTimeTransfer(withReturnWay: Boolean)
     fun enableReturnTimeChoose()
     fun setComment(comment: String)
-    fun setGetTransferEnabled(enabled: Boolean)
     fun setPromoResult(discountInfo: String?)
     fun resetPromoView()
     fun showEmptyFieldError(@StringRes stringId: Int)
