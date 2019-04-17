@@ -108,7 +108,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/create_transfer_divider_height"
-                    android:layout_marginStart="32dp"
+                    android:layout_marginStart="@dimen/divider_margin_start"
                     android:layout_marginEnd="@dimen/divider_margin_end"
                     android:background="@color/create_order_fields_divider"
                     android:layout_gravity="bottom"/>
@@ -172,7 +172,7 @@
                 android:id="@+id/seats_divider"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_divider_height"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="@dimen/divider_margin_start"
                 android:layout_marginEnd="@dimen/divider_margin_start"
                 android:background="@color/create_order_fields_divider" />
 

@@ -65,7 +65,7 @@
     <color name="colorBtnRedPressed">#dc0007</color>
     <color name="colorLinkText">#5597c2</color>
     <color name="colorDividerGray">#FFBCBBC1</color>
-    <color name="create_order_fields_divider">#FF8e8e93</color>
+    <color name="create_order_fields_divider">@color/color_gtr_light_grey</color>
     <color name="bg_gray">#EEEEEE</color>
 
     <color name="btn_login_disable">@color/color_gtr_light_grey</color>
