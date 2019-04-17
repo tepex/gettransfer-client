@@ -34,6 +34,7 @@ interface CreateOrderView : BaseView, RouteView {
     fun resetPromoView()
     fun showEmptyFieldError(@StringRes stringId: Int)
     fun showNotLoggedAlert(withOfferId: Long)
+    fun highLightErrorField(errorField: FieldError)
 
     enum class FieldError(val value: String, @StringRes val stringId: Int) {
         EMAIL_FIELD(Analytics.INVALID_EMAIL, R.string.LNG_ERROR_EMAIL),

@@ -373,6 +373,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         if (errorField == FieldError.UNKNOWN) return true
         logCreateTransfer(errorField.value)
         viewState.showEmptyFieldError(errorField.stringId)
+        viewState.highLightErrorField(errorField)
         return false
     }
 

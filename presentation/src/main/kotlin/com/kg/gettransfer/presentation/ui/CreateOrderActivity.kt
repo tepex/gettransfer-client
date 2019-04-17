@@ -10,6 +10,7 @@ import android.os.Handler
 
 import android.support.annotation.CallSuper
 import android.support.annotation.ColorRes
+import android.support.annotation.IdRes
 import android.support.annotation.StringRes
 
 import android.support.design.widget.BottomSheetBehavior
@@ -52,6 +53,7 @@ import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
 import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
+import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
@@ -59,6 +61,7 @@ import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.* //don't delete
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
+import kotlinx.android.synthetic.main.view_seats.*
 import kotlinx.android.synthetic.main.view_seats.view.*
 import org.koin.android.ext.android.inject
 
@@ -339,7 +342,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         layoutAgreement.isGone = user.termsAccepted
     }
 
-    //TODO сделать подсветку не заполненных полей
     override fun setGetTransferEnabled(enabled: Boolean) {}
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
@@ -379,6 +381,24 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
             show()
         }
+    }
+
+    override fun highLightErrorField(errorField: FieldError) {
+        when (errorField) {
+            FieldError.TRANSPORT_FIELD -> highLightErrorField(rvTransferType)
+            FieldError.TIME_NOT_SELECTED -> highLightErrorField(transfer_date_time_field)
+            FieldError.RETURN_TIME -> highLightErrorField(transfer_return_date_field)
+            FieldError.PASSENGERS_COUNT -> highLightErrorField(passengers_seats)
+            FieldError.PHONE_FIELD -> highLightErrorField(phone_field)
+            FieldError.EMAIL_FIELD -> highLightErrorField(email_field)
+            FieldError.TERMS_ACCEPTED_FIELD -> highLightErrorField(layoutAgreement)
+            else -> return
+        }
+    }
+
+    private fun highLightErrorField(view: View) {
+        view.setBackgroundResource(R.drawable.background_create_order_error)
+        scrollContent.smoothScrollTo(0, view.bottom)
     }
 
     private fun transportTypeClicked(transportType: TransportTypeModel) {
