@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBack"
+    android:background="@color/color_gtr_super_light_grey"
     android:orientation="vertical">
 
     <android.support.constraint.Guideline
@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="160dp" />
-
 
     <include
         android:id="@+id/toolbar"
@@ -37,222 +36,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    <android.support.constraint.Group
-        android:id="@+id/groupPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="background1,rbPay30,tvFullPrice,tvThirdOfPrice,rbPay100,divider1,tvLaterPrice" />
-
-    <View
-        android:id="@+id/background1"
-        android:layout_width="0dp"
-        android:layout_height="128dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:background="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/tvPriceInfo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/offer_layout" />
-
-    <RadioButton
-        android:id="@+id/rbPay100"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:button="@drawable/payment_selector"
-        android:checked="true"
-        android:paddingStart="16dp"
-        tools:text="@string/LNG_PAYMENT_TERM_PAY"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/offer_layout" />
-
-    <TextView
-        android:id="@+id/tvFullPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/rbPay100"
-        app:layout_constraintLeft_toLeftOf="@id/guide_left"
-        app:layout_constraintTop_toTopOf="@+id/rbPay100"
-        tools:text="20$" />
-
-    <View
-        android:id="@+id/divider1"
+    <include
+        android:id="@+id/layoutPrices"
+        layout="@layout/layout_prices"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/create_transfer_divider_height"
-        android:layout_marginStart="@dimen/divider_margin_start"
-        android:layout_marginTop="21dp"
-        android:layout_marginEnd="@dimen/divider_margin_end"
-        android:background="@color/create_order_fields_divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rbPay100" />
-
-    <RadioButton
-        android:id="@+id/rbPay30"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:button="@drawable/payment_selector"
-        android:paddingStart="16dp"
-        tools:text="@string/LNG_PAYMENT_TERM_PAY"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider1" />
-
-    <TextView
-        android:id="@+id/tvThirdOfPrice"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="@id/guide_left"
-        app:layout_constraintTop_toBottomOf="@+id/divider1"
-        tools:text="20$" />
-
-    <TextView
-        android:id="@+id/tvLaterPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/tvThirdOfPrice"
-        app:layout_constraintTop_toBottomOf="@+id/tvThirdOfPrice"
-        tools:text="@string/LNG_PAYMENT_TERM_LATER" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/offer_layout" />
 
     <TextView
         android:id="@+id/tvPriceInfo"
+        style="@style/sf_font_pro_display_regular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:gravity="center"
-        tools:text="@string/LNG_RIDE_PAY_CHARGE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rbPay30" />
+        app:layout_constraintTop_toBottomOf="@+id/layoutPrices"
+        tools:text="@string/LNG_RIDE_PAY_CHARGE" />
 
-    <View
-        android:id="@+id/background2"
-        android:layout_width="0dp"
-        android:layout_height="128dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="15dp"
-        android:background="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/tvCommission"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPriceInfo" />
-
-
-    <RadioButton
-        android:id="@+id/rbCard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="35dp"
-        android:button="@drawable/payment_selector"
-        android:checked="true"
-        android:paddingStart="16dp"
-        android:text="@string/LNG_PAYMENT_METHOD_CARD"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPriceInfo" />
-
-    <ImageView
-        android:id="@+id/ivMasterCard"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/rbCard"
-        app:layout_constraintLeft_toLeftOf="@id/guide_left"
-        app:layout_constraintTop_toTopOf="@+id/rbCard"
-        app:srcCompat="@drawable/bt_ic_vaulted_mastercard" />
-
-    <ImageView
-        android:id="@+id/ivMaestro"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="3.5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivMasterCard"
-        app:layout_constraintStart_toEndOf="@+id/ivMasterCard"
-        app:layout_constraintTop_toTopOf="@+id/ivMasterCard"
-        app:srcCompat="@drawable/bt_ic_vaulted_maestro" />
-
-    <ImageView
-        android:id="@+id/ivVisa"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="3.5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivMaestro"
-        app:layout_constraintStart_toEndOf="@+id/ivMaestro"
-        app:layout_constraintTop_toTopOf="@+id/ivMaestro"
-        app:srcCompat="@drawable/bt_ic_vaulted_visa" />
-
-    <ImageView
-        android:id="@+id/ivAmex"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="3.5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivVisa"
-        app:layout_constraintStart_toEndOf="@+id/ivVisa"
-        app:layout_constraintTop_toTopOf="@+id/ivVisa"
-        app:srcCompat="@drawable/bt_ic_vaulted_amex" />
-
-    <ImageView
-        android:id="@+id/ivDiscover"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="3.5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivAmex"
-        app:layout_constraintStart_toEndOf="@+id/ivAmex"
-        app:layout_constraintTop_toTopOf="@+id/ivAmex"
-        app:srcCompat="@drawable/bt_ic_vaulted_discover" />
-
-    <View
-        android:id="@+id/divider2"
+    <include
+        android:id="@+id/layoutPayments"
+        layout="@layout/layout_payments"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/create_transfer_divider_height"
-        android:layout_marginStart="@dimen/divider_margin_start"
-        android:layout_marginTop="21dp"
-        android:layout_marginEnd="@dimen/divider_margin_end"
-        android:background="@color/create_order_fields_divider"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rbCard" />
-
-    <RadioButton
-        android:id="@+id/rbPaypal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:button="@drawable/payment_selector"
-        android:paddingStart="16dp"
-        android:text="@string/LNG_PAYMENT_METHOD_PAYPAL"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider2" />
-
-    <ImageView
-        android:id="@+id/imageView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/rbPaypal"
-        app:layout_constraintLeft_toLeftOf="@id/guide_left"
-        app:layout_constraintTop_toTopOf="@+id/rbPaypal"
-        app:srcCompat="@drawable/ic_paypal" />
+        app:layout_constraintTop_toBottomOf="@+id/tvPriceInfo" />
 
     <TextView
         android:id="@+id/tvCommission"
+        style="@style/sf_font_pro_display_regular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:fontFamily="@font/sf_pro_display_regular"
         android:gravity="center"
         android:paddingStart="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
         android:paddingEnd="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rbPaypal"
+        app:layout_constraintTop_toBottomOf="@+id/layoutPayments"
         tools:text="Commission 3%.\n Refund is available before 17 Oct 2018 at 15:30:00" />
 
     <TextView
@@ -260,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-
+        android:textSize="14sp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -268,24 +100,19 @@
         android:text="@string/LNG_RIDE_PAYMENT_OFFERT"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCommission" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCommission"
+        style="@style/sf_font_pro_display_regular"/>
 
-    <Button
+    <include
+        layout="@layout/button_pay"
         android:id="@+id/btnGetPayment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:background="@drawable/bg_green_rounded"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:text="@string/LNG_PAYMENT_PAY"
-        android:textAllCaps="true"
-        android:textColor="@color/colorWhite"
-        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
 </android.support.constraint.ConstraintLayout>

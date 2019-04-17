@@ -14,7 +14,7 @@
         <ImageView
             android:id="@+id/ivCarPhoto"
             android:layout_width="130dp"
-            android:layout_height="72dp"
+            android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:background="@drawable/bg_rounded_bn_photo"
             android:scaleType="fitCenter"

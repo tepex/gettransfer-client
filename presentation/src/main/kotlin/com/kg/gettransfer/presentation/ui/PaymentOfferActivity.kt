@@ -8,9 +8,6 @@ import android.os.Bundle
 
 import android.support.v7.widget.Toolbar
 
-import android.text.SpannableString
-import android.text.style.ImageSpan
-
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -38,6 +35,8 @@ import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 
 import kotlinx.android.synthetic.main.activity_payment_offer.*
+import kotlinx.android.synthetic.main.layout_payments.*
+import kotlinx.android.synthetic.main.layout_prices.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
 import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
 
@@ -70,7 +69,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         presenter.params = JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
         setContentView(R.layout.activity_payment_offer)
-        setButton()
         initToolbar()
         tv_payment_agreement.setOnClickListener { presenter.onAgreementClicked() }
         btnGetPayment.setOnClickListener { presenter.getPayment() }
@@ -100,14 +98,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         }
         presenter.selectedPayment = payment
         presenter.changePayment(payment)
-    }
-
-    private fun setButton() {
-        val image = ImageSpan(this, R.drawable.ic_credit_card)
-        val string = SpannableString(getString(R.string.LNG_PAYMENT_PAY))
-        val title = SpannableString("  $string")
-        title.setSpan(image, 0, 1, 0)
-        btnGetPayment.text = title
     }
 
     override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>) {
@@ -159,6 +149,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(offer.transportType.id))
         OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(multiLineContainer = languages_container_tiny, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
+        tvPrice.text = offer.base.preferred
     }
 
     private fun showCarInfoOffer(offer: OfferModel) {
@@ -182,7 +173,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     private fun hidePaymentPercentage() {
-        groupPrice.isVisible = false
+        layoutPrices.isVisible = false
     }
 
     override fun showOfferError() {
