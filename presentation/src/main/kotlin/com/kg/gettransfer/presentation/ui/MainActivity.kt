@@ -554,17 +554,17 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     override fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
         val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
-        mDisMissAction = {
-            _mapView = mapView
-            isGmTouchEnabled = true
-            initMapView(null)
-            view.rate_map.onDestroy()
-            mapView.onResume()
-            presenter.updateCurrentLocation()
-            mDisMissAction = {}
-        }
+        view?.apply {
+            mDisMissAction = {
+                _mapView = mapView
+                isGmTouchEnabled = true
+                initMapView(null)
+                view.rate_map?.onDestroy()
+                mapView.onResume()
+                presenter.updateCurrentLocation()
+                mDisMissAction = {}
+            }
 
-        view.apply {
             tv_transfer_details.setOnClickListener {
                 closePopUp()
                 presenter.onTransferDetailsClick(transfer.id)
@@ -578,8 +578,9 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 presenter.onRateClicked(fl)
             }
             carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
+            drawMapForReview(view.rate_map, routeModel, transfer.from, startPoint)
         }
-        drawMapForReview(view.rate_map, routeModel, transfer.from, startPoint)
+
     }
 
     private fun drawMapForReview(map: MapView,  routeModel: RouteModel?, from: String, startPoint: LatLng) {
@@ -599,12 +600,14 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     override fun showDetailedReview(tappedRate: Float) {
         val popUpView = showPopUpWindow(R.layout.view_rate_dialog, contentMain)
-        popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
-        popUpView.send_feedBack.setOnClickListener {
-            closePopUp()
-            presenter.sendReview(Utils.createListOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
+        popUpView?.let {
+            popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
+            popUpView.send_feedBack.setOnClickListener {
+                closePopUp()
+                presenter.sendReview(Utils.createListOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
+            }
+            setupDetailRatings(tappedRate, popUpView)
         }
-        setupDetailRatings(tappedRate, popUpView)
     }
 
     private fun setupDetailRatings(rateForFill: Float, view: View) {
@@ -617,14 +620,16 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun askRateInPlayMarket() {
-        showPopUpWindow(R.layout.view_rate_in_store, contentMain).apply {
+        val popUpView = showPopUpWindow(R.layout.view_rate_in_store, contentMain)
+        popUpView?.apply {
             tv_agree_store.setOnClickListener  { presenter.onRateInStore() }
             tv_reject_store.setOnClickListener { closePopUp() }
         }
     }
 
     override fun thanksForRate() {
-        showPopUpWindow(R.layout.view_thanks_for_rate, contentMain).apply {
+        val popUpView = showPopUpWindow(R.layout.view_thanks_for_rate, contentMain)
+        popUpView?.apply {
             tv_thanks_close.setOnClickListener { closePopUp() }
         }
     }

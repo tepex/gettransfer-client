@@ -82,6 +82,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     private var displayCutout: DisplayCutout? = null
     private var cutoutOffset: Int = 0
+    private var isPaused = true
 
     protected lateinit var _tintBackground: View
     protected val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -199,10 +200,12 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
+        isPaused = false
     }
 
     @CallSuper
     protected override fun onPause() {
+        isPaused = true
         navigatorHolder.removeNavigator()
         super.onPause()
     }
@@ -358,22 +361,27 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         else screenHeight - actionBarHeight - statusBarHeight
     }
 
-    protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View {
-        applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
-        val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
-        val widthPx = getScreenSide(false) - 40
+    protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View? {
+        if(!isPaused) {
+            applyDim(window.decorView.rootView as ViewGroup, DIM_AMOUNT)
+            val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
+            val widthPx = getScreenSide(false) - 40
 
-        popupWindowRate = PopupWindow(layoutPopUp, widthPx, LinearLayout.LayoutParams.WRAP_CONTENT, true).apply {
-            setOnDismissListener { clearDim(window.decorView.rootView as  ViewGroup)
-                mDisMissAction()
+            popupWindowRate = PopupWindow(layoutPopUp, widthPx, LinearLayout.LayoutParams.WRAP_CONTENT, true).apply {
+                setOnDismissListener {
+                    clearDim(window.decorView.rootView as ViewGroup)
+                    mDisMissAction()
+                }
+                softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+                inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+
             }
-            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
-            inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
-
+            popupWindowRate.showAtLocation(parent, Gravity.CENTER, 0, 100)
+            popupWindowRate.isOutsideTouchable = false
+            return layoutPopUp
         }
-        popupWindowRate.showAtLocation(parent,  Gravity.CENTER, 0, 100)
-        popupWindowRate.isOutsideTouchable = false
-        return layoutPopUp
+
+        return null
     }
 
 
