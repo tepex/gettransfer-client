@@ -55,5 +55,6 @@ data class TransferCached (
         @ColumnInfo(name = TransferEntity.EDITABLE_FIELDS)         val editableFields: StringList?,
         @ColumnInfo(name = TransferEntity.AIRLINE_CARD)            val airlineCard: String?,
         @ColumnInfo(name = TransferEntity.PAYMENT_PERCENTAGES)     val paymentPercentages: IntList?,
-        @ColumnInfo(name = TransferEntity.UNREAD_MESSAGES_COUNT)   val unreadMessagesCount: Int
+        @ColumnInfo(name = TransferEntity.UNREAD_MESSAGES_COUNT)   val unreadMessagesCount: Int,
+        @ColumnInfo(name = TransferEntity.LAST_OFFERS_UPDATED_AT)  val lastOffersUpdatedAt: String?
 )

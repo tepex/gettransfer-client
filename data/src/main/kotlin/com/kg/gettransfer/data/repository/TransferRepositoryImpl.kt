@@ -16,6 +16,8 @@ import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.domain.repository.TransferRepository
 
 import java.util.Date
+import java.util.Calendar
+import java.text.DateFormat
 
 import org.koin.standalone.get
 
@@ -26,6 +28,8 @@ class TransferRepositoryImpl(
     private val preferencesCache = get<PreferencesCache>()
     private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
+
+    private val dateFormatTZ = get<ThreadLocal<DateFormat>>("iso_date_TZ")
 
     /*override suspend fun createTransfer(transferNew: TransferNew) =
         retrieveRemoteModel<TransferEntity, Transfer>(transferMapper, DEFAULT) {
@@ -73,11 +77,30 @@ class TransferRepositoryImpl(
         return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT, result.error?.let { ExceptionMapper.map(it) })
     }
 
+    override suspend fun setOffersUpdateDate(id: Long): Result<Unit> {
+        val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
+            factory.retrieveCacheDataStore().getTransfer(id, "")
+        }
+        result.entity?.let {
+            if (it.offersUpdatedAt != null) {
+                it.lastOffersUpdatedAt = dateFormatTZ.get().format(Calendar.getInstance().time)
+                factory.retrieveCacheDataStore().addTransfer(it)
+            }
+        }
+        return Result(Unit)
+    }
+
     override suspend fun getTransfer(id: Long, role: String): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getTransfer(id, role)
         }
-        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
+        if (result.error == null) {
+            result.entity?.apply {
+                setLastOffersUpdate(this, role)
+                factory.retrieveCacheDataStore().addTransfer(this)
+            }
+        }
+
         return Result(result.entity?.let { transferMapper.fromEntity(it) }?: DEFAULT,
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
@@ -139,7 +162,12 @@ class TransferRepositoryImpl(
         val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getAllTransfers()
         }
-        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addAllTransfers(it) }
+        if (result.error == null) {
+            result.entity?.apply {
+                setLastOffersUpdate(this)
+                factory.retrieveCacheDataStore().addAllTransfers(this)
+            }
+        }
         return Result(result.entity?.let { mapTransfersList(it) }?: emptyList(),
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
@@ -148,7 +176,12 @@ class TransferRepositoryImpl(
         val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getTransfersArchive()
         }
-        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addAllTransfers(it) }
+        if (result.error == null) {
+            result.entity?.apply {
+                setLastOffersUpdate(this)
+                factory.retrieveCacheDataStore().addAllTransfers(this)
+            }
+        }
         return Result(result.entity?.let { mapTransfersList(it) }?: emptyList(),
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
@@ -157,7 +190,12 @@ class TransferRepositoryImpl(
         val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getTransfersActive()
         }
-        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addAllTransfers(it) }
+        if (result.error == null) {
+            result.entity?.apply {
+                setLastOffersUpdate(this)
+                factory.retrieveCacheDataStore().addAllTransfers(this)
+            }
+        }
         return Result(result.entity?.let { mapTransfersList(it) }?: emptyList(),
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
@@ -182,6 +220,29 @@ class TransferRepositoryImpl(
 
     override fun clearTransfersCache() {
         factory.retrieveCacheDataStore().clearTransfersCache()
+    }
+
+    private suspend fun setLastOffersUpdate(remoteTransfers: List<TransferEntity>){
+        val result: ResultEntity<List<TransferEntity>?> = retrieveCacheEntity {
+            factory.retrieveCacheDataStore().getAllTransfers()
+        }
+        result.entity?.let { cachedTransfers ->
+            if (cachedTransfers.isNotEmpty()) {
+                remoteTransfers.forEach { remoteTransfer ->
+                    cachedTransfers.find { it.id == remoteTransfer.id}?.let { cachedTransfer ->
+                        if (remoteTransfer.offersUpdatedAt == null) return
+                        remoteTransfer.lastOffersUpdatedAt = cachedTransfer.lastOffersUpdatedAt
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun setLastOffersUpdate(remoteTransfer: TransferEntity, role: String) {
+        val resultCached: ResultEntity<TransferEntity?> = retrieveCacheEntity {
+            factory.retrieveCacheDataStore().getTransfer(remoteTransfer.id, role)
+        }
+        resultCached.entity?.let { remoteTransfer.lastOffersUpdatedAt = it.lastOffersUpdatedAt }
     }
 
     companion object {
@@ -223,7 +284,7 @@ class TransferRepositoryImpl(
                 offersCount           = 0,
 /* ================================================== */
                 relevantCarriersCount = 0,
-
+                offersUpdatedAt       = null,
                 dateRefund            = null,
                 paypalOnly            = null,
                 carrierMainPhone      = null,
@@ -237,7 +298,8 @@ class TransferRepositoryImpl(
                 airlineCard         = null,
                 paymentPercentages  = emptyList<Int>(),
                 unreadMessagesCount = 0,
-                showOfferInfo       = false
+                showOfferInfo       = false,
+                lastOffersUpdatedAt = null
             )
     }
 }

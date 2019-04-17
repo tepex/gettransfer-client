@@ -44,7 +44,7 @@ data class Transfer(
     val offersCount: Int,
 /* ================================================== */
     val relevantCarriersCount: Int,
-    /* offersUpdatedAt */
+    val offersUpdatedAt: Date?,
     val dateRefund: Date?,
     val paypalOnly: Boolean?,
     val carrierMainPhone: String?,
@@ -58,7 +58,9 @@ data class Transfer(
     val airlineCard: String?,
     val paymentPercentages: List<Int>?,
     val unreadMessagesCount: Int,
-    var showOfferInfo: Boolean
+    var showOfferInfo: Boolean,
+    val lastOffersUpdatedAt: Date?
+
 ) : Entity() {
 
     fun checkStatusCategory() = when (status) {

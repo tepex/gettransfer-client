@@ -66,7 +66,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
                     transferModel?.let { viewState.setToolbar(it, null, false) }
                 }
             } else {
-                val offerCachedResult = utils.asyncAwait { offerInteractor.getOffers(transferId) }
+                val offerCachedResult = utils.asyncAwait { offerInteractor.getOffers(transferId, true) }
                 offerModel = offerCachedResult.model.firstOrNull()?.let { offerMapper.toView(it) }
                 transferModel?.let { viewState.setToolbar(it, offerModel, tripId == NO_ID && userRole == ROLE_PASSENGER) }
             }

@@ -78,6 +78,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private suspend fun getOffers() {
         val offersResult = utils.asyncAwait { offerInteractor.getOffers(params.transferId) }
         offersResult.error?.let { checkResultError(it) }
+        if (offersResult.error == null) fetchResultOnly { transferInteractor.setOffersUpdatedDate(params.transferId) }
         if (offersResult.error == null || (offersResult.error != null && offersResult.fromCache)) {
             offer = params.offerId?.let { offerInteractor.getOffer(it) }
             offer?.let {

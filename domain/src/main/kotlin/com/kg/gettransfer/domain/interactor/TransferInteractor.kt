@@ -21,6 +21,7 @@ class TransferInteractor(private val repository: TransferRepository) {
     suspend fun cancelTransfer(id: Long, reason: String) = repository.cancelTransfer(id, reason)
         /*val cancelledTransfer = repository.cancelTransfer(transfer!!.id, reason)
         if(allTransfers != null) allTransfers!!.map { if(it.id == transfer!!.id) it.status = cancelledTransfer.status }*/
+    suspend fun setOffersUpdatedDate(id: Long) = repository.setOffersUpdateDate(id)
 
     suspend fun getAllTransfers() = repository.getAllTransfers()
     suspend fun getTransfersActiveCached() = repository.getTransfersActiveCached()

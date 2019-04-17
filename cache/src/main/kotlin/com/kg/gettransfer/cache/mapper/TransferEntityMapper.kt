@@ -62,7 +62,8 @@ open class TransferEntityMapper : EntityMapper<TransferCached, TransferEntity> {
                     editableFields        = type.editableFields?.list,
                     airlineCard           = type.airlineCard,
                     paymentPercentages    = type.paymentPercentages?.list,
-                    unreadMessagesCount   = type.unreadMessagesCount
+                    unreadMessagesCount   = type.unreadMessagesCount,
+                    lastOffersUpdatedAt   = type.lastOffersUpdatedAt
             )
 
     override fun toCached(type: TransferEntity) =
@@ -114,6 +115,7 @@ open class TransferEntityMapper : EntityMapper<TransferCached, TransferEntity> {
                     editableFields        = type.editableFields?.let { StringList(it) },
                     airlineCard           = type.airlineCard,
                     paymentPercentages    = type.paymentPercentages?.let { IntList(it) },
-                    unreadMessagesCount   = type.unreadMessagesCount
+                    unreadMessagesCount   = type.unreadMessagesCount,
+                    lastOffersUpdatedAt   = type.lastOffersUpdatedAt
             )
 }

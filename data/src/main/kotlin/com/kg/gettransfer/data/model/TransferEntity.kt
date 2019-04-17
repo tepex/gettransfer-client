@@ -3,8 +3,6 @@ package com.kg.gettransfer.data.model
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
-
-
 /* Align to line :8 */
 @Serializable
 open class TransferEntity(
@@ -55,7 +53,8 @@ open class TransferEntity(
     @SerialName(EDITABLE_FIELDS)         val editableFields: List<String>?,
     @SerialName(AIRLINE_CARD)            val airlineCard: String?,
     @SerialName(PAYMENT_PERCENTAGES)     val paymentPercentages: List<Int>?,
-    @SerialName(UNREAD_MESSAGES_COUNT)   val unreadMessagesCount: Int
+    @SerialName(UNREAD_MESSAGES_COUNT)   val unreadMessagesCount: Int,
+    @SerialName(LAST_OFFERS_UPDATED_AT)  var lastOffersUpdatedAt: String? = null
 ) {
     companion object {
         const val ENTITY_NAME             = "transfer"
@@ -107,5 +106,6 @@ open class TransferEntity(
         const val AIRLINE_CARD            = "airlineCard"
         const val PAYMENT_PERCENTAGES     = "payment_percentages"
         const val UNREAD_MESSAGES_COUNT   = "unread_messages_count"
+        const val LAST_OFFERS_UPDATED_AT  = "ast_offers_updated_at"
     }
 }

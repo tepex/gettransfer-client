@@ -19,10 +19,8 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
     private val cityPointMapper    = get<CityPointMapper>()
     private val bookNowOfferMapper = get<BookNowOfferMapper>()
     private val moneyMapper        = get<MoneyMapper>()
-    private val dateFormatTZ        = get<ThreadLocal<DateFormat>>("iso_date_TZ")
+    private val dateFormatTZ       = get<ThreadLocal<DateFormat>>("iso_date_TZ")
     private val dateFormat         = get<ThreadLocal<DateFormat>>("iso_date")
-
-
 
     /**
      * Map a [TransferEntity] instance to a [Transfer] instance.
@@ -30,16 +28,16 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
     override fun fromEntity(type: TransferEntity) =
         Transfer(
             id              = type.id,
-            createdAt       = dateFormat.get().parse(type.createdAt),
+            createdAt       = convertDate(type.createdAt),
             duration        = type.duration,
             distance        = type.distance,
             status          = Transfer.Status.valueOf(type.status.toUpperCase(Locale.US)),
             from            = cityPointMapper.fromEntity(type.from),
             to              = type.to?.let { cityPointMapper.fromEntity(it) },
-            dateToLocal     = dateFormat.get().parse(type.dateToLocal),
-            dateToTZ        = dateFormatTZ.get().parse(type.dateToLocal),
-            dateReturnLocal = type.dateReturnLocal?.let { dateFormat.get().parse(it) },
-            dateReturnTZ    = type.dateReturnLocal?.let { dateFormatTZ.get().parse(it) },
+            dateToLocal     = convertDate(type.dateToLocal),
+            dateToTZ        = convertDateTZ(type.dateToLocal),
+            dateReturnLocal = type.dateReturnLocal?.let { convertDate(it) },
+            dateReturnTZ    = type.dateReturnLocal?.let { convertDateTZ(it) },
             flightNumber    = type.flightNumber,
 /* ================================================== */
             flightNumberReturn    = type.flightNumberReturn,
@@ -65,8 +63,8 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             offersCount           = type.offersCount,
 /* ================================================== */
             relevantCarriersCount = type.relevantCarriersCount,
-            /* offersUpdatedAt */
-            dateRefund            = type.dateRefund?.let { dateFormat.get().parse(it) },
+            offersUpdatedAt       = type.offersUpdatedAt?.let { convertDate(it) },
+            dateRefund            = type.dateRefund?.let { convertDate(it) },
             paypalOnly            = type.paypalOnly,
             carrierMainPhone      = type.carrierMainPhone,
             pendingPaymentId      = type.pendingPaymentId,
@@ -79,13 +77,17 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             airlineCard         = type.airlineCard,
             paymentPercentages  = type.paymentPercentages,
             unreadMessagesCount = type.unreadMessagesCount,
-            showOfferInfo       = allowOfferInfo(type, dateFormat.get().parse(type.dateReturnLocal ?: type.dateToLocal))
+            showOfferInfo       = allowOfferInfo(type, convertDate(type.dateReturnLocal ?: type.dateToLocal)),
+            lastOffersUpdatedAt = type.lastOffersUpdatedAt?.let { convertDate(it) }
         )
 
     /**
      * Map a [Transfer] instance to a [TransferEntity] instance.
      */
     override fun toEntity(type: Transfer): TransferEntity { throw UnsupportedOperationException() }
+
+    private fun convertDate (dateString: String) = dateFormat.get().parse(dateString)
+    private fun convertDateTZ (dateString: String) = dateFormatTZ.get().parse(dateString)
 
     companion object {
         private const val HOURS_TO_SHOWING_OFFER_INFO = 24

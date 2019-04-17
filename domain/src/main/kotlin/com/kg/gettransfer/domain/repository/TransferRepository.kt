@@ -14,5 +14,6 @@ interface TransferRepository {
     suspend fun getTransfersActiveCached(): Result<List<Transfer>>
     suspend fun createTransfer(transferNew: TransferNew): Result<Transfer>
     suspend fun cancelTransfer(id: Long, reason: String): Result<Transfer>
+    suspend fun setOffersUpdateDate(id: Long): Result<Unit>
     fun clearTransfersCache()
 }
