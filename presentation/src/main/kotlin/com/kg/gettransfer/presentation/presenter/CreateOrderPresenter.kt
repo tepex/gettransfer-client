@@ -259,6 +259,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logTransferSettingsEvent(Analytics.PASSENGERS_ADDED)
     }
 
+    fun updateChildSeatsInfo() {
+        with(childSeatsDelegate) {
+            viewState.setChildSeats(getDescription(), getTotalSeats())
+        }
+    }
+
     fun setName(name: String) {
         user.profile.name = name
     }
@@ -269,13 +275,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun setPhone(phone: String) {
         user.profile.phone = phone
-    }
-
-    fun changeChildren(count: Int) {
-        children += count
-        if (children < MIN_CHILDREN) children = MIN_CHILDREN
-        viewState.setChildren(children)
-        logTransferSettingsEvent(Analytics.CHILDREN_ADDED)
     }
 
     fun setFlightNumber(flightNumber: String, returnWay: Boolean) {
@@ -323,7 +322,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 Trip(dateDelegate.startDate, flightNumber),
                 dateDelegate.returnDate?.let { Trip(it, flightNumberReturn) },
                 transportTypes!!.filter { it.checked }.map { it.id },
-                passengers,
+                passengers + childSeatsDelegate.getTotalSeats(),
                 childSeatsDelegate.infantSeats.isNonZero(),
                 childSeatsDelegate.convertibleSeats.isNonZero(),
                 childSeatsDelegate.boosterSeats.isNonZero(),
@@ -342,7 +341,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
             if (result.error == null && logResult.error == null) {
                 logGetOffers()
-                dateDelegate.resetAfterOrder()
+                releaseDelegates()
                 router.replaceScreen(Screens.Offers(result.model.id))
             } else if (result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
@@ -393,15 +392,36 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logButtons(Analytics.SHOW_ROUTE_CLICKED)
     }
 
+    private fun releaseDelegates() {
+        dateDelegate.resetAfterOrder()
+        childSeatsDelegate.clearSeats()
+    }
+
     fun onBackClick() = onBackCommandClick()
 
     override fun onBackCommandClick() {
- //       router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+        childSeatsDelegate.clearSeats()
         router.exit()
         logButtons(Analytics.BACK_TO_MAP)
     }
 
     fun redirectToLogin(id: Long) = router.replaceScreen(Screens.LoginToGetOffers(id, user.profile.email))
+
+
+
+    companion object {
+        private const val MIN_PASSENGERS = 0
+        private const val MIN_CHILDREN   = 0
+
+        private const val INVALID_CURRENCY_INDEX = -1
+    }
+
+
+
+
+                                          /////////Analytics////////
+
+
 
     fun logButtons(event: String) {
         analytics.logEventToFirebase(event, null)
@@ -500,13 +520,5 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logCreateTransfer(Analytics.RESULT_SUCCESS)
         logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
         logStartScreenOrder()
-    }
-
-
-    companion object {
-        private const val MIN_PASSENGERS = 0
-        private const val MIN_CHILDREN   = 0
-
-        private const val INVALID_CURRENCY_INDEX = -1
     }
 }

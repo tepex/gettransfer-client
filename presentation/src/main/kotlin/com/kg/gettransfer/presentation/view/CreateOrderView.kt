@@ -23,7 +23,7 @@ interface CreateOrderView : BaseView, RouteView {
     //fun setCurrencies(currencies: List<CurrencyModel>)
     fun setUser(user: UserModel, isLoggedIn: Boolean)
     fun setPassengers(count: Int)
-    fun setChildren(count: Int)
+    fun setChildSeats(setOf: Set<ChildSeatItem>, total: Int)
     fun setCurrency(currency: String, hideCurrencies: Boolean)
     fun setDateTimeTransfer(dateTimeString: String, startField: Boolean)
     fun setHintForDateTimeTransfer(withReturnWay: Boolean)
@@ -46,8 +46,9 @@ interface CreateOrderView : BaseView, RouteView {
         UNKNOWN("no_param", R.string.LNG_RIDE_CANT_CREATE);
     }
 
-    companion object {
-        /* Пока сервевер не присылает минимальный временной промежуток до заказа */
-        const val FUTURE_MINUTE = 5
+    enum class ChildSeatItem(var count: Int, @StringRes val stringId: Int) {
+        INFANT(0, R.string.LNG_SEAT_INFANT_SHORT),
+        CONVERTIBLE(0, R.string.LNG_SEAT_CONVERTIBLE_SHORT),
+        BOOSTER(0, R.string.LNG_SEAT_BOOSTER_SHORT)
     }
 }

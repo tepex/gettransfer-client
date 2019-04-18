@@ -60,8 +60,8 @@ import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
 import kotlinx.android.synthetic.main.layout_popup_comment.view.* //don't delete
+import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
-import kotlinx.android.synthetic.main.view_seats.view.*
 import org.koin.android.ext.android.inject
 
 class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeScreen {
@@ -140,6 +140,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN && bsOrder.state == BottomSheetBehavior.STATE_HIDDEN)
                 _tintBackground.isVisible = false
+            if (bottomSheet == sheetChildSeats && newState == BottomSheetBehavior.STATE_HIDDEN) {
+                presenter.updateChildSeatsInfo()
+            }
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -313,13 +316,28 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun setPassengers(count: Int) {
-        passengers_seats.person_count.text = count.toString()
-        checkMinusButton(count, 0, passengers_seats.img_minus_seat)
+        passengers_count.person_count.text = "$count"
+        checkMinusButton(count, 0, passengers_count.img_minus_seat)
     }
 
-    override fun setChildren(count: Int) {
-        child_seats.person_count.text = count.toString()
-        checkMinusButton(count, 0, child_seats.img_minus_seat)
+    override fun setChildSeats(setOf: Set<CreateOrderView.ChildSeatItem>, total: Int) {
+        with(StringBuilder()) {
+            if (total > 1) append("$total ")
+            append("(")
+            setOf.forEach {
+                if (it.count > 1) {
+                    append(it.count)
+                    append("x ")
+                }
+                append(getString(it.stringId))
+                append(", ")
+            }
+            trim()
+            deleteCharAt(length - 1)
+            append(")")
+        }.also {
+            children_seat_field.field_input.setText(it)
+        }
     }
 
     override fun setCurrency(currency: String, hideCurrencies: Boolean) {
@@ -406,7 +424,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                 highLightErrorField(transfer_return_date_field)
                 errorFieldView = transfer_return_date_field
             }
-            FieldError.PASSENGERS_COUNT -> highLightErrorField(passengers_seats)
+            FieldError.PASSENGERS_COUNT -> highLightErrorField(passengers_count_field)
             FieldError.PHONE_FIELD -> {
                 highLightErrorField(phone_field)
                 errorFieldView = phone_field
@@ -463,15 +481,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     //TODO create custom view for new bottom sheet
     private fun initFieldsViews() {
-        passengers_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passenger_small))
-        child_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_child_seat))
+     //   passengers_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passenger_small))
+     //   child_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_child_seat))
         Utils.setDrawables(price_field_input.field_input, 0, 0, R.drawable.ic_arrow_right, 0)
-
-        passengers_seats.seat_title.text = getString(R.string.LNG_RIDE_PASSENGERS)
-        child_seats.seat_title.text = getString(R.string.LNG_RIDE_CHILDREN)
-
-        passengers_seats.person_count.text = getString(R.string.passenger_number_default)
-        child_seats.person_count.text      = getString(R.string.child_number_default)
+        passengers_count.person_count.text = getString(R.string.passenger_number_default)
     }
 
     private fun initChangeTextListeners() {
@@ -506,20 +519,20 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         fl_DeleteReturnDate.setOnClickListener              { presenter.clearReturnDate()
             showReturnFlight(HIDE)
         }
-        passengers_seats.img_plus_seat.setOnClickListener   {
-            checkErrorField(passengers_seats)
+        passengers_count.img_plus_seat.setOnClickListener   {
+            checkErrorField(passengers_count_field)
             presenter.changePassengers(1)
         }
-        passengers_seats.img_minus_seat.setOnClickListener  { presenter.changePassengers(-1) }
+        passengers_count.img_minus_seat.setOnClickListener  {
+            presenter.changePassengers(-1)
+        }
+
         View.OnClickListener {
             bsChildSeats.state = BottomSheetBehavior.STATE_EXPANDED
         }.let {
             children_seat_field.setOnClickListener(it)
             children_seat_field.field_input.setOnClickListener(it)
         }
-//        child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
-//        child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
-
 
         cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input.field_input)  }
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }

@@ -151,23 +151,6 @@
                     android:visibility="gone"/>
             </RelativeLayout>
 
-
-            <LinearLayout
-                android:id="@+id/ll_seats"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <include
-                    android:id="@+id/passengers_seats"
-                    layout="@layout/view_seats" />
-
-                <include
-                    android:id="@+id/child_seats"
-                    layout="@layout/view_seats" />
-
-            </LinearLayout>
-
             <View
                 android:id="@+id/seats_divider"
                 android:layout_width="match_parent"
@@ -186,10 +169,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
+                    app:isFocusable="false"
                     app:icon_img="@drawable/ic_passenger_small"
-                    app:hint="Пассажиры"/>
+                    app:hint="@string/LNG_RIDE_PASSENGERS"/>
 
                 <include
+                    android:id="@+id/passengers_count"
                     layout="@layout/view_count_controller"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -203,7 +188,7 @@
                 android:id="@+id/children_seat_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="Детские кресла"
+                app:hint="@string/LNG_RIDE_CHILDREN"
                 app:isFocusable="false"
                 app:icon_img="@drawable/ic_child_seat"/>
 
