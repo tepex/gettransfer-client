@@ -480,7 +480,8 @@ object Utils : KoinComponent {
                      bottom: Drawable?) =
             textView.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
 
-    fun bindMainOfferPhoto(view: ImageView, parent: View, path: String? = null, resource: Int = 0) =
+    fun bindMainOfferPhoto(view: ImageView, parent: View, path: String? = null,
+                           @DrawableRes resource: Int = 0) =
             Glide.with(parent)
                     .let {
                         if (path != null) it.load(path)

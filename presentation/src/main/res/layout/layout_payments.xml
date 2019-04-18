@@ -10,26 +10,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="160dp" />
+        app:layout_constraintGuide_begin="@dimen/payment_layout_constraintGuide_begin" />
 
     <RadioButton
         android:id="@+id/rbCard"
         style="@style/sf_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="21dp"
+        android:layout_marginStart="@dimen/payment_radio_button_margin_start"
+        android:layout_marginTop="@dimen/payment_radio_button_margin_top"
         android:button="@drawable/payment_selector"
         android:checked="true"
-        android:paddingStart="16dp"
+        android:paddingStart="@dimen/payment_radio_button_padding_start"
         android:text="@string/LNG_PAYMENT_METHOD_CARD"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivMasterCard"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
+        android:layout_width="@dimen/payment_logo_card_width"
+        android:layout_height="@dimen/payment_logo_card_height"
         app:layout_constraintBottom_toBottomOf="@+id/rbCard"
         app:layout_constraintLeft_toLeftOf="@id/guide_left"
         app:layout_constraintTop_toTopOf="@+id/rbCard"
@@ -37,9 +37,9 @@
 
     <ImageView
         android:id="@+id/ivMaestro"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="3.5dp"
+        android:layout_width="@dimen/payment_logo_card_width"
+        android:layout_height="@dimen/payment_logo_card_height"
+        android:layout_marginStart="@dimen/payment_logo_card_margin_start"
         app:layout_constraintBottom_toBottomOf="@+id/ivMasterCard"
         app:layout_constraintStart_toEndOf="@+id/ivMasterCard"
         app:layout_constraintTop_toTopOf="@+id/ivMasterCard"
@@ -47,9 +47,9 @@
 
     <ImageView
         android:id="@+id/ivVisa"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="3.5dp"
+        android:layout_width="@dimen/payment_logo_card_width"
+        android:layout_height="@dimen/payment_logo_card_height"
+        android:layout_marginStart="@dimen/payment_logo_card_margin_start"
         app:layout_constraintBottom_toBottomOf="@+id/ivMaestro"
         app:layout_constraintStart_toEndOf="@+id/ivMaestro"
         app:layout_constraintTop_toTopOf="@+id/ivMaestro"
@@ -57,9 +57,9 @@
 
     <ImageView
         android:id="@+id/ivAmex"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="3.5dp"
+        android:layout_width="@dimen/payment_logo_card_width"
+        android:layout_height="@dimen/payment_logo_card_height"
+        android:layout_marginStart="@dimen/payment_logo_card_margin_start"
         app:layout_constraintBottom_toBottomOf="@+id/ivVisa"
         app:layout_constraintStart_toEndOf="@+id/ivVisa"
         app:layout_constraintTop_toTopOf="@+id/ivVisa"
@@ -67,9 +67,9 @@
 
     <ImageView
         android:id="@+id/ivDiscover"
-        android:layout_width="32dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="3.5dp"
+        android:layout_width="@dimen/payment_logo_card_width"
+        android:layout_height="@dimen/payment_logo_card_height"
+        android:layout_marginStart="@dimen/payment_logo_card_margin_start"
         app:layout_constraintBottom_toBottomOf="@+id/ivAmex"
         app:layout_constraintStart_toEndOf="@+id/ivAmex"
         app:layout_constraintTop_toTopOf="@+id/ivAmex"
@@ -80,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/create_transfer_divider_height"
         android:layout_marginStart="@dimen/divider_margin_start"
-        android:layout_marginTop="21dp"
+        android:layout_marginTop="@dimen/payment_divider_margin_top"
         android:layout_marginEnd="@dimen/divider_margin_end"
         android:background="@color/create_order_fields_divider"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,18 +92,18 @@
         style="@style/sf_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginBottom="21dp"
+        android:layout_marginStart="@dimen/payment_radio_button_margin_start"
+        android:layout_marginTop="@dimen/payment_radio_button_margin_top"
+        android:layout_marginBottom="@dimen/payment_radio_button_margin_bottom"
         android:button="@drawable/payment_selector"
-        android:paddingStart="16dp"
+        android:paddingStart="@dimen/payment_radio_button_padding_start"
         android:text="@string/LNG_PAYMENT_METHOD_PAYPAL"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
     <ImageView
-        android:id="@+id/imageView12"
+        android:id="@+id/ivPaypal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/rbPaypal"
