@@ -129,11 +129,12 @@
                         <TextView
                             android:id="@+id/tv_year_sort_title"
                             style="@style/black_regular"
-                            android:layout_width="@dimen/activity_offers_sorted_layout_text_width"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:layout_centerInParent="true"
-                            android:layout_marginEnd="-8dp"
+                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_text_margin_start"
+                            android:layout_alignParentStart="true"
+                            android:layout_toStartOf="@+id/triangleYear"
                             android:text="@string/LNG_FILTER_YEAR"
                             android:maxLines="1"
                             app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
@@ -141,14 +142,15 @@
                             app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
 
                         <ImageView
-                                android:id="@+id/triangleYear"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_toEndOf="@id/tv_year_sort_title"
-                                android:layout_centerVertical="true"
-                                app:srcCompat="@drawable/ic_triangle"
-                                android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
-                                android:visibility="invisible"/>
+                            android:id="@+id/triangleYear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="@dimen/activity_offers_sorted_layout_triangle_margin_end"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
+                            android:visibility="invisible"
+                            app:srcCompat="@drawable/ic_triangle" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -163,8 +165,11 @@
                         <TextView
                             android:id="@+id/tv_rating_sort_title"
                             style="@style/black_regular"
-                            android:layout_width="@dimen/activity_offers_sorted_layout_text_width"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_text_margin_start"
+                            android:layout_alignParentStart="true"
+                            android:layout_toStartOf="@+id/triangleRating"
                             android:gravity="center"
                             android:layout_centerInParent="true"
                             android:maxLines="1"
@@ -174,14 +179,15 @@
                             app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
 
                         <ImageView
-                                android:id="@+id/triangleRating"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:srcCompat="@drawable/ic_triangle"
-                                android:layout_centerVertical="true"
-                                android:layout_toEndOf="@id/tv_rating_sort_title"
-                                android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
-                                android:visibility="invisible"/>
+                            android:id="@+id/triangleRating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
+                            android:layout_marginEnd="@dimen/activity_offers_sorted_layout_triangle_margin_end"
+                            android:visibility="invisible"
+                            app:srcCompat="@drawable/ic_triangle" />
 
                     </RelativeLayout>
 
@@ -196,10 +202,13 @@
                         <TextView
                             android:id="@+id/tv_price_sort_title"
                             style="@style/black_regular"
-                            android:layout_width="@dimen/activity_offers_sorted_layout_text_width"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:layout_centerInParent="true"
+                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_text_margin_start"
+                            android:layout_alignParentStart="true"
+                            android:layout_toStartOf="@+id/trianglePrice"
                             android:maxLines="1"
                             android:text="@string/LNG_FILTER_PRICE"
                             app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
@@ -207,14 +216,15 @@
                             app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
 
                         <ImageView
-                                android:id="@+id/trianglePrice"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:srcCompat="@drawable/ic_triangle"
-                                android:layout_toEndOf="@+id/tv_price_sort_title"
-                                android:layout_centerVertical="true"
-                                android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
-                                android:visibility="invisible"/>
+                            android:id="@+id/trianglePrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
+                            android:layout_marginEnd="@dimen/activity_offers_sorted_layout_triangle_margin_end"
+                            android:visibility="invisible"
+                            app:srcCompat="@drawable/ic_triangle" />
                     </RelativeLayout>
 
                 </LinearLayout>
