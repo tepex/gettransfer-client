@@ -67,5 +67,6 @@ data class TransferModel(
     var showOfferInfo: Boolean
 ) {
     fun isBookNow() = paidPercentage != 0 && bookNow != null
+    fun getChildrenCount() = childSeatsInfant + childSeatsBooster + childSeatsConvertible
 }
 

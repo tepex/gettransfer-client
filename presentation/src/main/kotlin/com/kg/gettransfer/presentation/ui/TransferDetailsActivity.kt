@@ -318,11 +318,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
             tv_countPassengers.text = getString(R.string.X_SIGN).plus("${transfer.countPassengers}")
             imgPassengers.isVisible = true
             tv_countPassengers.isVisible = true
-            if(transfer.countChilds > 0) {
-                tvCountChildren.text = getString(R.string.X_SIGN).plus("${transfer.countChilds}")
-                imgChildSeats.isVisible =  true
-                tvCountChildren.isVisible = true
-            }
+            transfer.getChildrenCount()
+                    .isNonZero()
+                    ?.let {
+                        tvCountChildren.visibleText = getString(R.string.X_SIGN).plus("$it")
+                        imgChildSeats.isVisible =  true
+                    }
         }
     }
 

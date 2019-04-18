@@ -9,3 +9,10 @@ inline var TextView.strikeText: String
         paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         text = value
     }
+
+inline var TextView.visibleText: String
+    get() = text.toString()
+    set(value) {
+        text = value
+        this.isVisible = true
+}
