@@ -81,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/activity_offers_excellent_price_layout_height"
                     android:background="@color/colorPrimary"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:gravity="center">
 
                     <ImageView
