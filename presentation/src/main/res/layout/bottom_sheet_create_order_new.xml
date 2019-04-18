@@ -12,12 +12,12 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="110dp"
-        android:layout_height="3dp"
+        android:layout_width="@dimen/rounded_rectangle_width"
+        android:layout_height="@dimen/rounded_rectangle_height"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/rounded_rectangle_margin_top"
         android:background="@drawable/rectangle_swipe_down" />
 
     <android.support.v7.widget.RecyclerView

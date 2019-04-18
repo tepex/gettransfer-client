@@ -666,8 +666,9 @@
 
 	<dimen name="general_button_width">300dp</dimen>
 	<dimen name="general_button_height">44dp</dimen>
-	<dimen name="rounded_rectangle_width">110dp</dimen>
+	<dimen name="rounded_rectangle_width">103dp</dimen>
 	<dimen name="rounded_rectangle_height">3dp</dimen>
+	<dimen name="rounded_rectangle_margin_top">12dp</dimen>
 
 	<dimen name="toolbar_title_text_size">18sp</dimen>
 	<dimen name="toolbar_nav_title_text_size">15sp</dimen>
