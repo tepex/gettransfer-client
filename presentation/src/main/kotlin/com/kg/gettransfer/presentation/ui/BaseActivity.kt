@@ -17,6 +17,7 @@ import android.os.PersistableBundle
 import android.support.annotation.*
 
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatDelegate
@@ -82,7 +83,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     private var displayCutout: DisplayCutout? = null
     private var cutoutOffset: Int = 0
-    private var isPaused = true
 
     protected lateinit var _tintBackground: View
     protected val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -200,12 +200,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
-        isPaused = false
     }
 
     @CallSuper
     protected override fun onPause() {
-        isPaused = true
         navigatorHolder.removeNavigator()
         super.onPause()
     }
@@ -362,7 +360,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View? {
-        if(!isPaused) {
+        if(isResumed()) {
             applyDim(window.decorView.rootView as ViewGroup, DIM_AMOUNT)
             val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
             val widthPx = getScreenSide(false) - 40
@@ -414,5 +412,11 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
         const val DIM_AMOUNT = 0.5f
         const val SCREEN_WIDTH_REQUIRING_SMALL_TEXT_SIZE = 768
+    }
+
+    private fun isResumed(): Boolean {
+        val fieldPaused = FragmentActivity::class.java.getDeclaredField("mResumed"); //NoSuchFieldException
+        fieldPaused.setAccessible(true)
+        return fieldPaused.get(this) as Boolean
     }
 }
