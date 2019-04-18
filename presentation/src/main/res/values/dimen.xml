@@ -547,7 +547,7 @@
 	<!--activity_offers-->
 	<dimen name="activity_offers_divider_height">0.5dp</dimen>
 	<dimen name="activity_offers_excellent_price_text_size">13sp</dimen>
-	<dimen name="activity_offers_excellent_price_min_text_size">10sp</dimen>
+	<dimen name="activity_offers_excellent_price_min_text_size">5sp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_margin_start">9dp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_margin_end">36dp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_height">55dp</dimen>
