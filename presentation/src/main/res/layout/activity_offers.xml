@@ -96,14 +96,15 @@
                         android:id="@+id/tvExcellentPrice"
                         style="@style/sf_font_pro_display_regular"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginEnd="@dimen/offers_tv_excellent_price_margin_end"
                         android:gravity="center"
-                        android:lines="2"
+                        android:maxLines="2"
                         android:text="@string/LNG_OFFERS_PROMO_MESSAGE"
                         android:textColor="@color/colorWhite"
                         app:autoSizeTextType="uniform"
-                        app:autoSizeMaxTextSize="@dimen/activity_offers_excellent_price_text_size"/>
+                        app:autoSizeMaxTextSize="@dimen/activity_offers_excellent_price_text_size"
+                        app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
 
                 </LinearLayout>
 
@@ -128,14 +129,16 @@
                         <TextView
                             android:id="@+id/tv_year_sort_title"
                             style="@style/black_regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/activity_offers_sorted_layout_text_width"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
                             android:layout_centerInParent="true"
                             android:layout_marginEnd="-8dp"
                             android:text="@string/LNG_FILTER_YEAR"
-                            android:lines="1"
+                            android:maxLines="1"
                             app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
-                            app:autoSizeTextType="uniform" />
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
 
                         <ImageView
                                 android:id="@+id/triangleYear"
@@ -160,13 +163,15 @@
                         <TextView
                             android:id="@+id/tv_rating_sort_title"
                             style="@style/black_regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/activity_offers_sorted_layout_text_width"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
                             android:layout_centerInParent="true"
-                            android:lines="1"
+                            android:maxLines="1"
                             android:text="@string/LNG_FILTER_RATING"
                             app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
-                            app:autoSizeTextType="uniform" />
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
 
                         <ImageView
                                 android:id="@+id/triangleRating"
@@ -191,13 +196,15 @@
                         <TextView
                             android:id="@+id/tv_price_sort_title"
                             style="@style/black_regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/activity_offers_sorted_layout_text_width"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
                             android:layout_centerInParent="true"
-                            android:lines="1"
+                            android:maxLines="1"
                             android:text="@string/LNG_FILTER_PRICE"
                             app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
-                            app:autoSizeTextType="uniform" />
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
 
                         <ImageView
                                 android:id="@+id/trianglePrice"
