@@ -147,7 +147,7 @@
                                 android:layout_toEndOf="@id/tv_year_sort_title"
                                 android:layout_centerVertical="true"
                                 app:srcCompat="@drawable/ic_triangle"
-                                android:layout_marginStart="10dp"
+                                android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
                                 android:visibility="invisible"/>
                     </RelativeLayout>
 

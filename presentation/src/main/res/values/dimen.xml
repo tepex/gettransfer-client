@@ -564,8 +564,8 @@
 	<dimen name="activity_offers_sorted_layout_left_right_elements_margin_side">18dp</dimen>
 	<dimen name="activity_offers_sorted_layout_center_element_margin_side">8dp</dimen>
 	<dimen name="activity_offers_sorted_layout_texts_size">14sp</dimen>
-	<dimen name="activity_offers_sorted_layout_text_width">80dp</dimen>
-	<dimen name="activity_offers_sorted_layout_triangle_margin_start">10dp</dimen>
+	<dimen name="activity_offers_sorted_layout_text_width">50dp</dimen>
+	<dimen name="activity_offers_sorted_layout_triangle_margin_start">9dp</dimen>
 	<dimen name="sort_buttons_width">96dp</dimen>
 
 	<!--view_offer-->
