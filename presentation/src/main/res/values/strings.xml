@@ -290,6 +290,15 @@
     <string name="LNG_PENDING_PAYMENT">Transfer payment pending</string>
     <string name="LNG_RIDE_NUMBER">Transfer request #</string>
     <string name="LNG_SELECT_CHILDREN_SEATS">Выберите детские кресла</string>
+    <string name="LNG_SEAT_INFANT_FULL">Infant carrier</string>
+    <string name="LNG_SEAT_INFANT_SHORT">Infant</string>
+    <string name="LNG_SEAT_INFANT_WEIGHT">up to 10 kg, 6 months</string>
+    <string name="LNG_SEAT_CONVERTIBLE_FULL">Convertible seat</string>
+    <string name="LNG_SEAT_CONVERTIBLE_SHORT">Convertible</string>
+    <string name="LNG_SEAT_CONVERTIBLE_WEIGHT">9–25 kg, 0–7 years</string>
+    <string name="LNG_SEAT_BOOSTER_FULL">Booster seat</string>
+    <string name="LNG_SEAT_BOOSTER_SHORT">Booster</string>
+    <string name="LNG_SEAT_BOOSTER_WEIGHT">22–36 kg, 6–12 years</string>
     <string name="LNG_TOP_RATED">Top selection</string>
     <string name="LNG_TRANSPORT_ECONOMY">Economy</string>
     <string name="LNG_TRANSPORT_COMFORT">Comfort</string>

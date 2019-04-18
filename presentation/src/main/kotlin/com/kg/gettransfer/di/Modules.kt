@@ -27,6 +27,7 @@ import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.encrypt.EncryptPassImpl
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
+import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 
 import com.kg.gettransfer.presentation.mapper.*
 
@@ -151,6 +152,7 @@ val androidModule = module {
     single { PhoneNumberUtil.createInstance(get<Context>()) }
     single { GTNotificationManager(androidApplication().applicationContext) }
     single { DateTimeDelegate() }
+    single { PassengersDelegate() }
     single { MainState() }
 }
 

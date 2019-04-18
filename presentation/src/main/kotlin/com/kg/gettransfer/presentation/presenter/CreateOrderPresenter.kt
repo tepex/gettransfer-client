@@ -29,8 +29,10 @@ import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
 import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.extensions.isNonZero
 import com.kg.gettransfer.extensions.simpleFormat
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
+import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
@@ -65,6 +67,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val orderInteractor: OrderInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
     private val dateDelegate: DateTimeDelegate  = get()
+    private val childSeatsDelegate: PassengersDelegate = get()
 
     private val currencyMapper = get<CurrencyMapper>()
     private val routeMapper = get<RouteMapper>()
@@ -315,18 +318,20 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val from = orderInteractor.from!!
         val to = orderInteractor.to
         val transferNew = TransferNew(
-            from.cityPoint,
-            if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
-            Trip(dateDelegate.startDate, flightNumber),
-            dateDelegate.returnDate?.let { Trip(it, flightNumberReturn) },
-            transportTypes!!.filter { it.checked }.map { it.id },
-            passengers,
-            children,
-            cost?.times(100)?.toInt(),
-            comment,
-            userMapper.fromView(user),
-            promoCode,
-            false
+                from.cityPoint,
+                if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
+                Trip(dateDelegate.startDate, flightNumber),
+                dateDelegate.returnDate?.let { Trip(it, flightNumberReturn) },
+                transportTypes!!.filter { it.checked }.map { it.id },
+                passengers,
+                childSeatsDelegate.infantSeats.isNonZero(),
+                childSeatsDelegate.convertibleSeats.isNonZero(),
+                childSeatsDelegate.boosterSeats.isNonZero(),
+                cost?.times(100)?.toInt(),
+                comment,
+                userMapper.fromView(user),
+                promoCode,
+                false
         )
         Timber.d("new transfer: $transferNew")
 

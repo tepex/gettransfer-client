@@ -101,4 +101,15 @@
             layout="@layout/bottom_sheet_select_currencies"/>
     </android.support.design.widget.CoordinatorLayout>
 
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/expended_sheet_order_height">
+
+        <include
+            android:id="@+id/sheetChildSeats"
+            layout="@layout/bottom_sheet_child_seats"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
 </android.support.design.widget.CoordinatorLayout>

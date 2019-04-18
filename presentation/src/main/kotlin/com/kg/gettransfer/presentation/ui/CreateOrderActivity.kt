@@ -72,6 +72,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     private lateinit var bsOrder: BottomSheetBehavior<View>
     private lateinit var bsTransport: BottomSheetBehavior<View>
     private lateinit var bsCurrencies: BottomSheetBehavior<View>
+    private lateinit var bsChildSeats: BottomSheetBehavior<View>
     private lateinit var popupWindowComment: PopupWindow
 
     private var defaultPromoText: String? = null
@@ -153,13 +154,16 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         bsOrder = BottomSheetBehavior.from(sheetOrder)
         bsTransport = BottomSheetBehavior.from(sheetTransport)
         bsCurrencies = BottomSheetBehavior.from(sheetCurrencies)
+        bsChildSeats = BottomSheetBehavior.from(sheetChildSeats)
         bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
         bsCurrencies.state = BottomSheetBehavior.STATE_HIDDEN
+        bsChildSeats.state = BottomSheetBehavior.STATE_HIDDEN
 
         _tintBackground = tintBackground
         bsOrder.setBottomSheetCallback(bottomSheetCallback)
         bsTransport.setBottomSheetCallback(bsCallback)
         bsCurrencies.setBottomSheetCallback(bsCallback)
+        bsChildSeats.setBottomSheetCallback(bsCallback)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -172,6 +176,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                     if(hideBottomSheet(bsCurrencies, sheetCurrencies, BottomSheetBehavior.STATE_HIDDEN, event)) return true
 
                 bsOrder.state == BottomSheetBehavior.STATE_EXPANDED ->
+                    if(hideBottomSheet(bsOrder, sheetOrder, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
+
+                bsChildSeats.state == BottomSheetBehavior.STATE_EXPANDED ->
                     if(hideBottomSheet(bsOrder, sheetOrder, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
             }
         }
@@ -445,11 +452,12 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     @CallSuper
     override fun onBackPressed() {
         when {
-            isKeyBoardOpened                                         -> hideKeyboard()
-            bsTransport.state == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet(bsTransport)
-            bsCurrencies.state == BottomSheetBehavior.STATE_EXPANDED -> hideBottomSheet(bsCurrencies)
-            bsOrder.state     == BottomSheetBehavior.STATE_EXPANDED  -> toggleSheetOrder()
-            else                                                     -> super.onBackPressed()
+            isKeyBoardOpened                                          -> hideKeyboard()
+            bsTransport.state  == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet(bsTransport)
+            bsCurrencies.state == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet(bsCurrencies)
+            bsChildSeats.state == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet(bsChildSeats)
+            bsOrder.state      == BottomSheetBehavior.STATE_EXPANDED  -> toggleSheetOrder()
+            else                                                      -> super.onBackPressed()
         }
     }
 
@@ -503,8 +511,15 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             presenter.changePassengers(1)
         }
         passengers_seats.img_minus_seat.setOnClickListener  { presenter.changePassengers(-1) }
-        child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
-        child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
+        View.OnClickListener {
+            bsChildSeats.state = BottomSheetBehavior.STATE_EXPANDED
+        }.let {
+            children_seat_field.setOnClickListener(it)
+            children_seat_field.field_input.setOnClickListener(it)
+        }
+//        child_seats.img_minus_seat.setOnClickListener       { presenter.changeChildren(-1) }
+//        child_seats.img_plus_seat.setOnClickListener        { presenter.changeChildren(1) }
+
 
         cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input.field_input)  }
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }

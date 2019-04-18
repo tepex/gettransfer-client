@@ -1,0 +1,89 @@
+package com.kg.gettransfer.presentation.ui
+
+import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.arellomobile.mvp.MvpAppCompatFragment
+import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.delegate.ChildSeatsView
+import com.kg.gettransfer.presentation.delegate.PassengersDelegate
+import com.kg.gettransfer.presentation.delegate.PassengersDelegate.Companion.BOOSTER
+import com.kg.gettransfer.presentation.delegate.PassengersDelegate.Companion.CONVERTIBLE
+import com.kg.gettransfer.presentation.delegate.PassengersDelegate.Companion.INFANT
+import com.kg.gettransfer.presentation.ui.icons.seats.SeatImageProvider
+import kotlinx.android.synthetic.main.child_seats_fragment.*
+import kotlinx.android.synthetic.main.view_child_seat_type_counter.view.*
+import kotlinx.android.synthetic.main.view_count_controller.view.*
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
+
+class ChildSeatsFragment: MvpAppCompatFragment(), ChildSeatsView, KoinComponent{
+    private val delegate: PassengersDelegate by inject()
+    override val minusEnabled = R.drawable.ic_minus
+    override val minusDisabled = R.drawable.ic_minus_disabled
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.child_seats_fragment, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initClickListeners()
+        initCounters()
+    }
+
+    private fun initCounters() {
+        view_infant_seat.view_counter_btns.person_count.text      = "0"
+        view_convertible_seat.view_counter_btns.person_count.text = "0"
+        view_booster_seat.view_counter_btns.person_count.text     = "0"
+    }
+
+    private fun initClickListeners() {
+        view_infant_seat.view_counter_btns.img_minus_seat.setOnClickListener      { performMinus(INFANT) }
+        view_infant_seat.view_counter_btns.img_plus_seat.setOnClickListener       { performPlus(INFANT) }
+        view_convertible_seat.view_counter_btns.img_minus_seat.setOnClickListener { performMinus(CONVERTIBLE) }
+        view_convertible_seat.view_counter_btns.img_plus_seat.setOnClickListener  { performPlus(CONVERTIBLE) }
+        view_booster_seat.view_counter_btns.img_minus_seat.setOnClickListener     { performMinus(BOOSTER) }
+        view_booster_seat.view_counter_btns.img_plus_seat.setOnClickListener      { performPlus(BOOSTER) }
+    }
+
+    private fun performPlus(type: Int) =
+            delegate.increase(type, this)
+
+    private fun performMinus(type: Int) =
+            delegate.decrease(type, this)
+
+    override fun updateView(count: Int, type: Int) {
+        val res = if (count == 0) minusDisabled else minusEnabled
+        context?.let {
+            getMinusImageView(type).setImageDrawable(ContextCompat.getDrawable(it, res))
+            val seatImageRes = SeatImageProvider.getImage(type, count > 0)
+            getSeatImage(type).setImageDrawable(ContextCompat.getDrawable(it, seatImageRes))
+        }
+        getTextView(type).text = "$count"
+    }
+
+    private fun getMinusImageView (type: Int) =
+            when (type) {
+                INFANT      -> view_infant_seat.view_counter_btns.img_minus_seat
+                CONVERTIBLE -> view_convertible_seat.view_counter_btns.img_minus_seat
+                BOOSTER     -> view_booster_seat.view_counter_btns.img_minus_seat
+                else        -> throw IllegalArgumentException()
+        }
+
+    private fun getTextView(type: Int) =
+            when (type) {
+                INFANT      -> view_infant_seat.view_counter_btns.person_count
+                CONVERTIBLE -> view_convertible_seat.view_counter_btns.person_count
+                BOOSTER     -> view_booster_seat.view_counter_btns.person_count
+                else        -> throw IllegalArgumentException()
+            }
+    private fun getSeatImage(type: Int) =
+            when (type) {
+                INFANT      -> iv_infant_child_seat
+                CONVERTIBLE -> iv_convertible_child_seat
+                BOOSTER     -> iv_booster_child_seat
+                else        -> throw IllegalArgumentException()
+            }
+}

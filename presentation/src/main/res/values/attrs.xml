@@ -97,4 +97,9 @@
     <declare-styleable name="RatingFieldView">
         <attr name="rating_title" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="ChildCounterView">
+        <attr name="counter_title" format="string"/>
+        <attr name="counter_description" format="string"/>
+    </declare-styleable>
 </resources>

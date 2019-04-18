@@ -165,6 +165,7 @@
 	<dimen name="create_transfer_additionals_top_text_size">17sp</dimen>
 	<dimen name="create_transfer_additionals_bottom_text_size">14sp</dimen>
 	<dimen name="car_type_description">17sp</dimen>
+	<dimen name="child_seats_counter_title_text_size">17sp</dimen>
 	<dimen name="height_title_sheet_order">35dp</dimen>
 	<dimen name="create_transfer_editText_22">22dp</dimen>
 	<dimen name="create_transfer_textView_20">20dp</dimen>

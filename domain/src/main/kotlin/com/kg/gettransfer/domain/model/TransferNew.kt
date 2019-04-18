@@ -9,7 +9,9 @@ data class TransferNew(
     val tripReturn: Trip?,
     val transportTypeIds: List<TransportType.ID>,
     val pax: Int,
-    val childSeats: Int?,
+    val childSeatsInfant: Int?,
+    val childSeatsConvertible: Int?,
+    val childSeatsBooster: Int?,
     val passengerOfferedPrice: Int?, // x 100 (in cents)
     val comment: String?,
     val user: User,

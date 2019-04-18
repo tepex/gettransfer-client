@@ -29,7 +29,7 @@ import com.kg.gettransfer.extensions.isValid
 
 
 import com.kg.gettransfer.prefs.PreferencesImpl
-import com.kg.gettransfer.presentation.ui.icons.CarIconResourceProvider
+import com.kg.gettransfer.presentation.ui.icons.transport.CarIconResourceProvider
 import com.kg.gettransfer.presentation.delegate.CoordinateRequester
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper

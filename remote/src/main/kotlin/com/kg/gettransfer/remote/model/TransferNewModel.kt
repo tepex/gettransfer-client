@@ -14,7 +14,9 @@ open class TransferNewBase(
     @SerializedName(TransferNewEntity.TRIP_TO) @Expose val tripTo: TripModel,
     @SerializedName(TransferNewEntity.TRANSPORT_TYPE_IDS) @Expose val transportTypeIds: List<String>,
     @SerializedName(TransferNewEntity.PAX) @Expose val pax: Int,
-    @SerializedName(TransferNewEntity.CHILD_SEATS) @Expose val childSeats: Int?,
+    @SerializedName(TransferNewEntity.CHILD_SEATS_INFANT) @Expose val childSeatsInfant: Int?,
+    @SerializedName(TransferNewEntity.CHILD_SEATS_CONVERTIBLE) @Expose val childSeatsConvertible: Int?,
+    @SerializedName(TransferNewEntity.CHILD_SEATS_BOOSTER) @Expose val childSeatsBooster: Int?,
     @SerializedName(TransferNewEntity.PASSENGER_OFFERED_PRICE) @Expose val passengerOfferedPrice: Double?,
     @SerializedName(TransferNewEntity.NAME_SIGN) @Expose val nameSign: String?,
     @SerializedName(TransferNewEntity.COMMENT) @Expose val comment: String?,
@@ -30,7 +32,9 @@ class TransferPointToPointNewModel(
     @SerializedName(TransferNewEntity.TRIP_RETURN) @Expose val tripReturn: TripModel? = null,
     transportTypeIds: List<String>,
     pax: Int,
-    childSeats: Int?,
+    childSeatsInfant: Int?,
+    childSeatsConvertible: Int?,
+    childSeatsBooster: Int?,
     passengerOfferedPrice: Double?,
     nameSign: String?,
     comment: String?,
@@ -39,21 +43,23 @@ class TransferPointToPointNewModel(
 
 /* Not used now
     @SerializedName("paypal_only") @Expose val paypalOnly: Boolean */
-) : TransferNewBase(from, to, tripTo, transportTypeIds, pax, childSeats, passengerOfferedPrice, nameSign, comment, user, promoCode)
+) : TransferNewBase(from, to, tripTo, transportTypeIds, pax, childSeatsInfant, childSeatsConvertible, childSeatsBooster, passengerOfferedPrice, nameSign, comment, user, promoCode)
 
 class TransferHourlyNewModel(
     from: CityPointModel,
     tripTo: TripModel,
     transportTypeIds: List<String>,
     pax: Int,
-    childSeats: Int?,
+    childSeatsInfant: Int?,
+    childSeatsConvertible: Int?,
+    childSeatsBooster: Int?,
     passengerOfferedPrice: Double?,
     nameSign: String?,
     comment: String?,
     user: UserModel,
     promoCode: String?,
     @SerializedName(TransferNewEntity.DURATION) @Expose val duration: Int
-) : TransferNewBase(from, null, tripTo, transportTypeIds, pax, childSeats, passengerOfferedPrice, nameSign, comment, user, promoCode)
+) : TransferNewBase(from, null, tripTo, transportTypeIds, pax, childSeatsInfant, childSeatsConvertible, childSeatsBooster, passengerOfferedPrice, nameSign, comment, user, promoCode)
 
 data class TripModel(
     @SerializedName(TripEntity.DATE) @Expose val date: String,

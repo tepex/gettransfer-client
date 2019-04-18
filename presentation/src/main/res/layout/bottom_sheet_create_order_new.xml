@@ -176,6 +176,37 @@
                 android:layout_marginEnd="@dimen/divider_margin_start"
                 android:background="@color/create_order_fields_divider" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false">
+                <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                    android:id="@+id/passengers_count_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    app:icon_img="@drawable/ic_passenger_small"
+                    app:hint="Пассажиры"/>
+
+                <include
+                    layout="@layout/view_count_controller"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                android:id="@+id/children_seat_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="Детские кресла"
+                app:isFocusable="false"
+                app:icon_img="@drawable/ic_child_seat"/>
+
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/user_name_field"
                 android:layout_width="match_parent"

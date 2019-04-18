@@ -1,4 +1,4 @@
-package com.kg.gettransfer.presentation.ui.icons
+package com.kg.gettransfer.presentation.ui.icons.transport
 
 import com.kg.gettransfer.R
 

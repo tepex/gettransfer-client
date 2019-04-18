@@ -7,7 +7,9 @@ data class TransferNewEntity(
     val tripReturn: TripEntity?,
     val transportTypeIds: List<String>,
     val pax: Int,
-    val childSeats: Int?,
+    val childSeatsInfant: Int?,
+    val childSeatsConvertible: Int?,
+    val childSeatsBooster: Int?,
     val passengerOfferedPrice: Int?, // x 100 (in cents)
     val nameSign: String?,
     val comment: String?,
@@ -23,7 +25,9 @@ data class TransferNewEntity(
         const val TRIP_TO                 = "trip_to"
         const val TRANSPORT_TYPE_IDS      = "transport_type_ids"
         const val PAX                     = "pax"
-        const val CHILD_SEATS             = "child_seats"
+        const val CHILD_SEATS_INFANT      = "child_seats_infant"
+        const val CHILD_SEATS_CONVERTIBLE = "child_seats_convertible"
+        const val CHILD_SEATS_BOOSTER     = "child_seats_booster"
         const val PASSENGER_OFFERED_PRICE = "passenger_offered_price"
         const val NAME_SIGN               = "name_sign"
         const val COMMENT                 = "comment"
