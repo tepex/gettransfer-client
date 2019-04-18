@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.delegate
 
-import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isNonZero
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import java.lang.IllegalArgumentException
