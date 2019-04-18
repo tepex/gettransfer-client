@@ -81,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/activity_offers_excellent_price_layout_height"
                     android:background="@color/colorPrimary"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:gravity="center">
 
                     <ImageView
@@ -94,16 +94,16 @@
 
                     <TextView
                         android:id="@+id/tvExcellentPrice"
-                        style="@style/black_regular"
-                        android:layout_width="wrap_content"
+                        style="@style/sf_font_pro_display_regular"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/offers_tv_excellent_price_margin_end"
-                        android:ellipsize="end"
                         android:gravity="center"
-                        android:lines="3"
+                        android:lines="2"
                         android:text="@string/LNG_OFFERS_PROMO_MESSAGE"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/activity_offers_excellent_price_text_size" />
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMaxTextSize="@dimen/activity_offers_excellent_price_text_size"/>
 
                 </LinearLayout>
 
@@ -126,14 +126,16 @@
                             android:background="@drawable/back_sorted_layouts">
 
                         <TextView
-                                android:id="@+id/tv_year_sort_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/black_regular"
-                                android:layout_marginEnd="-8dp"
-                                android:layout_centerInParent="true"
-                                android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
-                                android:text="@string/LNG_FILTER_YEAR"/>
+                            android:id="@+id/tv_year_sort_title"
+                            style="@style/black_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginEnd="-8dp"
+                            android:text="@string/LNG_FILTER_YEAR"
+                            android:lines="1"
+                            app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
+                            app:autoSizeTextType="uniform" />
 
                         <ImageView
                                 android:id="@+id/triangleYear"
@@ -156,13 +158,15 @@
                             android:background="@drawable/back_sorted_layouts">
 
                         <TextView
-                                android:id="@+id/tv_rating_sort_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/black_regular"
-                                android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
-                                android:layout_centerInParent="true"
-                                android:text="@string/LNG_FILTER_RATING"/>
+                            android:id="@+id/tv_rating_sort_title"
+                            style="@style/black_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:lines="1"
+                            android:text="@string/LNG_FILTER_RATING"
+                            app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
+                            app:autoSizeTextType="uniform" />
 
                         <ImageView
                                 android:id="@+id/triangleRating"
@@ -185,13 +189,15 @@
                             android:background="@drawable/back_sorted_layouts">
 
                         <TextView
-                                android:id="@+id/tv_price_sort_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/black_regular"
-                                android:layout_centerInParent="true"
-                                android:textSize="@dimen/activity_offers_sorted_layout_texts_size"
-                                android:text="@string/LNG_FILTER_PRICE"/>
+                            android:id="@+id/tv_price_sort_title"
+                            style="@style/black_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:lines="1"
+                            android:text="@string/LNG_FILTER_PRICE"
+                            app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
+                            app:autoSizeTextType="uniform" />
 
                         <ImageView
                                 android:id="@+id/trianglePrice"
