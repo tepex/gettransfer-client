@@ -29,12 +29,10 @@
             android:drawableEnd="@drawable/ic_arrow_right"
             android:drawablePadding="8dp"
             android:ellipsize="end"
-            android:fontFamily="@font/sf_pro_text_semibold"
             android:gravity="start|center"
             android:imeOptions="actionNext"
             android:singleLine="true"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/create_transfer_additionals_top_text_size"/>
+            style="@style/sf_font"/>
     </android.support.design.widget.TextInputLayout>
 
     <View
