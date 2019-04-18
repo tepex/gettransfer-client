@@ -40,12 +40,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
-    var itemsExpanded: Boolean? = null
-        get() = field ?: offerInteractor.offerViewExpanded
-    set(value) {
-        field = value
-        offerInteractor.offerViewExpanded = value!!
-    }
     var isViewRoot: Boolean = false
 
     @CallSuper
@@ -97,7 +91,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
                             notificationManager.clearOffers(it.model.map { offer -> offer.id.toInt() })
                             addAll(transferMapper.toView(transfer).bookNowOffers) }
                     } }
-        //changeSortType(SORT_PRICE)
         processOffers()
     }
 
@@ -166,10 +159,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
             router.navigateTo(Screens.Main).also { isViewRoot = false }
         else super.onBackCommandClick()
     }
-
-    /*fun openLoginView() {
-        login("", "")
-    }*/
 
     fun cancelRequest(isCancel: Boolean) {
         if (!isCancel) return

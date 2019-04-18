@@ -87,10 +87,6 @@ class OffersActivity : BaseActivity(), OffersView {
         sortYear.setOnClickListener                       { presenter.changeSortType(Sort.YEAR) }
         sortRating.setOnClickListener                     { presenter.changeSortType(Sort.RATING) }
         sortPrice.setOnClickListener                      { presenter.changeSortType(Sort.PRICE) }
-//        img_changeListType.setOnClickListener             {
-//            presenter.itemsExpanded = !presenter.itemsExpanded!!
-//            changeViewType()
-//        }
     }
 
     private fun initToolBar() =
@@ -144,10 +140,8 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun initAdapter() {
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-//        OffersAdapter.viewType =
-//                if (presenter.itemsExpanded!!) PRESENTATION.EXPANDED  //typealias
-//                else PRESENTATION.TINY
     }
+
     override fun setOffers(offers: List<OfferItem>) {
         hideSheetOfferDetails()
         rvOffers.adapter = OffersAdapter(offers.toMutableList()) { offer, showDetails -> presenter.onSelectOfferClicked(offer, showDetails) }
@@ -170,12 +164,6 @@ class OffersActivity : BaseActivity(), OffersView {
         noOffers.isVisible = true
         val drawable = ivClock.drawable as Animatable
         drawable.start()
-    }
-
-    private fun changeViewType() {
-//        (rvOffers.adapter as OffersAdapter).changeItemRepresentation()
-//        (if (presenter.itemsExpanded!!) R.drawable.ic_offers_expanded
-//        else R.drawable.ic_offers_tiny).also { img_changeListType.setImageResource(it) }
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
@@ -333,10 +321,6 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun hideSheetOfferDetails() { bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN }
 
-    /*override fun redirectView() =
-        Utils.showScreenRedirectingAlert(this, getString(R.string.log_in_requirement_error_title),
-            getString(R.string.log_in_to_see_transfers_and_offers)) { presenter.openLoginView() }*/
-
     @CallSuper
     override fun onBackPressed() {
         if (bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetOfferDetails() else navigateBackWithTransition()
@@ -365,5 +349,3 @@ class OffersActivity : BaseActivity(), OffersView {
         const val NO_RATE      = 0f
     }
 }
-
-typealias PRESENTATION = OffersAdapter.Companion.PRESENTATION
