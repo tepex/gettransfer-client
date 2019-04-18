@@ -178,6 +178,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                 bsCurrencies.state == BottomSheetBehavior.STATE_EXPANDED ->
                     if(hideBottomSheet(bsCurrencies, sheetCurrencies, BottomSheetBehavior.STATE_HIDDEN, event)) return true
 
+                bsChildSeats.state == BottomSheetBehavior.STATE_EXPANDED ->
+                    if (hideBottomSheet(bsChildSeats, sheetChildSeats, BottomSheetBehavior.STATE_HIDDEN, event)) return true
+
                 bsOrder.state == BottomSheetBehavior.STATE_EXPANDED ->
                     if(hideBottomSheet(bsOrder, sheetOrder, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
 
@@ -321,6 +324,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun setChildSeats(setOf: Set<CreateOrderView.ChildSeatItem>, total: Int) {
+        if (total == 0) {
+            children_seat_field.field_input.setText("")
+            return
+        }
         with(StringBuilder()) {
             if (total > 1) append("$total ")
             append("(")
@@ -332,8 +339,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                 append(getString(it.stringId))
                 append(", ")
             }
-            trim()
-            deleteCharAt(length - 1)
+            trimEnd()
+            delete(length - 2, length)
             append(")")
         }.also {
             children_seat_field.field_input.setText(it)
@@ -475,7 +482,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             bsCurrencies.state == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet(bsCurrencies)
             bsChildSeats.state == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet(bsChildSeats)
             bsOrder.state      == BottomSheetBehavior.STATE_EXPANDED  -> toggleSheetOrder()
-            else                                                      -> super.onBackPressed()
+            else                                                      -> presenter.onBackClick()
         }
     }
 
