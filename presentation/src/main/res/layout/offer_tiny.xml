@@ -49,7 +49,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/tv_price_final"
                 app:layout_constraintEnd_toStartOf="@+id/tv_price_final"
                 app:layout_constraintTop_toTopOf="@+id/tv_price_final"
-                tools:text="(330.00p)" />
+                tools:text="330.00p" />
 
             <TextView
                 android:id="@+id/tv_price_final"
