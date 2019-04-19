@@ -33,8 +33,9 @@
         app:layout_constraintTop_toTopOf="@+id/menu_item_title"
         app:layout_constraintBottom_toBottomOf="@+id/menu_item_title"
         android:layout_marginStart="@dimen/nav_counter_margin_start"
-        android:gravity="center"
-        android:visibility="gone"/>
+        android:paddingStart="@dimen/activity_main_events_count_padding_start_end"
+        android:paddingEnd="@dimen/activity_main_events_count_padding_start_end"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/menu_item_subtitle"
