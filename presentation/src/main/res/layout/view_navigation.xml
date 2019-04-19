@@ -185,7 +185,7 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/navViewFooter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -194,51 +194,62 @@
 
             <ImageButton
                 android:id="@+id/navFooterStamp"
-                android:layout_width="@dimen/best_price_logo_image_height"
-                android:layout_height="@dimen/best_price_logo_image_width"
-                android:layout_above="@+id/navMessage"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/nav_footer_stamp_bottom"
-                android:layout_marginTop="@dimen/nav_footer_stamp_top"
+                android:layout_width="@dimen/best_price_logo_image_size"
+                android:layout_height="@dimen/best_price_logo_image_size"
                 android:background="@null"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/navFooter"
+                app:layout_constraintVertical_bias="1"
+                android:layout_marginStart="@dimen/best_price_logo_margin_start"
+                android:layout_marginBottom="@dimen/best_price_logo_margin_bottom"
                 android:scaleType="centerInside"
-                app:srcCompat="@drawable/ic_best_price_logo" />
+                app:srcCompat="@drawable/ic_best_price_logo"/>
 
             <TextView
                 android:id="@+id/navMessage"
                 style="@style/sf_font_semi_bold"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/nav_footer_title_horizontal_padding"
-                android:paddingEnd="@dimen/nav_footer_title_horizontal_padding"
-                android:layout_above="@+id/navFooterVersion"
+                app:layout_constraintTop_toTopOf="@+id/navFooterStamp"
+                app:layout_constraintBottom_toBottomOf="@+id/navFooterStamp"
+                app:layout_constraintStart_toEndOf="@+id/navFooterStamp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="@dimen/nav_footer_title_horizontal_margin"
+                android:layout_marginEnd="@dimen/nav_footer_title_horizontal_margin"
+                android:layout_above="@+id/navFooter"
                 android:textSize="@dimen/nav_footer_title_text_size"
-                android:layout_marginBottom="@dimen/nav_footer_read_more_bottom"
-                android:gravity="center_horizontal"
+                android:gravity="start"
                 android:text="@string/LNG_BESTPRICES" />
 
-            <TextView
-                android:id="@+id/navFooterReadMore"
-                android:layout_width="wrap_content"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/navFooter"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/navFooterVersion"
-                android:gravity="center_horizontal"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:textColor="@android:color/black"
-                android:layout_marginBottom="@dimen/nav_footer_version_bottom"
-                android:layout_marginEnd="@dimen/nav_footer_version_start"
-                android:text="@string/LNG_READMORE" />
+                android:paddingStart="@dimen/nav_footer_version_start"
+                android:paddingEnd="@dimen/nav_footer_version_start"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="@dimen/nav_footer_version_bottom">
 
-            <TextView
-                android:id="@+id/navFooterVersion"
-                style="@style/nav_footer_version"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/nav_footer_version_bottom"
-                android:layout_marginStart="@dimen/nav_footer_version_start"
-                android:text="version" />
+                <TextView
+                    android:id="@+id/navFooterReadMore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="@string/LNG_READMORE" />
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/navFooterVersion"
+                    style="@style/nav_footer_version"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="version" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
 
     </RelativeLayout>
 </android.support.design.widget.NavigationView>
