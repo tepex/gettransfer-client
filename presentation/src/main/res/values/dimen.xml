@@ -173,10 +173,9 @@
 
 	<dimen name="create_order_behaviour_peek_height">250dp</dimen>
 	<dimen name="get_offers_btn_height">300dp</dimen>
-	<dimen name="card_transfer_type_corner_radius_default">2dp</dimen>
-	<item name="card_transfer_type_corner_radius" format="float" type="dimen">8.0</item>
+	<dimen name="card_transfer_type_corner_radius_default">5dp</dimen>
 	<dimen name="card_transfer_type_elevation_default">2dp</dimen>
-	<item name="card_transfer_type_elevation" format="float" type="dimen">8.0</item>
+	<dimen name="card_transfer_type_elevation">5dp</dimen>
 
 	<dimen name="transport_time_server_price_min_text_size">8sp</dimen>
 	<dimen name="transport_time_server_price_max_text_size">14sp</dimen>
@@ -798,7 +797,7 @@
 
 
 	<!--drawable values-->
-	<dimen name="panels_corner_radius">16dp</dimen>
+	<dimen name="panels_corner_radius">5dp</dimen>
 	<dimen name="hourly_icon_borders">2dp</dimen>
 
 	<!-- empty offers-->

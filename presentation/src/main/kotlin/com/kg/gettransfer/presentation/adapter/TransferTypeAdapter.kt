@@ -62,22 +62,15 @@ class TransferTypeAdapter(
         }
 
         private fun setVisibilityShadow(context: Context, item: TransportTypeModel) {
-            if(item.checked) showItemShadowAndCorners(context) else hideItemShadowAndCorners(context)
+            if(item.checked) showItemShadow(context) else hideItemShadow(context)
         }
 
-        private fun hideItemShadowAndCorners(context: Context) {
+        private fun hideItemShadow(context: Context) {
             cardTransferType.cardElevation = context.resources.getDimension(R.dimen.card_transfer_type_elevation_default)
-            cardTransferType.radius        = context.resources.getDimension(R.dimen.card_transfer_type_corner_radius_default)
         }
 
-        private fun showItemShadowAndCorners(context: Context) {
-            val elevation = TypedValue()
-            val radius    = TypedValue()
-            context.resources.getValue(R.dimen.card_transfer_type_elevation, elevation, true)
-            context.resources.getValue(R.dimen.card_transfer_type_corner_radius, radius, true)
-
-            cardTransferType.cardElevation = elevation.float
-            cardTransferType.radius        = radius.float
+        private fun showItemShadow(context: Context) {
+            cardTransferType.cardElevation = context.resources.getDimension(R.dimen.card_transfer_type_elevation)
         }
 
         private fun getTextSize(text: String) =    //change title 'from:' text size depending on price characters count
