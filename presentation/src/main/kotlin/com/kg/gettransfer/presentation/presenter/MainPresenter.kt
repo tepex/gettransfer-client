@@ -326,9 +326,11 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         orderInteractor.from?.let { router.navigateTo(Screens.FindAddress(from, to, isClickTo, bounds, returnBack)) }
     }
 
-    fun onNextClick() {
-        if (orderInteractor.isCanCreateOrder())
+    fun onNextClick(block: (Boolean) -> Unit) {
+        if (orderInteractor.isCanCreateOrder()) {
+            block(true)
             router.navigateTo(Screens.CreateOrder)
+        }
     }
 
     fun onAboutClick() {

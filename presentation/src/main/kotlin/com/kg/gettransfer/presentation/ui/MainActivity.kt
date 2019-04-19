@@ -52,7 +52,6 @@ import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.MainView.Companion.MAP_SCREEN
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import kotlinx.android.synthetic.main.a_b_orange_view.*
-import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_item_requests.view.*
@@ -92,6 +91,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private var isFirst = true
     private var centerMarker: Marker? = null
     private var isGmTouchEnabled = true
+    private var nextClicked = false
 
     @ProvidePresenter
     fun createMainPresenter() = MainPresenter()
@@ -175,13 +175,21 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         searchFrom.setOnClickListener { performClick(false) }
         searchTo.setOnClickListener   { performClick(true) }
         rl_hourly.setOnClickListener  { showNumberPicker(true) }
-        btnNext.setOnClickListener    { presenter.onNextClick() }
+        btnNext.setOnClickListener    { performNextClick() }
         enableBtnNext()
     }
 
     override fun onResume() {
         super.onResume()
         presenter.setScreenState(requestView != null)
+    }
+
+    fun performNextClick() {
+        if (!nextClicked) {
+            presenter.onNextClick { process ->
+                nextClicked = process
+            }
+        }
     }
 
     private fun screenModeChanged(isChecked: Boolean) {
@@ -252,8 +260,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     @CallSuper
     protected override fun onStop() {
-        enableBtnNext()
         super.onStop()
+        nextClicked = false
+        enableBtnNext()
+
     }
 
     private fun initNavigation() {
@@ -471,7 +481,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     private fun defineMapModeStrategy() {
-        btnNext.setOnClickListener { presenter.onNextClick() }
+        btnNext.setOnClickListener { performNextClick()}
         btnBack.setOnClickListener { presenter.onBackClick() }
     }
 

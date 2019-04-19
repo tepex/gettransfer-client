@@ -93,7 +93,7 @@ class MainRequestFragment :
 
     private fun onNextClick() {
         if (dateDelegate.validateWith { dateErrorBlock() }) {
-            mPresenter.onNextClick()
+            mParent.performNextClick()
             mPresenter.onStartScreenOrderNote()
         }
     }
