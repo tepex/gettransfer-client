@@ -120,6 +120,8 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
     override fun onOptionsItemSelected(item: MenuItem) = toggle.onOptionsItemSelected(item)
 
     private fun initNavigation() {
+        navViewHeader.setPadding(0, getStatusBarHeight(), 0, 0)
+
         val versionName = BuildConfig.VERSION_NAME
         val versionCode = BuildConfig.VERSION_CODE
         (navFooterVersion as TextView).text =

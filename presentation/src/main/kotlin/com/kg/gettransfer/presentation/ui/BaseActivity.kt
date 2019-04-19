@@ -351,11 +351,14 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
         } else 0
 
-        val statusBarResource = resources.getIdentifier("status_bar_height", "dimen", "android")
-        val statusBarHeight = if(statusBarResource > 0) resources.getDimensionPixelSize(statusBarResource) else 0
-
+        val statusBarHeight = getStatusBarHeight()
         return if (displayCutout != null) (screenHeight - actionBarHeight - statusBarHeight) + cutoutOffset
         else screenHeight - actionBarHeight - statusBarHeight
+    }
+
+    protected fun getStatusBarHeight(): Int{
+        val statusBarResource = resources.getIdentifier("status_bar_height", "dimen", "android")
+        return if(statusBarResource > 0) resources.getDimensionPixelSize(statusBarResource) else 0
     }
 
     protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View? {
