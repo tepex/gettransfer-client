@@ -150,7 +150,10 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         tvClass.text = offer.transportType.nameId?.let { getString(it) } ?: ""
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(offer.transportType.id))
         OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)
-        OfferItemBindDelegate.bindLanguages(multiLineContainer = languages_container_tiny, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
+        OfferItemBindDelegate.bindLanguages(
+                multiLineContainer = languages_container_tiny,
+                languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
+                rowNumber = 6)
     }
 
     private fun showCarInfoOffer(offer: OfferModel) {
@@ -168,7 +171,10 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
                     )
                 }
         tvClass.text = offer.vehicle.transportType.nameId?.let { getString(it) ?: "" }
-        OfferItemBindDelegate.bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
+        OfferItemBindDelegate.bindLanguages(
+                multiLineContainer = languages_container_tiny,
+                languages = offer.carrier.languages,
+                rowNumber = 6)
         OfferItemBindDelegate.bindRating(layoutRating, offer.carrier.ratings, offer.carrier.approved)
     }
 

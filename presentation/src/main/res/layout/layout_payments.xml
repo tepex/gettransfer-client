@@ -34,10 +34,11 @@
         android:id="@+id/ivMasterCard"
         android:layout_width="@dimen/payment_logo_card_width"
         android:layout_height="@dimen/payment_logo_card_height"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="23dp"
         app:layout_constraintBottom_toBottomOf="@+id/rbCard"
         app:layout_constraintLeft_toLeftOf="@id/guide_left"
 
+        app:layout_constraintStart_toEndOf="@+id/rbCard"
         app:layout_constraintTop_toTopOf="@+id/rbCard"
         app:srcCompat="@drawable/bt_ic_vaulted_mastercard" />
 
