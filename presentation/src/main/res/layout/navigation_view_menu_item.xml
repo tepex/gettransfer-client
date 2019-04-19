@@ -35,7 +35,8 @@
         android:layout_marginStart="@dimen/nav_counter_margin_start"
         android:paddingStart="@dimen/activity_main_events_count_padding_start_end"
         android:paddingEnd="@dimen/activity_main_events_count_padding_start_end"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/menu_item_subtitle"
