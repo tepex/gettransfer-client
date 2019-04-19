@@ -120,6 +120,16 @@ object Utils : KoinComponent {
         }
     }
 
+    fun showAlertUpdateApp(context: Context, listener: (Boolean) -> Unit) {
+        getAlertDialogBuilder(context).apply {
+            setTitle(R.string.LNG_NEW_VERSION_UPDATE)
+            setPositiveButton(R.string.LNG_UPDATE) { _, _ -> listener(true) }
+            setNegativeButton(android.R.string.cancel)  { _, _ -> listener(false) }
+            setOnCancelListener { listener(false) }
+            show()
+        }
+    }
+
     fun showScreenRedirectingAlert(context: Context, title: String, message: String, navigate: () -> Unit) {
         getAlertDialogBuilder(context).apply {
             setTitle(title)

@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.annotation.SuppressLint
 import android.content.*
 
 import android.graphics.Color

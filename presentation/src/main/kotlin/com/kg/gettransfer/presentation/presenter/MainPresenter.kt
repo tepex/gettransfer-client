@@ -15,7 +15,6 @@ import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.*
 
-import com.kg.gettransfer.domain.model.Transfer.Companion.filterCompleted
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
 import com.kg.gettransfer.prefs.PreferencesImpl
 
@@ -576,11 +575,11 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     companion object {
-    const val FIELD_FROM    = "field_from"
-    const val FIELD_TO      = "field_to"
-    const val EMPTY_ADDRESS = ""
+        const val FIELD_FROM    = "field_from"
+        const val FIELD_TO      = "field_to"
+        const val EMPTY_ADDRESS = ""
 
-    const val MIN_HOURLY    = 2
-    const val ONE_SEC_DELAY = 1000L
+        const val MIN_HOURLY    = 2
+        const val ONE_SEC_DELAY = 1000L
     }
 }

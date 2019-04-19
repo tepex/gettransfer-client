@@ -23,6 +23,7 @@ val remoteMappersModule = module {
     single { CityPointMapper() }
     single { ConfigsMapper() }
     single { MobileConfigMapper() }
+    single { BuildsConfigsMapper() }
     single { CurrencyMapper() }
 
     single { EndpointMapper() }

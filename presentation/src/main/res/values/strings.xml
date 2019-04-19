@@ -480,6 +480,8 @@
     <string name="LNG_CURRENCIES_CHOOSE">Choose a currency</string>
     <string name="LNG_CURRENCIES_POPULAR">Popular currencies in your country</string>
     <string name="LNG_CURRENCIES_ALL">All currencies</string>
+    <string name="LNG_NEW_VERSION_UPDATE">New app version available</string>
+    <string name="LNG_UPDATE">Update</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

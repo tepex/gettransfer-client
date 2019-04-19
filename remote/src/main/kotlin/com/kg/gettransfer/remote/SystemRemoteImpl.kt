@@ -17,6 +17,7 @@ import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.ConfigsModel
 import com.kg.gettransfer.remote.model.AccountModelWrapper
 import com.kg.gettransfer.remote.model.MobileConfig
+import com.kg.gettransfer.remote.model.BuildsConfigs
 import com.kg.gettransfer.remote.model.LocationModel
 
 import org.koin.standalone.get

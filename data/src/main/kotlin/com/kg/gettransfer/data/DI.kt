@@ -78,6 +78,7 @@ val dataModule = module {
     single { ConfigsMapper() }
     single { ReviewRateMapper() }
     single { MobileConfigMapper() }
+    single { BuildsConfigsMapper() }
     single { LocationMapper() }
 
     single { SystemDataStoreCache() }

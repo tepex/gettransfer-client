@@ -284,7 +284,8 @@ class SystemRepositoryImpl(
         private val MOBILE_CONFIGS_DEFAULT = MobileConfig(
             pushShowDelay       = 5,
             orderMinimumMinutes = 120,
-            termsUrl            = "terms_of_use"
+            termsUrl            = "terms_of_use",
+            buildsConfigs       = null
         )
 
         private fun defineNoAccountCurrency() =

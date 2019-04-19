@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.Manifest
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import com.kg.gettransfer.BuildConfig
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
@@ -23,6 +22,7 @@ import net.hockeyapp.android.CrashManagerListener
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.ui.helpers.BuildsConfigsHelper
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
 
@@ -38,6 +38,8 @@ class SplashActivity : AppCompatActivity() {
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private val systemInteractor: SystemInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
+
+    private var updateAppDialogIsShowed = false
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,11 +87,48 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             }*/
             utils.asyncAwait { systemInteractor.coldStart() }
-            val intent = Intent(AppLifeCycleObserver.APP_STATE).apply { putExtra(AppLifeCycleObserver.STATUS, true) }
-            Handler().postDelayed({ LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent) }, 1000)
-            openNextScreen()
-            finish()
+            if (checkNeededUpdateApp()) showUpdateAppDialog()
+            else startApp()
         }
+    }
+
+    @CallSuper
+    protected override fun onResume() {
+        super.onResume()
+        if (updateAppDialogIsShowed) startApp()
+    }
+
+    private fun checkNeededUpdateApp(): Boolean {
+        systemInteractor.mobileConfigs.buildsConfigs?.let { buildsConfigs ->
+            BuildsConfigsHelper.getConfigsForCurrentBuildByField(
+                    BuildsConfigsHelper.SETTINGS_FIELD_UPDATE_REQUIRED,
+                    buildsConfigs
+            )?.let { return it.updateRequired ?: false }
+        }
+        return false
+    }
+
+    private fun showUpdateAppDialog() {
+        updateAppDialogIsShowed = true
+        Utils.showAlertUpdateApp(this) {
+            if (it) redirectToUpdateApp()
+            else startApp()
+        }
+    }
+
+    private fun redirectToUpdateApp() {
+        val url = getString(R.string.market_link) + getString(R.string.app_package)
+        startActivity(
+                Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(url)
+                })
+    }
+
+    private fun startApp() {
+        val intent = Intent(AppLifeCycleObserver.APP_STATE).apply { putExtra(AppLifeCycleObserver.STATUS, true) }
+        Handler().postDelayed({ LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent) }, 1000)
+        openNextScreen()
+        finish()
     }
 
     private fun openNextScreen(){
