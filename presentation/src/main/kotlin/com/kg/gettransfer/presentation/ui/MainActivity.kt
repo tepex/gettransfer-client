@@ -99,17 +99,19 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
     private val itemsNavigationViewListener = View.OnClickListener {
-        when (it.id) {
-            R.id.navLogin          -> presenter.onLoginClick()
-            R.id.navAbout          -> presenter.onAboutClick()
-            R.id.navSettings       -> presenter.onSettingsClick()
-            R.id.navSupport        -> presenter.onSupportClick()
-            R.id.navRequests       -> presenter.onRequestsClick()
-            R.id.navBecomeACarrier -> presenter.onBecomeACarrierClick()
-            R.id.navHeaderShare    -> presenter.onShareClick()
-            else -> Timber.d("No route")
+        with(presenter) {
+            when (it.id) {
+                R.id.navLogin          -> presenter.onLoginClick()
+                R.id.navAbout          -> presenter.onAboutClick()
+                R.id.navSettings       -> presenter.onSettingsClick()
+                R.id.navSupport        -> presenter.onSupportClick()
+                R.id.navRequests       -> presenter.onRequestsClick()
+                R.id.navBecomeACarrier -> presenter.onBecomeACarrierClick()
+                R.id.navHeaderShare    -> presenter.onShareClick()
+                else -> Timber.d("No route")
+            }
+            drawer.closeDrawer(GravityCompat.START)
         }
-        drawer.closeDrawer(GravityCompat.START)
     }
 
     init {

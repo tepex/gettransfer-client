@@ -6,8 +6,10 @@ import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_NOT_ASKED
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.Analytics
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
+import timber.log.Timber
 
 @InjectViewState
 class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComponent {
@@ -54,10 +56,22 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     fun onPassengerModeClick()  = router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
     fun onTransfersClick()      = router.navigateTo(Screens.CarrierTransfers)
 
+    fun onShareClick() {
+        Timber.d("Share action")
+        logEvent(Analytics.SHARE)
+        router.navigateTo(Screens.Share())
+    }
+
     private fun checkBackGroundCoordinateAcceptance() {
         if (carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_NOT_ASKED)
             viewState.askForBackGroundCoordinates()
     }
     fun permissionResult(accepted: Boolean) =
         carrierTripInteractor.permissionChanged(accepted)
+
+    private fun logEvent(value: String) {
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.PARAM_KEY_NAME] = value
+        analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
+    }
 }

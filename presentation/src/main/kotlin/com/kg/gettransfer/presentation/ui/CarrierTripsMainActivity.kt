@@ -56,6 +56,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
                 R.id.navSupport          -> onSupportClick()
                 R.id.navPassengerMode    -> onPassengerModeClick()
                 R.id.navCarrierTransfers -> onTransfersClick()
+                R.id.navHeaderShare      -> onShareClick()
                 else -> Timber.d("No route")
             }
             drawer.closeDrawer(GravityCompat.START)
@@ -127,17 +128,20 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         (navFooterVersion as TextView).text =
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
-        navFooterStamp.setOnClickListener(readMoreListener)
-        navFooterReadMore.setOnClickListener(readMoreListener)
+        readMoreListener.let {
+            navFooterStamp.setOnClickListener    (it)
+            navFooterReadMore.setOnClickListener (it)
+        }
 
-        navHeaderShare.setOnClickListener { Timber.d("Share action") }
-
-        navCarrierTrips.setOnClickListener(itemsNavigationViewListener)
-        navSettings.setOnClickListener(itemsNavigationViewListener)
-        navSupport.setOnClickListener(itemsNavigationViewListener)
-        navAbout.setOnClickListener(itemsNavigationViewListener)
-        navPassengerMode.setOnClickListener(itemsNavigationViewListener)
-        navCarrierTransfers.setOnClickListener(itemsNavigationViewListener)
+        itemsNavigationViewListener.let {
+            navHeaderShare.setOnClickListener      (it)
+            navCarrierTrips.setOnClickListener     (it)
+            navSettings.setOnClickListener         (it)
+            navSupport.setOnClickListener          (it)
+            navAbout.setOnClickListener            (it)
+            navPassengerMode.setOnClickListener    (it)
+            navCarrierTransfers.setOnClickListener (it)
+        }
 
     //    setViewColor(navViewHeader, R.color.colorWhite)
     //    setViewColor(layoutAccountInfo, R.color.primaryDriver)
