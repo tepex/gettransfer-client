@@ -49,12 +49,13 @@
 	<dimen name="nav_header_height">148dp</dimen>
 	<dimen name="nav_header_logo_width">102dp</dimen>
 	<dimen name="nav_header_logo_height">86dp</dimen>
+	<dimen name="nav_header_share_size">24dp</dimen>
 	<dimen name="nav_header_logo_start">16dp</dimen>
 	<dimen name="nav_header_logo_top">10dp</dimen>
-	<dimen name="nav_header_logo_bottom">6dp</dimen>
-	<dimen name="nav_header_share_top">10dp</dimen>
+	<dimen name="nav_header_share_bottom">14dp</dimen>
 	<dimen name="nav_header_share_end">16dp</dimen>
 	<dimen name="nav_header_mode_text_size">12sp</dimen>
+    <dimen name="nav_header_account_info_layout_margin_top">2dp</dimen>
 	<dimen name="nav_header_account_info_layout_padding_top">6dp</dimen>
 
 	<dimen name="nav_header_email_bottom">6dp</dimen>
