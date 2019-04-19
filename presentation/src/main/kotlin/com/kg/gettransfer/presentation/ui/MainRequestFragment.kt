@@ -109,7 +109,7 @@ class MainRequestFragment :
         initDateTimeFields()
         with(dateDelegate) {
             if (startOrderedTime == null) order_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)
-            if (returnOrderedTime == null) return_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)
+            if (returnOrderedTime == null) return_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE_RETURN)
         }
     }
 

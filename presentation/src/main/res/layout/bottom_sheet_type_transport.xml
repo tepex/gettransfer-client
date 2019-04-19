@@ -43,7 +43,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTypeTransfer"/>
+        app:layout_constraintTop_toBottomOf="@+id/tvTypeTransfer"
+
+        tools:srcCompat="@drawable/ic_transport_type_economy"/>
 
     <TextView
         android:id="@+id/tvPrice"
@@ -121,13 +123,18 @@
     <TextView
         android:id="@+id/tvCars"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_height="278dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="@+id/imageView5"
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
         android:textSize="@dimen/car_type_description"
+        app:autoSizeMinTextSize="@dimen/car_type_description_min"
+        app:autoSizeMaxTextSize="@dimen/car_type_description"
+        app:autoSizeStepGranularity="2sp"
         android:fontFamily="@font/sf_pro_text_regular"
         android:textColor="@color/hockeyapp_text_black"
+
+        tools:text="@string/LNG_TRANSPORT_EXAMPLES_ECONOMY"
 
 />
 
