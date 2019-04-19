@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/payment_layout_constraintGuide_begin" />
+        app:layout_constraintGuide_begin="@dimen/payment_layout_constraintGuide_begin_payments" />
 
     <RadioButton
         android:id="@+id/rbCard"
@@ -21,8 +22,11 @@
         android:layout_marginTop="@dimen/payment_radio_button_margin_top"
         android:button="@drawable/payment_selector"
         android:checked="true"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:paddingStart="@dimen/payment_radio_button_padding_start"
         android:text="@string/LNG_PAYMENT_METHOD_CARD"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,8 +34,10 @@
         android:id="@+id/ivMasterCard"
         android:layout_width="@dimen/payment_logo_card_width"
         android:layout_height="@dimen/payment_logo_card_height"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/rbCard"
         app:layout_constraintLeft_toLeftOf="@id/guide_left"
+
         app:layout_constraintTop_toTopOf="@+id/rbCard"
         app:srcCompat="@drawable/bt_ic_vaulted_mastercard" />
 
@@ -96,6 +102,8 @@
         android:layout_marginTop="@dimen/payment_radio_button_margin_top"
         android:layout_marginBottom="@dimen/payment_radio_button_margin_bottom"
         android:button="@drawable/payment_selector"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:paddingStart="@dimen/payment_radio_button_padding_start"
         android:text="@string/LNG_PAYMENT_METHOD_PAYPAL"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -107,7 +115,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/rbPaypal"
-        app:layout_constraintLeft_toLeftOf="@id/guide_left"
+        app:layout_constraintLeft_toRightOf="@id/rbPaypal"
+        app:layout_constraintStart_toStartOf="@+id/ivMasterCard"
         app:layout_constraintTop_toTopOf="@+id/rbPaypal"
         app:srcCompat="@drawable/ic_paypal" />
 

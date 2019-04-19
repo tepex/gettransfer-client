@@ -149,13 +149,14 @@ object OfferItemBindDelegate {
                 return@with approved
             }
 
-    internal fun bindLanguages(singleLineContainer: LinearLayout? = null, multiLineContainer: LinearLayout? = null, languages: List<LocaleModel>) {
+    internal fun bindLanguages(singleLineContainer: LinearLayout? = null, multiLineContainer: LinearLayout? = null,
+                               languages: List<LocaleModel>, rowNumber: Int = LanguageDrawer.ITEM_COLUMNS) {
 
         if (singleLineContainer == null && multiLineContainer == null)
             throw IllegalArgumentException("One of containers must not be null in ${this::class.java.name}")
 
         if (singleLineContainer != null) LanguageDrawer.drawSingleLine(singleLineContainer, languages = languages)
-        else LanguageDrawer.drawMultipleLine(multiLineContainer!!, languages = languages)
+        else LanguageDrawer.drawMultipleLine(multiLineContainer!!, languages = languages, rowNumber = rowNumber)
 
     }
 

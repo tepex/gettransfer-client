@@ -20,7 +20,7 @@ object LanguageDrawer {
         }
     }
 
-    fun drawMultipleLine (container: LinearLayout, rowNumber: Int = ITEM_COLUMNS, languages: List<LocaleModel>) {
+    fun drawMultipleLine (container: LinearLayout, rowNumber: Int, languages: List<LocaleModel>) {
         container.removeAllViews()
         val lp = getLayoutParamsWithMargin(container.context)
         val resources = container.context.resources
@@ -47,5 +47,5 @@ object LanguageDrawer {
         return LayoutHelper.createLinearParams(startEndMargin, topBottomMargin, startEndMargin, topBottomMargin)
     }
 
-    private const val ITEM_COLUMNS = 3
+    internal const val ITEM_COLUMNS = 3
 }

@@ -123,17 +123,19 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
             selectPaymentPercentage(selectedPercentage)
         }
         setCarInfo(offer)
-        setPriceInfo(offer.price.base.preferred, offer.price.base.def)
+        setPriceInfo(offer.price.base.def, offer.price.base.preferred)
     }
 
-    private fun setPriceInfo(preferredPrice: String?, default: String?) {
-        tvPriceInfo.text = getString(R.string.LNG_RIDE_PAY_CHARGE, preferredPrice, default)
+    private fun setPriceInfo(default: String?, preferredPrice: String?) {
+        tvPriceInfo.text  = if (preferredPrice != null)
+            getString(R.string.LNG_RIDE_PAY_CHARGE, preferredPrice, default)
+        else getString(R.string.LNG_RIDE_PAY_CHARGE2, default)
     }
 
     override fun setBookNowOffer(bookNowOffer: BookNowOfferModel?) {
         hidePaymentPercentage()
         setCarInfo(bookNowOffer)
-        setPriceInfo(bookNowOffer?.base?.preferred, bookNowOffer?.base?.def)
+        setPriceInfo(bookNowOffer?.base?.def, bookNowOffer?.base?.preferred)
     }
 
     private fun setCarInfo(offer: OfferItem?) {
@@ -149,7 +151,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(offer.transportType.id))
         OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(multiLineContainer = languages_container_tiny, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
-        tvPrice.text = offer.base.preferred
     }
 
     private fun showCarInfoOffer(offer: OfferModel) {
@@ -169,7 +170,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         tvClass.text = offer.vehicle.transportType.nameId?.let { getString(it) ?: "" }
         OfferItemBindDelegate.bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
         OfferItemBindDelegate.bindRating(layoutRating, offer.carrier.ratings, offer.carrier.approved)
-        tvPrice.text = offer.price.base.preferred
     }
 
     private fun hidePaymentPercentage() {
