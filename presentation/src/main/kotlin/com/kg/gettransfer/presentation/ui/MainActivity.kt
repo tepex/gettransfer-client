@@ -298,6 +298,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         navHeaderMode.isVisible = false
         navNewTransfer.isVisible = true
+        setMenuIconsColorFilter()
 
         readMoreListener.let {
             navFooterStamp.setOnClickListener   (it)
@@ -313,6 +314,18 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             navAbout.setOnClickListener         (it)
             navBecomeACarrier.setOnClickListener(it)
             navPassengerMode.setOnClickListener (it)
+        }
+    }
+
+    private fun setMenuIconsColorFilter() {
+        ContextCompat.getColor(this, R.color.color_gtr_orange).let {
+            navNewTransfer.menu_item_image.setColorFilter(it)
+            navLogin.menu_item_image.setColorFilter(it)
+            navRequests.menu_item_image.setColorFilter(it)
+            navSettings.menu_item_image.setColorFilter(it)
+            navSupport.menu_item_image.setColorFilter(it)
+            navAbout.menu_item_image.setColorFilter(it)
+            navBecomeACarrier.menu_item_image.setColorFilter(it)
         }
     }
 
