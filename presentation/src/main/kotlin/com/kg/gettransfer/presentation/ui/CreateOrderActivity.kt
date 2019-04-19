@@ -411,7 +411,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         Utils.getAlertDialogBuilder(this).apply {
             setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
             setMessage(getString(stringId))
-            setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
+            setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
             show()
         }
     }

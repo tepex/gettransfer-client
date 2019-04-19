@@ -101,7 +101,7 @@ object Utils : KoinComponent {
         getAlertDialogBuilder(context).apply {
             setTitle(R.string.LNG_ERROR)
             setMessage(message)
-            setPositiveButton(android.R.string.ok) { dialog, _ ->
+            setPositiveButton(R.string.LNG_OK) { dialog, _ ->
                 dialog.dismiss()
                 if (finish) (context as Activity).finish()
                 onClose?.invoke()
@@ -114,8 +114,8 @@ object Utils : KoinComponent {
     fun showAlertCancelRequest(context: Context, listener: (Boolean) -> Unit) {
         getAlertDialogBuilder(context).apply {
             setTitle(R.string.LNG_CANCEL_CONFIRM)
-            setPositiveButton(android.R.string.yes) { _, _ -> listener(true) }
-            setNegativeButton(android.R.string.no)  { _, _ -> listener(false) }
+            setPositiveButton(R.string.LNG_YES) { _, _ -> listener(true) }
+            setNegativeButton(R.string.LNG_NO)  { _, _ -> listener(false) }
             show()
         }
     }
@@ -124,7 +124,7 @@ object Utils : KoinComponent {
         getAlertDialogBuilder(context).apply {
             setTitle(R.string.LNG_NEW_VERSION_UPDATE)
             setPositiveButton(R.string.LNG_UPDATE) { _, _ -> listener(true) }
-            setNegativeButton(android.R.string.cancel)  { _, _ -> listener(false) }
+            setNegativeButton(R.string.LNG_CANCEL)  { _, _ -> listener(false) }
             setOnCancelListener { listener(false) }
             show()
         }
@@ -134,7 +134,7 @@ object Utils : KoinComponent {
         getAlertDialogBuilder(context).apply {
             setTitle(title)
             setMessage(message)
-            setPositiveButton(android.R.string.ok) { dialog, _ ->
+            setPositiveButton(R.string.LNG_OK) { dialog, _ ->
                 dialog.dismiss()
                 navigate()
             }
@@ -205,7 +205,7 @@ object Utils : KoinComponent {
             getAlertDialogBuilder(context).apply {
                 setTitle(titleId)
                 setItems(items.toTypedArray()) { _, which -> listener(which) }
-                setNegativeButton(android.R.string.cancel, null)
+                setNegativeButton(R.string.LNG_CANCEL, null)
                 show()
             }
         }

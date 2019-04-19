@@ -482,6 +482,8 @@
     <string name="LNG_CURRENCIES_ALL">All currencies</string>
     <string name="LNG_NEW_VERSION_UPDATE">New app version available</string>
     <string name="LNG_UPDATE">Update</string>
+    <string name="LNG_YES">Yes</string>
+    <string name="LNG_NO">No</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

@@ -101,7 +101,7 @@ class MainRequestFragment :
     private val dateErrorBlock = { Utils.getAlertDialogBuilder(mParent)
             .setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
             .setMessage(getString(CreateOrderView.FieldError.RETURN_TIME.stringId))
-            .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
             .show() }
 
     override fun onResume() {
