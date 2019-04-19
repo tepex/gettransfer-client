@@ -102,7 +102,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/nav_item_title_size</item>
         <item name="android:textColor">@color/colorTextBlack</item>
-        <item name="fontFamily">@font/sf_pro_text_bold</item>
+        <item name="fontFamily">@font/sf_pro_text_semibold</item>
     </style>
     <style name="nav_item_subtitle" parent="sf_font">
         <item name="android:layout_width">match_parent</item>

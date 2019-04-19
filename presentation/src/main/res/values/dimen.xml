@@ -64,7 +64,7 @@
 	<dimen name="nav_item_margin_top">5dp</dimen>
 	<dimen name="nav_item_margin_bottom">5dp</dimen>
 	<dimen name="nav_item_margin_start">30dp</dimen>
-	<dimen name="nav_item_title_size">16sp</dimen>
+	<dimen name="nav_item_title_size">17sp</dimen>
 	<dimen name="nav_item_subtitle_size">14sp</dimen>
 
 	<dimen name="nav_footer_version_size">10sp</dimen>
@@ -79,6 +79,9 @@
 
 	<dimen name="nav_icons_size">20dp</dimen>
 	<dimen name="nav_icons_margin_start_end">16dp</dimen>
+	<dimen name="nav_icons_margin_start">16dp</dimen>
+	<dimen name="nav_title_margin_start">16dp</dimen>
+	<dimen name="nav_counter_margin_start">5dp</dimen>
 
 	<!-- Search form -->
     <dimen name="search_elevation">8dp</dimen>

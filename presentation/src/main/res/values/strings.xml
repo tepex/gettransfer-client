@@ -129,6 +129,8 @@
     <string name="LNG_CNY">Renminbi</string>
     <string name="LNG_MENU_TITLE_LOGIN">Log in</string>
     <string name="LNG_MENU_SUBTITLE_LOGIN">Passenger log in and sign up</string>
+    <string name="LNG_MENU_TITLE_NEW">New</string>
+    <string name="LNG_MENU_SUBTITLE_NEW">Create new transfer</string>
     <string name="LNG_MENU_TITLE_RIDES">Requests</string>
     <string name="LNG_MENU_SUBTITLE_RIDES">Active and archived rides</string>
     <string name="LNG_MENU_TITLE_LAST_RIDES">Archived rides</string>

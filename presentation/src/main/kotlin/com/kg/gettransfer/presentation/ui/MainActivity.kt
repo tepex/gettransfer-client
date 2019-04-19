@@ -56,7 +56,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.a_b_orange_view.*
 
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.nav_item_requests.view.*
+import kotlinx.android.synthetic.main.navigation_view_menu_item.view.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
@@ -104,6 +104,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private val itemsNavigationViewListener = View.OnClickListener {
         with(presenter) {
             when (it.id) {
+                R.id.navNewTransfer    -> drawer.closeDrawer(GravityCompat.START)
                 R.id.navLogin          -> onLoginClick()
                 R.id.navAbout          -> onAboutClick()
                 R.id.navSettings       -> onSettingsClick()
@@ -296,12 +297,14 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         (navFooterVersion as TextView).text =
                 String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         navHeaderMode.isVisible = false
+        navNewTransfer.isVisible = true
 
         readMoreListener.let {
             navFooterStamp.setOnClickListener   (it)
             navFooterReadMore.setOnClickListener(it)
         }
         itemsNavigationViewListener.let {
+            navNewTransfer.setOnClickListener   (it)
             navHeaderShare.setOnClickListener   (it)
             navLogin.setOnClickListener         (it)
             navRequests.setOnClickListener      (it)
@@ -677,13 +680,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     override fun showBadge(show: Boolean) {
         tvEventsCount.isVisible = show
-        navRequests.tvEventsCount.isVisible = show
+        navRequests.menu_item_counter.isVisible = show
         requestView?.showBadge(show)
     }
 
     override fun setCountEvents(count: Int) {
         tvEventsCount.text = count.toString()
-        navRequests.tvEventsCount.text = count.toString()
+        navRequests.menu_item_counter.text = count.toString()
         requestView?.setBadge(count.toString())
     }
 

@@ -92,62 +92,95 @@
             android:background="@color/colorWhite"
             android:orientation="vertical">
 
-            <include android:id="@+id/navLogin"
+            <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
+                android:id="@+id/navNewTransfer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/nav_item_login"
+                app:menu_icon_img="@drawable/ic_menu_location"
+                app:menu_title_text="@string/LNG_MENU_TITLE_NEW"
+                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_NEW"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
+                android:id="@+id/navLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menu_icon_img="@drawable/ic_menu_person"
+                app:menu_title_text="@string/LNG_MENU_TITLE_LOGIN"
+                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_LOGIN"
                 android:visibility="visible"/>
 
-            <include
+            <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
                 android:id="@+id/navCarrierTransfers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/nav_item_transfers"
+                app:menu_icon_img="@drawable/ic_menu_route"
+                app:menu_title_text="@string/LNG_MENU_TITLE_TRANSFERS"
+                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_TRANSFERS"
                 android:visibility="gone"
-
                 tools:visibility="visible"/>
 
-            <include android:id="@+id/navRequests"
+            <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
+                android:id="@+id/navRequests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/nav_item_requests"
+                app:menu_icon_img="@drawable/ic_menu_route"
+                app:menu_title_text="@string/LNG_MENU_TITLE_RIDES"
+                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_RIDES"
                 android:visibility="gone"
-
                 tools:visibility="visible"/>
 
-            <include android:id="@+id/navCarrierTrips"
+            <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
+                android:id="@+id/navCarrierTrips"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/nav_item_carrier_trips"
+                app:menu_icon_img="@drawable/nav_driver_trips"
+                app:menu_title_text="@string/LNG_MENU_TITLE_TRIPS"
+                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_TRIPS"
                 android:visibility="gone"
-
                 tools:visibility="visible"/>
 
-            <include android:id="@+id/navSettings"
+            <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
+                android:id="@+id/navSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/nav_item_settings"/>
+                app:menu_icon_img="@drawable/ic_menu_settings"
+                app:menu_title_text="@string/LNG_MENU_TITLE_SETTINGS"
+                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_SETTINGS"/>
 
-            <include android:id="@+id/navSupport"
+            <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
+                android:id="@+id/navSupport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/nav_item_support"/>
+                app:menu_icon_img="@drawable/ic_support"
+                app:menu_title_text="@string/LNG_CUSTOMER_SUPPORT"
+                app:menu_subtitle_text="@string/LNG_CUSTOMER_SUBTITLE_SUPPORT"/>
 
-            <include android:id="@+id/navAbout"
+            <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
+                android:id="@+id/navAbout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/nav_item_about"/>
+                app:menu_icon_img="@drawable/ic_menu_info"
+                app:menu_title_text="@string/LNG_MENU_TITLE_ABOUT"
+                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_ABOUT"/>
 
-            <include android:id="@+id/navBecomeACarrier"
+            <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
+                android:id="@+id/navBecomeACarrier"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/nav_item_become_a_carrier"
+                app:menu_icon_img="@drawable/ic_menu_switch_off"
+                app:menu_title_text="@string/LNG_MENU_TITLE_DRIVE"
+                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_DRIVE"
                 android:visibility="visible"/>
 
-            <include android:id="@+id/navPassengerMode"
+            <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
+                android:id="@+id/navPassengerMode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                layout="@layout/nav_item_passenger_mode"
+                app:menu_icon_img="@drawable/ic_menu_switch_on"
+                app:menu_title_text="@string/LNG_MENU_TITLE_PASSENGER"
+                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_PASSENGER"
                 android:visibility="gone"/>
 
         </LinearLayout>

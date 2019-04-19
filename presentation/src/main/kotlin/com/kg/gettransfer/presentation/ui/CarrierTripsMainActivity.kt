@@ -162,8 +162,8 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         navCarrierTrips.isVisible = true
         navBecomeACarrier.isVisible = false
         navPassengerMode.isVisible = true
-        navCarrierTrips.isVisible  = true
         navCarrierTransfers.isVisible = true
+        navNewTransfer.isVisible = false
 
         navFooterStamp.isVisible = false
         navMessage.isVisible = false

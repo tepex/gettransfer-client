@@ -102,4 +102,10 @@
         <attr name="counter_title" format="string"/>
         <attr name="counter_description" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="NavigationViewMenuItem">
+        <attr name="menu_icon_img" format="reference" />
+        <attr name="menu_title_text" format="string"/>
+        <attr name="menu_subtitle_text" format="string"/>
+    </declare-styleable>
 </resources>
