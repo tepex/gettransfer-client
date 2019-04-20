@@ -7,8 +7,7 @@
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="@dimen/payment_offer_tiny_cardCornerRadius"
     card_view:cardElevation="@dimen/payment_offer_tiny_cardElevation"
-    card_view:cardUseCompatPadding="true"
-    app:cardCornerRadius="@dimen/payment_offer_tiny_cardCornerRadius">
+    card_view:cardUseCompatPadding="true">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content"
