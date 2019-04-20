@@ -70,7 +70,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
         setContentView(R.layout.activity_payment_offer)
         initToolbar()
-        tv_payment_agreement.setOnClickListener { presenter.onAgreementClicked() }
+        tvPaymentAgreement.setOnClickListener { presenter.onAgreementClicked() }
         btnGetPayment.setOnClickListener { presenter.getPayment() }
         rbCard.setOnClickListener { changePayment(it, PaymentRequestModel.PLATRON) }
         rbPaypal.setOnClickListener { changePayment(it, PaymentRequestModel.PAYPAL) }

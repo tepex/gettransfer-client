@@ -934,5 +934,34 @@
 	<dimen name="payment_type_payment_max_text_size">17sp</dimen>
 	<dimen name="payment_type_payment_min_text_size">10sp</dimen>
 	<dimen name="payment_offer_layout_height">72dp</dimen>
+	<dimen name="payment_offer_layout_margin_start">8dp</dimen>
+	<dimen name="payment_offer_layout_margin_end">8dp</dimen>
+	<dimen name="payment_offer_layout_margin_top">8dp</dimen>
+	<dimen name="payment_layout_prices_margin_top">16dp</dimen>
+	<dimen name="payment_layout_payments_margin_top">16dp</dimen>
+	<dimen name="payment_tvPriceInfo_margin_top">16dp</dimen>
+	<dimen name="payment_tvPriceInfo_padding_bottom">16dp</dimen>
+	<dimen name="payment_tvCommission_margin_top">16dp</dimen>
+	<dimen name="payment_tvCommission_margin_start">8dp</dimen>
+	<dimen name="payment_tvCommission_margin_end">8dp</dimen>
+	<dimen name="payment_tvPaymentAgreement_margin_top">8dp</dimen>
+	<dimen name="payment_tvPaymentAgreement_margin_start">8dp</dimen>
+	<dimen name="payment_tvPaymentAgreement_margin_end">8dp</dimen>
+	<dimen name="payment_button_pay_margin_start">24dp</dimen>
+	<dimen name="payment_button_pay_margin_end">24dp</dimen>
+	<dimen name="payment_button_pay_margin_bottom">24dp</dimen>
+	<dimen name="payment_offer_tiny_cardCornerRadius">5dp</dimen>
+	<dimen name="payment_offer_tiny_cardElevation">5dp</dimen>
+	<dimen name="payment_offer_tiny_ivCarPhoto_width">130dp</dimen>
+	<dimen name="payment_offer_tiny_ivCarPhoto_height">75dp</dimen>
+	<dimen name="payment_offer_tiny_tvModel_margin_start">8dp</dimen>
+	<dimen name="payment_offer_tiny_tvModel_margin_end">8dp</dimen>
+	<dimen name="payment_offer_tiny_tvModel_margin_top">8dp</dimen>
+	<dimen name="payment_offer_tiny_tvClass_margin_top">3dp</dimen>
+	<dimen name="payment_offer_tiny_tvClass_margin_bottom">5dp</dimen>
+	<dimen name="payment_offer_tiny_languages_margin_bottom">5dp</dimen>
+	<dimen name="payment_offer_tiny_rating_margin_bottom">5dp</dimen>
+	<dimen name="payment_offer_tiny_languages_margin_top">3dp</dimen>
+	<dimen name="payment_offer_tiny_languages_margin_start">8dp</dimen>
 
 </resources>

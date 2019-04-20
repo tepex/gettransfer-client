@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/payment_offer_layout_height"
-    card_view:cardCornerRadius="5dp"
-    card_view:cardElevation="5dp"
-    card_view:cardUseCompatPadding="true">
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="@dimen/payment_offer_tiny_cardCornerRadius"
+    card_view:cardElevation="@dimen/payment_offer_tiny_cardElevation"
+    card_view:cardUseCompatPadding="true"
+    app:cardCornerRadius="@dimen/payment_offer_tiny_cardCornerRadius">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/content"
@@ -16,11 +17,11 @@
 
         <ImageView
             android:id="@+id/ivCarPhoto"
-            android:layout_width="130dp"
-            android:layout_height="0dp"
+            android:layout_width="@dimen/payment_offer_tiny_ivCarPhoto_width"
+            android:layout_height="@dimen/payment_offer_tiny_ivCarPhoto_height"
             android:adjustViewBounds="true"
             android:background="@drawable/bg_rounded_bn_photo"
-            android:scaleType="fitCenter"
+            android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,9 +31,9 @@
             android:id="@+id/tvModel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/payment_offer_tiny_tvModel_margin_start"
+            android:layout_marginTop="@dimen/payment_offer_tiny_tvModel_margin_top"
+            android:layout_marginEnd="@dimen/payment_offer_tiny_tvModel_margin_end"
             style="@style/sf_pro_display_semibold"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,22 +43,24 @@
 
         <TextView
             android:id="@+id/tvClass"
+            style="@style/sf_font_pro_display_regular_black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="5dp"
-            tools:text="Business"
+            android:layout_marginTop="@dimen/payment_offer_tiny_tvClass_margin_top"
+            android:layout_marginBottom="@dimen/payment_offer_tiny_tvClass_margin_bottom"
             android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/layoutRating"
             app:layout_constraintStart_toStartOf="@+id/tvModel"
             app:layout_constraintTop_toBottomOf="@+id/tvModel"
-            style="@style/sf_font_pro_display_regular_black"/>
+            tools:text="Business" />
 
         <LinearLayout
             android:id="@+id/languages_container_tiny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="@dimen/payment_offer_tiny_languages_margin_top"
+            android:layout_marginStart="@dimen/payment_offer_tiny_languages_margin_start"
+            android:layout_marginBottom="@dimen/payment_offer_tiny_languages_margin_bottom"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/tvClass"
             app:layout_constraintStart_toEndOf="@+id/tvClass"
@@ -68,7 +71,7 @@
             layout="@layout/view_offer_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="@dimen/payment_offer_tiny_rating_margin_bottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvClass"
             app:layout_constraintTop_toBottomOf="@+id/tvClass" />

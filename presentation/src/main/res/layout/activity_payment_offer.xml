@@ -7,13 +7,6 @@
     android:background="@color/color_gtr_super_light_grey"
     android:orientation="vertical">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guide_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="160dp" />
-
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar_nav_payment"
@@ -28,9 +21,9 @@
         layout="@layout/offer_tiny_payment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/payment_offer_layout_margin_start"
+        android:layout_marginTop="@dimen/payment_offer_layout_margin_top"
+        android:layout_marginEnd="@dimen/payment_offer_layout_margin_end"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,15 +37,15 @@
         app:layout_constraintBottom_toBottomOf="@id/tvPriceInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
         android:id="@+id/tvPriceInfo"
         style="@style/sf_font"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:paddingBottom="16dp"
+        android:layout_marginTop="@dimen/payment_tvPriceInfo_margin_top"
+        android:paddingBottom="@dimen/payment_tvPriceInfo_padding_bottom"
         android:gravity="center"
         tools:text="@string/LNG_RIDE_PAY_CHARGE"
         android:background="@android:color/white"
@@ -65,7 +58,7 @@
         layout="@layout/layout_prices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/payment_layout_prices_margin_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPriceInfo" />
@@ -75,7 +68,7 @@
         layout="@layout/layout_payments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/payment_layout_payments_margin_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutPrices" />
@@ -85,9 +78,9 @@
         style="@style/sf_font_pro_display_regular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/payment_tvCommission_margin_start"
+        android:layout_marginTop="@dimen/payment_tvCommission_margin_top"
+        android:layout_marginEnd="@dimen/payment_tvCommission_margin_end"
         android:gravity="center"
         android:paddingStart="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
         android:paddingEnd="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
@@ -98,14 +91,14 @@
         tools:text="Commission 3%.\n Refund is available before 17 Oct 2018 at 15:30:00" />
 
     <TextView
-        android:id="@+id/tv_payment_agreement"
+        android:id="@+id/tvPaymentAgreement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textSize="14sp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/payment_tvPaymentAgreement_margin_start"
+        android:layout_marginTop="@dimen/payment_tvPaymentAgreement_margin_top"
+        android:layout_marginEnd="@dimen/payment_tvPaymentAgreement_margin_end"
         android:gravity="center_horizontal"
         android:text="@string/LNG_RIDE_PAYMENT_OFFER"
         app:layout_constraintEnd_toEndOf="parent"
@@ -118,9 +111,9 @@
         android:id="@+id/btnGetPayment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginStart="@dimen/payment_button_pay_margin_start"
+        android:layout_marginEnd="@dimen/payment_button_pay_margin_end"
+        android:layout_marginBottom="@dimen/payment_button_pay_margin_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
