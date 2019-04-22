@@ -32,7 +32,8 @@
         android:lines="1"
         android:ellipsize="end"
         app:layout_constrainedWidth="true"
-        style="@style/sf_font_grey"/>
+        style="@style/sf_font_grey"
+        android:textSize="16sp"/>
 
 
     <TextView
@@ -44,7 +45,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ivIcon"
         tools:text="+44 2038 087946"
-        style="@style/sf_font"/>
+        style="@style/sf_font"
+        android:textSize="16sp"/>
 
     <View
         android:id="@+id/divider"
