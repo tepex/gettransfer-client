@@ -88,8 +88,9 @@
     <ImageView
         android:id="@+id/iv_offer_bs_booknow"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_sheet_offer_details_iv_offer_bs_booknow_height"
+        android:layout_height="@dimen/bottom_sheet_offer_details_sv_photo_height"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
         android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
         android:layout_marginEnd="@dimen/bottom_sheet_offer_details_margin_16dp"
         android:adjustViewBounds="true"
