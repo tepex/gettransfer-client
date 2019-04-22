@@ -79,7 +79,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val currencies = systemInteractor.currencies.map { currencyMapper.toView(it) }
     private var duration: Int? = null
     private var passengers = MIN_PASSENGERS
-    private var children = MIN_CHILDREN
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
@@ -149,7 +148,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                         route = it
                         duration = it.duration
                     }
-            setTransportTypePrices(route?.prices ?: emptyMap())
+            setTransportTypePrices(route?.prices ?: emptyMap(), true)
 
             routeModel = routeMapper.getView(
                     route?.distance,
@@ -184,11 +183,17 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    private fun setTransportTypePrices(prices: Map<TransportType.ID, TransportTypePrice>){
+    private fun setTransportTypePrices(prices: Map<TransportType.ID, TransportTypePrice>, withFavorite: Boolean = false){
         transportTypeMapper.prices = prices.mapValues { transportTypePriceMapper.toView(it.value) }
         val newTransportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
-        if(transportTypes != null) newTransportTypes.forEach { type -> type.checked = transportTypes?.find { old -> old.id == type.id }?.checked ?: false }
+        transportTypes?.let {
+            newTransportTypes.forEach { type ->
+                type.checked = it.find { old -> old.id == type.id }
+                        ?.checked ?: false
+            }
+        }
         transportTypes = newTransportTypes
+        if (withFavorite) setFavoriteTransportTypes()
         viewState.setTransportTypes(transportTypes!!)
     }
 
@@ -196,6 +201,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         transportTypeMapper.prices = null
         if (transportTypes == null)
             transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
+        setFavoriteTransportTypes()
         viewState.setTransportTypes(transportTypes!!)
         orderInteractor.from?.let { from ->
             from.cityPoint.point?.let { p ->
@@ -340,8 +346,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val logResult = fetchResultOnly { systemInteractor.putAccount() }
 
             if (result.error == null && logResult.error == null) {
-                logGetOffers()
-                releaseDelegates()
+                handleSuccess()
                 router.replaceScreen(Screens.Offers(result.model.id))
             } else if (result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
@@ -357,6 +362,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
             viewState.blockInterface(false)
         }
+    }
+
+    private fun handleSuccess() {
+        logGetOffers()
+        saveChosenTransportTypes()
+        releaseDelegates()
     }
 
     private fun checkFieldsForRequest(): Boolean {
@@ -392,6 +403,20 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logButtons(Analytics.SHOW_ROUTE_CLICKED)
     }
 
+    private fun setFavoriteTransportTypes() =
+        systemInteractor.favoriteTransports
+                ?.forEach { favorite ->
+                    transportTypes
+                            ?.find { it.id == favorite }
+                            ?.checked = true
+                }
+
+    private fun saveChosenTransportTypes() {
+        systemInteractor.favoriteTransports = transportTypes!!.filter { it.checked }
+                .map { it.id }
+                .toSet()
+    }
+
     private fun releaseDelegates() {
         dateDelegate.resetAfterOrder()
         childSeatsDelegate.clearSeats()
@@ -406,8 +431,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun redirectToLogin(id: Long) = router.replaceScreen(Screens.LoginToGetOffers(id, user.profile.email))
-
-
 
     companion object {
         private const val MIN_PASSENGERS = 0

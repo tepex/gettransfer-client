@@ -9,14 +9,7 @@ import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
 import com.kg.gettransfer.data.ds.io.SystemSocketDataStoreOutput
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
-
-import com.kg.gettransfer.data.mapper.ConfigsMapper
-import com.kg.gettransfer.data.mapper.AccountMapper
-import com.kg.gettransfer.data.mapper.EndpointMapper
-import com.kg.gettransfer.data.mapper.AddressMapper
-import com.kg.gettransfer.data.mapper.MobileConfigMapper
-import com.kg.gettransfer.data.mapper.LocationMapper
-import com.kg.gettransfer.data.mapper.ExceptionMapper
+import com.kg.gettransfer.data.mapper.*
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
@@ -25,18 +18,7 @@ import com.kg.gettransfer.data.model.ResultEntity
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.SocketEventListener
-
-import com.kg.gettransfer.domain.model.Endpoint
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.MobileConfig
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.PushTokenType
-import com.kg.gettransfer.domain.model.Location
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.User
-import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -121,6 +103,16 @@ class SystemRepositoryImpl(
         set(value) {
             val endpointEntity = endpointMapper.toEntity(value)
             preferencesCache.endpoint = endpointEntity
+        }
+
+    override var favoriteTransportTypes: Set<TransportType.ID>?
+        get() = preferencesCache.favoriteTransportTypes
+                ?.map { TransportType.ID.parse(it) }
+                ?.toSet()
+        set(value) {
+            preferencesCache.favoriteTransportTypes =
+                    value?.map { it.name }
+                            ?.toSet()
         }
 
     override var addressHistory: List<GTAddress>

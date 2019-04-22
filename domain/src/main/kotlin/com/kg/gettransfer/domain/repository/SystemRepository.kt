@@ -1,14 +1,7 @@
 package com.kg.gettransfer.domain.repository
 
 import com.kg.gettransfer.domain.eventListeners.SocketEventListener
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Endpoint
-import com.kg.gettransfer.domain.model.MobileConfig
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.PushTokenType
-import com.kg.gettransfer.domain.model.Location
-import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.*
 
 interface SystemRepository {
     val isInitialized: Boolean
@@ -20,6 +13,7 @@ interface SystemRepository {
     val endpoints: List<Endpoint>
     val mobileConfig: MobileConfig
 
+    var favoriteTransportTypes: Set<TransportType.ID>?
     var lastMode: String
     var lastMainScreenMode: String
     var lastCarrierTripsTypeView: String

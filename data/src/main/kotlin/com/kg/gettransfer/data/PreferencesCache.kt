@@ -16,6 +16,7 @@ interface PreferencesCache {
     var endpoint: EndpointEntity
     var selectedField: String
     var addressHistory: List<GTAddressEntity>
+    var favoriteTransportTypes: Set<String>?
     var appEnters: Int
     var mapCountNewOffers: Map<Long, Int>
     var mapCountNewMessages: Map<Long, Int>

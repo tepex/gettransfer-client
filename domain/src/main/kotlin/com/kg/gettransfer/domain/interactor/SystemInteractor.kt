@@ -57,6 +57,10 @@ class SystemInteractor(
     val transportTypes: List<TransportType>
         get() = systemRepository.configs.transportTypes
 
+    var favoriteTransports: Set<TransportType.ID>?
+        get() = systemRepository.favoriteTransportTypes
+        set(value) { systemRepository.favoriteTransportTypes = value }
+
     val locales: List<Locale>
         get() = systemRepository.configs.availableLocales.filter { localesFilterList.contains(it.language) }
 

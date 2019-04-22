@@ -24,9 +24,9 @@ class PassengersDelegate {
 
     fun increase(seatType: Int, seatsCounterView: ChildSeatsView) {
         val current = when (seatType) {
-            INFANT -> ++infantSeats
+            INFANT ->      ++infantSeats
             CONVERTIBLE -> ++convertibleSeats
-            BOOSTER -> ++boosterSeats
+            BOOSTER ->     ++boosterSeats
             else -> throw IllegalArgumentException("Wrong counter constant when increase in ${this.javaClass.name}")
         }
         seatsCounterView.updateView(current, seatType)
@@ -34,9 +34,9 @@ class PassengersDelegate {
 
     fun decrease(seatType: Int, seatsCounterView: ChildSeatsView) {
         val current = when (seatType) {
-            INFANT -> --infantSeats
-            CONVERTIBLE -> --convertibleSeats
-            BOOSTER -> --boosterSeats
+            INFANT ->       --infantSeats
+            CONVERTIBLE ->  --convertibleSeats
+            BOOSTER ->      --boosterSeats
             else -> throw IllegalArgumentException("Wrong counter constant when decrease in ${this.javaClass.name}")
         }
         seatsCounterView.updateView(current, seatType)

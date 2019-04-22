@@ -32,6 +32,7 @@ class PreferencesImpl(context: Context,
         @JvmField val ENDPOINT            = "endpoint"
         @JvmField val ADDRESS_HISTORY     = "history"
         @JvmField val APP_ENTERS_COUNT    = "enters_count"
+        @JvmField val FAVORITE_TRANSPORT  = "favorite_transport"
 
         @JvmField val MAP_NEW_OFFERS      = "map_new_offers"
         @JvmField val MAP_NEW_MESSAGES    = "map_new_messages"
@@ -49,7 +50,7 @@ class PreferencesImpl(context: Context,
     
     private val configsPrefs  = context.getSharedPreferences(ConfigsEntity.ENTITY_NAME, Context.MODE_PRIVATE)
     private val accountPrefs  = context.getSharedPreferences(AccountEntity.ENTITY_NAME, Context.MODE_PRIVATE)
-    private val driverPrefs  = context.getSharedPreferences(CarrierEntity.ENTITY_NAME, Context.MODE_PRIVATE)
+    private val driverPrefs   = context.getSharedPreferences(CarrierEntity.ENTITY_NAME, Context.MODE_PRIVATE)
     private var _accessToken  = INVALID_TOKEN
     private var _userEmail    = INVALID_EMAIL
     private var _userPassword = INVALID_PASSWORD
@@ -191,6 +192,14 @@ class PreferencesImpl(context: Context,
                 putString(ADDRESS_HISTORY, JSON.stringify(GTAddressEntity.serializer().list, value))
                 apply()
             }            
+        }
+
+    override var favoriteTransportTypes: Set<String>?
+        get() = accountPrefs.getStringSet(FAVORITE_TRANSPORT, null)
+        set(value) {
+            accountPrefs.edit()
+                    .putStringSet(FAVORITE_TRANSPORT, value)
+                    .apply()
         }
 
     override var appEnters: Int
