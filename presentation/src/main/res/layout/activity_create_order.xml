@@ -83,32 +83,20 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/expended_sheet_order_height">
 
-        <include
-            android:id="@+id/sheetTransport"
-            layout="@layout/bottom_sheet_type_transport"/>
-    </android.support.design.widget.CoordinatorLayout>
-
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/expended_sheet_order_height">
-
-        <include
-            android:id="@+id/sheetCurrencies"
-            layout="@layout/bottom_sheet_select_currencies"/>
-    </android.support.design.widget.CoordinatorLayout>
-
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/expended_sheet_order_height">
-
-        <include
-            android:id="@+id/sheetChildSeats"
-            layout="@layout/bottom_sheet_child_seats"/>
+        <FrameLayout
+            android:id="@+id/secondary_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/back_top_rounded"
+            android:clickable="true"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            app:behavior_hideable="true"
+            app:behavior_skipCollapsed="true"
+            app:layout_behavior="android.support.design.widget.BottomSheetBehavior"/>
 
     </android.support.design.widget.CoordinatorLayout>
 
