@@ -81,8 +81,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     private var hasErrorFields = false
     private var errorFieldView: View? = null
 
-    private var transportTypeModel:TransportTypeModel? = null
-
     companion object {
 
         const val KEYBOARD_WAIT_DELAY = 300L
@@ -336,10 +334,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
-            transportTypeModel = transportType
             presenter.onTransportChosen()
             checkErrorField(rvTransferType)
-            if (showInfo) transportTypeClicked()
+            if (showInfo) transportTypeClicked(transportType)
         }
     }
 
@@ -440,8 +437,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     private fun clearHighLightErrorField(view: View?) = view?.setBackgroundResource(0)
 
-    private fun transportTypeClicked() {
-        replaceFragment(TransportTypeFragment(), null)
+    private fun transportTypeClicked(transportTypeModel: TransportTypeModel) {
+        val fragment = TransportTypeFragment()
+        fragment.transportTypeModel = transportTypeModel
+        replaceFragment(fragment, null)
         presenter.logButtons(CAR_INFO_CLICKED)
     }
 
@@ -608,9 +607,5 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                         tag)
 
         transaction.commit()
-    }
-
-    fun getTransportTypeModel():TransportTypeModel?{
-        return transportTypeModel
     }
 }
