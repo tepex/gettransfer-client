@@ -91,6 +91,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private lateinit var hourlySheet: BottomSheetBehavior<View>
 
     private var isFirst = true
+    private var isPermissionRequested = false
     private var centerMarker: Marker? = null
     private var isGmTouchEnabled = true
     private var nextClicked = false
@@ -219,8 +220,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             }
             else {
                 systemInteractor.lastMainScreenMode = Screens.MAIN_WITH_MAP
-            }
+                if (!isPermissionRequested) {
+                    isPermissionRequested = true
+                    checkPermission()
+                }
                 supportFragmentManager.fragments.firstOrNull()?.let { requestView = null;remove(it) }
+            }
         }?.commit()
     }
 
@@ -330,8 +335,11 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
 
-        checkPermission()
-        btnMyLocation.setOnClickListener  { presenter.updateCurrentLocation() }
+        //checkPermission()
+        btnMyLocation.setOnClickListener  {
+            checkPermission()
+            presenter.updateCurrentLocation()
+        }
         gm.setOnCameraMoveListener        {
             presenter.onCameraMove(gm.cameraPosition!!.target, true)
         }
@@ -349,7 +357,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         presenter.enablePinAnimation()
     }
 
-    private fun checkPermission() {
+    fun checkPermission() {
         if (!EasyPermissions.hasPermissions(this, *PERMISSIONS))
             EasyPermissions.requestPermissions(
                 this,
