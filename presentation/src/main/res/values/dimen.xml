@@ -364,7 +364,7 @@
 
     <dimen name="bottom_sheet_transfer_details_main_margin_top">14dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_width">110dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_swiped_view_height">5dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_swiped_view_height">3dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_top">11dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_swiped_view_margin_bottom">15dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_buttons_height">44dp</dimen>

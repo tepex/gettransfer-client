@@ -283,6 +283,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
                 tv_price_title.isVisible = false
             }
         }
+        setFullPrice(remainsToPay, 100)
     }
 
     private fun setFullPrice(price: String, paymentPercentages: Int) {

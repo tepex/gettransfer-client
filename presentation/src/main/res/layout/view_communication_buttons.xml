@@ -36,15 +36,6 @@
         app:btn_name="@string/LNG_CANCEL_REQUEST" />
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
-        android:id="@+id/btnSupport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:visibility="visible"
-        app:btn_img="@drawable/ic_support"
-        app:btn_name="@string/LNG_OFFERS_SUPPORT" />
-
-    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
         android:id="@+id/btnRepeatTransfer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,5 +43,14 @@
         android:visibility="gone"
         app:btn_img="@drawable/ic_repeat"
         app:btn_name="@string/LNG_DETAILS_REPEAT_ROUTE" />
+
+    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+        android:id="@+id/btnSupport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="visible"
+        app:btn_img="@drawable/ic_support"
+        app:btn_name="@string/LNG_OFFERS_SUPPORT" />
 
 </LinearLayout>
