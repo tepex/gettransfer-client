@@ -20,7 +20,7 @@ import android.widget.RelativeLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.FitCenter
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 
@@ -249,12 +249,14 @@ class OffersActivity : BaseActivity(), OffersView {
                 addSinglePhoto(path = paths.first())
             }
             else {
+                val size = getPhotoSize()
                 inflatePhotoScrollView(paths.size)
                 for (i in 0 until photos_container_bs.childCount) {
                     Glide.with(this)
                             .load(paths[i])
-                            .apply(RequestOptions().transforms(FitCenter(),
-                                    RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
+                            .apply(RequestOptions().transforms(CenterCrop(),
+                                    RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER)))
+                                    .override(size.first, size.second))
                             .into(photos_container_bs.getChildAt(i) as ImageView)
                 }
             }
@@ -264,14 +266,23 @@ class OffersActivity : BaseActivity(), OffersView {
     private fun addSinglePhoto(resId: Int = 0, path: String? = null) {
         sv_photo.isVisible = false
         iv_offer_bs_booknow.isVisible = true
+        val size = getPhotoSize()
         Glide.with(this)
                 .let {
                     if (path != null) it.load(path)
                     else it.load(resId)
                 }
-                .apply(RequestOptions().transforms(FitCenter(),
-                        RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
+                .apply(RequestOptions().transforms(CenterCrop(),
+                        RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER)))
+                        .override(size.first, size.second))
                 .into(iv_offer_bs_booknow)
+    }
+
+    private fun getPhotoSize(): Pair<Int, Int> {
+        val imgHorizontalMargins = resources.getDimensionPixelSize(R.dimen.bottom_sheet_offer_details_margin_16dp)
+        val imgWidth = resources.displayMetrics.widthPixels - imgHorizontalMargins * 2
+        val imgHeight = resources.getDimensionPixelSize(R.dimen.bottom_sheet_offer_details_sv_photo_height)
+        return Pair(imgWidth, imgHeight)
     }
 
     private fun inflatePhotoScrollView(imagesCount: Int) {
