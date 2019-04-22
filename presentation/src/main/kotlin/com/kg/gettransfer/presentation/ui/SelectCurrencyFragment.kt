@@ -37,6 +37,11 @@ class SelectCurrencyFragment : MvpAppCompatFragment(), SelectCurrencyView {
         mPresenter = (activity as BaseActivity).getPresenter()
         rvAllCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvPopularCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        val ctx = context
+        if(ctx is CreateOrderActivity) {
+            ctx.expandBottomSheet()
+        }
     }
 
     override fun setCurrencies(all: List<CurrencyModel>, popular: List<CurrencyModel>, selected: CurrencyModel) {

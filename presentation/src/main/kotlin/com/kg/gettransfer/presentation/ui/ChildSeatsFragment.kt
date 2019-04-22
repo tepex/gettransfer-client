@@ -13,7 +13,7 @@ import com.kg.gettransfer.presentation.delegate.PassengersDelegate.Companion.BOO
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate.Companion.CONVERTIBLE
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate.Companion.INFANT
 import com.kg.gettransfer.presentation.ui.icons.seats.SeatImageProvider
-import kotlinx.android.synthetic.main.child_seats_fragment.*
+import kotlinx.android.synthetic.main.bottom_sheet_child_seats.*
 import kotlinx.android.synthetic.main.view_child_seat_type_counter.view.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import org.koin.standalone.KoinComponent
@@ -25,12 +25,17 @@ class ChildSeatsFragment: MvpAppCompatFragment(), ChildSeatsView, KoinComponent{
     override val minusDisabled = R.drawable.ic_minus_disabled
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.child_seats_fragment, container, false)
+            inflater.inflate(R.layout.bottom_sheet_child_seats, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initClickListeners()
         initCounters()
+
+        val ctx = context
+        if(ctx is CreateOrderActivity) {
+            ctx.expandBottomSheet()
+        }
     }
 
     private fun initCounters() {
