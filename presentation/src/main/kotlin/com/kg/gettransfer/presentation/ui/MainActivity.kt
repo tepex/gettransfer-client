@@ -101,13 +101,13 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private val itemsNavigationViewListener = View.OnClickListener {
         with(presenter) {
             when (it.id) {
-                R.id.navLogin          -> presenter.onLoginClick()
-                R.id.navAbout          -> presenter.onAboutClick()
-                R.id.navSettings       -> presenter.onSettingsClick()
-                R.id.navSupport        -> presenter.onSupportClick()
-                R.id.navRequests       -> presenter.onRequestsClick()
-                R.id.navBecomeACarrier -> presenter.onBecomeACarrierClick()
-                R.id.navHeaderShare    -> presenter.onShareClick()
+                R.id.navLogin          -> onLoginClick()
+                R.id.navAbout          -> onAboutClick()
+                R.id.navSettings       -> onSettingsClick()
+                R.id.navSupport        -> onSupportClick()
+                R.id.navRequests       -> onRequestsClick()
+                R.id.navBecomeACarrier -> onBecomeACarrierClick()
+                R.id.navHeaderShare    -> onShareClick()
                 else -> Timber.d("No route")
             }
             drawer.closeDrawer(GravityCompat.START)
