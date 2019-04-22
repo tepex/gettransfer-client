@@ -415,6 +415,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             }
         }
         btnMyLocation.isVisible = showBtnMyLocation
+        requestView?.setVisibilityBtnMyLocation(showBtnMyLocation)
     }
 
     override fun openMapToSetPoint() {
