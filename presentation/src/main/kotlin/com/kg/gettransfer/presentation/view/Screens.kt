@@ -26,14 +26,18 @@ import ru.terrakok.cicerone.android.support.SupportAppScreen
 object Screens {
     @JvmField val NOT_USED = -1
 
-    @JvmField val MAIN   = "main"
-    @JvmField val MAIN_MENU   = "show_menu"
-    @JvmField val OFFERS = "offers"
+    @JvmField val MAIN      = "main"
+    @JvmField val MAIN_MENU = "show_menu"
+    @JvmField val OFFERS    = "offers"
 
-    @JvmField val CARRIER_MODE = "carrier_mode"
+    @JvmField val CARRIER_MODE   = "carrier_mode"
     @JvmField val PASSENGER_MODE = "passenger_mode"
-    @JvmField val REG_CARRIER = "registration_carrier"
+
+    @JvmField val REG_CARRIER       = "registration_carrier"
     @JvmField val CLOSE_AFTER_LOGIN = "close_after_login"
+
+    @JvmField val MAIN_WITH_MAP    = "main_with_map"
+    @JvmField val MAIN_WITHOUT_MAP = "main_without_map"
 
     @JvmField val CARRIER_TRIPS_TYPE_VIEW_CALENDAR = "carrier_trips_type_calendar"
     @JvmField val CARRIER_TRIPS_TYPE_VIEW_LIST     = "carrier_trips_type_list"
@@ -42,9 +46,10 @@ object Screens {
     @JvmField val RATE_TRANSFER = "rate_transfer"
     const val RETURN_MAIN       = "return"
 
-    private const val EMAIL_DATA = "mailto:"
+    private const val EMAIL_DATA  = "mailto:"
     private const val DIAL_SCHEME = "tel"
-    private const val NEW_LINE = "\n"
+
+    private const val NEW_LINE   = "\n"
     private const val UNDERSCORE = "_"
 
     private var canSendEmail: Boolean? = null

@@ -78,6 +78,10 @@ class SystemRepositoryImpl(
         get() = preferencesCache.lastMode
         set(value) { preferencesCache.lastMode = value }
 
+    override var lastMainScreenMode: String
+        get() = preferencesCache.lastMainScreenMode
+        set(value) { preferencesCache.lastMainScreenMode = value }
+
     override var lastCarrierTripsTypeView: String
         get() = preferencesCache.lastCarrierTripsTypeView
         set(value) { preferencesCache.lastCarrierTripsTypeView = value }

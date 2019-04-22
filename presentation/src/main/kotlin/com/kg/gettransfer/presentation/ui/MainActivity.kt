@@ -154,8 +154,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         initSearchForm()
         initNavigation()
 
-
-        switchMain(withMap = false, firstAttach = true)
+        switchMain(withMap = systemInteractor.lastMainScreenMode == Screens.MAIN_WITH_MAP, firstAttach = true)
         switch_mode.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
         switcher_map.switch_mode_.setOnCheckedChangeListener { _, isChecked -> screenModeChanged(isChecked) }
 
@@ -214,8 +213,14 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private fun switchMain(withMap: Boolean, firstAttach: Boolean = false) {
         with(supportFragmentManager.beginTransaction()) {
             if (!firstAttach)setAnimation(withMap, this)
-            if (!withMap) add(R.id.fragmentContainer, MainRequestFragment())
-            else supportFragmentManager.fragments.firstOrNull()?.let { requestView = null;remove(it) }
+            if (!withMap) {
+                systemInteractor.lastMainScreenMode = Screens.MAIN_WITHOUT_MAP
+                add(R.id.fragmentContainer, MainRequestFragment())
+            }
+            else {
+                systemInteractor.lastMainScreenMode = Screens.MAIN_WITH_MAP
+            }
+                supportFragmentManager.fragments.firstOrNull()?.let { requestView = null;remove(it) }
         }?.commit()
     }
 

@@ -23,6 +23,7 @@ class PreferencesImpl(context: Context,
         @JvmField val INVALID_PASSWORD    = ""
         @JvmField val USER_PASSWORD       = "user_password"
         @JvmField val LAST_MODE           = "last_mode"
+        @JvmField val LAST_MAIN_MODE      = "last_main_mode"
         @JvmField val CARRIER_TYPE_VIEW   = "last_carrier_trips_type_view"
         @JvmField val FIRST_DAY_OF_WEEK   = "first_day_of_week"
         @JvmField val FIRST_LAUNCH        = "first_launch"
@@ -104,6 +105,15 @@ class PreferencesImpl(context: Context,
         set(value) {
             with(configsPrefs.edit()) {
                 putString(LAST_MODE, value)
+                apply()
+            }
+        }
+
+    override var lastMainScreenMode: String
+        get() = configsPrefs.getString(LAST_MAIN_MODE, "")!!
+        set(value) {
+            with(configsPrefs.edit()) {
+                putString(LAST_MAIN_MODE, value)
                 apply()
             }
         }

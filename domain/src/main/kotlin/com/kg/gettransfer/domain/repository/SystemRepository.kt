@@ -21,6 +21,7 @@ interface SystemRepository {
     val mobileConfig: MobileConfig
 
     var lastMode: String
+    var lastMainScreenMode: String
     var lastCarrierTripsTypeView: String
     var firstDayOfWeek: Int
     var isFirstLaunch: Boolean

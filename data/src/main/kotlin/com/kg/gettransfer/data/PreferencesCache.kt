@@ -8,6 +8,7 @@ interface PreferencesCache {
     var userEmail: String
     var userPassword: String
     var lastMode: String
+    var lastMainScreenMode: String
     var lastCarrierTripsTypeView: String
     var firstDayOfWeek: Int
     var isFirstLaunch: Boolean
