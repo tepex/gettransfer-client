@@ -3,11 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:padding="8dp"
     tools:context=".presentation.ui.PaymentSuccessfulActivity"
-    tools:layout_editor_absoluteY="25dp">
-
+    android:background="@drawable/payment_top_rounded"
+    app:behavior_hideable="true"
+    app:behavior_skipCollapsed="true"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <TextView
         android:id="@+id/tvDetails"
@@ -30,7 +32,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/tvDetails"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvDetails"
-        app:srcCompat="@drawable/ic_close_x" />
+        app:srcCompat="@drawable/ic_close_x"
+        android:background="?android:attr/selectableItemBackground"/>
 
     <TextView
         android:id="@+id/tvPaidSuccessfully"
@@ -169,12 +172,10 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:lines="2"
         android:maxLines="2"
         android:text="@string/LNG_CUSTOMER_SUPPORT"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btnSupport"
         app:layout_constraintStart_toStartOf="@+id/btnSupport"
         app:layout_constraintTop_toBottomOf="@+id/btnSupport" />
