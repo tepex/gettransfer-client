@@ -161,7 +161,8 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
         isFirst = savedInstanceState == null
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.exitTransition = Fade().apply { duration = FADE_DURATION }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            window.exitTransition = Fade().apply { duration = FADE_DURATION }
         getIntents()
     }
 
@@ -172,7 +173,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 val rate = getIntExtra(SplashActivity.EXTRA_RATE, 0)
                 presenter.rateTransfer(transferId, rate)
             }
-            drawer.openDrawer(Gravity.START, true)
             if (getBooleanExtra(Screens.MAIN_MENU, false))
                 Handler().postDelayed( { drawer.openDrawer(Gravity.START, true) }, 500)
         }

@@ -123,6 +123,7 @@ class MainRequestFragment :
                 return_time_view.hint_title.text = it
                 setReturnTimeIcon(true)
             }
+            setReturnTimeIcon(returnOrderedTime != null)
             enableBtnNext()
         }
 
@@ -146,7 +147,6 @@ class MainRequestFragment :
     private fun enableBtnNext() {
         btnNextFragment.isEnabled = request_search_panel.searchFrom.text.isNotEmpty() &&
                 (request_search_panel.searchTo.text.isNotEmpty() || switcher_hourly.switch_mode_.isChecked)
-                && dateDelegate.startOrderedTime != null
     }
 
     private fun setReturnTimeIcon(hasDate: Boolean = true) {
