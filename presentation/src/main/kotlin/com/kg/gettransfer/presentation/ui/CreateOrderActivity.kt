@@ -544,7 +544,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input.field_input)  }
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
         email_field.setOnClickListener                      { fieldTouched(email_field.field_input) }
-        phone_field.field_input.setOnFocusChangeListener { v, hasFocus ->
+        phone_field.field_input.setOnFocusChangeListener    { v, hasFocus ->
             if (hasFocus) setPhoneCode()
             else {
                 val phone = phone_field.field_input.text?.trim()
@@ -588,16 +588,18 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     private fun setPhoneCode() {
         val phone = phone_field.field_input.text?.trim()
         phone?.let {
-            if (phone.isEmpty())
+            if (phone.isEmpty()) {
                 phone_field.field_input.setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+            }
         }
+        fieldTouched(phone_field.field_input)
     }
 
     private fun fieldTouched(viewForFocus: EditText) {
         if (!isKeyBoardOpened) showKeyboard()
         viewForFocus.apply {
             requestFocus()
-            setSelection(text.length)
+            post { setSelection(text.length) }
         }
     }
 

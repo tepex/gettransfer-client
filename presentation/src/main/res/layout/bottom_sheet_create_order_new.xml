@@ -174,7 +174,7 @@
 
                     app:isFocusable="false"
                     app:icon_img="@drawable/ic_passenger_small"
-                    app:hint="@string/LNG_RIDE_PASSENGERS"/>
+                    app:hint="@string/LNG_RIDE_ADULTS"/>
 
                 <include
                     android:id="@+id/passengers_count"
