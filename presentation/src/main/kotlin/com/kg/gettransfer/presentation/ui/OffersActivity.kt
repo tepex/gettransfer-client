@@ -334,7 +334,7 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun setNetworkAvailability(context: Context): Boolean{
         val available = super.setNetworkAvailability(context)
-        presenter.checkNewOffers()
+        if (available) presenter.checkNewOffers()
         offer_bottom_bs.btn_book.isEnabled = !textNetworkNotAvailable.isVisible
         if (available) presenter.updateBanners()
         else {
