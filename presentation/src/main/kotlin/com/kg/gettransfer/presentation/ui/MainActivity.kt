@@ -453,6 +453,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
 
     override fun blockSelectedField(block: Boolean, field: String) {
         if (block) {
+            requestView?.blockSelectedField(field)
             when (field) {
                 MainPresenter.FIELD_FROM -> searchFrom.text = getString(R.string.LNG_LOADING)
                 MainPresenter.FIELD_TO -> searchTo.text = getString(R.string.LNG_LOADING)

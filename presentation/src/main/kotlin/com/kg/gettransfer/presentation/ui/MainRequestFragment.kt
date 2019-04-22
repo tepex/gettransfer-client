@@ -208,4 +208,13 @@ class MainRequestFragment :
     override fun onNetworkWarning(disconnected: Boolean) {
         tv_internet_warning.isVisible = disconnected
     }
+
+    override fun blockSelectedField(field: String) {
+        with(request_search_panel) {
+            when (field) {
+                MainPresenter.FIELD_FROM -> searchFrom.text = getString(R.string.LNG_LOADING)
+                MainPresenter.FIELD_TO -> searchTo.text = getString(R.string.LNG_LOADING)
+            }
+        }
+    }
 }

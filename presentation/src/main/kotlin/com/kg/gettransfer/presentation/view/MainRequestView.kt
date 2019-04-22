@@ -6,4 +6,5 @@ interface MainRequestView {
     fun showBadge(show: Boolean)
     fun setNumberPickerValue(duration: String)
     fun onNetworkWarning(disconnected: Boolean)
+    fun blockSelectedField(field: String)
 }
