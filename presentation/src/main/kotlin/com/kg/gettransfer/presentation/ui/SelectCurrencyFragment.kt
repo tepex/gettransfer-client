@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -38,9 +39,12 @@ class SelectCurrencyFragment : MvpAppCompatFragment(), SelectCurrencyView {
         rvAllCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvPopularCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        val ctx = context
-        if(ctx is CreateOrderActivity) {
-            ctx.expandBottomSheet()
+        val parent = view.parent
+        if(parent is ViewGroup){
+            try {
+                val bottomSheet = BottomSheetBehavior.from(parent)
+                bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+            } catch (e: Exception){ }
         }
     }
 
