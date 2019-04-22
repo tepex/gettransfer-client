@@ -39,9 +39,7 @@ class ChildSeatsFragment: MvpAppCompatFragment(), ChildSeatsView, KoinComponent{
     }
 
     private fun initCounters() {
-        view_infant_seat.view_counter_btns.person_count.text      = "0"
-        view_convertible_seat.view_counter_btns.person_count.text = "0"
-        view_booster_seat.view_counter_btns.person_count.text     = "0"
+        delegate.initSeats(this)
     }
 
     private fun initClickListeners() {
