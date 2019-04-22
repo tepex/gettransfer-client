@@ -22,6 +22,12 @@ class PassengersDelegate {
             field = value
         }
 
+    fun initSeats(seatsCounterView: ChildSeatsView){
+        seatsCounterView.updateView(infantSeats, INFANT)
+        seatsCounterView.updateView(convertibleSeats, CONVERTIBLE)
+        seatsCounterView.updateView(boosterSeats, BOOSTER)
+    }
+
     fun increase(seatType: Int, seatsCounterView: ChildSeatsView) {
         val current = when (seatType) {
             INFANT ->      ++infantSeats
