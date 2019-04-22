@@ -27,6 +27,7 @@ object Screens {
     @JvmField val NOT_USED = -1
 
     @JvmField val MAIN   = "main"
+    @JvmField val MAIN_MENU   = "show_menu"
     @JvmField val OFFERS = "offers"
 
     @JvmField val CARRIER_MODE = "carrier_mode"
@@ -48,8 +49,9 @@ object Screens {
 
     private var canSendEmail: Boolean? = null
 
-    object Main : SupportAppScreen() {
+    data class Main(val showDrawer: Boolean = false) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
+                .apply { putExtra(MAIN_MENU, showDrawer) }
     }
 
     data class Splash(val transferId: Long?, val rate: Int?, val showRate: Boolean) : SupportAppScreen() {

@@ -71,7 +71,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private fun routeToScreen() {
         if (isViewRoot) {
             isViewRoot = false
-            router.newChain(Screens.Main, Screens.Requests, Screens.Details(transferId))
+            router.newChain(Screens.Main(), Screens.Requests, Screens.Details(transferId))
         }
         else router.exit()
     }
@@ -156,7 +156,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     override fun onBackCommandClick() {
         if (isViewRoot)
-            router.navigateTo(Screens.Main).also { isViewRoot = false }
+            router.navigateTo(Screens.Main()).also { isViewRoot = false }
         else super.onBackCommandClick()
     }
 

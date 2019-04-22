@@ -7,6 +7,7 @@ import android.graphics.Color
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
@@ -51,6 +52,7 @@ import com.kg.gettransfer.presentation.view.MainRequestView
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.MainView.Companion.MAP_SCREEN
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
+import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.a_b_orange_view.*
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -160,11 +162,19 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         isFirst = savedInstanceState == null
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.exitTransition = Fade().apply { duration = FADE_DURATION }
+        getIntents()
+    }
 
-        if (intent.getBooleanExtra(SplashActivity.EXTRA_SHOW_RATE, false)) {
-            val transferId = intent.getLongExtra(SplashActivity.EXTRA_TRANSFER_ID, 0)
-            val rate = intent.getIntExtra(SplashActivity.EXTRA_RATE, 0)
-            presenter.rateTransfer(transferId, rate)
+    private fun getIntents() {
+        with(intent) {
+            if (getBooleanExtra(SplashActivity.EXTRA_SHOW_RATE, false)) {
+                val transferId =getLongExtra(SplashActivity.EXTRA_TRANSFER_ID, 0)
+                val rate = getIntExtra(SplashActivity.EXTRA_RATE, 0)
+                presenter.rateTransfer(transferId, rate)
+            }
+            drawer.openDrawer(Gravity.START, true)
+            if (getBooleanExtra(Screens.MAIN_MENU, false))
+                Handler().postDelayed( { drawer.openDrawer(Gravity.START, true) }, 500)
         }
     }
 
