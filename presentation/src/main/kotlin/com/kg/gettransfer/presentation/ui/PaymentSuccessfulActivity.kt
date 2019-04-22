@@ -1,7 +1,8 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import android.support.annotation.NonNull
+import android.support.design.widget.BottomSheetBehavior
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -16,6 +17,8 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
+import kotlinx.android.synthetic.main.activity_payment_successful.*
+import kotlinx.android.synthetic.main.dialog_payment_successful.*
 
 import kotlinx.android.synthetic.main.dialog_payment_successful.view.*
 
@@ -24,8 +27,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     @InjectPresenter
     internal lateinit var presenter: PaymentSuccessfulPresenter
 
-    private lateinit var dialogView: View
-    private lateinit var dialog: AlertDialog
+    private lateinit var bsPayment: BottomSheetBehavior<View>
 
     override fun getPresenter(): PaymentSuccessfulPresenter = presenter
 
@@ -38,30 +40,37 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     }
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
-        dialogView = layoutInflater.inflate(R.layout.dialog_payment_successful, null)
-        dialog = AlertDialog.Builder(this).apply { setView(dialogView) }.show()
-        dialog.setCanceledOnTouchOutside(false)
+        bsPayment = BottomSheetBehavior.from(sheetSuccessPayment)
+        bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
+        bsPayment.setBottomSheetCallback(bsCallback)
 
-        _mapView = dialogView.mapViewRoute
+        sheetSuccessPayment.layoutParams.height = getScreenSide(true)
+
+        _mapView = mapViewRoute
         initMapView(savedInstanceState)
         presenter.setMapRoute()
 
-        with(dialogView) {
-            tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" ${presenter.transferId}")
-            tvDetails.setOnClickListener { presenter.onDetailsClick() }
+        tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" ${presenter.transferId}")
+        tvDetails.setOnClickListener { presenter.onDetailsClick() }
 
-            if (presenter.offerId == 0L) {
-                tvBookNowSuccess.isVisible = true
-                tvSupport.text = getString(R.string.LNG_OFFERS_SUPPORT)
-            }
-            ivClose.setOnClickListener { finish() }
-            btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
+        if (presenter.offerId == 0L) {
+            tvBookNowSuccess.isVisible = true
+            tvSupport.text = getString(R.string.LNG_OFFERS_SUPPORT)
         }
+        ivClose.setOnClickListener { finish() }
+        btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        dialog.dismiss()
+    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onSlide(p0: View, p1: Float) {
+
+        }
+
+        override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
     }
 
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
@@ -74,7 +83,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
     override fun setRemainTime(days: Int, hours: Int, minutes: Int) {
         val time = "$days${getString(R.string.LNG_D)}:$hours${getString(R.string.LNG_H)}:$minutes${getString(R.string.LNG_M)}"
-        dialogView.tvRemainTime.text = time
+        tvRemainTime.text = time
     }
 
     companion object {
@@ -87,10 +96,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     }
 
     override fun initCallButton() {
-        dialogView.apply {
-            btnCall.isVisible = true
-            tvCall.isVisible = true
-            btnCall.setOnClickListener { presenter.onCallClick() }
-        }
+        btnCall.isVisible = true
+        tvCall.isVisible = true
+        btnCall.setOnClickListener { presenter.onCallClick() }
     }
 }

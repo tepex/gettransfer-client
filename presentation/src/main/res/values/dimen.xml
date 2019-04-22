@@ -967,5 +967,6 @@
 	<dimen name="payment_offer_tiny_rating_margin_bottom">5dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_top">3dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_start">8dp</dimen>
+	<dimen name="payment_dialog_corner_radius">16dp</dimen>
 
 </resources>
