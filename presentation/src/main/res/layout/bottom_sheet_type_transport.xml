@@ -123,10 +123,11 @@
     <TextView
         android:id="@+id/tvCars"
         android:layout_width="match_parent"
-        android:layout_height="278dp"
-        android:layout_marginTop="32dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintVertical_bias="0.2"
         app:layout_constraintStart_toStartOf="@+id/imageView5"
         app:layout_constraintTop_toBottomOf="@+id/imageView5"
+        app:layout_constraintBottom_toTopOf="@+id/btnOk"
         android:textSize="@dimen/car_type_description"
         app:autoSizeMinTextSize="@dimen/car_type_description_min"
         app:autoSizeMaxTextSize="@dimen/car_type_description"
