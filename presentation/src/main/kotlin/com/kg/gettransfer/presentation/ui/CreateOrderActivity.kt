@@ -409,8 +409,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     override fun showEmptyFieldError(@StringRes stringId: Int) {
         Utils.getAlertDialogBuilder(this).apply {
-            setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
-            setMessage(getString(stringId))
+            setTitle(getString(stringId))
             setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
             show()
         }
