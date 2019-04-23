@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.delegate.ChildSeatsView
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
@@ -20,7 +19,7 @@ import kotlinx.android.synthetic.main.view_count_controller.view.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class ChildSeatsFragment: MvpAppCompatFragment(), ChildSeatsView, KoinComponent{
+class ChildSeatsFragment: BaseBottomSheetFragment(), ChildSeatsView, KoinComponent{
     private val delegate: PassengersDelegate by inject()
     override val minusEnabled = R.drawable.ic_minus
     override val minusDisabled = R.drawable.ic_minus_disabled
@@ -33,13 +32,7 @@ class ChildSeatsFragment: MvpAppCompatFragment(), ChildSeatsView, KoinComponent{
         initClickListeners()
         initCounters()
 
-        val parent = view.parent
-        if(parent is ViewGroup){
-            try {
-                val bottomSheet = BottomSheetBehavior.from(parent)
-                bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-            } catch (e: Exception){ }
-        }
+        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
     }
 
     private fun initCounters() {

@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
@@ -20,7 +19,7 @@ import com.kg.gettransfer.presentation.presenter.SelectCurrencyFragmentPresenter
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
 import kotlinx.android.synthetic.main.fragment_select_currency.*
 
-class SelectCurrencyFragment : MvpAppCompatFragment(), SelectCurrencyView {
+class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
     @InjectPresenter
     internal lateinit var presenter: SelectCurrencyFragmentPresenter
@@ -39,13 +38,7 @@ class SelectCurrencyFragment : MvpAppCompatFragment(), SelectCurrencyView {
         rvAllCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvPopularCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        val parent = view.parent
-        if(parent is ViewGroup){
-            try {
-                val bottomSheet = BottomSheetBehavior.from(parent)
-                bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-            } catch (e: Exception){ }
-        }
+        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
     }
 
     override fun setCurrencies(all: List<CurrencyModel>, popular: List<CurrencyModel>, selected: CurrencyModel) {
