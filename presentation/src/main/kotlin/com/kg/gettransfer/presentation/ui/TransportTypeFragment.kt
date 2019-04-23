@@ -2,19 +2,14 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
-
-import android.support.v4.app.Fragment
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
-import java.lang.Exception
 
-class TransportTypeFragment: Fragment() {
+class TransportTypeFragment: BaseBottomSheetFragment() {
 
     var transportTypeModel: TransportTypeModel? = null
 
@@ -24,17 +19,10 @@ class TransportTypeFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val parent = view.parent
-        if(parent is ViewGroup){
-            try {
-                val bottomSheet = BottomSheetBehavior.from(parent)
-                bottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
 
-                btnOk.setOnClickListener {
-                    bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN
-                }
-
-            } catch (e: Exception){ }
+        btnOk.setOnClickListener {
+            setBottomSheetState(view, BottomSheetBehavior.STATE_HIDDEN)
         }
 
         transportTypeModel?.let {
