@@ -24,7 +24,7 @@ import com.kg.gettransfer.presentation.view.CarrierTripsCalendarFragmentView
 import kotlinx.android.synthetic.main.activity_carrier_trips_calendar_fragment.*
 import timber.log.Timber
 
-class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalendarFragmentView{
+class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalendarFragmentView {
     @InjectPresenter
     internal lateinit var presenter: CarrierTripsCalendarFragmentPresenter
 
@@ -34,7 +34,7 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
     fun createCarrierTripsCalendarPresenter() = CarrierTripsCalendarFragmentPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflater.inflate(R.layout.activity_carrier_trips_calendar_fragment, container, false)
+        inflater.inflate(R.layout.activity_carrier_trips_calendar_fragment, container, false)
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,12 +45,12 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
         rvCarrierTrips.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
-    override fun setCalendarIndicators(calendarItems: Map<String, List<CarrierTripBaseModel>>){
+    override fun setCalendarIndicators(calendarItems: Map<String, List<CarrierTripBaseModel>>) {
         setDataInCalendarFragments(calendarItems)
         setPageChangeListener(calendarItems)
     }
 
-    private fun setPageChangeListener(calendarItems: Map<String, List<CarrierTripBaseModel>>? = null){
+    private fun setPageChangeListener(calendarItems: Map<String, List<CarrierTripBaseModel>>? = null) {
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
             override fun onPageSelected(position: Int) {
@@ -67,17 +67,28 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
         })
     }
 
-    private fun setDataInCalendarFragments(calendarItems: Map<String, List<CarrierTripBaseModel>>? = null){
+    private fun setDataInCalendarFragments(calendarItems: Map<String, List<CarrierTripBaseModel>>? = null) {
         for (i in 0 until CarrierTripsCalendarMonthPagerAdapter.MONTHS_COUNT) {
-            val fragment = (viewPager.adapter as CarrierTripsCalendarMonthPagerAdapter).instantiateItem(viewPager, i) as CarrierTripsCalendarMonthFragment
-            fragment.setUpCalendarAdapter(calendarItems, presenter.selectedDate, currentIndex - 1) { date -> presenter.onDateClick(date)}
+            val fragment = (viewPager.adapter as CarrierTripsCalendarMonthPagerAdapter).instantiateItem(
+                viewPager,
+                i
+            ) as CarrierTripsCalendarMonthFragment
+            fragment.setUpCalendarAdapter(
+                activity!!,
+                calendarItems,
+                presenter.selectedDate,
+                currentIndex - 1
+            ) { date -> presenter.onDateClick(date) }
         }
         viewPager.setCurrentItem(1, false)
     }
 
-    private fun selectDate(selectedDate: String){
+    private fun selectDate(selectedDate: String) {
         for (i in 0 until CarrierTripsCalendarMonthPagerAdapter.MONTHS_COUNT) {
-            val fragment = (viewPager.adapter as CarrierTripsCalendarMonthPagerAdapter).instantiateItem(viewPager, i) as CarrierTripsCalendarMonthFragment
+            val fragment = (viewPager.adapter as CarrierTripsCalendarMonthPagerAdapter).instantiateItem(
+                viewPager,
+                i
+            ) as CarrierTripsCalendarMonthFragment
             fragment.selectDate(selectedDate)
         }
     }
@@ -89,16 +100,16 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) =
-            (activity as BaseView).blockInterface(block, useSpinner)
+        (activity as BaseView).blockInterface(block, useSpinner)
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) =
-            (activity as BaseView).setError(finish, errId, *args)
+        (activity as BaseView).setError(finish, errId, *args)
 
     override fun setError(e: ApiException) {
-        Timber.e("code: ${e.code}", e)
+        Timber.e("code: ${e.code}")
         Utils.showError(context!!, false, getString(R.string.err_server, e.message))
     }
 
     override fun setError(e: DatabaseException) =
-            (activity as BaseView).setError(e)
+        (activity as BaseView).setError(e)
 }
