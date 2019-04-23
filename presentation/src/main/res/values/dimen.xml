@@ -801,7 +801,7 @@
 
 
 	<!--drawable values-->
-	<dimen name="panels_corner_radius">5dp</dimen>
+	<dimen name="panels_corner_radius">16dp</dimen>
 	<dimen name="hourly_icon_borders">2dp</dimen>
 
 	<!-- empty offers-->
