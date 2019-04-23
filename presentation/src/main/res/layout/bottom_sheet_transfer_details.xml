@@ -71,6 +71,8 @@
             android:id="@+id/yourComment"
             layout="@layout/view_your_comment"
             android:visibility="gone"
+
+            tools:visibility="visible"
             />
 
         <ProgressBar

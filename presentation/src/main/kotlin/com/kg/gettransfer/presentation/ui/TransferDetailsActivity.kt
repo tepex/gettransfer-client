@@ -539,6 +539,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 			yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
 		yourComment.tvComment.text = comment
 		yourComment.show(isShow)
+
 	}
 
     override fun showCommentEditor(comment: String) {
