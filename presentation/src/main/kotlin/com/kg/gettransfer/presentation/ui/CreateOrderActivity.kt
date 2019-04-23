@@ -20,7 +20,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.text.InputFilter
 import android.text.InputType //don't delete
 import android.text.TextUtils //don't delete
-import android.util.Log
 
 import android.view.*
 import android.view.animation.AnimationUtils
