@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.support.v4.app.Fragment
 import com.kg.gettransfer.R
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ import java.time.DayOfWeek
 import java.util.Calendar
 import java.util.Date
 
-class CarrierTripsCalendarMonthFragment: Fragment() {
+class CarrierTripsCalendarMonthFragment : Fragment() {
 
     companion object {
         const val EXTRA_MONTH_INDEX = "monthIndex"
@@ -46,14 +47,26 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-            inflater.inflate(R.layout.carrier_trips_calendar_month_fragment, container, false)
+        inflater.inflate(R.layout.carrier_trips_calendar_month_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUpCalendarAdapter(null, SystemUtils.formatDateWithoutTime(Calendar.getInstance().time), 0, null)
+        setUpCalendarAdapter(
+            view.context,
+            null,
+            SystemUtils.formatDateWithoutTime(Calendar.getInstance().time),
+            0,
+            null
+        )
     }
 
-    fun setUpCalendarAdapter(calendarItems: Map<String, List<CarrierTripBaseModel>>?, selectedDate: String, itemIndex: Int, listener: ClickOnDateHandler?) {
+    fun setUpCalendarAdapter(
+        context: Context,
+        calendarItems: Map<String, List<CarrierTripBaseModel>>?,
+        selectedDate: String,
+        itemIndex: Int,
+        listener: ClickOnDateHandler?
+    ) {
         cal.add(Calendar.MONTH, itemIndex)
         val dayValueInCells = ArrayList<Date>()
         val mCal = cal.clone() as Calendar
@@ -62,15 +75,19 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
         val firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) + getOffset()
         mCal.add(Calendar.DAY_OF_MONTH, -firstDayOfTheMonth)
         var i = 0
-        if(layoutDaysOfWeek != null && layoutDaysOfWeek.childCount > 0) layoutDaysOfWeek.removeAllViews()
+        if (layoutDaysOfWeek != null && layoutDaysOfWeek.childCount > 0) layoutDaysOfWeek.removeAllViews()
         while (dayValueInCells.size < MAX_CALENDAR_COLUMN) {
-            if(i < 7){
+            if (i < 7) {
                 val textViewDayOfWeek = TextView(context)
                 textViewDayOfWeek.text = SystemUtils.formatShortNameDayOfWeek(mCal.time).toUpperCase()
                 textViewDayOfWeek.gravity = Gravity.CENTER
                 TextViewCompat.setTextAppearance(textViewDayOfWeek, R.style.calendar_item_days_of_week)
                 layoutDaysOfWeek?.addView(textViewDayOfWeek)
-                textViewDayOfWeek.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                textViewDayOfWeek.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1f
+                )
                 i++
             }
             dayValueInCells.add(mCal.time)
@@ -79,27 +96,28 @@ class CarrierTripsCalendarMonthFragment: Fragment() {
 
         val monthYear = SystemUtils.formatMonthYear(cal.time)
         monthAndYear?.text = monthYear.substring(0, 1).toUpperCase().plus(monthYear.substring(1))
-        mAdapterCarrierTripsCalendar = CarrierTripsCalendarGridAdapter(context!!, dayValueInCells, selectedDate, cal, calendarItems, listener)
+        mAdapterCarrierTripsCalendar =
+            CarrierTripsCalendarGridAdapter(context!!, dayValueInCells, selectedDate, cal, calendarItems, listener)
         gridViewCalendar?.adapter = mAdapterCarrierTripsCalendar
     }
 
     private fun getOffsetToFirstDayOfWeek() =
-            when(systemInteractor.firstDayOfWeek) {
-                DayOfWeek.MONDAY.ordinal    -> -1
-                DayOfWeek.TUESDAY.ordinal   -> -2
-                DayOfWeek.WEDNESDAY.ordinal -> -3
-                DayOfWeek.THURSDAY.ordinal  -> +3
-                DayOfWeek.FRIDAY.ordinal    -> +2
-                DayOfWeek.SATURDAY.ordinal  -> +1
-                DayOfWeek.SUNDAY.ordinal    ->  0
-                else -> throw UnsupportedOperationException()
-            }
+        when (systemInteractor.firstDayOfWeek) {
+            DayOfWeek.MONDAY.ordinal -> -1
+            DayOfWeek.TUESDAY.ordinal -> -2
+            DayOfWeek.WEDNESDAY.ordinal -> -3
+            DayOfWeek.THURSDAY.ordinal -> +3
+            DayOfWeek.FRIDAY.ordinal -> +2
+            DayOfWeek.SATURDAY.ordinal -> +1
+            DayOfWeek.SUNDAY.ordinal -> 0
+            else -> throw UnsupportedOperationException()
+        }
 
     private fun getOffset() =
-            (GTDayOfWeek.getWeekDays().find { it.day == systemInteractor.firstDayOfWeek } ?:
-                    GTDayOfWeek.getWeekDays().first()).getOffset()
+        (GTDayOfWeek.getWeekDays().find { it.day == systemInteractor.firstDayOfWeek }
+            ?: GTDayOfWeek.getWeekDays().first()).getOffset()
 
-    fun selectDate(selectedDate: String){
+    fun selectDate(selectedDate: String) {
         mAdapterCarrierTripsCalendar!!.selectDate(selectedDate)
     }
 }
