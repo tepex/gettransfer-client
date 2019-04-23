@@ -12,15 +12,12 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import kotlinx.android.synthetic.main.activity_payment_successful.*
 import kotlinx.android.synthetic.main.dialog_payment_successful.*
-
-import kotlinx.android.synthetic.main.dialog_payment_successful.view.*
 
 class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView {
 
@@ -34,6 +31,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_successful)
+        setStatusBarColor(R.color.black_50)
         presenter.offerId = intent.getLongExtra(OFFER_ID, 0L)
         presenter.transferId = intent.getLongExtra(TRANSFER_ID, 0L)
         showPaymentDialog(savedInstanceState)
@@ -44,7 +42,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
         bsPayment.setBottomSheetCallback(bsCallback)
 
-        sheetSuccessPayment.layoutParams.height = getScreenSide(true)
+        sheetSuccessPayment.layoutParams.height =
+                getScreenSide(true) - Utils.dpToPxInt(this, 8f)
 
         _mapView = mapViewRoute
         initMapView(savedInstanceState)
