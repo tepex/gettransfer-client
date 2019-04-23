@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/tintBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_50" />
+
     <include
         android:id="@+id/sheetSuccessPayment"
         layout="@layout/dialog_payment_successful" />

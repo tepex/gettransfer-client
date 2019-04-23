@@ -90,6 +90,10 @@
         <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
     </style>
 
+    <style name="sf_pro_text_regular_green" parent="sf_font">
+        <item name="android:textColor">@color/color_gtr_green</item>
+    </style>
+
 
     <style name="nav_item">
         <item name="android:layout_width">match_parent</item>
