@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -60,43 +58,48 @@
             app:srcCompat="@drawable/booster_seat_disabled"/>
     </LinearLayout>
 
-    <LinearLayout
+    <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
+        android:id="@+id/view_infant_seat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
-        android:orientation="vertical"
+
+        app:counter_title="@string/LNG_SEAT_INFANT_FULL"
+        app:counter_description="@string/LNG_SEAT_INFANT_WEIGHT"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seats_linear_layout">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seats_linear_layout"/>
 
-        <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
-            android:id="@+id/view_infant_seat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+    <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
+        android:id="@+id/view_convertible_seat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
-            app:counter_title="@string/LNG_SEAT_INFANT_FULL"
-            app:counter_description="@string/LNG_SEAT_INFANT_WEIGHT"
-            />
-        <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
-            android:id="@+id/view_convertible_seat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        app:counter_title="@string/LNG_SEAT_CONVERTIBLE_FULL"
+        app:counter_description="@string/LNG_SEAT_CONVERTIBLE_WEIGHT"
 
-            app:counter_title="@string/LNG_SEAT_CONVERTIBLE_FULL"
-            app:counter_description="@string/LNG_SEAT_CONVERTIBLE_WEIGHT"/>
-        <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
-            android:id="@+id/view_booster_seat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_infant_seat"/>
 
-            app:counter_title="@string/LNG_SEAT_BOOSTER_FULL"
-            app:counter_description="@string/LNG_SEAT_BOOSTER_WEIGHT"/>
+    <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
+        android:id="@+id/view_booster_seat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
-        <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
-            android:id="@+id/view_booster_dummy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"/>
+        app:counter_description="@string/LNG_SEAT_BOOSTER_WEIGHT"
+        app:counter_title="@string/LNG_SEAT_BOOSTER_FULL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_convertible_seat" />
 
-    </LinearLayout>
+    <View
+        android:layout_width="@dimen/margin0"
+        android:layout_height="@dimen/margin0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_booster_seat"/>
 
 </android.support.constraint.ConstraintLayout>
