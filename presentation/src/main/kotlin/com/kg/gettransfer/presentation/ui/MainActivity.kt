@@ -612,7 +612,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
                 closePopUp()
                 presenter.onTransferDetailsClick(transfer.id)
             }
-            tv_close_lastTrip_rate.setOnClickListener { presenter.onReviewCanceled() }
+            ivClose.setOnClickListener { presenter.onReviewCanceled() }
             tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
             tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
             tv_vehicle_model_rate.text = vehicle
