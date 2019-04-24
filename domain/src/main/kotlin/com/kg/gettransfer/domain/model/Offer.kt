@@ -29,8 +29,7 @@ data class Offer(
 
     fun isOfferRatedByUser() =                //call after check
         ratings?.run {
-     //       vehicle == NO_RATE && driver == NO_RATE && fair == NO_RATE
-            vehicle != null && driver != null && fair != null
+            vehicle != NO_RATE && driver != NO_RATE && fair != NO_RATE
         } ?: true
 
     companion object {
