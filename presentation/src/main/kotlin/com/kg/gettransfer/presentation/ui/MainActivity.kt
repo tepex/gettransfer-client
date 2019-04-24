@@ -595,34 +595,34 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
-    override fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
-        val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
-        view?.apply {
-            mDisMissAction = {
-                _mapView = mapView
-                isGmTouchEnabled = true
-                initMapView(null)
-                view.rate_map?.onDestroy()
-                mapView.onResume()
-                presenter.updateCurrentLocation()
-                mDisMissAction = {}
-            }
+    override fun showRateForLastTrip() {
+        RatingLastTripFragment.newInstance().show(supportFragmentManager, "LastTrip")
+    }
 
-            tv_transfer_details.setOnClickListener {
-                closePopUp()
-                presenter.onTransferDetailsClick(transfer.id)
-            }
-            ivClose.setOnClickListener { presenter.onReviewCanceled() }
-            tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
-            tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
-            tv_vehicle_model_rate.text = vehicle
-            rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
-                closePopUp()
-                presenter.onRateClicked(fl)
-            }
-            carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
-            drawMapForReview(view.rate_map, routeModel, transfer.from, startPoint)
-        }
+    override fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
+//        val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
+//        view?.apply {
+//            mDisMissAction = {
+//                _mapView = mapView
+//                isGmTouchEnabled = true
+//                initMapView(null)
+//                view.rate_map?.onDestroy()
+//                mapView.onResume()
+//                presenter.updateCurrentLocation()
+//                mDisMissAction = {}
+//            }
+//
+//            ivClose.setOnClickListener { presenter.onReviewCanceled() }
+//            tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
+//            tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
+//            tv_vehicle_model_rate.text = vehicle
+//            rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
+//                closePopUp()
+//                presenter.onRateClicked(fl)
+//            }
+//            carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
+//            drawMapForReview(view.rate_map, routeModel, transfer.from, startPoint)
+//        }
     }
 
     private fun drawMapForReview(map: MapView,  routeModel: RouteModel?, from: String, startPoint: LatLng) {

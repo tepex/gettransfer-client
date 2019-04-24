@@ -50,7 +50,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
-    private val routeMapper: RouteMapper by inject()
     private val reviewRateMapper: ReviewRateMapper by inject()
 
     var screenType = REQUEST_SCREEN
@@ -383,50 +382,15 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         return latDiff < criteria && lngDiff < criteria
     }
 
-    private fun showRateForLastTrip() {     //get all completed transfers -> get last transfer -> get offer -> showRate view
-        utils.launchSuspend {
-            fetchResultOnly { transferInteractor.getAllTransfers() }
-                    .isSuccess()
-                    ?.let {
-                        getLastTransfer(it.filterRateable())
-                                ?.let { lastTransfer -> checkToShowReview(lastTransfer) }
-                    }
-        }
-    }
-
     private fun checkReview() =
             with(reviewInteractor) {
-                if (!isReviewSuggested) showRateForLastTrip()
+                if (!isReviewSuggested) viewState.showRateForLastTrip()
                 else if (shouldAskRateInMarket)
                     utils.launchSuspend {
                         delay(ONE_SEC_DELAY)
                         viewState.askRateInPlayMarket()
                     }
             }
-
-    private fun getLastTransfer(transfers: List<Transfer>) =
-            transfers.filter { it.status.checkOffers }
-                    .sortedByDescending { it.dateToLocal }
-                    .firstOrNull()
-
-    private suspend fun checkToShowReview(transfer: Transfer) =
-            fetchResultOnly { offerInteractor.getOffers(transfer.id) }
-                    .isSuccess()
-                    ?.firstOrNull()
-                    ?.let { offer ->
-                        if (!offer.isOfferRatedByUser()) {
-                            val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
-                            reviewInteractor.offerIdForReview = offer.id
-                            viewState.openReviewForLastTrip(
-                                    transferMapper.toView(transfer),
-                                    LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
-                                    offer.vehicle.name,
-                                    offer.vehicle.color ?: "",
-                                    routeModel
-                            )
-                            logTransferReviewRequested()
-                        }
-                    }
 
     fun onReviewCanceled() {
         reviewInteractor.rateCanceled()
@@ -488,19 +452,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         router.navigateTo(Screens.Share())
     }
 
-    private suspend fun createRouteModel(transfer: Transfer): RouteModel {
-        val route = orderInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.code).model
-        return routeMapper.getView(
-                route.distance,
-                route.polyLines,
-                transfer.from.name!!,
-                transfer.to!!.name!!,
-                transfer.from.point!!,
-                transfer.to!!.point!!,
-                SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
-        )
-    }
-
     private fun logAverageRate(rate: Double) =
             analytics.logEvent(
                     Analytics.REVIEW_AVERAGE,
@@ -520,12 +471,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         bundle.putString(Analytics.REVIEW_COMMENT, comment)
         analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
     }
-
-
-    private fun logTransferReviewRequested() =
-            analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
-                    createEmptyBundle(),
-                    emptyMap())
 
     private fun logAppReviewRequest() =
             analytics.logEvent(

@@ -36,6 +36,7 @@ interface MainView: BaseView {
     fun openMapToSetPoint()
     fun recreateRequestFragment()
     fun defineAddressRetrieving(block:(withGps: Boolean) -> Unit)
+    fun showRateForLastTrip()
 
     companion object {
         const val MAP_SCREEN     = 1
