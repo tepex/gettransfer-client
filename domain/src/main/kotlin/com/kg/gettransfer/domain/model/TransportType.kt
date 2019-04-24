@@ -1,5 +1,7 @@
 package com.kg.gettransfer.domain.model
 
+import java.util.Locale
+
 data class TransportType(
     val id: ID,
     val paxMax: Int,
@@ -9,12 +11,12 @@ data class TransportType(
     enum class ID {
         ECONOMY, COMFORT, PREMIUM, MINIBUS, BUS, HELICOPTER, LIMOUSINE, VIP, BUSINESS, VAN, SUV, UNKNOWN;
 
-        override fun toString() = name.toLowerCase()
+        override fun toString() = name.toLowerCase(Locale.US)
 
         companion object {
             fun parse(id: String): ID {
                 return try {
-                    enumValueOf<ID>(id.toUpperCase())
+                    enumValueOf<ID>(id.toUpperCase(Locale.US))
                 } catch(e: IllegalArgumentException) { UNKNOWN }
             }
         }
