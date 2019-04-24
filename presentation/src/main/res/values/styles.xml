@@ -209,7 +209,7 @@
         <item name="android:textSize">@dimen/sub_title_rating_text_size</item>
     </style>
 
-    <style name="tv_rate" parent="sf_font">
+    <style name="tv_rate" parent="sf_font_semi_bold">
         <item name="android:layout_marginTop">@dimen/vertical_margin_rate_dialog</item>
     </style>
 

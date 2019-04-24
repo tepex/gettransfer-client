@@ -746,7 +746,7 @@
 	<dimen name="thanks_forRate_text_size">17sp</dimen>
 	<dimen name="detailRate_title_text_size">17sp</dimen>
 	<dimen name="sub_title_rating_text_size">12sp</dimen>
-	<dimen name="transfer_number_rate_text_size">22sp</dimen>
+	<dimen name="transfer_number_rate_text_size">24sp</dimen>
 	<dimen name="rate_question_text_size">17sp</dimen>
 	<dimen name="transfer_date_text_size">17sp</dimen>
 

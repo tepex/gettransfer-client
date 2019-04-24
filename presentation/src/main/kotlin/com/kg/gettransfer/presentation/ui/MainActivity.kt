@@ -623,7 +623,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
             drawMapForReview(view.rate_map, routeModel, transfer.from, startPoint)
         }
-
     }
 
     private fun drawMapForReview(map: MapView,  routeModel: RouteModel?, from: String, startPoint: LatLng) {
