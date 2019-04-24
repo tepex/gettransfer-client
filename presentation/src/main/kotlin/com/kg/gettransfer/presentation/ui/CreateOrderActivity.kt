@@ -1,65 +1,51 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.annotation.SuppressLint
-
 import android.graphics.Color
-
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-
 import android.support.annotation.CallSuper
 import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
-
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-
 import android.support.v7.widget.LinearLayoutManager
-
 import android.text.InputFilter
-import android.text.InputType //don't delete
-import android.text.TextUtils //don't delete
-
+import android.text.InputType
 import android.view.*
 import android.view.animation.AnimationUtils
-import android.view.inputmethod.EditorInfo //don't delete
-
+import android.view.inputmethod.EditorInfo
 import android.widget.*
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
-
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.extensions.*
-
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.isGone
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.showKeyboard
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
-import com.kg.gettransfer.presentation.model.*
-
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
-
 import com.kg.gettransfer.presentation.view.CreateOrderView
-
+import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.utilities.Analytics.Companion.CAR_INFO_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
 import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
-import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
-
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
-import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.* //don't delete
+import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
 import org.koin.android.ext.android.inject
@@ -133,6 +119,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                 _tintBackground.isVisible = false
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 presenter.updateChildSeatsInfo()
+            } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                hideKeyboard()
             }
         }
 
