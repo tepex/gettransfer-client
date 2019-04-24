@@ -147,7 +147,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     private fun showCarInfoBookNow() {
-        val transportType = presenter.params.bookNowTransportId?.let { it } ?: ""
+        val transportType = presenter.params.bookNowTransportId ?: ""
         val transportTypeId = TransportType.ID.parse(transportType)
         tvModel.text = getString(TransportTypeMapper.getModelsById(transportTypeId))
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(transportTypeId))
