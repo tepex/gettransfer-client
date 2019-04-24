@@ -148,10 +148,10 @@ class OffersActivity : BaseActivity(), OffersView {
         if (offers.isNotEmpty()) {
             noOffers.isVisible = false
             fl_drivers_count_text.isVisible = false
-            cl_fixPrice.isVisible = true
+            cl_fixPrice.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
         } else {
             setAnimation()
-            fl_drivers_count_text.isVisible = true
+            fl_drivers_count_text.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
         }
     }
 
@@ -343,7 +343,7 @@ class OffersActivity : BaseActivity(), OffersView {
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, true, e.details)
     }
 
-    override fun setNetworkAvailability(context: Context): Boolean{
+    override fun setNetworkAvailability(context: Context): Boolean {
         val available = super.setNetworkAvailability(context)
         if (available) presenter.checkNewOffers()
         offer_bottom_bs.btn_book.isEnabled = !textNetworkNotAvailable.isVisible
