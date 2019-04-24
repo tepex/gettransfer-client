@@ -83,8 +83,9 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/expended_sheet_order_height">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/expended_sheet_order_height"
+        android:layout_gravity="bottom">
 
         <FrameLayout
             android:id="@+id/secondary_bottom_sheet"
@@ -92,8 +93,8 @@
             android:layout_height="match_parent"
             android:background="@drawable/back_top_rounded"
             android:clickable="true"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
+            android:elevation="@dimen/margin8"
+            android:layout_marginTop="@dimen/margin8"
             app:behavior_hideable="true"
             app:behavior_skipCollapsed="true"
             app:layout_behavior="android.support.design.widget.BottomSheetBehavior" />

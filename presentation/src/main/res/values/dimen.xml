@@ -847,7 +847,7 @@
 	<dimen name="margin24">24dp</dimen>
 	<dimen name="margin18">18dp</dimen>
 	<dimen name="margin0">0dp</dimen>
-
+	<dimen name="margin8">8dp</dimen>
 
 	<!--new settings-->
 	<dimen name="settings_field_text_size">17sp</dimen>
