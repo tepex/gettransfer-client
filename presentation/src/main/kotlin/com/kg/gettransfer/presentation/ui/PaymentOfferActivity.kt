@@ -24,6 +24,7 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.PaymentMethodNonce
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
@@ -34,6 +35,8 @@ import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
+import io.sentry.Sentry
+import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.layout_payments.*
@@ -301,5 +304,18 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
                     } ?: from
                 }
         toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
+    }
+
+    override fun setError(e: ApiException) {
+        Timber.e("code: ${e.code}", e)
+        val sentryMessage = if(e.code == ApiException.PHONE_REQUIRED_FOR_PAYMENT) getString(R.string.LNG_PHONE_REQUIRED_ERROR) else e.details
+        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(sentryMessage).build())
+        Sentry.capture(e)
+        val errorText = when {
+            e.code == ApiException.PHONE_REQUIRED_FOR_PAYMENT -> getString(R.string.LNG_PHONE_REQUIRED_ERROR)
+            e.code != ApiException.NETWORK_ERROR -> getString(R.string.LNG_ERROR) + ": " + e.message
+            else -> null
+        }
+        errorText?.let { Utils.showError(this, false, it) }
     }
 }
