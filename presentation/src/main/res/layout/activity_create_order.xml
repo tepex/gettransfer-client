@@ -91,10 +91,7 @@
             android:id="@+id/secondary_bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/back_top_rounded"
             android:clickable="true"
-            android:elevation="@dimen/margin8"
-            android:layout_marginTop="@dimen/margin8"
             app:behavior_hideable="true"
             app:behavior_skipCollapsed="true"
             app:layout_behavior="android.support.design.widget.BottomSheetBehavior" />
