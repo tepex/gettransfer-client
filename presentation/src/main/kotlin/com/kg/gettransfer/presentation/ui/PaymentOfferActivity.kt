@@ -24,6 +24,7 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.PaymentMethodNonce
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
@@ -141,14 +142,15 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     private fun setCarInfo(offer: OfferItem?) {
         when (offer) {
             is OfferModel -> showCarInfoOffer(offer)
-            is BookNowOfferModel -> showCarInfoBookNow(offer)
+            is BookNowOfferModel -> showCarInfoBookNow()
         }
     }
 
-    private fun showCarInfoBookNow(offer: BookNowOfferModel) {
-        tvModel.text = getString(TransportTypeMapper.getModelsById(offer.transportType.id))
-        tvClass.text = offer.transportType.nameId?.let { getString(it) } ?: ""
-        Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(offer.transportType.id))
+    private fun showCarInfoBookNow() {
+        val transportType = presenter.params.bookNowTransportId?.let { it } ?: ""
+        val transportTypeId = TransportType.ID.parse(transportType)
+        tvModel.text = getString(TransportTypeMapper.getModelsById(transportTypeId))
+        Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(transportTypeId))
         OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(
                 multiLineContainer = languages_container_tiny,
