@@ -27,7 +27,6 @@ import timber.log.Timber
 
 @InjectViewState
 class OffersPresenter : BasePresenter<OffersView>() {
-    private val transportTypeMapper: TransportTypeMapper by inject()
 
     internal var transferId = 0L
         set(value) {
