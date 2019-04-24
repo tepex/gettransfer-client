@@ -10,6 +10,7 @@ import java.text.DateFormat
 import org.koin.standalone.get
 import java.util.Date
 import java.util.Calendar
+import java.util.Locale
 
 /**
  * Map a [TransferEntity] to and from a [Transfer] instance when data is moving between this later and the Domain layer.
@@ -32,7 +33,7 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             createdAt       = dateFormat.get().parse(type.createdAt),
             duration        = type.duration,
             distance        = type.distance,
-            status          = Transfer.Status.valueOf(type.status.toUpperCase()),
+            status          = Transfer.Status.valueOf(type.status.toUpperCase(Locale.US)),
             from            = cityPointMapper.fromEntity(type.from),
             to              = type.to?.let { cityPointMapper.fromEntity(it) },
             dateToLocal     = dateFormat.get().parse(type.dateToLocal),
