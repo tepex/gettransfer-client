@@ -487,6 +487,7 @@
     <string name="LNG_UPDATE">Update</string>
     <string name="LNG_YES">Yes</string>
     <string name="LNG_NO">No</string>
+    <string name="LNG_PHONE_REQUIRED_ERROR">Please enter phone number in cabinet on the site</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

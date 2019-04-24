@@ -24,5 +24,5 @@ class ErrorModel {
 
     @Expose
     @SerializedName("details")
-    lateinit var details: Any /* String | JsonObject */
+    var details: Any? = null /* String | JsonObject */
 }
