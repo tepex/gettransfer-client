@@ -248,7 +248,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             })
         }
         Handler().postDelayed({
-            popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
+            popupShowAtLocation(popupWindowComment, mainLayoutActivityTransfer, 0)
             layoutPopupView.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.show_popup))
         }, CreateOrderActivity.KEYBOARD_WAIT_DELAY)
     }

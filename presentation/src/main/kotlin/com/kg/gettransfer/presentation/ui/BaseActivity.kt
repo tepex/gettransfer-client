@@ -362,30 +362,34 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View? {
-        if(isResumed()) {
-            applyDim(window.decorView.rootView as ViewGroup, DIM_AMOUNT)
-            val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
-            val widthPx = getScreenSide(false) - 40
+        applyDim(window.decorView.rootView as ViewGroup, DIM_AMOUNT)
+        val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
+        val widthPx = getScreenSide(false) - 40
 
-            popupWindowRate = PopupWindow(layoutPopUp, widthPx, LinearLayout.LayoutParams.WRAP_CONTENT, true).apply {
-                setOnDismissListener {
-                    clearDim(window.decorView.rootView as ViewGroup)
-                    mDisMissAction()
-                }
-                softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
-                inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
-
+        popupWindowRate = PopupWindow(layoutPopUp, widthPx, LinearLayout.LayoutParams.WRAP_CONTENT, true).apply {
+            setOnDismissListener {
+                clearDim(window.decorView.rootView as ViewGroup)
+                mDisMissAction()
             }
-            popupWindowRate.showAtLocation(parent, Gravity.CENTER, 0, 100)
-            popupWindowRate.isOutsideTouchable = false
-            return layoutPopUp
+            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+            inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+
         }
 
-        return null
+        popupShowAtLocation(popupWindowRate, parent, 100)
+        popupWindowRate.isOutsideTouchable = false
+        return layoutPopUp
     }
 
-
-
+    protected fun popupShowAtLocation(popup: PopupWindow, parent: View, y: Int){
+        if(isResumed()) {
+            try {
+                popup.showAtLocation(parent, Gravity.CENTER, 0, y)
+            } catch (e: WindowManager.BadTokenException){
+                e.printStackTrace()
+            }
+        }
+    }
 
     protected var mDisMissAction = { }    // used in popup dismiss event, need later init, when view with map would be created
 
