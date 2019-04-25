@@ -20,6 +20,7 @@ import com.kg.gettransfer.presentation.view.SelectCurrencyView
 import kotlinx.android.synthetic.main.fragment_select_currency.*
 
 class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
+    override val layout = R.layout.fragment_select_currency
 
     @InjectPresenter
     internal lateinit var presenter: SelectCurrencyFragmentPresenter
@@ -28,9 +29,6 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
     fun createSelectCurrencyFragmentPresenter() = SelectCurrencyFragmentPresenter()
 
     private lateinit var mPresenter: BasePresenter<*>
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_select_currency, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

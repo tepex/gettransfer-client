@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="@dimen/margin8"
-    android:layout_marginTop="@dimen/margin8"
     android:background="@drawable/back_top_rounded">
 
     <View
@@ -98,12 +97,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_convertible_seat" />
 
-    <View
-        android:layout_width="@dimen/margin0"
-        android:layout_height="@dimen/margin16"
-
-        app:layout_constraintEnd_toEndOf="parent"
+    <Button
+        android:id="@+id/btnOkChildSeats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin24"
+        android:layout_marginEnd="@dimen/margin24"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_bg_rounded"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_booster_seat"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/LNG_OK"
+        android:textColor="@color/colorWhite" />
+
 
 </android.support.constraint.ConstraintLayout>

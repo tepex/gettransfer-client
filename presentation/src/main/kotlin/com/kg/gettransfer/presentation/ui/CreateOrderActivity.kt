@@ -427,7 +427,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     private fun transportTypeClicked(transportTypeModel: TransportTypeModel) {
         val fragment = TransportTypeFragment()
         fragment.transportTypeModel = transportTypeModel
-        replaceFragment(fragment, null)
+        replaceFragment(fragment)
         presenter.logButtons(CAR_INFO_CLICKED)
     }
 
@@ -491,7 +491,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         }
 
         View.OnClickListener {
-            replaceFragment(ChildSeatsFragment(), null)
+            replaceFragment(ChildSeatsFragment())
         }.let {
             children_seat_field.setOnClickListener(it)
             children_seat_field.field_input.setOnClickListener(it)
@@ -586,13 +586,12 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                 R.drawable.ic_plus, 0, R.drawable.ic_arrow_right, 0)
     }
 
-    open protected fun replaceFragment(fragment: Fragment, tag: String?) {
-        var transaction = supportFragmentManager
+    private fun replaceFragment(fragment: Fragment, tag: String? = null) =
+        supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.secondary_bottom_sheet,
                         fragment,
                         tag)
+                .commit()
 
-        transaction.commit()
-    }
 }

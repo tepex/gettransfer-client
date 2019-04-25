@@ -20,12 +20,11 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 class ChildSeatsFragment: BaseBottomSheetFragment(), ChildSeatsView, KoinComponent{
-    private val delegate: PassengersDelegate by inject()
+    override val layout = R.layout.bottom_sheet_child_seats
     override val minusEnabled = R.drawable.ic_minus
     override val minusDisabled = R.drawable.ic_minus_disabled
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.bottom_sheet_child_seats, container, false)
+    private val delegate: PassengersDelegate by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,6 +45,9 @@ class ChildSeatsFragment: BaseBottomSheetFragment(), ChildSeatsView, KoinCompone
         view_convertible_seat.view_counter_btns.img_plus_seat.setOnClickListener  { performPlus(CONVERTIBLE) }
         view_booster_seat.view_counter_btns.img_minus_seat.setOnClickListener     { performMinus(BOOSTER) }
         view_booster_seat.view_counter_btns.img_plus_seat.setOnClickListener      { performPlus(BOOSTER) }
+        btnOkChildSeats.setOnClickListener                                        {
+            setBottomSheetState( this@ChildSeatsFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)   //force unwrap because fragment already has view with clicked button
+        }
     }
 
     private fun performPlus(type: Int) =
