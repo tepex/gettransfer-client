@@ -413,8 +413,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         viewState.showRateInPlayMarket()
     }
 
-    fun onTransferDetailsClick(transferId: Long) = router.navigateTo(Screens.Details(transferId))
-
     private fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = value

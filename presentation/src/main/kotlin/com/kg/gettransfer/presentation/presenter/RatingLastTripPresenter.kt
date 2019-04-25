@@ -11,6 +11,7 @@ import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.RatingLastTripView
+import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import org.koin.standalone.inject
 
@@ -31,7 +32,9 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                     .isSuccess()
                     ?.let {
                         getLastTransfer(it.filterRateable())
-                                ?.let { lastTransfer -> checkToShowReview(lastTransfer) }
+                                ?.let { lastTransfer ->
+                                    transferId = lastTransfer.id
+                                    checkToShowReview(lastTransfer) }
                     }
         }
     }
@@ -78,8 +81,10 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                     createEmptyBundle(),
                     emptyMap())
 
-    fun onTransferDetailsClick() {
+    private var transferId: Long = 0L
 
+    fun onTransferDetailsClick() {
+        router.navigateTo(Screens.Details(transferId))
     }
 
     fun onReviewCanceled() {
