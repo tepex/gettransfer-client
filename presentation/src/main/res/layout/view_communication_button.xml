@@ -34,7 +34,7 @@
         android:lines="2"
         android:layout_marginTop="@dimen/view_communication_button_name_margin_top"
         android:gravity="center"
-        android:textColor="@color/color_gtr_grey"
+        android:textColor="@color/colorTextBlack"
         android:fontFamily="@font/sf_pro_text_regular"
         android:text="@string/LNG_PAYMENT_CHAT"/>
 
