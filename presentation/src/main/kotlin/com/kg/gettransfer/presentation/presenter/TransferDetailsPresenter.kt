@@ -275,11 +275,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 //        viewState.thanksForRate()
     }
 
-    fun onRateInStore() {
-        systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
-        viewState.showRateInPlayMarket()
-    }
-
     fun onReviewCanceled() {
         viewState.closeRateWindow()
         reviewInteractor.rateCanceled()

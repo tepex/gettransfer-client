@@ -1,9 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdate
@@ -20,6 +17,7 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.RatingLastTripPresenter
 import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
+import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 import com.kg.gettransfer.presentation.view.RatingLastTripView
 import kotlinx.android.synthetic.main.view_last_trip_rate.*
@@ -135,9 +133,8 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
         dismiss()
     }
 
-    override fun askRateInPlayMarket() {
-
-    }
+    override fun askRateInPlayMarket() =
+        StoreDialogFragment.newInstance().show(fragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
 
     override fun thanksForRate() {
 

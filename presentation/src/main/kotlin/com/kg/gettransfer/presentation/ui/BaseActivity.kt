@@ -37,6 +37,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.*
@@ -394,6 +395,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected var mDisMissAction = { }    // used in popup dismiss event, need later init, when view with map would be created
 
     protected fun redirectToPlayMarket() {
+        systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
         val url = getString(R.string.market_link) + getString(R.string.app_package)
         startActivityForResult(
             Intent(Intent.ACTION_VIEW).apply {

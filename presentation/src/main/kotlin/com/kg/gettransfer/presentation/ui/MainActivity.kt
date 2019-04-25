@@ -47,6 +47,7 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setTrottledClickListener
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
+import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainRequestView
 import com.kg.gettransfer.presentation.view.MainView
@@ -63,14 +64,13 @@ import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_navigation.*
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
-import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_switcher.*
 import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
 
-class MainActivity : BaseGoogleMapActivity(), MainView {
+class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnStoreListener {
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
     var requestView: MainRequestView? = null
@@ -632,13 +632,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
-    override fun askRateInPlayMarket() {
-        val popUpView = showPopUpWindow(R.layout.view_rate_in_store, contentMain)
-        popUpView?.apply {
-            tv_agree_store.setOnClickListener  { presenter.onRateInStore() }
-            tv_reject_store.setOnClickListener { closePopUp() }
-        }
-    }
+    override fun askRateInPlayMarket() =
+        StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
+
+    override fun onClickGoToStore() = redirectToPlayMarket()
 
     override fun thanksForRate() {
         val popUpView = showPopUpWindow(R.layout.view_thanks_for_rate, contentMain)
@@ -646,8 +643,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             tv_thanks_close.setOnClickListener { closePopUp() }
         }
     }
-
-    override fun showRateInPlayMarket() = redirectToPlayMarket()
 
     override fun cancelReview() = closePopUp()
 

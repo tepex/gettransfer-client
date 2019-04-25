@@ -408,11 +408,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         viewState.thanksForRate()
     }
 
-    fun onRateInStore() {
-        systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
-        viewState.showRateInPlayMarket()
-    }
-
     private fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = value

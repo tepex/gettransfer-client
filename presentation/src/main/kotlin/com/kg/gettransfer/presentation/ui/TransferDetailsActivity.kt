@@ -472,7 +472,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     }
 
     override fun askRateInPlayMarket() {
-        StoreDialogFragment.newInstance().show(supportFragmentManager, STORE_DIALOG_TAG)
+        StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
     }
 
     override fun thanksForRate() {
@@ -482,8 +482,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
             Handler().postDelayed( { isVisible = false }, THANKS_DELAY)
         }
     }
-
-    override fun showRateInPlayMarket() = redirectToPlayMarket()
 
     override fun closeRateWindow() = closePopUp()
 
@@ -572,9 +570,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         presenter.ratingChangeCancelled()
     }
 
-    override fun onClickGoToStore() {
-        presenter.onRateInStore()
-    }
+    override fun onClickGoToStore() = redirectToPlayMarket()
 
     private fun clearMarker() {
         mCarMarker?.remove()
@@ -586,6 +582,5 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         const val THANKS_DELAY = 3000L
 
         const val RATE_DIALOG_TAG = "rate_dialog_tag"
-        const val STORE_DIALOG_TAG = "store_dialog_tag"
     }
 }

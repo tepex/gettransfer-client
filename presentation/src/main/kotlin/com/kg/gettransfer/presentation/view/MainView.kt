@@ -28,7 +28,6 @@ interface MainView: BaseView {
     fun cancelReview()
     fun showDetailedReview(tappedRate: Float)
     fun askRateInPlayMarket()
-    fun showRateInPlayMarket()
     fun thanksForRate()
     fun showBadge(show: Boolean)
     fun setCountEvents(count: Int)
