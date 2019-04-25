@@ -147,8 +147,10 @@ class OffersActivity : BaseActivity(), OffersView {
         rvOffers.adapter = OffersAdapter(offers.toMutableList()) { offer, showDetails -> presenter.onSelectOfferClicked(offer, showDetails) }
         if (offers.isNotEmpty()) {
             noOffers.isVisible = false
-            fl_drivers_count_text.isVisible = false
-            cl_fixPrice.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
+            if (offers.any { it is OfferModel }) {
+                fl_drivers_count_text.isVisible = false
+                cl_fixPrice.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
+            }
         } else {
             setAnimation()
             fl_drivers_count_text.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
