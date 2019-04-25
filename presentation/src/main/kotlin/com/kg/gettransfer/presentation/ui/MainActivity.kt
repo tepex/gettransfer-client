@@ -4,38 +4,48 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.FragmentTransaction
+
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+
 import android.support.v7.app.AppCompatDelegate
+
 import android.transition.Fade
+
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+
 import android.widget.TextView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
+
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setTrottledClickListener
 import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainRequestView
@@ -44,12 +54,12 @@ import com.kg.gettransfer.presentation.view.MainView.Companion.MAP_SCREEN
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.a_b_orange_view.*
+
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_view_menu_item.view.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
-import kotlinx.android.synthetic.main.view_last_trip_rate.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
 import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
@@ -57,6 +67,7 @@ import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_switcher.*
 import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 import pub.devrel.easypermissions.EasyPermissions
+
 import timber.log.Timber
 
 class MainActivity : BaseGoogleMapActivity(), MainView {
@@ -81,7 +92,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private var isFirst = true
     private var isPermissionRequested = false
     private var centerMarker: Marker? = null
-    private var isGmTouchEnabled = true
     private var nextClicked = false
 
     @ProvidePresenter
@@ -541,7 +551,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun setFieldTo() {
-        mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b_orange))
+        mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b))
         switchButtons(true)
         setAlpha(ALPHA_DISABLED)
         ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.btn_pin_enabled))
@@ -596,48 +606,9 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun showRateForLastTrip() {
-        RatingLastTripFragment.newInstance().show(supportFragmentManager, "LastTrip")
-    }
-
-    override fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
-//        val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
-//        view?.apply {
-//            mDisMissAction = {
-//                _mapView = mapView
-//                isGmTouchEnabled = true
-//                initMapView(null)
-//                view.rate_map?.onDestroy()
-//                mapView.onResume()
-//                presenter.updateCurrentLocation()
-//                mDisMissAction = {}
-//            }
-//
-//            ivClose.setOnClickListener { presenter.onReviewCanceled() }
-//            tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
-//            tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
-//            tv_vehicle_model_rate.text = vehicle
-//            rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
-//                closePopUp()
-//                presenter.onRateClicked(fl)
-//            }
-//            carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
-//            drawMapForReview(view.rate_map, routeModel, transfer.from, startPoint)
-//        }
-    }
-
-    private fun drawMapForReview(map: MapView,  routeModel: RouteModel?, from: String, startPoint: LatLng) {
-        _mapView = map
-        isGmTouchEnabled = false
-        initMapView(null)
-        if(routeModel != null){
-            setPolyline(Utils.getPolyline(routeModel), routeModel)
-        } else {
-            processGoogleMap(false) {
-                setPinForHourlyTransfer(from, "", startPoint, Utils.getCameraUpdateForPin(startPoint))
-            }
-        }
-        mapView.onPause()
-        map.onResume()
+        RatingLastTripFragment
+                .newInstance()
+                .show(supportFragmentManager, RatingLastTripFragment.TAG)
     }
 
     override fun showDetailedReview(tappedRate: Float) {

@@ -25,7 +25,6 @@ interface MainView: BaseView {
     fun onBackClick(isAddressNavigating: Boolean, isTo: Boolean)
     fun showReadMoreDialog()
     fun setTripMode(duration: Int?)
-    fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?)
     fun cancelReview()
     fun showDetailedReview(tappedRate: Float)
     fun askRateInPlayMarket()

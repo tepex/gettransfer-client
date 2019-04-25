@@ -6,6 +6,7 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
+import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
@@ -80,4 +81,36 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     fun onTransferDetailsClick() {
 
     }
+
+    fun onReviewCanceled() {
+        reviewInteractor.rateCanceled()
+        viewState.cancelReview()
+    }
+
+    fun onRateClicked(rate: Float) {
+        if (rate.toInt() == ReviewInteractor.MAX_RATE) {
+            logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
+            reviewInteractor.apply {
+                utils.launchSuspend { sendTopRate() }
+                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
+                    viewState.askRateInPlayMarket()
+                    logAppReviewRequest()
+                } else viewState.thanksForRate()
+            }
+        } else viewState.showDetailedReview(rate)
+    }
+
+    private fun logAppReviewRequest() =
+            analytics.logEvent(
+                    Analytics.EVENT_APP_REVIEW_REQUESTED,
+                    createEmptyBundle(),
+                    emptyMap()
+            )
+
+    private fun logAverageRate(rate: Double) =
+            analytics.logEvent(
+                    Analytics.REVIEW_AVERAGE,
+                    createStringBundle(Analytics.REVIEW, rate.toString()),
+                    mapOf(Analytics.REVIEW to rate)
+            )
 }

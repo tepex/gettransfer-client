@@ -397,20 +397,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         viewState.cancelReview()
     }
 
-    fun onRateClicked(rate: Float) {
-        if (rate.toInt() == ReviewInteractor.MAX_RATE) {
-            logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
-            reviewInteractor.apply {
-                utils.launchSuspend { sendTopRate() }
-                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
-                    viewState.askRateInPlayMarket()
-                    logAppReviewRequest()
-                } else viewState.thanksForRate()
-            }
-        } else viewState.showDetailedReview(rate)
-    }
-
-
     fun sendReview(list: List<ReviewRateModel>, comment: String) = utils.launchSuspend {
         val result = utils.asyncAwait {
             reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, comment)
@@ -471,13 +457,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         bundle.putString(Analytics.REVIEW_COMMENT, comment)
         analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
     }
-
-    private fun logAppReviewRequest() =
-            analytics.logEvent(
-                    Analytics.EVENT_APP_REVIEW_REQUESTED,
-                    createEmptyBundle(),
-                    emptyMap()
-            )
 
     private fun logIpapiRequest() =
             analytics.logEvent(
