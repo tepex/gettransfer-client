@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="6dp"
             android:background="@null"
-            android:drawableStart="@drawable/ic_comment"
+            android:drawableStart="@drawable/wrapped_ic_comment"
             android:drawableEnd="@drawable/ic_arrow_right"
             android:drawablePadding="8dp"
             android:ellipsize="end"
