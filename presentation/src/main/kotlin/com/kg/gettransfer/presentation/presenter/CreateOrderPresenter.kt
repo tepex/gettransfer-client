@@ -128,13 +128,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 return
             }
             else if (hourlyDuration != null) { // not need route info when hourly
-                setUIWithoutRoute()
+                setUIWithoutRoute(hourlyDuration!!)
                 return
             }
         }
 
         val from = orderInteractor.from!!.cityPoint
         val to = orderInteractor.to!!.cityPoint
+        val dateTime = orderInteractor.orderStartTime
         if (from.point == null || to.point == null) {
             Timber.w("NPE! from: $from, to: $to")
             viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
@@ -143,7 +144,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             var route: RouteInfo? = null
-            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.code) }
+            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.code, dateTime) }
                     ?.let {
                         route = it
                         duration = it.duration
@@ -169,17 +170,44 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
+    private fun getNewPrices() {
+        if (orderInteractor.hourlyDuration != null) {
+            initPrices(orderInteractor.hourlyDuration!!, false)
+        } else {
+            initPrices(dateDelegate.returnDate != null)
+        }
+    }
+
     private fun initPrices(returnWay: Boolean){
         val from = orderInteractor.from!!.cityPoint
         val to = orderInteractor.to!!.cityPoint
+        val dateTime = orderInteractor.orderStartTime
         if (from.point == null || to.point == null) {
             Timber.w("NPE! from: $from, to: $to")
             viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
             return
         }
+        var prices: Map<TransportType.ID, TransportTypePrice>? = null
         utils.launchSuspend {
-            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.code) }
-                    ?.let { setTransportTypePrices(it.prices) }
+            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.code, dateTime) }
+                    ?.let { prices = it.prices }
+            setTransportTypePrices(prices ?: emptyMap())
+        }
+    }
+
+    private fun initPrices(duration: Int, withFavorite: Boolean){
+        val from = orderInteractor.from!!.cityPoint
+        val dateTime = orderInteractor.orderStartTime
+        if (from.point == null) {
+            Timber.w("NPE! from: $from")
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set"))
+            return
+        }
+        var prices: Map<TransportType.ID, TransportTypePrice>? = null
+        utils.launchSuspend {
+            fetchData { orderInteractor.getRouteInfo(from.point!!, duration, systemInteractor.currency.code, dateTime) }
+                    ?.let { prices = it.prices }
+            setTransportTypePrices(prices ?: emptyMap(), withFavorite)
         }
     }
 
@@ -197,12 +225,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         viewState.setTransportTypes(transportTypes!!)
     }
 
-    private fun setUIWithoutRoute() {
-        transportTypeMapper.prices = null
-        if (transportTypes == null)
-            transportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
-        setFavoriteTransportTypes()
-        viewState.setTransportTypes(transportTypes!!)
+    private fun setUIWithoutRoute(duration: Int) {
+        initPrices(duration, true)
         orderInteractor.from?.let { from ->
             from.cityPoint.point?.let { p ->
                 val point = LatLng(p.latitude, p.longitude)
@@ -219,6 +243,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 it.dateTime = dateDelegate.startOrderedTime!!  //value came from DateDelegate, so start_time was set
                 viewState.setRoute(polyline!!, it, true)
             }
+            getNewPrices()
         }
     }
 
@@ -248,8 +273,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     override fun currencyChanged() {
         setCurrency(true)
-        if (orderInteractor.hourlyDuration == null)
-            initPrices(dateDelegate.returnDate != null)
+        getNewPrices()
     }
 
     private fun setCurrency(hideCurrencies: Boolean = false) {

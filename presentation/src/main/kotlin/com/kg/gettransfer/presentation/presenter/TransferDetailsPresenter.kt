@@ -132,7 +132,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             fetchResult {
                 orderInteractor.getRouteInfo(transfer.from.point!!,
                         transfer.to!!.point!!,
-                        true,
+                        false,
                         false,
                         systemInteractor.currency.code)
             }.also {

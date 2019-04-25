@@ -15,28 +15,13 @@ class RouteRemoteImpl : RouteRemote {
     private val core   = get<ApiCore>()
     private val routeInfoMapper = get<RouteInfoMapper>()
 
-    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean, returnWay: Boolean, currency: String): RouteInfoEntity {
-        /*try {
-            val response: ResponseModel<RouteInfoModel> = tryGetRouteInfo(arrayOf(from, to), withPrices, returnWay, currency)
-            return mapper.fromRemote(response.data!!)
-        } catch (e: Exception) {
-            throw core.remoteException(e)
-        }*/
-
-        val response: ResponseModel<RouteInfoModel> = core.tryTwice { core.api.getRouteInfo(arrayOf(from, to), withPrices, returnWay, currency) }
+    override suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean, currency: String, dateTime: String?): RouteInfoEntity {
+        val response: ResponseModel<RouteInfoModel> = core.tryTwice { core.api.getRouteInfo(points, null, withPrices, returnWay, currency, dateTime) }
         return routeInfoMapper.fromRemote(response.data!!)
     }
 
-    /*private suspend fun tryGetRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean, currency: String):
-        ResponseModel<RouteInfoModel> {
-        return try { core.api.getRouteInfo(points, withPrices, returnWay, currency).await() }
-        catch (e: Exception) {
-            if (e is RemoteException) throw e *//* second invocation *//*
-            val ae = core.remoteException(e)
-            if (!ae.isInvalidToken()) throw ae
-
-            try { core.updateAccessToken() } catch (e1: Exception) { throw core.remoteException(e1) }
-            return try { core.api.getRouteInfo(points, withPrices, returnWay, currency).await() } catch (e2: Exception) { throw core.remoteException(e2) }
-        }
-    }*/
+    override suspend fun getRouteInfo(points: Array<String>, hourlyDuration: Int, currency: String, dateTime: String?): RouteInfoEntity {
+        val response: ResponseModel<RouteInfoModel> = core.tryTwice { core.api.getRouteInfo(points, hourlyDuration, true, false, currency, dateTime) }
+        return routeInfoMapper.fromRemote(response.data!!)
+    }
 }
