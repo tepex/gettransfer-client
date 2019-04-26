@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui.dialogs
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.DialogFragment
@@ -17,8 +16,6 @@ abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
 	protected abstract val layout: Int
 
 	protected open val style: Int = R.style.DialogStyle
-
-	protected lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
 
 	protected var showListener: OnShowListener? = null
 
@@ -39,8 +36,8 @@ abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
 					val displayMetrics = DisplayMetrics()
 					activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
 					val height = displayMetrics.heightPixels
-					bottomSheetBehavior = BottomSheetBehavior.from(it).apply { peekHeight = height }
-					showListener?.let { show -> show.onShow() }
+					BottomSheetBehavior.from(it).apply { peekHeight = height }
+					showListener?.onShow()
 				}
 			}
 		}

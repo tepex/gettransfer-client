@@ -1,8 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.*
@@ -70,11 +68,16 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     }
 
     override fun onShow() {
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        dialog.hide()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        showListener = null
     }
 
     override fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        dialog.show()
         tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
         tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
         tv_vehicle_model_rate.text = vehicle
