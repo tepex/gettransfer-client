@@ -23,7 +23,6 @@ interface MainView: BaseView {
     fun onBackClick(isAddressNavigating: Boolean, isTo: Boolean)
     fun showReadMoreDialog()
     fun setTripMode(duration: Int?)
-    fun cancelReview()
     fun showDetailedReview(tappedRate: Float, offerId: Long)
     fun askRateInPlayMarket()
     fun thanksForRate()

@@ -46,6 +46,7 @@ import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setTrottledClickListener
 import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
@@ -64,12 +65,13 @@ import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_navigation.*
 import kotlinx.android.synthetic.main.view_switcher.*
-import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
 
-class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnStoreListener {
+class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnStoreListener,
+        RatingDetailDialogFragment.OnRatingChangeListener {
+
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
     var requestView: MainRequestView? = null
@@ -621,14 +623,14 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
 
     override fun onClickGoToStore() = redirectToPlayMarket()
 
-    override fun thanksForRate() {
-        val popUpView = showPopUpWindow(R.layout.view_thanks_for_rate, contentMain)
-        popUpView?.apply {
-            tv_thanks_close.setOnClickListener { closePopUp() }
-        }
-    }
+    override fun thanksForRate() =
+            ThanksForRateFragment
+                    .newInstance()
+                    .show(supportFragmentManager, ThanksForRateFragment.THANKS_FOR_RATE_TAG)
 
-    override fun cancelReview() = closePopUp()
+    override fun onRatingChanged(list: List<ReviewRateModel>, comment: String) {}
+
+    override fun onRatingChangeCancelled() = thanksForRate()
 
     override fun showBadge(show: Boolean) {
         tvEventsCount.isVisible = show

@@ -190,7 +190,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 
 	override fun onDismiss(dialog: DialogInterface?) {
 		super.onDismiss(dialog)
-		if (!isExitWithResult)
+		if (isExitWithResult)
 			ratingListener?.onRatingChangeCancelled()
 	}
 

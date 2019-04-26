@@ -259,52 +259,12 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             }
     }
 
-    fun sendReview(list: List<ReviewRateModel>, feedBackComment: String) = utils.launchSuspend {
-        fetchResult(WITHOUT_ERROR) {
-            reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) },
-                    feedBackComment) }
-                .also {
-                    it.error?.let { /* some error for analytics */ }
-                    logAverageRate(list.map { it.rateValue }.average())
-                    logDetailRate(list, feedBackComment)
-                    viewState.thanksForRate()
-                }
-//        logAverageRate(list.map { it.rateValue }.average())
-//        logDetailRate(list, feedBackComment)
-//        if (result.error != null) { /* some error for analytics */ }
-//        viewState.thanksForRate()
-    }
-
-    fun onReviewCanceled() {
-        viewState.closeRateWindow()
-        reviewInteractor.rateCanceled()
-    }
-
-    fun logEventGetOffer(key: String, value: String) {
-        val map = mutableMapOf<String, Any?>()
-        map[key] = value
-        analytics.logEvent(Analytics.EVENT_GET_OFFER, createStringBundle(key, value), map)
-    }
-
     private fun logAverageRate(rate: Double) =
         analytics.logEvent(
             Analytics.REVIEW_AVERAGE,
             createStringBundle(Analytics.REVIEW,rate.toString()),
             mapOf(Analytics.REVIEW to rate)
         )
-
-    private fun logDetailRate(list: List<ReviewRateModel>, comment: String) {
-        val map = mutableMapOf<String, String?>()
-        val bundle = Bundle()
-        list.forEach {
-            val key = analytics.reviewDetailKey(it.rateType.type)
-            bundle.putInt(key, it.rateValue)
-            map[key] = it.rateValue.toString()
-        }
-        map[Analytics.REVIEW_COMMENT] = comment
-        bundle.putString(Analytics.REVIEW_COMMENT, comment)
-        analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
-    }
 
     private fun logReviewRequest() =
         analytics.logEvent(

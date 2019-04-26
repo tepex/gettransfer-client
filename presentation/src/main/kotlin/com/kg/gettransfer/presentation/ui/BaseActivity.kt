@@ -362,38 +362,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         return if(statusBarResource > 0) resources.getDimensionPixelSize(statusBarResource) else 0
     }
 
-    protected fun showPopUpWindow(@LayoutRes res: Int, parent: View): View? {
-        applyDim(window.decorView.rootView as ViewGroup, DIM_AMOUNT)
-        val layoutPopUp = LayoutInflater.from(this).inflate(res, null)
-        val widthPx = getScreenSide(false) - 40
-
-        popupWindowRate = PopupWindow(layoutPopUp, widthPx, LinearLayout.LayoutParams.WRAP_CONTENT, true).apply {
-            setOnDismissListener {
-                clearDim(window.decorView.rootView as ViewGroup)
-                mDisMissAction()
-            }
-            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
-            inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
-
-        }
-
-        popupShowAtLocation(popupWindowRate, parent, 100)
-        popupWindowRate.isOutsideTouchable = false
-        return layoutPopUp
-    }
-
-    protected fun popupShowAtLocation(popup: PopupWindow, parent: View, y: Int){
-        if(isResumed()) {
-            try {
-                popup.showAtLocation(parent, Gravity.CENTER, 0, y)
-            } catch (e: WindowManager.BadTokenException){
-                e.printStackTrace()
-            }
-        }
-    }
-
-    protected var mDisMissAction = { }    // used in popup dismiss event, need later init, when view with map would be created
-
     protected fun redirectToPlayMarket() {
         systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
         val url = getString(R.string.market_link) + getString(R.string.app_package)
@@ -420,12 +388,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
         const val DIM_AMOUNT = 0.5f
         const val SCREEN_WIDTH_REQUIRING_SMALL_TEXT_SIZE = 768
-    }
-
-    private fun isResumed(): Boolean {
-        val fieldPaused = FragmentActivity::class.java.getDeclaredField("mResumed"); //NoSuchFieldException
-        fieldPaused.setAccessible(true)
-        return fieldPaused.get(this) as Boolean
     }
 
     protected fun setStatusBarColor(@ColorRes color: Int) {
