@@ -38,7 +38,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
     private var transfer: Transfer? = null
 
     internal var transferId = 0L
-    internal var offerId    = 0L
+    internal var offerId = 0L
     internal var percentage = 0
     internal var bookNowTransportId = ""
     internal var paymentType = ""
@@ -54,7 +54,8 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                     transfer?.let {
                         if (transfer!!.bookNowOffers.isNotEmpty()) {
                             if (bookNowTransportId.isNotEmpty()) {
-                                val filteredBookNow = transfer!!.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
+                                val filteredBookNow =
+                                    transfer!!.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
                                 if (filteredBookNow.isNotEmpty()) {
                                     bookNowOffer = filteredBookNow.values.first()
                                 }
@@ -108,19 +109,23 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
             else -> Analytics.TRIP_DESTINATION
         }
         val currency = systemInteractor.currency.code
-        var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
+        var price: Double = offer?.price?.amount ?: bookNowOffer?.amount ?: (-1.0).also {
+            Sentry.capture("At the time of payment server returned non-valid value")
+        }
+
         if (percentage == OfferModel.PRICE_30) price *= PRICE_30
 
         val purchase = analytics.EcommercePurchase(
-                transferId.toString(),
-                transfer?.promoCode,
-                orderInteractor.duration,
-                paymentType,
-                offerType,
-                requestType,
-                Currency.getInstance(systemInteractor.currency.code),
-                currency,
-                price)
+            transferId.toString(),
+            transfer?.promoCode,
+            orderInteractor.duration,
+            paymentType,
+            offerType,
+            requestType,
+            Currency.getInstance(systemInteractor.currency.code),
+            currency,
+            price
+        )
         purchase.sendAnalytics()
     }
 
