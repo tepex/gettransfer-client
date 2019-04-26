@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui.dialogs
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -196,6 +195,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	}
 
 	companion object {
+		const val RATE_DIALOG_TAG = "rate_dialog_tag"
 		private const val OFFER_ID = "offer id"
 		private const val VEHICLE_RATING = "vehicle rating"
 		private const val DRIVER_RATING = "driver rating"
@@ -206,11 +206,11 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 				vehicle: Float,
 				driver: Float,
 				punctuality: Float,
-				transferId: Long,
-				feedback: String
+				offerId: Long,
+				feedback: String = ""
 		) = RatingDetailDialogFragment().apply {
 			arguments = Bundle().apply {
-				putLong(OFFER_ID, transferId)
+				putLong(OFFER_ID, offerId)
 				putFloat(VEHICLE_RATING, vehicle)
 				putFloat(DRIVER_RATING, driver)
 				putFloat(PUNCTUALITY_RATING, punctuality)

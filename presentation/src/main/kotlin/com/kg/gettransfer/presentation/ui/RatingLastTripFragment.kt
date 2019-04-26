@@ -17,6 +17,7 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.RatingLastTripPresenter
 import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
+import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 import com.kg.gettransfer.presentation.view.RatingLastTripView
@@ -140,8 +141,10 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
 
     }
 
-    override fun showDetailedReview(rate: Float) {
-
+    override fun showDetailedReview(rate: Float, offerId: Long) {
+        RatingDetailDialogFragment
+                .newInstance(rate, rate, rate, offerId)
+                .show(fragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {

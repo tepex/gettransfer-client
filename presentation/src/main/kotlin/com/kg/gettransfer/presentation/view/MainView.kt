@@ -6,8 +6,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
@@ -26,7 +24,7 @@ interface MainView: BaseView {
     fun showReadMoreDialog()
     fun setTripMode(duration: Int?)
     fun cancelReview()
-    fun showDetailedReview(tappedRate: Float)
+    fun showDetailedReview(tappedRate: Float, offerId: Long)
     fun askRateInPlayMarket()
     fun thanksForRate()
     fun showBadge(show: Boolean)

@@ -64,7 +64,6 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.yandex.metrica.impl.ob.it
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 
 import java.text.SimpleDateFormat
@@ -388,12 +387,6 @@ object Utils : KoinComponent {
             })
         }
     }
-
-    fun createListOfDetailedRates(view: View) = listOf<ReviewRateModel>(
-        ReviewRateModel(ReviewRate.RateType.DRIVER, view.driver_rate.rate_bar.rating.toInt()),
-        ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, view.punctuality_rate.rate_bar.rating.toInt()),
-        ReviewRateModel(ReviewRate.RateType.VEHICLE, view.vehicle_rate.rate_bar.rating.toInt())
-    )
 
     fun setDrawables(textView: TextView,
                      @DrawableRes start: Int,

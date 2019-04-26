@@ -15,19 +15,12 @@ import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.*
 
-import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
-import com.kg.gettransfer.prefs.PreferencesImpl
-
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
-import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.model.ReviewRateModel
-import com.kg.gettransfer.presentation.model.RouteModel
-
-import com.kg.gettransfer.presentation.ui.SystemUtils
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
@@ -392,22 +385,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                     }
             }
 
-    fun onReviewCanceled() {
-        reviewInteractor.rateCanceled()
-        viewState.cancelReview()
-    }
-
-    fun sendReview(list: List<ReviewRateModel>, comment: String) = utils.launchSuspend {
-        val result = utils.asyncAwait {
-            reviewInteractor.sendRates(list.map { reviewRateMapper.fromView(it) }, comment)
-        }
-        logAverageRate(list.map { it.rateValue }.average())
-        logDetailRate(list, comment)
-        if (result.error != null) { /* some error for analytics */
-        }
-        viewState.thanksForRate()
-    }
-
     private fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = value
@@ -429,26 +406,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         Timber.d("Share action")
         logEvent(Analytics.SHARE)
         router.navigateTo(Screens.Share())
-    }
-
-    private fun logAverageRate(rate: Double) =
-            analytics.logEvent(
-                    Analytics.REVIEW_AVERAGE,
-                    createStringBundle(Analytics.REVIEW, rate.toString()),
-                    mapOf(Analytics.REVIEW to rate)
-            )
-
-    private fun logDetailRate(list: List<ReviewRateModel>, comment: String) {
-        val map = mutableMapOf<String, String?>()
-        val bundle = Bundle()
-        list.forEach {
-            val key = analytics.reviewDetailKey(it.rateType.type)
-            bundle.putInt(key, it.rateValue)
-            map[key] = it.rateValue.toString()
-        }
-        map[Analytics.REVIEW_COMMENT] = comment
-        bundle.putString(Analytics.REVIEW_COMMENT, comment)
-        analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
     }
 
     private fun logIpapiRequest() =
@@ -481,7 +438,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                                 viewState.thanksForRate()
                             }
                         } else {
-                            viewState.showDetailedReview(rate.toFloat())
+                            viewState.showDetailedReview(rate.toFloat(), offer.id)
                         }
                     }
                 }

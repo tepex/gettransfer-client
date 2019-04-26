@@ -47,6 +47,7 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setTrottledClickListener
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
+import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainRequestView
@@ -62,8 +63,6 @@ import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_navigation.*
-import kotlinx.android.synthetic.main.view_rate_dialog.view.*
-import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_switcher.*
 import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 import pub.devrel.easypermissions.EasyPermissions
@@ -611,25 +610,10 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
                 .show(supportFragmentManager, RatingLastTripFragment.TAG)
     }
 
-    override fun showDetailedReview(tappedRate: Float) {
-        val popUpView = showPopUpWindow(R.layout.view_rate_dialog, contentMain)
-        popUpView?.let {
-            popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
-            popUpView.send_feedBack.setOnClickListener {
-                closePopUp()
-                presenter.sendReview(Utils.createListOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
-            }
-            setupDetailRatings(tappedRate, popUpView)
-        }
-    }
-
-    private fun setupDetailRatings(rateForFill: Float, view: View) {
-        with(view) {
-            main_rate.rating                 = rateForFill
-            driver_rate.rate_bar.rating      = rateForFill
-            punctuality_rate.rate_bar.rating = rateForFill
-            vehicle_rate.rate_bar.rating     = rateForFill
-        }
+    override fun showDetailedReview(tappedRate: Float, offerId: Long) {
+        RatingDetailDialogFragment
+                .newInstance(tappedRate, tappedRate, tappedRate, offerId)
+                .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
     }
 
     override fun askRateInPlayMarket() =

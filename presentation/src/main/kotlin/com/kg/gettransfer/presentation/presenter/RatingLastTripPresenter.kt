@@ -21,6 +21,9 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     private val orderInteractor: OrderInteractor by inject()
     private val routeMapper: RouteMapper by inject()
 
+    private var transferId: Long = 0L
+    private var offerId: Long = 0L
+
     override fun attachView(view: RatingLastTripView) {
         super.attachView(view)
         showRateForLastTrip()
@@ -52,6 +55,7 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                         if (!offer.isOfferRatedByUser()) {
                             val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
                             reviewInteractor.offerIdForReview = offer.id
+                            offerId = offer.id
                             viewState.setupReviewForLastTrip(
                                     transferMapper.toView(transfer),
                                     LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
@@ -81,8 +85,6 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                     createEmptyBundle(),
                     emptyMap())
 
-    private var transferId: Long = 0L
-
     fun onTransferDetailsClick() {
         router.navigateTo(Screens.Details(transferId))
     }
@@ -102,7 +104,7 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                     logAppReviewRequest()
                 } else viewState.thanksForRate()
             }
-        } else viewState.showDetailedReview(rate)
+        } else viewState.showDetailedReview(rate, offerId)
     }
 
     private fun logAppReviewRequest() =
