@@ -16,5 +16,5 @@ open class RatingsMapper : Mapper<RatingsModel, Ratings> {
 
     override fun fromView(type: RatingsModel): Ratings { throw UnsupportedOperationException() }
 
-    private fun formatRating(value: Float?) = value?.toBigDecimal()?.setScale(1, RoundingMode.UP)?.toFloat()
+    private fun formatRating(value: Float?) = value?.toBigDecimal()?.setScale(1, RoundingMode.HALF_EVEN)?.toFloat()
 }
