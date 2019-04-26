@@ -2,15 +2,12 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.util.Log
 
-import android.util.Patterns
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
 
 import com.arellomobile.mvp.InjectViewState
 import com.facebook.appevents.AppEventsConstants
-import com.google.android.gms.common.util.Strings
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
@@ -43,9 +40,7 @@ import com.kg.gettransfer.presentation.mapper.UserMapper
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
-import com.kg.gettransfer.presentation.model.TripDate
 
-import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
@@ -53,9 +48,6 @@ import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-
-import java.util.Calendar
-import java.util.Date
 
 import org.koin.standalone.get
 import org.koin.standalone.inject
@@ -75,28 +67,19 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val transportTypePriceMapper: TransportTypePriceMapper by inject()
     private val userMapper = get<UserMapper>()
 
-    private var user = userMapper.toView(systemInteractor.account.user)
     private val currencies = systemInteractor.currencies.map { currencyMapper.toView(it) }
     private var duration: Int? = null
-    private var passengers = MIN_PASSENGERS
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
-    private var promoCode = ""
     private var selectedCurrency = INVALID_CURRENCY_INDEX
-
-    internal var cost: Double? = null
 
     private var isTimeSetByUser = false
     set(value) {
         field = value
         if (value) viewState.enableReturnTimeChoose()
     }
-
-    private var flightNumber: String? = null
-    private var flightNumberReturn: String? = null
-    private var comment: String? = null
 
     @CallSuper
     override fun attachView(view: CreateOrderView) {
@@ -105,7 +88,20 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val i = systemInteractor.currentCurrencyIndex
         if (i != -1) setCurrency(i)*/
         setCurrency()
-        viewState.setUser(user, systemInteractor.account.user.loggedIn)
+        val isLoggedIn = systemInteractor.account.user.loggedIn
+        if (isLoggedIn) {
+            orderInteractor.setNewUser(systemInteractor.account.user)
+        } else if (orderInteractor.isLoggedIn) {
+            orderInteractor.setNewUser(null)
+        }
+        with(orderInteractor) {
+            viewState.setUser(userMapper.toView(user), isLoggedIn)
+            viewState.setPassengers(passengers)
+            viewState.setEditableFields(offeredPrice, flightNumber, flightNumberReturn, promoCode)
+            if(promoCode.isNotEmpty()) checkPromoCode()
+            comment?.let { viewState.setComment(it) }
+        }
+        updateChildSeatsInfo()
         transportTypes?.let { viewState.setTransportTypes(it) }
         checkOrderDateTime()
     }
@@ -195,7 +191,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    private fun initPrices(duration: Int, withFavorite: Boolean){
+    private fun initPrices(duration: Int, selectTransport: Boolean){
         val from = orderInteractor.from?.cityPoint
         val dateTime = orderInteractor.orderStartTime
         if (from?.point == null) {
@@ -207,11 +203,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         utils.launchSuspend {
             fetchData { orderInteractor.getRouteInfoHourlyTransfer(from.point!!, duration, systemInteractor.currency.code, dateTime) }
                     ?.let { prices = it.prices }
-            setTransportTypePrices(prices ?: emptyMap(), withFavorite)
+            setTransportTypePrices(prices ?: emptyMap(), selectTransport)
         }
     }
 
-    private fun setTransportTypePrices(prices: Map<TransportType.ID, TransportTypePrice>, withFavorite: Boolean = false){
+    private fun setTransportTypePrices(prices: Map<TransportType.ID, TransportTypePrice>, selectTransport: Boolean = false){
         transportTypeMapper.prices = prices.mapValues { transportTypePriceMapper.toView(it.value) }
         val newTransportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
         transportTypes?.let {
@@ -221,7 +217,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             }
         }
         transportTypes = newTransportTypes
-        if (withFavorite) setFavoriteTransportTypes()
+        if (selectTransport) selectTransport()
         viewState.setTransportTypes(transportTypes!!)
     }
 
@@ -249,7 +245,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun clearReturnDate() {
         dateDelegate.returnDate = null
-        flightNumberReturn = null
+        orderInteractor.flightNumberReturn = null
         initPrices(false)
     }
 
@@ -283,9 +279,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun changePassengers(count: Int) {
-        passengers += count
-        if (passengers < MIN_PASSENGERS) passengers = MIN_PASSENGERS
-        viewState.setPassengers(passengers)
+        with(orderInteractor) {
+            passengers += count
+            if (passengers < OrderInteractor.MIN_PASSENGERS) passengers = OrderInteractor.MIN_PASSENGERS
+            viewState.setPassengers(passengers)
+        }
         logTransferSettingsEvent(Analytics.PASSENGERS_ADDED)
     }
 
@@ -295,47 +293,51 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
+    fun setOfferedPrice(price: Double?) {
+        orderInteractor.offeredPrice = price
+    }
+
     fun setName(name: String) {
-        user.profile.name = name
+        orderInteractor.user.profile.fullName = name
     }
 
     fun setEmail(email: String) {
-        user.profile.email = email
+        orderInteractor.user.profile.email = email
     }
 
     fun setPhone(phone: String) {
-        user.profile.phone = phone
+        orderInteractor.user.profile.phone = phone
     }
 
     fun setFlightNumber(flightNumber: String, returnWay: Boolean) {
         (if (flightNumber.isEmpty()) null else flightNumber).let {
-            if (returnWay) flightNumberReturn = it
-            else this.flightNumber = it }
+            if (returnWay) orderInteractor.flightNumberReturn = it
+            else orderInteractor.flightNumber = it }
         logTransferSettingsEvent(Analytics.FLIGHT_NUMBER_ADDED)
     }
 
     fun setPromo(codeText: String) {
-        promoCode = codeText
+        orderInteractor.promoCode = codeText
         if (codeText.isEmpty()) viewState.resetPromoView()
     }
 
     fun checkPromoCode() {
-        if (promoCode.isEmpty()) return
+        if (orderInteractor.promoCode.isEmpty()) return
         utils.launchSuspend {
             viewState.blockInterface(true)
-            val result = utils.asyncAwait { promoInteractor.getDiscountByPromo(promoCode) }
+            val result = utils.asyncAwait { promoInteractor.getDiscountByPromo(orderInteractor.promoCode) }
             if (result.error == null) viewState.setPromoResult(result.model.discount) else viewState.setPromoResult(null)
             viewState.blockInterface(false)
         }
     }
 
     fun setComment(comment: String) {
-        if (comment.isEmpty()) this.comment = null else this.comment = comment
+        if (comment.isEmpty()) orderInteractor.comment = null else orderInteractor.comment = comment
         viewState.setComment(comment)
     }
 
     fun setAgreeLicence(agreeLicence: Boolean) {
-        user.termsAccepted = agreeLicence
+        orderInteractor.user.termsAccepted = agreeLicence
         systemInteractor.account.user.termsAccepted = true
     }
 
@@ -349,17 +351,17 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val transferNew = TransferNew(
                 from.cityPoint,
                 if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
-                Trip(dateDelegate.startDate, flightNumber),
-                dateDelegate.returnDate?.let { Trip(it, flightNumberReturn) },
+                Trip(dateDelegate.startDate, orderInteractor.flightNumber),
+                dateDelegate.returnDate?.let { Trip(it, orderInteractor.flightNumberReturn) },
                 transportTypes!!.filter { it.checked }.map { it.id },
-                passengers + childSeatsDelegate.getTotalSeats(),
+                orderInteractor.passengers + childSeatsDelegate.getTotalSeats(),
                 childSeatsDelegate.infantSeats.isNonZero(),
                 childSeatsDelegate.convertibleSeats.isNonZero(),
                 childSeatsDelegate.boosterSeats.isNonZero(),
-                cost?.times(100)?.toInt(),
-                comment,
-                userMapper.fromView(user),
-                promoCode,
+                orderInteractor.offeredPrice?.times(100)?.toInt(),
+                orderInteractor.comment,
+                orderInteractor.user,
+                orderInteractor.promoCode,
                 false
         )
         Timber.d("new transfer: $transferNew")
@@ -395,21 +397,23 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        val errorField = when {
-            !isTimeSetByUser                                  -> FieldError.TIME_NOT_SELECTED
-            !dateDelegate.validate()                          -> FieldError.RETURN_TIME
-            !Utils.checkEmail(user.profile.email)             -> FieldError.EMAIL_FIELD
-            !Utils.checkPhone(user.profile.phone)             -> FieldError.PHONE_FIELD
-            transportTypes?.none { it.checked } == true       -> FieldError.TRANSPORT_FIELD
-            passengers == 0                                   -> FieldError.PASSENGERS_COUNT
-            !user.termsAccepted                               -> FieldError.TERMS_ACCEPTED_FIELD
-            else                                              -> FieldError.UNKNOWN
+        with(orderInteractor) {
+            val errorField = when {
+                !isTimeSetByUser                            -> FieldError.TIME_NOT_SELECTED
+                !dateDelegate.validate()                    -> FieldError.RETURN_TIME
+                !Utils.checkEmail(user.profile.email)       -> FieldError.EMAIL_FIELD
+                !Utils.checkPhone(user.profile.phone)       -> FieldError.PHONE_FIELD
+                transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
+                passengers == 0                             -> FieldError.PASSENGERS_COUNT
+                !user.termsAccepted                         -> FieldError.TERMS_ACCEPTED_FIELD
+                else                                        -> FieldError.UNKNOWN
+            }
+            if (errorField == FieldError.UNKNOWN) return true
+            logCreateTransfer(errorField.value)
+            viewState.showEmptyFieldError(errorField.stringId)
+            viewState.highLightErrorField(errorField)
+            return false
         }
-        if (errorField == FieldError.UNKNOWN) return true
-        logCreateTransfer(errorField.value)
-        viewState.showEmptyFieldError(errorField.stringId)
-        viewState.highLightErrorField(errorField)
-        return false
     }
 
     fun onTransportChosen() {
@@ -427,37 +431,59 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logButtons(Analytics.SHOW_ROUTE_CLICKED)
     }
 
+    private fun selectTransport() {
+        if(orderInteractor.selectedTransports != null) {
+            setSelectedTransportTypes()
+        } else {
+            setFavoriteTransportTypes()
+        }
+    }
+
     private fun setFavoriteTransportTypes() =
-        systemInteractor.favoriteTransports
-                ?.forEach { favorite ->
-                    transportTypes
-                            ?.find { it.id == favorite }
-                            ?.checked = true
-                }
+        systemInteractor.favoriteTransports?.let { selectTransportTypes(it) }
+
+    private fun setSelectedTransportTypes() =
+        orderInteractor.selectedTransports?.let { selectTransportTypes(it) }
+
+    private fun selectTransportTypes(selectedTransport: Set<TransportType.ID>) {
+        selectedTransport.forEach { favorite ->
+            transportTypes
+                    ?.find { it.id == favorite }
+                    ?.checked = true
+        }
+    }
 
     private fun saveChosenTransportTypes() {
-        systemInteractor.favoriteTransports = transportTypes!!.filter { it.checked }
-                .map { it.id }
-                .toSet()
+        systemInteractor.favoriteTransports = getSelectedTransportTypes()
     }
+
+    private fun saveSelectedTransportTypes() {
+        orderInteractor.selectedTransports = getSelectedTransportTypes()
+    }
+
+    private fun getSelectedTransportTypes() =
+            transportTypes!!.filter { it.checked }
+                    .map { it.id }
+                    .toSet()
 
     private fun releaseDelegates() {
         dateDelegate.resetAfterOrder()
         childSeatsDelegate.clearSeats()
+        orderInteractor.clearSelectedFields()
     }
 
     fun onBackClick() = onBackCommandClick()
 
     override fun onBackCommandClick() {
-        childSeatsDelegate.clearSeats()
+        //childSeatsDelegate.clearSeats()
+        saveSelectedTransportTypes()
         router.exit()
         logButtons(Analytics.BACK_TO_MAP)
     }
 
-    fun redirectToLogin(id: Long) = router.replaceScreen(Screens.LoginToGetOffers(id, user.profile.email))
+    fun redirectToLogin(id: Long) = router.replaceScreen(Screens.LoginToGetOffers(id, orderInteractor.user.profile.email))
 
     companion object {
-        private const val MIN_PASSENGERS = 0
         private const val MIN_CHILDREN   = 0
 
         private const val INVALID_CURRENCY_INDEX = -1
@@ -489,9 +515,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         map[Analytics.PARAM_KEY_RESULT] = value
         bundle.putString(Analytics.PARAM_KEY_RESULT, value)
 
-        if (cost != null) {
-            bundle.putString(Analytics.VALUE, cost.toString())
-            map[Analytics.VALUE] = cost.toString()
+        orderInteractor.offeredPrice?.let {
+            bundle.putString(Analytics.VALUE, it.toString())
+            map[Analytics.VALUE] = it.toString()
         }
 
         if (selectedCurrency != INVALID_CURRENCY_INDEX) {
@@ -510,8 +536,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val map = mutableMapOf<String, Any?>()
         val afMap = mutableMapOf<String, Any?>()
 
-        bundle.putInt(Analytics.NUMBER_OF_PASSENGERS, passengers)
-        map[Analytics.NUMBER_OF_PASSENGERS] = passengers
+        orderInteractor.passengers.let {
+            bundle.putInt(Analytics.NUMBER_OF_PASSENGERS, it)
+            map[Analytics.NUMBER_OF_PASSENGERS] = it
+        }
 
         bundle.putString(Analytics.ORIGIN, orderInteractor.from?.primary)
         map[Analytics.ORIGIN] = orderInteractor.from?.primary
@@ -536,9 +564,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         fbBundle.putAll(bundle)
         afMap.putAll(map)
 
-        if (cost != null) {
-            bundle.putString(Analytics.VALUE, cost.toString())
-            map[Analytics.VALUE] = cost.toString()
+        orderInteractor.offeredPrice?.let {
+            bundle.putString(Analytics.VALUE, it.toString())
+            map[Analytics.VALUE] = it.toString()
         }
 
         if (selectedCurrency != INVALID_CURRENCY_INDEX) {

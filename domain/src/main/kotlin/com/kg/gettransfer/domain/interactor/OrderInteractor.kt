@@ -4,6 +4,9 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.User
+import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
@@ -19,7 +22,38 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
     var orderStartTime: Date?  = null
     var orderReturnTime: Date? = null
 
+    var offeredPrice: Double? = null
+    var passengers: Int = MIN_PASSENGERS
+    var promoCode = ""
+    var flightNumber: String? = null
+    var flightNumberReturn: String? = null
+    var comment: String? = null
+    var selectedTransports: Set<TransportType.ID>? = null
+    var user = User(Profile(null, null, null), false)
+    var isLoggedIn = false
+
     var noPointPlaces: List<GTAddress> = emptyList()
+
+    fun clearSelectedFields() {
+        offeredPrice = null
+        passengers = MIN_PASSENGERS
+        promoCode = ""
+        flightNumber = null
+        flightNumberReturn = null
+        comment = null
+        selectedTransports = null
+        setNewUser(null)
+    }
+
+    fun setNewUser(newUser: User?) {
+        newUser?.let {
+            user = it
+            isLoggedIn = true
+            return
+        }
+        user = User(Profile(null, null, null), false)
+        isLoggedIn = false
+    }
 
     fun getCurrentAddress() = geoRepository.getCurrentAddress()
 
@@ -77,5 +111,6 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
     companion object {
         const val MIN_LAT_DIFF = 0.002
         const val MIN_LON_DIFF = 0.003
+        const val MIN_PASSENGERS = 0
     }
 }

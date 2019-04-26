@@ -284,6 +284,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }
 
+    override fun setEditableFields(offeredPrice: Double?, flightNumber: String?, flightNumberReturn: String?, promo: String) {
+        offeredPrice?.let { price_field_input.field_input.setText(it.toString()) }
+        flightNumber?.let { flight_number_field.field_input.setText(it) }
+        flightNumberReturn?.let { flight_numberReturn_field.field_input.setText(it) }
+        if (promo.isNotEmpty()) { promo_field.field_input.setText(promo) }
+    }
+
     override fun setPassengers(count: Int) {
         passengers_count.person_count.text = "$count"
         checkMinusButton(count, 0, passengers_count.img_minus_seat)
@@ -451,7 +458,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     private fun initChangeTextListeners() {
-        price_field_input.field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
+        price_field_input.field_input.onTextChanged             { presenter.setOfferedPrice(it.toDoubleOrNull()) }
         price_field_input.field_input.setOnFocusChangeListener  { _, hasFocus ->
             if (hasFocus) presenter.logTransferSettingsEvent(OFFER_PRICE_FOCUSED)
         }

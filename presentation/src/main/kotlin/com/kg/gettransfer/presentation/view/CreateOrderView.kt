@@ -22,6 +22,7 @@ interface CreateOrderView : BaseView, RouteView {
     fun setFairPrice(price: String?, time: String?)
     //fun setCurrencies(currencies: List<CurrencyModel>)
     fun setUser(user: UserModel, isLoggedIn: Boolean)
+    fun setEditableFields(offeredPrice: Double?, flightNumber: String?, flightNumberReturn: String?, promo: String)
     fun setPassengers(count: Int)
     fun setChildSeats(setOf: Set<ChildSeatItem>, total: Int)
     fun setCurrency(currency: String, hideCurrencies: Boolean)
