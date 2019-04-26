@@ -1,6 +1,8 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.*
@@ -20,7 +22,7 @@ import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 import com.kg.gettransfer.presentation.view.RatingLastTripView
 import kotlinx.android.synthetic.main.view_last_trip_rate.*
 
-class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripView, OnMapReadyCallback {
+class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripView, OnMapReadyCallback, BaseBottomSheetDialogFragment.OnShowListener {
 
     private lateinit var googleMap: GoogleMap
 
@@ -40,6 +42,7 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
 
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
+        showListener = this
         tv_transfer_details.setOnClickListener { presenter.onTransferDetailsClick() }
         ivClose.setOnClickListener { presenter.onReviewCanceled() }
         rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
@@ -66,7 +69,12 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
         gm.uiSettings.isZoomGesturesEnabled = false
     }
 
+    override fun onShow() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
     override fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
         tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
         tv_vehicle_model_rate.text = vehicle
