@@ -205,7 +205,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         var prices: Map<TransportType.ID, TransportTypePrice>? = null
         utils.launchSuspend {
-            fetchData { orderInteractor.getRouteInfo(from.point!!, duration, systemInteractor.currency.code, dateTime) }
+            fetchData { orderInteractor.getRouteInfoHourlyTransfer(from.point!!, duration, systemInteractor.currency.code, dateTime) }
                     ?.let { prices = it.prices }
             setTransportTypePrices(prices ?: emptyMap(), withFavorite)
         }

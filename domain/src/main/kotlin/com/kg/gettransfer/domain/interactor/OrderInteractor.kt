@@ -54,7 +54,7 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
         return routeInfo
     }
 
-    suspend fun getRouteInfo(from: Point, hourlyDuration: Int, currency: String, dateTime: Date? = null): Result<RouteInfo> {
+    suspend fun getRouteInfoHourlyTransfer(from: Point, hourlyDuration: Int, currency: String, dateTime: Date? = null): Result<RouteInfo> {
         val routeInfo = routeRepository.getRouteInfo(from, hourlyDuration, currency, dateTime)
         duration = routeInfo.model.duration
         return routeInfo
