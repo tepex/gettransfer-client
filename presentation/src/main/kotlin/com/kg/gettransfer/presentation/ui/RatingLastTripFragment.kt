@@ -1,14 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.os.Build
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.gms.maps.CameraUpdate
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -27,7 +22,6 @@ import kotlinx.android.synthetic.main.view_last_trip_rate.*
 
 class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripView, OnMapReadyCallback {
 
-    private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
 
     override val layout: Int = R.layout.view_last_trip_rate
@@ -56,39 +50,7 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-        mapView = map
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        mapView.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
-
-    override fun onPause() {
-        mapView.onPause()
-        super.onPause()
-    }
-
-    override fun onStop() {
-        mapView.onStop()
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        mapView.onDestroy()
-        super.onDestroy()
-    }
-
-    override fun onLowMemory() {
-        mapView.onLowMemory()
-        super.onLowMemory()
+        (fragmentManager?.findFragmentById(R.id.rate_map) as SupportMapFragment).getMapAsync(this)
     }
 
     override fun onMapReady(map: GoogleMap) {
