@@ -176,7 +176,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         searchFrom.setOnClickListener { performClick(false) }
         searchTo.setOnClickListener   { performClick(true) }
         rl_hourly.setOnClickListener  { showNumberPicker(true) }
-        btnNext.setTrottledClickListener(1000L) { performNextClick() }
+        btnNext.setTrottledClickListener { performNextClick() }
         enableBtnNext()
     }
 
