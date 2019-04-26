@@ -607,15 +607,21 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
     }
 
     override fun showRateForLastTrip() {
-        RatingLastTripFragment
-                .newInstance()
-                .show(supportFragmentManager, RatingLastTripFragment.TAG)
+        if (supportFragmentManager.fragments.firstOrNull {
+                    it.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG} == null) {
+            RatingLastTripFragment
+                    .newInstance()
+                    .show(supportFragmentManager, RatingLastTripFragment.RATING_LAST_TRIP_TAG)
+        }
     }
 
     override fun showDetailedReview(tappedRate: Float, offerId: Long) {
-        RatingDetailDialogFragment
-                .newInstance(tappedRate, tappedRate, tappedRate, offerId)
-                .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+        if (supportFragmentManager.fragments.firstOrNull {
+                    it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
+            RatingDetailDialogFragment
+                    .newInstance(tappedRate, tappedRate, tappedRate, offerId)
+                    .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+        }
     }
 
     override fun askRateInPlayMarket() =

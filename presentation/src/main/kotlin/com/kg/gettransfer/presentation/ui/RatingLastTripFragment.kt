@@ -1,6 +1,8 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdate
@@ -37,7 +39,7 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     fun providePresenter() = RatingLastTripPresenter()
 
     companion object {
-        val TAG = RatingLastTripFragment::class.simpleName
+        const val RATING_LAST_TRIP_TAG = "rating_last_trip_tag"
 
         fun newInstance() = RatingLastTripFragment()
     }
@@ -54,7 +56,7 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-        mapView = rate_map
+        mapView = map
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
     }
@@ -75,18 +77,18 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     }
 
     override fun onStop() {
-        super.onStop()
         mapView.onStop()
+        super.onStop()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         mapView.onDestroy()
+        super.onDestroy()
     }
 
     override fun onLowMemory() {
-        super.onLowMemory()
         mapView.onLowMemory()
+        super.onLowMemory()
     }
 
     override fun onMapReady(map: GoogleMap) {
@@ -143,9 +145,11 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
                     .show(fragmentManager, ThanksForRateFragment.THANKS_FOR_RATE_TAG)
 
     override fun showDetailedReview(rate: Float, offerId: Long) {
-        RatingDetailDialogFragment
-                .newInstance(rate, rate, rate, offerId)
-                .show(fragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+        if (fragmentManager?.fragments?.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
+            RatingDetailDialogFragment
+                    .newInstance(rate, rate, rate, offerId)
+                    .show(fragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+        }
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {

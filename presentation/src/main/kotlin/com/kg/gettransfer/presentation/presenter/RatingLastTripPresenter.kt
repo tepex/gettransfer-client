@@ -24,8 +24,8 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     private var transferId: Long = 0L
     private var offerId: Long = 0L
 
-    override fun attachView(view: RatingLastTripView) {
-        super.attachView(view)
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
         showRateForLastTrip()
     }
 
