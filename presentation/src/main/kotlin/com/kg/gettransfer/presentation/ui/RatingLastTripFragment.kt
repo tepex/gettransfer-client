@@ -20,7 +20,7 @@ import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 import com.kg.gettransfer.presentation.view.RatingLastTripView
 import kotlinx.android.synthetic.main.view_last_trip_rate.*
 
-class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripView, OnMapReadyCallback, BaseBottomSheetDialogFragment.OnShowListener {
+class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripView, OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
 
@@ -40,7 +40,6 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
 
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
-        showListener = this
         tv_transfer_details.setOnClickListener { presenter.onTransferDetailsClick() }
         ivClose.setOnClickListener { presenter.onReviewCanceled() }
         rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
@@ -67,14 +66,10 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
         gm.uiSettings.isZoomGesturesEnabled = false
     }
 
-    override fun onShow() {
+    override fun hideDialog() {
         dialog.hide()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        showListener = null
-    }
 
     override fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
         dialog.show()
@@ -125,19 +120,11 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
         }
     }
 
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
 
-    }
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
 
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
+    override fun setError(e: ApiException) {}
 
-    }
-
-    override fun setError(e: ApiException) {
-
-    }
-
-    override fun setError(e: DatabaseException) {
-
-    }
+    override fun setError(e: DatabaseException) {}
 }

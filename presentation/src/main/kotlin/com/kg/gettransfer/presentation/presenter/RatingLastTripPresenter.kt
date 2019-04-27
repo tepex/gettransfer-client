@@ -26,6 +26,7 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        viewState.hideDialog()
         showRateForLastTrip()
     }
 

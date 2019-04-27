@@ -9,6 +9,7 @@ interface RatingLastTripView: BaseView {
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?)
 
+    @StateStrategyType(SkipStrategy::class)
     fun cancelReview()
 
     @StateStrategyType(AddToEndSingleStrategy::class)
@@ -19,4 +20,7 @@ interface RatingLastTripView: BaseView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showDetailedReview(rate: Float, offerId: Long)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun hideDialog()
 }

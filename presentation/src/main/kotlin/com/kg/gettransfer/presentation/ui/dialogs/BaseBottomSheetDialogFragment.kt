@@ -17,8 +17,6 @@ abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
 
 	protected open val style: Int = R.style.DialogStyle
 
-	protected var showListener: OnShowListener? = null
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setStyle(DialogFragment.STYLE_NORMAL, style)
@@ -37,7 +35,6 @@ abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
 					activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
 					val height = displayMetrics.heightPixels
 					BottomSheetBehavior.from(it).apply { peekHeight = height }
-					showListener?.onShow()
 				}
 			}
 		}
@@ -52,9 +49,5 @@ abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
 	protected open fun initUi(savedInstanceState: Bundle?) {}
 
 	protected open fun initUx(savedInstanceState: Bundle?) {}
-
-	interface OnShowListener {
-		fun onShow()
-	}
 
 }
