@@ -24,6 +24,8 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
 
     private lateinit var googleMap: GoogleMap
 
+    private var showDialog = false
+
     override val layout: Int = R.layout.view_last_trip_rate
 
     @InjectPresenter
@@ -70,9 +72,14 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
         dialog.hide()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!showDialog) dialog.hide()
+    }
 
     override fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
         dialog.show()
+        showDialog = true
         tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
         tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
         tv_vehicle_model_rate.text = vehicle

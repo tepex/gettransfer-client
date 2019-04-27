@@ -5,22 +5,18 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
+@StateStrategyType(OneExecutionStateStrategy::class)
 interface RatingLastTripView: BaseView {
-    @StateStrategyType(OneExecutionStateStrategy::class)
+
     fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?)
 
-    @StateStrategyType(SkipStrategy::class)
     fun cancelReview()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
     fun askRateInPlayMarket()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
     fun thanksForRate()
 
-    @StateStrategyType(OneExecutionStateStrategy::class)
     fun showDetailedReview(rate: Float, offerId: Long)
 
-    @StateStrategyType(SkipStrategy::class)
     fun hideDialog()
 }
