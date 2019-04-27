@@ -338,7 +338,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun setAgreeLicence(agreeLicence: Boolean) {
         orderInteractor.user.termsAccepted = agreeLicence
-        systemInteractor.account.user.termsAccepted = true
     }
 
     fun showLicenceAgreement() = router.navigateTo(Screens.LicenceAgree)

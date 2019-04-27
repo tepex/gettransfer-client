@@ -347,7 +347,12 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         email_field.field_input.setText(user.profile.email ?: "")
 
         if (isLoggedIn) email_field.field_input.isEnabled = false
-        layoutAgreement.isGone = user.termsAccepted
+
+        if (isLoggedIn && user.termsAccepted) {
+            layoutAgreement.isVisible = false
+        } else {
+            switchAgreement.isChecked = user.termsAccepted
+        }
     }
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
