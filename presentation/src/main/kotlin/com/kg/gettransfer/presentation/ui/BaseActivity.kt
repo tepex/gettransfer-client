@@ -397,4 +397,20 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             window.statusBarColor = ContextCompat.getColor(this, color)
         }
     }
+
+    protected fun popupShowAtLocation(popup: PopupWindow, parent: View, y: Int){
+        if(isResumed()) {
+            try {
+                popup.showAtLocation(parent, Gravity.CENTER, 0, y)
+            } catch (e: WindowManager.BadTokenException){
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun isResumed(): Boolean {
+        val fieldPaused = FragmentActivity::class.java.getDeclaredField("mResumed"); //NoSuchFieldException
+        fieldPaused.setAccessible(true)
+        return fieldPaused.get(this) as Boolean
+    }
 }
