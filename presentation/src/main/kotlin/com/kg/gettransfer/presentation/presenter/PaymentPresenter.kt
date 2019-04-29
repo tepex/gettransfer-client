@@ -110,7 +110,15 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         }
         val currency = systemInteractor.currency.code
         var price: Double = offer?.price?.amount ?: bookNowOffer?.amount ?: (-1.0).also {
-            Sentry.capture("At the time of payment server returned non-valid value")
+            Sentry.capture(
+                """when try to get offer for analytics of payment - server return invalid value:
+                    |offer is null  - ${offer == null}
+                    |offer.price is null  - ${offer?.price == null}
+                    |offer.price.amount is null  - ${offer?.price?.amount == null}
+                    |bookNowOffer is null  - ${bookNowOffer == null}
+                    |bookNowOffer.amount is null  - ${bookNowOffer?.amount == null}
+                 """.trimMargin()
+            )
         }
 
         if (percentage == OfferModel.PRICE_30) price *= PRICE_30
