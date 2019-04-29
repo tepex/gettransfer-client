@@ -514,18 +514,20 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
     Is used when in no-map mode, but in SearchPresenter selectFinishPointOnMap() was called
      */
     private fun definePointSelectionStrategy() {
-//        btnNext.setOnClickListener {
-//            switchMain(false)
-//            setSwitchersVisibility(true)
-//        }
+        btnNext.setOnClickListener {
+            switchMain(false)
+            setSwitchersVisibility(true)
+            presenter.resetState()
+        }
         btnBack.setOnClickListener {
             performClick(true, true)
             setSwitchersVisibility(true)
+            presenter.resetState()
         }
     }
 
     private fun defineMapModeStrategy() {
-//        btnNext.setOnClickListener { performNextClick()}
+        btnNext.setOnClickListener { performNextClick()}
         btnBack.setOnClickListener { presenter.onBackClick() }
     }
 

@@ -114,6 +114,10 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
     }
 
+    fun resetState() {
+        nState.currentState = ScreenNavigationState.NO_STATE
+    }
+
     private fun setOwnLocation() {
         if (orderInteractor.from != null) setLastLocation() else updateCurrentLocation()
     }
