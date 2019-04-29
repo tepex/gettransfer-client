@@ -2,49 +2,40 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.graphics.drawable.Animatable
-
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
-
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
-
 import android.view.MotionEvent
 import android.view.View
-
 import android.widget.ImageView
 import android.widget.RelativeLayout
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.FitCenter
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.bumptech.glide.request.RequestOptions
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
-
-import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.extensions.isInvisible
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.strikeText
+import com.kg.gettransfer.extensions.visibleRating
 import com.kg.gettransfer.presentation.adapter.OffersAdapter
-
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.model.*
-
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
 import com.kg.gettransfer.presentation.ui.custom.RatingFieldView
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.ScrollGalleryInflater
-
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
-
+import com.yandex.metrica.impl.ob.it
 import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.activity_offers.view.*
-import kotlinx.android.synthetic.main.bottom_sheet_offer_details.view.*
-
 import kotlinx.android.synthetic.main.bottom_sheet_offers.*
 import kotlinx.android.synthetic.main.card_empty_offers.*
 import kotlinx.android.synthetic.main.toolbar_nav.view.*
@@ -54,7 +45,6 @@ import kotlinx.android.synthetic.main.view_offer_conditions.view.*
 import kotlinx.android.synthetic.main.view_offer_rating_details.*
 import kotlinx.android.synthetic.main.view_offer_rating_field.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
-
 import timber.log.Timber
 
 class OffersActivity : BaseActivity(), OffersView {
@@ -84,19 +74,18 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun initClickListeners() {
-        sortYear.setOnClickListener                       { presenter.changeSortType(Sort.YEAR) }
-        sortRating.setOnClickListener                     { presenter.changeSortType(Sort.RATING) }
-        sortPrice.setOnClickListener                      { presenter.changeSortType(Sort.PRICE) }
+        sortYear.setOnClickListener { presenter.changeSortType(Sort.YEAR) }
+        sortRating.setOnClickListener { presenter.changeSortType(Sort.RATING) }
+        sortPrice.setOnClickListener { presenter.changeSortType(Sort.PRICE) }
     }
 
     private fun initToolBar() =
-            with(toolbar) {
-                setSupportActionBar(this as Toolbar)
-                btn_back.setOnClickListener { navigateBackWithTransition() }
-                btn_forward.setOnClickListener { presenter.onRequestInfoClicked() }
-                tv_title.isSelected = true
-            }
-
+        with(toolbar) {
+            setSupportActionBar(this as Toolbar)
+            btn_back.setOnClickListener { navigateBackWithTransition() }
+            btn_forward.setOnClickListener { presenter.onRequestInfoClicked() }
+            tv_title.isSelected = true
+        }
 
     private fun initBottomSheet() {
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
@@ -108,7 +97,13 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
             if (bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) {
-                if(hideBottomSheet(bsOfferDetails, sheetOfferDetails, BottomSheetBehavior.STATE_HIDDEN, event)) return true
+                if (hideBottomSheet(
+                        bsOfferDetails,
+                        sheetOfferDetails,
+                        BottomSheetBehavior.STATE_HIDDEN,
+                        event
+                    )
+                ) return true
             }
         }
         return super.dispatchTouchEvent(event)
@@ -121,20 +116,20 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun setTransfer(transferModel: TransferModel) {
         toolbar.tv_title.text = transferModel.from
-                .let { from ->
-                    transferModel.to?.let {
-                        from.plus(" - ").plus(it)
-                    } ?: transferModel.duration?.let {
-                        from.plus(" - ").plus(HourlyValuesHelper.getValue(it, this))
-                    } ?: from
-                }
+            .let { from ->
+                transferModel.to?.let {
+                    from.plus(" - ").plus(it)
+                } ?: transferModel.duration?.let {
+                    from.plus(" - ").plus(HourlyValuesHelper.getValue(it, this))
+                } ?: from
+            }
         toolbar.tv_subtitle.text = SystemUtils.formatDateTime(transferModel.dateTime)
         fl_drivers_count_text.apply {
             tv_drivers_count.text =
-                    if (transferModel.relevantCarriersCount ?: 0 > 4)
-                        getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
-                    else
-                        getString(R.string.LNG_RIDE_CONNECT_CARRIERS_NONUM)
+                if (transferModel.relevantCarriersCount ?: 0 > 4)
+                    getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
+                else
+                    getString(R.string.LNG_RIDE_CONNECT_CARRIERS_NONUM)
         }
     }
 
@@ -144,14 +139,24 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun setOffers(offers: List<OfferItem>) {
         hideSheetOfferDetails()
-        rvOffers.adapter = OffersAdapter(offers.toMutableList()) { offer, showDetails -> presenter.onSelectOfferClicked(offer, showDetails) }
+        rvOffers.adapter = OffersAdapter(offers.toMutableList()) { offer, showDetails ->
+            presenter.onSelectOfferClicked(
+                offer,
+                showDetails
+            )
+        }
         if (offers.isNotEmpty()) {
             noOffers.isVisible = false
-            fl_drivers_count_text.isVisible = false
-            cl_fixPrice.isVisible = true
+            if (offers.any { it is OfferModel }) {
+                fl_drivers_count_text.isVisible = false
+                cl_fixPrice.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
+            } else {
+                fl_drivers_count_text.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
+                cl_fixPrice.isVisible = false
+            }
         } else {
             setAnimation()
-            fl_drivers_count_text.isVisible = true
+            fl_drivers_count_text.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
         }
     }
 
@@ -169,20 +174,20 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
         cleanSortState()
         when (sortCategory) {
-            Sort.YEAR   -> selectSort(sortYear, triangleYear, sortHigherToLower)
+            Sort.YEAR -> selectSort(sortYear, triangleYear, sortHigherToLower)
             Sort.RATING -> selectSort(sortRating, triangleRating, sortHigherToLower)
-            Sort.PRICE  -> selectSort(sortPrice, trianglePrice, sortHigherToLower)
+            Sort.PRICE -> selectSort(sortPrice, trianglePrice, sortHigherToLower)
         }
     }
 
     private fun cleanSortState() {
-        sortYear.isSelected   = false
+        sortYear.isSelected = false
         sortRating.isSelected = false
-        sortPrice.isSelected  = false
+        sortPrice.isSelected = false
 
-        triangleYear.isInvisible   = true
+        triangleYear.isInvisible = true
         triangleRating.isInvisible = true
-        trianglePrice.isInvisible  = true
+        trianglePrice.isInvisible = true
     }
 
     private fun selectSort(layout: RelativeLayout, triangleImage: ImageView, higherToLower: Boolean) {
@@ -196,7 +201,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferItem) {
-        when(offer) {
+        when (offer) {
             is OfferModel -> {
                 setVehicleName(vehicle = offer.vehicle)
                 Utils.initCarrierLanguages(languages_container_bs, offer.carrier.languages)
@@ -239,7 +244,7 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
-    private fun addOfferPhotos(paths: List<String>){
+    private fun addOfferPhotos(paths: List<String>) {
         photos_container_bs.removeAllViews()
         iv_offer_bs_booknow.isVisible = false
         val hasPhotos = paths.isNotEmpty()
@@ -247,15 +252,20 @@ class OffersActivity : BaseActivity(), OffersView {
         if (hasPhotos) {
             if (paths.size == 1) {
                 addSinglePhoto(path = paths.first())
-            }
-            else {
+            } else {
+                val size = getPhotoSize()
                 inflatePhotoScrollView(paths.size)
                 for (i in 0 until photos_container_bs.childCount) {
                     Glide.with(this)
-                            .load(paths[i])
-                            .apply(RequestOptions().transforms(FitCenter(),
-                                    RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
-                            .into(photos_container_bs.getChildAt(i) as ImageView)
+                        .load(paths[i])
+                        .apply(
+                            RequestOptions().transforms(
+                                CenterCrop(),
+                                RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))
+                            )
+                                .override(size.first, size.second)
+                        )
+                        .into(photos_container_bs.getChildAt(i) as ImageView)
                 }
             }
         }
@@ -265,13 +275,15 @@ class OffersActivity : BaseActivity(), OffersView {
         sv_photo.isVisible = false
         iv_offer_bs_booknow.isVisible = true
         Glide.with(this)
-                .let {
-                    if (path != null) it.load(path)
-                    else it.load(resId)
-                }
-                .apply(RequestOptions().transforms(FitCenter(),
-                        RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
-                .into(iv_offer_bs_booknow)
+            .load(path ?: resId)
+            .into(iv_offer_bs_booknow)
+    }
+
+    private fun getPhotoSize(): Pair<Int, Int> {
+        val imgHorizontalMargins = resources.getDimensionPixelSize(R.dimen.bottom_sheet_offer_details_margin_16dp)
+        val imgWidth = resources.displayMetrics.widthPixels - imgHorizontalMargins * 2
+        val imgHeight = resources.getDimensionPixelSize(R.dimen.bottom_sheet_offer_details_sv_photo_height)
+        return Pair(imgWidth, imgHeight)
     }
 
     private fun inflatePhotoScrollView(imagesCount: Int) {
@@ -292,9 +304,7 @@ class OffersActivity : BaseActivity(), OffersView {
     private fun setVehicleName(nameById: String? = null, vehicle: VehicleModel? = null) {
         if (nameById == null && vehicle == null) throw IllegalArgumentException()
         tv_car_model_bs.text =
-                nameById ?:
-                        vehicle!!.color?.let { Utils.getVehicleNameWithColor(this, vehicle.name, it) } ?:
-                        vehicle!!.name
+            nameById ?: vehicle!!.color?.let { Utils.getVehicleNameWithColor(this, vehicle.name, it) } ?: vehicle!!.name
     }
 
     private fun setRating(carrier: CarrierModel) {
@@ -319,20 +329,24 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
-    private fun hideSheetOfferDetails() { bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN }
+    private fun hideSheetOfferDetails() {
+        bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
+    }
 
     @CallSuper
     override fun onBackPressed() {
         if (bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetOfferDetails() else navigateBackWithTransition()
     }
 
-    override fun addNewOffer(offer: OfferModel) { (rvOffers.adapter as OffersAdapter).add(offer) }
+    override fun addNewOffer(offer: OfferModel) {
+        (rvOffers.adapter as OffersAdapter).add(offer)
+    }
 
     override fun setError(e: ApiException) {
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, true, e.details)
     }
 
-    override fun setNetworkAvailability(context: Context): Boolean{
+    override fun setNetworkAvailability(context: Context): Boolean {
         val available = super.setNetworkAvailability(context)
         if (available) presenter.checkNewOffers()
         offer_bottom_bs.btn_book.isEnabled = !textNetworkNotAvailable.isVisible
@@ -346,6 +360,6 @@ class OffersActivity : BaseActivity(), OffersView {
 
     companion object {
         const val PHOTO_CORNER = 7F
-        const val NO_RATE      = 0f
+        const val NO_RATE = 0f
     }
 }

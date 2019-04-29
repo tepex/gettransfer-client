@@ -1,11 +1,11 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.delegate.ChildSeatsView
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
@@ -13,30 +13,29 @@ import com.kg.gettransfer.presentation.delegate.PassengersDelegate.Companion.BOO
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate.Companion.CONVERTIBLE
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate.Companion.INFANT
 import com.kg.gettransfer.presentation.ui.icons.seats.SeatImageProvider
-import kotlinx.android.synthetic.main.child_seats_fragment.*
+import kotlinx.android.synthetic.main.bottom_sheet_child_seats.*
 import kotlinx.android.synthetic.main.view_child_seat_type_counter.view.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class ChildSeatsFragment: MvpAppCompatFragment(), ChildSeatsView, KoinComponent{
-    private val delegate: PassengersDelegate by inject()
+class ChildSeatsFragment: BaseBottomSheetFragment(), ChildSeatsView, KoinComponent{
+    override val layout = R.layout.bottom_sheet_child_seats
     override val minusEnabled = R.drawable.ic_minus
     override val minusDisabled = R.drawable.ic_minus_disabled
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.child_seats_fragment, container, false)
+    private val delegate: PassengersDelegate by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initClickListeners()
         initCounters()
+
+        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
     }
 
     private fun initCounters() {
-        view_infant_seat.view_counter_btns.person_count.text      = "0"
-        view_convertible_seat.view_counter_btns.person_count.text = "0"
-        view_booster_seat.view_counter_btns.person_count.text     = "0"
+        delegate.initSeats(this)
     }
 
     private fun initClickListeners() {
@@ -46,6 +45,9 @@ class ChildSeatsFragment: MvpAppCompatFragment(), ChildSeatsView, KoinComponent{
         view_convertible_seat.view_counter_btns.img_plus_seat.setOnClickListener  { performPlus(CONVERTIBLE) }
         view_booster_seat.view_counter_btns.img_minus_seat.setOnClickListener     { performMinus(BOOSTER) }
         view_booster_seat.view_counter_btns.img_plus_seat.setOnClickListener      { performPlus(BOOSTER) }
+        btnOkChildSeats.setOnClickListener                                        {
+            setBottomSheetState( this@ChildSeatsFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)   //force unwrap because fragment already has view with clicked button
+        }
     }
 
     private fun performPlus(type: Int) =

@@ -4,10 +4,13 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.User
+import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
-import java.util.*
+import java.util.Date
 import kotlin.math.absoluteValue
 
 class OrderInteractor(private val geoRepository: GeoRepository, private val routeRepository: RouteRepository) {
@@ -19,7 +22,38 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
     var orderStartTime: Date?  = null
     var orderReturnTime: Date? = null
 
+    var offeredPrice: Double? = null
+    var passengers: Int = MIN_PASSENGERS
+    var promoCode = ""
+    var flightNumber: String? = null
+    var flightNumberReturn: String? = null
+    var comment: String? = null
+    var selectedTransports: Set<TransportType.ID>? = null
+    var user = User(Profile(null, null, null), false)
+    var isLoggedIn = false
+
     var noPointPlaces: List<GTAddress> = emptyList()
+
+    fun clearSelectedFields() {
+        offeredPrice = null
+        passengers = MIN_PASSENGERS
+        promoCode = ""
+        flightNumber = null
+        flightNumberReturn = null
+        comment = null
+        selectedTransports = null
+        setNewUser(null)
+    }
+
+    fun setNewUser(newUser: User?) {
+        newUser?.let {
+            user = it
+            isLoggedIn = true
+            return
+        }
+        user = User(Profile(null, null, null), false)
+        isLoggedIn = false
+    }
 
     fun getCurrentAddress() = geoRepository.getCurrentAddress()
 
@@ -48,8 +82,14 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
         }
     }
 
-    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String): Result<RouteInfo> {
-        val routeInfo = routeRepository.getRouteInfo(from, to, withPrices, returnWay, currency)
+    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String, dateTime: Date? = null): Result<RouteInfo> {
+        val routeInfo = routeRepository.getRouteInfo(from, to, withPrices, returnWay, currency, dateTime)
+        duration = routeInfo.model.duration
+        return routeInfo
+    }
+
+    suspend fun getRouteInfoHourlyTransfer(from: Point, hourlyDuration: Int, currency: String, dateTime: Date? = null): Result<RouteInfo> {
+        val routeInfo = routeRepository.getRouteInfo(from, hourlyDuration, currency, dateTime)
         duration = routeInfo.model.duration
         return routeInfo
     }
@@ -71,5 +111,6 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
     companion object {
         const val MIN_LAT_DIFF = 0.002
         const val MIN_LON_DIFF = 0.003
+        const val MIN_PASSENGERS = 0
     }
 }

@@ -1,15 +1,11 @@
 package com.kg.gettransfer.extensions
 
 import android.content.Context
-
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
-
 import android.widget.Toast
-
 import com.kg.gettransfer.common.DebouncingOnClickListener
-import kotlin.text.StringBuilder
 
 inline var View.isVisible: Boolean
     get() = visibility == View.VISIBLE
@@ -63,4 +59,19 @@ fun View.show(isShow: Boolean, isGone: Boolean = true) {
         else
             View.INVISIBLE
     }
+}
+
+private var lastClickTimestamp = 0L
+
+fun View.setTrottledClickListener(delay: Long = 300L, clickListener: ((View) -> Unit)?) {
+    clickListener?.let { listener ->
+        setOnClickListener {
+            val currentTimestamp = System.currentTimeMillis()
+            val delta = currentTimestamp - lastClickTimestamp
+            if (delay <= delta) {
+                lastClickTimestamp = currentTimestamp
+                listener(this)
+            }
+        }
+    } ?: setOnClickListener(null)
 }

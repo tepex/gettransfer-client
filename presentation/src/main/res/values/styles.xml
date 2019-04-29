@@ -90,6 +90,10 @@
         <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
     </style>
 
+    <style name="sf_pro_text_regular_green" parent="sf_font">
+        <item name="android:textColor">@color/color_gtr_green</item>
+    </style>
+
 
     <style name="nav_item">
         <item name="android:layout_width">match_parent</item>
@@ -205,7 +209,7 @@
         <item name="android:textSize">@dimen/sub_title_rating_text_size</item>
     </style>
 
-    <style name="tv_rate" parent="sf_font">
+    <style name="tv_rate" parent="sf_font_semi_bold">
         <item name="android:layout_marginTop">@dimen/vertical_margin_rate_dialog</item>
     </style>
 

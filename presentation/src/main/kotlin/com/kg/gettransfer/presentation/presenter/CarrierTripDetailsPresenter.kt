@@ -68,7 +68,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
         if (tripBase.to != null && tripBase.to!!.point != null) {
             fetchData { orderInteractor.getRouteInfo(tripBase.from.point!!,
                     tripBase.to!!.point!!,
-                    true,
+                    false,
                     false,
                     systemInteractor.currency.code) }
                     ?.let { setRouteTransfer(tripBase, it) }

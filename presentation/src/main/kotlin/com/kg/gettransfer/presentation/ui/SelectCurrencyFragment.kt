@@ -1,12 +1,12 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
@@ -19,7 +19,8 @@ import com.kg.gettransfer.presentation.presenter.SelectCurrencyFragmentPresenter
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
 import kotlinx.android.synthetic.main.fragment_select_currency.*
 
-class SelectCurrencyFragment : MvpAppCompatFragment(), SelectCurrencyView {
+class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
+    override val layout = R.layout.fragment_select_currency
 
     @InjectPresenter
     internal lateinit var presenter: SelectCurrencyFragmentPresenter
@@ -29,14 +30,13 @@ class SelectCurrencyFragment : MvpAppCompatFragment(), SelectCurrencyView {
 
     private lateinit var mPresenter: BasePresenter<*>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_select_currency, container, false)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mPresenter = (activity as BaseActivity).getPresenter()
         rvAllCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvPopularCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
     }
 
     override fun setCurrencies(all: List<CurrencyModel>, popular: List<CurrencyModel>, selected: CurrencyModel) {

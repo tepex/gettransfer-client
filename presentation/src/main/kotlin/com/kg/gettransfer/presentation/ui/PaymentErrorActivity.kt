@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import android.support.annotation.NonNull
+import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.BottomSheetDialog
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -15,7 +17,8 @@ import kotlinx.android.synthetic.main.dialog_payment_error.view.*
 class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     private lateinit var dialogView: View
-    private lateinit var dialog: AlertDialog
+    private lateinit var dialog: BottomSheetDialog
+    private lateinit var bsPayment: BottomSheetBehavior<View>
 
     @InjectPresenter
     internal lateinit var presenter: PaymentErrorPresenter
@@ -33,14 +36,35 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     private fun showPaymentDialog() {
         dialogView = layoutInflater.inflate(R.layout.dialog_payment_error, null)
-        dialog = AlertDialog.Builder(this).apply { setView(dialogView) }.show()
+
+        dialog = BottomSheetDialog(this, R.style.DialogStyle).apply {
+            setContentView(dialogView)
+            bsPayment = BottomSheetBehavior.from(dialogView.parent as View)
+            bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
+            bsPayment.setBottomSheetCallback(bsCallback)
+            show()
+        }
+        dialogView.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, 108f)
         dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
 
         with(dialogView) {
             tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" $transferId")
             ivClose.setOnClickListener     { this@PaymentErrorActivity.finish() }
             btnTryAgain.setOnClickListener { this@PaymentErrorActivity.finish() }
             btnSupport.setOnClickListener  { presenter.sendEmail(null, transferId) }
+        }
+    }
+
+    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onSlide(p0: View, p1: Float) {
+
+        }
+
+        override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
+            }
         }
     }
 

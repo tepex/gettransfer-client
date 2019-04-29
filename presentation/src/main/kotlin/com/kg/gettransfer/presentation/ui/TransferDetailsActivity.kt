@@ -64,7 +64,6 @@ import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //don't delete
 
 
-import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
 import kotlinx.android.synthetic.main.view_seats_number.view.*
@@ -464,15 +463,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 
     override fun showDetailRate(vehicle: Float, driver: Float, punctuality: Float, offerId: Long, feedback: String) {
-        if (supportFragmentManager.fragments.firstOrNull { it.tag == RATE_DIALOG_TAG} == null) {
+        if (supportFragmentManager.fragments.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
             RatingDetailDialogFragment
                 .newInstance(vehicle, driver, punctuality, offerId, feedback)
-                .show(supportFragmentManager, RATE_DIALOG_TAG)
+                .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }
 
     override fun askRateInPlayMarket() {
-        StoreDialogFragment.newInstance().show(supportFragmentManager, STORE_DIALOG_TAG)
+        StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
     }
 
     override fun thanksForRate() {
@@ -483,21 +482,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         }
     }
 
-    override fun showRateInPlayMarket() = redirectToPlayMarket()
-
     override fun closeRateWindow() = closePopUp()
-
-
-    private fun setupDetailRatings(rateForFill: Float, v: View){
-        rateForFill.let {
-            v.apply {
-                main_rate.rating                 = it
-                driver_rate.rate_bar.rating      = it
-                punctuality_rate.rate_bar.rating = it
-                vehicle_rate.rate_bar.rating     = it
-            }
-        }
-    }
 
     private fun initCarMarker(offer: OfferModel) {
         processGoogleMap(false) {
@@ -539,6 +524,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 			yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
 		yourComment.tvComment.text = comment
 		yourComment.show(isShow)
+
 	}
 
     override fun showCommentEditor(comment: String) {
@@ -571,9 +557,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         presenter.ratingChangeCancelled()
     }
 
-    override fun onClickGoToStore() {
-        presenter.onRateInStore()
-    }
+    override fun onClickGoToStore() = redirectToPlayMarket()
 
     private fun clearMarker() {
         mCarMarker?.remove()
@@ -583,8 +567,5 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         const val TRANSPORT_TYPES_COLUMNS = 2
 
         const val THANKS_DELAY = 3000L
-
-        const val RATE_DIALOG_TAG = "rate_dialog_tag"
-        const val STORE_DIALOG_TAG = "store_dialog_tag"
     }
 }

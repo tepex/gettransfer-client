@@ -18,7 +18,6 @@ interface TransferDetailsView: BaseView, RouteView {
     fun showDetailRate(vehicle: Float, driver: Float, punctuality: Float, offerId: Long, feedback: String)
     fun closeRateWindow()
     fun askRateInPlayMarket()
-    fun showRateInPlayMarket()
     fun thanksForRate()
     fun showCommonRating(isShow: Boolean, averageRate: Float = 0f)
     fun showYourRateMark(isShow: Boolean, averageRate: Float = 0f)

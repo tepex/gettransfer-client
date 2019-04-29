@@ -38,7 +38,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
     private var transfer: Transfer? = null
 
     internal var transferId = 0L
-    internal var offerId    = 0L
+    internal var offerId = 0L
     internal var percentage = 0
     internal var bookNowTransportId = ""
     internal var paymentType = ""
@@ -52,9 +52,12 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 transfer = result.model
                 if (offer == null) {
                     transfer?.let {
-                        if (transfer!!.bookNowOffers.isNotEmpty()) {
+                        if (it.bookNowOffers.isNotEmpty()) {
                             if (bookNowTransportId.isNotEmpty()) {
-                                val filteredBookNow = transfer!!.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
+                                val filteredBookNow =
+                                    it.bookNowOffers.filterKeys { predicate ->
+                                        predicate.toString() == bookNowTransportId
+                                    }
                                 if (filteredBookNow.isNotEmpty()) {
                                     bookNowOffer = filteredBookNow.values.first()
                                 }
@@ -108,19 +111,31 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
             else -> Analytics.TRIP_DESTINATION
         }
         val currency = systemInteractor.currency.code
-        var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
+        var price: Double = offer?.price?.amount ?: bookNowOffer?.amount ?: (-1.0).also {
+            Sentry.capture(
+                """when try to get offer for analytics of payment - server return invalid value:
+                    |offer is null  - ${offer == null}
+                    |offer.price is null  - ${offer?.price == null}
+                    |offer.price.amount is null  - ${offer?.price?.amount == null}
+                    |bookNowOffer is null  - ${bookNowOffer == null}
+                    |bookNowOffer.amount is null  - ${bookNowOffer?.amount == null}
+                 """.trimMargin()
+            )
+        }
+
         if (percentage == OfferModel.PRICE_30) price *= PRICE_30
 
         val purchase = analytics.EcommercePurchase(
-                transferId.toString(),
-                transfer?.promoCode,
-                orderInteractor.duration,
-                paymentType,
-                offerType,
-                requestType,
-                Currency.getInstance(systemInteractor.currency.code),
-                currency,
-                price)
+            transferId.toString(),
+            transfer?.promoCode,
+            orderInteractor.duration,
+            paymentType,
+            offerType,
+            requestType,
+            Currency.getInstance(systemInteractor.currency.code),
+            currency,
+            price
+        )
         purchase.sendAnalytics()
     }
 

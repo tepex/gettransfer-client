@@ -1,65 +1,51 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.annotation.SuppressLint
-
 import android.graphics.Color
-
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-
 import android.support.annotation.CallSuper
 import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
-
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-
 import android.support.v7.widget.LinearLayoutManager
-
 import android.text.InputFilter
-import android.text.InputType //don't delete
-import android.text.TextUtils //don't delete
-import android.util.Log
-
+import android.text.InputType
 import android.view.*
 import android.view.animation.AnimationUtils
-import android.view.inputmethod.EditorInfo //don't delete
-
+import android.view.inputmethod.EditorInfo
 import android.widget.*
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
-
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.extensions.*
-
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.isGone
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.showKeyboard
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
-import com.kg.gettransfer.presentation.model.*
-
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
-
 import com.kg.gettransfer.presentation.view.CreateOrderView
-
+import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.utilities.Analytics.Companion.CAR_INFO_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
 import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
-import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
-
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
-import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.* //don't delete
+import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
 import org.koin.android.ext.android.inject
@@ -70,9 +56,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     private val dateDelegate: DateTimeDelegate by inject()
 
     private lateinit var bsOrder: BottomSheetBehavior<View>
-    private lateinit var bsTransport: BottomSheetBehavior<View>
-    private lateinit var bsCurrencies: BottomSheetBehavior<View>
-    private lateinit var bsChildSeats: BottomSheetBehavior<View>
+    private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
     private lateinit var popupWindowComment: PopupWindow
 
     private var defaultPromoText: String? = null
@@ -122,8 +106,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         rvTransferType.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvTransferType.isNestedScrollingEnabled = false
 
-        setCurrenciesFragment()
-
         initChangeTextListeners()
         initClickListeners()
         initPromoSection()
@@ -131,17 +113,14 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         initBottomSheets()
     }
 
-    @SuppressLint("CommitTransaction")
-    private fun setCurrenciesFragment() {
-        supportFragmentManager.beginTransaction().add(R.id.currenciesFragment, SelectCurrencyFragment()).commit()
-    }
-
     val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN && bsOrder.state == BottomSheetBehavior.STATE_HIDDEN)
                 _tintBackground.isVisible = false
-            if (bottomSheet == sheetChildSeats && newState == BottomSheetBehavior.STATE_HIDDEN) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 presenter.updateChildSeatsInfo()
+            } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                hideKeyboard()
             }
         }
 
@@ -155,43 +134,30 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     private fun initBottomSheets() {
         bsOrder = BottomSheetBehavior.from(sheetOrder)
-        bsTransport = BottomSheetBehavior.from(sheetTransport)
-        bsCurrencies = BottomSheetBehavior.from(sheetCurrencies)
-        bsChildSeats = BottomSheetBehavior.from(sheetChildSeats)
-        bsTransport.state = BottomSheetBehavior.STATE_HIDDEN
-        bsCurrencies.state = BottomSheetBehavior.STATE_HIDDEN
-        bsChildSeats.state = BottomSheetBehavior.STATE_HIDDEN
+        bsSecondarySheet = BottomSheetBehavior.from(secondary_bottom_sheet)
+        bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
 
         _tintBackground = tintBackground
         bsOrder.setBottomSheetCallback(bottomSheetCallback)
-        bsTransport.setBottomSheetCallback(bsCallback)
-        bsCurrencies.setBottomSheetCallback(bsCallback)
-        bsChildSeats.setBottomSheetCallback(bsCallback)
+        bsSecondarySheet.setBottomSheetCallback(bsCallback)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
             when {
-                bsTransport.state == BottomSheetBehavior.STATE_EXPANDED ->
-                    if(hideBottomSheet(bsTransport, sheetTransport, BottomSheetBehavior.STATE_HIDDEN, event)) return true
-
-                bsCurrencies.state == BottomSheetBehavior.STATE_EXPANDED ->
-                    if(hideBottomSheet(bsCurrencies, sheetCurrencies, BottomSheetBehavior.STATE_HIDDEN, event)) return true
-
-                bsChildSeats.state == BottomSheetBehavior.STATE_EXPANDED ->
-                    if (hideBottomSheet(bsChildSeats, sheetChildSeats, BottomSheetBehavior.STATE_HIDDEN, event)) return true
+                bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED ->
+                    if(hideBottomSheet(bsSecondarySheet, secondary_bottom_sheet, BottomSheetBehavior.STATE_HIDDEN, event)) return true
 
                 bsOrder.state == BottomSheetBehavior.STATE_EXPANDED ->
-                    if(hideBottomSheet(bsOrder, sheetOrder, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
-
-                bsChildSeats.state == BottomSheetBehavior.STATE_EXPANDED ->
                     if(hideBottomSheet(bsOrder, sheetOrder, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
             }
         }
         return super.dispatchTouchEvent(event)
     }
 
-    private fun hideBottomSheet(bottomSheet: BottomSheetBehavior<View>) { bottomSheet.state = BottomSheetBehavior.STATE_HIDDEN }
+    fun hideBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
+
+    fun expandBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_EXPANDED }
 
     private fun toggleSheetOrder() {
         if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
@@ -282,7 +248,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             })
         }
         Handler().postDelayed({
-            popupWindowComment.showAtLocation(mainLayoutActivityTransfer, Gravity.CENTER, 0, 0)
+            popupShowAtLocation(popupWindowComment, mainLayoutActivityTransfer, 0)
             layoutPopupView.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.show_popup))
         }, CreateOrderActivity.KEYBOARD_WAIT_DELAY)
     }
@@ -318,6 +284,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }
 
+    override fun setEditableFields(offeredPrice: Double?, flightNumber: String?, flightNumberReturn: String?, promo: String) {
+        offeredPrice?.let { price_field_input.field_input.setText(it.toString()) }
+        flightNumber?.let { flight_number_field.field_input.setText(it) }
+        flightNumberReturn?.let { flight_numberReturn_field.field_input.setText(it) }
+        if (promo.isNotEmpty()) { promo_field.field_input.setText(promo) }
+    }
+
     override fun setPassengers(count: Int) {
         passengers_count.person_count.text = "$count"
         checkMinusButton(count, 0, passengers_count.img_minus_seat)
@@ -349,7 +322,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     override fun setCurrency(currency: String, hideCurrencies: Boolean) {
         tv_currency.text = currency
-        if(hideCurrencies) hideBottomSheet(bsCurrencies)
+        if(hideCurrencies) hideBottomSheet()
     }
     override fun setComment(comment: String)   { comment_field.field_input.setText(comment) }
 
@@ -374,7 +347,12 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         email_field.field_input.setText(user.profile.email ?: "")
 
         if (isLoggedIn) email_field.field_input.isEnabled = false
-        layoutAgreement.isGone = user.termsAccepted
+
+        if (isLoggedIn && user.termsAccepted) {
+            layoutAgreement.isVisible = false
+        } else {
+            switchAgreement.isChecked = user.termsAccepted
+        }
     }
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
@@ -458,28 +436,18 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     private fun clearHighLightErrorField(view: View?) = view?.setBackgroundResource(0)
 
-    private fun transportTypeClicked(transportType: TransportTypeModel) {
-        bsTransport.state = BottomSheetBehavior.STATE_EXPANDED
-        showTransportInfo(transportType)
+    private fun transportTypeClicked(transportTypeModel: TransportTypeModel) {
+        val fragment = TransportTypeFragment()
+        fragment.transportTypeModel = transportTypeModel
+        replaceFragment(fragment)
         presenter.logButtons(CAR_INFO_CLICKED)
-    }
-
-    private fun showTransportInfo(transportType: TransportTypeModel) {
-        tvTypeTransfer.setText(transportType.nameId!!)
-        ivTypeTransfer.setImageResource(transportType.imageId!!)
-        tvPrice.text            = transportType.price?.min
-        tvCountPassengers.text  = transportType.paxMax.toString()
-        tvCountLuggage.text     = transportType.luggageMax.toString()
-        tvCars.setText(transportType.description!!)
     }
 
     @CallSuper
     override fun onBackPressed() {
         when {
             isKeyBoardOpened                                          -> hideKeyboard()
-            bsTransport.state  == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet(bsTransport)
-            bsCurrencies.state == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet(bsCurrencies)
-            bsChildSeats.state == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet(bsChildSeats)
+            bsSecondarySheet.state  == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet()
             bsOrder.state      == BottomSheetBehavior.STATE_EXPANDED  -> toggleSheetOrder()
             else                                                      -> presenter.onBackClick()
         }
@@ -495,7 +463,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     private fun initChangeTextListeners() {
-        price_field_input.field_input.onTextChanged             { presenter.cost = it.toDoubleOrNull() }
+        price_field_input.field_input.onTextChanged             { presenter.setOfferedPrice(it.toDoubleOrNull()) }
         price_field_input.field_input.setOnFocusChangeListener  { _, hasFocus ->
             if (hasFocus) presenter.logTransferSettingsEvent(OFFER_PRICE_FOCUSED)
         }
@@ -535,7 +503,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         }
 
         View.OnClickListener {
-            bsChildSeats.state = BottomSheetBehavior.STATE_EXPANDED
+            replaceFragment(ChildSeatsFragment())
         }.let {
             children_seat_field.setOnClickListener(it)
             children_seat_field.field_input.setOnClickListener(it)
@@ -571,9 +539,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         }
         btnCenterRoute.setOnClickListener                   { presenter.onCenterRouteClick() }
         btnBack.setOnClickListener                          { presenter.onBackClick() }
-        btnOk.setOnClickListener                            { hideBottomSheet(bsTransport) }
 
-        fl_currency.setOnClickListener { bsCurrencies.state = BottomSheetBehavior.STATE_EXPANDED }
+        fl_currency.setOnClickListener {
+            replaceFragment(SelectCurrencyFragment(), null)
+        }
     }
 
     override fun enableReturnTimeChoose() {
@@ -628,4 +597,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                 transfer_return_date_field.field_input,
                 R.drawable.ic_plus, 0, R.drawable.ic_arrow_right, 0)
     }
+
+    private fun replaceFragment(fragment: Fragment, tag: String? = null) =
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.secondary_bottom_sheet,
+                        fragment,
+                        tag)
+                .commit()
+
 }

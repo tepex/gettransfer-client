@@ -1,96 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/back_rounded"
-    android:padding="@dimen/rate_container_dialog_padding">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/back_top_rounded"
+    android:paddingTop="16dp"
+    android:paddingBottom="43dp">
 
     <TextView
         android:id="@+id/tv_transfer_details"
+        style="@style/sf_pro_text_regular_green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:text="@string/LNG_PAYMENT_DETAILS"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorGreen"/>
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close_x" />
+
+
     <TextView
-        android:id="@+id/tv_close_lastTrip_rate"
+        android:id="@+id/tv_transfer_number_rate"
+        style="@style/sf_font_semi_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/LNG_TRANSFER"
+        android:textSize="@dimen/transfer_number_rate_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_transfer_details" />
 
-        android:textColor="@color/black_a30"
-        android:text="@string/LNG_CLOSE"/>
-
-    <LinearLayout
-        android:id="@+id/ll_trip_info_rate"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_transfer_date_rate"
+        style="@style/sf_font"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_transfer_details"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_transfer_number_rate"
+        tools:text="29 Sep 2018 at 12:20" />
 
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+    <TextView
+        android:id="@+id/textView3"
+        style="@style/sf_font_semi_bold_17_sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/LNG_RIDE_YOU_HAPPY_TRANSFER"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rate_bar_last_trip" />
 
-        <TextView
-            android:id="@+id/tv_transfer_number_rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/tv_rate"
-            android:fontFamily="@font/sf_pro_text_bold"
-            android:textSize="@dimen/transfer_number_rate_text_size"
-            android:text="@string/LNG_TRANSFER"/>
+    <com.willy.ratingbar.ScaleRatingBar
+        android:id="@+id/rate_bar_last_trip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_transfer_date_rate"
+        app:srb_drawableEmpty="@drawable/ic_star_empty"
+        app:srb_drawableFilled="@drawable/ic_star_filled"
+        app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
+        app:srb_starWidth="@dimen/rating_bar_stars_enabled_width" />
 
-        <TextView
-            android:id="@+id/tv_transfer_date_rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/tv_rate"
-            android:text="29 Sep 2018 at 12:20"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/tv_rate"
-            android:textSize="@dimen/rate_question_text_size"
-            android:fontFamily="@font/sf_pro_text_semibold"
-            android:text="@string/LNG_RIDE_YOU_HAPPY_TRANSFER"/>
+    <fragment
+        android:id="@+id/rate_map"
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="296dp"
+        android:layout_height="228dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/back_rounded"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-        <com.willy.ratingbar.ScaleRatingBar
-            android:id="@+id/rate_bar_last_trip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vertical_margin_rate_dialog"
-            app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
-            app:srb_starWidth="@dimen/rating_bar_stars_enabled_width"
-            app:srb_drawableEmpty="@drawable/ic_star_empty"
-            app:srb_drawableFilled="@drawable/ic_star_filled"/>
-
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/rate_map"
-            android:layout_width="match_parent"
-            android:layout_height="229dp"
-            android:background="@drawable/back_rounded"
-            android:layout_marginTop="@dimen/vertical_margin_rate_dialog"/>
-    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_vehicle_model_rate"
+        style="@style/sf_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ll_trip_info_rate"
-        style="@style/tv_rate"
-        android:textColor="@color/colorTextBlack"
+        android:layout_marginTop="16dp"
         android:textSize="14sp"
-        android:text="Mercedes-Benz S-Closs, 2013"/>
+        app:layout_constraintStart_toStartOf="@+id/rate_map"
+        app:layout_constraintTop_toBottomOf="@+id/rate_map"
+        tools:text="Mercedes-Benz S-Closs, 2013" />
 
     <ImageView
         android:id="@+id/carColor_rate"
-        android:layout_width="@dimen/view_transfer_details_about_transport_car_color_image_size"
-        android:layout_height="@dimen/view_transfer_details_about_transport_car_color_image_size"
-        app:srcCompat="@drawable/ic_circle_car_color_indicator"
-        android:layout_toEndOf="@id/tv_vehicle_model_rate"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="14dp"
-        android:layout_below="@+id/ll_trip_info_rate"
-        android:background="@drawable/border_car_color_indicator"/>
+        android:background="@drawable/border_car_color_indicator"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_vehicle_model_rate"
+        app:layout_constraintStart_toEndOf="@+id/tv_vehicle_model_rate"
+        app:layout_constraintTop_toTopOf="@+id/tv_vehicle_model_rate"
+        tools:srcCompat="@drawable/ic_circle_car_color_indicator" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

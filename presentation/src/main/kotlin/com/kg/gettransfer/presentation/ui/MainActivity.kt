@@ -39,14 +39,17 @@ import com.google.android.gms.maps.model.Marker
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.domain.ApiException
-
+import com.kg.gettransfer.extensions.isGone
+import com.kg.gettransfer.extensions.isInvisible
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setTrottledClickListener
 import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
+import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
+import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.MainRequestView
 import com.kg.gettransfer.presentation.view.MainView
@@ -60,18 +63,15 @@ import kotlinx.android.synthetic.main.navigation_view_menu_item.view.*
 import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
-import kotlinx.android.synthetic.main.view_last_trip_rate.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
-import kotlinx.android.synthetic.main.view_rate_dialog.view.*
-import kotlinx.android.synthetic.main.view_rate_field.*
-import kotlinx.android.synthetic.main.view_rate_in_store.view.*
 import kotlinx.android.synthetic.main.view_switcher.*
-import kotlinx.android.synthetic.main.view_thanks_for_rate.view.*
 import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
 
-class MainActivity : BaseGoogleMapActivity(), MainView {
+class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnStoreListener,
+        RatingDetailDialogFragment.OnRatingChangeListener {
+
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
     var requestView: MainRequestView? = null
@@ -93,7 +93,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     private var isFirst = true
     private var isPermissionRequested = false
     private var centerMarker: Marker? = null
-    private var isGmTouchEnabled = true
     private var nextClicked = false
 
     @ProvidePresenter
@@ -188,7 +187,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         searchFrom.setOnClickListener { performClick(false) }
         searchTo.setOnClickListener   { performClick(true) }
         rl_hourly.setOnClickListener  { showNumberPicker(true) }
-        btnNext.setOnClickListener    { performNextClick() }
+        btnNext.setTrottledClickListener { performNextClick() }
         enableBtnNext()
     }
 
@@ -415,6 +414,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
             }
         }
         btnMyLocation.isVisible = showBtnMyLocation
+        requestView?.setVisibilityBtnMyLocation(showBtnMyLocation)
     }
 
     override fun openMapToSetPoint() {
@@ -517,10 +517,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         btnNext.setOnClickListener {
             switchMain(false)
             setSwitchersVisibility(true)
+            presenter.resetState()
         }
         btnBack.setOnClickListener {
             performClick(true, true)
             setSwitchersVisibility(true)
+            presenter.resetState()
         }
     }
 
@@ -552,7 +554,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
     }
 
     override fun setFieldTo() {
-        mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b_orange))
+        mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b))
         switchButtons(true)
         setAlpha(ALPHA_DISABLED)
         ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.btn_pin_enabled))
@@ -606,91 +608,37 @@ class MainActivity : BaseGoogleMapActivity(), MainView {
         }
     }
 
-    override fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
-        val view = showPopUpWindow(R.layout.view_last_trip_rate, contentMain)
-        view?.apply {
-            mDisMissAction = {
-                _mapView = mapView
-                isGmTouchEnabled = true
-                initMapView(null)
-                view.rate_map?.onDestroy()
-                mapView.onResume()
-                presenter.updateCurrentLocation()
-                mDisMissAction = {}
-            }
-
-            tv_transfer_details.setOnClickListener {
-                closePopUp()
-                presenter.onTransferDetailsClick(transfer.id)
-            }
-            tv_close_lastTrip_rate.setOnClickListener { presenter.onReviewCanceled() }
-            tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
-            tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
-            tv_vehicle_model_rate.text = vehicle
-            rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
-                closePopUp()
-                presenter.onRateClicked(fl)
-            }
-            carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(this@MainActivity, color))
-            drawMapForReview(view.rate_map, routeModel, transfer.from, startPoint)
-        }
-
-    }
-
-    private fun drawMapForReview(map: MapView,  routeModel: RouteModel?, from: String, startPoint: LatLng) {
-        _mapView = map
-        isGmTouchEnabled = false
-        initMapView(null)
-        if(routeModel != null){
-            setPolyline(Utils.getPolyline(routeModel), routeModel)
-        } else {
-            processGoogleMap(false) {
-                setPinForHourlyTransfer(from, "", startPoint, Utils.getCameraUpdateForPin(startPoint))
-            }
-        }
-        mapView.onPause()
-        map.onResume()
-    }
-
-    override fun showDetailedReview(tappedRate: Float) {
-        val popUpView = showPopUpWindow(R.layout.view_rate_dialog, contentMain)
-        popUpView?.let {
-            popUpView.tvCancelRate.setOnClickListener { presenter.onReviewCanceled() }
-            popUpView.send_feedBack.setOnClickListener {
-                closePopUp()
-                presenter.sendReview(Utils.createListOfDetailedRates(popUpView), popUpView.et_reviewComment.text.toString())
-            }
-            setupDetailRatings(tappedRate, popUpView)
+    override fun showRateForLastTrip() {
+        if (supportFragmentManager.fragments.firstOrNull {
+                    it.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG} == null) {
+            RatingLastTripFragment
+                    .newInstance()
+                    .show(supportFragmentManager, RatingLastTripFragment.RATING_LAST_TRIP_TAG)
         }
     }
 
-    private fun setupDetailRatings(rateForFill: Float, view: View) {
-        with(view) {
-            main_rate.rating                 = rateForFill
-            driver_rate.rate_bar.rating      = rateForFill
-            punctuality_rate.rate_bar.rating = rateForFill
-            vehicle_rate.rate_bar.rating     = rateForFill
+    override fun showDetailedReview(tappedRate: Float, offerId: Long) {
+        if (supportFragmentManager.fragments.firstOrNull {
+                    it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
+            RatingDetailDialogFragment
+                    .newInstance(tappedRate, tappedRate, tappedRate, offerId)
+                    .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }
 
-    override fun askRateInPlayMarket() {
-        val popUpView = showPopUpWindow(R.layout.view_rate_in_store, contentMain)
-        popUpView?.apply {
-            tv_agree_store.setOnClickListener  { presenter.onRateInStore() }
-            tv_reject_store.setOnClickListener { closePopUp() }
-        }
-    }
+    override fun askRateInPlayMarket() =
+        StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
 
-    override fun thanksForRate() {
-        val popUpView = showPopUpWindow(R.layout.view_thanks_for_rate, contentMain)
-        popUpView?.apply {
-            tv_thanks_close.setOnClickListener { closePopUp() }
-        }
-    }
+    override fun onClickGoToStore() = redirectToPlayMarket()
 
-    override fun showRateInPlayMarket() = redirectToPlayMarket()
+    override fun thanksForRate() =
+            ThanksForRateFragment
+                    .newInstance()
+                    .show(supportFragmentManager, ThanksForRateFragment.THANKS_FOR_RATE_TAG)
 
-    override fun cancelReview() = closePopUp()
+    override fun onRatingChanged(list: List<ReviewRateModel>, comment: String) {}
+
+    override fun onRatingChangeCancelled() = thanksForRate()
 
     override fun showBadge(show: Boolean) {
         tvEventsCount.isVisible = show

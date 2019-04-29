@@ -5,14 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="@dimen/margin8"
+    android:layout_marginTop="@dimen/margin8"
     android:background="@drawable/back_top_rounded"
-    android:clickable="true"
-    android:paddingStart="24dp"
-    android:paddingEnd="24dp"
-    app:behavior_hideable="true"
-    app:behavior_skipCollapsed="true"
-
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    android:paddingStart="@dimen/margin24"
+    android:paddingEnd="@dimen/margin24">
 
     <View
         android:id="@+id/view"
@@ -40,12 +37,12 @@
     <ImageView
         android:id="@+id/ivTypeTransfer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/margin104"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTypeTransfer"
 
-        tools:srcCompat="@drawable/ic_transport_type_economy"/>
+        tools:srcCompat="@drawable/ic_transport_type_economy" />
 
     <TextView
         android:id="@+id/tvPrice"
@@ -97,7 +94,7 @@
 
         app:layout_constraintStart_toStartOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@+id/imageView4"
-        app:srcCompat="@drawable/ic_lugg_transport_details"/>
+        app:srcCompat="@drawable/ic_lugg_transport_details" />
 
     <TextView
         android:id="@+id/tvLuggage"
@@ -124,20 +121,19 @@
         android:id="@+id/tvCars"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintVertical_bias="0.2"
-        app:layout_constraintStart_toStartOf="@+id/imageView5"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5"
-        app:layout_constraintBottom_toTopOf="@+id/btnOk"
-        android:textSize="@dimen/car_type_description"
-        app:autoSizeMinTextSize="@dimen/car_type_description_min"
-        app:autoSizeMaxTextSize="@dimen/car_type_description"
-        app:autoSizeStepGranularity="2sp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/sf_pro_text_regular"
         android:textColor="@color/hockeyapp_text_black"
+        android:textSize="@dimen/car_type_description"
+        app:autoSizeMaxTextSize="@dimen/car_type_description"
+        app:autoSizeMinTextSize="@dimen/car_type_description_min"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintStart_toStartOf="@+id/imageView5"
+        app:layout_constraintTop_toBottomOf="@+id/imageView5"
 
-        tools:text="@string/LNG_TRANSPORT_EXAMPLES_ECONOMY"
+        tools:text="@string/LNG_TRANSPORT_EXAMPLES_ECONOMY" />
 
-/>
 
     <Button
         android:id="@+id/btnOk"
@@ -149,6 +145,6 @@
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

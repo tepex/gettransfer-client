@@ -6,8 +6,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
@@ -25,17 +23,15 @@ interface MainView: BaseView {
     fun onBackClick(isAddressNavigating: Boolean, isTo: Boolean)
     fun showReadMoreDialog()
     fun setTripMode(duration: Int?)
-    fun openReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?)
-    fun cancelReview()
-    fun showDetailedReview(tappedRate: Float)
+    fun showDetailedReview(tappedRate: Float, offerId: Long)
     fun askRateInPlayMarket()
-    fun showRateInPlayMarket()
     fun thanksForRate()
     fun showBadge(show: Boolean)
     fun setCountEvents(count: Int)
     fun openMapToSetPoint()
     fun recreateRequestFragment()
     fun defineAddressRetrieving(block:(withGps: Boolean) -> Unit)
+    fun showRateForLastTrip()
 
     companion object {
         const val MAP_SCREEN     = 1

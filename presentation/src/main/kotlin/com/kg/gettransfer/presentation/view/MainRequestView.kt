@@ -7,4 +7,5 @@ interface MainRequestView {
     fun setNumberPickerValue(duration: String)
     fun onNetworkWarning(disconnected: Boolean)
     fun blockSelectedField(field: String)
+    fun setVisibilityBtnMyLocation(isVisible: Boolean)
 }

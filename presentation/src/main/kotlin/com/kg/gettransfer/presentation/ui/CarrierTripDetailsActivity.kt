@@ -211,12 +211,12 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     }
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
-        setPolyline(polyline, routeModel, true)
+        setPolyline(polyline, routeModel)
         btnCenterRoute.isVisible = false
     }
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
-        processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate, true) }
+        processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
         btnCenterRoute.isVisible = false
     }
 

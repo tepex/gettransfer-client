@@ -290,7 +290,7 @@
 	<dimen name="view_transfer_info_markers_margin_start">18dp</dimen>
 	<dimen name="view_transfer_info_markers_margin_top">7dp</dimen>
 	<dimen name="view_transfer_info_chevron_size">14dp</dimen>
-	<dimen name="view_transfer_info_chevron_margin_end">23dp</dimen>
+	<dimen name="view_transfer_info_chevron_margin_end">16dp</dimen>
 	<dimen name="view_transfer_info_divider_height">0.5dp</dimen>
 	<dimen name="view_transfer_info_divider_margin_top">10dp</dimen>
 	<dimen name="view_transfer_info_btn_cancel_request_margin_end">11dp</dimen>
@@ -746,7 +746,7 @@
 	<dimen name="thanks_forRate_text_size">17sp</dimen>
 	<dimen name="detailRate_title_text_size">17sp</dimen>
 	<dimen name="sub_title_rating_text_size">12sp</dimen>
-	<dimen name="transfer_number_rate_text_size">22sp</dimen>
+	<dimen name="transfer_number_rate_text_size">24sp</dimen>
 	<dimen name="rate_question_text_size">17sp</dimen>
 	<dimen name="transfer_date_text_size">17sp</dimen>
 
@@ -801,7 +801,7 @@
 
 
 	<!--drawable values-->
-	<dimen name="panels_corner_radius">5dp</dimen>
+	<dimen name="panels_corner_radius">16dp</dimen>
 	<dimen name="hourly_icon_borders">2dp</dimen>
 
 	<!-- empty offers-->
@@ -847,7 +847,9 @@
 	<dimen name="margin24">24dp</dimen>
 	<dimen name="margin18">18dp</dimen>
 	<dimen name="margin0">0dp</dimen>
-
+	<dimen name="margin8">8dp</dimen>
+	<dimen name="margin104">104dp</dimen>
+	<dimen name="margin56">56dp</dimen>
 
 	<!--new settings-->
 	<dimen name="settings_field_text_size">17sp</dimen>
@@ -967,5 +969,7 @@
 	<dimen name="payment_offer_tiny_languages_margin_bottom">5dp</dimen>
 	<dimen name="payment_offer_tiny_rating_margin_bottom">5dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_top">3dp</dimen>
+	<dimen name="payment_offer_tiny_languages_margin_start">8dp</dimen>
+	<dimen name="payment_dialog_corner_radius">16dp</dimen>
 
 </resources>

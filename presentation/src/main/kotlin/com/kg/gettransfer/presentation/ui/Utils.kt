@@ -64,7 +64,6 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.yandex.metrica.impl.ob.it
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import kotlinx.android.synthetic.main.view_rate_dialog.view.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 
 import java.text.SimpleDateFormat
@@ -317,89 +316,6 @@ object Utils : KoinComponent {
                else Html.fromHtml(htmlString)
     }
 
-        /*fun setPins(activity: Activity, googleMap: GoogleMap, routeModel: RouteModel) {
-
-            //Создание пинов с информацией
-            val pinLayout = activity.layoutInflater.inflate(R.layout.view_maps_pin, null)
-
-            pinLayout.tvPlace.text = routeModel.from
-            pinLayout.tvInfo.text = routeModel.dateTime
-            pinLayout.tvPlaceMirror.text = routeModel.from
-            pinLayout.tvInfoMirror.text = routeModel.dateTime
-            pinLayout.imgPin.setImageResource(R.drawable.ic_map_label_a)
-            val bmPinA = createBitmapFromView(pinLayout)
-
-            val distance = formatDistance(activity, routeModel.distance, routeModel.distanceUnit)
-            pinLayout.tvPlace.text = routeModel.to
-            pinLayout.tvInfo.text = distance
-            pinLayout.tvPlaceMirror.text = routeModel.to
-            pinLayout.tvInfoMirror.text = distance
-            pinLayout.imgPin.setImageResource(R.drawable.ic_map_label_b)
-            val bmPinB = createBitmapFromView(pinLayout)
-
-            //Создание polyline
-
-            // Для построения подробного маршрута
-            val mPoints = arrayListOf<LatLng>()
-            for(item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
-
-            // Для построения упрощённого маршрута (меньше точек)
-            //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
-
-            val line = PolylineOptions().width(10f).color(ContextCompat.getColor(activity, R.color.colorPolyline))
-
-            val latLngBuilder = LatLngBounds.Builder()
-            for(i in mPoints.indices) {
-                if(i == 0) {
-                    val startMakerOptions = MarkerOptions()
-                            .position(mPoints.get(i))
-                            .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
-                    googleMap.addMarker(startMakerOptions)
-                } else if(i == mPoints.size - 1) {
-                    val endMakerOptions = MarkerOptions()
-                            .position(mPoints.get(i))
-                            .icon(BitmapDescriptorFactory.fromBitmap(bmPinB))
-                    googleMap.addMarker(endMakerOptions)
-                }
-                line.add(mPoints.get(i))
-                latLngBuilder.include(mPoints.get(i))
-            }
-            googleMap.addPolyline(line)
-
-            *//*
-            val sizeWidth = resources.displayMetrics.widthPixels
-            val sizeHeight = mapView.height
-            val latLngBounds = latLngBuilder.build()
-            val track = CameraUpdateFactory.newLatLngBounds(latLngBounds, sizeWidth, sizeHeight, 150)
-            *//*
-            val track = CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150)
-            try { //googleMap.moveCamera(track)
-            googleMap.animateCamera(track)}
-            catch(e: Exception) { Timber.e(e) }
-        }
-
-        fun createBitmapFromView(v: View): Bitmap {
-            v.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT)
-            v.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-            v.layout(0, 0, v.measuredWidth, v.measuredHeight)
-            val bitmap = Bitmap.createBitmap(v.measuredWidth,
-                                             v.measuredHeight,
-                                             Bitmap.Config.ARGB_8888)
-
-            v.layout(v.left, v.top, v.right, v.bottom)
-            v.draw(Canvas(bitmap))
-            return bitmap
-        }*/
-
-        /*
-        fun getTransportTypeName(id: String): Int{
-            val nameRes = R.string::class.members.find( { it.name == "transport_type_$id" } )
-            return (nameRes?.call() as Int?) ?: R.string.transport_type_unknown
-        }
-        */
-
     @DrawableRes
     fun getLanguageImage(code: String): Int {
         val imageRes = R.drawable::class.members.find( { it.name == "ic_language_$code" } )
@@ -471,12 +387,6 @@ object Utils : KoinComponent {
             })
         }
     }
-
-    fun createListOfDetailedRates(view: View) = listOf<ReviewRateModel>(
-        ReviewRateModel(ReviewRate.RateType.DRIVER, view.driver_rate.rate_bar.rating.toInt()),
-        ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, view.punctuality_rate.rate_bar.rating.toInt()),
-        ReviewRateModel(ReviewRate.RateType.VEHICLE, view.vehicle_rate.rate_bar.rating.toInt())
-    )
 
     fun setDrawables(textView: TextView,
                      @DrawableRes start: Int,

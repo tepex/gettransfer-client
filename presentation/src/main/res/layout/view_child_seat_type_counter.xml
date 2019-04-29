@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
 
 
-                android:paddingStart="@dimen/seat_type_cell_padding_start"
-                android:paddingEnd="@dimen/seat_type_cell_padding_end">
+    android:paddingStart="@dimen/seat_type_cell_padding_start"
+    android:paddingEnd="@dimen/seat_type_cell_padding_end">
+
     <TextView
         android:id="@+id/child_seat_title"
+        style="@style/black_regular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/black_regular"
-        android:textSize="@dimen/child_seats_counter_title_text_size"
         android:layout_marginTop="22dp"
-        tools:text="Infant carrier"/>
+        android:textSize="@dimen/child_seats_counter_title_text_size"
+        tools:text="Infant carrier" />
 
     <TextView
         android:id="@+id/child_seat_description"
+        style="@style/sf_font_pro_display_regular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/sf_font_pro_display_regular"
-        android:layout_marginTop="3dp"
         android:layout_below="@+id/child_seat_title"
-        tools:text="Up to 10kg, 6 mount"/>
+        android:layout_marginTop="3dp"
+        tools:text="Up to 10kg, 6 mount" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@+id/child_seat_description"
         android:layout_marginTop="@dimen/seat_count_controller_margin_bottom"
-        android:background="@drawable/sh_divider_1dp"
-    android:layout_below="@+id/child_seat_description"/>
+        android:background="@drawable/sh_divider_1dp" />
 
     <include
         android:id="@+id/view_counter_btns"
+        layout="@layout/view_count_controller"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/seat_count_controller_margin_top"
-        android:layout_marginBottom="@dimen/seat_count_controller_margin_bottom"
         android:layout_alignParentEnd="true"
-        layout="@layout/view_count_controller"/>
+        android:layout_marginTop="@dimen/seat_count_controller_margin_top"
+        android:layout_marginBottom="@dimen/seat_count_controller_margin_bottom" />
 
 </RelativeLayout>

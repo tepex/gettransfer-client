@@ -34,6 +34,8 @@ class StoreDialogFragment : BaseBottomSheetDialogFragment() {
 	}
 
 	companion object {
+		const val STORE_DIALOG_TAG = "store_dialog_tag"
+
 		fun newInstance() = StoreDialogFragment()
 	}
 

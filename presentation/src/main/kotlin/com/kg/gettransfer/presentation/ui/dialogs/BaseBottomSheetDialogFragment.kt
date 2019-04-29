@@ -31,9 +31,9 @@ abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
 		dialog?.run {
 			setOnShowListener {
 				(view?.parent as? View)?.let {
-					val displaymetrics = DisplayMetrics()
-					activity?.getWindowManager()?.defaultDisplay?.getMetrics(displaymetrics)
-					val height = displaymetrics.heightPixels
+					val displayMetrics = DisplayMetrics()
+					activity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
+					val height = displayMetrics.heightPixels
 					BottomSheetBehavior.from(it).apply { peekHeight = height }
 				}
 			}
