@@ -52,10 +52,12 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 transfer = result.model
                 if (offer == null) {
                     transfer?.let {
-                        if (transfer!!.bookNowOffers.isNotEmpty()) {
+                        if (it.bookNowOffers.isNotEmpty()) {
                             if (bookNowTransportId.isNotEmpty()) {
                                 val filteredBookNow =
-                                    transfer!!.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
+                                    it.bookNowOffers.filterKeys { predicate ->
+                                        predicate.toString() == bookNowTransportId
+                                    }
                                 if (filteredBookNow.isNotEmpty()) {
                                     bookNowOffer = filteredBookNow.values.first()
                                 }
