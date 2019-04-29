@@ -41,6 +41,8 @@ class SocketManager(): KoinComponent {
         forceNew    = true
         transports  = arrayOf(WebSocket.NAME)
         timeout     = 2000
+        reconnectionAttempts = 5
+        reconnectionDelay    = 2000
     }
 
     fun startConnection(endpoint: EndpointModel, accessToken: String){
