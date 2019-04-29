@@ -150,6 +150,9 @@ class OffersActivity : BaseActivity(), OffersView {
             if (offers.any { it is OfferModel }) {
                 fl_drivers_count_text.isVisible = false
                 cl_fixPrice.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
+            } else {
+                fl_drivers_count_text.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
+                cl_fixPrice.isVisible = false
             }
         } else {
             setAnimation()
