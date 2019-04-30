@@ -11,8 +11,6 @@ import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.ImageView
 
-import android.widget.RelativeLayout
-
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -45,6 +43,7 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     protected lateinit var _mapView: MapView
     private lateinit var googleMap: GoogleMap
     protected lateinit var _btnCenter: ImageView
+    protected var isMapMovingByUser = false
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
@@ -113,7 +112,10 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         gm.setOnCameraMoveStartedListener {
             if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                 _btnCenter.isVisible = true
+                isMapMovingByUser = true
                 enablePinAnimation()
+            } else {
+                isMapMovingByUser = false
             }
         }
     }

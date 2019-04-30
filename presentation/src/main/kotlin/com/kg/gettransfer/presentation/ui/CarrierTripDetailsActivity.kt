@@ -17,6 +17,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
@@ -25,6 +26,7 @@ import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavi
 import com.kg.gettransfer.presentation.model.*
 
 import com.kg.gettransfer.presentation.presenter.CarrierTripDetailsPresenter
+import com.kg.gettransfer.presentation.ui.behavior.MapCollapseBehavior
 import com.kg.gettransfer.presentation.ui.custom.CommunicationButton
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -54,6 +56,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     override fun getPresenter(): CarrierTripDetailsPresenter = presenter
 
     private lateinit var bsCarrierTripDetails: BottomSheetTripleStatesBehavior<View>
+    private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +65,8 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         presenter.transferId = intent.getLongExtra(CarrierTripDetailsView.EXTRA_TRANSFER_ID, 0)
 
         setContentView(R.layout.activity_carrier_trip_details)
+
+        mapCollapseBehavior = (mapView.layoutParams as CoordinatorLayout.LayoutParams).behavior as MapCollapseBehavior
 
         passenger_name.field_title.text = getString(R.string.LNG_RIDE_CLIENT_NAME)
         topCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_CUSTOMER_SUPPORT).replace(" ", "\n")
@@ -75,6 +80,15 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         setupToolbar()
 
         setOnClickListeners()
+    }
+
+    override suspend fun customizeGoogleMaps(gm: GoogleMap) {
+        super.customizeGoogleMaps(gm)
+        gm.setOnCameraMoveListener {
+            if(isMapMovingByUser) {
+                mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
+            }
+        }
     }
 
     private fun setupStatusBar() {
@@ -212,11 +226,13 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
         setPolyline(polyline, routeModel)
+        mapView.getMapAsync { gm -> mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds) }
         btnCenterRoute.isVisible = false
     }
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
+        mapView.getMapAsync { gm -> mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds) }
         btnCenterRoute.isVisible = false
     }
 

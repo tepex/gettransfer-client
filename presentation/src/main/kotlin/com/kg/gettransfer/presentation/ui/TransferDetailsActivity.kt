@@ -14,8 +14,10 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.widget.FrameLayout
 
 import android.widget.ImageView
 
@@ -25,6 +27,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.bumptech.glide.Glide
 
 import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -43,6 +47,7 @@ import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
+import com.kg.gettransfer.presentation.ui.behavior.MapCollapseBehavior
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
@@ -89,6 +94,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     internal lateinit var presenter: TransferDetailsPresenter
 
     private lateinit var bsTransferDetails: BottomSheetTripleStatesBehavior<View>
+    private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
@@ -103,12 +109,23 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         setContentView(R.layout.activity_transfer_details)
         setupStatusBar()
 
+        mapCollapseBehavior = (mapView.layoutParams as CoordinatorLayout.LayoutParams).behavior as MapCollapseBehavior
+
         _mapView = mapView
         _btnCenter = btnCenterRoute
         initMapView(savedInstanceState)
         setupToolbar()
         initButtonTitles()
         setClickListeners()
+    }
+
+    override suspend fun customizeGoogleMaps(gm: GoogleMap) {
+        super.customizeGoogleMaps(gm)
+        gm.setOnCameraMoveListener {
+            if(isMapMovingByUser) {
+                mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
+            }
+        }
     }
 
     private fun setupStatusBar() {
@@ -440,11 +457,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
         setPolyline(polyline, routeModel)
+        mapView.getMapAsync { gm -> mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds) }
         btnCenterRoute.isVisible = false
     }
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
+        mapView.getMapAsync { gm -> mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds) }
         btnCenterRoute.isVisible = false
     }
 
