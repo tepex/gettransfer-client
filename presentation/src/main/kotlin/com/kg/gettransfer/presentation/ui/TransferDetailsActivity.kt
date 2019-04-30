@@ -14,10 +14,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import android.widget.FrameLayout
 
 import android.widget.ImageView
 
@@ -28,7 +26,6 @@ import com.bumptech.glide.Glide
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -60,16 +57,14 @@ import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
 import kotlinx.android.synthetic.main.transfer_details_header.view.*
-import kotlinx.android.synthetic.main.view_about_item.*
 import kotlinx.android.synthetic.main.view_communication_button.*
 import kotlinx.android.synthetic.main.view_communication_buttons.view.*
 
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
-import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.* //don't delete
+import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.*
 
 
-import kotlinx.android.synthetic.main.view_rate_field.*
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
 import kotlinx.android.synthetic.main.view_seats_number.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.view.*
@@ -457,14 +452,22 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
         setPolyline(polyline, routeModel)
-        mapView.getMapAsync { gm -> mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds) }
         btnCenterRoute.isVisible = false
+        updateMapBehaviorBounds()
     }
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
-        mapView.getMapAsync { gm -> mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds) }
         btnCenterRoute.isVisible = false
+        updateMapBehaviorBounds()
+    }
+
+    private fun updateMapBehaviorBounds() {
+        mapView.getMapAsync {
+            mapView.getMapAsync { gm ->
+                mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
+            }
+        }
     }
 
     override fun copyText(text: String) {
@@ -479,7 +482,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun recreateActivity() { recreate() }
 
-    override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
+    override fun centerRoute(cameraUpdate: CameraUpdate) {
+        showTrack(cameraUpdate) { updateMapBehaviorBounds() }
+    }
 
     override fun showDetailRate(vehicle: Float, driver: Float, punctuality: Float, offerId: Long, feedback: String) {
         if (supportFragmentManager.fragments.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {

@@ -37,7 +37,6 @@ import kotlinx.android.synthetic.main.bottom_sheet_carrier_trip_details.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
-import kotlinx.android.synthetic.main.view_about_item.*
 import kotlinx.android.synthetic.main.view_communication_buttons.view.*
 import kotlinx.android.synthetic.main.view_seats_number.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
@@ -226,17 +225,27 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
         setPolyline(polyline, routeModel)
-        mapView.getMapAsync { gm -> mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds) }
         btnCenterRoute.isVisible = false
+        updateMapBehaviorBounds()
     }
 
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
-        mapView.getMapAsync { gm -> mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds) }
         btnCenterRoute.isVisible = false
+        updateMapBehaviorBounds()
     }
 
-    override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
+    override fun centerRoute(cameraUpdate: CameraUpdate) {
+        showTrack(cameraUpdate) { updateMapBehaviorBounds() }
+    }
+
+    private fun updateMapBehaviorBounds() {
+        mapView.getMapAsync {
+            mapView.getMapAsync { gm ->
+                mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
+            }
+        }
+    }
 
     override fun copyText(text: String) {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager

@@ -1,12 +1,10 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.graphics.Bitmap
-import android.graphics.Canvas
 
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
-import android.support.v4.content.ContextCompat
 
 import android.view.View
 import android.widget.ImageView
@@ -25,15 +23,13 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 
-import kotlinx.android.synthetic.main.view_maps_pin.view.* //don't delete
-import kotlinx.android.synthetic.main.view_car_pin.view.*  //don't delete
+import kotlinx.android.synthetic.main.view_maps_pin.view.*
+import kotlinx.android.synthetic.main.view_car_pin.view.*
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 import org.koin.android.ext.android.get
-
-import timber.log.Timber
 
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -193,9 +189,13 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         return MapHelper.createBitmapFromView(pinLayout)
     }
 
-
-    protected fun showTrack (track: CameraUpdate) {
-        googleMap.animateCamera(track)
+    protected fun showTrack (track: CameraUpdate, listener: RouteIsCenteredListener? = null) {
+        googleMap.animateCamera(track, object: GoogleMap.CancelableCallback {
+            override fun onCancel() {}
+            override fun onFinish() {
+                listener?.invoke()
+            }
+        })
         _btnCenter.isVisible = false
     }
 
@@ -225,3 +225,5 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         val DEFAULT_POSITION = LatLng(0.0, 0.0)
     }
 }
+
+typealias RouteIsCenteredListener = () ->Unit
