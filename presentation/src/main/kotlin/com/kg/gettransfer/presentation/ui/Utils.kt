@@ -382,7 +382,7 @@ object Utils : KoinComponent {
         lp.setMargins(8, 0, 8, 0)
         for (item in languages) {
             layoutCarrierLanguages.addView(ImageView(layoutCarrierLanguages.context).apply {
-                setImageResource(getLanguageImage(item.delegate.language))
+                setImageResource(getLanguageImage(item.delegate.toLanguageTag()))
                 layoutParams = lp
             })
         }
