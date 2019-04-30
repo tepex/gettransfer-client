@@ -25,13 +25,11 @@ class MapCollapseBehavior<V : ViewGroup>(private val mContext: Context, attrs: A
             if (behavior.peekHeight > 0 && dependency.top != dependencyTopPos) {
                 val anchorPoint = behavior.anchorPoint
                 dependencyTopPos = dependency.top
-                child.layoutParams = (child as MapView).layoutParams.apply {
-                    height = when {
-                        dependency.top >= anchorPoint -> dependency.top
-                        else -> anchorPoint
-                    }
-                }
                 (child as MapView).getMapAsync{ map ->
+                    map.setPadding(0, 0, 0, when {
+                        dependency.top >= anchorPoint -> screenHeight - dependency.top
+                        else -> screenHeight - anchorPoint
+                    })
                     bounds?.let {
                         map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0))
                     }

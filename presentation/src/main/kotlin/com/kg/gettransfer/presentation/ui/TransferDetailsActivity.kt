@@ -116,6 +116,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
+        gm.setPadding(0, 0, 0, bsTransferDetails.peekHeight)
         gm.setOnCameraMoveListener {
             if(isMapMovingByUser) {
                 mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)

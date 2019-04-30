@@ -83,6 +83,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
 
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
+        gm.setPadding(0, 0, 0, bsCarrierTripDetails.peekHeight)
         gm.setOnCameraMoveListener {
             if(isMapMovingByUser) {
                 mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
