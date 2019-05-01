@@ -178,6 +178,18 @@ class SystemInteractor(
         }
         return result
     }
+
+    suspend fun accountLogin(email: String?, phone: String?, password: String): Result<Account>{
+        val result = systemRepository.accountLogin(email, phone, password)
+        if (email != null && result.error == null) {
+            this.userEmail = email
+            this.userPassword = password
+        }
+        return result
+    }
+
+    suspend fun getVerificationCode(email: String?, phone: String?) = systemRepository.getVerificationCode(email, phone)
+
     suspend fun putAccount() = systemRepository.putAccount(account)
     suspend fun putNoAccount() = systemRepository.putNoAccount(account)
 

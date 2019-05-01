@@ -206,6 +206,26 @@ class SystemRepositoryImpl(
         return Result(account, result.error?.let { ExceptionMapper.map(it) })
     }
 
+    override suspend fun accountLogin(email: String?, phone: String?, password: String): Result<Account> {
+        val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().accountLogin(email, phone, password)
+        }
+        result.entity?.let {
+            if(result.error == null) {
+                factory.retrieveCacheDataStore().setAccount(it)
+                account = accountMapper.fromEntity(it)
+            }
+        }
+        return Result(account, result.error?.let { ExceptionMapper.map(it) })
+    }
+
+    override suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean> {
+        val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().getVerificationCode(email, phone)
+        }
+        return Result(result.entity != null && result.entity, result.error?.let { ExceptionMapper.map(it) })
+    }
+
     override suspend fun logout(): Result<Account> {
         account = NO_ACCOUNT
         factory.retrieveCacheDataStore().clearAccount()

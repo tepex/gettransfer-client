@@ -14,6 +14,8 @@ interface Api {
         const val API_CONFIGS            = "/api/configs"
         const val API_ACCOUNT            = "/api/account"
         const val API_LOGIN              = "/api/login"
+        const val API_VERIFICATION_CODE  = "/api/account/verification_code"
+        const val API_ACCOUNT_LOGIN      = "/api/account/login"
         const val API_ROUTE_INFO         = "/api/route_info"
         const val API_CARRIER_TRIPS      = "/api/trips"
         const val API_TRANSFERS          = "/api/transfers"
@@ -56,6 +58,21 @@ interface Api {
         @Field("email") email: String,
         @Field("password") password: String
     ): Deferred<ResponseModel<AccountModelWrapper>>
+
+    @POST(API_ACCOUNT_LOGIN)
+    @FormUrlEncoded
+    fun accountLogin(
+            @Field("email") email: String?,
+            @Field("phone") phone: String?,
+            @Field("password") password: String
+    ): Deferred<ResponseModel<AccountModelWrapper>>
+
+    @GET(API_VERIFICATION_CODE)
+    @FormUrlEncoded
+    fun getVerificationCode(
+            @Field("email") email: String?,
+            @Field("phone") phone: String?
+    ): Deferred<ResponseModel<String?>>
 
     @GET(API_ROUTE_INFO)
     fun getRouteInfo(

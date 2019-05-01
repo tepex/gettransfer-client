@@ -23,6 +23,8 @@ open class SystemDataStoreCache : SystemDataStore {
     override suspend fun clearAccount() = cache.clearAccount()
 
     override suspend fun login(email: String, password: String): AccountEntity { throw UnsupportedOperationException() }
+    override suspend fun accountLogin(email: String?, phone: String?, password: String): AccountEntity { throw UnsupportedOperationException() }
+    override suspend fun getVerificationCode(email: String?, phone: String?): Boolean { throw UnsupportedOperationException() }
     override fun changeEndpoint(endpoint: EndpointEntity) { throw UnsupportedOperationException() }
     override suspend fun getMyLocation(): LocationEntity { throw UnsupportedOperationException()}
 }

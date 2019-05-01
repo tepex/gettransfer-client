@@ -23,6 +23,8 @@ open class SystemDataStoreRemote : SystemDataStore {
     override suspend fun getAccount() = remote.getAccount()
     override suspend fun setAccount(accountEntity: AccountEntity) = remote.setAccount(accountEntity)
     override suspend fun login(email: String, password: String) = remote.login(email, password)
+    override suspend fun accountLogin(email: String?, phone: String?, password: String) = remote.accountLogin(email, phone, password)
+    override suspend fun getVerificationCode(email: String?, phone: String?) = remote.getVerificationCode(email, phone)
     suspend fun registerPushToken(provider: String, token: String) = remote.registerPushToken(provider, token)
     suspend fun unregisterPushToken(token: String) = remote.unregisterPushToken(token)
     override suspend fun clearAccount() { throw UnsupportedOperationException() }

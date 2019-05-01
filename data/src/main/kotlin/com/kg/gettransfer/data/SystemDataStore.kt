@@ -14,6 +14,8 @@ interface SystemDataStore: KoinComponent {
     suspend fun setAccount(accountEntity: AccountEntity): AccountEntity
     suspend fun clearAccount()
     suspend fun login(email: String, password: String): AccountEntity
+    suspend fun accountLogin(email: String?, phone: String?, password: String): AccountEntity
+    suspend fun getVerificationCode(email: String?, phone: String?): Boolean
     fun changeEndpoint(endpoint: EndpointEntity)
     suspend fun getMyLocation(): LocationEntity
 }

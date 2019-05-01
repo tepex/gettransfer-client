@@ -65,6 +65,16 @@ class SystemRemoteImpl : SystemRemote {
         return accountMapper.fromRemote(response.data?.account!!)
     }
 
+    override suspend fun accountLogin(email: String?, phone: String?, password: String): AccountEntity {
+        val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.accountLogin(email, phone, password) }
+        return accountMapper.fromRemote(response.data?.account!!)
+    }
+
+    override suspend fun getVerificationCode(email: String?, phone: String?): Boolean {
+        val response: ResponseModel<String?> = core.tryTwice { core.api.getVerificationCode(email, phone) }
+        return response.error == null
+    }
+
     /*private suspend fun tryLogin(email: String, password: String): ResponseModel<AccountModelWrapper> {
         return try { core.api.login(email, password).await() }
         catch (e: Exception) {
