@@ -6,6 +6,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.model.Account.Companion.GROUP_CARRIER_DRIVER
 import com.kg.gettransfer.domain.model.Account.Companion.GROUP_MANAGER_VIEW_TRANSFERS
+import com.kg.gettransfer.extensions.firstSign
 
 import com.kg.gettransfer.presentation.ui.LoginActivityNew
 
@@ -13,6 +14,7 @@ import com.kg.gettransfer.presentation.view.LoginViewNew
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import java.lang.IllegalArgumentException
 
 @InjectViewState
 class LoginPresenterNew : BasePresenter<LoginViewNew>() {
@@ -78,6 +80,22 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             Screens.RATE_TRANSFER -> router.navigateTo(Screens.Splash(transferId, rate, true))
         }
     }
+
+    private fun identifyLoginType(input: String) =
+            input.contains("@")
+
+    private fun formatPhone() =
+            email?.let {
+                when {
+                    it.firstSign() == "8" ->
+                        buildString {
+                            "+7" + it.removeRange(0, 1)
+                    }
+                    it.firstSign() == "7" -> "+$it"
+                    else                  -> it
+            }
+
+        }
 
     private fun logLoginEvent(result: String) {
         val map = mutableMapOf<String, Any>()
