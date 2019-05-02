@@ -106,8 +106,8 @@ object Screens {
     open class Login(val nextScreen: String, val email: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LoginActivityNew::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, nextScreen)
-            putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
+            putExtra(LoginViewNew.EXTRA_SCREEN_FOR_RETURN, nextScreen)
+            putExtra(LoginViewNew.EXTRA_EMAIL_TO_LOGIN, email)
         }
     }
 
@@ -121,9 +121,9 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, LoginActivityNew::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            putExtra(LoginView.EXTRA_TRANSFER_ID, id)
-            putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, Screens.OFFERS)
-            putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
+            putExtra(LoginViewNew.EXTRA_TRANSFER_ID, id)
+            putExtra(LoginViewNew.EXTRA_SCREEN_FOR_RETURN, Screens.OFFERS)
+            putExtra(LoginViewNew.EXTRA_EMAIL_TO_LOGIN, email)
         }
     }
 
@@ -131,9 +131,9 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, LoginActivityNew::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            putExtra(LoginView.EXTRA_TRANSFER_ID, transferId)
-            putExtra(LoginView.EXTRA_OFFER_ID, offerId)
-            putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, Screens.PAYMENT_OFFER)
+            putExtra(LoginViewNew.EXTRA_TRANSFER_ID, transferId)
+            putExtra(LoginViewNew.EXTRA_OFFER_ID, offerId)
+            putExtra(LoginViewNew.EXTRA_SCREEN_FOR_RETURN, Screens.PAYMENT_OFFER)
         }
     }
 
@@ -141,9 +141,9 @@ object Screens {
         override fun getActivityIntent(context: Context?): Intent = Intent(context, LoginActivityNew::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            putExtra(LoginView.EXTRA_TRANSFER_ID, transferId)
-            putExtra(LoginView.EXTRA_RATE, rate)
-            putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, Screens.RATE_TRANSFER)
+            putExtra(LoginViewNew.EXTRA_TRANSFER_ID, transferId)
+            putExtra(LoginViewNew.EXTRA_RATE, rate)
+            putExtra(LoginViewNew.EXTRA_SCREEN_FOR_RETURN, Screens.RATE_TRANSFER)
         }
     }
 

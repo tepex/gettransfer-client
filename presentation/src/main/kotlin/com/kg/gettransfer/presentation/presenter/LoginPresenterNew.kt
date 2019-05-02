@@ -9,18 +9,20 @@ import com.kg.gettransfer.domain.model.Account.Companion.GROUP_MANAGER_VIEW_TRAN
 import com.kg.gettransfer.extensions.firstSign
 
 import com.kg.gettransfer.presentation.ui.LoginActivityNew
+import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.LoginViewNew
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import timber.log.Timber
 import java.lang.IllegalArgumentException
 
 @InjectViewState
 class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     internal var passwordFragmentIsShowing = false
 
-    internal var email: String? = null
+    internal var emailOrPhone: String? = null
     internal var screenForReturn: String? = null
     internal var transferId: Long = 0
     internal var offerId: Long? = null
@@ -28,16 +30,62 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
 
     private var password: String? = null
 
-    fun onLoginClick() {
-        if (!checkFields()) return
+    private var isPhone = false
+
+    fun onContinueClick() {
+        if(emailOrPhone == null) return
+        isPhone = checkIsNumber()
+        if(!isPhone) {
+            if(!Utils.checkEmail(emailOrPhone)) {
+                viewState.showValidationError(true, LoginActivityNew.INVALID_EMAIL)
+                return
+            }
+        } else {
+            if (!Utils.checkPhone(formatPhone())) {
+                viewState.showValidationError(true, LoginActivityNew.INVALID_PHONE)
+                return
+            }
+        }
+        viewState.showValidationError(false, 0)
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            fetchResult(SHOW_ERROR, checkLoginError = false) { systemInteractor.login(email!!, password!!) }
+            fetchResult(SHOW_ERROR, checkLoginError = false) {
+                when(isPhone) {
+                    true -> systemInteractor.getVerificationCode(null, formatPhone())
+                    false -> systemInteractor.getVerificationCode(emailOrPhone, null)
+                }
+            }.also {
+                if(it.error != null) {
+                    viewState.showError(true, it.error!!)
+                } else {
+                    viewState.showPasswordFragment(true)
+                }
+            }
+            viewState.blockInterface(false)
+        }
+    }
+
+    fun onLoginClick() {
+        //if (!checkFields()) return
+        if(password == null){
+            viewState.showValidationError(true, LoginActivityNew.INVALID_PASSWORD)
+            return
+        }
+        viewState.showValidationError(false, 0)
+
+        utils.launchSuspend {
+            viewState.blockInterface(true, true)
+            fetchResult(SHOW_ERROR, checkLoginError = false) {
+                when (isPhone) {
+                    true -> systemInteractor.accountLogin(null, formatPhone(), password!!)
+                    false -> systemInteractor.accountLogin(emailOrPhone, null, password!!)
+                }
+            }
                     .also {
                         it.error?.let { e ->
                             if (e.isNoUser())
-                                viewState.showError(true, e.message)
+                                viewState.showError(true, e)
                             logLoginEvent(Analytics.RESULT_FAIL)
                         }
 
@@ -82,20 +130,20 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     }
 
     private fun checkIsNumber(): Boolean {
-        if (email?.firstSign() == "+") return true
+        if (emailOrPhone?.firstSign() == "+") return true
         return try {
-            email?.toInt()
+            emailOrPhone?.toInt()
             true
         } catch (e: IllegalArgumentException) {
             false
         }
     }
 
-    private fun identifyLoginType(input: String) =
-            input.contains("@")
+    /*private fun identifyLoginType(input: String) =
+            input.contains("@")*/
 
     private fun formatPhone() =
-            email?.let {
+            emailOrPhone?.let {
                 when {
                     it.firstSign() == "8" ->
                         buildString {
@@ -104,7 +152,6 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
                     it.firstSign() == "7" -> "+$it"
                     else                  -> it
             }
-
         }
 
     private fun logLoginEvent(result: String) {
@@ -114,10 +161,16 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         analytics.logEvent(Analytics.EVENT_LOGIN, createStringBundle(Analytics.STATUS, result), map)
     }
 
-    fun onBackClick() = router.exit()
+    fun onBackClick() {
+        if (passwordFragmentIsShowing) {
+            viewState.showPasswordFragment(false)
+        } else {
+            router.exit()
+        }
+    }
 
-    fun setEmail(email: String) {
-        this.email = if (email.isEmpty()) null else email
+    fun setEmailOrPhone(email: String) {
+        this.emailOrPhone = if (email.isEmpty()) null else email
     }
 
     fun setPassword(password: String) {
@@ -125,17 +178,6 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     }
 
     fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
-
-    private fun checkFields(): Boolean {
-        val checkEmail = email != null && Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
-        val checkPassword = password != null
-        var fieldsValid = true
-        var errorType = 0
-        if (!checkEmail)         { fieldsValid = false; errorType = LoginActivityNew.INVALID_EMAIL }
-        else if (!checkPassword) { fieldsValid = false; errorType = LoginActivityNew.INVALID_PASSWORD }
-        viewState.showValidationError(!fieldsValid, errorType)
-        return fieldsValid
-    }
 
     private fun checkCarrierMode(): String {
         val groups = systemInteractor.account.groups
@@ -146,4 +188,15 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         }
         return Screens.REG_CARRIER
     }
+
+    /*private fun checkFields(): Boolean {
+        val checkEmail = emailOrPhone != null && Patterns.EMAIL_ADDRESS.matcher(emailOrPhone!!).matches()
+        val checkPassword = password != null
+        var fieldsValid = true
+        var errorType = 0
+        if (!checkEmail)         { fieldsValid = false; errorType = LoginActivityNew.INVALID_EMAIL }
+        else if (!checkPassword) { fieldsValid = false; errorType = LoginActivityNew.INVALID_PASSWORD }
+        viewState.showValidationError(!fieldsValid, errorType)
+        return fieldsValid
+    }*/
 }

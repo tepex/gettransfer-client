@@ -68,10 +68,9 @@ interface Api {
     ): Deferred<ResponseModel<AccountModelWrapper>>
 
     @GET(API_VERIFICATION_CODE)
-    @FormUrlEncoded
     fun getVerificationCode(
-            @Field("email") email: String?,
-            @Field("phone") phone: String?
+            @Query("email") email: String?,
+            @Query("phone") phone: String?
     ): Deferred<ResponseModel<String?>>
 
     @GET(API_ROUTE_INFO)

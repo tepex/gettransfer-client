@@ -553,5 +553,6 @@
     <!-- Strings for new login screen -->
     <string name="email_or_phone_number">Email or phone number</string>
     <string name="continue_btn">Continue</string>
+    <string name="invalid_phone">Invalid phone number</string>
 
 </resources>

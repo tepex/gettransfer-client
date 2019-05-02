@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.view
 
+import com.kg.gettransfer.domain.ApiException
+
 interface LoginViewNew: BaseView {
     companion object {
         val EXTRA_SCREEN_FOR_RETURN = "${LoginViewNew::class.java.name}.previous_screen"
@@ -9,7 +11,7 @@ interface LoginViewNew: BaseView {
         val EXTRA_RATE              = "${LoginViewNew::class.java.name}.rate"
     }
 
-    fun showError(show: Boolean, message: String?)
+    fun showError(show: Boolean, error: ApiException)
     fun showValidationError(show: Boolean, errorType: Int)
 
     fun showPasswordFragment(show: Boolean)
