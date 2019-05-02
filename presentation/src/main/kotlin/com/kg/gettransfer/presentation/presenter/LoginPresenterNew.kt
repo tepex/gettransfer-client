@@ -81,6 +81,16 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         }
     }
 
+    private fun checkIsNumber(): Boolean {
+        if (email?.firstSign() == "+") return true
+        return try {
+            email?.toInt()
+            true
+        } catch (e: IllegalArgumentException) {
+            false
+        }
+    }
+
     private fun identifyLoginType(input: String) =
             input.contains("@")
 
