@@ -104,7 +104,7 @@ object Screens {
     }
 
     open class Login(val nextScreen: String, val email: String?) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivityNew::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             putExtra(LoginView.EXTRA_SCREEN_FOR_RETURN, nextScreen)
             putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
@@ -118,7 +118,7 @@ object Screens {
     }
 
     data class LoginToGetOffers(val id: Long, val email: String?) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivityNew::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             putExtra(LoginView.EXTRA_TRANSFER_ID, id)
@@ -128,7 +128,7 @@ object Screens {
     }
 
     data class LoginToPaymentOffer(val transferId: Long, val offerId: Long?) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivityNew::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             putExtra(LoginView.EXTRA_TRANSFER_ID, transferId)
@@ -138,7 +138,7 @@ object Screens {
     }
 
     data class LoginToRateTransfer(val transferId: Long, val rate: Int) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?): Intent = Intent(context, LoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context?): Intent = Intent(context, LoginActivityNew::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
             putExtra(LoginView.EXTRA_TRANSFER_ID, transferId)

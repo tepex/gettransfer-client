@@ -545,4 +545,13 @@
         <item quantity="many">@string/LNG_HOURS</item>
         <item quantity="other">@string/LNG_HOURS</item>
     </plurals>
+    
+    
+    
+    
+    
+    <!-- Strings for new login screen -->
+    <string name="email_or_phone_number">Email or phone number</string>
+    <string name="continue_btn">Continue</string>
+
 </resources>
