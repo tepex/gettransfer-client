@@ -376,7 +376,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             } else if (result.error != null) {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
-                    result.error!!.details == "{phone=[taken]}" -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
+                    result.error!!.details == "{phone=[taken]}" -> {
+                        //viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
+                        router.navigateTo(Screens.Login(Screens.CLOSE_AFTER_LOGIN, orderInteractor.user.profile.phone))
+                    }
                     result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(false, R.string.LNG_NETWORK_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
