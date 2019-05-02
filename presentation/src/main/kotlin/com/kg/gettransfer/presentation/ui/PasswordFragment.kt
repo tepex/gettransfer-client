@@ -70,14 +70,14 @@ class PasswordFragment: MvpAppCompatFragment() {
         }
     }
 
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        if (block) tvLoginError.isVisible = false
-    }
-
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        tvLoginError.isVisible = true
-    }
-
-    override fun setError(e: ApiException) {}
-    override fun setError(e: DatabaseException) {}
+//    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
+//        if (block) tvLoginError.isVisible = false
+//    }
+//
+//    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+//        tvLoginError.isVisible = true
+//    }
+//
+//    override fun setError(e: ApiException) {}
+//    override fun setError(e: DatabaseException) {}
 }
