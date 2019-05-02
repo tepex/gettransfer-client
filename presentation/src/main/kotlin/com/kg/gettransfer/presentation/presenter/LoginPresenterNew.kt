@@ -132,7 +132,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     private fun checkIsNumber(): Boolean {
         if (emailOrPhone?.firstSign() == "+") return true
         return try {
-            emailOrPhone?.toInt()
+            emailOrPhone?.toLong()
             true
         } catch (e: IllegalArgumentException) {
             false
