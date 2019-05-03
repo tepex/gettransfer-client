@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:id="@+id/smsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/black_semiBold"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:text="@string/LNG_LOGIN_SEND_SMS_CODE"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="64dp"/>
+
+        <TextView
+            android:id="@+id/smsSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/black_regular"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:text="@string/LNG_LOGIN_ENTER_CODE"
+            app:layout_constraintTop_toBottomOf="@+id/smsTitle"
+            android:layout_marginTop="24dp"/>
+
+        <com.chaos.view.PinView
+            android:id="@+id/pinView"
+            style="@style/PinWidget.PinView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/smsSubtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:inputType="number"
+            android:layout_marginTop="16dp"
+            android:cursorVisible="true"
+            android:textColor="@color/color_gtr_green"
+            android:textSize="30sp"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            app:cursorColor="@color/color_gtr_green"
+            app:cursorWidth="2dp"
+            app:itemCount="4"
+            app:itemHeight="40dp"
+            app:itemSpacing="15dp"
+            app:itemWidth="35dp"
+            app:lineColor="@color/color_gtr_grey"
+            app:lineWidth="1dp"
+            app:viewType="line">
+            <requestFocus />
+        </com.chaos.view.PinView>
+
+        <TextView
+            android:id="@+id/tvLoginError"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="LNG_BAD_CREDENTIALS_ERROR"
+            android:textColor="@color/color_error"
+            android:textSize="13sp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/pinView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="4dp"/>
+
+        <Button
+            android:id="@+id/btnLogin"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/general_button_height"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/btn_bg_rounded"
+            android:enabled="false"
+            android:text="@string/LNG_LOGIN_BUTTON"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pinView" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

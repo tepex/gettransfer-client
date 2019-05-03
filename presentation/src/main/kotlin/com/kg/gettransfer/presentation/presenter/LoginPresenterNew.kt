@@ -59,7 +59,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
                 if(it.error != null) {
                     viewState.showError(true, it.error!!)
                 } else {
-                    viewState.showPasswordFragment(true)
+                    viewState.showPasswordFragment(true, isPhone)
                 }
             }
             viewState.blockInterface(false)
@@ -161,9 +161,9 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         analytics.logEvent(Analytics.EVENT_LOGIN, createStringBundle(Analytics.STATUS, result), map)
     }
 
-    fun onBackClick() {
+    override fun onBackCommandClick() {
         if (passwordFragmentIsShowing) {
-            viewState.showPasswordFragment(false)
+            viewState.showPasswordFragment(false, isPhone)
         } else {
             router.exit()
         }

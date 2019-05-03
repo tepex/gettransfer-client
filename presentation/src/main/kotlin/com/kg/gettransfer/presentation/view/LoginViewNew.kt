@@ -14,5 +14,5 @@ interface LoginViewNew: BaseView {
     fun showError(show: Boolean, error: ApiException)
     fun showValidationError(show: Boolean, errorType: Int)
 
-    fun showPasswordFragment(show: Boolean)
+    fun showPasswordFragment(show: Boolean, isPhone: Boolean)
 }

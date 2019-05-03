@@ -489,6 +489,11 @@
     <string name="LNG_YES">Yes</string>
     <string name="LNG_NO">No</string>
     <string name="LNG_PHONE_REQUIRED_ERROR">Please enter phone number in cabinet on the site</string>
+
+    <string name="LNG_LOGIN_SEND_SMS_CODE">We sent an SMS with a code to \nnumber"</string>
+    <string name="LNG_LOGIN_ENTER_CODE">Enter the received code:"</string>
+    <string name="LNG_ERROR_PHONE">Invalid phone"</string>
+    <string name="LNG_ERROR_ACCOUNT">Account not found"</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
@@ -545,14 +550,5 @@
         <item quantity="many">@string/LNG_HOURS</item>
         <item quantity="other">@string/LNG_HOURS</item>
     </plurals>
-    
-    
-    
-    
-    
-    <!-- Strings for new login screen -->
-    <string name="email_or_phone_number">Email or phone number</string>
-    <string name="continue_btn">Continue</string>
-    <string name="invalid_phone">Invalid phone number</string>
 
 </resources>

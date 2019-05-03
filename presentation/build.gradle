@@ -35,6 +35,7 @@ ext {
     easy_permissions_version   = "2.0.1"
     braintree_version          = "2.22.0"
     drop_in_version            = "3.7.1"
+    pinview_version            = "1.4.2"
 }
 
 android {
@@ -278,6 +279,9 @@ dependencies {
     //Braintree
     implementation "com.braintreepayments.api:braintree:$braintree_version" //don't update until migration to AndroidX
     implementation "com.braintreepayments.api:drop-in:$drop_in_version" //don't update until migration to AndroidX
+
+    //PinEditText
+    implementation "com.chaos.view:pinview:$pinview_version"
 }
 
 def getBuildNumber() {

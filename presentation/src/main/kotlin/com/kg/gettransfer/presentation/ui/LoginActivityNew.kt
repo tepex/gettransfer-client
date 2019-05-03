@@ -10,6 +10,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import android.support.v4.app.FragmentTransaction
+import android.support.v7.widget.Toolbar
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -49,6 +50,7 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
         presenter.rate = intent.getIntExtra(LoginViewNew.EXTRA_RATE, 0)
 
         setContentView(R.layout.activity_login_new)
+        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_LOGIN)
 
         etEmail.onTextChanged {
             val emailPhone = it.trim()
@@ -57,19 +59,21 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
         }
 
         btnLogin.setOnClickListener { presenter.onContinueClick() }
-        ivBack.setOnClickListener   { presenter.onBackClick() }
 
         etEmail.setText(presenter.emailOrPhone)
     }
 
     @SuppressLint("CommitTransaction")
-    override fun showPasswordFragment(show: Boolean) {
+    override fun showPasswordFragment(show: Boolean, isPhone: Boolean) {
         with(supportFragmentManager.beginTransaction()) {
             setAnimation(show, this)
             if (show) {
                 presenter.passwordFragmentIsShowing = true
-                add(R.id.passwordFragment, PasswordFragment())
-
+                if (isPhone) {
+                    add(R.id.passwordFragment, SmsCodeFragment())
+                } else {
+                    add(R.id.passwordFragment, PasswordFragment())
+                }
             }
             else {
                 presenter.passwordFragmentIsShowing = false
@@ -101,7 +105,7 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
         }
         tvLoginError.isVisible = show
         if (show) tvLoginError.text = when{
-            error.isNotFound() -> getString(R.string.LNG_NOT_FOUND)
+            error.isNotFound() -> getString(R.string.LNG_ERROR_ACCOUNT)
             else -> error.message ?: getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
         }
     }
@@ -109,7 +113,7 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
     override fun showValidationError(show: Boolean, errorType: Int) {
         val errStringRes = when (errorType) {
             INVALID_EMAIL    -> R.string.LNG_ERROR_EMAIL
-            INVALID_PHONE    -> R.string.invalid_phone
+            INVALID_PHONE    -> R.string.LNG_ERROR_PHONE
             INVALID_PASSWORD -> R.string.LNG_LOGIN_PASSWORD
             else             -> R.string.LNG_BAD_CREDENTIALS_ERROR
         }
