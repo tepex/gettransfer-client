@@ -14,12 +14,10 @@ import android.support.v7.widget.Toolbar
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.presenter.LoginPresenterNew
 
 import com.kg.gettransfer.presentation.view.LoginViewNew
-import com.kg.gettransfer.presentation.view.PasswordView
 
 import kotlinx.android.synthetic.main.activity_login_new.*
 
@@ -31,8 +29,6 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
     fun createLoginPresenterNew() = LoginPresenterNew()
 
     override fun getPresenter(): LoginPresenterNew = presenter
-
-    var passwordView: PasswordView? = null
 
     companion object {
         const val INVALID_EMAIL     = 1
@@ -77,7 +73,7 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
             }
             else {
                 presenter.passwordFragmentIsShowing = false
-                supportFragmentManager.fragments.firstOrNull()?.let { passwordView = null; remove(it) }
+                supportFragmentManager.fragments.firstOrNull()?.let { remove(it) }
             }
         }?.commit()
     }
@@ -89,25 +85,13 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
                 setCustomAnimations(anim, anim)
             }
 
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        super.blockInterface(block, useSpinner)
-        if (block) tvLoginError.isVisible = false
-    }
-
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        tvLoginError.isVisible = true
-    }
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {}
 
     override fun showError(show: Boolean, error: ApiException) {
-        if (presenter.passwordFragmentIsShowing) {
-            passwordView?.showError(show, error)
-            return
-        }
-        tvLoginError.isVisible = show
-        if (show) tvLoginError.text = when{
+        if (show) Utils.showError(this, false, when{
             error.isNotFound() -> getString(R.string.LNG_ERROR_ACCOUNT)
-            else -> error.message ?: getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
-        }
+            else -> error.details
+        })
     }
 
     override fun showValidationError(show: Boolean, errorType: Int) {
@@ -117,14 +101,7 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
             INVALID_PASSWORD -> R.string.LNG_LOGIN_PASSWORD
             else             -> R.string.LNG_BAD_CREDENTIALS_ERROR
         }
-        if (presenter.passwordFragmentIsShowing) {
-            passwordView?.showValidationError(if (show) errStringRes else null)
-            return
-        }
-        if (show) {
-            tvLoginError.isVisible = true
-            tvLoginError.setText(errStringRes)
-        }
+        if(show) Utils.showError(this, false, getString(errStringRes))
     }
 
     override fun onBackPressed() { presenter.onBackCommandClick() }

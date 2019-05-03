@@ -7,13 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.presenter.LoginPresenterNew
-import com.kg.gettransfer.presentation.view.PasswordView
 import kotlinx.android.synthetic.main.fragment_password.*
 
-class PasswordFragment: MvpAppCompatFragment(), PasswordView {
+class PasswordFragment: MvpAppCompatFragment() {
 
     private var passwordVisible = false
 
@@ -26,7 +23,6 @@ class PasswordFragment: MvpAppCompatFragment(), PasswordView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mActivity = activity as LoginActivityNew
-        mActivity.passwordView = this
         mPresenter = mActivity.presenter
 
         currentUser.text = mPresenter.emailOrPhone
@@ -73,34 +69,4 @@ class PasswordFragment: MvpAppCompatFragment(), PasswordView {
             else -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_off_inactive)
         }
     }
-
-    override fun showValidationError(errString: Int?) {
-        if(errString == null) {
-            tvLoginError.isVisible = false
-        } else {
-            tvLoginError.isVisible = true
-            tvLoginError.setText(errString)
-        }
-    }
-
-    override fun showError(show: Boolean, error: ApiException) {
-        tvLoginError.isVisible = show
-        if (show) tvLoginError.text = when{
-            error.isNotFound() -> getString(R.string.LNG_NOT_FOUND)
-            else -> error.message ?: getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
-        }
-    }
-
-
-
-//    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-//        if (block) tvLoginError.isVisible = false
-//    }
-//
-//    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-//        tvLoginError.isVisible = true
-//    }
-//
-//    override fun setError(e: ApiException) {}
-//    override fun setError(e: DatabaseException) {}
 }
