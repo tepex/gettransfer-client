@@ -148,10 +148,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     private fun formatPhone() =
             emailOrPhone?.let {
                 when {
-                    it.firstSign() == "8" ->
-                        buildString {
-                            "+7" + it.removeRange(0, 1)
-                    }
+                    it.firstSign() == "8" -> "+7${it.substring(1)}"
                     it.firstSign() == "7" -> "+$it"
                     else                  -> it
             }
