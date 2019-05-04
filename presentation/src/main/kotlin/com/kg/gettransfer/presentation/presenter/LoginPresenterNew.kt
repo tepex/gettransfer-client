@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.util.Patterns
-
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.model.Account.Companion.GROUP_CARRIER_DRIVER
@@ -15,7 +13,6 @@ import com.kg.gettransfer.presentation.view.LoginViewNew
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-import timber.log.Timber
 import java.lang.IllegalArgumentException
 
 @InjectViewState
@@ -48,6 +45,10 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         }
         viewState.showValidationError(false, 0)
 
+        sendVerificationCode()
+    }
+
+    fun sendVerificationCode() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
@@ -59,7 +60,10 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
                 if(it.error != null) {
                     viewState.showError(true, it.error!!)
                 } else {
-                    viewState.showPasswordFragment(true, isPhone)
+                    when (passwordFragmentIsShowing) {
+                        true -> viewState.updateTimerResendCode()
+                        false -> viewState.showPasswordFragment(true, isPhone)
+                    }
                 }
             }
             viewState.blockInterface(false)
@@ -67,7 +71,6 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     }
 
     fun onLoginClick() {
-        //if (!checkFields()) return
         if(password == null){
             viewState.showValidationError(true, LoginActivityNew.INVALID_PASSWORD)
             return
@@ -188,15 +191,4 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         }
         return Screens.REG_CARRIER
     }
-
-    /*private fun checkFields(): Boolean {
-        val checkEmail = emailOrPhone != null && Patterns.EMAIL_ADDRESS.matcher(emailOrPhone!!).matches()
-        val checkPassword = password != null
-        var fieldsValid = true
-        var errorType = 0
-        if (!checkEmail)         { fieldsValid = false; errorType = LoginActivityNew.INVALID_EMAIL }
-        else if (!checkPassword) { fieldsValid = false; errorType = LoginActivityNew.INVALID_PASSWORD }
-        viewState.showValidationError(!fieldsValid, errorType)
-        return fieldsValid
-    }*/
 }

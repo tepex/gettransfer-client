@@ -58,6 +58,24 @@
             app:viewType="line">
             <requestFocus />
         </com.chaos.view.PinView>
+        
+        <Button
+            android:id="@+id/btnResendCode"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toBottomOf="@+id/pinView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:paddingStart="50dp"
+            android:paddingEnd="50dp"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:enabled="false"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:background="@drawable/btn_background_counter_resend_code"
+            android:text="Resend SMS code\nin 45s"/>
 
         <Button
             android:id="@+id/btnLogin"
@@ -71,7 +89,7 @@
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pinView" />
+            app:layout_constraintTop_toBottomOf="@+id/btnResendCode" />
 
     </android.support.constraint.ConstraintLayout>
 

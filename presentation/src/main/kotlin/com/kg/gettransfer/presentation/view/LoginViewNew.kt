@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import com.kg.gettransfer.domain.ApiException
 
-interface LoginViewNew: BaseView {
+interface LoginViewNew: BaseView, SmsCodeView {
     companion object {
         val EXTRA_SCREEN_FOR_RETURN = "${LoginViewNew::class.java.name}.previous_screen"
         val EXTRA_EMAIL_TO_LOGIN    = "${LoginViewNew::class.java.name}.email_to_login"

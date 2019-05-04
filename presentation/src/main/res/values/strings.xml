@@ -111,6 +111,7 @@
     <string name="LNG_D">d</string>
     <string name="LNG_H">h</string>
     <string name="LNG_MIN">min</string>
+    <string name="LNG_SEC">sec</string>
     <string name="LNG_HOUR">hour</string>
     <string name="LNG_DAYS">days</string>
     <string name="LNG_HOURS">hours</string>
@@ -494,6 +495,7 @@
     <string name="LNG_LOGIN_ENTER_CODE">Enter the received code:"</string>
     <string name="LNG_ERROR_PHONE">Invalid phone"</string>
     <string name="LNG_ERROR_ACCOUNT">Account not found"</string>
+    <string name="LNG_LOGIN_RESEND_CODE">Resend SMS code"</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

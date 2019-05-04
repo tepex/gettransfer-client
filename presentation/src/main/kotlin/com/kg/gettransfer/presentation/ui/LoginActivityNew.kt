@@ -18,6 +18,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.presenter.LoginPresenterNew
 
 import com.kg.gettransfer.presentation.view.LoginViewNew
+import com.kg.gettransfer.presentation.view.SmsCodeView
 
 import kotlinx.android.synthetic.main.activity_login_new.*
 
@@ -29,6 +30,8 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
     fun createLoginPresenterNew() = LoginPresenterNew()
 
     override fun getPresenter(): LoginPresenterNew = presenter
+
+    var smsCodeView: SmsCodeView? = null
 
     companion object {
         const val INVALID_EMAIL     = 1
@@ -73,9 +76,13 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
             }
             else {
                 presenter.passwordFragmentIsShowing = false
-                supportFragmentManager.fragments.firstOrNull()?.let { remove(it) }
+                supportFragmentManager.fragments.firstOrNull()?.let { smsCodeView = null; remove(it) }
             }
         }?.commit()
+    }
+
+    override fun updateTimerResendCode() {
+        smsCodeView?.updateTimerResendCode()
     }
 
     @SuppressLint("PrivateResource")
