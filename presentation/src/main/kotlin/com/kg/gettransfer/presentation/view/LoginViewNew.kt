@@ -16,5 +16,5 @@ interface LoginViewNew: BaseView, SmsCodeView {
     fun showValidationError(show: Boolean, errorType: Int)
     fun showLoginInfo(@StringRes title: Int, @StringRes info: Int)
 
-    fun showPasswordFragment(show: Boolean, isPhone: Boolean)
+    fun showPasswordFragment(show:Boolean, showingView: Int)
 }

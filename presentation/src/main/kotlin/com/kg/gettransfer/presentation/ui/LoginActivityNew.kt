@@ -21,6 +21,7 @@ import com.kg.gettransfer.presentation.view.LoginViewNew
 import com.kg.gettransfer.presentation.view.SmsCodeView
 
 import kotlinx.android.synthetic.main.activity_login_new.*
+import java.lang.UnsupportedOperationException
 
 class LoginActivityNew : BaseActivity(), LoginViewNew {
     @InjectPresenter
@@ -63,19 +64,19 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
     }
 
     @SuppressLint("CommitTransaction")
-    override fun showPasswordFragment(show: Boolean, isPhone: Boolean) {
+    override fun showPasswordFragment(show: Boolean, showingView: Int) {
         with(supportFragmentManager.beginTransaction()) {
             setAnimation(show, this)
             if (show) {
-                presenter.passwordFragmentIsShowing = true
-                if (isPhone) {
-                    add(R.id.passwordFragment, SmsCodeFragment())
-                } else {
-                    add(R.id.passwordFragment, PasswordFragment())
-                }
+                presenter.showingFragment = showingView
+                replace(R.id.passwordFragment, when (showingView) {
+                    LoginPresenterNew.PASSWORD_VIEW -> PasswordFragment()
+                    LoginPresenterNew.SMS_CODE_VIEW -> SmsCodeFragment()
+                    else -> throw UnsupportedOperationException()
+                })
             }
             else {
-                presenter.passwordFragmentIsShowing = false
+                presenter.showingFragment = null
                 supportFragmentManager.fragments.firstOrNull()?.let { smsCodeView = null; remove(it) }
             }
         }?.commit()

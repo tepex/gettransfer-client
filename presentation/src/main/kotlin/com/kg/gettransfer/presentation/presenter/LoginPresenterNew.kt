@@ -19,7 +19,7 @@ import java.lang.IllegalArgumentException
 
 @InjectViewState
 class LoginPresenterNew : BasePresenter<LoginViewNew>() {
-    internal var passwordFragmentIsShowing = false
+    internal var showingFragment: Int? = null
 
     internal var emailOrPhone: String? = null
     internal var screenForReturn: String? = null
@@ -29,7 +29,16 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
 
     private var password: String? = null
 
-    private var isPhone = false
+    var isPhone = false
+
+    companion object{
+        const val PHONE_ATTRIBUTE = "+"
+        const val EMAIL_ATTRIBUTE = "@"
+
+        const val CLOSE_FRAGMENT = 0
+        const val PASSWORD_VIEW  = 1
+        const val SMS_CODE_VIEW  = 2
+    }
 
     fun onContinueClick() {
         if (emailOrPhone == null
@@ -37,12 +46,13 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
                 || !validateInput()) return
 
         //TODO проверка наличия аккаунта на бэке
-        val accountExist = false  //ответ от сервера
+        /*val accountExist = false  //ответ от сервера
         if (accountExist) {
             //переходим на фрагмент пароля
         } else {
             suggestCreateAccount()
-        }
+        }*/
+        viewState.showPasswordFragment(true, PASSWORD_VIEW)
     }
 
     private fun validateInput(): Boolean {
@@ -62,7 +72,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     }
 
     fun sendVerificationCode() {
-        utils.launchSuspend {
+        /*utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when(isPhone) {
@@ -76,6 +86,26 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
                     when (passwordFragmentIsShowing) {
                         true -> viewState.updateTimerResendCode()
                         false -> viewState.showPasswordFragment(true, isPhone)
+                    }
+                }
+            }
+            viewState.blockInterface(false)
+        }*/
+
+        utils.launchSuspend {
+            viewState.blockInterface(true, true)
+            fetchResult(SHOW_ERROR, checkLoginError = false) {
+                when(isPhone) {
+                    true -> systemInteractor.getVerificationCode(null, formatPhone())
+                    false -> systemInteractor.getVerificationCode(emailOrPhone, null)
+                }
+            }.also {
+                if(it.error != null) {
+                    viewState.showError(true, it.error!!)
+                } else {
+                    when (showingFragment) {
+                        PASSWORD_VIEW -> viewState.showPasswordFragment(true, SMS_CODE_VIEW)
+                        SMS_CODE_VIEW -> viewState.updateTimerResendCode()
                     }
                 }
             }
@@ -194,8 +224,8 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     }
 
     override fun onBackCommandClick() {
-        if (passwordFragmentIsShowing) {
-            viewState.showPasswordFragment(false, isPhone)
+        if (showingFragment != null) {
+            viewState.showPasswordFragment(false, CLOSE_FRAGMENT)
         } else {
             router.exit()
         }
@@ -219,10 +249,5 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             return Screens.CARRIER_MODE
         }
         return Screens.REG_CARRIER
-    }
-
-    companion object {
-        const val PHONE_ATTRIBUTE = "+"
-        const val EMAIL_ATTRIBUTE = "@"
     }
 }

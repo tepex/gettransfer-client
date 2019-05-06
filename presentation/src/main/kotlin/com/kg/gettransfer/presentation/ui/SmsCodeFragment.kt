@@ -37,7 +37,10 @@ class SmsCodeFragment: MvpAppCompatFragment(), SmsCodeView {
         mPresenter = mActivity.presenter
         mActivity.smsCodeView = this
 
-        smsTitle.text = getString(R.string.LNG_LOGIN_SEND_SMS_CODE).plus(" ").plus(mPresenter.emailOrPhone)
+        smsTitle.text = when(mPresenter.isPhone) {
+            true -> getString(R.string.LNG_LOGIN_SEND_SMS_CODE)
+            false -> getString(R.string.LNG_LOGIN_SEND_EMAIL_CODE)
+        }.plus(" ").plus(mPresenter.emailOrPhone)
 
         pinView.onTextChanged {
             mPresenter.setPassword(it)

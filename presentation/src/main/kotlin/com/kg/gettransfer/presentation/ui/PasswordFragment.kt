@@ -34,7 +34,8 @@ class PasswordFragment: MvpAppCompatFragment() {
         }
         etPassword.setOnFocusChangeListener { v, hasFocus -> changePasswordToggle(hasFocus) }
         ivPasswordToggle.setOnClickListener { togglePassword() }
-        tvForgotPassword.setOnClickListener { mPresenter.onPassForgot() }
+        btnLoginByCode.setOnClickListener { mPresenter.sendVerificationCode() }
+        //tvForgotPassword.setOnClickListener { mPresenter.onPassForgot() }
 
         btnLogin.setOnClickListener { mPresenter.onLoginClick() }
     }
