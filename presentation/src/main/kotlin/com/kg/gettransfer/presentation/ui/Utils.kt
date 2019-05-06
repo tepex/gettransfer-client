@@ -91,9 +91,7 @@ object Utils : KoinComponent {
     private val pointMapper: PointMapper by inject()
 
     fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false)
-            AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert)
-        else AlertDialog.Builder(context)
+        return AlertDialog.Builder(context)
     }
 
     fun showError(context: Context, finish: Boolean, message: String, onClose: (() -> Unit)? = null) {
@@ -108,6 +106,16 @@ object Utils : KoinComponent {
             setIcon(android.R.drawable.ic_dialog_alert)
             show()
         }
+    }
+
+    fun showLoginDialog(context: Context, message: String, title: String) {
+        getAlertDialogBuilder(context)
+                .apply {
+                    setTitle(title)
+                    setMessage(message)
+                    setPositiveButton(R.string.LNG_OK) { dialog,_ -> dialog.dismiss() }
+                    show()
+                }
     }
 
     fun showAlertCancelRequest(context: Context, listener: (Boolean) -> Unit) {
@@ -214,8 +222,8 @@ object Utils : KoinComponent {
         getAlertDialogBuilder(context).apply {
             setMessage(R.string.LNG_SEND_COORDINATES_IN_BACKGROUND_MESSAGE)
             setTitle(R.string.LNG_SEND_COORDINATES_IN_BACKGROUND)
-            setNegativeButton("Нет") { _, _ -> clickResult(false)}
-            setPositiveButton("Да") { _, _ -> clickResult(true)}
+            setNegativeButton(R.string.LNG_NO) { _, _ -> clickResult(false)}
+            setPositiveButton(R.string.LNG_YES) { _, _ -> clickResult(true)}
             show()
         }
     }

@@ -92,13 +92,19 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
                 setCustomAnimations(anim, anim)
             }
 
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {}
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+        Utils.showError(this, false, getString(errId, *args))
+    }
 
     override fun showError(show: Boolean, error: ApiException) {
         if (show) Utils.showError(this, false, when{
             error.isNotFound() -> getString(R.string.LNG_ERROR_ACCOUNT)
             else -> error.details
         })
+    }
+
+    override fun showLoginInfo(title: Int, info: Int) {
+        Utils.showLoginDialog(this, message = getString(info), title = getString(title))
     }
 
     override fun showValidationError(show: Boolean, errorType: Int) {

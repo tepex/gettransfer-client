@@ -1,10 +1,12 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.Account.Companion.GROUP_CARRIER_DRIVER
 import com.kg.gettransfer.domain.model.Account.Companion.GROUP_MANAGER_VIEW_TRANSFERS
 import com.kg.gettransfer.extensions.firstSign
+import com.kg.gettransfer.extensions.internationalExample
 
 import com.kg.gettransfer.presentation.ui.LoginActivityNew
 import com.kg.gettransfer.presentation.ui.Utils
@@ -30,22 +32,33 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     private var isPhone = false
 
     fun onContinueClick() {
-        if(emailOrPhone == null) return
+        if (emailOrPhone == null
+                || !checkIfEmailOrPhone()
+                || !validateInput()) return
+
+        //TODO проверка наличия аккаунта на бэке
+        val accountExist = false  //ответ от сервера
+        if (accountExist) {
+            //переходим на фрагмент пароля
+        } else {
+            suggestCreateAccount()
+        }
+    }
+
+    private fun validateInput(): Boolean {
         isPhone = checkIsNumber()
         if(!isPhone) {
             if(!Utils.checkEmail(emailOrPhone)) {
                 viewState.showValidationError(true, LoginActivityNew.INVALID_EMAIL)
-                return
+                return false
             }
         } else {
             if (!Utils.checkPhone(formatPhone())) {
                 viewState.showValidationError(true, LoginActivityNew.INVALID_PHONE)
-                return
+                return false
             }
         }
-        viewState.showValidationError(false, 0)
-
-        sendVerificationCode()
+        return true
     }
 
     fun sendVerificationCode() {
@@ -102,6 +115,10 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         }
     }
 
+    private fun suggestCreateAccount() {
+        viewState.showLoginInfo(R.string.LNG_ERROR_ACCOUNT, R.string.LNG_ERROR_ACCOUNT_CREATE_RIDE)
+    }
+
     private fun openPreviousScreen(screenForReturn: String?) {
         when (screenForReturn) {
             Screens.CARRIER_MODE   -> {
@@ -131,6 +148,21 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             Screens.RATE_TRANSFER -> router.navigateTo(Screens.Splash(transferId, rate, true))
         }
     }
+
+    private fun checkIfEmailOrPhone() =
+        emailOrPhone!!.run {
+            if (firstSign() == PHONE_ATTRIBUTE || any { it.toString() == EMAIL_ATTRIBUTE }) {
+                true
+            } else {
+                viewState.setError(false,
+                        R.string.LNG_ERROR_EMAIL_PHONE,
+                        Utils.phoneUtil.internationalExample(systemInteractor.locale.country)
+                )
+                false
+            }
+        }
+
+
 
     private fun checkIsNumber(): Boolean {
         if (emailOrPhone?.firstSign() == "+") return true
@@ -187,5 +219,10 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             return Screens.CARRIER_MODE
         }
         return Screens.REG_CARRIER
+    }
+
+    companion object {
+        const val PHONE_ATTRIBUTE = "+"
+        const val EMAIL_ATTRIBUTE = "@"
     }
 }

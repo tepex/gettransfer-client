@@ -495,7 +495,10 @@
     <string name="LNG_LOGIN_ENTER_CODE">Enter the received code:"</string>
     <string name="LNG_ERROR_PHONE">Invalid phone"</string>
     <string name="LNG_ERROR_ACCOUNT">Account not found"</string>
-    <string name="LNG_LOGIN_RESEND_CODE">Resend SMS code"</string>
+    <string name="LNG_LOGIN_RESEND_CODE">"Resend SMS code"</string>
+    <string name="LNG_ERROR_EMAIL_PHONE">Please enter valid email or international phone number (ex. %s)</string>
+    <string name="LNG_ERROR_ACCOUNT_CREATE">Do you want to create it?</string>
+    <string name="LNG_ERROR_ACCOUNT_CREATE_RIDE">You can create an accout by ordering a transfer</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
