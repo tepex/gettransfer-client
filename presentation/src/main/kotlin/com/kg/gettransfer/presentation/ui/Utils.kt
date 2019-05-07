@@ -377,14 +377,22 @@ object Utils : KoinComponent {
     fun isValidBitmap(bitmap: Bitmap) = bitmap.width <= MAX_BITMAP_SIZE && bitmap.height <= MAX_BITMAP_SIZE
 
     fun initCarrierLanguages(layoutCarrierLanguages: ViewGroup, languages: List<LocaleModel>) {
+        val context = layoutCarrierLanguages.context
         layoutCarrierLanguages.removeAllViews()
         val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lp.setMargins(8, 0, 8, 0)
         for (item in languages) {
-            layoutCarrierLanguages.addView(ImageView(layoutCarrierLanguages.context).apply {
-                setImageResource(getLanguageImage(item.delegate.toLanguageTag()))
+            layoutCarrierLanguages.addView(ImageView(context).apply {
+                background = resources.getDrawable(R.drawable.back_rounded_stroke_light_grey, null)
+                setPadding(1,1,1,1)
                 layoutParams = lp
             })
+            Glide.with(context)
+                    .load(getLanguageImage(item.delegate.toLanguageTag()))
+                    .apply(RequestOptions()
+                            .transform(RoundedCorners(layoutCarrierLanguages.context.resources.getDimensionPixelSize(R.dimen.view_offer_language_image_corner)))
+                            .override(Utils.dpToPxInt(context, 24F), Utils.dpToPxInt(context, 16F)))
+                    .into(layoutCarrierLanguages.getChildAt(layoutCarrierLanguages.childCount - 1) as ImageView)
         }
     }
 

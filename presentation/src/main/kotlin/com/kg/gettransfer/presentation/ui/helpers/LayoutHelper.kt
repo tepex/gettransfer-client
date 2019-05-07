@@ -15,7 +15,7 @@ object LayoutHelper {
 
     fun createLinearParams(l: Int, t: Int, r: Int, b: Int, width: Int? = null, height: Int? = null) =
             LinearLayout.LayoutParams (
-                    width ?: LinearLayout.LayoutParams.WRAP_CONTENT,
+                    width ?: LinearLayout.LayoutParams.MATCH_PARENT,
                     height ?: LinearLayout.LayoutParams.MATCH_PARENT)
                     .apply { setMargins(l, t, r, b) }
 }

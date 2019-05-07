@@ -461,9 +461,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun getSelectedTransportTypes() =
-            transportTypes!!.filter { it.checked }
-                    .map { it.id }
-                    .toSet()
+            transportTypes?.filter { it.checked }
+                    ?.map { it.id }
+                    ?.toSet() ?: emptySet()
 
     private fun releaseDelegates() {
         dateDelegate.resetAfterOrder()

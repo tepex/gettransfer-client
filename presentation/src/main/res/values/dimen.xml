@@ -616,6 +616,7 @@
 	<dimen name="view_offer_language_icon_height">8dp</dimen>
 	<dimen name="view_offer_language_icon_start_end_margin">2dp</dimen>
 	<dimen name="view_offer_language_icon_top_bottom_margin">4dp</dimen>
+	<dimen name="view_offer_language_image_corner">3dp</dimen>
 	<dimen name="view_offer_book_now_title_text_size">9sp</dimen>
 	<dimen name="view_offer_photo_corner">8dp</dimen>
     <dimen name="view_offer_text_size_10sp">10sp</dimen>
@@ -727,7 +728,7 @@
 	<dimen name="bottom_sheet_offer_details_padding_bottom">24dp</dimen>
 	<dimen name="bottom_sheet_offer_details_swipe_view_margin_top">25dp</dimen>
 	<dimen name="bottom_sheet_offer_details_languages_container_margin_start">7dp</dimen>
-	<dimen name="bottom_sheet_offer_details_sv_photo_height">152dp</dimen>
+	<dimen name="bottom_sheet_offer_details_sv_photo_height">212dp</dimen>
 	<dimen name="bottom_sheet_offer_details_iv_offer_bs_booknow_height">225dp</dimen>
 	<dimen name="bottom_sheet_offer_details_current_price_margin_end">20dp</dimen>
 	<dimen name="bottom_sheet_offer_details_old_price_margin_end">20dp</dimen>

@@ -259,7 +259,7 @@ class OffersActivity : BaseActivity(), OffersView {
                     Glide.with(this)
                         .load(paths[i])
                         .apply(
-                            RequestOptions().transforms(
+                            RequestOptions().transform(
                                 CenterCrop(),
                                 RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))
                             )
@@ -276,6 +276,7 @@ class OffersActivity : BaseActivity(), OffersView {
         iv_offer_bs_booknow.isVisible = true
         Glide.with(this)
             .load(path ?: resId)
+                .apply(RequestOptions().transform(CenterCrop(), RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
             .into(iv_offer_bs_booknow)
     }
 
