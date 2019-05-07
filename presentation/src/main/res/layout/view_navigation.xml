@@ -96,7 +96,7 @@
                 android:id="@+id/navNewTransfer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:menu_icon_img="@drawable/ic_return_time"
+                app:menu_icon_img="@drawable/ic_menu_new"
                 app:menu_title_text="@string/LNG_MENU_TITLE_NEW"
                 app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_NEW"
                 android:visibility="gone"

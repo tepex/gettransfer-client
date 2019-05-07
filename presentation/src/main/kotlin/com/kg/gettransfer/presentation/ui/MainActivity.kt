@@ -349,8 +349,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
 
     protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
-
-        //checkPermission()
         btnMyLocation.setOnClickListener  {
             checkPermission()
             presenter.updateCurrentLocation()
@@ -359,12 +357,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
             presenter.onCameraMove(gm.cameraPosition!!.target, true)
         }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
-        /*gm.setOnCameraMoveStartedListener {
-            if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                presenter.enablePinAnimation()
-                gm.setOnCameraMoveStartedListener(null)
-            }
-        }*/
     }
 
     override fun enablePinAnimation() {

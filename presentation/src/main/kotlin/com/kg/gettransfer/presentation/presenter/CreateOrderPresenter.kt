@@ -416,13 +416,13 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun onTransportChosen() {
-        try {
-            val tripTime = String.format("%d:%d", duration!! / 60, duration!! % 60)
-            val checkedTransport = transportTypes?.filter { it.checked }
-            if (!checkedTransport.isNullOrEmpty())
-                viewState.setFairPrice(checkedTransport.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
-            else viewState.setFairPrice(null, null)
-        } catch (e: KotlinNullPointerException) { viewState.setFairPrice(null, null) }
+        val tripTime = duration?.let { String.format("%d:%d", it / 60, it % 60) }
+        val checkedTransport = transportTypes?.filter { it.checked }
+        if (!checkedTransport.isNullOrEmpty()) {
+            viewState.setFairPrice(checkedTransport.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
+        } else {
+            viewState.setFairPrice(null, null)
+        }
     }
 
     fun onCenterRouteClick() {

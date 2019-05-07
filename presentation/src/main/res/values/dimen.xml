@@ -143,6 +143,7 @@
 	<dimen name="read_more_padding_horizontal">16dp</dimen>
 	<dimen name="read_more_content3_padding">10dp</dimen>
 	<dimen name="read_more_title_size">16sp</dimen>
+	<dimen name="read_more_tiny_text_size">13sp</dimen>
 
 	<!-- Create transfer -->
 	<dimen name="create_transfer_additional_margin">38dp</dimen>

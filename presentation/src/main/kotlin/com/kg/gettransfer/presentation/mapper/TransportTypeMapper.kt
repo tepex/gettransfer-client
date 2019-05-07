@@ -50,8 +50,8 @@ open class TransportTypeMapper : Mapper<TransportTypeModel, TransportType> {
 
         @StringRes
         fun getDescriptionById(id: TransportType.ID): Int {
-            val nameId = (if (id == TransportType.ID.LIMOUSINE) TransportType.ID.VIP else id).name
-            val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_EXAMPLES_$nameId" } )
+       //     val nameId = (if (id == TransportType.ID.LIMOUSINE) TransportType.ID.VIP else id).name
+            val nameRes = R.string::class.members.find { it.name == "LNG_TRANSPORT_EXAMPLES_${id.name}" }
             return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
         }
 
