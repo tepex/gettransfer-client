@@ -11,6 +11,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.Toolbar
+import android.text.InputType
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -33,6 +34,7 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
     override fun getPresenter(): LoginPresenterNew = presenter
 
     var smsCodeView: SmsCodeView? = null
+    private var passwordVisible = false
 
     companion object {
         const val INVALID_EMAIL     = 1
@@ -50,16 +52,18 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
         presenter.rate = intent.getIntExtra(LoginViewNew.EXTRA_RATE, 0)
 
         setContentView(R.layout.activity_login_new)
-        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_LOGIN)
 
         initTextChangeListeners()
         initClickListeners()
+        initFocusChangeListeners()
+
         etEmail.setText(presenter.emailOrPhone)
     }
 
     private fun initClickListeners() {
         btnLogin.setOnClickListener { presenter.onLoginClick() }
         btn_requestCode.setOnClickListener { presenter.sendVerificationCode() }
+        ivPasswordToggle.setOnClickListener { togglePassword() }
     }
 
     private fun initTextChangeListeners() {
@@ -73,6 +77,41 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
             btnLogin.isEnabled = etEmail.text?.isNotEmpty() ?: false && it.isNotEmpty()
         }
 
+    }
+
+    private fun initFocusChangeListeners() {
+        etPassword.setOnFocusChangeListener { _, hasFocus -> changePasswordToggle(hasFocus) }
+    }
+
+    private fun togglePassword() {
+        if (passwordVisible) {
+            passwordVisible = false
+            hidePassword()
+        } else {
+            passwordVisible = true
+            showPassword()
+        }
+    }
+
+    private fun showPassword() {
+        ivPasswordToggle.setImageResource(R.drawable.ic_eye)
+        etPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+        etPassword.text?.length?.let { etPassword.setSelection(it) }
+    }
+
+    private fun hidePassword() {
+        ivPasswordToggle.setImageResource(R.drawable.ic_eye_off)
+        etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        etPassword.text?.length?.let { etPassword.setSelection(it) }
+    }
+
+    private fun changePasswordToggle(hasFocus: Boolean) {
+        when {
+            hasFocus && passwordVisible -> ivPasswordToggle.setImageResource(R.drawable.ic_eye)
+            !hasFocus && passwordVisible -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_inactive)
+            hasFocus && !passwordVisible -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_off)
+            else -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_off_inactive)
+        }
     }
 
     @SuppressLint("CommitTransaction")

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -85,7 +87,7 @@
             android:layout_marginTop="32dp"
             android:background="@drawable/btn_bg_rounded"
             android:enabled="false"
-            android:text="@string/LNG_LOGIN_BUTTON"
+            android:text="@string/LNG_LOGIN_RESEND_CODE"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

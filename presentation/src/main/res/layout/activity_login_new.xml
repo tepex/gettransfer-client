@@ -4,22 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        android:fitsSystemWindows="true"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:attr/actionBarSize" />
-    </android.support.design.widget.AppBarLayout>
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -27,7 +11,7 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/icon"

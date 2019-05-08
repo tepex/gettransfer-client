@@ -91,7 +91,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             }
             viewState.blockInterface(false)
         }*/
-        validateInput()
+        if (!checkInputData()) return
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
@@ -116,8 +116,8 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             viewState.showValidationError(true, LoginActivityNew.INVALID_PASSWORD)
             return
         }
-        viewState.showValidationError(false, 0)
-        validateInput()
+   //     viewState.showValidationError(false, 0)
+        if (!checkInputData()) return
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
@@ -177,6 +177,11 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             Screens.RATE_TRANSFER -> router.navigateTo(Screens.Splash(transferId, rate, true))
         }
     }
+
+    private fun checkInputData() =
+            emailOrPhone != null
+                    && checkIfEmailOrPhone()
+                    && validateInput()
 
     private fun checkIfEmailOrPhone() =
         emailOrPhone!!.run {

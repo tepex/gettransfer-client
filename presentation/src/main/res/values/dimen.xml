@@ -902,8 +902,8 @@
 	<dimen name="login_layout_constraintGuide_begin">16dp</dimen>
 	<dimen name="login_layout_constraintGuide_end">16dp</dimen>
 	<dimen name="login_ivBack_marginTop">24dp</dimen>
-	<dimen name="login_logo_width">144dp</dimen>
-	<dimen name="login_logo_height">120dp</dimen>
+	<dimen name="login_logo_width">104dp</dimen>
+	<dimen name="login_logo_height">96dp</dimen>
 	<dimen name="login_layout_email_marginTop">8dp</dimen>
 	<dimen name="login_input_layout_drawable_padding">8dp</dimen>
 	<dimen name="login_etEmail_padding_start">16dp</dimen>
