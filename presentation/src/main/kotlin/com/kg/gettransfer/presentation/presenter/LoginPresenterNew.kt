@@ -91,6 +91,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             }
             viewState.blockInterface(false)
         }*/
+        validateInput()
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
@@ -100,14 +101,11 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
                     false -> systemInteractor.getVerificationCode(emailOrPhone, null)
                 }
             }.also {
-                if(it.error != null) {
+                if (it.error != null)
                     viewState.showError(true, it.error!!)
-                } else {
-                    when (showingFragment) {
-                        PASSWORD_VIEW -> viewState.showPasswordFragment(true, SMS_CODE_VIEW)
-                        SMS_CODE_VIEW -> viewState.updateTimerResendCode()
-                    }
-                }
+                else
+                    viewState.showPasswordFragment(true, SMS_CODE_VIEW)
+
             }
             viewState.blockInterface(false)
         }
@@ -119,6 +117,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             return
         }
         viewState.showValidationError(false, 0)
+        validateInput()
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)

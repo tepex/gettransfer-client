@@ -62,7 +62,46 @@
                 android:inputType="textEmailAddress"
                 android:paddingTop="@dimen/login_etEmail_padding_top"
                 android:paddingBottom="@dimen/login_etEmail_padding_bottom" />
+            <requestFocus />
         </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/passwordLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="16dp"
+            android:theme="@style/editTextLogin"
+            app:layout_constraintEnd_toStartOf="@+id/ivPasswordToggle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailLayout">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawableStart="@drawable/wrapped_ic_lock_black"
+                android:drawablePadding="@dimen/login_input_layout_drawable_padding"
+                android:ems="10"
+                android:hint="@string/LNG_LOGIN_PASSWORD"
+                android:inputType="textPassword"
+                android:paddingTop="@dimen/login_etPassword_padding_top"
+                android:paddingBottom="@dimen/login_etPassword_padding_bottom" >
+
+            </android.support.design.widget.TextInputEditText>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/ivPasswordToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/login_password_toggle__margin_top"
+            app:layout_constraintBottom_toBottomOf="@+id/passwordLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/passwordLayout"
+            app:srcCompat="@drawable/ic_eye_off_inactive" />
 
         <View
             android:id="@+id/divider1"
@@ -81,11 +120,38 @@
             android:layout_marginTop="@dimen/login_btnLogin_margin_top"
             android:background="@drawable/btn_bg_rounded"
             android:enabled="false"
-            android:text="@string/LNG_NEXT"
+            android:text="@string/LNG_LOGIN_WITH_PASSWORD"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
+
+        <TextView
+            android:id="@+id/tv_variant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:text="@string/LNG_OR"
+            android:textSize="16sp"
+            style="@style/black_semiBold"
+            app:layout_constraintTop_toBottomOf="@+id/btnLogin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_requestCode"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/general_button_height"
+            android:background="@drawable/btn_bg_rounded"
+            android:textColor="@color/colorWhite"
+            android:text="@string/LNG_LOGIN_CODE"
+            android:layout_marginTop="16dp"
+
+            app:layout_constraintTop_toBottomOf="@+id/tv_variant"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
 

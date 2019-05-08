@@ -52,15 +52,27 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
         setContentView(R.layout.activity_login_new)
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_LOGIN)
 
+        initTextChangeListeners()
+        initClickListeners()
+        etEmail.setText(presenter.emailOrPhone)
+    }
+
+    private fun initClickListeners() {
+        btnLogin.setOnClickListener { presenter.onLoginClick() }
+        btn_requestCode.setOnClickListener { presenter.sendVerificationCode() }
+    }
+
+    private fun initTextChangeListeners() {
         etEmail.onTextChanged {
             val emailPhone = it.trim()
             presenter.setEmailOrPhone(emailPhone)
-            btnLogin.isEnabled = emailPhone.isNotEmpty()
+            btnLogin.isEnabled = emailPhone.isNotEmpty() && etPassword.text?.isNotEmpty() ?: false
+        }
+        etPassword.onTextChanged {
+            presenter.setPassword(it)
+            btnLogin.isEnabled = etEmail.text?.isNotEmpty() ?: false && it.isNotEmpty()
         }
 
-        btnLogin.setOnClickListener { presenter.onContinueClick() }
-
-        etEmail.setText(presenter.emailOrPhone)
     }
 
     @SuppressLint("CommitTransaction")

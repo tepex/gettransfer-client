@@ -501,6 +501,7 @@
     <string name="LNG_ERROR_ACCOUNT_CREATE">Do you want to create it?</string>
     <string name="LNG_ERROR_ACCOUNT_CREATE_RIDE">You can create an accout by ordering a transfer</string>
     <string name="LNG_LOGIN_CODE">Log in with code</string>
+    <string name="LNG_LOGIN_WITH_PASSWORD">Log in with password</string>
     <string name="LNG_OR">or</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
