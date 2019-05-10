@@ -503,6 +503,8 @@
     <string name="LNG_LOGIN_CODE">Log in with code</string>
     <string name="LNG_LOGIN_WITH_PASSWORD">Log in with password</string>
     <string name="LNG_OR">or</string>
+    <string name="LNG_LOGIN_RESEND_WAIT">Didn\'t receive code? Try again in %s</string>
+    <string name="LNG_LOGIN_RESEND_ALLOW">Didn\'t receive code? <a href='#'>Try again</a></string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

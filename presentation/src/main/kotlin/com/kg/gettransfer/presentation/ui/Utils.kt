@@ -320,7 +320,7 @@ object Utils : KoinComponent {
     }
 
     fun getSpannedStringFromHtmlString(htmlString: String): Spanned {
-        return if (Build.VERSION.SDK_INT >= 24) Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
                else Html.fromHtml(htmlString)
     }
 

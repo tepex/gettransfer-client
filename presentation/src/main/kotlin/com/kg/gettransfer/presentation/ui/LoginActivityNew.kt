@@ -15,6 +15,7 @@ import android.text.InputType
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.presenter.LoginPresenterNew
 
@@ -61,6 +62,7 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
     }
 
     private fun initClickListeners() {
+        ivBtnBack.setOnClickListener { presenter.onBackCommandClick() }
         btnLogin.setOnClickListener { presenter.onLoginClick() }
         btn_requestCode.setOnClickListener { presenter.sendVerificationCode() }
         ivPasswordToggle.setOnClickListener { togglePassword() }
@@ -119,14 +121,15 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
         with(supportFragmentManager.beginTransaction()) {
             setAnimation(show, this)
             if (show) {
+                layoutLogin.isVisible = false
                 presenter.showingFragment = showingView
                 replace(R.id.passwordFragment, when (showingView) {
                     LoginPresenterNew.PASSWORD_VIEW -> PasswordFragment()
                     LoginPresenterNew.SMS_CODE_VIEW -> SmsCodeFragment()
                     else -> throw UnsupportedOperationException()
                 })
-            }
-            else {
+            } else {
+                layoutLogin.isVisible = true
                 presenter.showingFragment = null
                 supportFragmentManager.fragments.firstOrNull()?.let { smsCodeView = null; remove(it) }
             }

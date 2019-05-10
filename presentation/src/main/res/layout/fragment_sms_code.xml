@@ -9,9 +9,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:background="@color/colorWhite">
 
         <TextView
             android:id="@+id/smsTitle"
@@ -21,8 +19,7 @@
             android:gravity="center"
             android:textSize="18sp"
             android:text="@string/LNG_LOGIN_SEND_SMS_CODE"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="64dp"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/smsSubtitle"
@@ -44,7 +41,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:inputType="number"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:cursorVisible="true"
             android:textColor="@color/color_gtr_green"
             android:textSize="30sp"
@@ -60,38 +57,34 @@
             app:viewType="line">
             <requestFocus />
         </com.chaos.view.PinView>
-        
-        <Button
-            android:id="@+id/btnResendCode"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            app:layout_constraintTop_toBottomOf="@+id/pinView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"
-            android:paddingStart="50dp"
-            android:paddingEnd="50dp"
-            android:gravity="center"
-            android:textAllCaps="false"
-            android:enabled="false"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:background="@drawable/btn_background_counter_resend_code"
-            android:text="Resend SMS code\nin 45s"/>
 
         <Button
             android:id="@+id/btnLogin"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="@dimen/general_button_height"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="48dp"
             android:background="@drawable/btn_bg_rounded"
             android:enabled="false"
-            android:text="@string/LNG_LOGIN_RESEND_CODE"
+            android:text="@string/LNG_DONE"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnResendCode" />
+            app:layout_constraintTop_toBottomOf="@+id/pinView" />
+
+        <TextView
+            android:id="@+id/btnResendCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnLogin"
+            android:layout_marginTop="9dp"
+            android:padding="9dp"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textColor="@color/color_gtr_grey"
+            android:textSize="12sp"
+            android:text="@string/LNG_LOGIN_RESEND_ALLOW"/>
 
     </android.support.constraint.ConstraintLayout>
 
