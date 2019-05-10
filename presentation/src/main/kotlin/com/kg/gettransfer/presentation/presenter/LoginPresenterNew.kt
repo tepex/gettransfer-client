@@ -103,9 +103,10 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             }.also {
                 if (it.error != null)
                     viewState.showError(true, it.error!!)
-                else
-                    viewState.showPasswordFragment(true, SMS_CODE_VIEW)
-
+                else {
+                    if (showingFragment == SMS_CODE_VIEW) viewState.updateTimerResendCode()
+                    else viewState.showPasswordFragment(true, SMS_CODE_VIEW)
+                }
             }
             viewState.blockInterface(false)
         }
