@@ -19,7 +19,7 @@ interface SettingsView : BaseView {
     fun setCalendarModes(calendarModesKeys: List<String>)
     fun setDaysOfWeek(daysOfWeek: List<CharSequence>)
 
-    fun setCurrency(currency: String, hideCurrenciesFragment: Boolean = false)
+    fun setCurrency(currency: String)
     fun setLocale(locale: String, code: String)
     //fun setDistanceUnit(distanceUnit: String)
     fun setCalendarMode(calendarModeKey: String)
@@ -28,9 +28,10 @@ interface SettingsView : BaseView {
     fun setLogoutButtonEnabled(enabled: Boolean)
 
     fun initGeneralSettingsLayout()
+    fun initLoggedInUserSettings()
     fun initCarrierLayout()
     fun initDebugLayout()
 
-    fun showCurrenciesFragment(show: Boolean)
+    fun showFragment(showingView: Int)
     fun restartApp()
 }

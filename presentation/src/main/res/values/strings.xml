@@ -562,4 +562,10 @@
         <item quantity="other">@string/LNG_HOURS</item>
     </plurals>
 
+
+    <!--Needed to change-->
+    <string name="pass_view_1">Enter new password</string>
+    <string name="pass_view_2">Repeat new password</string>
+    <string name="pass_save">Save</string>
+    <string name="pass_match">Password doesn\'t match confirmation</string>
 </resources>

@@ -161,16 +161,19 @@ class SystemRepositoryImpl(
         return Result(account, error)
     }
 
-    override suspend fun putAccount(account: Account): Result<Account> {
+    override suspend fun putAccount(account: Account, pass: String?, repeatedPass: String?): Result<Account> {
         /*val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
         catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
 
         factory.retrieveCacheDataStore().setAccount(accountEntity)
         this.account = accountMapper.fromEntity(accountEntity)
         return Result(this.account)*/
+        val accountEntity =
+                if(pass != null && repeatedPass != null) accountMapper.toEntityWithNewPassword(account, pass, repeatedPass)
+                else accountMapper.toEntity(account)
 
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account))
+            factory.retrieveRemoteDataStore().setAccount(accountEntity)
         }
         result.entity?.let {
             if(result.error == null) {

@@ -44,4 +44,10 @@ open class AccountMapper : Mapper<AccountEntity, Account> {
             groups = type.groups,
             carrierId = type.carrierId
         )
+
+    fun toEntityWithNewPassword(type: Account, pass: String, repeatedPass: String) =
+        toEntity(type).apply {
+            password = pass
+            repeatedPassword = repeatedPass
+        }
 }

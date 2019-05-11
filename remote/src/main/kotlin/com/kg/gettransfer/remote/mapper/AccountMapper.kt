@@ -37,6 +37,9 @@ open class AccountMapper : EntityMapper<AccountModel, AccountEntity> {
             distanceUnit  = type.distanceUnit,
             groups        = type.groups,
             termsAccepted = type.user.termsAccepted,
-            carrierId     = type.carrierId
+            carrierId     = type.carrierId,
+
+            password = type.password,
+            repeatedPassword = type.repeatedPassword
         )
 }

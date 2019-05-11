@@ -192,6 +192,14 @@ class SystemInteractor(
 
     suspend fun putAccount() = systemRepository.putAccount(account)
     suspend fun putNoAccount() = systemRepository.putNoAccount(account)
+    suspend fun changePassword(pass: String, repeatedPass: String): Result<Account> {
+        val result = systemRepository.putAccount(account, pass, repeatedPass)
+        if (result.error == null) {
+            account.user.profile.email?.let { this.userEmail = it }
+            this.userPassword = pass
+        }
+        return result
+    }
 
     fun openSocketConnection() = systemRepository.connectSocket()
     fun closeSocketConnection() = systemRepository.disconnectSocket()

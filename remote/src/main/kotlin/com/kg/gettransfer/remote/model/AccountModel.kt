@@ -17,7 +17,10 @@ class AccountModel(
     @SerializedName(AccountEntity.DISTANCE_UNIT) @Expose val distanceUnit: String? = null,
     @SerializedName(AccountEntity.GROUPS) @Expose val groups: List<String>? = null,
     @SerializedName(UserEntity.TERMS_ACCEPTED) @Expose val termsAccepted: Boolean = true,
-    @SerializedName(AccountEntity.CARRIER_ID) @Expose val carrierId: Long? = null
+    @SerializedName(AccountEntity.CARRIER_ID) @Expose val carrierId: Long? = null,
+
+    @SerializedName(AccountEntity.PASSWORD) @Expose val password: String? = null,
+    @SerializedName(AccountEntity.PASSWORD_CONFIRMATION) @Expose val repeatedPassword: String? = null
 ) : ProfileModel(fullName, email, phone) {
 
     override fun equals(other: Any?): Boolean {

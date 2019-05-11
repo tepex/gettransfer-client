@@ -49,19 +49,29 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     @SuppressLint("CommitTransaction")
-    override fun showCurrenciesFragment(show: Boolean) {
+    override fun showFragment(showingView: Int) {
         with(supportFragmentManager.beginTransaction()) {
+            val show = showingView != SettingsPresenter.CLOSE_FRAGMENT
             setAnimation(show, this)
             if (show) {
-                presenter.currenciesFragmentIsShowing = true
-                add(R.id.currenciesFragment, SelectCurrencyFragment())
+                presenter.showingFragment = showingView
+                when (showingView) {
+                    SettingsPresenter.CURRENCIES_VIEW -> add(R.id.currenciesFragment, SelectCurrencyFragment())
+                    SettingsPresenter.PASSWORD_VIEW   -> add(R.id.currenciesFragment, ChangePasswordFragment())
+                    else -> throw UnsupportedOperationException()
+                }
+                /*add(R.id.currenciesFragment, when(showingView){
+                    SettingsPresenter.CURRENCIES_VIEW -> SelectCurrencyFragment()
+                    SettingsPresenter.PASSWORD_VIEW   -> ChangePasswordFragment()
+                    else -> throw UnsupportedOperationException()
+                })*/
             }
             else {
-                presenter.currenciesFragmentIsShowing = false
+                presenter.showingFragment = null
                 supportFragmentManager.fragments.firstOrNull()?.let { remove(it) }
             }
         }?.commit()
-        setTitleText(show)
+        setTitleText(showingView)
     }
 
     @SuppressLint("PrivateResource")
@@ -71,14 +81,24 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 setCustomAnimations(anim, anim)
             }
 
-    private fun setTitleText(currenciesFragmentIsShowing: Boolean) {
-        toolbar.toolbar_title.text = getString(if (currenciesFragmentIsShowing) R.string.LNG_CURRENCIES_CHOOSE else R.string.LNG_MENU_TITLE_SETTINGS)
+    private fun setTitleText(showingView: Int) {
+        toolbar.toolbar_title.text = getString(when (showingView) {
+            SettingsPresenter.PASSWORD_VIEW   -> R.string.LNG_LOGIN_PASSWORD_SECTION
+            SettingsPresenter.CURRENCIES_VIEW -> R.string.LNG_CURRENCIES_CHOOSE
+            else -> R.string.LNG_MENU_TITLE_SETTINGS
+        })
+
     }
 
     override fun initGeneralSettingsLayout() {
-        settingsCurrency.setOnClickListener { showCurrenciesFragment(true) }
+        settingsCurrency.setOnClickListener { presenter.onCurrencyClicked() }
         settingsBtnLogout.setOnClickListener { presenter.onLogout() }
         settingsBtnSupport.setOnClickListener { presenter.sendEmail(null, null) }
+    }
+
+    override fun initLoggedInUserSettings() {
+        settingsUserPassword.isVisible = true
+        settingsUserPassword.setOnClickListener { presenter.onPasswordClicked() }
     }
 
     override fun initCarrierLayout() {
@@ -166,10 +186,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
     override fun setEndpoints(endpoints: List<EndpointModel>) =
             Utils.setEndpointsDialogListener(this, settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
 
-    override fun setCurrency(currency: String, hideCurrenciesFragment: Boolean) {
-        settingsCurrency.field_text.text = currency
-        if(hideCurrenciesFragment) showCurrenciesFragment(false)
-    }
+    override fun setCurrency(currency: String) { settingsCurrency.field_text.text = currency }
 
     override fun setLocale(locale: String, code: String) {
         settingsLanguage.field_text.text = locale

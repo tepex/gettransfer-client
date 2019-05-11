@@ -42,13 +42,20 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val endpointMapper     = get<EndpointMapper>()
     private val reviewInteractor   = get<ReviewInteractor>()
 
-    internal var currenciesFragmentIsShowing = false
     private var localeWasChanged = false
     private var restart = true
     val isDriverMode get() =
         systemInteractor.lastMode == Screens.CARRIER_MODE
     val isBackGroundAccepted get() =
         carrierTripInteractor.bgCoordinatesPermission != CarrierTripsMainView.BG_COORDINATES_REJECTED
+
+    internal var showingFragment: Int? = null
+
+    companion object {
+        const val CLOSE_FRAGMENT  = 0
+        const val CURRENCIES_VIEW = 1
+        const val PASSWORD_VIEW   = 2
+    }
 
     /*companion object {
         private const val CURRENCY_GBP = "GBP"
@@ -61,8 +68,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         super.attachView(view)
         if (restart) initConfigs()
         initGeneralSettings()
-        if (isDriverMode) { initCarrierSettings() }
-        if (BuildConfig.FLAVOR == "dev") { initDebugSettings() }
+        if (systemInteractor.account.user.loggedIn) initLoggedInUserSettings()
+        if (isDriverMode) initCarrierSettings()
+        if (BuildConfig.FLAVOR == "dev") initDebugSettings()
     }
 
     private fun initGeneralSettings(){
@@ -82,6 +90,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setDistanceUnit(systemInteractor.distanceUnit == DistanceUnit.mi)
         viewState.setEmailNotifications(systemInteractor.isEmailNotificationEnabled)
         viewState.setLogoutButtonEnabled(systemInteractor.account.user.loggedIn)
+    }
+
+    private fun initLoggedInUserSettings() {
+        viewState.initLoggedInUserSettings()
     }
 
     private fun initCarrierSettings(){
@@ -114,8 +126,13 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     override fun currencyChanged() {
         val currencyModel = systemInteractor.currency.let { currencyMapper.toView(it) }
-        viewState.setCurrency(currencyModel.name, true)
+        viewState.setCurrency(currencyModel.name)
+        viewState.showFragment(CLOSE_FRAGMENT)
         logEvent(Analytics.CURRENCY_PARAM, currencyModel.code)
+    }
+
+    fun passwordChanged() {
+        viewState.showFragment(CLOSE_FRAGMENT)
     }
 
     fun changeLocale(selected: Int): Locale {
@@ -214,10 +231,20 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     fun onDriverCoordinatesSwitched(checked: Boolean) =
             carrierTripInteractor.permissionChanged(checked)
 
+    fun onCurrencyClicked() {
+        showingFragment = CURRENCIES_VIEW
+        viewState.showFragment(CURRENCIES_VIEW)
+    }
+
+    fun onPasswordClicked() {
+        showingFragment = PASSWORD_VIEW
+        viewState.showFragment(PASSWORD_VIEW)
+    }
+
     @CallSuper
     override fun onBackCommandClick() {
-        if (currenciesFragmentIsShowing) {
-            viewState.showCurrenciesFragment(false)
+        if (showingFragment != null) {
+            viewState.showFragment(CLOSE_FRAGMENT)
             return
         }
         if (localeWasChanged) {
