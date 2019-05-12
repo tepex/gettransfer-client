@@ -41,6 +41,14 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         const val SMS_CODE_VIEW  = 2
     }
 
+    override fun attachView(view: LoginViewNew) {
+        super.attachView(view)
+        emailOrPhone?.let {
+            viewState.setEmail(it)
+        }
+
+    }
+
     fun onContinueClick() {
         if (emailOrPhone == null
                 || !checkIfEmailOrPhone()

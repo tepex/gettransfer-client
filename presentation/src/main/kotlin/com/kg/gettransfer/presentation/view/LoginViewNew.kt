@@ -12,6 +12,8 @@ interface LoginViewNew: BaseView, SmsCodeView {
         val EXTRA_RATE              = "${LoginViewNew::class.java.name}.rate"
     }
 
+    fun setEmail(login: String)
+
     fun showError(show: Boolean, error: ApiException)
     fun showValidationError(show: Boolean, errorType: Int)
     fun showLoginInfo(@StringRes title: Int, @StringRes info: Int)

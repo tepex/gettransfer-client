@@ -21,7 +21,7 @@ open class UserMapper : EntityMapper<UserModel, UserEntity> {
         UserModel(
             fullName = type.profile.fullName!!,
             email = type.profile.email,
-            phone = type.profile.phone!!,
+            phone = type.profile.phone,
             termsAccepted = type.termsAccepted
         )
 }

@@ -8,6 +8,6 @@ import com.kg.gettransfer.data.model.UserEntity
 class UserModel(
     fullName: String,
     email: String?,
-    phone: String,
+    phone: String?,
     @SerializedName(UserEntity.TERMS_ACCEPTED) @Expose val termsAccepted: Boolean = true
 ) : ProfileModel(fullName, email, phone)

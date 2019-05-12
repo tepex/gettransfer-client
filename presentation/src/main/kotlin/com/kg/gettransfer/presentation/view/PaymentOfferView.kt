@@ -24,6 +24,7 @@ interface PaymentOfferView : BaseView {
     fun setCommission(paymentCommission: String)
     fun startPaypal(dropInRequest: DropInRequest)
     fun setToolbarTitle(transferModel: TransferModel)
+    fun openAuthFragmentDialog()
 
     companion object {
         val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"

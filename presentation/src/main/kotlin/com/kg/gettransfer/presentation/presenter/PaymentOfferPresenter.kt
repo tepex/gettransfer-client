@@ -109,6 +109,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     fun getPayment() = utils.launchSuspend {
+        if (!checkAuth()) return@launchSuspend
         viewState.blockInterface(true, true)
 
         paymentRequest.let {
@@ -129,6 +130,17 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             logEventBeginCheckout()
         }
         if (offer == null && bookNowOffer == null) viewState.showOfferError()
+    }
+
+    private fun checkAuth(): Boolean {
+        val hasUserData = systemInteractor.account.user.profile.run {
+            email != null && phone != null
+        }
+        return if (!hasUserData) {
+            viewState.openAuthFragmentDialog()
+            false
+        }
+        else true
     }
 
     private fun getBraintreeToken() {
@@ -185,6 +197,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 paymentRequest.percentage,
                 params.bookNowTransportId,
                 selectedPayment))
+    }
+
+    fun redirectToLogin(email: String) {
+        router.navigateTo(Screens.Login("", email))
     }
 
     private fun logEventBeginCheckout() {

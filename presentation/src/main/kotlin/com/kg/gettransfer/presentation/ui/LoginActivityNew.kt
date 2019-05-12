@@ -74,7 +74,11 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
             presenter.setPassword(it)
             btnLogin.isEnabled = etEmail.text?.isNotEmpty() ?: false && it.isNotEmpty()
         }
+    }
 
+    override fun setEmail(login: String) {
+        etEmail.setText(login)
+        etPassword.requestFocus()
     }
 
     @SuppressLint("CommitTransaction")

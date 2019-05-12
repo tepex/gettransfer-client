@@ -30,6 +30,7 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.parent.AuthDialogParent
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -51,7 +52,7 @@ import timber.log.Timber
 import java.lang.Exception
 
 class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonceCreatedListener,
-        BraintreeErrorListener, BraintreeCancelListener {
+        BraintreeErrorListener, BraintreeCancelListener, AuthDialogParent {
 
     companion object {
         const val PAYMENT_REQUEST_CODE = 100
@@ -295,6 +296,10 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         presenter.changePayment(PaymentRequestModel.PAYPAL)
     }
 
+    override fun openAuthFragmentDialog() {
+        AuthDialogFragment().show(supportFragmentManager, AuthDialogFragment::class.java.name)
+    }
+
     override fun setToolbarTitle(transferModel: TransferModel) {
         toolbar.tvSubTitle.text = transferModel.from
                 .let { from ->
@@ -305,6 +310,10 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
                     } ?: from
                 }
         toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
+    }
+
+    override fun redirectToLogin(withEmail: String) {
+        presenter.redirectToLogin(withEmail)
     }
 
     override fun setError(e: ApiException) {

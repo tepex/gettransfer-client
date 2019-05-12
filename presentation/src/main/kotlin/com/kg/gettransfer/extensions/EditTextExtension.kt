@@ -8,3 +8,6 @@ fun EditText.setUneditable() {
     isFocusable     = false
     isClickable     = true
 }
+
+fun EditText.getString() =
+        this.text.toString()
