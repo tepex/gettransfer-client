@@ -14,6 +14,7 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
@@ -53,10 +54,15 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     internal var selectedPayment = PaymentRequestModel.PLATRON
 
     private lateinit var paymentRequest: PaymentRequestModel
+    val profile: Profile
+        get() = systemInteractor.account.user.profile
+    lateinit var authEmail: String
+    lateinit var authPhone: String
 
     @CallSuper
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
+        isUserAuthorized()
         systemInteractor.paymentCommission.let {
             viewState.setCommission(if (it % 1.0 == 0.0) it.toInt().toString() else it.toString())
         }
@@ -108,10 +114,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    fun getPayment() = utils.launchSuspend {
-        if (!checkAuth()) return@launchSuspend
+    private fun getPayment() = utils.launchSuspend {
         viewState.blockInterface(true, true)
-
         paymentRequest.let {
             it.gatewayId = selectedPayment
             if (it.gatewayId == PaymentRequestModel.PLATRON) {
@@ -132,16 +136,32 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         if (offer == null && bookNowOffer == null) viewState.showOfferError()
     }
 
-    private fun checkAuth(): Boolean {
-        val hasUserData = systemInteractor.account.user.profile.run {
-            email != null && phone != null
-        }
-        return if (!hasUserData) {
-            viewState.openAuthFragmentDialog()
-            false
-        }
-        else true
+    fun onPaymentClicked() {
+        if (profile.hasData())
+            getPayment()
+         else
+            putAccount()
     }
+
+    private fun putAccount() {
+        utils.launchSuspend {
+            with(profile) {
+                phone = authPhone
+                email = authEmail
+            }
+            pushAccount()
+        }
+    }
+
+    private suspend fun pushAccount() =
+            fetchResultOnly { systemInteractor.putAccount() }
+                    .run {
+                        when {
+                            error?.isAccountExistError() ?: false  -> viewState.redirectToLogin()
+                            error != null                          -> viewState.setError(error!!)
+                            else                                   -> getPayment()
+                        }
+                    }
 
     private fun getBraintreeToken() {
         utils.launchSuspend {
@@ -199,8 +219,19 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 selectedPayment))
     }
 
-    fun redirectToLogin(email: String) {
-        router.navigateTo(Screens.Login("", email))
+    private fun isUserAuthorized() {
+        val isLoggedIn = profile.hasData()
+        viewState.setAuthUiVisible(!isLoggedIn)
+        if (!isLoggedIn) {
+            with(profile) {
+                phone?.let { viewState.setPhone(it) }
+                email?.let { viewState.setEmail(it) }
+            }
+        }
+    }
+
+    fun redirectToLogin(phone: String) {
+        router.navigateTo(Screens.Login("", phone))
     }
 
     private fun logEventBeginCheckout() {

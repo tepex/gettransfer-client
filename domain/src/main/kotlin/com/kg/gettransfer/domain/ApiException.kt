@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain
 
-class ApiException(val code: Int, val details: String) : RuntimeException(details) {
+class ApiException(val code: Int, val details: String, val type: String? = null) : RuntimeException(details) {
     companion object {
         @JvmField val APP_ERROR = 0
         @JvmField val NETWORK_ERROR = -1
@@ -20,4 +20,5 @@ class ApiException(val code: Int, val details: String) : RuntimeException(detail
     fun isNoUser() = code == NO_USER
     fun isNotLoggedIn() = code == NOT_LOGGED_IN
     fun isNotFound() = code == NOT_FOUND
+    fun isAccountExistError() = type == "account_exists"
 }

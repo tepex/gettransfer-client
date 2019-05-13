@@ -956,6 +956,7 @@
 	<dimen name="payment_tvPaymentAgreement_margin_top">8dp</dimen>
 	<dimen name="payment_tvPaymentAgreement_margin_start">8dp</dimen>
 	<dimen name="payment_tvPaymentAgreement_margin_end">8dp</dimen>
+	<dimen name="payment_button_pay_margin_top">24dp</dimen>
 	<dimen name="payment_button_pay_margin_start">24dp</dimen>
 	<dimen name="payment_button_pay_margin_end">24dp</dimen>
 	<dimen name="payment_button_pay_margin_bottom">24dp</dimen>

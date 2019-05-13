@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_gtr_super_light_grey"
     android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp">
+
 
     <include
         android:id="@+id/toolbar"
@@ -87,7 +93,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutPayments"
+        app:layout_constraintTop_toBottomOf="@+id/ll_auth_container"
         tools:text="Commission 3%.\n Refund is available before 17 Oct 2018 at 15:30:00" />
 
     <TextView
@@ -106,16 +112,88 @@
         app:layout_constraintTop_toBottomOf="@+id/tvCommission"
         style="@style/sf_font_pro_display_regular"/>
 
+    <LinearLayout
+        android:id="@+id/ll_auth_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:focusableInTouchMode="true"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutPayments"
+
+        tools:visibility="visible">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_auth_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/LNG_EMAIL"
+            android:background="@color/colorWhite"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
+            android:layout_marginTop="16dp"
+            android:theme="@style/editTextLogin">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_auth_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/icon"
+                android:background="@null"
+                android:drawableStart="@drawable/ic_phone"
+                android:drawablePadding="@dimen/login_input_layout_drawable_padding"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:paddingTop="@dimen/login_etEmail_padding_top"
+                android:paddingBottom="@dimen/login_etEmail_padding_bottom" />
+        </android.support.design.widget.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/create_order_fields_divider"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/il_auth_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/LNG_PHONE"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
+            android:background="@color/colorWhite"
+            android:theme="@style/editTextLogin">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_auth_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@null"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="@dimen/login_input_layout_drawable_padding"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:paddingTop="@dimen/login_etEmail_padding_top"
+                android:paddingBottom="@dimen/login_etEmail_padding_bottom"/>
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
     <include
         layout="@layout/button_pay"
         android:id="@+id/btnGetPayment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/payment_button_pay_margin_start"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="@dimen/payment_button_pay_margin_top"
         android:layout_marginEnd="@dimen/payment_button_pay_margin_end"
         android:layout_marginBottom="@dimen/payment_button_pay_margin_bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/tvPaymentAgreement"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+</ScrollView>

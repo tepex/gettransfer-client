@@ -24,7 +24,14 @@ interface PaymentOfferView : BaseView {
     fun setCommission(paymentCommission: String)
     fun startPaypal(dropInRequest: DropInRequest)
     fun setToolbarTitle(transferModel: TransferModel)
-    fun openAuthFragmentDialog()
+    fun setPaymentEnabled(enabled: Boolean)
+
+    fun setAuthUiVisible(visible: Boolean)
+    fun showBadCredentialsInfo()
+    fun setEmail(email: String)
+    fun setPhone(phone: String)
+    fun redirectToLogin()
+    fun onAccountCreated()
 
     companion object {
         val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"

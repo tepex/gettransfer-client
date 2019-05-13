@@ -7,6 +7,6 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 
 object ExceptionMapper {
-    fun map(e: RemoteException) = ApiException(e.code, e.details)
+    fun map(e: RemoteException) = ApiException(e.code, e.details, e.type)
     fun map(e: CacheException) = DatabaseException(e.code, e.details)
 }

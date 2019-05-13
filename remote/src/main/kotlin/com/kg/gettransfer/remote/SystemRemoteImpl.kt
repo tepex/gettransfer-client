@@ -19,8 +19,11 @@ import com.kg.gettransfer.remote.model.AccountModelWrapper
 import com.kg.gettransfer.remote.model.MobileConfig
 import com.kg.gettransfer.remote.model.BuildsConfigs
 import com.kg.gettransfer.remote.model.LocationModel
+import org.koin.core.parameter.parametersOf
 
 import org.koin.standalone.get
+import org.koin.standalone.inject
+import org.slf4j.Logger
 
 class SystemRemoteImpl : SystemRemote {
     private val core           = get<ApiCore>()
@@ -29,6 +32,7 @@ class SystemRemoteImpl : SystemRemote {
     private val endpointMapper = get<EndpointMapper>()
     private val mobileConfigMapper = get<MobileConfigMapper>()
     private val locationMapper = get<LocationMapper>()
+    private val log: Logger by inject { parametersOf("GTR-remote") }
 
     override suspend fun getConfigs(): ConfigsEntity {
         val response: ResponseModel<ConfigsModel> = core.tryTwice { core.api.getConfigs() }

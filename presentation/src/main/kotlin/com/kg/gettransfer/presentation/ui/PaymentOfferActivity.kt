@@ -26,11 +26,11 @@ import com.braintreepayments.api.models.PaymentMethodNonce
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.extensions.getString
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.model.*
-import com.kg.gettransfer.presentation.parent.AuthDialogParent
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -52,7 +52,7 @@ import timber.log.Timber
 import java.lang.Exception
 
 class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonceCreatedListener,
-        BraintreeErrorListener, BraintreeCancelListener, AuthDialogParent {
+        BraintreeErrorListener, BraintreeCancelListener {
 
     companion object {
         const val PAYMENT_REQUEST_CODE = 100
@@ -76,7 +76,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         setContentView(R.layout.activity_payment_offer)
         initToolbar()
         tvPaymentAgreement.setOnClickListener { presenter.onAgreementClicked() }
-        btnGetPayment.setOnClickListener { presenter.getPayment() }
+        btnGetPayment.setOnClickListener { presenter.onPaymentClicked() }
         rbCard.setOnClickListener { changePayment(it, PaymentRequestModel.PLATRON) }
         rbPaypal.setOnClickListener { changePayment(it, PaymentRequestModel.PAYPAL) }
     }
@@ -88,6 +88,24 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
             btnBack.setOnClickListener { presenter.onBackCommandClick() }
             tvSubTitle.isSelected = true
         }
+    }
+
+    private fun initTextChangeListeners() {
+        presenter.authEmail = ""
+        presenter.authPhone = ""
+        et_auth_email.onTextChanged {
+            presenter.authEmail = it
+            enablePayment()
+        }
+        et_auth_phone.onTextChanged {
+            presenter.authPhone = it
+            enablePayment()
+        }
+    }
+
+    private fun enablePayment() {
+        btnGetPayment.isEnabled = !et_auth_email.text.isNullOrEmpty()
+                && !et_auth_phone.text.isNullOrEmpty()
     }
 
     private fun changePayment(view: View, payment: String) {
@@ -296,10 +314,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         presenter.changePayment(PaymentRequestModel.PAYPAL)
     }
 
-    override fun openAuthFragmentDialog() {
-        AuthDialogFragment().show(supportFragmentManager, AuthDialogFragment::class.java.name)
-    }
-
     override fun setToolbarTitle(transferModel: TransferModel) {
         toolbar.tvSubTitle.text = transferModel.from
                 .let { from ->
@@ -312,8 +326,34 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
     }
 
-    override fun redirectToLogin(withEmail: String) {
-        presenter.redirectToLogin(withEmail)
+    override fun setAuthUiVisible(visible: Boolean) {
+        ll_auth_container.isVisible = visible
+        if (visible) initTextChangeListeners()
+        btnGetPayment.isEnabled = !visible
+    }
+
+    override fun setPaymentEnabled(enabled: Boolean) {
+        btnGetPayment.isEnabled = enabled
+    }
+
+    override fun showBadCredentialsInfo() {
+
+    }
+
+    override fun onAccountCreated() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun redirectToLogin() {
+        presenter.redirectToLogin(et_auth_phone.getString())
+    }
+
+    override fun setEmail(email: String) {
+        et_auth_email.setText(email)
+    }
+
+    override fun setPhone(phone: String) {
+        et_auth_phone.setText(phone)
     }
 
     override fun setError(e: ApiException) {

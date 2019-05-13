@@ -368,9 +368,13 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result    = fetchResultOnly { transferInteractor.createTransfer(transferNew) }
-            val logResult = fetchResultOnly { systemInteractor.putAccount() }
+            val hasData = systemInteractor.account.user.profile.hasData()
+            val logResult =
+                    if (hasData)
+                        fetchResultOnly { systemInteractor.putAccount() }
+                    else null
 
-            if (result.error == null && logResult.error == null) {
+            if (result.error == null && logResult?.error == null) {
                 handleSuccess()
                 router.replaceScreen(Screens.Offers(result.model.id))
             } else if (result.error != null) {
@@ -383,7 +387,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(false, R.string.LNG_NETWORK_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
-            } else if (logResult.error != null) viewState.showNotLoggedAlert(result.model.id)
+            } else if (logResult?.error != null) viewState.showNotLoggedAlert(result.model.id)
 
             //404 - есть акк, но не выполнен вход
             //500 - нет акка

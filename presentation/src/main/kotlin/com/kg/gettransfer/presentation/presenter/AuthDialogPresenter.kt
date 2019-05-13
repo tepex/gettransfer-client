@@ -24,7 +24,7 @@ class AuthDialogPresenter: BasePresenter<AuthDialogView>() {
                 phone = mPhone
                 email = mEmail
             }
-            pushAccount()
+          //  pushAccount()
         }
     }
 

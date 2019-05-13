@@ -2,7 +2,7 @@ package com.kg.gettransfer.data
 
 import com.kg.gettransfer.domain.ApiException
 
-class RemoteException(val code: Int, val details: String): RuntimeException(details) {
+class RemoteException(val code: Int, val details: String, val type: String? = null): RuntimeException(details) {
     companion object {
         @JvmField val NOT_HTTP      = ApiException.NETWORK_ERROR
         @JvmField val NO_USER       = ApiException.NO_USER

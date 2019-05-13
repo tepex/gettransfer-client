@@ -143,7 +143,12 @@ class ApiCore : KoinComponent {
                 log.warn("${e.message} matchResult: $matchResult", je)
                 matchResult?.getOrNull(1)
             }
-            RemoteException(e.code(), msg ?: e.message!!)
+            val type = try {
+                gson.fromJson(errorBody, ResponseModel::class.java).error?.type
+            } catch (js: JsonSyntaxException) {
+                null
+            }
+            RemoteException(e.code(), msg ?: e.message!!, type)
         }
         else -> RemoteException(RemoteException.NOT_HTTP, e.message!!)
     }
