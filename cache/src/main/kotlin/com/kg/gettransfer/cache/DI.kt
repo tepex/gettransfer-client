@@ -30,6 +30,7 @@ val cacheModule = module {
     single { PaypalCredentialsEntityMapper() }
     single { TransportTypeEntityMapper() }
     single { ConfigsEntityMapper() }
+    single { MobileConfigsEntityMapper() }
     single { AccountEntityMapper() }
     single { TransferEntityMapper() }
     single { BookNowOfferEntityMapper() }
@@ -50,6 +51,7 @@ val cacheModule = module {
     single { ChatEntityMapper() }
     single { MessageEntityMapper() }
     single { NewMessageEntityMapper() }
+    single { BuildsConfigsEntityMapper() }
     single<SystemCache> { SystemCacheImpl() }
     single<TransferCache> { TransferCacheImpl() }
     single<OfferCache> { OfferCacheImpl() }

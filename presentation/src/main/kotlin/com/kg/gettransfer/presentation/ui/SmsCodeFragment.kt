@@ -17,9 +17,10 @@ class SmsCodeFragment: MvpAppCompatFragment(), SmsCodeView {
     private lateinit var mPresenter: LoginPresenterNew
 
     private lateinit var timerBtnResendCode: CountDownTimer
+    private var smsResendDelay: Long = SMS_RESEND_DELAY_MILLIS
 
     companion object {
-        const val RESEND_CODE_TIME_MILLIS = 90_000L
+        const val SMS_RESEND_DELAY_MILLIS = 90_000L
         const val SEC_IN_MILLIS = 1_000L
     }
 
@@ -31,6 +32,7 @@ class SmsCodeFragment: MvpAppCompatFragment(), SmsCodeView {
         mActivity = activity as LoginActivityNew
         mPresenter = mActivity.presenter
         mActivity.smsCodeView = this
+        smsResendDelay = mPresenter.smsResendDelaySec * SEC_IN_MILLIS
 
         smsTitle.text = when(mPresenter.isPhone) {
             true -> getString(R.string.LNG_LOGIN_SEND_SMS_CODE)
@@ -55,7 +57,7 @@ class SmsCodeFragment: MvpAppCompatFragment(), SmsCodeView {
 
     private fun setTimer() {
         setStateBtnResendMessage(false)
-        timerBtnResendCode = object: CountDownTimer(RESEND_CODE_TIME_MILLIS, SEC_IN_MILLIS) {
+        timerBtnResendCode = object: CountDownTimer(smsResendDelay, SEC_IN_MILLIS) {
             override fun onTick(millisUntilFinished: Long) {
                 btnResendCode.text = getString(R.string.LNG_LOGIN_RESEND_WAIT, (millisUntilFinished / SEC_IN_MILLIS).toString())
                         .plus(" ${getString(R.string.LNG_SEC)}")

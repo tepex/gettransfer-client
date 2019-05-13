@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.SystemDataStore
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.EndpointEntity
+import com.kg.gettransfer.data.model.MobileConfigEntity
 
 import org.koin.standalone.inject
 
@@ -18,7 +19,8 @@ open class SystemDataStoreRemote : SystemDataStore {
     override suspend fun getConfigs() = remote.getConfigs()
     override suspend fun setConfigs(configsEntity: ConfigsEntity) { throw UnsupportedOperationException() }
 
-    suspend fun getMobileConfig() = remote.getMobileConfig()
+    override suspend fun getMobileConfigs() = remote.getMobileConfigs()
+    override suspend fun setMobileConfigs(mobileConfigsEntity: MobileConfigEntity) { throw UnsupportedOperationException() }
 
     override suspend fun getAccount() = remote.getAccount()
     override suspend fun setAccount(accountEntity: AccountEntity) = remote.setAccount(accountEntity)

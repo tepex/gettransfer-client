@@ -15,6 +15,7 @@ open class MobileConfigMapper : EntityMapper<MobileConfig, MobileConfigEntity> {
             pushShowDelay       = type.pushShowDelay,
             orderMinimumMinutes = type.orderMinimumMinutes,
             termsUrl            = type.termsOfUseUrl,
+            smsResendDelaySec   = type.smsResendDelaySec,
             buildsConfigs       = type.buildsConfigs?.mapValues { buildsConfigsMapper.fromRemote(it.value) }
         )
 

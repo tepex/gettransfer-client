@@ -26,6 +26,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     internal var transferId: Long = 0
     internal var offerId: Long? = null
     internal var rate: Int? = null
+    val smsResendDelaySec = systemInteractor.mobileConfigs.smsResendDelaySec
 
     private var password: String? = null
 

@@ -15,6 +15,7 @@ import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.ResultEntity
+import com.kg.gettransfer.data.model.MobileConfigEntity
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.SocketEventListener
@@ -142,11 +143,14 @@ class SystemRepositoryImpl(
         }
 
         if (mobileConfig === MOBILE_CONFIGS_DEFAULT) {
-            val result: Result<MobileConfig> = retrieveRemoteModel(mobileConfMapper, MOBILE_CONFIGS_DEFAULT) {
-                factory.retrieveRemoteDataStore().getMobileConfig()
+            val result: ResultEntity<MobileConfigEntity?> = retrieveEntity { fromRemote ->
+                factory.retrieveDataStore(fromRemote).getMobileConfigs()
             }
-            mobileConfig = result.model
-            if (result.error != null) return Result(account, result.error)
+            if (result.error != null && result.entity == null) return Result(account, ExceptionMapper.map(result.error))
+            result.entity?.let {
+                mobileConfig = mobileConfMapper.fromEntity(it)
+                if (result.error == null) factory.retrieveCacheDataStore().setMobileConfigs(it)
+            }
         }
 
         var error: ApiException? = null
@@ -304,6 +308,7 @@ class SystemRepositoryImpl(
             pushShowDelay       = 5,
             orderMinimumMinutes = 120,
             termsUrl            = "terms_of_use",
+            smsResendDelaySec   = 90,
             buildsConfigs       = null
         )
 

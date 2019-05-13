@@ -105,7 +105,7 @@ class SystemRemoteImpl : SystemRemote {
 
     override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpointMapper.toRemote(endpoint))
 
-    override suspend fun getMobileConfig(): MobileConfigEntity {
+    override suspend fun getMobileConfigs(): MobileConfigEntity {
         val response: MobileConfig = core.tryTwice { core.api.getMobileConfigs() }
         return mobileConfigMapper.fromRemote(response)
     }
