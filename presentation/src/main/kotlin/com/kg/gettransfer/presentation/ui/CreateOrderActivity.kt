@@ -427,7 +427,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     private fun highLightErrorField(view: View) {
         view.setBackgroundResource(R.drawable.background_create_order_error)
-        scrollContent.smoothScrollTo(0, view.bottom)
+        scrollContent.smoothScrollTo(0, view.top)
     }
 
     private fun checkErrorField(view: View) {
