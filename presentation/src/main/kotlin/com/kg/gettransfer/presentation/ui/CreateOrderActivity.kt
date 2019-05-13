@@ -263,6 +263,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         (if (field == START_DATE) transfer_date_time_field
         else transfer_return_date_field.also { showReturnFlight(SHOW) })
                 .apply { field_input.setText(date) }
+        checkErrorField(transfer_date_time_field)
     }
 
     override fun setDateTimeTransfer(dateTimeString: String, startField: Boolean) {
@@ -472,6 +473,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         }
         user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
         email_field.field_input.onTextChanged            { presenter.setEmail(it.trim()) }
+        email_field.field_input.afterTextChanged         { checkErrorField(email_field) }
         phone_field.field_input.onTextChanged            {
             if (it.isEmpty() && phone_field.field_input.isFocused) {
                 phone_field.field_input.setText("+")
@@ -479,6 +481,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             }
             presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
         }
+        phone_field.field_input.afterTextChanged         { checkErrorField(phone_field) }
         phone_field.field_input.addTextChangedListener(PhoneNumberFormatter())
         flight_number_field.field_input.onTextChanged         { presenter.setFlightNumber(it.trim(), false) }
         flight_numberReturn_field.field_input.onTextChanged   { presenter.setFlightNumber(it.trim(), true) }
