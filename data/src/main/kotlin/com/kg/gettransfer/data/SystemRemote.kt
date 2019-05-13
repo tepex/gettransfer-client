@@ -18,6 +18,5 @@ interface SystemRemote : KoinComponent {
     suspend fun registerPushToken(provider: String, token: String)
     suspend fun unregisterPushToken(token: String)
     fun changeEndpoint(endpoint: EndpointEntity)
-    suspend fun getMyLocation(): LocationEntity
     suspend fun getMobileConfigs(): MobileConfigEntity
 }

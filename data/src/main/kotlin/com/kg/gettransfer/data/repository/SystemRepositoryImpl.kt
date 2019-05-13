@@ -38,7 +38,6 @@ class SystemRepositoryImpl(
     private val endpointMapper   = get<EndpointMapper>()
     private val addressMapper    = get<AddressMapper>()
     private val mobileConfMapper = get<MobileConfigMapper>()
-    private val locationMapper   = get<LocationMapper>()
 
     private val socketListeners = mutableSetOf<SocketEventListener>()
 
@@ -267,17 +266,6 @@ class SystemRepositoryImpl(
     override var appEnters: Int
         get() = preferencesCache.appEnters
         set(value) { preferencesCache.appEnters = value }
-
-    override suspend fun getMyLocation(): Result<Location> {
-        return try {
-            //factory.retrieveRemoteDataStore().changeEndpoint(EndpointEntity("", "", API_URL_LOCATION))
-            val locationEntity = factory.retrieveRemoteDataStore().getMyLocation()
-            //factory.retrieveRemoteDataStore().changeEndpoint(preferencesCache.endpoint)
-            Result(locationMapper.fromEntity(locationEntity))
-        } catch (e: RemoteException) {
-            Result(Location(null, null), ExceptionMapper.map(e))
-        }
-    }
 
     override fun addSocketListener(listener: SocketEventListener)    { socketListeners.add(listener) }
     override fun removeSocketListener(listener: SocketEventListener) { socketListeners.remove(listener) }

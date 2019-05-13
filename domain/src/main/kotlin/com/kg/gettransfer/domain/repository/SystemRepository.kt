@@ -34,7 +34,6 @@ interface SystemRepository {
     suspend fun logout(): Result<Account>
     suspend fun registerPushToken(provider: PushTokenType, token: String): Result<Unit>
     suspend fun unregisterPushToken(token: String): Result<Unit>
-    suspend fun getMyLocation(): Result<Location>
 
     fun connectSocket()
     fun disconnectSocket()

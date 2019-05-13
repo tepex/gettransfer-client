@@ -79,9 +79,8 @@ val remoteModule = module {
     single<PaymentRemote> { PaymentRemoteImpl() }
     single<PromoRemote> { PromoRemoteImpl() }
     single<ChatRemote> { ChatRemoteImpl() }
-
     single<ReviewRemote> { ReviewRemoteImpl() }
-
+    single<GeoRemote> { GeoRemoteImpl() }
 }
 
 val socketModule = module {

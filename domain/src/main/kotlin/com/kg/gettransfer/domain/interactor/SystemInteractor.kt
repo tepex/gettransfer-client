@@ -146,11 +146,6 @@ class SystemInteractor(
 
     suspend fun coldStart() = systemRepository.coldStart()
 
-    fun initGeocoder() = geoRepository.initGeocoder(locale)
-
-    val isGpsEnabled
-        get() = geoRepository.isGpsEnabled
-
     var appEntersForMarketRate: Int
         get()  = systemRepository.appEnters
         set(value) { systemRepository.appEnters = value }
@@ -205,8 +200,6 @@ class SystemInteractor(
     fun closeSocketConnection() = systemRepository.disconnectSocket()
 
     fun clearLogs() = loggingRepository.clearLogs()
-
-    suspend fun getMyLocation() = systemRepository.getMyLocation()
 
     fun addSocketListener(listener: SocketEventListener)    { systemRepository.addSocketListener(listener) }
     fun removeSocketListener(listener: SocketEventListener) { systemRepository.removeSocketListener(listener) }

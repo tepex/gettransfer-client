@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
 import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
@@ -10,6 +9,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
+import com.kg.gettransfer.domain.interactor.GeoInteractor
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
@@ -19,8 +19,6 @@ import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
 import com.kg.gettransfer.presentation.model.OfferModel
-
-import com.kg.gettransfer.presentation.model.ReviewRateModel
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
@@ -37,6 +35,7 @@ import timber.log.Timber
 
 @InjectViewState
 class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
+    private val geoInteractor: GeoInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
     private val nState: MainState by inject()  //to keep info about navigation
@@ -68,8 +67,8 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
-        systemInteractor.initGeocoder()
-        if (systemInteractor.account.user.hasAccount) {
+        geoInteractor.initGeocoder()
+        if (systemInteractor.account.user.loggedIn) {
             registerPushToken()
             checkReview()
             utils.launchSuspend {
@@ -193,14 +192,14 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         viewState.blockSelectedField(true, systemInteractor.selectedField)
         viewState.defineAddressRetrieving { withGps ->
             utils.launchSuspend {
-                if (systemInteractor.isGpsEnabled && withGps)
+                if (geoInteractor.isGpsEnabled && withGps)
                     fetchDataOnly { orderInteractor.getCurrentAddress() }
                             ?.let {
                                 lastCurrentLocation = it.cityPoint.point?.let { point -> pointMapper.toLatLng(point) }
                                 setPointAddress(it)
                             }
                 else
-                    with(fetchResultOnly { systemInteractor.getMyLocation() }) {
+                    with(fetchResultOnly { geoInteractor.getMyLocation() }) {
                         logIpapiRequest()
                         if (error == null && model.latitude != null && model.longitude != null)
                             setLocation(model)

@@ -31,7 +31,6 @@ class SystemRemoteImpl : SystemRemote {
     private val accountMapper  = get<AccountMapper>()
     private val endpointMapper = get<EndpointMapper>()
     private val mobileConfigMapper = get<MobileConfigMapper>()
-    private val locationMapper = get<LocationMapper>()
     private val log: Logger by inject { parametersOf("GTR-remote") }
 
     override suspend fun getConfigs(): ConfigsEntity {
@@ -112,13 +111,5 @@ class SystemRemoteImpl : SystemRemote {
     override suspend fun getMobileConfigs(): MobileConfigEntity {
         val response: MobileConfig = core.tryTwice { core.api.getMobileConfigs() }
         return mobileConfigMapper.fromRemote(response)
-    }
-
-    override suspend fun getMyLocation(): LocationEntity {
-        /*return try { locationMapper.fromRemote(core.api.getMyLocation().await()) }
-        catch (e: Exception) { throw core.remoteException(e) }*/
-
-        val response: LocationModel = core.tryTwice { core.ipApi.getMyLocation() }
-        return locationMapper.fromRemote(response)
     }
 }
