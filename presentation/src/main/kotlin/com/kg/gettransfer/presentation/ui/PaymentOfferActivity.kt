@@ -132,7 +132,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     private fun setPriceInfo(default: String?, preferredPrice: String?) {
         tvPriceInfo.text  = if (preferredPrice != null)
-            getString(R.string.LNG_RIDE_PAY_CHARGE, preferredPrice, default)
+            getString(R.string.LNG_RIDE_PAY_CHARGE, default, preferredPrice)
         else getString(R.string.LNG_RIDE_PAY_CHARGE2, default)
     }
 
