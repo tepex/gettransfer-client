@@ -27,7 +27,7 @@ class ChangePasswordFragmentPresenter : BasePresenter<ChangePasswordView>(), Koi
                 viewState.blockInterface(false)
             }
         } else {
-            viewState.setError(false, R.string.pass_match)
+            viewState.setError(false, R.string.LNG_NEW_PASSWORD_FAIL)
         }
     }
 

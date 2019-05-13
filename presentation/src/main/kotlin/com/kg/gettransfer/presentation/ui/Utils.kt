@@ -139,8 +139,8 @@ object Utils : KoinComponent {
 
     fun showAlertSetNewPassword(context: Context, listener: (Boolean) -> Unit) {
         getAlertDialogBuilder(context).apply {
-            setTitle(R.string.successful_auth)
-            setMessage(R.string.create_pass_dialog)
+            setTitle(R.string.LNG_AUTHORIZED)
+            setMessage(R.string.LNG_PASSWORD_CREATE_HINT)
             setPositiveButton(R.string.LNG_MENU_TITLE_SETTINGS) { _, _ -> listener(true) }
             setNegativeButton(R.string.LNG_REVIEW_REQUEST_LATER)  { _, _ -> listener(false) }
             setOnCancelListener { listener(false) }

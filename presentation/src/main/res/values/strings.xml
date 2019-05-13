@@ -505,6 +505,11 @@
     <string name="LNG_OR">or</string>
     <string name="LNG_LOGIN_RESEND_WAIT">Didn\'t receive code? Try again in %s</string>
     <string name="LNG_LOGIN_RESEND_ALLOW">Didn\'t receive code? <a href='#'>Try again</a></string>
+    <string name="LNG_NEW_PASSWORD">Enter new password</string>
+    <string name="LNG_NEW_PASSWORD_CONFIRM">Repeat new password</string>
+    <string name="LNG_NEW_PASSWORD_FAIL">Password doesn\'t match confirmation</string>
+    <string name="LNG_AUTHORIZED">Successful authorization</string>
+    <string name="LNG_PASSWORD_CREATE_HINT">You can create a new password in the application settings</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
@@ -561,14 +566,5 @@
         <item quantity="many">@string/LNG_HOURS</item>
         <item quantity="other">@string/LNG_HOURS</item>
     </plurals>
-
-
-    <!--Needed to change-->
-    <string name="pass_view_1">Enter new password</string>
-    <string name="pass_view_2">Repeat new password</string>
-    <string name="pass_save">Save</string>
-    <string name="pass_match">Password doesn\'t match confirmation</string>
-    <string name="successful_auth">Successful authorization</string>
-    <string name="create_pass_dialog">Вы можете создать новый пароль в настройках приложения</string>
-    <string name="incorrect_sms_code">Вы ввели неверный код</string>
+    
 </resources>

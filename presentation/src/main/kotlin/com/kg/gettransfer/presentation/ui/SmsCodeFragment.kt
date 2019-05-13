@@ -79,9 +79,10 @@ class SmsCodeFragment: MvpAppCompatFragment(), SmsCodeView {
         timerBtnResendCode.start()
     }
 
-    override fun showErrorText(show: Boolean) {
+    override fun showErrorText(show: Boolean, text: String?) {
         pinView.setTextColor(ContextCompat.getColor(mActivity, if (show) R.color.color_gtr_red else R.color.color_gtr_green))
         wrongCodeError.isVisible = show
+        text?.let { wrongCodeError.text = text }
     }
 
     private fun setStateBtnResendMessage(enable: Boolean) {

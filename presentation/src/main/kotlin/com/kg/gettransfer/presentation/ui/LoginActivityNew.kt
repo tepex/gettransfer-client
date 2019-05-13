@@ -110,14 +110,15 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
 
     override fun showError(show: Boolean, error: ApiException) {
         if (show) {
-            smsCodeView?.let {
-                showErrorText(true)
-                return
-            }
-            Utils.showError(this, false, when {
+            val errText = when {
                 error.isNotFound() -> getString(R.string.LNG_ERROR_ACCOUNT)
                 else -> error.details
-            })
+            }
+            smsCodeView?.let {
+                showErrorText(true, errText)
+                return
+            }
+            Utils.showError(this, false, errText)
         }
     }
 
@@ -143,8 +144,8 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
         smsCodeView?.updateTimerResendCode()
     }
 
-    override fun showErrorText(show: Boolean) {
-        smsCodeView?.showErrorText(show)
+    override fun showErrorText(show: Boolean, text: String?) {
+        smsCodeView?.showErrorText(show, text)
     }
 
     override fun onBackPressed() { presenter.onBackCommandClick() }
