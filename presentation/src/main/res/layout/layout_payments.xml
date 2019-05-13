@@ -40,7 +40,7 @@
 
         app:layout_constraintStart_toEndOf="@+id/rbCard"
         app:layout_constraintTop_toTopOf="@+id/rbCard"
-        app:srcCompat="@drawable/bt_ic_vaulted_mastercard" />
+        app:srcCompat="@drawable/ic_master_card" />
 
     <ImageView
         android:id="@+id/ivMaestro"
@@ -50,7 +50,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/ivMasterCard"
         app:layout_constraintStart_toEndOf="@+id/ivMasterCard"
         app:layout_constraintTop_toTopOf="@+id/ivMasterCard"
-        app:srcCompat="@drawable/bt_ic_vaulted_maestro" />
+        app:srcCompat="@drawable/ic_maestro" />
 
     <ImageView
         android:id="@+id/ivVisa"
@@ -60,7 +60,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/ivMaestro"
         app:layout_constraintStart_toEndOf="@+id/ivMaestro"
         app:layout_constraintTop_toTopOf="@+id/ivMaestro"
-        app:srcCompat="@drawable/bt_ic_vaulted_visa" />
+        app:srcCompat="@drawable/ic_visa" />
 
     <ImageView
         android:id="@+id/ivAmex"
@@ -70,7 +70,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/ivVisa"
         app:layout_constraintStart_toEndOf="@+id/ivVisa"
         app:layout_constraintTop_toTopOf="@+id/ivVisa"
-        app:srcCompat="@drawable/bt_ic_vaulted_amex" />
+        app:srcCompat="@drawable/ic_amex" />
 
     <ImageView
         android:id="@+id/ivDiscover"
@@ -80,7 +80,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/ivAmex"
         app:layout_constraintStart_toEndOf="@+id/ivAmex"
         app:layout_constraintTop_toTopOf="@+id/ivAmex"
-        app:srcCompat="@drawable/bt_ic_vaulted_discover" />
+        app:srcCompat="@drawable/ic_discover" />
 
     <View
         android:id="@+id/divider2"
