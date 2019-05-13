@@ -570,4 +570,5 @@
     <string name="pass_match">Password doesn\'t match confirmation</string>
     <string name="successful_auth">Successful authorization</string>
     <string name="create_pass_dialog">Вы можете создать новый пароль в настройках приложения</string>
+    <string name="incorrect_sms_code">Вы ввели неверный код</string>
 </resources>

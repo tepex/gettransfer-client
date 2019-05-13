@@ -97,10 +97,6 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
         }?.commit()
     }
 
-    override fun updateTimerResendCode() {
-        smsCodeView?.updateTimerResendCode()
-    }
-
     @SuppressLint("PrivateResource")
     private fun setAnimation(opens: Boolean, transaction: FragmentTransaction) =
             transaction.apply {
@@ -113,10 +109,16 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
     }
 
     override fun showError(show: Boolean, error: ApiException) {
-        if (show) Utils.showError(this, false, when{
-            error.isNotFound() -> getString(R.string.LNG_ERROR_ACCOUNT)
-            else -> error.details
-        })
+        if (show) {
+            smsCodeView?.let {
+                showErrorText(true)
+                return
+            }
+            Utils.showError(this, false, when {
+                error.isNotFound() -> getString(R.string.LNG_ERROR_ACCOUNT)
+                else -> error.details
+            })
+        }
     }
 
     override fun showLoginInfo(title: Int, info: Int) {
@@ -135,6 +137,14 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
 
     override fun showChangePasswordDialog() {
         Utils.showAlertSetNewPassword(this) { presenter.openPreviousScreen(it) }
+    }
+
+    override fun updateTimerResendCode() {
+        smsCodeView?.updateTimerResendCode()
+    }
+
+    override fun showErrorText(show: Boolean) {
+        smsCodeView?.showErrorText(show)
     }
 
     override fun onBackPressed() { presenter.onBackCommandClick() }

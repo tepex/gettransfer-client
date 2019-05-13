@@ -2,11 +2,13 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.presenter.LoginPresenterNew
 import com.kg.gettransfer.presentation.view.SmsCodeView
 import kotlinx.android.synthetic.main.fragment_sms_code.*
@@ -40,6 +42,7 @@ class SmsCodeFragment: MvpAppCompatFragment(), SmsCodeView {
         }.plus(" ").plus(mPresenter.emailOrPhone)
 
         pinView.onTextChanged {
+            if (wrongCodeError.isVisible) pinView.setTextColor(ContextCompat.getColor(mActivity, R.color.color_gtr_green))
             mPresenter.setPassword(it)
             btnLogin.isEnabled = it.length == pinView.itemCount
         }
@@ -74,6 +77,11 @@ class SmsCodeFragment: MvpAppCompatFragment(), SmsCodeView {
     override fun updateTimerResendCode() {
         setStateBtnResendMessage(false)
         timerBtnResendCode.start()
+    }
+
+    override fun showErrorText(show: Boolean) {
+        pinView.setTextColor(ContextCompat.getColor(mActivity, if (show) R.color.color_gtr_red else R.color.color_gtr_green))
+        wrongCodeError.isVisible = show
     }
 
     private fun setStateBtnResendMessage(enable: Boolean) {

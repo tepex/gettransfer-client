@@ -137,6 +137,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
                         }
 
                         it.isSuccess()?.let {
+                            viewState.showErrorText(false)
                             if (withSmsCode) viewState.showChangePasswordDialog()
                             else openPreviousScreen()
                             logLoginEvent(Analytics.RESULT_SUCCESS)
