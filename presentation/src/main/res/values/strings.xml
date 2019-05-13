@@ -568,4 +568,6 @@
     <string name="pass_view_2">Repeat new password</string>
     <string name="pass_save">Save</string>
     <string name="pass_match">Password doesn\'t match confirmation</string>
+    <string name="successful_auth">Successful authorization</string>
+    <string name="create_pass_dialog">Вы можете создать новый пароль в настройках приложения</string>
 </resources>

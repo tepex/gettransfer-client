@@ -47,7 +47,7 @@ class SmsCodeFragment: MvpAppCompatFragment(), SmsCodeView {
         setTimer()
         btnResendCode.setOnClickListener { mPresenter.sendVerificationCode() }
 
-        btnLogin.setOnClickListener { mPresenter.onLoginClick() }
+        btnLogin.setOnClickListener { mPresenter.onLoginClick(true) }
     }
 
     override fun onDestroyView() {

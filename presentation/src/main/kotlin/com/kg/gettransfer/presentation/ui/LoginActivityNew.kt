@@ -133,5 +133,9 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
         if(show) Utils.showError(this, false, getString(errStringRes))
     }
 
+    override fun showChangePasswordDialog() {
+        Utils.showAlertSetNewPassword(this) { presenter.openPreviousScreen(it) }
+    }
+
     override fun onBackPressed() { presenter.onBackCommandClick() }
 }

@@ -113,7 +113,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         }
     }
 
-    fun onLoginClick() {
+    fun onLoginClick(withSmsCode: Boolean = false) {
         if(password == null){
             viewState.showValidationError(true, LoginActivityNew.INVALID_PASSWORD)
             return
@@ -137,7 +137,8 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
                         }
 
                         it.isSuccess()?.let {
-                            if (!screenForReturn.isNullOrEmpty()) openPreviousScreen(screenForReturn)
+                            if (withSmsCode) viewState.showChangePasswordDialog()
+                            else openPreviousScreen()
                             logLoginEvent(Analytics.RESULT_SUCCESS)
                             registerPushToken()
                         }
@@ -150,7 +151,8 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         viewState.showLoginInfo(R.string.LNG_ERROR_ACCOUNT, R.string.LNG_ERROR_ACCOUNT_CREATE_RIDE)
     }
 
-    private fun openPreviousScreen(screenForReturn: String?) {
+    fun openPreviousScreen(openSettingsScreen: Boolean = false) {
+        if (screenForReturn.isNullOrEmpty()) return
         when (screenForReturn) {
             Screens.CARRIER_MODE   -> {
                 router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
@@ -178,6 +180,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             }
             Screens.RATE_TRANSFER -> router.navigateTo(Screens.Splash(transferId, rate, true))
         }
+        if(openSettingsScreen) router.navigateTo(Screens.Settings)
     }
 
     private fun checkInputData() =

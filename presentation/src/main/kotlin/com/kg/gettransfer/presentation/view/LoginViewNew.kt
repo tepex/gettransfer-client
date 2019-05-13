@@ -17,4 +17,5 @@ interface LoginViewNew: BaseView, SmsCodeView {
     fun showLoginInfo(@StringRes title: Int, @StringRes info: Int)
 
     fun showPasswordFragment(show:Boolean, showingView: Int)
+    fun showChangePasswordDialog()
 }
