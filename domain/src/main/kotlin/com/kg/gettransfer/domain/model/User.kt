@@ -7,4 +7,9 @@ data class User(
 
     val loggedIn: Boolean
         get() = profile.email != null
+
+    val hasAccount: Boolean
+        get() = profile.email != null
+                && profile.phone != null
+                || termsAccepted
 }

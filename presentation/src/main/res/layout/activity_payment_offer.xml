@@ -142,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/icon"
                 android:background="@null"
-                android:drawableStart="@drawable/ic_phone"
+                android:drawableStart="@drawable/ic_email"
                 android:drawablePadding="@dimen/login_input_layout_drawable_padding"
                 android:ems="10"
                 android:inputType="textEmailAddress"
@@ -171,7 +171,7 @@
                 android:layout_height="wrap_content"
 
                 android:background="@null"
-                android:drawableStart="@drawable/ic_email"
+                android:drawableStart="@drawable/ic_phone"
                 android:drawablePadding="@dimen/login_input_layout_drawable_padding"
                 android:ems="10"
                 android:inputType="textEmailAddress"

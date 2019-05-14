@@ -523,17 +523,15 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
         btnBack.setOnClickListener { presenter.onBackClick() }
     }
 
-    override fun setProfile(profile: ProfileModel) {
-        profile.apply {
-            navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_PASSENGER)
-            navHeaderName.isVisible  = isLoggedIn()
-            navHeaderEmail.isVisible = isLoggedIn()
-            navRequests.isVisible    = isLoggedIn()
-            navLogin.isVisible       = !isLoggedIn()
-            if(isLoggedIn()){
-                navHeaderName.text = name
-                navHeaderEmail.text = email
-            }
+    override fun setProfile(isLoggedIn: Boolean, email: String?, name: String?) {
+        navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_PASSENGER)
+        navHeaderName.isVisible  = isLoggedIn
+        navHeaderEmail.isVisible = isLoggedIn
+        navRequests.isVisible    = isLoggedIn
+        navLogin.isVisible       = !isLoggedIn
+        if(isLoggedIn){
+            name?.let { navHeaderName.text = it }
+            email?.let { navHeaderEmail.text = it }
         }
     }
 

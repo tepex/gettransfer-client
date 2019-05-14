@@ -33,7 +33,8 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
 
     private var password: String? = null
 
-    var isPhone = false
+    val isPhone: Boolean
+        get() = LoginHelper.checkIsNumber(emailOrPhone)
 
     companion object{
         const val PHONE_ATTRIBUTE = "+"
@@ -49,11 +50,10 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
         emailOrPhone?.let {
             viewState.setEmail(it)
         }
-
     }
 
     private fun validateInput(): Boolean {
-        LoginHelper.validateInput(emailOrPhone!!)    //force unwrap because null-check is already done
+        LoginHelper.validateInput(emailOrPhone!!, isPhone)    //force unwrap because null-check is already done
                 .also {
                     when (it) {
                         INVALID_EMAIL -> viewState.showValidationError(true, INVALID_EMAIL)
@@ -128,6 +128,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     fun openPreviousScreen(openSettingsScreen: Boolean = false) {
         if (screenForReturn.isNullOrEmpty()) return
         when (screenForReturn) {
+            Screens.CLOSE_AFTER_LOGIN -> router.exit()
             Screens.CARRIER_MODE   -> {
                 router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
             }
@@ -139,7 +140,6 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
                 router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
                 router.navigateTo(Screens.Offers(transferId))
             }
-            Screens.CLOSE_AFTER_LOGIN -> router.exit()
             Screens.PAYMENT_OFFER -> {
                 utils.launchSuspend {
                     fetchData (NO_CACHE_CHECK) { transferInteractor.getTransfer(transferId) }

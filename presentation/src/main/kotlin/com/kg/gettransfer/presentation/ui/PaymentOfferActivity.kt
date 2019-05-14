@@ -349,7 +349,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     override fun redirectToLogin() {
-        presenter.redirectToLogin(et_auth_phone.getString())
+        presenter.redirectToLogin(et_auth_email.getString())
     }
 
     override fun setEmail(email: String) {

@@ -146,7 +146,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private fun putAccount() {
-        if (!isValid(authEmail) || !isValid(authPhone)) return
+        if (!isValid(authEmail, false) || !isValid(authPhone, true)) return
         with(profile) {
             phone = LoginHelper.formatPhone(authPhone)
             email = authEmail
@@ -164,9 +164,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                         }
                     }
 
-    private fun isValid(input: String) =
+    private fun isValid(input: String, isPhone: Boolean) =
         LoginHelper
-                .validateInput(input)
+                .validateInput(input, isPhone)
                 .let {
                     if (it != CREDENTIALS_VALID)
                         viewState.showBadCredentialsInfo(it)
@@ -249,7 +249,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     fun redirectToLogin(phone: String) {
-        router.navigateTo(Screens.Login("", phone))
+        router.navigateTo(Screens.Login(Screens.CLOSE_AFTER_LOGIN, phone))
     }
 
     private fun logEventBeginCheckout() {

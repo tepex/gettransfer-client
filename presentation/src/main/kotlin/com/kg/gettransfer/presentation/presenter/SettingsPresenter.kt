@@ -89,7 +89,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
         viewState.setDistanceUnit(systemInteractor.distanceUnit == DistanceUnit.mi)
         viewState.setEmailNotifications(systemInteractor.isEmailNotificationEnabled)
-        viewState.setLogoutButtonEnabled(systemInteractor.account.user.loggedIn)
+        viewState.setLogoutButtonEnabled(systemInteractor.account.user.hasAccount)
     }
 
     private fun initLoggedInUserSettings() {

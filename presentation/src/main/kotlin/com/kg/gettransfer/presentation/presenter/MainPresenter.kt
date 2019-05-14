@@ -93,7 +93,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
         Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
         if (!setAddressFields()) setOwnLocation()
-        viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
+        checkAccount()
         changeUsedField(systemInteractor.selectedField)
         viewState.setTripMode(orderInteractor.hourlyDuration)
     }
@@ -111,6 +111,12 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
             screenType == REQUEST_SCREEN && !hasRequestView      ->
                 viewState.recreateRequestFragment()
+        }
+    }
+
+    private fun checkAccount() {
+        with(systemInteractor.account.user) {
+            viewState.setProfile(hasAccount, profile.email, profile.fullName)
         }
     }
 
@@ -140,7 +146,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     @CallSuper
     override fun systemInitialized() {
         super.systemInitialized()
-        viewState.setProfile(profileMapper.toView(systemInteractor.account.user.profile))
+        checkAccount()
     }
 
     fun switchUsedField() {

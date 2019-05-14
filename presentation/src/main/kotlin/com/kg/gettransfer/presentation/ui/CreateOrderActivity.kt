@@ -352,7 +352,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
         if (isLoggedIn) email_field.field_input.isEnabled = false
 
-        if (isLoggedIn && user.termsAccepted) {
+        if (isLoggedIn || user.termsAccepted) {
             layoutAgreement.isVisible = false
         } else {
             switchAgreement.isChecked = user.termsAccepted

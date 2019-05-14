@@ -21,8 +21,7 @@ object LoginHelper {
                 }
             }
 
-    fun validateInput(input: String): Int {
-        val isPhone = checkIsNumber(input)
+    fun validateInput(input: String, isPhone: Boolean): Int {
         if(!isPhone) {
             if(!Utils.checkEmail(input)) return INVALID_EMAIL
         } else {
@@ -31,7 +30,7 @@ object LoginHelper {
         return CREDENTIALS_VALID
     }
 
-    private fun checkIsNumber(source: String?): Boolean {
+    fun checkIsNumber(source: String?): Boolean {
         if (source?.firstSign() == "+") return true
         return try {
             source?.toLong()
