@@ -60,6 +60,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val countEventsInteractor: CountEventsInteractor by inject()
 
     private val pushTokenInteractor: PushTokenInteractor by inject()
+    protected val socketInteractor: SocketInteractor by inject()
 
     //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
@@ -258,18 +259,16 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     }
 
     fun onAppStateChanged(isForeGround: Boolean) {
-        with(systemInteractor) {
+        with(socketInteractor) {
             if (isForeGround) openSocketConnection()
-            else {
-                when {
-                    lastMode != Screens.CARRIER_MODE -> closeSocketConnection()
-                    carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_REJECTED -> closeSocketConnection()
-                }
+            else if (systemInteractor.lastMode != Screens.CARRIER_MODE ||
+                    carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_REJECTED){
+                closeSocketConnection()
             }
         }
     }
 
-    fun openSocketConnection() { systemInteractor.openSocketConnection() }
+    fun openSocketConnection() { socketInteractor.openSocketConnection() }
 
     private fun increaseEventsOffersCounter(transferId: Long) =
             with(countEventsInteractor) {
@@ -316,8 +315,9 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 }
             }
 
-    fun onDriverModeExit() =
-        with(systemInteractor) { if (lastMode == Screens.CARRIER_MODE) closeSocketConnection() }
+    fun onDriverModeExit() {
+        if (systemInteractor.lastMode == Screens.CARRIER_MODE) socketInteractor.closeSocketConnection()
+    }
 
 
     /*

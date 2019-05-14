@@ -1,6 +1,5 @@
 package com.kg.gettransfer.domain.repository
 
-import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.domain.model.*
 
 interface SystemRepository {
@@ -32,11 +31,4 @@ interface SystemRepository {
     suspend fun accountLogin(email: String?, phone: String?, password: String): Result<Account>
     suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean>
     suspend fun logout(): Result<Account>
-
-    fun connectSocket()
-    fun disconnectSocket()
-    fun connectionChanged()
-
-    fun addSocketListener(listener: SocketEventListener)
-    fun removeSocketListener(listener: SocketEventListener)
 }

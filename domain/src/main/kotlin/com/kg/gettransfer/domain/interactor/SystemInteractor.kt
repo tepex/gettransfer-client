@@ -182,13 +182,7 @@ class SystemInteractor(
         return result
     }
 
-    fun openSocketConnection() = systemRepository.connectSocket()
-    fun closeSocketConnection() = systemRepository.disconnectSocket()
-
     fun clearLogs() = loggingRepository.clearLogs()
-
-    fun addSocketListener(listener: SocketEventListener)    { systemRepository.addSocketListener(listener) }
-    fun removeSocketListener(listener: SocketEventListener) { systemRepository.removeSocketListener(listener) }
 
     companion object {
         //private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )

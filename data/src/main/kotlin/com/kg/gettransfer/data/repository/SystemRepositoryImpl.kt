@@ -2,12 +2,10 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
-import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
-import com.kg.gettransfer.data.ds.io.SystemSocketDataStoreOutput
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 import com.kg.gettransfer.data.mapper.*
 
@@ -18,7 +16,6 @@ import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.MobileConfigEntity
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.SystemRepository
@@ -28,8 +25,7 @@ import java.util.Locale
 import org.koin.standalone.get
 
 class SystemRepositoryImpl(
-    private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>,
-    private val socketDataStore: SystemSocketDataStoreOutput
+    private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>
 ) : BaseRepository(), SystemRepository, PreferencesListener {
 
     private val preferencesCache = get<PreferencesCache>()
@@ -38,8 +34,6 @@ class SystemRepositoryImpl(
     private val endpointMapper   = get<EndpointMapper>()
     private val addressMapper    = get<AddressMapper>()
     private val mobileConfMapper = get<MobileConfigMapper>()
-
-    private val socketListeners = mutableSetOf<SocketEventListener>()
 
     init {
         preferencesCache.addListener(this)
@@ -240,32 +234,14 @@ class SystemRepositoryImpl(
         return Result(account)
     }
 
-    override fun accessTokenChanged(accessToken: String) {
-        connectionChanged()
-    }
-
+    override fun accessTokenChanged(accessToken: String) {}
     override fun endpointChanged(endpointEntity: EndpointEntity) {
         factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
-        connectionChanged()
     }
 
     override var appEnters: Int
         get() = preferencesCache.appEnters
         set(value) { preferencesCache.appEnters = value }
-
-    override fun addSocketListener(listener: SocketEventListener)    { socketListeners.add(listener) }
-    override fun removeSocketListener(listener: SocketEventListener) { socketListeners.remove(listener) }
-
-    /* Socket */
-
-    override fun connectSocket()     = socketDataStore.connectSocket(endpointMapper.toEntity(endpoint), accessToken)
-    override fun connectionChanged() = socketDataStore.changeConnection(endpointMapper.toEntity(endpoint), accessToken)
-    override fun disconnectSocket()  = socketDataStore.disconnectSocket()
-
-    fun notifyAboutConnection()    = socketListeners.forEach { it.onSocketConnected() }
-    fun notifyAboutDisconnection() = socketListeners.forEach { it.onSocketDisconnected() }
-
-
 
 
     companion object {

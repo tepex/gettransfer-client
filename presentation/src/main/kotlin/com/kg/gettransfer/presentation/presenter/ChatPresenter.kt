@@ -46,7 +46,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     @CallSuper
     override fun attachView(view: ChatView) {
         super.attachView(view)
-        systemInteractor.addSocketListener(this)
+        socketInteractor.addSocketListener(this)
         utils.launchSuspend {
             val transferCachedResult = utils.asyncAwait { transferInteractor.getTransfer(transferId, false, userRole) }
             val chatCachedResult = utils.asyncAwait { chatInteractor.getChat(transferId, true) }
@@ -83,7 +83,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     fun onLeaveRoom(){
         chatInteractor.onLeaveRoom(transferId)
         chatInteractor.eventChatReceiver = null
-        systemInteractor.removeSocketListener(this)
+        socketInteractor.removeSocketListener(this)
     }
 
     /*override fun doingSomethingAfterSendingNewMessagesCached() {

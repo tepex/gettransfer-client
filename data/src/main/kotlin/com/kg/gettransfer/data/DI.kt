@@ -85,13 +85,15 @@ val dataModule = module {
     single { SystemDataStoreRemote() }
     single { SystemSocketDataStoreOutput(get()) }
     single <SystemDataStoreReceiver> { SystemSocketDataStoreInput() }
-    single { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get()), get()) } bind SystemRepository::class
+    single { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get())) } bind SystemRepository::class
 
     single { GeoDataStoreRemote() }
     single { GeoRemoteRepositoryImpl(get()) } bind GeoRemoteRepository::class
 
     single { PushTokenDataStoreRemote() }
     single { PushTokenRepositoryImpl(get()) } bind PushTokenRepository::class
+
+    single { SocketRepositoryImpl(get()) } bind SocketRepository::class
 
     single { RouteInfoMapper() }
     single { PointMapper() }

@@ -82,7 +82,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
-        systemInteractor.addSocketListener(this)
+        socketInteractor.addSocketListener(this)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
            fetchData { transferInteractor.getTransfer(transferId) }
@@ -143,7 +143,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         super.detachView(view)
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
         isCameraUpdatedForCoordinates = false
-        systemInteractor.removeSocketListener(this)
+        socketInteractor.removeSocketListener(this)
     }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
