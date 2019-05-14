@@ -9,11 +9,11 @@ import org.koin.standalone.inject
 @InjectViewState
 class LogsPresenter : BasePresenter<LogsView>() {
     override fun onFirstViewAttach() {
-        viewState.setLogs(systemInteractor.logs)
+        viewState.setLogs(logsInteractor.logs)
     }
 
     fun clearLogs() {
-        systemInteractor.clearLogs()
+        logsInteractor.clearLogs()
         viewState.setLogs("")
     }
 

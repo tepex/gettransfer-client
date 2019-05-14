@@ -22,6 +22,7 @@ import net.hockeyapp.android.CrashManagerListener
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.LogsInteractor
 import com.kg.gettransfer.presentation.ui.helpers.BuildsConfigsHelper
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
@@ -38,6 +39,7 @@ class SplashActivity : AppCompatActivity() {
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private val systemInteractor: SystemInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
+    private val logsInteractor: LogsInteractor by inject()
 
     private var updateAppDialogIsShowed = false
 
@@ -52,7 +54,7 @@ class SplashActivity : AppCompatActivity() {
 
         if (!BuildConfig.DEBUG) {
             CrashManager.register(applicationContext, object : CrashManagerListener() {
-                override fun getDescription() = systemInteractor.logs
+                override fun getDescription() = logsInteractor.logs
             })
         }
 

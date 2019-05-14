@@ -61,6 +61,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
 
     private val pushTokenInteractor: PushTokenInteractor by inject()
     protected val socketInteractor: SocketInteractor by inject()
+    protected val logsInteractor: LogsInteractor by inject()
 
     //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
@@ -168,7 +169,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
             router.navigateTo(
                     Screens.SendEmail(
                             emailCarrier,
-                            systemInteractor.logsFile,
+                            logsInteractor.logsFile,
                             transferID,
                             systemInteractor.account.user.profile.email))
         }
