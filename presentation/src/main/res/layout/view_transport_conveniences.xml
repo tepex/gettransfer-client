@@ -52,8 +52,8 @@
 
         <ImageView
                 android:id="@+id/imgFreeWater"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="22dp"
+                android:layout_height="24dp"
                 android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
                 app:srcCompat="@drawable/ic_free_water"
                 android:visibility="gone"

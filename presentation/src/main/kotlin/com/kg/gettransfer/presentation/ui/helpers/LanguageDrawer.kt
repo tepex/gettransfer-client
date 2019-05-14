@@ -14,7 +14,7 @@ object LanguageDrawer {
         layout.removeAllViews()
         languages.forEach {
             layout.addView(ImageView(layout.context).apply {
-                setImageResource(Utils.getLanguageImage(it.delegate.language))
+                setImageResource(Utils.getLanguageImage(it.delegate.toLanguageTag()))
                 layoutParams = getLayoutParamsWithMargin(layout.context)
             })
         }
@@ -32,7 +32,7 @@ object LanguageDrawer {
                 val i = row * rowNumber + col
                 if (i == languages.size) break
                 layout.addView(ImageView(layout.context).apply {
-                    setImageResource(Utils.getLanguageImage(languages[i].delegate.language))
+                    setImageResource(Utils.getLanguageImage(languages[i].delegate.toLanguageTag()))
                     layoutParams = lp
                 }, col)
             }
