@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:paddingTop="16dp"
     android:paddingBottom="25dp"
     tools:context=".presentation.ui.PaymentSuccessfulActivity"
@@ -37,7 +37,7 @@
         android:id="@+id/tvPaidSuccessfully"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         style="@style/sf_font_semi_bold"
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         style="@style/sf_font"
         android:textSize="16sp"
@@ -68,23 +68,23 @@
         android:layout_width="0dp"
         android:layout_height="165dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvBookNowSuccess" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDownloadVoucher" />
 
     <TextView
         android:id="@+id/tvWillStart"
         style="@style/sf_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
         android:paddingStart="32dp"
-        android:layout_marginTop="16dp"
         android:paddingEnd="32dp"
         android:text="@string/LNG_TRANSFER_WILL_START"
         android:textSize="16sp"
-        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mapViewRoute" />
@@ -93,7 +93,7 @@
         android:id="@+id/tvRemainTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/sf_pro_text_semibold"
         android:textColor="@android:color/black"
         android:textSize="24sp"
@@ -106,41 +106,41 @@
         android:id="@+id/btnCall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="50dp"
+        android:visibility="gone"
         app:backgroundTint="@color/colorPrimaryDark"
         app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnChat"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRemainTime"
-        app:srcCompat="@drawable/ic_call"
-        android:visibility="gone"/>
+        app:srcCompat="@drawable/ic_call" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="50dp"
+        android:visibility="gone"
         app:backgroundTint="@color/colorPrimaryDark"
         app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnSupport"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnCall"
-        app:layout_constraintTop_toBottomOf="@+id/tvRemainTime"
-        app:srcCompat="@drawable/ic_chat_yellow"
-        android:visibility="gone"/>
+        app:srcCompat="@drawable/ic_chat_yellow" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnSupport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="50dp"
         app:backgroundTint="@color/colorWhite"
         app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnChat"
-        app:layout_constraintTop_toBottomOf="@+id/tvRemainTime"
         app:srcCompat="@drawable/ic_support" />
 
     <TextView
@@ -183,7 +183,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="33dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
         android:layout_marginEnd="33dp"
         android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"
         app:layout_constraintBottom_toTopOf="@+id/mapViewRoute"
@@ -192,6 +193,31 @@
         app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber"
         style="@style/sf_pro_text_regular_green"
         android:gravity="center"
-        android:visibility="gone"/>
+        android:visibility="invisible"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabDownloadVoucher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@android:color/white"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber"
+        app:srcCompat="@drawable/ic_download" />
+
+    <TextView
+        android:id="@+id/tvDownloadVoucher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/LNG_DOWNLOAD_BOOKING_VOUCHER"
+        app:layout_constraintEnd_toEndOf="@+id/fabDownloadVoucher"
+        app:layout_constraintStart_toStartOf="@+id/fabDownloadVoucher"
+        app:layout_constraintTop_toBottomOf="@+id/fabDownloadVoucher"
+        android:textSize="12sp"
+        style="@style/sf_font_pro_text_regular_grey"/>
 
 </android.support.constraint.ConstraintLayout>
