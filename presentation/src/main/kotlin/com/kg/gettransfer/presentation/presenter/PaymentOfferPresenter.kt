@@ -21,6 +21,8 @@ import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
+import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
@@ -144,13 +146,12 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private fun putAccount() {
-        utils.launchSuspend {
-            with(profile) {
-                phone = authPhone
-                email = authEmail
-            }
-            pushAccount()
+        if (!isValid(authEmail) || !isValid(authPhone)) return
+        with(profile) {
+            phone = LoginHelper.formatPhone(authPhone)
+            email = authEmail
         }
+        utils.launchSuspend { pushAccount() }
     }
 
     private suspend fun pushAccount() =
@@ -162,6 +163,16 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                             else                                   -> getPayment()
                         }
                     }
+
+    private fun isValid(input: String) =
+        LoginHelper
+                .validateInput(input)
+                .let {
+                    if (it != CREDENTIALS_VALID)
+                        viewState.showBadCredentialsInfo(it)
+                    it == CREDENTIALS_VALID
+                }
+
 
     private fun getBraintreeToken() {
         utils.launchSuspend {
@@ -204,19 +215,26 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         currentTransfer?.let {
             router.navigateTo(
                     Screens.PayPalConnection(
-                            paymentId, nonce, it.id,
-                            params.offerId, paymentRequest.percentage, params.bookNowTransportId))
+                            paymentId,
+                            nonce,
+                            it.id,
+                            params.offerId,
+                            paymentRequest.percentage,
+                            params.bookNowTransportId)
+            )
         }
     }
 
 
     private fun navigateToPayment() {
-        router.navigateTo(Screens.Payment(params.transferId,
+        router.navigateTo(Screens.Payment(
+                params.transferId,
                 offer?.id,
                 url,
                 paymentRequest.percentage,
                 params.bookNowTransportId,
-                selectedPayment))
+                selectedPayment)
+        )
     }
 
     private fun isUserAuthorized() {

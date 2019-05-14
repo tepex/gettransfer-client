@@ -27,11 +27,10 @@ interface PaymentOfferView : BaseView {
     fun setPaymentEnabled(enabled: Boolean)
 
     fun setAuthUiVisible(visible: Boolean)
-    fun showBadCredentialsInfo()
+    fun showBadCredentialsInfo(field: Int)
     fun setEmail(email: String)
     fun setPhone(phone: String)
     fun redirectToLogin()
-    fun onAccountCreated()
 
     companion object {
         val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"

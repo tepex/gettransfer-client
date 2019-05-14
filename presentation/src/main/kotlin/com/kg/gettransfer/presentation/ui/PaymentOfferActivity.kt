@@ -57,6 +57,9 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     companion object {
         const val PAYMENT_REQUEST_CODE = 100
         const val PAYPAL_PACKAGE_NAME = "com.paypal.android.p2pmobile"
+
+        const val INVALID_EMAIL     = 1
+        const val INVALID_PHONE     = 2
     }
 
     @InjectPresenter
@@ -336,12 +339,13 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         btnGetPayment.isEnabled = enabled
     }
 
-    override fun showBadCredentialsInfo() {
-
-    }
-
-    override fun onAccountCreated() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showBadCredentialsInfo(field: Int) {
+        val errStringRes = when (field) {
+            INVALID_EMAIL    -> R.string.LNG_ERROR_EMAIL
+            INVALID_PHONE    -> R.string.LNG_ERROR_PHONE
+            else             -> R.string.LNG_BAD_CREDENTIALS_ERROR
+        }
+        Utils.showError(this, false, getString(errStringRes))
     }
 
     override fun redirectToLogin() {

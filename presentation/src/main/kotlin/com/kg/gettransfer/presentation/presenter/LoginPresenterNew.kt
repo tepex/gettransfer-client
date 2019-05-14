@@ -10,12 +10,15 @@ import com.kg.gettransfer.extensions.internationalExample
 
 import com.kg.gettransfer.presentation.ui.LoginActivityNew
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
+import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
+import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
+import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_PHONE
 
 import com.kg.gettransfer.presentation.view.LoginViewNew
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-import java.lang.IllegalArgumentException
 
 @InjectViewState
 class LoginPresenterNew : BasePresenter<LoginViewNew>() {
@@ -49,64 +52,26 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
 
     }
 
-    fun onContinueClick() {
-        if (emailOrPhone == null
-                || !checkIfEmailOrPhone()
-                || !validateInput()) return
-
-        //TODO проверка наличия аккаунта на бэке
-        /*val accountExist = false  //ответ от сервера
-        if (accountExist) {
-            //переходим на фрагмент пароля
-        } else {
-            suggestCreateAccount()
-        }*/
-        viewState.showPasswordFragment(true, PASSWORD_VIEW)
-    }
-
     private fun validateInput(): Boolean {
-        isPhone = checkIsNumber()
-        if(!isPhone) {
-            if(!Utils.checkEmail(emailOrPhone)) {
-                viewState.showValidationError(true, LoginActivityNew.INVALID_EMAIL)
-                return false
-            }
-        } else {
-            if (!Utils.checkPhone(formatPhone())) {
-                viewState.showValidationError(true, LoginActivityNew.INVALID_PHONE)
-                return false
-            }
-        }
-        return true
+        LoginHelper.validateInput(emailOrPhone!!)    //force unwrap because null-check is already done
+                .also {
+                    when (it) {
+                        INVALID_EMAIL -> viewState.showValidationError(true, INVALID_EMAIL)
+                        INVALID_PHONE -> viewState.showValidationError(true, INVALID_PHONE)
+                        CREDENTIALS_VALID -> return true
+                    }
+                }
+        return false
     }
 
     fun sendVerificationCode() {
-        /*utils.launchSuspend {
-            viewState.blockInterface(true, true)
-            fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when(isPhone) {
-                    true -> systemInteractor.getVerificationCode(null, formatPhone())
-                    false -> systemInteractor.getVerificationCode(emailOrPhone, null)
-                }
-            }.also {
-                if(it.error != null) {
-                    viewState.showError(true, it.error!!)
-                } else {
-                    when (passwordFragmentIsShowing) {
-                        true -> viewState.updateTimerResendCode()
-                        false -> viewState.showPasswordFragment(true, isPhone)
-                    }
-                }
-            }
-            viewState.blockInterface(false)
-        }*/
         if (!checkInputData()) return
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when(isPhone) {
-                    true -> systemInteractor.getVerificationCode(null, formatPhone())
+                    true -> systemInteractor.getVerificationCode(null, LoginHelper.formatPhone(emailOrPhone))
                     false -> systemInteractor.getVerificationCode(emailOrPhone, null)
                 }
             }.also {
@@ -133,7 +98,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> systemInteractor.accountLogin(null, formatPhone(), password!!)
+                    true -> systemInteractor.accountLogin(null, LoginHelper.formatPhone(emailOrPhone), password!!)
                     false -> systemInteractor.accountLogin(emailOrPhone, null, password!!)
                 }
             }
@@ -210,29 +175,9 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             }
         }
 
-
-
-    private fun checkIsNumber(): Boolean {
-        if (emailOrPhone?.firstSign() == "+") return true
-        return try {
-            emailOrPhone?.toLong()
-            true
-        } catch (e: IllegalArgumentException) {
-            false
-        }
-    }
-
     /*private fun identifyLoginType(input: String) =
             input.contains("@")*/
 
-    private fun formatPhone() =
-            emailOrPhone?.let {
-                when {
-                    it.firstSign() == "8" -> "+7${it.substring(1)}"
-                    it.firstSign() == "7" -> "+$it"
-                    else                  -> it
-            }
-        }
 
     private fun logLoginEvent(result: String) {
         val map = mutableMapOf<String, Any>()
