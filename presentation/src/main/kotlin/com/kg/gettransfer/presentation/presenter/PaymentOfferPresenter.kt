@@ -60,11 +60,12 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         systemInteractor.paymentCommission.let {
             viewState.setCommission(if (it % 1.0 == 0.0) it.toInt().toString() else it.toString())
         }
-        viewState.blockInterface(false)
         utils.launchSuspend {
+            viewState.blockInterface(true, true)
             getOffers()
+            getPaymentRequest()
+            viewState.blockInterface(false)
         }
-        getPaymentRequest()
     }
 
     private fun getPaymentRequest() {

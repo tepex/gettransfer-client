@@ -59,7 +59,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/payment_offer_tiny_languages_margin_top"
-            android:layout_marginBottom="@dimen/payment_offer_tiny_languages_margin_bottom"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/tvClass"
             app:layout_constraintStart_toEndOf="@+id/tvClass"
