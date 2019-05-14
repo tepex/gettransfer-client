@@ -6,13 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guide_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/payment_layout_constraintGuide_begin_payments" />
-
     <RadioButton
         android:id="@+id/rbCard"
         style="@style/sf_font"
@@ -25,6 +18,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingStart="@dimen/payment_radio_button_padding_start"
+        android:paddingEnd="@dimen/payment_radio_button_padding_start"
         android:text="@string/LNG_PAYMENT_METHOD_CARD"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,9 +28,7 @@
         android:id="@+id/ivMasterCard"
         android:layout_width="@dimen/payment_logo_card_width"
         android:layout_height="@dimen/payment_logo_card_height"
-        android:layout_marginStart="23dp"
         app:layout_constraintBottom_toBottomOf="@+id/rbCard"
-        app:layout_constraintLeft_toLeftOf="@id/guide_left"
 
         app:layout_constraintStart_toEndOf="@+id/rbCard"
         app:layout_constraintTop_toTopOf="@+id/rbCard"
