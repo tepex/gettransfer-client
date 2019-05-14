@@ -32,7 +32,6 @@ class ChangePasswordFragment: MvpAppCompatFragment(), ChangePasswordView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        root.setOnClickListener {}
         mActivity = (activity as SettingsActivity)
         mPresenter = mActivity.presenter
 
