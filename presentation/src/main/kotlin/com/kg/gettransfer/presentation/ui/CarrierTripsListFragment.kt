@@ -23,7 +23,7 @@ import com.kg.gettransfer.presentation.adapter.CarrierTripsRVAdapter
 
 import com.kg.gettransfer.presentation.model.CarrierTripsRVItemModel
 
-import com.kg.gettransfer.presentation.presenter.CarrierTripsListFragmentPresenter
+import com.kg.gettransfer.presentation.presenter.CarrierTripsListPresenter
 import com.kg.gettransfer.presentation.view.BaseView
 
 import com.kg.gettransfer.presentation.view.CarrierTripsListFragmentView
@@ -34,12 +34,12 @@ import timber.log.Timber
 
 class CarrierTripsListFragment : MvpAppCompatFragment(), CarrierTripsListFragmentView {
     @InjectPresenter
-    internal lateinit var presenter: CarrierTripsListFragmentPresenter
+    internal lateinit var presenter: CarrierTripsListPresenter
 
     private var isUserScrolling = false
 
     @ProvidePresenter
-    fun createCarrierTripsPresenter() = CarrierTripsListFragmentPresenter()
+    fun createCarrierTripsListPresenter() = CarrierTripsListPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
             inflater.inflate(R.layout.activity_carrier_trips_list_fragment, container, false)

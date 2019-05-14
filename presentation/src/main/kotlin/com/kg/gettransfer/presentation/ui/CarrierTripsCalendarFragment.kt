@@ -18,7 +18,7 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarRVAdapter
 import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarMonthPagerAdapter
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
-import com.kg.gettransfer.presentation.presenter.CarrierTripsCalendarFragmentPresenter
+import com.kg.gettransfer.presentation.presenter.CarrierTripsCalendarPresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.CarrierTripsCalendarFragmentView
 import kotlinx.android.synthetic.main.activity_carrier_trips_calendar_fragment.*
@@ -26,12 +26,12 @@ import timber.log.Timber
 
 class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalendarFragmentView {
     @InjectPresenter
-    internal lateinit var presenter: CarrierTripsCalendarFragmentPresenter
+    internal lateinit var presenter: CarrierTripsCalendarPresenter
 
     var currentIndex: Int = 1
 
     @ProvidePresenter
-    fun createCarrierTripsCalendarPresenter() = CarrierTripsCalendarFragmentPresenter()
+    fun createCarrierTripsCalendarPresenter() = CarrierTripsCalendarPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         inflater.inflate(R.layout.activity_carrier_trips_calendar_fragment, container, false)

@@ -3,7 +3,7 @@ package com.kg.gettransfer.presentation.adapter
 import com.kg.gettransfer.R
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import com.kg.gettransfer.presentation.presenter.CarrierTripsCalendarFragmentPresenter
+import com.kg.gettransfer.presentation.presenter.CarrierTripsCalendarPresenter
 import android.view.LayoutInflater
 import android.view.View
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
@@ -14,7 +14,7 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 class CarrierTripsCalendarRVAdapter(
-        private val presenter: CarrierTripsCalendarFragmentPresenter,
+        private val presenter: CarrierTripsCalendarPresenter,
         private val carrierTrips: List<CarrierTripBaseModel>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 

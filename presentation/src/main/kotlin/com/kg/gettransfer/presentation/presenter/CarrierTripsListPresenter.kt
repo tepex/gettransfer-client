@@ -17,7 +17,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import org.koin.standalone.inject
 
 @InjectViewState
-class CarrierTripsListFragmentPresenter : BasePresenter<CarrierTripsListFragmentView>() {
+class CarrierTripsListPresenter : BasePresenter<CarrierTripsListFragmentView>() {
     private val carrierTripsListItemsMapper: CarrierTripsListItemsMapper by inject()
 
     private var tripsRVItems: List<CarrierTripsRVItemModel>? = null

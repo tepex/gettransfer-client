@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
@@ -15,7 +13,7 @@ import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.presentation.adapter.CurrenciesListAdapter
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.presenter.BasePresenter
-import com.kg.gettransfer.presentation.presenter.SelectCurrencyFragmentPresenter
+import com.kg.gettransfer.presentation.presenter.SelectCurrencyPresenter
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
 import kotlinx.android.synthetic.main.fragment_select_currency.*
 
@@ -23,10 +21,10 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
     override val layout = R.layout.fragment_select_currency
 
     @InjectPresenter
-    internal lateinit var presenter: SelectCurrencyFragmentPresenter
+    internal lateinit var presenter: SelectCurrencyPresenter
 
     @ProvidePresenter
-    fun createSelectCurrencyFragmentPresenter() = SelectCurrencyFragmentPresenter()
+    fun createSelectCurrencyPresenter() = SelectCurrencyPresenter()
 
     private lateinit var mPresenter: BasePresenter<*>
 

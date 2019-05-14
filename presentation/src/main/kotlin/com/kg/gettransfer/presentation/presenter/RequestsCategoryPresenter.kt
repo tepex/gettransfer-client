@@ -14,7 +14,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import timber.log.Timber
 
 @InjectViewState
-class RequestsFragmentPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
+class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         BasePresenter<RequestsFragmentView>(), CounterEventListener {
 
     companion object {

@@ -6,7 +6,7 @@ import com.kg.gettransfer.presentation.view.ChangePasswordView
 import org.koin.standalone.KoinComponent
 
 @InjectViewState
-class ChangePasswordFragmentPresenter : BasePresenter<ChangePasswordView>(), KoinComponent {
+class ChangePasswordPresenter : BasePresenter<ChangePasswordView>(), KoinComponent {
     private var newPassword: String? = null
     private var repeatedNewPassword: String? = null
 

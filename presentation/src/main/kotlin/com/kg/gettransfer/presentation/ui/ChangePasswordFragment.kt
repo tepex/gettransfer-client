@@ -10,8 +10,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
-import com.kg.gettransfer.presentation.presenter.BasePresenter
-import com.kg.gettransfer.presentation.presenter.ChangePasswordFragmentPresenter
+import com.kg.gettransfer.presentation.presenter.ChangePasswordPresenter
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.view.ChangePasswordView
 import kotlinx.android.synthetic.main.fragment_change_password.*
@@ -20,10 +19,10 @@ import kotlinx.android.synthetic.main.view_input_password.view.*
 class ChangePasswordFragment: MvpAppCompatFragment(), ChangePasswordView {
 
     @InjectPresenter
-    internal lateinit var presenter: ChangePasswordFragmentPresenter
+    internal lateinit var presenter: ChangePasswordPresenter
 
     @ProvidePresenter
-    fun createChangePasswordFragmentPresenter() = ChangePasswordFragmentPresenter()
+    fun createChangePasswordPresenter() = ChangePasswordPresenter()
 
     private lateinit var mActivity: SettingsActivity
     private lateinit var mPresenter: SettingsPresenter

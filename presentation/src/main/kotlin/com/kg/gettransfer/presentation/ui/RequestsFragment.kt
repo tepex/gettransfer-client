@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -25,7 +24,7 @@ import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
 import com.kg.gettransfer.presentation.model.TransferModel
-import com.kg.gettransfer.presentation.presenter.RequestsFragmentPresenter
+import com.kg.gettransfer.presentation.presenter.RequestsCategoryPresenter
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
@@ -35,7 +34,6 @@ import kotlinx.android.synthetic.main.fragment_requests.*
 
 import timber.log.Timber
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 
 
 /**
@@ -43,10 +41,10 @@ import android.util.Log
  */
 class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     @InjectPresenter
-    internal lateinit var presenter: RequestsFragmentPresenter
+    internal lateinit var presenter: RequestsCategoryPresenter
 
     @ProvidePresenter
-    fun createRequestsFragmentPresenter() = RequestsFragmentPresenter(arguments!!.getInt(TRANSFER_TYPE_ARG))
+    fun createRequestsCategoryPresenter() = RequestsCategoryPresenter(arguments!!.getInt(TRANSFER_TYPE_ARG))
 
     private var rvAdapter: RequestsRVAdapter? = null
 

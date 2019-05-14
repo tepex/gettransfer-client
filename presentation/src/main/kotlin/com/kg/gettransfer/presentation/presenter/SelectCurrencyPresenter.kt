@@ -10,7 +10,7 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 
 @InjectViewState
-class SelectCurrencyFragmentPresenter : BasePresenter<SelectCurrencyView>(), KoinComponent {
+class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinComponent {
 
     private val currencyMapper = get<CurrencyMapper>()
 

@@ -13,7 +13,7 @@ import org.koin.standalone.inject
 import java.util.Calendar
 
 @InjectViewState
-class CarrierTripsCalendarFragmentPresenter : BasePresenter<CarrierTripsCalendarFragmentView>() {
+class CarrierTripsCalendarPresenter : BasePresenter<CarrierTripsCalendarFragmentView>() {
     private val carrierTripsCalendarItemsMapper: CarrierTripsCalendarItemsMapper by inject()
 
     private var carrierTripsCalendarItems: Map<String, List<CarrierTripBaseModel>>? = null
