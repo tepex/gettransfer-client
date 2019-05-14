@@ -63,9 +63,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             getOffers()
-            getPaymentRequest()
             viewState.blockInterface(false)
         }
+        getPaymentRequest()
     }
 
     private fun getPaymentRequest() {
