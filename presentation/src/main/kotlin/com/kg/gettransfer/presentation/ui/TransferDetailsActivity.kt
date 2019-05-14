@@ -108,6 +108,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
         _mapView = mapView
         _btnCenter = btnCenterRoute
+        initBottomSheetDetails()
+        setClickListeners()
         initMapView(savedInstanceState)
         setupToolbar()
         initButtonTitles()
@@ -150,9 +152,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        initBottomSheetDetails()
-        //initTextFields()
-        setClickListeners()
+//        initBottomSheetDetails()
+          //initTextFields()
+//        setClickListeners()
     }
 
     override fun onStop() {
