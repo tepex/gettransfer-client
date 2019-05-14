@@ -18,8 +18,11 @@ import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import kotlinx.android.synthetic.main.activity_payment_successful.*
 import kotlinx.android.synthetic.main.dialog_payment_successful.*
+import org.jetbrains.anko.longToast
+import pub.devrel.easypermissions.EasyPermissions
 
-class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView {
+class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView,
+        EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentSuccessfulPresenter
@@ -58,6 +61,21 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         }
         ivClose.setOnClickListener { finish() }
         btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
+        btnDownloadVoucher.setOnClickListener { checkPermissionForWrite() }
+    }
+
+    private fun checkPermissionForWrite() {
+        val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (EasyPermissions.hasPermissions(this, *perms)) {
+            downloadVoucher()
+        } else EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
+                RC_WRITE_FILE, *perms)
+    }
+
+    private fun downloadVoucher() {
+
     }
 
     private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -88,6 +106,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     companion object {
         const val TRANSFER_ID = "transferId"
         const val OFFER_ID = "offerId"
+        const val RC_WRITE_FILE = 111
     }
 
     override fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate) {
@@ -99,4 +118,16 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         tvCall.isVisible = true
         btnCall.setOnClickListener { presenter.onCallClick() }
     }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
+
+    override fun onRationaleDenied(requestCode: Int) {
+        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+    }
+
+    override fun onRationaleAccepted(requestCode: Int) {}
 }

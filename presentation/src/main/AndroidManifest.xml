@@ -227,6 +227,10 @@
                 <action android:name="com.kg.gettransfer.service.CoordinateService" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".VoucherService"
+            android:exported="false" />
     </application>
 
 </manifest>

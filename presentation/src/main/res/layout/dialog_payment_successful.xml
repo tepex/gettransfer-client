@@ -66,7 +66,7 @@
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapViewRoute"
         android:layout_width="0dp"
-        android:layout_height="165dp"
+        android:layout_height="169dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
@@ -196,7 +196,7 @@
         android:visibility="invisible"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabDownloadVoucher"
+        android:id="@+id/btnDownloadVoucher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -214,9 +214,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/LNG_DOWNLOAD_BOOKING_VOUCHER"
-        app:layout_constraintEnd_toEndOf="@+id/fabDownloadVoucher"
-        app:layout_constraintStart_toStartOf="@+id/fabDownloadVoucher"
-        app:layout_constraintTop_toBottomOf="@+id/fabDownloadVoucher"
+        app:layout_constraintEnd_toEndOf="@+id/btnDownloadVoucher"
+        app:layout_constraintStart_toStartOf="@+id/btnDownloadVoucher"
+        app:layout_constraintTop_toBottomOf="@+id/btnDownloadVoucher"
         android:textSize="12sp"
         style="@style/sf_font_pro_text_regular_grey"/>
 
