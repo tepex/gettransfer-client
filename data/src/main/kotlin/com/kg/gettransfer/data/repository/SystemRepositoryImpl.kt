@@ -240,20 +240,6 @@ class SystemRepositoryImpl(
         return Result(account)
     }
 
-    override suspend fun registerPushToken(provider: PushTokenType, token: String): Result<Unit> {
-        return try {
-            factory.retrieveRemoteDataStore().registerPushToken(provider.toString(), token)
-            Result(Unit)
-        } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
-    }
-
-    override suspend fun unregisterPushToken(token: String): Result<Unit> {
-        return try {
-            factory.retrieveRemoteDataStore().unregisterPushToken(token)
-            Result(Unit)
-        } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
-    }
-
     override fun accessTokenChanged(accessToken: String) {
         connectionChanged()
     }

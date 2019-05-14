@@ -107,6 +107,7 @@ val domainModule = module {
     single { CoordinateInteractor(get()) }
     single { CountEventsInteractor(get()) }
     single { GeoInteractor(get(), get(), get()) }
+    single { PushTokenInteractor(get()) }
 }
 
 val mappersModule = module {

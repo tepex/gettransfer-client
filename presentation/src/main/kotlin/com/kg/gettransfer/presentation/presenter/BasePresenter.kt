@@ -59,6 +59,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val chatInteractor: ChatInteractor by inject()
     protected val countEventsInteractor: CountEventsInteractor by inject()
 
+    private val pushTokenInteractor: PushTokenInteractor by inject()
+
     //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
 
@@ -109,7 +111,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     }
 
     protected suspend fun clearAllCachedData() {
-        utils.asyncAwait { systemInteractor.unregisterPushToken() }
+        utils.asyncAwait { pushTokenInteractor.unregisterPushToken() }
         utils.asyncAwait { systemInteractor.logout() }
 
         utils.asyncAwait { transferInteractor.clearTransfersCache() }
@@ -181,7 +183,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                 it.result?.token?.let {
                     Timber.d("[FCM token]: $it")
                     utils.launchSuspend {
-                        fetchResult { systemInteractor.registerPushToken(it) }
+                        fetchResult { pushTokenInteractor.registerPushToken(it) }
                     }
                 }
             } else Timber.w("getInstanceId failed", it.exception)

@@ -32,8 +32,6 @@ interface SystemRepository {
     suspend fun accountLogin(email: String?, phone: String?, password: String): Result<Account>
     suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean>
     suspend fun logout(): Result<Account>
-    suspend fun registerPushToken(provider: PushTokenType, token: String): Result<Unit>
-    suspend fun unregisterPushToken(token: String): Result<Unit>
 
     fun connectSocket()
     fun disconnectSocket()

@@ -90,6 +90,9 @@ val dataModule = module {
     single { GeoDataStoreRemote() }
     single { GeoRemoteRepositoryImpl(get()) } bind GeoRemoteRepository::class
 
+    single { PushTokenDataStoreRemote() }
+    single { PushTokenRepositoryImpl(get()) } bind PushTokenRepository::class
+
     single { RouteInfoMapper() }
     single { PointMapper() }
     single { TransportTypePriceMapper() }

@@ -73,9 +73,6 @@ class SystemInteractor(
     val currencies: List<Currency> /* Dirty hack. GAA-298 */
         get() = systemRepository.configs.supportedCurrencies//.filter { currenciesFilterList.contains(it.currencyCode) }
 
-    var pushToken: String? = null
-        private set
-
     val mobileConfigs: MobileConfig
         get() = systemRepository.mobileConfig
 
@@ -153,17 +150,6 @@ class SystemInteractor(
     var startScreenOrder = false //for analytics
 
     suspend fun logout() = systemRepository.logout()
-
-    suspend fun registerPushToken(token: String): Result<Unit> {
-        pushToken = token
-        systemRepository.registerPushToken(PushTokenType.FCM, token)
-        return Result(Unit)
-    }
-
-    suspend fun unregisterPushToken(): Result<Unit> {
-        pushToken?.let { systemRepository.unregisterPushToken(it) } ?: Result(Unit)
-        return Result(Unit)
-    }
 
     suspend fun login(email: String, password: String): Result<Account> {
         val result = systemRepository.login(email, password)
