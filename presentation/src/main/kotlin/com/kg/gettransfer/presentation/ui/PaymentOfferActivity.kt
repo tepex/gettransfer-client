@@ -145,13 +145,14 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     private fun setCarInfo(offer: OfferItem?) {
         when (offer) {
             is OfferModel -> showCarInfoOffer(offer)
-            is BookNowOfferModel -> showCarInfoBookNow()
+            is BookNowOfferModel -> showCarInfoBookNow(offer)
         }
     }
 
-    private fun showCarInfoBookNow() {
+    private fun showCarInfoBookNow(offer: BookNowOfferModel) {
         val transportType = presenter.params.bookNowTransportId ?: ""
         val transportTypeId = TransportType.ID.parse(transportType)
+        tvClass.text = getString(TransportTypeMapper.getNameById(transportTypeId))
         tvModel.text = getString(TransportTypeMapper.getModelsById(transportTypeId))
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(transportTypeId))
         OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)

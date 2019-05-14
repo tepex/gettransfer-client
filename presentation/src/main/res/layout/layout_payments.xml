@@ -20,7 +20,7 @@
         android:paddingStart="@dimen/payment_radio_button_padding_start"
         android:paddingEnd="@dimen/payment_radio_button_padding_start"
         android:text="@string/LNG_PAYMENT_METHOD_CARD"
-        android:textSize="12sp"
+        android:textSize="13sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
