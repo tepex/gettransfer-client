@@ -1,9 +1,13 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.app.DownloadManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.support.annotation.NonNull
 import android.support.design.widget.BottomSheetBehavior
 import android.view.View
+import android.webkit.URLUtil
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.google.android.gms.maps.CameraUpdate
@@ -75,7 +79,17 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     }
 
     private fun downloadVoucher() {
-
+        val url = URL_VOUCHER + presenter.transferId
+        val request = DownloadManager.Request(Uri.parse(url)).apply {
+            allowScanningByMediaScanner()
+            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_DOWNLOADS,
+                    URLUtil.guessFileName(url, null, "application/pdf"))
+        }
+        val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        dm.enqueue(request)
+        longToast(getString(R.string.LNG_DOWNLOADING))
     }
 
     private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -107,6 +121,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         const val TRANSFER_ID = "transferId"
         const val OFFER_ID = "offerId"
         const val RC_WRITE_FILE = 111
+        const val URL_VOUCHER = "https://stgtr.org/api/transfers/voucher/"
     }
 
     override fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate) {
