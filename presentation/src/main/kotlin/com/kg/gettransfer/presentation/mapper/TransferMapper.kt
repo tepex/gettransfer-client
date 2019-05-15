@@ -60,7 +60,8 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             watertaxi             = type.watertaxi,
             bookNowOffers         = type.bookNowOffers.map { entry ->
                 bookNowOfferMapper.toView(entry.value).apply {
-                    transportType = transportTypesModels.find { it.id === entry.key }!!
+                    transportType = transportTypesModels.find { it.id === entry.key }
+                            ?: transportTypesModels.first()
                 }
             },
             offersCount           = type.offersCount,

@@ -183,7 +183,9 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private fun setLastLocation() {
         viewState.blockInterface(true)
-        setPointAddress(orderInteractor.from!!)
+        orderInteractor.from?.let {
+            setPointAddress(it)
+        }
     }
 
     private fun updateCurrentLocationAsync() {

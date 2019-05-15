@@ -47,12 +47,12 @@ class DateTimeDelegate: KoinComponent {
                 else orderReturnTime?.after(orderStartTime) ?: true  //true if hourly or return date not defined
             }
 
-    fun chooseOrderTime(context: Context, fieldStart: Boolean, screen: DateTimeScreen) =
+    fun chooseOrderTime(context: Context, fieldStart: Boolean, screen: DateTimeScreen?) =
         DateTimePickerHelper.showDatePickerDialog(context, getCurrentDateForField(fieldStart), object : DateTimeHandler {
             override fun onDateChosen(date: Date) { handleDateChoice(date, fieldStart) }
             override fun onTimeChosen(date: Date) {
                 handleTimeChoice(date, fieldStart).also {
-                        screen.setFieldDate(getDisplayText(date, context), fieldStart)
+                        screen?.setFieldDate(getDisplayText(date, context), fieldStart)
                 }
             }
         })

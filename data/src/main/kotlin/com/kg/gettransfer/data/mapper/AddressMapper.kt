@@ -23,7 +23,7 @@ class AddressMapper : Mapper<GTAddressEntity, GTAddress> {
         GTAddressEntity(
             lat = type.cityPoint.point?.latitude,
             lon = type.cityPoint.point?.longitude,
-            address = type.address!!,
+            address = type.address?:"",
             placeTypes = type.placeTypes,
             primary = type.primary,
             secondary = type.secondary
