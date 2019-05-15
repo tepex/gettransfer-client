@@ -41,8 +41,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     private val nState: MainState by inject()  //to keep info about navigation
 
     private val pointMapper: PointMapper by inject()
-    private val profileMapper: ProfileMapper by inject()
-    private val reviewRateMapper: ReviewRateMapper by inject()
 
     var screenType = REQUEST_SCREEN
 
@@ -114,7 +112,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     private fun checkAccount() {
-        with(systemInteractor.account.user) {
+        with(sessionInteractor.account.user) {
             viewState.setProfile(loggedIn, profile.email, profile.fullName)
         }
     }

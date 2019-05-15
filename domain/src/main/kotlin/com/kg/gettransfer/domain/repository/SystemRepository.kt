@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain.repository
 
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.GTAddress
 
 interface SystemRepository {
     val endpoints: List<Endpoint>

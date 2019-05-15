@@ -57,7 +57,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private lateinit var paymentRequest: PaymentRequestModel
     val profile: Profile
-        get() = systemInteractor.account.user.profile
+        get() = sessionInteractor.account.user.profile
     lateinit var authEmail: String
     lateinit var authPhone: String
 
@@ -155,7 +155,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun pushAccount() =
-            fetchResultOnly { systemInteractor.putAccount() }
+            fetchResultOnly { sessionInteractor.putAccount() }
                     .run {
                         when {
                             error?.isAccountExistError() ?: false  -> onAccountExists()

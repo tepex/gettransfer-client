@@ -8,7 +8,7 @@ import com.kg.gettransfer.presentation.view.AuthDialogView
 class AuthDialogPresenter: BasePresenter<AuthDialogView>() {
 
     val profile: Profile
-    get() = systemInteractor.account.user.profile
+    get() = sessionInteractor.account.user.profile
 
     override fun attachView(view: AuthDialogView) {
         super.attachView(view)
@@ -29,11 +29,11 @@ class AuthDialogPresenter: BasePresenter<AuthDialogView>() {
     }
 
     private suspend fun pushAccount() =
-            fetchResult { systemInteractor.putAccount() }
+            fetchResult { sessionInteractor.putAccount() }
                     .run {
                         when {
-                            error != null                       -> viewState.redirectToLogin()
-                            else                                -> viewState.onAccountCreated()
+                            error != null -> viewState.redirectToLogin()
+                            else          -> viewState.onAccountCreated()
                         }
                     }
 }

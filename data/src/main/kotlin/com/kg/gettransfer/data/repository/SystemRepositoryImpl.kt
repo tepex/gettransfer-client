@@ -1,8 +1,10 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
-import com.kg.gettransfer.data.mapper.*
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.data.mapper.EndpointMapper
+import com.kg.gettransfer.data.mapper.AddressMapper
+import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
