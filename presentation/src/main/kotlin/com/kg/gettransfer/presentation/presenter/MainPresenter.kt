@@ -69,7 +69,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
         systemInteractor.initGeocoder()
-        if (systemInteractor.account.user.loggedIn) {
+        if (systemInteractor.account.user.hasAccount) {
             registerPushToken()
             checkReview()
             utils.launchSuspend {
@@ -86,7 +86,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     override fun attachView(view: MainView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
-        if (systemInteractor.account.user.loggedIn) {
+        if (systemInteractor.account.user.hasAccount) {
             setCountEvents(countEventsInteractor.eventsCount)
         } else {
             viewState.showBadge(false)

@@ -142,7 +142,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         val localeModel = locales.get(selected)
         systemInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name, localeModel.locale)
-        if (systemInteractor.account.user.loggedIn) putAccount()
+        if (systemInteractor.account.user.hasAccount) putAccount()
         else saveNoAccount()
         logEvent(Analytics.LANGUAGE_PARAM, localeModel.name)
 

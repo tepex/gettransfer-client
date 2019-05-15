@@ -5,11 +5,11 @@ data class User(
     var termsAccepted: Boolean = false
 ) {
 
-    val loggedIn: Boolean
-        get() = profile.email != null
+    val loggedIn: Boolean //is authorized user
+        get() = profile.email != null && profile.phone != null
 
-    val hasAccount: Boolean
-        get() = profile.email != null
-                && profile.phone != null
+    val hasAccount: Boolean //is temporary or authorized user
+        get() = (profile.email != null
+                && profile.phone != null)
                 || termsAccepted
 }

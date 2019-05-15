@@ -88,9 +88,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val i = systemInteractor.currentCurrencyIndex
         if (i != -1) setCurrency(i)*/
         setCurrency()
-        val isLoggedIn = systemInteractor.account.user.loggedIn
+        val remoteUser = systemInteractor.account.user
+        val isLoggedIn = remoteUser.hasAccount
         if (isLoggedIn) {
-            orderInteractor.setNewUser(systemInteractor.account.user)
+            orderInteractor.setNewUser(remoteUser)
         } else if (orderInteractor.isLoggedIn) {
             orderInteractor.setNewUser(null)
         }
@@ -368,14 +369,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result    = fetchResultOnly { transferInteractor.createTransfer(transferNew) }
-            val hasData = systemInteractor.account.user.profile.hasData()
-            val logResult =
-                    if (hasData)
-                        fetchResultOnly { systemInteractor.putAccount() }
-                    else null
+            val result  = fetchResultOnly { transferInteractor.createTransfer(transferNew) }
 
-            if (result.error == null && logResult?.error == null) {
+            if(result.error == null) { systemInteractor.account.user = orderInteractor.user }
+            val logResult = fetchResult { systemInteractor.putAccount() }
+
+            if (result.error == null && logResult.error == null) {
                 handleSuccess()
                 router.replaceScreen(Screens.Offers(result.model.id))
             } else if (result.error != null) {
@@ -388,7 +387,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(false, R.string.LNG_NETWORK_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
-            } else if (logResult?.error?.isAccountExistError() ?: false) {
+            } else if (logResult.error?.isAccountExistError() ?: false) {
                 orderInteractor.user.profile.fullName = null
                 viewState.showNotLoggedAlert(result.model.id)
             }

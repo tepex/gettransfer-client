@@ -3,7 +3,7 @@ package com.kg.gettransfer.domain.model
 import java.util.Locale
 
 data class Account(
-    val user: User,
+    var user: User,
     var locale: Locale,
     var currency: Currency,
     var distanceUnit: DistanceUnit,

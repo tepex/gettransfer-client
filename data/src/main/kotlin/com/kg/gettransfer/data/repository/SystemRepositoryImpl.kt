@@ -235,6 +235,7 @@ class SystemRepositoryImpl(
 
     override suspend fun logout(): Result<Account> {
         account = NO_ACCOUNT
+        account.user.termsAccepted = false
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()
         return Result(account)
@@ -297,7 +298,7 @@ class SystemRepositoryImpl(
         private val CONFIGS_DEFAULT = Configs.DEFAULT_CONFIGS
 
         private val NO_ACCOUNT = Account(
-            user         = User(Profile(null, null, null)),
+            user         = User(Profile(null, null, null), false),
             locale       = Locale.getDefault(),
             currency     = defineNoAccountCurrency(),
             distanceUnit = DistanceUnit.km,
