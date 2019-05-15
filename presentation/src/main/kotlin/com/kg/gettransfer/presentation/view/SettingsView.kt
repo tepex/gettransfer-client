@@ -3,8 +3,7 @@ package com.kg.gettransfer.presentation.view
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
-import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.DayOfWeekModel
+import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
@@ -28,7 +27,7 @@ interface SettingsView : BaseView {
     fun setLogoutButtonEnabled(enabled: Boolean)
 
     fun initGeneralSettingsLayout()
-    fun initLoggedInUserSettings()
+    fun initLoggedInUserSettings(profile: ProfileModel)
     fun initCarrierLayout()
     fun initDebugLayout()
 

@@ -34,6 +34,20 @@
             android:paddingBottom="@dimen/activity_settings_padding_bottom">
 
             <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                android:id="@+id/settingsUserPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:settingsTitlePicker="@string/LNG_PHONE"
+                android:visibility="gone"/>
+
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                android:id="@+id/settingsUserEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:settingsTitlePicker="@string/LNG_EMAIL"
+                android:visibility="gone"/>
+
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                 android:id="@+id/settingsUserPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

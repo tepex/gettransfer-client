@@ -18,6 +18,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.model.*
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
+import com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -96,9 +97,22 @@ class SettingsActivity : BaseActivity(), SettingsView {
         settingsBtnSupport.setOnClickListener { presenter.sendEmail(null, null) }
     }
 
-    override fun initLoggedInUserSettings() {
+    override fun initLoggedInUserSettings(profile: ProfileModel) {
+        profile.phone?.let { initInfoField(it, settingsUserPhone) }
+        profile.email?.let { initInfoField(it, settingsUserEmail) }
+
         settingsUserPassword.isVisible = true
         settingsUserPassword.setOnClickListener { presenter.onPasswordClicked() }
+    }
+
+    private fun initInfoField(text: String, field: SettingsFieldPicker){
+        if (text.isNotEmpty()) {
+            field.apply {
+                field_text.text = text
+                field_chevron.isVisible = false
+                isVisible = true
+            }
+        }
     }
 
     override fun initCarrierLayout() {

@@ -12,6 +12,7 @@ import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.DayOfWeekMapper
 import com.kg.gettransfer.presentation.mapper.EndpointMapper
 import com.kg.gettransfer.presentation.mapper.LocaleMapper
+import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.model.*
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
 
@@ -41,6 +42,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val dayOfWeekMapper    = get<DayOfWeekMapper>()
     private val endpointMapper     = get<EndpointMapper>()
     private val reviewInteractor   = get<ReviewInteractor>()
+    private val profileMapper      = get<ProfileMapper>()
 
     private var localeWasChanged = false
     private var restart = true
@@ -93,7 +95,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     private fun initLoggedInUserSettings() {
-        viewState.initLoggedInUserSettings()
+        viewState.initLoggedInUserSettings(systemInteractor.account.user.profile.let { profileMapper.toView(it) })
     }
 
     private fun initCarrierSettings(){
