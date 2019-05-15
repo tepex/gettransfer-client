@@ -21,7 +21,7 @@ class ChangePasswordPresenter : BasePresenter<ChangePasswordView>(), KoinCompone
         if (isFieldsEquals()) {
             utils.launchSuspend {
                 viewState.blockInterface(true)
-                val result = utils.asyncAwait { systemInteractor.changePassword(newPassword!!, repeatedNewPassword!!) }
+                val result = utils.asyncAwait { sessionInteractor.changePassword(newPassword!!, repeatedNewPassword!!) }
                 result.error?.let { viewState.setError(it) }
                 if (result.error == null) viewState.passwordChanged()
                 viewState.blockInterface(false)

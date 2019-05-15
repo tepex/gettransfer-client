@@ -97,7 +97,7 @@ val fileModule = module {
 val domainModule = module {
     single { OfferInteractor(get()) }
     single { PaymentInteractor(get()) }
-    single { SystemInteractor(get(), get()) }
+    single { SystemInteractor(get()) }
     single { OrderInteractor(get(), get()) }
     single { CarrierTripInteractor(get()) }
     single { TransferInteractor(get()) }
@@ -110,6 +110,7 @@ val domainModule = module {
     single { PushTokenInteractor(get()) }
     single { SocketInteractor(get()) }
     single { LogsInteractor(get()) }
+    single { SessionInteractor(get(), get()) }
 }
 
 val mappersModule = module {

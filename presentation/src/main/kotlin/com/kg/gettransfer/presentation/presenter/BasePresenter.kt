@@ -62,6 +62,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     private val pushTokenInteractor: PushTokenInteractor by inject()
     protected val socketInteractor: SocketInteractor by inject()
     protected val logsInteractor: LogsInteractor by inject()
+    protected val sessionInteractor: SessionInteractor by inject()
 
     //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
@@ -76,9 +77,9 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected fun login(nextScreen: String, email: String?) = router.navigateTo(Screens.Login(nextScreen, email))
 
     override fun onFirstViewAttach() {
-        if (systemInteractor.isInitialized) return
+        if (sessionInteractor.isInitialized) return
         utils.launchSuspend {
-            fetchData { systemInteractor.coldStart() }
+            fetchData { sessionInteractor.coldStart() }
                     ?.let { systemInitialized() }
         }
     }
@@ -96,7 +97,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected fun checkResultError(error: ApiException): Boolean {
         if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser() )) {
             openedLoginScreenForUnauthorizedUser = true
-            login(Screens.CLOSE_AFTER_LOGIN, systemInteractor.account.user.profile.email)
+            login(Screens.CLOSE_AFTER_LOGIN, sessionInteractor.account.user.profile.email)
             return false
         } else if (openedLoginScreenForUnauthorizedUser) {
             logout()
@@ -114,7 +115,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
 
     protected suspend fun clearAllCachedData() {
         utils.asyncAwait { pushTokenInteractor.unregisterPushToken() }
-        utils.asyncAwait { systemInteractor.logout() }
+        utils.asyncAwait { sessionInteractor.logout() }
 
         utils.asyncAwait { transferInteractor.clearTransfersCache() }
         utils.asyncAwait { offerInteractor.clearOffersCache() }
@@ -171,7 +172,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                             emailCarrier,
                             logsInteractor.logsFile,
                             transferID,
-                            systemInteractor.account.user.profile.email))
+                            sessionInteractor.account.user.profile.email))
         }
     }
 
@@ -235,7 +236,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                     notificationManager.showNewMessageNotification(
                             chatBadgeEvent.transferId,
                             transfer.unreadMessagesCount,
-                            systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) < 0)
+                            sessionInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) < 0)
                 }
             }
         } else {
@@ -254,7 +255,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
 
     fun saveAccount() = utils.launchSuspend {
         viewState.blockInterface(true)
-        val result = utils.asyncAwait { systemInteractor.putAccount() }
+        val result = utils.asyncAwait { sessionInteractor.putAccount() }
         result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
         viewState.blockInterface(false)
     }

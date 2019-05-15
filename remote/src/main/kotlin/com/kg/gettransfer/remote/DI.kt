@@ -72,7 +72,7 @@ val remoteModule = module {
 
     single { ApiCore() }
     single<RouteRemote> { RouteRemoteImpl() }
-    single<SystemRemote> { SystemRemoteImpl() }
+    single<SessionRemote> { SessionRemoteImpl() }
     single<CarrierTripRemote> { CarrierTripRemoteImpl() }
     single<TransferRemote> { TransferRemoteImpl() }
     single<OfferRemote> { OfferRemoteImpl() }

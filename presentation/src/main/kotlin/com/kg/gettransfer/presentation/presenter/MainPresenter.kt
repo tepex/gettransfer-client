@@ -68,7 +68,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
         geoInteractor.initGeocoder()
-        if (systemInteractor.account.user.loggedIn) {
+        if (sessionInteractor.account.user.loggedIn) {
             registerPushToken()
             checkReview()
             utils.launchSuspend {
@@ -85,12 +85,12 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     override fun attachView(view: MainView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
-        if (systemInteractor.account.user.hasAccount) {
+        if (sessionInteractor.account.user.hasAccount) {
             setCountEvents(countEventsInteractor.eventsCount)
         } else {
             viewState.showBadge(false)
         }
-        Timber.d("MainPresenter.is user logged in: ${systemInteractor.account.user.loggedIn}")
+        Timber.d("MainPresenter.is user logged in: ${sessionInteractor.account.user.loggedIn}")
         if (!setAddressFields()) setOwnLocation()
         checkAccount()
         changeUsedField(systemInteractor.selectedField)
@@ -363,8 +363,8 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun onBecomeACarrierClick() {
         logEvent(Analytics.DRIVER_CLICKED)
-        if (systemInteractor.account.user.loggedIn) {
-            if (systemInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.ChangeMode(Screens.CARRIER_MODE))
+        if (sessionInteractor.account.user.loggedIn) {
+            if (sessionInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.ChangeMode(Screens.CARRIER_MODE))
             else router.navigateTo(Screens.ChangeMode(Screens.REG_CARRIER))
         } else {
             login(Screens.CARRIER_MODE, "")

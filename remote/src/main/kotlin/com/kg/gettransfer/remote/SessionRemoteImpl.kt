@@ -1,6 +1,6 @@
 package com.kg.gettransfer.remote
 
-import com.kg.gettransfer.data.SystemRemote
+import com.kg.gettransfer.data.SessionRemote
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.EndpointEntity
@@ -21,7 +21,7 @@ import org.koin.standalone.get
 import org.koin.standalone.inject
 import org.slf4j.Logger
 
-class SystemRemoteImpl : SystemRemote {
+class SessionRemoteImpl : SessionRemote {
     private val core           = get<ApiCore>()
     private val configsMapper  = get<ConfigsMapper>()
     private val accountMapper  = get<AccountMapper>()

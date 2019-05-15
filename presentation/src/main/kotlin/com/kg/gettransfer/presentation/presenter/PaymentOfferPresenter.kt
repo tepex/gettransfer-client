@@ -65,7 +65,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
         isUserAuthorized()
-        systemInteractor.paymentCommission.let {
+        sessionInteractor.paymentCommission.let {
             viewState.setCommission(if (it % 1.0 == 0.0) it.toInt().toString() else it.toString())
         }
         utils.launchSuspend {
@@ -276,7 +276,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 selectedPayment,
                 offerType,
                 requestType,
-                systemInteractor.currency.code,
+                sessionInteractor.currency.code,
                 price)
         beginCheckout.sendAnalytics()
     }

@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
 
@@ -15,6 +16,7 @@ import org.koin.standalone.KoinComponent
 
 internal object SystemUtils : KoinComponent {
     private val systemInteractor = get<SystemInteractor>()
+    private val sessionInteractor = get<SessionInteractor>()
 
     private const val MESSAGE_DATE_TIME_PATTERN = "MMM dd, yyyy HH:mm"
     private const val DATE_TIME_PATTERN = "dd MMMM yyyy, HH:mm"
@@ -32,8 +34,8 @@ internal object SystemUtils : KoinComponent {
 
     fun formatDistance(context: Context, _distance: Int?, withDistanceText: Boolean): String {
         if (_distance == null) return ""
-        return if (withDistanceText) context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $_distance ").plus(systemInteractor.distanceUnit.name)
-        else _distance.toString().plus(" ${systemInteractor.distanceUnit.name}")
+        return if (withDistanceText) context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $_distance ").plus(sessionInteractor.distanceUnit.name)
+        else _distance.toString().plus(" ${sessionInteractor.distanceUnit.name}")
     }
 
     fun formatMessageDateTimePattern(date: Date) = getFormattedDate(MESSAGE_DATE_TIME_PATTERN, date)
@@ -49,10 +51,10 @@ internal object SystemUtils : KoinComponent {
     fun formatMonthYear(date: Date) = getFormattedDate(MONTH_YEAR_PATTERN, date)
     fun formatSeconds(date: Date) = getFormattedDate(FULL_DATE_SECONDS, date)
 
-    private fun getFormattedDate(pattern: String, date: Date) = SimpleDateFormat(pattern, systemInteractor.locale).format(date)
+    private fun getFormattedDate(pattern: String, date: Date) = SimpleDateFormat(pattern, sessionInteractor.locale).format(date)
 
     fun getUrlWithLocale() =
             systemInteractor.endpoint.url
                     .plus(SLASH)
-                    .plus(systemInteractor.locale.language)
+                    .plus(sessionInteractor.locale.language)
 }

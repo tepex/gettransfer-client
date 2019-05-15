@@ -4,7 +4,7 @@ import com.kg.gettransfer.cache.mapper.AccountEntityMapper
 import com.kg.gettransfer.cache.mapper.ConfigsEntityMapper
 import com.kg.gettransfer.cache.mapper.MobileConfigsEntityMapper
 
-import com.kg.gettransfer.data.SystemCache
+import com.kg.gettransfer.data.SessionCache
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
@@ -13,7 +13,7 @@ import com.kg.gettransfer.data.model.MobileConfigEntity
 import org.koin.standalone.inject
 import org.koin.standalone.KoinComponent
 
-class SystemCacheImpl: SystemCache, KoinComponent {
+class SessionCacheImpl: SessionCache, KoinComponent {
     private val db: CacheDatabase by inject()
     private val configsMapper: ConfigsEntityMapper by inject()
     private val mobileConfigsMapper: MobileConfigsEntityMapper by inject()

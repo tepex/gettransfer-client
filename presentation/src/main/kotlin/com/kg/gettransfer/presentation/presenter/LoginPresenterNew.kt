@@ -29,7 +29,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     internal var transferId: Long = 0
     internal var offerId: Long? = null
     internal var rate: Int? = null
-    val smsResendDelaySec = systemInteractor.mobileConfigs.smsResendDelaySec
+    val smsResendDelaySec = sessionInteractor.mobileConfigs.smsResendDelaySec
 
     private var password: String? = null
 
@@ -71,8 +71,8 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when(isPhone) {
-                    true -> systemInteractor.getVerificationCode(null, LoginHelper.formatPhone(emailOrPhone))
-                    false -> systemInteractor.getVerificationCode(emailOrPhone, null)
+                    true -> sessionInteractor.getVerificationCode(null, LoginHelper.formatPhone(emailOrPhone))
+                    false -> sessionInteractor.getVerificationCode(emailOrPhone, null)
                 }
             }.also {
                 if (it.error != null)
@@ -98,8 +98,8 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> systemInteractor.accountLogin(null, LoginHelper.formatPhone(emailOrPhone), password!!)
-                    false -> systemInteractor.accountLogin(emailOrPhone, null, password!!)
+                    true -> sessionInteractor.accountLogin(null, LoginHelper.formatPhone(emailOrPhone), password!!)
+                    false -> sessionInteractor.accountLogin(emailOrPhone, null, password!!)
                 }
             }
                     .also {
@@ -168,7 +168,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             } else {
                 viewState.setError(false,
                         R.string.LNG_ERROR_EMAIL_PHONE,
-                        Utils.phoneUtil.internationalExample(systemInteractor.account.locale)
+                        Utils.phoneUtil.internationalExample(sessionInteractor.account.locale)
                 )
                 false
             }
@@ -188,7 +188,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     override fun onBackCommandClick() {
         when {
             showingFragment != null -> viewState.showPasswordFragment(false, CLOSE_FRAGMENT)
-            transferId != 0L         -> router.newRootScreen(Screens.Main())
+            transferId != 0L        -> router.newRootScreen(Screens.Main())
             else                    -> router.exit()
         }
     }
@@ -204,7 +204,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
 
     private fun checkCarrierMode(): String {
-        val groups = systemInteractor.account.groups
+        val groups = sessionInteractor.account.groups
         if (groups.indexOf(GROUP_CARRIER_DRIVER) >= 0) {
             if (groups.indexOf(GROUP_MANAGER_VIEW_TRANSFERS) >= 0) analytics.logProfile(Analytics.CARRIER_TYPE)
             else analytics.logProfile(Analytics.DRIVER_TYPE)

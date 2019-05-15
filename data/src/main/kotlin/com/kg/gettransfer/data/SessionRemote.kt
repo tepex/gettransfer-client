@@ -8,7 +8,7 @@ import com.kg.gettransfer.data.model.LocationEntity
 
 import org.koin.standalone.KoinComponent
 
-interface SystemRemote : KoinComponent {
+interface SessionRemote : KoinComponent {
     suspend fun getConfigs(): ConfigsEntity
     suspend fun getAccount(): AccountEntity?
     suspend fun setAccount(accountEntity: AccountEntity): AccountEntity

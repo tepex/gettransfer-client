@@ -110,7 +110,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
             transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
         }
-        val currency = systemInteractor.currency.code
+        val currency = sessionInteractor.currency.code
         var price: Double = offer?.price?.amount ?: bookNowOffer?.amount ?: (-1.0).also {
             Sentry.capture(
                 """when try to get offer for analytics of payment - server return invalid value:
@@ -132,7 +132,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
             paymentType,
             offerType,
             requestType,
-            Currency.getInstance(systemInteractor.currency.code),
+            Currency.getInstance(sessionInteractor.currency.code),
             currency,
             price
         )

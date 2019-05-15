@@ -6,7 +6,7 @@ import com.kg.gettransfer.data.model.MobileConfigEntity
 
 import org.koin.standalone.KoinComponent
 
-interface SystemCache: KoinComponent {
+interface SessionCache: KoinComponent {
     fun getConfigs(): ConfigsEntity?
     fun setConfigs(configs: ConfigsEntity)
 

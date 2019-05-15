@@ -6,7 +6,7 @@ import com.kg.gettransfer.cache.mapper.*
 
 import com.kg.gettransfer.data.OfferCache
 import com.kg.gettransfer.data.RouteCache
-import com.kg.gettransfer.data.SystemCache
+import com.kg.gettransfer.data.SessionCache
 import com.kg.gettransfer.data.TransferCache
 import com.kg.gettransfer.data.CarrierTripCache
 import com.kg.gettransfer.data.ChatCache
@@ -52,7 +52,7 @@ val cacheModule = module {
     single { MessageEntityMapper() }
     single { NewMessageEntityMapper() }
     single { BuildsConfigsEntityMapper() }
-    single<SystemCache> { SystemCacheImpl() }
+    single<SessionCache> { SessionCacheImpl() }
     single<TransferCache> { TransferCacheImpl() }
     single<OfferCache> { OfferCacheImpl() }
     single<RouteCache> { RouteCacheImpl() }

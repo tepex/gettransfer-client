@@ -23,6 +23,7 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.LogsInteractor
+import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.presentation.ui.helpers.BuildsConfigsHelper
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
@@ -40,6 +41,7 @@ class SplashActivity : AppCompatActivity() {
     private val systemInteractor: SystemInteractor by inject()
     private val reviewInteractor: ReviewInteractor by inject()
     private val logsInteractor: LogsInteractor by inject()
+    private val sessionInteractor: SessionInteractor by inject()
 
     private var updateAppDialogIsShowed = false
 
@@ -88,7 +90,7 @@ class SplashActivity : AppCompatActivity() {
                 openNextScreen()
                 finish()
             }*/
-            utils.asyncAwait { systemInteractor.coldStart() }
+            utils.asyncAwait { sessionInteractor.coldStart() }
             if (checkNeededUpdateApp()) showUpdateAppDialog()
             else startApp()
         }
@@ -101,7 +103,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkNeededUpdateApp(): Boolean {
-        systemInteractor.mobileConfigs.buildsConfigs?.let { buildsConfigs ->
+        sessionInteractor.mobileConfigs.buildsConfigs?.let { buildsConfigs ->
             BuildsConfigsHelper.getConfigsForCurrentBuildByField(
                     BuildsConfigsHelper.SETTINGS_FIELD_UPDATE_REQUIRED,
                     buildsConfigs

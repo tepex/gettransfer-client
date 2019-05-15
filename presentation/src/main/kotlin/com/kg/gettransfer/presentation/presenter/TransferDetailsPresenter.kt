@@ -130,7 +130,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                         transfer.to!!.point!!,
                         false,
                         false,
-                        systemInteractor.currency.code)
+                        sessionInteractor.currency.code)
             }.also {
                 it.cacheError?.let { e -> viewState.setError(e) }
                 setRouteTransfer(transfer, it.model)

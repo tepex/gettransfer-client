@@ -29,7 +29,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            fetchResult(SHOW_ERROR, checkLoginError = false) { systemInteractor.login(email!!, password!!) }
+            fetchResult(SHOW_ERROR, checkLoginError = false) { sessionInteractor.login(email!!, password!!) }
                     .also {
                         it.error?.let { e ->
                             if (e.isNoUser())
@@ -115,7 +115,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
     }
 
     private fun checkCarrierMode(): String {
-        val groups = systemInteractor.account.groups
+        val groups = sessionInteractor.account.groups
         if (groups.indexOf(GROUP_CARRIER_DRIVER) >= 0) {
             if (groups.indexOf(GROUP_MANAGER_VIEW_TRANSFERS) >= 0) analytics.logProfile(Analytics.CARRIER_TYPE)
             else analytics.logProfile(Analytics.DRIVER_TYPE)

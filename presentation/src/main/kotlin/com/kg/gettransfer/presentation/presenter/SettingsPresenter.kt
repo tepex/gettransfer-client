@@ -70,7 +70,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         super.attachView(view)
         if (restart) initConfigs()
         initGeneralSettings()
-        if (systemInteractor.account.user.loggedIn) initLoggedInUserSettings()
+        if (sessionInteractor.account.user.loggedIn) initLoggedInUserSettings()
         if (isDriverMode) initCarrierSettings()
         if (BuildConfig.FLAVOR == "dev") initDebugSettings()
     }
@@ -82,20 +82,20 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         val currency = systemInteractor.currency
         val currencyModel = currencies.find { it.delegate == currency }
         viewState.setCurrency(currencyModel?.name ?: "")*/
-        viewState.setCurrency(systemInteractor.currency.let { currencyMapper.toView(it) }.name)
+        viewState.setCurrency(sessionInteractor.currency.let { currencyMapper.toView(it) }.name)
 
         viewState.setLocales(locales)
-        val locale = systemInteractor.locale
+        val locale = sessionInteractor.locale
         val localeModel = locales.find { it.delegate.language == locale.language }
         viewState.setLocale(localeModel?.name ?: "", locale.language)
 
-        viewState.setDistanceUnit(systemInteractor.distanceUnit == DistanceUnit.mi)
-        viewState.setEmailNotifications(systemInteractor.isEmailNotificationEnabled)
-        viewState.setLogoutButtonEnabled(systemInteractor.account.user.hasAccount)
+        viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.mi)
+        viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
+        viewState.setLogoutButtonEnabled(sessionInteractor.account.user.hasAccount)
     }
 
     private fun initLoggedInUserSettings() {
-        viewState.initLoggedInUserSettings(systemInteractor.account.user.profile.let { profileMapper.toView(it) })
+        viewState.initLoggedInUserSettings(sessionInteractor.account.user.profile.let { profileMapper.toView(it) })
     }
 
     private fun initCarrierSettings(){
@@ -127,7 +127,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }*/
 
     override fun currencyChanged() {
-        val currencyModel = systemInteractor.currency.let { currencyMapper.toView(it) }
+        val currencyModel = sessionInteractor.currency.let { currencyMapper.toView(it) }
         viewState.setCurrency(currencyModel.name)
         viewState.showFragment(CLOSE_FRAGMENT)
         logEvent(Analytics.CURRENCY_PARAM, currencyModel.code)
@@ -140,18 +140,18 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     fun changeLocale(selected: Int): Locale {
         localeWasChanged = true
         val localeModel = locales.get(selected)
-        systemInteractor.locale = localeModel.delegate
+        sessionInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name, localeModel.locale)
-        if (systemInteractor.account.user.hasAccount) putAccount()
+        if (sessionInteractor.account.user.hasAccount) putAccount()
         else saveNoAccount()
         logEvent(Analytics.LANGUAGE_PARAM, localeModel.name)
 
-        Locale.setDefault(systemInteractor.locale)
+        Locale.setDefault(sessionInteractor.locale)
         initConfigs()
         //viewState.setCurrencies(currencies)
         viewState.setCalendarModes(calendarModes)
 
-        return systemInteractor.locale
+        return sessionInteractor.locale
     }
 
     fun changeFirstDayOfWeek(selected: Int) {
@@ -168,14 +168,14 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun putAccount() = utils.launchSuspend {
         viewState.blockInterface(true)
-        val result = utils.asyncAwait { systemInteractor.putAccount() }
+        val result = utils.asyncAwait { sessionInteractor.putAccount() }
         result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
         if (result.error == null) viewState.restartApp()
         viewState.blockInterface(false)
     }
 
     private fun saveNoAccount() = utils.launchSuspend {
-        val result = utils.asyncAwait { systemInteractor.putNoAccount() }
+        val result = utils.asyncAwait { sessionInteractor.putNoAccount() }
         if (result.error == null) viewState.restartApp()
     }
 
@@ -193,8 +193,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         systemInteractor.endpoint = endpoint.delegate
         utils.launchSuspend {
             viewState.blockInterface(true)
-            utils.asyncAwait { systemInteractor.logout() }
-            utils.asyncAwait { systemInteractor.coldStart() }
+            utils.asyncAwait { sessionInteractor.logout() }
+            utils.asyncAwait { sessionInteractor.coldStart() }
             viewState.blockInterface(false)
             restart = true
             router.exit() //Without restarting app
@@ -210,7 +210,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun onDistanceUnitSwitched(isChecked: Boolean) {
-        systemInteractor.distanceUnit = when (isChecked) {
+        sessionInteractor.distanceUnit = when (isChecked) {
             true  -> DistanceUnit.mi
             false -> DistanceUnit.km
         }.apply { logEvent(Analytics.UNITS_PARAM, name) }
@@ -218,7 +218,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun onEmailNotificationSwitched(isChecked: Boolean) {
-        systemInteractor.isEmailNotificationEnabled = isChecked
+        sessionInteractor.isEmailNotificationEnabled = isChecked
         saveAccount()
     }
 
@@ -228,7 +228,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
 
-    fun onClearAccessTokenClicked() { systemInteractor.accessToken = "" }
+    fun onClearAccessTokenClicked() { sessionInteractor.accessToken = "" }
 
     fun onDriverCoordinatesSwitched(checked: Boolean) =
             carrierTripInteractor.permissionChanged(checked)
@@ -265,7 +265,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 }
             }*//*
         }*/
-        locales = systemInteractor.locales.map { localeMapper.toView(it) }
+        locales = sessionInteractor.locales.map { localeMapper.toView(it) }
         //distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
      //   daysOfWeek = GTDayOfWeek.values().toList().map { dayOfWeekMapper.toView(it) }

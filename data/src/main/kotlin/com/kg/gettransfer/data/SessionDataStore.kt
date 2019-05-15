@@ -7,7 +7,7 @@ import com.kg.gettransfer.data.model.MobileConfigEntity
 
 import org.koin.standalone.KoinComponent
 
-interface SystemDataStore: KoinComponent {
+interface SessionDataStore: KoinComponent {
     suspend fun getConfigs(): ConfigsEntity?
     suspend fun setConfigs(configsEntity: ConfigsEntity)
 

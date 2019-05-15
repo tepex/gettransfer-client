@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.delegate
 import android.content.Context
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.extensions.simpleFormat
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeHandler
@@ -15,6 +16,7 @@ import java.util.*
 class DateTimeDelegate: KoinComponent {
     val systemInteractor: SystemInteractor = get()
     val orderInteractor: OrderInteractor = get()
+    val sessionInteractor: SessionInteractor = get()
 
     lateinit var currentData: Calendar
     var startDate: Date = Date()
@@ -28,7 +30,7 @@ class DateTimeDelegate: KoinComponent {
         orderInteractor.orderReturnTime = value
     }
     private val futureHour
-        get() = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
+        get() = sessionInteractor.mobileConfigs.orderMinimumMinutes / 60
     val startOrderedTime
         get() = orderInteractor.orderStartTime?.simpleFormat()
     val returnOrderedTime
@@ -64,7 +66,7 @@ class DateTimeDelegate: KoinComponent {
     }
 
     fun getCurrentDatePlusMinimumHours(): Calendar {
-        val calendar = Calendar.getInstance(systemInteractor.locale)
+        val calendar = Calendar.getInstance(sessionInteractor.locale)
         /* Server must send current locale time */
         calendar.add(Calendar.HOUR_OF_DAY, futureHour)
         calendar.add(Calendar.MINUTE, FUTURE_MINUTE)

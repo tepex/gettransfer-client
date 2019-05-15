@@ -81,11 +81,11 @@ val dataModule = module {
     single { BuildsConfigsMapper() }
     single { LocationMapper() }
 
-    single { SystemDataStoreCache() }
-    single { SystemDataStoreRemote() }
+    single { SessionDataStoreCache() }
+    single { SessionDataStoreRemote() }
     single { SystemSocketDataStoreOutput(get()) }
     single <SystemDataStoreReceiver> { SystemSocketDataStoreInput() }
-    single { SystemRepositoryImpl(DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>(get(), get())) } bind SystemRepository::class
+    single { SystemRepositoryImpl() } bind SystemRepository::class
 
     single { GeoDataStoreRemote() }
     single { GeoRemoteRepositoryImpl(get()) } bind GeoRemoteRepository::class
@@ -94,6 +94,8 @@ val dataModule = module {
     single { PushTokenRepositoryImpl(get()) } bind PushTokenRepository::class
 
     single { SocketRepositoryImpl(get()) } bind SocketRepository::class
+
+    single { SessionRepositoryImpl(DataStoreFactory<SessionDataStore, SessionDataStoreCache, SessionDataStoreRemote>(get(), get())) } bind SessionRepository::class
 
     single { RouteInfoMapper() }
     single { PointMapper() }

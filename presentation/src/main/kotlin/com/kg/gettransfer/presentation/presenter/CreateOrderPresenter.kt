@@ -68,7 +68,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val transportTypePriceMapper: TransportTypePriceMapper by inject()
     private val userMapper = get<UserMapper>()
 
-    private val currencies = systemInteractor.currencies.map { currencyMapper.toView(it) }
+    private val currencies = sessionInteractor.currencies.map { currencyMapper.toView(it) }
     private var duration: Int? = null
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
@@ -89,7 +89,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val i = systemInteractor.currentCurrencyIndex
         if (i != -1) setCurrency(i)*/
         setCurrency()
-        val remoteUser = systemInteractor.account.user
+        val remoteUser = sessionInteractor.account.user
         val isLoggedIn = remoteUser.hasAccount
         if (isLoggedIn) {
             orderInteractor.setNewUser(remoteUser)
@@ -97,7 +97,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             orderInteractor.setNewUser(null)
         }
         with(orderInteractor) {
-            viewState.setUser(userMapper.toView(user), systemInteractor.account.user.loggedIn)
+            viewState.setUser(userMapper.toView(user), sessionInteractor.account.user.loggedIn)
             viewState.setPassengers(passengers)
             viewState.setEditableFields(offeredPrice, flightNumber, flightNumberReturn, promoCode)
             if(promoCode.isNotEmpty()) checkPromoCode()
@@ -142,7 +142,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         utils.launchSuspend {
             viewState.blockInterface(true)
             var route: RouteInfo? = null
-            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, false, systemInteractor.currency.code, dateTime) }
+            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, false, sessionInteractor.currency.code, dateTime) }
                     ?.let {
                         route = it
                         duration = it.duration
@@ -187,7 +187,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         var prices: Map<TransportType.ID, TransportTypePrice>? = null
         utils.launchSuspend {
-            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, systemInteractor.currency.code, dateTime) }
+            fetchData { orderInteractor.getRouteInfo(from.point!!, to.point!!, true, returnWay, sessionInteractor.currency.code, dateTime) }
                     ?.let { prices = it.prices }
             setTransportTypePrices(prices ?: emptyMap())
         }
@@ -203,7 +203,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         var prices: Map<TransportType.ID, TransportTypePrice>? = null
         utils.launchSuspend {
-            fetchData { orderInteractor.getRouteInfoHourlyTransfer(from.point!!, duration, systemInteractor.currency.code, dateTime) }
+            fetchData { orderInteractor.getRouteInfoHourlyTransfer(from.point!!, duration, sessionInteractor.currency.code, dateTime) }
                     ?.let { prices = it.prices }
             setTransportTypePrices(prices ?: emptyMap(), selectTransport)
         }
@@ -211,7 +211,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun setTransportTypePrices(prices: Map<TransportType.ID, TransportTypePrice>, selectTransport: Boolean = false){
         transportTypeMapper.prices = prices.mapValues { transportTypePriceMapper.toView(it.value) }
-        val newTransportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
+        val newTransportTypes = sessionInteractor.transportTypes.map { transportTypeMapper.toView(it) }
         transportTypes?.let {
             newTransportTypes.forEach { type ->
                 type.checked = it
@@ -277,7 +277,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setCurrency(hideCurrencies: Boolean = false) {
-        val currency = systemInteractor.currency.let { currencyMapper.toView(it) }
+        val currency = sessionInteractor.currency.let { currencyMapper.toView(it) }
         viewState.setCurrency(currency.symbol, hideCurrencies)
         selectedCurrency = currencies.indexOf(currency)
     }
@@ -375,8 +375,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val result  = fetchResultOnly { transferInteractor.createTransfer(transferNew) }
 
             if(result.error == null) {
-                systemInteractor.account.user = orderInteractor.user
-                val logResult = fetchResultOnly { systemInteractor.putAccount() }
+                sessionInteractor.account.user = orderInteractor.user
+                val logResult = fetchResultOnly { sessionInteractor.putAccount() }
                 if(logResult.error == null) {
                     handleSuccess()
                     router.replaceScreen(Screens.Offers(result.model.id))
@@ -461,7 +461,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setFavoriteTransportTypes() =
-        systemInteractor.favoriteTransports?.let { selectTransportTypes(it) }
+        sessionInteractor.favoriteTransports?.let { selectTransportTypes(it) }
 
     private fun setSelectedTransportTypes() =
         orderInteractor.selectedTransports?.let { selectTransportTypes(it) }
@@ -475,7 +475,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun saveChosenTransportTypes() {
-        systemInteractor.favoriteTransports = getSelectedTransportTypes()
+        sessionInteractor.favoriteTransports = getSelectedTransportTypes()
     }
 
     private fun saveSelectedTransportTypes() {

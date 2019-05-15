@@ -14,18 +14,18 @@ class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinCompone
 
     private val currencyMapper = get<CurrencyMapper>()
 
-    private val currencies = systemInteractor.currencies.map { currencyMapper.toView(it) }
+    private val currencies = sessionInteractor.currencies.map { currencyMapper.toView(it) }
     private val popularCurrencies = currencies.filter { Currency.POPULAR_CURRENCIES.contains(it.code) }
 
     @CallSuper
     override fun attachView(view: SelectCurrencyView) {
         super.attachView(view)
         viewState.setCurrencies(currencies.filter { !Currency.POPULAR_CURRENCIES.contains(it.code) },
-                popularCurrencies, systemInteractor.currency.let { currencyMapper.toView(it) })
+                popularCurrencies, sessionInteractor.currency.let { currencyMapper.toView(it) })
     }
 
     fun changeCurrency(selected: CurrencyModel) {
-        systemInteractor.currency = selected.delegate
+        sessionInteractor.currency = selected.delegate
         saveAccount()
         viewState.currencyChanged()
     }

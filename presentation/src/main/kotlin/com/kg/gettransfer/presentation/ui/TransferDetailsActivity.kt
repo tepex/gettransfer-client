@@ -239,7 +239,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     }
 
     private fun initInfoView(transfer: TransferModel) {
-        val transferDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, transfer.dateTime, true)
+        val transferDateTimePair = Utils.getDateTimeTransferDetails(sessionInteractor.locale, transfer.dateTime, true)
         transfer_details_header.apply {
             tvTransferDate.text = transferDateTimePair.first
             tvTransferTime.text = transferDateTimePair.second

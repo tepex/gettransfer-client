@@ -70,7 +70,7 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
                     tripBase.to!!.point!!,
                     false,
                     false,
-                    systemInteractor.currency.code) }
+                    sessionInteractor.currency.code) }
                     ?.let { setRouteTransfer(tripBase, it) }
         }
         else if (tripBase.duration != null) {

@@ -3,8 +3,7 @@ package com.kg.gettransfer.presentation.mapper
 import android.support.annotation.StringRes
 
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.domain.interactor.SessionInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
 
@@ -18,7 +17,7 @@ import java.util.*
 open class TransferMapper : Mapper<TransferModel, Transfer> {
     private val bookNowOfferMapper  = get<BookNowOfferMapper>()
     private val transportTypeMapper  = get<TransportTypeMapper>()
-    private val systemTransportTypes = get<SystemInteractor>().transportTypes
+    private val systemTransportTypes = get<SessionInteractor>().transportTypes
 
     override fun toView(type: Transfer): TransferModel {
         val transportTypesModels = systemTransportTypes.map { transportTypeMapper.toView(it) }

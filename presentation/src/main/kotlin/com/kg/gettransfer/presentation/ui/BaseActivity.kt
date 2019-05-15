@@ -38,6 +38,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.*
@@ -66,6 +67,7 @@ import timber.log.Timber
 abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     internal val systemInteractor: SystemInteractor by inject()
+    internal val sessionInteractor: SessionInteractor by inject()
 
     internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
@@ -293,7 +295,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     //protected fun openScreen(screen: String) { router.navigateTo(screen) }
 
     override fun attachBaseContext(newBase: Context?) {
-        if (newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, systemInteractor.locale))
+        if (newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
         else super.attachBaseContext(null)
     }
 

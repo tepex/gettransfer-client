@@ -74,7 +74,7 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
             transfer.to?.point?.let { to ->
                 orderInteractor.getRouteInfo(
                         from, to, false, false,
-                        systemInteractor.currency.code).model
+                        sessionInteractor.currency.code).model
             }
         }
 

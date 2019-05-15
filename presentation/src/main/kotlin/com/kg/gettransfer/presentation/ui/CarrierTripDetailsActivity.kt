@@ -135,7 +135,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     }
 
     private fun initInfoView(item: CarrierTripModel){
-        val transferDateTimePair = Utils.getDateTimeTransferDetails(systemInteractor.locale, item.base.dateLocal, true)
+        val transferDateTimePair = Utils.getDateTimeTransferDetails(sessionInteractor.locale, item.base.dateLocal, true)
         transfer_details_header.apply {
             tvTransferDate.text = transferDateTimePair.first
             tvTransferTime.text = transferDateTimePair.second

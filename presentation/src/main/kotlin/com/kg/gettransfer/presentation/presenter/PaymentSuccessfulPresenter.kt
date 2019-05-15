@@ -37,7 +37,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                 if (transfer.to != null) {
                     val r = utils.asyncAwait {
                         orderInteractor
-                            .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.code)
+                            .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, sessionInteractor.currency.code)
                     }
                     r.cacheError?.let { viewState.setError(it) }
                     if (r.error == null || (r.error != null && r.fromCache)) {

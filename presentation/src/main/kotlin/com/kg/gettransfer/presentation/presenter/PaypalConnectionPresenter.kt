@@ -97,8 +97,8 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
                 PaymentRequestModel.PAYPAL,
                 offerType,
                 requestType,
-                Currency.getInstance(systemInteractor.currency.code),
-                systemInteractor.currency.code,
+                Currency.getInstance(sessionInteractor.currency.code),
+                sessionInteractor.currency.code,
                 price)
         purchase.sendAnalytics()
     }
