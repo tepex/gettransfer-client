@@ -16,7 +16,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
@@ -32,7 +31,6 @@ import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.activity_carrier_trips_main.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
-import kotlinx.android.synthetic.main.view_navigation.view.*
 import timber.log.Timber
 
 class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
@@ -193,7 +191,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
                 changeButtonModeInTitle(true)
             }
         }
-        transaction.commit()
+        transaction.commitAllowingStateLoss()
     }
 
     private fun changeButtonModeInTitle(isCalendarMode: Boolean){
