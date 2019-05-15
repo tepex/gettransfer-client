@@ -38,7 +38,7 @@ open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
             childSeatsConvertible = type.childSeatsConvertible,
             childSeatsBooster     = type.childSeatsBooster,
             passengerOfferedPrice = type.passengerOfferedPrice,
-            nameSign              = type.user.profile.fullName,
+            nameSign              = type.nameSign,
             comment               = type.comment,
             user                  = userMapper.toEntity(type.user),
             promoCode             = type.promoCode

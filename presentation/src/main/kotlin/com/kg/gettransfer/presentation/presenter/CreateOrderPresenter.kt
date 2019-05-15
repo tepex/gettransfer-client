@@ -359,6 +359,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 childSeatsDelegate.boosterSeats.isNonZero(),
                 orderInteractor.offeredPrice?.times(100)?.toInt(),
                 orderInteractor.comment,
+                systemInteractor.account.user.profile.fullName,
                 orderInteractor.user,
                 orderInteractor.promoCode,
                 false
@@ -387,7 +388,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(false, R.string.LNG_NETWORK_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
-            } else if (logResult?.error != null) viewState.showNotLoggedAlert(result.model.id)
+            } else if (logResult?.error?.isAccountExistError() ?: false) {
+                orderInteractor.user.profile.fullName = null
+                viewState.showNotLoggedAlert(result.model.id)
+            }
 
             //404 - есть акк, но не выполнен вход
             //500 - нет акка

@@ -14,6 +14,7 @@ data class TransferNew(
     val childSeatsBooster: Int?,
     val passengerOfferedPrice: Int?, // x 100 (in cents)
     val comment: String?,
+    val nameSign: String? = null,
     val user: User,
     val promoCode: String = "",
     val paypalOnly: Boolean
