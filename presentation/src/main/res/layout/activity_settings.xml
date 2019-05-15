@@ -48,13 +48,6 @@
                 android:visibility="gone"/>
 
             <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
-                android:id="@+id/settingsUserPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:settingsTitlePicker="@string/LNG_LOGIN_PASSWORD_SECTION"
-                android:visibility="gone"/>
-
-            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                 android:id="@+id/settingsCurrency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,8 +69,14 @@
                 android:id="@+id/settingsEmailNotif"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:settingsTitleSwitch="@string/LNG_EMAIL_NOTIFICATIONS"
-            />
+                app:settingsTitleSwitch="@string/LNG_EMAIL_NOTIFICATIONS" />
+
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                android:id="@+id/settingsUserPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:settingsTitlePicker="@string/LNG_LOGIN_PASSWORD_SECTION"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/layoutCarrierSettings"
