@@ -360,7 +360,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 childSeatsDelegate.boosterSeats.isNonZero(),
                 orderInteractor.offeredPrice?.times(100)?.toInt(),
                 orderInteractor.comment,
-                systemInteractor.account.user.profile.fullName,
+                orderInteractor.user.profile.fullName,
                 orderInteractor.user,
                 orderInteractor.promoCode,
                 false
