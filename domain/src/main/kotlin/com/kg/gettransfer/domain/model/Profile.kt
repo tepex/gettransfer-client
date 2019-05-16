@@ -8,4 +8,9 @@ data class Profile(
     fun hasData() =
             !email.isNullOrEmpty()
                     && !phone.isNullOrEmpty()
+
+    fun clear() {
+        email = null
+        phone = null
+    }
 }

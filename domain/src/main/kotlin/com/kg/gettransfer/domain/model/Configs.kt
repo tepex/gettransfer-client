@@ -75,8 +75,8 @@ data class Configs(
                 Locale("fr"),
                 Locale("it"),
                 Locale("es"),
-                Locale("pt"))
-//                Locale("zh"),
+                Locale("pt"),
+                Locale("zh"))
 //                Locale("ar"),
 //                Locale("tr"),
 //                Locale("pl"),

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 
 import android.support.v7.widget.Toolbar
 
@@ -77,11 +78,9 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         presenter.params = JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
         setContentView(R.layout.activity_payment_offer)
+        initListeners()
         initToolbar()
-        tvPaymentAgreement.setOnClickListener { presenter.onAgreementClicked() }
-        btnGetPayment.setOnClickListener { presenter.onPaymentClicked() }
-        rbCard.setOnClickListener { changePayment(it, PaymentRequestModel.PLATRON) }
-        rbPaypal.setOnClickListener { changePayment(it, PaymentRequestModel.PAYPAL) }
+
     }
 
     private fun initToolbar() {
@@ -90,6 +89,19 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
             tvTitle.text = getString(R.string.LNG_PAYMENT_SETTINGS)
             btnBack.setOnClickListener { presenter.onBackCommandClick() }
             tvSubTitle.isSelected = true
+        }
+    }
+
+    private fun initListeners() {
+        tvPaymentAgreement.setOnClickListener { presenter.onAgreementClicked() }
+        btnGetPayment.setOnClickListener { presenter.onPaymentClicked() }
+        rbCard.setOnClickListener { changePayment(it, PaymentRequestModel.PLATRON) }
+        rbPaypal.setOnClickListener { changePayment(it, PaymentRequestModel.PAYPAL) }
+        addKeyBoardDismissListener {
+            Handler().postDelayed({
+                if (it) sv_root.fling(2000)         //need to show "Payment" button
+            }, 150)
+
         }
     }
 

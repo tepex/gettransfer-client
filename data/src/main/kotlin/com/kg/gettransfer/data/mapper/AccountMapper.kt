@@ -25,10 +25,23 @@ open class AccountMapper : Mapper<AccountEntity, Account> {
     override fun fromEntity(type: AccountEntity) =
         Account(
             user = userMapper.fromEntity(type.user),
-            locale = configs.availableLocales.find { it.language == type.locale } ?: Locale.getDefault(),
-            currency = configs.supportedCurrencies.find { it.code == type.currency } ?: Currency("USD", "\$"),
-            distanceUnit = type.distanceUnit?.let { DistanceUnit.valueOf(it) } ?: DistanceUnit.km,
-            groups = type.groups ?: emptyList<String>(),
+
+            locale = configs.availableLocales
+                    .find { it.language == type.locale }
+                    ?.let { Locale(it.language, Locale.getDefault().country) }
+                    ?: Locale.getDefault(),
+
+            currency = configs.supportedCurrencies
+                    .find { it.code == type.currency }
+                    ?: Currency("USD", "\$"),
+
+            distanceUnit = type.distanceUnit
+                    ?.let { DistanceUnit.valueOf(it) }
+                    ?: DistanceUnit.km,
+
+            groups = type.groups
+                    ?: emptyList<String>(),
+
             carrierId = type.carrierId
         )
 

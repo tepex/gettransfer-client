@@ -169,7 +169,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             } else {
                 viewState.setError(false,
                         R.string.LNG_ERROR_EMAIL_PHONE,
-                        Utils.phoneUtil.internationalExample(systemInteractor.locale)
+                        Utils.phoneUtil.internationalExample(systemInteractor.account.locale)
                 )
                 false
             }

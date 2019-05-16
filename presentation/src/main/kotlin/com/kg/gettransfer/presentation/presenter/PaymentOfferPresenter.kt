@@ -158,11 +158,16 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             fetchResultOnly { systemInteractor.putAccount() }
                     .run {
                         when {
-                            error?.isAccountExistError() ?: false  -> viewState.redirectToLogin()
+                            error?.isAccountExistError() ?: false  -> onAccountExists()
                             error != null                          -> viewState.setError(error!!)
                             else                                   -> getPayment()
                         }
                     }
+
+    private fun onAccountExists() {
+        profile.clear()
+        viewState.redirectToLogin()
+    }
 
     private fun isValid(input: String, isPhone: Boolean) =
         LoginHelper
