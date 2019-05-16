@@ -371,28 +371,28 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             viewState.blockInterface(true, true)
             val result  = fetchResultOnly { transferInteractor.createTransfer(transferNew) }
 
-            if(result.error == null) { systemInteractor.account.user = orderInteractor.user }
-            val logResult = fetchResult { systemInteractor.putAccount() }
-
-            if (result.error == null && logResult.error == null) {
-                handleSuccess()
-                router.replaceScreen(Screens.Offers(result.model.id))
-            } else if (result.error != null) {
+            if(result.error == null) {
+                systemInteractor.account.user = orderInteractor.user
+                val logResult = fetchResultOnly { systemInteractor.putAccount() }
+                if(logResult.error == null) {
+                    handleSuccess()
+                    router.replaceScreen(Screens.Offers(result.model.id))
+                } else if(logResult.error?.isNotLoggedIn() == true) {
+                    orderInteractor.user.profile.fullName = null
+                    viewState.showNotLoggedAlert(result.model.id)
+                }
+            } else {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
                     result.error!!.details == "{phone=[taken]}" -> {
-                        //viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
                         router.navigateTo(Screens.Login(Screens.CLOSE_AFTER_LOGIN, orderInteractor.user.profile.phone))
                     }
                     result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(false, R.string.LNG_NETWORK_ERROR)
                     else -> viewState.setError(result.error!!)
                 }
-            } else if (logResult.error?.isAccountExistError() ?: false) {
-                orderInteractor.user.profile.fullName = null
-                viewState.showNotLoggedAlert(result.model.id)
             }
 
-            //404 - есть акк, но не выполнен вход
+            //403 - есть акк, но не выполнен вход
             //500 - нет акка
 
             viewState.blockInterface(false)
@@ -490,7 +490,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logButtons(Analytics.BACK_TO_MAP)
     }
 
-    fun redirectToLogin(id: Long) = router.replaceScreen(Screens.LoginToGetOffers(id, orderInteractor.user.profile.email))
+    fun redirectToLogin(id: Long) {
+        with (orderInteractor.user.profile) {
+            router.replaceScreen(Screens.LoginToGetOffers(id, if(!email.isNullOrEmpty()) email else phone))
+        }
+    }
 
     companion object {
         private const val MIN_CHILDREN   = 0
