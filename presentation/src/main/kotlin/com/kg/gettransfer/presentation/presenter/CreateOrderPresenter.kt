@@ -378,8 +378,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     handleSuccess()
                     router.replaceScreen(Screens.Offers(result.model.id))
                 } else if(logResult.error?.isNotLoggedIn() == true) {
-                    orderInteractor.user.profile.fullName = null
-                    viewState.showNotLoggedAlert(result.model.id)
+                    onAccountExists(result.model.id)
                 }
             } else {
                 logCreateTransfer(Analytics.SERVER_ERROR)
@@ -397,6 +396,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
             viewState.blockInterface(false)
         }
+    }
+
+    private fun onAccountExists(transferId: Long) {
+        systemInteractor.account.user.profile.clear()
+        viewState.showNotLoggedAlert(transferId)
     }
 
     private fun handleSuccess() {

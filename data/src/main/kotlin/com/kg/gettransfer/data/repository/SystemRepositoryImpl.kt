@@ -234,7 +234,7 @@ class SystemRepositoryImpl(
     }
 
     override suspend fun logout(): Result<Account> {
-        account = NO_ACCOUNT
+        account.user.profile.clear()
         account.user.termsAccepted = false
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()
