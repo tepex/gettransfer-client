@@ -528,7 +528,8 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
         navHeaderName.isVisible  = isLoggedIn
         navHeaderEmail.isVisible = isLoggedIn
         navRequests.isVisible    = isLoggedIn
-        navLogin.isVisible       = !isLoggedIn
+        navLogin.isVisible       = email == null || name == null
+        layoutAccountInfo.isVisible = email != null && name != null
         if(isLoggedIn){
             name?.let { navHeaderName.text = it }
             email?.let { navHeaderEmail.text = it }
