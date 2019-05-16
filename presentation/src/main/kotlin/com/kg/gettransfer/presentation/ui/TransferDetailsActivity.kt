@@ -425,6 +425,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
             Utils.initCarrierLanguages(layoutAboutDriver.view_driver_languages.layoutCarrierLanguages, offer.carrier.languages)
             layoutAboutDriver.isVisible = true
+            tv_bookNow_info.isVisible = false
         }
     }
 
