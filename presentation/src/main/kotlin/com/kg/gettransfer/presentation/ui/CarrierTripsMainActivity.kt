@@ -32,6 +32,7 @@ import kotlinx.android.synthetic.main.activity_carrier_trips_main.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
 import timber.log.Timber
+import java.lang.IllegalStateException
 
 class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
     @InjectPresenter
@@ -88,7 +89,11 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         }
         setViewColor((toolbar as Toolbar), R.color.colorWhite)
         initNavigation()
-        startCoordinateService()
+        try {
+            startCoordinateService()
+        } catch (e: IllegalStateException) {
+            Timber.e("Unexpected start of Coordiante service in ${this::class.java.name}")
+        }
     }
 
     @CallSuper
