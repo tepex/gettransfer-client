@@ -19,7 +19,7 @@ open class UserMapper : EntityMapper<UserModel, UserEntity> {
      */
     override fun toRemote(type: UserEntity) =
         UserModel(
-            fullName = type.profile.fullName!!,
+            fullName = type.profile.fullName ?: "",
             email = type.profile.email,
             phone = type.profile.phone,
             termsAccepted = type.termsAccepted
