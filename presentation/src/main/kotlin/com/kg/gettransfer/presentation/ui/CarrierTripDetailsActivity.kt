@@ -192,8 +192,8 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                     comment_view.isVisible = true
                 }
                 flightNumber?.let { initField(flight_number, it) }
+                nameSign?.let { initField(passenger_name, it) }
                 passenger?.profile?.let { profile ->
-                    profile.name?.let { initField(passenger_name, it) }
                     profile.email?.let {email ->
                         initField(passenger_email, email)
                         Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_email, operationsName, R.string.LNG_DRIVER_EMAIL) {

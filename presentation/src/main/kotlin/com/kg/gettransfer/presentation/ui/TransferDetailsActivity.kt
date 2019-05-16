@@ -187,9 +187,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         yourComment.setOnClickListener { presenter.clickComment(yourComment.tvComment.text.toString()) }
     }
 
-    override fun setTransfer(transfer: TransferModel, userProfile: ProfileModel) {
+    override fun setTransfer(transfer: TransferModel) {
         initInfoView(transfer)
-        initAboutRequestView(transfer, userProfile)
+        initAboutRequestView(transfer)
         topCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
         bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
 
@@ -313,8 +313,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         tv_bookNow_info.isVisible = transfer.isBookNow()
     }
 
-    private fun initAboutRequestView(transfer: TransferModel, userProfile: ProfileModel) {
-        userProfile.name?.let { initField(passenger_name, it) }
+    private fun initAboutRequestView(transfer: TransferModel) {
+        transfer.nameSign?.let { initField(passenger_name, it) }
         with(transfer) {
             flightNumber?.let { initField(flight_number, it) }
             dateTimeReturn?.let { initField(back_trip, SystemUtils.formatDateTime(it)) }

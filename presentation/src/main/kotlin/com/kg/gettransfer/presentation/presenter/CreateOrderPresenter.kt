@@ -299,7 +299,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun setName(name: String) {
-        orderInteractor.user.profile.fullName = name
+        orderInteractor.nameSign = name
     }
 
     fun setEmail(email: String) {
@@ -360,7 +360,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 childSeatsDelegate.boosterSeats.isNonZero(),
                 orderInteractor.offeredPrice?.times(100)?.toInt(),
                 orderInteractor.comment,
-                orderInteractor.user.profile.fullName,
+                orderInteractor.nameSign,
                 orderInteractor.user,
                 orderInteractor.promoCode,
                 false

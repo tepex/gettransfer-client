@@ -30,6 +30,7 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
     var comment: String? = null
     var selectedTransports: Set<TransportType.ID>? = null
     var user = User(Profile(null, null, null), false)
+    var nameSign: String? = null
     var isLoggedIn = false
 
     var noPointPlaces: List<GTAddress> = emptyList()
@@ -43,6 +44,7 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
         comment = null
         selectedTransports = null
         setNewUser(null)
+        nameSign = null
     }
 
     fun setNewUser(newUser: User?) {

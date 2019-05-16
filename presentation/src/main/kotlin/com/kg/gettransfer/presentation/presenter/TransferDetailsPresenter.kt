@@ -96,7 +96,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                 ?.let {
                                     if (transferModel.status.checkOffers)
                                         offer = it }
-                        viewState.setTransfer(transferModel, profileMapper.toView(systemInteractor.account.user.profile))
+                        viewState.setTransfer(transferModel)
 
                         updateRatingState()
                         setTransferType(transfer)
