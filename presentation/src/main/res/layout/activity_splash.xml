@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/splash_logo">
+    android:background="@color/colorPrimary">
 
-    <!--<ImageView-->
-        <!--android:layout_width="216dp"-->
-        <!--android:layout_height="119dp"-->
-        <!--android:layout_marginTop="188dp"-->
-        <!--app:srcCompat="@drawable/logo"-->
-        <!--android:layout_gravity="top|center_horizontal"/>-->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_splash_background"
+        android:layout_gravity="top|center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.66"/>
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>
