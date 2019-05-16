@@ -311,6 +311,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     private fun setBookNow(transfer: TransferModel){
         tv_bookNow_info.isVisible = transfer.isBookNow()
+        if (layoutAboutDriver.isShown) tv_bookNow_info.isVisible = false
     }
 
     private fun initAboutRequestView(transfer: TransferModel) {
@@ -425,7 +426,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
             Utils.initCarrierLanguages(layoutAboutDriver.view_driver_languages.layoutCarrierLanguages, offer.carrier.languages)
             layoutAboutDriver.isVisible = true
-            tv_bookNow_info.isVisible = false
         }
     }
 
