@@ -79,6 +79,7 @@ import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
 import kotlinx.android.synthetic.main.view_your_comment.view.tvComment
 import kotlinx.android.synthetic.main.view_your_comment.view.tvTitile
 import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
+import org.jetbrains.anko.longToast
 import java.util.*
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
@@ -484,7 +485,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         Utils.showAlertCancelRequest(this) { presenter.cancelRequest(it) }
     }
 
-    override fun recreateActivity() { recreate() }
+    override fun showCancelRequestToast() {
+        longToast(R.string.transfer_canceled)
+    }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) {
         showTrack(cameraUpdate) { updateMapBehaviorBounds() }

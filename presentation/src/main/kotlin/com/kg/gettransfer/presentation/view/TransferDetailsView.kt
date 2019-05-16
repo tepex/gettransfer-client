@@ -14,7 +14,6 @@ interface TransferDetailsView: BaseView, RouteView {
     fun setOffer(offer: OfferModel, childSeats: Int)
     fun showAlertCancelRequest()
     fun copyText(text: String)
-    fun recreateActivity()
     fun showDetailRate(vehicle: Float, driver: Float, punctuality: Float, offerId: Long, feedback: String)
     fun closeRateWindow()
     fun askRateInPlayMarket()
@@ -24,6 +23,7 @@ interface TransferDetailsView: BaseView, RouteView {
     fun showYourComment(isShow: Boolean, comment: String = "")
     fun showYourDataProgress(isShow: Boolean)
     fun showCommentEditor(comment: String)
+    fun showCancelRequestToast()
 
     fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)
     fun updateCamera(latLngList: List<LatLng>)

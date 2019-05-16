@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.CallSuper
 
@@ -33,7 +32,6 @@ import com.kg.gettransfer.presentation.ui.icons.transport.CarIconResourceProvide
 import com.kg.gettransfer.presentation.delegate.CoordinateRequester
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
-import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
 import com.kg.gettransfer.presentation.mapper.CityPointMapper
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
@@ -63,7 +61,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     private val profileMapper: ProfileMapper by inject()
     private val routeMapper: RouteMapper by inject()
-    private val reviewRateMapper: ReviewRateMapper by inject()
     private val cityPointMapper: CityPointMapper by inject()
     private val pointMapper: PointMapper by inject()
 
@@ -200,9 +197,14 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchData { transferInteractor.cancelTransfer(transferId, "") }
-                    ?.let { viewState.recreateActivity() }
+                    ?.let { showMainActivity() }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun showMainActivity() {
+        viewState.showCancelRequestToast()
+        router.navigateTo(Screens.ChangeMode(systemInteractor.lastMode))
     }
 
     fun makeFieldOperation(field: String, operation: String, text: String) {
