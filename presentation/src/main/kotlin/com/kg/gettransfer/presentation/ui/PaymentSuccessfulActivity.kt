@@ -63,6 +63,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         if (presenter.offerId == 0L) {
             tvBookNowSuccess.isVisible = true
             tvSupport.text = getString(R.string.LNG_OFFERS_SUPPORT)
+            groupVoucher.isVisible = false
         }
         ivClose.setOnClickListener { finish() }
         btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
