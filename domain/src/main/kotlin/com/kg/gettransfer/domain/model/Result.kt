@@ -10,7 +10,7 @@ data class Result<M>(
     val cacheError: DatabaseException? = null
 ) {
 
-    fun isError()     = error == null
+    fun isError()     = error != null
     fun isSuccess()   = if (error == null) model else null    //get data if no need to handle error
     fun hasData()     = if (error == null || fromCache) model else null
     fun isDataError() = if (error != null && !fromCache) error else null

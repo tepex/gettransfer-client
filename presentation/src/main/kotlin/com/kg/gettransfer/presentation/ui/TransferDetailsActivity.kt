@@ -486,7 +486,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     }
 
     override fun showCancelRequestToast() {
-        longToast(R.string.transfer_canceled)
+        longToast(R.string.LNG_TRANSFER_CANCELED)
     }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) {

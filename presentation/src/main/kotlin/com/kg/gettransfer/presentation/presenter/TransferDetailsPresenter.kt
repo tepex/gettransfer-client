@@ -197,7 +197,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = fetchResultOnly { transferInteractor.cancelTransfer(transferId, "") }
-            if (!result.isError()) result.error?.let { viewState.setError(it) }
+            if (result.isError()) result.error?.let { viewState.setError(it) }
             else showMainActivity()
             viewState.blockInterface(false)
         }

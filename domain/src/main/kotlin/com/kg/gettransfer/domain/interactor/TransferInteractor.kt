@@ -33,46 +33,4 @@ class TransferInteractor(private val repository: TransferRepository) {
         repository.clearTransfersCache()
         return Result(Unit)
     }
-
-    suspend fun getActiveTransfers(): Result<List<Transfer>> {
-        /*if(activeTransfers == null) */
-        val result = getAllTransfers()
-        if(result.isError() && !result.fromCache) return result
-        val filteredList = result.model.filter {
-                it.status == Transfer.Status.NEW ||
-                it.status == Transfer.Status.DRAFT ||
-                it.status == Transfer.Status.PERFORMED ||
-                it.status == Transfer.Status.PENDING_CONFIRMATION
-        }
-        return Result(filteredList)
-    }
-
-    suspend fun getCompletedTransfers(): Result<List<Transfer>> {
-        /*if(completedTransfers == null) */
-        val result = getAllTransfers()
-        if(result.isError() && !result.fromCache) return result
-        val filteredList = result.model.filter {
-                it.status == Transfer.Status.COMPLETED ||
-                it.status == Transfer.Status.NOT_COMPLETED
-            }
-        return Result(filteredList)
-    }
-
-    suspend fun getArchivedTransfers(): Result<List<Transfer>> {
-        /*if(archivedTransfers == null) */
-        val result = getAllTransfers()
-        if(result.isError() && !result.fromCache) return result
-        val filteredList = result.model.filter {
-                    it.status != Transfer.Status.COMPLETED ||
-                    it.status != Transfer.Status.NOT_COMPLETED
-        }
-        return Result(filteredList)
-    }
-
-    /*private fun insertNewTransfer() {
-        if(allTransfers == null || transfer == null || allTransfers!!.firstOrNull()?.id == transfer!!.id) return
-        val mutableList = allTransfers!!.toMutableList()
-        mutableList.add(0, transfer!!)
-        allTransfers = mutableList
-    }*/
 }
