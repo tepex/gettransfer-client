@@ -188,7 +188,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     override fun onBackCommandClick() {
         when {
             showingFragment != null -> viewState.showPasswordFragment(false, CLOSE_FRAGMENT)
-            offerId != null         -> router.newRootScreen(Screens.Main())
+            transferId != 0L         -> router.newRootScreen(Screens.Main())
             else                    -> router.exit()
         }
     }
