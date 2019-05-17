@@ -15,6 +15,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.bumptech.glide.request.RequestOptions
@@ -276,7 +277,7 @@ class OffersActivity : BaseActivity(), OffersView {
         iv_offer_bs_booknow.isVisible = true
         Glide.with(this)
             .load(path ?: resId)
-                .apply(RequestOptions().transform(CenterCrop(), RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
+                .apply(RequestOptions().transform(CenterInside(), RoundedCorners(Utils.dpToPxInt(this, PHOTO_CORNER))))
             .into(iv_offer_bs_booknow)
     }
 
