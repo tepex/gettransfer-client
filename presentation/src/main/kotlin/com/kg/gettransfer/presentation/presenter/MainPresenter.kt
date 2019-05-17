@@ -116,7 +116,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private fun checkAccount() {
         with(systemInteractor.account.user) {
-            viewState.setProfile(hasAccount, profile.email, profile.fullName)
+            viewState.setProfile(loggedIn, profile.email, profile.fullName)
         }
     }
 

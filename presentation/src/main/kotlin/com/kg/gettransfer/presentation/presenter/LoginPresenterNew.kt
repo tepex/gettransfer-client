@@ -104,8 +104,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
             }
                     .also {
                         it.error?.let { e ->
-                            if (e.isNoUser())
-                                viewState.showError(true, e)
+                            viewState.showError(true, e)
                             logLoginEvent(Analytics.RESULT_FAIL)
                         }
 
