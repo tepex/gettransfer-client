@@ -96,7 +96,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             orderInteractor.setNewUser(null)
         }
         with(orderInteractor) {
-            viewState.setUser(userMapper.toView(user), isLoggedIn)
+            viewState.setUser(userMapper.toView(user), systemInteractor.account.user.loggedIn)
             viewState.setPassengers(passengers)
             viewState.setEditableFields(offeredPrice, flightNumber, flightNumberReturn, promoCode)
             if(promoCode.isNotEmpty()) checkPromoCode()
