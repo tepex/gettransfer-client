@@ -59,7 +59,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private val reviewInteractor: ReviewInteractor by inject()
     private val coordinateInteractor: CoordinateInteractor by inject()
 
-    private val profileMapper: ProfileMapper by inject()
     private val routeMapper: RouteMapper by inject()
     private val cityPointMapper: CityPointMapper by inject()
     private val pointMapper: PointMapper by inject()
@@ -167,8 +166,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         routeModel = routeMapper.getView(
             route.distance,
             route.polyLines,
-            transfer.from.name!!,
-            transfer.to!!.name!!,
+            transfer.from.name,
+            transfer.to!!.name,
             transfer.from.point!!,
             transfer.to!!.point!!,
             SystemUtils.formatDateTime(transferModel.dateTime)
