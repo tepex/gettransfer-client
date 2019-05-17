@@ -22,10 +22,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.isGone
-import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.extensions.showKeyboard
+import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
@@ -580,7 +577,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     override fun showNotLoggedAlert(withOfferId: Long) =
         Utils.showScreenRedirectingAlert(this, getString(R.string.LNG_LOGIN_NOT_LOGGED_IN),
-                    getString(R.string.LNG_LOGIN_LOGIN_TO_CONTINUE)) { presenter.redirectToLogin(withOfferId) }
+                    getString(R.string.LNG_LOGIN_LOGIN_TO_CONTINUE)) {
+            presenter.redirectToLogin(withOfferId, email_field.field_input.getString())
+        }
 
     val showReturnFlight: (show: Boolean) -> Unit = { show ->
         flight_numberReturn_field.isVisible = show
