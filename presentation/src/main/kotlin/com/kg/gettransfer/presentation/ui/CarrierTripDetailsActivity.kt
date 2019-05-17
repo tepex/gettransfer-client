@@ -196,14 +196,14 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                 passenger?.profile?.let { profile ->
                     profile.email?.let {email ->
                         initField(passenger_email, email)
-                        Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
+                        Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_email, operationsName, R.string.LNG_EMAIL) {
                             presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
                     }
                     profile.phone?.let { phone ->
                         initField(passenger_phone, phone)
                         initCommunicationButton(topCommunicationButtons.btnCall) { presenter.callPhone(phone) }
                         initCommunicationButton(bottomCommunicationButtons.btnCall) { presenter.callPhone(phone) }
-                        Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
+                        Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_phone, operationsName, R.string.LNG_PHONE) {
                             presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
                     }
                 }

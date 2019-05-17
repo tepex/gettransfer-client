@@ -428,8 +428,10 @@
     <string name="LNG_RIDE_REQUEST_WAS_SENT">Request was sent</string>
     <string name="LNG_TRANSFER_AT">at</string>
     <string name="LNG_LANGUAGES">Languages</string>
-    <string name="LNG_DRIVER_PHONE">Phone</string>
-    <string name="LNG_DRIVER_EMAIL">Email</string>
+    <string name="LNG_DRIVER_PHONE">Driver phone number</string>
+    <string name="LNG_DRIVER_EMAIL">Driver email</string>
+    <string name="LNG_CARRIER_PHONE">Carrier\'s phone number</string>
+    <string name="LNG_CARRIER_EMAIL">Carrier\'s email</string>
     <string name="LNG_RIDE_FLIGHT_NUMBER">Flight number</string>
     <string name="LNG_RIDE_NOT_PAID">Not paid</string>
     <string name="LNG_SEND">Send</string>

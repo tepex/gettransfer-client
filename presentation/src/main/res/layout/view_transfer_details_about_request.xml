@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            app:title_transfer_details="@string/LNG_DRIVER_EMAIL"
+            app:title_transfer_details="@string/LNG_EMAIL"
             tools:input_transfer_details="example@gmail.com"
             tools:visibility="visible"
             android:visibility="gone"/>
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            app:title_transfer_details="@string/LNG_DRIVER_PHONE"
+            app:title_transfer_details="@string/LNG_PHONE"
             tools:input_transfer_details="+7 900 123 56 78"
             tools:visibility="visible"
             android:visibility="gone"/>

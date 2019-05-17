@@ -427,13 +427,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
             carrier.profile?.phone?.let { phone ->
                 carrier_phone.field_text.text = phone
                 carrier_phone.isVisible = true
-                Utils.setSelectOperationListener(this, carrier_phone, operationsName, R.string.LNG_DRIVER_PHONE) {
+                Utils.setSelectOperationListener(this, carrier_phone, operationsName, R.string.LNG_CARRIER_PHONE) {
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
             }
             carrier.profile?.email?.let { email ->
                 carrier_email.field_text.text = email
                 carrier_email.isVisible = true
-                Utils.setSelectOperationListener(this, carrier_email, operationsName, R.string.LNG_DRIVER_EMAIL) {
+                Utils.setSelectOperationListener(this, carrier_email, operationsName, R.string.LNG_CARRIER_EMAIL) {
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
             }
 

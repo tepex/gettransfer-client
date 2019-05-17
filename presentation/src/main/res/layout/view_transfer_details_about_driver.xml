@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            app:title_transfer_details="@string/LNG_DRIVER_EMAIL"
+            app:title_transfer_details="@string/LNG_CARRIER_EMAIL"
             tools:input_transfer_details="carriere@gmail.com"
             android:visibility="gone"
 
@@ -55,7 +55,7 @@
         android:id="@+id/carrier_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title_transfer_details="@string/LNG_DRIVER_PHONE"
+        app:title_transfer_details="@string/LNG_CARRIER_PHONE"
         android:visibility="gone"
 
         tools:input_transfer_details="+7 900 123 56 78"
