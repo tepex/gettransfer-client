@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
@@ -63,7 +64,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         if (presenter.offerId == 0L) {
             tvBookNowSuccess.isVisible = true
             tvSupport.text = getString(R.string.LNG_OFFERS_SUPPORT)
-            groupVoucher.isVisible = false
+            groupVoucher.isInvisible = true
         }
         ivClose.setOnClickListener { finish() }
         btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
