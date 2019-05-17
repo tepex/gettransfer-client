@@ -69,17 +69,28 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                         }
                     }
 
-    private suspend fun createRouteModel(transfer: Transfer): RouteModel {
-        val route = orderInteractor.getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, systemInteractor.currency.code).model
-        return routeMapper.getView(
-                route.distance,
-                route.polyLines,
-                transfer.from.name!!,
-                transfer.to!!.name!!,
-                transfer.from.point!!,
-                transfer.to!!.point!!,
-                SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
-        )
+    private suspend fun createRouteModel(transfer: Transfer): RouteModel? {
+        val route = transfer.from.point?.let { from ->
+            transfer.to?.point?.let { to ->
+                orderInteractor.getRouteInfo(
+                        from, to, false, false,
+                        systemInteractor.currency.code).model
+            }
+        }
+
+        return transfer.from.point?.let { fromPoint ->
+            transfer.to?.point?.let { toPoint ->
+                routeMapper.getView(
+                        route?.distance,
+                        route?.polyLines,
+                        transfer.from.name,
+                        transfer.to?.name,
+                        fromPoint,
+                        toPoint,
+                        SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
+                )
+            }
+        }
     }
 
     private fun logTransferReviewRequested() =

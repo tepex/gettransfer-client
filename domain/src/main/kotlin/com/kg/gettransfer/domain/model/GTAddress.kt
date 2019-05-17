@@ -39,6 +39,6 @@ data class GTAddress(
         const val TYPE_LOCALITY                    = 1009
         const val TYPE_STREET_ADDRESS              = 1021
 
-        val EMPTY = GTAddress(CityPoint(null, null, null), null, null, null, null)
+        val EMPTY = GTAddress(CityPoint("", null, null), null, null, null, null)
     }
 }

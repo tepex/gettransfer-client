@@ -82,8 +82,8 @@ class CarrierTripRepositoryImpl(
                 CarrierTripBase(
                     id                    = 0,
                     transferId            = 0,
-                    from                  = CityPoint(null, null, null),
-                    to                    = CityPoint(null, null, null),
+                    from                  = CityPoint("", null, null),
+                    to                    = CityPoint("", null, null),
                     dateLocal             = Date(),
                     duration              = null,
                     distance              = null,

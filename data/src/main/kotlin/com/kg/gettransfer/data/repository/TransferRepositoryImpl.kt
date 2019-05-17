@@ -253,7 +253,7 @@ class TransferRepositoryImpl(
                 duration        = null,
                 distance        = null,
                 status          = Transfer.Status.NEW,
-                from            = CityPoint(null, null, null),
+                from            = CityPoint("", null, null),
                 to              = null,
                 dateToLocal     = Date(),
                 dateToTZ        = Date(),
