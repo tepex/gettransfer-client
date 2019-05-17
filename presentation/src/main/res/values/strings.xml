@@ -545,7 +545,7 @@
     <string name="LNG_COUNTRY_NAMES_ZH">China</string>
     <string name="LNG_RIDE_PAY_CHARGE"><b>You will be charged %s,</b> equivalent\nto %s</string>
     <string name="LNG_RIDE_PAY_CHARGE2"><b>You will be charged %s</b></string>
-    <string name="transfer_canceled">Transfer canceled</string>
+    <string name="LNG_TRANSFER_CANCELED">Transfer canceled</string>
 
     <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
     <string name="switzerland_phone" translatable="false">+41 22 518 04 00</string>

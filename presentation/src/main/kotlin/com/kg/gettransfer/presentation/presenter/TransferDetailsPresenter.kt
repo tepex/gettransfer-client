@@ -196,15 +196,16 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         if (!isCancel) return
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            fetchData { transferInteractor.cancelTransfer(transferId, "") }
-                    ?.let { showMainActivity() }
+            val result = fetchResultOnly { transferInteractor.cancelTransfer(transferId, "") }
+            if (!result.isError()) result.error?.let { viewState.setError(it) }
+            else showMainActivity()
             viewState.blockInterface(false)
         }
     }
 
     private fun showMainActivity() {
         viewState.showCancelRequestToast()
-        router.navigateTo(Screens.ChangeMode(systemInteractor.lastMode))
+        router.navigateTo(Screens.Main(false, true))
     }
 
     fun makeFieldOperation(field: String, operation: String, text: String) {

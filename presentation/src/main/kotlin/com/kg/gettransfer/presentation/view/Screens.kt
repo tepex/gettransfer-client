@@ -54,9 +54,15 @@ object Screens {
 
     private var canSendEmail: Boolean? = null
 
-    data class Main(val showDrawer: Boolean = false) : SupportAppScreen() {
+    data class Main(val showDrawer: Boolean = false, val clearStack: Boolean = false) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
-                .apply { putExtra(MAIN_MENU, showDrawer) }
+                .apply {
+                    if (clearStack) {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    }
+                    putExtra(MAIN_MENU, showDrawer)
+                }
     }
 
     data class Splash(val transferId: Long?, val rate: Int?, val showRate: Boolean) : SupportAppScreen() {
