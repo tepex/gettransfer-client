@@ -300,7 +300,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     private fun showLoading() {
         if (loadingFragment.isAdded) return
         supportFragmentManager.beginTransaction().apply {
-            add(android.R.id.content, loadingFragment)
+            replace(android.R.id.content, loadingFragment)
             commit()
         }
     }
