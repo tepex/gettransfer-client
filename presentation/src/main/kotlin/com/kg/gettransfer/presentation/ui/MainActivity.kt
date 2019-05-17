@@ -151,7 +151,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
             }
         })
 
-        presenter.setAddressFields()
         initSearchForm()
         initNavigation()
 

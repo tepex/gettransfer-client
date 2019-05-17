@@ -312,7 +312,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun isHourly() = orderInteractor.hourlyDuration != null
 
-    fun setAddressFields(): Boolean {
+    private fun setAddressFields(): Boolean {
         with(orderInteractor) {
             viewState.setAddressTo(to?.address ?: EMPTY_ADDRESS)
             return from.also {
