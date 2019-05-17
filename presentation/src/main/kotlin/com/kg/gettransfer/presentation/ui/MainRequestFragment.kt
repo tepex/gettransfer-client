@@ -47,6 +47,7 @@ class MainRequestFragment :
         super.onViewCreated(view, savedInstanceState)
         mParent = activity as MainActivity
         mPresenter = mParent.presenter
+        mParent.requestView = this
         initUi()
         initClickListeners()
     }
@@ -107,7 +108,6 @@ class MainRequestFragment :
 
     override fun onResume() {
         super.onResume()
-        mParent.requestView = this
         initDateTimeFields()
         with(dateDelegate) {
             if (startOrderedTime == null) order_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)
