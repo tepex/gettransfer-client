@@ -15,14 +15,14 @@ open class CityPointMapper : Mapper<CityPointEntity, CityPoint> {
 
     override fun fromEntity(type: CityPointEntity) =
         CityPoint(
-            name = type.name,
+            name = type.name ?: "",
             point = type.point?.let { pointMapper.fromEntity(type.point) },
             placeId = type.placeId
         )
 
     override fun toEntity(type: CityPoint) =
         CityPointEntity(
-            name = type.name!!,
+            name = type.name,
             point = pointMapper.toEntity(type.point!!),
             placeId = type.placeId
         )

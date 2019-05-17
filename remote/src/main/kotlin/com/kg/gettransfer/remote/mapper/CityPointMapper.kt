@@ -17,7 +17,7 @@ open class CityPointMapper : EntityMapper<CityPointModel, CityPointEntity> {
 
     override fun toRemote(type: CityPointEntity) =
         CityPointModel(
-            name = type.name,
+            name = type.name ?: "",
             point = type.point,
             placeId = type.placeId
         )
