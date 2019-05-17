@@ -504,7 +504,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun redirectToLogin(id: Long, email: String) {
         with (orderInteractor.user.profile) {
-            router.replaceScreen(Screens.LoginToGetOffers(id, email))
+            router.navigateTo(Screens.LoginToGetOffers(id, email, Screens.OFFERS))
         }
     }
 

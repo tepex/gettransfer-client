@@ -25,7 +25,7 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     internal var showingFragment: Int? = null
 
     internal var emailOrPhone: String? = null
-    internal var screenForReturn: String? = null
+    internal var nextScreen: String? = null
     internal var transferId: Long = 0
     internal var offerId: Long? = null
     internal var rate: Int? = null
@@ -125,8 +125,8 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     }
 
     fun openPreviousScreen(openSettingsScreen: Boolean = false) {
-        if (screenForReturn.isNullOrEmpty()) return
-        when (screenForReturn) {
+        if (nextScreen.isNullOrEmpty()) return
+        when (nextScreen) {
             Screens.CLOSE_AFTER_LOGIN -> router.exit()
             Screens.CARRIER_MODE   -> {
                 router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
@@ -151,9 +151,11 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
                             }
                 }
             }
-            Screens.RATE_TRANSFER -> router.navigateTo(Screens.Splash(transferId, rate, true))
+            Screens.RATE_TRANSFER -> {
+                router.navigateTo(Screens.Splash(transferId, rate, true))
+            }
         }
-        if(openSettingsScreen) router.navigateTo(Screens.Settings)
+        if(openSettingsScreen) { router.replaceScreen(Screens.Settings) }
     }
 
     private fun checkInputData() =
@@ -188,7 +190,6 @@ class LoginPresenterNew : BasePresenter<LoginViewNew>() {
     override fun onBackCommandClick() {
         when {
             showingFragment != null -> viewState.showPasswordFragment(false, CLOSE_FRAGMENT)
-            transferId != 0L        -> router.newRootScreen(Screens.Main())
             else                    -> router.exit()
         }
     }

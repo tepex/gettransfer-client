@@ -5,11 +5,11 @@ import com.kg.gettransfer.domain.ApiException
 
 interface LoginViewNew: BaseView, SmsCodeView {
     companion object {
-        val EXTRA_SCREEN_FOR_RETURN = "${LoginViewNew::class.java.name}.previous_screen"
-        val EXTRA_EMAIL_TO_LOGIN    = "${LoginViewNew::class.java.name}.email_to_login"
-        val EXTRA_TRANSFER_ID       = "${LoginViewNew::class.java.name}.transfer_id"
-        val EXTRA_OFFER_ID          = "${LoginViewNew::class.java.name}.offer_id"
-        val EXTRA_RATE              = "${LoginViewNew::class.java.name}.rate"
+        val EXTRA_NEXT_SCREEN    = "${LoginViewNew::class.java.name}.next_screen"
+        val EXTRA_EMAIL_TO_LOGIN = "${LoginViewNew::class.java.name}.email_to_login"
+        val EXTRA_TRANSFER_ID    = "${LoginViewNew::class.java.name}.transfer_id"
+        val EXTRA_OFFER_ID       = "${LoginViewNew::class.java.name}.offer_id"
+        val EXTRA_RATE           = "${LoginViewNew::class.java.name}.rate"
     }
 
     fun setEmail(login: String)

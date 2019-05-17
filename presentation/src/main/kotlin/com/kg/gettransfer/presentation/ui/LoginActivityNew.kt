@@ -45,7 +45,7 @@ class LoginActivityNew : BaseActivity(), LoginViewNew {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.emailOrPhone = intent.getStringExtra(LoginViewNew.EXTRA_EMAIL_TO_LOGIN)
-        presenter.screenForReturn = intent.getStringExtra(LoginViewNew.EXTRA_SCREEN_FOR_RETURN)
+        presenter.nextScreen = intent.getStringExtra(LoginViewNew.EXTRA_NEXT_SCREEN)
         presenter.transferId = intent.getLongExtra(LoginViewNew.EXTRA_TRANSFER_ID, 0L)
         presenter.offerId = intent.getLongExtra(LoginViewNew.EXTRA_OFFER_ID, 0L)
         presenter.rate = intent.getIntExtra(LoginViewNew.EXTRA_RATE, 0)
