@@ -9,7 +9,7 @@ class CityPointMapper : Mapper<CityPointModel, CityPoint> {
 
     override fun fromView(type: CityPointModel) =
             CityPoint(
-                    type.name,
+                    type.name ?: "",
                     type.point?.let { pointMapper.fromView(it) },
                     type.placeId
             )

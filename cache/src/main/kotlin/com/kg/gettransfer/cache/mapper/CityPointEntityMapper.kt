@@ -7,7 +7,7 @@ import com.kg.gettransfer.data.model.CityPointEntity
 open class CityPointEntityMapper : EntityMapper<CityPointCached, CityPointEntity> {
     override fun fromCached(type: CityPointCached) =
         CityPointEntity(
-            name = type.name,
+            name = type.name ?: "",
             point = type.point,
             placeId = type.placeId
         )
