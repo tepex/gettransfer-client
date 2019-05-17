@@ -32,7 +32,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -45,7 +44,6 @@ import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setTrottledClickListener
-import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
@@ -215,6 +213,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
             if (!firstAttach)setAnimation(withMap, this)
             if (!withMap) {
                 systemInteractor.lastMainScreenMode = Screens.MAIN_WITHOUT_MAP
+                if (isFragmentExists()) return
                 add(R.id.fragmentContainer, MainRequestFragment())
             }
             else {
@@ -227,6 +226,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
             }
         }?.commit()
     }
+
+    private fun isFragmentExists() =
+        supportFragmentManager.fragments.any {
+            it is MainRequestFragment
+        }
+
 
     private fun setRequestView () {
         val addressTo = if (rl_searchForm.isVisible) searchTo.text else null
