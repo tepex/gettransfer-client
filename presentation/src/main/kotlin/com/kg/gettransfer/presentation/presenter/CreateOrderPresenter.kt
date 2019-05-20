@@ -53,6 +53,7 @@ import org.koin.standalone.get
 import org.koin.standalone.inject
 
 import timber.log.Timber
+import java.lang.NullPointerException
 
 @InjectViewState
 class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
@@ -151,8 +152,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             routeModel = routeMapper.getView(
                     route?.distance,
                     route?.polyLines,
-                    from.name!!,
-                    to.name!!,
+                    from.name,
+                    to.name,
                     from.point!!,
                     to.point!!,
                     dateDelegate.run { startOrderedTime ?: getCurrentDatePlusMinimumHours().time.simpleFormat() }
@@ -213,8 +214,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val newTransportTypes = systemInteractor.transportTypes.map { transportTypeMapper.toView(it) }
         transportTypes?.let {
             newTransportTypes.forEach { type ->
-                type.checked = it.find { old -> old.id == type.id }
-                        ?.checked ?: false
+                type.checked = it
+                        .find { old -> old.id == type.id }
+                        ?.checked
+                        ?: false
             }
         }
         transportTypes = newTransportTypes
@@ -433,7 +436,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val tripTime = duration?.let { String.format("%d:%d", it / 60, it % 60) }
         val checkedTransport = transportTypes?.filter { it.checked }
         if (!checkedTransport.isNullOrEmpty()) {
-            viewState.setFairPrice(checkedTransport.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
+            try {
+                viewState.setFairPrice(checkedTransport.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
+            } catch (e: NullPointerException) {
+                viewState.setFairPrice(null, null)
+            }
         } else {
             viewState.setFairPrice(null, null)
         }
@@ -450,6 +457,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         } else {
             setFavoriteTransportTypes()
         }
+        onTransportChosen()
     }
 
     private fun setFavoriteTransportTypes() =
