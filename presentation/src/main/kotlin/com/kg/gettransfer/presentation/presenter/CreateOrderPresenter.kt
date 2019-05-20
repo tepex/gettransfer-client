@@ -402,7 +402,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun onAccountExists(transferId: Long) {
-        systemInteractor.account.user.profile.clear()
+        sessionInteractor.account.user.profile.clear()
         viewState.showNotLoggedAlert(transferId)
     }
 
