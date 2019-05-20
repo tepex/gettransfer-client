@@ -326,7 +326,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
-            presenter.onTransportChosen()
+//            presenter.onTransportChosen()
             checkErrorField(rvTransferType)
             if (showInfo) transportTypeClicked(transportType)
         }

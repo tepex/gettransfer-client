@@ -457,7 +457,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         } else {
             setFavoriteTransportTypes()
         }
-        onTransportChosen()
+//        onTransportChosen()
     }
 
     private fun setFavoriteTransportTypes() =
