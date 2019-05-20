@@ -29,7 +29,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
     internal var transferId: Long = 0
     internal var offerId: Long? = null
     internal var rate: Int? = null
-    val smsResendDelaySec = systemInteractor.mobileConfigs.smsResendDelaySec
+    val smsResendDelaySec = sessionInteractor.mobileConfigs.smsResendDelaySec
 
     private var password: String? = null
 
@@ -71,8 +71,8 @@ class LoginPresenter : BasePresenter<LoginView>() {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when(isPhone) {
-                    true -> systemInteractor.getVerificationCode(null, LoginHelper.formatPhone(emailOrPhone))
-                    false -> systemInteractor.getVerificationCode(emailOrPhone, null)
+                    true -> sessionInteractor.getVerificationCode(null, LoginHelper.formatPhone(emailOrPhone))
+                    false -> sessionInteractor.getVerificationCode(emailOrPhone, null)
                 }
             }.also {
                 if (it.error != null)
@@ -98,8 +98,8 @@ class LoginPresenter : BasePresenter<LoginView>() {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> systemInteractor.login(null, LoginHelper.formatPhone(emailOrPhone), password!!, withSmsCode)
-                    false -> systemInteractor.login(emailOrPhone, null, password!!, withSmsCode)
+                    true -> sessionInteractor.login(null, LoginHelper.formatPhone(emailOrPhone), password!!, withSmsCode)
+                    false -> sessionInteractor.login(emailOrPhone, null, password!!, withSmsCode)
                 }
             }
                     .also {
@@ -170,7 +170,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
             } else {
                 viewState.setError(false,
                         R.string.LNG_ERROR_EMAIL_PHONE,
-                        Utils.phoneUtil.internationalExample(systemInteractor.account.locale)
+                        Utils.phoneUtil.internationalExample(sessionInteractor.account.locale)
                 )
                 false
             }

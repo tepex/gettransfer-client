@@ -1,6 +1,5 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.MobileConfig
@@ -20,14 +19,6 @@ class SessionInteractor(
     var accessToken: String
         get() = sessionRepository.accessToken
         set(value) { sessionRepository.accessToken = value }
-
-    var userEmail: String
-        get() = sessionRepository.userEmail
-        set(value) { sessionRepository.userEmail = value }
-
-    var userPassword: String
-        get() = sessionRepository.userPassword
-        set(value) { sessionRepository.userPassword = value }
 
     val account: Account
         get() = sessionRepository.account
@@ -74,21 +65,13 @@ class SessionInteractor(
 
     suspend fun logout() = sessionRepository.logout()
 
-    suspend fun login(email: String, password: String) = sessionRepository.login(email, password)
-    suspend fun accountLogin(email: String?, phone: String?, password: String) = sessionRepository.accountLogin(email, phone, password)
+    suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean) = sessionRepository.login(email, phone, password, withSmsCode)
 
     suspend fun getVerificationCode(email: String?, phone: String?) = sessionRepository.getVerificationCode(email, phone)
 
     suspend fun putAccount() = sessionRepository.putAccount(account)
     suspend fun putNoAccount() = sessionRepository.putNoAccount(account)
-    suspend fun changePassword(pass: String, repeatedPass: String): Result<Account> {
-        val result = sessionRepository.putAccount(account, pass, repeatedPass)
-        if (result.error == null) {
-            account.user.profile.email?.let { this.userEmail = it }
-            this.userPassword = pass
-        }
-        return result
-    }
+    suspend fun changePassword(pass: String, repeatedPass: String) = sessionRepository.putAccount(account, pass, repeatedPass)
 
     companion object {
         //private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )

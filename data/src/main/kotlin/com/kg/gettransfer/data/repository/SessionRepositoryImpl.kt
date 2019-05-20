@@ -63,9 +63,13 @@ class SessionRepositoryImpl(
         get() = preferencesCache.accessToken
         set(value) { preferencesCache.accessToken = value }
 
-    override var userEmail: String
+    override var userEmail: String?
         get() = preferencesCache.userEmail
         set(value) { preferencesCache.userEmail = value }
+
+    override var userPhone: String?
+        get() = preferencesCache.userPhone
+        set(value) { preferencesCache.userPhone = value }
 
     override var userPassword: String
         get() = preferencesCache.userPassword
@@ -140,11 +144,12 @@ class SessionRepositoryImpl(
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().setAccount(accountEntity)
         }
-        result.entity?.let {
-            if(result.error == null) {
+        if(result.error == null) {
+            result.entity?.let {
                 factory.retrieveCacheDataStore().setAccount(it)
                 this.account = accountMapper.fromEntity(it)
             }
+            if (pass != null && repeatedPass != null) this.userPassword = pass
         }
         return Result(this.account, result.error?.let { ExceptionMapper.map(it) })
     }
@@ -154,40 +159,18 @@ class SessionRepositoryImpl(
         return Result(account)
     }
 
-    override suspend fun login(email: String, password: String): Result<Account> {
-        /*val accountEntity = try { factory.retrieveRemoteDataStore().login(email, password) }
-        catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
-
-        factory.retrieveCacheDataStore().setAccount(accountEntity)
-        account = accountMapper.fromEntity(accountEntity)
-        return Result(account)*/
-
+    override suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean): Result<Account> {
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().login(email, password)
+            factory.retrieveRemoteDataStore().login(email, phone, password)
         }
         if (result.error == null) {
             result.entity?.let {
                 factory.retrieveCacheDataStore().setAccount(it)
                 account = accountMapper.fromEntity(it)
             }
-            this.userEmail = email
-            this.userPassword = password
-        }
-
-        return Result(account, result.error?.let { ExceptionMapper.map(it) })
-    }
-
-    override suspend fun accountLogin(email: String?, phone: String?, password: String): Result<Account> {
-        val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().accountLogin(email, phone, password)
-        }
-        if (result.error == null) {
-            result.entity?.let {
-                factory.retrieveCacheDataStore().setAccount(it)
-                account = accountMapper.fromEntity(it)
-            }
-            if (email != null) {
+            if (!withSmsCode) {
                 this.userEmail = email
+                this.userPhone = phone
                 this.userPassword = password
             }
         }
