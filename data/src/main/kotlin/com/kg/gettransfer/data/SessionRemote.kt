@@ -12,8 +12,7 @@ interface SessionRemote : KoinComponent {
     suspend fun getConfigs(): ConfigsEntity
     suspend fun getAccount(): AccountEntity?
     suspend fun setAccount(accountEntity: AccountEntity): AccountEntity
-    suspend fun login(email: String, password: String): AccountEntity
-    suspend fun accountLogin(email: String?, phone: String?, password: String): AccountEntity
+    suspend fun login(email: String?, phone: String?, password: String): AccountEntity
     suspend fun getVerificationCode(email: String?, phone: String?): Boolean
     fun changeEndpoint(endpoint: EndpointEntity)
     suspend fun getMobileConfigs(): MobileConfigEntity

@@ -19,8 +19,10 @@ class PreferencesImpl(context: Context,
         @JvmField val INVALID_TOKEN       = "invalid_token"
         @JvmField val ACCESS_TOKEN        = "token"
         @JvmField val INVALID_EMAIL       = ""
-        @JvmField val USER_EMAIL          = "user_email"
+        @JvmField val INVALID_PHONE       = ""
         @JvmField val INVALID_PASSWORD    = ""
+        @JvmField val USER_EMAIL          = "user_email"
+        @JvmField val USER_PHONE          = "user_phone"
         @JvmField val USER_PASSWORD       = "user_password"
         @JvmField val LAST_MODE           = "last_mode"
         @JvmField val LAST_MAIN_MODE      = "last_main_mode"
@@ -52,7 +54,8 @@ class PreferencesImpl(context: Context,
     private val accountPrefs  = context.getSharedPreferences(AccountEntity.ENTITY_NAME, Context.MODE_PRIVATE)
     private val driverPrefs   = context.getSharedPreferences(CarrierEntity.ENTITY_NAME, Context.MODE_PRIVATE)
     private var _accessToken  = INVALID_TOKEN
-    private var _userEmail    = INVALID_EMAIL
+    private var _userEmail: String? = null
+    private var _userPhone: String? = null
     private var _userPassword = INVALID_PASSWORD
     private var _endpoint: EndpointEntity? = null
 
@@ -73,16 +76,42 @@ class PreferencesImpl(context: Context,
             listeners.forEach { it.accessTokenChanged(value) }
         }
 
-    override var userEmail: String
+    override var userEmail: String?
         get() {
-            if(_userEmail == INVALID_EMAIL)
-                _userEmail = configsPrefs.getString(USER_EMAIL, INVALID_EMAIL)!!
+            if(_userEmail == null || _userEmail == INVALID_EMAIL) {
+                val prefsEmail = configsPrefs.getString(USER_EMAIL, INVALID_EMAIL)!!
+                _userEmail = if (prefsEmail.isNotEmpty()) prefsEmail else null
+            }
             return _userEmail
         }
         set(value) {
             _userEmail = value
-            with(configsPrefs.edit()){
-                putString(USER_EMAIL, value)
+            with(configsPrefs.edit()) {
+                if (value == null) {
+                    remove(USER_EMAIL)
+                } else {
+                    putString(USER_EMAIL, value)
+                }
+                apply()
+            }
+        }
+
+    override var userPhone: String?
+        get() {
+            if (_userPhone == null || _userPhone == INVALID_PHONE) {
+                val prefsPhone = configsPrefs.getString(USER_PHONE, INVALID_PHONE)!!
+                _userPhone = if (prefsPhone.isNotEmpty()) prefsPhone else null
+            }
+            return _userPhone
+        }
+        set(value) {
+            _userPhone = value
+            with(configsPrefs.edit()) {
+                if (value == null) {
+                    remove(USER_PHONE)
+                } else {
+                    putString(USER_PHONE, value)
+                }
                 apply()
             }
         }

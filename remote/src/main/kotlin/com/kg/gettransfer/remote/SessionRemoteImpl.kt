@@ -58,14 +58,8 @@ class SessionRemoteImpl : SessionRemote {
         }
     }*/
 
-    override suspend fun login(email: String, password: String): AccountEntity {
-        //val response: ResponseModel<AccountModelWrapper> = tryLogin(email, password)
-        val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.login(email, password) }
-        return accountMapper.fromRemote(response.data?.account!!)
-    }
-
-    override suspend fun accountLogin(email: String?, phone: String?, password: String): AccountEntity {
-        val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.accountLogin(email, phone, password) }
+    override suspend fun login(email: String?, phone: String?, password: String): AccountEntity {
+        val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.login(email, phone, password) }
         return accountMapper.fromRemote(response.data?.account!!)
     }
 

@@ -26,8 +26,7 @@ open class SessionDataStoreCache : SessionDataStore {
     override suspend fun setAccount(accountEntity: AccountEntity) = cache.setAccount(accountEntity)
     override suspend fun clearAccount() = cache.clearAccount()
 
-    override suspend fun login(email: String, password: String): AccountEntity { throw UnsupportedOperationException() }
-    override suspend fun accountLogin(email: String?, phone: String?, password: String): AccountEntity { throw UnsupportedOperationException() }
+    override suspend fun login(email: String?, phone: String?, password: String): AccountEntity { throw UnsupportedOperationException() }
     override suspend fun getVerificationCode(email: String?, phone: String?): Boolean { throw UnsupportedOperationException() }
     override fun changeEndpoint(endpoint: EndpointEntity) { throw UnsupportedOperationException() }
 }

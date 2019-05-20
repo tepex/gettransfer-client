@@ -52,16 +52,9 @@ interface Api {
     fun postAccount(@Body account: AccountModel): Deferred<ResponseModel<AccountWrapperModel>>
     */
 
-    @POST(API_LOGIN)
-    @FormUrlEncoded
-    fun login(
-        @Field("email") email: String,
-        @Field("password") password: String
-    ): Deferred<ResponseModel<AccountModelWrapper>>
-
     @POST(API_ACCOUNT_LOGIN)
     @FormUrlEncoded
-    fun accountLogin(
+    fun login(
             @Field("email") email: String?,
             @Field("phone") phone: String?,
             @Field("password") password: String

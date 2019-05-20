@@ -128,9 +128,9 @@ class ApiCore : KoinComponent {
         val response: ResponseModel<TokenModel> = api.accessToken().await()
         preferences.accessToken = response.data!!.token
         val email = preferences.userEmail
+        val phone = preferences.userPhone
         val password = preferences.userPassword
-        if(email.isNotEmpty() && password.isNotEmpty()) api.login(email, password).await()
-        //if (response.error == null) api.login().await()
+        api.login(email, phone, password).await()
     }
 
     internal fun remoteException(e: Exception): RemoteException = when(e) {

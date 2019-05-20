@@ -82,7 +82,7 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
         else router.replaceScreen(Screens.Splash(transferId, rate, true))
     }
 
-    private fun isLoggedIn() = sessionInteractor.userEmail != PreferencesImpl.INVALID_EMAIL
+    private fun isLoggedIn() = systemInteractor.account.user.loggedIn
 
     fun openMainScreen() = router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
 }

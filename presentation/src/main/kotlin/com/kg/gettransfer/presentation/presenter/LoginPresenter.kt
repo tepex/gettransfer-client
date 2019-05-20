@@ -98,8 +98,8 @@ class LoginPresenter : BasePresenter<LoginView>() {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> systemInteractor.accountLogin(null, LoginHelper.formatPhone(emailOrPhone), password!!)
-                    false -> systemInteractor.accountLogin(emailOrPhone, null, password!!)
+                    true -> systemInteractor.login(null, LoginHelper.formatPhone(emailOrPhone), password!!, withSmsCode)
+                    false -> systemInteractor.login(emailOrPhone, null, password!!, withSmsCode)
                 }
             }
                     .also {
