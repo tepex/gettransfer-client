@@ -116,33 +116,33 @@ object Screens {
     }
 
     open class Login(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivityNew::class.java).apply {
-            putExtra(LoginViewNew.EXTRA_NEXT_SCREEN, nextScreen)
-            putExtra(LoginViewNew.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
+        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
+            putExtra(LoginView.EXTRA_NEXT_SCREEN, nextScreen)
+            putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
         }
     }
 
     data class LoginToGetOffers(val id: Long, val email: String?, val backToScreen: String? = null) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivityNew::class.java).apply {
-            putExtra(LoginViewNew.EXTRA_TRANSFER_ID, id)
-            putExtra(LoginViewNew.EXTRA_NEXT_SCREEN, Screens.OFFERS)
-            putExtra(LoginViewNew.EXTRA_EMAIL_TO_LOGIN, email)
+        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
+            putExtra(LoginView.EXTRA_TRANSFER_ID, id)
+            putExtra(LoginView.EXTRA_NEXT_SCREEN, Screens.OFFERS)
+            putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
         }
     }
 
     data class LoginToPaymentOffer(val transferId: Long, val offerId: Long?) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivityNew::class.java).apply {
-            putExtra(LoginViewNew.EXTRA_TRANSFER_ID, transferId)
-            putExtra(LoginViewNew.EXTRA_OFFER_ID, offerId)
-            putExtra(LoginViewNew.EXTRA_NEXT_SCREEN, Screens.PAYMENT_OFFER)
+        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
+            putExtra(LoginView.EXTRA_TRANSFER_ID, transferId)
+            putExtra(LoginView.EXTRA_OFFER_ID, offerId)
+            putExtra(LoginView.EXTRA_NEXT_SCREEN, Screens.PAYMENT_OFFER)
         }
     }
 
     data class LoginToRateTransfer(val transferId: Long, val rate: Int) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?): Intent = Intent(context, LoginActivityNew::class.java).apply {
-            putExtra(LoginViewNew.EXTRA_TRANSFER_ID, transferId)
-            putExtra(LoginViewNew.EXTRA_RATE, rate)
-            putExtra(LoginViewNew.EXTRA_NEXT_SCREEN, Screens.RATE_TRANSFER)
+        override fun getActivityIntent(context: Context?): Intent = Intent(context, LoginActivity::class.java).apply {
+            putExtra(LoginView.EXTRA_TRANSFER_ID, transferId)
+            putExtra(LoginView.EXTRA_RATE, rate)
+            putExtra(LoginView.EXTRA_NEXT_SCREEN, Screens.RATE_TRANSFER)
         }
     }
 

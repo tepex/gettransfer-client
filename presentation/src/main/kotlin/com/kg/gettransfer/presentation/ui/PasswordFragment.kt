@@ -7,22 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.presenter.LoginPresenterNew
+import com.kg.gettransfer.presentation.presenter.LoginPresenter
 import kotlinx.android.synthetic.main.fragment_password.*
 
 class PasswordFragment: MvpAppCompatFragment() {
 
     private var passwordVisible = false
 
-    private lateinit var mActivity: LoginActivityNew
-    private lateinit var mPresenter: LoginPresenterNew
+    private lateinit var mActivity: LoginActivity
+    private lateinit var mPresenter: LoginPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_password, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mActivity = activity as LoginActivityNew
+        mActivity = activity as LoginActivity
         mPresenter = mActivity.presenter
 
         currentUser.text = mPresenter.emailOrPhone

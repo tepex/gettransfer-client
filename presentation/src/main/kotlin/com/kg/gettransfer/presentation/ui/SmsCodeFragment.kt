@@ -9,14 +9,14 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.presentation.presenter.LoginPresenterNew
+import com.kg.gettransfer.presentation.presenter.LoginPresenter
 import com.kg.gettransfer.presentation.view.SmsCodeView
 import kotlinx.android.synthetic.main.fragment_sms_code.*
 
 class SmsCodeFragment: MvpAppCompatFragment(), SmsCodeView {
 
-    private lateinit var mActivity: LoginActivityNew
-    private lateinit var mPresenter: LoginPresenterNew
+    private lateinit var mActivity: LoginActivity
+    private lateinit var mPresenter: LoginPresenter
 
     private lateinit var timerBtnResendCode: CountDownTimer
     private var smsResendDelay: Long = SMS_RESEND_DELAY_MILLIS
@@ -31,7 +31,7 @@ class SmsCodeFragment: MvpAppCompatFragment(), SmsCodeView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mActivity = activity as LoginActivityNew
+        mActivity = activity as LoginActivity
         mPresenter = mActivity.presenter
         mActivity.smsCodeView = this
         smsResendDelay = mPresenter.smsResendDelaySec * SEC_IN_MILLIS

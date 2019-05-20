@@ -1,22 +1,28 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
-import android.text.InputType
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
+import android.support.v4.app.FragmentTransaction
+
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.presenter.LoginPresenter
 
 import com.kg.gettransfer.presentation.view.LoginView
+import com.kg.gettransfer.presentation.view.SmsCodeView
 
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_login_new.*
+import kotlinx.android.synthetic.main.view_input_password.*
+import java.lang.UnsupportedOperationException
 
 class LoginActivity : BaseActivity(), LoginView {
     @InjectPresenter
@@ -27,95 +33,123 @@ class LoginActivity : BaseActivity(), LoginView {
 
     override fun getPresenter(): LoginPresenter = presenter
 
+    var smsCodeView: SmsCodeView? = null
+
     companion object {
         const val INVALID_EMAIL     = 1
-        const val INVALID_PASSWORD  = 2
+        const val INVALID_PHONE     = 2
+        const val INVALID_PASSWORD  = 3
     }
-
-    private var passwordVisible = false
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.email = intent.getStringExtra(LoginView.EXTRA_EMAIL_TO_LOGIN)
-        presenter.screenForReturn = intent.getStringExtra(LoginView.EXTRA_SCREEN_FOR_RETURN)
+        presenter.emailOrPhone = intent.getStringExtra(LoginView.EXTRA_EMAIL_TO_LOGIN)
+        presenter.nextScreen = intent.getStringExtra(LoginView.EXTRA_NEXT_SCREEN)
         presenter.transferId = intent.getLongExtra(LoginView.EXTRA_TRANSFER_ID, 0L)
         presenter.offerId = intent.getLongExtra(LoginView.EXTRA_OFFER_ID, 0L)
         presenter.rate = intent.getIntExtra(LoginView.EXTRA_RATE, 0)
 
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_login_new)
 
+        initTextChangeListeners()
+        initClickListeners()
+
+        etEmail.setText(presenter.emailOrPhone)
+    }
+
+    private fun initClickListeners() {
+        ivBtnBack.setOnClickListener { presenter.onBackCommandClick() }
+        btnLogin.setOnClickListener { presenter.onLoginClick() }
+        btn_requestCode.setOnClickListener { presenter.sendVerificationCode() }
+    }
+
+    private fun initTextChangeListeners() {
         etEmail.onTextChanged {
-            presenter.setEmail(it.trim())
+            val emailPhone = it.trim()
+            presenter.setEmailOrPhone(emailPhone)
+            btnLogin.isEnabled = emailPhone.isNotEmpty() && etPassword.text?.isNotEmpty() ?: false
         }
         etPassword.onTextChanged {
-            presenter.setPassword(it.trim())
-        }
-        etPassword.setOnFocusChangeListener { v, hasFocus -> changePasswordToggle(hasFocus) }
-        ivPasswordToggle.setOnClickListener { togglePassword() }
-        btnLogin.setOnClickListener   { presenter.onLoginClick() }
-        ivBack.setOnClickListener { presenter.onBackClick() }
-
-        etEmail.setText(presenter.email)
-        tvForgotPassword.setOnClickListener { presenter.onPassForgot() }
-    }
-
-    private fun togglePassword() {
-        if (passwordVisible) {
-            passwordVisible = false
-            hidePassword()
-        } else {
-            passwordVisible = true
-            showPassword()
+            presenter.setPassword(it)
+            btnLogin.isEnabled = etEmail.text?.isNotEmpty() ?: false && it.isNotEmpty()
         }
     }
 
-    private fun showPassword() {
-        ivPasswordToggle.setImageResource(R.drawable.ic_eye)
-        etPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-        etPassword.text?.length?.let { etPassword.setSelection(it) }
+    override fun setEmail(login: String) {
+        etEmail.setText(login)
+        etPassword.requestFocus()
     }
 
-    private fun hidePassword() {
-        ivPasswordToggle.setImageResource(R.drawable.ic_eye_off)
-        etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-        etPassword.text?.length?.let { etPassword.setSelection(it) }
+    @SuppressLint("CommitTransaction")
+    override fun showPasswordFragment(show: Boolean, showingView: Int) {
+        with(supportFragmentManager.beginTransaction()) {
+            setAnimation(show, this)
+            if (show) {
+                layoutLogin.isVisible = false
+                presenter.showingFragment = showingView
+                replace(R.id.passwordFragment, when (showingView) {
+                    LoginPresenter.PASSWORD_VIEW -> PasswordFragment()
+                    LoginPresenter.SMS_CODE_VIEW -> SmsCodeFragment()
+                    else -> throw UnsupportedOperationException()
+                })
+            } else {
+                layoutLogin.isVisible = true
+                presenter.showingFragment = null
+                supportFragmentManager.fragments.firstOrNull()?.let { smsCodeView = null; remove(it) }
+            }
+        }?.commit()
     }
 
-    private fun changePasswordToggle(hasFocus: Boolean) {
-        when {
-            hasFocus && passwordVisible -> ivPasswordToggle.setImageResource(R.drawable.ic_eye)
-            !hasFocus && passwordVisible -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_inactive)
-            hasFocus && !passwordVisible -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_off)
-            else -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_off_inactive)
-        }
-    }
-
-    override fun enableBtnLogin(enable: Boolean) {
-        btnLogin.isEnabled = enable
-    }
-
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        super.blockInterface(block, useSpinner)
-        if (block) tvLoginError.isVisible = false
-    }
+    @SuppressLint("PrivateResource")
+    private fun setAnimation(opens: Boolean, transaction: FragmentTransaction) =
+            transaction.apply {
+                val anim = if(opens) R.anim.enter_from_right else R.anim.exit_to_right
+                setCustomAnimations(anim, anim)
+            }
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        tvLoginError.isVisible = true
+        Utils.showError(this, false, getString(errId, *args))
     }
 
-    override fun showError(show: Boolean, message: String?) {
-        tvLoginError.isVisible = show
-        if (show) tvLoginError.text = message ?: getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
+    override fun showError(show: Boolean, error: ApiException) {
+        if (show) {
+            val errText = when {
+                error.isNotFound() -> getString(R.string.LNG_ERROR_ACCOUNT)
+                else -> error.details
+            }
+            smsCodeView?.let {
+                showErrorText(true, errText)
+                return
+            }
+            Utils.showError(this, false, errText)
+        }
+    }
+
+    override fun showLoginInfo(title: Int, info: Int) {
+        Utils.showLoginDialog(this, message = getString(info), title = getString(title))
     }
 
     override fun showValidationError(show: Boolean, errorType: Int) {
-        tvLoginError.isVisible = show
-        if (show) tvLoginError.setText(when (errorType) {
+        val errStringRes = when (errorType) {
             INVALID_EMAIL    -> R.string.LNG_ERROR_EMAIL
+            INVALID_PHONE    -> R.string.LNG_ERROR_PHONE
             INVALID_PASSWORD -> R.string.LNG_LOGIN_PASSWORD
             else             -> R.string.LNG_BAD_CREDENTIALS_ERROR
-        })
+        }
+        if(show) Utils.showError(this, false, getString(errStringRes))
+    }
+
+    override fun showChangePasswordDialog() {
+        Utils.showAlertSetNewPassword(this) { presenter.openPreviousScreen(it) }
+    }
+
+    override fun updateTimerResendCode() {
+        smsCodeView?.updateTimerResendCode()
+    }
+
+    override fun showErrorText(show: Boolean, text: String?) {
+        smsCodeView?.showErrorText(show, text)
     }
 
     override fun onBackPressed() { presenter.onBackCommandClick() }
