@@ -67,38 +67,15 @@ class SessionInteractor(
         set(value) { account.distanceUnit = value }
 
     var isEmailNotificationEnabled: Boolean
-        get() = account.isEmailNotificationEnabled()
-        set(value) {
-            account.groups =
-                    account.groups
-                            .toMutableList()
-                            .apply {
-                                if (value) add(Account.GROUP_EMAIL_NOTIFICATION_PASSENGER)
-                                else remove(Account.GROUP_EMAIL_NOTIFICATION_PASSENGER)
-                            }
-        }
+        get() = account.isEmailNotificationsEnabled
+        set(value) { account.isEmailNotificationsEnabled = value }
 
     suspend fun coldStart() = sessionRepository.coldStart()
 
     suspend fun logout() = sessionRepository.logout()
 
-    suspend fun login(email: String, password: String): Result<Account> {
-        val result = sessionRepository.login(email, password)
-        if (result.error == null) {
-            this.userEmail = email
-            this.userPassword = password
-        }
-        return result
-    }
-
-    suspend fun accountLogin(email: String?, phone: String?, password: String): Result<Account>{
-        val result = sessionRepository.accountLogin(email, phone, password)
-        if (email != null && result.error == null) {
-            this.userEmail = email
-            this.userPassword = password
-        }
-        return result
-    }
+    suspend fun login(email: String, password: String) = sessionRepository.login(email, password)
+    suspend fun accountLogin(email: String?, phone: String?, password: String) = sessionRepository.accountLogin(email, phone, password)
 
     suspend fun getVerificationCode(email: String?, phone: String?) = sessionRepository.getVerificationCode(email, phone)
 

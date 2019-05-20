@@ -11,8 +11,15 @@ data class Account(
     var carrierId: Long?
 ) {
 
-    fun isEmailNotificationEnabled() =
-            groups.contains(GROUP_EMAIL_NOTIFICATION_PASSENGER)
+    var isEmailNotificationsEnabled: Boolean
+        get() = groups.contains(GROUP_EMAIL_NOTIFICATION_PASSENGER)
+        set(value) {
+            groups = groups.toMutableList()
+                    .apply {
+                        if (value) add(GROUP_EMAIL_NOTIFICATION_PASSENGER)
+                        else remove(GROUP_EMAIL_NOTIFICATION_PASSENGER)
+                    }
+        }
 
     companion object {
         const val GROUP_CARRIER_DRIVER = "carrier/driver"

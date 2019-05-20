@@ -165,12 +165,15 @@ class SessionRepositoryImpl(
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().login(email, password)
         }
-        result.entity?.let {
-            if(result.error == null) {
+        if (result.error == null) {
+            result.entity?.let {
                 factory.retrieveCacheDataStore().setAccount(it)
                 account = accountMapper.fromEntity(it)
             }
+            this.userEmail = email
+            this.userPassword = password
         }
+
         return Result(account, result.error?.let { ExceptionMapper.map(it) })
     }
 
@@ -178,10 +181,14 @@ class SessionRepositoryImpl(
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().accountLogin(email, phone, password)
         }
-        result.entity?.let {
-            if(result.error == null) {
+        if (result.error == null) {
+            result.entity?.let {
                 factory.retrieveCacheDataStore().setAccount(it)
                 account = accountMapper.fromEntity(it)
+            }
+            if (email != null) {
+                this.userEmail = email
+                this.userPassword = password
             }
         }
         return Result(account, result.error?.let { ExceptionMapper.map(it) })
