@@ -67,9 +67,13 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
 
     @Synchronized
     suspend fun <T> async(block: TaskResult<T>): Deferred<Result<T>> = coroutineScope { async(cc.bg) { block() } }
+
+    @Synchronized
+    suspend fun <T> compute(block: TaskData<T>): T = coroutineScope { async(Dispatchers.Default) { block() } }.await()
 }
 
 typealias Task = suspend CoroutineScope.() -> Unit
 typealias TaskThrowable = suspend CoroutineScope.(Throwable) -> Unit
 typealias TaskGeneric<T> = suspend CoroutineScope.() -> T
 typealias TaskResult<T> = suspend CoroutineScope.() -> Result<T>
+typealias TaskData<T> = suspend CoroutineScope.() -> T

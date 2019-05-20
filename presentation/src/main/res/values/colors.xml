@@ -120,6 +120,7 @@
 
     <color name="transparent_white">#00ffffff</color>
     <color name="transparent_black">#00000000</color>
+    <color name="empty_data_text">#19000000</color>
 
     <!-- Transfer details -->
     <color name="color_transfer_details_vertical_divider">#d8d8d8</color>

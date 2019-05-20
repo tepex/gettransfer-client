@@ -1,11 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
 
 import android.support.v7.widget.LinearLayoutManager
 
@@ -48,9 +46,8 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     @ProvidePresenter
     fun createRequestsCategoryPresenter() = RequestsCategoryPresenter(arguments!!.getInt(TRANSFER_TYPE_ARG))
 
-    private var rvAdapter: RequestsRVAdapter? = null
-
-    var networkAvailable:Boolean? = null
+    private val rvAdapter: RequestsRVAdapter
+    get() = rvRequests.adapter as RequestsRVAdapter
 
     companion object {
         @JvmField val TRANSFER_TYPE_ARG = "TRANSFER_TYPE_ARG"
@@ -81,32 +78,26 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
             RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> R.layout.view_transfer_request_info_disabled
             else -> throw UnsupportedOperationException()
         }
-
-        rvAdapter = RequestsRVAdapter(layout) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
-        rvRequests.adapter = rvAdapter
-    }
-
-    override fun setScrollListener() {
-        rvRequests.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            }
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if(!rvRequests.canScrollVertically(1)){
-                    presenter.updateTransfersSuspend()
-                }
-            }
-        })
+        rvRequests.adapter = RequestsRVAdapter(layout) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
     }
 
     override fun updateTransfers(transfers: List<TransferModel>) {
-        noTransfersText.isVisible = transfers.isEmpty()
-        rvAdapter?.updateTransfers(transfers)
+        switchBackGroundData(false)
+        rvAdapter.updateTransfers(transfers)
     }
 
     override fun updateEvents(eventsCount: Map<Long, Int>) {
-        rvAdapter?.updateEvents(eventsCount)
+        rvAdapter.updateEvents(eventsCount)
+    }
+
+    override fun onEmptyList() {
+        switchBackGroundData(true)
+    }
+
+    private fun switchBackGroundData(isEmpty: Boolean) {
+        rvRequests.isVisible      = !isEmpty
+        iv_no_transfers.isVisible = isEmpty
+        noTransfersText.isVisible = isEmpty
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) =
@@ -122,21 +113,4 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     override fun setError(e: DatabaseException) =
             (activity as BaseView).setError(e)
-
-    override fun notifyData() {
-        activity?.runOnUiThread { rvAdapter?.notifyDataSetChanged() }
-    }
-
-    override fun showTransfers(){
-        if(::presenter.isInitialized){
-            presenter.getTransfers(networkAvailable)
-        }
-    }
-
-    fun setNetworkAvailability(available: Boolean){
-        if(networkAvailable != available) {
-            networkAvailable = available
-            showTransfers()
-        }
-    }
 }

@@ -24,9 +24,7 @@ class TransferInteractor(private val repository: TransferRepository) {
     suspend fun setOffersUpdatedDate(id: Long) = repository.setOffersUpdateDate(id)
 
     suspend fun getAllTransfers() = repository.getAllTransfers()
-    suspend fun getTransfersActiveCached() = repository.getTransfersActiveCached()
     suspend fun getTransfersActive() = repository.getTransfersActive()
-    suspend fun getTransfersArchiveCached() = repository.getTransfersArchiveCached()
     suspend fun getTransfersArchive() = repository.getTransfersArchive()
 
     fun clearTransfersCache(): Result<Unit> {

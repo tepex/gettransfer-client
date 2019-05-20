@@ -9,7 +9,5 @@ import com.kg.gettransfer.presentation.model.TransferModel
 interface RequestsFragmentView: BaseView {
     fun updateTransfers(transfers: List<TransferModel>)
     fun updateEvents(eventsCount: Map<Long, Int>)
-    fun notifyData()
-    fun showTransfers()
-    fun setScrollListener()
+    fun onEmptyList()
 }

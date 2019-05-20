@@ -298,6 +298,11 @@
 	<dimen name="view_transfer_info_btn_cancel_request_padding_top_bottom">5dp</dimen>
 
 	<dimen name="transfer_main_info_container_vertical_padding">10dp</dimen>
+	<dimen name="no_transfers_image_width">161dp</dimen>
+	<dimen name="no_transfers_image_height">104dp</dimen>
+	<dimen name="no_transfers_title_margin_top">8dp</dimen>
+	<dimen name="no_transfers_title_margin_start">60dp</dimen>
+	<dimen name="no_transfers_title_margin_end">60dp</dimen>
 
 	<!--order_field-->
 	<dimen name="order_field_padding">16dp</dimen>

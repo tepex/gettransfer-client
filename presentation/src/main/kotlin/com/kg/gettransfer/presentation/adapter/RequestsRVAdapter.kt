@@ -56,8 +56,9 @@ class RequestsRVAdapter(
     }
 
     fun updateTransfers(tr: List<TransferModel>) {
+        val start = transfers.size
         transfers.addAll(tr)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(start, transfers.size)
     }
 
     fun updateEvents(eventsCount: Map<Long, Int>) {

@@ -5,10 +5,8 @@ import android.os.Bundle
 
 import android.support.annotation.CallSuper
 
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 
 import android.support.v7.widget.Toolbar
@@ -17,9 +15,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView
@@ -66,29 +61,17 @@ class RequestsActivity: BaseActivity(), RequestsView {
         blockInterface(true, true)
     }
 
-    override fun setNetworkAvailability(context: Context): Boolean {
-        val available = super.setNetworkAvailability(context)
-        requestsVPAdapter?.setNetworkAvailability(available)
-        return available
-    }
-
     private class RequestsViewPagerAdapter(manager: FragmentManager): FragmentPagerAdapter(manager) {
         val fragments = mutableListOf<RequestsFragment>()
         val titles = mutableListOf<String>()
 
-        override fun getItem(position: Int) = fragments.get(position)
+        override fun getItem(position: Int) = fragments[position]
         override fun getCount() = fragments.size
-        override fun getPageTitle(position: Int) = titles.get(position)
+        override fun getPageTitle(position: Int) = titles[position]
 
         fun addFragment(fragment: RequestsFragment, title: String) {
             fragments.add(fragment)
             titles.add(title)
-        }
-
-        fun setNetworkAvailability(available: Boolean) {
-            fragments.forEach {
-                it.setNetworkAvailability(available)
-            }
         }
     }
 
@@ -99,7 +82,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
             override fun onPageSelected(p0: Int) {
                 when(p0) {
                     TRANSFER_ACTIVE -> sendEventLog(getString(R.string.LNG_RIDES_ACTIVE))
-                    TRANSFER_ARCHIVE -> sendEventLog(getString(R.string.LNG_RIDES_COMPLETED))
+                    TRANSFER_ARCHIVE ->  { sendEventLog(getString(R.string.LNG_RIDES_COMPLETED)) }
                 }
             }
         })
