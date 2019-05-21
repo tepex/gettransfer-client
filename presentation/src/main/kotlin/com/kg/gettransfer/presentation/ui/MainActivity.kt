@@ -136,6 +136,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
         _btnCenter = btnMyLocation
         initMapView(savedInstanceState)
         viewNetworkNotAvailable = textNetworkNotAvailable
+        hourlySheet = BottomSheetBehavior.from(hourly_sheet)
 
         btnShowDrawerLayout.setOnClickListener { drawer.openDrawer(Gravity.START) }
         btnBack.setOnClickListener { presenter.onBackClick() }
@@ -333,7 +334,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
     }
 
     private fun initHourly() {
-        hourlySheet = BottomSheetBehavior.from(hourly_sheet)
         hourlySheet.state = BottomSheetBehavior.STATE_HIDDEN
         with(np_hours) {
             displayedValues = HourlyValuesHelper.getHourlyValues(this@MainActivity).toTypedArray()
@@ -569,10 +569,12 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
     override fun onBackClick(isAddressNavigating: Boolean, isTo: Boolean) {
         when {
             drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
+
             screenType == MainView.REQUEST_SCREEN && isAddressNavigating -> {
                 performClick(isTo, true)
                 setSwitchersVisibility(true)
             }
+
             hourlySheet.state == BottomSheetBehavior.STATE_COLLAPSED -> showNumberPicker(false)
             else -> super.onBackPressed()
         }
