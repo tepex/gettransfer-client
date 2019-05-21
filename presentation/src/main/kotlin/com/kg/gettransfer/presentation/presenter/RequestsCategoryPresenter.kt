@@ -23,6 +23,12 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     private var eventsCount: Map<Long, Int>? = null
 
     @CallSuper
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        viewState.blockInterface(true, true)
+    }
+
+    @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
@@ -37,7 +43,6 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
 
     private fun getTransfers() {
         utils.launchSuspend {
-            viewState.blockInterface(true, true)
             transfers = when (transferType) {
                 TRANSFER_ACTIVE  ->  fetchData { transferInteractor.getTransfersActive() }
                 TRANSFER_ARCHIVE ->  fetchData { transferInteractor.getTransfersArchive() }

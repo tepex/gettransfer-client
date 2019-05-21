@@ -58,7 +58,6 @@ class RequestsActivity: BaseActivity(), RequestsView {
         vpRequests.adapter = requestsVPAdapter
         tabs.setupWithViewPager(vpRequests)
         setListenersForLog()
-        blockInterface(true, true)
     }
 
     private class RequestsViewPagerAdapter(manager: FragmentManager): FragmentPagerAdapter(manager) {

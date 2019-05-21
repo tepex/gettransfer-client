@@ -33,7 +33,7 @@ import com.kg.gettransfer.presentation.view.RequestsView
 import kotlinx.android.synthetic.main.fragment_requests.*
 
 import timber.log.Timber
-import android.support.v7.widget.RecyclerView
+import kotlinx.android.synthetic.main.view_shimmer_loader.view.*
 
 
 /**
@@ -57,7 +57,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_requests, container, false)
 
     @CallSuper
@@ -100,8 +100,13 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         noTransfersText.isVisible = isEmpty
     }
 
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) =
-        (activity as BaseView).blockInterface(block, useSpinner)
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
+        transfers_loader.isVisible = block
+        if (block)
+            transfers_loader.shimmer_loader.startShimmer()
+        else transfers_loader.shimmer_loader.stopShimmer()
+
+    }
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) =
         (activity as BaseView).setError(finish, errId, *args)

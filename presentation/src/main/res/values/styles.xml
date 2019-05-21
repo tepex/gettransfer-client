@@ -309,4 +309,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="shimmer_item">
+        <item name="android:background">@color/shimmer</item>
+    </style>
 </resources>
