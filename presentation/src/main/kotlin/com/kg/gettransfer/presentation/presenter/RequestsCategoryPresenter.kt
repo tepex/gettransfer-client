@@ -94,4 +94,8 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     override fun updateCounter() {
         updateEventsCount()
     }
+
+    fun onGetBookClicked() {
+        router.navigateTo(Screens.Main(false, true))
+    }
 }

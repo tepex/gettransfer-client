@@ -64,21 +64,30 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val transferName = when(presenter.transferType) {
+        val layoutRes = setFragmentTransferListType()
+        rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rvRequests.adapter = RequestsRVAdapter(layoutRes) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
+        initClickListeners()
+    }
+
+    private fun setFragmentTransferListType(): Int {
+        noTransfersText.text = when(presenter.transferType) {
             RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> getString(R.string.LNG_TRIPS_EMPTY_ACTIVE)
             RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> getString(R.string.LNG_TRIPS_EMPTY_COMPLETED)
             else -> throw UnsupportedOperationException()
         }
 
-        noTransfersText.text = transferName
-        rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
-        val layout = when(presenter.transferType) {
+        return when(presenter.transferType) {
             RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> R.layout.view_transfer_request_info_enabled
             RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> R.layout.view_transfer_request_info_disabled
             else -> throw UnsupportedOperationException()
         }
-        rvRequests.adapter = RequestsRVAdapter(layout) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
+    }
+
+    private fun initClickListeners() {
+        btn_forward_main.setOnClickListener {
+            presenter.onGetBookClicked()
+        }
     }
 
     override fun updateTransfers(transfers: List<TransferModel>) {
@@ -95,9 +104,10 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     private fun switchBackGroundData(isEmpty: Boolean) {
-        rvRequests.isVisible      = !isEmpty
-        iv_no_transfers.isVisible = isEmpty
-        noTransfersText.isVisible = isEmpty
+        rvRequests.isVisible       = !isEmpty
+        iv_no_transfers.isVisible  = isEmpty
+        noTransfersText.isVisible  = isEmpty
+        btn_forward_main.isVisible = isEmpty
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
