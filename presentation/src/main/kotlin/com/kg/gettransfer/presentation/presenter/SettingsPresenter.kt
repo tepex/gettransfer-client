@@ -90,12 +90,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setLocale(localeModel?.name ?: "", locale.language)
 
         viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.mi)
-        viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
         viewState.setLogoutButtonEnabled(sessionInteractor.account.user.hasAccount)
     }
 
     private fun initLoggedInUserSettings() {
         viewState.initLoggedInUserSettings(sessionInteractor.account.user.profile.let { profileMapper.toView(it) })
+        viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
     }
 
     private fun initCarrierSettings(){
@@ -142,8 +142,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         val localeModel = locales.get(selected)
         sessionInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name, localeModel.locale)
-        if (sessionInteractor.account.user.hasAccount) putAccount()
-        else saveNoAccount()
+        saveGeneralSettings(true)
         logEvent(Analytics.LANGUAGE_PARAM, localeModel.name)
 
         Locale.setDefault(sessionInteractor.locale)
@@ -164,19 +163,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     fun changeCalendarMode(selected: String) {
         systemInteractor.lastCarrierTripsTypeView = selected
         viewState.setCalendarMode(selected)
-    }
-
-    private fun putAccount() = utils.launchSuspend {
-        viewState.blockInterface(true)
-        val result = utils.asyncAwait { sessionInteractor.putAccount() }
-        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
-        if (result.error == null) viewState.restartApp()
-        viewState.blockInterface(false)
-    }
-
-    private fun saveNoAccount() = utils.launchSuspend {
-        val result = utils.asyncAwait { sessionInteractor.putNoAccount() }
-        if (result.error == null) viewState.restartApp()
     }
 
     /*fun changeDistanceUnit(selected: Int) {
@@ -214,7 +200,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             true  -> DistanceUnit.mi
             false -> DistanceUnit.km
         }.apply { logEvent(Analytics.UNITS_PARAM, name) }
-        saveAccount()
+        saveGeneralSettings()
     }
 
     fun onEmailNotificationSwitched(isChecked: Boolean) {
@@ -279,4 +265,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
         analytics.logEvent(Analytics.EVENT_SETTINGS, createStringBundle(param, value), map)
     }
+
+    override fun restartApp() { viewState.restartApp() }
 }

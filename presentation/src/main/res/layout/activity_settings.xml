@@ -69,7 +69,8 @@
                 android:id="@+id/settingsEmailNotif"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:settingsTitleSwitch="@string/LNG_EMAIL_NOTIFICATIONS" />
+                app:settingsTitleSwitch="@string/LNG_EMAIL_NOTIFICATIONS"
+                android:visibility="gone"/>
 
             <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                 android:id="@+id/settingsUserPassword"

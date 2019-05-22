@@ -159,7 +159,9 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun setEmailNotifications(enabled: Boolean) {
+        settingsEmailNotif.isVisible = true
         with(settingsEmailNotif) {
+            isVisible = true
             setOnClickListener {
                 with(it.switch_button) {
                     isChecked = !isChecked

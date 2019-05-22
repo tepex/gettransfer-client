@@ -26,7 +26,7 @@ class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinCompone
 
     fun changeCurrency(selected: CurrencyModel) {
         sessionInteractor.currency = selected.delegate
-        saveAccount()
+        saveGeneralSettings()
         viewState.currencyChanged()
     }
 }
