@@ -27,6 +27,9 @@ import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.presentation.ui.helpers.BuildsConfigsHelper
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 class SplashActivity : AppCompatActivity() {
     companion object {
@@ -42,6 +45,9 @@ class SplashActivity : AppCompatActivity() {
     private val reviewInteractor: ReviewInteractor by inject()
     private val logsInteractor: LogsInteractor by inject()
     private val sessionInteractor: SessionInteractor by inject()
+    private val router: Router by inject()
+    private val navigatorHolder: NavigatorHolder by inject()
+    private val navigator = SupportAppNavigator(this, Screens.NOT_USED)
 
     private var updateAppDialogIsShowed = false
 
@@ -99,7 +105,14 @@ class SplashActivity : AppCompatActivity() {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
+        navigatorHolder.setNavigator(navigator)
         if (updateAppDialogIsShowed) startApp()
+    }
+
+    @CallSuper
+    override fun onPause() {
+        super.onPause()
+        navigatorHolder.removeNavigator()
     }
 
     private fun checkNeededUpdateApp(): Boolean {
@@ -138,6 +151,7 @@ class SplashActivity : AppCompatActivity() {
     private fun openNextScreen(){
         if (!systemInteractor.isOnboardingShowed) {
             systemInteractor.isOnboardingShowed = true
+
             startActivity(Intent(this@SplashActivity, AboutActivity::class.java)
                     .putExtra(AboutView.EXTRA_OPEN_MAIN, true).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY))
         }
@@ -156,7 +170,7 @@ class SplashActivity : AppCompatActivity() {
                                 putExtra(EXTRA_SHOW_RATE, showRate)
                             })
                 }
-                else -> startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                else -> router.newRootScreen(Screens.Main())
             }
         }
     }

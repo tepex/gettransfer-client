@@ -69,7 +69,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
     internal val sessionInteractor: SessionInteractor by inject()
 
-    internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
     protected val localeManager: LocaleManager by inject()
 
@@ -79,7 +78,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     private lateinit var popupWindowRate: PopupWindow
 
-    protected open var navigator = SupportAppNavigator(this, Screens.NOT_USED)
+    private var navigator = SupportAppNavigator(this, Screens.NOT_USED)
 
     protected var viewNetworkNotAvailable: View? = null
 

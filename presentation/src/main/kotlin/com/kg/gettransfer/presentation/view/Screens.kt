@@ -108,7 +108,7 @@ object Screens {
     object CreateOrder : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
     }
-
+    
     data class About(val isOnboardingShowed: Boolean) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, AboutActivity::class.java).apply {
             putExtra(AboutView.EXTRA_OPEN_MAIN, false)
