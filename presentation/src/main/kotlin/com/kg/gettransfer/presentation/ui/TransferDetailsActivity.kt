@@ -154,9 +154,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-//        initBottomSheetDetails()
-          //initTextFields()
-//        setClickListeners()
+        setupBottomSheetHeight()
+    }
+
+    private fun setupBottomSheetHeight() {
+        val lp = sheetTransferDetails.layoutParams as CoordinatorLayout.LayoutParams
+        lp.height = getHeightForBottomSheetDetails()
+        sheetTransferDetails.layoutParams = lp
     }
 
     override fun onStop() {
@@ -166,11 +170,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     private fun initBottomSheetDetails() {
         bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
-
-        val lp = sheetTransferDetails.layoutParams as CoordinatorLayout.LayoutParams
-        lp.height = getHeightForBottomSheetDetails()
-        sheetTransferDetails.layoutParams = lp
-
         bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
 
