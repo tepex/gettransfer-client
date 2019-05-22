@@ -49,7 +49,9 @@
 
         <TextView
             android:id="@+id/tvPriceInfo"
-            style="@style/sf_font"
+            android:textSize="17sp"
+            android:textColor="@color/colorTextBlack"
+            android:fontFamily="@font/sf_pro_text_semibold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/payment_tvPriceInfo_margin_top"
