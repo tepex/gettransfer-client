@@ -20,6 +20,7 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
             type.id,
             type.transferId,
             type.status,
+            type.currency,
             type.wifi,
             type.refreshments,
             type.charger,

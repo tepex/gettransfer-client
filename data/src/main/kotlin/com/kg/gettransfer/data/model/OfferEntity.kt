@@ -9,6 +9,7 @@ data class OfferEntity(
     @SerialName(ID)                    val id: Long,
     @Optional @SerialName(TRANSFER_ID) var transferId: Long? = null,
     @SerialName(STATUS)                val status: String,
+    @SerialName(CURRENCY)              val currency: String,
     @SerialName(WIFI)                  val wifi: Boolean,
     @SerialName(REFRESHMENTS)          val refreshments: Boolean,
     @SerialName(CHARGER)               val charger: Boolean,
@@ -27,6 +28,7 @@ data class OfferEntity(
         const val ID                 = "id"
         const val TRANSFER_ID        = "transfer_id"
         const val STATUS             = "status"
+        const val CURRENCY           = "currency"
         const val WIFI               = "wifi"
         const val REFRESHMENTS       = "refreshments"
         const val CREATED_AT         = "created_at"

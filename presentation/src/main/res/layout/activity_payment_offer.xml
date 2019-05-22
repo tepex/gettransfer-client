@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/sv_root"
-    android:overScrollMode="never"
-    android:background="@color/color_gtr_super_light_grey"
-    android:orientation="vertical">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/sv_root"
+            android:overScrollMode="never"
+            android:background="@color/color_gtr_super_light_grey"
+            android:orientation="vertical">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,187 +15,199 @@
         android:paddingBottom="12dp">
 
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_nav_payment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <include
-        android:id="@+id/offer_layout"
-        layout="@layout/offer_tiny_payment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/payment_offer_layout_margin_start"
-        android:layout_marginTop="@dimen/payment_offer_layout_margin_top"
-        android:layout_marginEnd="@dimen/payment_offer_layout_margin_end"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <View
-        android:id="@+id/background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="@id/tvPriceInfo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <TextView
-        android:id="@+id/tvPriceInfo"
-        style="@style/sf_font"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/payment_tvPriceInfo_margin_top"
-        android:paddingBottom="@dimen/payment_tvPriceInfo_padding_bottom"
-        android:gravity="center"
-        tools:text="@string/LNG_RIDE_PAY_CHARGE"
-        android:background="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/offer_layout"/>
-
-    <include
-        android:id="@+id/layoutPrices"
-        layout="@layout/layout_prices"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/payment_layout_prices_margin_top"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPriceInfo" />
-
-    <include
-        android:id="@+id/layoutPayments"
-        layout="@layout/layout_payments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/payment_layout_payments_margin_top"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutPrices" />
-
-    <TextView
-        android:id="@+id/tvCommission"
-        style="@style/sf_font_pro_display_regular"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/payment_tvCommission_margin_start"
-        android:layout_marginTop="@dimen/payment_tvCommission_margin_top"
-        android:layout_marginEnd="@dimen/payment_tvCommission_margin_end"
-        android:gravity="center"
-        android:paddingStart="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
-        android:paddingEnd="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_auth_container"
-        tools:text="Commission 3%.\n Refund is available before 17 Oct 2018 at 15:30:00" />
-
-    <TextView
-        android:id="@+id/tvPaymentAgreement"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="14sp"
-        android:layout_marginStart="@dimen/payment_tvPaymentAgreement_margin_start"
-        android:layout_marginTop="@dimen/payment_tvPaymentAgreement_margin_top"
-        android:layout_marginEnd="@dimen/payment_tvPaymentAgreement_margin_end"
-        android:gravity="center_horizontal"
-        android:text="@string/LNG_RIDE_PAYMENT_OFFER"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCommission"
-        style="@style/sf_font_pro_display_regular"/>
-
-    <LinearLayout
-        android:id="@+id/ll_auth_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:focusableInTouchMode="true"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutPayments"
-
-        tools:visibility="visible">
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/il_auth_email"
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_nav_payment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/LNG_EMAIL"
-            android:background="@color/colorWhite"
-            android:paddingStart="16dp"
-            android:paddingEnd="0dp"
-            android:layout_marginTop="16dp"
-            android:theme="@style/editTextLogin">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/et_auth_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/icon"
-                android:background="@null"
-                android:drawableStart="@drawable/ic_email"
-                android:drawablePadding="@dimen/login_input_layout_drawable_padding"
-                android:ems="10"
-                android:inputType="textEmailAddress"
-                android:paddingTop="@dimen/login_etEmail_padding_top"
-                android:paddingBottom="@dimen/login_etEmail_padding_bottom" />
-        </android.support.design.widget.TextInputLayout>
+        <include
+            android:id="@+id/offer_layout"
+            layout="@layout/offer_tiny_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/payment_offer_layout_margin_start"
+            android:layout_marginTop="@dimen/payment_offer_layout_margin_top"
+            android:layout_marginEnd="@dimen/payment_offer_layout_margin_end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
 
         <View
+            android:id="@+id/background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="@id/tvPriceInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+
+        <TextView
+            android:id="@+id/tvPriceInfo"
+            style="@style/sf_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/create_order_fields_divider"/>
+            android:layout_marginTop="@dimen/payment_tvPriceInfo_margin_top"
+            android:paddingBottom="@dimen/payment_tvPriceInfo_padding_bottom"
+            android:gravity="center"
+            tools:text="@string/LNG_RIDE_PAY_CHARGE"
+            android:background="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/offer_layout"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/il_auth_phone"
+        <include
+            android:id="@+id/view_currency_converting_info"
+            layout="@layout/view_currency_converting_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/LNG_PHONE"
-            android:paddingStart="16dp"
-            android:paddingEnd="0dp"
-            android:background="@color/colorWhite"
-            android:theme="@style/editTextLogin">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPriceInfo"
+            android:visibility="gone"
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/et_auth_phone"
+            tools:visibility="visible"
+        />
+
+        <include
+            android:id="@+id/layoutPrices"
+            layout="@layout/layout_prices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/payment_layout_prices_margin_top"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_currency_converting_info"/>
+
+        <include
+            android:id="@+id/layoutPayments"
+            layout="@layout/layout_payments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/payment_layout_payments_margin_top"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutPrices"/>
+
+        <TextView
+            android:id="@+id/tvCommission"
+            style="@style/sf_font_pro_display_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/payment_tvCommission_margin_start"
+            android:layout_marginTop="@dimen/payment_tvCommission_margin_top"
+            android:layout_marginEnd="@dimen/payment_tvCommission_margin_end"
+            android:gravity="center"
+            android:paddingStart="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
+            android:paddingEnd="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_auth_container"
+            tools:text="Commission 3%.\n Refund is available before 17 Oct 2018 at 15:30:00"/>
+
+        <TextView
+            android:id="@+id/tvPaymentAgreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="14sp"
+            android:layout_marginStart="@dimen/payment_tvPaymentAgreement_margin_start"
+            android:layout_marginTop="@dimen/payment_tvPaymentAgreement_margin_top"
+            android:layout_marginEnd="@dimen/payment_tvPaymentAgreement_margin_end"
+            android:gravity="center_horizontal"
+            android:text="@string/LNG_RIDE_PAYMENT_OFFER"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCommission"
+            style="@style/sf_font_pro_display_regular"/>
+
+        <LinearLayout
+            android:id="@+id/ll_auth_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:focusableInTouchMode="true"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutPayments"
+
+            tools:visibility="visible">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/il_auth_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/LNG_EMAIL"
+                android:background="@color/colorWhite"
+                android:paddingStart="16dp"
+                android:paddingEnd="0dp"
+                android:layout_marginTop="16dp"
+                android:theme="@style/editTextLogin">
 
-                android:background="@null"
-                android:drawableStart="@drawable/ic_phone"
-                android:drawablePadding="@dimen/login_input_layout_drawable_padding"
-                android:ems="10"
-                android:inputType="textEmailAddress"
-                android:paddingTop="@dimen/login_etEmail_padding_top"
-                android:paddingBottom="@dimen/login_etEmail_padding_bottom"/>
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/et_auth_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/icon"
+                    android:background="@null"
+                    android:drawableStart="@drawable/ic_email"
+                    android:drawablePadding="@dimen/login_input_layout_drawable_padding"
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:paddingTop="@dimen/login_etEmail_padding_top"
+                    android:paddingBottom="@dimen/login_etEmail_padding_bottom"/>
+            </android.support.design.widget.TextInputLayout>
 
-    </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/create_order_fields_divider"/>
 
-    <include
-        layout="@layout/button_pay"
-        android:id="@+id/btnGetPayment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="@dimen/payment_button_pay_margin_top"
-        android:layout_marginEnd="@dimen/payment_button_pay_margin_end"
-        android:layout_marginBottom="@dimen/payment_button_pay_margin_bottom"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/il_auth_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/LNG_PHONE"
+                android:paddingStart="16dp"
+                android:paddingEnd="0dp"
+                android:background="@color/colorWhite"
+                android:theme="@style/editTextLogin">
 
-        app:layout_constraintTop_toBottomOf="@+id/tvPaymentAgreement"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/et_auth_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:background="@null"
+                    android:drawableStart="@drawable/ic_phone"
+                    android:drawablePadding="@dimen/login_input_layout_drawable_padding"
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:paddingTop="@dimen/login_etEmail_padding_top"
+                    android:paddingBottom="@dimen/login_etEmail_padding_bottom"/>
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/button_pay"
+            android:id="@+id/btnGetPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="@dimen/payment_button_pay_margin_top"
+            android:layout_marginEnd="@dimen/payment_button_pay_margin_end"
+            android:layout_marginBottom="@dimen/payment_button_pay_margin_bottom"
+
+            app:layout_constraintTop_toBottomOf="@+id/tvPaymentAgreement"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

@@ -404,6 +404,8 @@
     <string name="LNG_PAYMENT_DECLINED">Payment declined</string>
     <string name="LNG_PAYMENT_DECLINE_INFO">Try to pay again or use another bank card</string>
     <string name="LNG_PAYMENT_TRY_AGAIN">Try again</string>
+    <string name="LNG_RIDE_PAY_CONVERT1">The price in %s (%s) has been converted to\nshow you the approximate price in %s (%s)</string>
+    <string name="LNG_RIDE_PAY_CONVERT2">You will pay in %s (%s) according to\nthe exchange rate on that day</string>
     <string name="LNG_CUSTOMER_SUPPORT">Customer support</string>
     <string name="LNG_PAYMENT_DETAILS"><u>Details</u></string>
     <string name="LNG_TRANSFER_PAID_SUCCESSFULLY">Transfer paid successfully</string>

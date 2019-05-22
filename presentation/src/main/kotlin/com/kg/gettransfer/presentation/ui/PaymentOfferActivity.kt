@@ -26,6 +26,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.extensions.getString
 import com.kg.gettransfer.extensions.isVisible
@@ -45,6 +46,7 @@ import kotlinx.android.synthetic.main.layout_payments.*
 import kotlinx.android.synthetic.main.layout_prices.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
 import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
+import kotlinx.android.synthetic.main.view_currency_converting_info.view.*
 
 import kotlinx.serialization.json.JSON
 import org.jetbrains.anko.longToast
@@ -230,6 +232,19 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         presenter.params.dateRefund?.let {
             tvCommission.text = getString(R.string.LNG_PAYMENT_COMISSION2, paymentCommission, SystemUtils.formatDateTime(it))
         }
+    }
+
+    override fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency) {
+        view_currency_converting_info.isVisible = true
+        view_currency_converting_info.tv_convert_description.text = getString(R.string.LNG_RIDE_PAY_CONVERT1,
+                ownCurrency.symbol,
+                ownCurrency.code,
+                offerCurrency.symbol,
+                offerCurrency.code
+        )
+        view_currency_converting_info.tv_payment_description.text = getString(R.string.LNG_RIDE_PAY_CONVERT2,
+                offerCurrency.symbol,
+                offerCurrency.code)
     }
 
     private fun changePaymentSettings(view: View?) {

@@ -10,6 +10,7 @@ data class OffersModel(@SerializedName("offers") @Expose val offers: List<OfferM
 data class OfferModel(
     @SerializedName(OfferEntity.ID)                  @Expose val id: Long,
     @SerializedName(OfferEntity.STATUS)              @Expose val status: String,
+    @SerializedName(OfferEntity.CURRENCY)            @Expose val currency: String,
     @SerializedName(OfferEntity.WIFI)                @Expose val wifi: Boolean,
     @SerializedName(OfferEntity.REFRESHMENTS)        @Expose val refreshments: Boolean,
     @SerializedName(OfferEntity.CHARGER)             @Expose val charger: Boolean,

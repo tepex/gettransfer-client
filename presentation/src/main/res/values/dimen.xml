@@ -969,7 +969,7 @@
 	<dimen name="payment_button_pay_margin_start">24dp</dimen>
 	<dimen name="payment_button_pay_margin_end">24dp</dimen>
 	<dimen name="payment_button_pay_margin_bottom">24dp</dimen>
-	<dimen name="payment_offer_tiny_cardCornerRadius">5dp</dimen>
+	<dimen name="payment_offer_tiny_cardCornerRadius">8dp</dimen>
 	<dimen name="payment_offer_tiny_cardElevation">5dp</dimen>
 	<dimen name="payment_offer_tiny_ivCarPhoto_width">130dp</dimen>
 	<dimen name="payment_offer_tiny_ivCarPhoto_height">75dp</dimen>

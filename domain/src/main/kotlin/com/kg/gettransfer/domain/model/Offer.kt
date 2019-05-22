@@ -6,6 +6,7 @@ data class Offer(
     override val id: Long,
     val transferId: Long,
     val status: String,
+    val currency: String,
     val wifi: Boolean,
     val refreshments: Boolean,
     val charger: Boolean,

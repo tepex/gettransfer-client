@@ -3,7 +3,7 @@ package com.kg.gettransfer.presentation.view
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.braintreepayments.api.dropin.DropInRequest
-import com.kg.gettransfer.domain.model.BookNowOffer
+import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -11,9 +11,9 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.utilities.DateSerializer
 
-import java.util.Date
-
 import kotlinx.serialization.Serializable
+import java.util.*
+
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface PaymentOfferView : BaseView {
@@ -25,6 +25,7 @@ interface PaymentOfferView : BaseView {
     fun startPaypal(dropInRequest: DropInRequest)
     fun setToolbarTitle(transferModel: TransferModel)
     fun setPaymentEnabled(enabled: Boolean)
+    fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency)
 
     fun setAuthUiVisible(visible: Boolean)
     fun showBadCredentialsInfo(field: Int)
@@ -38,10 +39,10 @@ interface PaymentOfferView : BaseView {
 
     @Serializable
     data class Params(
-        @Serializable(with = DateSerializer::class) val dateRefund: Date?,
-        val transferId: Long,
-        val offerId: Long?,
-        val paymentPercentages: List<Int>,
-        val bookNowTransportId: String?
+            @Serializable(with = DateSerializer::class) val dateRefund: Date?,
+            val transferId: Long,
+            val offerId: Long?,
+            val paymentPercentages: List<Int>,
+            val bookNowTransportId: String?
     )
 }

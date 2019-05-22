@@ -29,6 +29,7 @@ open class OfferMapper : EntityMapper<OfferModel, OfferEntity> {
             id                = type.id,
             transferId        = transferId,
             status            = type.status,
+            currency          = type.currency,
             wifi              = type.wifi,
             refreshments      = type.refreshments,
             charger           = type.charger,

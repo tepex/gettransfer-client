@@ -91,7 +91,16 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         if (offersResult.error == null || (offersResult.error != null && offersResult.fromCache)) {
             offer = params.offerId?.let { offerInteractor.getOffer(it) }
             offer?.let {
-                viewState.setOffer(offerMapper.toView(it), params.paymentPercentages) }
+                offerMapper.toView(it)
+                        .also { viewModel ->
+                            viewState.setOffer(viewModel, params.paymentPercentages)
+                            if (viewModel.currency != sessionInteractor.currency.code)
+                                viewState.setCurrencyConvertingInfo(
+                                        sessionInteractor.currencies.first { c -> c.code == viewModel.currency },
+                                        sessionInteractor.currency
+                                )
+                        }
+            }
         }
         getTransfer()
     }
