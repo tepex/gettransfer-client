@@ -15,7 +15,7 @@ interface SessionRepository {
     val isInitialized: Boolean
     val configs: Configs
     val account: Account
-    var tempUser: User
+    val tempUser: User
     var accessToken: String
     var userEmail: String?
     var userPhone: String?

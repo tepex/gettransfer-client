@@ -18,6 +18,7 @@ import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
+import com.kg.gettransfer.presentation.mapper.ProfileMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
@@ -45,6 +46,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private val orderInteractor: OrderInteractor by inject()
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
+    private val profileMapper: ProfileMapper by inject()
 
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
@@ -57,13 +59,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private lateinit var paymentRequest: PaymentRequestModel
 
-    lateinit var authEmail: String
-    lateinit var authPhone: String
-
     @CallSuper
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
-        isUserAuthorized()
+        viewState.setAuthUiVisible(accountManager.hasAccount, profileMapper.toView(accountManager.remoteProfile))
         sessionInteractor.paymentCommission.let {
             viewState.setCommission(if (it % 1.0 == 0.0) it.toInt().toString() else it.toString())
         }
@@ -162,7 +161,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private fun putAccount() {
-        val error = accountManager.isValidEmailAndPhoneFields()
+        val error = accountManager.isValidEmailAndPhoneFieldsForPay()
         if (error == null) {
             utils.launchSuspend { pushAccount() }
         } else {
@@ -256,17 +255,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 params.bookNowTransportId,
                 selectedPayment)
         )
-    }
-
-    private fun isUserAuthorized() {
-        val isLoggedIn = accountManager.remoteProfile.hasData()
-        viewState.setAuthUiVisible(!isLoggedIn)
-        if (!isLoggedIn) {
-            with(accountManager.remoteProfile) {
-                phone?.let { viewState.setPhone(it) }
-                email?.let { viewState.setEmail(it) }
-            }
-        }
     }
 
     fun redirectToLogin(phone: String) {

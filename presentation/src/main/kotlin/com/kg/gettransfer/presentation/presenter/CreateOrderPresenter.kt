@@ -414,7 +414,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 passengers == 0                             -> FieldError.PASSENGERS_COUNT
                 else                                        -> null
             }
-            if (errorField == null) errorField = accountManager.isValidProfile()
+            if (errorField == null) errorField = accountManager.isValidProfileForCreateOrder()
             if (errorField == null) return true
             logCreateTransfer(errorField.value)
             viewState.showEmptyFieldError(errorField.stringId)
@@ -494,8 +494,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logButtons(Analytics.BACK_TO_MAP)
     }
 
-    fun redirectToLogin(id: Long, email: String) {
-        router.navigateTo(Screens.LoginToGetOffers(id, email, Screens.OFFERS))
+    fun redirectToLogin(id: Long) {
+        with(accountManager.tempProfile) {
+            router.navigateTo(Screens.LoginToGetOffers(id, if (!phone.isNullOrEmpty()) phone else email, Screens.OFFERS))
+        }
     }
 
     companion object {

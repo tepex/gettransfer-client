@@ -128,7 +128,17 @@ class SessionRepositoryImpl(
         }
         result.error?.let { error = ExceptionMapper.map(it) }
         isInitialized = true
+        initTempUser(account.user)
         return Result(account, error)
+    }
+
+    fun initTempUser(remoteUser: User) {
+        tempUser.profile.apply {
+            fullName = remoteUser.profile.fullName
+            email = remoteUser.profile.email
+            phone = remoteUser.profile.phone
+        }
+        tempUser.termsAccepted = remoteUser.termsAccepted
     }
 
     override suspend fun putAccount(account: Account, pass: String?, repeatedPass: String?): Result<Account> {

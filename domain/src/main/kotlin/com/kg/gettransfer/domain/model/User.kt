@@ -6,10 +6,8 @@ data class User(
 ) {
 
     val loggedIn: Boolean //is authorized user
-        get() = profile.email != null && profile.phone != null
+        get() = (!profile.email.isNullOrEmpty() || !profile.phone.isNullOrEmpty()) && termsAccepted
 
     val hasAccount: Boolean //is temporary or authorized user
-        get() = (profile.email != null
-                && profile.phone != null)
-                || termsAccepted
+        get() = loggedIn || (profile.email.isNullOrEmpty() && profile.email.isNullOrEmpty() && termsAccepted)
 }

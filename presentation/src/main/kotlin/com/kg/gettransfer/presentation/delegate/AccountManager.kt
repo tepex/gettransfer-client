@@ -47,26 +47,27 @@ class AccountManager : KoinComponent {
     val tempProfile: Profile
         get() = tempUser.profile
 
-    private fun initTempUser(user: User, saveTempUserData: Boolean) {
+    private fun initTempUser(user: User) {
         tempUser.profile.apply {
-            user.profile.fullName?.let { if (overwriteField(it, fullName, saveTempUserData)) fullName = it }
-            user.profile.email?.let { if (overwriteField(it, email, saveTempUserData)) email = it }
-            user.profile.phone?.let { if (overwriteField(it, phone, saveTempUserData)) phone = it }
+            fullName = user.profile.fullName
+            email = user.profile.email
+            phone = user.profile.phone
         }
-        if (!saveTempUserData) tempUser.termsAccepted = user.termsAccepted
+        tempUser.termsAccepted = user.termsAccepted
     }
 
     private fun overwriteField(newField: String, tempField: String?, saveTempUserData: Boolean) =
             newField.isNotEmpty() && (tempField.isNullOrEmpty() || !saveTempUserData)
 
-    fun isValidProfile() =
-        if (!tempProfile.email.isNullOrEmpty() || !tempProfile.phone.isNullOrEmpty()) {
-            isValidEmailAndPhoneFields()
-        } else if (!tempUser.termsAccepted) {
-            FieldError.TERMS_ACCEPTED_FIELD
-        } else null
+    fun isValidProfileForCreateOrder() =
+            when {
+                !tempProfile.email.isNullOrEmpty() && !Utils.checkEmail(tempProfile.email) -> FieldError.INVALID_EMAIL
+                !tempProfile.phone.isNullOrEmpty() && !Utils.checkPhone(tempProfile.phone) -> FieldError.INVALID_PHONE
+                !tempUser.termsAccepted -> FieldError.TERMS_ACCEPTED_FIELD
+                else -> null
+            }
 
-    fun isValidEmailAndPhoneFields() =
+    fun isValidEmailAndPhoneFieldsForPay() =
             when {
                 tempProfile.email.isNullOrEmpty() -> FieldError.EMAIL_FIELD
                 tempProfile.phone.isNullOrEmpty() -> FieldError.PHONE_FIELD
@@ -74,7 +75,6 @@ class AccountManager : KoinComponent {
                 !Utils.checkPhone(tempProfile.phone) -> FieldError.INVALID_PHONE
                 else -> null
             }
-
 
     fun clearTempUser() {
         tempUser.profile.clear()
@@ -86,7 +86,7 @@ class AccountManager : KoinComponent {
 
     suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean): Result<Account> {
         val result = sessionInteractor.login(email, phone, password, withSmsCode)
-        if (result.error == null) initTempUser(result.model.user, false)
+        if (result.error == null) initTempUser(result.model.user)
         return result
     }
 
@@ -97,7 +97,7 @@ class AccountManager : KoinComponent {
 
     suspend fun putAccount(isTempAccount: Boolean = false): Result<Account> {
         val result = sessionInteractor.putAccount(if (isTempAccount) remoteAccount.copy(user = tempUser) else remoteAccount )
-        if (result.error == null) initTempUser(result.model.user, true)
+        if (result.error == null) initTempUser(result.model.user)
         return result
     }
 }

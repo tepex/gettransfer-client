@@ -114,13 +114,14 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         }
     }
 
-    private fun initTextChangeListeners() {
-        presenter.authEmail = ""
-        presenter.authPhone = ""
+    private fun initEmailTextChangeListeners() {
         et_auth_email.onTextChanged {
             presenter.setEmail(it.trim())
             enablePayment()
         }
+    }
+
+    private fun initPhoneTextChangeListeners() {
         et_auth_phone.onTextChanged            {
             if (it.isEmpty() && et_auth_phone.isFocused) {
                 et_auth_phone.setText("+")
@@ -400,14 +401,22 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
     }
 
-    override fun setAuthUiVisible(visible: Boolean) {
-        ll_auth_container.isVisible = visible
-        if (visible) initTextChangeListeners()
-        btnGetPayment.isEnabled = !visible
-    }
-
-    override fun setPaymentEnabled(enabled: Boolean) {
-        btnGetPayment.isEnabled = enabled
+    override fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel) {
+        if (hasAccount) {
+            if (profile.email.isNullOrEmpty()) {
+                il_auth_email.isVisible = true
+                initEmailTextChangeListeners()
+            }
+            if (profile.phone.isNullOrEmpty()) {
+                il_auth_phone.isVisible = true
+                initPhoneTextChangeListeners()
+            }
+        }
+        profile.email?.let { et_auth_email.setText(it) }
+        profile.phone?.let { et_auth_phone.setText(it) }
+        email_phone_divider.isVisible = il_auth_email.isVisible && il_auth_phone.isVisible
+        ll_auth_container.isVisible = il_auth_email.isVisible || il_auth_phone.isVisible
+        enablePayment()
     }
 
     override fun showBadCredentialsInfo(field: Int) {
@@ -421,14 +430,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun redirectToLogin() {
         presenter.redirectToLogin(et_auth_email.getString())
-    }
-
-    override fun setEmail(email: String) {
-        et_auth_email.setText(email)
-    }
-
-    override fun setPhone(phone: String) {
-        et_auth_phone.setText(phone)
     }
 
     override fun setError(e: ApiException) {

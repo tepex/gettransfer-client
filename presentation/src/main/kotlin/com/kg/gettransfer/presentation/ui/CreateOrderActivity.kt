@@ -349,8 +349,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
         if (isLoggedIn) {
             //email_field.field_input.isEnabled = false
-            email_field.isVisible = false
-            phone_field.isVisible = false
+            email_field.isVisible = user.profile.email.isNullOrEmpty()
+            phone_field.isVisible = user.profile.phone.isNullOrEmpty()
         }
 
         if (isLoggedIn && user.termsAccepted) {
@@ -584,7 +584,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     override fun showNotLoggedAlert(withOfferId: Long) =
         Utils.showScreenRedirectingAlert(this, getString(R.string.LNG_LOGIN_NOT_LOGGED_IN),
                     getString(R.string.LNG_LOGIN_LOGIN_TO_CONTINUE)) {
-            presenter.redirectToLogin(withOfferId, email_field.field_input.getString())
+            presenter.redirectToLogin(withOfferId)
         }
 
     val showReturnFlight: (show: Boolean) -> Unit = { show ->
