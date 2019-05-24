@@ -125,7 +125,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        overridePendingTransition(R.anim.transition_l2r, R.anim.transition_r2l)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
         else {
