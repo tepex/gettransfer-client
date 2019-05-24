@@ -1,10 +1,11 @@
 package com.kg.gettransfer.domain.interactor
 
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.MobileConfig
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.SessionRepository
 import java.util.Locale
@@ -22,6 +23,9 @@ class SessionInteractor(
 
     val account: Account
         get() = sessionRepository.account
+
+    val tempUser: User
+        get() = sessionRepository.tempUser
 
     val transportTypes: List<TransportType>
         get() = sessionRepository.configs.transportTypes
@@ -64,12 +68,11 @@ class SessionInteractor(
     suspend fun coldStart() = sessionRepository.coldStart()
 
     suspend fun logout() = sessionRepository.logout()
-
     suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean) = sessionRepository.login(email, phone, password, withSmsCode)
 
     suspend fun getVerificationCode(email: String?, phone: String?) = sessionRepository.getVerificationCode(email, phone)
 
-    suspend fun putAccount() = sessionRepository.putAccount(account)
+    suspend fun putAccount(account: Account? = null) = sessionRepository.putAccount(account ?: this.account)
     suspend fun putNoAccount() = sessionRepository.putNoAccount(account)
     suspend fun changePassword(pass: String, repeatedPass: String) = sessionRepository.putAccount(account, pass, repeatedPass)
 

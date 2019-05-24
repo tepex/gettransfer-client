@@ -4,8 +4,8 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 import com.google.android.gms.maps.model.LatLng
-
 import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.UserModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 //interface MainView: MvpView, OnCameraMoveListener
@@ -14,7 +14,7 @@ interface MainView: BaseView {
     fun moveCenterMarker(point: LatLng)
     fun setAddressFrom(address: String)
     fun setAddressTo(address: String)
-    fun setProfile(isLoggedIn: Boolean, email: String?, name: String?)
+    fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean)
     fun setMarkerElevation(up: Boolean, elevation: Float)
     fun changeFields(hourly: Boolean)
     fun blockSelectedField(block: Boolean, field: String)

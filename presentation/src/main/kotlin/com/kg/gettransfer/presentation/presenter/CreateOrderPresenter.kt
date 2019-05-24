@@ -28,6 +28,7 @@ import com.kg.gettransfer.domain.model.TransportTypePrice
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.extensions.isNonZero
 import com.kg.gettransfer.extensions.simpleFormat
+import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 
@@ -89,15 +90,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val i = systemInteractor.currentCurrencyIndex
         if (i != -1) setCurrency(i)*/
         setCurrency()
-        val remoteUser = sessionInteractor.account.user
-        val isLoggedIn = remoteUser.hasAccount
-        if (isLoggedIn) {
-            orderInteractor.setNewUser(remoteUser)
-        } else if (orderInteractor.isLoggedIn) {
-            orderInteractor.setNewUser(null)
-        }
         with(orderInteractor) {
-            viewState.setUser(userMapper.toView(user), sessionInteractor.account.user.loggedIn)
+            viewState.setUser(userMapper.toView(accountManager.tempUser), accountManager.isLoggedIn)
             viewState.setPassengers(passengers)
             viewState.setEditableFields(offeredPrice, flightNumber, flightNumberReturn, promoCode)
             if(promoCode.isNotEmpty()) checkPromoCode()
@@ -306,11 +300,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun setEmail(email: String) {
-        orderInteractor.user.profile.email = email
+        accountManager.tempProfile.email = email
     }
 
     fun setPhone(phone: String) {
-        orderInteractor.user.profile.phone = phone
+        accountManager.tempProfile.phone = phone
     }
 
     fun setFlightNumber(flightNumber: String, returnWay: Boolean) {
@@ -341,7 +335,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun setAgreeLicence(agreeLicence: Boolean) {
-        orderInteractor.user.termsAccepted = agreeLicence
+        accountManager.tempUser.termsAccepted = agreeLicence
     }
 
     fun showLicenceAgreement() = router.navigateTo(Screens.LicenceAgree)
@@ -364,7 +358,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 orderInteractor.offeredPrice?.times(100)?.toInt(),
                 orderInteractor.comment,
                 orderInteractor.nameSign,
-                orderInteractor.user,
+                accountManager.tempUser,
                 orderInteractor.promoCode,
                 false
         )
@@ -375,19 +369,18 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val result  = fetchResultOnly { transferInteractor.createTransfer(transferNew) }
 
             if(result.error == null) {
-                sessionInteractor.account.user = orderInteractor.user
-                val logResult = fetchResultOnly { sessionInteractor.putAccount() }
+                val logResult = fetchResultOnly { accountManager.putAccount(true) }
                 if(logResult.error == null) {
                     handleSuccess()
                     router.replaceScreen(Screens.Offers(result.model.id))
-                } else if(logResult.error?.isNotLoggedIn() == true) {
+                } else if(logResult.error!!.isNotLoggedIn() || logResult.error!!.isAccountExistError()) {
                     onAccountExists(result.model.id)
                 }
             } else {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
-                    result.error!!.details == "{phone=[taken]}" -> {
-                        router.navigateTo(Screens.Login(Screens.CLOSE_AFTER_LOGIN, orderInteractor.user.profile.phone))
+                    result.error!!.isPhoneTaken() -> {
+                        router.navigateTo(Screens.Login(Screens.CLOSE_AFTER_LOGIN, accountManager.tempProfile.phone))
                     }
                     result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(false, R.string.LNG_NETWORK_ERROR)
                     else -> viewState.setError(result.error!!)
@@ -402,7 +395,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun onAccountExists(transferId: Long) {
-        sessionInteractor.account.user.profile.clear()
+        accountManager.clearRemoteUser()
         viewState.showNotLoggedAlert(transferId)
     }
 
@@ -414,17 +407,15 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun checkFieldsForRequest(): Boolean {
         with(orderInteractor) {
-            val errorField = when {
+            var errorField = when {
                 !isTimeSetByUser                            -> FieldError.TIME_NOT_SELECTED
                 !dateDelegate.validate()                    -> FieldError.RETURN_TIME
-                !Utils.checkEmail(user.profile.email)       -> FieldError.EMAIL_FIELD
-                !Utils.checkPhone(user.profile.phone)       -> FieldError.PHONE_FIELD
                 transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
                 passengers == 0                             -> FieldError.PASSENGERS_COUNT
-                !user.termsAccepted                         -> FieldError.TERMS_ACCEPTED_FIELD
-                else                                        -> FieldError.UNKNOWN
+                else                                        -> null
             }
-            if (errorField == FieldError.UNKNOWN) return true
+            if (errorField == null) errorField = accountManager.isValidProfile()
+            if (errorField == null) return true
             logCreateTransfer(errorField.value)
             viewState.showEmptyFieldError(errorField.stringId)
             viewState.highLightErrorField(errorField)
@@ -491,6 +482,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         dateDelegate.resetAfterOrder()
         childSeatsDelegate.clearSeats()
         orderInteractor.clearSelectedFields()
+        accountManager.clearTempUser()
     }
 
     fun onBackClick() = onBackCommandClick()
@@ -503,9 +495,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun redirectToLogin(id: Long, email: String) {
-        with (orderInteractor.user.profile) {
-            router.navigateTo(Screens.LoginToGetOffers(id, email, Screens.OFFERS))
-        }
+        router.navigateTo(Screens.LoginToGetOffers(id, email, Screens.OFFERS))
     }
 
     companion object {

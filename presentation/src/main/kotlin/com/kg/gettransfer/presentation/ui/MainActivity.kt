@@ -44,7 +44,9 @@ import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setTrottledClickListener
+import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
+import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
@@ -527,16 +529,18 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
         btnBack.setOnClickListener { presenter.onBackClick() }
     }
 
-    override fun setProfile(isLoggedIn: Boolean, email: String?, name: String?) {
+    override fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean) {
         navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_PASSENGER)
-        navHeaderName.isVisible  = isLoggedIn
-        navHeaderEmail.isVisible = isLoggedIn
-        navRequests.isVisible    = isLoggedIn
-        navLogin.isVisible       = email == null || name == null
-        layoutAccountInfo.isVisible = email != null && name != null
-        if(isLoggedIn){
-            name?.let { navHeaderName.text = it }
-            email?.let { navHeaderEmail.text = it }
+        with(profile) {
+            navHeaderName.isVisible  = isLoggedIn && !name.isNullOrEmpty()
+            navHeaderEmail.isVisible = isLoggedIn && !email.isNullOrEmpty()
+            navRequests.isVisible    = hasAccount
+            navLogin.isVisible       = (!isLoggedIn && hasAccount) || !hasAccount
+            layoutAccountInfo.isVisible = navHeaderName.isVisible || navHeaderEmail.isVisible
+            if (isLoggedIn) {
+                name?.let { navHeaderName.text = it }
+                email?.let { navHeaderEmail.text = it }
+            }
         }
     }
 

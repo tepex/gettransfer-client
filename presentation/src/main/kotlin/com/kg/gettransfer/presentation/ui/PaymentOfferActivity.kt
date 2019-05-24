@@ -6,10 +6,12 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.support.annotation.StringRes
 
 import android.support.v7.widget.Toolbar
 
 import android.view.View
+import android.widget.EditText
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -38,6 +40,7 @@ import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
+import com.kg.gettransfer.utilities.PhoneNumberFormatter
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
@@ -85,6 +88,11 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        enablePayment()
+    }
+
     private fun initToolbar() {
         with(toolbar) {
             setSupportActionBar(this as Toolbar)
@@ -103,7 +111,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
             Handler().postDelayed({
                 if (it) sv_root.fling(2000)         //need to show "Payment" button
             }, 150)
-
         }
     }
 
@@ -111,12 +118,49 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         presenter.authEmail = ""
         presenter.authPhone = ""
         et_auth_email.onTextChanged {
-            presenter.authEmail = it
+            presenter.setEmail(it.trim())
             enablePayment()
         }
-        et_auth_phone.onTextChanged {
-            presenter.authPhone = it
+        et_auth_phone.onTextChanged            {
+            if (it.isEmpty() && et_auth_phone.isFocused) {
+                et_auth_phone.setText("+")
+                et_auth_phone.setSelection(1)
+            }
+            presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
             enablePayment()
+        }
+        et_auth_phone.addTextChangedListener(PhoneNumberFormatter())
+        et_auth_phone.setOnFocusChangeListener    { v, hasFocus ->
+            if (hasFocus) setPhoneCode()
+            else {
+                val phone = et_auth_phone.text?.trim()
+                phone?.let {
+                    if (phone.length == 1) {
+                        et_auth_phone.text?.clear()
+                        presenter.setPhone("")
+                        enablePayment()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setPhoneCode() {
+        val phone = et_auth_phone.text?.trim()
+        phone?.let {
+            if (phone.isEmpty()) {
+                val phoneCode = Utils.getPhoneCodeByCountryIso(this)
+                et_auth_phone.setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+            }
+        }
+        fieldTouched(et_auth_phone)
+    }
+
+    private fun fieldTouched(viewForFocus: EditText) {
+        if (!isKeyBoardOpened) showKeyboard()
+        viewForFocus.apply {
+            requestFocus()
+            post { setSelection(text.length) }
         }
     }
 
@@ -398,5 +442,13 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
             else -> null
         }
         errorText?.let { Utils.showError(this, false, it) }
+    }
+
+    override fun showFieldError(@StringRes stringId: Int) {
+        Utils.getAlertDialogBuilder(this).apply {
+            setTitle(getString(stringId))
+            setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
+            show()
+        }
     }
 }

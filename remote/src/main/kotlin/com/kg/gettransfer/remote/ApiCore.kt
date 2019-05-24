@@ -130,7 +130,7 @@ class ApiCore : KoinComponent {
         val email = preferences.userEmail
         val phone = preferences.userPhone
         val password = preferences.userPassword
-        api.login(email, phone, password).await()
+        if (email != null || phone != null) api.login(email, phone, password).await()
     }
 
     internal fun remoteException(e: Exception): RemoteException = when(e) {

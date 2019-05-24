@@ -21,4 +21,5 @@ class ApiException(val code: Int, val details: String, val type: String? = null)
     fun isNotLoggedIn() = code == NOT_LOGGED_IN
     fun isNotFound() = code == NOT_FOUND
     fun isAccountExistError() = type == "account_exists"
+    fun isPhoneTaken() = type == "phone_taken"
 }

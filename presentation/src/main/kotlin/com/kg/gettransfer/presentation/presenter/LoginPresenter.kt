@@ -98,8 +98,8 @@ class LoginPresenter : BasePresenter<LoginView>() {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> sessionInteractor.login(null, LoginHelper.formatPhone(emailOrPhone), password!!, withSmsCode)
-                    false -> sessionInteractor.login(emailOrPhone, null, password!!, withSmsCode)
+                    true -> accountManager.login(null, LoginHelper.formatPhone(emailOrPhone), password!!, withSmsCode)
+                    false -> accountManager.login(emailOrPhone, null, password!!, withSmsCode)
                 }
             }
                     .also {
@@ -170,7 +170,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
             } else {
                 viewState.setError(false,
                         R.string.LNG_ERROR_EMAIL_PHONE,
-                        Utils.phoneUtil.internationalExample(sessionInteractor.account.locale)
+                        Utils.phoneUtil.internationalExample(sessionInteractor.locale)
                 )
                 false
             }
@@ -205,9 +205,8 @@ class LoginPresenter : BasePresenter<LoginView>() {
     fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
 
     private fun checkCarrierMode(): String {
-        val groups = sessionInteractor.account.groups
-        if (groups.indexOf(GROUP_CARRIER_DRIVER) >= 0) {
-            if (groups.indexOf(GROUP_MANAGER_VIEW_TRANSFERS) >= 0) analytics.logProfile(Analytics.CARRIER_TYPE)
+        if (accountManager.remoteAccount.isDriver) {
+            if (accountManager.remoteAccount.isManager) analytics.logProfile(Analytics.CARRIER_TYPE)
             else analytics.logProfile(Analytics.DRIVER_TYPE)
             return Screens.CARRIER_MODE
         }

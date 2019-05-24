@@ -26,6 +26,7 @@ import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.encrypt.EncryptPassImpl
+import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 
@@ -159,6 +160,7 @@ val androidModule = module {
     single { DateTimeDelegate() }
     single { PassengersDelegate() }
     single { MainState() }
+    single { AccountManager() }
 }
 
 val testModule = module {

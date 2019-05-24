@@ -29,7 +29,6 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
     var flightNumberReturn: String? = null
     var comment: String? = null
     var selectedTransports: Set<TransportType.ID>? = null
-    var user = User(Profile(null, null, null), false)
     var nameSign: String? = null
     var isLoggedIn = false
 
@@ -43,18 +42,7 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
         flightNumberReturn = null
         comment = null
         selectedTransports = null
-        setNewUser(null)
         nameSign = null
-    }
-
-    fun setNewUser(newUser: User?) {
-        newUser?.let {
-            user = it
-            isLoggedIn = true
-            return
-        }
-        user = User(Profile(null, null, null), false)
-        isLoggedIn = false
     }
 
     fun getCurrentAddress() = geoRepository.getCurrentAddress()

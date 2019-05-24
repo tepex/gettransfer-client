@@ -11,7 +11,7 @@ import com.kg.gettransfer.presentation.view.Screens
 class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
 
     fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) {
-        if (!isLoggedIn())
+        if (!accountManager.isLoggedIn)
             router.replaceScreen(Screens.LoginToPaymentOffer(transferId, offerId))
         else {
             utils.launchSuspend {
@@ -40,7 +40,7 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
     }
 
     fun openTransfer(transferId: Long) {
-        if (!isLoggedIn())
+        if (!accountManager.isLoggedIn)
             router.replaceScreen(Screens.LoginToGetOffers(transferId, ""))
         else {
             router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
@@ -78,11 +78,9 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
     }
 
     fun rateTransfer(transferId: Long, rate: Int) {
-        if (!isLoggedIn()) router.replaceScreen(Screens.LoginToRateTransfer(transferId, rate))
+        if (!accountManager.isLoggedIn) router.replaceScreen(Screens.LoginToRateTransfer(transferId, rate))
         else router.replaceScreen(Screens.Splash(transferId, rate, true))
     }
-
-    private fun isLoggedIn() = sessionInteractor.account.user.loggedIn
 
     fun openMainScreen() = router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
 }

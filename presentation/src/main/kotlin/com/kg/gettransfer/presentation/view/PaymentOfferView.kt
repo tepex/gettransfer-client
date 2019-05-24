@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.view
 
+import android.support.annotation.StringRes
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.braintreepayments.api.dropin.DropInRequest
@@ -32,6 +33,8 @@ interface PaymentOfferView : BaseView {
     fun setEmail(email: String)
     fun setPhone(phone: String)
     fun redirectToLogin()
+
+    fun showFieldError(@StringRes stringId: Int)
 
     companion object {
         val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"

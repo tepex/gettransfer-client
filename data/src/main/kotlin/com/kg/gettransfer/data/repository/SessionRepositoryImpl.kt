@@ -56,6 +56,7 @@ class SessionRepositoryImpl(
         private set
     override var account = NO_ACCOUNT
         private set
+    override var tempUser = NO_USER
     override var mobileConfig = MOBILE_CONFIGS_DEFAULT
         private set
 
@@ -208,6 +209,16 @@ class SessionRepositoryImpl(
                 groups       = emptyList<String>(),
                 carrierId    = null
         )
+
+        private val NO_USER = User(
+                profile = Profile(
+                        fullName = null,
+                        email    = null,
+                        phone    = null
+                ),
+                termsAccepted = false
+        )
+
         private val MOBILE_CONFIGS_DEFAULT = MobileConfig(
                 pushShowDelay       = 5,
                 orderMinimumMinutes = 120,

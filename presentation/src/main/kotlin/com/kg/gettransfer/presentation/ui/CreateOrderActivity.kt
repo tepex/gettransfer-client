@@ -347,7 +347,11 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
         email_field.field_input.setText(user.profile.email ?: "")
 
-        if (isLoggedIn) email_field.field_input.isEnabled = false
+        if (isLoggedIn) {
+            //email_field.field_input.isEnabled = false
+            email_field.isVisible = false
+            phone_field.isVisible = false
+        }
 
         if (isLoggedIn && user.termsAccepted) {
             layoutAgreement.isVisible = false
@@ -520,8 +524,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             else {
                 val phone = phone_field.field_input.text?.trim()
                 phone?.let {
-                    if (phone.length == 1)
+                    if (phone.length == 1) {
                         phone_field.field_input.text?.clear()
+                        presenter.setPhone("")
+                    }
                 }
             }
         }

@@ -37,8 +37,10 @@ interface CreateOrderView : BaseView, RouteView {
     fun highLightErrorField(errorField: FieldError)
 
     enum class FieldError(val value: String, @StringRes val stringId: Int) {
-        EMAIL_FIELD(Analytics.INVALID_EMAIL, R.string.LNG_ERROR_EMAIL),
+        EMAIL_FIELD(Analytics.INVALID_EMAIL, R.string.LNG_RIDE_EMAIL),
         PHONE_FIELD(Analytics.INVALID_PHONE, R.string.LNG_RIDE_PHONE),
+        INVALID_EMAIL(Analytics.INVALID_EMAIL, R.string.LNG_ERROR_EMAIL),
+        INVALID_PHONE(Analytics.INVALID_PHONE, R.string.LNG_ERROR_PHONE),
         TRANSPORT_FIELD(Analytics.NO_TRANSPORT_TYPE, R.string.LNG_RIDE_CHOOSE_TRANSPORT),
         TERMS_ACCEPTED_FIELD(Analytics.LICENSE_NOT_ACCEPTED, R.string.LNG_RIDE_OFFERT_ERROR),
         PASSENGERS_COUNT(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_PASSENGERS),

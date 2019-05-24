@@ -20,7 +20,7 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.CARRIER_MODE
         checkLoggedIn()
-        viewState.initNavigation(profileMapper.toView(sessionInteractor.account.user.profile))
+        viewState.initNavigation(profileMapper.toView(accountManager.remoteProfile))
         if (systemInteractor.lastCarrierTripsTypeView.isEmpty()) {
             systemInteractor.lastCarrierTripsTypeView = Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR
         }
@@ -45,7 +45,7 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     }
 
     private fun checkLoggedIn() {
-        if(!sessionInteractor.account.user.loggedIn) router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+        if(!accountManager.isLoggedIn) router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
     }
 
     fun onCarrierTripsClick()   { /*router.navigateTo(Screens.CARRIER_TRIPS)*/ }

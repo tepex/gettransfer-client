@@ -18,6 +18,7 @@ import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
+import com.kg.gettransfer.presentation.mapper.UserMapper
 import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.view.MainView
@@ -41,6 +42,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     private val nState: MainState by inject()  //to keep info about navigation
 
     private val pointMapper: PointMapper by inject()
+    private val profileMapper: ProfileMapper by inject()
 
     var screenType = REQUEST_SCREEN
 
@@ -66,7 +68,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
         geoInteractor.initGeocoder()
-        if (sessionInteractor.account.user.loggedIn) {
+        if (accountManager.isLoggedIn) {
             registerPushToken()
             checkReview()
             utils.launchSuspend {
@@ -83,12 +85,12 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     override fun attachView(view: MainView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
-        if (sessionInteractor.account.user.hasAccount) {
+        if (accountManager.hasAccount) {
             setCountEvents(countEventsInteractor.eventsCount)
         } else {
             viewState.showBadge(false)
         }
-        Timber.d("MainPresenter.is user logged in: ${sessionInteractor.account.user.loggedIn}")
+        Timber.d("MainPresenter.is user logged in: ${accountManager.isLoggedIn}")
         if (!setAddressFields()) setOwnLocation()
         checkAccount()
         changeUsedField(systemInteractor.selectedField)
@@ -112,8 +114,8 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     private fun checkAccount() {
-        with(sessionInteractor.account.user) {
-            viewState.setProfile(loggedIn, profile.email, profile.fullName)
+        with(accountManager) {
+            viewState.setProfile(profileMapper.toView(remoteProfile), isLoggedIn, hasAccount)
         }
     }
 
@@ -361,8 +363,8 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun onBecomeACarrierClick() {
         logEvent(Analytics.DRIVER_CLICKED)
-        if (sessionInteractor.account.user.loggedIn) {
-            if (sessionInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.ChangeMode(Screens.CARRIER_MODE))
+        if (accountManager.isLoggedIn) {
+            if (accountManager.remoteAccount.isDriver) router.navigateTo(Screens.ChangeMode(Screens.CARRIER_MODE))
             else router.navigateTo(Screens.ChangeMode(Screens.REG_CARRIER))
         } else {
             login(Screens.CARRIER_MODE, "")

@@ -56,8 +56,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     internal var selectedPayment = PaymentRequestModel.PLATRON
 
     private lateinit var paymentRequest: PaymentRequestModel
-    val profile: Profile
-        get() = sessionInteractor.account.user.profile
+
     lateinit var authEmail: String
     lateinit var authPhone: String
 
@@ -74,6 +73,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             viewState.blockInterface(false)
         }
         getPaymentRequest()
+    }
+
+    fun setEmail(email: String) {
+        accountManager.tempProfile.email = email
+    }
+
+    fun setPhone(phone: String) {
+        accountManager.tempProfile.phone = phone
     }
 
     private fun getPaymentRequest() {
@@ -148,23 +155,23 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     fun onPaymentClicked() {
-        if (profile.hasData())
+        if (accountManager.remoteProfile.hasData())
             getPayment()
          else
             putAccount()
     }
 
     private fun putAccount() {
-        if (!isValid(authEmail, false) || !isValid(authPhone, true)) return
-        with(profile) {
-            phone = LoginHelper.formatPhone(authPhone)
-            email = authEmail
+        val error = accountManager.isValidEmailAndPhoneFields()
+        if (error == null) {
+            utils.launchSuspend { pushAccount() }
+        } else {
+            viewState.showFieldError(error.stringId)
         }
-        utils.launchSuspend { pushAccount() }
     }
 
     private suspend fun pushAccount() =
-            fetchResultOnly { sessionInteractor.putAccount() }
+            fetchResultOnly { accountManager.putAccount(true) }
                     .run {
                         when {
                             error?.isAccountExistError() ?: false  -> onAccountExists()
@@ -174,7 +181,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                     }
 
     private fun onAccountExists() {
-        profile.clear()
+        accountManager.clearRemoteUser()
         viewState.redirectToLogin()
     }
 
@@ -252,10 +259,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private fun isUserAuthorized() {
-        val isLoggedIn = profile.hasData()
+        val isLoggedIn = accountManager.remoteProfile.hasData()
         viewState.setAuthUiVisible(!isLoggedIn)
         if (!isLoggedIn) {
-            with(profile) {
+            with(accountManager.remoteProfile) {
                 phone?.let { viewState.setPhone(it) }
                 email?.let { viewState.setEmail(it) }
             }

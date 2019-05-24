@@ -70,7 +70,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         super.attachView(view)
         if (restart) initConfigs()
         initGeneralSettings()
-        if (sessionInteractor.account.user.loggedIn) initLoggedInUserSettings()
+        if (accountManager.isLoggedIn) initLoggedInUserSettings()
         if (isDriverMode) initCarrierSettings()
         if (BuildConfig.FLAVOR == "dev") initDebugSettings()
     }
@@ -90,11 +90,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setLocale(localeModel?.name ?: "", locale.language)
 
         viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.mi)
-        viewState.setLogoutButtonEnabled(sessionInteractor.account.user.hasAccount)
+        viewState.setLogoutButtonEnabled(accountManager.hasAccount)
     }
 
     private fun initLoggedInUserSettings() {
-        viewState.initLoggedInUserSettings(sessionInteractor.account.user.profile.let { profileMapper.toView(it) })
+        viewState.initLoggedInUserSettings(accountManager.remoteProfile.let { profileMapper.toView(it) })
         viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
     }
 
@@ -179,7 +179,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         systemInteractor.endpoint = endpoint.delegate
         utils.launchSuspend {
             viewState.blockInterface(true)
-            utils.asyncAwait { sessionInteractor.logout() }
+            utils.asyncAwait { accountManager.logout() }
             utils.asyncAwait { sessionInteractor.coldStart() }
             viewState.blockInterface(false)
             restart = true

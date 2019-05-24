@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GetTransfer (dev)</string>
-	<string name="api_key">7dfea5095801332db75975c882361bbf</string>
+	<string name="api_key">android_e3996c61be6786dfac7413d53be26e64</string>
 	<string name="api_url">https://stgtr.org</string>
     <string name="google_app_id" translatable="false">1:215265777280:android:6102b6945a841ae4</string>
     <string name="registration_carrier_url">https://stgtr.org/carrier/new</string>

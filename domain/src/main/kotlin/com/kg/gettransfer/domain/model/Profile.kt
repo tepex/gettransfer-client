@@ -10,6 +10,7 @@ data class Profile(
                     && !phone.isNullOrEmpty()
 
     fun clear() {
+        fullName = null
         email = null
         phone = null
     }

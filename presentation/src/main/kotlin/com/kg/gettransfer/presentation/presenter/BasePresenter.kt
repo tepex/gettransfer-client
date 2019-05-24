@@ -13,7 +13,6 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.eventListeners.ChatBadgeEventListener
 import com.kg.gettransfer.domain.eventListeners.OfferEventListener
 import com.kg.gettransfer.domain.interactor.*
-import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.ChatBadgeEvent
 import com.kg.gettransfer.domain.model.Offer
 
@@ -30,9 +29,9 @@ import com.kg.gettransfer.utilities.GTNotificationManager
 import kotlinx.coroutines.Job
 
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.mapper.BookNowOfferMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
-import kotlinx.coroutines.delay
 
 import org.koin.standalone.get
 import org.koin.standalone.inject
@@ -63,6 +62,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected val socketInteractor: SocketInteractor by inject()
     protected val logsInteractor: LogsInteractor by inject()
     protected val sessionInteractor: SessionInteractor by inject()
+    protected val accountManager: AccountManager by inject()
 
     //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
@@ -97,7 +97,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     protected fun checkResultError(error: ApiException): Boolean {
         if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser() )) {
             openedLoginScreenForUnauthorizedUser = true
-            login(Screens.CLOSE_AFTER_LOGIN, sessionInteractor.account.user.profile.email)
+            login(Screens.CLOSE_AFTER_LOGIN, accountManager.remoteProfile.email)
             return false
         } else if (openedLoginScreenForUnauthorizedUser) {
             logout()
@@ -115,7 +115,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
 
     protected suspend fun clearAllCachedData() {
         utils.asyncAwait { pushTokenInteractor.unregisterPushToken() }
-        utils.asyncAwait { sessionInteractor.logout() }
+        utils.asyncAwait { accountManager.logout() }
 
         utils.asyncAwait { transferInteractor.clearTransfersCache() }
         utils.asyncAwait { offerInteractor.clearOffersCache() }
@@ -172,7 +172,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                             emailCarrier,
                             logsInteractor.logsFile,
                             transferID,
-                            sessionInteractor.account.user.profile.email))
+                            accountManager.remoteProfile.email))
         }
     }
 
@@ -236,7 +236,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                     notificationManager.showNewMessageNotification(
                             chatBadgeEvent.transferId,
                             transfer.unreadMessagesCount,
-                            sessionInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) < 0)
+                            !accountManager.remoteAccount.isDriver)
                 }
             }
         } else {
