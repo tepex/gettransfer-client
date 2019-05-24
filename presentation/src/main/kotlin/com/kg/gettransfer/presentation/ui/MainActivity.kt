@@ -67,6 +67,8 @@ import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_navigation.*
 import kotlinx.android.synthetic.main.view_switcher.*
+import org.jetbrains.anko.longToast
+import org.jetbrains.anko.toast
 import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
@@ -128,7 +130,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i("FindView", "Main created")
+        longToast("MAIN SCREEN CREATED")
         setContentView(R.layout.activity_main)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
