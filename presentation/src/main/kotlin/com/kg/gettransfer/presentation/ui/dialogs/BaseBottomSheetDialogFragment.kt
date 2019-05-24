@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.kg.gettransfer.R
 import android.util.DisplayMetrics
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
 
 
 abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
@@ -50,4 +52,28 @@ abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
 
 	protected open fun initUx(savedInstanceState: Bundle?) {}
 
+	protected fun setBottomSheetState(view: View,
+									  state: Int){
+		val parent = view.parent
+		if(parent is ViewGroup) {
+			val params = parent.layoutParams
+			if(params is CoordinatorLayout.LayoutParams) {
+				val behaviour = params.behavior
+				if (behaviour is BottomSheetBehavior)
+					behaviour.state = state
+			}
+		}
+	}
+
+	protected fun showKeyboard() {
+		activity?.currentFocus?.showKeyboard()
+	}
+
+	protected fun hideKeyboard(): Boolean {
+		activity?.currentFocus?.run {
+			hideKeyboard()
+			clearFocus()
+		}
+		return true
+	}
 }

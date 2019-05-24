@@ -1,7 +1,10 @@
 package com.kg.gettransfer.presentation.ui.dialogs
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
+import android.view.View
 import android.view.WindowManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -29,9 +32,19 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         onCommentLister = activity as OnCommentListener
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        showKeyboard()
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        hideKeyboard()
     }
 
     override fun initUx(savedInstanceState: Bundle?) {
@@ -39,6 +52,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         tvDone.setOnClickListener {
             val comment = etPopupComment.text.toString().trim()
             presenter.setComment(comment)
+            setBottomSheetState( this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
         }
     }
 
