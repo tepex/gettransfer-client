@@ -36,39 +36,39 @@
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/create_transfer_additionals_top_text_size" />
 
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+    <!--<HorizontalScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true">-->
 
-        <android.support.design.chip.ChipGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+        <!--<android.support.design.chip.ChipGroup-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="8dp">-->
 
-            <android.support.design.chip.Chip
-                android:id="@+id/chipDriver"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:text="I need a Russian driver" />
+            <!--<android.support.design.chip.Chip-->
+                <!--android:id="@+id/chipDriver"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--style="@style/Widget.MaterialComponents.Chip.Choice"-->
+                <!--android:text="I need a Russian driver" />-->
 
-            <android.support.design.chip.Chip
-                android:id="@+id/chipWifi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:text="I need WiFi" />
+            <!--<android.support.design.chip.Chip-->
+                <!--android:id="@+id/chipWifi"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--style="@style/Widget.MaterialComponents.Chip.Choice"-->
+                <!--android:text="I need WiFi" />-->
 
-            <android.support.design.chip.Chip
-                android:id="@+id/chipCharge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:text="I need the charge" />
-        </android.support.design.chip.ChipGroup>
-    </HorizontalScrollView>
+            <!--<android.support.design.chip.Chip-->
+                <!--android:id="@+id/chipCharge"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="8dp"-->
+                <!--style="@style/Widget.MaterialComponents.Chip.Choice"-->
+                <!--android:text="I need the charge" />-->
+        <!--</android.support.design.chip.ChipGroup>-->
+    <!--</HorizontalScrollView>-->
 </RelativeLayout>
