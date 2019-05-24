@@ -38,6 +38,7 @@ import org.koin.standalone.inject
 import org.koin.standalone.KoinComponent
 
 import ru.terrakok.cicerone.Router
+import ru.terrakok.cicerone.Screen
 
 import timber.log.Timber
 
@@ -109,7 +110,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     private fun logout(){
         utils.launchSuspend {
             clearAllCachedData()
-            router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+            router.backTo(Screens.MainPassenger(true))
         }
     }
 

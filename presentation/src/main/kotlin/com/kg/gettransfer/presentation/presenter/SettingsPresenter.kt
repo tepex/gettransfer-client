@@ -24,6 +24,7 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.get
+import java.lang.IllegalArgumentException
 import java.util.Locale
 
 @InjectViewState
@@ -237,7 +238,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
         if (localeWasChanged) {
             localeWasChanged = false
-            router.navigateTo(Screens.ChangeMode(systemInteractor.lastMode))
+            val screen = when (systemInteractor.lastMode) {
+                Screens.CARRIER_MODE -> Screens.Carrier()
+                Screens.PASSENGER_MODE -> Screens.MainPassenger()
+                else                   -> throw IllegalArgumentException("Wrong last mode in onBackCommandClick in ${this.javaClass.name}")
+            }
+            router.backTo(screen)
         } else super.onBackCommandClick()
     }
 

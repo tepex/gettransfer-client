@@ -8,6 +8,7 @@ import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 
@@ -98,8 +99,12 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
     }
 
     private fun showSuccessfulPayment() {
-        router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-        router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
+        router.newChainFromMain(
+                Screens.PaymentSuccess(
+                        transferId,
+                        offerId
+                )
+        )
         logEventEcommercePurchase()
     }
 

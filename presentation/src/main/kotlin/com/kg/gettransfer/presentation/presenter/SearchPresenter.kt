@@ -51,11 +51,11 @@ class SearchPresenter : BasePresenter<SearchView>() {
         val placeType = checkPlaceType(selected)
         val isDoubleClickOnRoute: Boolean
         if (isTo) {
-            viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, placeType == ROUTE_TYPE, true)
+            viewState.setAddressTo(selected.primary ?: selected.cityPoint.name, placeType == ROUTE_TYPE, true)
             isDoubleClickOnRoute = orderInteractor.to == selected
             orderInteractor.to = selected
         } else {
-            viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, placeType == ROUTE_TYPE, true)
+            viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name, placeType == ROUTE_TYPE, true)
             isDoubleClickOnRoute = orderInteractor.from == selected
             orderInteractor.from = selected
         }
@@ -71,8 +71,8 @@ class SearchPresenter : BasePresenter<SearchView>() {
             }
         } else {
             val sendRequest = selected.needApproximation() /* dirty hack */
-            if (isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
-            else viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name!!, sendRequest, true)
+            if (isTo) viewState.setAddressTo(selected.primary ?: selected.cityPoint.name, sendRequest, true)
+            else viewState.setAddressFrom(selected.primary ?: selected.cityPoint.name, sendRequest, true)
         }
     }
 
@@ -83,7 +83,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
             else if (!isTo) {
                 viewState.setFocus(true)
                 orderInteractor.to?.let {
-                    viewState.setAddressTo(it.primary ?: it.cityPoint.name!!, true, true)
+                    viewState.setAddressTo(it.primary ?: it.cityPoint.name, true, true)
                 }
             }
         }
@@ -157,6 +157,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
         systemInteractor.addressHistory = mutableListOf(orderInteractor.from!!)
                 .apply { orderInteractor.to?.let { add(it) } }
     }
+
 
     companion object {
         const val ADDRESS_PREDICTION_SIZE = 3

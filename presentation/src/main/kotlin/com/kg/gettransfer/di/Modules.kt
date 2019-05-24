@@ -90,7 +90,6 @@ val fileModule = module {
         Logger.getLogger(FileLoggingTree.LOGGER_NAME).also { l ->
         FileHandler(androidContext().filesDir.path.toString().plus("/${l.name}"), FILE_LIMIT, FILES_COUNT, true).also { h ->
             h.formatter = SimpleFormatter()
-
             l.addHandler(h)
        } } }
 }

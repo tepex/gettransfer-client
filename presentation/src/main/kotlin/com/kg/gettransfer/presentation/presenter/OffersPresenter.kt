@@ -9,7 +9,6 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.model.OfferItem
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
@@ -20,8 +19,6 @@ import com.kg.gettransfer.presentation.view.OffersView.Sort
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-
-import org.koin.standalone.inject
 
 import timber.log.Timber
 import java.util.Date
@@ -57,7 +54,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
                         it.hasData()?.let { transfer ->
                             if (transfer.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE)
-                                routeToScreen()
+                                checkIfNeedNewChain()
                             else {
                                 viewState.setTransfer(transferMapper.toView(transfer))
                                 checkNewOffersSuspended(transfer)
@@ -68,12 +65,19 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
     }
 
-    private fun routeToScreen() {
-        if (isViewRoot) {
-            isViewRoot = false
-            router.newChain(Screens.Main(), Screens.Requests, Screens.Details(transferId))
-        }
+    private fun checkIfNeedNewChain() {
+        if (isViewRoot)
+            routeForward()
         else router.exit()
+    }
+
+    private fun routeForward() {
+        isViewRoot = false
+        router.newChain(
+                Screens.MainPassenger(),
+                Screens.Requests,
+                Screens.Details(transferId)
+        )
     }
 
     fun checkNewOffers() {
@@ -167,7 +171,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     override fun onBackCommandClick() {
         if (isViewRoot)
-            router.navigateTo(Screens.Main()).also { isViewRoot = false }
+            router.newRootScreen(Screens.MainPassenger(true)).also { isViewRoot = false }
         else super.onBackCommandClick()
     }
 

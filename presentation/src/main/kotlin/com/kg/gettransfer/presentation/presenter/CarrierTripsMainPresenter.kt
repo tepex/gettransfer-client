@@ -45,7 +45,7 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     }
 
     private fun checkLoggedIn() {
-        if(!accountManager.isLoggedIn) router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+        if(!accountManager.isLoggedIn) router.newRootScreen(Screens.MainPassenger())
     }
 
     fun onCarrierTripsClick()   { /*router.navigateTo(Screens.CARRIER_TRIPS)*/ }
@@ -53,7 +53,7 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     fun readMoreClick()         = viewState.showReadMoreDialog()
     fun onSettingsClick()       = router.navigateTo(Screens.Settings)
     fun onSupportClick()        = router.navigateTo(Screens.Support)
-    fun onPassengerModeClick()  = router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+    fun onPassengerModeClick()  = router.newRootScreen(Screens.MainPassenger())
     fun onTransfersClick()      = router.navigateTo(Screens.CarrierTransfers)
 
     fun onShareClick() {

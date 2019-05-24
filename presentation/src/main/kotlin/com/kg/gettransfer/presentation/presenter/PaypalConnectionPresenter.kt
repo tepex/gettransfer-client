@@ -7,6 +7,7 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.view.PaypalConnectionView
@@ -75,8 +76,12 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
     }
 
     private fun showSuccessfulPayment() {
-        router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
-        router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
+        router.newChainFromMain(
+                Screens.PaymentSuccess(
+                        transferId,
+                        offerId
+                )
+        )
         logEventEcommercePurchase()
     }
 

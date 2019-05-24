@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
+import android.util.Log
 
 import android.view.Gravity
 import android.view.View
@@ -56,6 +57,7 @@ import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.MainView.Companion.MAP_SCREEN
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.presentation.view.SplashView
 import kotlinx.android.synthetic.main.a_b_orange_view.*
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -126,6 +128,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("FindView", "Main created")
         setContentView(R.layout.activity_main)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
@@ -168,9 +171,9 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
 
     private fun getIntents() {
         with(intent) {
-            if (getBooleanExtra(SplashActivity.EXTRA_SHOW_RATE, false)) {
-                val transferId =getLongExtra(SplashActivity.EXTRA_TRANSFER_ID, 0)
-                val rate = getIntExtra(SplashActivity.EXTRA_RATE, 0)
+            if (getBooleanExtra(SplashView.EXTRA_SHOW_RATE, false)) {
+                val transferId = getLongExtra(SplashView.EXTRA_TRANSFER_ID, 0)
+                val rate = getIntExtra(SplashView.EXTRA_RATE, 0)
                 presenter.rateTransfer(transferId, rate)
             }
             if (getBooleanExtra(Screens.MAIN_MENU, false))

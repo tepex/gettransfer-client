@@ -30,7 +30,6 @@ import com.kg.gettransfer.extensions.isValid
 import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.ui.icons.transport.CarIconResourceProvider
 import com.kg.gettransfer.presentation.delegate.CoordinateRequester
-import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.CityPointMapper
 import com.kg.gettransfer.presentation.mapper.PointMapper
@@ -204,7 +203,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     private fun showMainActivity() {
         viewState.showCancelRequestToast()
-        router.navigateTo(Screens.Main(false, true))
+        router.backTo(Screens.MainPassenger())
     }
 
     fun makeFieldOperation(field: String, operation: String, text: String) {

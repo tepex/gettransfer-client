@@ -21,7 +21,7 @@
 
 	<dimen name="transfer_start_end_sign_marker_text_size">14sp</dimen>
 	
-	<!--Main Activity, Fragments-->
+	<!--MainPassenger Activity, Fragments-->
 	<dimen name="switchers_vertical_margin">16dp</dimen>
 
 	<dimen name="internet_warning_horizontal_text_padding">12dp</dimen>

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.support.v4.content.FileProvider
 
 import com.google.android.gms.maps.model.LatLngBounds
@@ -21,6 +22,7 @@ import java.util.Date
 import org.jetbrains.anko.toast
 
 import ru.terrakok.cicerone.android.support.SupportAppScreen
+import java.lang.IllegalArgumentException
 
 
 object Screens {
@@ -54,24 +56,37 @@ object Screens {
 
     private var canSendEmail: Boolean? = null
 
-    data class Main(val showDrawer: Boolean = false, val clearStack: Boolean = false) : SupportAppScreen() {
+    data class MainPassenger(val showDrawer: Boolean = false,
+                             val rateBundle: Bundle? = null)
+        : SupportAppScreen()
+    {
         override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
                 .apply {
-                    if (clearStack) {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    }
                     putExtra(MAIN_MENU, showDrawer)
+                    rateBundle?.apply {
+                        putExtra(SplashView.EXTRA_TRANSFER_ID, getLong(SplashView.EXTRA_TRANSFER_ID, 0))
+                        putExtra(SplashView.EXTRA_RATE, getInt(SplashView.EXTRA_RATE, 0))
+                        putExtra(SplashView.EXTRA_SHOW_RATE, getBoolean(SplashView.EXTRA_SHOW_RATE, false))
+                    }
+                }
+    }
+
+    data class Carrier(val forIntent: String = CARRIER_MODE) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) =
+                when (forIntent) {
+                    CARRIER_MODE   -> Intent(context, CarrierTripsMainActivity()::class.java)
+                    REG_CARRIER    -> Intent(context, WebPageActivity()::class.java).apply {
+                        putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
+                    }
+                    else           -> throw IllegalArgumentException("Unknown intent key when try to navigate to Carrier mode in ${this.javaClass.name}")
                 }
     }
 
     data class Splash(val transferId: Long?, val rate: Int?, val showRate: Boolean) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, SplashActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            putExtra(SplashActivity.EXTRA_TRANSFER_ID, transferId)
-            putExtra(SplashActivity.EXTRA_RATE, rate)
-            putExtra(SplashActivity.EXTRA_SHOW_RATE, showRate)
+            putExtra(SplashView.EXTRA_TRANSFER_ID, transferId)
+            putExtra(SplashView.EXTRA_RATE, rate)
+            putExtra(SplashView.EXTRA_SHOW_RATE, showRate)
         }
     }
 
@@ -114,7 +129,7 @@ object Screens {
             putExtra(AboutView.EXTRA_OPEN_MAIN, false)
         }
     }
-
+    
     open class Login(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
             putExtra(LoginView.EXTRA_NEXT_SCREEN, nextScreen)
@@ -148,21 +163,12 @@ object Screens {
 
     data class ChangeMode(val mode: String) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = when (mode) {
-            /*CARRIER_MODE -> Intent(context, WebPageActivity()::class.java).apply {
-                putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_CARRIER)
-            }*/
-            CARRIER_MODE -> Intent(context, CarrierTripsMainActivity()::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            }
-            REG_CARRIER -> Intent(context, WebPageActivity()::class.java).apply {
+            CARRIER_MODE   -> Intent(context, CarrierTripsMainActivity()::class.java)
+            REG_CARRIER    -> Intent(context, WebPageActivity()::class.java).apply {
                 putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
             }
-            PASSENGER_MODE -> Intent(context, MainActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            }
-            else -> null
+            PASSENGER_MODE -> Intent(context, MainActivity::class.java)
+            else           -> null
         }
     }
 
@@ -257,13 +263,14 @@ object Screens {
 
             val emailIntent = Intent(Intent.ACTION_SEND).apply {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                if (emailCarrier != null) putExtra(Intent.EXTRA_EMAIL, arrayOf(emailCarrier))
+                if (emailCarrier != null)
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf(emailCarrier))
                 else putExtra(Intent.EXTRA_EMAIL, arrayOf(context!!.getString(R.string.email_support)))
 
                 val subject = context?.getString(R.string.LNG_EMAIL_SUBJECT)
-                        .plus(if (transferId != null) " #$transferId" else "")
-                putExtra(Intent.EXTRA_SUBJECT, subject)
+                        .plus("${transferId ?: ""}")
 
+                putExtra(Intent.EXTRA_SUBJECT, subject)
                 putExtra(Intent.EXTRA_TEXT, createSignature())
 
                 selector = emailSelectorIntent
@@ -318,9 +325,13 @@ object Screens {
         return canSendEmail!!
     }
 
-    data class PayPalConnection(val paymentId: Long, val nonce: String,
-                                val transferId: Long, val offerId: Long?,
-                                val percentage: Int, val bookNowTransportId: String?) : SupportAppScreen() {
+    data class PayPalConnection(val paymentId: Long,
+                                val nonce: String,
+                                val transferId: Long,
+                                val offerId: Long?,
+                                val percentage: Int,
+                                val bookNowTransportId: String?) : SupportAppScreen()
+    {
         override fun getActivityIntent(context: Context?) =
                 Intent(context, PaypalConnectionActivity::class.java).apply {
                     putExtra(PaypalConnectionView.EXTRA_PAYMENT_ID, paymentId)

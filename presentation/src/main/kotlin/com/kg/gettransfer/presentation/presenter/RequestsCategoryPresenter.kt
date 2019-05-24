@@ -100,6 +100,6 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     }
 
     fun onGetBookClicked() {
-        router.navigateTo(Screens.Main(false, true))
+        router.backTo(Screens.MainPassenger(true))
     }
 }

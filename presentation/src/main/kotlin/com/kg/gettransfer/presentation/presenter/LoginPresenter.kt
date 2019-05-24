@@ -152,7 +152,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 }
             }
             Screens.RATE_TRANSFER -> {
-                router.navigateTo(Screens.Splash(transferId, rate, true))
+                router.newRootScreen(Screens.Splash(transferId, rate, true))
             }
         }
         if(openSettingsScreen) { router.replaceScreen(Screens.Settings) }

@@ -322,11 +322,25 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun onSearchClick(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false) {
         nState.currentState = ScreenNavigationState.NO_STATE
-        navigateToFindAddress(from, to, bounds, returnBack)
+        navigateToFindAddress(
+                from,
+                to,
+                bounds,
+                returnBack
+        )
     }
 
     private fun navigateToFindAddress(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false) {
-        orderInteractor.from?.let { router.navigateTo(Screens.FindAddress(from, to, isClickTo, bounds, returnBack)) }
+        orderInteractor.from
+                ?.let {
+                    router.navigateTo(Screens.FindAddress(
+                            from,
+                            to,
+                            isClickTo,
+                            bounds,
+                            returnBack)
+                    )
+                }
     }
 
     fun onNextClick(block: (Boolean) -> Unit) {
@@ -364,8 +378,8 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     fun onBecomeACarrierClick() {
         logEvent(Analytics.DRIVER_CLICKED)
         if (accountManager.isLoggedIn) {
-            if (accountManager.remoteAccount.isDriver) router.navigateTo(Screens.ChangeMode(Screens.CARRIER_MODE))
-            else router.navigateTo(Screens.ChangeMode(Screens.REG_CARRIER))
+            if (accountManager.remoteAccount.isDriver) router.newRootScreen(Screens.Carrier(Screens.CARRIER_MODE))
+            else router.navigateTo(Screens.Carrier(Screens.REG_CARRIER))
         } else {
             login(Screens.CARRIER_MODE, "")
         }
