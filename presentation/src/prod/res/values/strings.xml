@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GetTransfer</string>
-	<string name="api_key">android_124b0e119b32bf1b2e8254ea1740ee3e</string>
+	<string name="api_key">android_9614f456a934e340353e6c60c5fb9a48</string>
 	<string name="api_url">https://gettransfer.com</string>
 	<string name="registration_carrier_url">https://gettransfer.com/en/carrier/new</string>
 	<string name="carrier_mode">https://gettransfer.com/en/carrier</string>
