@@ -412,8 +412,14 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
                 initPhoneTextChangeListeners()
             }
         }
-        profile.email?.let { et_auth_email.setText(it) }
-        profile.phone?.let { et_auth_phone.setText(it) }
+        profile.email?.let {
+            et_auth_email.setText(it)
+            presenter.setEmail(it)
+        }
+        profile.phone?.let {
+            et_auth_phone.setText(it)
+            presenter.setPhone(it)
+        }
         email_phone_divider.isVisible = il_auth_email.isVisible && il_auth_phone.isVisible
         ll_auth_container.isVisible = il_auth_email.isVisible || il_auth_phone.isVisible
         enablePayment()
