@@ -95,7 +95,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             viewState.setPassengers(passengers)
             viewState.setEditableFields(offeredPrice, flightNumber, flightNumberReturn, promoCode)
             if(promoCode.isNotEmpty()) checkPromoCode()
-            comment?.let { viewState.setComment(it) }
         }
         updateChildSeatsInfo()
         transportTypes?.let { viewState.setTransportTypes(it) }
@@ -327,11 +326,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             if (result.error == null) viewState.setPromoResult(result.model.discount) else viewState.setPromoResult(null)
             viewState.blockInterface(false)
         }
-    }
-
-    fun setComment(comment: String) {
-        if (comment.isEmpty()) orderInteractor.comment = null else orderInteractor.comment = comment
-        viewState.setComment(comment)
     }
 
     fun setAgreeLicence(agreeLicence: Boolean) {

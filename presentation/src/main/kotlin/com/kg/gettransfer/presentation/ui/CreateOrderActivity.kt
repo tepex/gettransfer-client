@@ -48,7 +48,7 @@ import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
 import org.koin.android.ext.android.inject
 
-class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeScreen {
+class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeScreen, CommentDialogFragment.OnCommentListener {
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
     private val dateDelegate: DateTimeDelegate by inject()
@@ -196,60 +196,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         presenter.initMapAndPrices()
     }
 
-    /*override fun setCurrencies(currencies: List<CurrencyModel>) =
-        Utils.setCurrenciesDialogListener(this, fl_currency, currencies) { presenter.changeCurrency(it) }*/
-
-    /*override fun setCurrencies(all: List<CurrencyModel>, popular: List<CurrencyModel>, selected: CurrencyModel) {
-        currenciesFragment.setCurrencies(all, popular, selected) {
-            bsCurrencies.state = BottomSheetBehavior.STATE_HIDDEN
-            presenter.changeCurrency(it)
-        }
-        bsCurrencies.state = BottomSheetBehavior.STATE_EXPANDED
-    }*/
-
-
-//    private fun showPopupWindowComment() {
-//        val screenHeight = getScreenSide(true)
-//        applyDim(window.decorView.rootView as  ViewGroup, DIM_AMOUNT)
-//
-//        val layoutPopupView = LayoutInflater.from(applicationContext).inflate(R.layout.layout_popup_comment, layoutPopup).apply {
-//            btnClearPopupComment.setOnClickListener { etPopupComment.setText("") }
-//            setOnClickListener { etPopupComment.requestFocus() }
-//            etPopupComment.setSelection(etPopupComment.text.length)
-//        }
-//
-//        popupWindowComment = PopupWindow(layoutPopupView, LinearLayout.LayoutParams.MATCH_PARENT, screenHeight / 3, true).apply {
-//            softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-//            inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
-//            isOutsideTouchable = true
-//            setOnDismissListener {
-//                layoutPopupView.etPopupComment.hideKeyboard()
-//                layoutPopupView.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.hide_popup))
-//                btnGetOffers.requestFocus()
-//                clearDim(window.decorView.rootView as  ViewGroup)
-//            }
-//        }
-//
-//        with (layoutPopupView.etPopupComment) {
-//            text = comment_field.field_input.text
-//            setRawInputType(InputType.TYPE_CLASS_TEXT)
-//            popupWindow = popupWindowComment
-//            if (!isKeyBoardOpened) showKeyboard()
-//            setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
-//                if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                    presenter.setComment(layoutPopupView.etPopupComment.text.toString().trim())
-//                    popupWindowComment.dismiss()
-//                    return@OnEditorActionListener true
-//                }
-//                false
-//            })
-//        }
-//        Handler().postDelayed({
-//            popupShowAtLocation(popupWindowComment, mainLayoutActivityTransfer, 0)
-//            layoutPopupView.startAnimation(AnimationUtils.loadAnimation(applicationContext, R.anim.show_popup))
-//        }, CreateOrderActivity.KEYBOARD_WAIT_DELAY)
-//    }
-
     private fun showDatePickerDialog(field: Boolean) {
         dateDelegate.chooseOrderTime(this, field, this)
     }
@@ -322,7 +268,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         tv_currency.text = currency
         if(hideCurrencies) hideBottomSheet()
     }
-    override fun setComment(comment: String)   { comment_field.field_input.setText(comment) }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
@@ -617,4 +562,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                         tag)
                 .commit()
 
+    override fun onSetComment(comment: String) {
+        comment_field.field_input.setText(comment)
+    }
 }
