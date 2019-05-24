@@ -55,7 +55,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     private lateinit var bsOrder: BottomSheetBehavior<View>
     private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
-    private lateinit var popupWindowComment: PopupWindow
 
     private var defaultPromoText: String? = null
 
