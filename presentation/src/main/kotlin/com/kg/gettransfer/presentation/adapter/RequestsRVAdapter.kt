@@ -55,10 +55,13 @@ class RequestsRVAdapter(
         }
     }
 
-    fun updateTransfers(tr: List<TransferModel>) {
+    fun updateTransfers(tr: List<TransferModel>, removeAll: Boolean = true) {
+        if (removeAll) transfers.clear()
         val start = transfers.size
         transfers.addAll(tr)
-        notifyItemRangeInserted(start, transfers.size)
+        if (removeAll)
+            notifyDataSetChanged()
+        else notifyItemRangeInserted(start, transfers.size)
     }
 
     fun updateEvents(eventsCount: Map<Long, Int>) {

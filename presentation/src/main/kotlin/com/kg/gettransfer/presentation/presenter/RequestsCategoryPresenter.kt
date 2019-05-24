@@ -38,6 +38,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     @CallSuper
     override fun detachView(view: RequestsFragmentView?) {
         super.detachView(view)
+        transfers = null
         countEventsInteractor.removeCounterListener(this)
     }
 
@@ -58,7 +59,10 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
             if (it.isNotEmpty()) {
                 utils
                         .compute { transfers?.map { t -> transferMapper.toView(t) } }
-                        ?.also { viewList -> viewState.updateTransfers(viewList) }
+                        ?.also { viewList ->
+                            viewState.updateTransfers(viewList)
+                            updateEventsCount()
+                        }
             } else
                 viewState.onEmptyList()
         }
@@ -73,7 +77,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
 
     private fun getEventsCount(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>): Map<Long, Int> {
         val eventsMap = mutableMapOf<Long, Int>()
-        transfers?.forEach { transfer->
+        transfers?.forEach { transfer ->
             mapCountNewEvents[transfer.id]?.let {
                 val eventsCount = it - (mapCountViewedOffers[transfer.id] ?: 0)
                 if (eventsCount > 0) eventsMap[transfer.id] = eventsCount
