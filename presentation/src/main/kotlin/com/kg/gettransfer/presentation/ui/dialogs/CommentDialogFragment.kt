@@ -53,6 +53,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
             val comment = etPopupComment.text.toString().trim()
             presenter.setComment(comment)
             setBottomSheetState( this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
+            hideKeyboard()
         }
     }
 
