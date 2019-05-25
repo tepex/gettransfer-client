@@ -76,7 +76,7 @@ class AccountManager : KoinComponent {
                 else -> null
             }
 
-    fun clearTempUser() {
+    private fun clearTempUser() {
         tempUser.profile.clear()
         tempUser.termsAccepted = false
     }
@@ -95,9 +95,9 @@ class AccountManager : KoinComponent {
         return sessionInteractor.logout()
     }
 
-    suspend fun putAccount(isTempAccount: Boolean = false): Result<Account> {
+    suspend fun putAccount(isTempAccount: Boolean = false, updateTempUser: Boolean): Result<Account> {
         val result = sessionInteractor.putAccount(if (isTempAccount) remoteAccount.copy(user = tempUser) else remoteAccount )
-        if (result.error == null) initTempUser(result.model.user)
+        if (result.error == null && updateTempUser) initTempUser(result.model.user)
         return result
     }
 }

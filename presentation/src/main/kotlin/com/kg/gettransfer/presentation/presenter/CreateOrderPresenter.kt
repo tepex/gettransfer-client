@@ -369,7 +369,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val result  = fetchResultOnly { transferInteractor.createTransfer(transferNew) }
 
             if(result.error == null) {
-                val logResult = fetchResultOnly { accountManager.putAccount(true) }
+                val logResult = fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
                 if(logResult.error == null) {
                     handleSuccess()
                     router.replaceScreen(Screens.Offers(result.model.id))
@@ -482,7 +482,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         dateDelegate.resetAfterOrder()
         childSeatsDelegate.clearSeats()
         orderInteractor.clearSelectedFields()
-        accountManager.clearTempUser()
     }
 
     fun onBackClick() = onBackCommandClick()

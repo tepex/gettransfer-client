@@ -72,14 +72,23 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             viewState.blockInterface(false)
         }
         getPaymentRequest()
+        enablePaymentBtn()
     }
 
     fun setEmail(email: String) {
         accountManager.tempProfile.email = email
+        enablePaymentBtn()
     }
 
     fun setPhone(phone: String) {
         accountManager.tempProfile.phone = phone
+        enablePaymentBtn()
+    }
+
+    fun enablePaymentBtn() {
+        with(accountManager.tempProfile) {
+            viewState.enablePayment(!email.isNullOrEmpty() && !phone.isNullOrEmpty())
+        }
     }
 
     private fun getPaymentRequest() {
@@ -170,7 +179,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun pushAccount() =
-            fetchResultOnly { accountManager.putAccount(true) }
+            fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
                     .run {
                         when {
                             error?.isAccountExistError() ?: false  -> onAccountExists()

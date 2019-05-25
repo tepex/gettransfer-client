@@ -85,12 +85,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         setContentView(R.layout.activity_payment_offer)
         initListeners()
         initToolbar()
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        enablePayment()
     }
 
     private fun initToolbar() {
@@ -117,7 +111,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     private fun initEmailTextChangeListeners() {
         et_auth_email.onTextChanged {
             presenter.setEmail(it.trim())
-            enablePayment()
         }
     }
 
@@ -128,7 +121,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
                 et_auth_phone.setSelection(1)
             }
             presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
-            enablePayment()
         }
         et_auth_phone.addTextChangedListener(PhoneNumberFormatter())
         et_auth_phone.setOnFocusChangeListener    { v, hasFocus ->
@@ -139,7 +131,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
                     if (phone.length == 1) {
                         et_auth_phone.text?.clear()
                         presenter.setPhone("")
-                        enablePayment()
                     }
                 }
             }
@@ -165,9 +156,8 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         }
     }
 
-    private fun enablePayment() {
-        btnGetPayment.isEnabled = !et_auth_email.text.isNullOrEmpty()
-                && !et_auth_phone.text.isNullOrEmpty()
+    override fun enablePayment(enable: Boolean) {
+        btnGetPayment.isEnabled = enable
     }
 
     private fun changePayment(view: View, payment: String) {
@@ -412,17 +402,9 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
                 initPhoneTextChangeListeners()
             }
         }
-        profile.email?.let {
-            et_auth_email.setText(it)
-            presenter.setEmail(it)
-        }
-        profile.phone?.let {
-            et_auth_phone.setText(it)
-            presenter.setPhone(it)
-        }
         email_phone_divider.isVisible = il_auth_email.isVisible && il_auth_phone.isVisible
         ll_auth_container.isVisible = il_auth_email.isVisible || il_auth_phone.isVisible
-        enablePayment()
+        presenter.enablePaymentBtn()
     }
 
     override fun showBadCredentialsInfo(field: Int) {

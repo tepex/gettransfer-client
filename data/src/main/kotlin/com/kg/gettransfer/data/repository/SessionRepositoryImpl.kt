@@ -132,7 +132,7 @@ class SessionRepositoryImpl(
         return Result(account, error)
     }
 
-    fun initTempUser(remoteUser: User) {
+    private fun initTempUser(remoteUser: User) {
         tempUser.profile.apply {
             fullName = remoteUser.profile.fullName
             email = remoteUser.profile.email

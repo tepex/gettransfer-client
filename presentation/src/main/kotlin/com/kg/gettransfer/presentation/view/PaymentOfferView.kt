@@ -33,6 +33,7 @@ interface PaymentOfferView : BaseView {
     fun redirectToLogin()
 
     fun showFieldError(@StringRes stringId: Int)
+    fun enablePayment(enable: Boolean)
 
     companion object {
         val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"
