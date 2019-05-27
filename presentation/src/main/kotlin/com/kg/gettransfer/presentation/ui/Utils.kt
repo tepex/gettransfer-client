@@ -50,27 +50,19 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
-import com.kg.gettransfer.domain.model.ReviewRate
-import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
-import com.yandex.metrica.impl.ob.it
-
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import kotlinx.android.synthetic.main.view_rate_field.*
 
 import java.text.SimpleDateFormat
 
 import java.util.Date
 import java.util.Locale
-import java.util.regex.Pattern
 
 import org.koin.standalone.inject
 import org.koin.standalone.KoinComponent
@@ -342,10 +334,27 @@ object Utils : KoinComponent {
     }
 
     fun getVehicleNameWithColor(context: Context, name: String, color: String): SpannableStringBuilder {
-        val drawableCompat = getVehicleColorFormRes(context, color)
-            .also { it.setBounds(4, 0, it.intrinsicWidth + 4, it.intrinsicHeight) }
-        return SpannableStringBuilder("$name ").apply {
-            setSpan(ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE), length - 1, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val drawable = getDrawableCarColor(context, color)
+        return getSpanCarColorAndName(name, drawable, false)
+    }
+
+    fun getCarNameWithColorNewLine(context: Context, name: String, color: String): SpannableStringBuilder {
+        val drawable = getDrawableCarColor(context, color)
+        return getSpanCarColorAndName(name, drawable, true)
+    }
+
+    private fun getDrawableCarColor(context: Context, color: String) =
+        getVehicleColorFormRes(context, color)
+                .also { it.setBounds(4, 0, it.intrinsicWidth + 4, it.intrinsicHeight) }
+    }
+
+    private fun getSpanCarColorAndName(name: String, drawableCompat: Drawable,
+                                       colorNewLine: Boolean): SpannableStringBuilder {
+
+        val colorPosition = if (colorNewLine) "/n" else " "
+        return SpannableStringBuilder("$name$colorPosition").apply {
+            setSpan(ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE), length - 1, length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
 
