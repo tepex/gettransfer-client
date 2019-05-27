@@ -129,7 +129,7 @@ object Screens {
             putExtra(AboutView.EXTRA_OPEN_MAIN, false)
         }
     }
-    
+
     open class Login(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
             putExtra(LoginView.EXTRA_NEXT_SCREEN, nextScreen)
@@ -161,17 +161,6 @@ object Screens {
         }
     }
 
-    data class ChangeMode(val mode: String) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = when (mode) {
-            CARRIER_MODE   -> Intent(context, CarrierTripsMainActivity()::class.java)
-            REG_CARRIER    -> Intent(context, WebPageActivity()::class.java).apply {
-                putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
-            }
-            PASSENGER_MODE -> Intent(context, MainActivity::class.java)
-            else           -> null
-        }
-    }
-
     data class FindAddress(val from: String,
                            val to: String,
                            val isClickTo: Boolean?,
@@ -189,7 +178,6 @@ object Screens {
 
     data class Offers(val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, OffersActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             putExtra(OffersView.EXTRA_TRANSFER_ID, transferId)
         }
     }

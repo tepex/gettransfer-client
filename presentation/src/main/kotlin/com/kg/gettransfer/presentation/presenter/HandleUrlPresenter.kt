@@ -13,13 +13,8 @@ import com.kg.gettransfer.presentation.view.Screens
 class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
 
     fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) {
-<<<<<<< HEAD
         if (!accountManager.isLoggedIn)
-            router.replaceScreen(Screens.LoginToPaymentOffer(transferId, offerId))
-=======
-        if (!isLoggedIn())
             router.newChainFromMain(Screens.LoginToPaymentOffer(transferId, offerId))
->>>>>>> todo navigation with login screen
         else {
             utils.launchSuspend {
 

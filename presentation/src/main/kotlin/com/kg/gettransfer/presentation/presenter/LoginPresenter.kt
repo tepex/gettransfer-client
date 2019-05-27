@@ -7,6 +7,7 @@ import com.kg.gettransfer.domain.model.Account.Companion.GROUP_CARRIER_DRIVER
 import com.kg.gettransfer.domain.model.Account.Companion.GROUP_MANAGER_VIEW_TRANSFERS
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.extensions.internationalExample
+import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.ui.LoginActivity
 import com.kg.gettransfer.presentation.ui.Utils
@@ -129,25 +130,29 @@ class LoginPresenter : BasePresenter<LoginView>() {
         when (nextScreen) {
             Screens.CLOSE_AFTER_LOGIN -> router.exit()
             Screens.CARRIER_MODE   -> {
-                router.navigateTo(Screens.ChangeMode(checkCarrierMode()))
+                router.backTo(Screens.Carrier(checkCarrierMode()))
             }
             Screens.PASSENGER_MODE -> {
-                router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
+                router.backTo(Screens.MainPassenger())
                 analytics.logProfile(Analytics.PASSENGER_TYPE)
             }
             Screens.OFFERS         -> {
-                router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-                router.navigateTo(Screens.Offers(transferId))
+                router.newChainFromMain(Screens.Offers(transferId))
             }
             Screens.PAYMENT_OFFER -> {
                 utils.launchSuspend {
                     fetchData (NO_CACHE_CHECK) { transferInteractor.getTransfer(transferId) }
                             ?.let { transfer ->
                                 val transferModel = transferMapper.toView(transfer)
-
-                                router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-                                router.navigateTo(Screens.PaymentOffer(transferId, offerId, transferModel.dateRefund,
-                                        transferModel.paymentPercentages!!, null))
+                                router.newChainFromMain(
+                                        Screens.PaymentOffer(
+                                                transferId,
+                                                offerId,
+                                                transferModel.dateRefund,
+                                                transferModel.paymentPercentages!!,
+                                                null
+                                        )
+                                )
                             }
                 }
             }
@@ -155,7 +160,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 router.newRootScreen(Screens.Splash(transferId, rate, true))
             }
         }
-        if(openSettingsScreen) { router.replaceScreen(Screens.Settings) }
+        if (openSettingsScreen) { router.replaceScreen(Screens.Settings) }
     }
 
     private fun checkInputData() =
