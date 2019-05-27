@@ -392,18 +392,15 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     override fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel) {
-        if (hasAccount) {
-            if (profile.email.isNullOrEmpty()) {
-                il_auth_email.isVisible = true
-                initEmailTextChangeListeners()
-            }
-            if (profile.phone.isNullOrEmpty()) {
-                il_auth_phone.isVisible = true
-                initPhoneTextChangeListeners()
-            }
+        if(hasAccount && (profile.email.isNullOrEmpty() || profile.phone.isNullOrEmpty())) {
+            ll_auth_container.isVisible = true
+            initEmailTextChangeListeners()
+            initPhoneTextChangeListeners()
+            profile.email?.let { et_auth_email.setText(it) }
+            profile.phone?.let { et_auth_phone.setText(it) }
+        } else {
+            ll_auth_container.isVisible = false
         }
-        email_phone_divider.isVisible = il_auth_email.isVisible && il_auth_phone.isVisible
-        ll_auth_container.isVisible = il_auth_email.isVisible || il_auth_phone.isVisible
         presenter.enablePaymentBtn()
     }
 
