@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
@@ -38,10 +36,10 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onResume() {
+        super.onResume()
         etPopupComment.requestFocus()
         showKeyboard()
-        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
@@ -54,7 +52,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         tvDone.setOnClickListener {
             val comment = etPopupComment.text.toString().trim()
             presenter.setComment(comment)
-            setBottomSheetState( this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
+            setBottomSheetState(this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
             hideKeyboard()
         }
     }

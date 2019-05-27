@@ -53,8 +53,7 @@ abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
 
 	protected open fun initUx(savedInstanceState: Bundle?) {}
 
-	protected fun setBottomSheetState(view: View,
-									  state: Int){
+	protected fun setBottomSheetState(view: View, state: Int){
 		val parent = view.parent
 		if(parent is ViewGroup) {
 			val params = parent.layoutParams

@@ -59,9 +59,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     private var errorFieldView: View? = null
 
     companion object {
-
-        const val KEYBOARD_WAIT_DELAY = 300L
-
         const val FIELD_START  = true
         const val FIELD_RETURN = false
 
@@ -105,13 +102,12 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         initBottomSheets()
     }
 
-    val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN && bsOrder.state == BottomSheetBehavior.STATE_HIDDEN)
                 _tintBackground.isVisible = false
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 presenter.updateChildSeatsInfo()
-            } else if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                 hideKeyboard()
             }
         }
@@ -450,6 +446,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         }
 
         View.OnClickListener {
+            hideKeyboard()
             replaceFragment(ChildSeatsFragment())
         }.let {
             children_seat_field.setOnClickListener(it)
@@ -491,6 +488,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         btnBack.setOnClickListener                          { presenter.onBackClick() }
 
         fl_currency.setOnClickListener {
+            hideKeyboard()
             replaceFragment(SelectCurrencyFragment(), null)
         }
     }
