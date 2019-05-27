@@ -346,14 +346,13 @@ object Utils : KoinComponent {
     private fun getDrawableCarColor(context: Context, color: String) =
         getVehicleColorFormRes(context, color)
                 .also { it.setBounds(4, 0, it.intrinsicWidth + 4, it.intrinsicHeight) }
-    }
 
     private fun getSpanCarColorAndName(name: String, drawableCompat: Drawable,
                                        colorNewLine: Boolean): SpannableStringBuilder {
 
-        val colorPosition = if (colorNewLine) "/n" else " "
+        val colorPosition = if (colorNewLine) "\n" else " "
         return SpannableStringBuilder("$name$colorPosition").apply {
-            setSpan(ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE), length - 1, length,
+            setSpan(ImageSpan(drawableCompat), length - 1, length,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
