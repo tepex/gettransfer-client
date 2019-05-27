@@ -350,9 +350,9 @@ object Utils : KoinComponent {
     private fun getSpanCarColorAndName(name: String, drawableCompat: Drawable,
                                        colorNewLine: Boolean): SpannableStringBuilder {
 
-        val colorPosition = if (colorNewLine) "\n" else " "
-        return SpannableStringBuilder("$name$colorPosition").apply {
-            setSpan(ImageSpan(drawableCompat), length - 1, length,
+        val space = if (colorNewLine) "" else " "
+        return SpannableStringBuilder("$name $space").apply {
+            setSpan(ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE), length - 1, length,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }

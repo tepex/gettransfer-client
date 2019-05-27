@@ -305,9 +305,9 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun setVehicleName(nameById: String? = null, vehicle: VehicleModel? = null) {
         if (nameById == null && vehicle == null) throw IllegalArgumentException()
-        tv_car_model_bs.text =
-            nameById ?: vehicle!!.color?.let {
-                Utils.getCarNameWithColorNewLine(this, vehicle.name, it) } ?: vehicle!!.name
+        tv_car_model_bs.text = vehicle?.name
+        tvCarColor.text = nameById ?: vehicle!!.color?.let {
+                Utils.getCarNameWithColorNewLine(this, "", it) }
     }
 
     private fun setRating(carrier: CarrierModel) {

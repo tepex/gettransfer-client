@@ -25,7 +25,7 @@
     <TextView
         android:id="@+id/tv_car_model_bs"
         style="@style/black_semiBold"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
@@ -33,6 +33,13 @@
         android:layout_marginEnd="@dimen/bottom_sheet_offer_details_margin_16dp"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_15sp"
         tools:text="Ma best Mercedes" />
+
+    <TextView
+        android:id="@+id/tvCarColor"
+        android:layout_width="@dimen/bottom_sheet_offer_details_car_color_width"
+        android:layout_height="@dimen/bottom_sheet_offer_details_car_color_height"
+        android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
+        android:layout_marginTop="@dimen/bottom_sheet_offer_details_car_color_margin_top"/>
 
     <LinearLayout
         android:id="@+id/offer_conditions_bs"
