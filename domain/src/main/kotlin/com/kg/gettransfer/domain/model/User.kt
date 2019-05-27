@@ -9,5 +9,5 @@ data class User(
         get() = (!profile.email.isNullOrEmpty() || !profile.phone.isNullOrEmpty()) && termsAccepted
 
     val hasAccount: Boolean //is temporary or authorized user
-        get() = loggedIn || (profile.email.isNullOrEmpty() && profile.email.isNullOrEmpty() && termsAccepted)
+        get() = loggedIn || (profile.email.isNullOrEmpty() && profile.phone.isNullOrEmpty() && termsAccepted)
 }
