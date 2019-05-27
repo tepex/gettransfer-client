@@ -514,6 +514,8 @@
     <string name="LNG_NEW_PASSWORD_FAIL">Password doesn\'t match confirmation</string>
     <string name="LNG_AUTHORIZED">Successful authorization</string>
     <string name="LNG_PASSWORD_CREATE_HINT">You can create a new password in the application settings</string>
+    <string name="LNG_ERROR_PHONE_NOTFOUND">Phone is not found</string>
+    <string name="LNG_ERROR_EMAIL_NOTFOUND">Email is not found</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
