@@ -92,6 +92,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
+            app:behavior_hideable="true"
+            app:behavior_skipCollapsed="true"
             app:layout_behavior="android.support.design.widget.BottomSheetBehavior" />
 
     </android.support.design.widget.CoordinatorLayout>
