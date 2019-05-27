@@ -12,10 +12,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.text.InputFilter
-import android.text.InputType
 import android.view.*
-import android.view.animation.AnimationUtils
-import android.view.inputmethod.EditorInfo
 import android.widget.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -42,8 +39,6 @@ import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
-import kotlinx.android.synthetic.main.layout_popup_comment.*
-import kotlinx.android.synthetic.main.layout_popup_comment.view.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
 import org.koin.android.ext.android.inject
@@ -477,7 +472,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             }
         }
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
-        comment_field.field_input.setOnClickListener        { replaceFragment(CommentDialogFragment())
+        comment_field.field_input.setOnClickListener        {
+            replaceFragment(CommentDialogFragment())
             presenter.logTransferSettingsEvent(COMMENT_INPUT)
         }
 

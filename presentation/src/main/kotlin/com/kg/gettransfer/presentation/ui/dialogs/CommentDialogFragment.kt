@@ -4,8 +4,9 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
+import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
+import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
@@ -13,11 +14,11 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.presentation.presenter.CommentPresenter
 import com.kg.gettransfer.presentation.view.CommentView
-import kotlinx.android.synthetic.main.layout_popup_comment.*
+import kotlinx.android.synthetic.main.layout_comment.*
 
 class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
-    override val layout: Int = R.layout.layout_popup_comment
+    override val layout: Int = R.layout.layout_comment
 
     private var onCommentLister: OnCommentListener? = null
 
@@ -37,9 +38,10 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        etPopupComment.requestFocus()
         showKeyboard()
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
