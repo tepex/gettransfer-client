@@ -189,7 +189,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                     }
 
     private fun onAccountExists() {
-        accountManager.clearRemoteUser()
         viewState.redirectToLogin()
     }
 
