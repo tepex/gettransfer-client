@@ -133,7 +133,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 router.backTo(Screens.Carrier(checkCarrierMode()))
             }
             Screens.PASSENGER_MODE -> {
-                router.backTo(Screens.MainPassenger())
+                router.newRootScreen(Screens.MainPassenger())
                 analytics.logProfile(Analytics.PASSENGER_TYPE)
             }
             Screens.OFFERS         -> {

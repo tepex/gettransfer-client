@@ -49,9 +49,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
     private var lastCurrentLocation: LatLng? = null
-    private var minDistance: Int = 30
 
-    private var available: Boolean = false
     private var currentLocation: String = ""
 
     private val MARKER_ELEVATION = 5f
@@ -220,8 +218,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation(lastAddressPoint))
-        //viewState.setAddressFrom(currentAddress.cityPoint.name!!)
-        setAddressInSelectedField(currentAddress.cityPoint.name!!)
+        setAddressInSelectedField(currentAddress.cityPoint.name)
 
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
     }
@@ -236,7 +233,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
             }
             this.lastPoint = lastPoint
             viewState.moveCenterMarker(lastPoint)
-            //viewState.blockInterface(true)
             viewState.blockSelectedField(true, systemInteractor.selectedField)
         }
     }
@@ -248,12 +244,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                 markerStateLifted = false
             }
             if (lastPoint == null) return
-            /* Не запрашивать адрес, если перемещение составило менее minDistance
-        val distance = FloatArray(2)
-        Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude,
-                                lastAddressPoint.latitude, lastAddressPoint.longitude, distance)
-        //if(distance.get(0) < minDistance) return
-        */
 
             lastAddressPoint = lastPoint!!
             val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
@@ -266,7 +256,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                             latLonPair)
                 }
                         ?.let {
-                            currentLocation = it.cityPoint.name!!
+                            currentLocation = it.cityPoint.name
                             setAddressInSelectedField(currentLocation)
                         }
                 viewState.blockInterface(false)
