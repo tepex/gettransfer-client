@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
