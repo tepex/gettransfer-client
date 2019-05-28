@@ -30,9 +30,6 @@
         android:hint="@string/LNG_COMMENT_PLACEHOLDER"
         android:imeOptions="actionDone"
         android:inputType="textMultiLine"
-        android:paddingStart="0dp"
-        android:paddingEnd="50dp"
-        android:gravity="center"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/create_transfer_additionals_top_text_size" />
 
