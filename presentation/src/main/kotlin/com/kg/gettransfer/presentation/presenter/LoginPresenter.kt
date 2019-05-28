@@ -218,4 +218,12 @@ class LoginPresenter : BasePresenter<LoginView>() {
         }
         router.replaceScreen(Screens.Carrier(Screens.REG_CARRIER))
     }
+
+    fun showNoAccountError(){
+        viewState.setError(false,
+                when(isPhone){
+                    true -> R.string.LNG_ERROR_PHONE_NOTFOUND
+                    false -> R.string.LNG_ERROR_EMAIL_NOTFOUND
+                })
+    }
 }

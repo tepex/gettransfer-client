@@ -114,20 +114,15 @@ class LoginActivity : BaseActivity(), LoginView {
 
     override fun showError(show: Boolean, error: ApiException) {
         if (show) {
-            val errText = when {
-                error.isNotFound() -> {
-                    when (presenter.isPhone) {
-                        true -> getString(R.string.LNG_ERROR_PHONE_NOTFOUND)
-                        false -> getString(R.string.LNG_ERROR_EMAIL_NOTFOUND)
-                    }
-                }
-                else -> error.details
-            }
-            smsCodeView?.let {
-                showErrorText(true, errText)
+            if (error.isNotFound()) {
+                presenter.showNoAccountError()
                 return
             }
-            Utils.showError(this, false, errText)
+            smsCodeView?.let {
+                showErrorText(true, error.details)
+                return
+            }
+            Utils.showError(this, false, error.details)
         }
     }
 
