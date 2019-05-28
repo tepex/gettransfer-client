@@ -54,7 +54,7 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                     ?.firstOrNull()
                     ?.let { offer ->
                         if (transfer.offersUpdatedAt != null) fetchDataOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
-                        if (offer.isRateAvailable()) {
+                        if (offer.isRateAvailable() && !offer.isOfferRatedByUser()) {
                             val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
                             reviewInteractor.offerIdForReview = offer.id
                             offerId = offer.id

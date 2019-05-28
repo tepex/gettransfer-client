@@ -108,8 +108,6 @@ data class Transfer(
         }
 
         fun List<Transfer>.filterRateable() =
-                filterCompleted() +
-                        filter { it.status == Status.PERFORMED ||
-                                it.status == Status.PENDING_CONFIRMATION }
+                filterCompleted() + filter { it.status == Status.PENDING_CONFIRMATION }
     }
 }
