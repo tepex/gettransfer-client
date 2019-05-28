@@ -9,7 +9,6 @@ import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
-import com.kg.gettransfer.presentation.mapper.DayOfWeekMapper
 import com.kg.gettransfer.presentation.mapper.EndpointMapper
 import com.kg.gettransfer.presentation.mapper.LocaleMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
@@ -35,12 +34,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var endpoints: List<EndpointModel>
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
-    private lateinit var daysOfWeek1: List<DayOfWeekModel1>
 
     private val localeMapper       = get<LocaleMapper>()
     private val currencyMapper     = get<CurrencyMapper>()
     //private val distanceUnitMapper = get<DistanceUnitMapper>()
-    private val dayOfWeekMapper    = get<DayOfWeekMapper>()
     private val endpointMapper     = get<EndpointMapper>()
     private val reviewInteractor   = get<ReviewInteractor>()
     private val profileMapper      = get<ProfileMapper>()
@@ -108,8 +105,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
         viewState.setCalendarMode(systemInteractor.lastCarrierTripsTypeView)
 
-        viewState.setDaysOfWeek(daysOfWeek1)
-        viewState.setFirstDayOfWeek(daysOfWeek1[systemInteractor.firstDayOfWeek - 1].name)
+        viewState.setDaysOfWeek(daysOfWeek)
+        viewState.setFirstDayOfWeek(daysOfWeek[systemInteractor.firstDayOfWeek - 1].name)
     }
 
     private fun initDebugSettings() {
@@ -155,7 +152,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun changeFirstDayOfWeek(selected: Int) {
-        with(daysOfWeek1[selected]) {
+        with(daysOfWeek[selected]) {
             systemInteractor.firstDayOfWeek = delegate.day
             viewState.setFirstDayOfWeek(name)
         }
@@ -261,7 +258,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         //distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
      //   daysOfWeek = GTDayOfWeek.values().toList().map { dayOfWeekMapper.toView(it) }
-        daysOfWeek1 = GTDayOfWeek.getWeekDays().map { DayOfWeekModel1(it) }
+        daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false
     }
 
