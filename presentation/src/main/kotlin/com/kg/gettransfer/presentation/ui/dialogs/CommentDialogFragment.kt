@@ -11,6 +11,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.presentation.presenter.CommentPresenter
+import com.kg.gettransfer.presentation.ui.afterTextChanged
 import com.kg.gettransfer.presentation.view.CommentView
 import kotlinx.android.synthetic.main.layout_comment.*
 
@@ -68,6 +69,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
             setBottomSheetState(this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
             hideKeyboard()
         }
+        etPopupComment.afterTextChanged { presenter.setComment(it.trim()) }
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
