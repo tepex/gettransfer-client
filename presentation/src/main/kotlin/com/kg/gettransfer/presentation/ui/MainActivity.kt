@@ -20,7 +20,6 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatDelegate
 
 import android.transition.Fade
-import android.util.Log
 
 import android.view.Gravity
 import android.view.View
@@ -67,8 +66,6 @@ import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_navigation.*
 import kotlinx.android.synthetic.main.view_switcher.*
-import org.jetbrains.anko.longToast
-import org.jetbrains.anko.toast
 import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber

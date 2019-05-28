@@ -30,11 +30,6 @@ class SplashPresenter: MvpPresenter<SplashView>(), KoinComponent {
     private val sessionInteractor: SessionInteractor by inject()
     private val router: Router by inject()
 
-    override fun attachView(view: SplashView?) {
-        super.attachView(view)
-
-    }
-
     fun onLaunchContinue() {
         viewState.initBuildConfigs(object :
                 LateAccessLogs { override fun getLog() = logsInteractor.onLogRequested() }
@@ -89,7 +84,6 @@ class SplashPresenter: MvpPresenter<SplashView>(), KoinComponent {
         else
             when (systemInteractor.lastMode) {
                 Screens.CARRIER_MODE   -> router.replaceScreen(Screens.Carrier(Screens.CARRIER_MODE))
-        //        Screens.PASSENGER_MODE -> router.replaceScreen(Screens.MainPassenger(rateBundle = createBundle(transferId, rate, showRate)))
                 else                   -> router.newRootScreen(Screens.MainPassenger(true))
             }
     }

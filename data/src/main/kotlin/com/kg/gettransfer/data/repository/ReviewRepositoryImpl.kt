@@ -14,6 +14,10 @@ import org.koin.standalone.get
 class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRepository, BaseRepository() {
     private val rateMapper = get<ReviewRateMapper>()
 
+
+    override var thanksComment: String = NO_COMMENT
+    override var currentOfferRateID: Long = DEFAULT_ID
+
     override suspend fun rateTrip(offerId: Long, list: List<ReviewRate>, comment: String): Result<Unit> {
         return try {
             list.forEach { rate ->
@@ -31,4 +35,27 @@ class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRe
         } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
     }
 
+    override suspend fun pushThanksComment(): Result<Unit> {
+        return try {
+            remote.sendFeedBackComment(currentOfferRateID, thanksComment)
+            Result(Unit)
+        } catch (e: RemoteException) {
+            Result(Unit, ExceptionMapper.map(e))
+        }
+        finally {
+            releaseData()
+        }
+    }
+
+    private fun releaseData() {
+        thanksComment = NO_COMMENT
+        currentOfferRateID = DEFAULT_ID
+    }
+
+
+
+    companion object {
+        const val DEFAULT_ID = 0L
+        const val NO_COMMENT = ""
+    }
 }

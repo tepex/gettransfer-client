@@ -11,6 +11,10 @@ class ReviewInteractor(private val repository: ReviewRepository) {
     var offerIdForReview = 0L
     var shouldAskRateInMarket = false
 
+    var thanksComment: String
+    get() = repository.thanksComment
+    set(value) { repository.thanksComment = value }
+
     fun rateCanceled() { isReviewSuggested = true }
 
     suspend fun sendRates(rateList: List<ReviewRate>, comment: String): Result<Unit> {
@@ -23,6 +27,8 @@ class ReviewInteractor(private val repository: ReviewRepository) {
     suspend fun sendComment(offerId: Long, comment: String): Result<Unit> {
         return repository.sendComment(offerId, comment)
     }
+
+    suspend fun pushComment() = repository.pushThanksComment()
 
     suspend fun sendTopRate() =
         sendRates(
