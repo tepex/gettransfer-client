@@ -90,7 +90,7 @@ class SplashPresenter: MvpPresenter<SplashView>(), KoinComponent {
             when (systemInteractor.lastMode) {
                 Screens.CARRIER_MODE   -> router.replaceScreen(Screens.Carrier(Screens.CARRIER_MODE))
         //        Screens.PASSENGER_MODE -> router.replaceScreen(Screens.MainPassenger(rateBundle = createBundle(transferId, rate, showRate)))
-                else                   -> router.newRootScreen(Screens.MainPassenger())
+                else                   -> router.newRootScreen(Screens.MainPassenger(true))
             }
     }
 

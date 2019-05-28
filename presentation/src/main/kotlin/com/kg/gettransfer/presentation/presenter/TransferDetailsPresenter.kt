@@ -24,6 +24,7 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.PUNCTUALITY
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
+import com.kg.gettransfer.extensions.finishChainAndBackTo
 import com.kg.gettransfer.extensions.isValid
 
 
@@ -203,7 +204,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     private fun showMainActivity() {
         viewState.showCancelRequestToast()
-        router.backTo(Screens.MainPassenger())
+        router.finishChainAndBackTo()
     }
 
     fun makeFieldOperation(field: String, operation: String, text: String) {

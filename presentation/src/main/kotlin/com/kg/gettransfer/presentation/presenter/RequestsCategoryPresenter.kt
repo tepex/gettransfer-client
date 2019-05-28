@@ -4,6 +4,7 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.extensions.finishChainAndBackTo
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
@@ -100,6 +101,6 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     }
 
     fun onGetBookClicked() {
-        router.backTo(Screens.MainPassenger(true))
+        router.finishChainAndBackTo()
     }
 }
