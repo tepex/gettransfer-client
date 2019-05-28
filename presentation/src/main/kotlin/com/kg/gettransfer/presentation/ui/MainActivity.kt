@@ -130,7 +130,6 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        longToast("MAIN SCREEN CREATED")
         setContentView(R.layout.activity_main)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
