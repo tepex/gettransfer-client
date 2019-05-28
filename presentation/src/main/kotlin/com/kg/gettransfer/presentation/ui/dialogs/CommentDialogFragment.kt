@@ -26,6 +26,14 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
     @ProvidePresenter
     fun providePresenter() = CommentPresenter()
 
+    companion object {
+        private const val EXTRA_COMMENT = "comment"
+
+        fun newInstance(comment: String) = CommentDialogFragment().apply {
+            arguments = Bundle().apply { putString(EXTRA_COMMENT, comment) }
+        }
+    }
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         onCommentLister = activity as OnCommentListener
@@ -47,6 +55,11 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         hideKeyboard()
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        onCommentLister = null
+    }
+
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
         tvDone.setOnClickListener {
@@ -55,6 +68,11 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
             setBottomSheetState(this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
             hideKeyboard()
         }
+    }
+
+    override fun initUi(savedInstanceState: Bundle?) {
+        super.initUi(savedInstanceState)
+        etPopupComment.setText(arguments?.getString(EXTRA_COMMENT).toString())
     }
 
     override fun setComment(comment: String) {
