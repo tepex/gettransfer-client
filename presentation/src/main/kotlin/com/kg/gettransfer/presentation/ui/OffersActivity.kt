@@ -317,9 +317,9 @@ class OffersActivity : BaseActivity(), OffersView {
         if (!hasRating) return
 
         carrier.ratings.let { ratings ->
-            ratings.driver?.let { if (it != NO_RATE) setRating(it, ratingDriver) }
-            ratings.fair?.let { if (it != NO_RATE) setRating(it, ratingPunctuality) }
-            ratings.vehicle?.let { if (it != NO_RATE) setRating(it, ratingVehicle) }
+            ratings.driver?.let { setRating(it, ratingDriver) }
+            ratings.fair?.let { setRating(it, ratingPunctuality) }
+            ratings.vehicle?.let { setRating(it, ratingVehicle) }
         }
         layoutTopSelection.isVisible = carrier.approved
     }
@@ -363,6 +363,5 @@ class OffersActivity : BaseActivity(), OffersView {
 
     companion object {
         const val PHOTO_CORNER = 7F
-        const val NO_RATE = 0f
     }
 }
