@@ -7,6 +7,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 
 import android.os.Build
 
@@ -358,13 +359,23 @@ object Utils : KoinComponent {
     }
 
     fun getVehicleColorFormRes(context: Context, color: String): Drawable {
-        val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
+        val colorRes = R.color::class.members.find({ it.name == "color_vehicle_$color" })
         val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
 
-        return ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!
-            .constantState!!.newDrawable().mutate().apply {
+        return when (color) {
+            "white" -> getGradientDrawable(context, colorId)
+            else -> ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!
+                    .constantState!!.newDrawable().mutate().apply {
                 setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
             }
+        }
+    }
+
+    private fun getGradientDrawable(context: Context, colorId: Int): Drawable {
+        return GradientDrawable().apply {
+            setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
+            setStroke(1, ContextCompat.getColor(context, R.color.color_gtr_light_grey))
+        }
     }
 
     fun getPhoneCodeByCountryIso(context: Context): Int {
