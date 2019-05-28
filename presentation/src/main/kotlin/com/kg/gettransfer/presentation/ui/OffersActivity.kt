@@ -311,11 +311,6 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun setRating(carrier: CarrierModel) {
-        val hasRating = presenter.hasAnyRate(carrier)
-        offer_ratingDivider_bs.isVisible = hasRating
-        view_offer_rating_bs.isVisible = hasRating
-        if (!hasRating) return
-
         carrier.ratings.let { ratings ->
             ratings.driver?.let { setRating(it, ratingDriver) }
             ratings.fair?.let { setRating(it, ratingPunctuality) }

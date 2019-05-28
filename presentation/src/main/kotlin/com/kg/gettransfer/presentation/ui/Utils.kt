@@ -375,6 +375,7 @@ object Utils : KoinComponent {
         return GradientDrawable().apply {
             setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
             setStroke(1, ContextCompat.getColor(context, R.color.color_gtr_light_grey))
+            shape = GradientDrawable.OVAL
         }
     }
 
