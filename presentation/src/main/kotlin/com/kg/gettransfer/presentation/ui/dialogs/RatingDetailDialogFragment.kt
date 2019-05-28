@@ -92,7 +92,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	override fun initUx(savedInstanceState: Bundle?) {
 		super.initUx(savedInstanceState)
 		btnSend.setOnClickListener {
-			presenter.onClickSend(createListOfDetailedRates(), tvComment.text.toString(), commonRate.rating)
+			presenter.onClickSend(createListOfDetailedRates(), tvComment.text.toString())
 		}
 		ivClose.setOnClickListener { dismiss() }
 		tvComment.setOnClickListener { presenter.onClickComment(tvComment.text.toString()) }
@@ -182,11 +182,14 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		dismiss()
 	}
 
-	private fun createListOfDetailedRates() = listOf(
-		ReviewRateModel(ReviewRate.RateType.DRIVER, driverRate.rate_bar.rating.toInt()),
-		ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, punctualityRate.rate_bar.rating.toInt()),
-		ReviewRateModel(ReviewRate.RateType.VEHICLE, vehicleRate.rate_bar.rating.toInt())
-	)
+	private fun createListOfDetailedRates() =
+			listOf(
+					ReviewRateModel(ReviewRate.RateType.DRIVER, driverRate.rate_bar.rating.toInt()),
+					ReviewRateModel(ReviewRate.RateType.PUNCTUALITY, punctualityRate.rate_bar.rating.toInt()),
+					ReviewRateModel(ReviewRate.RateType.VEHICLE, vehicleRate.rate_bar.rating.toInt())
+			)
+
+
 
 	override fun onDismiss(dialog: DialogInterface?) {
 		super.onDismiss(dialog)

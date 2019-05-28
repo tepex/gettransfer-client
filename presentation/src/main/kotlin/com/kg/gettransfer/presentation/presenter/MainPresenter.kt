@@ -437,7 +437,9 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                 val err = transferResult.error!!
                 if (err.isNotFound()) {
                     viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
-                } else viewState.setError(err)
+                } else {
+                    viewState.setError(err)
+                }
             } else {
                 val transfer = transferResult.model
                 val transferModel = transferMapper.toView(transfer)

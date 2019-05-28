@@ -32,7 +32,7 @@ class ThanksForRateFragment: BaseBottomSheetDialogFragment(), ThanksForRateView 
         super.onViewCreated(view, savedInstanceState)
         et_thanks_comment.setUneditable()
         et_thanks_comment.setOnClickListener {
-
+            
         }
     }
 

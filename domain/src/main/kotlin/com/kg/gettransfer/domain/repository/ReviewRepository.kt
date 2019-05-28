@@ -5,8 +5,11 @@ import com.kg.gettransfer.domain.model.ReviewRate
 
 interface ReviewRepository {
     var currentOfferRateID: Long
-    var thanksComment: String
-    suspend fun rateTrip(offerId: Long, list: List<ReviewRate>, comment: String): Result<Unit>
+    var currentComment: String
+    var rates: MutableSet<ReviewRate>
+    suspend fun rateTrip(): Result<Unit>
     suspend fun sendComment(offerId: Long, comment: String): Result<Unit>
-    suspend fun pushThanksComment(): Result<Unit>
+    suspend fun pushComment(): Result<Unit>
+    suspend fun pushTopRates(): Result<Unit>
+    fun releaseUserData()
 }

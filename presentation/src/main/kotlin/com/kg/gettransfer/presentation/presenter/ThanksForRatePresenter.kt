@@ -19,12 +19,17 @@ class ThanksForRatePresenter: MvpPresenter<ThanksForRateView>(), KoinComponent {
 
     override fun attachView(view: ThanksForRateView?) {
         super.attachView(view)
-        viewState.setComment(reviewInteractor.thanksComment)
+        viewState.setComment(reviewInteractor.comment)
     }
 
     fun sendThanks() {
         utils.launchSuspend {
-            utils.asyncAwait { reviewInteractor.pushComment() }
+            with(reviewInteractor) {
+                if (comment.isNotEmpty()) {
+                    utils.asyncAwait { pushComment() }
+                }
+                releaseRepo()
+            }
             compositeDisposable.cancel()
         }
     }

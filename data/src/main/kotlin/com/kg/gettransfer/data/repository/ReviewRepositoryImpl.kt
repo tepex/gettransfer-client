@@ -15,17 +15,19 @@ class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRe
     private val rateMapper = get<ReviewRateMapper>()
 
 
-    override var thanksComment: String = NO_COMMENT
+    override var currentComment: String = NO_COMMENT
     override var currentOfferRateID: Long = DEFAULT_ID
+    override var rates: MutableSet<ReviewRate> = mutableSetOf()
 
-    override suspend fun rateTrip(offerId: Long, list: List<ReviewRate>, comment: String): Result<Unit> {
+    override suspend fun rateTrip(): Result<Unit> {
         return try {
-            list.forEach { rate ->
-                retrieveRemoteEntity { remote.sendReview(offerId, rateMapper.toEntity(rate)) }
+            rates.forEach { rateItem ->
+                retrieveRemoteEntity { remote.sendReview(currentOfferRateID, rateMapper.toEntity(rateItem)) }
             }
-            remote.sendFeedBackComment(offerId, comment)
             Result(Unit)
-        } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
+        } catch (e: RemoteException) {
+            Result(Unit, ExceptionMapper.map(e))
+        }
     }
 
     override suspend fun sendComment(offerId: Long, comment: String): Result<Unit> {
@@ -35,27 +37,32 @@ class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRe
         } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
     }
 
-    override suspend fun pushThanksComment(): Result<Unit> {
+    override suspend fun pushComment(): Result<Unit> {
         return try {
-            remote.sendFeedBackComment(currentOfferRateID, thanksComment)
+            remote.sendFeedBackComment(currentOfferRateID, currentComment)
             Result(Unit)
         } catch (e: RemoteException) {
             Result(Unit, ExceptionMapper.map(e))
         }
-        finally {
-            releaseData()
-        }
     }
 
-    private fun releaseData() {
-        thanksComment = NO_COMMENT
+    override suspend fun pushTopRates(): Result<Unit> {
+        rates.add(ReviewRate(ReviewRate.RateType.VEHICLE,     MAX_RATE))
+        rates.add(ReviewRate(ReviewRate.RateType.DRIVER,     MAX_RATE))
+        rates.add(ReviewRate(ReviewRate.RateType.PUNCTUALITY,     MAX_RATE))
+        return rateTrip()
+    }
+
+    //call this when leave root screen (not dialogs!) with possible review working
+    override fun releaseUserData() {
+        rates.clear()
+        currentComment = NO_COMMENT
         currentOfferRateID = DEFAULT_ID
     }
-
-
 
     companion object {
         const val DEFAULT_ID = 0L
         const val NO_COMMENT = ""
+        const val MAX_RATE = 5
     }
 }

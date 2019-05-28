@@ -54,7 +54,8 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                     ?.firstOrNull()
                     ?.let { offer ->
                         if (transfer.offersUpdatedAt != null) fetchDataOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
-                        if (offer.isRateAvailable() && !offer.isOfferRatedByUser()) {
+  //                      if (offer.isRateAvailable() && !offer.isOfferRatedByUser()) {
+                        if (true) {
                             val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
                             reviewInteractor.offerIdForReview = offer.id
                             offerId = offer.id
@@ -111,7 +112,7 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
         if (rate.toInt() == ReviewInteractor.MAX_RATE) {
             logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
             reviewInteractor.apply {
-                utils.launchSuspend { sendTopRate() }
+                utils.launchSuspend { fetchDataOnly { sendTopRate() } }
                 if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
                     viewState.askRateInPlayMarket()
                     logAppReviewRequest()

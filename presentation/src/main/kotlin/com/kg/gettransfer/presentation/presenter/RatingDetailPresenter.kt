@@ -16,10 +16,10 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	private val reviewInteractor: ReviewInteractor by inject()
 	private val reviewRateMapper: ReviewRateMapper by inject()
 
-	internal var offerId = 0L
+	internal var offerId
+		get() = reviewInteractor.offerIdForReview
 		set(value) {
 			reviewInteractor.offerIdForReview = value
-			field = value
 		}
 
 	internal var vehicleRating = 0F
@@ -41,32 +41,41 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		viewState.showComment(if (currentComment.isNotEmpty()) currentComment else hintComment)
 	}
 
-	fun onClickSend(list: List<ReviewRateModel>, comment: String, commonRating: Float) = utils.launchSuspend {
+	fun onClickSend(list: List<ReviewRateModel>, comment: String) = utils.launchSuspend {
 		viewState.showProgress(true)
 		viewState.blockInterface(true)
-		fetchResult {
-			reviewInteractor.sendRates(
-				list.map { reviewRateMapper.fromView(it) }, getFeedBackText(comment))
-		}.also { result ->
-			logAverageRate(list.map { it.rateValue }.average())
-			logDetailRate(list, comment)
-			viewState.blockInterface(false)
-			viewState.showProgress(false)
-			result.isSuccess()
-					?.let {
-						viewState.exitAndReportSuccess(
-								list,
-								getFeedBackText(comment)
-						)
-					}
+		fillRates(list)
+		writeComment(comment)
+		val rateResult = fetchResult { reviewInteractor.sendRates() }
+		val commentResult = fetchResult { reviewInteractor.pushComment() }
+		if (!rateResult.isError() && !commentResult.isError()) {
+			viewState.exitAndReportSuccess(
+					list,
+					getFeedBackText(comment)
+			)
 		}
+		logAverageRate(list.map { it.rateValue }.average())
+		logDetailRate(list, comment)
+		viewState.blockInterface(false)
+		viewState.showProgress(false)
 	}
 
 	fun onClickComment(currentComment: String) {
 		viewState.showCommentEditor(getFeedBackText(currentComment))
 	}
 
+	private fun fillRates(list: List<ReviewRateModel>) {
+		list.forEach {
+			reviewInteractor.rates.add(reviewRateMapper.fromView(it))
+		}
+	}
+
+	private fun writeComment(text: String) {
+		reviewInteractor.comment = text
+	}
+
 	fun commentChanged(newComment: String) {
+		reviewInteractor.comment = newComment
 		viewState.showComment(
 			if (newComment.isEmpty())
 				hintComment
@@ -113,4 +122,9 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	private fun getFeedBackText(text: String) =
 			if (text == hintComment) ""
 			else text
+
+//	override fun detachView(view: RatingDetailView?) {
+//		super.detachView(view)
+//		reviewInteractor.releaseRepo()
+//	}
 }

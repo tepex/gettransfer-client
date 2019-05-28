@@ -5,44 +5,39 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.ReviewRate
 
 class ReviewInteractor(private val repository: ReviewRepository) {
+
     var isReviewSuggested = false
         private set
 
-    var offerIdForReview = 0L
     var shouldAskRateInMarket = false
 
-    var thanksComment: String
-    get() = repository.thanksComment
-    set(value) { repository.thanksComment = value }
+    var offerIdForReview
+        get() = repository.currentOfferRateID
+        set(value) { repository.currentOfferRateID = value }
+
+    var comment: String
+        get() = repository.currentComment
+        set(value) { repository.currentComment = value }
+
+    val rates: MutableSet<ReviewRate>
+        get() = repository.rates
 
     fun rateCanceled() { isReviewSuggested = true }
 
-    suspend fun sendRates(rateList: List<ReviewRate>, comment: String): Result<Unit> {
+
+    suspend fun sendRates(): Result<Unit> {
         isReviewSuggested = true
-        val response = repository.rateTrip(offerIdForReview, rateList, comment)
-        offerIdForReview = 0
-        return response
+        return repository.rateTrip()
     }
 
-    suspend fun sendComment(offerId: Long, comment: String): Result<Unit> {
-        return repository.sendComment(offerId, comment)
-    }
+    suspend fun pushComment() = repository.pushComment()
 
-    suspend fun pushComment() = repository.pushThanksComment()
+    suspend fun sendTopRate() = repository.pushTopRates()
 
-    suspend fun sendTopRate() =
-        sendRates(
-            arrayListOf(
-                ReviewRate(ReviewRate.RateType.VEHICLE,     MAX_RATE),
-                ReviewRate(ReviewRate.RateType.DRIVER,      MAX_RATE),
-                ReviewRate(ReviewRate.RateType.PUNCTUALITY, MAX_RATE)
-            ),
-            EMPTY_COMMENT)
+    fun releaseRepo() = repository.releaseUserData()
 
     companion object {
         const val MAX_RATE = 5
         const val APP_RATED_IN_MARKET = -1
-
-        const val EMPTY_COMMENT = ""
     }
 }

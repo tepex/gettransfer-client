@@ -144,6 +144,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
         isCameraUpdatedForCoordinates = false
         socketInteractor.removeSocketListener(this)
+        reviewInteractor.releaseRepo()
     }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
@@ -331,7 +332,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         offer?.let {
             viewState.showYourDataProgress(true)
 			utils.launchSuspend {
-				fetchResult { reviewInteractor.sendComment(it.id, comment) }
+				fetchResult { reviewInteractor.pushComment() }
 					.also {
                         if (it.error == null) {
                             offer = offer?.copy(passengerFeedback = comment)
@@ -345,7 +346,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     private fun updateRatingState() {
         val available = offer?.isRateAvailable() ?: false
-        val isRated   = offer?.isOfferRatedByUser() ?: false && offer?.ratings?.averageRating.isValid()
+        val isRated   = offer?.isOfferRatedByUser() ?: false
+        if (available && !isRated) reviewInteractor.offerIdForReview = offer?.id ?: 0
         viewState.showCommonRating(available && !isRated)
         viewState.showYourRateMark(isRated, offer?.ratings?.averageRating ?: 0f)
         viewState.showYourComment(isRated, offer?.passengerFeedback.orEmpty())
