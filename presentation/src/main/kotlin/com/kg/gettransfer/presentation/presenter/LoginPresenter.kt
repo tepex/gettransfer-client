@@ -130,7 +130,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
         when (nextScreen) {
             Screens.CLOSE_AFTER_LOGIN -> router.exit()
             Screens.CARRIER_MODE   -> {
-                router.backTo(Screens.Carrier(checkCarrierMode()))
+                checkCarrierMode()
             }
             Screens.PASSENGER_MODE -> {
                 router.newRootScreen(Screens.MainPassenger())
@@ -209,12 +209,13 @@ class LoginPresenter : BasePresenter<LoginView>() {
 
     fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
 
-    private fun checkCarrierMode(): String {
+    private fun checkCarrierMode()  {
         if (accountManager.remoteAccount.isDriver) {
             if (accountManager.remoteAccount.isManager) analytics.logProfile(Analytics.CARRIER_TYPE)
             else analytics.logProfile(Analytics.DRIVER_TYPE)
-            return Screens.CARRIER_MODE
+            router.newRootScreen(Screens.Carrier(Screens.CARRIER_MODE))
+            return
         }
-        return Screens.REG_CARRIER
+        router.replaceScreen(Screens.Carrier(Screens.REG_CARRIER))
     }
 }
