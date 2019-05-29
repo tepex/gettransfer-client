@@ -14,7 +14,6 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
@@ -57,6 +56,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private var paymentId = 0L
     internal var selectedPayment = PaymentRequestModel.PLATRON
 
+    private var loginScreenIsShowed = false
+
     private lateinit var paymentRequest: PaymentRequestModel
 
     @CallSuper
@@ -73,6 +74,11 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
         getPaymentRequest()
         enablePaymentBtn()
+
+        if (loginScreenIsShowed) {
+            loginScreenIsShowed = false
+            if (accountManager.remoteProfile.hasData()) getPayment()
+        }
     }
 
     fun setEmail(email: String) {
@@ -165,7 +171,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     fun onPaymentClicked() {
         if (accountManager.remoteProfile.hasData())
             getPayment()
-         else
+        else
             putAccount()
     }
 
@@ -189,7 +195,18 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                     }
 
     private fun onAccountExists() {
-        viewState.redirectToLogin()
+        loginScreenIsShowed = true
+        redirectToLogin()
+    }
+
+    private fun redirectToLogin() {
+        with(accountManager) {
+            router.navigateTo(Screens.Login(Screens.CLOSE_AFTER_LOGIN, when{
+                remoteProfile.phone.isNullOrEmpty() -> tempProfile.phone
+                remoteProfile.email.isNullOrEmpty() -> tempProfile.email
+                else -> tempProfile.phone
+            }))
+        }
     }
 
     private fun isValid(input: String, isPhone: Boolean) =
@@ -263,10 +280,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 params.bookNowTransportId,
                 selectedPayment)
         )
-    }
-
-    fun redirectToLogin(phone: String) {
-        router.navigateTo(Screens.Login(Screens.CLOSE_AFTER_LOGIN, phone))
     }
 
     private fun logEventBeginCheckout() {

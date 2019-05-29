@@ -30,11 +30,17 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.extensions.getString
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.presentation.model.LocaleModel
+import com.kg.gettransfer.presentation.model.BookNowOfferModel
+import com.kg.gettransfer.presentation.model.RatingsModel
+import com.kg.gettransfer.presentation.model.OfferItem
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -411,10 +417,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
             else             -> R.string.LNG_BAD_CREDENTIALS_ERROR
         }
         Utils.showError(this, false, getString(errStringRes))
-    }
-
-    override fun redirectToLogin() {
-        presenter.redirectToLogin(et_auth_email.getString())
     }
 
     override fun setError(e: ApiException) {

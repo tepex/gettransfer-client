@@ -30,7 +30,6 @@ interface PaymentOfferView : BaseView {
 
     fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel)
     fun showBadCredentialsInfo(field: Int)
-    fun redirectToLogin()
 
     fun showFieldError(@StringRes stringId: Int)
     fun enablePayment(enable: Boolean)
