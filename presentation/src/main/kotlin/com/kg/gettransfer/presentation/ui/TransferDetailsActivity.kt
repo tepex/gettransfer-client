@@ -313,17 +313,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     private fun setBookNow(transfer: TransferModel){
         tv_bookNow_info.isVisible = transfer.isBookNow()
         if (layoutAboutDriver.isShown) tv_bookNow_info.isVisible = false
-        layoutAboutTransport.isVisible = true
-        layoutAboutTransport.apply {
-            car_model_field.isVisible = false
-            carPhoto.isVisible = false
-            view_conveniences.apply {
-                conveniences_field.field_title.text = transfer.bookNow?.let { transportType ->
-                    TransportTypeMapper.getNameById(transportType) }?.let { getString(it) }
-                imgFreeWiFi.isVisible = true
-                imgFreeWater.isVisible = true
-            }
-        }
     }
 
     private fun initAboutRequestView(transfer: TransferModel) {
