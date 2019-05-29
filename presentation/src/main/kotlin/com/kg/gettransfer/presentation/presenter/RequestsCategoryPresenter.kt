@@ -49,7 +49,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
                 TRANSFER_ACTIVE  ->  fetchData { transferInteractor.getTransfersActive() }
                 TRANSFER_ARCHIVE ->  fetchData { transferInteractor.getTransfersArchive() }
                 else             ->  throw IllegalArgumentException("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
-            }
+            }?.sortedByDescending { it.dateToLocal }
             prepareDataAsync()
             viewState.blockInterface(false)
         }
