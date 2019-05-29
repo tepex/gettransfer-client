@@ -39,7 +39,9 @@
         android:layout_width="@dimen/bottom_sheet_offer_details_car_color_width"
         android:layout_height="@dimen/bottom_sheet_offer_details_car_color_height"
         android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
-        android:layout_marginTop="@dimen/bottom_sheet_offer_details_car_color_margin_top"/>
+        android:layout_marginTop="@dimen/bottom_sheet_offer_details_car_color_margin_top"
+        app:srcCompat="@drawable/ic_circle_car_color_indicator"
+        android:background="@drawable/border_car_color_indicator"/>
 
     <LinearLayout
         android:id="@+id/offer_conditions_bs"
