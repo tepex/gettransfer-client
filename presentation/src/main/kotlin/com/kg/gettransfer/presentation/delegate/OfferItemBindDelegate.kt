@@ -32,9 +32,8 @@ object OfferItemBindDelegate {
 
     private fun bindOfferModel(offer: OfferModel, view: View) =
         with(view) {
-            tv_car_model.text =
-                    if (offer.vehicle.color != null) Utils.getVehicleNameWithColor(context, offer.vehicle.name, offer.vehicle.color)
-                    else offer.vehicle.name
+            tv_car_model.text = offer.vehicle.name
+            ivCarColor.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(view.context, it) })
             tv_car_class.text = offer.vehicle.transportType.nameId?.let { context.getString(it) } ?: ""
             bindCapacity(offer_conditions.view_capacity, offer.vehicle.transportType)
             bindConveniences(offer_conditions.vehicle_conveniences, offer)
@@ -80,9 +79,8 @@ object OfferItemBindDelegate {
 
     private fun bindOfferModelTiny(view: View, offer: OfferModel) {
         with(view) {
-            tv_car_model_tiny.text =
-                    if (offer.vehicle.color != null) Utils.getVehicleNameWithColor(view.context, offer.vehicle.name, offer.vehicle.color)
-                    else offer.vehicle.name
+            tv_car_model_tiny.text = offer.vehicle.name
+            ivCarColorTiny.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(view.context, it) })
             tv_car_class_tiny.text = offer.vehicle.transportType.nameId?.let { context.getString(it) ?: "" }
             offer.vehicle.photos.firstOrNull()
                     .also {

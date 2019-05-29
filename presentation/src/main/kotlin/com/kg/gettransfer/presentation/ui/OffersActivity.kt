@@ -23,7 +23,6 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.strikeText
-import com.kg.gettransfer.extensions.visibleRating
 import com.kg.gettransfer.presentation.adapter.OffersAdapter
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 import com.kg.gettransfer.presentation.model.*
@@ -304,8 +303,7 @@ class OffersActivity : BaseActivity(), OffersView {
     private fun setVehicleName(nameById: String? = null, vehicle: VehicleModel? = null) {
         if (nameById == null && vehicle == null) throw IllegalArgumentException()
         tv_car_model_bs.text = vehicle?.name
-        ivCarColor.setImageDrawable(vehicle?.color?.let { Utils.getVehicleColorFormRes(this, it) }
-        )
+        ivCarColor.setImageDrawable(vehicle?.color?.let { Utils.getCarColorFormRes(this, it) })
     }
 
     private fun setRating(carrier: CarrierModel) {
@@ -319,7 +317,6 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun setRating(rate: Float, ratingLayout: RatingFieldView) {
         with(ratingLayout) {
-            ratingBar.visibleRating = rate
             ratingNumber.text = rate.toString().replace(".", ",")
             isVisible = true
         }

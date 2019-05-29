@@ -240,10 +240,8 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     private fun showCarInfoOffer(offer: OfferModel) {
-        tvModel.text =
-                if (offer.vehicle.color != null)
-                    Utils.getVehicleNameWithColor(this, offer.vehicle.name, offer.vehicle.color)
-                else offer.vehicle.name
+        tvModel.text = offer.vehicle.name
+        ivCarColor.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(this, it) })
         offer.vehicle.photos.firstOrNull()
                 .also {
                     Utils.bindMainOfferPhoto(

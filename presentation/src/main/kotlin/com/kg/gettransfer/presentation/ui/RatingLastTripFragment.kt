@@ -83,7 +83,7 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
         tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
         tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
         tv_vehicle_model_rate.text = vehicle
-        context?.let { carColor_rate.setImageDrawable(Utils.getVehicleColorFormRes(it, color)) }
+        context?.let { carColor_rate.setImageDrawable(Utils.getCarColorFormRes(it, color)) }
         drawMapForReview(routeModel, transfer.from, startPoint)
     }
 

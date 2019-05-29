@@ -37,7 +37,6 @@ import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -444,7 +443,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
                 offerModel.vehicle.color?.let{
                     carColor.isVisible = true
-                    carColor.setImageDrawable(Utils.getVehicleColorFormRes(this@TransferDetailsActivity, it))
+                    carColor.setImageDrawable(Utils.getCarColorFormRes(this@TransferDetailsActivity, it))
                 }
             }
         }

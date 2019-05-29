@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 
 import android.graphics.Bitmap
-import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 
@@ -21,10 +20,8 @@ import android.telephony.TelephonyManager
 
 import android.text.Html
 import android.text.Editable
-import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
-import android.text.style.ImageSpan
 
 import android.util.DisplayMetrics
 import android.util.Patterns
@@ -334,47 +331,17 @@ object Utils : KoinComponent {
         return (imageRes?.call() as Int?) ?: R.drawable.ic_language_unknown
     }
 
-    fun getVehicleNameWithColor(context: Context, name: String, color: String): SpannableStringBuilder {
-        val drawable = getDrawableCarColor(context, color)
-        return getSpanCarColorAndName(name, drawable, false)
-    }
-
-    fun getCarNameWithColorNewLine(context: Context, name: String, color: String): SpannableStringBuilder {
-        val drawable = getDrawableCarColor(context, color)
-        return getSpanCarColorAndName(name, drawable, true)
-    }
-
-    private fun getDrawableCarColor(context: Context, color: String) =
-        getVehicleColorFormRes(context, color)
-                .also { it.setBounds(4, 0, it.intrinsicWidth + 4, it.intrinsicHeight) }
-
-    private fun getSpanCarColorAndName(name: String, drawableCompat: Drawable,
-                                       colorNewLine: Boolean): SpannableStringBuilder {
-
-        val space = if (colorNewLine) "" else " "
-        return SpannableStringBuilder("$name $space").apply {
-            setSpan(ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE), length - 1, length,
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-    }
-
-    fun getVehicleColorFormRes(context: Context, color: String): Drawable {
+    fun getCarColorFormRes(context: Context, color: String): Drawable {
         val colorRes = R.color::class.members.find({ it.name == "color_vehicle_$color" })
         val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
-
-        return when (color) {
-            "white" -> getGradientDrawable(context, colorId)
-            else -> ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!
-                    .constantState!!.newDrawable().mutate().apply {
-                setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
-            }
-        }
+        return getCarColorDrawable(context, colorId)
     }
 
-    private fun getGradientDrawable(context: Context, colorId: Int): Drawable {
+    private fun getCarColorDrawable(context: Context, colorId: Int): Drawable {
         return GradientDrawable().apply {
-            setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
-            setStroke(1, ContextCompat.getColor(context, R.color.color_gtr_light_grey))
+            setColor(ContextCompat.getColor(context, colorId))
+            if (colorId == R.color.color_vehicle_white)
+                setStroke(dpToPxInt(context, 1f), ContextCompat.getColor(context, R.color.color_gtr_light_grey))
             shape = GradientDrawable.OVAL
             cornerRadius = 8.0f
         }

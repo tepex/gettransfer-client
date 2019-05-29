@@ -731,6 +731,8 @@
 	<dimen name="bottom_sheet_offer_details_dimen1_margin_top">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_indicator_size">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_margin_16dp">16dp</dimen>
+	<dimen name="offer_car_color_margin_start">8dp</dimen>
+	<dimen name="offer_car_color_margin_bottom">2dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_width">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_height">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_margin_top">11dp</dimen>

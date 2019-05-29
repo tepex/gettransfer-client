@@ -48,8 +48,19 @@
                     android:layout_height="wrap_content"
                     style="@style/black_semiBold"
                     tools:text="Ma best Mercedes"
-                    android:layout_toEndOf="@id/imgOffer_mainPhoto"
-            />
+                    android:layout_toEndOf="@id/imgOffer_mainPhoto" />
+
+            <ImageView
+                android:id="@+id/ivCarColor"
+                android:layout_width="@dimen/bottom_sheet_offer_details_car_color_width"
+                android:layout_height="@dimen/bottom_sheet_offer_details_car_color_height"
+                android:layout_marginStart="@dimen/offer_car_color_margin_start"
+                android:layout_marginBottom="@dimen/offer_car_color_margin_bottom"
+                app:srcCompat="@drawable/ic_circle_car_color_indicator"
+                android:background="@drawable/border_car_color_indicator"
+                android:layout_toEndOf="@id/tv_car_model"
+                android:layout_alignBottom="@+id/tv_car_model" />
+
             <TextView
                     android:id="@+id/tv_car_class"
                     android:layout_width="wrap_content"
