@@ -343,7 +343,7 @@ object Utils : KoinComponent {
             if (colorId == R.color.color_vehicle_white)
                 setStroke(dpToPxInt(context, 1f), ContextCompat.getColor(context, R.color.color_gtr_light_grey))
             shape = GradientDrawable.OVAL
-            cornerRadius = 8.0f
+            cornerRadius = 5.0f
         }
     }
 
