@@ -39,21 +39,18 @@
         android:id="@+id/ratingDriver"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:rating_title="@string/LNG_DRIVER"
-        android:visibility="gone"/>
+        app:rating_title="@string/LNG_DRIVER" />
 
     <com.kg.gettransfer.presentation.ui.custom.RatingFieldView
         android:id="@+id/ratingPunctuality"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:rating_title="@string/LNG_PUNCTUALITY"
-        android:visibility="gone"/>
+        app:rating_title="@string/LNG_PUNCTUALITY" />
 
     <com.kg.gettransfer.presentation.ui.custom.RatingFieldView
         android:id="@+id/ratingVehicle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:rating_title="@string/LNG_VEHICLE"
-        android:visibility="gone"/>
+        app:rating_title="@string/LNG_VEHICLE" />
 
 </LinearLayout>
