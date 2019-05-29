@@ -21,9 +21,9 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
                 fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
                         .also {
                             it.error?.let { e ->
-                                if (e.isNotFound())
-                                    viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer $offerId not found!"))
-                                router.replaceScreen(Screens.MainPassenger()) }
+                                if (e.isNotFound()) viewState.setTransferNotFoundError(transferId)
+                                router.replaceScreen(Screens.MainPassenger())
+                            }
 
                             it.isSuccess()?.let { transfer ->
                                 val transferModel = transferMapper.toView(transfer)
@@ -52,8 +52,7 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
                 fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
                         .also {
                             it.error?.let { e ->
-                                if (e.isNotFound())
-                                    viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
+                                if (e.isNotFound()) viewState.setTransferNotFoundError(transferId)
                             }
 
                             it.isSuccess()?.let { t ->

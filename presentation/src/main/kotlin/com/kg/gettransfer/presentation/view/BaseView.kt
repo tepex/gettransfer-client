@@ -13,4 +13,5 @@ interface BaseView : MvpView {
     fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?)
     fun setError(e: ApiException)
     fun setError(e: DatabaseException)
+    fun setTransferNotFoundError(transferId: Long)
 }

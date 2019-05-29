@@ -17,6 +17,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.MapHelper
+import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RatingLastTripView
 import kotlinx.android.synthetic.main.view_last_trip_rate.*
 
@@ -130,8 +131,9 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
 
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
-
     override fun setError(e: ApiException) {}
-
     override fun setError(e: DatabaseException) {}
+
+    override fun setTransferNotFoundError(transferId: Long) =
+        (activity as BaseView).setTransferNotFoundError(transferId)
 }

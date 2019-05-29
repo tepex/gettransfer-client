@@ -428,12 +428,9 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
-        val sentryMessage =
-            if (e.code == ApiException.PHONE_REQUIRED_FOR_PAYMENT) getString(R.string.LNG_PHONE_REQUIRED_ERROR) else e.details
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(sentryMessage).build())
+        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         val errorText = when {
-            e.code == ApiException.PHONE_REQUIRED_FOR_PAYMENT -> getString(R.string.LNG_PHONE_REQUIRED_ERROR)
             e.code != ApiException.NETWORK_ERROR -> getString(R.string.LNG_ERROR) + ": " + e.message
             else -> null
         }

@@ -111,5 +111,7 @@ class CarrierTripsListFragment : MvpAppCompatFragment(), CarrierTripsListFragmen
     }
 
     override fun setError(e: DatabaseException) =
-            (activity as BaseView).setError(e)
+        (activity as BaseView).setError(e)
+
+    override fun setTransferNotFoundError(transferId: Long) {}
 }

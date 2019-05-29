@@ -127,23 +127,27 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun getTransfer() {
-        val transferResult = utils.asyncAwait { transferInteractor.getTransfer(params.transferId) }
-        transferResult.error?.let { checkResultError(it) }
-        if (transferResult.error == null || (transferResult.error != null && transferResult.fromCache)) {
-            currentTransfer = transferResult.model
-            if (params.bookNowTransportId != null) {
-                if (transferResult.model.bookNowOffers.isNotEmpty()) {
-                    val filteredBookNow = transferResult.model.bookNowOffers.filterKeys { it.toString() == params.bookNowTransportId }
-                    if (filteredBookNow.isNotEmpty()) {
-                        bookNowOffer = filteredBookNow.values.first()
-                    }
+        fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(params.transferId) }
+            .also {
+                it.error?.let { e ->
+                    if (e.isNotFound()) viewState.setTransferNotFoundError(params.transferId)
+                    router.replaceScreen(Screens.MainPassenger())
                 }
-                viewState.setBookNowOffer(bookNowOffer?.let { bookNowOfferMapper.toView(it) })
+
+                it.hasData()?.let { transfer ->
+                    currentTransfer = transfer
+                    if (params.bookNowTransportId != null) {
+                        if (transfer.bookNowOffers.isNotEmpty()) {
+                            val filteredBookNow = transfer.bookNowOffers.filterKeys { it.toString() == params.bookNowTransportId }
+                            if (filteredBookNow.isNotEmpty()) {
+                                bookNowOffer = filteredBookNow.values.first()
+                            }
+                        }
+                        viewState.setBookNowOffer(bookNowOffer?.let { bookNowOfferMapper.toView(it) })
+                    }
+                    viewState.setToolbarTitle(transferMapper.toView(transfer))
+                }
             }
-            viewState.setToolbarTitle(transferMapper.toView(transferResult.model))
-        } else {
-            viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer [${params.offerId}] not found!"))
-        }
     }
 
     private fun getPayment() = utils.launchSuspend {

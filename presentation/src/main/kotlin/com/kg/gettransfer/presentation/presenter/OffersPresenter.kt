@@ -48,8 +48,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
             fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
                     .also {
                         it.error?.let { e ->
-                            if (e.isNotFound())
-                                viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
+                            if (e.isNotFound()) viewState.setTransferNotFoundError(transferId)
                         }
 
                         it.hasData()?.let { transfer ->

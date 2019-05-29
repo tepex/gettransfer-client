@@ -248,6 +248,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         Sentry.capture(e)
     }
 
+    override fun setTransferNotFoundError(transferId: Long) {
+        Utils.showError(this, false, getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString()))
+    }
+
     protected fun showKeyboard() {
         currentFocus?.showKeyboard()
     }
