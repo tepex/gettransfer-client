@@ -34,8 +34,8 @@
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_15sp"
         tools:text="Ma best Mercedes" />
 
-    <TextView
-        android:id="@+id/tvCarColor"
+    <ImageView
+        android:id="@+id/ivCarColor"
         android:layout_width="@dimen/bottom_sheet_offer_details_car_color_width"
         android:layout_height="@dimen/bottom_sheet_offer_details_car_color_height"
         android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"

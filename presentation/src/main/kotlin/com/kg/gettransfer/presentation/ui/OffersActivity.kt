@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.bumptech.glide.request.RequestOptions
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -34,7 +33,6 @@ import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.ScrollGalleryInflater
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
-import com.yandex.metrica.impl.ob.it
 import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.activity_offers.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_offers.*
@@ -306,8 +304,8 @@ class OffersActivity : BaseActivity(), OffersView {
     private fun setVehicleName(nameById: String? = null, vehicle: VehicleModel? = null) {
         if (nameById == null && vehicle == null) throw IllegalArgumentException()
         tv_car_model_bs.text = vehicle?.name
-        tvCarColor.text = nameById ?: vehicle!!.color?.let {
-                Utils.getCarNameWithColorNewLine(this, "", it) }
+        ivCarColor.setImageDrawable(vehicle?.color?.let { Utils.getVehicleColorFormRes(this, it) }
+        )
     }
 
     private fun setRating(carrier: CarrierModel) {
