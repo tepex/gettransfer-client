@@ -155,17 +155,20 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 if (paymentResult.error != null) {
                     Timber.e(paymentResult.error!!)
                     viewState.setError(paymentResult.error!!)
+                    viewState.blockInterface(false)
                 } else {
                     url = paymentResult.model.url
                     navigateToPayment()
                 }
-                viewState.blockInterface(false)
             } else {
                 getBraintreeToken()
             }
             logEventBeginCheckout()
         }
-        if (offer == null && bookNowOffer == null) viewState.showOfferError()
+        if (offer == null && bookNowOffer == null) {
+            viewState.blockInterface(false)
+            viewState.showOfferError()
+        }
     }
 
     fun onPaymentClicked() {
@@ -222,8 +225,12 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private fun getBraintreeToken() {
         utils.launchSuspend {
             val tokenResult = utils.asyncAwait { paymentInteractor.getBrainTreeToken() }
-            if (tokenResult.error != null) viewState.setError(tokenResult.error!!)
-            else braintreeToken = tokenResult.isSuccess()?.token ?: ""
+            if (tokenResult.error != null) {
+                viewState.setError(tokenResult.error!!)
+                viewState.blockInterface(false)
+            } else {
+                braintreeToken = tokenResult.isSuccess()?.token ?: ""
+            }
             createNewPayment()
         }
     }
@@ -251,6 +258,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             viewState.startPaypal(dropInRequest)
         } catch (e: InvalidArgumentException) {
             Sentry.capture(e)
+            viewState.blockInterface(false)
         }
 
     }
