@@ -1,6 +1,8 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.app.Activity
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -23,7 +25,7 @@ class ThanksForRateFragment: BaseBottomSheetDialogFragment(), ThanksForRateView 
     override val layout: Int = R.layout.view_thanks_for_rate
 
     companion object {
-        const val THANKS_FOR_RATE_TAG = "thanks_for_rate_tag"
+        const val TAG = "thanks_for_rate_tag"
 
         fun newInstance() = ThanksForRateFragment()
     }
@@ -32,7 +34,7 @@ class ThanksForRateFragment: BaseBottomSheetDialogFragment(), ThanksForRateView 
         super.onViewCreated(view, savedInstanceState)
         et_thanks_comment.setUneditable()
         et_thanks_comment.setOnClickListener {
-            
+            presenter.onAddCommentClicked()
         }
     }
 
@@ -42,11 +44,34 @@ class ThanksForRateFragment: BaseBottomSheetDialogFragment(), ThanksForRateView 
     }
 
     override fun setComment(text: String) {
-        et_thanks_comment.setText(text)
+        if (text.isNotEmpty())
+            et_thanks_comment.setText(text)
+        else {
+            et_thanks_comment.text.clear()
+        }
+
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
         super.onDismiss(dialog)
         presenter.sendThanks()
+    }
+
+    override fun showTextEditorWithCurrentText(text: String) {
+        Intent(context, TextEditorActivity::class.java).apply {
+            putExtra(TextEditorActivity.TEXT_FOR_CORRECTING, text)
+            startActivityForResult(this, TextEditorActivity.REQUEST_CODE)
+        }
+        dialog.hide()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == TextEditorActivity.REQUEST_CODE) {
+            data?.let {
+                presenter.onCommentTextGot(it.getStringExtra(TextEditorActivity.CORRECTED_TEXT).orEmpty())
+            }
+        }
+        dialog.show()
     }
 }

@@ -148,18 +148,19 @@
 			app:layout_constraintTop_toBottomOf="@+id/vehicleRate"
 			style="@style/transfer_details_main_text" />
 
-		<TextView
+		<EditText
 			android:id="@+id/tvComment"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="32dp"
 			android:layout_marginStart="32dp"
 			android:layout_marginTop="8dp"
-			android:drawableBottom="@drawable/sh_divider_gray_1dp"
+			android:backgroundTint="@color/color_gtr_light_grey"
 			android:drawableEnd="@drawable/ic_arrow_right"
 			android:drawablePadding="16dp"
 			android:paddingTop="16dp"
-			android:text="@string/LNG_PAYMENT_YOUR_COMMENT"
+			android:paddingBottom="18dp"
+			android:hint="@string/LNG_PAYMENT_YOUR_COMMENT"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/tvCommentTitle"

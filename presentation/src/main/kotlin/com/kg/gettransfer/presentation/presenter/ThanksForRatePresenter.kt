@@ -22,6 +22,15 @@ class ThanksForRatePresenter: MvpPresenter<ThanksForRateView>(), KoinComponent {
         viewState.setComment(reviewInteractor.comment)
     }
 
+    fun onCommentTextGot(text: String) {
+        reviewInteractor.comment = text
+        viewState.setComment(text)
+    }
+
+    fun onAddCommentClicked() {
+        viewState.showTextEditorWithCurrentText(reviewInteractor.comment)
+    }
+
     fun sendThanks() {
         utils.launchSuspend {
             with(reviewInteractor) {

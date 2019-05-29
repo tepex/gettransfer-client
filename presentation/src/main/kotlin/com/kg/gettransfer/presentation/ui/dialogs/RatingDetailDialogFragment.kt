@@ -11,6 +11,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.model.ReviewRate
+import com.kg.gettransfer.extensions.setUneditable
 import com.kg.gettransfer.extensions.show
 import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.presenter.RatingDetailPresenter
@@ -96,6 +97,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		}
 		ivClose.setOnClickListener { dismiss() }
 		tvComment.setOnClickListener { presenter.onClickComment(tvComment.text.toString()) }
+		tvComment.setUneditable()
 		commonRate.setOnRatingChangeListener(commonRateListener)
 		vehicleRate.rate_bar.setOnRatingChangeListener(vehicleRateListener)
 		driverRate.rate_bar.setOnRatingChangeListener(driverRateListener)
@@ -149,7 +151,11 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 	}
 
 	override fun showComment(comment: String) {
-		tvComment.text = comment
+		tvComment.setText(comment)
+	}
+
+	override fun showHint(text: String) {
+		tvComment.hint = text
 	}
 
 	override fun showCommentEditor(comment: String) {

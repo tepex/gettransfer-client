@@ -46,7 +46,6 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setTrottledClickListener
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
-import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
@@ -70,8 +69,12 @@ import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
 
-class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnStoreListener,
-        RatingDetailDialogFragment.OnRatingChangeListener {
+class MainActivity :
+        BaseGoogleMapActivity(),
+        MainView,
+        StoreDialogFragment.OnStoreListener,
+        RatingDetailDialogFragment.OnRatingChangeListener
+{
 
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
@@ -636,7 +639,7 @@ class MainActivity : BaseGoogleMapActivity(), MainView, StoreDialogFragment.OnSt
     override fun thanksForRate() =
             ThanksForRateFragment
                     .newInstance()
-                    .show(supportFragmentManager, ThanksForRateFragment.THANKS_FOR_RATE_TAG)
+                    .show(supportFragmentManager, ThanksForRateFragment.TAG)
 
     override fun onRatingChanged(list: List<ReviewRateModel>, comment: String) {}
 

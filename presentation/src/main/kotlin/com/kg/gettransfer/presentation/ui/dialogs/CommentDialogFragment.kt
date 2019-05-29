@@ -8,9 +8,7 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.DatabaseException
-import com.kg.gettransfer.presentation.presenter.CommentPresenter
+import com.kg.gettransfer.presentation.presenter.OrderCommentPresenter
 import com.kg.gettransfer.presentation.ui.afterTextChanged
 import com.kg.gettransfer.presentation.view.CommentView
 import kotlinx.android.synthetic.main.layout_comment.*
@@ -22,10 +20,10 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
     private var onCommentLister: OnCommentListener? = null
 
     @InjectPresenter
-    lateinit var presenter: CommentPresenter
+    lateinit var presenter: OrderCommentPresenter
 
     @ProvidePresenter
-    fun providePresenter() = CommentPresenter()
+    fun providePresenter() = OrderCommentPresenter()
 
     companion object {
         private const val EXTRA_COMMENT = "comment"
@@ -79,19 +77,6 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
     override fun setComment(comment: String) {
         onCommentLister?.onSetComment(comment)
-    }
-
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-
-    }
-
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
-    }
-
-    override fun setError(e: ApiException) {
-    }
-
-    override fun setError(e: DatabaseException) {
     }
 
     interface OnCommentListener {

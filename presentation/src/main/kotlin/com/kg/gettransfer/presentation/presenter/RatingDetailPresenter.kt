@@ -25,7 +25,9 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	internal var vehicleRating = 0F
 	internal var driverRating = 0F
 	internal var punctualityRating = 0F
-	internal var currentComment = ""
+	internal var currentComment
+		get() = reviewInteractor.comment
+		set(value) { reviewInteractor.comment = value }
 
 	internal var hintComment: String = ""
 
@@ -38,7 +40,6 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		onSecondaryRatingsChanged(vehicleRating, driverRating, punctualityRating)
 
 		viewState.showProgress(false)
-		viewState.showComment(if (currentComment.isNotEmpty()) currentComment else hintComment)
 	}
 
 	fun onClickSend(list: List<ReviewRateModel>, comment: String) = utils.launchSuspend {
@@ -53,6 +54,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 					list,
 					getFeedBackText(comment)
 			)
+			reviewInteractor.releaseRepo()
 		}
 		logAverageRate(list.map { it.rateValue }.average())
 		logDetailRate(list, comment)
@@ -76,12 +78,14 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 
 	fun commentChanged(newComment: String) {
 		reviewInteractor.comment = newComment
-		viewState.showComment(
-			if (newComment.isEmpty())
-				hintComment
-			else
-				newComment
-		)
+		updateViewComment()
+	}
+
+	private fun updateViewComment() {
+		if (currentComment.isNotEmpty())
+			viewState.showComment(currentComment)
+		else
+			viewState.showHint(hintComment)
 	}
 
 	fun onCommonRatingChanged(rating: Float) {
@@ -122,9 +126,4 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	private fun getFeedBackText(text: String) =
 			if (text == hintComment) ""
 			else text
-
-//	override fun detachView(view: RatingDetailView?) {
-//		super.detachView(view)
-//		reviewInteractor.releaseRepo()
-//	}
 }

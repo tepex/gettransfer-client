@@ -1,12 +1,14 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.presentation.view.CommentView
+import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 @InjectViewState
-class CommentPresenter: BasePresenter<CommentView>() {
+class OrderCommentPresenter: MvpPresenter<CommentView>(), KoinComponent {
 
     private val orderInteractor: OrderInteractor by inject()
 
@@ -18,7 +20,7 @@ class CommentPresenter: BasePresenter<CommentView>() {
     }
 
     fun setComment(comment: String) {
-        if (comment.isEmpty()) orderInteractor.comment = null else orderInteractor.comment = comment
+        orderInteractor.comment = if (comment.isNotEmpty()) comment else null
         viewState.setComment(comment)
     }
 }

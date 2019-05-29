@@ -117,7 +117,7 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     override fun thanksForRate() =
             ThanksForRateFragment
                     .newInstance()
-                    .show(fragmentManager, ThanksForRateFragment.THANKS_FOR_RATE_TAG)
+                    .show(fragmentManager, ThanksForRateFragment.TAG)
 
     override fun showDetailedReview(rate: Float, offerId: Long) {
         if (fragmentManager?.fragments?.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {

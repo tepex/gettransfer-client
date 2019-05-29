@@ -91,7 +91,7 @@ class DateTimeDelegate: KoinComponent {
             if (date.after(getCurrentDatePlusMinimumHours().time)) date.simpleFormat()
             else getTextForMinDate(context)
 
-    fun getTextForMinDate(context: Context) = context.getString(R.string.LNG_DATE_IN_HOURS)
+    private fun getTextForMinDate(context: Context) = context.getString(R.string.LNG_DATE_IN_HOURS)
             .plus(" ")
             .plus(futureHour)
             .plus(" ")
