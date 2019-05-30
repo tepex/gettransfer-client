@@ -1,18 +1,23 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.interactor.PaymentInteractor
+import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.createStartChain
 import com.kg.gettransfer.extensions.newChainFromMain
-import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.presentation.view.Screens
+import org.koin.standalone.inject
 
 @InjectViewState
 class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
+    private val paymentInteractor: PaymentInteractor by inject()
 
     fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) {
+        if (!sessionInteractor.isInitialized) {
+            utils.launchSuspend { sessionInteractor.coldStart() }
+        }
         if (!accountManager.isLoggedIn)
             router.newChainFromMain(Screens.LoginToPaymentOffer(transferId, offerId))
         else {
@@ -26,13 +31,24 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
                             }
 
                             it.isSuccess()?.let { transfer ->
-                                val transferModel = transferMapper.toView(transfer)
-                                router.createStartChain(
-                                        Screens.PaymentOffer(
-                                                transferId, offerId, transferModel.dateRefund,
-                                                transferModel.paymentPercentages!!, bookNowTransportId
-                                        )
-                                )
+
+                                val offerItem: OfferItem? = when {
+                                    offerId != null -> {
+                                        fetchData(NO_CACHE_CHECK) {
+                                            offerInteractor.getOffers(transferId)
+                                        }?.find { offer -> offer.id == offerId }
+                                    }
+                                    bookNowTransportId != null -> transfer.bookNowOffers.find { offer -> offer.transportType.id.name == bookNowTransportId }
+                                    else -> null
+                                }
+
+                                offerItem?.let { offer ->
+                                    with(paymentInteractor) {
+                                        selectedTransfer = transfer
+                                        selectedOffer = offer
+                                    }
+                                    router.createStartChain(Screens.PaymentOffer())
+                                }
                             }
                         }
             }
@@ -45,6 +61,9 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
     }
 
     fun openTransfer(transferId: Long) {
+        if (!sessionInteractor.isInitialized) {
+            utils.launchSuspend { sessionInteractor.coldStart() }
+        }
         if (!accountManager.isLoggedIn)
             router.createStartChain(Screens.LoginToGetOffers(transferId, ""))
         else {
@@ -66,6 +85,9 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
     }
 
     fun rateTransfer(transferId: Long, rate: Int) {
+        if (!sessionInteractor.isInitialized) {
+            utils.launchSuspend { sessionInteractor.coldStart() }
+        }
         if (!accountManager.isLoggedIn) router.replaceScreen(Screens.LoginToRateTransfer(transferId, rate))
         else router.newRootScreen(Screens.Splash(transferId, rate, true))
     }

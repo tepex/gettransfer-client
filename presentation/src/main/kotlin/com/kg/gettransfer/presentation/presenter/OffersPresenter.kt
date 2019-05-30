@@ -4,21 +4,23 @@ import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
+import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.model.OfferItem
+import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
-import com.kg.gettransfer.presentation.model.CarrierModel
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import org.koin.standalone.inject
 
 import timber.log.Timber
 import java.util.Date
@@ -31,6 +33,8 @@ class OffersPresenter : BasePresenter<OffersView>() {
             field = value
             offerInteractor.lastTransferId = value
         }
+
+    private val paymentInteractor: PaymentInteractor by inject()
 
     private var transfer: Transfer? = null
     private var offers: List<OfferItem> = emptyList()
@@ -92,9 +96,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
                     if (it.error != null && !it.fromCache) offers = emptyList()
                     else {
                         offers = mutableListOf<OfferItem>().apply {
-                            addAll(it.model.map { offer -> offerMapper.toView(offer) })
+                            addAll(it.model)
                             notificationManager.clearOffers(it.model.map { offer -> offer.id.toInt() })
-                            addAll(transferMapper.toView(transfer).bookNowOffers) }
+                            addAll(transfer.bookNowOffers) }
                     } }
         processOffers()
     }
@@ -111,16 +115,16 @@ class OffersPresenter : BasePresenter<OffersView>() {
     override fun onNewOffer(offer: Offer): OfferModel {
         val offerModel = super.onNewOffer(offer)
         if (transferId != offer.transferId) return offerModel
-        if (!checkDuplicated(offerModel))
-            offers = offers.toMutableList().apply { add(offerModel) }
+        if (!checkDuplicated(offer))
+            offers = offers.toMutableList().apply { add(offer) }
         utils.launchSuspend { processOffers() }
         return offerModel
     }
 
-    private fun checkDuplicated(offer: OfferModel): Boolean {
+    private fun checkDuplicated(offer: Offer): Boolean {
         var duplicated = false
         offers.forEach {
-            if (it is OfferModel && it.id == offer.id) {
+            if (it is Offer && it.id == offer.id) {
                 offers = offers.toMutableList().apply { set(indexOf(it), offer) }
                 duplicated = true
             }
@@ -132,29 +136,19 @@ class OffersPresenter : BasePresenter<OffersView>() {
         router.navigateTo(Screens.Details(transferId))
     }
 
-    fun onSelectOfferClicked(offer: OfferItem, isShowingOfferDetails: Boolean) {
+    fun onSelectOfferClicked(offerItem: OfferItemModel, isShowingOfferDetails: Boolean) {
         transfer?.let {
             if (isShowingOfferDetails) {
-                viewState.showBottomSheetOfferDetails(offer)
+                viewState.showBottomSheetOfferDetails(offerItem)
                 logButtons(Analytics.OFFER_DETAILS)
             } else {
                 logButtons(Analytics.OFFER_BOOK)
-                when(offer) {
-                    is OfferModel ->
-                        router.navigateTo(Screens.PaymentOffer(
-                                it.id,
-                                offer.id,
-                                it.dateRefund,
-                                it.paymentPercentages!!,
-                                null))
-                    is BookNowOfferModel ->
-                        router.navigateTo(Screens.PaymentOffer(
-                                it.id,
-                        null,
-                                it.dateRefund,
-                                it.paymentPercentages!!,
-                                offer.transportType.id.toString()))
+                paymentInteractor.selectedTransfer = transfer
+                paymentInteractor.selectedOffer = when (offerItem) {
+                    is OfferModel -> offers.filter { offer -> offer is Offer }.find { offer -> (offer as Offer).id == offerItem.id }
+                    is BookNowOfferModel -> offers.filter { offer -> offer is BookNowOffer }.find { offer -> (offer as BookNowOffer).transportType.id == offerItem.transportType.id }
                 }
+                router.navigateTo(Screens.PaymentOffer())
             }
         }
     }
@@ -204,7 +198,12 @@ class OffersPresenter : BasePresenter<OffersView>() {
             val countNewOffers = (mapCountNewOffers[transferId] ?: 0) - (mapCountViewedOffers[transferId] ?: 0)
             if (countNewOffers > 0) increaseViewedOffersCounter(transferId, countNewOffers)
         }
-        viewState.setOffers(offers)
+        viewState.setOffers(offers.map {
+            when (it) {
+                is Offer -> offerMapper.toView(it)
+                is BookNowOffer -> bookNowOfferMapper.toView(it)
+            }
+        })
         viewState.setSortState(sortCategory, sortHigherToLower)
     }
 
@@ -215,7 +214,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 sortType = if (sortHigherToLower) SortType.YEAR_DESC else SortType.YEAR_ASC
                 offers.sortedWith(compareBy {
                     when (it) {
-                        is OfferModel -> it.vehicle.year
+                        is Offer -> it.vehicle.year
                         else -> 0
                     }
                 })
@@ -224,7 +223,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 sortType = if (sortHigherToLower) SortType.RATING_DESC else SortType.RATING_ASC
                 offers.sortedWith(compareBy {
                     when (it) {
-                        is OfferModel -> it.ratings?.average
+                        is Offer -> it.ratings?.average
                         else -> 0
                     }
                 })
@@ -233,8 +232,8 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 sortType = if (sortHigherToLower) SortType.PRICE_DESC else SortType.PRICE_ASC
                 offers.sortedWith(compareBy {
                     when (it) {
-                        is OfferModel -> it.price.amount
-                        is BookNowOfferModel -> it.amount
+                        is Offer-> it.price.amount
+                        is BookNowOffer -> it.amount
                     }
                 })
             }

@@ -53,15 +53,9 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 transfer = result.model
                 if (offer == null) {
                     transfer?.let {
-                        if (it.bookNowOffers.isNotEmpty()) {
-                            if (bookNowTransportId.isNotEmpty()) {
-                                val filteredBookNow =
-                                    it.bookNowOffers.filterKeys { predicate ->
-                                        predicate.toString() == bookNowTransportId
-                                    }
-                                if (filteredBookNow.isNotEmpty()) {
-                                    bookNowOffer = filteredBookNow.values.first()
-                                }
+                        if (it.bookNowOffers.isNotEmpty() && bookNowTransportId.isNotEmpty()) {
+                            bookNowOffer = it.bookNowOffers.find { bookNowOffer ->
+                                bookNowOffer.transportType.id.name == bookNowTransportId
                             }
                         }
                     }

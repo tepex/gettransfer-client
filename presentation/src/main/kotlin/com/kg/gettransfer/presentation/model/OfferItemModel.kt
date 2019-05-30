@@ -1,15 +1,13 @@
 package com.kg.gettransfer.presentation.model
 
-sealed class OfferItem
+sealed class OfferItemModel
 
 data class BookNowOfferModel(
         val amount: Double,
         val base: MoneyModel,
-        val withoutDiscount: MoneyModel?
-) : OfferItem() {
-
-    lateinit var transportType: TransportTypeModel
-}
+        val withoutDiscount: MoneyModel?,
+        var transportType: TransportTypeModel
+) : OfferItemModel()
 
 data class OfferModel(
         val id: Long,
@@ -27,7 +25,7 @@ data class OfferModel(
         val vehicle: VehicleModel,
         val driver: ProfileModel?,
         val phoneToCall: String?
-) : OfferItem() {
+) : OfferItemModel() {
 
     companion object {
         const val FULL_PRICE = 100

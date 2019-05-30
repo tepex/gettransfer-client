@@ -176,6 +176,10 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         }
     }
 
+    override fun setTransferNotFoundError(transferId: Long) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     companion object {
         const val SMS_RESEND_DELAY_MILLIS = 90_000L
         const val SEC_IN_MILLIS = 1_000L

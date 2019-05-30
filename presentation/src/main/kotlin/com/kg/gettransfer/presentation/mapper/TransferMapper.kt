@@ -12,7 +12,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import kotlin.math.absoluteValue
 
 import org.koin.standalone.get
-import java.util.*
+import java.util.Date
 
 open class TransferMapper : Mapper<TransferModel, Transfer> {
     private val bookNowOfferMapper  = get<BookNowOfferMapper>()
@@ -57,12 +57,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             remainsToPay          = type.remainsToPay?.def,
             paidPercentage        = type.paidPercentage,
             watertaxi             = type.watertaxi,
-            bookNowOffers         = type.bookNowOffers.map { entry ->
-                bookNowOfferMapper.toView(entry.value).apply {
-                    transportType = transportTypesModels.find { it.id === entry.key }
-                            ?: transportTypesModels.first()
-                }
-            },
+            bookNowOffers         = type.bookNowOffers.map { bookNowOfferMapper.toView(it) },
             offersCount           = type.offersCount,
 /* ================================================== */
             relevantCarriersCount = type.relevantCarriersCount,

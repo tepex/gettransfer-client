@@ -40,7 +40,7 @@ data class Transfer(
     val remainsToPay: Money?,
     val paidPercentage: Int,
     val watertaxi: Boolean,
-    val bookNowOffers: Map<TransportType.ID, BookNowOffer>,
+    val bookNowOffers: List<BookNowOffer>,
     val offersCount: Int,
 /* ================================================== */
     val relevantCarriersCount: Int,

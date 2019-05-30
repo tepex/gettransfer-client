@@ -4,6 +4,7 @@ import com.kg.gettransfer.data.model.TransferEntity
 
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.repository.SessionRepository
 
 import java.text.DateFormat
 
@@ -21,6 +22,8 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
     private val moneyMapper        = get<MoneyMapper>()
     private val dateFormatTZ       = get<ThreadLocal<DateFormat>>("iso_date_TZ")
     private val dateFormat         = get<ThreadLocal<DateFormat>>("iso_date")
+
+    private val transportTypes = get<SessionRepository>().configs.transportTypes
 
     /**
      * Map a [TransferEntity] instance to a [Transfer] instance.
@@ -59,7 +62,12 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             remainsToPay          = type.remainsToPay?.let { moneyMapper.fromEntity(it) },
             paidPercentage        = type.paidPercentage,
             watertaxi             = type.watertaxi,
-            bookNowOffers         = type.bookNowOffers.entries.associate { TransportType.ID.parse(it.key) to bookNowOfferMapper.fromEntity(it.value) },
+            bookNowOffers         = type.bookNowOffers.map { entry ->
+                bookNowOfferMapper.fromEntity(entry.value).apply {
+                    transportType = transportTypes.find { it.id === TransportType.ID.parse(entry.key) }
+                            ?: transportTypes.first()
+                }
+            },
             offersCount           = type.offersCount,
 /* ================================================== */
             relevantCarriersCount = type.relevantCarriersCount,

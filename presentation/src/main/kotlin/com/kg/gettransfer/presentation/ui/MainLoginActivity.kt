@@ -79,4 +79,8 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
     override fun setError(e: DatabaseException) {
         //TODO remove BaseView or add code.
     }
+
+    override fun setTransferNotFoundError(transferId: Long) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

@@ -29,7 +29,6 @@ import com.braintreepayments.api.models.PaymentMethodNonce
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
-import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
@@ -40,7 +39,7 @@ import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.RatingsModel
-import com.kg.gettransfer.presentation.model.OfferItem
+import com.kg.gettransfer.presentation.model.OfferItemModel
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -57,7 +56,6 @@ import kotlinx.android.synthetic.main.offer_tiny_payment.*
 import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
 import kotlinx.android.synthetic.main.view_currency_converting_info.view.*
 
-import kotlinx.serialization.json.JSON
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
 import timber.log.Timber
@@ -86,8 +84,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.params =
-            JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
+        //presenter.params = JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
         setContentView(R.layout.activity_payment_offer)
         initListeners()
@@ -220,16 +217,15 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         setPriceInfo(bookNowOffer?.base?.def, bookNowOffer?.base?.preferred)
     }
 
-    private fun setCarInfo(offer: OfferItem?) {
+    private fun setCarInfo(offer: OfferItemModel?) {
         when (offer) {
             is OfferModel -> showCarInfoOffer(offer)
-            is BookNowOfferModel -> showCarInfoBookNow()
+            is BookNowOfferModel -> showCarInfoBookNow(offer)
         }
     }
 
-    private fun showCarInfoBookNow() {
-        val transportType = presenter.params.bookNowTransportId ?: ""
-        val transportTypeId = TransportType.ID.parse(transportType)
+    private fun showCarInfoBookNow(bookNowOffer: BookNowOfferModel) {
+        val transportTypeId = bookNowOffer.transportType.id
         tvClass.text = getString(TransportTypeMapper.getNameById(transportTypeId))
         tvModel.text = getString(TransportTypeMapper.getModelsById(transportTypeId))
         ivCarColor.isVisible = false
@@ -272,11 +268,8 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         toast(getString(R.string.LNG_RIDE_OFFER_CANCELLED))
     }
 
-    override fun setCommission(paymentCommission: String) {
-        presenter.params.dateRefund?.let {
-            tvCommission.text =
-                getString(R.string.LNG_PAYMENT_COMISSION2, paymentCommission, SystemUtils.formatDateTime(it))
-        }
+    override fun setCommission(paymentCommission: String, dateRefund: String) {
+        tvCommission.text = getString(R.string.LNG_PAYMENT_COMISSION2, paymentCommission, dateRefund)
     }
 
     override fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency) {

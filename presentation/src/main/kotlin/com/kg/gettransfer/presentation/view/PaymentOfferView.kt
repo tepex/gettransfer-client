@@ -11,11 +11,6 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
-import com.kg.gettransfer.utilities.DateSerializer
-
-import kotlinx.serialization.Serializable
-import java.util.*
-
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface PaymentOfferView : BaseView {
@@ -23,7 +18,7 @@ interface PaymentOfferView : BaseView {
     fun setOffer(offer: OfferModel, paymentPercentages: List<Int>)
     fun setBookNowOffer(bookNowOffer: BookNowOfferModel?)
     fun showOfferError()
-    fun setCommission(paymentCommission: String)
+    fun setCommission(paymentCommission: String, dateRefund: String)
     fun startPaypal(dropInRequest: DropInRequest)
     fun setToolbarTitle(transferModel: TransferModel)
     fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency)
@@ -34,7 +29,7 @@ interface PaymentOfferView : BaseView {
     fun showFieldError(@StringRes stringId: Int)
     fun enablePayment(enable: Boolean)
 
-    companion object {
+    /*companion object {
         val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"
     }
 
@@ -42,8 +37,6 @@ interface PaymentOfferView : BaseView {
     data class Params(
             @Serializable(with = DateSerializer::class) val dateRefund: Date?,
             val transferId: Long,
-            val offerId: Long?,
-            val paymentPercentages: List<Int>,
-            val bookNowTransportId: String?
-    )
+            val paymentPercentages: List<Int>
+    )*/
 }

@@ -43,9 +43,8 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
             if (offer == null) {
                 transfer?.let {
                     if (it.bookNowOffers.isNotEmpty()) {
-                        val filteredBookNow = it.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
-                        if (filteredBookNow.isNotEmpty()) {
-                            bookNowOffer = filteredBookNow.values.first()
+                        bookNowOffer = it.bookNowOffers.find { bookNowOffer ->
+                            bookNowOffer.transportType.id.name == bookNowTransportId
                         }
                     }
                 }
