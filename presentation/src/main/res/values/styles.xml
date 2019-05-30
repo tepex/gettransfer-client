@@ -276,7 +276,7 @@
         <item name="android:textColor">@color/colorGrey</item>
     </style>
     
-    <style name="editTextHintCreateOrder" parent="TextAppearance.AppCompat">
+    <style name="editTextHintCreateOrder" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:textColorHint">@color/black_a30</item>
         <item name="colorControlActivated">@color/black_a30</item>
     </style>
