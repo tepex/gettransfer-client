@@ -28,7 +28,7 @@
         app:srb_drawableEmpty="@drawable/ic_star_empty"
         app:srb_drawableFilled="@drawable/ic_star_filled"
         app:srb_isIndicator="true"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:srb_minimumStars="@integer/stars_minimum"
         app:srb_numStars="@integer/stars_number"
         app:srb_rating="2"

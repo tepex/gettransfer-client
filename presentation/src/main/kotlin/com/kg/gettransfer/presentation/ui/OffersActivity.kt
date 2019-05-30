@@ -321,7 +321,6 @@ class OffersActivity : BaseActivity(), OffersView {
     private fun setRating(rate: Float, ratingLayout: RatingFieldView) {
         with(ratingLayout) {
             ratingNumber.text = rate.toString().replace(".", ",")
-            isVisible = true
         }
     }
 
