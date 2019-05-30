@@ -2,18 +2,14 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.model.LatLng
-
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.Transfer
-
+import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.mapper.RouteMapper
-
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
-
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
-
 import org.koin.standalone.inject
 
 @InjectViewState
@@ -37,18 +33,24 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                 if (transfer.to != null) {
                     val r = utils.asyncAwait {
                         orderInteractor
-                            .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, sessionInteractor.currency.code)
+                            .getRouteInfo(
+                                transfer.from.point!!,
+                                transfer.to!!.point!!,
+                                false,
+                                false,
+                                sessionInteractor.currency.code
+                            )
                     }
                     r.cacheError?.let { viewState.setError(it) }
                     if (r.error == null || (r.error != null && r.fromCache)) {
                         val routeModel = routeMapper.getView(
-                                r.model.distance,
-                                r.model.polyLines,
-                                transfer.from.name!!,
-                                transfer.to!!.name!!,
-                                transfer.from.point!!,
-                                transfer.to!!.point!!,
-                                SystemUtils.formatDateTime(transferModel.dateTime)
+                            r.model.distance,
+                            r.model.polyLines,
+                            transfer.from.name!!,
+                            transfer.to!!.name!!,
+                            transfer.from.point!!,
+                            transfer.to!!.point!!,
+                            SystemUtils.formatDateTime(transferModel.dateTime)
                         )
                         viewState.setRoute(Utils.getPolyline(routeModel))
                     }
@@ -77,6 +79,6 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     }
 
     fun onDetailsClick() {
-        router.navigateTo(Screens.Details(transferId))
+        router.replaceScreen(Screens.Details(transferId))
     }
 }
