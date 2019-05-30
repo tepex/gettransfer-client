@@ -363,8 +363,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
     override fun setOffer(offer: OfferModel, childSeats: Int) {
         initAboutDriverView(offer)
-        initAboutTransportView(offer, childSeats)
         layoutAboutTransport.isVisible = true
+        initAboutTransportView(offer, childSeats)
 
         initChatButton()
 
