@@ -41,7 +41,7 @@
     <string name="transfer_end_sign">B</string>
     <string name="rub">₽</string>
 
-    <string name="count_persons_and_baggage"> X %1$d</string>
+    <string name="count_persons_and_baggage"> x%1$d</string>
     <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string>
 
     <string name="share">Share</string>

@@ -274,6 +274,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             price != null && time == null -> String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT_HOURLY), price)
             else -> ""
          }
+        if (price == null && time == null) tvRate.isVisible = false
     }
 
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {

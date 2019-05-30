@@ -54,7 +54,8 @@
                 android:fontFamily="@font/sf_pro_text_regular"
                 android:textColor="@color/colorTextLightGray"
                 android:textSize="15sp"
-                tools:text="Average rate on route $25.5 (ETA ~5:53)"/>
+                tools:text="Average rate on route $25.5 (ETA ~5:53)"
+                android:visibility="gone"/>
 
             <FrameLayout
                 android:layout_width="match_parent"

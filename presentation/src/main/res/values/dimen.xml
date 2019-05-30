@@ -181,6 +181,25 @@
 	<dimen name="card_transfer_type_corner_radius_default">5dp</dimen>
 	<dimen name="card_transfer_type_elevation_default">2dp</dimen>
 	<dimen name="card_transfer_type_elevation">5dp</dimen>
+	<dimen name="card_transfer_type_width">112dp</dimen>
+	<dimen name="card_transfer_type_height">140dp</dimen>
+	<dimen name="card_transfer_type_margin">3dp</dimen>
+	<dimen name="card_transfer_type_ivPassanger_margin_top">9dp</dimen>
+	<dimen name="card_transfer_type_ivPassanger_width">14dp</dimen>
+	<dimen name="card_transfer_type_ivPassanger_height">14dp</dimen>
+	<dimen name="ivTransportInfo_width">13dp</dimen>
+	<dimen name="ivTransportInfo_height">13dp</dimen>
+	<dimen name="ivTransferType_height">35dp</dimen>
+	<dimen name="ivTransferType_width">95dp</dimen>
+	<dimen name="ivTransferType_margin_start">10dp</dimen>
+	<dimen name="ivTransferType_margin_end">10dp</dimen>
+	<dimen name="ivTransferType_margin_top">8dp</dimen>
+	<dimen name="cbTransferType_margin_start">10dp</dimen>
+	<dimen name="cbTransferType_margin_top">8dp</dimen>
+	<dimen name="cbTransferType_width">22dp</dimen>
+	<dimen name="cbTransferType_height">22dp</dimen>
+	<dimen name="tvCountBaggage_margin_start">2dp</dimen>
+	<dimen name="tvCountBaggage_margin_end">8dp</dimen>
 
 	<dimen name="transport_time_server_price_min_text_size">8sp</dimen>
 	<dimen name="transport_time_server_price_max_text_size">14sp</dimen>
@@ -265,7 +284,7 @@
 
 	<!-- Transfer types -->
 	<dimen name="transfer_types_text_size">11sp</dimen>
-	<dimen name="transfer_types_title_text_size">9sp</dimen>
+	<dimen name="transfer_types_title_text_size">12sp</dimen>
 	<dimen name="transfer_types_cost_title">12sp</dimen>
 	<dimen name="transfer_types_cost">14sp</dimen>
 	<dimen name="transfer_types_image_person_width">7dp</dimen>
