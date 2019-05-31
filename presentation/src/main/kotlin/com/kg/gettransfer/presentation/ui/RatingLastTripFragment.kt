@@ -116,10 +116,7 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     override fun askRateInPlayMarket() =
         StoreDialogFragment.newInstance().show(fragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
 
-    override fun thanksForRate() =
-            ThanksForRateFragment
-                    .newInstance()
-                    .show(fragmentManager, ThanksForRateFragment.TAG)
+    override fun thanksForRate() = (activity as MainActivity).thanksForRate()
 
     override fun showDetailedReview(rate: Float, offerId: Long) {
         if (fragmentManager?.fragments?.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
