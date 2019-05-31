@@ -5,10 +5,10 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.UserModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-//interface MainView: MvpView, OnCameraMoveListener
 interface MainView: BaseView {
     fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean)
     fun moveCenterMarker(point: LatLng)
@@ -31,7 +31,7 @@ interface MainView: BaseView {
     fun openMapToSetPoint()
     fun recreateRequestFragment()
     fun defineAddressRetrieving(block:(withGps: Boolean) -> Unit)
-    fun showRateForLastTrip()
+    fun showRateForLastTrip(transferId: Long, vehicle: String, color: String)
 
     companion object {
         const val MAP_SCREEN     = 1

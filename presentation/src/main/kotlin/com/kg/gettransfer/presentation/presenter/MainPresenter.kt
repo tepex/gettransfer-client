@@ -14,11 +14,9 @@ import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
+import com.kg.gettransfer.presentation.mapper.*
 
-import com.kg.gettransfer.presentation.mapper.PointMapper
-import com.kg.gettransfer.presentation.mapper.ProfileMapper
-import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
-import com.kg.gettransfer.presentation.mapper.UserMapper
 import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.view.MainView
@@ -392,13 +390,52 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private fun checkReview() =
             with(reviewInteractor) {
-                if (!isReviewSuggested) viewState.showRateForLastTrip()
+                if (!isReviewSuggested) checkLastTrip()
                 else if (shouldAskRateInMarket)
                     utils.launchSuspend {
                         delay(ONE_SEC_DELAY)
                         viewState.askRateInPlayMarket()
                     }
             }
+
+    private fun checkLastTrip() {
+        utils.launchSuspend {
+            fetchResultOnly { transferInteractor.getAllTransfers() }
+                    .isSuccess()
+                    ?.let {
+                        getLastTransfer(it.filterRateable())
+                                ?.let { lastTransfer ->
+                                    checkToShowReview(lastTransfer) }
+                    }
+        }
+    }
+
+    private fun getLastTransfer(transfers: List<Transfer>) =
+            transfers.filter { it.status.checkOffers }
+                    .sortedByDescending { it.dateToLocal }
+                    .firstOrNull()
+
+    private suspend fun checkToShowReview(transfer: Transfer) =
+            fetchResultOnly { offerInteractor.getOffers(transfer.id) }
+                    .isSuccess()
+                    ?.firstOrNull()
+                    ?.let { offer ->
+                        if (transfer.offersUpdatedAt != null) fetchDataOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
+                        if (offer.isRateAvailable() && !offer.isOfferRatedByUser()) {
+                            reviewInteractor.offerIdForReview = offer.id
+                            viewState.showRateForLastTrip(
+                                    transfer.id,
+                                    offer.vehicle.name,
+                                    offer.vehicle.color ?: ""
+                            )
+                            logTransferReviewRequested()
+                        }
+                    }
+
+    private fun logTransferReviewRequested() =
+            analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
+                    createEmptyBundle(),
+                    emptyMap())
 
     private fun logEvent(value: String) {
         val map = mutableMapOf<String, Any>()

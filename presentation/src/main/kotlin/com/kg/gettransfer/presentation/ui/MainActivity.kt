@@ -46,6 +46,8 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setTrottledClickListener
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
@@ -613,11 +615,11 @@ class MainActivity :
         }
     }
 
-    override fun showRateForLastTrip() {
+    override fun showRateForLastTrip(transferId: Long, vehicle: String, color: String) {
         if (supportFragmentManager.fragments.firstOrNull {
                     it.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG} == null) {
             RatingLastTripFragment
-                    .newInstance()
+                    .newInstance(transferId, vehicle, color)
                     .show(supportFragmentManager, RatingLastTripFragment.RATING_LAST_TRIP_TAG)
         }
     }

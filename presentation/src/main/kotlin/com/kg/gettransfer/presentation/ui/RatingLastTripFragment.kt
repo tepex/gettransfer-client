@@ -24,8 +24,6 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
 
     private lateinit var googleMap: GoogleMap
 
-    private var showDialog = false
-
     override val layout: Int = R.layout.view_last_trip_rate
 
     @InjectPresenter
@@ -36,8 +34,22 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
 
     companion object {
         const val RATING_LAST_TRIP_TAG = "rating_last_trip_tag"
+        private const val EXTRA_TRANSFER_ID = "transfer_id"
+        private const val EXTRA_VEHICLE = "vehicle"
+        private const val EXTRA_COLOR = "color"
 
-        fun newInstance() = RatingLastTripFragment()
+        fun newInstance(transferId: Long, vehicle: String, color: String) = RatingLastTripFragment().apply {
+            arguments = Bundle().apply {
+                putLong(EXTRA_TRANSFER_ID, transferId)
+                putString(EXTRA_VEHICLE, vehicle)
+                putString(EXTRA_COLOR, color)
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter.transferId = arguments?.getLong(EXTRA_TRANSFER_ID) ?: 0L
     }
 
     override fun initUx(savedInstanceState: Bundle?) {
@@ -68,21 +80,11 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
         gm.uiSettings.isZoomGesturesEnabled = false
     }
 
-    override fun hideDialog() {
-        dialog.hide()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (!showDialog) dialog.hide()
-    }
-
-    override fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?) {
-        dialog.show()
-        showDialog = true
+    override fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, routeModel: RouteModel?) {
         tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
         tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
-        tv_vehicle_model_rate.text = vehicle
+        tv_vehicle_model_rate.text = arguments?.getString(EXTRA_VEHICLE)
+        val color = arguments?.getString(EXTRA_COLOR) ?: ""
         context?.let { carColor_rate.setImageDrawable(Utils.getCarColorFormRes(it, color)) }
         drawMapForReview(routeModel, transfer.from, startPoint)
     }

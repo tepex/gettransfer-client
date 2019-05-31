@@ -5,7 +5,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
 import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -21,53 +20,30 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     private val orderInteractor: OrderInteractor by inject()
     private val routeMapper: RouteMapper by inject()
 
-    private var transferId: Long = 0L
-    private var offerId: Long = 0L
+    internal var transferId: Long = 0L
+    private val offerId: Long
+        get() = reviewInteractor.offerIdForReview
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.hideDialog()
-        showRateForLastTrip()
+        getTransferAndSetupReview()
     }
 
-    private fun showRateForLastTrip() {
+    private fun getTransferAndSetupReview() {
         utils.launchSuspend {
-            fetchResultOnly { transferInteractor.getAllTransfers() }
+            fetchResultOnly { transferInteractor.getTransfer(transferId) }
                     .isSuccess()
-                    ?.let {
-                        getLastTransfer(it.filterRateable())
-                                ?.let { lastTransfer ->
-                                    transferId = lastTransfer.id
-                                    checkToShowReview(lastTransfer) }
-                    }
+                    ?.let { setupReview(it) }
         }
     }
 
-    private fun getLastTransfer(transfers: List<Transfer>) =
-            transfers.filter { it.status.checkOffers }
-                    .sortedByDescending { it.dateToLocal }
-                    .firstOrNull()
-
-    private suspend fun checkToShowReview(transfer: Transfer) =
-            fetchResultOnly { offerInteractor.getOffers(transfer.id) }
-                    .isSuccess()
-                    ?.firstOrNull()
-                    ?.let { offer ->
-                        if (transfer.offersUpdatedAt != null) fetchDataOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
-                        if (offer.isRateAvailable() && !offer.isOfferRatedByUser()) {
-                            val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
-                            reviewInteractor.offerIdForReview = offer.id
-                            offerId = offer.id
-                            viewState.setupReviewForLastTrip(
-                                    transferMapper.toView(transfer),
-                                    LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
-                                    offer.vehicle.name,
-                                    offer.vehicle.color ?: "",
-                                    routeModel
-                            )
-                            logTransferReviewRequested()
-                        }
-                    }
+    private suspend fun setupReview(transfer: Transfer) {
+        val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
+        viewState.setupReviewForLastTrip(
+                transferMapper.toView(transfer),
+                LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
+                routeModel)
+    }
 
     private suspend fun createRouteModel(transfer: Transfer): RouteModel? {
         val route = transfer.from.point?.let { from ->
@@ -92,11 +68,6 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
             }
         }
     }
-
-    private fun logTransferReviewRequested() =
-            analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
-                    createEmptyBundle(),
-                    emptyMap())
 
     fun onTransferDetailsClick() {
         router.navigateTo(Screens.Details(transferId))
