@@ -102,6 +102,7 @@ object OfferItemBindDelegate {
         with(view) {
             tv_car_model_tiny.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
             tv_car_model_tiny.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.view_offer_book_now_title_text_size))
+            ivCarColorTiny.isVisible = false
             tv_car_class_tiny.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
             Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
             bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING, true)

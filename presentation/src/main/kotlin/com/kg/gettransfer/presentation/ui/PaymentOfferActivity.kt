@@ -231,6 +231,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         val transportTypeId = TransportType.ID.parse(transportType)
         tvClass.text = getString(TransportTypeMapper.getNameById(transportTypeId))
         tvModel.text = getString(TransportTypeMapper.getModelsById(transportTypeId))
+        ivCarColor.isVisible = false
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(transportTypeId))
         OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(

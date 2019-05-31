@@ -29,13 +29,14 @@
         <TextView
             android:id="@+id/tvModel"
             style="@style/sf_pro_display_semibold"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/payment_offer_tiny_tvModel_margin_start"
             android:layout_marginTop="@dimen/payment_offer_tiny_tvModel_margin_top"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/ivCarPhoto"
             app:layout_constraintTop_toTopOf="parent"
+            android:maxLength="28"
             tools:text="Mercedes-Benz E-Class" />
 
         <ImageView

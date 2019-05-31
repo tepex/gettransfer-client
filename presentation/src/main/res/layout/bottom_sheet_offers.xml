@@ -9,7 +9,6 @@
     android:focusable="true"
     android:gravity="start"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/bottom_sheet_offer_details_padding_bottom"
     app:behavior_hideable="true"
     app:behavior_skipCollapsed="true"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
@@ -164,7 +163,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
         android:paddingStart="@dimen/bottom_sheet_offer_details_margin_16dp"
         android:paddingEnd="@dimen/bottom_sheet_offer_details_margin_16dp">
 
