@@ -555,6 +555,7 @@
     <string name="LNG_RIDE_PAY_CHARGE"><b>You will be charged %s,</b> equivalent\nto %s</string>
     <string name="LNG_RIDE_PAY_CHARGE2"><b>You will be charged %s</b></string>
     <string name="LNG_TRANSFER_CANCELED">Transfer canceled</string>
+    <string name="LNG_LOGIN_LOGIN_TITLE">Log in &amp; Sign up</string>
 
     <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
     <string name="switzerland_phone" translatable="false">+41 22 518 04 00</string>

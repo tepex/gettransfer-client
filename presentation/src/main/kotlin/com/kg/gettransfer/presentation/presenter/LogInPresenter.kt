@@ -30,13 +30,9 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
     val isPhone: Boolean
         get() = LoginHelper.checkIsNumber(emailOrPhone)
 
-    companion object{
+    companion object {
         const val PHONE_ATTRIBUTE = "+"
         const val EMAIL_ATTRIBUTE = "@"
-
-        const val CLOSE_FRAGMENT = 0
-        const val PASSWORD_VIEW  = 1
-        const val SMS_CODE_VIEW  = 2
     }
 
     override fun attachView(view: LogInView) {
@@ -48,70 +44,14 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
     private fun validateInput(): Boolean {
         LoginHelper.validateInput(emailOrPhone!!, isPhone)    //force unwrap because null-check is already done
-                .also {
-                    when (it) {
-                        INVALID_EMAIL -> viewState.showValidationError(true, INVALID_EMAIL)
-                        INVALID_PHONE -> viewState.showValidationError(true, INVALID_PHONE)
-                        CREDENTIALS_VALID -> return true
-                    }
+            .also {
+                when (it) {
+                    INVALID_EMAIL -> viewState.showValidationError(true, INVALID_EMAIL)
+                    INVALID_PHONE -> viewState.showValidationError(true, INVALID_PHONE)
+                    CREDENTIALS_VALID -> return true
                 }
+            }
         return false
-    }
-
-    fun sendVerificationCode() {
-        if (!checkInputData()) return
-
-        utils.launchSuspend {
-            viewState.blockInterface(true, true)
-            fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when(isPhone) {
-                    true -> sessionInteractor.getVerificationCode(null, LoginHelper.formatPhone(emailOrPhone))
-                    false -> sessionInteractor.getVerificationCode(emailOrPhone, null)
-                }
-            }.also {
-                if (it.error != null)
-                    viewState.showError(true, it.error!!)
-                else {
-                    if (showingFragment == SMS_CODE_VIEW) viewState.updateTimerResendCode()
-                    else viewState.showPasswordFragment(true, SMS_CODE_VIEW)
-                }
-            }
-            viewState.blockInterface(false)
-        }
-    }
-
-    fun onLoginClick(withSmsCode: Boolean = false) {
-        if(password == null){
-            viewState.showValidationError(true, LoginActivity.INVALID_PASSWORD)
-            return
-        }
-   //     viewState.showValidationError(false, 0)
-        if (!checkInputData()) return
-
-        utils.launchSuspend {
-            viewState.blockInterface(true, true)
-            fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when (isPhone) {
-                    true -> accountManager.login(null, LoginHelper.formatPhone(emailOrPhone), password!!, withSmsCode)
-                    false -> accountManager.login(emailOrPhone, null, password!!, withSmsCode)
-                }
-            }
-                    .also {
-                        it.error?.let { e ->
-                            viewState.showError(true, e)
-                            logLoginEvent(Analytics.RESULT_FAIL)
-                        }
-
-                        it.isSuccess()?.let {
-                            viewState.showErrorText(false)
-                            if (withSmsCode) viewState.showChangePasswordDialog()
-                            else openPreviousScreen()
-                            logLoginEvent(Analytics.RESULT_SUCCESS)
-                            registerPushToken()
-                        }
-                    }
-            viewState.blockInterface(false)
-        }
     }
 
     private fun suggestCreateAccount() {
@@ -122,53 +62,56 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         if (nextScreen.isNullOrEmpty()) return
         when (nextScreen) {
             Screens.CLOSE_AFTER_LOGIN -> router.exit()
-            Screens.CARRIER_MODE   -> {
+            Screens.CARRIER_MODE -> {
                 checkCarrierMode()
             }
             Screens.PASSENGER_MODE -> {
                 router.exit()
 //                analytics.logProfile(Analytics.PASSENGER_TYPE) //TODO add analitics
             }
-            Screens.OFFERS         -> {
+            Screens.OFFERS -> {
                 router.newChainFromMain(Screens.Offers(transferId))
             }
             Screens.PAYMENT_OFFER -> {
                 utils.launchSuspend {
-                    fetchData (NO_CACHE_CHECK) { transferInteractor.getTransfer(transferId) }
-                            ?.let { transfer ->
-                                val transferModel = transferMapper.toView(transfer)
-                                router.newChainFromMain(
-                                        Screens.PaymentOffer(
-                                                transferId,
-                                                offerId,
-                                                transferModel.dateRefund,
-                                                transferModel.paymentPercentages!!,
-                                                null
-                                        )
+                    fetchData(NO_CACHE_CHECK) { transferInteractor.getTransfer(transferId) }
+                        ?.let { transfer ->
+                            val transferModel = transferMapper.toView(transfer)
+                            router.newChainFromMain(
+                                Screens.PaymentOffer(
+                                    transferId,
+                                    offerId,
+                                    transferModel.dateRefund,
+                                    transferModel.paymentPercentages!!,
+                                    null
                                 )
-                            }
+                            )
+                        }
                 }
             }
             Screens.RATE_TRANSFER -> {
                 router.newRootScreen(Screens.Splash(transferId, rate, true))
             }
         }
-        if (openSettingsScreen) { router.replaceScreen(Screens.Settings) }
+        if (openSettingsScreen) {
+            router.replaceScreen(Screens.Settings)
+        }
     }
 
     private fun checkInputData() =
-            emailOrPhone != null
-                    && checkIfEmailOrPhone()
-                    && validateInput()
+        emailOrPhone != null
+                && checkIfEmailOrPhone()
+                && validateInput()
 
     private fun checkIfEmailOrPhone() =
         emailOrPhone!!.run {
             if (firstSign() == PHONE_ATTRIBUTE || any { it.toString() == EMAIL_ATTRIBUTE }) {
                 true
             } else {
-                viewState.setError(false,
-                        R.string.LNG_ERROR_EMAIL_PHONE,
-                        Utils.phoneUtil.internationalExample(sessionInteractor.locale)
+                viewState.setError(
+                    false,
+                    R.string.LNG_ERROR_EMAIL_PHONE,
+                    Utils.phoneUtil.internationalExample(sessionInteractor.locale)
                 )
                 false
             }
@@ -176,7 +119,6 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
     /*private fun identifyLoginType(input: String) =
             input.contains("@")*/
-
 
     private fun logLoginEvent(result: String) {
         val map = mutableMapOf<String, Any>()
@@ -186,10 +128,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
     }
 
     override fun onBackCommandClick() {
-        when {
-            showingFragment != null -> viewState.showPasswordFragment(false, CLOSE_FRAGMENT)
-            else                    -> router.exit()
-        }
+        router.backTo(Screens.MainPassenger())
     }
 
     fun setEmailOrPhone(email: String) {
@@ -202,7 +141,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
     fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
 
-    private fun checkCarrierMode()  {
+    private fun checkCarrierMode() {
         if (accountManager.remoteAccount.isDriver) {
             if (accountManager.remoteAccount.isManager) analytics.logProfile(Analytics.CARRIER_TYPE)
             else analytics.logProfile(Analytics.DRIVER_TYPE)
@@ -212,11 +151,50 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         router.replaceScreen(Screens.Carrier(Screens.REG_CARRIER))
     }
 
-    fun showNoAccountError(){
-        viewState.setError(false,
-                when(isPhone){
-                    true -> R.string.LNG_ERROR_PHONE_NOTFOUND
-                    false -> R.string.LNG_ERROR_EMAIL_NOTFOUND
-                })
+    fun showNoAccountError() {
+        viewState.setError(
+            false,
+            when (isPhone) {
+                true -> R.string.LNG_ERROR_PHONE_NOTFOUND
+                false -> R.string.LNG_ERROR_EMAIL_NOTFOUND
+            }
+        )
+    }
+
+    fun loginWithCode() {
+        router.replaceScreen(Screens.SmsCode(isPhone, emailOrPhone))
+    }
+
+    fun onLoginClick() {
+        if (password == null) {
+            viewState.showValidationError(true, MainLoginActivity.INVALID_PASSWORD)
+            return
+        }
+        if (!checkInputData()) return
+
+        utils.launchSuspend {
+            viewState.blockInterface(true, true)
+            fetchResult(SHOW_ERROR, checkLoginError = false) {
+                when (isPhone) {
+                    true -> accountManager.login(null, LoginHelper.formatPhone(emailOrPhone), password!!, false)
+                    false -> accountManager.login(emailOrPhone, null, password!!, false)
+                }
+            }
+                .also {
+                    it.error?.let { e ->
+                        viewState.showError(true, e)
+                        logLoginEvent(Analytics.RESULT_FAIL)
+                    }
+
+                    it.isSuccess()?.let {
+                        //                        viewState.showErrorText(false, null)
+                        openPreviousScreen()
+                        logLoginEvent(Analytics.RESULT_SUCCESS)
+                        registerPushToken()
+                        router.exit()
+                    }
+                }
+            viewState.blockInterface(false)
+        }
     }
 }
