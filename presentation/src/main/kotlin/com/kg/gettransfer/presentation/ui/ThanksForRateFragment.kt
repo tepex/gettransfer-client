@@ -14,7 +14,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
 import com.kg.gettransfer.presentation.view.ThanksForRateView
 import kotlinx.android.synthetic.main.view_thanks_for_rate.*
 
-class ThanksForRateFragment: BaseBottomSheetDialogFragment(), ThanksForRateView {
+class ThanksForRateFragment : BaseBottomSheetDialogFragment(), ThanksForRateView {
 
     @InjectPresenter
     internal lateinit var presenter: ThanksForRatePresenter
@@ -49,7 +49,6 @@ class ThanksForRateFragment: BaseBottomSheetDialogFragment(), ThanksForRateView 
         else {
             et_thanks_comment.text.clear()
         }
-
     }
 
     override fun onDismiss(dialog: DialogInterface?) {

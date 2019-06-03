@@ -28,6 +28,7 @@ interface SessionRepository {
     suspend fun putAccount(account: Account, pass: String? = null, repeatedPass: String? = null): Result<Account>
     suspend fun putNoAccount(account: Account): Result<Account>
     suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean): Result<Account>
+    suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean): Result<Account>
     suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean>
     suspend fun logout(): Result<Account>
 }

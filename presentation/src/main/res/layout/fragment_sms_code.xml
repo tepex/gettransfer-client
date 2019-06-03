@@ -1,60 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:clickable="true"
-    android:focusable="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/loginBackButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:padding="6dp"
+        android:rotation="180"
+        android:src="@drawable/ic_chevron_right_black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/login_logo_width"
+        android:layout_height="@dimen/login_logo_height"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo_small"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite">
+        android:layout_height="0dp"
+        android:background="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/icon">
 
         <TextView
             android:id="@+id/smsTitle"
+            style="@style/black_semiBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/black_semiBold"
             android:gravity="center"
-            android:textSize="18sp"
             android:text="@string/LNG_LOGIN_SEND_SMS_CODE"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/smsSubtitle"
+            style="@style/black_regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/black_regular"
+            android:layout_marginTop="24dp"
             android:gravity="center"
-            android:textSize="16sp"
             android:text="@string/LNG_LOGIN_ENTER_CODE"
-            app:layout_constraintTop_toBottomOf="@+id/smsTitle"
-            android:layout_marginTop="24dp"/>
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@+id/smsTitle" />
 
         <com.chaos.view.PinView
             android:id="@+id/pinView"
             style="@style/PinWidget.PinView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/smsSubtitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:inputType="number"
             android:layout_marginTop="32dp"
             android:cursorVisible="true"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:inputType="number"
             android:textColor="@color/color_gtr_green"
             android:textSize="30sp"
-            android:fontFamily="@font/sf_pro_text_semibold"
             app:cursorColor="@color/color_gtr_green"
             app:cursorWidth="2dp"
             app:itemCount="4"
             app:itemHeight="40dp"
             app:itemSpacing="15dp"
             app:itemWidth="35dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/smsSubtitle"
             app:lineColor="@color/color_gtr_grey"
             app:lineWidth="1dp"
             app:viewType="line">
+
             <requestFocus />
         </com.chaos.view.PinView>
 
@@ -62,17 +86,17 @@
             android:id="@+id/wrongCodeError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/pinView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="8dp"
-            android:textSize="12sp"
             android:fontFamily="@font/sf_pro_text_regular"
             android:textColor="@color/color_gtr_red"
-            android:visibility="gone"/>
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pinView" />
 
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnDone"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="@dimen/general_button_height"
@@ -89,16 +113,16 @@
             android:id="@+id/btnResendCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnLogin"
             android:layout_marginTop="9dp"
-            android:padding="9dp"
             android:fontFamily="@font/sf_pro_text_regular"
+            android:padding="9dp"
+            android:text="@string/LNG_LOGIN_RESEND_ALLOW"
             android:textColor="@color/color_gtr_grey"
             android:textSize="12sp"
-            android:text="@string/LNG_LOGIN_RESEND_ALLOW"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnDone" />
 
     </android.support.constraint.ConstraintLayout>
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

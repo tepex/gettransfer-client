@@ -204,7 +204,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private fun redirectToLogin() {
         with(accountManager) {
-            router.navigateTo(Screens.Login(Screens.CLOSE_AFTER_LOGIN, when{
+            router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, when{
                 remoteProfile.phone.isNullOrEmpty() -> tempProfile.phone
                 remoteProfile.email.isNullOrEmpty() -> tempProfile.email
                 else -> tempProfile.phone

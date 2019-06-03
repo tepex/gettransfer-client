@@ -188,6 +188,19 @@ class SessionRepositoryImpl(
         return Result(account, result.error?.let { ExceptionMapper.map(it) })
     }
 
+    override suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean): Result<Account> {
+        val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().register(name, phone, email, termsAccepted)
+        }
+        if (result.error == null) {
+            result.entity?.let {
+                factory.retrieveCacheDataStore().setAccount(it)
+                account = accountMapper.fromEntity(it)
+            }
+        }
+        return Result(account, result.error?.let { ExceptionMapper.map(it) })
+    }
+
     override suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean> {
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().getVerificationCode(email, phone)

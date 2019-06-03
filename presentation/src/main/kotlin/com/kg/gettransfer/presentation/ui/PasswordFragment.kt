@@ -7,23 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.presenter.LoginPresenter
+import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import kotlinx.android.synthetic.main.fragment_password.*
 
-class PasswordFragment: MvpAppCompatFragment() {
+class PasswordFragment : MvpAppCompatFragment() {
 
     private var passwordVisible = false
 
-    private lateinit var mActivity: LoginActivity
-    private lateinit var mPresenter: LoginPresenter
+    private lateinit var parent: LogInFragment
+    private lateinit var mPresenter: LogInPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_password, container, false)
+        inflater.inflate(R.layout.fragment_password, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mActivity = activity as LoginActivity
-        mPresenter = mActivity.presenter
+        parent = parentFragment as LogInFragment
+        mPresenter = parent.presenter
 
         currentUser.text = mPresenter.emailOrPhone
 
@@ -34,7 +34,7 @@ class PasswordFragment: MvpAppCompatFragment() {
         }
         etPassword.setOnFocusChangeListener { v, hasFocus -> changePasswordToggle(hasFocus) }
         ivPasswordToggle.setOnClickListener { togglePassword() }
-        btnLoginByCode.setOnClickListener { mPresenter.sendVerificationCode() }
+        btnLoginByCode.setOnClickListener { mPresenter.loginWithCode() }
         //tvForgotPassword.setOnClickListener { mPresenter.onPassForgot() }
 
         btnLogin.setOnClickListener { mPresenter.onLoginClick() }

@@ -28,7 +28,6 @@ import com.kg.gettransfer.domain.model.TransportTypePrice
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.extensions.isNonZero
 import com.kg.gettransfer.extensions.simpleFormat
-import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 
@@ -374,7 +373,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 logCreateTransfer(Analytics.SERVER_ERROR)
                 when {
                     result.error!!.isPhoneTaken() -> {
-                        router.navigateTo(Screens.Login(Screens.CLOSE_AFTER_LOGIN, accountManager.tempProfile.phone))
+                        router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, accountManager.tempProfile.phone))
                     }
                     result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(false, R.string.LNG_NETWORK_ERROR)
                     else -> viewState.setError(result.error!!)

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
 
 import com.google.android.gms.maps.model.LatLngBounds
@@ -24,62 +25,61 @@ import org.jetbrains.anko.toast
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import java.lang.IllegalArgumentException
 
-
 object Screens {
     @JvmField val NOT_USED = -1
 
-    @JvmField val MAIN      = "main"
+    @JvmField val MAIN = "main"
     @JvmField val MAIN_MENU = "show_menu"
-    @JvmField val OFFERS    = "offers"
+    @JvmField val OFFERS = "offers"
 
-    @JvmField val CARRIER_MODE   = "carrier_mode"
+    @JvmField val CARRIER_MODE = "carrier_mode"
     @JvmField val PASSENGER_MODE = "passenger_mode"
 
-    @JvmField val REG_CARRIER       = "registration_carrier"
+    @JvmField val REG_CARRIER = "registration_carrier"
     @JvmField val CLOSE_AFTER_LOGIN = "close_after_login"
 
-    @JvmField val MAIN_WITH_MAP    = "main_with_map"
+    @JvmField val MAIN_WITH_MAP = "main_with_map"
     @JvmField val MAIN_WITHOUT_MAP = "main_without_map"
 
     @JvmField val CARRIER_TRIPS_TYPE_VIEW_CALENDAR = "carrier_trips_type_calendar"
-    @JvmField val CARRIER_TRIPS_TYPE_VIEW_LIST     = "carrier_trips_type_list"
+    @JvmField val CARRIER_TRIPS_TYPE_VIEW_LIST = "carrier_trips_type_list"
 
     @JvmField val PAYMENT_OFFER = "payment_offer"
     @JvmField val RATE_TRANSFER = "rate_transfer"
-    const val RETURN_MAIN       = "return"
+    const val RETURN_MAIN = "return"
 
-    private const val EMAIL_DATA  = "mailto:"
+    private const val EMAIL_DATA = "mailto:"
     private const val DIAL_SCHEME = "tel"
 
-    private const val NEW_LINE   = "\n"
+    private const val NEW_LINE = "\n"
     private const val UNDERSCORE = "_"
 
     private var canSendEmail: Boolean? = null
 
-    data class MainPassenger(val showDrawer: Boolean = false,
-                             val rateBundle: Bundle? = null)
-        : SupportAppScreen()
-    {
+    data class MainPassenger(
+        val showDrawer: Boolean = false,
+        val rateBundle: Bundle? = null
+    ) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
-                .apply {
-                    putExtra(MAIN_MENU, showDrawer)
-                    rateBundle?.apply {
-                        putExtra(SplashView.EXTRA_TRANSFER_ID, getLong(SplashView.EXTRA_TRANSFER_ID, 0))
-                        putExtra(SplashView.EXTRA_RATE, getInt(SplashView.EXTRA_RATE, 0))
-                        putExtra(SplashView.EXTRA_SHOW_RATE, getBoolean(SplashView.EXTRA_SHOW_RATE, false))
-                    }
+            .apply {
+                putExtra(MAIN_MENU, showDrawer)
+                rateBundle?.apply {
+                    putExtra(SplashView.EXTRA_TRANSFER_ID, getLong(SplashView.EXTRA_TRANSFER_ID, 0))
+                    putExtra(SplashView.EXTRA_RATE, getInt(SplashView.EXTRA_RATE, 0))
+                    putExtra(SplashView.EXTRA_SHOW_RATE, getBoolean(SplashView.EXTRA_SHOW_RATE, false))
                 }
+            }
     }
 
     data class Carrier(val forIntent: String = CARRIER_MODE) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
-                when (forIntent) {
-                    CARRIER_MODE   -> Intent(context, CarrierTripsMainActivity()::class.java)
-                    REG_CARRIER    -> Intent(context, WebPageActivity()::class.java).apply {
-                        putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
-                    }
-                    else           -> throw IllegalArgumentException("Unknown intent key when try to navigate to Carrier mode in ${this.javaClass.name}")
+            when (forIntent) {
+                CARRIER_MODE -> Intent(context, CarrierTripsMainActivity()::class.java)
+                REG_CARRIER -> Intent(context, WebPageActivity()::class.java).apply {
+                    putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
                 }
+                else -> throw IllegalArgumentException("Unknown intent key when try to navigate to Carrier mode in ${this.javaClass.name}")
+            }
     }
 
     data class Splash(val transferId: Long?, val rate: Int?, val showRate: Boolean) : SupportAppScreen() {
@@ -108,13 +108,13 @@ object Screens {
         }
     }
 
-    object RestorePassword: SupportAppScreen() {
+    object RestorePassword : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
             putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_RESTORE_PASS)
         }
     }
 
-    object CarrierTransfers: SupportAppScreen() {
+    object CarrierTransfers : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
             putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_TRANSFERS)
         }
@@ -123,49 +123,88 @@ object Screens {
     object CreateOrder : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
     }
-    
+
     data class About(val isOnboardingShowed: Boolean) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, AboutActivity::class.java).apply {
             putExtra(AboutView.EXTRA_OPEN_MAIN, false)
         }
     }
 
-    open class Login(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
-            putExtra(LoginView.EXTRA_NEXT_SCREEN, nextScreen)
-            putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
+    open class MainLogin(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+            putExtra(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
+            putExtra(LogInView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
         }
     }
 
-    data class LoginToGetOffers(val id: Long, val email: String?, val backToScreen: String? = null) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
-            putExtra(LoginView.EXTRA_TRANSFER_ID, id)
-            putExtra(LoginView.EXTRA_NEXT_SCREEN, Screens.OFFERS)
-            putExtra(LoginView.EXTRA_EMAIL_TO_LOGIN, email)
+    open class Login(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
+        override fun getFragment(): Fragment {
+            return LogInFragment().apply {
+                arguments = Bundle().apply {
+                    putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
+                    putString(LogInView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
+                }
+            }
+        }
+    }
+
+    open class SignUp() : SupportAppScreen() {
+        override fun getFragment(): Fragment {
+            return SignUpFragment()
+        }
+    }
+
+    open class AuthorizationPager(private val nextScreen: String, private val emailOrPhone: String?) : SupportAppScreen() {
+        override fun getFragment(): Fragment = AuthorizationPagerFragment().apply {
+            arguments = Bundle().apply {
+                putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
+                putString(LogInView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
+            }
+        }
+    }
+
+    open class SmsCode(private val isPhone: Boolean, private val emailOrPhone: String?) : SupportAppScreen() {
+        override fun getFragment() = SmsCodeFragment.newInstance().apply {
+            arguments = Bundle().apply {
+                putBoolean(SmsCodeFragment.EXTERNAL_IS_PHONE, isPhone)
+                putString(SmsCodeFragment.EXTERNAL_EMAIL_OR_PHONE, emailOrPhone)
+            }
+        }
+    }
+
+    data class LoginToGetOffers(val id: Long, val email: String?, val backToScreen: String? = null) :
+        SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+            putExtra(LogInView.EXTRA_TRANSFER_ID, id)
+            putExtra(LogInView.EXTRA_NEXT_SCREEN, Screens.OFFERS)
+            putExtra(LogInView.EXTRA_EMAIL_TO_LOGIN, email)
         }
     }
 
     data class LoginToPaymentOffer(val transferId: Long, val offerId: Long?) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LoginActivity::class.java).apply {
-            putExtra(LoginView.EXTRA_TRANSFER_ID, transferId)
-            putExtra(LoginView.EXTRA_OFFER_ID, offerId)
-            putExtra(LoginView.EXTRA_NEXT_SCREEN, Screens.PAYMENT_OFFER)
+        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+            putExtra(LogInView.EXTRA_TRANSFER_ID, transferId)
+            putExtra(LogInView.EXTRA_OFFER_ID, offerId)
+            putExtra(LogInView.EXTRA_NEXT_SCREEN, Screens.PAYMENT_OFFER)
         }
     }
 
     data class LoginToRateTransfer(val transferId: Long, val rate: Int) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?): Intent = Intent(context, LoginActivity::class.java).apply {
-            putExtra(LoginView.EXTRA_TRANSFER_ID, transferId)
-            putExtra(LoginView.EXTRA_RATE, rate)
-            putExtra(LoginView.EXTRA_NEXT_SCREEN, Screens.RATE_TRANSFER)
-        }
+        override fun getActivityIntent(context: Context?): Intent =
+            Intent(context, MainLoginActivity::class.java).apply {
+                putExtra(LogInView.EXTRA_TRANSFER_ID, transferId)
+                putExtra(LogInView.EXTRA_RATE, rate)
+                putExtra(LogInView.EXTRA_NEXT_SCREEN, Screens.RATE_TRANSFER)
+            }
     }
 
-    data class FindAddress(val from: String,
-                           val to: String,
-                           val isClickTo: Boolean?,
-                           val bounds: LatLngBounds,
-                           val returnMain: Boolean = false) :
+    data class FindAddress(
+        val from: String,
+        val to: String,
+        val isClickTo: Boolean?,
+        val bounds: LatLngBounds,
+        val returnMain: Boolean = false
+    ) :
         SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, SearchActivity::class.java).apply {
             putExtra(SearchView.EXTRA_ADDRESS_FROM, from)
@@ -203,8 +242,10 @@ object Screens {
             }
     }
 
-    data class Payment(val transferId: Long, val offerId: Long?, val url: String?, val percentage: Int,
-                       val bookNowTransportId: String?, val paymentType: String) :
+    data class Payment(
+        val transferId: Long, val offerId: Long?, val url: String?, val percentage: Int,
+        val bookNowTransportId: String?, val paymentType: String
+    ) :
         SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentActivity::class.java).apply {
             putExtra(PaymentView.EXTRA_TRANSFER_ID, transferId)
@@ -216,7 +257,13 @@ object Screens {
         }
     }
 
-    data class PaymentOffer(val transferId: Long, val offerId: Long?, val dateRefund: Date?, val paymentPercentages: List<Int>, val bookNowTransportId: String?) : SupportAppScreen() {
+    data class PaymentOffer(
+        val transferId: Long,
+        val offerId: Long?,
+        val dateRefund: Date?,
+        val paymentPercentages: List<Int>,
+        val bookNowTransportId: String?
+    ) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentOfferActivity::class.java).apply {
             putExtra(
                 PaymentOfferView.EXTRA_PARAMS,
@@ -242,8 +289,10 @@ object Screens {
             }
     }
 
-    data class SendEmail(val emailCarrier: String?, val logsFile: File?,
-                         val transferId: Long?, val userEmail: String?) : SupportAppScreen() {
+    data class SendEmail(
+        val emailCarrier: String?, val logsFile: File?,
+        val transferId: Long?, val userEmail: String?
+    ) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?): Intent? {
             val emailSelectorIntent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse(EMAIL_DATA)
@@ -256,7 +305,7 @@ object Screens {
                 else putExtra(Intent.EXTRA_EMAIL, arrayOf(context!!.getString(R.string.email_support)))
 
                 val subject = context?.getString(R.string.LNG_EMAIL_SUBJECT)
-                        .plus("${transferId ?: ""}")
+                    .plus("${transferId ?: ""}")
 
                 putExtra(Intent.EXTRA_SUBJECT, subject)
                 putExtra(Intent.EXTRA_TEXT, createSignature())
@@ -265,19 +314,20 @@ object Screens {
 
                 logsFile?.let {
                     putExtra(
-                            Intent.EXTRA_STREAM,
-                            FileProvider.getUriForFile(context!!, context.getString(R.string.file_provider_authority), it)
+                        Intent.EXTRA_STREAM,
+                        FileProvider.getUriForFile(context!!, context.getString(R.string.file_provider_authority), it)
                     )
                 }
             }
             return if (checkEmailIntent(context!!, emailIntent)) Intent.createChooser(
                 emailIntent,
-                context.getString(R.string.send_email))
+                context.getString(R.string.send_email)
+            )
             else Intent()
         }
 
         private fun createSignature(): String =
-                NEW_LINE.plus(UNDERSCORE)
+            NEW_LINE.plus(UNDERSCORE)
                 .plus(UNDERSCORE).plus(NEW_LINE)
                 .plus(Build.DEVICE).plus(" ")
                 .plus(Build.MODEL).plus(NEW_LINE)
@@ -287,11 +337,16 @@ object Screens {
                 .plus(userEmail ?: "")
     }
 
-
     class Share() : SupportAppScreen() {
         override fun getActivityIntent(context: Context?): Intent {
             return Intent(Intent.ACTION_SEND).apply {
-                putExtra(Intent.EXTRA_TEXT, context?.getString(R.string.LNG_SHARE_TEXT,"https://play.google.com/store/apps/details?id=com.gettransfer"))
+                putExtra(
+                    Intent.EXTRA_TEXT,
+                    context?.getString(
+                        R.string.LNG_SHARE_TEXT,
+                        "https://play.google.com/store/apps/details?id=com.gettransfer"
+                    )
+                )
                 type = "text/plain"
             }
         }
@@ -308,27 +363,28 @@ object Screens {
 
     private fun checkEmailIntent(context: Context, intent: Intent): Boolean {
         if (canSendEmail == null) canSendEmail =
-                context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isNotEmpty()
+            context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isNotEmpty()
         if (!canSendEmail!!) context.toast(context.getString(R.string.no_email_apps))
         return canSendEmail!!
     }
 
-    data class PayPalConnection(val paymentId: Long,
-                                val nonce: String,
-                                val transferId: Long,
-                                val offerId: Long?,
-                                val percentage: Int,
-                                val bookNowTransportId: String?) : SupportAppScreen()
-    {
+    data class PayPalConnection(
+        val paymentId: Long,
+        val nonce: String,
+        val transferId: Long,
+        val offerId: Long?,
+        val percentage: Int,
+        val bookNowTransportId: String?
+    ) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
-                Intent(context, PaypalConnectionActivity::class.java).apply {
-                    putExtra(PaypalConnectionView.EXTRA_PAYMENT_ID, paymentId)
-                    putExtra(PaypalConnectionView.EXTRA_NONCE, nonce)
-                    putExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, transferId)
-                    putExtra(PaypalConnectionView.EXTRA_OFFER_ID, offerId)
-                    putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
-                    putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
-                }
+            Intent(context, PaypalConnectionActivity::class.java).apply {
+                putExtra(PaypalConnectionView.EXTRA_PAYMENT_ID, paymentId)
+                putExtra(PaypalConnectionView.EXTRA_NONCE, nonce)
+                putExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, transferId)
+                putExtra(PaypalConnectionView.EXTRA_OFFER_ID, offerId)
+                putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
+                putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
+            }
     }
 
     object Support : SupportAppScreen() {

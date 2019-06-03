@@ -132,6 +132,8 @@
     <string name="LNG_MENU_SUBTITLE_LOGIN">Passenger log in and sign up</string>
     <string name="LNG_MENU_TITLE_NEW">New</string>
     <string name="LNG_MENU_SUBTITLE_NEW">Create new transfer</string>
+    <string name="LNG_REGISTERED">Successful registration</string>
+    <string name="LNG_TRANSFER_CREATE_HINT">You can create a new transfers over the world</string>
     <string name="LNG_MENU_TITLE_RIDES">Requests</string>
     <string name="LNG_MENU_SUBTITLE_RIDES">Active and archived rides</string>
     <string name="LNG_MENU_TITLE_LAST_RIDES">Archived rides</string>
@@ -423,6 +425,7 @@
     <string name="LNG_PAYMENT_LEAVE_COMMENT">Please leave your comment about transfer:</string>
     <string name="LNG_PAYMENT_YOUR_COMMENT">Your comment</string>
     <string name="LNG_PAYMENT_TRANSFER_NUMBER">Transfer number</string>
+    <string name="LNG_ERROR_CREDENTIALS">Invalid credentials</string>
     <string name="LNG_TRANSFER_TITLE">Transfer paid</string>
     <string name="LNG_RIDE_ABOUT_REQUEST">About request</string>
     <string name="LNG_RIDE_ABOUT_DRIVER">About driver</string>

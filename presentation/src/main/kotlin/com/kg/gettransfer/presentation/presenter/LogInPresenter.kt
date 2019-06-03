@@ -2,35 +2,28 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.domain.model.Account.Companion.GROUP_CARRIER_DRIVER
-import com.kg.gettransfer.domain.model.Account.Companion.GROUP_MANAGER_VIEW_TRANSFERS
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.extensions.internationalExample
 import com.kg.gettransfer.extensions.newChainFromMain
-
-import com.kg.gettransfer.presentation.ui.LoginActivity
+import com.kg.gettransfer.presentation.ui.MainLoginActivity
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_PHONE
-
-import com.kg.gettransfer.presentation.view.LoginView
+import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
-
 import com.kg.gettransfer.utilities.Analytics
+import org.koin.standalone.KoinComponent
 
 @InjectViewState
-class LoginPresenter : BasePresenter<LoginView>() {
-    internal var showingFragment: Int? = null
+class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
     internal var emailOrPhone: String? = null
     internal var nextScreen: String? = null
     internal var transferId: Long = 0
     internal var offerId: Long? = null
     internal var rate: Int? = null
-    val smsResendDelaySec = sessionInteractor.mobileConfigs.smsResendDelaySec
 
     private var password: String? = null
 
@@ -46,7 +39,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
         const val SMS_CODE_VIEW  = 2
     }
 
-    override fun attachView(view: LoginView) {
+    override fun attachView(view: LogInView) {
         super.attachView(view)
         emailOrPhone?.let {
             viewState.setEmail(it)
@@ -133,8 +126,8 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 checkCarrierMode()
             }
             Screens.PASSENGER_MODE -> {
-                router.newRootScreen(Screens.MainPassenger())
-                analytics.logProfile(Analytics.PASSENGER_TYPE)
+                router.exit()
+//                analytics.logProfile(Analytics.PASSENGER_TYPE) //TODO add analitics
             }
             Screens.OFFERS         -> {
                 router.newChainFromMain(Screens.Offers(transferId))

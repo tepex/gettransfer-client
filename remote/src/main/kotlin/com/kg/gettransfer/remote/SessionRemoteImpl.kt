@@ -63,6 +63,11 @@ class SessionRemoteImpl : SessionRemote {
         return accountMapper.fromRemote(response.data?.account!!)
     }
 
+    override suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean): AccountEntity {
+        val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.register(name, phone, email, termsAccepted) }
+        return accountMapper.fromRemote(response.data?.account!!)
+    }
+
     override suspend fun getVerificationCode(email: String?, phone: String?): Boolean {
         val response: ResponseModel<String?> = core.tryTwice { core.api.getVerificationCode(email, phone) }
         return response.error == null

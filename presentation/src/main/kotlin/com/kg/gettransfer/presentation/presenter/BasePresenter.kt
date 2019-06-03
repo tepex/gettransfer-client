@@ -38,7 +38,6 @@ import org.koin.standalone.inject
 import org.koin.standalone.KoinComponent
 
 import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.Screen
 
 import timber.log.Timber
 
@@ -75,7 +74,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
         router.exit()
     }
 
-    protected fun login(nextScreen: String, email: String?) = router.navigateTo(Screens.Login(nextScreen, email))
+    protected fun login(nextScreen: String, email: String?) = router.navigateTo(Screens.MainLogin(nextScreen, email))
 
     override fun onFirstViewAttach() {
         if (sessionInteractor.isInitialized) return

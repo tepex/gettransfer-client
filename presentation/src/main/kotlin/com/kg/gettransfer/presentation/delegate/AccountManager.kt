@@ -90,6 +90,12 @@ class AccountManager : KoinComponent {
         return result
     }
 
+    suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean): Result<Account> {
+        val result = sessionInteractor.register(name, phone, email, termsAccepted)
+        if (result.error == null) initTempUser(result.model.user)
+        return result
+    }
+
     suspend fun logout(): Result<Account> {
         clearTempUser()
         return sessionInteractor.logout()

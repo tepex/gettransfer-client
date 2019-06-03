@@ -11,15 +11,17 @@ import com.kg.gettransfer.domain.repository.SessionRepository
 import java.util.Locale
 
 class SessionInteractor(
-        private val sessionRepository: SessionRepository,
-        private val geoRepository: GeoRepository
+    private val sessionRepository: SessionRepository,
+    private val geoRepository: GeoRepository
 ) {
     val isInitialized: Boolean
         get() = sessionRepository.isInitialized
 
     var accessToken: String
         get() = sessionRepository.accessToken
-        set(value) { sessionRepository.accessToken = value }
+        set(value) {
+            sessionRepository.accessToken = value
+        }
 
     val account: Account
         get() = sessionRepository.account
@@ -32,7 +34,9 @@ class SessionInteractor(
 
     var favoriteTransports: Set<TransportType.ID>?
         get() = sessionRepository.favoriteTransportTypes
-        set(value) { sessionRepository.favoriteTransportTypes = value }
+        set(value) {
+            sessionRepository.favoriteTransportTypes = value
+        }
 
     val locales: List<Locale>
         get() = sessionRepository.configs.availableLocales.filter { localesFilterList.contains(it.language) }
@@ -55,26 +59,38 @@ class SessionInteractor(
 
     var currency: Currency
         get() = if (currencies.contains(account.currency)) account.currency else Currency("USD", "\$")
-        set(value) { account.currency = value }
+        set(value) {
+            account.currency = value
+        }
 
     var distanceUnit: DistanceUnit
         get() = account.distanceUnit
-        set(value) { account.distanceUnit = value }
+        set(value) {
+            account.distanceUnit = value
+        }
 
     var isEmailNotificationEnabled: Boolean
         get() = account.isEmailNotificationsEnabled
-        set(value) { account.isEmailNotificationsEnabled = value }
+        set(value) {
+            account.isEmailNotificationsEnabled = value
+        }
 
     suspend fun coldStart() = sessionRepository.coldStart()
 
     suspend fun logout() = sessionRepository.logout()
-    suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean) = sessionRepository.login(email, phone, password, withSmsCode)
+    suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean) =
+        sessionRepository.login(email, phone, password, withSmsCode)
 
-    suspend fun getVerificationCode(email: String?, phone: String?) = sessionRepository.getVerificationCode(email, phone)
+    suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean) =
+        sessionRepository.register(name, phone, email, termsAccepted)
+
+    suspend fun getVerificationCode(email: String?, phone: String?) =
+        sessionRepository.getVerificationCode(email, phone)
 
     suspend fun putAccount(account: Account? = null) = sessionRepository.putAccount(account ?: this.account)
     suspend fun putNoAccount() = sessionRepository.putNoAccount(account)
-    suspend fun changePassword(pass: String, repeatedPass: String) = sessionRepository.putAccount(account, pass, repeatedPass)
+    suspend fun changePassword(pass: String, repeatedPass: String) =
+        sessionRepository.putAccount(account, pass, repeatedPass)
 
     companion object {
         //private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )

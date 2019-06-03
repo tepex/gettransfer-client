@@ -28,7 +28,6 @@ import android.view.*
 
 import android.view.inputmethod.InputMethodManager
 
-import android.widget.LinearLayout
 import android.widget.PopupWindow
 
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -54,12 +53,10 @@ import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.toolbar.view.*
-import kotlinx.android.synthetic.main.view_navigation.*
 
 import org.koin.android.ext.android.inject
 
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
@@ -78,7 +75,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     private lateinit var popupWindowRate: PopupWindow
 
-    private var navigator = SupportAppNavigator(this, Screens.NOT_USED)
+    protected var baseNavigator = SupportAppNavigator(this, Screens.NOT_USED)
 
     protected var viewNetworkNotAvailable: View? = null
 
@@ -200,7 +197,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
-        navigatorHolder.setNavigator(navigator)
+        navigatorHolder.setNavigator(baseNavigator)
     }
 
     @CallSuper
