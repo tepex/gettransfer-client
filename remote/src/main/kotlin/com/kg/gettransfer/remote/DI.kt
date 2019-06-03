@@ -65,6 +65,14 @@ val remoteMappersModule = module {
     single { ChatMapper() }
 
     single { LocationMapper() }
+
+    single { AutocompletePredictionsMapper() }
+    single { PredictionMapper() }
+
+    single { PlaceDetailsResultMapper() }
+    single { PlaceDetailsMapper() }
+    single { AddressComponentMapper() }
+    single { PlaceLocationMapper() }
 }
 
 val remoteModule = module {

@@ -31,6 +31,11 @@ interface Api {
         const val MOBILE_CONFIGS         = "/mobile/mobile.conf"
 
         const val API_LOCATION           = "/json"
+
+
+        /*Autocomplete & place*/
+        const val API_AUTOCOMPLETE  = "/api/address-lookup"
+        const val API_PLACE_DETAILS = "/api/place"
     }
 
     @GET(API_ACCESS_TOKEN)
@@ -186,4 +191,16 @@ interface Api {
     fun confirmPaypal(
             @Field("payment_id") paymentId: Long,
             @Field("nonce") nonce: String) : Deferred<ResponseModel<PaymentStatusWrapperModel>>
+
+
+    /*Autocomplete*/
+    @GET(API_AUTOCOMPLETE)
+    fun getAutocompletePredictions(
+            @Query("query") query: String,
+            @Query("lang") lang: String) : Deferred<AutocompletePredictionsModel>
+
+    @GET(API_PLACE_DETAILS)
+    fun getPlaceDetails(
+            @Query("place_id") placeId: String,
+            @Query("lang") lang: String) : Deferred<PlaceDetailsResultModel>
 }

@@ -2,10 +2,10 @@ package com.kg.gettransfer.domain.model
 
 data class GTAddress(
     val cityPoint: CityPoint,
-    val placeTypes: List<Int>?,
+    val placeTypes: List<String>?,
     val address: String?,
-    val primary: String?,
-    val secondary: String?
+    var primary: String?,
+    var secondary: String?
 ) {
 
     /**
@@ -17,11 +17,26 @@ data class GTAddress(
     val lon: Double?
     get() = cityPoint.point?.longitude
 
-    fun isConcreteObject() = if (placeTypes == null || placeTypes.isEmpty()) false
-        else placeTypes.any { (it in 1..999) || it == TYPE_STREET_ADDRESS }
+    /*fun isConcreteObject() = if (placeTypes == null || placeTypes.isEmpty()) false
+        else placeTypes.any { (it in 1..999) || it == TYPE_STREET_ADDRESS }*/
+
+    /*fun needApproximation() = if (placeTypes == null || placeTypes.isEmpty()) false
+        else placeTypes.any { it == TYPE_ADMINISTRATIVE_AREA_LEVEL_1 || it == TYPE_LOCALITY }*/
 
     fun needApproximation() = if (placeTypes == null || placeTypes.isEmpty()) false
-        else placeTypes.any { it == TYPE_ADMINISTRATIVE_AREA_LEVEL_1 || it == TYPE_LOCALITY }
+                                       else placeTypes.any { it == "route" }
+
+    fun setPrimaryAndSecondary() {
+        if (address != null) {
+            val lastCommaIndex = address.lastIndexOf(", ")
+            if (lastCommaIndex >= 0) {
+                primary = address.substring(0, lastCommaIndex)
+                secondary = address.substring(lastCommaIndex + 2, address.length)
+            } else {
+                primary = address
+            }
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

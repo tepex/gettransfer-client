@@ -5,6 +5,7 @@ import android.content.Intent
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
+import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.Coordinate
 import kotlinx.coroutines.*
@@ -16,7 +17,7 @@ class CoordinateService: Service(), KoinComponent {
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     private val coordinateInteractor: CoordinateInteractor by inject()
-    private val orderInteractor: OrderInteractor by inject()
+    private val geoInteractor: GeoInteractor by inject()
     private var serviceAlive = false
 
     override fun onBind(intent: Intent?) = null
@@ -35,9 +36,8 @@ class CoordinateService: Service(), KoinComponent {
     private fun coordinateProcess(){
         if (serviceAlive) {
             utils.launchSuspend {
-                utils.asyncAwait { orderInteractor.getCurrentAddress() }
+                utils.asyncAwait { geoInteractor.getCurrentLocation() }
                         .isSuccess()
-                        ?.let { it.cityPoint.point }
                         ?.let { coordinateInteractor.sendOwnCoordinates(Coordinate(lat = it.latitude, lon = it.longitude)) }
                 delay(DELAY)
                 coordinateProcess()

@@ -189,15 +189,19 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         viewState.defineAddressRetrieving { withGps ->
             utils.launchSuspend {
                 if (geoInteractor.isGpsEnabled && withGps)
-                    fetchDataOnly { orderInteractor.getCurrentAddress() }
+                    fetchDataOnly { geoInteractor.getCurrentLocation() }
                             ?.let {
-                                lastCurrentLocation = it.cityPoint.point?.let { point -> pointMapper.toLatLng(point) }
-                                setPointAddress(it)
+                                lastCurrentLocation = pointMapper.fromLocationToLatLng(it)
+                                fetchResult { geoInteractor.getAddressByLocation(it) }
+                                        .isSuccess()
+                                        ?.let { address ->
+                                            if (address.cityPoint.point != null) setPointAddress(address)
+                                        }
                             }
                 else
-                    with(fetchResultOnly { geoInteractor.getMyLocation() }) {
+                    with(fetchResultOnly { geoInteractor.getMyLocationByIp() }) {
                         logIpapiRequest()
-                        if (error == null && model.latitude != null && model.longitude != null)
+                        if (error == null && model.latitude != 0.0 && model.longitude != 0.0)
                             setLocation(model)
                     }
             }
@@ -205,10 +209,10 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     private suspend fun setLocation(location: Location) {
-        val point = Point(location.latitude!!, location.longitude!!)
-        val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude!!, location.longitude!!)).build()
-        val latLonPair = getLatLonPair(lngBounds)
-        val result = fetchResultOnly { orderInteractor.getAddressByLocation(true, point, latLonPair) }
+        val point = Point(location.latitude, location.longitude)
+        //val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude, location.longitude)).build()
+        //val latLonPair = getLatLonPair(lngBounds)
+        val result = fetchResultOnly { orderInteractor.getAddressByLocation(true, point) }
         if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model)
     }
 
@@ -244,14 +248,13 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
             if (lastPoint == null) return
 
             lastAddressPoint = lastPoint!!
-            val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
+            //val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
 
             utils.launchSuspend {
                 fetchData {
                     orderInteractor.getAddressByLocation(
                             systemInteractor.selectedField == FIELD_FROM,
-                            pointMapper.fromLatLng(lastPoint!!),
-                            latLonPair)
+                            pointMapper.fromLatLng(lastPoint!!))
                 }
                         ?.let {
                             currentLocation = it.cityPoint.name
@@ -265,13 +268,13 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
     }
 
-    private fun getLatLonPair(latLngBounds: LatLngBounds): Pair<Point, Point> {
+    /*private fun getLatLonPair(latLngBounds: LatLngBounds): Pair<Point, Point> {
         val latLonPair: Pair<Point, Point>
         val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
         val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
         latLonPair = Pair(nePoint, swPoint)
         return latLonPair
-    }
+    }*/
 
     private fun setAddressInSelectedField(address: String) {
         when (systemInteractor.selectedField) {

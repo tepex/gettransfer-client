@@ -64,7 +64,7 @@ dependencies {
     implementation libs.psLocation
     implementation libs.psPlaces
     implementation libs.timber
-	implementation project(":domain")
+	implementation project(":data")
     
 	testImplementation libs.junit
 	testImplementation libs.hamcrest

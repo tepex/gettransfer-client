@@ -2,12 +2,14 @@ package com.kg.gettransfer.domain.model
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.domain.GeoException
 
 data class Result<M>(
     val model: M,
     val error: ApiException? = null,
     val fromCache: Boolean = false,
-    val cacheError: DatabaseException? = null
+    val cacheError: DatabaseException? = null,
+    val geoException: GeoException? = null
 ) {
 
     fun isError()     = error != null

@@ -44,7 +44,10 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
         }
 
         utils.launchSuspend {
-            fetchData(checkLoginError = false) { orderInteractor.getAutocompletePredictions(prediction, latLonPair) }
+            fetchData(checkLoginError = false) {
+                //orderInteractor.getAutocompletePredictions(prediction, latLonPair)
+                orderInteractor.getAutoCompletePredictions(prediction)
+            }
                     ?.let {
                         lastResult = it
                         lastRequest = prediction

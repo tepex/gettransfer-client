@@ -152,8 +152,12 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun onCancelRequestClicked() { viewState.showAlertCancelRequest() }
 
     fun onRepeatTransferClicked() {
-        fromPoint?.let { orderInteractor.from = GTAddress(cityPointMapper.fromView(it), null, transferModel.from, null, null) }
-        toPoint?.let { orderInteractor.to = GTAddress(cityPointMapper.fromView(it), null, transferModel.to, null, null) }
+        fromPoint?.let { orderInteractor.from =
+                GTAddress(cityPointMapper.fromView(it), null, transferModel.from, null, null)
+                        .apply { setPrimaryAndSecondary() }}
+        toPoint?.let { orderInteractor.to =
+                GTAddress(cityPointMapper.fromView(it), null, transferModel.to, null, null)
+                        .apply { setPrimaryAndSecondary() }}
         hourlyDuration?.let { orderInteractor.hourlyDuration = it }
 
         if (orderInteractor.isCanCreateOrder()) router.navigateTo(Screens.CreateOrder)

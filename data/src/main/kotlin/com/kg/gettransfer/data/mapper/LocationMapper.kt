@@ -7,7 +7,6 @@ class LocationMapper: Mapper<LocationEntity, Location> {
     override fun fromEntity(type: LocationEntity): Location =
             Location(type.latitude, type.longitude)
 
-    override fun toEntity(type: Location): LocationEntity {
-        throw UnsupportedOperationException()
-    }
+    override fun toEntity(type: Location) =
+            LocationEntity(type.latitude, type.longitude)
 }

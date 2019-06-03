@@ -1,19 +1,18 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Point
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.RouteInfo
-import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.User
-import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
+import com.kg.gettransfer.domain.repository.SessionRepository
+import com.sun.jndi.cosnaming.ExceptionMapper
 import java.util.Date
 import kotlin.math.absoluteValue
 
-class OrderInteractor(private val geoRepository: GeoRepository, private val routeRepository: RouteRepository) {
+class OrderInteractor(
+        private val geoRepository: GeoRepository,
+        private val routeRepository: RouteRepository,
+        private val sessionRepository: SessionRepository) {
 
     var from: GTAddress?       = null
     var to: GTAddress?         = null
@@ -45,31 +44,36 @@ class OrderInteractor(private val geoRepository: GeoRepository, private val rout
         nameSign = null
     }
 
-    fun getCurrentAddress() = geoRepository.getCurrentAddress()
+    suspend fun getAddressByLocation(isFrom: Boolean, point: Point): Result<GTAddress> {
+        val gtAddress = geoRepository.getAddressByLocation(Location(point.latitude, point.longitude), sessionRepository.account.locale.language)
 
-    fun getAddressByLocation(isFrom: Boolean, point: Point, pair: Pair<Point, Point>): Result<GTAddress> {
-        val result = geoRepository.getAddressByLocation(point, pair)
-        if (result.error != null) return result
-        if (isFrom) from = result.model else to = result.model
-        return result
+        if (gtAddress.error != null) return gtAddress
+        if (isFrom) from = gtAddress.model else to = gtAddress.model
+        return gtAddress
     }
 
-    fun getAutocompletePredictions(prediction: String, pointsPair: Pair<Point, Point>?) =
+    /*fun getAutocompletePredictions(prediction: String, pointsPair: Pair<Point, Point>?) =
             Result(geoRepository.
                     getAutocompletePredictions(prediction, pointsPair)
-                    .model.filter { noPointPlaces.none { n -> it.cityPoint.placeId == n.cityPoint.placeId }}) // if result has addresses without point,
+                    .model.filter { noPointPlaces.none { n -> it.cityPoint.placeId == n.cityPoint.placeId }})*/ // if result has addresses without placeId,
                                                                                                               // exclude such from result
 
-    fun updatePoint(isTo: Boolean): Result<Point> {
-        (if (isTo) to else from).let {
-            return if (it!!.cityPoint.point == null)
-                geoRepository
-                        .getLatLngByPlaceId(it.cityPoint.placeId!!)
-                        .also { pointResult ->
-                            it.cityPoint.point = pointResult.model
-                        }
-            else Result(it.cityPoint.point!!)
-        }
+    suspend fun getAutoCompletePredictions(prediction: String): Result<List<GTAddress>> {
+        val result = geoRepository.getAutocompletePredictions(prediction, sessionRepository.account.locale.language)
+        return if (result.error == null && !result.model.isNullOrEmpty()) {
+            val addresses = result.model
+                    .filter { noPointPlaces.none { n -> it.cityPoint.placeId == n.cityPoint.placeId }} // if result has addresses without placeId,
+            Result(addresses)                                                                   // exclude such from result
+        } else Result(emptyList(), result.error)
+    }
+
+    suspend fun updatePoint(isTo: Boolean, placeId: String): Result<GTAddress> {
+        val result = geoRepository.getPlaceDetails(placeId, sessionRepository.account.locale.language)
+        return if (result.error == null) {
+            if (isTo) to = result.model
+            else from = result.model
+            Result(result.model)
+        } else Result(GTAddress.EMPTY, result.error)
     }
 
     suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String, dateTime: Date? = null): Result<RouteInfo> {

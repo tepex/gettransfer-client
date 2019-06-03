@@ -8,6 +8,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+import com.kg.gettransfer.data.Location
 import com.kg.gettransfer.utilities.LocaleManager
 
 import com.kg.gettransfer.logging.LoggingRepositoryImpl
@@ -19,13 +20,13 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.repository.*
 
-import com.kg.gettransfer.geo.GeoRepositoryImpl
 import com.kg.gettransfer.prefs.EncryptPass
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.encrypt.EncryptPassImpl
+import com.kg.gettransfer.geo.LocationImpl
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
@@ -61,7 +62,7 @@ val ciceroneModule = module {
 }
 
 val geoModule = module {
-    single<GeoRepository> { GeoRepositoryImpl(get()) }
+    single<Location> { LocationImpl(get()) }
 }
 
 val encryptModule = module {
@@ -98,7 +99,7 @@ val domainModule = module {
     single { OfferInteractor(get()) }
     single { PaymentInteractor(get()) }
     single { SystemInteractor(get()) }
-    single { OrderInteractor(get(), get()) }
+    single { OrderInteractor(get(), get(), get()) }
     single { CarrierTripInteractor(get()) }
     single { TransferInteractor(get()) }
     single { PromoInteractor(get()) }
@@ -106,7 +107,7 @@ val domainModule = module {
     single { ChatInteractor(get()) }
     single { CoordinateInteractor(get()) }
     single { CountEventsInteractor(get()) }
-    single { GeoInteractor(get(), get(), get()) }
+    single { GeoInteractor(get(), get()) }
     single { PushTokenInteractor(get()) }
     single { SocketInteractor(get()) }
     single { LogsInteractor(get()) }

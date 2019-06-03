@@ -4,6 +4,7 @@ import com.kg.gettransfer.data.ds.*
 import com.kg.gettransfer.data.ds.io.*
 import com.kg.gettransfer.data.socket.CoordinateDataStoreReceiver
 import com.kg.gettransfer.data.mapper.*
+import com.kg.gettransfer.data.model.PlaceLocationMapper
 import com.kg.gettransfer.data.repository.*
 import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
 import com.kg.gettransfer.data.socket.OfferDataStoreReceiver
@@ -87,8 +88,8 @@ val dataModule = module {
     single <SystemDataStoreReceiver> { SystemSocketDataStoreInput() }
     single { SystemRepositoryImpl() } bind SystemRepository::class
 
-    single { GeoDataStoreRemote() }
-    single { GeoRemoteRepositoryImpl(get()) } bind GeoRemoteRepository::class
+    single { GeoDataStore() }
+    single <GeoRepository> { GeoRepositoryImpl(get()) }
 
     single { PushTokenDataStoreRemote() }
     single { PushTokenRepositoryImpl(get()) } bind PushTokenRepository::class
@@ -145,4 +146,6 @@ val dataModule = module {
     single { CoordinateRepositoryImpl(get()) } bind CoordinateRepository::class
 
     single { CountEventsRepositoryImpl() } bind CountEventsRepository::class
+
+    single { PlaceLocationMapper() }
 }
