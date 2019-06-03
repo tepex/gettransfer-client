@@ -19,8 +19,9 @@ class ReviewInteractor(private val repository: ReviewRepository) {
         get() = repository.currentComment
         set(value) { repository.currentComment = value }
 
-    val rates: MutableSet<ReviewRate>
+    var rates: MutableSet<ReviewRate>
         get() = repository.rates
+        set(value) { repository.rates = value }
 
     fun rateCanceled() { isReviewSuggested = true }
 

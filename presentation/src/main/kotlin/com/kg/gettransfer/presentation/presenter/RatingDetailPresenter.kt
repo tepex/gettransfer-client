@@ -67,9 +67,8 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	}
 
 	private fun fillRates(list: List<ReviewRateModel>) {
-		list.forEach {
-			reviewInteractor.rates.add(reviewRateMapper.fromView(it))
-		}
+		val mappedList = list.map { reviewRateMapper.fromView(it) }
+		reviewInteractor.rates = mappedList.toMutableSet()
 	}
 
 	private fun writeComment(text: String) {
