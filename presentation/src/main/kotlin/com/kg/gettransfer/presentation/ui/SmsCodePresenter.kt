@@ -9,6 +9,7 @@ import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PH
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
+import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SmsCodeView
 import com.kg.gettransfer.utilities.Analytics
 
@@ -102,7 +103,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
     }
 
     fun back() {
-        router.exit()
+        router.replaceScreen(Screens.AuthorizationPager(Screens.CLOSE_AFTER_LOGIN, null))
     }
 
     companion object {

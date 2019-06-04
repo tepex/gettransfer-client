@@ -2,11 +2,7 @@ package com.kg.gettransfer.data.ds
 
 import com.kg.gettransfer.data.SessionCache
 import com.kg.gettransfer.data.SessionDataStore
-
-import com.kg.gettransfer.data.model.AccountEntity
-import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
+import com.kg.gettransfer.data.model.*
 
 import org.koin.standalone.inject
 
@@ -32,7 +28,7 @@ open class SessionDataStoreCache : SessionDataStore {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean): AccountEntity {
+    override suspend fun register(registrationAccountEntity: RegistrationAccountEntity): AccountEntity {
         throw UnsupportedOperationException()
     }
 

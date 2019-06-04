@@ -1,5 +1,6 @@
 package com.kg.gettransfer.remote
 
+import com.kg.gettransfer.data.model.RegistrationAccountEntity
 import com.kg.gettransfer.remote.model.*
 import com.sun.org.apache.xpath.internal.operations.Bool
 
@@ -67,12 +68,8 @@ interface Api {
     ): Deferred<ResponseModel<AccountModelWrapper>>
 
     @POST(API_ACCOUNT_REGISTER)
-    @FormUrlEncoded
     fun register(
-        @Field("email") email: String,
-        @Field("phone") phone: String,
-        @Field("full_name") fullName: String?,
-        @Field("terms_accepted") termsAccepted: Boolean
+        @Body account: RegistrationAccountEntityWrapper
     ): Deferred<ResponseModel<AccountModelWrapper>>
 
     @GET(API_VERIFICATION_CODE)

@@ -12,7 +12,6 @@ import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 /**

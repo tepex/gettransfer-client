@@ -3,10 +3,7 @@ package com.kg.gettransfer.presentation.delegate
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Profile
-import com.kg.gettransfer.domain.model.User
-import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import org.koin.standalone.KoinComponent
@@ -38,7 +35,6 @@ class AccountManager : KoinComponent {
         remoteUser.termsAccepted = false
     }
 
-
     /* TEMPORARY USER */
 
     val tempUser: User
@@ -57,30 +53,29 @@ class AccountManager : KoinComponent {
     }
 
     private fun overwriteField(newField: String, tempField: String?, saveTempUserData: Boolean) =
-            newField.isNotEmpty() && (tempField.isNullOrEmpty() || !saveTempUserData)
+        newField.isNotEmpty() && (tempField.isNullOrEmpty() || !saveTempUserData)
 
     fun isValidProfileForCreateOrder() =
-            when {
-                !tempProfile.email.isNullOrEmpty() && !Utils.checkEmail(tempProfile.email) -> FieldError.INVALID_EMAIL
-                !tempProfile.phone.isNullOrEmpty() && !Utils.checkPhone(tempProfile.phone) -> FieldError.INVALID_PHONE
-                !tempUser.termsAccepted -> FieldError.TERMS_ACCEPTED_FIELD
-                else -> null
-            }
+        when {
+            !tempProfile.email.isNullOrEmpty() && !Utils.checkEmail(tempProfile.email) -> FieldError.INVALID_EMAIL
+            !tempProfile.phone.isNullOrEmpty() && !Utils.checkPhone(tempProfile.phone) -> FieldError.INVALID_PHONE
+            !tempUser.termsAccepted -> FieldError.TERMS_ACCEPTED_FIELD
+            else -> null
+        }
 
     fun isValidEmailAndPhoneFieldsForPay() =
-            when {
-                tempProfile.email.isNullOrEmpty() -> FieldError.EMAIL_FIELD
-                tempProfile.phone.isNullOrEmpty() -> FieldError.PHONE_FIELD
-                !Utils.checkEmail(tempProfile.email) -> FieldError.INVALID_EMAIL
-                !Utils.checkPhone(tempProfile.phone) -> FieldError.INVALID_PHONE
-                else -> null
-            }
+        when {
+            tempProfile.email.isNullOrEmpty() -> FieldError.EMAIL_FIELD
+            tempProfile.phone.isNullOrEmpty() -> FieldError.PHONE_FIELD
+            !Utils.checkEmail(tempProfile.email) -> FieldError.INVALID_EMAIL
+            !Utils.checkPhone(tempProfile.phone) -> FieldError.INVALID_PHONE
+            else -> null
+        }
 
     private fun clearTempUser() {
         tempUser.profile.clear()
         tempUser.termsAccepted = false
     }
-
 
     /* METHODS */
 
@@ -90,8 +85,8 @@ class AccountManager : KoinComponent {
         return result
     }
 
-    suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean): Result<Account> {
-        val result = sessionInteractor.register(name, phone, email, termsAccepted)
+    suspend fun register(registerAccount: RegistrationAccount): Result<Account> {
+        val result = sessionInteractor.register(registerAccount)
         if (result.error == null) initTempUser(result.model.user)
         return result
     }
@@ -102,7 +97,8 @@ class AccountManager : KoinComponent {
     }
 
     suspend fun putAccount(isTempAccount: Boolean = false, updateTempUser: Boolean): Result<Account> {
-        val result = sessionInteractor.putAccount(if (isTempAccount) remoteAccount.copy(user = tempUser) else remoteAccount )
+        val result =
+            sessionInteractor.putAccount(if (isTempAccount) remoteAccount.copy(user = tempUser) else remoteAccount)
         if (result.error == null && updateTempUser) initTempUser(result.model.user)
         return result
     }

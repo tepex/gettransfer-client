@@ -76,6 +76,7 @@ val dataModule = module {
     single { EndpointMapper() }
     single { UserMapper() }
     single { AccountMapper() }
+    single { AccountRegisterMapper() }
     single { ConfigsMapper() }
     single { ReviewRateMapper() }
     single { MobileConfigMapper() }

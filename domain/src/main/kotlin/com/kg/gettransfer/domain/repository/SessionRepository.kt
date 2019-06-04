@@ -1,12 +1,6 @@
 package com.kg.gettransfer.domain.repository
 
-import com.kg.gettransfer.domain.model.Endpoint
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.User
-import com.kg.gettransfer.domain.model.MobileConfig
-import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.*
 
 interface SessionRepository {
 
@@ -28,7 +22,7 @@ interface SessionRepository {
     suspend fun putAccount(account: Account, pass: String? = null, repeatedPass: String? = null): Result<Account>
     suspend fun putNoAccount(account: Account): Result<Account>
     suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean): Result<Account>
-    suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean): Result<Account>
+    suspend fun register(registerAccount: RegistrationAccount): Result<Account>
     suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean>
     suspend fun logout(): Result<Account>
 }

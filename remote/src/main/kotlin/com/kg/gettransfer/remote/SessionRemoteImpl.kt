@@ -1,20 +1,14 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.SessionRemote
-import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.AccountEntity
-import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
+import com.kg.gettransfer.data.model.*
 
 import com.kg.gettransfer.remote.mapper.ConfigsMapper
 import com.kg.gettransfer.remote.mapper.AccountMapper
 import com.kg.gettransfer.remote.mapper.EndpointMapper
 import com.kg.gettransfer.remote.mapper.MobileConfigMapper
+import com.kg.gettransfer.remote.model.*
 
-import com.kg.gettransfer.remote.model.ResponseModel
-import com.kg.gettransfer.remote.model.ConfigsModel
-import com.kg.gettransfer.remote.model.AccountModelWrapper
-import com.kg.gettransfer.remote.model.MobileConfig
 import org.koin.core.parameter.parametersOf
 
 import org.koin.standalone.get
@@ -22,9 +16,9 @@ import org.koin.standalone.inject
 import org.slf4j.Logger
 
 class SessionRemoteImpl : SessionRemote {
-    private val core           = get<ApiCore>()
-    private val configsMapper  = get<ConfigsMapper>()
-    private val accountMapper  = get<AccountMapper>()
+    private val core = get<ApiCore>()
+    private val configsMapper = get<ConfigsMapper>()
+    private val accountMapper = get<AccountMapper>()
     private val endpointMapper = get<EndpointMapper>()
     private val mobileConfigMapper = get<MobileConfigMapper>()
     private val log: Logger by inject { parametersOf("GTR-remote") }
@@ -42,7 +36,8 @@ class SessionRemoteImpl : SessionRemote {
 
     override suspend fun setAccount(accountEntity: AccountEntity): AccountEntity {
         //val response: ResponseModel<AccountModelWrapper> = tryPutAccount(AccountModelWrapper(accountMapper.toRemote(accountEntity)))
-        val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.putAccount(AccountModelWrapper(accountMapper.toRemote(accountEntity))) }
+        val response: ResponseModel<AccountModelWrapper> =
+            core.tryTwice { core.api.putAccount(AccountModelWrapper(accountMapper.toRemote(accountEntity))) }
         return accountMapper.fromRemote(response.data?.account!!)
     }
 
@@ -63,8 +58,20 @@ class SessionRemoteImpl : SessionRemote {
         return accountMapper.fromRemote(response.data?.account!!)
     }
 
-    override suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean): AccountEntity {
-        val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.register(name, phone, email, termsAccepted) }
+    override suspend fun register(account: RegistrationAccountEntity): AccountEntity {
+        //TODO добавить маппер!!
+        val response: ResponseModel<AccountModelWrapper> = core.tryTwice {
+            core.api.register(
+                account = RegistrationAccountEntityWrapper(
+                    RegistrationAccount(
+                        account.fullName,
+                        account.email,
+                        account.phone,
+                        account.termsAccepted
+                    )
+                )
+            )
+        }
         return accountMapper.fromRemote(response.data?.account!!)
     }
 

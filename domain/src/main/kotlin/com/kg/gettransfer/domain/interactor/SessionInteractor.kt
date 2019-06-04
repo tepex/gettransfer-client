@@ -1,11 +1,6 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.User
-import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.Currency
-import com.kg.gettransfer.domain.model.MobileConfig
-import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.SessionRepository
 import java.util.Locale
@@ -81,8 +76,8 @@ class SessionInteractor(
     suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean) =
         sessionRepository.login(email, phone, password, withSmsCode)
 
-    suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean) =
-        sessionRepository.register(name, phone, email, termsAccepted)
+    suspend fun register(registrationAccount: RegistrationAccount) =
+        sessionRepository.register(registrationAccount)
 
     suspend fun getVerificationCode(email: String?, phone: String?) =
         sessionRepository.getVerificationCode(email, phone)

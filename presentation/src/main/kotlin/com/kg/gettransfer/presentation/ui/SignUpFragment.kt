@@ -12,6 +12,8 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.presentation.view.SignUpView
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
+import io.sentry.Sentry
+import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
 /**
@@ -143,7 +145,13 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     override fun setError(e: ApiException) {
-        //TODO remove BaseView or add code.
+        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
+        Sentry.capture(e)
+        if (e.code != ApiException.NETWORK_ERROR) Utils.showError(
+            context!!,
+            false,
+            getString(R.string.LNG_ERROR) + ": " + e.message
+        )
     }
 
     override fun setError(e: DatabaseException) {

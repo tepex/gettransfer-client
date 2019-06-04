@@ -1,6 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
 import com.arellomobile.mvp.InjectViewState
+import com.kg.gettransfer.data.model.ProfileEntity
+import com.kg.gettransfer.data.model.UserEntity
+import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.view.Screens
@@ -9,18 +12,21 @@ import org.koin.standalone.KoinComponent
 
 @InjectViewState
 class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
+
+    //TODO добавить сохранение в модель
     fun registration(name: String, phone: String, email: String, termsAccepted: Boolean) {
-        if (!checkFieldsIsValid(name, email)) viewState.showValidationErrorDialog()
+        if (!checkFieldsIsValid(phone, email)) {
+            viewState.showValidationErrorDialog()
+            return
+        }
 
         utils.launchSuspend {
-            viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
-                accountManager.register(name, phone, email, termsAccepted)
+                accountManager.register(RegistrationAccount(email, phone, termsAccepted, name))
             }
                 .also {
                     it.error?.let { e ->
-                        //TODO added error
-//                        viewState.showError(true, e)
+                        viewState.setError(e)
 //                        logLoginEvent(Analytics.RESULT_FAIL)
                     }
 

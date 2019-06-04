@@ -6,40 +6,25 @@ import com.kg.gettransfer.data.SessionDataStore
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SessionDataStoreCache
 import com.kg.gettransfer.data.ds.SessionDataStoreRemote
-import com.kg.gettransfer.data.mapper.ConfigsMapper
-import com.kg.gettransfer.data.mapper.MobileConfigMapper
-import com.kg.gettransfer.data.mapper.EndpointMapper
-import com.kg.gettransfer.data.mapper.AccountMapper
-import com.kg.gettransfer.data.mapper.ExceptionMapper
-import com.kg.gettransfer.data.model.ResultEntity
-import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
-import com.kg.gettransfer.data.model.AccountEntity
-import com.kg.gettransfer.data.model.EndpointEntity
+import com.kg.gettransfer.data.mapper.*
+import com.kg.gettransfer.data.model.*
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.Endpoint
-import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Configs
-import com.kg.gettransfer.domain.model.User
-import com.kg.gettransfer.domain.model.Profile
-import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.MobileConfig
+import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.domain.repository.SessionRepository
 import org.koin.standalone.get
-import java.util.Locale
+import java.util.*
 
 class SessionRepositoryImpl(
-        private val factory: DataStoreFactory<SessionDataStore, SessionDataStoreCache, SessionDataStoreRemote>
+    private val factory: DataStoreFactory<SessionDataStore, SessionDataStoreCache, SessionDataStoreRemote>
 ) : BaseRepository(), SessionRepository, PreferencesListener {
 
     private val preferencesCache = get<PreferencesCache>()
 
-    private val configsMapper    = get<ConfigsMapper>()
+    private val configsMapper = get<ConfigsMapper>()
     private val mobileConfMapper = get<MobileConfigMapper>()
-    private val endpointMapper   = get<EndpointMapper>()
-    private val accountMapper    = get<AccountMapper>()
+    private val endpointMapper = get<EndpointMapper>()
+    private val accountMapper = get<AccountMapper>()
+    private val accountRegisterMapper = get<AccountRegisterMapper>()
 
     init {
         preferencesCache.addListener(this)
@@ -62,28 +47,36 @@ class SessionRepositoryImpl(
 
     override var accessToken: String
         get() = preferencesCache.accessToken
-        set(value) { preferencesCache.accessToken = value }
+        set(value) {
+            preferencesCache.accessToken = value
+        }
 
     override var userEmail: String?
         get() = preferencesCache.userEmail
-        set(value) { preferencesCache.userEmail = value }
+        set(value) {
+            preferencesCache.userEmail = value
+        }
 
     override var userPhone: String?
         get() = preferencesCache.userPhone
-        set(value) { preferencesCache.userPhone = value }
+        set(value) {
+            preferencesCache.userPhone = value
+        }
 
     override var userPassword: String
         get() = preferencesCache.userPassword
-        set(value) { preferencesCache.userPassword = value }
+        set(value) {
+            preferencesCache.userPassword = value
+        }
 
     override var favoriteTransportTypes: Set<TransportType.ID>?
         get() = preferencesCache.favoriteTransportTypes
-                ?.map { TransportType.ID.parse(it) }
-                ?.toSet()
+            ?.map { TransportType.ID.parse(it) }
+            ?.toSet()
         set(value) {
             preferencesCache.favoriteTransportTypes =
-                    value?.map { it.name }
-                            ?.toSet()
+                value?.map { it.name }
+                    ?.toSet()
         }
 
     override suspend fun coldStart(): Result<Account> {
@@ -91,7 +84,8 @@ class SessionRepositoryImpl(
 
         if (configs === CONFIGS_DEFAULT) {
             val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
-                factory.retrieveDataStore(fromRemote).getConfigs() }
+                factory.retrieveDataStore(fromRemote).getConfigs()
+            }
             result.entity?.let {
                 /* Save to cache only fresh data from remote */
                 if (result.error == null) factory.retrieveCacheDataStore().setConfigs(it)
@@ -101,9 +95,10 @@ class SessionRepositoryImpl(
             /* No chance to go further */
             //if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
 
-            account = factory.retrieveCacheDataStore().getAccount()?.let { accountMapper.fromEntity(it) }?: NO_ACCOUNT
+            account = factory.retrieveCacheDataStore().getAccount()?.let { accountMapper.fromEntity(it) } ?: NO_ACCOUNT
             if (result.error != null) {
-                configs = factory.retrieveCacheDataStore().getConfigs()?.let { configsMapper.fromEntity(it) }?: CONFIGS_DEFAULT
+                configs = factory.retrieveCacheDataStore().getConfigs()?.let { configsMapper.fromEntity(it) }
+                    ?: CONFIGS_DEFAULT
                 return Result(account, ExceptionMapper.map(result.error))
             }
         }
@@ -121,9 +116,10 @@ class SessionRepositoryImpl(
 
         var error: ApiException? = null
         val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).getAccount() }
+            factory.retrieveDataStore(fromRemote).getAccount()
+        }
         result.entity?.let {
-            if(result.error == null) factory.retrieveCacheDataStore().setAccount(it)
+            if (result.error == null) factory.retrieveCacheDataStore().setAccount(it)
             account = accountMapper.fromEntity(it)
         }
         result.error?.let { error = ExceptionMapper.map(it) }
@@ -149,13 +145,13 @@ class SessionRepositoryImpl(
         this.account = accountMapper.fromEntity(accountEntity)
         return Result(this.account)*/
         val accountEntity =
-                if(pass != null && repeatedPass != null) accountMapper.toEntityWithNewPassword(account, pass, repeatedPass)
-                else accountMapper.toEntity(account)
+            if (pass != null && repeatedPass != null) accountMapper.toEntityWithNewPassword(account, pass, repeatedPass)
+            else accountMapper.toEntity(account)
 
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().setAccount(accountEntity)
         }
-        if(result.error == null) {
+        if (result.error == null) {
             result.entity?.let {
                 factory.retrieveCacheDataStore().setAccount(it)
                 this.account = accountMapper.fromEntity(it)
@@ -170,7 +166,12 @@ class SessionRepositoryImpl(
         return Result(account)
     }
 
-    override suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean): Result<Account> {
+    override suspend fun login(
+        email: String?,
+        phone: String?,
+        password: String,
+        withSmsCode: Boolean
+    ): Result<Account> {
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().login(email, phone, password)
         }
@@ -188,9 +189,9 @@ class SessionRepositoryImpl(
         return Result(account, result.error?.let { ExceptionMapper.map(it) })
     }
 
-    override suspend fun register(name: String, phone: String, email: String, termsAccepted: Boolean): Result<Account> {
+    override suspend fun register(registerAccount: RegistrationAccount): Result<Account> {
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().register(name, phone, email, termsAccepted)
+            factory.retrieveRemoteDataStore().register(accountRegisterMapper.toEntity(registerAccount))
         }
         if (result.error == null) {
             result.entity?.let {
@@ -225,38 +226,38 @@ class SessionRepositoryImpl(
         private val CONFIGS_DEFAULT = Configs.DEFAULT_CONFIGS
 
         private val NO_ACCOUNT = Account(
-                user         = User(Profile(null, null, null), false),
-                locale       = Locale.getDefault(),
-                currency     = defineNoAccountCurrency(),
-                distanceUnit = DistanceUnit.km,
-                groups       = emptyList<String>(),
-                carrierId    = null
+            user = User(Profile(null, null, null), false),
+            locale = Locale.getDefault(),
+            currency = defineNoAccountCurrency(),
+            distanceUnit = DistanceUnit.km,
+            groups = emptyList<String>(),
+            carrierId = null
         )
 
         private val NO_USER = User(
-                profile = Profile(
-                        fullName = null,
-                        email    = null,
-                        phone    = null
-                ),
-                termsAccepted = false
+            profile = Profile(
+                fullName = null,
+                email = null,
+                phone = null
+            ),
+            termsAccepted = false
         )
 
         private val MOBILE_CONFIGS_DEFAULT = MobileConfig(
-                pushShowDelay       = 5,
-                orderMinimumMinutes = 120,
-                termsUrl            = "terms_of_use",
-                smsResendDelaySec   = 90,
-                buildsConfigs       = null
+            pushShowDelay = 5,
+            orderMinimumMinutes = 120,
+            termsUrl = "terms_of_use",
+            smsResendDelaySec = 90,
+            buildsConfigs = null
         )
 
         private fun defineNoAccountCurrency() =
-                java.util.Currency.getInstance(Locale.getDefault()).let {
-                    com.kg.gettransfer.domain.model.Currency(it.currencyCode, it.symbol)
-                            .let { dc ->
-                                if (CONFIGS_DEFAULT.supportedCurrencies.contains(dc)) dc
-                                else CONFIGS_DEFAULT.supportedCurrencies.first { c -> c.code == "USD" }
-                            }
-                }
+            java.util.Currency.getInstance(Locale.getDefault()).let {
+                com.kg.gettransfer.domain.model.Currency(it.currencyCode, it.symbol)
+                    .let { dc ->
+                        if (CONFIGS_DEFAULT.supportedCurrencies.contains(dc)) dc
+                        else CONFIGS_DEFAULT.supportedCurrencies.first { c -> c.code == "USD" }
+                    }
+            }
     }
 }
