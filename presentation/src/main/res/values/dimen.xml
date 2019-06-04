@@ -285,6 +285,8 @@
 	<!-- Transfer types -->
 	<dimen name="transfer_types_text_size">11sp</dimen>
 	<dimen name="transfer_types_title_text_size">12sp</dimen>
+	<dimen name="transfer_types_title_margin_start">5dp</dimen>
+	<dimen name="transfer_types_title_margin_end">10dp</dimen>
 	<dimen name="transfer_types_cost_title">12sp</dimen>
 	<dimen name="transfer_types_cost">14sp</dimen>
 	<dimen name="transfer_types_image_person_width">7dp</dimen>
