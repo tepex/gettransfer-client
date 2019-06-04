@@ -59,8 +59,7 @@
         <include
             android:id="@+id/view_rate_ride"
             layout="@layout/view_rate_your_transfer"
-            android:visibility="gone"
-            />
+            android:visibility="gone"/>
 
         <include
             android:id="@+id/yourRateMark"

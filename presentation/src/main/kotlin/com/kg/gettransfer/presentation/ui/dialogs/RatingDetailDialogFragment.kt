@@ -199,7 +199,6 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		super.onDismiss(dialog)
 		if (isExitWithResult) {
 			ratingListener?.onRatingChangeCancelled()
-			presenter.releaseReviewData()
 		}
 	}
 

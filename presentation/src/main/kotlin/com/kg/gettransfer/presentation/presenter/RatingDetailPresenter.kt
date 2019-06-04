@@ -61,8 +61,6 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		viewState.showProgress(false)
 	}
 
-	fun releaseReviewData() = reviewInteractor.releaseReviewData()
-
 	fun onClickComment(currentComment: String) {
 		viewState.showCommentEditor(getFeedBackText(currentComment))
 	}

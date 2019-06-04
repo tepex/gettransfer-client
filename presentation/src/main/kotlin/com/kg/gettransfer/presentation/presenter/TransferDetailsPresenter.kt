@@ -78,13 +78,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private var startCoordinate: LatLng? = null
     private var offer: Offer? = null
 
-    @CallSuper
-    override fun attachView(view: TransferDetailsView) {
-        super.attachView(view)
-        socketInteractor.addSocketListener(this)
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-           fetchData { transferInteractor.getTransfer(transferId) }
+            fetchData { transferInteractor.getTransfer(transferId) }
                     ?.let { transfer ->
                         setTransferFields(transfer)
                         setOffer(transfer.id)
@@ -98,6 +96,12 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                     }
             viewState.blockInterface(false)
         }
+    }
+
+    @CallSuper
+    override fun attachView(view: TransferDetailsView) {
+        super.attachView(view)
+        socketInteractor.addSocketListener(this)
     }
 
     private fun setTransferFields(transfer: Transfer) {

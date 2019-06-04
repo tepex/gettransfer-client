@@ -535,7 +535,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         }
     }
 
-    override fun showCommonRating(isShow: Boolean, averageRate: Float) {
+    override fun showCommonRating(isShow: Boolean) {
         view_rate_ride.isVisible = isShow
         if (isShow) presenter.logTransferReviewRequested()
     }
