@@ -28,12 +28,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/view_offer_car_model_margin_start_end"
                 android:ellipsize="end"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:textSize="@dimen/view_offer_text_size_14sp"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Mercedes-Benz E-Class"
-                android:maxLength="41"/>
+                android:maxLength="39"/>
 
             <ImageView
                 android:id="@+id/ivCarColorTiny"
@@ -41,9 +42,11 @@
                 android:layout_height="@dimen/bottom_sheet_offer_details_car_color_height"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/border_car_color_indicator"
+                android:visibility="invisible"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_car_model_tiny"
                 app:layout_constraintStart_toEndOf="@+id/tv_car_model_tiny"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_car_model_tiny"
                 app:srcCompat="@drawable/ic_circle_car_color_indicator" />
 
             <TextView
@@ -66,10 +69,14 @@
                 style="@style/black_semiBold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
                 android:lines="1"
                 android:textSize="@dimen/view_offer_text_size_15sp"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/ivCarColorTiny"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="220.00p" />
 

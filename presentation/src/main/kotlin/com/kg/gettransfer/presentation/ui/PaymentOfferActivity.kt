@@ -244,6 +244,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     private fun showCarInfoOffer(offer: OfferModel) {
         tvModel.text = offer.vehicle.name
+        ivCarColor.isVisible = true
         ivCarColor.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(this, it) })
         offer.vehicle.photos.firstOrNull()
             .also {

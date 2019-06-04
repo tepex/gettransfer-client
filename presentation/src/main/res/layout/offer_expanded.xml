@@ -59,7 +59,8 @@
                 app:srcCompat="@drawable/ic_circle_car_color_indicator"
                 android:background="@drawable/border_car_color_indicator"
                 android:layout_toEndOf="@id/tv_car_model"
-                android:layout_alignBottom="@+id/tv_car_model" />
+                android:layout_alignBottom="@+id/tv_car_model"
+                android:visibility="invisible"/>
 
             <TextView
                     android:id="@+id/tv_car_class"

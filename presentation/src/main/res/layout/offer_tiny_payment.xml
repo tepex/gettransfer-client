@@ -29,26 +29,33 @@
         <TextView
             android:id="@+id/tvModel"
             style="@style/sf_pro_display_semibold"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/payment_offer_tiny_tvModel_margin_start"
             android:layout_marginTop="@dimen/payment_offer_tiny_tvModel_margin_top"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="16sp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@+id/ivCarColor"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/ivCarPhoto"
             app:layout_constraintTop_toTopOf="parent"
-            android:maxLength="28"
             tools:text="Mercedes-Benz E-Class" />
 
         <ImageView
             android:id="@+id/ivCarColor"
             android:layout_width="@dimen/bottom_sheet_offer_details_car_color_width"
             android:layout_height="@dimen/bottom_sheet_offer_details_car_color_height"
-            android:layout_marginStart="@dimen/offer_car_color_margin_start"
+            android:layout_marginEnd="8dp"
             android:background="@drawable/border_car_color_indicator"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@+id/tvModel"
-            app:layout_constraintStart_toEndOf="@+id/tvModel"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvModel"
-            app:srcCompat="@drawable/ic_circle_car_color_indicator" />
+            app:srcCompat="@drawable/ic_circle_car_color_indicator"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/tvClass"
