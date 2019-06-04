@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.Location
+import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.SessionRepository
 
@@ -15,5 +15,5 @@ class GeoInteractor(
 
     suspend fun getCurrentLocation() = geoRepository.getCurrentLocation()
     suspend fun getMyLocationByIp() = geoRepository.getMyLocationByIp()
-    suspend fun getAddressByLocation(point: Location) = geoRepository.getAddressByLocation(point, sessionRepository.account.locale.language)
+    suspend fun getAddressByLocation(point: Point) = geoRepository.getAddressByLocation(point, sessionRepository.account.locale.language)
 }

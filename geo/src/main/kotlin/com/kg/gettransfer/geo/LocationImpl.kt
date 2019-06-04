@@ -20,8 +20,7 @@ class LocationImpl(private val context: Context) : Location {
                 as LocationManager).isProviderEnabled(LocationManager.GPS_PROVIDER)
 
     override fun initGeocoder(locale: Locale) {
-        //geocoder = Geocoder(context, locale)
-        geocoder = Geocoder(context)
+        geocoder = Geocoder(context, locale)
     }
 
     override suspend fun getCurrentLocation(): LocationEntity = suspendCoroutine { cont ->

@@ -48,8 +48,8 @@ class SearchPresenter : BasePresenter<SearchView>() {
 
     fun onAddressSelected(selected: GTAddress) {
         utils.launchSuspend {
-            val oldAddress = if (isTo) orderInteractor.to else orderInteractor.from
-            var updatedGTAddress: GTAddress? = null
+            val oldAddress = if (isTo) orderInteractor.to else orderInteractor.from //for detecting double click
+            var updatedGTAddress: GTAddress? = null //address with point
             selected.cityPoint.placeId?.let { placeId ->
                 fetchResult { orderInteractor.updatePoint(isTo, placeId) }
                         .isSuccess()
@@ -57,34 +57,25 @@ class SearchPresenter : BasePresenter<SearchView>() {
                             updatedGTAddress = it
                         }
             }
-            val address = updatedGTAddress ?: selected
+            val newAddress = updatedGTAddress ?: selected
             logButtons(Analytics.LAST_PLACE_CLICKED)
-            val placeType = checkPlaceType(address)
+            val placeType = checkPlaceType(newAddress)
             val isDoubleClickOnRoute =
                     if (oldAddress?.cityPoint?.point != null) oldAddress.cityPoint.point == updatedGTAddress?.cityPoint?.point else false
             if (isTo) {
-                viewState.setAddressTo(address.primary
-                        ?: address.cityPoint.name, placeType == ROUTE_TYPE, true)
-                //isDoubleClickOnRoute = orderInteractor.to == address
-                orderInteractor.to = address
+                viewState.setAddressTo(newAddress.primary
+                        ?: newAddress.cityPoint.name, placeType == ROUTE_TYPE, true)
+                orderInteractor.to = newAddress
             } else {
-                viewState.setAddressFrom(address.primary
-                        ?: address.cityPoint.name, placeType == ROUTE_TYPE, true)
-                //isDoubleClickOnRoute = orderInteractor.from == address
-                orderInteractor.from = address
+                viewState.setAddressFrom(newAddress.primary
+                        ?: newAddress.cityPoint.name, placeType == ROUTE_TYPE, true)
+                orderInteractor.from = newAddress
             }
 
             if (placeType != ROUTE_TYPE || isDoubleClickOnRoute) {
-                val sendRequest = address.needApproximation() /* dirty hack */
-
-                if (isTo) viewState.setAddressTo(address.primary ?: address.cityPoint.name, sendRequest, true)
-                else viewState.setAddressFrom(address.primary ?: address.cityPoint.name, sendRequest, true)
-            }
-
-            if (placeType != ROUTE_TYPE) {
                 viewState.updateIcon(isTo)
-                if (address.cityPoint.point != null) {
-                    pointReady(checkZeroPoint(address), isDoubleClickOnRoute, true)
+                if (newAddress.cityPoint.point != null) {
+                    pointReady(checkZeroPoint(newAddress), isDoubleClickOnRoute, true)
                 } else {
                     if (selected.cityPoint.placeId != null) {
                         fetchResult { orderInteractor.updatePoint(isTo, selected.cityPoint.placeId!!) }
@@ -94,20 +85,11 @@ class SearchPresenter : BasePresenter<SearchView>() {
                                 }
                     }
                 }
-                /*if (updatedGTAddress == null && selected.cityPoint.placeId != null) {
-                    fetchResult { orderInteractor.updatePoint(isTo, selected.cityPoint.placeId!!) }
-                            .isSuccess()
-                            ?.let {
-                                updatedGTAddress = it
-                            }
-                } */
-
-
             } else {
-                val sendRequest = address.needApproximation() /* dirty hack */
+                val sendRequest = newAddress.needApproximation() /* dirty hack */
 
-                if (isTo) viewState.setAddressTo(address.primary ?: address.cityPoint.name, sendRequest, true)
-                else viewState.setAddressFrom(address.primary ?: address.cityPoint.name, sendRequest, true)
+                if (isTo) viewState.setAddressTo(newAddress.primary ?: newAddress.cityPoint.name, sendRequest, true)
+                else viewState.setAddressFrom(newAddress.primary ?: newAddress.cityPoint.name, sendRequest, true)
             }
         }
     }

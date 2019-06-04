@@ -191,7 +191,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                 if (geoInteractor.isGpsEnabled && withGps)
                     fetchDataOnly { geoInteractor.getCurrentLocation() }
                             ?.let {
-                                lastCurrentLocation = pointMapper.fromLocationToLatLng(it)
+                                lastCurrentLocation = pointMapper.toLatLng(it)
                                 fetchResult { geoInteractor.getAddressByLocation(it) }
                                         .isSuccess()
                                         ?.let { address ->
@@ -208,8 +208,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
     }
 
-    private suspend fun setLocation(location: Location) {
-        val point = Point(location.latitude, location.longitude)
+    private suspend fun setLocation(point: Point) {
         //val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude, location.longitude)).build()
         //val latLonPair = getLatLonPair(lngBounds)
         val result = fetchResultOnly { orderInteractor.getAddressByLocation(true, point) }
@@ -251,7 +250,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
             //val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
 
             utils.launchSuspend {
-                fetchData {
+                fetchDataOnly {
                     orderInteractor.getAddressByLocation(
                             systemInteractor.selectedField == FIELD_FROM,
                             pointMapper.fromLatLng(lastPoint!!))

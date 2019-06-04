@@ -45,7 +45,7 @@ class OrderInteractor(
     }
 
     suspend fun getAddressByLocation(isFrom: Boolean, point: Point): Result<GTAddress> {
-        val gtAddress = geoRepository.getAddressByLocation(Location(point.latitude, point.longitude), sessionRepository.account.locale.language)
+        val gtAddress = geoRepository.getAddressByLocation(point, sessionRepository.account.locale.language)
 
         if (gtAddress.error != null) return gtAddress
         if (isFrom) from = gtAddress.model else to = gtAddress.model

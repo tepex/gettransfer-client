@@ -22,25 +22,25 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
 
     override fun initGeocoder(locale: Locale) = geoDataStore.initGeocoder(locale)
 
-    override suspend fun getCurrentLocation(): Result<Location> {
+    override suspend fun getCurrentLocation(): Result<Point> {
         return try {
             val locationEntity = geoDataStore.getCurrentLocation()
             Result(locationMapper.fromEntity(locationEntity))
         } catch (e: LocationException) {
-            Result(Location.EMPTY_LOCATION, geoException = ExceptionMapper.map(e))
+            Result(Point.EMPTY_POINT, geoException = ExceptionMapper.map(e))
         }
     }
 
-    override suspend fun getMyLocationByIp(): Result<Location> {
+    override suspend fun getMyLocationByIp(): Result<Point> {
         return try {
             val locationEntity = geoDataStore.getMyLocationByIp()
             Result(locationMapper.fromEntity(locationEntity))
         } catch (e: RemoteException) {
-            Result(Location.EMPTY_LOCATION, ExceptionMapper.map(e))
+            Result(Point.EMPTY_POINT, ExceptionMapper.map(e))
         }
     }
 
-    override suspend fun getAddressByLocation(point: Location, lang: String): Result<GTAddress> {
+    override suspend fun getAddressByLocation(point: Point, lang: String): Result<GTAddress> {
         return try {
             val address = geoDataStore.getAddressByLocation(locationMapper.toEntity(point))
             val result = getAutocompletePredictions(address, lang)
