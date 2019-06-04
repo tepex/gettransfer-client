@@ -117,7 +117,8 @@
         android:id="@+id/licenseAgreementTv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Я ознакомился и согласен с текстом Лицензионного соглашения"
+        android:layout_marginTop="8dp"
+        android:text="@string/LNG_RIDE_OFFERT"
         app:layout_constraintTop_toBottomOf="@+id/divider3"
         app:layout_constraintEnd_toStartOf="@+id/switchAgreementTb"
         app:layout_constraintStart_toStartOf="parent"/>

@@ -11,6 +11,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.presentation.view.SignUpView
+import com.kg.gettransfer.utilities.PhoneNumberFormatter
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
 /**
@@ -28,13 +29,13 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     fun createLoginPresenter() = SignUpPresenter()
 
     private val phone
-        get() = loginPhoneTv.text.toString()
+        get() = loginPhoneTv.text.toString().replace(" ", "")
 
     private val name
-        get() = loginNameTv.text.toString()
+        get() = loginNameTv.text.toString().trim()
 
     private val email
-        get() = loginEmailTv.text.toString()
+        get() = loginEmailTv.text.toString().trim()
 
     private val termsAccepted
         get() = switchAgreementTb.isChecked
@@ -46,13 +47,14 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         super.onViewCreated(view, savedInstanceState)
 
         initTextChangeListeners()
+        initPhoneTextChangeListeners()
         btnLogin.setOnClickListener {
-            if (checkFieldsIsValid()) presenter.registration(name, phone, email, termsAccepted)
-            else showValidationErrorDialog()
+            presenter.registration(name, phone, email, termsAccepted)
         }
+        licenseAgreementTv.setOnClickListener { presenter.showLicenceAgreement() }
     }
 
-    private fun showValidationErrorDialog() {
+    override fun showValidationErrorDialog() {
         SignUpBottomSheetError
             .newInstance()
             .show(fragmentManager, SignUpBottomSheetError.TAG)
@@ -82,7 +84,28 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         }
     }
 
-    private fun checkFieldsIsValid(): Boolean = presenter.checkFieldsIsValid(phone = phone, email = email)
+    private fun initPhoneTextChangeListeners() {
+        loginPhoneTv.onTextChanged { text ->
+            if (text.isEmpty() && loginPhoneTv.isFocused) {
+                loginPhoneTv.setText("+")
+                loginPhoneTv.setSelection(1)
+            }
+        }
+        loginPhoneTv.addTextChangedListener(PhoneNumberFormatter())
+        loginPhoneTv.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) phone.let {
+                val phoneCode = Utils.getPhoneCodeByCountryIso(context!!)
+                if (it.isEmpty()) {
+                    loginPhoneTv.setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+                }
+            }
+            else phone.let {
+                if (it.length <= 4) {
+                    loginPhoneTv.setText("")
+                }
+            }
+        }
+    }
 
     private fun checkAbleEnableButton(): Boolean =
         presenter.checkFieldsIsEmpty(fieldValues = listOf(name, phone, email)) && termsAccepted
@@ -116,14 +139,14 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO remove BaseView or add code.
     }
 
     override fun setError(e: ApiException) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO remove BaseView or add code.
     }
 
     override fun setError(e: DatabaseException) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO remove BaseView or add code.
     }
 }

@@ -64,14 +64,14 @@ import timber.log.Timber
 import java.lang.Exception
 
 class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonceCreatedListener,
-        BraintreeErrorListener, BraintreeCancelListener {
+    BraintreeErrorListener, BraintreeCancelListener {
 
     companion object {
         const val PAYMENT_REQUEST_CODE = 100
         const val PAYPAL_PACKAGE_NAME = "com.paypal.android.p2pmobile"
 
-        const val INVALID_EMAIL     = 1
-        const val INVALID_PHONE     = 2
+        const val INVALID_EMAIL = 1
+        const val INVALID_PHONE = 2
     }
 
     @InjectPresenter
@@ -86,7 +86,8 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.params = JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
+        presenter.params =
+            JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
         setContentView(R.layout.activity_payment_offer)
         initListeners()
@@ -121,7 +122,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     private fun initPhoneTextChangeListeners() {
-        et_auth_phone.onTextChanged            {
+        et_auth_phone.onTextChanged {
             if (it.isEmpty() && et_auth_phone.isFocused) {
                 et_auth_phone.setText("+")
                 et_auth_phone.setSelection(1)
@@ -129,7 +130,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
             presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
         }
         et_auth_phone.addTextChangedListener(PhoneNumberFormatter())
-        et_auth_phone.setOnFocusChangeListener    { v, hasFocus ->
+        et_auth_phone.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) setPhoneCode()
             else {
                 val phone = et_auth_phone.text?.trim()
@@ -208,7 +209,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     private fun setPriceInfo(default: String?, preferredPrice: String?) {
-        tvPriceInfo.text  = if (preferredPrice != null)
+        tvPriceInfo.text = if (preferredPrice != null)
             getString(R.string.LNG_RIDE_PAY_CHARGE, default, preferredPrice)
         else getString(R.string.LNG_RIDE_PAY_CHARGE2, default)
     }
@@ -235,28 +236,30 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(transportTypeId))
         OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(
-                multiLineContainer = languages_container_tiny,
-                languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
-                rowNumber = 6)
+            multiLineContainer = languages_container_tiny,
+            languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
+            rowNumber = 6
+        )
     }
 
     private fun showCarInfoOffer(offer: OfferModel) {
         tvModel.text = offer.vehicle.name
         ivCarColor.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(this, it) })
         offer.vehicle.photos.firstOrNull()
-                .also {
-                    Utils.bindMainOfferPhoto(
-                            ivCarPhoto,
-                            content,
-                            path = it,
-                            resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id)
-                    )
-                }
+            .also {
+                Utils.bindMainOfferPhoto(
+                    ivCarPhoto,
+                    content,
+                    path = it,
+                    resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id)
+                )
+            }
         tvClass.text = offer.vehicle.transportType.nameId?.let { getString(it) ?: "" }
         OfferItemBindDelegate.bindLanguages(
-                multiLineContainer = languages_container_tiny,
-                languages = offer.carrier.languages,
-                rowNumber = 6)
+            multiLineContainer = languages_container_tiny,
+            languages = offer.carrier.languages,
+            rowNumber = 6
+        )
         OfferItemBindDelegate.bindRating(layoutRating, offer.carrier.ratings, offer.carrier.approved)
     }
 
@@ -270,27 +273,31 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun setCommission(paymentCommission: String) {
         presenter.params.dateRefund?.let {
-            tvCommission.text = getString(R.string.LNG_PAYMENT_COMISSION2, paymentCommission, SystemUtils.formatDateTime(it))
+            tvCommission.text =
+                getString(R.string.LNG_PAYMENT_COMISSION2, paymentCommission, SystemUtils.formatDateTime(it))
         }
     }
 
     override fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency) {
         view_currency_converting_info.isVisible = true
-        view_currency_converting_info.tv_convert_description.text = getString(R.string.LNG_RIDE_PAY_CONVERT1,
-                ownCurrency.symbol,
-                ownCurrency.code,
-                offerCurrency.symbol,
-                offerCurrency.code
+        view_currency_converting_info.tv_convert_description.text = getString(
+            R.string.LNG_RIDE_PAY_CONVERT1,
+            ownCurrency.symbol,
+            ownCurrency.code,
+            offerCurrency.symbol,
+            offerCurrency.code
         )
-        view_currency_converting_info.tv_payment_description.text = getString(R.string.LNG_RIDE_PAY_CONVERT2,
-                offerCurrency.symbol,
-                offerCurrency.code)
+        view_currency_converting_info.tv_payment_description.text = getString(
+            R.string.LNG_RIDE_PAY_CONVERT2,
+            offerCurrency.symbol,
+            offerCurrency.code
+        )
     }
 
     private fun changePaymentSettings(view: View?) {
         when (view?.id) {
             R.id.rbPay100 -> selectPaymentPercentage(PaymentRequestModel.FULL_PRICE)
-            R.id.rbPay30  -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
+            R.id.rbPay30 -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
         }
     }
 
@@ -386,18 +393,18 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun setToolbarTitle(transferModel: TransferModel) {
         toolbar.tvSubTitle.text = transferModel.from
-                .let { from ->
-                    transferModel.to?.let {
-                        from.plus(" - ").plus(it)
-                    } ?: transferModel.duration?.let {
-                        from.plus(" - ").plus(HourlyValuesHelper.getValue(it, this))
-                    } ?: from
-                }
+            .let { from ->
+                transferModel.to?.let {
+                    from.plus(" - ").plus(it)
+                } ?: transferModel.duration?.let {
+                    from.plus(" - ").plus(HourlyValuesHelper.getValue(it, this))
+                } ?: from
+            }
         toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
     }
 
     override fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel) {
-        if(hasAccount && (profile.email.isNullOrEmpty() || profile.phone.isNullOrEmpty())) {
+        if (hasAccount && (profile.email.isNullOrEmpty() || profile.phone.isNullOrEmpty())) {
             ll_auth_container.isVisible = true
             initEmailTextChangeListeners()
             initPhoneTextChangeListeners()
@@ -411,16 +418,17 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     override fun showBadCredentialsInfo(field: Int) {
         val errStringRes = when (field) {
-            INVALID_EMAIL    -> R.string.LNG_ERROR_EMAIL
-            INVALID_PHONE    -> R.string.LNG_ERROR_PHONE
-            else             -> R.string.LNG_BAD_CREDENTIALS_ERROR
+            INVALID_EMAIL -> R.string.LNG_ERROR_EMAIL
+            INVALID_PHONE -> R.string.LNG_ERROR_PHONE
+            else -> R.string.LNG_BAD_CREDENTIALS_ERROR
         }
         Utils.showError(this, false, getString(errStringRes))
     }
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
-        val sentryMessage = if(e.code == ApiException.PHONE_REQUIRED_FOR_PAYMENT) getString(R.string.LNG_PHONE_REQUIRED_ERROR) else e.details
+        val sentryMessage =
+            if (e.code == ApiException.PHONE_REQUIRED_FOR_PAYMENT) getString(R.string.LNG_PHONE_REQUIRED_ERROR) else e.details
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(sentryMessage).build())
         Sentry.capture(e)
         val errorText = when {

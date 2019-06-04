@@ -8,7 +8,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.presentation.view.MainLoginView
-import com.kg.gettransfer.presentation.view.Screens
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import ru.terrakok.cicerone.Navigator
@@ -25,8 +24,6 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
 
     @InjectPresenter
     internal lateinit var presenter: MainLoginPresenter
-
-    private val router: Router by inject()
     private lateinit var navigator: Navigator
 
     companion object {
@@ -39,35 +36,32 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_login)
-
-//        presenter.showLoginFragment()
     }
 
     override fun onResume() {
         super.onResume()
-
         navigator = SupportAppNavigator(this, supportFragmentManager, R.id.container)
         navigatorHolder.setNavigator(navigator)
-        router.replaceScreen(Screens.AuthorizationPager(Screens.CLOSE_AFTER_LOGIN, null))
+        presenter.showLoginFragment()
     }
 
     override fun onBackPressed() {
-        router.exit()
+        presenter.onBack()
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO remove BaseView or add code.
     }
 
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO remove BaseView or add code.
     }
 
     override fun setError(e: ApiException) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO remove BaseView or add code.
     }
 
     override fun setError(e: DatabaseException) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO remove BaseView or add code.
     }
 }
