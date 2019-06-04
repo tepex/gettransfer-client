@@ -267,6 +267,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
     }
 
+    // пригодится, если в запрос добавят bounds
     /*private fun getLatLonPair(latLngBounds: LatLngBounds): Pair<Point, Point> {
         val latLonPair: Pair<Point, Point>
         val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)

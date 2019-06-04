@@ -44,13 +44,12 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
         return try {
             val address = geoDataStore.getAddressByLocation(locationMapper.toEntity(point))
             val result = getAutocompletePredictions(address, lang)
-            if (result.error == null) {
-                val gtAddress = result.model.firstOrNull()
-                if (gtAddress != null) {
-                    gtAddress.cityPoint.point = Point(point.latitude, point.longitude)
-                    Result(gtAddress)
-                } else Result(GTAddress.EMPTY, ApiException(ApiException.NOT_FOUND, "List is empty"))
-            } else Result(GTAddress.EMPTY, result.error)
+            if (result.error != null) Result(GTAddress.EMPTY, result.error)
+            val gtAddress = result.model.firstOrNull()
+            if (gtAddress != null) {
+                gtAddress.cityPoint.point = Point(point.latitude, point.longitude)
+                Result(gtAddress)
+            } else Result(GTAddress.EMPTY, ApiException(ApiException.NOT_FOUND, "List is empty"))
         } catch (e: LocationException) {
             Result(GTAddress.EMPTY, geoException = ExceptionMapper.map(e))
         }
