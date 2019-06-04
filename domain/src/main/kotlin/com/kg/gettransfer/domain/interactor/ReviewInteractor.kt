@@ -35,7 +35,7 @@ class ReviewInteractor(private val repository: ReviewRepository) {
 
     suspend fun sendTopRate() = repository.pushTopRates()
 
-    fun releaseRepo() = repository.releaseUserData()
+    fun releaseReviewData() = repository.releaseReviewData()
 
     companion object {
         const val MAX_RATE = 5

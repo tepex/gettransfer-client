@@ -37,7 +37,7 @@ class ThanksForRatePresenter: MvpPresenter<ThanksForRateView>(), KoinComponent {
                 if (comment.isNotEmpty()) {
                     utils.asyncAwait { pushComment() }
                 }
-                releaseRepo()
+                releaseReviewData()
             }
             compositeDisposable.cancel()
         }

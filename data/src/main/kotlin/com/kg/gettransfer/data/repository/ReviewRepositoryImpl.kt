@@ -14,7 +14,6 @@ import org.koin.standalone.get
 class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRepository, BaseRepository() {
     private val rateMapper = get<ReviewRateMapper>()
 
-
     override var currentComment: String = NO_COMMENT
     override var currentOfferRateID: Long = DEFAULT_ID
     override var rates: MutableSet<ReviewRate> = mutableSetOf()
@@ -54,7 +53,7 @@ class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRe
     }
 
     //call this when leave root screen (not dialogs!) with possible review working
-    override fun releaseUserData() {
+    override fun releaseReviewData() {
         rates.clear()
         currentComment = NO_COMMENT
         currentOfferRateID = DEFAULT_ID

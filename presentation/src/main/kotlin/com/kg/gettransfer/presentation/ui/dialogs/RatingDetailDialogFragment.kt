@@ -195,12 +195,12 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 					ReviewRateModel(ReviewRate.RateType.VEHICLE, vehicleRate.rate_bar.rating.toInt())
 			)
 
-
-
 	override fun onDismiss(dialog: DialogInterface?) {
 		super.onDismiss(dialog)
-		if (isExitWithResult)
+		if (isExitWithResult) {
 			ratingListener?.onRatingChangeCancelled()
+			presenter.releaseReviewData()
+		}
 	}
 
 	companion object {
@@ -232,5 +232,4 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 		fun onRatingChanged(list: List<ReviewRateModel>, comment: String)
 		fun onRatingChangeCancelled()
 	}
-
 }

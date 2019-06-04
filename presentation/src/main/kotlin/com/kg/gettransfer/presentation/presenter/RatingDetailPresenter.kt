@@ -44,7 +44,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 
 	fun onClickSend(list: List<ReviewRateModel>, comment: String) = utils.launchSuspend {
 		viewState.showProgress(true)
-		viewState.blockInterface(true)
+		viewState.blockInterface(true, true)
 		fillRates(list)
 		writeComment(comment)
 		val rateResult = fetchResult { reviewInteractor.sendRates() }
@@ -54,13 +54,14 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 					list,
 					getFeedBackText(comment)
 			)
-			reviewInteractor.releaseRepo()
 		}
 		logAverageRate(list.map { it.rateValue }.average())
 		logDetailRate(list, comment)
 		viewState.blockInterface(false)
 		viewState.showProgress(false)
 	}
+
+	fun releaseReviewData() = reviewInteractor.releaseReviewData()
 
 	fun onClickComment(currentComment: String) {
 		viewState.showCommentEditor(getFeedBackText(currentComment))

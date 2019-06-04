@@ -11,5 +11,5 @@ interface ReviewRepository {
     suspend fun sendComment(offerId: Long, comment: String): Result<Unit>
     suspend fun pushComment(): Result<Unit>
     suspend fun pushTopRates(): Result<Unit>
-    fun releaseUserData()
+    fun releaseReviewData()
 }

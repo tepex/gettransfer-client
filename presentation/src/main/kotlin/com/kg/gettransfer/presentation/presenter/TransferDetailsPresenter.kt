@@ -25,7 +25,6 @@ import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.PUNCTUALITY
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
 import com.kg.gettransfer.extensions.finishChainAndBackTo
-import com.kg.gettransfer.extensions.isValid
 
 
 import com.kg.gettransfer.prefs.PreferencesImpl
@@ -144,7 +143,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
         isCameraUpdatedForCoordinates = false
         socketInteractor.removeSocketListener(this)
-        reviewInteractor.releaseRepo()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        reviewInteractor.releaseReviewData()
     }
 
     fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
