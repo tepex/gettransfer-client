@@ -9,6 +9,7 @@ import com.kg.gettransfer.data.LocationException
 import com.kg.gettransfer.data.model.LocationEntity
 import java.util.Locale
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class LocationImpl(private val context: Context) : Location {
@@ -26,7 +27,7 @@ class LocationImpl(private val context: Context) : Location {
     override suspend fun getCurrentLocation(): LocationEntity = suspendCoroutine { cont ->
         locationProviderClient.lastLocation
                 .addOnSuccessListener { l: android.location.Location -> cont.resume(LocationEntity(l.latitude, l.longitude)) }
-                .addOnFailureListener { throw LocationException(LocationException.NOT_FOUND, "Unknown") }
+                .addOnFailureListener { cont.resumeWithException(LocationException(LocationException.NOT_FOUND, "Unknown")) }
     }
 
     override fun getAddressByLocation(point: LocationEntity): String {

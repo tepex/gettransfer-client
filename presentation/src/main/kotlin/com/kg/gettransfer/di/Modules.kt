@@ -62,7 +62,7 @@ val ciceroneModule = module {
 }
 
 val geoModule = module {
-    single<Location> { LocationImpl(get()) }
+    single<Location> { LocationImpl(androidContext()) }
 }
 
 val encryptModule = module {
