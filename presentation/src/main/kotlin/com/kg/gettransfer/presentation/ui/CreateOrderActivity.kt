@@ -279,16 +279,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {
         user_name_field.field_input.setText(user.profile.name ?: "")
-        if (user.profile.phone != null) phone_field.field_input.setText(user.profile.phone)
-        else phoneCode = Utils.getPhoneCodeByCountryIso(this)
-
-        email_field.field_input.setText(user.profile.email ?: "")
-
-        if (isLoggedIn) {
-            //email_field.field_input.isEnabled = false
-            email_field.isVisible = user.profile.email.isNullOrEmpty()
-            phone_field.isVisible = user.profile.phone.isNullOrEmpty()
-        }
 
         if (isLoggedIn && user.termsAccepted) {
             layoutAgreement.isVisible = false
@@ -351,14 +341,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                 errorFieldView = transfer_return_date_field
             }
             FieldError.PASSENGERS_COUNT -> highLightErrorField(passengers_count_field)
-            FieldError.PHONE_FIELD -> {
-                highLightErrorField(phone_field)
-                errorFieldView = phone_field
-            }
-            FieldError.EMAIL_FIELD -> {
-                highLightErrorField(email_field)
-                errorFieldView = email_field
-            }
             FieldError.TERMS_ACCEPTED_FIELD -> highLightErrorField(layoutAgreement)
             else -> return
         }
@@ -397,8 +379,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     //TODO create custom view for new bottom sheet
     private fun initFieldsViews() {
-     //   passengers_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_passenger_small))
-     //   child_seats.seat_icon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_child_seat))
         Utils.setDrawables(price_field_input.field_input, 0, 0, R.drawable.ic_arrow_right, 0)
         price_field_input.field_input.compoundDrawablePadding = 0
         passengers_count.person_count.text = getString(R.string.passenger_number_default)
@@ -410,17 +390,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             if (hasFocus) presenter.logTransferSettingsEvent(OFFER_PRICE_FOCUSED)
         }
         user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
-        email_field.field_input.onTextChanged            { presenter.setEmail(it.trim()) }
-        email_field.field_input.afterTextChanged         { checkErrorField(email_field) }
-        phone_field.field_input.onTextChanged            {
-            if (it.isEmpty() && phone_field.field_input.isFocused) {
-                phone_field.field_input.setText("+")
-                phone_field.field_input.setSelection(1)
-            }
-            presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
-        }
-        phone_field.field_input.afterTextChanged         { checkErrorField(phone_field) }
-        phone_field.field_input.addTextChangedListener(PhoneNumberFormatter())
         flight_number_field.field_input.onTextChanged         { presenter.setFlightNumber(it.trim(), false) }
         flight_numberReturn_field.field_input.onTextChanged   { presenter.setFlightNumber(it.trim(), true) }
         promo_field.field_input.onTextChanged                 { presenter.setPromo(promo_field.field_input.text.toString()) }
@@ -456,19 +425,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
         cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input.field_input)  }
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
-        email_field.setOnClickListener                      { fieldTouched(email_field.field_input) }
-        phone_field.field_input.setOnFocusChangeListener    { v, hasFocus ->
-            if (hasFocus) setPhoneCode()
-            else {
-                val phone = phone_field.field_input.text?.trim()
-                phone?.let {
-                    if (phone.length == 1) {
-                        phone_field.field_input.text?.clear()
-                        presenter.setPhone("")
-                    }
-                }
-            }
-        }
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
         comment_field.field_input.setOnClickListener        {
             val comment = comment_field.field_input.text.toString().trim()
@@ -502,16 +458,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             transfer_return_date_field.setOnClickListener(it)
             transfer_return_date_field.field_input.setOnClickListener(it)
         }
-    }
-
-    private fun setPhoneCode() {
-        val phone = phone_field.field_input.text?.trim()
-        phone?.let {
-            if (phone.isEmpty()) {
-                phone_field.field_input.setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
-            }
-        }
-        fieldTouched(phone_field.field_input)
     }
 
     private fun fieldTouched(viewForFocus: EditText) {

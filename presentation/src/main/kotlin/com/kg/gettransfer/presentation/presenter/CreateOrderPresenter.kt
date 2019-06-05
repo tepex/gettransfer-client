@@ -245,24 +245,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         initPrices(false)
     }
 
-    /*fun changeCurrency(selected: Int) {
-        if (selected < currencies.size) {
-            val currencyModel = currencies[selected]
-            systemInteractor.currency = currencyModel.delegate
-            setCurrency(selected)
-            saveAccount()
-            if (orderInteractor.hourlyDuration == null)
-                initPrices(dateDelegate.returnDate != null)
-        }
-    }*/
-
-    /*private fun setCurrency(selected: Int){
-        if (selected < currencies.size) {
-            selectedCurrency = selected
-            viewState.setCurrency(currencies[selected].symbol)
-        }
-    }*/
-
     override fun currencyChanged() {
         setCurrency(true)
         getNewPrices()
@@ -295,14 +277,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun setName(name: String) {
         orderInteractor.nameSign = name
-    }
-
-    fun setEmail(email: String) {
-        accountManager.tempProfile.email = email
-    }
-
-    fun setPhone(phone: String) {
-        accountManager.tempProfile.phone = phone
     }
 
     fun setFlightNumber(flightNumber: String, returnWay: Boolean) {
@@ -493,17 +467,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     companion object {
-        private const val MIN_CHILDREN   = 0
-
         private const val INVALID_CURRENCY_INDEX = -1
     }
 
-
-
-
                                           /////////Analytics////////
-
-
 
     fun logButtons(event: String) {
         analytics.logEventToFirebase(event, null)

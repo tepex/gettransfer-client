@@ -206,23 +206,6 @@
                 app:icon_img="@drawable/ic_passport" />
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
-                android:id="@+id/phone_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                app:hint="@string/LNG_RIDE_PHONE_PLACEHOLDER"
-                app:icon_img="@drawable/ic_phone"
-                app:inputType="@integer/inputType_Phone" />
-
-            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
-                android:id="@+id/email_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/LNG_RIDE_EMAIL_PLACEHOLDER"
-                app:icon_img="@drawable/ic_email"
-                app:inputType="@integer/inputType_Email" />
-
-            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/flight_number_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
