@@ -311,16 +311,18 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun setRating(carrier: CarrierModel) {
         carrier.ratings.let { ratings ->
-            ratings.driver?.let { setRating(it, ratingDriver) }
-            ratings.fair?.let { setRating(it, ratingPunctuality) }
-            ratings.vehicle?.let { setRating(it, ratingVehicle) }
+            setRating(ratings.driver, ratingDriver)
+            setRating(ratings.fair, ratingPunctuality)
+            setRating(ratings.vehicle, ratingVehicle)
         }
         layoutTopSelection.isVisible = carrier.approved
     }
 
-    private fun setRating(rate: Float, ratingLayout: RatingFieldView) {
+    private fun setRating(rate: Float?, ratingLayout: RatingFieldView) {
         with(ratingLayout) {
-            ratingNumber.text = rate.toString().replace(".", ",")
+            val rating = rate ?: 0.0f
+            ratingBar.rating = rating
+            ratingNumber.text = rating.toString().replace(".", ",")
         }
     }
 

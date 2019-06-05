@@ -31,7 +31,6 @@
         android:visibility="visible"
         app:srb_minimumStars="@integer/stars_minimum"
         app:srb_numStars="@integer/stars_number"
-        app:srb_rating="2"
         app:srb_starHeight="@dimen/rating_bar_stars_height_width"
         app:srb_starPadding="@dimen/rating_bar_stars_padding"
         app:srb_starWidth="@dimen/rating_bar_stars_height_width"
