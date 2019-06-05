@@ -154,7 +154,8 @@ object Screens {
         }
     }
 
-    open class AuthorizationPager(private val nextScreen: String, private val emailOrPhone: String?) : SupportAppScreen() {
+    open class AuthorizationPager(private val nextScreen: String, private val emailOrPhone: String?) :
+        SupportAppScreen() {
         override fun getFragment(): Fragment = AuthorizationPagerFragment().apply {
             arguments = Bundle().apply {
                 putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
@@ -163,9 +164,14 @@ object Screens {
         }
     }
 
-    open class SmsCode(private val isPhone: Boolean, private val emailOrPhone: String?) : SupportAppScreen() {
+    open class SmsCode(
+        private val isPhone: Boolean,
+        private val emailOrPhone: String?,
+        private val nextScreen: String
+    ) : SupportAppScreen() {
         override fun getFragment() = SmsCodeFragment.newInstance().apply {
             arguments = Bundle().apply {
+                putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
                 putBoolean(SmsCodeFragment.EXTERNAL_IS_PHONE, isPhone)
                 putString(SmsCodeFragment.EXTERNAL_EMAIL_OR_PHONE, emailOrPhone)
             }

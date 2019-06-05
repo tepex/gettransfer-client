@@ -25,19 +25,18 @@ class PasswordFragment : MvpAppCompatFragment() {
         parent = parentFragment as LogInFragment
         mPresenter = parent.presenter
 
-        currentUser.text = mPresenter.emailOrPhone
+        currentUser.text = mPresenter.emailOrPhoneProfile
 
         etPassword.onTextChanged {
             val pas = it.trim()
-            mPresenter.setPassword(pas)
             btnLogin.isEnabled = pas.isNotEmpty()
         }
         etPassword.setOnFocusChangeListener { v, hasFocus -> changePasswordToggle(hasFocus) }
         ivPasswordToggle.setOnClickListener { togglePassword() }
-        btnLoginByCode.setOnClickListener { mPresenter.loginWithCode() }
+//        btnLoginByCode.setOnClickListener { mPresenter.loginWithCode() }
         //tvForgotPassword.setOnClickListener { mPresenter.onPassForgot() }
 
-        btnLogin.setOnClickListener { mPresenter.onLoginClick() }
+//        btnLogin.setOnClickListener { mPresenter.onLoginClick() }
     }
 
     private fun togglePassword() {

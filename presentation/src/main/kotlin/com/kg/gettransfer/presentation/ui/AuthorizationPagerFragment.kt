@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.view.LogInView
 import kotlinx.android.synthetic.main.fragment_pager_authorization.*
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
@@ -22,6 +23,8 @@ import ru.terrakok.cicerone.Router
 class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
 
     private val router by inject<Router>()
+    private var nextScreen = ""
+    private var emailOrPhone = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_pager_authorization, container, false)
@@ -32,6 +35,9 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         loginPager.adapter = LoginPagerAdapter(fragmentManager!!)
 
         loginBackButton.setOnClickListener { router.exit() }
+
+        nextScreen = arguments?.getString(LogInView.EXTRA_NEXT_SCREEN) ?: ""
+        emailOrPhone = arguments?.getString(LogInView.EXTRA_EMAIL_TO_LOGIN) ?: ""
     }
 
     companion object {
@@ -48,8 +54,15 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         }
 
         override fun getItem(position: Int): Fragment = when (position) {
-            0 -> LogInFragment.newInstance()
-            1 -> SignUpFragment.newInstance()
+            0 -> LogInFragment.newInstance().apply {
+                arguments = Bundle().apply {
+                    putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
+                    putString(LogInView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
+                }
+            }
+            1 -> SignUpFragment.newInstance().apply {
+
+            }
             else -> throw UnsupportedOperationException()
         }
     }

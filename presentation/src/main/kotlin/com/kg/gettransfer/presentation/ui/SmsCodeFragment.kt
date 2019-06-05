@@ -14,6 +14,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.SmsCodeView
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
@@ -42,22 +43,30 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         super.onViewCreated(view, savedInstanceState)
         smsResendDelay = presenter.smsResendDelaySec * SEC_IN_MILLIS
 
-        val isPhone = savedInstanceState?.getBoolean(EXTERNAL_IS_PHONE) ?: false
-        val emailOrPhone = savedInstanceState?.getString(EXTERNAL_EMAIL_OR_PHONE) ?: ""
+        val isPhone = arguments?.getBoolean(EXTERNAL_IS_PHONE) ?: false
+
+        with(presenter) {
+            arguments?.let {
+                nextScreen = it.getString(LogInView.EXTRA_NEXT_SCREEN) ?: ""
+                emailOrPhone = arguments?.getString(EXTERNAL_EMAIL_OR_PHONE) ?: ""
+            }
+        }
 
         smsTitle.text = when (isPhone) {
             true -> getString(R.string.LNG_LOGIN_SEND_SMS_CODE)
             false -> getString(R.string.LNG_LOGIN_SEND_EMAIL_CODE)
-        }.plus(" ").plus(emailOrPhone)
+        }.plus(" ").plus(presenter.emailOrPhone)
 
         pinView.onTextChanged { code ->
             if (wrongCodeError.isVisible) {
-                pinView.setTextColor(
-                    ContextCompat.getColor(
-                        context!!,
-                        R.color.color_gtr_green
+                context?.let {
+                    pinView.setTextColor(
+                        ContextCompat.getColor(
+                            it,
+                            R.color.color_gtr_green
+                        )
                     )
-                )
+                }
             }
             password = code
             btnDone.isEnabled = code.length == pinView.itemCount
@@ -66,9 +75,9 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         loginBackButton.setOnClickListener { presenter.back() }
 
         setTimer()
-        btnResendCode.setOnClickListener { presenter.sendVerificationCode(emailOrPhone, isPhone) }
+        btnResendCode.setOnClickListener { presenter.sendVerificationCode(presenter.emailOrPhone ?: "", isPhone) }
 
-        btnDone.setOnClickListener { presenter.onLoginClick(emailOrPhone, password, isPhone) }
+        btnDone.setOnClickListener { presenter.onLoginClick(presenter.emailOrPhone ?: "", password, isPhone) }
     }
 
     override fun onDestroyView() {
@@ -109,10 +118,6 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         text?.let { wrongCodeError.text = text }
     }
 
-    override fun showError(b: Boolean, error: ApiException) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun showValidationError(b: Boolean, invaliD_EMAIL: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -130,6 +135,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     }
 
     override fun setError(e: ApiException) {
+        pinView.setTextColor(ContextCompat.getColor(context!!, R.color.color_gtr_red))
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)

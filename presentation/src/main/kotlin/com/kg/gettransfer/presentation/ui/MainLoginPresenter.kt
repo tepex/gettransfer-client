@@ -14,8 +14,8 @@ class MainLoginPresenter : MvpPresenter<MainLoginView>(), KoinComponent {
 
     private val router: Router by inject()
 
-    fun showLoginFragment() {
-        router.replaceScreen(Screens.AuthorizationPager(Screens.CLOSE_AFTER_LOGIN, null))
+    fun showLoginFragment(nextScreen: String, emailOrPhone: String) {
+        router.replaceScreen(Screens.AuthorizationPager(nextScreen, emailOrPhone))
     }
 
     fun onBack() {
