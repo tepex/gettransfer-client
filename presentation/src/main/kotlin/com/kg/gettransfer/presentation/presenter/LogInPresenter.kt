@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.extensions.internationalExample
 import com.kg.gettransfer.extensions.newChainFromMain
@@ -19,38 +20,41 @@ import org.koin.standalone.KoinComponent
 @InjectViewState
 class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
-    internal var emailOrPhone: String? = null
     internal var nextScreen: String? = null
     internal var transferId: Long = 0
     internal var offerId: Long? = null
     internal var rate: Int? = null
+    private var profile = Profile("", "", "")
 
-    private var password: String? = null
+    val emailOrPhoneProfile: String
+        get() {
+            return if (!profile.email.isNullOrEmpty()) profile.email!!
+            else if (!profile.phone.isNullOrEmpty()) profile.phone!!
+            else ""
+        }
 
-    val isPhone: Boolean
-        get() = LoginHelper.checkIsNumber(emailOrPhone)
-
-    companion object {
-        const val PHONE_ATTRIBUTE = "+"
-        const val EMAIL_ATTRIBUTE = "@"
-    }
+    private fun isPhone(emailOrPhone: String): Boolean = LoginHelper.checkIsNumber(emailOrPhone)
 
     override fun attachView(view: LogInView) {
         super.attachView(view)
-        emailOrPhone?.let {
-            viewState.setEmail(it)
+        profile?.let {
+            if (!it.email.isNullOrEmpty()) viewState.setEmail(it.email!!)
+            else if (!it.phone.isNullOrEmpty()) viewState.setEmail(it.phone!!)
+            else viewState.setEmail("")
         }
     }
 
-    private fun validateInput(): Boolean {
-        LoginHelper.validateInput(emailOrPhone!!, isPhone)    //force unwrap because null-check is already done
-            .also {
-                when (it) {
-                    INVALID_EMAIL -> viewState.showValidationError(true, INVALID_EMAIL)
-                    INVALID_PHONE -> viewState.showValidationError(true, INVALID_PHONE)
-                    CREDENTIALS_VALID -> return true
-                }
+    private fun validateInput(emailOrPhone: String): Boolean {
+        LoginHelper.validateInput(
+            emailOrPhone,
+            isPhone(emailOrPhone)
+        ).also {
+            when (it) {
+                INVALID_EMAIL -> viewState.showValidationError(true, INVALID_EMAIL)
+                INVALID_PHONE -> viewState.showValidationError(true, INVALID_PHONE)
+                CREDENTIALS_VALID -> return true
             }
+        }
         return false
     }
 
@@ -67,7 +71,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
             }
             Screens.PASSENGER_MODE -> {
                 router.exit()
-//                analytics.logProfile(Analytics.PASSENGER_TYPE) //TODO add analitics
+                analytics.logProfile(Analytics.PASSENGER_TYPE)
             }
             Screens.OFFERS -> {
                 router.newChainFromMain(Screens.Offers(transferId))
@@ -98,13 +102,13 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         }
     }
 
-    private fun checkInputData() =
-        emailOrPhone != null
-                && checkIfEmailOrPhone()
-                && validateInput()
+    private fun checkInputData(emailOrPhone: String) =
+        emailOrPhone.isNotEmpty()
+                && checkIfEmailOrPhone(emailOrPhone)
+                && validateInput(emailOrPhone)
 
-    private fun checkIfEmailOrPhone() =
-        emailOrPhone!!.run {
+    private fun checkIfEmailOrPhone(emailOrPhone: String) =
+        emailOrPhone.run {
             if (firstSign() == PHONE_ATTRIBUTE || any { it.toString() == EMAIL_ATTRIBUTE }) {
                 true
             } else {
@@ -117,9 +121,6 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
             }
         }
 
-    /*private fun identifyLoginType(input: String) =
-            input.contains("@")*/
-
     private fun logLoginEvent(result: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.STATUS] = result
@@ -129,14 +130,6 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
     override fun onBackCommandClick() {
         router.backTo(Screens.MainPassenger())
-    }
-
-    fun setEmailOrPhone(email: String) {
-        this.emailOrPhone = if (email.isEmpty()) null else email
-    }
-
-    fun setPassword(password: String) {
-        this.password = if (password.isEmpty()) null else password
     }
 
     fun onPassForgot() = router.navigateTo(Screens.RestorePassword)
@@ -151,33 +144,52 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         router.replaceScreen(Screens.Carrier(Screens.REG_CARRIER))
     }
 
-    fun showNoAccountError() {
+    fun showNoAccountError(emailOrPhone: String) {
         viewState.setError(
             false,
-            when (isPhone) {
+            when (isPhone(emailOrPhone)) {
                 true -> R.string.LNG_ERROR_PHONE_NOTFOUND
                 false -> R.string.LNG_ERROR_EMAIL_NOTFOUND
             }
         )
     }
 
-    fun loginWithCode() {
-        router.replaceScreen(Screens.SmsCode(isPhone, emailOrPhone))
+    fun loginWithCode(emailOrPhone: String) {
+        if (!checkInputData(emailOrPhone)) return
+        val isPhone = isPhone(emailOrPhone)
+        saveProfile(emailOrPhone)
+        router.replaceScreen(Screens.SmsCode(isPhone, emailOrPhone, nextScreen ?: ""))
     }
 
-    fun onLoginClick() {
-        if (password == null) {
+    fun saveProfile(emailOrPhone: String) {
+        val isPhone = isPhone(emailOrPhone)
+        profile?.let {
+            if (isPhone) {
+                it.phone = emailOrPhone
+                it.email = ""
+            } else {
+                it.email = emailOrPhone
+                it.phone = ""
+            }
+        }
+        viewState.setEmail(emailOrPhone)
+    }
+
+    fun onLoginClick(emailOrPhone: String, password: String) {
+        if (password.isEmpty()) {
             viewState.showValidationError(true, MainLoginActivity.INVALID_PASSWORD)
             return
         }
-        if (!checkInputData()) return
+
+        if (!checkInputData(emailOrPhone)) return
+
+        saveProfile(emailOrPhone)
 
         utils.launchSuspend {
-            viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when (isPhone) {
-                    true -> accountManager.login(null, LoginHelper.formatPhone(emailOrPhone), password!!, false)
-                    false -> accountManager.login(emailOrPhone, null, password!!, false)
+                when (isPhone(emailOrPhone)) {
+                    true -> accountManager.login(null, LoginHelper.formatPhone(emailOrPhone), password, false)
+                    false -> accountManager.login(emailOrPhone, null, password, false)
                 }
             }
                 .also {
@@ -187,7 +199,6 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
                     }
 
                     it.isSuccess()?.let {
-                        //                        viewState.showErrorText(false, null)
                         openPreviousScreen()
                         logLoginEvent(Analytics.RESULT_SUCCESS)
                         registerPushToken()
@@ -196,5 +207,10 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
                 }
             viewState.blockInterface(false)
         }
+    }
+
+    companion object {
+        const val PHONE_ATTRIBUTE = "+"
+        const val EMAIL_ATTRIBUTE = "@"
     }
 }

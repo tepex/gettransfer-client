@@ -18,6 +18,7 @@ import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EM
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
 import com.kg.gettransfer.presentation.view.LogInView
+import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_EMAIL_TO_LOGIN
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_log_in.*
@@ -46,34 +47,39 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        savedInstanceState?.let {
-            presenter.emailOrPhone = it.getString(LogInView.EXTRA_EMAIL_TO_LOGIN)
-            presenter.nextScreen = it.getString(LogInView.EXTRA_NEXT_SCREEN)
-            presenter.transferId = it.getLong(LogInView.EXTRA_TRANSFER_ID, 0L)
-            presenter.offerId = it.getLong(LogInView.EXTRA_OFFER_ID, 0L)
-            presenter.rate = it.getInt(LogInView.EXTRA_RATE, 0)
-        }
 
+        with(presenter) {
+            arguments?.let {
+                saveProfile(it.getString(EXTRA_EMAIL_TO_LOGIN, ""))
+                nextScreen = it.getString(LogInView.EXTRA_NEXT_SCREEN) ?: ""
+                transferId = it.getLong(LogInView.EXTRA_TRANSFER_ID, 0L)
+                offerId = it.getLong(LogInView.EXTRA_OFFER_ID, 0L)
+                rate = it.getInt(LogInView.EXTRA_RATE, 0)
+            }
+        }
         initTextChangeListeners()
         initClickListeners()
+    }
 
-        loginEmailTv.setText(presenter.emailOrPhone)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val emailOrPhone = loginEmailTv.text.toString()
+        outState.putString(LOG_IN_EMAIL, emailOrPhone)
+        presenter.saveProfile(emailOrPhone)
     }
 
     private fun initClickListeners() {
-        btnLogin.setOnClickListener { presenter.onLoginClick() }
-        btnRequestCode.setOnClickListener { presenter.loginWithCode() }
+        btnLogin.setOnClickListener { presenter.onLoginClick(loginEmailTv.text.toString(), etPassword.text.toString()) }
+        btnRequestCode.setOnClickListener { presenter.loginWithCode(loginEmailTv.text.toString()) }
     }
 
     private fun initTextChangeListeners() {
         loginEmailTv.onTextChanged {
             val emailPhone = it.trim()
-            presenter.setEmailOrPhone(emailPhone)
             btnLogin.isEnabled = emailPhone.isNotEmpty() && etPassword.text?.isNotEmpty() ?: false
             btnRequestCode.isEnabled = emailPhone.isNotEmpty()
         }
         etPassword.onTextChanged {
-            presenter.setPassword(it)
             btnLogin.isEnabled = loginEmailTv.text?.isNotEmpty() ?: false && it.isNotEmpty()
         }
     }
@@ -90,7 +96,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     override fun showError(show: Boolean, error: ApiException) {
         if (show) {
             if (error.isNotFound()) {
-                presenter.showNoAccountError()
+                presenter.showNoAccountError(loginEmailTv.text.toString())
                 return
             }
             Utils.showError(context!!, false, error.details)
@@ -127,6 +133,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     }
 
     companion object {
+        const val LOG_IN_EMAIL = ".presentation.ui.LogInFragment"
         fun newInstance() = LogInFragment()
     }
 

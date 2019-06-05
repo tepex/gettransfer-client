@@ -18,11 +18,13 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
 
     val smsResendDelaySec = sessionInteractor.mobileConfigs.smsResendDelaySec
 
+    internal var nextScreen: String? = null
+    internal var emailOrPhone: String? = null
+
     fun sendVerificationCode(emailOrPhone: String, isPhone: Boolean) {
         if (!checkInputData(emailOrPhone, isPhone)) return
 
         utils.launchSuspend {
-            viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
                     true -> sessionInteractor.getVerificationCode(null, LoginHelper.formatPhone(emailOrPhone))
@@ -30,12 +32,11 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
                 }
             }.also {
                 if (it.error != null)
-                    viewState.showError(true, it.error!!)
+                    viewState.setError(it.error!!)
                 else {
                     viewState.updateTimerResendCode()
                 }
             }
-            viewState.blockInterface(false)
         }
     }
 
@@ -80,7 +81,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
             }
                 .also {
                     it.error?.let { e ->
-                        viewState.showError(true, e)
+                        viewState.setError(e)
                         logLoginEvent(Analytics.RESULT_FAIL)
                     }
 
@@ -103,7 +104,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
     }
 
     fun back() {
-        router.replaceScreen(Screens.AuthorizationPager(Screens.CLOSE_AFTER_LOGIN, null))
+        router.replaceScreen(Screens.AuthorizationPager(nextScreen ?: Screens.CLOSE_AFTER_LOGIN, emailOrPhone))
     }
 
     companion object {
