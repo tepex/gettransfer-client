@@ -10,7 +10,7 @@
         android:id="@+id/titleRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/black_regular"
+        style="@style/sf_font_pro_display_regular_black"
         android:text="@string/LNG_DRIVER"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
         app:layout_constraintStart_toStartOf="parent"
