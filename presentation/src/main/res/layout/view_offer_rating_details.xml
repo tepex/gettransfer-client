@@ -17,7 +17,7 @@
             android:id="@+id/tvTopSelection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_text_regular"
+            style="@style/sf_font_pro_display_regular_black"
             android:text="@string/LNG_TOP_RATED"
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"

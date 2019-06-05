@@ -253,7 +253,8 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/expended_sheet_order_height">
 
         <include
             android:id="@+id/sheetOfferDetails"
