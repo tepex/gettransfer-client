@@ -138,10 +138,9 @@ object Utils : KoinComponent {
         }
     }
 
-    fun showScreenRedirectingAlert(context: Context, title: String, message: String, navigate: () -> Unit) {
+    fun showScreenRedirectingAlert(context: Context, title: String, navigate: () -> Unit) {
         getAlertDialogBuilder(context).apply {
             setTitle(title)
-            setMessage(message)
             setPositiveButton(R.string.LNG_OK) { dialog, _ ->
                 dialog.dismiss()
                 navigate()
@@ -150,26 +149,12 @@ object Utils : KoinComponent {
         }
     }
 
-    fun setCurrenciesDialogListener(
-        context: Context,
-        view: View,
-        items: List<CharSequence>,
-        listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_CURRENCY, items, listener) }
-
     fun setLocalesDialogListener(
         context: Context,
         view: View,
         items: List<CharSequence>,
         listener: (Int) -> Unit
     ) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
-
-    /*fun setDistanceUnitsDialogListener(
-        context: Context,
-        view: View,
-        items: List<CharSequence>,
-        listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_DISTANCE_UNIT, items, listener) }*/
 
     fun setFirstDayOfWeekDialogListener(
             context: Context,

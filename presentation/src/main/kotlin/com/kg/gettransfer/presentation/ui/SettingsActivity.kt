@@ -185,16 +185,10 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
-    /*override fun setCurrencies(currencies: List<CurrencyModel>) =
-            Utils.setCurrenciesDialogListener(this, settingsCurrency, currencies) { presenter.changeCurrency(it) }*/
-
     override fun setLocales(locales: List<LocaleModel>) =
             Utils.setLocalesDialogListener(this, settingsLanguage, locales) {
                 localeManager.updateResources(this, presenter.changeLocale(it))
             }
-
-    /*override fun setDistanceUnits(distanceUnits: List<DistanceUnitModel>) =
-            Utils.setDistanceUnitsDialogListener(this, layoutSettingsDistanceUnits, distanceUnits) { presenter.changeDistanceUnit(it) }*/
 
     override fun setDaysOfWeek(daysOfWeek: List<CharSequence>) =
             Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { presenter.changeFirstDayOfWeek(it) }
@@ -212,7 +206,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
             compoundDrawablePadding = Utils.dpToPxInt(this@SettingsActivity, 8f)
         }
     }
-    /*override fun setDistanceUnit(distanceUnit: String) { tvSelectedDistanceUnits.text = distanceUnit }*/
+
     override fun setFirstDayOfWeek(dayOfWeek: String) { settingsFirstDayOfWeek.field_text.text = dayOfWeek }
     override fun setEndpoint(endpoint: EndpointModel)  { settingsEndpoint.field_text.text = endpoint.name }
     override fun setCalendarMode(calendarModeKey: String) { settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey) }
