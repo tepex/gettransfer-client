@@ -3,6 +3,9 @@ package com.kg.gettransfer.geo
 import android.content.Context
 import android.location.Geocoder
 import android.location.LocationManager
+import android.os.Bundle
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
 import com.kg.gettransfer.data.Location
 import com.kg.gettransfer.data.LocationException
@@ -12,9 +15,12 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class LocationImpl(private val context: Context) : Location {
+class LocationImpl(private val context: Context) : Location, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
+
     private lateinit var geocoder: Geocoder
     private val locationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+    private var googleApiClient: GoogleApiClient? = null
 
     override val isGpsEnabled: Boolean
         get() = (context.getSystemService(Context.LOCATION_SERVICE)
@@ -24,10 +30,21 @@ class LocationImpl(private val context: Context) : Location {
         geocoder = Geocoder(context, locale)
     }
 
-    override suspend fun getCurrentLocation(): LocationEntity = suspendCoroutine { cont ->
+    override suspend fun getCurrentLocation(): LocationEntity {
+        if (googleApiClient == null) {
+            googleApiClient = GoogleApiClient.Builder(context)
+                    .addApi(LocationServices.API).
+                            addConnectionCallbacks(this).
+                    addOnConnectionFailedListener(this).build()
+        } else {
+            googleApiClient?.connect()
+        }
+        var loc = LocationEntity(0.0, 0.0)
         locationProviderClient.lastLocation
-                .addOnSuccessListener { l: android.location.Location -> cont.resume(LocationEntity(l.latitude, l.longitude)) }
-                .addOnFailureListener { cont.resumeWithException(LocationException(LocationException.NOT_FOUND, "Unknown")) }
+                // In some rare situations this can be null. https://developer.android.com/training/location/retrieve-current#last-known
+                .addOnSuccessListener { l: android.location.Location? -> l?.let { loc = LocationEntity(it.latitude, it.longitude) } }
+                .addOnFailureListener { e -> LocationException(LocationException.NOT_FOUND, "Unknown") }
+        return loc
     }
 
     override fun getAddressByLocation(point: LocationEntity): String {
@@ -54,5 +71,17 @@ class LocationImpl(private val context: Context) : Location {
                 if (!area.isNullOrEmpty() && area != city) append(area).append(", ")
             }
         }
+    }
+
+    override fun onConnected(p0: Bundle?) {
+
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+
+    }
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+
     }
 }
