@@ -2,7 +2,6 @@ package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.model.RegistrationAccountEntity
 import com.kg.gettransfer.remote.model.*
-import com.sun.org.apache.xpath.internal.operations.Bool
 
 import kotlinx.coroutines.Deferred
 

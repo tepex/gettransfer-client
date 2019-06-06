@@ -1,7 +1,9 @@
 package com.kg.gettransfer.data.model
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
+@Serializable
 data class CityPointEntity(
     @SerialName(NAME) val name: String?,
     @SerialName(POINT) val point: String?,
