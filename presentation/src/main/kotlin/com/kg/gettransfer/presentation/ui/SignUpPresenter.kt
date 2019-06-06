@@ -23,18 +23,17 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 accountManager.register(RegistrationAccount(email, phone, termsAccepted, name))
-            }
-                .also {
-                    it.error?.let { e ->
-                        viewState.setError(e)
+            }.also {
+                it.error?.let { e ->
+                    viewState.setError(e)
 //                        logLoginEvent(Analytics.RESULT_FAIL)
-                    }
-
-                    it.isSuccess()?.let {
-                        viewState.showRegisterSuccessDialog()
-                        registerPushToken()
-                    }
                 }
+
+                it.isSuccess()?.let {
+                    viewState.showRegisterSuccessDialog()
+                    registerPushToken()
+                }
+            }
             viewState.blockInterface(false)
         }
     }
