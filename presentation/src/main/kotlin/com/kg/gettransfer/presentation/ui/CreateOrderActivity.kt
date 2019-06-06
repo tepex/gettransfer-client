@@ -469,8 +469,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun showNotLoggedAlert(withOfferId: Long) =
-        Utils.showScreenRedirectingAlert(this, getString(R.string.LNG_LOGIN_NOT_LOGGED_IN),
-                    getString(R.string.LNG_LOGIN_LOGIN_TO_CONTINUE)) {
+        Utils.showScreenRedirectingAlert(this, getString(R.string.LNG_LOGIN_LOGIN_TO_CONTINUE)) {
             presenter.redirectToLogin(withOfferId)
         }
 
