@@ -18,7 +18,7 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseModel, CarrierTripBase>
         return CarrierTripBaseModel(
             id                    = type.id,
             transferId            = type.transferId,
-            from                  = type.from.name!!,
+            from                  = type.from.name,
             to                    = type.to?.name,
             dateLocal             = type.dateLocal,
             duration              = type.duration,

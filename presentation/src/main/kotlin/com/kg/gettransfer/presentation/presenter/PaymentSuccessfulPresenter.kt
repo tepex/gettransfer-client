@@ -46,8 +46,8 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                         val routeModel = routeMapper.getView(
                             r.model.distance,
                             r.model.polyLines,
-                            transfer.from.name!!,
-                            transfer.to!!.name!!,
+                            transfer.from.name,
+                            transfer.to!!.name,
                             transfer.from.point!!,
                             transfer.to!!.point!!,
                             SystemUtils.formatDateTime(transferModel.dateTime)

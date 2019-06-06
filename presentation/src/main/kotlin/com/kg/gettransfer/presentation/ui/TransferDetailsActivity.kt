@@ -429,6 +429,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun initAboutTransportView(offerModel: OfferModel, childSeats: Int) {
         layoutAboutTransport .apply {
             car_model_field.field_title.text = offerModel.vehicle.name
@@ -547,15 +548,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         yourRateMark.rbYourRateMark.setOnRatingChangeListener { _, fl -> presenter.rateTrip(fl , true) }
     }
 
-	override fun showYourComment(isShow: Boolean, comment: String) {
-		if (comment.isEmpty())
-			yourComment.tvTitile.text = getString(R.string.LNG_PAYMENT_LEAVE_COMMENT)
-		else
-			yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
-		yourComment.tvComment.text = comment
-		yourComment.show(isShow)
+    override fun showYourComment(isShow: Boolean, comment: String) {
+        if (comment.isEmpty())
+            yourComment.tvTitile.text = getString(R.string.LNG_PAYMENT_LEAVE_COMMENT)
+        else
+            yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
+        yourComment.tvComment.text = comment
+        yourComment.show(isShow)
 
-	}
+    }
 
     override fun showCommentEditor(comment: String) {
         Intent(this, TextEditorActivity::class.java).apply {

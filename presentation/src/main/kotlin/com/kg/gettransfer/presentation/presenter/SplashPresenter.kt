@@ -65,17 +65,16 @@ class SplashPresenter: MvpPresenter<SplashView>(), KoinComponent {
         openStartScreen(transferId, rate, showRate)
     }
 
-    private fun shouldAskForRateApp() =
-            when (systemInteractor.appEntersForMarketRate) {
-                3    -> true
-                9    -> true
-                18   -> true
-                else -> false
-            }
+    /* TODO: Magic values here! */
+    private fun shouldAskForRateApp() = when (systemInteractor.appEntersForMarketRate) {
+        3    -> true
+        9    -> true
+        18   -> true
+        else -> false
+    }
 
-    private fun openStartScreen(transferId: Long = 0,
-                                rate: Int = 0,
-                                showRate: Boolean = false) {
+    @Suppress("UNUSED_PARAMETER")
+    private fun openStartScreen(transferId: Long = 0, rate: Int = 0, showRate: Boolean = false) {
 
         if (!systemInteractor.isOnboardingShowed) {
             systemInteractor.isOnboardingShowed = true

@@ -31,7 +31,7 @@ class PasswordFragment : MvpAppCompatFragment() {
             val pas = it.trim()
             btnLogin.isEnabled = pas.isNotEmpty()
         }
-        etPassword.setOnFocusChangeListener { v, hasFocus -> changePasswordToggle(hasFocus) }
+        etPassword.setOnFocusChangeListener { _, hasFocus -> changePasswordToggle(hasFocus) }
         ivPasswordToggle.setOnClickListener { togglePassword() }
 //        btnLoginByCode.setOnClickListener { mPresenter.loginWithCode() }
         //tvForgotPassword.setOnClickListener { mPresenter.onPassForgot() }

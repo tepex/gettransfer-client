@@ -130,7 +130,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
             presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
         }
         et_auth_phone.addTextChangedListener(PhoneNumberFormatter())
-        et_auth_phone.setOnFocusChangeListener { v, hasFocus ->
+        et_auth_phone.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) setPhoneCode()
             else {
                 val phone = et_auth_phone.text?.trim()
