@@ -4,18 +4,26 @@ import com.kg.gettransfer.data.model.ChatBadgeEventEntity
 import com.kg.gettransfer.data.model.MessageEntity
 import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.model.OfferEntity
+
 import com.kg.gettransfer.remote.model.EndpointModel
+
 import io.socket.client.IO
 import io.socket.client.Manager
 import io.socket.client.Socket
+
 import io.socket.engineio.client.Transport
 import io.socket.engineio.client.transports.WebSocket
+
 import io.socket.parser.Packet
+
 import kotlinx.serialization.json.JSON
+
 import org.json.JSONArray
+
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
+
 import org.slf4j.Logger
 
 class SocketManager(): KoinComponent {
@@ -134,7 +142,6 @@ class SocketManager(): KoinComponent {
     }
 
     private fun retrievePacket(someTrash: Any): JSONArray? {
-        log.debug("someTrash type: ${someTrash::class.qualifiedName}")
         if (someTrash !is Packet<*>) return null
         val packetData: Any? = someTrash.data
         if (packetData == null || packetData !is JSONArray) return null
