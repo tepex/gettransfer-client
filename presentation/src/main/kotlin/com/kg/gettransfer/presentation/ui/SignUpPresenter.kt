@@ -12,8 +12,6 @@ import org.koin.standalone.KoinComponent
 
 @InjectViewState
 class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
-
-    //TODO добавить сохранение в модель
     fun registration(name: String, phone: String, email: String, termsAccepted: Boolean) {
         if (!checkFieldsIsValid(phone, email)) {
             viewState.showValidationErrorDialog()
@@ -23,18 +21,16 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 accountManager.register(RegistrationAccount(email, phone, termsAccepted, name))
-            }
-                .also {
-                    it.error?.let { e ->
-                        viewState.setError(e)
-//                        logLoginEvent(Analytics.RESULT_FAIL)
-                    }
-
-                    it.isSuccess()?.let {
-                        viewState.showRegisterSuccessDialog()
-                        registerPushToken()
-                    }
+            }.also {
+                it.error?.let { e ->
+                    viewState.setError(e)
                 }
+
+                it.isSuccess()?.let {
+                    viewState.showRegisterSuccessDialog()
+                    registerPushToken()
+                }
+            }
             viewState.blockInterface(false)
         }
     }
