@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             style="@style/sf_font_semi_bold_17_sp"
             android:gravity="center"
-            android:text="Begin to earn more with \nGetTransfer.com!"/>
+            android:text="@string/LNG_LOGIN_CARRIER_SIGNUP_TITLE"/>
 
         <TextView
             android:id="@+id/registrationText"
@@ -32,11 +32,9 @@
             android:layout_marginTop="24dp"
             style="@style/sf_font_pro_text_regular_grey"
             android:gravity="center"
-            android:text="Carrier registration is available on our \nweb site gettransfer.com"/>
+            android:text="@string/LNG_LOGIN_CARRIER_SIGNUP_HINT"/>
 
     </LinearLayout>
-
-
 
     <Button
         android:id="@+id/btnLogin"
@@ -46,7 +44,7 @@
         android:layout_marginTop="@dimen/login_btnLogin_margin_top"
         android:background="@drawable/btn_bg_rounded"
         android:enabled="true"
-        android:text="Sign up on Gettransfer.com"
+        android:text="@string/LNG_LOGIN_CARRIER_SIGNUP_BUTTON"
         android:layout_marginBottom="32dp"
         android:textColor="@color/colorWhite"
         app:layout_constraintLeft_toLeftOf="parent"

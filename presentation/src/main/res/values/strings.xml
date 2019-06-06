@@ -563,6 +563,9 @@
     <string name="russia_phone" translatable="false">+7 495 414 23 87</string>
     <string name="florida_phone" translatable="false">+1 786 870 1567</string>
     <string name="china_phone" translatable="false">+852 5803 1035</string>
+    <string name="LNG_LOGIN_CARRIER_SIGNUP_TITLE">Begin to earn more with GetTransfer.com!</string>
+    <string name="LNG_LOGIN_CARRIER_SIGNUP_HINT">Carrier registration is available on our web site gettransfer.com</string>
+    <string name="LNG_LOGIN_CARRIER_SIGNUP_BUTTON">Sign up on gettransfer.com</string>
 
     <plurals name="days">
         <item quantity="one">@string/LNG_DAY</item>
