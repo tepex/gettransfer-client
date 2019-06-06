@@ -10,13 +10,14 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.view.LogInView
+import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.fragment_pager_authorization.*
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import ru.terrakok.cicerone.Router
 
 /**
- *
+ * This fragment contain the pagers for login and registration
  *
  * @author П. Густокашин (Diwixis)
  */
@@ -60,8 +61,9 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
                     putString(LogInView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
                 }
             }
-            1 -> SignUpFragment.newInstance().apply {
-
+            1 -> {
+                if (nextScreen == Screens.CARRIER_MODE) SignUpCarrierFragment.newInstance()
+                else SignUpFragment.newInstance()
             }
             else -> throw UnsupportedOperationException()
         }
