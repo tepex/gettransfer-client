@@ -205,7 +205,6 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
                         router.exit()
                     }
                 }
-            viewState.blockInterface(false)
         }
     }
 

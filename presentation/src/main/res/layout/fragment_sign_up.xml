@@ -26,7 +26,7 @@
             android:drawableStart="@drawable/wrapped_ic_account_wrapper"
             android:drawablePadding="@dimen/login_input_layout_drawable_padding"
             android:ems="10"
-            android:hint="Your full name"
+            android:hint="@string/LNG_RIDE_NAME"
             android:inputType="text"
             android:paddingTop="@dimen/login_etEmail_padding_top"
             android:paddingBottom="@dimen/login_etEmail_padding_bottom" />
@@ -61,7 +61,7 @@
             android:drawableStart="@drawable/ic_phone"
             android:drawablePadding="@dimen/login_input_layout_drawable_padding"
             android:ems="10"
-            android:hint="Your phone number"
+            android:hint="@string/LNG_RIDE_PHONE"
             android:inputType="phone"
             android:paddingTop="@dimen/login_etEmail_padding_top"
             android:paddingBottom="@dimen/login_etEmail_padding_bottom" />
@@ -96,7 +96,7 @@
             android:drawableStart="@drawable/ic_email"
             android:drawablePadding="@dimen/login_input_layout_drawable_padding"
             android:ems="10"
-            android:hint="Your e-mail"
+            android:hint="@string/LNG_LOGIN_EMAIL"
             android:inputType="textEmailAddress"
             android:paddingTop="@dimen/login_etEmail_padding_top"
             android:paddingBottom="@dimen/login_etEmail_padding_bottom" />
@@ -140,7 +140,7 @@
         android:layout_marginTop="@dimen/login_btnLogin_margin_top"
         android:background="@drawable/btn_bg_rounded"
         android:enabled="false"
-        android:text="Sign Up"
+        android:text="@string/LNG_SIGNUP"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:textColor="@color/colorWhite"
