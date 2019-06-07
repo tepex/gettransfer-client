@@ -172,12 +172,6 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
             navPassengerMode.setOnClickListener    (it)
             navCarrierTransfers.setOnClickListener (it)
         }
-
-    //    setViewColor(navViewHeader, R.color.colorWhite)
-    //    setViewColor(layoutAccountInfo, R.color.primaryDriver)
-//        navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-//        navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-//        navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
     }
 
     override fun initNavigation(profile: ProfileModel) {

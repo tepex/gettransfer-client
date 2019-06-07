@@ -25,9 +25,9 @@ class TripAddressesInfoView @JvmOverloads constructor(
 
     fun setInfo(item: CarrierTripBaseModel) {
         tvTripFrom.text = item.from
-        if(item.to != null) {
-            tvTripTo.text = item.to
-            changeViewForHourlyTransfer(false)
+        if(item.to.isNullOrEmpty()) {
+            tv_duration.text = HourlyValuesHelper.getValue(item.duration ?: 0, context)
+            changeViewForHourlyTransfer(true)
         } else if (item.duration != null) {
             tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
             changeViewForHourlyTransfer(true)
