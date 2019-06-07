@@ -36,6 +36,10 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         loginPager.adapter = LoginPagerAdapter(fragmentManager!!)
 
         loginBackButton.setOnClickListener { router.exit() }
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         nextScreen = arguments?.getString(LogInView.EXTRA_NEXT_SCREEN) ?: ""
         emailOrPhone = arguments?.getString(LogInView.EXTRA_EMAIL_TO_LOGIN) ?: ""

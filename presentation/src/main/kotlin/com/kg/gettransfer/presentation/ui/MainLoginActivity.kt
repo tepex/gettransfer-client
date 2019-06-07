@@ -25,6 +25,7 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
 
     @InjectPresenter
     internal lateinit var presenter: MainLoginPresenter
+
     private lateinit var navigator: Navigator
 
     companion object {
@@ -37,6 +38,11 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_login)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         navigator = SupportAppNavigator(this, supportFragmentManager, R.id.container)
         navigatorHolder.setNavigator(navigator)
         val nextScreen = intent?.getStringExtra(EXTRA_NEXT_SCREEN) ?: ""
