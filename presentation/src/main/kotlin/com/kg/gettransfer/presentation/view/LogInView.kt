@@ -9,7 +9,7 @@ interface LogInView : BaseView {
     fun showValidationError(show: Boolean, errorType: Int)
     fun showLoginInfo(@StringRes title: Int, @StringRes info: Int)
     fun showChangePasswordDialog()
-    fun showErrorText(b: Boolean, text: String?)
+    fun showErrorText(show: Boolean, text: String?)
 
     companion object {
         val EXTRA_NEXT_SCREEN = "${LogInView::class.java.name}.next_screen"

@@ -28,7 +28,7 @@ open class SessionDataStoreCache : SessionDataStore {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun register(registrationAccountEntity: RegistrationAccountEntity): AccountEntity {
+    override suspend fun register(account: RegistrationAccountEntity): AccountEntity {
         throw UnsupportedOperationException()
     }
 

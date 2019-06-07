@@ -353,9 +353,7 @@ class MainActivity :
             checkPermission()
             presenter.updateCurrentLocation()
         }
-        gm.setOnCameraMoveListener        {
-            presenter.onCameraMove(gm.cameraPosition!!.target, true)
-        }
+        gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true) }
         gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
     }
 

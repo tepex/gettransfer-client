@@ -115,7 +115,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
 
     private fun downloadVoucher(url: String) {
         webView.loadUrl(url)
-        webView.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+        webView.setDownloadListener { _, _, contentDisposition, mimetype, _ ->
             val request = DownloadManager.Request(Uri.parse(url)).apply {
                 allowScanningByMediaScanner()
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)

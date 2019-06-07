@@ -82,8 +82,8 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
         routeModel = routeMapper.getView(
                 route.distance,
                 route.polyLines,
-                baseTrip.from.name!!,
-                baseTrip.to!!.name!!,
+                baseTrip.from.name,
+                baseTrip.to!!.name,
                 baseTrip.from.point!!,
                 baseTrip.to!!.point!!,
                 SystemUtils.formatDateTime(tripModel.base.dateLocal)

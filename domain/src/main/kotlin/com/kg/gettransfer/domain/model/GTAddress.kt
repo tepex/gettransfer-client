@@ -46,7 +46,7 @@ data class GTAddress(
         else cityPoint.name == eq.cityPoint.name
     }
 
-    override fun hashCode(): Int = cityPoint.placeId?.hashCode() ?: cityPoint.name!!.hashCode()
+    override fun hashCode(): Int = cityPoint.placeId?.hashCode() ?: cityPoint.name.hashCode()
     override fun toString(): String = "$cityPoint.name {$placeTypes}"
 
     companion object {

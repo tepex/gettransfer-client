@@ -19,7 +19,7 @@ class DriverCoordinate(private val handler: Handler,
 
     init { requestCoordinates() }
 
-    var property: Coordinate by Delegates.observable(Coordinate(0, ZERO_COORDINATE, ZERO_COORDINATE)) { p, old, new ->
+    var property: Coordinate by Delegates.observable(Coordinate(0, ZERO_COORDINATE, ZERO_COORDINATE)) { _, old, new ->
         with(old) {
             if (lat != ZERO_COORDINATE && lon != ZERO_COORDINATE) showMoving = true
         }

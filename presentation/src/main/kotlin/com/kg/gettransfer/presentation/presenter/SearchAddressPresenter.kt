@@ -36,12 +36,14 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
         }
 
         Timber.d("------ request list for prediction $prediction")
+        /*
         var latLonPair: Pair<Point, Point>? = null
         mBounds?.let {
             val nePoint = Point(it.northeast.latitude, it.northeast.longitude)
             val swPoint = Point(it.southwest.latitude, it.southwest.longitude)
             latLonPair = Pair(nePoint, swPoint)
         }
+        */
 
         utils.launchSuspend {
             fetchData(checkLoginError = false) {

@@ -39,6 +39,7 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun openChat(chatId: String) {
 
     }

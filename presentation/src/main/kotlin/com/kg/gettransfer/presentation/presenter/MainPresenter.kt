@@ -233,6 +233,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onCameraIdle(latLngBounds: LatLngBounds) {
         if (idleAndMoveCamera) {
             if (markerStateLifted && !isMarkerAnimating) {
