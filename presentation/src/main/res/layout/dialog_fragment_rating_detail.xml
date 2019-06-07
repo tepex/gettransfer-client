@@ -180,6 +180,8 @@
 			android:text="@string/LNG_SEND"
 			android:textColor="@color/colorWhite"
 			android:textSize="14sp"
+			android:gravity="center"
+			android:textAllCaps="true"
 			app:backgroundTint="@color/color_gtr_green"
 			app:cornerRadius="22dp"
 			app:icon="@drawable/ic_check_circle"

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="16dp"
@@ -13,60 +12,50 @@
         style="@style/sf_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/payment_radio_button_margin_start"
         android:layout_marginTop="@dimen/payment_radio_button_margin_top"
         android:button="@drawable/payment_selector"
         android:checked="true"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingStart="@dimen/payment_radio_button_padding_start"
-        android:paddingEnd="@dimen/payment_radio_button_padding_start"
-        android:text="@string/LNG_PAYMENT_METHOD_CARD"
         android:textSize="13sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/ivMasterCard"
-        android:layout_width="@dimen/payment_logo_card_width"
-        android:layout_height="@dimen/payment_logo_card_height"
-        app:layout_constraintBottom_toBottomOf="@+id/rbCard"
-
-        app:layout_constraintStart_toEndOf="@+id/rbCard"
-        app:layout_constraintTop_toTopOf="@+id/rbCard"
-        app:srcCompat="@drawable/ic_master_card" />
-
-    <ImageView
-        android:id="@+id/ivMaestro"
-        android:layout_width="@dimen/payment_logo_card_width"
-        android:layout_height="@dimen/payment_logo_card_height"
-        app:layout_constraintBottom_toBottomOf="@+id/ivMasterCard"
-        app:layout_constraintStart_toEndOf="@+id/ivMasterCard"
-        app:layout_constraintTop_toTopOf="@+id/ivMasterCard"
-        app:srcCompat="@drawable/ic_maestro" />
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectPayment" />
 
     <ImageView
         android:id="@+id/ivVisa"
         android:layout_width="@dimen/payment_logo_card_width"
         android:layout_height="@dimen/payment_logo_card_height"
-        app:layout_constraintBottom_toBottomOf="@+id/ivMaestro"
-        app:layout_constraintStart_toEndOf="@+id/ivMaestro"
-        app:layout_constraintTop_toTopOf="@+id/ivMaestro"
+        app:layout_constraintBottom_toBottomOf="@+id/rbCard"
+        android:layout_marginStart="@dimen/payment_logo_card_margin_start"
+        app:layout_constraintStart_toEndOf="@+id/rbCard"
+        app:layout_constraintTop_toTopOf="@+id/rbCard"
         app:srcCompat="@drawable/ic_visa" />
+
+    <ImageView
+        android:id="@+id/ivMasterCard"
+        android:layout_width="@dimen/payment_logo_card_width"
+        android:layout_height="@dimen/payment_logo_card_height"
+        android:layout_marginStart="@dimen/payment_logo_card_margin_start2"
+        app:layout_constraintBottom_toBottomOf="@+id/ivVisa"
+        app:layout_constraintStart_toEndOf="@+id/ivVisa"
+        app:layout_constraintTop_toTopOf="@+id/ivVisa"
+        app:srcCompat="@drawable/ic_master_card" />
 
     <ImageView
         android:id="@+id/ivAmex"
         android:layout_width="@dimen/payment_logo_card_width"
         android:layout_height="@dimen/payment_logo_card_height"
-        app:layout_constraintBottom_toBottomOf="@+id/ivVisa"
-        app:layout_constraintStart_toEndOf="@+id/ivVisa"
-        app:layout_constraintTop_toTopOf="@+id/ivVisa"
+        android:layout_marginStart="@dimen/payment_logo_card_margin_start2"
+        app:layout_constraintBottom_toBottomOf="@+id/ivMasterCard"
+        app:layout_constraintStart_toEndOf="@+id/ivMasterCard"
+        app:layout_constraintTop_toTopOf="@+id/ivMasterCard"
         app:srcCompat="@drawable/ic_amex" />
 
     <ImageView
         android:id="@+id/ivDiscover"
         android:layout_width="@dimen/payment_logo_card_width"
         android:layout_height="@dimen/payment_logo_card_height"
+        android:layout_marginStart="@dimen/payment_logo_card_margin_start2"
         app:layout_constraintBottom_toBottomOf="@+id/ivAmex"
         app:layout_constraintStart_toEndOf="@+id/ivAmex"
         app:layout_constraintTop_toTopOf="@+id/ivAmex"
@@ -89,14 +78,11 @@
         style="@style/sf_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/payment_radio_button_margin_start"
         android:layout_marginTop="@dimen/payment_radio_button_margin_top"
         android:layout_marginBottom="@dimen/payment_radio_button_margin_bottom"
         android:button="@drawable/payment_selector"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingStart="@dimen/payment_radio_button_padding_start"
-        android:text="@string/LNG_PAYMENT_METHOD_PAYPAL"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider2" />
@@ -107,9 +93,20 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/rbPaypal"
         app:layout_constraintLeft_toRightOf="@id/rbPaypal"
-        app:layout_constraintStart_toStartOf="@+id/ivMasterCard"
+        app:layout_constraintStart_toStartOf="@+id/ivVisa"
         app:layout_constraintTop_toTopOf="@+id/rbPaypal"
         app:srcCompat="@drawable/ic_paypal" />
 
-
+    <TextView
+        android:id="@+id/tvSelectPayment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/payment_tvSelectPayment_margin_start"
+        android:layout_marginTop="@dimen/payment_tvSelectPayment_margin_top"
+        android:layout_marginEnd="@dimen/payment_tvSelectPayment_margin_end"
+        android:text="@string/LNG_PAYMENT_METHOD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/sf_font_pro_display_bold"/>
 </android.support.constraint.ConstraintLayout>

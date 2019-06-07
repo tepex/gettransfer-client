@@ -49,9 +49,7 @@
 
         <TextView
             android:id="@+id/tvPriceInfo"
-            android:textSize="17sp"
-            android:textColor="@color/colorTextBlack"
-            android:fontFamily="@font/sf_pro_text_semibold"
+            style="@style/sf_font_pro_display_bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/payment_tvPriceInfo_margin_top"
@@ -72,8 +70,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvPriceInfo"
             android:visibility="gone"
 
-            tools:visibility="visible"
-        />
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/layoutPrices"
@@ -94,6 +91,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutPrices"/>
+
+        <ImageView
+            android:id="@+id/ivGtrBonus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/payment_ivGtrBonus_layout_marginTop"
+            app:layout_constraintBottom_toTopOf="@+id/tvCollectMiles"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutPayments"
+            app:srcCompat="@drawable/gtr_bonus" />
+
+        <TextView
+            android:id="@+id/tvCollectMiles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/payment_tvCollectMiles_layout_marginTop"
+            android:text="@string/LNG_PAYMENT_COLLECT_MILES"
+            app:layout_constraintTop_toBottomOf="@+id/ivGtrBonus"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/sf_font_pro_display_regular_black"
+            android:textSize="17sp"/>
 
         <TextView
             android:id="@+id/tvCommission"
@@ -137,40 +157,10 @@
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutPayments"
-            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvCollectMiles"
+            android:layout_marginTop="@dimen/payment_ll_auth_container_layout_marginTop"
 
             tools:visibility="visible">
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/il_auth_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/LNG_EMAIL"
-                android:background="@color/colorWhite"
-                android:paddingStart="16dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="4dp"
-                android:theme="@style/editTextLogin">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/et_auth_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/icon"
-                    android:background="@null"
-                    android:drawableStart="@drawable/ic_email"
-                    android:drawablePadding="@dimen/login_input_layout_drawable_padding"
-                    android:ems="10"
-                    android:inputType="textEmailAddress"
-                    android:paddingTop="@dimen/login_etEmail_padding_top"
-                    android:paddingBottom="@dimen/login_etEmail_padding_bottom"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/create_order_fields_divider"/>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/il_auth_phone"
@@ -197,18 +187,57 @@
                     android:paddingBottom="@dimen/login_etEmail_padding_bottom"/>
             </android.support.design.widget.TextInputLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/payment_divider_height"
+                android:background="@color/color_gtr_super_light_grey"
+                android:layout_marginStart="@dimen/payment_divider_marginStart"
+                android:layout_marginEnd="@dimen/payment_divider_marginStart" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/il_auth_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/LNG_EMAIL"
+                android:background="@color/colorWhite"
+                android:paddingStart="16dp"
+                android:paddingEnd="0dp"
+                android:paddingTop="4dp"
+                android:theme="@style/editTextLogin">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/et_auth_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/icon"
+                    android:background="@null"
+                    android:drawableStart="@drawable/ic_email"
+                    android:drawablePadding="@dimen/login_input_layout_drawable_padding"
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:paddingTop="@dimen/login_etEmail_padding_top"
+                    android:paddingBottom="@dimen/login_etEmail_padding_bottom"/>
+            </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
-        <include
-            layout="@layout/button_pay"
+        <android.support.design.button.MaterialButton
             android:id="@+id/btnGetPayment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="@dimen/payment_button_pay_margin_top"
+            android:layout_height="@dimen/btn_rounded_height"
+            android:layout_marginTop="@dimen/payment_button_pay_margin_top"
+            android:layout_marginStart="@dimen/payment_button_pay_margin_start"
             android:layout_marginEnd="@dimen/payment_button_pay_margin_end"
             android:layout_marginBottom="@dimen/payment_button_pay_margin_bottom"
-
+            android:text="@string/LNG_PAYMENT_PAY"
+            android:textSize="14sp"
+            android:textAllCaps="true"
+            android:gravity="center"
+            style="@style/sf_pro_text_semibold_white"
+            app:icon="@drawable/ic_credit_card"
+            app:iconGravity="textStart"
+            app:cornerRadius="@dimen/btn_radius"
+            app:backgroundTint="@color/color_gtr_green"
+            app:iconTint="@android:color/white"
             app:layout_constraintTop_toBottomOf="@+id/tvPaymentAgreement"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
