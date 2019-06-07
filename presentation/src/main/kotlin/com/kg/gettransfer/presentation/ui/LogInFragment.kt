@@ -22,7 +22,6 @@ import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_EMAIL_TO_L
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_log_in.*
-import kotlinx.android.synthetic.main.fragment_log_in.btnLogin
 import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.android.synthetic.main.view_input_password.*
 import timber.log.Timber

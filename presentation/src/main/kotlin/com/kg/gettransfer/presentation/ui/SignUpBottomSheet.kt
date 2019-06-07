@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.app.KeyguardManager
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
