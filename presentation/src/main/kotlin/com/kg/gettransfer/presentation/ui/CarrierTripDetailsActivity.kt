@@ -151,12 +151,13 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
 
         layoutCarrierTripInfo.setInfo(item.base)
 
-        if (item.base.to != null) {
+        if (item.base.to.isNullOrEmpty()) {
+            transfer_details_main.tv_time.text = HourlyValuesHelper.getValue(item.base.duration ?: 0, this)
+        } else {
             transfer_details_main.tv_distance.text = SystemUtils.formatDistance(this, item.base.distance, false)
             transfer_details_main.tv_time.text = Utils.durationToString(this, Utils.convertDuration(item.base.time ?: 0))
             transfer_details_main.tv_distance_dash.isVisible = false
-        } else {
-            transfer_details_main.tv_time.text = HourlyValuesHelper.getValue(item.base.duration ?: 0, this)
+
         }
         transfer_details_main.tv_price_title.text = getString(R.string.LNG_TOTAL_PRICE).plus(" ${item.base.price}")
         item.totalPrice?.let {

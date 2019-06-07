@@ -38,16 +38,18 @@ class CarrierTripInfoItem @JvmOverloads constructor(
         textTransferStatus.text = context.getString(R.string.LNG_TRANSFER).plus(" #${item.transferId}").plus(" ${transferStatus?: ""}")
         tvTripFrom.text = item.from
 
-        if (item.to != null) {
+        if (item.to.isNullOrEmpty()) {
+            if (item.duration != null) {
+                tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
+                changeViewForHourlyTransfer(true)
+            }
+        } else {
             item.distance?.let {
                 textDistance.text = SystemUtils.formatDistance(context, it, false)
                 textDistance.isVisible = true
             }
             tvTripTo.text = item.to
             changeViewForHourlyTransfer(false)
-        } else if (item.duration != null) {
-            tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
-            changeViewForHourlyTransfer(true)
         }
 
         vehiceName.text = item.vehicle.name
