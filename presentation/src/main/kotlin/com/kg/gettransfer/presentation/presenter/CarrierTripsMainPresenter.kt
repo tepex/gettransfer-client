@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
+import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_NOT_ASKED
@@ -14,6 +15,7 @@ import timber.log.Timber
 @InjectViewState
 class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComponent {
     private val profileMapper: ProfileMapper by inject()
+    private val geoInteractor: GeoInteractor by inject()
 
     @CallSuper
     override fun onFirstViewAttach() {
@@ -74,4 +76,8 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
         map[Analytics.PARAM_KEY_NAME] = value
         analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
     }
+
+    fun initGoogleApiClient() = geoInteractor.initGoogleApiClient()
+
+    fun disconnectGoogleApiClient() = geoInteractor.disconnectGoogleApiClient()
 }

@@ -22,6 +22,10 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
 
     override fun initGeocoder(locale: Locale) = geoDataStore.initGeocoder(locale)
 
+    override fun initGoogleApiClient() = geoDataStore.initGoogleApiClient()
+
+    override fun disconnectGoogleApiClient() = geoDataStore.disconnectGoogleApiClient()
+
     override suspend fun getCurrentLocation(): Result<Point> {
         return try {
             val locationEntity = geoDataStore.getCurrentLocation()

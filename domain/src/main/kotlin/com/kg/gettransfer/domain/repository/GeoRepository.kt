@@ -7,6 +7,8 @@ import java.util.Locale
 interface GeoRepository {
     val isGpsEnabled: Boolean
     fun initGeocoder(locale: Locale)
+    fun initGoogleApiClient()
+    fun disconnectGoogleApiClient()
 
     suspend fun getCurrentLocation(): Result<Point>
     suspend fun getMyLocationByIp(): Result<Point>
