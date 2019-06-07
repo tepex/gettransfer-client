@@ -256,7 +256,7 @@
     <string name="LNG_RIDE_CONNECT_CARRIERS_NONUM">Connecting with nearby carriers</string>
     <string name="LNG_RIDE_CARRIERS">Carrier\'s offers</string>
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
-    <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
+    <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting…</string>
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
     <string name="LNG_RIDE_OFFERT">I aggree with \n<a href='#'>License agreement</a></string>
     <string name="LNG_RIDE_PAYMENT_OFFER">By pressing \"\PAY\"\ you accept <a href="#">terms of the Agreement</a></string>
@@ -279,9 +279,8 @@
     <string name="LNG_PAYMENT_TERM_PAY">Pay %s%%</string>
     <string name="LNG_PAYMENT_TERM_NOW"> now</string>
     <string name="LNG_PAYMENT_TERM_LATER">(%s later to the driver)</string>
-    <string name="LNG_PAYMENT_METHOD">Method of payment</string>
-    <string name="LNG_PAYMENT_METHOD_CARD">Credit Card</string>
-    <string name="LNG_PAYMENT_METHOD_PAYPAL">Pay Pal</string>
+    <string name="LNG_PAYMENT_METHOD"><b>Select your payment method</b></string>
+    <string name="LNG_PAYMENT_COLLECT_MILES">To collect miles please  log in</string>
     <string name="LNG_SOON">Soon</string>
     <string name="LNG_PAYMENT_COMISSION">Commission 2%%.\nRefund is available before %s</string>
     <string name="LNG_PAYMENT_COMISSION2">Commission %s%%.\nRefund is available before %s</string>

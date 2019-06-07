@@ -1,6 +1,6 @@
 <resources xmlns:android="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -92,6 +92,10 @@
 
     <style name="sf_pro_text_regular_green" parent="sf_font">
         <item name="android:textColor">@color/color_gtr_green</item>
+    </style>
+
+    <style name="sf_font_pro_display_bold" parent="sf_font">
+        <item name="android:fontFamily">@font/sf_pro_display_bold</item>
     </style>
 
 

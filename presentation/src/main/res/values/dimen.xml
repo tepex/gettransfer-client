@@ -966,7 +966,10 @@
 	<dimen name="payment_radio_button_margin_start">8dp</dimen>
 	<dimen name="payment_rb_paypal_margin_start">25dp</dimen>
 	<dimen name="payment_radio_button_margin_end">16dp</dimen>
-	<dimen name="payment_radio_button_margin_top">21dp</dimen>
+	<dimen name="payment_radio_button_margin_top">33dp</dimen>
+	<dimen name="payment_tvSelectPayment_margin_top">16dp</dimen>
+	<dimen name="payment_tvSelectPayment_margin_start">8dp</dimen>
+	<dimen name="payment_tvSelectPayment_margin_end">5dp</dimen>
 	<dimen name="payment_radio_button_margin_bottom">21dp</dimen>
 	<dimen name="payment_radio_button_padding_start">5dp</dimen>
 	<dimen name="payment_radio_button_padding_end">5dp</dimen>
@@ -974,6 +977,8 @@
 	<dimen name="payment_layout_constraintGuide_begin_payments">200dp</dimen>
 	<dimen name="payment_logo_card_width">38dp</dimen>
 	<dimen name="payment_logo_card_height">30dp</dimen>
+	<dimen name="payment_logo_card_margin_start">16dp</dimen>
+	<dimen name="payment_logo_card_margin_start2">24dp</dimen>
 	<dimen name="F">1dp</dimen>
 	<dimen name="payment_divider_margin_top">21dp</dimen>
 	<dimen name="payment_tvThirdOfPrice_margin_top">24dp</dimen>
@@ -986,20 +991,20 @@
 	<dimen name="payment_offer_layout_margin_top">8dp</dimen>
 	<dimen name="payment_layout_prices_margin_top">16dp</dimen>
 	<dimen name="payment_layout_payments_margin_top">16dp</dimen>
-	<dimen name="payment_tvPriceInfo_margin_top">16dp</dimen>
+	<dimen name="payment_tvPriceInfo_margin_top">8dp</dimen>
 	<dimen name="payment_tvPriceInfo_padding_bottom">16dp</dimen>
-	<dimen name="payment_tvCommission_margin_top">16dp</dimen>
+	<dimen name="payment_tvCommission_margin_top">24dp</dimen>
 	<dimen name="payment_tvCommission_margin_start">8dp</dimen>
 	<dimen name="payment_tvCommission_margin_end">8dp</dimen>
 	<dimen name="payment_tvPaymentAgreement_margin_top">8dp</dimen>
 	<dimen name="payment_tvPaymentAgreement_margin_start">8dp</dimen>
 	<dimen name="payment_tvPaymentAgreement_margin_end">8dp</dimen>
 	<dimen name="payment_button_pay_margin_top">24dp</dimen>
-	<dimen name="payment_button_pay_margin_start">24dp</dimen>
-	<dimen name="payment_button_pay_margin_end">24dp</dimen>
+	<dimen name="payment_button_pay_margin_start">30dp</dimen>
+	<dimen name="payment_button_pay_margin_end">30dp</dimen>
 	<dimen name="payment_button_pay_margin_bottom">24dp</dimen>
 	<dimen name="payment_offer_tiny_cardCornerRadius">8dp</dimen>
-	<dimen name="payment_offer_tiny_cardElevation">5dp</dimen>
+	<dimen name="payment_offer_tiny_cardElevation">10dp</dimen>
 	<dimen name="payment_offer_tiny_ivCarPhoto_width">130dp</dimen>
 	<dimen name="payment_offer_tiny_ivCarPhoto_height">75dp</dimen>
 	<dimen name="payment_offer_tiny_tvModel_margin_start">8dp</dimen>
@@ -1013,6 +1018,12 @@
 	<dimen name="payment_offer_tiny_languages_margin_top">2dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_start">8dp</dimen>
 	<dimen name="payment_dialog_corner_radius">16dp</dimen>
+	<dimen name="payment_ivGtrBonus_layout_marginTop">16dp</dimen>
+	<dimen name="payment_tvCollectMiles_layout_marginTop">5dp</dimen>
+	<dimen name="payment_ll_auth_container_layout_marginTop">16dp</dimen>
+
+	<dimen name="btn_radius">22dp</dimen>
+	<dimen name="btn_rounded_height">56dp</dimen>
 
 	<!--Shimmer loader-->
 	<dimen name="line_height">20dp</dimen>
