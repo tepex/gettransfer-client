@@ -107,7 +107,10 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
                     this,
                     getString(R.string.LNG_LOCATION_ACCESS),
                     RC_LOCATION, *PERMISSIONS)
-        else startCoordinateService()
+        else {
+            presenter.initGoogleApiClient()
+            startCoordinateService()
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -128,6 +131,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         if (isServiceStart) {
             isServiceStart = false
             stopCoordinateService()
+            presenter.disconnectGoogleApiClient()
         }
     }
 

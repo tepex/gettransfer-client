@@ -502,6 +502,10 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         systemInteractor.startScreenOrder = true
     }
 
+    fun initGoogleApiClient() = geoInteractor.initGoogleApiClient()
+
+    fun disconnectGoogleApiClient() = geoInteractor.disconnectGoogleApiClient()
+
     companion object {
         const val FIELD_FROM    = "field_from"
         const val FIELD_TO      = "field_to"

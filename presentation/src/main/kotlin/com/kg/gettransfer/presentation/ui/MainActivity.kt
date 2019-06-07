@@ -59,8 +59,7 @@ class MainActivity :
         BaseGoogleMapActivity(),
         MainView,
         StoreDialogFragment.OnStoreListener,
-        RatingDetailDialogFragment.OnRatingChangeListener
-{
+        RatingDetailDialogFragment.OnRatingChangeListener {
 
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
@@ -154,6 +153,7 @@ class MainActivity :
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             window.exitTransition = Fade().apply { duration = FADE_DURATION }
         getIntents()
+        presenter.initGoogleApiClient()
     }
 
     private fun getIntents() {
@@ -282,7 +282,11 @@ class MainActivity :
         super.onStop()
         nextClicked = false
         enableBtnNext()
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.disconnectGoogleApiClient()
     }
 
     private fun initNavigation() {

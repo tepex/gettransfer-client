@@ -13,6 +13,8 @@ open class GeoDataStore : KoinComponent {
 
     fun isGpsEnabled() = location.isGpsEnabled
     fun initGeocoder(locale: Locale) = location.initGeocoder(locale)
+    fun initGoogleApiClient() = location.initGoogleApiClient()
+    fun disconnectGoogleApiClient() = location.disconnectGoogleApiClient()
 
     suspend fun getCurrentLocation() = location.getCurrentLocation()
     suspend fun getMyLocationByIp() = remote.getMyLocationByIp()
