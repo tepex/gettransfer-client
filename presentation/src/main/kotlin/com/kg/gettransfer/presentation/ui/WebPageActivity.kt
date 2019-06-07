@@ -28,7 +28,7 @@ import org.koin.android.ext.android.inject
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
-class WebPageActivity: MvpAppCompatActivity(), WebPageView {
+class WebPageActivity : MvpAppCompatActivity(), WebPageView {
     var navigator = SupportAppNavigator(this, Screens.NOT_USED)
     val navigatorHolder: NavigatorHolder by inject()
 
@@ -55,14 +55,30 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
 
         webView.settings.javaScriptEnabled = true
         webView.setUserAgent()
-        webView.webViewClient = object: WebViewClient() {}
+        webView.webViewClient = object : WebViewClient() {}
 
-        when(intent.getStringExtra(WebPageView.EXTRA_SCREEN)) {
-            WebPageView.SCREEN_LICENSE      -> initActivity(R.string.LNG_RIDE_OFFERT_TITLE, createUrlWithLocale(presenter.termsUrl))
-            WebPageView.SCREEN_REG_CARRIER  -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, createUrlWithLocale(getString(R.string.api_url_carrier_new)))
-            WebPageView.SCREEN_CARRIER      -> initActivity(R.string.LNG_RIDE_CREATE_CARRIER, createUrlWithLocale(getString(R.string.api_url_carrier)))
-            WebPageView.SCREEN_RESTORE_PASS -> initActivity(R.string.LNG_LOGIN_RECOVERY_PASSWORD, createUrlWithLocale(getString(R.string.api_url_restore_password)))
-            WebPageView.SCREEN_TRANSFERS    -> initActivity(null, createUrlWithLocale(getString(R.string.api_url_transfers)), presenter.baseUrl)
+        when (intent.getStringExtra(WebPageView.EXTRA_SCREEN)) {
+            WebPageView.SCREEN_LICENSE -> initActivity(
+                R.string.LNG_RIDE_OFFERT_TITLE,
+                createUrlWithLocale(presenter.termsUrl)
+            )
+            WebPageView.SCREEN_REG_CARRIER -> initActivity(
+                R.string.LNG_RIDE_CREATE_CARRIER,
+                createUrlWithLocale(getString(R.string.api_url_carrier_new))
+            )
+            WebPageView.SCREEN_CARRIER -> initActivity(
+                R.string.LNG_RIDE_CREATE_CARRIER,
+                createUrlWithLocale(getString(R.string.api_url_carrier))
+            )
+            WebPageView.SCREEN_RESTORE_PASS -> initActivity(
+                R.string.LNG_LOGIN_RECOVERY_PASSWORD,
+                createUrlWithLocale(getString(R.string.api_url_restore_password))
+            )
+            WebPageView.SCREEN_TRANSFERS -> initActivity(
+                null,
+                createUrlWithLocale(getString(R.string.api_url_transfers)),
+                presenter.baseUrl
+            )
         }
     }
 
@@ -84,10 +100,13 @@ class WebPageActivity: MvpAppCompatActivity(), WebPageView {
     }
 
     override fun onBackPressed() {
-        if(webView.canGoBack()) webView.goBack()
-        else presenter.onBackCommandClick()
+        if (webView.canGoBack()) webView.goBack()
+        else {
+            presenter.onBackCommandClick()
+            navigatorHolder.removeNavigator()
+        }
     }
 
     private fun createUrlWithLocale(path: String) =
-            SystemUtils.getUrlWithLocale().plus(path)
+        SystemUtils.getUrlWithLocale().plus(path)
 }
