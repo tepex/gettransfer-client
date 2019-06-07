@@ -6,6 +6,7 @@ import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SignUpView
+import com.kg.gettransfer.utilities.Analytics
 import org.koin.standalone.KoinComponent
 
 @InjectViewState
@@ -22,15 +23,24 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
             }.also {
                 it.error?.let { e ->
                     viewState.setError(e)
+                    logLoginEvent(Analytics.RESULT_FAIL)
                 }
 
                 it.isSuccess()?.let {
                     viewState.showRegisterSuccessDialog()
                     registerPushToken()
+                    logLoginEvent(Analytics.RESULT_SUCCESS)
                 }
             }
             viewState.blockInterface(false)
         }
+    }
+
+    private fun logLoginEvent(result: String) {
+        val map = mutableMapOf<String, Any>()
+        map[Analytics.STATUS] = result
+
+        analytics.logEvent(Analytics.EVENT_SIGN_UP, createStringBundle(Analytics.STATUS, result), map)
     }
 
     private fun checkFieldsIsValid(phone: String, email: String): Boolean =
