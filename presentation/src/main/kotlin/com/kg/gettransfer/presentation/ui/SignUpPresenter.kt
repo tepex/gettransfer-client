@@ -1,8 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import com.arellomobile.mvp.InjectViewState
-import com.kg.gettransfer.data.model.ProfileEntity
-import com.kg.gettransfer.data.model.UserEntity
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper

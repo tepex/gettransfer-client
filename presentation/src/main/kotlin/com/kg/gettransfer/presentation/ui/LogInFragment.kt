@@ -13,6 +13,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setTrottledClickListener
 import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
@@ -22,7 +23,6 @@ import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_EMAIL_TO_L
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_log_in.*
-import kotlinx.android.synthetic.main.fragment_log_in.btnLogin
 import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.android.synthetic.main.view_input_password.*
 import timber.log.Timber
@@ -69,8 +69,8 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     }
 
     private fun initClickListeners() {
-        btnLogin.setOnClickListener { presenter.onLoginClick(loginEmailTv.text.toString(), etPassword.text.toString()) }
-        btnRequestCode.setOnClickListener { presenter.loginWithCode(loginEmailTv.text.toString()) }
+        btnLogin.setTrottledClickListener { presenter.onLoginClick(loginEmailTv.text.toString(), etPassword.text.toString()) }
+        btnRequestCode.setTrottledClickListener { presenter.loginWithCode(loginEmailTv.text.toString()) }
     }
 
     private fun initTextChangeListeners() {

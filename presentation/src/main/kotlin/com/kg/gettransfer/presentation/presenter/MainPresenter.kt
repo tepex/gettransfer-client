@@ -1,35 +1,30 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
-
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.interactor.GeoInteractor
-
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
-import com.kg.gettransfer.presentation.mapper.*
-
+import com.kg.gettransfer.presentation.mapper.PointMapper
+import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.model.OfferModel
-
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import com.kg.gettransfer.presentation.view.Screens
-
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.MainState
 import com.kg.gettransfer.utilities.ScreenNavigationState
 import kotlinx.coroutines.delay
-
 import org.koin.standalone.inject
-
 import timber.log.Timber
 
 @InjectViewState
