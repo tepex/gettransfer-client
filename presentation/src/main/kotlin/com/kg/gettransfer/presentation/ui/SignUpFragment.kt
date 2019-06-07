@@ -65,6 +65,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     override fun showRegisterSuccessDialog() {
         SignUpBottomSheetSuccess
             .newInstance()
+            .setOnDissmissCalback { presenter.onBackCommandClick() }
             .show(fragmentManager, SignUpBottomSheetSuccess.TAG)
     }
 

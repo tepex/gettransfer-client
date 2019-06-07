@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.app.KeyguardManager
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import com.kg.gettransfer.R
@@ -36,11 +38,11 @@ class SignUpBottomSheetError : BaseBottomSheetDialogFragment(), KoinComponent {
 /**
  * The bottomsheet dialog for sign up success
  */
-class SignUpBottomSheetSuccess : BaseBottomSheetDialogFragment(), KoinComponent {
-    private val sessionInteractor: SessionInteractor by inject()
+class SignUpBottomSheetSuccess : BaseBottomSheetDialogFragment() {
     private val router by inject<Router>()
 
     override val layout: Int = R.layout.view_sign_up_success
+    private var onDismissCallBack: (() -> Unit)? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,6 +51,16 @@ class SignUpBottomSheetSuccess : BaseBottomSheetDialogFragment(), KoinComponent 
             dismiss()
             router.exit()
         }
+    }
+
+    fun setOnDissmissCalback(onDismissCallBack: (() -> Unit)): SignUpBottomSheetSuccess {
+        this.onDismissCallBack = onDismissCallBack
+        return this
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        onDismissCallBack?.invoke()
     }
 
     companion object {
