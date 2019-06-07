@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -7,9 +8,11 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_EMAIL_TO_LOGIN
 import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_NEXT_SCREEN
 import com.kg.gettransfer.presentation.view.MainLoginView
+import com.kg.gettransfer.utilities.LocaleManager
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
 import ru.terrakok.cicerone.Navigator
@@ -22,16 +25,17 @@ import ru.terrakok.cicerone.android.support.SupportAppNavigator
 class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
 
     private val navigatorHolder: NavigatorHolder by inject()
+    private val localeManager: LocaleManager by inject()
+    private val sessionInteractor: SessionInteractor by inject()
 
     @InjectPresenter
     internal lateinit var presenter: MainLoginPresenter
 
     private lateinit var navigator: Navigator
 
-    companion object {
-        const val INVALID_EMAIL = 1
-        const val INVALID_PHONE = 2
-        const val INVALID_PASSWORD = 3
+    override fun attachBaseContext(newBase: Context?) {
+        if (newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
+        else super.attachBaseContext(null)
     }
 
     @CallSuper
@@ -52,6 +56,12 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
 
     override fun onBackPressed() {
         presenter.onBack()
+    }
+
+    companion object {
+        const val INVALID_EMAIL = 1
+        const val INVALID_PHONE = 2
+        const val INVALID_PASSWORD = 3
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
