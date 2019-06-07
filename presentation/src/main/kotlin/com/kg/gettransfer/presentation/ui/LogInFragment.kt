@@ -13,6 +13,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setTrottledClickListener
 import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
@@ -68,8 +69,8 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     }
 
     private fun initClickListeners() {
-        btnLogin.setOnClickListener { presenter.onLoginClick(loginEmailTv.text.toString(), etPassword.text.toString()) }
-        btnRequestCode.setOnClickListener { presenter.loginWithCode(loginEmailTv.text.toString()) }
+        btnLogin.setTrottledClickListener { presenter.onLoginClick(loginEmailTv.text.toString(), etPassword.text.toString()) }
+        btnRequestCode.setTrottledClickListener { presenter.loginWithCode(loginEmailTv.text.toString()) }
     }
 
     private fun initTextChangeListeners() {

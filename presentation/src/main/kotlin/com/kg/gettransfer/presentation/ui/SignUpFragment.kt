@@ -10,6 +10,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.extensions.setTrottledClickListener
 import com.kg.gettransfer.presentation.view.SignUpView
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
 import io.sentry.Sentry
@@ -50,10 +51,10 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
 
         initTextChangeListeners()
         initPhoneTextChangeListeners()
-        btnLogin.setOnClickListener {
+        btnLogin.setTrottledClickListener(3000L) {
             presenter.registration(name, phone, email, termsAccepted)
         }
-        licenseAgreementTv.setOnClickListener { presenter.showLicenceAgreement() }
+        licenseAgreementTv.setTrottledClickListener { presenter.showLicenceAgreement() }
     }
 
     override fun showValidationErrorDialog() {
