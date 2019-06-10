@@ -1,14 +1,13 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 
 import android.support.annotation.CallSuper
+import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
@@ -33,7 +32,6 @@ import com.google.android.gms.maps.model.Marker
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.*
-import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -46,6 +44,7 @@ import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
 import com.kg.gettransfer.presentation.ui.behavior.MapCollapseBehavior
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -84,12 +83,13 @@ import java.util.*
 
 class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         RatingDetailDialogFragment.OnRatingChangeListener,
-        StoreDialogFragment.OnStoreListener {
+        StoreDialogFragment.OnStoreListener, CommentDialogFragment.OnCommentListener {
 
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
 
     private lateinit var bsTransferDetails: BottomSheetTripleStatesBehavior<View>
+    private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
     private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
 
     @ProvidePresenter
@@ -109,7 +109,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
         _mapView = mapView
         _btnCenter = btnCenterRoute
-        initBottomSheetDetails()
+        initBottomSheets()
         setClickListeners()
         initMapView(savedInstanceState)
         setupToolbar()
@@ -167,17 +167,21 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         clearMarker()
     }
 
-    private fun initBottomSheetDetails() {
+    private fun initBottomSheets() {
         bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
+        bsSecondarySheet = BottomSheetBehavior.from(secondary_bottom_sheet)
+
+        bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
         bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+
+        _tintBackground = tintBackground
+        bsSecondarySheet.setBottomSheetCallback(bottomSheetCallback)
     }
 
 
     private fun setClickListeners() {
         btnBack.setOnClickListener          { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
-//        btnSupportBottom.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
-//        btnCancel.setOnClickListener        { presenter.onCancelRequestClicked() }
         tripRate.setOnRatingChangeListener  { _, fl -> presenter.rateTrip(fl, true) }
         topCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         bottomCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
@@ -549,29 +553,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     }
 
     override fun showYourComment(isShow: Boolean, comment: String) {
-        if (comment.isEmpty())
-            yourComment.tvTitile.text = getString(R.string.LNG_PAYMENT_LEAVE_COMMENT)
-        else
-            yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
-        yourComment.tvComment.text = comment
         yourComment.show(isShow)
-
+        yourComment.tvComment.text = comment
     }
 
     override fun showCommentEditor(comment: String) {
-        Intent(this, TextEditorActivity::class.java).apply {
-            putExtra(TextEditorActivity.TEXT_FOR_CORRECTING, comment)
-            startActivityForResult(this, TextEditorActivity.REQUEST_CODE)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == TextEditorActivity.REQUEST_CODE) {
-            data?.let {
-                presenter.commentChanged(it.getStringExtra(TextEditorActivity.CORRECTED_TEXT).orEmpty())
-            }
-        }
+        replaceFragment(
+                CommentDialogFragment.newInstance(comment),
+                R.id.secondary_bottom_sheet,
+                CommentDialogFragment.COMMENT_DIALOG_TAG)
     }
 
     override fun showYourDataProgress(isShow: Boolean) {
@@ -594,9 +584,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         mCarMarker?.remove()
     }
 
-    companion object {
-        const val TRANSPORT_TYPES_COLUMNS = 2
+    override fun onSetComment(comment: String) {
+        if (comment.isEmpty()) yourComment.tvTitile.text = getString(R.string.LNG_PAYMENT_LEAVE_COMMENT)
+        else yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
+        yourComment.tvComment.text = comment
+        presenter.commentChanged(comment)
+    }
 
+
+    companion object {
         const val THANKS_DELAY = 3000L
     }
 }

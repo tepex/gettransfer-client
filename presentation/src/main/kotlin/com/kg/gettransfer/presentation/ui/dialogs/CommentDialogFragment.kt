@@ -27,6 +27,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
     companion object {
         private const val EXTRA_COMMENT = "comment"
+        const val COMMENT_DIALOG_TAG = "comment_dialog_tag"
 
         fun newInstance(comment: String) = CommentDialogFragment().apply {
             arguments = Bundle().apply { putString(EXTRA_COMMENT, comment) }

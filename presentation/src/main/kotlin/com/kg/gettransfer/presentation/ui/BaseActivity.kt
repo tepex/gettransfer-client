@@ -16,6 +16,7 @@ import android.os.PersistableBundle
 import android.support.annotation.*
 
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
@@ -85,8 +86,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected lateinit var _tintBackground: View
     protected val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN)
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
                 _tintBackground.isVisible = false
+                hideKeyboard()
+            }
         }
 
         override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
@@ -415,4 +418,11 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         fieldPaused.setAccessible(true)
         return fieldPaused.get(this) as Boolean
     }
+
+    protected fun replaceFragment(fragment: Fragment, @IdRes id: Int, tag: String? = null) =
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(id, fragment, tag)
+                    .commit()
+
 }

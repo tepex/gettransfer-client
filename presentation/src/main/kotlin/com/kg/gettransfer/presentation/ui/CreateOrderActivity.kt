@@ -1,9 +1,11 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.graphics.Color
+
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+
 import android.support.annotation.CallSuper
 import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
@@ -11,14 +13,24 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+
 import android.text.InputFilter
-import android.view.*
-import android.widget.*
+
+import android.view.MotionEvent
+import android.view.View
+import android.view.WindowManager
+
+import android.widget.EditText
+import android.widget.ImageView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.extensions.*
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
@@ -32,15 +44,18 @@ import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
+
 import com.kg.gettransfer.utilities.Analytics.Companion.CAR_INFO_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
 import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
+
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.view.*
+
 import org.koin.android.ext.android.inject
 
 class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeScreen, CommentDialogFragment.OnCommentListener {
@@ -364,7 +379,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     private fun transportTypeClicked(transportTypeModel: TransportTypeModel) {
         val fragment = TransportTypeFragment()
         fragment.transportTypeModel = transportTypeModel
-        replaceFragment(fragment)
+        replaceFragment(fragment, R.id.secondary_bottom_sheet)
         presenter.logButtons(CAR_INFO_CLICKED)
     }
 
@@ -418,7 +433,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
         View.OnClickListener {
             hideKeyboard()
-            replaceFragment(ChildSeatsFragment())
+            replaceFragment(ChildSeatsFragment(), R.id.secondary_bottom_sheet)
         }.let {
             children_seat_field.setOnClickListener(it)
             children_seat_field.field_input.setOnClickListener(it)
@@ -429,7 +444,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
         comment_field.field_input.setOnClickListener        {
             val comment = comment_field.field_input.text.toString().trim()
-            replaceFragment(CommentDialogFragment.newInstance(comment))
+            replaceFragment(CommentDialogFragment.newInstance(comment), R.id.secondary_bottom_sheet)
             presenter.logTransferSettingsEvent(COMMENT_INPUT)
         }
 
@@ -448,7 +463,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
         fl_currency.setOnClickListener {
             hideKeyboard()
-            replaceFragment(SelectCurrencyFragment(), null)
+            replaceFragment(SelectCurrencyFragment(), R.id.secondary_bottom_sheet)
         }
     }
 
@@ -495,14 +510,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
                 transfer_return_date_field.field_input,
                 R.drawable.ic_plus, 0, R.drawable.ic_arrow_right, 0)
     }
-
-    private fun replaceFragment(fragment: Fragment, tag: String? = null) =
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.secondary_bottom_sheet,
-                        fragment,
-                        tag)
-                .commit()
 
     override fun onSetComment(comment: String) {
         comment_field.field_input.setText(comment)
