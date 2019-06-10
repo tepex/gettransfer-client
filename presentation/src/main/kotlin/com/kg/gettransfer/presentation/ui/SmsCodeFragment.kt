@@ -128,7 +128,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     }
 
     override fun showChangePasswordDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Utils.showAlertSetNewPassword(context!!) { presenter.onBackCommandClick() }
     }
 
     //----------TODO остатки от группы Base.---------------

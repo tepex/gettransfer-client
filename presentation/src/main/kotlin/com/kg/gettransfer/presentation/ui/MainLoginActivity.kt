@@ -31,7 +31,7 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
     @InjectPresenter
     internal lateinit var presenter: MainLoginPresenter
 
-    private lateinit var navigator: Navigator
+    private var navigator: Navigator = SupportAppNavigator(this, supportFragmentManager, R.id.container)
 
     override fun attachBaseContext(newBase: Context?) {
         if (newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
@@ -42,13 +42,8 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_login)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        navigator = SupportAppNavigator(this, supportFragmentManager, R.id.container)
         navigatorHolder.setNavigator(navigator)
+        super.onResume()
         val nextScreen = intent?.getStringExtra(EXTRA_NEXT_SCREEN) ?: ""
         val emailOrPhone = intent.getStringExtra(EXTRA_EMAIL_TO_LOGIN) ?: ""
         presenter.showLoginFragment(nextScreen, emailOrPhone)
