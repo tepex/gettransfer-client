@@ -15,14 +15,13 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
     private val paymentInteractor: PaymentInteractor by inject()
 
     fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) {
-        if (!sessionInteractor.isInitialized) {
-            utils.launchSuspend { sessionInteractor.coldStart() }
-        }
-        if (!accountManager.isLoggedIn)
-            router.newChainFromMain(Screens.LoginToPaymentOffer(transferId, offerId))
-        else {
-            utils.launchSuspend {
-
+        utils.launchSuspend {
+            if (!sessionInteractor.isInitialized) {
+                fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
+            }
+            if (!accountManager.isLoggedIn)
+                router.newChainFromMain(Screens.LoginToPaymentOffer(transferId, offerId))
+            else {
                 fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
                         .also {
                             it.error?.let { e ->
@@ -61,13 +60,13 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
     }
 
     fun openTransfer(transferId: Long) {
-        if (!sessionInteractor.isInitialized) {
-            utils.launchSuspend { sessionInteractor.coldStart() }
-        }
-        if (!accountManager.isLoggedIn)
-            router.createStartChain(Screens.LoginToGetOffers(transferId, ""))
-        else {
-            utils.launchSuspend {
+        utils.launchSuspend {
+            if (!sessionInteractor.isInitialized) {
+                fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
+            }
+            if (!accountManager.isLoggedIn)
+                router.createStartChain(Screens.LoginToGetOffers(transferId, ""))
+            else {
                 fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
                         .also {
                             it.error?.let { e ->
