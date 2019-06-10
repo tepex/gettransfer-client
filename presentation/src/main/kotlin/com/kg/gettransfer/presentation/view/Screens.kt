@@ -246,16 +246,14 @@ object Screens {
     }
 
     data class Payment(
-        val transferId: Long, val offerId: Long?, val url: String?, val percentage: Int,
-        val bookNowTransportId: String?, val paymentType: String
+        val url: String?,
+        val percentage: Int,
+        val paymentType: String
     ) :
         SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentActivity::class.java).apply {
-            putExtra(PaymentView.EXTRA_TRANSFER_ID, transferId)
-            putExtra(PaymentView.EXTRA_OFFER_ID, offerId)
             putExtra(PaymentView.EXTRA_URL, url)
             putExtra(PaymentView.EXTRA_PERCENTAGE, percentage)
-            putExtra(PaymentView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId ?: "")
             putExtra(PaymentView.EXTRA_PAYMENT_TYPE, paymentType)
         }
     }

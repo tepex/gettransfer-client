@@ -42,10 +42,7 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.transferId = intent.getLongExtra(PaymentView.EXTRA_TRANSFER_ID, 0)
-        presenter.offerId    = intent.getLongExtra(PaymentView.EXTRA_OFFER_ID, 0)
         presenter.percentage = intent.getIntExtra(PaymentView.EXTRA_PERCENTAGE, 0)
-        presenter.bookNowTransportId = intent.getStringExtra(PaymentView.EXTRA_BOOK_NOW_TRANSPORT_ID)
         presenter.paymentType = intent.getStringExtra(PaymentView.EXTRA_PAYMENT_TYPE)
 
         setContentView(R.layout.activity_payment)

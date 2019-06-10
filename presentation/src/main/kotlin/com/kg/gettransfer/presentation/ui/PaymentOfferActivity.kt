@@ -310,7 +310,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         this.selectedPercentage = selectedPercentage
     }
 
-    override fun startPaypal(dropInRequest: DropInRequest) {
+    override fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String) {
         when {
             payPalInstalled() -> {
                 blockInterface(false)

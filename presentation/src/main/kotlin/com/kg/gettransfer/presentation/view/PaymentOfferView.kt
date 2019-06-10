@@ -19,7 +19,7 @@ interface PaymentOfferView : BaseView {
     fun setBookNowOffer(bookNowOffer: BookNowOfferModel?)
     fun showOfferError()
     fun setCommission(paymentCommission: String, dateRefund: String)
-    fun startPaypal(dropInRequest: DropInRequest)
+    fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String)
     fun setToolbarTitle(transferModel: TransferModel)
     fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency)
 

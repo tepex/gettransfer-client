@@ -7,11 +7,8 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface PaymentView: BaseView {
 
     companion object {
-        val EXTRA_TRANSFER_ID               = "${PaymentView::class.java.name}.transferId"
-        val EXTRA_OFFER_ID                  = "${PaymentView::class.java.name}.offerId"
-        val EXTRA_URL                       = "${PaymentView::class.java.name}.url"
-        val EXTRA_PERCENTAGE                = "${PaymentView::class.java.name}.percentage"
-        val EXTRA_BOOK_NOW_TRANSPORT_ID     = "${PaymentView::class.java.name}.bookNowTransportId"
-        val EXTRA_PAYMENT_TYPE              = "${PaymentView::class.java.name}.paymentType"
+        val EXTRA_URL          = "${PaymentView::class.java.name}.url"
+        val EXTRA_PERCENTAGE   = "${PaymentView::class.java.name}.percentage"
+        val EXTRA_PAYMENT_TYPE = "${PaymentView::class.java.name}.paymentType"
     }
 }

@@ -119,28 +119,31 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private fun getPayment() = utils.launchSuspend {
-        viewState.blockInterface(true, true)
-        paymentRequest.let {
-            it.gatewayId = selectedPayment
-            if (it.gatewayId == PaymentRequestModel.PLATRON) {
-                val paymentResult = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(it)) }
-                if (paymentResult.error != null) {
-                    Timber.e(paymentResult.error!!)
-                    viewState.setError(paymentResult.error!!)
-                    viewState.blockInterface(false)
-                } else {
-                    url = paymentResult.model.url
-                    navigateToPayment()
-                }
-            } else {
-                getBraintreeToken()
-            }
-            logEventBeginCheckout()
-        }
-        if (offer == null) {
+    private fun getPayment() {
+        if (transfer == null || offer == null) {
             viewState.blockInterface(false)
             viewState.showOfferError()
+            return
+        }
+        utils.launchSuspend {
+            viewState.blockInterface(true, true)
+            paymentRequest.let {
+                it.gatewayId = selectedPayment
+                if (it.gatewayId == PaymentRequestModel.PLATRON) {
+                    val paymentResult = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(it)) }
+                    if (paymentResult.error != null) {
+                        Timber.e(paymentResult.error!!)
+                        viewState.setError(paymentResult.error!!)
+                    } else {
+                        url = paymentResult.model.url
+                        navigateToPayment()
+                    }
+                    viewState.blockInterface(false)
+                } else {
+                    getBraintreeToken()
+                }
+                logEventBeginCheckout()
+            }
         }
     }
 
@@ -161,14 +164,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun pushAccount() =
-            fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
-                    .run {
-                        when {
-                            error?.isAccountExistError() ?: false  -> onAccountExists()
-                            error != null                          -> viewState.setError(error!!)
-                            else                                   -> getPayment()
-                        }
-                    }
+        fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
+            .run {
+                when {
+                    error?.isAccountExistError() ?: false  -> onAccountExists()
+                    error != null                          -> viewState.setError(error!!)
+                    else                                   -> getPayment()
+                }
+            }
 
     private fun onAccountExists() {
         loginScreenIsShowed = true
@@ -203,8 +206,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 viewState.blockInterface(false)
             } else {
                 braintreeToken = tokenResult.isSuccess()?.token ?: ""
+                createNewPayment()
             }
-            createNewPayment()
         }
     }
 
@@ -228,7 +231,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             val paypal = PayPalRequest(amount)
                     .currencyCode(currency).intent(PayPalRequest.INTENT_AUTHORIZE)
             dropInRequest.paypalRequest(paypal)
-            viewState.startPaypal(dropInRequest)
+            viewState.startPaypal(dropInRequest, braintreeToken)
         } catch (e: InvalidArgumentException) {
             Sentry.capture(e)
             viewState.blockInterface(false)
@@ -240,29 +243,24 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         viewState.blockInterface(true, true)
         transfer?.let {
             router.navigateTo(
-                    Screens.PayPalConnection(
-                            paymentId,
-                            nonce,
-                            it.id,
-                            if (!isBookNowOffer) (offer as Offer).id else null,
-                            paymentRequest.percentage,
-                            if (isBookNowOffer) (offer as BookNowOffer).transportType.id.name else null)
+                Screens.PayPalConnection(
+                    paymentId,
+                    nonce,
+                    it.id,
+                    if (!isBookNowOffer) (offer as Offer).id else null,
+                    paymentRequest.percentage,
+                    if (isBookNowOffer) (offer as BookNowOffer).transportType.id.name else null)
             )
         }
     }
 
 
     private fun navigateToPayment() {
-        transfer?.id?.let { transferId ->
-            router.navigateTo(Screens.Payment(
-                    transferId,
-                    if (!isBookNowOffer) (offer as Offer).id else null,
-                    url,
-                    paymentRequest.percentage,
-                    if (isBookNowOffer) (offer as BookNowOffer).transportType.id.name else null,
-                    selectedPayment)
-            )
-        }
+        router.navigateTo(Screens.Payment(
+            url,
+            paymentRequest.percentage,
+            selectedPayment)
+        )
     }
 
     private fun logEventBeginCheckout() {
@@ -280,14 +278,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         if (paymentRequest.percentage == OfferModel.PRICE_30) price *= PRICE_30
 
         val beginCheckout = analytics.BeginCheckout(
-                paymentRequest.percentage,
-                transfer?.promoCode,
-                orderInteractor.duration,
-                selectedPayment,
-                offerType,
-                requestType,
-                sessionInteractor.currency.code,
-                price)
+            paymentRequest.percentage,
+            transfer?.promoCode,
+            orderInteractor.duration,
+            selectedPayment,
+            offerType,
+            requestType,
+            sessionInteractor.currency.code,
+            price)
         beginCheckout.sendAnalytics()
     }
 
