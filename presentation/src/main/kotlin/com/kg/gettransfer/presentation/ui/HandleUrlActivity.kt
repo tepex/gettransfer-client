@@ -14,6 +14,7 @@ import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
 import kotlinx.android.synthetic.main.activity_handle_url.*
 import org.jetbrains.anko.longToast
@@ -147,6 +148,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
     override fun onRationaleAccepted(requestCode: Int) {}
 
     private fun showWebView(url: String) {
+        splashLayout.isVisible = false
         webView.settings.javaScriptEnabled = true
         webView.setUserAgent()
         webView.webViewClient = object: WebViewClient() {
