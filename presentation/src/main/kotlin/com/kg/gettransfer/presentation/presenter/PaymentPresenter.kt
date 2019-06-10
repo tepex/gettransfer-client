@@ -7,6 +7,7 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.newChainFromMain
 
@@ -38,36 +39,20 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
     private var bookNowOffer: BookNowOffer? = null
     private var transfer: Transfer? = null
 
-    internal var transferId = 0L
-    internal var offerId = 0L
     internal var percentage = 0
-    internal var bookNowTransportId = ""
     internal var paymentType = ""
 
     override fun attachView(view: PaymentView) {
         super.attachView(view)
-        offer = offerInteractor.getOffer(offerId)
-        utils.launchSuspend {
-            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if (result.error == null || (result.error != null && result.fromCache)) {
-                transfer = result.model
-                if (offer == null) {
-                    transfer?.let {
-                        if (it.bookNowOffers.isNotEmpty()) {
-                            if (bookNowTransportId.isNotEmpty()) {
-                                val filteredBookNow =
-                                    it.bookNowOffers.filterKeys { predicate ->
-                                        predicate.toString() == bookNowTransportId
-                                    }
-                                if (filteredBookNow.isNotEmpty()) {
-                                    bookNowOffer = filteredBookNow.values.first()
-                                }
-                            }
-                        }
+        with(paymentInteractor) {
+            if (selectedTransfer != null && selectedOffer != null) {
+                transfer = selectedTransfer!!
+                selectedOffer?.let {
+                    when (it) {
+                        is Offer -> offer = it
+                        is BookNowOffer -> bookNowOffer = it
                     }
                 }
-            } else {
-                Sentry.capture(result.error)
             }
         }
     }
@@ -94,16 +79,16 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
 
     private fun showFailedPayment() {
         router.exit()
-        router.navigateTo(Screens.PaymentError(transferId))
+        router.navigateTo(Screens.PaymentError(transfer!!.id))
         logEvent(Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {
         router.newChainFromMain(
-                Screens.PaymentSuccess(
-                        transferId,
-                        offerId
-                )
+            Screens.PaymentSuccess(
+                transfer!!.id,
+                offer?.id
+            )
         )
         logEventEcommercePurchase()
     }
@@ -131,7 +116,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         if (percentage == OfferModel.PRICE_30) price *= PRICE_30
 
         val purchase = analytics.EcommercePurchase(
-            transferId.toString(),
+            transfer?.id.toString(),
             transfer?.promoCode,
             orderInteractor.duration,
             paymentType,

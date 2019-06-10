@@ -67,4 +67,5 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
     override fun setError(e: ApiException) {}
     override fun setError(e: DatabaseException) {}
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
+    override fun setTransferNotFoundError(transferId: Long) {}
 }

@@ -232,7 +232,7 @@ class TransferRepositoryImpl(
                 remainsToPay          = null,
                 paidPercentage        = 0,
                 watertaxi             = false,
-                bookNowOffers         = emptyMap<TransportType.ID, BookNowOffer>(),
+                bookNowOffers         = emptyList<BookNowOffer>(),
                 offersCount           = 0,
 /* ================================================== */
                 relevantCarriersCount = 0,

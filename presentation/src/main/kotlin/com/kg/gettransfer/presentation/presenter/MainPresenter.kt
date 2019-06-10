@@ -471,11 +471,8 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
             val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             if (transferResult.error != null) {
                 val err = transferResult.error!!
-                if (err.isNotFound()) {
-                    viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
-                } else {
-                    viewState.setError(err)
-                }
+                if (err.isNotFound()) viewState.setTransferNotFoundError(transferId)
+                else viewState.setError(err)
             } else {
                 val transfer = transferResult.model
                 val transferModel = transferMapper.toView(transfer)

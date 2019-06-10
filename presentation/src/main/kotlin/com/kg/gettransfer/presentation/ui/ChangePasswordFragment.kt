@@ -51,4 +51,5 @@ class ChangePasswordFragment: MvpAppCompatFragment(), ChangePasswordView {
     override fun setError(e: ApiException) { mActivity.setError(e) }
     override fun setError(e: DatabaseException) { mActivity.setError(e) }
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) { mActivity.setError(finish, errId, *args) }
+    override fun setTransferNotFoundError(transferId: Long) {}
 }

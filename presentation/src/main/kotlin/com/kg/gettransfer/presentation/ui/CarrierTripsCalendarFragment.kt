@@ -112,4 +112,6 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
 
     override fun setError(e: DatabaseException) =
         (activity as BaseView).setError(e)
+
+    override fun setTransferNotFoundError(transferId: Long) {}
 }

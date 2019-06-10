@@ -8,7 +8,13 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.strikeText
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.model.OfferItemModel
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.BookNowOfferModel
+import com.kg.gettransfer.presentation.model.LocaleModel
+import com.kg.gettransfer.presentation.model.RatingsModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.MoneyModel
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import kotlinx.android.synthetic.main.offer_expanded.view.*
@@ -24,7 +30,7 @@ import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 object OfferItemBindDelegate {
 
-    fun bindOfferExpanded(view: View, offer: OfferItem) =
+    fun bindOfferExpanded(view: View, offer: OfferItemModel) =
             when (offer) {
                 is OfferModel         -> bindOfferModel(offer, view)
                 is BookNowOfferModel  -> bindBookNow(offer, view)
@@ -71,7 +77,7 @@ object OfferItemBindDelegate {
     }
 
 
-    fun bindOfferTiny(view: View, offer: OfferItem) {
+    fun bindOfferTiny(view: View, offer: OfferItemModel) {
         when (offer) {
             is OfferModel -> bindOfferModelTiny(view, offer)
             is BookNowOfferModel -> bindBookNowTiny(view, offer)

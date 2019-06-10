@@ -13,8 +13,6 @@ class ApiException(val code: Int, val details: String, val type: String? = null)
 
         @JvmField val INTERNAL_SERVER_ERROR   = 500
         @JvmField val CONNECTION_TIMED_OUT    = 522
-
-        @JvmField val PHONE_REQUIRED_FOR_PAYMENT = 422
     }
 
     fun isNoUser() = code == NO_USER

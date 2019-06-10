@@ -15,10 +15,7 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.ui.*
 
-import kotlinx.serialization.json.JSON
-
 import java.io.File
-import java.util.Date
 
 import org.jetbrains.anko.toast
 
@@ -249,35 +246,27 @@ object Screens {
     }
 
     data class Payment(
-        val transferId: Long, val offerId: Long?, val url: String?, val percentage: Int,
-        val bookNowTransportId: String?, val paymentType: String
+        val url: String?,
+        val percentage: Int,
+        val paymentType: String
     ) :
         SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentActivity::class.java).apply {
-            putExtra(PaymentView.EXTRA_TRANSFER_ID, transferId)
-            putExtra(PaymentView.EXTRA_OFFER_ID, offerId)
             putExtra(PaymentView.EXTRA_URL, url)
             putExtra(PaymentView.EXTRA_PERCENTAGE, percentage)
-            putExtra(PaymentView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId ?: "")
             putExtra(PaymentView.EXTRA_PAYMENT_TYPE, paymentType)
         }
     }
 
-    data class PaymentOffer(
-        val transferId: Long,
-        val offerId: Long?,
-        val dateRefund: Date?,
-        val paymentPercentages: List<Int>,
-        val bookNowTransportId: String?
-    ) : SupportAppScreen() {
+    class PaymentOffer : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentOfferActivity::class.java).apply {
-            putExtra(
+            /*putExtra(
                 PaymentOfferView.EXTRA_PARAMS,
                 JSON.stringify(
                     PaymentOfferView.Params.serializer(),
-                    PaymentOfferView.Params(dateRefund, transferId, offerId, paymentPercentages, bookNowTransportId)
+                    PaymentOfferView.Params(dateRefund, transferId, paymentPercentages)
                 )
-            )
+            )*/
         }
     }
 

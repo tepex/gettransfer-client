@@ -2,8 +2,10 @@ package com.kg.gettransfer.domain.model
 
 import java.util.Date
 
+sealed class OfferItem
+
 data class Offer(
-    override val id: Long,
+    val id: Long,
     val transferId: Long,
     val status: String,
     val currency: String,
@@ -18,7 +20,7 @@ data class Offer(
     val carrier: Carrier,
     val vehicle: Vehicle,
     val driver: Profile?
-) : Entity() {
+) : OfferItem() {
 
     val phoneToCall = when {
         driver?.phone != null          -> driver.phone
@@ -42,3 +44,12 @@ data class Offer(
         const val NO_RATE          = 0f
     }
 }
+
+data class BookNowOffer(
+    val amount: Double,
+    val base: Money,
+    val withoutDiscount: Money?
+) : OfferItem() {
+    lateinit var transportType: TransportType
+}
+

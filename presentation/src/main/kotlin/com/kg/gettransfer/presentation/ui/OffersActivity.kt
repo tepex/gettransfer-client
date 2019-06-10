@@ -25,7 +25,15 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.strikeText
 import com.kg.gettransfer.presentation.adapter.OffersAdapter
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.OfferItemModel
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.BookNowOfferModel
+import com.kg.gettransfer.presentation.model.LocaleModel
+import com.kg.gettransfer.presentation.model.MoneyModel
+import com.kg.gettransfer.presentation.model.CarrierModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.VehicleModel
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
 import com.kg.gettransfer.presentation.ui.custom.RatingFieldView
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -135,7 +143,7 @@ class OffersActivity : BaseActivity(), OffersView {
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
 
-    override fun setOffers(offers: List<OfferItem>) {
+    override fun setOffers(offers: List<OfferItemModel>) {
         hideSheetOfferDetails()
         rvOffers.adapter = OffersAdapter(offers.toMutableList()) { offer, showDetails ->
             presenter.onSelectOfferClicked(
@@ -198,7 +206,7 @@ class OffersActivity : BaseActivity(), OffersView {
         Utils.showAlertCancelRequest(this) { presenter.cancelRequest(it) }
     }
 
-    override fun showBottomSheetOfferDetails(offer: OfferItem) {
+    override fun showBottomSheetOfferDetails(offer: OfferItemModel) {
         when (offer) {
             is OfferModel -> {
                 setVehicleName(vehicle = offer.vehicle)

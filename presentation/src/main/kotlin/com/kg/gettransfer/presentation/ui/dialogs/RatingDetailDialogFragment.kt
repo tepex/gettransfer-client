@@ -19,6 +19,7 @@ import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.presenter.RatingDetailPresenter
 import com.kg.gettransfer.presentation.ui.TextEditorActivity
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RatingDetailView
 
 import com.willy.ratingbar.BaseRatingBar
@@ -178,11 +179,14 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         //empty
     }
 
-    override fun exitAndReportSuccess(list: List<ReviewRateModel>, comment: String) {
-        ratingListener?.onRatingChanged(list, comment)
-        isExitWithResult = true
-        dismiss()
-    }
+	override fun setTransferNotFoundError(transferId: Long) =
+		(activity as BaseView).setTransferNotFoundError(transferId)
+
+	override fun exitAndReportSuccess(list: List<ReviewRateModel>, comment: String) {
+		ratingListener?.onRatingChanged(list, comment)
+		isExitWithResult = true
+		dismiss()
+	}
 
     private fun createListOfDetailedRates() =
             listOf(
