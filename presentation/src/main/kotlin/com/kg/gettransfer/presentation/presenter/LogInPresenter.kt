@@ -82,14 +82,18 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
             }
             Screens.PAYMENT_OFFER -> {
                 utils.launchSuspend {
-                    val transferResult = fetchData (NO_CACHE_CHECK) { transferInteractor.getTransfer(transferId) }
-                    val offerResult = fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(transferId) }?.find { it.id == offerId }
-                    transferResult?.let { transfer ->
-                        offerResult?.let { offer ->
-                            with(paymentInteractor) {
-                                selectedTransfer = transfer
-                                selectedOffer = offer
+                    with(paymentInteractor) {
+                        if (transferId != 0L && offerId != 0L) {
+                            val transferResult = fetchData(NO_CACHE_CHECK) { transferInteractor.getTransfer(transferId) }
+                            val offerResult = fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(transferId) }?.find { it.id == offerId }
+                            transferResult?.let { transfer ->
+                                offerResult?.let { offer ->
+                                    selectedTransfer = transfer
+                                    selectedOffer = offer
+                                    router.newChainFromMain(Screens.PaymentOffer())
+                                }
                             }
+                        } else {
                             router.newChainFromMain(Screens.PaymentOffer())
                         }
                     }
