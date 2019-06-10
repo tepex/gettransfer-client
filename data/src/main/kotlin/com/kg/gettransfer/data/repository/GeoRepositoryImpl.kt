@@ -53,7 +53,7 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
             if (gtAddress != null) {
                 gtAddress.cityPoint.point = Point(point.latitude, point.longitude)
                 Result(gtAddress)
-            } else Result(GTAddress.EMPTY, ApiException(ApiException.NOT_FOUND, "List is empty"))
+            } else Result(GTAddress.EMPTY)
         } catch (e: LocationException) {
             Result(GTAddress.EMPTY, geoException = ExceptionMapper.map(e))
         }
