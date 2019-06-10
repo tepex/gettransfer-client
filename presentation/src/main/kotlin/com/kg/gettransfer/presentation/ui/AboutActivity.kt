@@ -18,6 +18,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.presenter.AboutPresenter
 import com.kg.gettransfer.presentation.view.AboutView
@@ -59,7 +60,7 @@ class AboutActivity : BaseActivity(), AboutView {
         pageIndicator.count = COUNT_PAGE
         pageIndicator.setSelected(DEFAULT_PAGE)
 
-        btnClose.setOnClickListener {
+        btnClose.setThrottledClickListener {
             presenter.closeAboutActivity()
             if (viewpager.currentItem == viewpager.childCount - 1) presenter.logEvent(0)
             else presenter.logEvent(viewpager.currentItem + 1)

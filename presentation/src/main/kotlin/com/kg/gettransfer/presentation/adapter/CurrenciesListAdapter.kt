@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.extensions.setTrottledClickListener
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_currency_item.view.*
@@ -37,7 +37,7 @@ class CurrenciesListAdapter(
             currencySymbol.text = currency.symbol
             currencyName.text = currency.nameWithoutSymbol
             imgSelected.isVisible = isSelected
-            setTrottledClickListener { listener(currency) }
+            setThrottledClickListener { listener(currency) }
         }
     }
 }
