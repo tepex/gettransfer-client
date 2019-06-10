@@ -163,7 +163,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
     fun saveProfile(emailOrPhone: String) {
         val isPhone = isPhone(emailOrPhone)
-        profile?.let {
+        profile.let {
             if (isPhone) {
                 it.phone = emailOrPhone
                 it.email = ""

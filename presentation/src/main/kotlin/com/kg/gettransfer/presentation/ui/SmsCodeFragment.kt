@@ -74,10 +74,15 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
 
         loginBackButton.setOnClickListener { presenter.back() }
 
+        sendVerificationCode(isPhone)
         setTimer()
-        btnResendCode.setOnClickListener { presenter.sendVerificationCode(presenter.emailOrPhone ?: "", isPhone) }
+        btnResendCode.setOnClickListener { sendVerificationCode(isPhone) }
 
         btnDone.setOnClickListener { presenter.onLoginClick(presenter.emailOrPhone ?: "", password, isPhone) }
+    }
+
+    private fun sendVerificationCode(isPhone: Boolean) {
+        presenter.sendVerificationCode(presenter.emailOrPhone ?: "", isPhone)
     }
 
     override fun onDestroyView() {
