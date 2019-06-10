@@ -338,7 +338,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     fun onAboutClick() {
-        router.navigateTo(Screens.About(false))
+        router.navigateTo(Screens.About(systemInteractor.isOnboardingShowed))
         logEvent(Analytics.ABOUT_CLICKED)
     }
 

@@ -31,7 +31,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.extensions.setTrottledClickListener
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.presenter.MainPresenter
@@ -177,7 +177,7 @@ class MainActivity :
         searchFrom.setOnClickListener { performClick(false) }
         searchTo.setOnClickListener   { performClick(true) }
         rl_hourly.setOnClickListener  { showNumberPicker(true) }
-        btnNext.setTrottledClickListener { performNextClick() }
+        btnNext.setThrottledClickListener { performNextClick() }
         enableBtnNext()
     }
 

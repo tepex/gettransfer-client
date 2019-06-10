@@ -123,7 +123,7 @@ object Screens {
 
     data class About(val isOnboardingShowed: Boolean) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, AboutActivity::class.java).apply {
-            putExtra(AboutView.EXTRA_OPEN_MAIN, false)
+            putExtra(AboutView.EXTRA_OPEN_MAIN, isOnboardingShowed)
         }
     }
 
