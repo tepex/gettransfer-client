@@ -1,47 +1,15 @@
 package com.kg.gettransfer.service
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-
-import android.content.Context
-import android.content.Intent
-
-import android.media.RingtoneManager
-
-import android.os.Build
-import android.os.Handler
-import android.os.Looper
-
 import android.support.annotation.CallSuper
-import android.support.v4.app.NotificationCompat
-
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.iid.FirebaseInstanceId
+import com.appsflyer.AppsFlyerLib
 import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
-
-import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
-
-import com.kg.gettransfer.domain.interactor.OfferInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
-
-import com.kg.gettransfer.presentation.ui.OffersActivity
-
-import com.kg.gettransfer.presentation.view.OffersView
-import com.kg.gettransfer.presentation.view.Screens
-
 import kotlinx.coroutines.Job
-
+import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
-
-import ru.terrakok.cicerone.Router
-
 import timber.log.Timber
 
 class OffersPushService : KoinComponent, FirebaseMessagingService() {
@@ -63,6 +31,7 @@ class OffersPushService : KoinComponent, FirebaseMessagingService() {
      */
     override fun onNewToken(token: String?) {
         Timber.d("Refreshed token: $token")
+        AppsFlyerLib.getInstance().updateServerUninstallToken(applicationContext, token)
         /*
         FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
