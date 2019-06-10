@@ -53,7 +53,7 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         override fun getCount(): Int = 2
 
         override fun getPageTitle(position: Int): CharSequence? = when (position) {
-            0 -> getString(R.string.LNG_MENU_TITLE_LOGIN)
+            0 -> getString(R.string.LNG_SIGNIN)
             1 -> getString(R.string.LNG_SIGNUP)
             else -> throw UnsupportedOperationException()
         }
