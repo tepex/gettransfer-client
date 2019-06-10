@@ -565,6 +565,7 @@
     <string name="LNG_LOGIN_CARRIER_SIGNUP_HINT">Carrier registration is available on our web site gettransfer.com</string>
     <string name="LNG_LOGIN_CARRIER_SIGNUP_BUTTON">Sign up on gettransfer.com</string>
     <string name="LNG_SIGNUP">Sign up</string>
+    <string name="LNG_SIGNIN">Log in</string>
 
     <plurals name="days">
         <item quantity="one">@string/LNG_DAY</item>
