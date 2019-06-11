@@ -269,7 +269,8 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     override fun setCommission(paymentCommission: String, dateRefund: String) {
-        tvCommission.text = getString(R.string.LNG_PAYMENT_COMISSION2, paymentCommission, dateRefund)
+        tvCommission.text = getString(R.string.LNG_PAYMENT_COMISSION3, paymentCommission)
+        tvRefundDate.text = getString(R.string.LNG_PAYMENT_REFUND, dateRefund)
     }
 
     override fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency) {

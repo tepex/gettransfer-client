@@ -12,7 +12,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="12dp">
+        android:paddingBottom="16dp">
 
 
         <include
@@ -61,13 +61,44 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/offer_layout"/>
 
+        <LinearLayout
+            android:id="@+id/layoutRefund"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPriceInfo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingStart="@dimen/payment_layoutRefund_margins"
+            android:paddingEnd="@dimen/payment_layoutRefund_margins"
+            android:paddingBottom="@dimen/payment_layoutRefund_margins"
+            android:background="@android:color/white"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/imgRefund"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_check_green"
+                android:layout_marginEnd="@dimen/payment_imgRefund_margin_end"/>
+
+            <TextView
+                android:id="@+id/tvRefundDate"
+                style="@style/sf_font_pro_display_regular_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="14sp"
+                tools:text="Refund is available before 17 Oct 2018 at 15:30:00"/>
+
+        </LinearLayout>
+
         <include
             android:id="@+id/view_currency_converting_info"
             layout="@layout/view_currency_converting_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvPriceInfo"
+            app:layout_constraintTop_toBottomOf="@+id/layoutRefund"
             android:visibility="gone"
 
             tools:visibility="visible" />
@@ -130,7 +161,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ll_auth_container"
-            tools:text="Commission 3%.\n Refund is available before 17 Oct 2018 at 15:30:00"/>
+            tools:text="Commission 3%"/>
 
         <TextView
             android:id="@+id/tvPaymentAgreement"
