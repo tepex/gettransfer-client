@@ -15,7 +15,7 @@ interface MainView: BaseView {
     fun setAddressFrom(address: String)
     fun setAddressTo(address: String)
     fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean)
-    fun setMarkerElevation(up: Boolean, elevation: Float)
+    fun setMarkerElevation(up: Boolean)
     fun changeFields(hourly: Boolean)
     fun blockSelectedField(block: Boolean, field: String)
     fun selectFieldFrom()
