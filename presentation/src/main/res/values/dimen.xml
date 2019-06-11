@@ -992,14 +992,14 @@
 	<dimen name="payment_layout_prices_margin_top">16dp</dimen>
 	<dimen name="payment_layout_payments_margin_top">16dp</dimen>
 	<dimen name="payment_tvPriceInfo_margin_top">8dp</dimen>
-	<dimen name="payment_tvPriceInfo_padding_bottom">16dp</dimen>
-	<dimen name="payment_tvCommission_margin_top">24dp</dimen>
+	<dimen name="payment_tvPriceInfo_padding_bottom">8dp</dimen>
+	<dimen name="payment_tvCommission_margin_top">16dp</dimen>
 	<dimen name="payment_tvCommission_margin_start">8dp</dimen>
 	<dimen name="payment_tvCommission_margin_end">8dp</dimen>
-	<dimen name="payment_tvPaymentAgreement_margin_top">8dp</dimen>
+	<dimen name="payment_tvPaymentAgreement_margin_top">2dp</dimen>
 	<dimen name="payment_tvPaymentAgreement_margin_start">8dp</dimen>
 	<dimen name="payment_tvPaymentAgreement_margin_end">8dp</dimen>
-	<dimen name="payment_button_pay_margin_top">24dp</dimen>
+	<dimen name="payment_button_pay_margin_top">16dp</dimen>
 	<dimen name="payment_button_pay_margin_start">30dp</dimen>
 	<dimen name="payment_button_pay_margin_end">30dp</dimen>
 	<dimen name="payment_button_pay_margin_bottom">24dp</dimen>
@@ -1024,6 +1024,8 @@
 	<dimen name="payment_divider_height">1dp</dimen>
 	<dimen name="payment_divider_marginStart">16dp</dimen>
 	<dimen name="payment_divider_marginEnd">16dp</dimen>
+	<dimen name="payment_layoutRefund_margins">16dp</dimen>
+	<dimen name="payment_imgRefund_margin_end">8dp</dimen>
 
 	<dimen name="btn_radius">22dp</dimen>
 	<dimen name="btn_rounded_height">56dp</dimen>
