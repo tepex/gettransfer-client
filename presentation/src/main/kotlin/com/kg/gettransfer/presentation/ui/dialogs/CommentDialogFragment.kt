@@ -46,7 +46,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
     override fun onResume() {
         super.onResume()
-        etPopupComment.requestFocus()
+        etComment.requestFocus()
         showKeyboard()
     }
 
@@ -63,17 +63,17 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
         tvDone.setOnClickListener {
-            val comment = etPopupComment.text.toString().trim()
+            val comment = etComment.text.toString().trim()
             presenter.setComment(comment)
             setBottomSheetState(this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
             hideKeyboard()
         }
-        etPopupComment.afterTextChanged { presenter.setComment(it.trim()) }
+        etComment.afterTextChanged { presenter.setComment(it.trim()) }
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-        etPopupComment.setText(arguments?.getString(EXTRA_COMMENT).toString())
+        etComment.setText(arguments?.getString(EXTRA_COMMENT).toString())
     }
 
     override fun setComment(comment: String) {

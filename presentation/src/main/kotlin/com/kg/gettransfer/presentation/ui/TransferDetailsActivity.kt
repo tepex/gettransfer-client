@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 
 import android.support.annotation.CallSuper
+import android.support.annotation.NonNull
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
 import android.support.v4.content.ContextCompat
@@ -52,6 +53,7 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
+import kotlinx.android.synthetic.main.layout_comment.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
@@ -167,6 +169,21 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         clearMarker()
     }
 
+    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                _tintBackground.isVisible = false
+                hideKeyboard()
+                presenter.commentChanged(etComment.text.toString().trim())
+            }
+        }
+
+        override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
+            _tintBackground.isVisible = true
+            _tintBackground.alpha = slideOffset
+        }
+    }
+
     private fun initBottomSheets() {
         bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
         bsSecondarySheet = BottomSheetBehavior.from(secondary_bottom_sheet)
@@ -175,7 +192,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
 
         _tintBackground = tintBackground
-        bsSecondarySheet.setBottomSheetCallback(bottomSheetCallback)
+        bsSecondarySheet.setBottomSheetCallback(bsCallback)
     }
 
 
@@ -588,7 +605,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         if (comment.isEmpty()) yourComment.tvTitile.text = getString(R.string.LNG_PAYMENT_LEAVE_COMMENT)
         else yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
         yourComment.tvComment.text = comment
-        presenter.commentChanged(comment)
     }
 
 

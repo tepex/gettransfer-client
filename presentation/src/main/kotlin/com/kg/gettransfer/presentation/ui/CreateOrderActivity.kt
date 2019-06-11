@@ -10,10 +10,8 @@ import android.support.annotation.CallSuper
 import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
 import android.support.design.widget.BottomSheetBehavior
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
-
 import android.text.InputFilter
 
 import android.view.MotionEvent
@@ -67,8 +65,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
 
     private var defaultPromoText: String? = null
-
-    private var phoneCode: Int = 0
 
     private var hasErrorFields = false
     private var errorFieldView: View? = null
