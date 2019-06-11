@@ -1,9 +1,7 @@
 package com.kg.gettransfer.presentation.ui.dialogs
 
-import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -17,7 +15,6 @@ import com.kg.gettransfer.extensions.setUneditable
 import com.kg.gettransfer.extensions.show
 import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.presenter.RatingDetailPresenter
-import com.kg.gettransfer.presentation.ui.TextEditorActivity
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RatingDetailView
@@ -27,7 +24,8 @@ import com.willy.ratingbar.BaseRatingBar
 import kotlinx.android.synthetic.main.dialog_fragment_rating_detail.*
 import kotlinx.android.synthetic.main.view_rate_field.rate_bar
 
-class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetailView {
+class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetailView,
+        CommentDialogFragment.OnCommentListener {
 
     override val layout: Int = R.layout.dialog_fragment_rating_detail
 
@@ -101,15 +99,6 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         punctualityRate.rate_bar.setOnRatingChangeListener(punctualityRateListener)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == TextEditorActivity.REQUEST_CODE) {
-            data?.let {
-                presenter.commentChanged(it.getStringExtra(TextEditorActivity.CORRECTED_TEXT).orEmpty())
-            }
-        }
-    }
-
     override fun showProgress(isShow: Boolean) {
         btnSend.show(!isShow, false)
         progressBar.show(isShow)
@@ -155,12 +144,10 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         tvComment.hint = text
     }
 
-    override fun showCommentEditor(comment: String) {
-        Intent(context, TextEditorActivity::class.java).apply {
-            putExtra(TextEditorActivity.TEXT_FOR_CORRECTING, comment)
-            startActivityForResult(this, TextEditorActivity.REQUEST_CODE)
-        }
-    }
+    override fun showCommentEditor(comment: String) =
+        CommentDialogFragment
+                .newInstance(comment)
+                .show(fragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
 
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
         context?.let {
@@ -225,6 +212,10 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
                 putString(CURRENT_COMMENT, feedback)
             }
         }
+    }
+
+    override fun onSetComment(comment: String) {
+        tvComment.setText(comment)
     }
 
     interface OnRatingChangeListener {

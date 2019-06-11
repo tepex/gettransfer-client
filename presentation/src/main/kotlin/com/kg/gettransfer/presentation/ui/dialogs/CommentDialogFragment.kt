@@ -36,7 +36,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        onCommentLister = activity as OnCommentListener
+        onCommentLister = (activity as? OnCommentListener)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
