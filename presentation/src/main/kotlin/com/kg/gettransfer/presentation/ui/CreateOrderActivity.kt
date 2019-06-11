@@ -509,5 +509,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     override fun onSetComment(comment: String) {
         comment_field.field_input.setText(comment)
+        presenter.setComment(comment)
     }
 }

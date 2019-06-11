@@ -341,7 +341,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     fun commentChanged(comment: String) {
         offer?.let {
-            reviewInteractor.comment = comment
+            setComment(comment)
             viewState.showYourDataProgress(true)
 			utils.launchSuspend {
 				fetchResult { reviewInteractor.pushComment() }
@@ -354,6 +354,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 					}
 			}
         }
+    }
+
+    fun setComment(comment: String) {
+        reviewInteractor.comment = comment
     }
 
     private fun updateRatingState() {

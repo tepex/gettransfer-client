@@ -9,18 +9,4 @@ import org.koin.standalone.inject
 
 @InjectViewState
 class OrderCommentPresenter: MvpPresenter<CommentView>(), KoinComponent {
-
-    private val orderInteractor: OrderInteractor by inject()
-
-    override fun attachView(view: CommentView) {
-        super.attachView(view)
-        with(orderInteractor) {
-            comment?.let { viewState.setComment(it) }
-        }
-    }
-
-    fun setComment(comment: String) {
-        orderInteractor.comment = if (comment.isNotEmpty()) comment else null
-        viewState.setComment(comment)
-    }
 }

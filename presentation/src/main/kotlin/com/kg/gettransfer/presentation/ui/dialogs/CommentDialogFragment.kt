@@ -19,6 +19,8 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
     private var onCommentLister: OnCommentListener? = null
 
+    private var comment: String = ""
+
     @InjectPresenter
     lateinit var presenter: OrderCommentPresenter
 
@@ -57,27 +59,27 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
     override fun onDetach() {
         super.onDetach()
+        onCommentLister?.onSetComment(comment)
         onCommentLister = null
     }
 
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
         tvDone.setOnClickListener {
-            val comment = etComment.text.toString().trim()
-            presenter.setComment(comment)
+            comment = etComment.text.toString().trim()
+            onCommentLister?.onSetComment(comment)
             setBottomSheetState(this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
             hideKeyboard()
         }
-        etComment.afterTextChanged { presenter.setComment(it.trim()) }
+        etComment.afterTextChanged {
+            comment = it.trim()
+            onCommentLister?.onSetComment(comment)
+        }
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
         etComment.setText(arguments?.getString(EXTRA_COMMENT).toString())
-    }
-
-    override fun setComment(comment: String) {
-        onCommentLister?.onSetComment(comment)
     }
 
     interface OnCommentListener {

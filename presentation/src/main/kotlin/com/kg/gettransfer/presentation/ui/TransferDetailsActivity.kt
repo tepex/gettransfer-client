@@ -10,6 +10,7 @@ import android.support.annotation.CallSuper
 import android.support.annotation.NonNull
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
@@ -53,7 +54,6 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
-import kotlinx.android.synthetic.main.layout_comment.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
@@ -77,8 +77,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_field.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.view.*
 import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
-import kotlinx.android.synthetic.main.view_your_comment.view.tvComment
-import kotlinx.android.synthetic.main.view_your_comment.view.tvTitile
+import kotlinx.android.synthetic.main.view_your_comment.view.*
 import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
 import org.jetbrains.anko.longToast
 import java.util.*
@@ -93,6 +92,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     private lateinit var bsTransferDetails: BottomSheetTripleStatesBehavior<View>
     private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
     private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
+
+    private var fragment: Fragment? = null
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
@@ -158,6 +159,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         setupBottomSheetHeight()
     }
 
+    override fun onAttachFragment(fragment: Fragment?) {
+        this.fragment = fragment
+    }
+
     private fun setupBottomSheetHeight() {
         val lp = sheetTransferDetails.layoutParams as CoordinatorLayout.LayoutParams
         lp.height = getHeightForBottomSheetDetails()
@@ -174,7 +179,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 _tintBackground.isVisible = false
                 hideKeyboard()
-                presenter.commentChanged(etComment.text.toString().trim())
+                presenter.commentChanged(yourComment.tvComment.text.toString())
             }
         }
 
@@ -605,6 +610,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         if (comment.isEmpty()) yourComment.tvTitile.text = getString(R.string.LNG_PAYMENT_LEAVE_COMMENT)
         else yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
         yourComment.tvComment.text = comment
+        presenter.setComment(comment)
+
+        if (supportFragmentManager.fragments.find {
+                    it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} != null) {
+            if (fragment is RatingDetailDialogFragment) {
+                (fragment as RatingDetailDialogFragment).setComment(comment)
+            }
+        }
     }
 
 

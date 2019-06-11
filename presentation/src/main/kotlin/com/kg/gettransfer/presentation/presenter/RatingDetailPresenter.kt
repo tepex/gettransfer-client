@@ -38,7 +38,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		viewState.setRatingDriver(driverRating)
 		viewState.setRatingPunctuality(punctualityRating)
 		onSecondaryRatingsChanged(vehicleRating, driverRating, punctualityRating)
-
+		showComment()
 		viewState.showProgress(false)
 	}
 
@@ -46,7 +46,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		viewState.showProgress(true)
 		viewState.blockInterface(true, true)
 		fillRates(list)
-		writeComment(comment)
+		setComment(comment)
 		val rateResult = fetchResult { reviewInteractor.sendRates() }
 		val commentResult = fetchResult { reviewInteractor.pushComment() }
 		if (!rateResult.isError() && !commentResult.isError()) {
@@ -70,16 +70,11 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		reviewInteractor.rates = mappedList.toMutableSet()
 	}
 
-	private fun writeComment(text: String) {
+	private fun setComment(text: String) {
 		reviewInteractor.comment = text
 	}
 
-	fun commentChanged(newComment: String) {
-		reviewInteractor.comment = newComment
-		updateViewComment()
-	}
-
-	private fun updateViewComment() {
+	private fun showComment() {
 		if (currentComment.isNotEmpty())
 			viewState.showComment(currentComment)
 		else

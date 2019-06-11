@@ -26,8 +26,10 @@ import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
 import com.kg.gettransfer.domain.model.RouteInfo
+
 import com.kg.gettransfer.extensions.isNonZero
 import com.kg.gettransfer.extensions.simpleFormat
+
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 
@@ -53,7 +55,6 @@ import org.koin.standalone.get
 import org.koin.standalone.inject
 
 import timber.log.Timber
-import java.lang.NullPointerException
 
 @InjectViewState
 class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
@@ -312,22 +313,31 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         val from = orderInteractor.from!!
         val to = orderInteractor.to
+        val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
+        var pax = orderInteractor.passengers + childSeatsDelegate.getTotalSeats()
+        if (pax == 0) {
+            pax = if (selectedTransportTypes.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 } ) {
+                DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT
+            } else {
+                DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT
+            }
+        }
         val transferNew = TransferNew(
-                from.cityPoint,
-                if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
-                Trip(dateDelegate.startDate, orderInteractor.flightNumber),
-                dateDelegate.returnDate?.let { Trip(it, orderInteractor.flightNumberReturn) },
-                transportTypes!!.filter { it.checked }.map { it.id },
-                orderInteractor.passengers + childSeatsDelegate.getTotalSeats(),
-                childSeatsDelegate.infantSeats.isNonZero(),
-                childSeatsDelegate.convertibleSeats.isNonZero(),
-                childSeatsDelegate.boosterSeats.isNonZero(),
-                orderInteractor.offeredPrice?.times(100)?.toInt(),
-                orderInteractor.comment,
-                orderInteractor.nameSign,
-                accountManager.tempUser,
-                orderInteractor.promoCode,
-                false
+            from.cityPoint,
+            if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
+            Trip(dateDelegate.startDate, orderInteractor.flightNumber),
+            dateDelegate.returnDate?.let { Trip(it, orderInteractor.flightNumberReturn) },
+            transportTypes!!.filter { it.checked }.map { it.id },
+            orderInteractor.passengers + childSeatsDelegate.getTotalSeats(),
+            childSeatsDelegate.infantSeats.isNonZero(),
+            childSeatsDelegate.convertibleSeats.isNonZero(),
+            childSeatsDelegate.boosterSeats.isNonZero(),
+            orderInteractor.offeredPrice?.times(100)?.toInt(),
+            orderInteractor.comment,
+            orderInteractor.nameSign,
+            accountManager.tempUser,
+            orderInteractor.promoCode,
+            false
         )
         Timber.d("new transfer: $transferNew")
 
@@ -590,7 +600,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
         logStartScreenOrder()
     }
-    
+
+    fun setComment(comment: String) {
+        orderInteractor.comment = if (comment.isNotEmpty()) comment else null
+    }
+
     companion object {
         private const val INVALID_CURRENCY_INDEX = -1
 

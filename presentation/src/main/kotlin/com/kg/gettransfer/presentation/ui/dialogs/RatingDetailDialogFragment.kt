@@ -24,8 +24,7 @@ import com.willy.ratingbar.BaseRatingBar
 import kotlinx.android.synthetic.main.dialog_fragment_rating_detail.*
 import kotlinx.android.synthetic.main.view_rate_field.rate_bar
 
-class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetailView,
-        CommentDialogFragment.OnCommentListener {
+class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetailView {
 
     override val layout: Int = R.layout.dialog_fragment_rating_detail
 
@@ -85,14 +84,19 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         presenter.currentComment = currentComment
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        ratingListener = null
+    }
+
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
         btnSend.setOnClickListener {
-            presenter.onClickSend(createListOfDetailedRates(), tvComment.text.toString())
+            presenter.onClickSend(createListOfDetailedRates(), etComment.text.toString())
         }
         ivClose.setOnClickListener { dismiss() }
-        tvComment.setOnClickListener { presenter.onClickComment(tvComment.text.toString()) }
-        tvComment.setUneditable()
+        etComment.setOnClickListener { presenter.onClickComment(etComment.text.toString()) }
+        etComment.setUneditable()
         commonRate.setOnRatingChangeListener(commonRateListener)
         vehicleRate.rate_bar.setOnRatingChangeListener(vehicleRateListener)
         driverRate.rate_bar.setOnRatingChangeListener(driverRateListener)
@@ -133,15 +137,15 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         vehicleRate.rate_bar.setIsIndicator(!block)
         driverRate.rate_bar.setIsIndicator(!block)
         punctualityRate.rate_bar.setIsIndicator(!block)
-        tvComment.isEnabled = !block
+        etComment.isEnabled = !block
     }
 
     override fun showComment(comment: String) {
-        tvComment.setText(comment)
+        etComment.setText(comment)
     }
 
     override fun showHint(text: String) {
-        tvComment.hint = text
+        etComment.hint = text
     }
 
     override fun showCommentEditor(comment: String) =
@@ -214,8 +218,8 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         }
     }
 
-    override fun onSetComment(comment: String) {
-        tvComment.setText(comment)
+    fun setComment(comment: String) {
+        etComment.setText(comment)
     }
 
     interface OnRatingChangeListener {
