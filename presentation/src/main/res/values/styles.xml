@@ -291,6 +291,9 @@
         <item name="android:textSize">17sp</item>
     </style>
 
+    <style name="CustomAlerDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorControlNormal">@color/colorPrimary</item>
+    </style>
 
     <style name="DialogStyle" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
