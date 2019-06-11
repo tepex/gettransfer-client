@@ -17,20 +17,6 @@ class ThanksForRatePresenter: MvpPresenter<ThanksForRateView>(), KoinComponent {
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private val reviewInteractor: ReviewInteractor by inject()
 
-    override fun attachView(view: ThanksForRateView?) {
-        super.attachView(view)
-        viewState.setComment(reviewInteractor.comment)
-    }
-
-    fun onCommentTextGot(text: String) {
-        reviewInteractor.comment = text
-        viewState.setComment(text)
-    }
-
-    fun onAddCommentClicked() {
-        viewState.showTextEditorWithCurrentText(reviewInteractor.comment)
-    }
-
     fun sendThanks() {
         utils.launchSuspend {
             with(reviewInteractor) {

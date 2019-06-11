@@ -32,31 +32,4 @@
         android:fontFamily="@font/sf_pro_text_semibold"
         android:textSize="17sp"
         android:text="@string/LNG_PAYMENT_THANK_RATING"/>
-    
-    <TextView
-        android:id="@+id/yv_comment_suggestion_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:paddingStart="56dp"
-        android:paddingEnd="56dp"
-        android:textColor="@color/colorTextBlack"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:textSize="17sp"
-        android:gravity="center"
-        android:text="@string/LNG_PAYMENT_LEAVE_COMMENT"/>
-
-    <EditText
-        android:id="@+id/et_thanks_comment"
-
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:hint="@string/LNG_RIDE_YOUR_COMMENT"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/color_gtr_light_grey"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/transfer_details_secondary_text"/>
-
 </LinearLayout>
