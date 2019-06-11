@@ -56,25 +56,26 @@ import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
 
 class MainActivity :
-        BaseGoogleMapActivity(),
-        MainView,
-        StoreDialogFragment.OnStoreListener,
-        RatingDetailDialogFragment.OnRatingChangeListener {
+    BaseGoogleMapActivity(),
+    MainView,
+    StoreDialogFragment.OnStoreListener,
+    RatingDetailDialogFragment.OnRatingChangeListener {
 
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
     var requestView: MainRequestView? = null
-    set(value) {
-        field = value
-        value?.let {
-            initHourly()
-            setRequestView() }
-    }
+        set(value) {
+            field = value
+            value?.let {
+                initHourly()
+                setRequestView()
+            }
+        }
     var screenType = REQUEST_SCREEN
-    set(value) {
-        field = value
-        presenter.screenType = value
-    }
+        set(value) {
+            field = value
+            presenter.screenType = value
+        }
 
     lateinit var drawer: DrawerLayout
     private lateinit var hourlySheet: BottomSheetBehavior<View>
@@ -94,14 +95,14 @@ class MainActivity :
     private val itemsNavigationViewListener = View.OnClickListener {
         with(presenter) {
             when (it.id) {
-                R.id.navNewTransfer    -> drawer.closeDrawer(GravityCompat.START)
-                R.id.navLogin          -> onLoginClick()
-                R.id.navAbout          -> onAboutClick()
-                R.id.navSettings       -> onSettingsClick()
-                R.id.navSupport        -> onSupportClick()
-                R.id.navRequests       -> onRequestsClick()
+                R.id.navNewTransfer -> drawer.closeDrawer(GravityCompat.START)
+                R.id.navLogin -> onLoginClick()
+                R.id.navAbout -> onAboutClick()
+                R.id.navSettings -> onSettingsClick()
+                R.id.navSupport -> onSupportClick()
+                R.id.navRequests -> onRequestsClick()
                 R.id.navBecomeACarrier -> onBecomeACarrierClick()
-                R.id.navHeaderShare    -> onShareClick()
+                R.id.navHeaderShare -> onShareClick()
                 else -> Timber.d("No route")
             }
             drawer.closeDrawer(GravityCompat.START)
@@ -167,19 +168,20 @@ class MainActivity :
                 presenter.rateTransfer(transferId, rate)
             }
             if (getBooleanExtra(Screens.MAIN_MENU, false))
-                Handler().postDelayed( { drawer.openDrawer(Gravity.START, true) }, 500)
+                Handler().postDelayed({ drawer.openDrawer(Gravity.START, true) }, 500)
         }
     }
 
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search_panel.elevation = resources.getDimension(R.dimen.search_elevation)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search_panel.elevation =
+            resources.getDimension(R.dimen.search_elevation)
         searchFrom.setUneditable()
         searchTo.setUneditable()
         searchFrom.setOnClickListener { performClick(false) }
-        searchTo.setOnClickListener   { performClick(true) }
-        rl_hourly.setOnClickListener  { showNumberPicker(true) }
+        searchTo.setOnClickListener { performClick(true) }
+        rl_hourly.setOnClickListener { showNumberPicker(true) }
         btnNext.setThrottledClickListener { performNextClick() }
         enableBtnNext()
     }
@@ -206,13 +208,12 @@ class MainActivity :
     @SuppressLint("CommitTransaction")
     private fun switchMain(withMap: Boolean, firstAttach: Boolean = false) {
         with(supportFragmentManager.beginTransaction()) {
-            if (!firstAttach)setAnimation(withMap, this)
+            if (!firstAttach) setAnimation(withMap, this)
             if (!withMap) {
                 systemInteractor.lastMainScreenMode = Screens.MAIN_WITHOUT_MAP
                 if (isFragmentExists()) return
                 add(R.id.fragmentContainer, MainRequestFragment())
-            }
-            else {
+            } else {
                 systemInteractor.lastMainScreenMode = Screens.MAIN_WITH_MAP
                 if (!isPermissionRequested) {
                     isPermissionRequested = true
@@ -228,8 +229,7 @@ class MainActivity :
             it is MainRequestFragment
         }
 
-
-    private fun setRequestView () {
+    private fun setRequestView() {
         val addressTo = if (rl_searchForm.isVisible) searchTo.text else null
         val duration = if (rl_hourly.isVisible) tvCurrent_hours.text.toString() else null
         requestView?.let {
@@ -243,19 +243,21 @@ class MainActivity :
 
     @SuppressLint("PrivateResource")
     private fun setAnimation(opens: Boolean, transaction: FragmentTransaction) =
-            transaction.apply {
-                val first = if(opens) R.anim.abc_fade_in else R.anim.abc_fade_in
-                val second = if(opens) R.anim.abc_fade_out else R.anim.abc_fade_out
-                setCustomAnimations(first, second)
-            }
+        transaction.apply {
+            val first = if (opens) R.anim.abc_fade_in else R.anim.abc_fade_in
+            val second = if (opens) R.anim.abc_fade_out else R.anim.abc_fade_out
+            setCustomAnimations(first, second)
+        }
 
     fun performClick(clickedTo: Boolean, returnBack: Boolean = false) {
         presenter.isClickTo = clickedTo
         processGoogleMap(true) {
-            presenter.onSearchClick(searchFrom.text,
-                    searchTo.text,
-                    it.projection.visibleRegion.latLngBounds,
-                    returnBack)
+            presenter.onSearchClick(
+                searchFrom.text,
+                searchTo.text,
+                it.projection.visibleRegion.latLngBounds,
+                returnBack
+            )
         }
     }
 
@@ -266,7 +268,7 @@ class MainActivity :
 
     private fun onPickerExpanded(expanded: Boolean) {
         expanded.let {
-            switch_mode.isEnabled    = !it
+            switch_mode.isEnabled = !it
             search_panel.isClickable = !it
         }
     }
@@ -298,25 +300,25 @@ class MainActivity :
         val versionName = BuildConfig.VERSION_NAME
         val versionCode = BuildConfig.VERSION_CODE
         (navFooterVersion as TextView).text =
-                String.format(getString(R.string.nav_footer_version), versionName, versionCode)
+            String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         navHeaderMode.isVisible = false
         navNewTransfer.isVisible = true
         setMenuIconsColorFilter()
 
         readMoreListener.let {
-            navFooterStamp.setOnClickListener   (it)
+            navFooterStamp.setOnClickListener(it)
             navFooterReadMore.setOnClickListener(it)
         }
         itemsNavigationViewListener.let {
-            navNewTransfer.setOnClickListener   (it)
-            navHeaderShare.setOnClickListener   (it)
-            navLogin.setOnClickListener         (it)
-            navRequests.setOnClickListener      (it)
-            navSettings.setOnClickListener      (it)
-            navSupport.setOnClickListener       (it)
-            navAbout.setOnClickListener         (it)
+            navNewTransfer.setOnClickListener(it)
+            navHeaderShare.setOnClickListener(it)
+            navLogin.setOnClickListener(it)
+            navRequests.setOnClickListener(it)
+            navSettings.setOnClickListener(it)
+            navSupport.setOnClickListener(it)
+            navAbout.setOnClickListener(it)
             navBecomeACarrier.setOnClickListener(it)
-            navPassengerMode.setOnClickListener (it)
+            navPassengerMode.setOnClickListener(it)
         }
     }
 
@@ -352,12 +354,12 @@ class MainActivity :
 
     protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
-        btnMyLocation.setOnClickListener  {
+        btnMyLocation.setOnClickListener {
             checkPermission()
             presenter.updateCurrentLocation()
         }
-        gm.setOnCameraMoveListener        { presenter.onCameraMove(gm.cameraPosition!!.target, true) }
-        gm.setOnCameraIdleListener        { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
+        gm.setOnCameraMoveListener { presenter.onCameraMove(gm.cameraPosition!!.target, true) }
+        gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
     }
 
     override fun enablePinAnimation() {
@@ -370,7 +372,8 @@ class MainActivity :
             EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_LOCATION_ACCESS),
-                PERMISSION_REQUEST, *PERMISSIONS)
+                PERMISSION_REQUEST, *PERMISSIONS
+            )
     }
 
     override fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit) {
@@ -399,8 +402,7 @@ class MainActivity :
                     val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
                     it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
                     isFirst = false
-                }
-                else {
+                } else {
                     if (withAnimation) it.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                     else it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 }
@@ -423,12 +425,17 @@ class MainActivity :
 
     override fun setMarkerElevation(up: Boolean) {
         val animator = mMarker.animate()
-                .withStartAction { presenter.isMarkerAnimating = true }
-                .withEndAction {
-                    presenter.isMarkerAnimating = false
-                    if (!up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_position_shadow))
-                }
-                .setDuration(150L)
+            .withStartAction { presenter.isMarkerAnimating = true }
+            .withEndAction {
+                presenter.isMarkerAnimating = false
+                if (!up) markerShadow.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        this,
+                        R.drawable.default_position_shadow
+                    )
+                )
+            }
+            .setDuration(150L)
         if (up) animator.translationYBy(Utils.convertDpToPixels(this, -MainPresenter.MARKER_ELEVATION))
         else animator.translationY(markerTranslationY)
 
@@ -462,7 +469,7 @@ class MainActivity :
 
     fun initSearchForm() {
         searchFrom.sub_title.text = getString(R.string.LNG_FIELD_SOURCE_PICKUP)
-        searchTo.sub_title.text   = getString(R.string.LNG_FIELD_DESTINATION)
+        searchTo.sub_title.text = getString(R.string.LNG_FIELD_DESTINATION)
     }
 
     override fun setAddressFrom(address: String) {
@@ -521,17 +528,17 @@ class MainActivity :
     }
 
     private fun defineMapModeStrategy() {
-        btnNext.setOnClickListener { performNextClick()}
+        btnNext.setOnClickListener { performNextClick() }
         btnBack.setOnClickListener { presenter.onBackClick() }
     }
 
     override fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean) {
         navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_PASSENGER)
         with(profile) {
-            navHeaderName.isVisible  = isLoggedIn && !name.isNullOrEmpty()
+            navHeaderName.isVisible = isLoggedIn && !name.isNullOrEmpty()
             navHeaderEmail.isVisible = isLoggedIn && !email.isNullOrEmpty()
-            navRequests.isVisible    = hasAccount
-            navLogin.isVisible       = (!isLoggedIn && hasAccount) || !hasAccount
+            navRequests.isVisible = hasAccount
+            navLogin.isVisible = (!isLoggedIn && hasAccount) || !hasAccount
             layoutAccountInfo.isVisible = navHeaderName.isVisible || navHeaderEmail.isVisible
             if (isLoggedIn) {
                 name?.let { navHeaderName.text = it }
@@ -563,7 +570,7 @@ class MainActivity :
 
     private fun setAlpha(alpha: Float) {
         searchFrom.alpha = alpha
-        tv_a_point.alpha    = alpha
+        tv_a_point.alpha = alpha
     }
 
     override fun onBackClick(isAddressNavigating: Boolean, isTo: Boolean) {
@@ -586,11 +593,11 @@ class MainActivity :
     }
 
     override fun changeFields(hourly: Boolean) {
-        rl_hourly.isVisible    = hourly
+        rl_hourly.isVisible = hourly
         hourly_point.isVisible = hourly
-        rl_searchForm.isGone   = hourly
-        tv_b_point.isGone      = hourly
-        link_line.isInvisible  = hourly
+        rl_searchForm.isGone = hourly
+        tv_b_point.isGone = hourly
+        link_line.isInvisible = hourly
         enableBtnNext()
         if (!hourly) showNumberPicker(false)
     }
@@ -598,7 +605,7 @@ class MainActivity :
     override fun setTripMode(duration: Int?) {
         duration?.let {
             switch_mode.isChecked = true
-            with (HourlyValuesHelper) {
+            with(HourlyValuesHelper) {
                 np_hours.value = durationValues.indexOf(it)
                 tvCurrent_hours.text = getValue(it, this@MainActivity)
             }
@@ -607,19 +614,21 @@ class MainActivity :
 
     override fun showRateForLastTrip(transferId: Long, vehicle: String, color: String) {
         if (supportFragmentManager.fragments.firstOrNull {
-                    it.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG} == null) {
+                it.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG
+            } == null) {
             RatingLastTripFragment
-                    .newInstance(transferId, vehicle, color)
-                    .show(supportFragmentManager, RatingLastTripFragment.RATING_LAST_TRIP_TAG)
+                .newInstance(transferId, vehicle, color)
+                .show(supportFragmentManager, RatingLastTripFragment.RATING_LAST_TRIP_TAG)
         }
     }
 
     override fun showDetailedReview(tappedRate: Float, offerId: Long) {
         if (supportFragmentManager.fragments.firstOrNull {
-                    it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
+                it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG
+            } == null) {
             RatingDetailDialogFragment
-                    .newInstance(tappedRate, tappedRate, tappedRate, offerId)
-                    .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+                .newInstance(tappedRate, tappedRate, tappedRate, offerId)
+                .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }
 
@@ -629,9 +638,9 @@ class MainActivity :
     override fun onClickGoToStore() = redirectToPlayMarket()
 
     override fun thanksForRate() =
-            ThanksForRateFragment
-                    .newInstance()
-                    .show(supportFragmentManager, ThanksForRateFragment.TAG)
+        ThanksForRateFragment
+            .newInstance()
+            .show(supportFragmentManager, ThanksForRateFragment.TAG)
 
     override fun onRatingChanged(list: List<ReviewRateModel>, comment: String) {}
 
@@ -650,16 +659,17 @@ class MainActivity :
     }
 
     override fun setNetworkAvailability(context: Context) =
-            super.setNetworkAvailability(context)
-                    .also { requestView?.onNetworkWarning(!it) }
+        super.setNetworkAvailability(context)
+            .also { requestView?.onNetworkWarning(!it) }
 
     companion object {
-        @JvmField val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        @JvmField val PERMISSIONS =
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         const val PERMISSION_REQUEST = 2211
         const val FADE_DURATION = 500L
         const val MAX_INIT_ZOOM = 2.0f
 
-        const val ALPHA_FULL     = 1f
+        const val ALPHA_FULL = 1f
         const val ALPHA_DISABLED = 0.3f
     }
 }
