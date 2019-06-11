@@ -315,7 +315,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
         var pax = orderInteractor.passengers + childSeatsDelegate.getTotalSeats()
         if (pax == 0) {
-            pax = if (selectedTransportTypes.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 }) 4 else 2
+            
+            pax = if (selectedTransportTypes.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 } ) {
+                DEFAULT_BIG_PASSENGER_COUNT 
+            } else {
+                DEFAULT_PASSENGER_COUNT
+            }
         }
         val transferNew = TransferNew(
                 from.cityPoint,
@@ -471,10 +476,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    companion object {
-        private const val INVALID_CURRENCY_INDEX = -1
-    }
-
                                           /////////Analytics////////
 
     fun logButtons(event: String) {
@@ -576,5 +577,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logCreateTransfer(Analytics.RESULT_SUCCESS)
         logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
         logStartScreenOrder()
+    }
+    
+    companion object {
+        private const val INVALID_CURRENCY_INDEX = -1
+        private const val DEFAULT_PASSENGER_COUNT = 2
+        private const val DEFAULT_BIG_PASSENGER_COUNT = 4
     }
 }
