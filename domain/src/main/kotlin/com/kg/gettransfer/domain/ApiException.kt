@@ -20,4 +20,7 @@ class ApiException(val code: Int, val details: String, val type: String? = null)
     fun isNotFound() = code == NOT_FOUND
     fun isAccountExistError() = type == "account_exists"
     fun isPhoneTaken() = type == "phone_taken"
+
+    /* PAYMENT ERRORS */
+    fun isBigPriceError() = code == UNPROCESSABLE && details == "{price=[is_too_big]}"
 }
