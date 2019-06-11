@@ -216,7 +216,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     private fun showMainActivity() {
         viewState.showCancelRequestToast()
-        router.finishChainAndBackTo()
+        router.finishChainAndBackTo(Screens.MainPassenger())
     }
 
     fun makeFieldOperation(field: String, operation: String, text: String) {

@@ -9,9 +9,9 @@ fun Router.createStartChain(vararg args: Screen) {
     newRootChain(Screens.MainPassenger(), *args)
 }
 
-//clear navigation stack and go back to root (by default to Main)
+//clear navigation stack and go back to root
 //backTo() without finishChain doesn't work
-fun Router.finishChainAndBackTo(screen: Screen = Screens.MainPassenger(true)) {
+fun Router.finishChainAndBackTo(screen: Screen) {
     finishChain()
     newRootChain(screen)
 }
