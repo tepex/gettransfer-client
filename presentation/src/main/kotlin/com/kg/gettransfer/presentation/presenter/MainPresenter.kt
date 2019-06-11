@@ -45,9 +45,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private var currentLocation: String = ""
 
-    private val MARKER_ELEVATION = 5f
     private var markerStateLifted = false
-
     var isMarkerAnimating = true
     internal var isClickTo: Boolean? = null
 
@@ -224,7 +222,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
         if (idleAndMoveCamera) {
             if (!markerStateLifted && !isMarkerAnimating && animateMarker) {
-                viewState.setMarkerElevation(true, MARKER_ELEVATION)
+                viewState.setMarkerElevation(true)
                 markerStateLifted = true
             }
             this.lastPoint = lastPoint
@@ -236,8 +234,8 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     @Suppress("UNUSED_PARAMETER")
     fun onCameraIdle(latLngBounds: LatLngBounds) {
         if (idleAndMoveCamera) {
-            if (markerStateLifted && !isMarkerAnimating) {
-                viewState.setMarkerElevation(false, -MARKER_ELEVATION)
+            if (markerStateLifted) {
+                viewState.setMarkerElevation(false)
                 markerStateLifted = false
             }
             if (lastPoint == null) return
@@ -511,5 +509,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
         const val MIN_HOURLY    = 2
         const val ONE_SEC_DELAY = 1000L
+
+        const val MARKER_ELEVATION = 5f
     }
 }

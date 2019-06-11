@@ -84,6 +84,8 @@ class MainActivity :
     private var centerMarker: Marker? = null
     private var nextClicked = false
 
+    private var markerTranslationY = 0f
+
     @ProvidePresenter
     fun createMainPresenter() = MainPresenter()
 
@@ -125,6 +127,7 @@ class MainActivity :
 
         _mapView = mapView
         _btnCenter = btnMyLocation
+        markerTranslationY = mMarker.translationY
         initMapView(savedInstanceState)
         viewNetworkNotAvailable = textNetworkNotAvailable
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
@@ -418,17 +421,18 @@ class MainActivity :
         switch_panel.isVisible = visible
     }
 
-    override fun setMarkerElevation(up: Boolean, elevation: Float) {
-        val px = -1 * Utils.convertDpToPixels(this, elevation)
-        mMarker.animate()
+    override fun setMarkerElevation(up: Boolean) {
+        val animator = mMarker.animate()
                 .withStartAction { presenter.isMarkerAnimating = true }
                 .withEndAction {
                     presenter.isMarkerAnimating = false
                     if (!up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.default_position_shadow))
                 }
                 .setDuration(150L)
-                .translationYBy(px)
-                .start()
+        if (up) animator.translationYBy(Utils.convertDpToPixels(this, -MainPresenter.MARKER_ELEVATION))
+        else animator.translationY(markerTranslationY)
+
+        animator.start()
 
         if (up) markerShadow.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.lifted_marker_shadow))
     }
