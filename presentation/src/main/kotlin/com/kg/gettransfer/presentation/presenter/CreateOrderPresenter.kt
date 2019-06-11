@@ -312,13 +312,23 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         val from = orderInteractor.from!!
         val to = orderInteractor.to
+        val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
+        var pax = orderInteractor.passengers + childSeatsDelegate.getTotalSeats()
+        if (pax == 0) {
+            
+            pax = if (selectedTransportTypes.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 } ) {
+                DEFAULT_BIG_PASSENGER_COUNT 
+            } else {
+                DEFAULT_PASSENGER_COUNT
+            }
+        }
         val transferNew = TransferNew(
                 from.cityPoint,
                 if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
                 Trip(dateDelegate.startDate, orderInteractor.flightNumber),
                 dateDelegate.returnDate?.let { Trip(it, orderInteractor.flightNumberReturn) },
-                transportTypes!!.filter { it.checked }.map { it.id },
-                orderInteractor.passengers + childSeatsDelegate.getTotalSeats(),
+                selectedTransportTypes,
+                pax,
                 childSeatsDelegate.infantSeats.isNonZero(),
                 childSeatsDelegate.convertibleSeats.isNonZero(),
                 childSeatsDelegate.boosterSeats.isNonZero(),
@@ -378,7 +388,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 !isTimeSetByUser                            -> FieldError.TIME_NOT_SELECTED
                 !dateDelegate.validate()                    -> FieldError.RETURN_TIME
                 transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
-                passengers == 0                             -> FieldError.PASSENGERS_COUNT
+                //passengers == 0                             -> FieldError.PASSENGERS_COUNT
                 else                                        -> null
             }
             if (errorField == null) errorField = accountManager.isValidProfileForCreateOrder()
@@ -464,10 +474,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         with(accountManager.tempProfile) {
             router.navigateTo(Screens.LoginToGetOffers(id, if (!phone.isNullOrEmpty()) phone else email, Screens.OFFERS))
         }
-    }
-
-    companion object {
-        private const val INVALID_CURRENCY_INDEX = -1
     }
 
                                           /////////Analytics////////
@@ -571,5 +577,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         logCreateTransfer(Analytics.RESULT_SUCCESS)
         logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
         logStartScreenOrder()
+    }
+    
+    companion object {
+        private const val INVALID_CURRENCY_INDEX = -1
+        private const val DEFAULT_PASSENGER_COUNT = 2
+        private const val DEFAULT_BIG_PASSENGER_COUNT = 4
     }
 }

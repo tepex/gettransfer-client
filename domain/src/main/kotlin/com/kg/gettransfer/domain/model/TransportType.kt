@@ -35,5 +35,7 @@ data class TransportType(
                 TransportType(ID.BUS, 50, 50),
                 TransportType(ID.HELICOPTER, 5, 2)
         )
+
+        val BIG_TRANSPORT = arrayListOf<TransportType.ID>(ID.VAN, ID.MINIBUS, ID.BUS, ID.HELICOPTER)
     }
 }
