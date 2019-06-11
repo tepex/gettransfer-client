@@ -520,6 +520,7 @@
     <string name="LNG_ERROR_PHONE_NOTFOUND">Phone is not found</string>
     <string name="LNG_ERROR_EMAIL_NOTFOUND">Email is not found</string>
     <string name="LNG_TRANSFER_NOT_FOUND">Sorry, but transfer #%s not found</string>
+    <string name="LNG_BIG_PRICE_ERROR">Price is too big</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>
