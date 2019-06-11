@@ -103,8 +103,14 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     private fun initListeners() {
         tvPaymentAgreement.setOnClickListener { presenter.onAgreementClicked() }
         btnGetPayment.setOnClickListener { presenter.onPaymentClicked() }
-        rbCard.setOnClickListener { changePayment(it, PaymentRequestModel.PLATRON) }
-        rbPaypal.setOnClickListener { changePayment(it, PaymentRequestModel.PAYPAL) }
+        View.OnClickListener { changePayment(rbCard, PaymentRequestModel.PLATRON) }.apply {
+            rbCard.setOnClickListener(this)
+            layoutCard.setOnClickListener(this)
+        }
+        View.OnClickListener { changePayment(rbPaypal, PaymentRequestModel.PAYPAL) }.apply {
+            rbPaypal.setOnClickListener(this)
+            layoutPaypal.setOnClickListener(this)
+        }
         addKeyBoardDismissListener {
             Handler().postDelayed({
                 if (it) sv_root.fling(2000)         //need to show "Payment" button
