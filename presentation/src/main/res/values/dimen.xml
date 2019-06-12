@@ -1021,8 +1021,8 @@
 	<dimen name="payment_offer_tiny_languages_margin_start">8dp</dimen>
 	<dimen name="payment_dialog_corner_radius">16dp</dimen>
 	<dimen name="payment_ivGtrBonus_layout_marginTop">16dp</dimen>
-	<dimen name="payment_tvCollectMiles_layout_marginTop">5dp</dimen>
-	<dimen name="payment_ll_auth_container_layout_marginTop">16dp</dimen>
+	<dimen name="payment_ilAuthPhone_layout_marginTop">16dp</dimen>
+	<dimen name="payment_ll_auth_container_layout_paddingTop">8dp</dimen>
 	<dimen name="payment_divider_height">1dp</dimen>
 	<dimen name="payment_divider_marginStart">16dp</dimen>
 	<dimen name="payment_divider_marginEnd">16dp</dimen>
