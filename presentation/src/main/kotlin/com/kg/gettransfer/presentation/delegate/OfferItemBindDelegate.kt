@@ -87,8 +87,8 @@ object OfferItemBindDelegate {
     private fun bindOfferModelTiny(view: View, offer: OfferModel) {
         with(view) {
             tv_car_model_tiny.text = offer.vehicle.name
-            ivCarColorTiny.isVisible = true
-            ivCarColorTiny.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(view.context, it) })
+            //ivCarColorTiny.isVisible = offer.vehicle.color != null
+            //ivCarColorTiny.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(view.context, it) })
             tv_car_class_tiny.text = offer.vehicle.transportType.nameId?.let { context.getString(it) ?: "" }
             offer.vehicle.photos.firstOrNull()
                     .also {
@@ -110,7 +110,7 @@ object OfferItemBindDelegate {
         with(view) {
             tv_car_model_tiny.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
             tv_car_model_tiny.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.view_offer_book_now_title_text_size))
-            ivCarColorTiny.isVisible = false
+            //ivCarColorTiny.isVisible = false
             tv_car_class_tiny.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
             Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
             bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING, true)

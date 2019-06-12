@@ -227,11 +227,12 @@ class OffersActivity : BaseActivity(), OffersView {
                 setVehicleName(nameById = getString(TransportTypeMapper.getModelsById(offer.transportType.id)))
                 Utils.initCarrierLanguages(languages_container_bs, listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
                 setCapacity(offer.transportType)
-                setPrice(offer.base.preferred ?: offer.base.def)
+                offer_conditions_bs.vehicle_conveniences.isVisible = false
                 setWithoutDiscount(offer.withoutDiscount)
+                setPrice(offer.base.preferred ?: offer.base.def)
+                addSinglePhoto(resId = TransportTypeMapper.getImageById(offer.transportType.id))
                 view_offer_rating_bs.isVisible = false
                 offer_ratingDivider_bs.isVisible = false
-                addSinglePhoto(resId = TransportTypeMapper.getImageById(offer.transportType.id))
             }
         }
 
@@ -244,8 +245,7 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun setWithoutDiscount(withoutDiscount: MoneyModel?) {
         with(offer_bottom_bs) {
-            if (withoutDiscount != null)
-                tv_old_price.strikeText = withoutDiscount.preferred ?: withoutDiscount.def
+            withoutDiscount?.let { tv_old_price.strikeText = it.preferred ?: it.def }
             tv_old_price.isVisible = withoutDiscount != null
         }
     }
@@ -310,14 +310,18 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun setVehicleName(nameById: String? = null, vehicle: VehicleModel? = null) {
         if (nameById == null && vehicle == null) throw IllegalArgumentException()
-        tv_car_model_bs.text = vehicle?.name
-        vehicle?.color?.let {
+        tv_car_model_bs.text = vehicle?.name ?: nameById
+        if (vehicle?.color != null) {
             ivCarColor.isVisible = true
-            ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this, it))
+            ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this, vehicle.color))
+        } else {
+            ivCarColor.isVisible = false
         }
     }
 
     private fun setRating(carrier: CarrierModel) {
+        view_offer_rating_bs.isVisible = true
+        offer_ratingDivider_bs.isVisible = true
         carrier.ratings.let { ratings ->
             setRating(ratings.driver, ratingDriver)
             setRating(ratings.fair, ratingPunctuality)
