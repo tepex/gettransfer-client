@@ -84,14 +84,14 @@ class ChatActivity : BaseActivity(), ChatView {
     }
 
     private fun initTransferInfoLayout(from: String, date: Date, transferId: Long, isShowChevron: Boolean) {
-        imgChevron.isVisible = isShowChevron
+        //imgChevron.isVisible = isShowChevron
         layoutTransferInfo.apply {
             isVisible = true
             textTransferInfoFrom.text = from
             textTransferInfoDate.text = getString(R.string.chat_transfer_date_transfer_id_format,
                     SystemUtils.formatDateTime(date),
                     getString(R.string.LNG_TRANSFER).plus(" №$transferId"))
-            setOnClickListener { presenter.onTransferInfoClick() }
+            //setOnClickListener { presenter.onTransferInfoClick() }
         }
     }
 

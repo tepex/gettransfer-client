@@ -827,7 +827,7 @@
     <dimen name="activity_chat_not_my_message_date_text_margin">8dp</dimen>
 
 	<dimen name="activity_chat_transfer_info_text_size">12sp</dimen>
-	<dimen name="activity_chat_transfer_info_from_margin_start">16dp</dimen>
+	<dimen name="activity_chat_transfer_info_from_margin_start_end">16dp</dimen>
 	<dimen name="activity_chat_transfer_info_from_margin_top">9dp</dimen>
 	<dimen name="activity_chat_transfer_info_from_margin_end">8dp</dimen>
 	<dimen name="activity_chat_transfer_info_date_margin_top">3dp</dimen>
