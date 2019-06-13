@@ -300,7 +300,7 @@ object Screens {
                 else putExtra(Intent.EXTRA_EMAIL, arrayOf(context!!.getString(R.string.email_support)))
 
                 val subject = context?.getString(R.string.LNG_EMAIL_SUBJECT)
-                    .plus("${transferId ?: ""}")
+                    .plus(" ${transferId ?: ""}")
 
                 putExtra(Intent.EXTRA_SUBJECT, subject)
                 putExtra(Intent.EXTRA_TEXT, createSignature())
