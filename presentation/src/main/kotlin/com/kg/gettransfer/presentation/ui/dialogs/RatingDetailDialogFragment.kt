@@ -97,7 +97,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
             presenter.onClickSend(createListOfDetailedRates(), etComment.text.toString())
         }
         ivClose.setOnClickListener { dismiss() }
-        etComment.setOnClickListener { presenter.onClickComment(etComment.text.toString()) }
+        etComment.setOnClickListener { presenter.onClickComment(etComment.text.toString().trim()) }
         etComment.setUneditable()
         commonRate.setOnRatingChangeListener(commonRateListener)
         vehicleRate.rate_bar.setOnRatingChangeListener(vehicleRateListener)

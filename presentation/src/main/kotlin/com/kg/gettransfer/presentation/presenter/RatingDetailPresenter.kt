@@ -61,8 +61,8 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		viewState.showProgress(false)
 	}
 
-	fun onClickComment(currentComment: String) {
-		viewState.showCommentDialog(getFeedBackText(currentComment))
+	fun onClickComment(comment: String) {
+		viewState.showCommentDialog(getFeedBackText(comment))
 	}
 
 	private fun fillRates(list: List<ReviewRateModel>) {

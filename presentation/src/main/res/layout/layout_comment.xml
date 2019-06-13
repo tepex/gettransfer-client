@@ -37,7 +37,7 @@
             android:layout_marginBottom="16dp"
             android:layout_below="@+id/tvDone"
             android:background="@null"
-            android:gravity="top"
+            android:gravity="top|center"
             android:fontFamily="@font/sf_pro_text_regular"
             android:hint="@string/LNG_COMMENT_PLACEHOLDER"
             android:imeOptions="actionDone"
