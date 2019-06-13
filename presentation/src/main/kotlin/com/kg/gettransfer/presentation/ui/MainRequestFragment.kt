@@ -87,8 +87,9 @@ class MainRequestFragment :
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
         btnNextFragment.setOnClickListener       { onNextClick() }
         ivSetMyLocation.setOnClickListener       {
-            mParent.checkPermission()
-            mPresenter.updateCurrentLocation()
+            //mParent.checkPermission()
+            //mPresenter.updateCurrentLocation()
+            switch_mode_.isChecked = true
         }
         fl_DeleteReturnDate.setOnClickListener   { clearReturnDate() }
     }
