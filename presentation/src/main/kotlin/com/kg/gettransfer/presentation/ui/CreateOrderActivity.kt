@@ -214,8 +214,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         transfer_date_time_field.input_layout.hint = getString(R.string.LNG_RIDE_DATE)
     }
 
-    private fun checkMinusButton(count: Int, minimum: Int, view: ImageView) {
-        val imgRes = if (count == minimum) R.drawable.ic_minus_disabled else R.drawable.ic_minus
+    private fun checkMinusButton(count: Int, view: ImageView) {
+        val imgRes = if (count == CreateOrderPresenter.MIN_PASSENGERS) R.drawable.ic_minus_disabled else R.drawable.ic_minus
         view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }
 
@@ -228,7 +228,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     override fun setPassengers(count: Int) {
         passengers_count.person_count.text = "$count"
-        checkMinusButton(count, 0, passengers_count.img_minus_seat)
+        checkMinusButton(count, passengers_count.img_minus_seat)
     }
 
     override fun setChildSeats(setOf: Set<CreateOrderView.ChildSeatItem>, total: Int) {
@@ -263,6 +263,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
         rvTransferType.adapter = TransferTypeAdapter(transportTypes) { transportType, showInfo ->
 //            presenter.onTransportChosen()
+            presenter.setPassengersCountForSelectedTransportTypes()
             checkErrorField(rvTransferType)
             if (showInfo) transportTypeClicked(transportType)
         }

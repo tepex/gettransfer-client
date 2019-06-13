@@ -259,7 +259,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun changePassengers(count: Int) {
         with(orderInteractor) {
             passengers += count
-            if (passengers < OrderInteractor.MIN_PASSENGERS) passengers = OrderInteractor.MIN_PASSENGERS
+            if (passengers < MIN_PASSENGERS) passengers = MIN_PASSENGERS
             viewState.setPassengers(passengers)
         }
         logTransferSettingsEvent(Analytics.PASSENGERS_ADDED)
@@ -312,23 +312,13 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         val from = orderInteractor.from!!
         val to = orderInteractor.to
-        val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
-        var pax = orderInteractor.passengers + childSeatsDelegate.getTotalSeats()
-        if (pax == 0) {
-            
-            pax = if (selectedTransportTypes.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 } ) {
-                DEFAULT_BIG_PASSENGER_COUNT 
-            } else {
-                DEFAULT_PASSENGER_COUNT
-            }
-        }
         val transferNew = TransferNew(
                 from.cityPoint,
                 if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),
                 Trip(dateDelegate.startDate, orderInteractor.flightNumber),
                 dateDelegate.returnDate?.let { Trip(it, orderInteractor.flightNumberReturn) },
-                selectedTransportTypes,
-                pax,
+                transportTypes!!.filter { it.checked }.map { it.id },
+                orderInteractor.passengers + childSeatsDelegate.getTotalSeats(),
                 childSeatsDelegate.infantSeats.isNonZero(),
                 childSeatsDelegate.convertibleSeats.isNonZero(),
                 childSeatsDelegate.boosterSeats.isNonZero(),
@@ -414,6 +404,22 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
+    fun setPassengersCountForSelectedTransportTypes(setSavedPax: Boolean = false) {
+        if (setSavedPax) {
+            viewState.setPassengers(orderInteractor.passengers)
+            return
+        }
+        transportTypes!!.filter { it.checked }.map { it.id }
+                .any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 }
+                .let {
+                    (if (it) DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT
+                    else DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT).let { pax ->
+                        orderInteractor.passengers = pax
+                        viewState.setPassengers(pax)
+                    }
+                }
+    }
+
     fun onCenterRouteClick() {
         track?.let { viewState.centerRoute(it) }
         logButtons(Analytics.SHOW_ROUTE_CLICKED)
@@ -429,10 +435,16 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setFavoriteTransportTypes() =
-        sessionInteractor.favoriteTransports?.let { selectTransportTypes(it) }
+        sessionInteractor.favoriteTransports?.let {
+            selectTransportTypes(it)
+            setPassengersCountForSelectedTransportTypes()
+        }
 
     private fun setSelectedTransportTypes() =
-        orderInteractor.selectedTransports?.let { selectTransportTypes(it) }
+        orderInteractor.selectedTransports?.let {
+            selectTransportTypes(it)
+            setPassengersCountForSelectedTransportTypes(true)
+        }
 
     private fun selectTransportTypes(selectedTransport: Set<TransportType.ID>) {
         selectedTransport.forEach { favorite ->
@@ -581,7 +593,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     
     companion object {
         private const val INVALID_CURRENCY_INDEX = -1
-        private const val DEFAULT_PASSENGER_COUNT = 2
-        private const val DEFAULT_BIG_PASSENGER_COUNT = 4
+
+        const val MIN_PASSENGERS = 1
+        private const val DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT = 2
+        private const val DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT = 4
     }
 }
