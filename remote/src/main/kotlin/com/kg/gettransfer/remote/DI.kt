@@ -99,5 +99,6 @@ val socketModule = module {
     single { SystemSocketImp() } bind SystemEventEmitter::class
     single { OfferSocketImpl(get()) }
     single { ChatSocketImpl() }
+    single { PaymentSocketEventer() }
     single<ChatEventEmitter> { ChatSocketImpl() }
 }

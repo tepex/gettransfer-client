@@ -4,6 +4,7 @@ import com.kg.gettransfer.data.model.ChatBadgeEventEntity
 import com.kg.gettransfer.data.model.MessageEntity
 import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.model.OfferEntity
+import com.kg.gettransfer.data.model.PaymentStatusEventEntity
 
 import com.kg.gettransfer.remote.model.EndpointModel
 
@@ -36,6 +37,7 @@ class SocketManager(): KoinComponent {
     private val transferEventer: CoordinateSocketImpl by inject()
     private val chatEventer: ChatSocketImpl           by inject()
     private val systemEventer: SystemSocketImp        by inject()
+    private val paymentEventer: PaymentSocketEventer  by inject()
 
     private var socket:      Socket?            = null
     private var url:         String?            = null
@@ -132,6 +134,7 @@ class SocketManager(): KoinComponent {
                         NEW_MESSAGE_RE.matches(event) -> { onReceiveMessage(packet[1].toString()) }
                         MESSAGE_READ_RE.matches(event) -> { onReceiveMessageRead(packet[1].toString().toLong()) }
                         CHAT_BADGE_RE.matches(event) -> { onReceiveChatBadge(packet[1].toString()) }
+                        PAYMENT_STATUS_RE.matches(event) -> { onReceiveNewPaymentStatus(packet[1].toString()) }
                     }
 
                 }
@@ -199,6 +202,17 @@ class SocketManager(): KoinComponent {
         }
     }
 
+    private fun onReceiveNewPaymentStatus(messageJson: String) {
+        log.debug("$SOCKET_TAG onPaymentStatus: $messageJson")
+        try {
+            val event = JSON.nonstrict.parse(PaymentStatusEventEntity.serializer(), messageJson)
+            paymentEventer.onNewPaymentStatusEvent(event.isPaymentSuccessed())
+        } catch (e: Exception) {
+            log.error(e.toString())
+            throw e
+        }
+    }
+
 
     private fun <T> tryParse(block: () -> T): T {
         return try { block.invoke() }
@@ -232,6 +246,7 @@ class SocketManager(): KoinComponent {
         @JvmField val NEW_MESSAGE_RE  = Regex("^chat.new-message$")
         @JvmField val MESSAGE_READ_RE = Regex("^chat.message-read$")
         @JvmField val CHAT_BADGE_RE   = Regex("^chat.set-badge$")
+        @JvmField val PAYMENT_STATUS_RE = Regex("^payment/(\\d+)$")
         const val ACTION_OFFER = "gt.socket_offerEvent"
     }
 }
