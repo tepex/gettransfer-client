@@ -579,12 +579,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         yourComment.tvComment.text = comment
     }
 
-    override fun showCommentEditor(comment: String) {
-        replaceFragment(
-                CommentDialogFragment.newInstance(comment),
-                R.id.secondary_bottom_sheet,
-                CommentDialogFragment.COMMENT_DIALOG_TAG)
-    }
+    override fun showCommentEditor(comment: String) =
+        CommentDialogFragment.newInstance(comment)
+                .show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
 
     override fun showYourDataProgress(isShow: Boolean) {
         pbYourData.show(isShow)

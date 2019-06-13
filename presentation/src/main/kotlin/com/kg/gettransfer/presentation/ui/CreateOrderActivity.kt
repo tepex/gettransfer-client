@@ -440,7 +440,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
         comment_field.field_input.setOnClickListener        {
             val comment = comment_field.field_input.text.toString().trim()
-            replaceFragment(CommentDialogFragment.newInstance(comment), R.id.secondary_bottom_sheet)
+            CommentDialogFragment.newInstance(comment)
+                    .show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
             presenter.logTransferSettingsEvent(COMMENT_INPUT)
         }
 
