@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.ui.dialogs
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.view.View
@@ -28,7 +30,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
     fun providePresenter() = OrderCommentPresenter()
 
     companion object {
-        private const val EXTRA_COMMENT = "comment"
+        const val EXTRA_COMMENT = "comment"
         const val COMMENT_DIALOG_TAG = "comment_dialog_tag"
 
         fun newInstance(comment: String) = CommentDialogFragment().apply {
@@ -68,6 +70,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         tvDone.setOnClickListener {
             comment = etComment.text.toString().trim()
             onCommentLister?.onSetComment(comment)
+            sendCommentToRatingFragment(comment)
             setBottomSheetState(this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
             hideKeyboard()
         }
@@ -75,6 +78,11 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
             comment = it.trim()
             onCommentLister?.onSetComment(comment)
         }
+    }
+
+    private fun sendCommentToRatingFragment(comment: String) {
+        val intent = Intent().apply { putExtra(EXTRA_COMMENT, comment) }
+        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
     }
 
     override fun initUi(savedInstanceState: Bundle?) {

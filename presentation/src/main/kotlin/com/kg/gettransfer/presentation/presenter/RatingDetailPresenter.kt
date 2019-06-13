@@ -62,7 +62,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	}
 
 	fun onClickComment(currentComment: String) {
-		viewState.showCommentEditor(getFeedBackText(currentComment))
+		viewState.showCommentDialog(getFeedBackText(currentComment))
 	}
 
 	private fun fillRates(list: List<ReviewRateModel>) {
@@ -97,11 +97,11 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	}
 
 	private fun logAverageRate(rate: Double) =
-		analytics.logEvent(
-			Analytics.REVIEW_AVERAGE,
-			createStringBundle(Analytics.REVIEW,rate.toString()),
-			mapOf(Analytics.REVIEW to rate)
-		)
+			analytics.logEvent(
+					Analytics.REVIEW_AVERAGE,
+					createStringBundle(Analytics.REVIEW,rate.toString()),
+					mapOf(Analytics.REVIEW to rate)
+			)
 
 	private fun logDetailRate(list: List<ReviewRateModel>, comment: String) {
 		val map = mutableMapOf<String, String?>()

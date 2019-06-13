@@ -25,7 +25,7 @@ interface RatingDetailView : BaseView {
 	fun showHint(text: String)
 
 	@StateStrategyType(OneExecutionStateStrategy::class)
-	fun showCommentEditor(comment: String)
+	fun showCommentDialog(comment: String)
 
 	@StateStrategyType(OneExecutionStateStrategy::class)
 	fun exitAndReportSuccess(list: List<ReviewRateModel>, comment: String)

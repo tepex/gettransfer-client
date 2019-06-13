@@ -522,8 +522,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
     override fun showDetailRate(vehicle: Float, driver: Float, punctuality: Float, offerId: Long, feedback: String) {
         if (supportFragmentManager.fragments.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
             RatingDetailDialogFragment
-                .newInstance(vehicle, driver, punctuality, offerId, feedback)
-                .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+                    .newInstance(vehicle, driver, punctuality, offerId, feedback)
+                    .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }
 
@@ -611,13 +611,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         else yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
         yourComment.tvComment.text = comment
         presenter.setComment(comment)
-
-        if (supportFragmentManager.fragments.find {
-                    it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} != null) {
-            if (fragment is RatingDetailDialogFragment) {
-                (fragment as RatingDetailDialogFragment).setComment(comment)
-            }
-        }
     }
 
 
