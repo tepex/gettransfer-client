@@ -47,7 +47,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         utils.launchSuspend {
             transfers = when (transferType) {
                 TRANSFER_ACTIVE  ->  fetchData { transferInteractor.getTransfersActive() }
-                TRANSFER_ARCHIVE ->  fetchData { transferInteractor.getTransfersArchive() }
+                TRANSFER_ARCHIVE ->  fetchData(checkLoginError = false) { transferInteractor.getTransfersArchive() }
                 else             ->  throw IllegalArgumentException("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
             }?.sortedByDescending { it.dateToLocal }
             prepareDataAsync()

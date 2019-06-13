@@ -94,7 +94,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     return false if error handled, true otherwise
      */
 
-    protected fun checkResultError(error: ApiException): Boolean {
+    private fun checkResultError(error: ApiException): Boolean {
         if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser() )) {
             openedLoginScreenForUnauthorizedUser = true
             login(Screens.CLOSE_AFTER_LOGIN, accountManager.remoteProfile.email)
