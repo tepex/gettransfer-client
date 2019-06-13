@@ -607,7 +607,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
         if (comment.isEmpty()) yourComment.tvTitile.text = getString(R.string.LNG_PAYMENT_LEAVE_COMMENT)
         else yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
         yourComment.tvComment.text = comment
-        presenter.setComment(comment)
+        presenter.commentChanged(comment)
     }
 
 

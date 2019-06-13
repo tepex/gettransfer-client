@@ -37,13 +37,14 @@
             android:layout_marginBottom="16dp"
             android:layout_below="@+id/tvDone"
             android:background="@null"
-            android:gravity="top|center"
+            android:gravity="top"
             android:fontFamily="@font/sf_pro_text_regular"
             android:hint="@string/LNG_COMMENT_PLACEHOLDER"
             android:imeOptions="actionDone"
             android:inputType="textMultiLine"
             android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/create_transfer_additionals_top_text_size" />
+            android:textSize="@dimen/create_transfer_additionals_top_text_size"
+            android:textColorHint="@color/colorGrey"/>
 
         <!-- it'll be implemented later-->
 

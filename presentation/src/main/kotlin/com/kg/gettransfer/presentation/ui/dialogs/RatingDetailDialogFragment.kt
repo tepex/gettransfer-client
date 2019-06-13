@@ -82,7 +82,6 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         presenter.vehicleRating = vehicleRating
         presenter.driverRating = driverRating
         presenter.punctualityRating = punctualityRating
-        presenter.hintComment = getString(R.string.LNG_PAYMENT_YOUR_COMMENT)
         presenter.currentComment = currentComment
     }
 
@@ -145,11 +144,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     override fun showComment(comment: String) {
         etComment.setText(comment)
     }
-
-    override fun showHint(text: String) {
-        etComment.hint = text
-    }
-
+    
     override fun showCommentDialog(comment: String) {
         val commentDialog = CommentDialogFragment.newInstance(comment)
         commentDialog.setTargetFragment(this@RatingDetailDialogFragment, COMMENT_REQUEST_CODE)

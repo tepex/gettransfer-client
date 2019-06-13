@@ -10,7 +10,7 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.presenter.OrderCommentPresenter
+import com.kg.gettransfer.presentation.presenter.CommentPresenter
 import com.kg.gettransfer.presentation.ui.afterTextChanged
 import com.kg.gettransfer.presentation.view.CommentView
 import kotlinx.android.synthetic.main.layout_comment.*
@@ -24,10 +24,10 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
     private var comment: String = ""
 
     @InjectPresenter
-    lateinit var presenter: OrderCommentPresenter
+    lateinit var presenter: CommentPresenter
 
     @ProvidePresenter
-    fun providePresenter() = OrderCommentPresenter()
+    fun providePresenter() = CommentPresenter()
 
     companion object {
         const val EXTRA_COMMENT = "comment"
@@ -74,10 +74,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
             setBottomSheetState(this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
             hideKeyboard()
         }
-        etComment.afterTextChanged {
-            comment = it.trim()
-            onCommentLister?.onSetComment(comment)
-        }
+        etComment.afterTextChanged { comment = it.trim() }
     }
 
     private fun sendCommentToRatingFragment(comment: String) {

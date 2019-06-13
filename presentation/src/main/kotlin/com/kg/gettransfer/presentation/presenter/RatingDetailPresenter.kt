@@ -29,8 +29,6 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		get() = reviewInteractor.comment
 		set(value) { reviewInteractor.comment = value }
 
-	internal var hintComment: String = ""
-
 	override fun onFirstViewAttach() {
 		super.onFirstViewAttach()
 
@@ -49,12 +47,8 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		setComment(comment)
 		val rateResult = fetchResult { reviewInteractor.sendRates() }
 		val commentResult = fetchResult { reviewInteractor.pushComment() }
-		if (!rateResult.isError() && !commentResult.isError()) {
-			viewState.exitAndReportSuccess(
-					list,
-					getFeedBackText(comment)
-			)
-		}
+		if (!rateResult.isError() && !commentResult.isError())
+            viewState.exitAndReportSuccess(list, comment)
 		logAverageRate(list.map { it.rateValue }.average())
 		logDetailRate(list, comment)
 		viewState.blockInterface(false)
@@ -62,7 +56,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	}
 
 	fun onClickComment(comment: String) {
-		viewState.showCommentDialog(getFeedBackText(comment))
+		viewState.showCommentDialog(comment)
 	}
 
 	private fun fillRates(list: List<ReviewRateModel>) {
@@ -77,8 +71,6 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	private fun showComment() {
 		if (currentComment.isNotEmpty())
 			viewState.showComment(currentComment)
-		else
-			viewState.showHint(hintComment)
 	}
 
 	fun onCommonRatingChanged(rating: Float) {
@@ -115,8 +107,4 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		bundle.putString(Analytics.REVIEW_COMMENT, comment)
 		analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
 	}
-
-	private fun getFeedBackText(text: String) =
-			if (text == hintComment) ""
-			else text
 }

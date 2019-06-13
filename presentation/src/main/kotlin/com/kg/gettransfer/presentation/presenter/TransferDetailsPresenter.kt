@@ -356,7 +356,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    fun setComment(comment: String) {
+    private fun setComment(comment: String) {
         reviewInteractor.comment = comment
     }
 

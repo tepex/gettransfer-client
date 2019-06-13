@@ -161,6 +161,7 @@
 			android:paddingTop="16dp"
 			android:paddingBottom="18dp"
 			android:hint="@string/LNG_PAYMENT_YOUR_COMMENT"
+			android:textColorHint="@color/colorGrey"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/tvCommentTitle"
