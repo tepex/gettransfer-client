@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.kg.gettransfer.domain.eventListeners.PaymentStatusEventListener
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
@@ -30,7 +31,7 @@ import timber.log.Timber
 import java.util.Currency
 
 @InjectViewState
-class PaymentPresenter : BasePresenter<PaymentView>() {
+class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListener {
     private val paymentInteractor: PaymentInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
     private val orderInteractor: OrderInteractor by inject()
@@ -45,6 +46,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
     override fun attachView(view: PaymentView) {
         super.attachView(view)
         with(paymentInteractor) {
+            eventPaymentReceiver = this@PaymentPresenter
             if (selectedTransfer != null && selectedOffer != null) {
                 transfer = selectedTransfer!!
                 selectedOffer?.let {
@@ -55,6 +57,11 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 }
             }
         }
+    }
+
+    override fun detachView(view: PaymentView?) {
+        super.detachView(view)
+        paymentInteractor.eventPaymentReceiver = null
     }
 
     fun changePaymentStatus(orderId: Long, success: Boolean) {
@@ -68,22 +75,49 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 router.exit()
             } else {
                 if (result.model.success) {
-                    showSuccessfulPayment()
+                    isPaymentWasSuccessful()
                 } else {
                     showFailedPayment()
                 }
             }
-            viewState.blockInterface(false)
         }
     }
 
+    override fun onNewPaymentStatusEvent(isSuccess: Boolean) {
+        if (isSuccess) {
+            utils.launchSuspend {
+               isPaymentWasSuccessful()
+            }
+        } else {
+            showFailedPayment()
+        }
+    }
+
+    private suspend fun isPaymentWasSuccessful() {
+        if (isOfferPaid()) showSuccessfulPayment()
+    }
+
+    private suspend fun isOfferPaid(): Boolean {
+        transfer?.let {
+            fetchResult { transferInteractor.getTransfer(transfer!!.id) }
+                .isSuccess()
+                ?.let { transfer ->
+                    this.transfer = transfer
+                    return transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
+                }
+        }
+        return false
+    }
+
     private fun showFailedPayment() {
+        viewState.blockInterface(false)
         router.exit()
         router.navigateTo(Screens.PaymentError(transfer!!.id))
         logEvent(Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {
+        viewState.blockInterface(false)
         router.newChainFromMain(
             Screens.PaymentSuccess(
                 transfer!!.id,

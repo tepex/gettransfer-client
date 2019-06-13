@@ -11,6 +11,7 @@ import com.kg.gettransfer.data.mapper.PaymentStatusMapper
 import com.kg.gettransfer.data.mapper.BraintreeTokenMapper
 import com.kg.gettransfer.data.model.PaymentEntity
 import com.kg.gettransfer.data.model.PaymentStatusEntity
+import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.OfferItem
@@ -23,6 +24,7 @@ import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.PaymentRepository
 import org.koin.standalone.get
+import org.koin.standalone.inject
 
 class PaymentRepositoryImpl(private val factory: DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>):
                                 BaseRepository(), PaymentRepository {
@@ -31,6 +33,8 @@ class PaymentRepositoryImpl(private val factory: DataStoreFactory<PaymentDataSto
     private val paymentStatusRequestMapper = get<PaymentStatusRequestMapper>()
     private val paymentStatusMapper        = get<PaymentStatusMapper>()
     private val braintreeTokenMapper       = get<BraintreeTokenMapper>()
+
+    private val paymentReceiver: PaymentInteractor by inject()
 
     override var selectedTransfer: Transfer? = null
     override var selectedOffer: OfferItem? = null
@@ -46,12 +50,16 @@ class PaymentRepositoryImpl(private val factory: DataStoreFactory<PaymentDataSto
         }
 
     override suspend fun getBrainTreeToken(): Result<BraintreeToken> =
-            retrieveRemoteModel(braintreeTokenMapper, BraintreeToken("", "")) {
-                factory.retrieveRemoteDataStore().getBraintreeToken()
-            }
+        retrieveRemoteModel(braintreeTokenMapper, BraintreeToken("", "")) {
+            factory.retrieveRemoteDataStore().getBraintreeToken()
+        }
 
     override suspend fun confirmPaypal(paymentId: Long, nonce: String): Result<PaymentStatus> =
-            retrieveRemoteModel(paymentStatusMapper, PaymentStatus(0, "")) {
-                factory.retrieveRemoteDataStore().confirmPaypal(paymentId, nonce)
-            }
+        retrieveRemoteModel(paymentStatusMapper, PaymentStatus(0, "")) {
+            factory.retrieveRemoteDataStore().confirmPaypal(paymentId, nonce)
+        }
+
+    internal fun onNewPaymentStatusEvent(isSuccess: Boolean) {
+        paymentReceiver.onNewPaymentStatusEvent(isSuccess)
+    }
 }

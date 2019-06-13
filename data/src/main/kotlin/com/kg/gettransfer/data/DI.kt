@@ -9,6 +9,7 @@ import com.kg.gettransfer.data.repository.*
 import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
 import com.kg.gettransfer.data.socket.OfferDataStoreReceiver
 import com.kg.gettransfer.data.socket.SystemDataStoreReceiver
+import com.kg.gettransfer.data.socket.PaymentDataStoreReceiver
 
 import com.kg.gettransfer.domain.repository.*
 
@@ -66,7 +67,7 @@ val dataModule = module {
     single { ParamsMapper() }
     single { PaymentDataStoreCache() }
     single { PaymentDataStoreRemote() }
-    single<PaymentRepository> { PaymentRepositoryImpl(DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>(get(), get())) }
+    single { PaymentRepositoryImpl(DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>(get(), get())) } bind PaymentRepository::class
 
     single { PaypalCredentialsMapper() }
     single { PaymentStatusRequestMapper() }
@@ -140,6 +141,8 @@ val dataModule = module {
     single <ChatDataStoreReceiver> { ChatSocketDataStoreInput() }
     single { ChatSocketDataStoreOutput(get()) }
     single { ChatRepositoryImpl(DataStoreFactory<ChatDataStore, ChatDataStoreCache, ChatDataStoreRemote>(get(), get()), get()) } bind ChatRepository::class
+
+    single <PaymentDataStoreReceiver> { PaymentSocketDataStoreInput() }
 
     single { CoordinateMapper() }
     single { CoordinateSocketDataStoreOutput(get()) }
