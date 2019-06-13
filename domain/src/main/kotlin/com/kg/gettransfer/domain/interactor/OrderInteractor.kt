@@ -23,7 +23,7 @@ class OrderInteractor(
     var orderReturnTime: Date? = null
 
     var offeredPrice: Double? = null
-    var passengers: Int = MIN_PASSENGERS
+    var passengers: Int = DEFAULT_PASSENGERS
     var promoCode = ""
     var flightNumber: String? = null
     var flightNumberReturn: String? = null
@@ -36,7 +36,7 @@ class OrderInteractor(
 
     fun clearSelectedFields() {
         offeredPrice = null
-        passengers = MIN_PASSENGERS
+        passengers = DEFAULT_PASSENGERS
         promoCode = ""
         flightNumber = null
         flightNumberReturn = null
@@ -106,6 +106,6 @@ class OrderInteractor(
     companion object {
         const val MIN_LAT_DIFF = 0.002
         const val MIN_LON_DIFF = 0.003
-        const val MIN_PASSENGERS = 0
+        const val DEFAULT_PASSENGERS = 2
     }
 }
