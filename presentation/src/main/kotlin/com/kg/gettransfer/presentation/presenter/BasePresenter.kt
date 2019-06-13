@@ -362,8 +362,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                             ?.let { handle -> if (!handle) return@also
                                 if (withCacheCheck) !it.fromCache else true }
                             ?.let { resultCheck ->
-                                if (!processError && resultCheck) viewState.setError(it.error!!)
-                                Timber.e(it.error!!) }
+                                if (!processError && resultCheck) it.error?.let { e -> viewState.setError(e) }
+                                Timber.e(it.error) }
                 }
 
 
