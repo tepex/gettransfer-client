@@ -91,7 +91,11 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
             transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
         }
-        var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
+
+        var price = 0.0
+        if (offer != null) price = offer?.price?.amount ?: 0.0
+         else if (bookNowOffer != null) price = bookNowOffer?.amount ?: 0.0
+
         if (percentage == OfferModel.PRICE_30) price *= PaymentOfferPresenter.PRICE_30
 
         val purchase = analytics.EcommercePurchase(

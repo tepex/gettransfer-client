@@ -272,7 +272,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
         var price = 0.0
         offer?.let {
-            if (!isBookNowOffer) (it as Offer).price.amount
+            price = if (!isBookNowOffer) (it as Offer).price.amount
             else (it as BookNowOffer).amount
         }
         if (paymentRequest.percentage == OfferModel.PRICE_30) price *= PRICE_30
