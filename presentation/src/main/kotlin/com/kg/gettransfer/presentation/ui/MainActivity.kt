@@ -538,7 +538,6 @@ class MainActivity :
         with(profile) {
             navHeaderName.isVisible = isLoggedIn && !name.isNullOrEmpty()
             navHeaderEmail.isVisible = isLoggedIn && !email.isNullOrEmpty()
-            navRequests.isVisible = hasAccount
             navLogin.isVisible = (!isLoggedIn && hasAccount) || !hasAccount
             layoutAccountInfo.isVisible = navHeaderName.isVisible || navHeaderEmail.isVisible
             if (isLoggedIn) {
