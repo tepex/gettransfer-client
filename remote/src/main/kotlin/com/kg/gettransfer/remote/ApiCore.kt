@@ -7,6 +7,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.PreferencesCache
+import com.kg.gettransfer.domain.repository.SessionRepository
 
 import com.kg.gettransfer.remote.model.EndpointModel
 import com.kg.gettransfer.remote.model.ResponseModel
@@ -35,6 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiCore : KoinComponent {
     private val preferences = get<PreferencesCache>()
     private val log: Logger by inject { parametersOf("GTR-remote") }
+    private val sessionRepository: SessionRepository by inject()
 
     internal lateinit var api: Api
     lateinit var apiUrl: String
@@ -49,10 +51,13 @@ class ApiCore : KoinComponent {
         addInterceptor { chain ->
             val request = chain.request()
             val urlBuilder = request.url().newBuilder()
-            if(request.url().host() != IP_API_HOST_NAME) urlBuilder.addQueryParameter(PARAM_API_KEY, apiKey)
-            /*val url = request.url().newBuilder()
-                    .addQueryParameter(PARAM_API_KEY, apiKey)
-                    .build()*/
+            if(request.url().host() != IP_API_HOST_NAME) {
+                urlBuilder.apply {
+                    addQueryParameter(PARAM_API_KEY, apiKey)
+                    addQueryParameter(PARAM_CURRENCY, sessionRepository.account.currency.code)
+                    addQueryParameter(PARAM_LOCALE, sessionRepository.account.locale.language)
+                }
+            }
             val url = urlBuilder.build()
 
             val builder = request.newBuilder().url(url)

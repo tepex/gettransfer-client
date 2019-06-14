@@ -172,7 +172,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }*/
 
     fun changeEndpoint(selected: Int) {
-        val endpoint = endpoints.get(selected)
+        val endpoint = endpoints[selected]
         viewState.setEndpoint(endpoint)
         systemInteractor.endpoint = endpoint.delegate
         utils.launchSuspend {
