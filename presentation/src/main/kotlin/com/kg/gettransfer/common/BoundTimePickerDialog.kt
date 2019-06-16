@@ -1,9 +1,15 @@
 package com.kg.gettransfer.common
 
 import android.app.TimePickerDialog
+
 import android.content.Context
+
+import android.support.annotation.CallSuper
+import android.support.v4.content.ContextCompat
+
 import android.widget.NumberPicker
 import android.widget.TimePicker
+
 import com.kg.gettransfer.R
 
 class BoundTimePickerDialog(
@@ -23,6 +29,7 @@ class BoundTimePickerDialog(
     private var currentHour = hourOfDay
     private var currentMinute = minute
 
+    @CallSuper
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
@@ -42,7 +49,7 @@ class BoundTimePickerDialog(
             NumberPicker::class.java.declaredFields.firstOrNull { it.name == "mSelectionDivider" } ?: return
         try {
             dividerField.isAccessible = true
-            dividerField.set(this, resources.getDrawable(color))
+            dividerField.set(this, ContextCompat.getDrawable(context, color))
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -58,6 +65,7 @@ class BoundTimePickerDialog(
         maxMinute = minute
     }
 
+    @CallSuper
     override fun onTimeChanged(view: TimePicker?, hourOfDay: Int, minute: Int) {
         super.onTimeChanged(view, hourOfDay, minute)
 

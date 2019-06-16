@@ -313,6 +313,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         val from = orderInteractor.from!!
         val to = orderInteractor.to
+        /*
         val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
         var pax = orderInteractor.passengers + childSeatsDelegate.getTotalSeats()
         if (pax == 0) {
@@ -322,6 +323,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT
             }
         }
+        */
         val transferNew = TransferNew(
             from.cityPoint,
             if (orderInteractor.hourlyDuration != null) DestDuration(orderInteractor.hourlyDuration!!) else DestPoint(to!!.cityPoint),

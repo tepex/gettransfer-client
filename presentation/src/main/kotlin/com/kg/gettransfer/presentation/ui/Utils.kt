@@ -14,6 +14,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 
 import android.support.v4.content.ContextCompat
+import android.support.v4.text.HtmlCompat
 import android.support.v7.app.AlertDialog
 
 import android.telephony.TelephonyManager
@@ -33,7 +34,9 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -223,7 +226,7 @@ object Utils : KoinComponent {
             else phoneUtil.isValidNumber(phoneUtil.parse(phone, null))*/
             return phoneUtil.isValidNumber(phoneUtil.parse(phone, null))
         } catch (e: Exception) {
-            Timber.w("phone parse error: $phone", e)
+            Timber.w(e, "phone parse error: $phone")
             return false
         }
     }
@@ -256,7 +259,7 @@ object Utils : KoinComponent {
         Timber.d("latLngBuilder: $latLngBuilder")
         track = try { CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150) }
         catch (e: Exception) {
-            Timber.w("Create order error: $latLngBuilder", e)
+            Timber.w(e, "Create order error: $latLngBuilder")
             null
         }
         return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track)
@@ -307,7 +310,7 @@ object Utils : KoinComponent {
 
     fun getSpannedStringFromHtmlString(htmlString: String): Spanned {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
-               else Html.fromHtml(htmlString)
+        else Html.fromHtml(htmlString)
     }
 
     @DrawableRes
@@ -400,19 +403,25 @@ object Utils : KoinComponent {
                      bottom: Drawable?) =
             textView.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
 
-    fun bindMainOfferPhoto(view: ImageView, parent: View, path: String? = null,
-                           @DrawableRes resource: Int = 0) =
-            Glide.with(parent)
-                    .let {
-                        if (path != null) it.load(path)
-                        else it.load(resource) }
-                    .apply(RequestOptions()
-                            .error(resource)
-                            .placeholder(resource)
-                            .transforms(path?.let { CenterCrop() } ?: FitCenter(),
-                            RoundedCorners(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))))
-                    .into(view)
-
+    fun bindMainOfferPhoto(
+        view: ImageView,
+        parent: View,
+        path: String? = null,
+        @DrawableRes resource: Int = 0
+    ) = Glide
+        .with(parent).let { if (path != null) it.load(path) else it.load(resource) }
+        .apply(
+            RequestOptions()
+                .error(resource)
+                .placeholder(resource)
+                .transform(
+                    *arrayOf<Transformation<Bitmap>>(
+                        path?.let { CenterCrop() } ?: FitCenter(),
+                        RoundedCorners(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))
+                    )
+                )
+        )
+        .into(view)
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

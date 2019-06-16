@@ -3,12 +3,16 @@ package com.kg.gettransfer.presentation.ui
 import com.kg.gettransfer.R
 
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.extensions.isVisible
+
 import com.kg.gettransfer.presentation.adapter.ChatAdapter
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.ChatModel
@@ -16,9 +20,11 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.ChatPresenter
 import com.kg.gettransfer.presentation.view.ChatView
+
+import java.util.Date
+
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import java.util.Date
 
 class ChatActivity : BaseActivity(), ChatView {
     @InjectPresenter
@@ -83,7 +89,11 @@ class ChatActivity : BaseActivity(), ChatView {
         }
     }
 
-    private fun initTransferInfoLayout(from: String, date: Date, transferId: Long, isShowChevron: Boolean) {
+    private fun initTransferInfoLayout(
+        from: String, date: Date,
+        transferId: Long,
+        @Suppress("UNUSED_PARAMETER") isShowChevron: Boolean
+    ) {
         //imgChevron.isVisible = isShowChevron
         layoutTransferInfo.apply {
             isVisible = true
