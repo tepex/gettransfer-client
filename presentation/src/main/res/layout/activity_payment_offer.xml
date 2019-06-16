@@ -123,16 +123,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutPrices"/>
 
-        <ImageView
-            android:id="@+id/ivGtrBonus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/payment_ivGtrBonus_layout_marginTop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutPayments"
-            app:srcCompat="@drawable/gtr_bonus" />
-
         <LinearLayout
             android:id="@+id/ll_auth_container"
             android:layout_width="match_parent"
@@ -142,10 +132,17 @@
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivGtrBonus"
+            app:layout_constraintTop_toBottomOf="@+id/layoutPayments"
             android:paddingTop="@dimen/payment_ll_auth_container_layout_paddingTop"
 
             tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/ivGtrBonus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/payment_ivGtrBonus_layout_marginTop"
+                app:srcCompat="@drawable/gtr_bonus" />
 
             <TextView
                 android:id="@+id/tvCollectMiles"
