@@ -19,33 +19,34 @@ open class ChatEntityMapper : KoinComponent {
     private val newMessageMapper = get<NewMessageEntityMapper>()
 
     fun fromCached(type: ChatCached, messages: List<MessageCached>, newMessages: List<NewMessageCached>) =
-            ChatEntity(
-                    accounts         = type.accounts.map.mapValues { chatAccountMapper.fromCached(it.value) },
-                    currentAccountId = type.currentAccountId,
-                    messages         = messages.map { messageMapper.fromCached(it) }.plus(newMessages.map { newMessageMapper.fromCached(it) })
-            )
+        ChatEntity(
+            accounts  = type.accounts.map.mapValues { chatAccountMapper.fromCached(it.value) },
+            accountId = type.accountId,
+            messages  = messages.map { messageMapper.fromCached(it) }
+                .toMutableList().apply { addAll(newMessages.map { newMessageMapper.fromCached(it) }) }
+        )
 
     fun toCached(type: ChatEntity, transferId: Long) =
-            ChatCached(
-                    transferId       = transferId,
-                    accounts         = ChatAccountsCachedMap(type.accounts.mapValues { chatAccountMapper.toCached(it.value) }),
-                    currentAccountId = type.currentAccountId
-            )
+        ChatCached(
+            transferId = transferId,
+            accounts  = ChatAccountsCachedMap(type.accounts.mapValues { chatAccountMapper.toCached(it.value) }),
+            accountId  = type.accountId
+        )
 }
 
-open class ChatAccountEntityMapper : EntityMapper<ChatAccountCached, ChatAccountEntity> {
+open class ChatAccountEntityMapper : KoinComponent {
 
-    override fun fromCached(type: ChatAccountCached) =
-            ChatAccountEntity(
-                    email    = type.email,
-                    fullName = type.fullName,
-                    roles    = type.roles.list
-            )
-
-    override fun toCached(type: ChatAccountEntity) =
-            ChatAccountCached(
-                    email    = type.email,
-                    fullName = type.fullName,
-                    roles    = StringList(type.roles)
-            )
+    fun fromCached(type: ChatAccountCached) =
+        ChatAccountEntity(
+            email    = type.email,
+            fullName = type.fullName,
+            roles    = type.roles.list
+        )
+        
+    fun toCached(type: ChatAccountEntity) =
+        ChatAccountCached(
+            email    = type.email,
+            fullName = type.fullName,
+            roles    = StringList(type.roles)
+        )
 }

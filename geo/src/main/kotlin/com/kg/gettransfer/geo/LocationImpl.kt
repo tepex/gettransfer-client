@@ -3,24 +3,31 @@ package com.kg.gettransfer.geo
 import android.content.Context
 import android.location.Geocoder
 import android.location.LocationManager
+
 import android.os.Bundle
 import android.os.Looper
+
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+
 import com.kg.gettransfer.data.Location
 import com.kg.gettransfer.data.LocationException
 import com.kg.gettransfer.data.model.LocationEntity
+
 import java.util.Locale
+
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class LocationImpl(private val context: Context) : Location, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+class LocationImpl(private val context: Context) : 
+    Location, 
+    GoogleApiClient.ConnectionCallbacks,
+    GoogleApiClient.OnConnectionFailedListener {
 
     private lateinit var geocoder: Geocoder
     private val locationProviderClient = LocationServices.getFusedLocationProviderClient(context)
