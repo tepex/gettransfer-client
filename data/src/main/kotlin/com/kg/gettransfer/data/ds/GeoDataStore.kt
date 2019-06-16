@@ -3,9 +3,11 @@ package com.kg.gettransfer.data.ds
 import com.kg.gettransfer.data.GeoRemote
 import com.kg.gettransfer.data.Location
 import com.kg.gettransfer.data.model.LocationEntity
+
+import java.util.Locale
+
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-import java.util.Locale
 
 open class GeoDataStore : KoinComponent {
     private val remote: GeoRemote by inject()
