@@ -1,30 +1,40 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
+
 import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_EMAIL_TO_LOGIN
+
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
+
 import kotlinx.android.synthetic.main.fragment_log_in.*
 import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.android.synthetic.main.view_input_password.*
+
 import timber.log.Timber
 
 /**
