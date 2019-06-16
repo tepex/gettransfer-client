@@ -48,8 +48,6 @@ data class Offer(
 data class BookNowOffer(
     val amount: Double,
     val base: Money,
-    val withoutDiscount: Money?
-) : OfferItem() {
-    lateinit var transportType: TransportType
-}
-
+    val withoutDiscount: Money?,
+    val transportType: TransportType
+) : OfferItem()
