@@ -7,5 +7,5 @@ data class Vehicle(
     val year: Int,
     val color: String?,
     val transportType: TransportType,
-    var photos: List<String>
+    val photos: List<String>
 ) : Entity()
