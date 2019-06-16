@@ -1,13 +1,16 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
 import com.kg.gettransfer.domain.model.Profile
+
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.extensions.internationalExample
 import com.kg.gettransfer.extensions.newChainFromMain
+
 import com.kg.gettransfer.presentation.ui.MainLoginActivity
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
@@ -16,7 +19,9 @@ import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_PHONE
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
+
 import org.koin.standalone.inject
 import org.koin.standalone.KoinComponent
 
@@ -41,7 +46,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
     override fun attachView(view: LogInView) {
         super.attachView(view)
-        profile?.let {
+        profile.let {
             if (!it.email.isNullOrEmpty()) viewState.setEmail(it.email!!)
             else if (!it.phone.isNullOrEmpty()) viewState.setEmail(it.phone!!)
             else viewState.setEmail("")

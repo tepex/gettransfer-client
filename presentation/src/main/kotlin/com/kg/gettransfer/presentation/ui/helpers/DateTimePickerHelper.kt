@@ -77,7 +77,7 @@ object DateTimePickerHelper : KoinComponent {
     ) {
         BoundTimePickerDialog(
             context,
-            AlertDialog.THEME_HOLO_LIGHT,
+            @Suppress("DEPRECATION") AlertDialog.THEME_HOLO_LIGHT,
             { _, hour, minute ->
                 calendar.set(Calendar.HOUR_OF_DAY, hour)
                 calendar.set(Calendar.MINUTE, minute)

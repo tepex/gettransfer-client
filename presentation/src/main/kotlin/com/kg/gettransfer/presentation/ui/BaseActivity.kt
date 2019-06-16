@@ -1,6 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 
 import android.graphics.Color
 import android.graphics.Point
@@ -9,11 +12,16 @@ import android.graphics.drawable.ColorDrawable
 
 import android.net.ConnectivityManager
 import android.net.Uri
+
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
-import android.support.annotation.*
+
+import android.support.annotation.CallSuper
+import android.support.annotation.ColorRes
+import android.support.annotation.IdRes
+import android.support.annotation.StringRes
 
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.Fragment
@@ -25,7 +33,13 @@ import android.support.v7.widget.Toolbar
 
 import android.util.DisplayMetrics
 import android.util.TypedValue
-import android.view.*
+
+import android.view.DisplayCutout
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 
 import android.view.inputmethod.InputMethodManager
 
@@ -40,16 +54,18 @@ import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.extensions.isGone
 
-import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
-
 import com.kg.gettransfer.utilities.LocaleManager
+
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
@@ -85,14 +101,14 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected lateinit var _tintBackground: View
     protected val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
                 _tintBackground.isVisible = false
                 hideKeyboard()
             }
         }
 
-        override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
             _tintBackground.isVisible = true
             _tintBackground.alpha = slideOffset
         }
@@ -240,7 +256,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     override fun setError(e: ApiException) {
-        Timber.e("code: ${e.code}", e)
+        Timber.e(e, "code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, false, getString(R.string.LNG_ERROR) + ": " + e.message)
