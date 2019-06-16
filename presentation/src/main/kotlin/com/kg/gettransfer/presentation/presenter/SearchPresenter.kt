@@ -63,11 +63,11 @@ class SearchPresenter : BasePresenter<SearchView>() {
             val isDoubleClickOnRoute =
                     if (oldAddress?.cityPoint?.point != null) oldAddress.cityPoint.point == updatedGTAddress?.cityPoint?.point else false
             if (isTo) {
-                viewState.setAddressTo(newAddress.primary
+                viewState.setAddressTo(newAddress.variants?.first
                         ?: newAddress.cityPoint.name, placeType == ROUTE_TYPE, true)
                 orderInteractor.to = newAddress
             } else {
-                viewState.setAddressFrom(newAddress.primary
+                viewState.setAddressFrom(newAddress.variants?.first
                         ?: newAddress.cityPoint.name, placeType == ROUTE_TYPE, true)
                 orderInteractor.from = newAddress
             }
@@ -88,8 +88,8 @@ class SearchPresenter : BasePresenter<SearchView>() {
             } else {
                 val sendRequest = newAddress.needApproximation() /* dirty hack */
 
-                if (isTo) viewState.setAddressTo(newAddress.primary ?: newAddress.cityPoint.name, sendRequest, true)
-                else viewState.setAddressFrom(newAddress.primary ?: newAddress.cityPoint.name, sendRequest, true)
+                if (isTo) viewState.setAddressTo(newAddress.variants?.first ?: newAddress.cityPoint.name, sendRequest, true)
+                else viewState.setAddressFrom(newAddress.variants?.first ?: newAddress.cityPoint.name, sendRequest, true)
             }
         }
     }
@@ -101,7 +101,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
             else if (!isTo) {
                 viewState.setFocus(true)
                 orderInteractor.to?.let {
-                    viewState.setAddressTo(it.primary ?: it.cityPoint.name, true, true)
+                    viewState.setAddressTo(it.variants?.first ?: it.cityPoint.name, true, true)
                 }
             }
         }

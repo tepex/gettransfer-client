@@ -8,6 +8,5 @@ data class GTAddressEntity(
     val lon: Double?,
     val address: String,
     val placeTypes: List<String>?,
-    val primary: String?,
-    val secondary: String?
+    val variants: Pair<String?, String?>?
 )
