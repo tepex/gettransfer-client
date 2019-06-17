@@ -1,6 +1,5 @@
 package com.kg.gettransfer.remote
 
-import com.kg.gettransfer.data.model.RegistrationAccountEntity
 import com.kg.gettransfer.remote.model.*
 
 import kotlinx.coroutines.Deferred
