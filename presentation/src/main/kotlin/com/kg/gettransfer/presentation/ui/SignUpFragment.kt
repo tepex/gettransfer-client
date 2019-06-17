@@ -16,6 +16,7 @@ import com.kg.gettransfer.utilities.PhoneNumberFormatter
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_sign_up.*
+import timber.log.Timber
 
 /**
  * Fragment for user registration.
@@ -23,7 +24,6 @@ import kotlinx.android.synthetic.main.fragment_sign_up.*
  * @author П. Густокашин (Diwixis)
  */
 class SignUpFragment : MvpAppCompatFragment(), SignUpView {
-
     @InjectPresenter
     internal lateinit var presenter: SignUpPresenter
     private val loadingFragment by lazy { LoadingFragment() }
@@ -57,17 +57,27 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         licenseAgreementTv.setThrottledClickListener { presenter.showLicenceAgreement() }
     }
 
-    override fun showValidationErrorDialog() {
-        SignUpBottomSheetError
+    override fun showValidationErrorDialog(phoneExample: String) {
+        BottomSheetDialog
             .newInstance()
-            .show(fragmentManager, SignUpBottomSheetError.TAG)
+            .apply {
+                title = this@SignUpFragment.getString(R.string.LNG_ERROR_CREDENTIALS)
+                text = this@SignUpFragment.getString(R.string.LNG_ERROR_EMAIL_PHONE, phoneExample)
+            }
+            .show(fragmentManager)
     }
 
     override fun showRegisterSuccessDialog() {
-        SignUpBottomSheetSuccess
+        BottomSheetDialog
             .newInstance()
-            .setOnDissmissCalback { presenter.onBackCommandClick() }
-            .show(fragmentManager, SignUpBottomSheetSuccess.TAG)
+            .apply {
+                imageId = R.drawable.logo
+                title = this@SignUpFragment.getString(R.string.LNG_REGISTERED)
+                text = this@SignUpFragment.getString(R.string.LNG_TRANSFER_CREATE_HINT)
+                buttonOkText = this@SignUpFragment.getString(R.string.LNG_MENU_SUBTITLE_NEW)
+                onDismissCallBack = { presenter.onBackCommandClick() }
+            }
+            .show(fragmentManager)
     }
 
     private fun initTextChangeListeners() {
@@ -147,13 +157,17 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     override fun setError(e: ApiException) {
+        Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
-        if (e.code != ApiException.NETWORK_ERROR) Utils.showError(
-            context!!,
-            false,
-            getString(R.string.LNG_ERROR) + ": " + e.message
-        )
+        var textError = e.message ?: "Error"
+        when (e.code) {
+            ApiException.UNPROCESSABLE -> textError = getString(R.string.LNG_UNPROCESSABLE_ERROR)
+        }
+        BottomSheetDialog
+            .newInstance()
+            .apply { title = textError }
+            .show(fragmentManager)
     }
 
     override fun setError(e: DatabaseException) {
@@ -161,6 +175,6 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     override fun setTransferNotFoundError(transferId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO remove BaseView or add code.
     }
 }

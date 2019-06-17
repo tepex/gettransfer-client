@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.model.RegistrationAccount
+import com.kg.gettransfer.extensions.internationalExample
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.view.Screens
@@ -13,7 +14,7 @@ import org.koin.standalone.KoinComponent
 class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
     fun registration(name: String, phone: String, email: String, termsAccepted: Boolean) {
         if (!checkFieldsIsValid(phone, email)) {
-            viewState.showValidationErrorDialog()
+            viewState.showValidationErrorDialog(Utils.phoneUtil.internationalExample(sessionInteractor.locale))
             return
         }
 
