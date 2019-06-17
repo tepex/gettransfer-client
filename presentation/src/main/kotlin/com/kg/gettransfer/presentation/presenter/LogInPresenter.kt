@@ -1,23 +1,31 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.Profile
+
 import com.kg.gettransfer.extensions.newChainFromMain
+
 import com.kg.gettransfer.presentation.ui.MainLoginActivity
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_PHONE
+
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
+
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
 @InjectViewState
 class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
+
     private val paymentInteractor: PaymentInteractor by inject()
 
     internal var nextScreen: String? = null
@@ -101,9 +109,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         }
     }
 
-    private fun checkInputData(emailOrPhone: String) =
-        emailOrPhone.isNotEmpty()
-                && validateInput(emailOrPhone)
+    private fun checkInputData(emailOrPhone: String) = emailOrPhone.isNotEmpty() && validateInput(emailOrPhone)
 
     private fun logLoginEvent(result: String) {
         val map = mutableMapOf<String, Any>()

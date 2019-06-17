@@ -1,27 +1,38 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+
 import com.kg.gettransfer.extensions.setThrottledClickListener
+
 import com.kg.gettransfer.presentation.presenter.LogInPresenter
+
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
+
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_EMAIL_TO_LOGIN
+
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
+
 import kotlinx.android.synthetic.main.fragment_log_in.*
 import kotlinx.android.synthetic.main.view_input_password.*
+
 import timber.log.Timber
 
 /**
@@ -44,6 +55,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_log_in, container, false)
 
+    @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -60,6 +72,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         initClickListeners()
     }
 
+    @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         val emailOrPhone = loginEmailTv.text.toString()
@@ -69,10 +82,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     private fun initClickListeners() {
         btnLogin.setThrottledClickListener {
-            presenter.onLoginClick(
-                loginEmailTv.text.toString(),
-                etPassword.text.toString()
-            )
+            presenter.onLoginClick(loginEmailTv.text.toString(), etPassword.text.toString())
         }
         btnRequestCode.setThrottledClickListener { presenter.loginWithCode(loginEmailTv.text.toString(), changePage) }
     }

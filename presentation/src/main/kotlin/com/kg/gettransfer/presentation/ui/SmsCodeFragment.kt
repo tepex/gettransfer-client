@@ -2,24 +2,33 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import android.os.CountDownTimer
+
+import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
+
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.SmsCodeView
+
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
+
 import kotlinx.android.synthetic.main.fragment_sms_code.*
+
 import timber.log.Timber
 
 class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
@@ -42,6 +51,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_sms_code, container, false)
 
+    @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         smsResendDelay = presenter.smsResendDelaySec * SEC_IN_MILLIS
@@ -62,14 +72,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
 
         pinView.onTextChanged { code ->
             if (wrongCodeError.isVisible) {
-                context?.let {
-                    pinView.setTextColor(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.color_gtr_green
-                        )
-                    )
-                }
+                context?.let { pinView.setTextColor(ContextCompat.getColor(it, R.color.color_gtr_green)) }
             }
             password = code
             btnDone.isEnabled = code.length == pinView.itemCount
@@ -88,6 +91,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         presenter.sendVerificationCode(presenter.emailOrPhone ?: "", isPhone)
     }
 
+    @CallSuper
     override fun onDestroyView() {
         super.onDestroyView()
         timerBtnResendCode.cancel()
