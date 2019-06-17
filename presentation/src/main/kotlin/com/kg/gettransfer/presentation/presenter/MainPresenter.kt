@@ -54,6 +54,12 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     @CallSuper
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        utils.launchSuspend {
+            val res = fetchResult(SHOW_ERROR) {
+                transferInteractor.getTransfer(1)
+            }
+            if (res.error!!.isNotFound()) viewState.setTransferNotFoundError(1)
+        }
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
         geoInteractor.initGeocoder()

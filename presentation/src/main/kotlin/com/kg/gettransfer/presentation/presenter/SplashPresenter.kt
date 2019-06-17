@@ -77,8 +77,8 @@ class SplashPresenter: MvpPresenter<SplashView>(), KoinComponent {
     private fun openStartScreen(transferId: Long = 0, rate: Int = 0, showRate: Boolean = false) {
 
         if (!systemInteractor.isOnboardingShowed) {
-            systemInteractor.isOnboardingShowed = true
             router.replaceScreen(Screens.About(systemInteractor.isOnboardingShowed))
+            systemInteractor.isOnboardingShowed = true
         }
         else
             when (systemInteractor.lastMode) {
