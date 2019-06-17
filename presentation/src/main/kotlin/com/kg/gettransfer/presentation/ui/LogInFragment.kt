@@ -1,40 +1,27 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-
 import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
-
-import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
-
 import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_EMAIL_TO_LOGIN
-
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
-
 import kotlinx.android.synthetic.main.fragment_log_in.*
-import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.android.synthetic.main.view_input_password.*
-
 import timber.log.Timber
 
 /**
@@ -49,6 +36,8 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     @ProvidePresenter
     fun createLoginPresenter() = LogInPresenter()
+
+    var changePage: (() -> Unit)? = null
 
     private val loadingFragment by lazy { LoadingFragment() }
 
@@ -79,8 +68,13 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     }
 
     private fun initClickListeners() {
-        btnLogin.setThrottledClickListener { presenter.onLoginClick(loginEmailTv.text.toString(), etPassword.text.toString()) }
-        btnRequestCode.setThrottledClickListener { presenter.loginWithCode(loginEmailTv.text.toString()) }
+        btnLogin.setThrottledClickListener {
+            presenter.onLoginClick(
+                loginEmailTv.text.toString(),
+                etPassword.text.toString()
+            )
+        }
+        btnRequestCode.setThrottledClickListener { presenter.loginWithCode(loginEmailTv.text.toString(), changePage) }
     }
 
     private fun initTextChangeListeners() {
@@ -99,47 +93,23 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         etPassword.requestFocus()
     }
 
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        Utils.showError(context!!, false, getString(errId, *args))
-    }
-
-    override fun showError(show: Boolean, error: ApiException) {
-        if (show) {
-            if (error.isNotFound()) {
-                presenter.showNoAccountError(loginEmailTv.text.toString())
-                return
-            }
-            Utils.showError(context!!, false, error.details)
-        }
-    }
-
     override fun showLoginInfo(title: Int, info: Int) {
         Utils.showLoginDialog(context!!, message = getString(info), title = getString(title))
     }
 
-    override fun showValidationError(show: Boolean, errorType: Int) {
+    override fun showValidationError(errorType: Int) {
         val errStringRes = when (errorType) {
             INVALID_EMAIL -> R.string.LNG_ERROR_EMAIL
             INVALID_PHONE -> R.string.LNG_ERROR_PHONE
             INVALID_PASSWORD -> R.string.LNG_LOGIN_PASSWORD
             else -> R.string.LNG_BAD_CREDENTIALS_ERROR
         }
-        if (show) Utils.showError(context!!, false, getString(errStringRes))
-    }
-
-    override fun showChangePasswordDialog() {
-        Utils.showAlertSetNewPassword(context!!) { presenter.openPreviousScreen(it) }
-    }
-
-    override fun showErrorText(show: Boolean, text: String?) {
-        pinView.setTextColor(
-            ContextCompat.getColor(
-                context!!,
-                if (show) R.color.color_gtr_red else R.color.color_gtr_green
-            )
-        )
-        wrongCodeError.isVisible = show
-        text?.let { wrongCodeError.text = text }
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                title = this@LogInFragment.getString(errStringRes)
+            }
+            .show(fragmentManager)
     }
 
     companion object {
@@ -155,15 +125,44 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         } else hideLoading()
     }
 
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+        //TODO remove BaseView or add code.
+    }
+
+    override fun setTransferNotFoundError(transferId: Long) {
+        //TODO remove BaseView or add code.
+    }
+
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
-        if (e.code != ApiException.NETWORK_ERROR) Utils.showError(
-            context!!,
-            false,
-            getString(R.string.LNG_ERROR) + ": " + e.message
-        )
+        when (e.code) {
+            ApiException.NO_USER -> {
+                BottomSheetDialog
+                    .newInstance()
+                    .apply { title = this@LogInFragment.getString(R.string.LNG_BAD_CREDENTIALS_ERROR) }
+                    .show(fragmentManager)
+            }
+            ApiException.NOT_FOUND -> {
+                BottomSheetDialog
+                    .newInstance()
+                    .apply {
+                        title =
+                            this@LogInFragment.getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.emailOrPhoneProfile)
+                        text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
+                        buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
+                        onClickOkButton = { changePage?.invoke() }
+                    }
+                    .show(fragmentManager)
+            }
+            else -> {
+                BottomSheetDialog
+                    .newInstance()
+                    .apply { title = e.message ?: "Error" }
+                    .show(fragmentManager)
+            }
+        }
     }
 
     override fun setError(e: DatabaseException) {
@@ -185,9 +184,5 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
             remove(loadingFragment)
             commit()
         }
-    }
-
-    override fun setTransferNotFoundError(transferId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

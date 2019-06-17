@@ -36,13 +36,13 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         loginPager.adapter = LoginPagerAdapter(fragmentManager!!)
 
         loginBackButton.setOnClickListener { router.exit() }
-    }
-
-    override fun onResume() {
-        super.onResume()
 
         nextScreen = arguments?.getString(LogInView.EXTRA_NEXT_SCREEN) ?: ""
         emailOrPhone = arguments?.getString(LogInView.EXTRA_EMAIL_TO_LOGIN) ?: ""
+    }
+
+    fun showOtherPage() {
+        loginPager.currentItem = if (loginPager.currentItem == 0) 1 else 0
     }
 
     companion object {
@@ -53,13 +53,14 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         override fun getCount(): Int = 2
 
         override fun getPageTitle(position: Int): CharSequence? = when (position) {
-            0 -> getString(R.string.LNG_SIGNIN)
+            0 -> getString(R.string.LNG_MENU_TITLE_LOGIN)
             1 -> getString(R.string.LNG_SIGNUP)
             else -> throw UnsupportedOperationException()
         }
 
         override fun getItem(position: Int): Fragment = when (position) {
             0 -> LogInFragment.newInstance().apply {
+                changePage = { showOtherPage() }
                 arguments = Bundle().apply {
                     putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
                     putString(LogInView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
