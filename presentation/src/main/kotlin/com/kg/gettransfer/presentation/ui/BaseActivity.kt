@@ -269,7 +269,21 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     override fun setTransferNotFoundError(transferId: Long) {
-        Utils.showError(this, false, getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString()))
+//        Utils.showError(this, false, getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString()))
+        Bundle().apply {
+            putString(ErrorBottomSheet.TITLE, getString(R.string.LNG_ERROR))
+            putString(
+                    ErrorBottomSheet.DESCRIPTION,
+                    getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString())
+            )
+            putInt(ErrorBottomSheet.IMAGE_RES, R.drawable.transfer_error)
+        }
+                .also {
+                    ErrorBottomSheet
+                            .newInstance()
+                            .putArgs(it)
+                            .show(supportFragmentManager)
+                }
     }
 
     protected fun showKeyboard() {
