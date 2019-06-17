@@ -1,12 +1,13 @@
-package com.kg.gettransfer.presentation.ui
+package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.extensions.internationalExample
 
-import com.kg.gettransfer.presentation.presenter.BasePresenter
+import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
+
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SignUpView
 

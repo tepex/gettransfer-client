@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,10 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 
 import com.kg.gettransfer.extensions.setThrottledClickListener
+
+import com.kg.gettransfer.presentation.presenter.SignUpPresenter
 import com.kg.gettransfer.presentation.view.SignUpView
+
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
 
 import io.sentry.Sentry
