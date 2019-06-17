@@ -1,32 +1,38 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.ChatDataStore
+
 import com.kg.gettransfer.data.ds.ChatDataStoreCache
 import com.kg.gettransfer.data.ds.ChatDataStoreRemote
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.io.ChatSocketDataStoreOutput
+
 import com.kg.gettransfer.data.mapper.ChatBadgeEventMapper
 import com.kg.gettransfer.data.mapper.ChatMapper
 import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.mapper.MessageMapper
+
 import com.kg.gettransfer.data.model.ChatBadgeEventEntity
 import com.kg.gettransfer.data.model.ChatEntity
 import com.kg.gettransfer.data.model.MessageEntity
 import com.kg.gettransfer.data.model.ResultEntity
+
 import com.kg.gettransfer.domain.interactor.ChatInteractor
 import com.kg.gettransfer.domain.model.Chat
+import com.kg.gettransfer.domain.model.ChatAccount
 import com.kg.gettransfer.domain.model.Message
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.ChatRepository
 
 import org.koin.standalone.get
 import org.koin.standalone.inject
+
 import java.util.Calendar
 import java.util.Date
 
 class ChatRepositoryImpl(
-        private val factory: DataStoreFactory<ChatDataStore, ChatDataStoreCache, ChatDataStoreRemote>,
-        private val chatDataStoreIO: ChatSocketDataStoreOutput
+    private val factory: DataStoreFactory<ChatDataStore, ChatDataStoreCache, ChatDataStoreRemote>,
+    private val chatDataStoreIO: ChatSocketDataStoreOutput
 ) : BaseRepository(), ChatRepository {
 
     private val chatMapper = get<ChatMapper>()
@@ -43,16 +49,20 @@ class ChatRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addChat(transferId, it) }
         resultNewMessages.entity?.let {
-            result.entity?.messages?.plus(it)
+            result.entity?.messages?.addAll(it)
         }
+        
+        /*
         val chat = result.entity?.let { chatMapper.fromEntity(it) } ?: DEFAULT_CHAT
         resultNewMessages.entity?.map {
             val newMessage = messageMapper.fromEntity(it)
-            if (newMessage.accountId == DEFAULT_CHAT.currentAccountId && chat.currentAccountId != DEFAULT_CHAT.currentAccountId) {
-                newMessage.accountId = chat.currentAccountId
+            
+            if (newMessage.accountId == DEFAULT_CHAT.accountId && chat.accountId != DEFAULT_CHAT.accountId) {
+                newMessage.accountId = chat.accountId
             }
             chat.messages = chat.messages.plus(newMessage)
         }
+        */
         return Result(result.entity?.let { chatMapper.fromEntity(it) } ?: DEFAULT_CHAT, result.error?.let { ExceptionMapper.map(it) })
     }
 
@@ -117,9 +127,8 @@ class ChatRepositoryImpl(
     }
 
     internal fun onMessageReadEvent(messageId: Long){
-        val message = factory.retrieveCacheDataStore().getMessage(messageId)?.let { messageMapper.fromEntity(it) }
-        if(message != null) {
-            message.readAt = Calendar.getInstance().time
+        factory.retrieveCacheDataStore().getMessage(messageId)?.let { messageMapper.fromEntity(it) }?.let {
+            val message = it.copy(readAt = Calendar.getInstance().time)
             factory.retrieveCacheDataStore().addMessage(messageMapper.toEntity(message))
             chatReceiver.onMessageReadEvent(message)
         }
@@ -131,20 +140,20 @@ class ChatRepositoryImpl(
 
     companion object {
         private val DEFAULT_CHAT =
-                Chat(
-                        accounts         = emptyMap(),
-                        currentAccountId = 0,
-                        messages         = emptyList()
-                )
+            Chat(
+                accounts  = emptyMap<Long, ChatAccount>(),
+                accountId = 0,
+                messages  = emptyList<Message>().toMutableList()
+            )
 
         private val DEFAULT_MESSAGE =
-                Message(
-                        id         = 0,
-                        accountId  = 0,
-                        transferId = 0,
-                        createdAt  = Date(),
-                        readAt     = null,
-                        text       = ""
-                )
+            Message(
+                id         = 0,
+                accountId  = 0,
+                transferId = 0,
+                createdAt  = Date(),
+                readAt     = null,
+                text       = ""
+            )
     }
 }

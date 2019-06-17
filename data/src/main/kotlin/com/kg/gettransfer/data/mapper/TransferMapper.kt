@@ -7,28 +7,29 @@ import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.repository.SessionRepository
 
 import java.text.DateFormat
-
-import org.koin.standalone.get
 import java.util.Date
 import java.util.Calendar
 import java.util.Locale
 
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
+
 /**
  * Map a [TransferEntity] to and from a [Transfer] instance when data is moving between this later and the Domain layer.
  */
-open class TransferMapper : Mapper<TransferEntity, Transfer> {
+open class TransferMapper : KoinComponent {
     private val cityPointMapper    = get<CityPointMapper>()
     private val bookNowOfferMapper = get<BookNowOfferMapper>()
     private val moneyMapper        = get<MoneyMapper>()
     private val dateFormatTZ       = get<ThreadLocal<DateFormat>>("iso_date_TZ")
     private val dateFormat         = get<ThreadLocal<DateFormat>>("iso_date")
 
-    private val transportTypes = get<SessionRepository>().configs.transportTypes
+    private val transportTypes     = get<SessionRepository>().configs.transportTypes
 
     /**
      * Map a [TransferEntity] instance to a [Transfer] instance.
      */
-    override fun fromEntity(type: TransferEntity) =
+    fun fromEntity(type: TransferEntity) =
         Transfer(
             id              = type.id,
             createdAt       = convertDate(type.createdAt),
@@ -63,10 +64,10 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             paidPercentage        = type.paidPercentage,
             watertaxi             = type.watertaxi,
             bookNowOffers         = type.bookNowOffers.map { entry ->
-                bookNowOfferMapper.fromEntity(entry.value).apply {
-                    transportType = transportTypes.find { it.id === TransportType.ID.parse(entry.key) }
-                            ?: transportTypes.first()
-                }
+                bookNowOfferMapper.fromEntity(
+                    entry.value,
+                    transportTypes.find { it.id === TransportType.ID.parse(entry.key) } ?: transportTypes.first()
+                )
             },
             offersCount           = type.offersCount,
 /* ================================================== */
@@ -89,11 +90,6 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
             lastOffersUpdatedAt = type.lastOffersUpdatedAt?.let { convertDate(it) }
         )
 
-    /**
-     * Map a [Transfer] instance to a [TransferEntity] instance.
-     */
-    override fun toEntity(type: Transfer): TransferEntity { throw UnsupportedOperationException() }
-
     private fun convertDate (dateString: String) = dateFormat.get().parse(dateString)
     private fun convertDateTZ (dateString: String) = dateFormatTZ.get().parse(dateString)
 
@@ -101,10 +97,10 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
         private const val HOURS_TO_SHOWING_OFFER_INFO = 24
 
         private fun allowOfferInfo(transfer: TransferEntity, date: Date): Boolean {
-            if (transfer.status != Transfer.Status.NEW.name.toLowerCase() &&
-                    transfer.status != Transfer.Status.CANCELED.name.toLowerCase() &&
-                    transfer.status != Transfer.Status.OUTDATED.name.toLowerCase() &&
-                    transfer.status != Transfer.Status.PERFORMED.name.toLowerCase()) {
+            return if (transfer.status != Transfer.Status.NEW.name.toLowerCase() &&
+                transfer.status != Transfer.Status.CANCELED.name.toLowerCase() &&
+                transfer.status != Transfer.Status.OUTDATED.name.toLowerCase() &&
+                transfer.status != Transfer.Status.PERFORMED.name.toLowerCase()) {
 
                 val calendar = Calendar.getInstance()
                 calendar.apply {
@@ -112,9 +108,10 @@ open class TransferMapper : Mapper<TransferEntity, Transfer> {
                     add(Calendar.MINUTE, transfer.time ?: transfer.duration?.times(60) ?: 0)
                     add(Calendar.MINUTE, HOURS_TO_SHOWING_OFFER_INFO.times(60))
                 }
-                return calendar.time.after(Calendar.getInstance().time)
+                calendar.time.after(Calendar.getInstance().time)
+            } else {
+                transfer.status == Transfer.Status.PERFORMED.name.toLowerCase()
             }
-            return transfer.status == Transfer.Status.PERFORMED.name.toLowerCase()
         }
     }
 }

@@ -5,8 +5,7 @@ data class MobileConfig(
     val orderMinimumMinutes: Int,
     val termsUrl: String,
     val smsResendDelaySec: Int,
-    val buildsConfigs: Map<String, BuildsConfigs>?,
-    var isUpdated: Boolean = false // field if need to check whether config was loaded or is hardcoded one
+    val buildsConfigs: Map<String, BuildsConfigs>?
 ) {
 
     companion object {

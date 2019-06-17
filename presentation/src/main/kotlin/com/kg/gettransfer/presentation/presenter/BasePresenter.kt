@@ -1,13 +1,12 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.MvpPresenter
 
 import com.google.firebase.iid.FirebaseInstanceId
-import com.kg.gettransfer.domain.ApiException
 
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.eventListeners.ChatBadgeEventListener
@@ -41,7 +40,11 @@ import ru.terrakok.cicerone.Router
 
 import timber.log.Timber
 
-open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener, ChatBadgeEventListener, KoinComponent {
+open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
+    OfferEventListener,
+    ChatBadgeEventListener,
+    KoinComponent {
+
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
@@ -79,8 +82,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     override fun onFirstViewAttach() {
         if (sessionInteractor.isInitialized) return
         utils.launchSuspend {
-            fetchData { sessionInteractor.coldStart() }
-                    ?.let { systemInitialized() }
+            fetchData { sessionInteractor.coldStart() }?.let { systemInitialized() }
         }
     }
 
@@ -94,19 +96,17 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     return false if error handled, true otherwise
      */
 
-    private fun checkResultError(error: ApiException): Boolean {
+    private fun checkResultError(error: ApiException) =
         if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser() )) {
             openedLoginScreenForUnauthorizedUser = true
             login(Screens.CLOSE_AFTER_LOGIN, accountManager.remoteProfile.email)
-            return false
+            false
         } else if (openedLoginScreenForUnauthorizedUser) {
             logout()
-            return false
-        }
-        return true
-    }
+            false
+        } else true
 
-    private fun logout(){
+    private fun logout() {
         utils.launchSuspend {
             clearAllCachedData()
             router.backTo(Screens.MainPassenger(true))
@@ -137,7 +137,6 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
 
     //open fun doingSomethingAfterSendingNewMessagesCached() {}
 
-    @CallSuper
     override fun onDestroy() {
         compositeDisposable.cancel()
         super.onDestroy()
@@ -168,11 +167,13 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
             } else transferID = transferId
 
             router.navigateTo(
-                    Screens.SendEmail(
-                            emailCarrier,
-                            logsInteractor.logsFile,
-                            transferID,
-                            accountManager.remoteProfile.email))
+                Screens.SendEmail(
+                    emailCarrier,
+                    logsInteractor.logsFile,
+                    transferID,
+                    accountManager.remoteProfile.email
+                )
+            )
         }
     }
 
@@ -203,13 +204,11 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
 
     open fun onNewOffer(offer: Offer): OfferModel {
         utils.launchSuspend { utils.asyncAwait { offerInteractor.newOffer(offer) } }
-        return offerMapper.toView(offer)
-                .also { notificationManager.showOfferNotification(it) }
+        return offerMapper.toView(offer).also { notificationManager.showOfferNotification(it) }
     }
 
     override fun onNewOfferEvent(offer: Offer) {
         onNewOffer(offer.also {
-            it.vehicle.photos = it.vehicle.photos.map { photo -> "${systemInteractor.endpoint.url}$photo" }
             utils.launchSuspend {
                 fetchDataOnly { offerInteractor.getOffers(offer.transferId, true) }?.let { offersCached ->
                     if (offersCached.find { offerCached -> offerCached.id == offer.id } != null) {
@@ -231,9 +230,10 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
         if (accountManager.remoteAccount.isDriver) {
             notificationManager.showNewMessageNotification(
-                    chatBadgeEvent.transferId,
-                    0,
-                    false)
+                chatBadgeEvent.transferId,
+                0,
+                false
+            )
         } else {
             if(!chatBadgeEvent.clearBadge) {
                 utils.launchSuspend {
@@ -242,7 +242,8 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
                         notificationManager.showNewMessageNotification(
                             chatBadgeEvent.transferId,
                             transfer.unreadMessagesCount,
-                            true)
+                            true
+                        )
                     }
                 }
             } else {
@@ -261,30 +262,34 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
     open fun currencyChanged() {}
 
     fun saveGeneralSettings(withRestartApp: Boolean = false) {
-        if (accountManager.hasAccount) saveAccount(withRestartApp)
-        else saveNoAccount(withRestartApp)
+        if (accountManager.hasAccount) saveAccount(withRestartApp) else saveNoAccount(withRestartApp)
     }
 
     fun saveAccount(withRestartApp: Boolean = false) = utils.launchSuspend {
         viewState.blockInterface(true)
         val result = utils.asyncAwait { accountManager.putAccount(updateTempUser = false) }
         result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
-        if (result.error == null && withRestartApp) restartApp()
+        if (result.error == null && withRestartApp) {
+            restartApp()
+        }
         viewState.blockInterface(false)
     }
 
     fun saveNoAccount(withRestartApp: Boolean) = utils.launchSuspend {
         val result = utils.asyncAwait { sessionInteractor.putNoAccount() }
-        if (result.error == null && withRestartApp) restartApp()
+        if (result.error == null && withRestartApp) {
+            restartApp()
+        }
     }
 
     open fun restartApp() {}
 
     fun onAppStateChanged(isForeGround: Boolean) {
         with(socketInteractor) {
-            if (isForeGround) openSocketConnection()
-            else if (systemInteractor.lastMode != Screens.CARRIER_MODE ||
-                    carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_REJECTED){
+            if (isForeGround) {
+                openSocketConnection()
+            } else if (systemInteractor.lastMode != Screens.CARRIER_MODE ||
+                    carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_REJECTED) {
                 closeSocketConnection()
             }
         }
@@ -292,55 +297,52 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
 
     fun openSocketConnection() { socketInteractor.openSocketConnection() }
 
-    private fun increaseEventsOffersCounter(transferId: Long) =
-            with(countEventsInteractor) {
-                eventsCount += 1
-                mapCountNewOffers = increaseMapCounter(transferId, mapCountNewOffers)
-            }
-
-    protected fun increaseViewedOffersCounter(transferId: Long, plusCount: Int) =
-            with(countEventsInteractor) {
-                eventsCount -= plusCount
-                mapCountViewedOffers = increaseMapCounter(transferId, mapCountViewedOffers, null, plusCount)
-            }
-
-    private fun decreaseViewedOffersCounter(transferId: Long) =
-            with(countEventsInteractor) {
-                eventsCount += 1
-                mapCountViewedOffers = decreaseMapCounter(transferId, mapCountViewedOffers)
-            }
-
-    private fun increaseEventsMessagesCounter(transferId: Long, count: Int) =
-            with(countEventsInteractor) {
-                eventsCount = eventsCount + count - (mapCountNewMessages[transferId] ?: 0)
-                mapCountNewMessages = increaseMapCounter(transferId, mapCountNewMessages, count)
-            }
-
-    protected fun decreaseEventsMessagesCounter(transferId: Long) =
-            with(countEventsInteractor) {
-                mapCountNewMessages = decreaseMapCounter(transferId, mapCountNewMessages)
-            }
-
-    private fun increaseMapCounter(transferId: Long, map: Map<Long, Int>, count: Int? = null, plussedCount: Int? = null)
-            = map.toMutableMap().apply {
-                put(transferId, count ?: map[transferId]?.plus(plussedCount ?: 1) ?: 1)
-            }
-
-    private fun decreaseMapCounter(transferId: Long, map: Map<Long, Int>)
-            = map.toMutableMap().apply {
-                if (this[transferId] != null) {
-                    if (map.getValue(transferId) > 1) {
-                        put(transferId, map.getValue(transferId) - 1)
-                    } else {
-                        remove(transferId)
-                    }
-                }
-            }
-
-    fun onDriverModeExit() {
-        if (systemInteractor.lastMode == Screens.CARRIER_MODE) socketInteractor.closeSocketConnection()
+    private fun increaseEventsOffersCounter(transferId: Long) = with(countEventsInteractor) {
+        eventsCount += 1
+        mapCountNewOffers = increaseMapCounter(transferId, mapCountNewOffers)
     }
 
+    protected fun increaseViewedOffersCounter(transferId: Long, plusCount: Int) = with(countEventsInteractor) {
+        eventsCount -= plusCount
+        mapCountViewedOffers = increaseMapCounter(transferId, mapCountViewedOffers, null, plusCount)
+    }
+
+    private fun decreaseViewedOffersCounter(transferId: Long) = with(countEventsInteractor) {
+        eventsCount += 1
+        mapCountViewedOffers = decreaseMapCounter(transferId, mapCountViewedOffers)
+    }
+
+    private fun increaseEventsMessagesCounter(transferId: Long, count: Int) = with(countEventsInteractor) {
+        eventsCount = eventsCount + count - (mapCountNewMessages[transferId] ?: 0)
+        mapCountNewMessages = increaseMapCounter(transferId, mapCountNewMessages, count)
+    }
+
+    protected fun decreaseEventsMessagesCounter(transferId: Long) = with(countEventsInteractor) {
+        mapCountNewMessages = decreaseMapCounter(transferId, mapCountNewMessages)
+    }
+
+    private fun increaseMapCounter(
+        transferId: Long,
+        map: Map<Long, Int>,
+        count: Int? = null,
+        plussedCount: Int? = null
+    ) = map.toMutableMap().apply { put(transferId, count ?: map[transferId]?.plus(plussedCount ?: 1) ?: 1) }
+
+    private fun decreaseMapCounter(transferId: Long, map: Map<Long, Int>) = map.toMutableMap().apply {
+        if (this[transferId] != null) {
+            if (map.getValue(transferId) > 1) {
+                put(transferId, map.getValue(transferId) - 1)
+            } else {
+                remove(transferId)
+            }
+        }
+    }
+
+    fun onDriverModeExit() {
+        if (systemInteractor.lastMode == Screens.CARRIER_MODE) {
+            socketInteractor.closeSocketConnection()
+        }
+    }
 
     /*
     First - work with error: check login error. CheckResultError returns
@@ -351,52 +353,54 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(), OfferEventListener,
      - DEFAULT_ERROR: if want to call only viewState.setError()
      - CHECK_CACHE: when want to show error also after check data in cache
      */
-    protected suspend fun <M>fetchResult(processError: Boolean = DEFAULT_ERROR,
-                                         withCacheCheck: Boolean = CHECK_CACHE,
-                                         checkLoginError: Boolean = true,
-                                         block: suspend () -> Result<M>) =
-            utils.asyncAwait { block() }
-                .also {
-                    it.error
-                            ?.let { e -> if (checkLoginError) checkResultError(e) else true }
-                            ?.let { handle -> if (!handle) return@also
-                                if (withCacheCheck) !it.fromCache else true }
-                            ?.let { resultCheck ->
-                                if (!processError && resultCheck) it.error?.let { e -> viewState.setError(e) }
-                                Timber.e(it.error) }
-                }
-
+    protected suspend fun <M>fetchResult(
+        processError: Boolean = DEFAULT_ERROR,
+        withCacheCheck: Boolean = CHECK_CACHE,
+        checkLoginError: Boolean = true,
+        block: suspend () -> Result<M>
+    ) = utils.asyncAwait { block() }.also {
+        it.error?.let { e -> if (checkLoginError) checkResultError(e) else true }
+            ?.let { handle -> if (!handle) return@also
+                if (withCacheCheck) !it.fromCache else true
+            }?.let { resultCheck ->
+                if (!processError && resultCheck) it.error?.let { e -> viewState.setError(e) }
+                Timber.e(it.error)
+            }
+    }
 
     /*
     Method to fetch only data without result if no need to have error object in client class.
     As we unwrap return data safely in client class, so it's possible to use it without care.
      */
-    protected suspend fun <D>fetchData(processError: Boolean = DEFAULT_ERROR,
-                                       withCacheCheck: Boolean = CHECK_CACHE,
-                                       checkLoginError: Boolean = true,
-                                       block: suspend () -> Result<D>) =
-            with(fetchResult(processError, withCacheCheck, checkLoginError) { block() }) {
-                if (error == null || withCacheCheck && fromCache) model else null
-            }
+    protected suspend fun <D>fetchData(
+        processError: Boolean = DEFAULT_ERROR,
+        withCacheCheck: Boolean = CHECK_CACHE,
+        checkLoginError: Boolean = true,
+        block: suspend () -> Result<D>
+    ) = with(fetchResult(processError, withCacheCheck, checkLoginError) { block() }) {
+        if (error == null || withCacheCheck && fromCache) model else null
+    }
+
     /*
     Optional methods for easy request with only suspend block and without params to handle
     errors.
      */
     protected suspend fun<R>fetchResultOnly(block: suspend () -> Result<R>) =
-            fetchResult(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
+        fetchResult(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
     protected suspend fun <D>fetchDataOnly(block: suspend () -> Result<D>) =
-            fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
+        fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
     companion object {
         const val SINGLE_CAPACITY = 1
         const val DOUBLE_CAPACITY = 2
 
-        const val SHOW_ERROR         = true   //when you want to handle error in child presenter
-        const val DEFAULT_ERROR      = false
-        const val WITHOUT_ERROR      = true   //the same as SHOW_ERROR, but when you will not show error even in child presenter
-        const val CHECK_CACHE        = true
-        const val NO_CACHE_CHECK     = false
+        //when you want to handle error in child presenter
+        const val SHOW_ERROR     = true
+        const val DEFAULT_ERROR  = false
+        //the same as SHOW_ERROR, but when you will not show error even in child presenter
+        const val WITHOUT_ERROR  = true
+        const val CHECK_CACHE    = true
+        const val NO_CACHE_CHECK = false
     }
-
 }

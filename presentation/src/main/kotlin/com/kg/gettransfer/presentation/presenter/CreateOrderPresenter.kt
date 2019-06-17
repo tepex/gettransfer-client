@@ -224,7 +224,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             from.cityPoint.point?.let { p ->
                 val point = LatLng(p.latitude, p.longitude)
                 track = Utils.getCameraUpdateForPin(point)
-                viewState.setPinHourlyTransfer(from.address ?: "", from.primary ?: "", point, track!!)
+                viewState.setPinHourlyTransfer(from.address ?: "", from.variants?.first ?: "", point, track!!)
             }
         }
     }
@@ -547,10 +547,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             map[Analytics.NUMBER_OF_PASSENGERS] = it
         }
 
-        bundle.putString(Analytics.ORIGIN, orderInteractor.from?.primary)
-        map[Analytics.ORIGIN] = orderInteractor.from?.primary
-        bundle.putString(Analytics.DESTINATION, orderInteractor.to?.primary)
-        map[Analytics.DESTINATION] = orderInteractor.to?.primary
+        bundle.putString(Analytics.ORIGIN, orderInteractor.from?.variants?.first)
+        map[Analytics.ORIGIN] = orderInteractor.from?.variants?.first
+        bundle.putString(Analytics.DESTINATION, orderInteractor.to?.variants?.first)
+        map[Analytics.DESTINATION] = orderInteractor.to?.variants?.first
 
         bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
         map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()

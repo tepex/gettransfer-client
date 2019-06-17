@@ -12,7 +12,7 @@ data class Transfer(
     val createdAt: Date,
     val duration: Int?,
     val distance: Int?,
-    var status: Status,
+    val status: Status,
     val from: CityPoint,
     val to: CityPoint?,
     val dateToLocal: Date,
@@ -58,7 +58,7 @@ data class Transfer(
     val airlineCard: String?,
     val paymentPercentages: List<Int>?,
     val unreadMessagesCount: Int,
-    var showOfferInfo: Boolean,
+    val showOfferInfo: Boolean,
     val lastOffersUpdatedAt: Date?
 
 ) : Entity() {

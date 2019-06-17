@@ -51,7 +51,6 @@ import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.standalone.inject
 
-
 @InjectViewState
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SocketEventListener {
     private val orderInteractor: OrderInteractor by inject()
@@ -159,12 +158,22 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun onCancelRequestClicked() { viewState.showAlertCancelRequest() }
 
     fun onRepeatTransferClicked() {
-        fromPoint?.let { orderInteractor.from =
-                GTAddress(cityPointMapper.fromView(it), null, transferModel.from, null, null)
-                        .apply { setPrimaryAndSecondary() }}
-        toPoint?.let { orderInteractor.to =
-                GTAddress(cityPointMapper.fromView(it), null, transferModel.to, null, null)
-                        .apply { setPrimaryAndSecondary() }}
+        fromPoint?.let { 
+            orderInteractor.from = GTAddress(
+                cityPointMapper.fromView(it),
+                null,
+                transferModel.from,
+                GTAddress.parseAddress(transferModel.from)
+            )
+        }
+        toPoint?.let { to ->
+            orderInteractor.to = GTAddress(
+                cityPointMapper.fromView(to),
+                null,
+                transferModel.to,
+                transferModel.to?.let { GTAddress.parseAddress(it) }
+            )
+        }
         hourlyDuration?.let { orderInteractor.hourlyDuration = it }
 
         if (orderInteractor.isCanCreateOrder()) router.navigateTo(Screens.CreateOrder)
@@ -176,13 +185,13 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     private fun setRouteTransfer(transfer: Transfer, route: RouteInfo) {
         routeModel = routeMapper.getView(
-                route.distance,
-                route.polyLines,
-                transfer.from.name,
-                transfer.to!!.name,
-                transfer.from.point!!,
-                transfer.to!!.point!!,
-                SystemUtils.formatDateTime(transferModel.dateTime)
+            route.distance,
+            route.polyLines,
+            transfer.from.name,
+            transfer.to!!.name,
+            transfer.from.point!!,
+            transfer.to!!.point!!,
+            SystemUtils.formatDateTime(transferModel.dateTime)
         )
         routeModel?.let {
             polyline = Utils.getPolyline(it)
@@ -196,10 +205,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         val point = LatLng(from.latitude, from.longitude)
         track = Utils.getCameraUpdateForPin(point)
         viewState.setPinHourlyTransfer(
-                transferModel.from,
-                SystemUtils.formatDateTime(transferModel.dateTime),
-                point,
-                track!!
+            transferModel.from,
+            SystemUtils.formatDateTime(transferModel.dateTime),
+            point,
+            track!!
         )
     }
 
@@ -243,56 +252,56 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                     }
                 }
                 offer = offer?.copy(
-                        ratings = offer?.ratings?.copy(
-                                vehicle = rating,
-                                driver = rating,
-                                fair = rating
-                        )
+                    ratings = offer?.ratings?.copy(
+                        vehicle = rating,
+                        driver = rating,
+                        fair = rating
+                    )
                 )
                 updateRatingState()
             } else {
                 offer?.let {
                     viewState.showDetailRate(
-                            rating,
-                            rating,
-                            rating,
-                            it.id,
-                            it.passengerFeedback.orEmpty()
+                        rating,
+                        rating,
+                        rating,
+                        it.id,
+                        it.passengerFeedback.orEmpty()
                     )
                 }
             }
         } else
             offer?.let {
                 viewState.showDetailRate(
-                        it.ratings?.vehicle ?: 0f,
-                        it.ratings?.driver ?: 0f,
-                        it.ratings?.fair ?: 0f,
-                        it.id,
-                        it.passengerFeedback.orEmpty()
+                    it.ratings?.vehicle ?: 0f,
+                    it.ratings?.driver ?: 0f,
+                    it.ratings?.fair ?: 0f,
+                    it.id,
+                    it.passengerFeedback.orEmpty()
                 )
             }
     }
 
     private fun logAverageRate(rate: Double) =
-            analytics.logEvent(
-                    Analytics.REVIEW_AVERAGE,
-                    createStringBundle(Analytics.REVIEW,rate.toString()),
-                    mapOf(Analytics.REVIEW to rate)
-            )
+        analytics.logEvent(
+            Analytics.REVIEW_AVERAGE,
+            createStringBundle(Analytics.REVIEW,rate.toString()),
+            mapOf(Analytics.REVIEW to rate)
+        )
 
     private fun logReviewRequest() =
-            analytics.logEvent(
-                    Analytics.EVENT_APP_REVIEW_REQUESTED,
-                    createEmptyBundle(),
-                    mapOf()
-            )
+        analytics.logEvent(
+            Analytics.EVENT_APP_REVIEW_REQUESTED,
+            createEmptyBundle(),
+            mapOf()
+        )
 
     fun logTransferReviewRequested() =
-            analytics.logEvent(
-                    Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
-                    createEmptyBundle(),
-                    mapOf()
-            )
+        analytics.logEvent(
+            Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
+            createEmptyBundle(),
+            mapOf()
+        )
 
     private val coordinateRequester = object : CoordinateRequester {
         override fun request() = coordinateInteractor.initCoordinatesReceiving(transferId)
@@ -321,12 +330,12 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     fun ratingChanged(list: List<ReviewRateModel>, userFeedback: String) {
         offer = offer?.copy(
-                ratings = offer?.ratings?.copy(
-                        vehicle = list.firstOrNull{ it.rateType == VEHICLE }?.rateValue?.toFloat() ?: 0f,
-                        driver = list.firstOrNull{ it.rateType == DRIVER }?.rateValue?.toFloat() ?: 0f,
-                        fair = list.firstOrNull{ it.rateType == PUNCTUALITY }?.rateValue?.toFloat() ?: 0f
-                ),
-                passengerFeedback = userFeedback
+            ratings = offer?.ratings?.copy(
+                vehicle = list.firstOrNull{ it.rateType == VEHICLE }?.rateValue?.toFloat() ?: 0f,
+                driver = list.firstOrNull{ it.rateType == DRIVER }?.rateValue?.toFloat() ?: 0f,
+                fair = list.firstOrNull{ it.rateType == PUNCTUALITY }?.rateValue?.toFloat() ?: 0f
+            ),
+            passengerFeedback = userFeedback
         )
         updateRatingState()
     }
@@ -345,17 +354,17 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             viewState.showYourDataProgress(true)
             utils.launchSuspend {
                 fetchResult { reviewInteractor.pushComment() }
-                        .also {
-                            if (it.error == null) {
-                                offer = offer?.copy(passengerFeedback = comment)
-                                updateRatingState()
-                            }
-                            viewState.showYourDataProgress(false)
+                    .also {
+                        if (it.error == null) {
+                            offer = offer?.copy(passengerFeedback = comment)
+                            updateRatingState()
                         }
+                        viewState.showYourDataProgress(false)
+                    }
             }
         }
     }
-
+    
     private fun setComment(comment: String) {
         reviewInteractor.comment = comment
     }
