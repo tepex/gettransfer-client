@@ -201,7 +201,7 @@
 	<dimen name="tvCountBaggage_margin_start">2dp</dimen>
 	<dimen name="tvCountBaggage_margin_end">8dp</dimen>
 
-	<dimen name="transport_time_server_price_min_text_size">8sp</dimen>
+	<dimen name="transport_time_server_price_min_text_size">5sp</dimen>
 	<dimen name="transport_time_server_price_max_text_size">14sp</dimen>
 
 	<dimen name="circle_plus_height">35dp</dimen>
@@ -285,6 +285,7 @@
 	<!-- Transfer types -->
 	<dimen name="transfer_types_text_size">11sp</dimen>
 	<dimen name="transfer_types_title_text_size">12sp</dimen>
+	<dimen name="transfer_types_title_min_text_size">5sp</dimen>
 	<dimen name="transfer_types_title_margin_start">5dp</dimen>
 	<dimen name="transfer_types_title_margin_end">10dp</dimen>
 	<dimen name="transfer_types_cost_title">12sp</dimen>

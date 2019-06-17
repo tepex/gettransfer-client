@@ -34,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/transfer_types_title_margin_start"
             android:layout_marginEnd="@dimen/transfer_types_title_margin_end"
-            android:ellipsize="end"
             android:maxLines="1"
             android:textSize="@dimen/transfer_types_title_text_size"
             app:layout_constrainedWidth="true"
@@ -43,7 +42,10 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/cbTransferType"
             app:layout_constraintTop_toTopOf="@+id/cbTransferType"
-            tools:text="Economy" />
+            tools:text="Economy"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="@dimen/transfer_types_title_min_text_size"
+            app:autoSizeMaxTextSize="@dimen/transfer_types_title_text_size"/>
 
 
         <ImageView
@@ -162,6 +164,7 @@
                 android:gravity="center_vertical|end"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:textSize="@dimen/transport_time_server_price_max_text_size"
                 app:autoSizeTextType="uniform"
                 app:autoSizeMinTextSize="@dimen/transport_time_server_price_min_text_size"
                 app:autoSizeMaxTextSize="@dimen/transport_time_server_price_max_text_size"
