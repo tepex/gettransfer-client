@@ -1,15 +1,11 @@
 package com.kg.gettransfer.presentation.view
 
 import android.support.annotation.StringRes
-import com.kg.gettransfer.domain.ApiException
 
 interface LogInView : BaseView {
     fun setEmail(login: String)
-    fun showError(show: Boolean, error: ApiException)
-    fun showValidationError(show: Boolean, errorType: Int)
+    fun showValidationError(errorType: Int)
     fun showLoginInfo(@StringRes title: Int, @StringRes info: Int)
-    fun showChangePasswordDialog()
-    fun showErrorText(show: Boolean, text: String?)
 
     companion object {
         val EXTRA_NEXT_SCREEN = "${LogInView::class.java.name}.next_screen"

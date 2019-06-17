@@ -1,6 +1,5 @@
-package com.kg.gettransfer.presentation.ui
+package com.kg.gettransfer.presentation.presenter
 
-import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SignUpCarrierView
 

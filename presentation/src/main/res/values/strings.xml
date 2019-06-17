@@ -97,6 +97,8 @@
     <string name="LNG_NOT_FOUND">not found</string>
     <string name="LNG_ERROR_EMAIL">Invalid email</string>
     <string name="LNG_UNEXPECTED_ERROR">Unexpected error</string>
+    <string name="LNG_ACCOUNT_NOTFOUND">Account %s not found</string>
+    <string name="LNG_ERROR_ACCOUNT_CREATE_USER">Do you want to create it?</string>
     <string name="LNG_BAD_CREDENTIALS_ERROR">Login failed</string>
     <string name="LNG_NO_ACCOUNT_ERROR">Account didn\'t created</string>
     <string name="LNG_UNAUTHORIZED_ERROR">Not logged in</string>

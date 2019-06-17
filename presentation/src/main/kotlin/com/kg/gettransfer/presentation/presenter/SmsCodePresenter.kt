@@ -1,16 +1,22 @@
-package com.kg.gettransfer.presentation.ui
+package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.extensions.internationalExample
-import com.kg.gettransfer.presentation.presenter.BasePresenter
+import com.kg.gettransfer.extensions.newChainFromMain
+
+import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
+
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SmsCodeView
+
 import com.kg.gettransfer.utilities.Analytics
 
 @InjectViewState
@@ -87,9 +93,9 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
 
                     it.isSuccess()?.let {
                         viewState.showErrorText(false)
-                        viewState.showChangePasswordDialog()
                         logLoginEvent(Analytics.RESULT_SUCCESS)
                         registerPushToken()
+                        router.exit()
                     }
                 }
             viewState.blockInterface(false)
