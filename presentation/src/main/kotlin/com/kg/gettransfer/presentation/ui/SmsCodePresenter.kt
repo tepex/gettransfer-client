@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.extensions.internationalExample
+import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
@@ -87,9 +88,9 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
 
                     it.isSuccess()?.let {
                         viewState.showErrorText(false)
-                        viewState.showChangePasswordDialog()
                         logLoginEvent(Analytics.RESULT_SUCCESS)
                         registerPushToken()
+                        router.exit()
                     }
                 }
             viewState.blockInterface(false)

@@ -51,7 +51,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
 
         initTextChangeListeners()
         initPhoneTextChangeListeners()
-        btnLogin.setThrottledClickListener(3000L) {
+        btnLogin.setThrottledClickListener(1000L) {
             presenter.registration(name, phone, email, termsAccepted)
         }
         licenseAgreementTv.setThrottledClickListener { presenter.showLicenceAgreement() }

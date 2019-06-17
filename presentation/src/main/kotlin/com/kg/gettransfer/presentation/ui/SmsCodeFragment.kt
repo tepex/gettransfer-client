@@ -14,6 +14,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.SmsCodeView
 import io.sentry.Sentry
@@ -35,6 +36,8 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     fun smsCodePresenterProvider() = SmsCodePresenter()
 
     private var password = ""
+
+    var changePage: (() -> Unit)? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_sms_code, container, false)
@@ -78,7 +81,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         setTimer()
         btnResendCode.setOnClickListener { sendVerificationCode(isPhone) }
 
-        btnDone.setOnClickListener { presenter.onLoginClick(presenter.emailOrPhone ?: "", password, isPhone) }
+        btnDone.setThrottledClickListener { presenter.onLoginClick(presenter.emailOrPhone ?: "", password, isPhone) }
     }
 
     private fun sendVerificationCode(isPhone: Boolean) {
@@ -124,11 +127,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     }
 
     override fun showValidationError(b: Boolean, invaliD_EMAIL: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun showChangePasswordDialog() {
-        Utils.showAlertSetNewPassword(context!!) { presenter.onBackCommandClick() }
+        //TODO remove BaseView or add code.
     }
 
     //----------TODO остатки от группы Base.---------------
@@ -144,11 +143,21 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
-        if (e.code != ApiException.NETWORK_ERROR) Utils.showError(
-            context!!,
-            false,
-            getString(R.string.LNG_ERROR) + ": " + e.message
-        )
+        when (e.code) {
+            ApiException.NOT_FOUND -> {
+                BottomSheetDialog
+                    .newInstance()
+                    .apply {
+                        title = this@SmsCodeFragment.getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.emailOrPhone)
+                        buttonOkText = this@SmsCodeFragment.getString(R.string.LNG_OK)
+                        onDismissCallBack = {
+                            presenter.back()
+                            changePage?.invoke()
+                        }
+                    }
+                    .show(fragmentManager)
+            }
+        }
     }
 
     override fun setError(e: DatabaseException) {
@@ -177,7 +186,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     }
 
     override fun setTransferNotFoundError(transferId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO remove BaseView or add code.
     }
 
     companion object {
