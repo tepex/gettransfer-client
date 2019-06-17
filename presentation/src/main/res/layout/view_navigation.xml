@@ -127,9 +127,7 @@
                 android:layout_height="wrap_content"
                 app:menu_icon_img="@drawable/ic_menu_route"
                 app:menu_title_text="@string/LNG_MENU_TITLE_RIDES"
-                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_RIDES"
-                android:visibility="gone"
-                tools:visibility="visible"/>
+                app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_RIDES" />
 
             <com.kg.gettransfer.presentation.ui.custom.NavigationViewMenuItem
                 android:id="@+id/navCarrierTrips"
