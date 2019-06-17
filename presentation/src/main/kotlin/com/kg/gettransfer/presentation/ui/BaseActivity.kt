@@ -54,6 +54,7 @@ import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.isGone
 
 import com.kg.gettransfer.extensions.isVisible
@@ -276,9 +277,9 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     protected fun hideKeyboard(): Boolean {
-        currentFocus?.run {
-            hideKeyboard()
-            clearFocus()
+        currentFocus?.let {
+            it.hideKeyboard()
+            it.clearFocus()
         }
         return true
     }
