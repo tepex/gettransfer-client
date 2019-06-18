@@ -218,10 +218,10 @@ class MainRequestFragment :
         }
     }
 
-    override fun setVisibilityBtnMyLocation(isVisible: Boolean) {
+    /*override fun setVisibilityBtnMyLocation(isVisible: Boolean) {
         ivSetMyLocation.setImageDrawable(ContextCompat.getDrawable(mParent, when(isVisible) {
             true -> R.drawable.ic_pin_orange_border
             false -> R.drawable.ic_pin_gray_border
         }))
-    }
+    }*/
 }
