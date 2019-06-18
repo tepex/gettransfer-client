@@ -214,7 +214,7 @@ class PreferencesImpl(context: Context,
     override var addressHistory: List<GTAddressEntity>
         get() {
             val json = accountPrefs.getString(ADDRESS_HISTORY, null)
-            return if(json != null) JSON.parse(GTAddressEntity.serializer().list, json) else emptyList<GTAddressEntity>()
+            return if(json != null) JSON.nonstrict.parse(GTAddressEntity.serializer().list, json) else emptyList()
         }
         set(value) {
             with(accountPrefs.edit()) {

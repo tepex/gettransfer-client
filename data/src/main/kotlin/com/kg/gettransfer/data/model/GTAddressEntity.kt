@@ -1,5 +1,6 @@
 package com.kg.gettransfer.data.model
 
+import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,5 +9,6 @@ data class GTAddressEntity(
     val lon: Double?,
     val address: String,
     val placeTypes: List<String>?,
-    val variants: Pair<String?, String?>?
+    @Optional
+    val variants: Pair<String?, String?>? = null
 )
