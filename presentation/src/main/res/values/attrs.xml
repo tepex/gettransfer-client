@@ -119,5 +119,6 @@
 
     <declare-styleable name="InputPasswordView">
         <attr name="password_view_hint" format="string"/>
+        <attr name="password_view_divider_visible" format="boolean"/>
     </declare-styleable>
 </resources>
