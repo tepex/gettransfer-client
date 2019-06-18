@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.delegate
 
-import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -91,14 +90,14 @@ object OfferItemBindDelegate {
             //ivCarColorTiny.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(view.context, it) })
             tv_car_class_tiny.text = offer.vehicle.transportType.nameId?.let { context.getString(it) ?: "" }
             offer.vehicle.photos.firstOrNull()
-                    .also {
-                        Utils.bindMainOfferPhoto(
-                                img_car_photo_tiny,
-                                view,
-                                path = it,
-                                resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id)
-                        )
-                    }
+                .also {
+                    Utils.bindMainOfferPhoto(
+                        img_car_photo_tiny,
+                        view,
+                        path = it,
+                        resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id)
+                    )
+                }
             bindRating(view_rating_tiny, offer.carrier.ratings, offer.carrier.approved)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
             offer.price.withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
@@ -109,7 +108,6 @@ object OfferItemBindDelegate {
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) {
         with(view) {
             tv_car_model_tiny.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
-            tv_car_model_tiny.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.view_offer_book_now_title_text_size))
             //ivCarColorTiny.isVisible = false
             tv_car_class_tiny.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
             Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
