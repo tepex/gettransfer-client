@@ -1,8 +1,12 @@
 package com.kg.gettransfer.data.mapper
 
 import com.kg.gettransfer.data.model.OfferEntity
+import com.kg.gettransfer.data.model.map
+
 import com.kg.gettransfer.domain.model.Offer
+
 import java.text.DateFormat
+
 import org.koin.standalone.get
 
 /**
@@ -13,7 +17,6 @@ open class OfferMapper : Mapper<OfferEntity, Offer> {
     private val ratingsMapper = get<RatingsMapper>()
     private val carrierMapper = get<CarrierMapper>()
     private val vehicleMapper = get<VehicleMapper>()
-    private val profileMapper = get<ProfileMapper>()
     private val dateFormat    = get<ThreadLocal<DateFormat>>("iso_date")
 
     /**
@@ -35,7 +38,7 @@ open class OfferMapper : Mapper<OfferEntity, Offer> {
             passengerFeedback = type.passengerFeedback,
             carrier           = carrierMapper.fromEntity(type.carrier),
             vehicle           = vehicleMapper.fromEntity(type.vehicle),
-            driver            = type.driver?.let { profileMapper.fromEntity(it) }
+            driver            = type.driver?.let { it.map() }
         )
 
     /**
@@ -57,6 +60,6 @@ open class OfferMapper : Mapper<OfferEntity, Offer> {
                     passengerFeedback = type.passengerFeedback,
                     carrier           = carrierMapper.toEntity(type.carrier),
                     vehicle           = vehicleMapper.toEntity(type.vehicle),
-                    driver            = type.driver?.let { profileMapper.toEntity(it) }
+                    driver            = type.driver?.let { it.map() }
             )
 }

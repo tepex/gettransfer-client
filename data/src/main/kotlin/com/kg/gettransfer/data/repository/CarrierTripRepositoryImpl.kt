@@ -41,9 +41,6 @@ class CarrierTripRepositoryImpl(
         set(value) { preferencesCache.driverCoordinatesInBackGround = value }
 
     override suspend fun getCarrierTrips(): Result<List<CarrierTripBase>> {
-        /*retrieveRemoteListModel<CarrierTripBaseEntity, CarrierTripBase>(carrierTripBaseMapper) {
-            factory.retrieveRemoteDataStore().getAllBaseCarrierTrips()
-        }*/
         val result: ResultEntity<List<CarrierTripBaseEntity>?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getCarrierTrips()
         }
@@ -53,14 +50,11 @@ class CarrierTripRepositoryImpl(
     }
 
     override suspend fun getCarrierTrip(id: Long): Result<CarrierTrip> {
-        /*retrieveRemoteModel<CarrierTripEntity, CarrierTrip>(carrierTripMapper, DEFAULT) {
-            factory.retrieveRemoteDataStore().getCarrierTrip(id)
-        }*/
         val result: ResultEntity<CarrierTripEntity?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getCarrierTrip(id)
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addCarrierTrip(it) }
-        return Result(result.entity?.let { carrierTripMapper.fromEntity(it) }?: DEFAULT,
+        return Result(result.entity?.let { carrierTripMapper.fromEntity(it) }?: CarrierTrip.EMPTY,
                 result.error?.let { ExceptionMapper.map(it) }, result.error != null && result.entity != null)
     }
 
@@ -68,46 +62,11 @@ class CarrierTripRepositoryImpl(
         val result: ResultEntity<CarrierTripEntity?> = retrieveCacheEntity {
             factory.retrieveCacheDataStore().getCarrierTrip(id)
         }
-        return Result(result.entity?.let { carrierTripMapper.fromEntity(it) }?: DEFAULT, null,
+        return Result(result.entity?.let { carrierTripMapper.fromEntity(it) }?: CarrierTrip.EMPTY, null,
                 result.entity != null, result.cacheError?.let { ExceptionMapper.map(it) })
     }
 
     override suspend fun clearCarrierTripsCache() {
         factory.retrieveCacheDataStore().clearCariierTripsCache()
     }
-
-    companion object {
-        private val DEFAULT =
-            CarrierTrip(
-                CarrierTripBase(
-                    id                    = 0,
-                    transferId            = 0,
-                    from                  = CityPoint("", null, null),
-                    to                    = CityPoint("", null, null),
-                    dateLocal             = Date(),
-                    duration              = null,
-                    distance              = null,
-                    time                  = 0,
-                    childSeats            = 0,
-                    childSeatsInfant      = 0,
-                    childSeatsConvertible = 0,
-                    childSeatsBooster     = 0,
-                    comment               = null,
-                    waterTaxi             = false,
-                    price                 = "",
-                    vehicle               = VehicleInfo("", "")
-                ),
-                pax              = 0,
-                nameSign         = null,
-                flightNumber     = null,
-                paidSum          = "",
-                remainsToPay     = "",
-                paidPercentage   = 0,
-                passengerAccount = PassengerAccount(
-                    id       = 0,
-                    profile  = Profile(null, null, null),
-                    lastSeen = Date()
-                )
-            )
-        }
 }

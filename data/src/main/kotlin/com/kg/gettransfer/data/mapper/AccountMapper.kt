@@ -1,11 +1,13 @@
 package com.kg.gettransfer.data.mapper
 
 import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.User
 
 import java.util.Locale
 
@@ -16,7 +18,6 @@ import org.koin.standalone.get
  * this later and the Domain layer
  */
 open class AccountMapper : Mapper<AccountEntity, Account> {
-    private val userMapper = get<UserMapper>()
     internal lateinit var configs: Configs
 
     /**
@@ -24,25 +25,13 @@ open class AccountMapper : Mapper<AccountEntity, Account> {
      */
     override fun fromEntity(type: AccountEntity) =
         Account(
-            user = userMapper.fromEntity(type.user),
-
-            locale = configs.availableLocales
-                    .find { it.language == type.locale }
-                    ?.let { Locale(it.language, Locale.getDefault().country) }
-                    ?: Locale.getDefault(),
-
-            currency = configs.supportedCurrencies
-                    .find { it.code == type.currency }
-                    ?: Currency("USD", "\$"),
-
-            distanceUnit = type.distanceUnit
-                    ?.let { DistanceUnit.valueOf(it) }
-                    ?: DistanceUnit.km,
-
-            groups = type.groups
-                    ?: emptyList<String>(),
-
-            carrierId = type.carrierId
+            type.user.map(),
+            configs.availableLocales.find { it.language == type.locale }
+                ?.let { Locale(it.language, Locale.getDefault().country) } ?: Locale.getDefault(),
+            configs.supportedCurrencies.find { it.code == type.currency } ?: Currency("USD", "\$"),
+            type.distanceUnit?.let { DistanceUnit.valueOf(it) } ?: DistanceUnit.km,
+            type.groups ?: emptyList<String>(),
+            type.carrierId
         )
 
     /**
@@ -50,12 +39,12 @@ open class AccountMapper : Mapper<AccountEntity, Account> {
      */
     override fun toEntity(type: Account) =
         AccountEntity(
-            user = userMapper.toEntity(type.user),
-            locale = type.locale.language,
-            currency = type.currency.code,
-            distanceUnit = type.distanceUnit.name,
-            groups = type.groups,
-            carrierId = type.carrierId
+            type.user.map(),
+            type.locale.language,
+            type.currency.code,
+            type.distanceUnit.name,
+            type.groups,
+            type.carrierId
         )
 
     fun toEntityWithNewPassword(type: Account, pass: String, repeatedPass: String) =

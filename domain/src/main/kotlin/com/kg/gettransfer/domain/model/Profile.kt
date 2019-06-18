@@ -1,17 +1,12 @@
 package com.kg.gettransfer.domain.model
 
 data class Profile(
-    var fullName: String?,
-    var email: String?,
-    var phone: String?
+    val name: String,
+    val email: String,
+    val phone: String
 ) {
-    fun hasData() =
-        !email.isNullOrEmpty()
-                && !phone.isNullOrEmpty()
-
-    fun clear() {
-        fullName = null
-        email = null
-        phone = null
+    
+    companion object {
+        val EMPTY = Profile("", "", "")
     }
 }

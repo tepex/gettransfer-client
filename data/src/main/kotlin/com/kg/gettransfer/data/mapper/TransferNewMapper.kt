@@ -2,6 +2,7 @@ package com.kg.gettransfer.data.mapper
 
 import com.kg.gettransfer.data.model.TransferNewEntity
 import com.kg.gettransfer.data.model.TripEntity
+import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.TransportType
@@ -15,7 +16,6 @@ open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
     private val cityPointMapper = get<CityPointMapper>()
     private val tripMapper      = get<TripMapper>()
     private val moneyMapper     = get<MoneyMapper>()
-    private val userMapper      = get<UserMapper>()
     private val destMapper      = get<DestMapper>()
 
     /**
@@ -40,7 +40,7 @@ open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
             passengerOfferedPrice = type.passengerOfferedPrice,
             nameSign              = type.nameSign,
             comment               = type.comment,
-            user                  = userMapper.toEntity(type.user),
+            user                  = type.user.map(),
             promoCode             = type.promoCode
         )
 }

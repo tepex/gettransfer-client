@@ -14,10 +14,8 @@ import org.koin.standalone.get
  * this later and the Domain layer.
  */
 open class CarrierTripBaseMapper : Mapper<CarrierTripBaseEntity, CarrierTripBase> {
-    private val cityPointMapper        = get<CityPointMapper>()
     private val vehicleInfoMapper      = get<VehicleInfoMapper>()
     private val dateFormat             = get<ThreadLocal<DateFormat>>("iso_date")
-
 
     /**
      * Map a [CarrierTripBaseEntity] instance to a [CarrierTripBase] instance.
@@ -26,17 +24,17 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseEntity, CarrierTripBase
         CarrierTripBase(
             id                    = type.id,
             transferId            = type.transferId,
-            from                  = cityPointMapper.fromEntity(type.from),
-            to                    = type.to?.let { cityPointMapper.fromEntity(it) },
+            from                  = type.from.map(),
+            to                    = type.to?.let { it.map() },
             dateLocal             = dateFormat.get().parse(type.dateLocal),
-            duration              = type.duration,
-            distance              = type.distance,
-            time                  = type.time,
+            duration              = type.duration ?: CarrierTripBase.NO_DURATION,
+            distance              = type.distance ?: CarrierTripBase.NO_DISTANCE,
+            time                  = type.time ?: CarrierTripBase.NO_TIME,
             childSeats            = type.childSeats,
             childSeatsInfant      = type.childSeatsInfant,
             childSeatsConvertible = type.childSeatsConvertible,
             childSeatsBooster     = type.childSeatsBooster,
-            comment               = type.comment,
+            comment               = type.comment ?: CarrierTripBase.NO_COMMENT,
             waterTaxi             = type.waterTaxi,
             price                 = type.price,
             vehicle               = vehicleInfoMapper.fromEntity(type.vehicle)
