@@ -6,6 +6,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.models.PayPalRequest
+import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
@@ -30,6 +31,7 @@ import io.sentry.Sentry
 import org.koin.standalone.inject
 
 import timber.log.Timber
+import java.lang.UnsupportedOperationException
 
 @InjectViewState
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
@@ -167,25 +169,27 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
             .run {
                 when {
-                    error?.isAccountExistError() ?: false  -> onAccountExists()
-                    error != null                          -> viewState.setError(error!!)
-                    else                                   -> getPayment()
+                    error?.isAccountExistError() ?: false -> onAccountExists(error!!.checkExistedAccountField())
+                    error != null                         -> viewState.setError(error!!)
+                    else                                  -> getPayment()
                 }
             }
 
-    private fun onAccountExists() {
+    private fun onAccountExists(existedField: String) {
         loginScreenIsShowed = true
-        redirectToLogin()
+        redirectToLogin(
+            with(accountManager) {
+                when(existedField) {
+                    ApiException.EMAIL_EXISTED -> tempProfile.email
+                    ApiException.PHONE_EXISTED -> tempProfile.phone
+                    else -> throw UnsupportedOperationException()
+                }!!
+            }
+        )
     }
 
-    private fun redirectToLogin() {
-        with(accountManager) {
-            router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, when{
-                remoteProfile.phone.isNullOrEmpty() -> tempProfile.phone
-                remoteProfile.email.isNullOrEmpty() -> tempProfile.email
-                else -> tempProfile.phone
-            }))
-        }
+    private fun redirectToLogin(existedEmailOrPhone: String) {
+        router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, existedEmailOrPhone))
     }
 
     /*private fun isValid(input: String, isPhone: Boolean) =
