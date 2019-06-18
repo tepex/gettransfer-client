@@ -18,10 +18,11 @@ open class RouteInfoMapper : EntityMapper<RouteInfoModel, RouteInfoEntity> {
             success = type.success,
             distance = type.distance,
             duration = type.duration,
-            prices = type.prices?.mapValues { transportTypePriceMapper.fromRemote(it) } ?: emptyMap<String, TransportTypePriceEntity>(),
+            prices = type.prices?.mapValues { transportTypePriceMapper.fromRemote(it) } ?: emptyMap(),
             watertaxi = type.watertaxi,
-            polyLines = type.routes?.first()?.legs?.first()?.steps?.map { it.polyline.points } ?: emptyList<String>(),
-            overviewPolyline = type.routes?.first()?.overviewPolyline?.points
+            polyLines = type.routes?.first()?.legs?.first()?.steps?.map { it.polyline.points } ?: emptyList(),
+            overviewPolyline = type.routes?.first()?.overviewPolyline?.points,
+            hintsToComments = type.hintsToComments
         )
 
     override fun toRemote(type: RouteInfoEntity): RouteInfoModel { throw UnsupportedOperationException() }

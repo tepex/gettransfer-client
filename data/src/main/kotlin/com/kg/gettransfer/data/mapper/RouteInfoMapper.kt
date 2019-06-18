@@ -24,7 +24,8 @@ open class RouteInfoMapper : Mapper<RouteInfoEntity, RouteInfo> {
             prices           = type.prices.entries.associate { TransportType.ID.parse(it.key) to transportTypePriceMapper.fromEntity(it.value) },
             watertaxi        = type.watertaxi,
             polyLines        = type.polyLines,
-            overviewPolyline = type.overviewPolyline
+            overviewPolyline = type.overviewPolyline,
+            hintsToComments = type.hintsToComments
         )
 
     /**

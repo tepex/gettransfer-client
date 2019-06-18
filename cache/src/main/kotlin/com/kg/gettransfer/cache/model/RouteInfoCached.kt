@@ -14,5 +14,6 @@ data class RouteInfoCached(@PrimaryKey(autoGenerate = true) val id: Long = 0,
         @ColumnInfo(name = RouteInfoEntity.DURATION)          val duration: Int?,
         @ColumnInfo(name = RouteInfoEntity.WATERTAXI)         val watertaxi: Boolean,
         @ColumnInfo(name = RouteInfoEntity.POLYLINES)         val polyLines: StringList,
-        @ColumnInfo(name = RouteInfoEntity.OVERVIEW_POLYLINE) val overviewPolyline: String?
+        @ColumnInfo(name = RouteInfoEntity.OVERVIEW_POLYLINE) val overviewPolyline: String?,
+        @ColumnInfo(name = RouteInfoEntity.HINTS_TO_COMMENTS) val hintsToComments: StringList?
 )

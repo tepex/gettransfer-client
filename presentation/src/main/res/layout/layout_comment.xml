@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutPopup"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minHeight="@dimen/comment_dialog_min_height"
+    android:layout_height="@dimen/comment_dialog_max_height"
+    android:background="@drawable/back_top_rounded"
     android:maxHeight="@dimen/comment_dialog_max_height"
-    android:layout_marginTop="@dimen/expended_sheet_order_height"
-    android:layout_gravity="bottom">
+    android:minHeight="@dimen/comment_dialog_min_height">
 
-    <RelativeLayout
-        android:id="@+id/layoutPopup"
+    <TextView
+        android:id="@+id/tvDone"
+        style="@style/sf_font_semi_bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="0dp"
+        android:padding="8dp"
+        android:text="@string/LNG_DONE"
+        android:textAllCaps="true"
+        android:textColor="@color/color_gtr_green"
+        android:textSize="14sp" />
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/back_top_rounded">
-
-        <TextView
-            android:id="@+id/tvDone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:padding="8dp"
-            android:layout_margin="16dp"
-            android:layout_marginBottom="0dp"
-            android:text="@string/LNG_DONE"
-            android:textColor="@color/color_gtr_green"
-            android:textAllCaps="true"
-            style="@style/sf_font_semi_bold"
-            android:textSize="14sp" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/scrollHints"
+        android:layout_below="@+id/tvDone">
 
         <EditText
             android:id="@+id/etComment"
@@ -35,53 +35,34 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:layout_below="@+id/tvDone"
             android:background="@null"
-            android:gravity="top"
             android:fontFamily="@font/sf_pro_text_regular"
+            android:gravity="top"
             android:hint="@string/LNG_COMMENT_PLACEHOLDER"
             android:imeOptions="actionDone"
             android:inputType="textMultiLine"
             android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/create_transfer_additionals_top_text_size"
-            android:textColorHint="@color/colorGrey"/>
+            android:textColorHint="@color/colorGrey"
+            android:textSize="@dimen/create_transfer_additionals_top_text_size" />
+    </android.support.v4.widget.NestedScrollView>
 
-        <!-- it'll be implemented later-->
+    <HorizontalScrollView
+        android:id="@+id/scrollHints"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp">
 
-        <!--<HorizontalScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true">-->
-
-        <!--<android.support.design.chip.ChipGroup-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="8dp">-->
-
-        <!--<android.support.design.chip.Chip-->
-        <!--android:id="@+id/chipDriver"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--style="@style/Widget.MaterialComponents.Chip.Choice"-->
-        <!--android:text="I need a Russian driver" />-->
-
-        <!--<android.support.design.chip.Chip-->
-        <!--android:id="@+id/chipWifi"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--style="@style/Widget.MaterialComponents.Chip.Choice"-->
-        <!--android:text="I need WiFi" />-->
-
-        <!--<android.support.design.chip.Chip-->
-        <!--android:id="@+id/chipCharge"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--style="@style/Widget.MaterialComponents.Chip.Choice"-->
-        <!--android:text="I need the charge" />-->
-        <!--</android.support.design.chip.ChipGroup>-->
-        <!--</HorizontalScrollView>-->
-    </RelativeLayout>
-</android.support.design.widget.CoordinatorLayout>
+        <android.support.design.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:chipSpacing="8dp"
+            app:singleLine="true" />
+    </HorizontalScrollView>
+</RelativeLayout>

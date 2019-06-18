@@ -439,9 +439,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
         comment_field.field_input.setOnClickListener        {
-            val comment = comment_field.field_input.text.toString().trim()
-            CommentDialogFragment.newInstance(comment)
-                    .show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
+            presenter.commentClick(comment_field.field_input.text.toString().trim())
             presenter.logTransferSettingsEvent(COMMENT_INPUT)
         }
 
@@ -512,4 +510,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         comment_field.field_input.setText(comment)
         presenter.setComment(comment)
     }
+
+    override fun showCommentDialog(comment: String, hintsToComments: List<String>?) =
+            CommentDialogFragment.newInstance(comment, hintsToComments?.toTypedArray())
+                    .show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
 }

@@ -11,7 +11,8 @@ data class RouteInfoModel(
     @SerializedName(RouteInfoEntity.DURATION) @Expose val duration: Int?,
     @SerializedName(RouteInfoEntity.PRICES) @Expose val prices: Map<String, TransportTypePriceModel>?,
     @SerializedName(RouteInfoEntity.WATERTAXI) @Expose val watertaxi: Boolean,
-    @SerializedName(RouteInfoEntity.ROUTES) @Expose val routes: List<RoutesModel>?
+    @SerializedName(RouteInfoEntity.ROUTES) @Expose val routes: List<RoutesModel>?,
+    @SerializedName(RouteInfoEntity.HINTS_TO_COMMENTS) @Expose val hintsToComments: List<String>?
 )
 
 data class RoutesModel(
