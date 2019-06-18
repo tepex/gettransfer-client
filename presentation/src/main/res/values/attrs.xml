@@ -75,6 +75,14 @@
 
     <declare-styleable name="SettingsFieldPicker">
         <attr name="settingsTitlePicker" format="string"/>
+        <attr name="settingsPickerDivider" format="boolean"/>
+        <attr name="settingsPickerBlackText" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="SettingsEditableField">
+        <attr name="settingsEditableFieldHint" format="string"/>
+        <attr name="settingsEditableFieldEnabled" format="boolean"/>
+        <attr name="settingsEditableFieldChevron" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="SettingsFieldSwitch">

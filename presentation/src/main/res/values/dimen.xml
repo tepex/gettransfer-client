@@ -705,6 +705,7 @@
 	<dimen name="rounded_rectangle_margin_top">12dp</dimen>
 
 	<dimen name="toolbar_title_text_size">18sp</dimen>
+	<dimen name="toolbar_subtitle_text_size">12sp</dimen>
 	<dimen name="toolbar_nav_title_text_size">15sp</dimen>
 	<dimen name="toolbar_chat_driver_name_text_size">17sp</dimen>
 	<dimen name="toolbar_start_date_text_size">12sp</dimen>
@@ -1039,5 +1040,41 @@
 
 	<dimen name="comment_dialog_min_height">600dp</dimen>
 	<dimen name="comment_dialog_max_height">600dp</dimen>
+
+	<!--Profile settings-->
+	<dimen name="profile_settings_btn_save_vertical_margin">20dp</dimen>
+	<dimen name="profile_settings_btn_save_margin_bottom">40dp</dimen>
+
+	<!--Change email settings-->
+	<dimen name="change_email_sent_code_text_size">12sp</dimen>
+	<dimen name="change_email_sent_code_text_margin_top">24dp</dimen>
+	<dimen name="change_email_code_text_size">24sp</dimen>
+	<dimen name="change_email_code_text_margin_top">24dp</dimen>
+	<dimen name="change_email_code_text_cursor_width">2dp</dimen>
+	<dimen name="change_email_code_text_height">40dp</dimen>
+	<dimen name="change_email_code_text_item_width">35dp</dimen>
+	<dimen name="change_email_code_text_line_width">1dp</dimen>
+	<dimen name="change_email_btn_resend_code_text_size">12sp</dimen>
+	<dimen name="change_email_btn_resend_code_margin_top">14dp</dimen>
+	<dimen name="change_email_btn_resend_code_padding">10dp</dimen>
+	<dimen name="change_email_field_min_height">64dp</dimen>
+	<dimen name="change_email_field_vertical_padding">16dp</dimen>
+	<dimen name="change_email_field_edit_text_padding_top">6dp</dimen>
+	<dimen name="change_email_field_edit_text_drawable_padding">8dp</dimen>
+	<dimen name="change_email_layout_code_vertical_padding">16dp</dimen>
+	<dimen name="change_email_bth_change_email_margins">16dp</dimen>
+
+	<!--Change password settings-->
+	<dimen name="change_pass_fields_layout_vertical_padding">16dp</dimen>
+	<dimen name="change_pass_fields_padding_top">16dp</dimen>
+	<dimen name="change_pass_btn_done_margins">16dp</dimen>
+
+	<!--Settings editable field-->
+	<dimen name="settings_editable_field_min_height">64dp</dimen>
+	<dimen name="settings_editable_field_vertical_padding">16dp</dimen>
+	<dimen name="settings_editable_field_input_layout_margins">12dp</dimen>
+	<dimen name="settings_editable_field_edit_text_parring_top">6dp</dimen>
+	<dimen name="settings_editable_field_edit_text_drawable_padding">8dp</dimen>
+	<dimen name="settings_editable_field_divider_height">1dp</dimen>
 
 </resources>

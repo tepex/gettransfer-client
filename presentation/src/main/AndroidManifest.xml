@@ -89,6 +89,20 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".presentation.ui.ProfileSettingsActivity"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ui.SettingsChangePasswordActivity"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ui.SettingsChangeEmailActivity"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".presentation.ui.OffersActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait">

@@ -66,6 +66,7 @@
             android:inputType="number"
             android:textColor="@color/color_gtr_green"
             android:textSize="30sp"
+            android:maxLength="4"
             app:cursorColor="@color/color_gtr_green"
             app:cursorWidth="2dp"
             app:itemCount="4"

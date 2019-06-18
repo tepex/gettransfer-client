@@ -43,13 +43,14 @@ class AccountManager : KoinComponent {
     val tempProfile: Profile
         get() = tempUser.profile
 
-    private fun initTempUser(user: User) {
+    fun initTempUser(user: User? = null) {
+        val settedUser = user ?: remoteUser
         tempUser.profile.apply {
-            fullName = user.profile.fullName
-            email = user.profile.email
-            phone = user.profile.phone
+            fullName = settedUser.profile.fullName
+            email = settedUser.profile.email
+            phone = settedUser.profile.phone
         }
-        tempUser.termsAccepted = user.termsAccepted
+        tempUser.termsAccepted = settedUser.termsAccepted
     }
 
     private fun overwriteField(newField: String, tempField: String?, saveTempUserData: Boolean) =

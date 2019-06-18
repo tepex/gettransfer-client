@@ -69,6 +69,7 @@ import com.kg.gettransfer.utilities.LocaleManager
 
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
+import kotlinx.android.synthetic.main.toolbar.*
 
 import kotlinx.android.synthetic.main.toolbar.view.*
 
@@ -178,7 +179,13 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     abstract fun getPresenter(): BasePresenter<*>
 
-    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int = TOOLBAR_NO_TITLE, hasBackAction: Boolean = true, firstLetterToUpperCase: Boolean = false) {
+    protected fun setToolbar(
+            toolbar: Toolbar,
+            @StringRes titleId: Int = TOOLBAR_NO_TITLE,
+            hasBackAction: Boolean = true,
+            firstLetterToUpperCase: Boolean = false,
+            subTitle: String? = null
+    ) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
@@ -189,6 +196,12 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             val title = getString(titleId)
             toolbar.toolbar_title.text =
                 if (!firstLetterToUpperCase) title else title.substring(0, 1).toUpperCase().plus(title.substring(1))
+            subTitle?.let {
+                with(toolbar_subtitle) {
+                    isVisible = true
+                    text = it
+                }
+            }
         }
         if (hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
     }

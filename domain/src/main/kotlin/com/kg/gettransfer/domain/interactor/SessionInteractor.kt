@@ -87,6 +87,9 @@ class SessionInteractor(
     suspend fun changePassword(pass: String, repeatedPass: String) =
         sessionRepository.putAccount(account, pass, repeatedPass)
 
+    suspend fun getCodeForChangeEmail(email: String) = sessionRepository.getCodeForChangeEmail(email)
+    suspend fun changeEmail(email: String, code: String) = sessionRepository.changeEmail(email, code)
+
     companion object {
         //private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
         private val localesFilterList = arrayOf("en", "ru", "de", "es", "it", "pt", "fr", "zh")

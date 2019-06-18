@@ -15,6 +15,8 @@ interface Api {
         const val API_ACCOUNT = "/api/account"
         const val API_LOGIN = "/api/login"
         const val API_VERIFICATION_CODE = "/api/account/verification_code"
+        const val API_CODE_FOR_CHANGE_EMAIL = "/api/account/email_code"
+        const val API_CHANGE_EMAIL = "/api/account/change_email"
         const val API_ACCOUNT_LOGIN = "/api/account/login"
         const val API_ACCOUNT_REGISTER = "/api/account"
         const val API_ROUTE_INFO = "/api/route_info"
@@ -74,6 +76,17 @@ interface Api {
     fun getVerificationCode(
         @Query("email") email: String?,
         @Query("phone") phone: String?
+    ): Deferred<ResponseModel<String?>>
+
+    @POST(API_CODE_FOR_CHANGE_EMAIL)
+    fun getCodeForChangeEmail(
+            @Query("new_email") email: String
+    ): Deferred<ResponseModel<String?>>
+
+    @POST(API_CHANGE_EMAIL)
+    fun changeEmail(
+        @Query("new_email") email: String,
+        @Query("code") code: String
     ): Deferred<ResponseModel<String?>>
 
     @GET(API_ROUTE_INFO)

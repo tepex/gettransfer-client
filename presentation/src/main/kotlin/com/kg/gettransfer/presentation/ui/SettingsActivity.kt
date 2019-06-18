@@ -58,7 +58,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 presenter.showingFragment = showingView
                 when (showingView) {
                     SettingsPresenter.CURRENCIES_VIEW -> add(R.id.currenciesFragment, SelectCurrencyFragment())
-                    SettingsPresenter.PASSWORD_VIEW   -> add(R.id.currenciesFragment, ChangePasswordFragment())
+                    //SettingsPresenter.PASSWORD_VIEW   -> add(R.id.currenciesFragment, ChangePasswordFragment())
                     else -> throw UnsupportedOperationException()
                 }
                 /*add(R.id.currenciesFragment, when(showingView){
@@ -84,7 +84,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     private fun setTitleText(showingView: Int) {
         toolbar.toolbar_title.text = getString(when (showingView) {
-            SettingsPresenter.PASSWORD_VIEW   -> R.string.LNG_LOGIN_PASSWORD_SECTION
+            //SettingsPresenter.PASSWORD_VIEW   -> R.string.LNG_LOGIN_PASSWORD_SECTION
             SettingsPresenter.CURRENCIES_VIEW -> R.string.LNG_CURRENCIES_CHOOSE
             else -> R.string.LNG_MENU_TITLE_SETTINGS
         })
@@ -97,12 +97,17 @@ class SettingsActivity : BaseActivity(), SettingsView {
         settingsBtnSupport.setOnClickListener { presenter.sendEmail(null, null) }
     }
 
-    override fun initLoggedInUserSettings(profile: ProfileModel) {
+    /*override fun initLoggedInUserSettings(profile: ProfileModel) {
         profile.phone?.let { initInfoField(it, settingsUserPhone) }
         profile.email?.let { initInfoField(it, settingsUserEmail) }
 
         settingsUserPassword.isVisible = true
         settingsUserPassword.setOnClickListener { presenter.onPasswordClicked() }
+    }*/
+
+    override fun initProfileField() {
+        settingsProfile.isVisible = true
+        settingsProfile.setOnClickListener { presenter.onProfileFieldClicked() }
     }
 
     private fun initInfoField(text: String, field: SettingsFieldPicker){

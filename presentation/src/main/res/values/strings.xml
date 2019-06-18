@@ -523,6 +523,13 @@
     <string name="LNG_ERROR_EMAIL_NOTFOUND">Email is not found</string>
     <string name="LNG_TRANSFER_NOT_FOUND">Sorry, but transfer #%s not found</string>
     <string name="LNG_BIG_PRICE_ERROR">Price is too big</string>
+    <string name="LNG_EMAIL_NOT_CHANGEABLE">Email not changeable</string>
+    <string name="LNG_EMAIL_TAKEN_ERROR">Email already taken</string>
+    <string name="LNG_EMAIL_SENT_ACTIVATION_CODE">An activation code has been sent to \nyour email.</string>
+    <string name="LNG_ENTER_NEW_EMAIL">Enter new e-mail</string>
+    <string name="LNG_PROFILE">Profile</string>
+    <string name="LNG_CHANGE_EMAIL">Change e-mail</string>
+    <string name="LNG_CHANGING_EMAIL">Changing e-mail</string>
     <!-- tags for api params-->
     <string name="VEHICLE">vehicle</string>
     <string name="DRIVER">driver</string>

@@ -25,4 +25,7 @@ interface SessionRepository {
     suspend fun register(registerAccount: RegistrationAccount): Result<Account>
     suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean>
     suspend fun logout(): Result<Account>
+
+    suspend fun getCodeForChangeEmail(email: String): Result<Boolean>
+    suspend fun changeEmail(email: String, code: String): Result<Boolean>
 }

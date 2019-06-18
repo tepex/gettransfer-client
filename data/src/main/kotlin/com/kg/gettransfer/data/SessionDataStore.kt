@@ -18,4 +18,7 @@ interface SessionDataStore : KoinComponent {
     suspend fun register(account: RegistrationAccountEntity): AccountEntity
     suspend fun getVerificationCode(email: String?, phone: String?): Boolean
     fun changeEndpoint(endpoint: EndpointEntity)
+
+    suspend fun getCodeForChangeEmail(email: String): Boolean
+    suspend fun changeEmail(email: String, code: String): Boolean
 }

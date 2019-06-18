@@ -33,4 +33,7 @@ open class SessionDataStoreRemote : SessionDataStore {
     }
 
     override fun changeEndpoint(endpoint: EndpointEntity) = remote.changeEndpoint(endpoint)
+
+    override suspend fun getCodeForChangeEmail(email: String) = remote.getCodeForChangeEmail(email)
+    override suspend fun changeEmail(email: String, code: String) = remote.changeEmail(email, code)
 }

@@ -9,14 +9,31 @@
 	android:minHeight="?android:attr/actionBarSize"
 	tools:ignore="Overdraw" >
 
-	<TextView
+	<LinearLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
-		android:id="@+id/toolbar_title"
-		android:textSize="@dimen/toolbar_title_text_size"
-		android:fontFamily="@font/sf_pro_text_semibold"
-		android:textColor="@android:color/black"/>
+		android:gravity="center"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/toolbar_title"
+			android:textSize="@dimen/toolbar_title_text_size"
+			android:fontFamily="@font/sf_pro_text_semibold"
+			android:textColor="@android:color/black"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/toolbar_subtitle"
+			android:textSize="@dimen/toolbar_subtitle_text_size"
+			android:textColor="@color/color_gtr_grey"
+			android:fontFamily="@font/sf_pro_text_regular"
+			android:visibility="gone"/>
+
+	</LinearLayout>
 
 	<android.support.constraint.ConstraintLayout
 		android:id="@+id/layoutChatTitle"
