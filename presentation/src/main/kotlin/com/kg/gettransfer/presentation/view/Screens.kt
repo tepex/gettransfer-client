@@ -161,6 +161,18 @@ object Screens {
         }
     }
 
+    open class ProfileSettings() : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, ProfileSettingsActivity::class.java)
+    }
+
+    open class ChangeEmail() : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangeEmailActivity::class.java)
+    }
+
+    open class ChangePassword() : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangePasswordActivity::class.java)
+    }
+
     open class SmsCode(
         private val isPhone: Boolean,
         private val emailOrPhone: String?,

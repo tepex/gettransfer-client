@@ -54,7 +54,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     companion object {
         const val CLOSE_FRAGMENT  = 0
         const val CURRENCIES_VIEW = 1
-        const val PASSWORD_VIEW   = 2
+        //const val PASSWORD_VIEW   = 2
     }
 
     /*companion object {
@@ -68,7 +68,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         super.attachView(view)
         if (restart) initConfigs()
         initGeneralSettings()
-        if (accountManager.isLoggedIn) initLoggedInUserSettings()
+        if (accountManager.isLoggedIn) {
+            //initLoggedInUserSettings()
+            viewState.initProfileField()
+            viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
+        }
         if (isDriverMode) initCarrierSettings()
         if (BuildConfig.FLAVOR == "dev") initDebugSettings()
     }
@@ -91,10 +95,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setLogoutButtonEnabled(accountManager.hasAccount)
     }
 
-    private fun initLoggedInUserSettings() {
+    /*private fun initLoggedInUserSettings() {
         viewState.initLoggedInUserSettings(accountManager.remoteProfile.let { profileMapper.toView(it) })
         viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
-    }
+    }*/
 
     private fun initCarrierSettings(){
         viewState.initCarrierLayout()
@@ -223,8 +227,14 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun onPasswordClicked() {
-        showingFragment = PASSWORD_VIEW
-        viewState.showFragment(PASSWORD_VIEW)
+        //showingFragment = PASSWORD_VIEW
+        //viewState.showFragment(PASSWORD_VIEW)
+        router.navigateTo(Screens.ChangePassword())
+    }
+
+    fun onProfileFieldClicked() {
+        router.navigateTo(Screens.ProfileSettings())
+        //router.replaceScreen(Screens.ProfileSettings())
     }
 
     @CallSuper

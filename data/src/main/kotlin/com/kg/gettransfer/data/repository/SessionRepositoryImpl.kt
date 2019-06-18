@@ -225,6 +225,24 @@ class SessionRepositoryImpl(
         factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
     }
 
+    override suspend fun getCodeForChangeEmail(email: String): Result<Boolean> {
+        val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().getCodeForChangeEmail(email)
+        }
+        return Result(result.entity != null && result.entity, result.error?.let { ExceptionMapper.map(it) })
+    }
+
+    override suspend fun changeEmail(email: String, code: String): Result<Boolean> {
+        val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().changeEmail(email, code)
+        }
+        if (result.error == null) {
+            this.account.user.profile.email = email
+            this.userEmail = email
+        }
+        return Result(result.entity != null && result.entity, result.error?.let { ExceptionMapper.map(it) })
+    }
+
     companion object {
         private val CONFIGS_DEFAULT = Configs.DEFAULT_CONFIGS
 

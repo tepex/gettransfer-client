@@ -80,6 +80,16 @@ class SessionRemoteImpl : SessionRemote {
         return response.error == null
     }
 
+    override suspend fun getCodeForChangeEmail(email: String): Boolean {
+        val response: ResponseModel<String?> = core.tryTwice { core.api.getCodeForChangeEmail(email) }
+        return response.error == null
+    }
+
+    override suspend fun changeEmail(email: String, code: String): Boolean {
+        val response: ResponseModel<String?> = core.tryTwice { core.api.changeEmail(email, code) }
+        return response.error == null
+    }
+
     /*private suspend fun tryLogin(email: String, password: String): ResponseModel<AccountModelWrapper> {
         return try { core.api.login(email, password).await() }
         catch (e: Exception) {

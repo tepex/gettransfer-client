@@ -2,11 +2,10 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.view.ChangePasswordView
-import org.koin.standalone.KoinComponent
+import com.kg.gettransfer.presentation.view.SettingsChangePasswordView
 
 @InjectViewState
-class ChangePasswordPresenter : BasePresenter<ChangePasswordView>(), KoinComponent {
+class SettingsChangePasswordPresenter : BasePresenter<SettingsChangePasswordView>() {
     private var newPassword: String? = null
     private var repeatedNewPassword: String? = null
 
@@ -23,7 +22,7 @@ class ChangePasswordPresenter : BasePresenter<ChangePasswordView>(), KoinCompone
                 viewState.blockInterface(true)
                 val result = utils.asyncAwait { sessionInteractor.changePassword(newPassword!!, repeatedNewPassword!!) }
                 result.error?.let { viewState.setError(it) }
-                if (result.error == null) viewState.passwordChanged()
+                if (result.error == null) router.exit()
                 viewState.blockInterface(false)
             }
         } else {

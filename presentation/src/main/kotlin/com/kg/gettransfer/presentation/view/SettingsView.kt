@@ -24,7 +24,8 @@ interface SettingsView : BaseView {
     fun setLogoutButtonEnabled(enabled: Boolean)
 
     fun initGeneralSettingsLayout()
-    fun initLoggedInUserSettings(profile: ProfileModel)
+    //fun initLoggedInUserSettings(profile: ProfileModel)
+    fun initProfileField()
     fun initCarrierLayout()
     fun initDebugLayout()
 

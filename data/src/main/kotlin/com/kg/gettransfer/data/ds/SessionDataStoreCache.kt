@@ -2,7 +2,11 @@ package com.kg.gettransfer.data.ds
 
 import com.kg.gettransfer.data.SessionCache
 import com.kg.gettransfer.data.SessionDataStore
-import com.kg.gettransfer.data.model.*
+import com.kg.gettransfer.data.model.ConfigsEntity
+import com.kg.gettransfer.data.model.MobileConfigEntity
+import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.RegistrationAccountEntity
+import com.kg.gettransfer.data.model.EndpointEntity
 
 import org.koin.standalone.inject
 
@@ -18,7 +22,7 @@ open class SessionDataStoreCache : SessionDataStore {
 
     override suspend fun getMobileConfigs() = cache.getMobileConfigs()
     override suspend fun setMobileConfigs(mobileConfigsEntity: MobileConfigEntity) =
-        cache.setMobileConfigs(mobileConfigsEntity)
+            cache.setMobileConfigs(mobileConfigsEntity)
 
     override suspend fun getAccount() = cache.getAccount()
     override suspend fun setAccount(accountEntity: AccountEntity) = cache.setAccount(accountEntity)
@@ -37,6 +41,14 @@ open class SessionDataStoreCache : SessionDataStore {
     }
 
     override fun changeEndpoint(endpoint: EndpointEntity) {
+        throw UnsupportedOperationException()
+    }
+
+    override suspend fun getCodeForChangeEmail(email: String): Boolean {
+        throw UnsupportedOperationException()
+    }
+
+    override suspend fun changeEmail(email: String, code: String): Boolean {
         throw UnsupportedOperationException()
     }
 }
