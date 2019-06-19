@@ -50,9 +50,7 @@ val dataModule = module {
         }
     }
 
-    single { VehicleInfoMapper() }
     single { CarrierMapper() }
-    single { VehicleMapper() }
     single { OfferMapper() }
     single { OfferDataStoreCache() }
     single { OfferDataStoreRemote() }

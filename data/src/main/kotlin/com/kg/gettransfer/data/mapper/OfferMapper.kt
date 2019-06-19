@@ -14,7 +14,6 @@ import org.koin.standalone.get
  */
 open class OfferMapper : Mapper<OfferEntity, Offer> {
     private val carrierMapper = get<CarrierMapper>()
-    private val vehicleMapper = get<VehicleMapper>()
     private val dateFormat    = get<ThreadLocal<DateFormat>>("iso_date")
 
     /**
@@ -35,7 +34,7 @@ open class OfferMapper : Mapper<OfferEntity, Offer> {
             ratings           = type.ratings?.let { it.map() },
             passengerFeedback = type.passengerFeedback,
             carrier           = carrierMapper.fromEntity(type.carrier),
-            vehicle           = vehicleMapper.fromEntity(type.vehicle),
+            vehicle           = type.vehicle.map(),
             driver            = type.driver?.let { it.map() }
         )
 
@@ -57,7 +56,7 @@ open class OfferMapper : Mapper<OfferEntity, Offer> {
                     ratings           = type.ratings?.let { it.map() },
                     passengerFeedback = type.passengerFeedback,
                     carrier           = carrierMapper.toEntity(type.carrier),
-                    vehicle           = vehicleMapper.toEntity(type.vehicle),
+                    vehicle           = type.vehicle.map(),
                     driver            = type.driver?.let { it.map() }
             )
 }

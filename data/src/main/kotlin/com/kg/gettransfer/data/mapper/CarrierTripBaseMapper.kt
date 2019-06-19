@@ -16,8 +16,7 @@ import org.koin.standalone.get
  * this later and the Domain layer.
  */
 open class CarrierTripBaseMapper : Mapper<CarrierTripBaseEntity, CarrierTripBase> {
-    private val vehicleInfoMapper      = get<VehicleInfoMapper>()
-    private val dateFormat             = get<ThreadLocal<DateFormat>>("iso_date")
+    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
 
     /**
      * Map a [CarrierTripBaseEntity] instance to a [CarrierTripBase] instance.
@@ -39,7 +38,7 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseEntity, CarrierTripBase
             comment               = type.comment,
             waterTaxi             = type.waterTaxi,
             price                 = type.price,
-            vehicle               = vehicleInfoMapper.fromEntity(type.vehicle)
+            vehicle               = type.vehicle.map()
         )
 
     /**
