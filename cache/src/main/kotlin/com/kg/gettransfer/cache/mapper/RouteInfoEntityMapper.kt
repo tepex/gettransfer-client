@@ -15,7 +15,8 @@ open class RouteInfoEntityMapper : KoinComponent {
                     prices           = mapOf(),
                     watertaxi        = type.watertaxi,
                     polyLines        = type.polyLines.list,
-                    overviewPolyline = type.overviewPolyline
+                    overviewPolyline = type.overviewPolyline,
+                    hintsToComments  = type.hintsToComments?.list
             )
 
     fun toCached(from: String, to: String, type: RouteInfoEntity) =
@@ -27,6 +28,7 @@ open class RouteInfoEntityMapper : KoinComponent {
                     duration         = type.duration,
                     watertaxi        = type.watertaxi,
                     polyLines        = StringList(type.polyLines),
-                    overviewPolyline = type.overviewPolyline
+                    overviewPolyline = type.overviewPolyline,
+                    hintsToComments  = type.hintsToComments?.let { StringList(it) }
             )
 }

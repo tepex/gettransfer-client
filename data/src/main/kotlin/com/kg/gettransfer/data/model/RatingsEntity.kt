@@ -14,7 +14,7 @@ data class RatingsEntity(
 
     companion object {
         const val AVERAGE = "average"
-        const val VEHICLE = "vehicle"
+        const val   VEHICLE = "vehicle"
         const val DRIVER  = "driver"
         const val FAIR    = "fair"
     }

@@ -75,10 +75,11 @@ class RouteRepositoryImpl(
             success          = false,
             distance         = null,
             duration         = null,
-            prices           = emptyMap<TransportType.ID, TransportTypePrice>(),
+            prices           = emptyMap(),
             watertaxi        = false,
-            polyLines        = emptyList<String>(),
-            overviewPolyline = null
+            polyLines        = emptyList(),
+            overviewPolyline = null,
+            hintsToComments = emptyList()
         )
     }
 }

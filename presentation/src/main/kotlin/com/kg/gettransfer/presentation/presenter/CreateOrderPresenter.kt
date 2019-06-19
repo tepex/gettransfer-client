@@ -76,6 +76,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
     private var selectedCurrency = INVALID_CURRENCY_INDEX
+    private var hintsToComments: List<String>? = null
 
     private var isTimeSetByUser = false
     set(value) {
@@ -139,6 +140,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     ?.let {
                         route = it
                         duration = it.duration
+                        hintsToComments = it.hintsToComments
                     }
             setTransportTypePrices(route?.prices ?: emptyMap(), true)
 
@@ -605,6 +607,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun setComment(comment: String) {
         orderInteractor.comment = if (comment.isNotEmpty()) comment else null
+    }
+
+    fun commentClick(comment: String) {
+        viewState.showCommentDialog(comment, hintsToComments)
     }
 
     companion object {
