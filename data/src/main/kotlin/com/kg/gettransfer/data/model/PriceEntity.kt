@@ -1,6 +1,7 @@
 package com.kg.gettransfer.data.model
 
-import java.util.Locale
+import com.kg.gettransfer.data.model.PriceEntity
+import com.kg.gettransfer.domain.model.Price
 
 import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
@@ -23,3 +24,21 @@ data class PriceEntity(
         const val AMOUNT        = "amount"
     }
 }
+
+fun Price.map() =
+    PriceEntity(
+        base.map(),
+        withoutDiscount?.let { it.map() },
+        percentage30,
+        percentage70,
+        amount
+    )
+    
+fun PriceEntity.map() = 
+    Price(
+        base.map(),
+        withoutDiscount?.let { it.map() },
+        percentage30,
+        percentage70,
+        amount
+    )

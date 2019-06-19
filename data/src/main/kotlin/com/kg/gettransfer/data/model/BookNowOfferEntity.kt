@@ -1,5 +1,8 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.BookNowOffer
+import com.kg.gettransfer.domain.model.TransportType
+
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
@@ -16,3 +19,11 @@ class BookNowOfferEntity(
         const val WITHOUT_DISCOUNT = "without_discount"
     }
 }
+
+fun BookNowOfferEntity.map(transportType: TransportType) =
+    BookNowOffer(
+        amount,
+        base.map(),
+        withoutDiscount?.let { it.map() },
+        transportType
+    )

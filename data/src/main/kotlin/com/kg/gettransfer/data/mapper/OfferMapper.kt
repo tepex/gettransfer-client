@@ -13,7 +13,6 @@ import org.koin.standalone.get
  * Map a [OfferEntity] to and from a [Offer] instance when data is moving between this later and the Domain layer.
  */
 open class OfferMapper : Mapper<OfferEntity, Offer> {
-    private val priceMapper   = get<PriceMapper>()
     private val ratingsMapper = get<RatingsMapper>()
     private val carrierMapper = get<CarrierMapper>()
     private val vehicleMapper = get<VehicleMapper>()
@@ -33,7 +32,7 @@ open class OfferMapper : Mapper<OfferEntity, Offer> {
             charger           = type.charger,
             createdAt         = dateFormat.get().parse(type.createdAt),
             updatedAt         = type.updatedAt?.let { dateFormat.get().parse(it) },
-            price             = priceMapper.fromEntity(type.price),
+            price             = type.price.map(),
             ratings           = type.ratings?.let { ratingsMapper.fromEntity(it) },
             passengerFeedback = type.passengerFeedback,
             carrier           = carrierMapper.fromEntity(type.carrier),
@@ -55,7 +54,7 @@ open class OfferMapper : Mapper<OfferEntity, Offer> {
                     charger           = type.charger,
                     createdAt         = dateFormat.get().format(type.createdAt),
                     updatedAt         = type.updatedAt?.let { dateFormat.get().format(it) },
-                    price             = priceMapper.toEntity(type.price),
+                    price             = type.price.map(),
                     ratings           = type.ratings?.let { ratingsMapper.toEntity(it) },
                     passengerFeedback = type.passengerFeedback,
                     carrier           = carrierMapper.toEntity(type.carrier),

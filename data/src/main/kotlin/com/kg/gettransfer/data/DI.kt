@@ -52,11 +52,9 @@ val dataModule = module {
 
     single { LocaleMapper() }
     single { RatingsMapper() }
-    single { MoneyMapper() }
     single { VehicleInfoMapper() }
     single { TransportTypeMapper() }
     single { CarrierMapper() }
-    single { PriceMapper() }
     single { VehicleMapper() }
     single { OfferMapper() }
     single { OfferDataStoreCache() }
@@ -116,7 +114,6 @@ val dataModule = module {
     single { CarrierTripDataStoreRemote() }
     single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get()), get()) }
 
-    single { BookNowOfferMapper() }
     single { TripMapper() }
     single { TransferMapper() }
     single { TransferNewMapper() }

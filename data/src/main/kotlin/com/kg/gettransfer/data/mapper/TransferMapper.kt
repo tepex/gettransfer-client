@@ -19,8 +19,6 @@ import org.koin.standalone.get
  * Map a [TransferEntity] to and from a [Transfer] instance when data is moving between this later and the Domain layer.
  */
 open class TransferMapper : KoinComponent {
-    private val bookNowOfferMapper = get<BookNowOfferMapper>()
-    private val moneyMapper        = get<MoneyMapper>()
     private val dateFormatTZ       = get<ThreadLocal<DateFormat>>("iso_date_TZ")
     private val dateFormat         = get<ThreadLocal<DateFormat>>("iso_date")
 
@@ -58,14 +56,13 @@ open class TransferMapper : KoinComponent {
             childSeatsBooster     = type.childSeatsBooster,
             promoCode             = type.promoCode,
             passengerOfferedPrice = type.passengerOfferedPrice,
-            price                 = type.price?.let { moneyMapper.fromEntity(it) },
-            paidSum               = type.paidSum?.let { moneyMapper.fromEntity(it) },
-            remainsToPay          = type.remainsToPay?.let { moneyMapper.fromEntity(it) },
+            price                 = type.price?.let { it.map() },
+            paidSum               = type.paidSum?.let { it.map() },
+            remainsToPay          = type.remainsToPay?.let { it.map() },
             paidPercentage        = type.paidPercentage,
             watertaxi             = type.watertaxi,
             bookNowOffers         = type.bookNowOffers.map { entry ->
-                bookNowOfferMapper.fromEntity(
-                    entry.value,
+                entry.value.map(
                     transportTypes.find { it.id === TransportType.ID.parse(entry.key) } ?: transportTypes.first()
                 )
             },
@@ -79,7 +76,7 @@ open class TransferMapper : KoinComponent {
             pendingPaymentId      = type.pendingPaymentId,
             analyticsSent         = type.analyticsSent,
             rubPrice              = type.rubPrice,
-            refundedPrice         = type.refundedPrice?.let { moneyMapper.fromEntity(it) },
+            refundedPrice         = type.refundedPrice?.let { it.map() },
             campaign              = type.campaign,
 /* ================================================== */
             editableFields      = type.editableFields,

@@ -14,7 +14,6 @@ import org.koin.standalone.get
  */
 open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
     private val tripMapper      = get<TripMapper>()
-    private val moneyMapper     = get<MoneyMapper>()
     private val destMapper      = get<DestMapper>()
 
     /**
