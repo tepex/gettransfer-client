@@ -80,8 +80,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun initDebugMenu() {
         if (BuildConfig.FLAVOR == "dev") {
-            viewState.setEndpoints(endpoints)
-            viewState.setEndpoint(endpointMapper.toView(systemInteractor.endpoint))
             showDebugMenu()
         } else if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
             if (systemInteractor.isDebugMenuShowed)
@@ -137,7 +135,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
     }
 
-    private fun showDebugMenu() = viewState.showDebugMenu()
+    private fun showDebugMenu() {
+        viewState.setEndpoints(endpoints)
+        viewState.setEndpoint(endpointMapper.toView(systemInteractor.endpoint))
+        viewState.showDebugMenu()
+    }
 
     /*fun changeCurrency(selected: Int) {
         val currencyModel = currencies.get(selected)
