@@ -12,14 +12,12 @@ import org.koin.standalone.get
  * Map a [ConfigsEntity] to and from a [Configs] instance when data is moving between this later and the Domain layer.
  */
 open class ConfigsMapper : Mapper<ConfigsEntity, Configs> {
-    private val transportTypeMapper     = get<TransportTypeMapper>()
-
     /**
      * Map a [ConfigsEntity] instance to a [Configs] instance
      */
     override fun fromEntity(type: ConfigsEntity) =
         Configs(
-            transportTypes = type.transportTypes.map { transportTypeMapper.fromEntity(it) },
+            transportTypes = type.transportTypes.map { it.map() },
             //paypalCredentials = paypalCredentialsMapper.fromEntity(type.paypalCredentials),
             availableLocales = type.availableLocales.map { it.map() },
             //preferredLocale = locales.find { it.language == type.preferredLocale },

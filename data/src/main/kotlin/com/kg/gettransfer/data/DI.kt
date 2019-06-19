@@ -51,7 +51,6 @@ val dataModule = module {
     }
 
     single { VehicleInfoMapper() }
-    single { TransportTypeMapper() }
     single { CarrierMapper() }
     single { VehicleMapper() }
     single { OfferMapper() }
@@ -95,8 +94,6 @@ val dataModule = module {
 
     single { SessionRepositoryImpl(DataStoreFactory<SessionDataStore, SessionDataStoreCache, SessionDataStoreRemote>(get(), get())) } bind SessionRepository::class
 
-    single { RouteInfoMapper() }
-    single { TransportTypePriceMapper() }
     single { RouteDataStoreCache() }
     single { RouteDataStoreRemote() }
     single<RouteRepository> { RouteRepositoryImpl(DataStoreFactory<RouteDataStore, RouteDataStoreCache, RouteDataStoreRemote>(get(), get())) }

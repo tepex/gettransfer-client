@@ -8,10 +8,10 @@ import com.kg.gettransfer.data.ds.RouteDataStoreCache
 import com.kg.gettransfer.data.ds.RouteDataStoreRemote
 
 import com.kg.gettransfer.data.mapper.ExceptionMapper
-import com.kg.gettransfer.data.mapper.RouteInfoMapper
-import com.kg.gettransfer.data.model.ResultEntity
 
+import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.RouteInfoEntity
+import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
@@ -23,13 +23,9 @@ import com.kg.gettransfer.domain.repository.RouteRepository
 
 import java.util.Date
 
-import org.koin.standalone.get
-
 class RouteRepositoryImpl(
     private val factory: DataStoreFactory<RouteDataStore, RouteDataStoreCache, RouteDataStoreRemote>
 ) : BaseRepository(), RouteRepository {
-
-    private val routeInfoMapper = get<RouteInfoMapper>()
 
     override suspend fun getRouteInfo(
         from: Point,
@@ -56,14 +52,14 @@ class RouteRepositoryImpl(
             }
         } catch (e: CacheException) {
             return Result(
-                result.entity?.let { routeInfoMapper.fromEntity(it) } ?: EMPTY,
+                result.entity?.let { it.map() } ?: EMPTY,
                 null,
                 false,
                 ExceptionMapper.map(e)
             )
         }
         return Result(
-            result.entity?.let { routeInfoMapper.fromEntity(it) } ?: EMPTY,
+            result.entity?.let { it.map() } ?: EMPTY,
             result.error?.let { ExceptionMapper.map(it) },
             result.error != null && result.entity != null,
             result.cacheError?.let { ExceptionMapper.map(it) }
@@ -86,7 +82,7 @@ class RouteRepositoryImpl(
             )
         }
         return Result(
-            result.entity?.let { routeInfoMapper.fromEntity(it) } ?: EMPTY,
+            result.entity?.let { it.map() } ?: EMPTY,
             result.error?.let { ExceptionMapper.map(it) },
             result.error != null && result.entity != null,
             result.cacheError?.let { ExceptionMapper.map(it) }
