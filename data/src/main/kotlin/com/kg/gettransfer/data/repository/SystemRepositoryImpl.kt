@@ -60,4 +60,8 @@ class SystemRepositoryImpl : BaseRepository(), SystemRepository{
     override var appEnters: Int
         get() = preferencesCache.appEnters
         set(value) { preferencesCache.appEnters = value }
+
+    override var isDebugMenuShowed: Boolean
+        get() = preferencesCache.isDebugMenuShowed
+        set(value) { preferencesCache.isDebugMenuShowed = value }
 }

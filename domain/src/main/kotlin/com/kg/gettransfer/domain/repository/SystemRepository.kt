@@ -16,4 +16,5 @@ interface SystemRepository {
     var endpoint: Endpoint
     var addressHistory: List<GTAddress>
     var appEnters: Int
+    var isDebugMenuShowed: Boolean
 }

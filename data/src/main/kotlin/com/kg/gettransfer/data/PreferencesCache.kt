@@ -26,6 +26,7 @@ interface PreferencesCache {
     val endpoints: List<EndpointEntity>
     var driverCoordinatesInBackGround: Int
     var offerViewExpanded: Boolean
+    var isDebugMenuShowed: Boolean
 
     fun logout()
     fun addListener(listener: PreferencesListener)

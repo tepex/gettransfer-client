@@ -74,7 +74,19 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
         }
         if (isDriverMode) initCarrierSettings()
-        if (BuildConfig.FLAVOR == "dev") initDebugSettings()
+
+        initDebugMenu()
+    }
+
+    private fun initDebugMenu() {
+        if (BuildConfig.FLAVOR == "dev") {
+            viewState.setEndpoints(endpoints)
+            viewState.setEndpoint(endpointMapper.toView(systemInteractor.endpoint))
+            showDebugMenu()
+        } else if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
+            if (systemInteractor.isDebugMenuShowed)
+                showDebugMenu()
+        }
     }
 
     private fun initGeneralSettings(){
@@ -113,12 +125,19 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setFirstDayOfWeek(daysOfWeek[systemInteractor.firstDayOfWeek - 1].name)
     }
 
-    private fun initDebugSettings() {
-        viewState.initDebugLayout()
-
-        viewState.setEndpoints(endpoints)
-        viewState.setEndpoint(endpointMapper.toView(systemInteractor.endpoint))
+    fun switchDebugSettings() {
+        if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
+            if (systemInteractor.isDebugMenuShowed) {
+                systemInteractor.isDebugMenuShowed = false
+                viewState.hideDebugMenu()
+            } else {
+                systemInteractor.isDebugMenuShowed = true
+                showDebugMenu()
+            }
+        }
     }
+
+    private fun showDebugMenu() = viewState.showDebugMenu()
 
     /*fun changeCurrency(selected: Int) {
         val currencyModel = currencies.get(selected)
