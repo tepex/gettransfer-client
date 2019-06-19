@@ -13,6 +13,7 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.presenter.SettingsChangeEmailPresenter
 import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 import kotlinx.android.synthetic.main.activity_settings_change_email.*
+import kotlinx.android.synthetic.main.view_input_account_field.view.*
 
 class SettingsChangeEmailActivity: BaseActivity(), SettingsChangeEmailView {
 
@@ -31,7 +32,7 @@ class SettingsChangeEmailActivity: BaseActivity(), SettingsChangeEmailView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_change_email)
 
-        new_email_field_input.onTextChanged { presenter.setEmail(it) }
+        emailLayout.fieldText.onTextChanged { presenter.setEmail(it) }
         emailCodeView.filters = arrayOf(InputFilter.AllCaps())
         emailCodeView.onTextChanged {
             if (emailCodeView.length() > SettingsChangeEmailPresenter.MAX_CODE_LENGTH) {
@@ -40,6 +41,7 @@ class SettingsChangeEmailActivity: BaseActivity(), SettingsChangeEmailView {
                 presenter.setCode(it, it.length == emailCodeView.itemCount)
             }
         }
+        emailLayout.fieldText.requestFocus()
 
         btnResendCode.setOnClickListener { presenter.onResendCodeClicked() }
         btnChangeEmail.setOnClickListener { presenter.onChangeEmailClicked() }

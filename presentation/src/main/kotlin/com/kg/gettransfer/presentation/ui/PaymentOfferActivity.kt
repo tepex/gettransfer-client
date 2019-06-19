@@ -55,6 +55,7 @@ import kotlinx.android.synthetic.main.layout_prices.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
 import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
 import kotlinx.android.synthetic.main.view_currency_converting_info.view.*
+import kotlinx.android.synthetic.main.view_input_account_field.view.*
 
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
@@ -119,28 +120,30 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     private fun initEmailTextChangeListeners() {
-        et_auth_email.onTextChanged {
+        emailLayout.fieldText.onTextChanged {
             presenter.setEmail(it.trim())
         }
     }
 
     private fun initPhoneTextChangeListeners() {
-        et_auth_phone.onTextChanged {
-            if (it.isEmpty() && et_auth_phone.isFocused) {
-                et_auth_phone.setText("+")
-                et_auth_phone.setSelection(1)
+        with(phoneLayout.fieldText) {
+            onTextChanged {
+                if (it.isEmpty() && isFocused) {
+                    setText("+")
+                    setSelection(1)
+                }
+                presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
             }
-            presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
-        }
-        et_auth_phone.addTextChangedListener(PhoneNumberFormatter())
-        et_auth_phone.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) setPhoneCode()
-            else {
-                val phone = et_auth_phone.text?.trim()
-                phone?.let {
-                    if (phone.length == 1) {
-                        et_auth_phone.text?.clear()
-                        presenter.setPhone("")
+            addTextChangedListener(PhoneNumberFormatter())
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) setPhoneCode()
+                else {
+                    val phone = text?.trim()
+                    phone?.let {
+                        if (phone.length == 1) {
+                            text?.clear()
+                            presenter.setPhone("")
+                        }
                     }
                 }
             }
@@ -148,14 +151,16 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     private fun setPhoneCode() {
-        val phone = et_auth_phone.text?.trim()
-        phone?.let {
-            if (phone.isEmpty()) {
-                val phoneCode = Utils.getPhoneCodeByCountryIso(this)
-                et_auth_phone.setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+        with(phoneLayout.fieldText) {
+            val phone = text?.trim()
+            phone?.let {
+                if (phone.isEmpty()) {
+                    val phoneCode = Utils.getPhoneCodeByCountryIso(context)
+                    setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+                }
             }
+            fieldTouched(this)
         }
-        fieldTouched(et_auth_phone)
     }
 
     private fun fieldTouched(viewForFocus: EditText) {
@@ -409,8 +414,8 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
             ll_auth_container.isVisible = true
             initEmailTextChangeListeners()
             initPhoneTextChangeListeners()
-            profile.email?.let { et_auth_email.setText(it) }
-            profile.phone?.let { et_auth_phone.setText(it) }
+            profile.email?.let { emailLayout.fieldText.setText(it) }
+            profile.phone?.let { phoneLayout.fieldText.setText(it) }
         } else {
             ll_auth_container.isVisible = false
         }

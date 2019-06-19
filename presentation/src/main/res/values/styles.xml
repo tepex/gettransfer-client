@@ -251,6 +251,11 @@
         <item name="android:fontFamily">@font/sf_pro_text_regular</item>
     </style>
 
+    <style name="tabs_text_style" parent="black_regular">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <style name="offerCard" parent="Base.CardView">
         <item name="android:layout_marginTop">@dimen/card_view_margin_top_bottom</item>
         <item name="android:layout_marginBottom">@dimen/card_view_margin_top_bottom</item>

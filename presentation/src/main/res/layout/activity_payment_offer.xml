@@ -12,7 +12,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp">
+        android:paddingBottom="@dimen/payment_layout_padding_bottom">
 
 
         <include
@@ -87,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="14sp"
+                android:textSize="@dimen/payment_text_size_14sp"
                 tools:text="Refund is available before 17 Oct 2018 at 15:30:00"/>
 
         </LinearLayout>
@@ -150,66 +150,37 @@
                 android:layout_height="wrap_content"
                 android:text="@string/LNG_PAYMENT_COLLECT_MILES"
                 style="@style/sf_font_pro_display_regular_black"
-                android:textSize="17sp"
+                android:textSize="@dimen/payment_text_size_17sp"
                 android:gravity="center"/>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/il_auth_phone"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/payment_ilAuthPhone_layout_marginTop"
-                android:hint="@string/LNG_PHONE"
-                android:paddingStart="16dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="4dp"
+                android:layout_marginTop="@dimen/payment_login_view_margin_top"
+                android:paddingStart="@dimen/payment_login_view_vertical_padding"
+                android:paddingEnd="@dimen/payment_login_view_vertical_padding"
                 android:background="@color/colorWhite"
-                android:theme="@style/editTextLogin">
+                android:orientation="vertical">
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/et_auth_phone"
+                <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
+                    android:id="@+id/phoneLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:account_field_view_icon="@drawable/ic_phone"
+                    app:account_field_view_hint="@string/LNG_PHONE"
+                    android:inputType="phone"/>
 
-                    android:background="@null"
-                    android:drawableStart="@drawable/ic_phone"
-                    android:drawablePadding="@dimen/login_input_layout_drawable_padding"
-                    android:ems="10"
-                    android:inputType="textEmailAddress"
-                    android:paddingTop="@dimen/login_etEmail_padding_top"
-                    android:paddingBottom="@dimen/login_etEmail_padding_bottom"/>
-            </android.support.design.widget.TextInputLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/payment_divider_height"
-                android:background="@color/color_gtr_super_light_grey"
-                android:layout_marginStart="@dimen/payment_divider_marginStart"
-                android:layout_marginEnd="@dimen/payment_divider_marginStart" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/il_auth_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/LNG_EMAIL"
-                android:background="@color/colorWhite"
-                android:paddingStart="16dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="4dp"
-                android:theme="@style/editTextLogin">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/et_auth_email"
+                <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
+                    android:id="@+id/emailLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/icon"
-                    android:background="@null"
-                    android:drawableStart="@drawable/ic_email"
-                    android:drawablePadding="@dimen/login_input_layout_drawable_padding"
-                    android:ems="10"
-                    android:inputType="textEmailAddress"
-                    android:paddingTop="@dimen/login_etEmail_padding_top"
-                    android:paddingBottom="@dimen/login_etEmail_padding_bottom"/>
-            </android.support.design.widget.TextInputLayout>
+                    app:account_field_view_icon="@drawable/ic_email"
+                    app:account_field_view_hint="@string/LNG_EMAIL"
+                    app:account_field_view_divider_visible="false"
+                    android:inputType="textEmailAddress"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <TextView
@@ -223,7 +194,7 @@
             android:gravity="center"
             android:paddingStart="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
             android:paddingEnd="@dimen/activity_carrier_transfer_details_header_text_padding_start_end"
-            android:textSize="14sp"
+            android:textSize="@dimen/payment_text_size_14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ll_auth_container"
@@ -234,7 +205,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textSize="14sp"
+            android:textSize="@dimen/payment_text_size_14sp"
             android:layout_marginStart="@dimen/payment_tvPaymentAgreement_margin_start"
             android:layout_marginTop="@dimen/payment_tvPaymentAgreement_margin_top"
             android:layout_marginEnd="@dimen/payment_tvPaymentAgreement_margin_end"
@@ -254,7 +225,7 @@
             android:layout_marginEnd="@dimen/payment_button_pay_margin_end"
             android:layout_marginBottom="@dimen/payment_button_pay_margin_bottom"
             android:text="@string/LNG_PAYMENT_PAY"
-            android:textSize="14sp"
+            android:textSize="@dimen/payment_text_size_14sp"
             android:textAllCaps="true"
             android:gravity="center"
             style="@style/sf_pro_text_semibold_white"
