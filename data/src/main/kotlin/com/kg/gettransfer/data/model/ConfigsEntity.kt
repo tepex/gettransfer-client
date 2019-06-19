@@ -1,5 +1,8 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.CardGateways
+import com.kg.gettransfer.domain.model.Currency
+
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
@@ -72,3 +75,5 @@ data class CurrencyEntity(
         const val SYMBOL   = "symbol"
     }
 }
+
+fun CurrencyEntity.map() = Currency(code,symbol)

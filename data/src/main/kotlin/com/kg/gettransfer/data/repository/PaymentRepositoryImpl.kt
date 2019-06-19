@@ -4,13 +4,16 @@ import com.kg.gettransfer.data.PaymentDataStore
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.PaymentDataStoreCache
 import com.kg.gettransfer.data.ds.PaymentDataStoreRemote
-import com.kg.gettransfer.data.mapper.PaymentRequestMapper
+
+import com.kg.gettransfer.data.mapper.BraintreeTokenMapper
 import com.kg.gettransfer.data.mapper.PaymentMapper
+import com.kg.gettransfer.data.mapper.PaymentRequestMapper
 import com.kg.gettransfer.data.mapper.PaymentStatusRequestMapper
 import com.kg.gettransfer.data.mapper.PaymentStatusMapper
-import com.kg.gettransfer.data.mapper.BraintreeTokenMapper
+
 import com.kg.gettransfer.data.model.PaymentEntity
 import com.kg.gettransfer.data.model.PaymentStatusEntity
+
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
@@ -23,11 +26,14 @@ import com.kg.gettransfer.domain.model.BraintreeToken
 import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.PaymentRepository
+
 import org.koin.standalone.get
 import org.koin.standalone.inject
 
-class PaymentRepositoryImpl(private val factory: DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>):
-                                BaseRepository(), PaymentRepository {
+class PaymentRepositoryImpl(
+    private val factory: DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>
+): BaseRepository(), PaymentRepository {
+
     private val paymentRequestMapper       = get<PaymentRequestMapper>()
     private val paymentMapper              = get<PaymentMapper>()
     private val paymentStatusRequestMapper = get<PaymentStatusRequestMapper>()

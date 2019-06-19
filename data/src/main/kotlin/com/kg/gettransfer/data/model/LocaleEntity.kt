@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import java.util.Locale
+
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
@@ -14,3 +16,6 @@ data class LocaleEntity(
         const val TITLE = "title"
     }
 }
+
+fun Locale.map() = LocaleEntity(language.toUpperCase(), displayLanguage)
+fun LocaleEntity.map() = Locale(code)

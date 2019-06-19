@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.Ratings
+
 import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
@@ -19,3 +21,6 @@ data class RatingsEntity(
         const val FAIR    = "fair"
     }
 }
+
+fun Ratings.map() = RatingsEntity(average, vehicle, driver, fair)
+fun RatingsEntity.map() = Ratings(average, vehicle, driver, fair)

@@ -12,8 +12,6 @@ import org.koin.standalone.get
  * Map a [CarrierEntity] to and from a [Carrier] instance when data is moving between this later and the Domain layer.
  */
 open class CarrierMapper : Mapper<CarrierEntity, Carrier> {
-    private val localeMapper  = get<LocaleMapper>()
-    private val ratingsMapper = get<RatingsMapper>()
     /**
      * Map a [CarrierEntity] instance to a [Carrier] instance.
      */
@@ -23,8 +21,8 @@ open class CarrierMapper : Mapper<CarrierEntity, Carrier> {
             profile            = type.profile?.let { it.map() },
             approved           = type.approved,
             completedTransfers = type.completedTransfers,
-            languages          = type.languages.map { localeMapper.fromEntity(it) },
-            ratings            = ratingsMapper.fromEntity(type.ratings),
+            languages          = type.languages.map { it.map() },
+            ratings            = type.ratings.map(),
             canUpdateOffers    = type.canUpdateOffers ?: false
         )
     /**
@@ -36,8 +34,8 @@ open class CarrierMapper : Mapper<CarrierEntity, Carrier> {
                     profile            = type.profile?.let { it.map() },
                     approved           = type.approved,
                     completedTransfers = type.completedTransfers,
-                    languages          = type.languages.map { localeMapper.toEntity(it) },
-                    ratings            = ratingsMapper.toEntity(type.ratings),
+                    languages          = type.languages.map { it.map() },
+                    ratings            = type.ratings.map(),
                     canUpdateOffers    = type.canUpdateOffers
             )
 }
