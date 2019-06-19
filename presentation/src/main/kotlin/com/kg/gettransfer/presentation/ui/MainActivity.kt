@@ -410,7 +410,7 @@ class MainActivity :
             }
         }
         btnMyLocation.isVisible = showBtnMyLocation
-        requestView?.setVisibilityBtnMyLocation(showBtnMyLocation)
+        //requestView?.setVisibilityBtnMyLocation(showBtnMyLocation)
     }
 
     override fun openMapToSetPoint() {
