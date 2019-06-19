@@ -13,7 +13,7 @@ fun Router.createStartChain(vararg args: Screen) {
 //backTo() without finishChain doesn't work
 fun Router.finishChainAndBackTo(screen: Screen) {
     finishChain()
-    newRootChain(screen)
+    newRootScreen(screen)
 }
 
 //use if need delete current chain, go back to main and create new chain

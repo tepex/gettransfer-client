@@ -13,7 +13,7 @@ class AboutPresenter : BasePresenter<AboutView>() {
     internal var openMain = false
 
     fun closeAboutActivity() {
-        if (!openMain) router.replaceScreen(Screens.MainPassenger(true)) else router.exit()
+        if (!openMain) router.newRootScreen(Screens.MainPassenger(true)) else router.exit()
     }
 
     fun logEvent(value: Int) {

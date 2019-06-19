@@ -61,6 +61,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:launchMode="singleTask"
             android:name=".presentation.ui.MainActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
