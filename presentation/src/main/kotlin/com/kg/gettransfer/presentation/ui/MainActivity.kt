@@ -583,7 +583,7 @@ class MainActivity :
             }
 
             hourlySheet.state == BottomSheetBehavior.STATE_COLLAPSED -> showNumberPicker(false)
-            else -> super.onBackPressed()
+            else -> presenter.onBackCommandClick()
         }
     }
 
