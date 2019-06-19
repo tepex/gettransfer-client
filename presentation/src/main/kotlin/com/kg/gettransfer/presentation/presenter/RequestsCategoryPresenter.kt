@@ -4,18 +4,16 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.extensions.finishChainAndBackTo
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
 import timber.log.Timber
-import java.lang.IllegalArgumentException
 
 @InjectViewState
 class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
-        BasePresenter<RequestsFragmentView>(), CounterEventListener {
+    BasePresenter<RequestsFragmentView>(), CounterEventListener {
 
     @RequestsView.TransferTypeAnnotation
     var transferType = tt
@@ -46,9 +44,9 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     private fun getTransfers() {
         utils.launchSuspend {
             transfers = when (transferType) {
-                TRANSFER_ACTIVE  ->  fetchData(checkLoginError = false) { transferInteractor.getTransfersActive() }
-                TRANSFER_ARCHIVE ->  fetchData(checkLoginError = false) { transferInteractor.getTransfersArchive() }
-                else             ->  throw IllegalArgumentException("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
+                TRANSFER_ACTIVE -> fetchData(checkLoginError = false) { transferInteractor.getTransfersActive() }
+                TRANSFER_ARCHIVE -> fetchData(checkLoginError = false) { transferInteractor.getTransfersArchive() }
+                else -> throw IllegalArgumentException("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
             }?.sortedByDescending { it.dateToLocal }
             prepareDataAsync()
             viewState.blockInterface(false)
@@ -59,11 +57,11 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         transfers?.let {
             if (it.isNotEmpty()) {
                 utils
-                        .compute { transfers?.map { t -> transferMapper.toView(t) } }
-                        ?.also { viewList ->
-                            viewState.updateTransfers(viewList)
-                            updateEventsCount()
-                        }
+                    .compute { transfers?.map { t -> transferMapper.toView(t) } }
+                    ?.also { viewList ->
+                        viewState.updateTransfers(viewList)
+                        updateEventsCount()
+                    }
             } else
                 viewState.onEmptyList()
         }
@@ -76,7 +74,10 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         eventsCount?.let { viewState.updateEvents(it) }
     }
 
-    private fun getEventsCount(mapCountNewEvents: Map<Long, Int>, mapCountViewedOffers: Map<Long, Int>): Map<Long, Int> {
+    private fun getEventsCount(
+        mapCountNewEvents: Map<Long, Int>,
+        mapCountViewedOffers: Map<Long, Int>
+    ): Map<Long, Int> {
         val eventsMap = mutableMapOf<Long, Int>()
         transfers?.forEach { transfer ->
             mapCountNewEvents[transfer.id]?.let {
@@ -101,6 +102,6 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     }
 
     fun onGetBookClicked() {
-        router.finishChainAndBackTo(Screens.MainPassenger())
+        router.exit()
     }
 }

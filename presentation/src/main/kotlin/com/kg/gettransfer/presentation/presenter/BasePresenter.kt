@@ -1,11 +1,8 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
-
 import com.arellomobile.mvp.MvpPresenter
-
 import com.google.firebase.iid.FirebaseInstanceId
-
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -14,33 +11,25 @@ import com.kg.gettransfer.domain.eventListeners.OfferEventListener
 import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.model.ChatBadgeEvent
 import com.kg.gettransfer.domain.model.Offer
-
-import com.kg.gettransfer.presentation.mapper.OfferMapper
-import com.kg.gettransfer.presentation.model.OfferModel
-
-import com.kg.gettransfer.presentation.view.BaseView
-import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_REJECTED
-import com.kg.gettransfer.presentation.view.Screens
-
-import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.GTNotificationManager
-
-import kotlinx.coroutines.Job
-
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.mapper.BookNowOfferMapper
+import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
-
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.view.BaseView
+import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_REJECTED
+import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.GTNotificationManager
+import kotlinx.coroutines.Job
+import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
-
 import ru.terrakok.cicerone.Router
-
 import timber.log.Timber
 
-open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
+open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     OfferEventListener,
     ChatBadgeEventListener,
     KoinComponent {
@@ -73,11 +62,15 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
         map[Analytics.PARAM_KEY_NAME] = Analytics.BACK_CLICKED
-        analytics.logEvent(Analytics.EVENT_MAIN, createStringBundle(Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED), map)
+        analytics.logEvent(
+            Analytics.EVENT_MAIN,
+            createStringBundle(Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED),
+            map
+        )
         router.exit()
     }
 
-    protected fun login(nextScreen: String, email: String?) = router.navigateTo(Screens.MainLogin(nextScreen, email))
+    protected fun login(nextScreen: String, email: String?) = router.newRootScreen(Screens.MainLogin(nextScreen, email))
 
     override fun onFirstViewAttach() {
         if (sessionInteractor.isInitialized) return
@@ -97,7 +90,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
      */
 
     private fun checkResultError(error: ApiException) =
-        if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser() )) {
+        if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser())) {
             openedLoginScreenForUnauthorizedUser = true
             login(Screens.CLOSE_AFTER_LOGIN, accountManager.remoteProfile.email)
             false
@@ -163,7 +156,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
             var transferID: Long? = null
             if (transferId == null) {
                 fetchData { transferInteractor.getAllTransfers() }
-                        ?.let { if (it.isNotEmpty()) transferID = it.first().id }
+                    ?.let { if (it.isNotEmpty()) transferID = it.first().id }
             } else transferID = transferId
 
             router.navigateTo(
@@ -235,9 +228,9 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
                 false
             )
         } else {
-            if(!chatBadgeEvent.clearBadge) {
+            if (!chatBadgeEvent.clearBadge) {
                 utils.launchSuspend {
-                    fetchDataOnly { transferInteractor.getTransfer(chatBadgeEvent.transferId) }?.let {transfer ->
+                    fetchDataOnly { transferInteractor.getTransfer(chatBadgeEvent.transferId) }?.let { transfer ->
                         increaseEventsMessagesCounter(chatBadgeEvent.transferId, transfer.unreadMessagesCount)
                         notificationManager.showNewMessageNotification(
                             chatBadgeEvent.transferId,
@@ -289,13 +282,16 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
             if (isForeGround) {
                 openSocketConnection()
             } else if (systemInteractor.lastMode != Screens.CARRIER_MODE ||
-                    carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_REJECTED) {
+                carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_REJECTED
+            ) {
                 closeSocketConnection()
             }
         }
     }
 
-    fun openSocketConnection() { socketInteractor.openSocketConnection() }
+    fun openSocketConnection() {
+        socketInteractor.openSocketConnection()
+    }
 
     private fun increaseEventsOffersCounter(transferId: Long) = with(countEventsInteractor) {
         eventsCount += 1
@@ -353,14 +349,15 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
      - DEFAULT_ERROR: if want to call only viewState.setError()
      - CHECK_CACHE: when want to show error also after check data in cache
      */
-    protected suspend fun <M>fetchResult(
+    protected suspend fun <M> fetchResult(
         processError: Boolean = DEFAULT_ERROR,
         withCacheCheck: Boolean = CHECK_CACHE,
         checkLoginError: Boolean = true,
         block: suspend () -> Result<M>
     ) = utils.asyncAwait { block() }.also {
         it.error?.let { e -> if (checkLoginError) checkResultError(e) else true }
-            ?.let { handle -> if (!handle) return@also
+            ?.let { handle ->
+                if (!handle) return@also
                 if (withCacheCheck) !it.fromCache else true
             }?.let { resultCheck ->
                 if (!processError && resultCheck) it.error?.let { e -> viewState.setError(e) }
@@ -372,7 +369,7 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
     Method to fetch only data without result if no need to have error object in client class.
     As we unwrap return data safely in client class, so it's possible to use it without care.
      */
-    protected suspend fun <D>fetchData(
+    protected suspend fun <D> fetchData(
         processError: Boolean = DEFAULT_ERROR,
         withCacheCheck: Boolean = CHECK_CACHE,
         checkLoginError: Boolean = true,
@@ -385,10 +382,10 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
     Optional methods for easy request with only suspend block and without params to handle
     errors.
      */
-    protected suspend fun<R>fetchResultOnly(block: suspend () -> Result<R>) =
+    protected suspend fun <R> fetchResultOnly(block: suspend () -> Result<R>) =
         fetchResult(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
-    protected suspend fun <D>fetchDataOnly(block: suspend () -> Result<D>) =
+    protected suspend fun <D> fetchDataOnly(block: suspend () -> Result<D>) =
         fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
     companion object {
@@ -396,11 +393,11 @@ open class BasePresenter<BV: BaseView> : MvpPresenter<BV>(),
         const val DOUBLE_CAPACITY = 2
 
         //when you want to handle error in child presenter
-        const val SHOW_ERROR     = true
-        const val DEFAULT_ERROR  = false
+        const val SHOW_ERROR = true
+        const val DEFAULT_ERROR = false
         //the same as SHOW_ERROR, but when you will not show error even in child presenter
-        const val WITHOUT_ERROR  = true
-        const val CHECK_CACHE    = true
+        const val WITHOUT_ERROR = true
+        const val CHECK_CACHE = true
         const val NO_CACHE_CHECK = false
     }
 }

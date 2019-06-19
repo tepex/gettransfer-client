@@ -2,53 +2,30 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Handler
 import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
-
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
-import com.kg.gettransfer.domain.eventListeners.SocketEventListener
-import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
+import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
-
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
-
-import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.RouteInfo
-import com.kg.gettransfer.domain.model.Coordinate
-
 import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
-import com.kg.gettransfer.domain.model.ReviewRate.RateType.PUNCTUALITY
-import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.ReviewRate.RateType.*
 import com.kg.gettransfer.extensions.finishChainAndBackTo
-
-
 import com.kg.gettransfer.prefs.PreferencesImpl
-import com.kg.gettransfer.presentation.ui.icons.transport.CarIconResourceProvider
 import com.kg.gettransfer.presentation.delegate.CoordinateRequester
-import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.presentation.mapper.CityPointMapper
 import com.kg.gettransfer.presentation.mapper.PointMapper
-
-import com.kg.gettransfer.presentation.model.TransferModel
-import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.CityPointModel
-import com.kg.gettransfer.presentation.model.ReviewRateModel
-
+import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.model.*
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.ui.icons.transport.CarIconResourceProvider
 import com.kg.gettransfer.presentation.view.Screens
-
 import com.kg.gettransfer.presentation.view.TransferDetailsView
-
 import com.kg.gettransfer.utilities.Analytics
-
 import org.koin.standalone.inject
 
 @InjectViewState
@@ -82,17 +59,18 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchData { transferInteractor.getTransfer(transferId) }
-                    ?.let { transfer ->
-                        setTransferFields(transfer)
-                        setOffer(transfer.id)
-                                ?.let {
-                                    if (transferModel.status.checkOffers)
-                                        offer = it }
-                        viewState.setTransfer(transferModel)
+                ?.let { transfer ->
+                    setTransferFields(transfer)
+                    setOffer(transfer.id)
+                        ?.let {
+                            if (transferModel.status.checkOffers)
+                                offer = it
+                        }
+                    viewState.setTransfer(transferModel)
 
-                        updateRatingState()
-                        setTransferType(transfer)
-                    }
+                    updateRatingState()
+                    setTransferType(transfer)
+                }
             viewState.blockInterface(false)
         }
     }
@@ -113,26 +91,27 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     private suspend fun setOffer(transferId: Long) =
-            fetchData { offerInteractor.getOffers(transferId) }
-                    ?.let {
-                        if (it.size == 1) {
-                            val offer = it.first()
-                            offerModel = offerMapper.toView(offer)
-                            reviewInteractor.offerIdForReview = offer.id
-                            if (transferModel.showOfferInfo) viewState.setOffer(offerModel, transferModel.countChilds)
-                            offer
-                        }
-                        else null
-                    }
+        fetchData { offerInteractor.getOffers(transferId) }
+            ?.let {
+                if (it.size == 1) {
+                    val offer = it.first()
+                    offerModel = offerMapper.toView(offer)
+                    reviewInteractor.offerIdForReview = offer.id
+                    if (transferModel.showOfferInfo) viewState.setOffer(offerModel, transferModel.countChilds)
+                    offer
+                } else null
+            }
 
     private suspend fun setTransferType(transfer: Transfer) {
         if (transfer.to != null) {
             fetchResult {
-                orderInteractor.getRouteInfo(transfer.from.point!!,
-                        transfer.to!!.point!!,
-                        false,
-                        false,
-                        sessionInteractor.currency.code)
+                orderInteractor.getRouteInfo(
+                    transfer.from.point!!,
+                    transfer.to!!.point!!,
+                    false,
+                    false,
+                    sessionInteractor.currency.code
+                )
             }.also {
                 it.cacheError?.let { e -> viewState.setError(e) }
                 setRouteTransfer(transfer, it.model)
@@ -153,12 +132,16 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         reviewInteractor.releaseReviewData()
     }
 
-    fun onCenterRouteClick() { track?.let { viewState.centerRoute(it) } }
+    fun onCenterRouteClick() {
+        track?.let { viewState.centerRoute(it) }
+    }
 
-    fun onCancelRequestClicked() { viewState.showAlertCancelRequest() }
+    fun onCancelRequestClicked() {
+        viewState.showAlertCancelRequest()
+    }
 
     fun onRepeatTransferClicked() {
-        fromPoint?.let { 
+        fromPoint?.let {
             orderInteractor.from = GTAddress(
                 cityPointMapper.fromView(it),
                 null,
@@ -179,7 +162,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         if (orderInteractor.isCanCreateOrder()) router.navigateTo(Screens.CreateOrder)
     }
 
-    fun onChatClick(){
+    fun onChatClick() {
         router.navigateTo(Screens.Chat(transferId))
     }
 
@@ -285,7 +268,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private fun logAverageRate(rate: Double) =
         analytics.logEvent(
             Analytics.REVIEW_AVERAGE,
-            createStringBundle(Analytics.REVIEW,rate.toString()),
+            createStringBundle(Analytics.REVIEW, rate.toString()),
             mapOf(Analytics.REVIEW to rate)
         )
 
@@ -309,7 +292,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     fun initCoordinates() {
         driverCoordinate = DriverCoordinate(Handler(), coordinateRequester) { bearing, coordinates, show ->
-            viewState.moveCarMarker(bearing, coordinates, show) }
+            viewState.moveCarMarker(bearing, coordinates, show)
+        }
         coordinateInteractor.coordinateEventListener = this
     }
 
@@ -319,8 +303,14 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     override fun onLocationReceived(coordinate: Coordinate) {
         driverCoordinate?.property = coordinate
         with(coordinate) {
-            if(!isCameraUpdatedForCoordinates) {
-                viewState.updateCamera(mutableListOf(LatLng(lat, lon)).also { list -> startCoordinate?.let { list.add(it) } })
+            if (!isCameraUpdatedForCoordinates) {
+                viewState.updateCamera(
+                    mutableListOf(
+                        LatLng(
+                            lat,
+                            lon
+                        )
+                    ).also { list -> startCoordinate?.let { list.add(it) } })
                 isCameraUpdatedForCoordinates = true
             }
         }
@@ -331,9 +321,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun ratingChanged(list: List<ReviewRateModel>, userFeedback: String) {
         offer = offer?.copy(
             ratings = offer?.ratings?.copy(
-                vehicle = list.firstOrNull{ it.rateType == VEHICLE }?.rateValue?.toFloat() ?: 0f,
-                driver = list.firstOrNull{ it.rateType == DRIVER }?.rateValue?.toFloat() ?: 0f,
-                fair = list.firstOrNull{ it.rateType == PUNCTUALITY }?.rateValue?.toFloat() ?: 0f
+                vehicle = list.firstOrNull { it.rateType == VEHICLE }?.rateValue?.toFloat() ?: 0f,
+                driver = list.firstOrNull { it.rateType == DRIVER }?.rateValue?.toFloat() ?: 0f,
+                fair = list.firstOrNull { it.rateType == PUNCTUALITY }?.rateValue?.toFloat() ?: 0f
             ),
             passengerFeedback = userFeedback
         )
@@ -364,14 +354,14 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             }
         }
     }
-    
+
     private fun setComment(comment: String) {
         reviewInteractor.comment = comment
     }
 
     private fun updateRatingState() {
         val available = offer?.isRateAvailable() ?: false
-        val isRated   = offer?.isOfferRatedByUser() ?: false
+        val isRated = offer?.isOfferRatedByUser() ?: false
         if (available && !isRated) reviewInteractor.offerIdForReview = offer?.id ?: 0
         viewState.showCommonRating(available && !isRated)
         viewState.showYourRateMark(isRated, offer?.ratings?.averageRating ?: 0f)

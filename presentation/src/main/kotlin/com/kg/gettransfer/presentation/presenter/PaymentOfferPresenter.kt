@@ -1,37 +1,28 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.models.PayPalRequest
 import com.kg.gettransfer.domain.ApiException
-
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
-
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
-
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
-
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
-
 import com.kg.gettransfer.utilities.Analytics
 import io.sentry.Sentry
-
 import org.koin.standalone.inject
-
 import timber.log.Timber
-import java.lang.UnsupportedOperationException
 
 @InjectViewState
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
@@ -76,8 +67,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             transfer.dateRefund?.let { dateRefund ->
                 val commission = sessionInteractor.paymentCommission
                 viewState.setCommission(
-                        if (commission % 1.0 == 0.0) commission.toInt().toString() else commission.toString(),
-                        SystemUtils.formatDateTime(dateRefund)
+                    if (commission % 1.0 == 0.0) commission.toInt().toString() else commission.toString(),
+                    SystemUtils.formatDateTime(dateRefund)
                 )
             }
         }
@@ -132,7 +123,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             paymentRequest.let {
                 it.gatewayId = selectedPayment
                 if (it.gatewayId == PaymentRequestModel.PLATRON) {
-                    val paymentResult = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(it)) }
+                    val paymentResult =
+                        utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(it)) }
                     if (paymentResult.error != null) {
                         Timber.e(paymentResult.error!!)
                         viewState.setError(paymentResult.error!!)
@@ -170,8 +162,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             .run {
                 when {
                     error?.isAccountExistError() ?: false -> onAccountExists(error!!.checkExistedAccountField())
-                    error != null                         -> viewState.setError(error!!)
-                    else                                  -> getPayment()
+                    error != null -> viewState.setError(error!!)
+                    else -> getPayment()
                 }
             }
 
@@ -179,7 +171,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         loginScreenIsShowed = true
         redirectToLogin(
             with(accountManager) {
-                when(existedField) {
+                when (existedField) {
                     ApiException.EMAIL_EXISTED -> tempProfile.email
                     ApiException.PHONE_EXISTED -> tempProfile.phone
                     else -> throw UnsupportedOperationException()
@@ -189,7 +181,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private fun redirectToLogin(existedEmailOrPhone: String) {
-        router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, existedEmailOrPhone))
+        router.newRootScreen(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, existedEmailOrPhone))
     }
 
     /*private fun isValid(input: String, isPhone: Boolean) =
@@ -200,7 +192,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                         viewState.showBadCredentialsInfo(it)
                     it == CREDENTIALS_VALID
                 }*/
-
 
     private fun getBraintreeToken() {
         utils.launchSuspend {
@@ -233,14 +224,13 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             val dropInRequest = DropInRequest().clientToken(braintreeToken)
 
             val paypal = PayPalRequest(amount)
-                    .currencyCode(currency).intent(PayPalRequest.INTENT_AUTHORIZE)
+                .currencyCode(currency).intent(PayPalRequest.INTENT_AUTHORIZE)
             dropInRequest.paypalRequest(paypal)
             viewState.startPaypal(dropInRequest, braintreeToken)
         } catch (e: InvalidArgumentException) {
             Sentry.capture(e)
             viewState.blockInterface(false)
         }
-
     }
 
     fun confirmPayment(nonce: String) {
@@ -253,22 +243,24 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                     it.id,
                     if (!isBookNowOffer) (offer as Offer).id else null,
                     paymentRequest.percentage,
-                    if (isBookNowOffer) (offer as BookNowOffer).transportType.id.name.toLowerCase() else null)
+                    if (isBookNowOffer) (offer as BookNowOffer).transportType.id.name.toLowerCase() else null
+                )
             )
         }
     }
 
-
     private fun navigateToPayment() {
-        router.navigateTo(Screens.Payment(
-            url,
-            paymentRequest.percentage,
-            selectedPayment)
+        router.navigateTo(
+            Screens.Payment(
+                url,
+                paymentRequest.percentage,
+                selectedPayment
+            )
         )
     }
 
     private fun logEventBeginCheckout() {
-        val offerType = if (offer != null ) Analytics.REGULAR else Analytics.NOW
+        val offerType = if (offer != null) Analytics.REGULAR else Analytics.NOW
         val requestType = when {
             transfer?.duration != null -> Analytics.TRIP_HOURLY
             transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
@@ -289,11 +281,18 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             offerType,
             requestType,
             sessionInteractor.currency.code,
-            price)
+            price
+        )
         beginCheckout.sendAnalytics()
     }
 
-    fun changePrice(price: Int)        { paymentRequest.percentage = price }
-    fun changePayment(payment: String) { paymentRequest.gatewayId  = payment }
+    fun changePrice(price: Int) {
+        paymentRequest.percentage = price
+    }
+
+    fun changePayment(payment: String) {
+        paymentRequest.gatewayId = payment
+    }
+
     fun onAgreementClicked() = router.navigateTo(Screens.LicenceAgree)
 }
