@@ -19,20 +19,16 @@ data class GTAddressEntity(
 
 fun GTAddress.map() =
     GTAddressEntity(
-        cityPoint.point.latitude,
-        cityPoint.point.longitude,
-        address,
+        cityPoint.point?.latitude,
+        cityPoint.point?.longitude,
+        address ?: "",
         placeTypes,
         variants
     )
 fun GTAddressEntity.map() =
     GTAddress(
-        CityPoint(
-            address,
-            lat?.let { lat -> lon?.let { Point(lat, it) } } ?: Point.EMPTY,
-            ""
-        ),
-        placeTypes,
+        if (lat == null || lon == null) CityPoint.EMPTY else CityPoint(address, Point(lat, lon), null),
+        placeTypes ?: emptyList<String>(),
         address,
-        variants
+        null
     )

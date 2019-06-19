@@ -32,7 +32,7 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
             val locationEntity = geoDataStore.getCurrentLocation()
             Result(locationMapper.fromEntity(locationEntity))
         } catch (e: LocationException) {
-            Result(Point.EMPTY_POINT, geoException = ExceptionMapper.map(e))
+            Result(Point.EMPTY, geoException = ExceptionMapper.map(e))
         }
     }
 
@@ -41,7 +41,7 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
             val locationEntity = geoDataStore.getMyLocationByIp()
             Result(locationMapper.fromEntity(locationEntity))
         } catch (e: RemoteException) {
-            Result(Point.EMPTY_POINT, ExceptionMapper.map(e))
+            Result(Point.EMPTY, ExceptionMapper.map(e))
         }
     }
 
@@ -69,7 +69,7 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
                         null,
                         it.placeId
                     ),
-                    it.types,
+                    it.types ?: emptyList<String>(),
                     it.description,
                     GTAddress.parseAddress(it.description)
                 )

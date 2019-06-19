@@ -1,8 +1,10 @@
 package com.kg.gettransfer.data.mapper
 
 import com.kg.gettransfer.data.model.CarrierTripBaseEntity
+import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.CarrierTripBase
+import com.kg.gettransfer.domain.model.CityPoint
 
 import java.text.DateFormat
 
@@ -25,16 +27,16 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseEntity, CarrierTripBase
             id                    = type.id,
             transferId            = type.transferId,
             from                  = type.from.map(),
-            to                    = type.to?.let { it.map() },
+            to                    = type.to?.let { it.map() } ?: CityPoint.EMPTY,
             dateLocal             = dateFormat.get().parse(type.dateLocal),
-            duration              = type.duration ?: CarrierTripBase.NO_DURATION,
-            distance              = type.distance ?: CarrierTripBase.NO_DISTANCE,
-            time                  = type.time ?: CarrierTripBase.NO_TIME,
+            duration              = type.duration,
+            distance              = type.distance,
+            time                  = type.time,
             childSeats            = type.childSeats,
             childSeatsInfant      = type.childSeatsInfant,
             childSeatsConvertible = type.childSeatsConvertible,
             childSeatsBooster     = type.childSeatsBooster,
-            comment               = type.comment ?: CarrierTripBase.NO_COMMENT,
+            comment               = type.comment,
             waterTaxi             = type.waterTaxi,
             price                 = type.price,
             vehicle               = vehicleInfoMapper.fromEntity(type.vehicle)

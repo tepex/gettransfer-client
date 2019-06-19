@@ -46,7 +46,7 @@ class SessionRepositoryImpl(
         private set
     override var account = NO_ACCOUNT
         private set
-    override var tempUser = NO_USER
+    override var tempUser = User.EMPTY
     override var mobileConfig = MOBILE_CONFIGS_DEFAULT
         private set
 
@@ -129,17 +129,8 @@ class SessionRepositoryImpl(
         }
         result.error?.let { error = ExceptionMapper.map(it) }
         isInitialized = true
-        initTempUser(account.user)
+        tempUser = User(account.user.profile.copy(), account.user.termsAccepted)
         return Result(account, error)
-    }
-
-    private fun initTempUser(remoteUser: User) {
-        tempUser.profile.apply {
-            fullName = remoteUser.profile.fullName
-            email = remoteUser.profile.email
-            phone = remoteUser.profile.phone
-        }
-        tempUser.termsAccepted = remoteUser.termsAccepted
     }
 
     override suspend fun putAccount(account: Account, pass: String?, repeatedPass: String?): Result<Account> {
@@ -215,8 +206,8 @@ class SessionRepositoryImpl(
     }
 
     override suspend fun logout(): Result<Account> {
-        account.user.profile.clear()
-        account.user.termsAccepted = false
+        tempUser = User.EMPTY
+        account.user = User.EMPTY
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()
         return Result(account)
@@ -249,21 +240,12 @@ class SessionRepositoryImpl(
         private val CONFIGS_DEFAULT = Configs.DEFAULT_CONFIGS
 
         private val NO_ACCOUNT = Account(
-            user = User(Profile(null, null, null), false),
+            user = User.EMPTY,
             locale = Locale.getDefault(),
             currency = defineNoAccountCurrency(),
             distanceUnit = DistanceUnit.km,
             groups = emptyList<String>(),
             carrierId = null
-        )
-
-        private val NO_USER = User(
-            profile = Profile(
-                fullName = null,
-                email = null,
-                phone = null
-            ),
-            termsAccepted = false
         )
 
         private val MOBILE_CONFIGS_DEFAULT = MobileConfig(

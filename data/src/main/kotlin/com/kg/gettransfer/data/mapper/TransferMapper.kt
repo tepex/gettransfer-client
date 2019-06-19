@@ -1,6 +1,7 @@
 package com.kg.gettransfer.data.mapper
 
 import com.kg.gettransfer.data.model.TransferEntity
+import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransportType
@@ -18,7 +19,6 @@ import org.koin.standalone.get
  * Map a [TransferEntity] to and from a [Transfer] instance when data is moving between this later and the Domain layer.
  */
 open class TransferMapper : KoinComponent {
-    private val cityPointMapper    = get<CityPointMapper>()
     private val bookNowOfferMapper = get<BookNowOfferMapper>()
     private val moneyMapper        = get<MoneyMapper>()
     private val dateFormatTZ       = get<ThreadLocal<DateFormat>>("iso_date_TZ")
@@ -36,8 +36,8 @@ open class TransferMapper : KoinComponent {
             duration        = type.duration,
             distance        = type.distance,
             status          = Transfer.Status.valueOf(type.status.toUpperCase(Locale.US)),
-            from            = cityPointMapper.fromEntity(type.from),
-            to              = type.to?.let { cityPointMapper.fromEntity(it) },
+            from            = type.from.map(),
+            to              = type.to?.let { it.map() },
             dateToLocal     = convertDate(type.dateToLocal),
             dateToTZ        = convertDateTZ(type.dateToLocal),
             dateReturnLocal = type.dateReturnLocal?.let { convertDate(it) },

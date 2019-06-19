@@ -1,8 +1,8 @@
 package com.kg.gettransfer.domain.model
 
 data class User(
-    val profile: Profile,
-    val termsAccepted: Boolean
+    var profile: Profile, /* TODO: change to `val` */
+    var termsAccepted: Boolean /* TODO: change to `val` */
 ) {
 
     companion object {

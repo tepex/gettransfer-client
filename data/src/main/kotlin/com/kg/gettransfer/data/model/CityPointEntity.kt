@@ -13,13 +13,10 @@ data class CityPointEntity(
     @SerialName(PLACE_ID) val placeId: String?
 ) {
 
-    fun mapPoint(): Point {
-        return if (point == null) {
-            Point.EMPTY
-        } else {
-            val latLng = POINT_REGEX.find(point)!!.groupValues
-            Point(latLng.get(1).toDouble(), latLng.get(2).toDouble())
-        }
+    fun mapPoint(): Point? {
+        if (point == null) return null
+        val latLng = POINT_REGEX.find(point)!!.groupValues
+        return Point(latLng.get(1).toDouble(), latLng.get(2).toDouble())
     }
     
     companion object {
@@ -31,5 +28,5 @@ data class CityPointEntity(
     }
 }
 
-fun CityPoint.map() = CityPointEntity(name, point.toString(), placeId)
+fun CityPoint.map() = CityPointEntity(name, point?.toString(), placeId)
 fun CityPointEntity.map() = CityPoint(name ?: "", mapPoint(), placeId ?: "")

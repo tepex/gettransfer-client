@@ -81,7 +81,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
         if (loginScreenIsShowed) {
             loginScreenIsShowed = false
-            if (accountManager.remoteProfile.hasData()) getPayment()
+            if (accountManager.hasData) {
+                getPayment()
+            }
         }
     }
 
@@ -142,10 +144,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     fun onPaymentClicked() {
-        if (accountManager.remoteProfile.hasData())
-            getPayment()
-        else
-            putAccount()
+        if (accountManager.hasData) getPayment() else putAccount()
     }
 
     private fun putAccount() {

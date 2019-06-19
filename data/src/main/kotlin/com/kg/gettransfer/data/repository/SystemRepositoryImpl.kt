@@ -2,7 +2,8 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.mapper.EndpointMapper
-import com.kg.gettransfer.data.mapper.AddressMapper
+import com.kg.gettransfer.data.model.map
+
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
 
@@ -14,7 +15,6 @@ class SystemRepositoryImpl : BaseRepository(), SystemRepository{
 
     private val preferencesCache = get<PreferencesCache>()
     private val endpointMapper   = get<EndpointMapper>()
-    private val addressMapper    = get<AddressMapper>()
 
     override var lastMode: String
         get() = preferencesCache.lastMode
@@ -54,8 +54,8 @@ class SystemRepositoryImpl : BaseRepository(), SystemRepository{
         }
 
     override var addressHistory: List<GTAddress>
-        get() = preferencesCache.addressHistory.map { addressMapper.fromEntity(it) }
-        set(value) { preferencesCache.addressHistory = value.map { addressMapper.toEntity(it) } }
+        get() = preferencesCache.addressHistory.map { it.map() }
+        set(value) { preferencesCache.addressHistory = value.map { it.map() } }
 
     override var appEnters: Int
         get() = preferencesCache.appEnters
