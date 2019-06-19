@@ -146,16 +146,20 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
     fun loginWithCode(emailOrPhone: String, changePage: (() -> Unit)?) {
         if (!checkInputData(emailOrPhone)) return
-        val isPhone = isPhone(emailOrPhone)
         saveProfile(emailOrPhone)
-        router.replaceScreen(Screens.SmsCode(isPhone, emailOrPhone, nextScreen ?: ""))
+        val isPhone = isPhone(emailOrPhone)
+        if (isPhone) {
+            router.replaceScreen(Screens.SmsCodeByPhone(profile.phone, nextScreen ?: ""))
+        } else {
+            router.replaceScreen(Screens.SmsCodeByEmail(profile.email, nextScreen ?: ""))
+        }
     }
 
     fun saveProfile(emailOrPhone: String) {
         val isPhone = isPhone(emailOrPhone)
         profile.let {
             if (isPhone) {
-                it.phone = emailOrPhone
+                it.phone = LoginHelper.formatPhone(emailOrPhone)
                 it.email = ""
             } else {
                 it.email = emailOrPhone
