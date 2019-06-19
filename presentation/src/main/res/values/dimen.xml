@@ -1070,7 +1070,6 @@
 
 	<!--Change password settings-->
 	<dimen name="change_pass_fields_layout_vertical_padding">16dp</dimen>
-	<dimen name="change_pass_fields_padding_top">16dp</dimen>
 	<dimen name="change_pass_btn_done_margins">16dp</dimen>
 
 	<!--Settings editable field-->
@@ -1080,5 +1079,13 @@
 	<dimen name="settings_editable_field_edit_text_parring_top">6dp</dimen>
 	<dimen name="settings_editable_field_edit_text_drawable_padding">8dp</dimen>
 	<dimen name="settings_editable_field_divider_height">1dp</dimen>
+
+	<!--Fragment log in-->
+	<dimen name="fragment_log_in_vertical_padding">16dp</dimen>
+	<dimen name="fragment_log_in_padding_top">12dp</dimen>
+	<dimen name="fragment_log_in_field_height">64dp</dimen>
+	<dimen name="fragment_log_in_variant_text_margin_top">10dp</dimen>
+	<dimen name="fragment_log_in_variant_text_size">17sp</dimen>
+	<dimen name="fragment_log_in_btn_with_code_margin_top">14dp</dimen>
 
 </resources>
