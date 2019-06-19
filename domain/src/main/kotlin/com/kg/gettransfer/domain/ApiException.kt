@@ -13,13 +13,22 @@ class ApiException(val code: Int, val details: String, val type: String? = null)
 
         @JvmField val INTERNAL_SERVER_ERROR   = 500
         @JvmField val CONNECTION_TIMED_OUT    = 522
+
+        @JvmField val EMAIL_EXISTED = "email_existed"
+        @JvmField val PHONE_EXISTED = "phone_existed"
     }
 
     fun isNoUser() = code == NO_USER
     fun isNotLoggedIn() = code == NOT_LOGGED_IN
     fun isNotFound() = code == NOT_FOUND
-    fun isAccountExistError() = type == "account_exists"
     fun isPhoneTaken() = type == "phone_taken"
+
+    fun isAccountExistError() = type == "account_exists"
+    fun checkExistedAccountField() = when {
+        details.indexOf("phone") >= 0 -> PHONE_EXISTED
+        details.indexOf("email") >= 0 -> EMAIL_EXISTED
+        else -> PHONE_EXISTED
+    }
 
     /* PAYMENT ERRORS */
     fun isBigPriceError() = code == UNPROCESSABLE && details == "{price=[is_too_big]}"
