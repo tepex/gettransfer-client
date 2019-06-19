@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.PaymentStatusRequest
+
 data class PaymentStatusRequestEntity(
     val paymentId: Long?,
     val pgOrderId: Long?,
@@ -13,3 +15,5 @@ data class PaymentStatusRequestEntity(
         const val WITHOUT_REDIRECT = "without_redirect"
     }
 }
+
+fun PaymentStatusRequest.map() = PaymentStatusRequestEntity(paymentId, pgOrderId, withoutRedirect, success)

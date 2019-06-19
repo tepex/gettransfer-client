@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.PaymentRequest
+
 data class PaymentRequestEntity(
     val transferId: Long,
     val offerId: Long?,
@@ -16,3 +18,5 @@ data class PaymentRequestEntity(
         const val BOOK_NOW_TRANSPORT_TYPE  = "book_now_transport_type"
     }
 }
+
+fun PaymentRequest.map() = PaymentRequestEntity(transferId, offerId, gatewayId, percentage, bookNowTransportType)

@@ -60,7 +60,6 @@ val dataModule = module {
     single { BraintreeTokenMapper() }
     single { PaymentMapper() }
     single { PaymentRequestMapper() }
-    single { ParamsMapper() }
     single { PaymentDataStoreCache() }
     single { PaymentDataStoreRemote() }
     single { PaymentRepositoryImpl(DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>(get(), get())) } bind PaymentRepository::class
@@ -71,7 +70,6 @@ val dataModule = module {
     single { AccountMapper() }
     single { AccountRegisterMapper() }
     single { ConfigsMapper() }
-    single { ReviewRateMapper() }
     single { MobileConfigMapper() }
     single { BuildsConfigsMapper() }
     single { LocationMapper() }
@@ -104,14 +102,12 @@ val dataModule = module {
     single { CarrierTripDataStoreRemote() }
     single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get()), get()) }
 
-    single { TripMapper() }
     single { TransferMapper() }
     single { TransferNewMapper() }
     single { TransferDataStoreCache() }
     single { TransferDataStoreRemote() }
     single { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get())) } bind TransferRepository::class
 
-    single { PromoDiscountMapper() }
     single { PromoDataStoreCache() }
     single { PromoDataStoreRemote() }
     single<PromoRepository> { PromoRepositoryImpl(DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>(get(), get())) }

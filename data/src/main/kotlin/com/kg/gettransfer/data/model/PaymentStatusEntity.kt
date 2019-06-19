@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.PaymentStatus
+
 data class PaymentStatusEntity(
     val id: Long,
     val status: String
@@ -11,3 +13,5 @@ data class PaymentStatusEntity(
         const val STATUS      = "status"
     }
 }
+
+fun PaymentStatusEntity.map() = PaymentStatus(id,status)

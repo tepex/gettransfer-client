@@ -3,7 +3,7 @@ package com.kg.gettransfer.data.repository
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.ds.ReviewDataStoreRemote
 import com.kg.gettransfer.data.mapper.ExceptionMapper
-import com.kg.gettransfer.data.mapper.ReviewRateMapper
+import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.ReviewRate
@@ -12,7 +12,6 @@ import com.kg.gettransfer.domain.repository.ReviewRepository
 import org.koin.standalone.get
 
 class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRepository, BaseRepository() {
-    private val rateMapper = get<ReviewRateMapper>()
 
     override var currentComment: String = NO_COMMENT
     override var currentOfferRateID: Long = DEFAULT_ID
@@ -21,7 +20,7 @@ class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRe
     override suspend fun rateTrip(): Result<Unit> {
         return try {
             rates.forEach { rateItem ->
-                retrieveRemoteEntity { remote.sendReview(currentOfferRateID, rateMapper.toEntity(rateItem)) }
+                retrieveRemoteEntity { remote.sendReview(currentOfferRateID, rateItem.map()) }
             }
             Result(Unit)
         } catch (e: RemoteException) {
@@ -47,8 +46,8 @@ class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRe
 
     override suspend fun pushTopRates(): Result<Unit> {
         rates.add(ReviewRate(ReviewRate.RateType.VEHICLE,     MAX_RATE))
-        rates.add(ReviewRate(ReviewRate.RateType.DRIVER,     MAX_RATE))
-        rates.add(ReviewRate(ReviewRate.RateType.PUNCTUALITY,     MAX_RATE))
+        rates.add(ReviewRate(ReviewRate.RateType.DRIVER,      MAX_RATE))
+        rates.add(ReviewRate(ReviewRate.RateType.PUNCTUALITY, MAX_RATE))
         return rateTrip()
     }
 

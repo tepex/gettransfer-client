@@ -16,9 +16,11 @@ import com.kg.gettransfer.domain.repository.PromoRepository
 
 import org.koin.standalone.get
 
-class PromoRepositoryImpl(private val factory: DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>):
-                            BaseRepository(), PromoRepository {
-    private val mapper = get<PromoDiscountMapper>()
+class PromoRepositoryImpl(
+    private val factory: DataStoreFactory<PromoDataStore, PromoDataStoreCache, PromoDataStoreRemote>
+) : BaseRepository(), PromoRepository {
+
+    private val mapper = PromoDiscountMapper()
 
     override suspend fun getDiscount(code: String): Result<PromoDiscount> =
         retrieveRemoteModel<PromoDiscountEntity, PromoDiscount>(mapper, PromoDiscount("")) {

@@ -7,14 +7,17 @@ import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.TransportType
 
+import java.text.DateFormat
+
 import org.koin.standalone.get
 
 /**
  * Map a [TransferNewEntity] to and from a [TransferNew] instance when data is moving between this later and the Domain layer.
  */
 open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
-    private val tripMapper      = get<TripMapper>()
-    private val destMapper      = get<DestMapper>()
+    private val destMapper       = get<DestMapper>()
+    private val serverDateFormat = get<ThreadLocal<DateFormat>>("server_date")
+    private val serverTimeFormat = get<ThreadLocal<DateFormat>>("server_time")
 
     /**
      * Map a [TransferNewEntity] instance to a [TransferNew] instance.
@@ -28,8 +31,8 @@ open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
         TransferNewEntity(
             from                  = type.from.map(),
             dest                  = destMapper.toEntity(type.dest),
-            tripTo                = tripMapper.toEntity(type.tripTo),
-            tripReturn            = type.tripReturn?.let { tripMapper.toEntity(it) },
+            tripTo                = type.tripTo.map(serverDateFormat, serverTimeFormat),
+            tripReturn            = type.tripReturn?.let { it.map(serverDateFormat, serverTimeFormat) },
             transportTypeIds      = type.transportTypeIds.map { it.toString() },
             pax                   = type.pax,
             childSeatsInfant      = type.childSeatsInfant,
