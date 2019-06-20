@@ -1,8 +1,10 @@
 package com.kg.gettransfer.data.mapper
 
 import com.kg.gettransfer.data.model.CarrierTripBaseEntity
+import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.CarrierTripBase
+import com.kg.gettransfer.domain.model.CityPoint
 
 import java.text.DateFormat
 
@@ -14,10 +16,8 @@ import org.koin.standalone.get
  * this later and the Domain layer.
  */
 open class CarrierTripBaseMapper : Mapper<CarrierTripBaseEntity, CarrierTripBase> {
-    private val cityPointMapper        = get<CityPointMapper>()
     private val vehicleInfoMapper      = get<VehicleInfoMapper>()
     private val dateFormat             = get<ThreadLocal<DateFormat>>("iso_date")
-
 
     /**
      * Map a [CarrierTripBaseEntity] instance to a [CarrierTripBase] instance.
@@ -26,8 +26,8 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseEntity, CarrierTripBase
         CarrierTripBase(
             id                    = type.id,
             transferId            = type.transferId,
-            from                  = cityPointMapper.fromEntity(type.from),
-            to                    = type.to?.let { cityPointMapper.fromEntity(it) },
+            from                  = type.from.map(),
+            to                    = type.to?.let { it.map() } ?: CityPoint.EMPTY,
             dateLocal             = dateFormat.get().parse(type.dateLocal),
             duration              = type.duration,
             distance              = type.distance,

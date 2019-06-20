@@ -5,13 +5,8 @@ data class Profile(
     var email: String?,
     var phone: String?
 ) {
-    fun hasData() =
-        !email.isNullOrEmpty()
-                && !phone.isNullOrEmpty()
 
-    fun clear() {
-        fullName = null
-        email = null
-        phone = null
+    companion object {
+        val EMPTY = Profile(null, null, null)
     }
 }

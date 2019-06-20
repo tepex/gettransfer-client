@@ -1,13 +1,11 @@
 package com.kg.gettransfer.domain.model
 
 data class User(
-    var profile: Profile,
-    var termsAccepted: Boolean = false
+    var profile: Profile, /* TODO: change to `val` */
+    var termsAccepted: Boolean /* TODO: change to `val` */
 ) {
 
-    val loggedIn: Boolean //is authorized user
-        get() = (!profile.email.isNullOrEmpty() || !profile.phone.isNullOrEmpty()) && termsAccepted
-
-    val hasAccount: Boolean //is temporary or authorized user
-        get() = loggedIn || (profile.email.isNullOrEmpty() && profile.phone.isNullOrEmpty() && termsAccepted)
+    companion object {
+        val EMPTY = User(Profile.EMPTY, false)
+    }
 }

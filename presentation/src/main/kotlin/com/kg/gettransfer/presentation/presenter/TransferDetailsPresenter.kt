@@ -1,31 +1,50 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Handler
-import android.support.annotation.CallSuper
+
 import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
 import com.kg.gettransfer.domain.eventListeners.SocketEventListener
+
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
-import com.kg.gettransfer.domain.model.*
-import com.kg.gettransfer.domain.model.ReviewRate.RateType.*
+
+import com.kg.gettransfer.domain.model.Coordinate
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.Transfer
+
+import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
+import com.kg.gettransfer.domain.model.ReviewRate.RateType.PUNCTUALITY
+import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
+
 import com.kg.gettransfer.extensions.finishChainAndBackTo
+
 import com.kg.gettransfer.prefs.PreferencesImpl
+
 import com.kg.gettransfer.presentation.delegate.CoordinateRequester
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
+
 import com.kg.gettransfer.presentation.mapper.CityPointMapper
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
+
 import com.kg.gettransfer.presentation.model.*
+
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.icons.transport.CarIconResourceProvider
+
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.TransferDetailsView
+
 import com.kg.gettransfer.utilities.Analytics
+
 import org.koin.standalone.inject
 
 @InjectViewState
@@ -75,7 +94,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    @CallSuper
     override fun attachView(view: TransferDetailsView) {
         super.attachView(view)
         socketInteractor.addSocketListener(this)
@@ -119,7 +137,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         } else if (transfer.duration != null) setHourlyTransfer(transfer)
     }
 
-    @CallSuper
     override fun detachView(view: TransferDetailsView?) {
         super.detachView(view)
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
@@ -144,7 +161,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         fromPoint?.let {
             orderInteractor.from = GTAddress(
                 cityPointMapper.fromView(it),
-                null,
+                emptyList<String>(),
                 transferModel.from,
                 GTAddress.parseAddress(transferModel.from)
             )
@@ -152,7 +169,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         toPoint?.let { to ->
             orderInteractor.to = GTAddress(
                 cityPointMapper.fromView(to),
-                null,
+                emptyList<String>(),
                 transferModel.to,
                 transferModel.to?.let { GTAddress.parseAddress(it) }
             )
@@ -200,8 +217,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = fetchResultOnly { transferInteractor.cancelTransfer(transferId, "") }
-            if (result.isError()) result.error?.let { viewState.setError(it) }
-            else showMainActivity()
+            if (result.isError()) {
+                result.error?.let { viewState.setError(it) }
+            } else {
+                showMainActivity()
+            }
             viewState.blockInterface(false)
         }
     }

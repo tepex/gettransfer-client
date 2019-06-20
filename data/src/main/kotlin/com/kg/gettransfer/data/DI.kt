@@ -2,10 +2,15 @@ package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.ds.*
 import com.kg.gettransfer.data.ds.io.*
+
 import com.kg.gettransfer.data.socket.CoordinateDataStoreReceiver
+
 import com.kg.gettransfer.data.mapper.*
+
 import com.kg.gettransfer.data.model.PlaceLocationMapper
+
 import com.kg.gettransfer.data.repository.*
+
 import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
 import com.kg.gettransfer.data.socket.OfferDataStoreReceiver
 import com.kg.gettransfer.data.socket.SystemDataStoreReceiver
@@ -45,8 +50,6 @@ val dataModule = module {
         }
     }
 
-    single { AddressMapper() }
-    single { ProfileMapper() }
     single { LocaleMapper() }
     single { RatingsMapper() }
     single { MoneyMapper() }
@@ -75,7 +78,6 @@ val dataModule = module {
     single { CurrencyMapper() }
     single { CardGatewaysMapper() }
     single { EndpointMapper() }
-    single { UserMapper() }
     single { AccountMapper() }
     single { AccountRegisterMapper() }
     single { ConfigsMapper() }
@@ -101,13 +103,11 @@ val dataModule = module {
     single { SessionRepositoryImpl(DataStoreFactory<SessionDataStore, SessionDataStoreCache, SessionDataStoreRemote>(get(), get())) } bind SessionRepository::class
 
     single { RouteInfoMapper() }
-    single { PointMapper() }
     single { TransportTypePriceMapper() }
     single { RouteDataStoreCache() }
     single { RouteDataStoreRemote() }
     single<RouteRepository> { RouteRepositoryImpl(DataStoreFactory<RouteDataStore, RouteDataStoreCache, RouteDataStoreRemote>(get(), get())) }
 
-    single { CityPointMapper() }
     single { DestMapper() }
     single { PassengerAccountMapper() }
     single { CarrierTripBaseMapper() }

@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.Profile
+
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
@@ -18,3 +20,12 @@ data class ProfileEntity(
         const val TITLE     = "title"
     }
 }
+
+fun Profile.map() = ProfileEntity(fullName, email, phone)
+
+fun ProfileEntity.map() =
+    if (fullName == null && email == null && phone == null) {
+        Profile.EMPTY
+    } else {
+        Profile(fullName ?: "", email ?: "", phone ?: "")
+    }

@@ -2,6 +2,7 @@ package com.kg.gettransfer.data.mapper
 
 import com.kg.gettransfer.data.model.TransferNewEntity
 import com.kg.gettransfer.data.model.TripEntity
+import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.TransportType
@@ -12,10 +13,8 @@ import org.koin.standalone.get
  * Map a [TransferNewEntity] to and from a [TransferNew] instance when data is moving between this later and the Domain layer.
  */
 open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
-    private val cityPointMapper = get<CityPointMapper>()
     private val tripMapper      = get<TripMapper>()
     private val moneyMapper     = get<MoneyMapper>()
-    private val userMapper      = get<UserMapper>()
     private val destMapper      = get<DestMapper>()
 
     /**
@@ -28,7 +27,7 @@ open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
      */
     override fun toEntity(type: TransferNew) =
         TransferNewEntity(
-            from                  = cityPointMapper.toEntity(type.from),
+            from                  = type.from.map(),
             dest                  = destMapper.toEntity(type.dest),
             tripTo                = tripMapper.toEntity(type.tripTo),
             tripReturn            = type.tripReturn?.let { tripMapper.toEntity(it) },
@@ -40,7 +39,7 @@ open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
             passengerOfferedPrice = type.passengerOfferedPrice,
             nameSign              = type.nameSign,
             comment               = type.comment,
-            user                  = userMapper.toEntity(type.user),
+            user                  = type.user.map(),
             promoCode             = type.promoCode
         )
 }

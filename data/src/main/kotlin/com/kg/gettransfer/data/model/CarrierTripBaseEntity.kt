@@ -1,7 +1,5 @@
 package com.kg.gettransfer.data.model
 
-
-
 open class CarrierTripBaseEntity(
     open val id: Long,
     open val transferId: Long,

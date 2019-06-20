@@ -2,7 +2,7 @@ package com.kg.gettransfer.domain.model
 
 data class GTAddress(
     val cityPoint: CityPoint,
-    val placeTypes: List<String>?,
+    val placeTypes: List<String>,
     val address: String?,
     val variants: Pair<String?, String?>?
 ) {
@@ -16,8 +16,7 @@ data class GTAddress(
     val lon: Double?
         get() = cityPoint.point?.longitude
 
-    fun needApproximation() = 
-        if (placeTypes == null || placeTypes.isEmpty()) false else placeTypes.any { it == "route" }
+    fun needApproximation() = if (placeTypes.isEmpty()) false else placeTypes.any { it == "route" }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -34,10 +33,10 @@ data class GTAddress(
         const val TYPE_ADMINISTRATIVE_AREA_LEVEL_1 = 1001
         const val TYPE_LOCALITY                    = 1009
         const val TYPE_STREET_ADDRESS              = 1021
+        
+        val EMPTY = GTAddress(CityPoint.EMPTY, emptyList<String>(), null, null)
 
-        val EMPTY = GTAddress(CityPoint("", null, null), null, null, null)
-
-        fun parseAddress(addr: String): Pair<String?, String?>? {
+        fun parseAddress(addr: String): Pair<String?, String?> {
             val lastCommaIndex = addr.lastIndexOf(", ")
             return if (lastCommaIndex >= 0) {
                 Pair(addr.substring(0, lastCommaIndex), addr.substring(lastCommaIndex + 2, addr.length))

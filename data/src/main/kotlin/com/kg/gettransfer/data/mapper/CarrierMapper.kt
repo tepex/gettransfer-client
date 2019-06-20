@@ -1,6 +1,7 @@
 package com.kg.gettransfer.data.mapper
 
 import com.kg.gettransfer.data.model.CarrierEntity
+import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.Carrier
 import com.kg.gettransfer.domain.model.Profile
@@ -13,14 +14,13 @@ import org.koin.standalone.get
 open class CarrierMapper : Mapper<CarrierEntity, Carrier> {
     private val localeMapper  = get<LocaleMapper>()
     private val ratingsMapper = get<RatingsMapper>()
-    private val profileMapper = get<ProfileMapper>()
     /**
      * Map a [CarrierEntity] instance to a [Carrier] instance.
      */
     override fun fromEntity(type: CarrierEntity) =
         Carrier(
             id                 = type.id,
-            profile            = type.profile?.let { profileMapper.fromEntity(it) },
+            profile            = type.profile?.let { it.map() },
             approved           = type.approved,
             completedTransfers = type.completedTransfers,
             languages          = type.languages.map { localeMapper.fromEntity(it) },
@@ -33,7 +33,7 @@ open class CarrierMapper : Mapper<CarrierEntity, Carrier> {
     override fun toEntity(type: Carrier) =
             CarrierEntity(
                     id                 = type.id,
-                    profile            = type.profile?.let { profileMapper.toEntity(it) },
+                    profile            = type.profile?.let { it.map() },
                     approved           = type.approved,
                     completedTransfers = type.completedTransfers,
                     languages          = type.languages.map { localeMapper.toEntity(it) },
