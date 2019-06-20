@@ -93,11 +93,12 @@ class LocationImpl(private val context: Context) :
             if (street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty())
                 append(list.firstOrNull()?.getAddressLine(0))
             else {
-                if (!street.isNullOrEmpty()) append(street).append(", ")
+                if (!street.isNullOrEmpty() && street != "Unnamed Road") append(street).append(", ")
                 if (!house.isNullOrEmpty()) append(house).append(", ")
                 if (!city.isNullOrEmpty()) append(city).append(", ")
-                if (!country.isNullOrEmpty()) append(country)
+                if (!country.isNullOrEmpty()) append(country).append(", ")
                 if (!area.isNullOrEmpty() && area != city) append(area).append(", ")
+                if (this.lastIndexOf(", ") == this.length - 2) delete(this.length - 2, this.length)
             }
         }
     }
