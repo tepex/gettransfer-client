@@ -34,12 +34,12 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
                 }
 
                 it.isSuccess()?.let {
+                    viewState.hideLoading()
                     viewState.showRegisterSuccessDialog()
                     registerPushToken()
                     logLoginEvent(Analytics.RESULT_SUCCESS)
                 }
             }
-            viewState.blockInterface(false)
         }
     }
 

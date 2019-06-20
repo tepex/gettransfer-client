@@ -88,9 +88,13 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     private fun initClickListeners() {
         btnLogin.setThrottledClickListener {
-            presenter.onLoginClick(emailLayout.fieldText.text.toString(), etPassword.text.toString())
+            showLoading()
+            presenter.onLoginClick(loginEmailTv.text.toString(), etPassword.text.toString())
         }
-        btnRequestCode.setThrottledClickListener { presenter.loginWithCode(emailLayout.fieldText.text.toString(), changePage) }
+        btnRequestCode.setThrottledClickListener {
+            showLoading()
+            presenter.loginWithCode(loginEmailTv.text.toString(), changePage)
+        }
     }
 
     private fun initTextChangeListeners() {
@@ -124,6 +128,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
             .newInstance()
             .apply {
                 title = this@LogInFragment.getString(errStringRes)
+                onDismissCallBack = { hideLoading() }
             }
             .show(fragmentManager)
     }
@@ -157,7 +162,10 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
             ApiException.NO_USER -> {
                 BottomSheetDialog
                     .newInstance()
-                    .apply { title = this@LogInFragment.getString(R.string.LNG_BAD_CREDENTIALS_ERROR) }
+                    .apply {
+                        title = this@LogInFragment.getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
+                        onDismissCallBack = { hideLoading() }
+                    }
                     .show(fragmentManager)
             }
             ApiException.NOT_FOUND -> {
@@ -169,13 +177,17 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                         text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
                         buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
                         onClickOkButton = { changePage?.invoke() }
+                        onDismissCallBack = { hideLoading() }
                     }
                     .show(fragmentManager)
             }
             else -> {
                 BottomSheetDialog
                     .newInstance()
-                    .apply { title = e.message ?: "Error" }
+                    .apply {
+                        title = e.message ?: "Error"
+                        onDismissCallBack = { hideLoading() }
+                    }
                     .show(fragmentManager)
             }
         }
@@ -186,17 +198,15 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         Sentry.capture(e)
     }
 
-    private fun showLoading() {
-        if (loadingFragment.isAdded) return
-        activity?.supportFragmentManager?.beginTransaction()?.apply {
-            replace(R.id.container, loadingFragment)
+    override fun showLoading() {
+        fragmentManager?.beginTransaction()?.apply {
+            add(R.id.container, loadingFragment)
             commit()
         }
     }
 
-    private fun hideLoading() {
-        if (!loadingFragment.isAdded) return
-        activity?.supportFragmentManager?.beginTransaction()?.apply {
+    override fun hideLoading() {
+        fragmentManager?.beginTransaction()?.apply {
             remove(loadingFragment)
             commit()
         }
