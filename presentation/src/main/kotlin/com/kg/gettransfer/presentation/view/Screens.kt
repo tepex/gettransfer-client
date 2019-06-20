@@ -173,16 +173,28 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangePasswordActivity::class.java)
     }
 
-    open class SmsCode(
-        private val isPhone: Boolean,
-        private val emailOrPhone: String?,
+    open class SmsCodeByEmail(
+        private val email: String?,
         private val nextScreen: String
     ) : SupportAppScreen() {
         override fun getFragment() = SmsCodeFragment.newInstance().apply {
             arguments = Bundle().apply {
                 putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
-                putBoolean(SmsCodeFragment.EXTERNAL_IS_PHONE, isPhone)
-                putString(SmsCodeFragment.EXTERNAL_EMAIL_OR_PHONE, emailOrPhone)
+                putBoolean(SmsCodeFragment.EXTERNAL_IS_PHONE, false)
+                putString(SmsCodeFragment.EXTERNAL_EMAIL_OR_PHONE, email)
+            }
+        }
+    }
+
+    open class SmsCodeByPhone(
+        private val phone: String?,
+        private val nextScreen: String
+    ) : SupportAppScreen() {
+        override fun getFragment() = SmsCodeFragment.newInstance().apply {
+            arguments = Bundle().apply {
+                putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
+                putBoolean(SmsCodeFragment.EXTERNAL_IS_PHONE, true)
+                putString(SmsCodeFragment.EXTERNAL_EMAIL_OR_PHONE, phone)
             }
         }
     }
