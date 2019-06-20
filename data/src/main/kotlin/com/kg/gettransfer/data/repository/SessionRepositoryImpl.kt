@@ -2,6 +2,7 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
+import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.SessionDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
@@ -27,9 +28,7 @@ class SessionRepositoryImpl(
 
     private val configsMapper = get<ConfigsMapper>()
     private val mobileConfMapper = get<MobileConfigMapper>()
-    private val endpointMapper = get<EndpointMapper>()
     private val accountMapper = get<AccountMapper>()
-    private val accountRegisterMapper = get<AccountRegisterMapper>()
 
     init {
         preferencesCache.addListener(this)
@@ -37,7 +36,7 @@ class SessionRepositoryImpl(
     }
 
     override val endpoint: Endpoint
-        get() = endpointMapper.fromEntity(preferencesCache.endpoint)
+        get() = preferencesCache.endpoint.map()
 
     override var isInitialized = false
         private set
@@ -85,7 +84,7 @@ class SessionRepositoryImpl(
         }
 
     override suspend fun coldStart(): Result<Account> {
-        factory.retrieveRemoteDataStore().changeEndpoint(endpointMapper.toEntity(endpoint))
+        factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
 
         if (configs === CONFIGS_DEFAULT) {
             val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
@@ -186,8 +185,10 @@ class SessionRepositoryImpl(
     }
 
     override suspend fun register(registerAccount: RegistrationAccount): Result<Account> {
-        val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().register(accountRegisterMapper.toEntity(registerAccount))
+        val result = try {
+            ResultEntity(factory.retrieveRemoteDataStore().register(registerAccount.map()))
+        } catch (e: RemoteException) {
+            ResultEntity(null, e)
         }
         if (result.error == null) {
             result.entity?.let {
@@ -195,7 +196,7 @@ class SessionRepositoryImpl(
                 account = accountMapper.fromEntity(it)
             }
         }
-        return Result(account, result.error?.let { ExceptionMapper.map(it) })
+        return Result(account, result.error?.let { it.map() })
     }
 
     override suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean> {

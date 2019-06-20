@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.RegistrationAccount
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -24,3 +26,5 @@ data class RegistrationAccountEntity(
         const val TERMS_ACCEPTED = "terms_accepted"
     }
 }
+
+fun RegistrationAccount.map() = RegistrationAccountEntity(fullName, email, phone, termsAccepted)

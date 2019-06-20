@@ -3,6 +3,7 @@ package com.kg.gettransfer.domain.interactor
 import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.SessionRepository
+
 import java.util.Locale
 
 class SessionInteractor(

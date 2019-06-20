@@ -61,9 +61,7 @@ val dataModule = module {
     single { PaymentDataStoreRemote() }
     single { PaymentRepositoryImpl(DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>(get(), get())) } bind PaymentRepository::class
 
-    single { EndpointMapper() }
     single { AccountMapper() }
-    single { AccountRegisterMapper() }
     single { ConfigsMapper() }
     single { MobileConfigMapper() }
     single { BuildsConfigsMapper() }
@@ -89,7 +87,6 @@ val dataModule = module {
     single { RouteDataStoreRemote() }
     single<RouteRepository> { RouteRepositoryImpl(DataStoreFactory<RouteDataStore, RouteDataStoreCache, RouteDataStoreRemote>(get(), get())) }
 
-    single { DestMapper() }
     single { PassengerAccountMapper() }
     single { CarrierTripBaseMapper() }
     single { CarrierTripMapper() }
@@ -122,7 +119,6 @@ val dataModule = module {
 
     single <PaymentDataStoreReceiver> { PaymentSocketDataStoreInput() }
 
-    single { CoordinateMapper() }
     single { CoordinateSocketDataStoreOutput(get()) }
     single <CoordinateDataStoreReceiver> { CoordinateSocketDataStoreInput() }
     single { CoordinateRepositoryImpl(get()) } bind CoordinateRepository::class

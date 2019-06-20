@@ -15,7 +15,6 @@ import org.koin.standalone.get
  * Map a [TransferNewEntity] to and from a [TransferNew] instance when data is moving between this later and the Domain layer.
  */
 open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
-    private val destMapper       = get<DestMapper>()
     private val serverDateFormat = get<ThreadLocal<DateFormat>>("server_date")
     private val serverTimeFormat = get<ThreadLocal<DateFormat>>("server_time")
 
@@ -30,7 +29,7 @@ open class TransferNewMapper : Mapper<TransferNewEntity, TransferNew> {
     override fun toEntity(type: TransferNew) =
         TransferNewEntity(
             from                  = type.from.map(),
-            dest                  = destMapper.toEntity(type.dest),
+            dest                  = type.dest.map(),
             tripTo                = type.tripTo.map(serverDateFormat, serverTimeFormat),
             tripReturn            = type.tripReturn?.let { it.map(serverDateFormat, serverTimeFormat) },
             transportTypeIds      = type.transportTypeIds.map { it.toString() },
