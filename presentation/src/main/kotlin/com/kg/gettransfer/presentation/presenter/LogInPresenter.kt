@@ -148,9 +148,8 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
     fun loginWithCode(emailOrPhone: String, changePage: (() -> Unit)?) {
         if (!checkInputData(emailOrPhone)) return
-        viewState.hideLoading()
-        val isPhone = isPhone(emailOrPhone)
         saveProfile(emailOrPhone)
+        viewState.hideLoading()
         val isPhone = isPhone(emailOrPhone)
         if (isPhone) {
             router.replaceScreen(Screens.SmsCodeByPhone(profile.phone, nextScreen ?: ""))
