@@ -146,7 +146,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         )
     }
 
-    fun loginWithCode(emailOrPhone: String, changePage: (() -> Unit)?) {
+    private fun loginWithCode(emailOrPhone: String) {
         if (!checkInputData(emailOrPhone)) return
         saveProfile(emailOrPhone)
         viewState.hideLoading()
@@ -207,6 +207,24 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
             }
         }
         viewState.hideLoading()
+    }
+
+    fun sendVerificationCode(emailOrPhone: String) {
+        val isPhone = isPhone(emailOrPhone)
+        utils.launchSuspend {
+            fetchResult(SHOW_ERROR, checkLoginError = false) {
+                when (isPhone) {
+                    true -> sessionInteractor.getVerificationCode(null, LoginHelper.formatPhone(emailOrPhone))
+                    false -> sessionInteractor.getVerificationCode(emailOrPhone, null)
+                }
+            }.also {
+                if (it.error != null)
+                    viewState.setError(it.error!!)
+                else {
+                    loginWithCode(emailOrPhone)
+                }
+            }
+        }
     }
 
     companion object {
