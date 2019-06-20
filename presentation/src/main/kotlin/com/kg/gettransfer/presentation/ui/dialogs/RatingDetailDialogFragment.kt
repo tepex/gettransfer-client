@@ -13,11 +13,14 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.model.ReviewRate
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.setUneditable
 import com.kg.gettransfer.extensions.show
 import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.presenter.RatingDetailPresenter
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment.Companion.COMMENT_DIALOG_TAG
+import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment.Companion.COMMENT_REQUEST_CODE
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RatingDetailView
 
@@ -96,7 +99,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
             presenter.onClickSend(createListOfDetailedRates(), etComment.text.toString())
         }
         ivClose.setOnClickListener { dismiss() }
-        etComment.setOnClickListener { presenter.onClickComment(etComment.text.toString().trim()) }
+        etComment.setThrottledClickListener { presenter.onClickComment(etComment.text.toString().trim()) }
         etComment.setUneditable()
         commonRate.setOnRatingChangeListener(commonRateListener)
         vehicleRate.rate_bar.setOnRatingChangeListener(vehicleRateListener)
@@ -148,7 +151,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     override fun showCommentDialog(comment: String) {
         val commentDialog = CommentDialogFragment.newInstance(comment)
         commentDialog.setTargetFragment(this@RatingDetailDialogFragment, COMMENT_REQUEST_CODE)
-        commentDialog.show(fragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
+        commentDialog.show(fragmentManager, COMMENT_DIALOG_TAG)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -203,7 +206,6 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 
     companion object {
         const val RATE_DIALOG_TAG = "rate_dialog_tag"
-        const val COMMENT_REQUEST_CODE = 1
         private const val OFFER_ID = "offer id"
         private const val VEHICLE_RATING = "vehicle rating"
         private const val DRIVER_RATING = "driver rating"
