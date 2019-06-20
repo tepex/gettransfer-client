@@ -148,7 +148,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         )
     }
 
-    private fun loginWithCode(emailOrPhone: String) {
+    fun loginWithCode(emailOrPhone: String) {
         if (!checkInputData(emailOrPhone)) return
         saveProfile(emailOrPhone)
         viewState.hideLoading()
