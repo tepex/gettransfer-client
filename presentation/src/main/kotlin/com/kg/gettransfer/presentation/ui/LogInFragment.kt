@@ -90,12 +90,10 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     private fun initClickListeners() {
         btnLogin.setThrottledClickListener {
             showLoading()
-            // presenter.onLoginClick(loginEmailTv.text.toString(), etPassword.text.toString())
             presenter.onLoginClick(emailLayout.fieldText.text.toString(), etPassword.text.toString())
         }
         btnRequestCode.setThrottledClickListener {
             showLoading()
-            //presenter.loginWithCode(loginEmailTv.text.toString(), changePage)
             presenter.loginWithCode(emailLayout.fieldText.text.toString())
         }
     }
