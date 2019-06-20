@@ -70,7 +70,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         router.exit()
     }
 
-    protected fun login(nextScreen: String, email: String?) = router.newRootScreen(Screens.MainLogin(nextScreen, email))
+    protected fun login(nextScreen: String, email: String?) = router.navigateTo(Screens.MainLogin(nextScreen, email))
 
     override fun onFirstViewAttach() {
         if (sessionInteractor.isInitialized) return
