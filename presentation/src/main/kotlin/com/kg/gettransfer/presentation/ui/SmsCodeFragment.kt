@@ -52,18 +52,16 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val smsResendDelay = presenter.smsResendDelaySec * SEC_IN_MILLIS
-
-        val isPhone = arguments?.getBoolean(EXTERNAL_IS_PHONE) ?: false
 
         with(presenter) {
             arguments?.let {
                 nextScreen = it.getString(LogInView.EXTRA_NEXT_SCREEN) ?: ""
-                emailOrPhone = arguments?.getString(EXTERNAL_EMAIL_OR_PHONE) ?: ""
+                emailOrPhone = it.getString(SmsCodeView.EXTERNAL_EMAIL_OR_PHONE) ?: ""
+                isPhone = it.getBoolean(SmsCodeView.EXTERNAL_IS_PHONE)
             }
         }
 
-        smsTitle.text = when (isPhone) {
+        smsTitle.text = when (presenter.isPhone ?: false) {
             true -> getString(R.string.LNG_LOGIN_SEND_SMS_CODE)
             false -> getString(R.string.LNG_LOGIN_SEND_EMAIL_CODE)
         }.plus(" ").plus(presenter.emailOrPhone)
@@ -72,26 +70,15 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
             if (wrongCodeError.isVisible) {
                 context?.let { pinView.setTextColor(ContextCompat.getColor(it, R.color.color_gtr_green)) }
             }
+            presenter.setCode(code)
             btnDone.isEnabled = code.length == pinView.itemCount
         }
 
         loginBackButton.setOnClickListener { presenter.back() }
+        btnResendCode.setOnClickListener { presenter.sendVerificationCode() }
+        btnDone.setThrottledClickListener { presenter.onLoginClick() }
 
-        setTimer(smsResendDelay)
-        updateTimerResendCode()
-        btnResendCode.setOnClickListener { sendVerificationCode(isPhone) }
-
-        btnDone.setThrottledClickListener {
-            presenter.onLoginClick(
-                presenter.emailOrPhone ?: "",
-                pinView.toString(),
-                isPhone
-            )
-        }
-    }
-
-    private fun sendVerificationCode(isPhone: Boolean) {
-        presenter.sendVerificationCode(presenter.emailOrPhone ?: "", isPhone)
+        setTimer()
     }
 
     @CallSuper
@@ -100,9 +87,11 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         timerBtnResendCode.cancel()
     }
 
-    private fun setTimer(smsResendDelay: Long) {
-        btnResendCode.isEnabled = false
-        timerBtnResendCode = object : CountDownTimer(smsResendDelay, SEC_IN_MILLIS) {
+
+    /* Timer */
+
+    private fun setTimer() {
+        timerBtnResendCode = object : CountDownTimer(presenter.smsResendDelaySec * SEC_IN_MILLIS, SEC_IN_MILLIS) {
             override fun onTick(millisUntilFinished: Long) {
                 btnResendCode.text =
                     getString(R.string.LNG_LOGIN_RESEND_WAIT, (millisUntilFinished / SEC_IN_MILLIS).toString())
@@ -114,13 +103,15 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
                 btnResendCode.text = getText(R.string.LNG_LOGIN_RESEND_ALLOW)
             }
         }
-        timerBtnResendCode.start()
     }
 
     override fun updateTimerResendCode() {
         btnResendCode.isEnabled = false
         timerBtnResendCode.start()
     }
+
+
+    /* Errors */
 
     override fun showErrorText(show: Boolean, text: String?) {
         pinView.setTextColor(
@@ -175,6 +166,13 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         Utils.showError(context!!, false, getString(errId, *args))
     }
 
+    override fun setTransferNotFoundError(transferId: Long) {
+        //TODO remove BaseView or add code.
+    }
+
+
+    /* Loading fragment */
+
     private fun showLoading() {
         if (loadingFragment.isAdded) return
         activity?.supportFragmentManager?.beginTransaction()?.apply {
@@ -191,17 +189,8 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         }
     }
 
-    override fun setTransferNotFoundError(transferId: Long) {
-        //TODO remove BaseView or add code.
-    }
-
     companion object {
-        const val SMS_RESEND_DELAY_MILLIS = 90_000L
         const val SEC_IN_MILLIS = 1_000L
-
-        const val EXTERNAL_IS_PHONE = ".presentation.ui.SmsCodeFragment_IS_PHONE"
-        const val EXTERNAL_EMAIL_OR_PHONE = ".presentation.ui.SmsCodeFragment_EMAIL_OR_PHONE"
-        const val EXTERNAL_SMS_RESEND_DELAY_SEC = ".presentation.ui.SmsCodeFragment_EMAIL_OR_PHONE"
 
         fun newInstance() = SmsCodeFragment()
     }

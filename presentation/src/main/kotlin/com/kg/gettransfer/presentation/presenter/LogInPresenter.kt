@@ -153,11 +153,14 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         saveProfile(emailOrPhone)
         viewState.hideLoading()
         val isPhone = isPhone(emailOrPhone)
-        if (isPhone) {
-            router.replaceScreen(Screens.SmsCodeByPhone(profile.phone, nextScreen ?: ""))
-        } else {
-            router.replaceScreen(Screens.SmsCodeByEmail(profile.email, nextScreen ?: ""))
-        }
+        router.replaceScreen(Screens.SmsCode(
+            when (isPhone) {
+                true -> profile.phone
+                false -> profile.email
+            },
+            isPhone,
+                nextScreen ?: ""
+        ))
     }
 
     fun saveProfile(emailOrPhone: String) {
