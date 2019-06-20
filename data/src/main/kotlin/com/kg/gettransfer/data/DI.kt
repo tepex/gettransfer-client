@@ -57,15 +57,10 @@ val dataModule = module {
     single { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get())) } bind OfferRepository::class
     single<OfferDataStoreReceiver> { OfferSocketDataStoreInput() }
 
-    single { BraintreeTokenMapper() }
-    single { PaymentMapper() }
-    single { PaymentRequestMapper() }
     single { PaymentDataStoreCache() }
     single { PaymentDataStoreRemote() }
     single { PaymentRepositoryImpl(DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>(get(), get())) } bind PaymentRepository::class
 
-    single { PaymentStatusRequestMapper() }
-    single { PaymentStatusMapper() }
     single { EndpointMapper() }
     single { AccountMapper() }
     single { AccountRegisterMapper() }

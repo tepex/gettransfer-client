@@ -7,9 +7,14 @@ data class Payment(
     val params: Params?
 ) {
 
+    enum class Type { IFRAME, WIDGET }
+    
     companion object {
+        /* TODO: переделать в enum */
         const val TYPE_IFRAME = "iframe"
         const val TYPE_WIDGET = "widget"
+        
+        val EMPTY = Payment("", null, null, null)
     }
 }
 
