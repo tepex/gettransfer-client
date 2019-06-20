@@ -34,15 +34,17 @@
             android:layout_marginStart="@dimen/payment_offer_tiny_tvModel_margin_start"
             android:layout_marginTop="@dimen/payment_offer_tiny_tvModel_margin_top"
             android:layout_marginEnd="8dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textSize="16sp"
+            android:maxLines="2"
+            android:textSize="@dimen/payment_car_name_max_size"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toStartOf="@+id/ivCarColor"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/ivCarPhoto"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Mercedes-Benz E-Class" />
+            tools:text="Mercedes-Benz E-Class"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="@dimen/payment_car_name_min_size"
+            app:autoSizeMaxTextSize="@dimen/payment_car_name_max_size" />
 
         <ImageView
             android:id="@+id/ivCarColor"
