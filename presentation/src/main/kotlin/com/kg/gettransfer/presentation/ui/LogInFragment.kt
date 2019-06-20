@@ -15,6 +15,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.extensions.internationalExample
 
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
@@ -119,16 +120,20 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     override fun showValidationError(errorType: Int) {
         val errStringRes = when (errorType) {
-            INVALID_EMAIL -> R.string.LNG_ERROR_EMAIL
-            INVALID_PHONE -> R.string.LNG_ERROR_PHONE
-            INVALID_PASSWORD -> R.string.LNG_LOGIN_PASSWORD
-            else -> R.string.LNG_BAD_CREDENTIALS_ERROR
+            INVALID_EMAIL, INVALID_PHONE -> getString(R.string.LNG_ERROR_EMAIL_PHONE, presenter.getPhoneExample())
+            INVALID_PASSWORD -> getString(R.string.LNG_LOGIN_PASSWORD)
+            else -> getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
         }
         BottomSheetDialog
             .newInstance()
             .apply {
+<<<<<<< HEAD
                 title = this@LogInFragment.getString(errStringRes)
                 onDismissCallBack = { hideLoading() }
+=======
+                title = this@LogInFragment.getString(R.string.LNG_ERROR_CREDENTIALS)
+                text = errStringRes
+>>>>>>> fix: Fix popup for the invalid credentials
             }
             .show(fragmentManager)
     }

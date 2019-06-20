@@ -6,10 +6,12 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.extensions.internationalExample
 
 import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.ui.MainLoginActivity
+import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
@@ -226,6 +228,8 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
             }
         }
     }
+
+    fun getPhoneExample(): String = Utils.phoneUtil.internationalExample(sessionInteractor.locale)
 
     companion object {
         const val PHONE_ATTRIBUTE = "+"
