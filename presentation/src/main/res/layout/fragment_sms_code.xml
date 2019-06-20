@@ -4,16 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:background="@color/colorWhite">
 
     <ImageView
         android:id="@+id/loginBackButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:padding="6dp"
-        android:rotation="180"
-        android:src="@drawable/ic_chevron_right_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/fragment_sms_back_btn_padding"
+        app:srcCompat="@drawable/ic_button_back_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,7 +29,6 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/icon">
 
@@ -41,7 +39,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/LNG_LOGIN_SEND_SMS_CODE"
-            android:textSize="18sp"
+            android:textSize="@dimen/fragment_sms_text_size_18sp"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -49,10 +47,10 @@
             style="@style/black_regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/fragment_sms_subtitle_margin_top"
             android:gravity="center"
             android:text="@string/LNG_LOGIN_ENTER_CODE"
-            android:textSize="16sp"
+            android:textSize="@dimen/fragment_sms_text_size_16sp"
             app:layout_constraintTop_toBottomOf="@+id/smsTitle" />
 
         <com.chaos.view.PinView
@@ -60,24 +58,24 @@
             style="@style/PinWidget.PinView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="@dimen/fragment_sms_pin_view_margin_top"
             android:cursorVisible="true"
             android:fontFamily="@font/sf_pro_text_semibold"
             android:inputType="number"
             android:textColor="@color/color_gtr_green"
-            android:textSize="30sp"
+            android:textSize="@dimen/fragment_sms_text_size_30sp"
             android:maxLength="4"
             app:cursorColor="@color/color_gtr_green"
-            app:cursorWidth="2dp"
+            app:cursorWidth="@dimen/fragment_sms_pin_view_cursor_width"
             app:itemCount="4"
-            app:itemHeight="40dp"
-            app:itemSpacing="15dp"
-            app:itemWidth="35dp"
+            app:itemHeight="@dimen/fragment_sms_pin_view_item_height"
+            app:itemSpacing="@dimen/fragment_sms_pin_view_item_spacing"
+            app:itemWidth="@dimen/fragment_sms_pin_view_item_width"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/smsSubtitle"
             app:lineColor="@color/color_gtr_grey"
-            app:lineWidth="1dp"
+            app:lineWidth="@dimen/fragment_sms_pin_view_line_width"
             app:viewType="line">
 
             <requestFocus />
@@ -87,10 +85,10 @@
             android:id="@+id/wrongCodeError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/fragment_sms_code_error_margin_top"
             android:fontFamily="@font/sf_pro_text_regular"
             android:textColor="@color/color_gtr_red"
-            android:textSize="12sp"
+            android:textSize="@dimen/fragment_sms_text_size_12sp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,28 +99,30 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="@dimen/general_button_height"
-            android:layout_marginTop="48dp"
+            android:layout_marginStart="@dimen/fragment_sms_btn_done_vertical_margin"
+            android:layout_marginEnd="@dimen/fragment_sms_btn_done_vertical_margin"
+            android:layout_marginBottom="@dimen/fragment_sms_btn_done_margin_bottom"
             android:background="@drawable/btn_bg_rounded"
             android:enabled="false"
             android:text="@string/LNG_DONE"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pinView" />
+            app:layout_constraintBottom_toTopOf="@+id/btnResendCode"/>
 
         <TextView
             android:id="@+id/btnResendCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="9dp"
+            android:layout_marginBottom="@dimen/fragment_sms_resend_code_margin_bottom"
             android:fontFamily="@font/sf_pro_text_regular"
-            android:padding="9dp"
+            android:padding="@dimen/fragment_sms_resend_code_padding"
             android:text="@string/LNG_LOGIN_RESEND_ALLOW"
             android:textColor="@color/color_gtr_grey"
-            android:textSize="12sp"
+            android:textSize="@dimen/fragment_sms_text_size_12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnDone" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
 

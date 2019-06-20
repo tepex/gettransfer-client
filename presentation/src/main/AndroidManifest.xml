@@ -92,6 +92,7 @@
         <activity
             android:name=".presentation.ui.ProfileSettingsActivity"
             android:resizeableActivity="false"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.SettingsChangePasswordActivity"
@@ -139,7 +140,7 @@
         <activity android:name=".presentation.ui.MainLoginActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateUnchanged|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
         <activity
             android:name=".presentation.ui.PaymentActivity"
             android:resizeableActivity="false"

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/fragment_log_in_field_height">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/fieldLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:theme="@style/editTextLogin">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/fieldText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/icon"
+            android:background="@null"
+            android:drawableStart="@drawable/ic_email"
+            android:drawablePadding="@dimen/login_input_layout_drawable_padding"
+            android:ems="10"
+            android:paddingTop="@dimen/login_etPassword_padding_top"
+            android:paddingBottom="@dimen/login_etPassword_padding_bottom"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/create_transfer_divider_height"
+        android:background="@color/create_order_fields_divider"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

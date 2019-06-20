@@ -26,6 +26,7 @@ import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.fragment_sign_up.*
+import kotlinx.android.synthetic.main.view_input_account_field.view.*
 
 import timber.log.Timber
 
@@ -43,13 +44,13 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     fun createLoginPresenter() = SignUpPresenter()
 
     private val phone
-        get() = loginPhoneTv.text.toString().replace(" ", "")
+        get() = phoneLayout.fieldText.text.toString().replace(" ", "")
 
     private val name
-        get() = loginNameTv.text.toString().trim()
+        get() = nameLayout.fieldText.text.toString().trim()
 
     private val email
-        get() = loginEmailTv.text.toString().trim()
+        get() = emailLayout.fieldText.text.toString().trim()
 
     private val termsAccepted
         get() = switchAgreementTb.isChecked
@@ -93,15 +94,15 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     private fun initTextChangeListeners() {
-        loginNameTv.onTextChanged {
+        nameLayout.fieldText.onTextChanged {
             btnLogin.isEnabled = checkAbleEnableButton()
         }
 
-        loginPhoneTv.onTextChanged {
+        phoneLayout.fieldText.onTextChanged {
             btnLogin.isEnabled = checkAbleEnableButton()
         }
 
-        loginEmailTv.onTextChanged {
+        emailLayout.fieldText.onTextChanged {
             btnLogin.isEnabled = checkAbleEnableButton()
         }
 
@@ -111,23 +112,25 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     private fun initPhoneTextChangeListeners() {
-        loginPhoneTv.onTextChanged { text ->
-            if (text.isEmpty() && loginPhoneTv.isFocused) {
-                loginPhoneTv.setText("+")
-                loginPhoneTv.setSelection(1)
-            }
-        }
-        loginPhoneTv.addTextChangedListener(PhoneNumberFormatter())
-        loginPhoneTv.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) phone.let {
-                val phoneCode = Utils.getPhoneCodeByCountryIso(context!!)
-                if (it.isEmpty()) {
-                    loginPhoneTv.setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+        with(phoneLayout.fieldText) {
+            onTextChanged { text ->
+                if (text.isEmpty() && isFocused) {
+                    setText("+")
+                    setSelection(1)
                 }
             }
-            else phone.let {
-                if (it.length <= 4) {
-                    loginPhoneTv.setText("")
+            addTextChangedListener(PhoneNumberFormatter())
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) phone.let {
+                    val phoneCode = Utils.getPhoneCodeByCountryIso(context!!)
+                    if (it.isEmpty()) {
+                        setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+                    }
+                }
+                else phone.let {
+                    if (it.length <= 4) {
+                        setText("")
+                    }
                 }
             }
         }

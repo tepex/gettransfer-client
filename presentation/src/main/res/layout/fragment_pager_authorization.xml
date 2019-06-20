@@ -4,38 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/loginBackButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:padding="6dp"
-        android:rotation="180"
-        android:src="@drawable/ic_chevron_right_black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/toolbarLogin"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fragment_auth_title_height"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/colorWhite">
 
-    <TextView
-        android:id="@+id/loginTitleText"
-        style="@style/sf_font_semi_bold_17_sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/LNG_LOGIN_LOGIN_TITLE"
-        app:layout_constraintBottom_toBottomOf="@+id/loginBackButton"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/loginBackButton" />
+        <ImageView
+            android:id="@+id/loginBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/fragment_auth_back_btn_padding"
+            app:srcCompat="@drawable/ic_button_back_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/loginTitleText"
+            style="@style/sf_font_semi_bold_17_sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/LNG_LOGIN_LOGIN_TITLE"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/loginTitleTabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/loginBackButton"
+        android:background="@color/colorWhite"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLogin"
+        app:tabTextAppearance="@style/tabs_text_style"
         app:tabMode="fixed"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/colorPrimary"
-        />
+        app:tabSelectedTextColor="@color/color_gtr_orange"
+        app:tabIndicatorColor="@color/color_gtr_orange"
+        android:elevation="@dimen/fragment_auth_tabs_elevation" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/loginPager"

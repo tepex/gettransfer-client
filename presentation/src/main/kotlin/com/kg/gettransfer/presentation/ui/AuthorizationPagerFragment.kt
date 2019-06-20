@@ -3,13 +3,17 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
+import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.content.res.ResourcesCompat
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 
 import com.arellomobile.mvp.MvpAppCompatFragment
 
@@ -43,6 +47,23 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loginTitleTabs.setupWithViewPager(loginPager)
+        val semiboldFontRes = ResourcesCompat.getFont(context!!, R.font.sf_pro_text_semibold)
+        val regularFontRes = ResourcesCompat.getFont(context!!, R.font.sf_pro_text_regular)
+        loginTitleTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(p0: TabLayout.Tab) {}
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                (((loginTitleTabs.getChildAt(0) as ViewGroup)
+                        .getChildAt(tab.position) as LinearLayout)
+                        .getChildAt(1) as TextView)
+                        .typeface = regularFontRes
+            }
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                (((loginTitleTabs.getChildAt(0) as ViewGroup)
+                        .getChildAt(tab.position) as LinearLayout)
+                        .getChildAt(1) as TextView)
+                        .typeface = semiboldFontRes
+            }
+        })
         loginPager.adapter = LoginPagerAdapter(fragmentManager!!)
 
         loginBackButton.setOnClickListener { router.exit() }

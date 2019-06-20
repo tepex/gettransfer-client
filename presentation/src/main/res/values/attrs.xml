@@ -121,4 +121,11 @@
         <attr name="password_view_hint" format="string"/>
         <attr name="password_view_divider_visible" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="InputAccountFieldView">
+        <attr name="account_field_view_hint" format="string"/>
+        <attr name="account_field_view_divider_visible" format="boolean"/>
+        <attr name="account_field_view_icon" format="reference"/>
+        <attr name="android:inputType"/>
+    </declare-styleable>
 </resources>

@@ -31,6 +31,7 @@ import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.fragment_log_in.*
+import kotlinx.android.synthetic.main.view_input_account_field.view.*
 import kotlinx.android.synthetic.main.view_input_password.*
 
 import timber.log.Timber
@@ -72,34 +73,39 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         initClickListeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+        emailLayout.fieldText.requestFocus()
+    }
+
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val emailOrPhone = loginEmailTv.text.toString()
+        val emailOrPhone = emailLayout.fieldText.text.toString()
         outState.putString(LOG_IN_EMAIL, emailOrPhone)
         presenter.saveProfile(emailOrPhone)
     }
 
     private fun initClickListeners() {
         btnLogin.setThrottledClickListener {
-            presenter.onLoginClick(loginEmailTv.text.toString(), etPassword.text.toString())
+            presenter.onLoginClick(emailLayout.fieldText.text.toString(), etPassword.text.toString())
         }
-        btnRequestCode.setThrottledClickListener { presenter.loginWithCode(loginEmailTv.text.toString(), changePage) }
+        btnRequestCode.setThrottledClickListener { presenter.loginWithCode(emailLayout.fieldText.text.toString(), changePage) }
     }
 
     private fun initTextChangeListeners() {
-        loginEmailTv.onTextChanged {
+        emailLayout.fieldText.onTextChanged {
             val emailPhone = it.trim()
             btnLogin.isEnabled = emailPhone.isNotEmpty() && etPassword.text?.isNotEmpty() ?: false
             btnRequestCode.isEnabled = emailPhone.isNotEmpty()
         }
         etPassword.onTextChanged {
-            btnLogin.isEnabled = loginEmailTv.text?.isNotEmpty() ?: false && it.isNotEmpty()
+            btnLogin.isEnabled = emailLayout.fieldText.text?.isNotEmpty() ?: false && it.isNotEmpty()
         }
     }
 
     override fun setEmail(login: String) {
-        loginEmailTv.setText(login)
+        emailLayout.fieldText.setText(login)
         etPassword.requestFocus()
     }
 
