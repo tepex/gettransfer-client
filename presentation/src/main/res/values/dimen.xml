@@ -1124,5 +1124,7 @@
 	<dimen name="fragment_sms_pin_view_item_spacing">15dp</dimen>
 	<dimen name="fragment_sms_pin_view_item_width">35dp</dimen>
 	<dimen name="fragment_sms_pin_view_line_width">1dp</dimen>
+    <dimen name="payment_car_name_min_size">9sp</dimen>
+    <dimen name="payment_car_name_max_size">16sp</dimen>
 
 </resources>
