@@ -625,7 +625,8 @@
 	<dimen name="offer_list_rv_padding">4dp</dimen>
 	<dimen name="card_view_margin_top_bottom">4dp</dimen>
 	<dimen name="card_view_margin_start_end">4dp</dimen>
-    <dimen name="card_view_padding_top_end">8dp</dimen>
+    <dimen name="card_view_padding_top">8dp</dimen>
+	<dimen name="card_view_padding_end">8dp</dimen>
     <dimen name="view_offer_car_model_margin_start_end">8dp</dimen>
     <dimen name="view_offer_price_no_discount_margin_end">8dp</dimen>
     <dimen name="view_offer_car_img_width">72dp</dimen>
@@ -647,13 +648,15 @@
 	<dimen name="view_offer_language_image_corner">3dp</dimen>
 	<dimen name="view_offer_book_now_title_text_size">9sp</dimen>
 	<dimen name="view_offer_photo_corner">8dp</dimen>
-	<dimen name="view_offer_text_car_name_height">21dp</dimen>
+	<dimen name="view_offer_text_car_name_height">24dp</dimen>
 	<dimen name="view_offer_text_car_name_min_size">9sp</dimen>
 	<dimen name="view_offer_text_car_name_max_size">14sp</dimen>
 	<dimen name="view_offer_text_car_name_step_size">1sp</dimen>
+	<dimen name="view_offer_img_car_color_size">8dp</dimen>
+	<dimen name="view_offer_img_car_color_margin_start">2dp</dimen>
+	<dimen name="view_offer_text_size_9sp">10sp</dimen>
     <dimen name="view_offer_text_size_10sp">10sp</dimen>
     <dimen name="view_offer_text_size_12sp">12sp</dimen>
-	<dimen name="view_offer_text_size_14sp">14sp</dimen>
     <dimen name="view_offer_text_size_15sp">15sp</dimen>
 
     <dimen name="view_offer_bs_btn_book_width">128dp</dimen>
