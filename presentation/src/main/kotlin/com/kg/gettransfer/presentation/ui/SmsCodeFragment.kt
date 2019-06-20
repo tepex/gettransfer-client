@@ -49,8 +49,6 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
 
     private var password = ""
 
-    var changePage: (() -> Unit)? = null
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_sms_code, container, false)
 
@@ -83,7 +81,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
 
         loginBackButton.setOnClickListener { presenter.back() }
 
-        sendVerificationCode(isPhone)
+        updateTimerResendCode()
         setTimer()
         btnResendCode.setOnClickListener { sendVerificationCode(isPhone) }
 
@@ -159,7 +157,6 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
                         buttonOkText = this@SmsCodeFragment.getString(R.string.LNG_OK)
                         onDismissCallBack = {
                             presenter.back()
-                            changePage?.invoke()
                         }
                     }
                     .show(fragmentManager)
