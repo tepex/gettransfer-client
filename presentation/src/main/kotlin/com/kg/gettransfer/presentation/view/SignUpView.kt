@@ -8,4 +8,6 @@ package com.kg.gettransfer.presentation.view
 interface SignUpView : BaseView {
     fun showRegisterSuccessDialog()
     fun showValidationErrorDialog(phoneExample: String)
+    fun showLoading()
+    fun hideLoading()
 }

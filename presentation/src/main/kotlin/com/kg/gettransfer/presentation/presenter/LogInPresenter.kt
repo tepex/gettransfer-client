@@ -67,6 +67,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
     }
 
     private fun suggestCreateAccount() {
+        viewState.hideLoading()
         viewState.showLoginInfo(R.string.LNG_ERROR_ACCOUNT, R.string.LNG_ERROR_ACCOUNT_CREATE_RIDE)
     }
 
@@ -107,6 +108,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         if (openSettingsScreen) {
             router.replaceScreen(Screens.Settings)
         }
+        viewState.hideLoading()
     }
 
     private fun checkInputData(emailOrPhone: String) = emailOrPhone.isNotEmpty() && validateInput(emailOrPhone)
@@ -147,6 +149,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
     fun loginWithCode(emailOrPhone: String, changePage: (() -> Unit)?) {
         if (!checkInputData(emailOrPhone)) return
         saveProfile(emailOrPhone)
+        viewState.hideLoading()
         val isPhone = isPhone(emailOrPhone)
         if (isPhone) {
             router.replaceScreen(Screens.SmsCodeByPhone(profile.phone, nextScreen ?: ""))
@@ -203,6 +206,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
                 }
             }
         }
+        viewState.hideLoading()
     }
 
     companion object {

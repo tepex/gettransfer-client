@@ -65,9 +65,13 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         initTextChangeListeners()
         initPhoneTextChangeListeners()
         btnLogin.setThrottledClickListener(1000L) {
+            showLoading()
             presenter.registration(name, phone, email, termsAccepted)
         }
-        licenseAgreementTv.setThrottledClickListener { presenter.showLicenceAgreement() }
+        licenseAgreementTv.setThrottledClickListener {
+            showLoading()
+            presenter.showLicenceAgreement()
+        }
     }
 
     override fun showValidationErrorDialog(phoneExample: String) {
@@ -76,6 +80,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             .apply {
                 title = this@SignUpFragment.getString(R.string.LNG_ERROR_CREDENTIALS)
                 text = this@SignUpFragment.getString(R.string.LNG_ERROR_EMAIL_PHONE, phoneExample)
+                onDismissCallBack = { hideLoading() }
             }
             .show(fragmentManager)
     }
@@ -88,7 +93,10 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                 title = this@SignUpFragment.getString(R.string.LNG_REGISTERED)
                 text = this@SignUpFragment.getString(R.string.LNG_TRANSFER_CREATE_HINT)
                 buttonOkText = this@SignUpFragment.getString(R.string.LNG_MENU_SUBTITLE_NEW)
-                onDismissCallBack = { presenter.onBackCommandClick() }
+                onDismissCallBack = {
+                    presenter.onBackCommandClick()
+                    hideLoading()
+                }
             }
             .show(fragmentManager)
     }
@@ -151,16 +159,14 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         } else hideLoading()
     }
 
-    private fun showLoading() {
-        if (loadingFragment.isAdded) return
+    override fun showLoading() {
         fragmentManager?.beginTransaction()?.apply {
-            replace(R.id.container, loadingFragment)
+            add(R.id.container, loadingFragment)
             commit()
         }
     }
 
-    private fun hideLoading() {
-        if (!loadingFragment.isAdded) return
+    override fun hideLoading() {
         fragmentManager?.beginTransaction()?.apply {
             remove(loadingFragment)
             commit()
@@ -181,7 +187,10 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         }
         BottomSheetDialog
             .newInstance()
-            .apply { title = textError }
+            .apply {
+                title = textError
+                onDismissCallBack = { hideLoading() }
+            }
             .show(fragmentManager)
     }
 
