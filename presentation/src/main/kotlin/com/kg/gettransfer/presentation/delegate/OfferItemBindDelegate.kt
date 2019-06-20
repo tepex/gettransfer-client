@@ -85,32 +85,52 @@ object OfferItemBindDelegate {
 
     private fun bindOfferModelTiny(view: View, offer: OfferModel) {
         with(view) {
-            tv_car_model_tiny.text = offer.vehicle.name
-            //ivCarColorTiny.isVisible = offer.vehicle.color != null
-            //ivCarColorTiny.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(view.context, it) })
-            tv_car_class_tiny.text = offer.vehicle.transportType.nameId?.let { context.getString(it) ?: "" }
-            offer.vehicle.photos.firstOrNull()
-                .also {
-                    Utils.bindMainOfferPhoto(
-                        img_car_photo_tiny,
-                        view,
-                        path = it,
-                        resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id)
-                    )
-                }
-            bindRating(view_rating_tiny, offer.carrier.ratings, offer.carrier.approved)
-            bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
-            offer.price.withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
-            tv_price_final.text = offer.price.base.preferred ?: offer.price.base.def
+            with(offer.vehicle) {
+                val yearStartIndex = name.indexOf(",")
+                tv_car_model_tiny.text = if (yearStartIndex > 0) name.substring(0, yearStartIndex) else name
+                tv_car_model_tiny.maxLines = 1
+
+                tv_car_year_tiny.text = year.toString()
+                tv_car_year_tiny.isVisible = true
+
+                color?.let { iv_car_color_tiny.setImageDrawable(Utils.getCarColorFormRes(view.context, it)) }
+                iv_car_color_tiny.isVisible = color != null
+
+                tv_car_class_tiny.text = transportType.nameId?.let { context.getString(it) ?: "" }
+
+                photos.firstOrNull()
+                    .also {
+                        Utils.bindMainOfferPhoto(
+                            img_car_photo_tiny,
+                            view,
+                            path = it,
+                            resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id)
+                        )
+                    }
+            }
+            with(offer.carrier) {
+                bindRating(view_rating_tiny, ratings, approved)
+                bindLanguages(multiLineContainer = languages_container_tiny, languages = languages)
+            }
+            with(offer.price) {
+                withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
+                tv_price_final.text = base.preferred ?: base.def
+            }
         }
     }
 
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) {
         with(view) {
             tv_car_model_tiny.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
-            //ivCarColorTiny.isVisible = false
-            tv_car_class_tiny.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
-            Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
+            tv_car_model_tiny.maxLines = 2
+
+            tv_car_year_tiny.isVisible = false
+            iv_car_color_tiny.isVisible = false
+
+            with(offer.transportType) {
+                tv_car_class_tiny.text = nameId?.let { context.getString(it) } ?: ""
+                Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(id))
+            }
             bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING, true)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
             offer.withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
