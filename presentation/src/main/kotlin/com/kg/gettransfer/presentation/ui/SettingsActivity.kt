@@ -9,6 +9,7 @@ import android.support.annotation.CallSuper
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
+import android.view.MotionEvent
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -32,6 +33,9 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
+
+    private var count = 0
+    private var startMillis = 0L
 
     @ProvidePresenter
     fun createSettingsPresenter() = SettingsPresenter()
@@ -138,12 +142,16 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
-    override fun initDebugLayout() {
+    override fun showDebugMenu() {
         layoutDebugSettings.isVisible = true
         settingsLogs.setOnClickListener { presenter.onLogsClicked() }
         settingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
         settingsResetRate.setOnClickListener { presenter.onResetRateClicked() }
         settingsClearAccessToken.setOnClickListener { presenter.onClearAccessTokenClicked() }
+    }
+
+    override fun hideDebugMenu() {
+        layoutDebugSettings.isVisible = false
     }
 
     override fun setDistanceUnit(inMiles: Boolean) {
@@ -237,4 +245,30 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 Screens.CARRIER_TRIPS_TYPE_VIEW_LIST -> getString(R.string.LNG_LIST)
                 else -> throw UnsupportedOperationException()
             }
+
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_UP) {
+            val time = System.currentTimeMillis()
+
+            //if it is the first time, or if it has been more than 3 seconds since the first tap
+            // (so it is like a new try), we reset everything
+            if (startMillis == 0L || (time - startMillis > TIME_FOR_DEBUG)) {
+                startMillis = time
+                count = 1
+            }
+            //it is not the first, and it has been  less than 3 seconds since the first
+            else count++
+
+            if (count == COUNTS_FOR_DEBUG) {
+                count = 0
+                presenter.switchDebugSettings()
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
+    companion object {
+        private const val COUNTS_FOR_DEBUG = 7
+        private const val TIME_FOR_DEBUG = 3000L
+    }
 }

@@ -50,4 +50,8 @@ class SystemInteractor(private val systemRepository: SystemRepository) {
         set(value) { systemRepository.appEnters = value }
 
     var startScreenOrder = false //for analytics
+
+    var isDebugMenuShowed: Boolean
+        get() = systemRepository.isDebugMenuShowed
+        set(value) { systemRepository.isDebugMenuShowed = value }
 }

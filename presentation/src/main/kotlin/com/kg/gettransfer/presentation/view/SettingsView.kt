@@ -27,7 +27,8 @@ interface SettingsView : BaseView {
     //fun initLoggedInUserSettings(profile: ProfileModel)
     fun initProfileField()
     fun initCarrierLayout()
-    fun initDebugLayout()
+    fun showDebugMenu()
+    fun hideDebugMenu()
 
     fun showFragment(showingView: Int)
     fun restartApp()

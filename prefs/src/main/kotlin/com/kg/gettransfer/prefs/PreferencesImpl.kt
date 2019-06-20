@@ -35,6 +35,7 @@ class PreferencesImpl(context: Context,
         @JvmField val ADDRESS_HISTORY     = "history"
         @JvmField val APP_ENTERS_COUNT    = "enters_count"
         @JvmField val FAVORITE_TRANSPORT  = "favorite_transport"
+        @JvmField val DEBUG_MENU           = "debug_menu"
 
         @JvmField val MAP_NEW_OFFERS      = "map_new_offers"
         @JvmField val MAP_NEW_MESSAGES    = "map_new_messages"
@@ -304,6 +305,15 @@ class PreferencesImpl(context: Context,
                     .edit()
                     .putBoolean(OFFERS_VIEW, value)
                     .apply()
+        }
+
+    override var isDebugMenuShowed: Boolean
+        get() = configsPrefs.getBoolean(DEBUG_MENU, false)
+        set(value) {
+            with(configsPrefs.edit()){
+                putBoolean(DEBUG_MENU, value)
+                apply()
+            }
         }
         
     override fun addListener(listener: PreferencesListener)    { listeners.add(listener) }
