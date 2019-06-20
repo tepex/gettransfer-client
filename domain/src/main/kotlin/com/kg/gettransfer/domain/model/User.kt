@@ -6,6 +6,6 @@ data class User(
 ) {
 
     companion object {
-        val EMPTY = User(Profile.EMPTY, false)
+        val EMPTY = User(Profile.EMPTY.copy(), false)
     }
 }

@@ -1,8 +1,6 @@
 package com.kg.gettransfer.presentation.delegate
 
-import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.*
 
@@ -26,17 +24,17 @@ class AccountManager : KoinComponent {
     val remoteProfile: Profile
         get() = remoteUser.profile
 
-    val isLoggedIn: Boolean
-        get() = remoteUser !== User.EMPTY
-        
-    val hasAccount: Boolean
-        get() = remoteUser !== User.EMPTY
-        
+    val isLoggedIn: Boolean //is authorized user
+        get() = (!remoteProfile.email.isNullOrEmpty() || !remoteProfile.phone.isNullOrEmpty()) && remoteUser.termsAccepted
+
+    val hasAccount: Boolean //is temporary or authorized user
+        get() = isLoggedIn || (remoteProfile.email.isNullOrEmpty() && remoteProfile.phone.isNullOrEmpty() && remoteUser.termsAccepted)
+
     val hasData: Boolean
-        get() = remoteProfile !== Profile.EMPTY
+        get() = !remoteProfile.email.isNullOrEmpty() && !remoteProfile.phone.isNullOrEmpty()
 
     fun clearRemoteUser() {
-        remoteUser.profile = Profile.EMPTY
+        remoteUser.profile = Profile.EMPTY.copy()
         remoteUser.termsAccepted = false
     }
 
@@ -44,14 +42,14 @@ class AccountManager : KoinComponent {
 
     val tempUser: User
         get() = sessionInteractor.tempUser
-        
+
     val tempProfile: Profile
         get() = tempUser.profile
 
     fun setTermsAccepted(isAccepted: Boolean) {
         tempUser.termsAccepted = isAccepted
     }
-    
+
     fun initTempUser(user: User? = null) {
         val settedUser = user ?: remoteUser
         tempUser.profile.apply {
@@ -97,7 +95,7 @@ class AccountManager : KoinComponent {
     }
 
     suspend fun logout(): Result<Account> {
-        tempUser.profile = Profile.EMPTY
+        tempUser.profile = Profile.EMPTY.copy()
         return sessionInteractor.logout()
     }
 

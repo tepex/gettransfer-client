@@ -22,10 +22,4 @@ data class ProfileEntity(
 }
 
 fun Profile.map() = ProfileEntity(fullName, email, phone)
-
-fun ProfileEntity.map() =
-    if (fullName == null && email == null && phone == null) {
-        Profile.EMPTY
-    } else {
-        Profile(fullName ?: "", email ?: "", phone ?: "")
-    }
+fun ProfileEntity.map() = Profile(fullName, email, phone)

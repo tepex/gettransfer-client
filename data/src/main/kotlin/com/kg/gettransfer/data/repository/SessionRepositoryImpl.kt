@@ -46,7 +46,7 @@ class SessionRepositoryImpl(
         private set
     override var account = NO_ACCOUNT
         private set
-    override var tempUser = User.EMPTY
+    override var tempUser = User.EMPTY.copy()
     override var mobileConfig = MOBILE_CONFIGS_DEFAULT
         private set
 
@@ -206,8 +206,8 @@ class SessionRepositoryImpl(
     }
 
     override suspend fun logout(): Result<Account> {
-        tempUser = User.EMPTY
-        account.user = User.EMPTY
+        tempUser = User.EMPTY.copy()
+        account.user = User.EMPTY.copy()
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()
         return Result(account)
@@ -240,7 +240,7 @@ class SessionRepositoryImpl(
         private val CONFIGS_DEFAULT = Configs.DEFAULT_CONFIGS
 
         private val NO_ACCOUNT = Account(
-            user = User.EMPTY,
+            user = User.EMPTY.copy(),
             locale = Locale.getDefault(),
             currency = defineNoAccountCurrency(),
             distanceUnit = DistanceUnit.km,

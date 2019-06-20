@@ -9,6 +9,6 @@ data class PassengerAccount(
 ) : Entity() {
 
     companion object {
-        val EMPTY = PassengerAccount(0, Profile.EMPTY, Date())
+        val EMPTY = PassengerAccount(0, Profile.EMPTY.copy(), Date())
     }
 }
