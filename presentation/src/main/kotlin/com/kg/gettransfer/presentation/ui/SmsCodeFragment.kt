@@ -37,7 +37,6 @@ import timber.log.Timber
 class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
 
     private lateinit var timerBtnResendCode: CountDownTimer
-    private var smsResendDelay: Long = SMS_RESEND_DELAY_MILLIS
 
     private val loadingFragment by lazy { LoadingFragment() }
 
@@ -47,15 +46,13 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     @ProvidePresenter
     fun smsCodePresenterProvider() = SmsCodePresenter()
 
-    private var password = ""
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_sms_code, container, false)
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        smsResendDelay = presenter.smsResendDelaySec * SEC_IN_MILLIS
+        val smsResendDelay = presenter.smsResendDelaySec * SEC_IN_MILLIS
 
         val isPhone = arguments?.getBoolean(EXTERNAL_IS_PHONE) ?: false
 
@@ -75,17 +72,22 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
             if (wrongCodeError.isVisible) {
                 context?.let { pinView.setTextColor(ContextCompat.getColor(it, R.color.color_gtr_green)) }
             }
-            password = code
             btnDone.isEnabled = code.length == pinView.itemCount
         }
 
         loginBackButton.setOnClickListener { presenter.back() }
 
+        setTimer(smsResendDelay)
         updateTimerResendCode()
-        setTimer()
         btnResendCode.setOnClickListener { sendVerificationCode(isPhone) }
 
-        btnDone.setThrottledClickListener { presenter.onLoginClick(presenter.emailOrPhone ?: "", password, isPhone) }
+        btnDone.setThrottledClickListener {
+            presenter.onLoginClick(
+                presenter.emailOrPhone ?: "",
+                pinView.toString(),
+                isPhone
+            )
+        }
     }
 
     private fun sendVerificationCode(isPhone: Boolean) {
@@ -98,7 +100,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         timerBtnResendCode.cancel()
     }
 
-    private fun setTimer() {
+    private fun setTimer(smsResendDelay: Long) {
         btnResendCode.isEnabled = false
         timerBtnResendCode = object : CountDownTimer(smsResendDelay, SEC_IN_MILLIS) {
             override fun onTick(millisUntilFinished: Long) {
