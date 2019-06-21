@@ -1,20 +1,16 @@
 package com.kg.gettransfer.domain.model
 
 data class Payment(
-    val type: String,
+    val type: Type,
     val url: String?,
     val id: Long?,
     val params: Params?
 ) {
 
-    enum class Type { IFRAME, WIDGET }
-    
+    enum class Type { IFRAME, WIDGET, NOTHING }
+
     companion object {
-        /* TODO: переделать в enum */
-        const val TYPE_IFRAME = "iframe"
-        const val TYPE_WIDGET = "widget"
-        
-        val EMPTY = Payment("", null, null, null)
+        val EMPTY = Payment(Type.NOTHING, null, null, null)
     }
 }
 

@@ -74,7 +74,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
                 viewState.setError(result.error!!)
                 router.exit()
             } else {
-                if (result.model.success) {
+                if (result.model.isSuccess) {
                     isPaymentWasSuccessful()
                 } else {
                     showFailedPayment()

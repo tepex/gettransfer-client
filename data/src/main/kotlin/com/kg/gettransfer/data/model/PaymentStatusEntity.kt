@@ -14,4 +14,8 @@ data class PaymentStatusEntity(
     }
 }
 
-fun PaymentStatusEntity.map() = PaymentStatus(id,status)
+fun PaymentStatusEntity.map() =
+    PaymentStatus(
+        id,
+        PaymentStatus.Status.values().find { it.name.toLowerCase() == status } ?: PaymentStatus.Status.NOTHING
+    )
