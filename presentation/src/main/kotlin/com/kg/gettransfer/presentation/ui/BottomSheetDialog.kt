@@ -31,15 +31,17 @@ import kotlinx.android.synthetic.main.view_bottomsheet_dialog.*
 class BottomSheetDialog : BaseBottomSheetDialogFragment() {
 
     override val layout: Int = R.layout.view_bottomsheet_dialog
-    var title: String = ""
-    var text: String = ""
-    var buttonOkText: String = ""
-    var buttonCancelText: String = ""
+    var title = ""
+    var text = ""
+    var buttonOkText = ""
+    var buttonCancelText = ""
     var onClickOkButton: (() -> Unit)? = null
     var onClickCancelButton: (() -> Unit)? = null
     var onDismissCallBack: (() -> Unit)? = null
-    var imageId: Int = R.drawable.ic_invalid_credentials
-    var isShowCancelButton: Boolean = false
+    var imageId = R.drawable.ic_invalid_credentials
+    var isShowCancelButton = false
+    var isShowCloseButton = false
+    var isShowOkButton = true
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,7 +65,15 @@ class BottomSheetDialog : BaseBottomSheetDialogFragment() {
             dismiss()
         }
 
+        bottomSheetDialogCloseButton.setThrottledClickListener {
+            dismiss()
+        }
+
         bottomSheetDialogCancelButton.isVisible = isShowCancelButton
+
+        bottomSheetDialogCloseButton.isVisible = isShowCloseButton
+
+        bottomSheetDialogOkButton.isVisible = isShowOkButton
     }
 
     @CallSuper

@@ -179,6 +179,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                         buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
                         onClickOkButton = { changePage?.invoke() }
                         onDismissCallBack = { hideLoading() }
+                        isShowCloseButton = true
                     }
                     .show(fragmentManager)
             }
