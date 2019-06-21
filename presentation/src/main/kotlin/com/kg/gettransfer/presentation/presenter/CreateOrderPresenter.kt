@@ -131,6 +131,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             }?.let {
                 route = it
                 duration = it.duration
+                hintsToComments = it.hintsToComments
             }
             setTransportTypePrices(route?.prices ?: emptyMap(), true)
 

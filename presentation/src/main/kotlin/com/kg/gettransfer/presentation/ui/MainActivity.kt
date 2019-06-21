@@ -59,8 +59,7 @@ import timber.log.Timber
 class MainActivity :
     BaseGoogleMapActivity(),
     MainView,
-    StoreDialogFragment.OnStoreListener,
-    RatingDetailDialogFragment.OnRatingChangeListener {
+    StoreDialogFragment.OnStoreListener {
 
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
@@ -641,10 +640,6 @@ class MainActivity :
         ThanksForRateFragment
             .newInstance()
             .show(supportFragmentManager, ThanksForRateFragment.TAG)
-
-    override fun onRatingChanged(list: List<ReviewRateModel>, comment: String) {}
-
-    override fun onRatingChangeCancelled() = thanksForRate()
 
     override fun showBadge(show: Boolean) {
         tvEventsCount.isVisible = show

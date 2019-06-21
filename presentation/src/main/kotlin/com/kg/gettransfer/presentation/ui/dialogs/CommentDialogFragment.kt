@@ -33,10 +33,11 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
     companion object {
         const val EXTRA_COMMENT = "comment"
-        const val EXTRA_HINTS = "comment"
+        const val EXTRA_HINTS = "hints"
         const val COMMENT_DIALOG_TAG = "comment_dialog_tag"
+        const val COMMENT_REQUEST_CODE = 111
 
-        fun newInstance(comment: String, hints: Array<String>? = emptyArray()) =
+        fun newInstance(comment: String = "", hints: Array<String>? = emptyArray()) =
                 CommentDialogFragment().apply {
                     arguments = Bundle().apply {
                         putString(EXTRA_COMMENT, comment)
@@ -77,7 +78,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         tvDone.setOnClickListener {
             comment = etComment.text.toString().trim()
             onCommentLister?.onSetComment(comment)
-            sendCommentToRatingFragment(comment)
+            sendCommentToTargetFragment(comment)
             setBottomSheetState(this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
             hideKeyboard()
         }
@@ -104,14 +105,15 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         }
     }
 
-    private fun sendCommentToRatingFragment(comment: String) {
+    private fun sendCommentToTargetFragment(comment: String) {
         val intent = Intent().apply { putExtra(EXTRA_COMMENT, comment) }
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
     }
 
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-        etComment.setText(arguments?.getString(EXTRA_COMMENT, "").toString())
+        comment = arguments?.getString(EXTRA_COMMENT) ?: ""
+        etComment.setText(comment)
         addChipsForHits()
     }
 

@@ -83,10 +83,11 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
             logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
             reviewInteractor.apply {
                 utils.launchSuspend { fetchDataOnly { sendTopRate() } }
+                viewState.thanksForRate()
                 if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
                     viewState.askRateInPlayMarket()
                     logAppReviewRequest()
-                } else viewState.thanksForRate()
+                }
             }
         } else viewState.showDetailedReview(rate, offerId)
     }
