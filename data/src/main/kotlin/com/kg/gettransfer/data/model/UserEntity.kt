@@ -1,6 +1,5 @@
 package com.kg.gettransfer.data.model
 
-import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.User
 
 import kotlinx.serialization.Serializable
@@ -22,7 +21,4 @@ data class UserEntity(
 }
 
 fun User.map() = UserEntity(profile.map(), termsAccepted)
-fun UserEntity.map(): User {
-    val pr = profile.map()
-    return if (pr === Profile.EMPTY) User.EMPTY else User(pr, termsAccepted)
-}
+fun UserEntity.map() = User(profile.map(), termsAccepted)
