@@ -87,6 +87,12 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
+        accountManager.initTempUser()
+    }
+
     private fun getPaymentRequest() {
         transfer?.id?.let { transferId ->
             offer?.let { offer ->
