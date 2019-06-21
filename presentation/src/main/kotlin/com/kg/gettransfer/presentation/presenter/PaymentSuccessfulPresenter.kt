@@ -79,6 +79,6 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     }
 
     fun onDetailsClick() {
-        router.replaceScreen(Screens.Details(transferId))
+        router.newChainFromMain(Screens.Details(transferId))
     }
 }
