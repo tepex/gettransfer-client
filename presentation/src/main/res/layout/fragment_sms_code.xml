@@ -16,21 +16,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="@dimen/login_logo_width"
-        android:layout_height="@dimen/login_logo_height"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/logo_small"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/icon">
+        app:layout_constraintTop_toBottomOf="@+id/loginBackButton">
 
         <TextView
             android:id="@+id/smsTitle"
@@ -40,7 +30,8 @@
             android:gravity="center"
             android:text="@string/LNG_LOGIN_SEND_SMS_CODE"
             android:textSize="@dimen/fragment_sms_text_size_18sp"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/fragment_sms_title_margin_top"/>
 
         <TextView
             android:id="@+id/smsSubtitle"
