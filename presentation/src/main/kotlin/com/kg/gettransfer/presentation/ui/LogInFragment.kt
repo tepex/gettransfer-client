@@ -94,7 +94,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         }
         btnRequestCode.setThrottledClickListener {
             showLoading()
-            presenter.loginWithCode(emailLayout.fieldText.text.toString())
+            presenter.sendVerificationCode(emailLayout.fieldText.text.toString())
         }
     }
 
