@@ -8,10 +8,16 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:id="@+id/bottomSheetDialogCloseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close_x"
+        android:layout_gravity="end"/>
+
+    <ImageView
         android:id="@+id/bottomSheetDialogImage"
         android:layout_width="160dp"
         android:layout_height="106dp"
-        android:layout_marginTop="20dp"
         android:src="@drawable/ic_invalid_credentials"/>
 
     <TextView
