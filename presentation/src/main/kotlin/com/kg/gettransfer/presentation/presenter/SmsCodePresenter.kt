@@ -24,12 +24,25 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
     var nextScreen: String? = null
     var pinItemsCount = PIN_ITEMS_COUNT
     val smsResendDelaySec = sessionInteractor.mobileConfigs.smsResendDelaySec * SEC_IN_MILLIS
-    private lateinit var timerBtnResendCode: CountDownTimer
+    
+    private val timerBtnResendCode: CountDownTimer = object : CountDownTimer(smsResendDelaySec, SEC_IN_MILLIS) {
+        override fun onTick(millisUntilFinished: Long) {
+            viewState.tickTimer(millisUntilFinished, SEC_IN_MILLIS)
+        }
+        
+        override fun onFinish() {
+            viewState.finishTimer()
+        }
+    }
 
-    @CallSuper
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
+    override fun attachView(view: SmsCodeView) {
+        super.attachView(view)
         setTimer()
+    }
+    
+    override fun detachView(view: SmsCodeView) {
+        super.detachView(view)
+        timerBtnResendCode.cancel()
     }
 
     fun sendVerificationCode() {
@@ -45,8 +58,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
                 if (result.error != null) {
                     viewState.setError(result.error!!)
                 } else {
-                    viewState.startTimer()
-                    timerBtnResendCode.start()
+                    setTimer()
                 }
             }
         }
@@ -106,20 +118,6 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
         }
     }
 
-    fun setTimer() {
-        timerBtnResendCode = object : CountDownTimer(smsResendDelaySec, SEC_IN_MILLIS) {
-            override fun onTick(millisUntilFinished: Long) {
-                viewState.tickTimer(millisUntilFinished, SEC_IN_MILLIS)
-            }
-
-            override fun onFinish() {
-                viewState.finishTimer()
-            }
-        }
-        viewState.startTimer()
-        timerBtnResendCode.start()
-    }
-
     private fun logLoginEvent(result: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.STATUS] = result
@@ -136,6 +134,11 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
     fun checkAfterPinChanged() {
         viewState.showErrorText(false)
         viewState.setBtnDoneIsEnabled(pinCode.length == pinItemsCount)
+    }
+    
+    fun setTimer() {
+        viewState.startTimer()
+        timerBtnResendCode.start()        
     }
 
     companion object {
