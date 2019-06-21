@@ -243,7 +243,7 @@ class SessionRepositoryImpl(
             user = User.EMPTY.copy(),
             locale = Locale.getDefault(),
             currency = defineNoAccountCurrency(),
-            distanceUnit = DistanceUnit.km,
+            distanceUnit = DistanceUnit.KM,
             groups = emptyList<String>(),
             carrierId = null
         )

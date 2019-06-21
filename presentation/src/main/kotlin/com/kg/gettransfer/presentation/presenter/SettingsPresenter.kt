@@ -101,7 +101,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         val localeModel = locales.find { it.delegate.language == locale.language }
         viewState.setLocale(localeModel?.name ?: "", locale.language)
 
-        viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.mi)
+        viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
         viewState.setLogoutButtonEnabled(accountManager.hasAccount)
     }
 
@@ -220,8 +220,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun onDistanceUnitSwitched(isChecked: Boolean) {
         sessionInteractor.distanceUnit = when (isChecked) {
-            true  -> DistanceUnit.mi
-            false -> DistanceUnit.km
+            true  -> DistanceUnit.MI
+            false -> DistanceUnit.KM
         }.apply { logEvent(Analytics.UNITS_PARAM, name) }
         saveGeneralSettings()
     }

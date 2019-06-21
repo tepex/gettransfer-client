@@ -42,7 +42,7 @@ fun AccountEntity.map(configs: Configs) =
         configs.availableLocales.find { it.language == locale }
             ?.let { Locale(it.language, Locale.getDefault().country) } ?: Locale.getDefault(),
         configs.supportedCurrencies.find { it.code == currency } ?: Currency("USD", "\$"),
-        distanceUnit?.let { DistanceUnit.valueOf(it) } ?: DistanceUnit.km,
+        distanceUnit?.let { DistanceUnit.valueOf(it) } ?: DistanceUnit.KM,
         groups ?: emptyList<String>(),
         carrierId
     )

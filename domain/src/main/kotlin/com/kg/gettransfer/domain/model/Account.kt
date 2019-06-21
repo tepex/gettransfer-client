@@ -17,6 +17,7 @@ data class Account(
             groups = groups.toMutableList().apply {
                 if (value) add(GROUP_EMAIL_NOTIFICATION_PASSENGER) else remove(GROUP_EMAIL_NOTIFICATION_PASSENGER)
             }
+        }
 
     val isDriver: Boolean
         get() = groups.indexOf(GROUP_CARRIER_DRIVER) >= 0

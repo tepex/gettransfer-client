@@ -42,9 +42,9 @@ data class GTAddress(
         fun parseAddress(addr: String): Pair<String?, String?> {
             val lastCommaIndex = addr.lastIndexOf(", ")
             return if (lastCommaIndex >= 0) {
-                Pair(addr.substring(0, lastCommaIndex) to addr.substring(lastCommaIndex + 2, addr.length))
+                addr.substring(0, lastCommaIndex) to addr.substring(lastCommaIndex + 2, addr.length)
             } else {
-                Pair(addr to null)
+                addr to null
             }
         }
     }
