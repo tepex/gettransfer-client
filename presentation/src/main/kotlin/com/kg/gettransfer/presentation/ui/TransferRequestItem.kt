@@ -33,7 +33,7 @@ class TransferRequestItem @JvmOverloads constructor(
         tvTransferRequestNumber.text = context.getString(R.string.LNG_RIDE_NUMBER).plus(item.id)
         tvTransferRequestStatus.text = when (item.status) {
             Transfer.Status.NEW -> {
-                if (item.offersCount > 0) context.getString(R.string.LNG_BOOK_OFFER)
+                if (item.offersCount > 0 && !item.isBookNow()) context.getString(R.string.LNG_BOOK_OFFER)
                 else context.getString(R.string.LNG_WAIT_FOR_OFFERS)
             }
             Transfer.Status.PERFORMED -> {

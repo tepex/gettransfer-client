@@ -221,7 +221,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(), TransferDetailsView,
 
         booking_info.text = when (transfer.status) {
             Transfer.Status.NEW -> {
-                val suff = if (transfer.offersCount > 0) R.string.LNG_BOOK_OFFER
+                val suff = if (transfer.offersCount > 0 && !transfer.isBookNow()) R.string.LNG_BOOK_OFFER
                 else R.string.LNG_WAIT_FOR_OFFERS
                 getString(R.string.LNG_TRANSFER)
                         .plus(" #${transfer.id} ")
