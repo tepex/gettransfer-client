@@ -59,6 +59,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
                 emailOrPhone = it.getString(SmsCodeView.EXTERNAL_EMAIL_OR_PHONE) ?: ""
                 isPhone = it.getBoolean(SmsCodeView.EXTERNAL_IS_PHONE)
             }
+            pinItemsCount = pinView.itemCount
         }
 
         smsTitle.text = when (presenter.isPhone ?: false) {
@@ -66,13 +67,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
             false -> getString(R.string.LNG_LOGIN_SEND_EMAIL_CODE)
         }.plus(" ").plus(presenter.emailOrPhone)
 
-        pinView.onTextChanged { code ->
-            if (wrongCodeError.isVisible) {
-                context?.let { pinView.setTextColor(ContextCompat.getColor(it, R.color.color_gtr_green)) }
-            }
-            presenter.setCode(code)
-            btnDone.isEnabled = code.length == pinView.itemCount
-        }
+        pinView.onTextChanged { presenter.setCode(it) }
 
         loginBackButton.setOnClickListener { presenter.back() }
         btnResendCode.setOnClickListener { presenter.sendVerificationCode() }
@@ -108,6 +103,10 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     override fun updateTimerResendCode() {
         btnResendCode.isEnabled = false
         timerBtnResendCode.start()
+    }
+
+    override fun setEnabledBtnDone(enable: Boolean) {
+        btnDone.isEnabled = enable
     }
 
 

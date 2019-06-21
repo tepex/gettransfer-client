@@ -29,9 +29,12 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
     internal var isPhone: Boolean? = null
 
     private var code: String? = null
+    internal var pinItemsCount = PIN_ITEMS_COUNT
 
     fun setCode(code: String) {
         this.code = code
+        viewState.showErrorText(false)
+        viewState.setEnabledBtnDone(code.length == pinItemsCount)
     }
 
     @CallSuper
@@ -149,5 +152,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
     companion object {
         const val PHONE_ATTRIBUTE = "+"
         const val EMAIL_ATTRIBUTE = "@"
+
+        const val PIN_ITEMS_COUNT = 4
     }
 }
