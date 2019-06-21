@@ -32,16 +32,13 @@ data class Offer(
 
     fun isOfferRatedByUser() =                // call after check
         ratings?.run {
-            vehicle != NO_RATE && driver != NO_RATE && fair != NO_RATE
-        } ?: true
+            vehicle != Ratings.NO_RATE && driver != Ratings.NO_RATE && fair != Ratings.NO_RATE } ?: true
 
     companion object {
         const val STATUS_NEW       = "new"
         const val STATUS_PERFORMED = "performed"
         const val STATUS_BLOCKED   = "blocked"
         const val STATUS_CANCELED  = "canceled"
-
-        const val NO_RATE          = 0f
     }
 }
 

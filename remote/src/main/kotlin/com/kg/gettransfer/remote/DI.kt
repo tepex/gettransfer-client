@@ -47,7 +47,6 @@ val remoteMappersModule = module {
     single { ProfileMapper() }
     single { PromoMapper() }
 
-    single { RatingsMapper() }
     single { RouteInfoMapper() }
 
     single { TransferMapper() }

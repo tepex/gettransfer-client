@@ -21,6 +21,7 @@ data class GTAddress(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
+        @Suppress("UNCHECKED_CAST")
         val eq = other as GTAddress
         return if (cityPoint.placeId != null && eq.cityPoint.placeId != null) {
             cityPoint.placeId == eq.cityPoint.placeId

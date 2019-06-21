@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.model.MoneyEntity
 import com.kg.gettransfer.data.model.OfferEntity
 
 import com.kg.gettransfer.remote.model.OfferModel
+import com.kg.gettransfer.remote.model.map
 
 import org.koin.standalone.get
 
@@ -14,7 +15,6 @@ import org.koin.standalone.get
  */
 open class OfferMapper : EntityMapper<OfferModel, OfferEntity> {
     private val priceMapper   = get<PriceMapper>()
-    private val ratingsMapper = get<RatingsMapper>()
     private val carrierMapper = get<CarrierMapper>()
     private val vehicleMapper = get<VehicleMapper>()
     private val profileMapper = get<ProfileMapper>()
@@ -36,7 +36,7 @@ open class OfferMapper : EntityMapper<OfferModel, OfferEntity> {
             createdAt         = type.createdAt,
             updatedAt         = type.updatedAt,
             price             = priceMapper.fromRemote(type.price),
-            ratings           = type.ratings?.let { ratingsMapper.fromRemote(it) },
+            ratings           = type.ratings?.let { it.map() },
             passengerFeedback = type.passengerFeedback,
             carrier           = carrierMapper.fromRemote(type.carrier),
             vehicle           = vehicleMapper.fromRemote(type.vehicle),

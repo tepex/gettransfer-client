@@ -239,7 +239,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    fun rateTrip(rating: Float, isNeedCheckStoreRate: Boolean) {
+    fun rateTrip(rating: Double, isNeedCheckStoreRate: Boolean) {
         if (isNeedCheckStoreRate) {
             if (rating.toInt() == ReviewInteractor.MAX_RATE) {
                 with(reviewInteractor) {

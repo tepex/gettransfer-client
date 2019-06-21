@@ -2,13 +2,14 @@ package com.kg.gettransfer.cache.mapper
 
 import com.kg.gettransfer.cache.model.CarrierCached
 import com.kg.gettransfer.cache.model.LocaleCachedList
+import com.kg.gettransfer.cache.model.map
+
 import com.kg.gettransfer.data.model.CarrierEntity
 
 import org.koin.standalone.get
 
 open class CarrierEntityMapper : EntityMapper<CarrierCached, CarrierEntity> {
     private val profileCached = get<ProfileEntityMapper>()
-    private val ratingsMapper = get<RatingsEntityMapper>()
     private val localeMapper = get<LocaleEntityMapper>()
 
     override fun fromCached(type: CarrierCached) =
@@ -18,7 +19,7 @@ open class CarrierEntityMapper : EntityMapper<CarrierCached, CarrierEntity> {
                     approved = type.approved,
                     completedTransfers = type.completedTransfers,
                     languages = type.languages.list.map { localeMapper.fromCached(it)},
-                    ratings = ratingsMapper.fromCached(type.ratings),
+                    ratings = type.ratings.map(),
                     canUpdateOffers = type.canUpdateOffers
             )
 
@@ -29,7 +30,7 @@ open class CarrierEntityMapper : EntityMapper<CarrierCached, CarrierEntity> {
                     approved = type.approved,
                     completedTransfers = type.completedTransfers,
                     languages = LocaleCachedList(type.languages.map { localeMapper.toCached(it) }),
-                    ratings = ratingsMapper.toCached(type.ratings),
+                    ratings = type.ratings.map(),
                     canUpdateOffers = type.canUpdateOffers
             )
 }
