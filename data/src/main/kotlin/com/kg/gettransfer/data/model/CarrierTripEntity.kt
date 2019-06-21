@@ -54,16 +54,3 @@ data class CarrierTripEntity(
         const val PASSENGER_ACCOUNT = "passenger_account"
     }
 }
-
-data class PassengerAccountEntity(
-    val id: Long,
-    val profile: ProfileEntity,
-    var lastSeen: String
-) {
-
-    companion object {
-        const val ID        = "id"
-        const val PROFILE   = "profile"
-        const val LAST_SEEN = "last_seen"
-    }
-}
