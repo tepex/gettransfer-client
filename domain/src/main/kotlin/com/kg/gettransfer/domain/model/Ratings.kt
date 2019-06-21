@@ -7,12 +7,10 @@ data class Ratings(
     val fair: Float?
 ) {
 
-	val vehicleNn = vehicle ?: 0f
-	val driverNn = driver ?: 0f
-	val fairNn = fair ?: 0f
+    val vehicleNn = vehicle ?: 0f
+    val driverNn = driver ?: 0f
+    val fairNn = fair ?: 0f
 
-	val averageRating: Float
-		get() = average ?: (vehicleNn + driverNn + fairNn) / 3
-
+    val averageRating: Float
+        get() = average ?: (vehicleNn + driverNn + fairNn) / 3
 }
-

@@ -28,9 +28,9 @@ data class Offer(
         else                           -> null
     }
 
-    fun isRateAvailable() = ratings != null   //call this first
+    fun isRateAvailable() = ratings != null   // call this first
 
-    fun isOfferRatedByUser() =                //call after check
+    fun isOfferRatedByUser() =                // call after check
         ratings?.run {
             vehicle != NO_RATE && driver != NO_RATE && fair != NO_RATE
         } ?: true

@@ -1,12 +1,12 @@
 package com.kg.gettransfer.domain.model
 
 import java.util.Date
+/*
 
 
 
 
-
-/* Align to line:9 */
+ Align to line:9 */
 data class Transfer(
     override val id: Long,
     val createdAt: Date,
@@ -93,10 +93,10 @@ data class Transfer(
         const val STATUS_CATEGORY_UNFINISHED = "unfinished_status"
         const val STATUS_CATEGORY_FINISHED   = "finished_status"
 
-        fun List<Transfer>.filterActive() = filter {
-            it.status == Status.NEW ||
-            it.status == Status.DRAFT ||
-            it.status == Status.PERFORMED
+        fun List<Transfer>.filterActive() = filter { tr ->
+            tr.status == Status.NEW ||
+            tr.status == Status.DRAFT ||
+            tr.status == Status.PERFORMED
         }
 
         fun List<Transfer>.filterCompleted() = filter {

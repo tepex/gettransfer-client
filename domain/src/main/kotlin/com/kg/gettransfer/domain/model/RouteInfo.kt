@@ -10,4 +10,3 @@ data class RouteInfo(
     val overviewPolyline: String?,
     val hintsToComments: List<String>?
 )
-

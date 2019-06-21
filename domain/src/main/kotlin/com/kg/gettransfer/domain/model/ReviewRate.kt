@@ -6,8 +6,6 @@ data class ReviewRate(
 ) {
 
     enum class RateType(val type: String) {
-        VEHICLE    ("vehicle"),
-        DRIVER     ("driver"),
-        PUNCTUALITY("fair")
+        VEHICLE("vehicle"), DRIVER("driver"), PUNCTUALITY("fair")
     }
 }

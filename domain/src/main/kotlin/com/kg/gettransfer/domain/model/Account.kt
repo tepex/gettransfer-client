@@ -14,12 +14,9 @@ data class Account(
     var isEmailNotificationsEnabled: Boolean
         get() = groups.contains(GROUP_EMAIL_NOTIFICATION_PASSENGER)
         set(value) {
-            groups = groups.toMutableList()
-                    .apply {
-                        if (value) add(GROUP_EMAIL_NOTIFICATION_PASSENGER)
-                        else remove(GROUP_EMAIL_NOTIFICATION_PASSENGER)
-                    }
-        }
+            groups = groups.toMutableList().apply {
+                if (value) add(GROUP_EMAIL_NOTIFICATION_PASSENGER) else remove(GROUP_EMAIL_NOTIFICATION_PASSENGER)
+            }
 
     val isDriver: Boolean
         get() = groups.indexOf(GROUP_CARRIER_DRIVER) >= 0

@@ -6,7 +6,7 @@ data class GTAddress(
     val address: String?,
     val variants: Pair<String?, String?>?
 ) {
-    
+
     /**
      * Check for concrete address type.
      * [Types][com.google.android.gms.location.places.Place]
@@ -22,8 +22,11 @@ data class GTAddress(
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
         val eq = other as GTAddress
-        return if (cityPoint.placeId != null && eq.cityPoint.placeId != null) cityPoint.placeId == eq.cityPoint.placeId
-        else cityPoint.name == eq.cityPoint.name
+        return if (cityPoint.placeId != null && eq.cityPoint.placeId != null) {
+            cityPoint.placeId == eq.cityPoint.placeId
+        } else {
+            cityPoint.name == eq.cityPoint.name
+        }
     }
 
     override fun hashCode(): Int = cityPoint.placeId?.hashCode() ?: cityPoint.name.hashCode()
@@ -33,15 +36,15 @@ data class GTAddress(
         const val TYPE_ADMINISTRATIVE_AREA_LEVEL_1 = 1001
         const val TYPE_LOCALITY                    = 1009
         const val TYPE_STREET_ADDRESS              = 1021
-        
+
         val EMPTY = GTAddress(CityPoint.EMPTY, emptyList<String>(), null, null)
 
         fun parseAddress(addr: String): Pair<String?, String?> {
             val lastCommaIndex = addr.lastIndexOf(", ")
             return if (lastCommaIndex >= 0) {
-                Pair(addr.substring(0, lastCommaIndex), addr.substring(lastCommaIndex + 2, addr.length))
+                Pair(addr.substring(0, lastCommaIndex) to addr.substring(lastCommaIndex + 2, addr.length))
             } else {
-                Pair(addr, null)
+                Pair(addr to null)
             }
         }
     }

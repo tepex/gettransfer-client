@@ -86,6 +86,10 @@ allprojects {
     }
 }
 
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.0.0-RC15"
+}
+
 detekt {
     toolVersion = "1.0.0-RC15"
     filters = ".*build.*,.*/resources/.*,.*/tmp/.*"

@@ -7,7 +7,7 @@ abstract class Entity {
 }
 
 /* For API < v.24 */
-fun <E: Entity> List<E>.sortDescendant() = ArrayList(this).apply {
+fun <E : Entity> List<E>.sortDescendant() = ArrayList(this).apply {
     Collections.sort(this, object : Comparator<E> {
         override fun compare(a: E, b: E) = (b.id - a.id).toInt()
     })

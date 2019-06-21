@@ -13,6 +13,8 @@ data class Payment(
     }
 }
 
-data class Params(val amount: String,
-                  val currency: String,
-                  val paymentId: Long)
+data class Params(
+    val amount: String,
+    val currency: String,
+    val paymentId: Long
+)
