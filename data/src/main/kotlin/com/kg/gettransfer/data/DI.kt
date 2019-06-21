@@ -61,12 +61,6 @@ val dataModule = module {
     single { PaymentDataStoreRemote() }
     single { PaymentRepositoryImpl(DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>(get(), get())) } bind PaymentRepository::class
 
-    single { AccountMapper() }
-    single { ConfigsMapper() }
-    single { MobileConfigMapper() }
-    single { BuildsConfigsMapper() }
-    single { LocationMapper() }
-
     single { SessionDataStoreCache() }
     single { SessionDataStoreRemote() }
     single { SystemSocketDataStoreOutput(get()) }

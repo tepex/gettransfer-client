@@ -26,13 +26,8 @@ class SessionRepositoryImpl(
 
     private val preferencesCache = get<PreferencesCache>()
 
-    private val configsMapper = get<ConfigsMapper>()
-    private val mobileConfMapper = get<MobileConfigMapper>()
-    private val accountMapper = get<AccountMapper>()
-
     init {
         preferencesCache.addListener(this)
-        accountMapper.configs = CONFIGS_DEFAULT
     }
 
     override val endpoint: Endpoint
@@ -93,17 +88,15 @@ class SessionRepositoryImpl(
             result.entity?.let {
                 /* Save to cache only fresh data from remote */
                 if (result.error == null) factory.retrieveCacheDataStore().setConfigs(it)
-                configs = configsMapper.fromEntity(it)
-                accountMapper.configs = configs
+                configs = it.map()
             }
             /* No chance to go further */
             //if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
 
-            account = factory.retrieveCacheDataStore().getAccount()?.let { accountMapper.fromEntity(it) } ?: NO_ACCOUNT
+            account = factory.retrieveCacheDataStore().getAccount()?.let { it.map(configs) } ?: NO_ACCOUNT
             if (result.error != null) {
-                configs = factory.retrieveCacheDataStore().getConfigs()?.let { configsMapper.fromEntity(it) }
-                    ?: CONFIGS_DEFAULT
-                return Result(account, ExceptionMapper.map(result.error))
+                configs = factory.retrieveCacheDataStore().getConfigs()?.let { it.map() } ?: CONFIGS_DEFAULT
+                return Result(account, result.error.map())
             }
         }
 
@@ -113,7 +106,7 @@ class SessionRepositoryImpl(
             }
             if (result.error != null && result.entity == null) return Result(account, ExceptionMapper.map(result.error))
             result.entity?.let {
-                mobileConfig = mobileConfMapper.fromEntity(it)
+                mobileConfig = it.map()
                 if (result.error == null) factory.retrieveCacheDataStore().setMobileConfigs(it)
             }
         }
@@ -124,9 +117,9 @@ class SessionRepositoryImpl(
         }
         result.entity?.let {
             if (result.error == null) factory.retrieveCacheDataStore().setAccount(it)
-            account = accountMapper.fromEntity(it)
+            account = it.map(configs)
         }
-        result.error?.let { error = ExceptionMapper.map(it) }
+        result.error?.let { error = it.map() }
         isInitialized = true
         tempUser = User(account.user.profile.copy(), account.user.termsAccepted)
         return Result(account, error)
@@ -140,8 +133,14 @@ class SessionRepositoryImpl(
         this.account = accountMapper.fromEntity(accountEntity)
         return Result(this.account)*/
         val accountEntity =
-            if (pass != null && repeatedPass != null) accountMapper.toEntityWithNewPassword(account, pass, repeatedPass)
-            else accountMapper.toEntity(account)
+            if (pass != null && repeatedPass != null) {
+                account.map().apply {
+                    password = pass
+                    repeatedPassword = repeatedPass
+                }
+            } else {
+                account.map()
+            }
 
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().setAccount(accountEntity)
@@ -149,7 +148,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let {
                 factory.retrieveCacheDataStore().setAccount(it)
-                this.account = accountMapper.fromEntity(it)
+                this.account = it.map(configs)
             }
             if (pass != null && repeatedPass != null) this.userPassword = pass
         }
@@ -157,7 +156,7 @@ class SessionRepositoryImpl(
     }
 
     override suspend fun putNoAccount(account: Account): Result<Account> {
-        factory.retrieveCacheDataStore().setAccount(accountMapper.toEntity(account))
+        factory.retrieveCacheDataStore().setAccount(account.map())
         return Result(account)
     }
 
@@ -173,7 +172,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let {
                 factory.retrieveCacheDataStore().setAccount(it)
-                account = accountMapper.fromEntity(it)
+                account = it.map(configs)
             }
             if (!withSmsCode) {
                 this.userEmail = email
@@ -193,7 +192,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let {
                 factory.retrieveCacheDataStore().setAccount(it)
-                account = accountMapper.fromEntity(it)
+                account = it.map(configs)
             }
         }
         return Result(account, result.error?.let { it.map() })

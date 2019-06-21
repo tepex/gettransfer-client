@@ -1,7 +1,9 @@
 package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.CardGateways
+import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Currency
+import com.kg.gettransfer.domain.model.DistanceUnit
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
@@ -77,3 +79,18 @@ data class CurrencyEntity(
 }
 
 fun CurrencyEntity.map() = Currency(code,symbol)
+
+fun ConfigsEntity.map() =         
+    Configs(
+        transportTypes.map { it.map() },
+        //paypalCredentials = paypalCredentialsMapper.fromEntity(type.paypalCredentials),
+        availableLocales.map { it.map() },
+        //preferredLocale = locales.find { it.language == type.preferredLocale },
+        //cardGateways = cardGatewaysMapper.fromEntity(type.cardGateways),
+        //defaultCardGateways = type.defaultCardGateways,
+        paymentCommission,
+        supportedCurrencies.map { it.map() },
+        supportedDistanceUnits.map { DistanceUnit.valueOf(it) }
+        //officePhone = type.officePhone,
+        //baseUrl = type.baseUrl
+    )
