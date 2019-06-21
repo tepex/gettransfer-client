@@ -1,12 +1,12 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.extensions.internationalExample
-import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
@@ -26,13 +26,29 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
 
     internal var nextScreen: String? = null
     internal var emailOrPhone: String? = null
+    internal var isPhone: Boolean? = null
 
-    fun sendVerificationCode(emailOrPhone: String, isPhone: Boolean) {
-        if (!checkInputData(emailOrPhone, isPhone)) return
+    private var code: String? = null
+
+    fun setCode(code: String) {
+        this.code = code
+    }
+
+    @CallSuper
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        if (emailOrPhone != null && isPhone != null) sendVerificationCode()
+    }
+
+    fun sendVerificationCode() {
+        if (isWrongFields(false)) {
+            viewState.setError(false, R.string.LNG_UNEXPECTED_ERROR)
+            return
+        }
 
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when (isPhone) {
+                when (isPhone!!) {
                     true -> sessionInteractor.getVerificationCode(null, LoginHelper.formatPhone(emailOrPhone))
                     false -> sessionInteractor.getVerificationCode(emailOrPhone, null)
                 }
@@ -45,6 +61,46 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
             }
         }
     }
+
+    fun onLoginClick() {
+        if (isWrongFields(true)) {
+            viewState.setError(false, R.string.LNG_UNEXPECTED_ERROR)
+            return
+        }
+
+        utils.launchSuspend {
+            viewState.blockInterface(true, true)
+            fetchResult(SHOW_ERROR, checkLoginError = false) {
+                when (isPhone) {
+                    true -> accountManager.login(null, LoginHelper.formatPhone(emailOrPhone), code!!, true)
+                    else -> accountManager.login(emailOrPhone, null, code!!, true)
+                }
+            }
+                    .also {
+                        it.error?.let { e ->
+                            viewState.setError(e)
+                            logLoginEvent(Analytics.RESULT_FAIL)
+                        }
+
+                        it.isSuccess()?.let {
+                            viewState.showErrorText(false)
+                            logLoginEvent(Analytics.RESULT_SUCCESS)
+                            registerPushToken()
+                            router.exit()
+                        }
+                    }
+            viewState.blockInterface(false)
+        }
+    }
+
+
+    /* Validating */
+
+    private fun isWrongFields(checkCode: Boolean)
+            = emailOrPhone.isNullOrEmpty()
+            || isPhone == null
+            || (checkCode && code.isNullOrEmpty())
+            || !checkInputData(emailOrPhone!!, isPhone!!)
 
     private fun checkInputData(emailOrPhone: String, isPhone: Boolean) =
         checkIfEmailOrPhone(emailOrPhone) && validateInput(emailOrPhone, isPhone)
@@ -74,33 +130,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
         return false
     }
 
-    fun onLoginClick(emailOrPhone: String, password: String, isPhone: Boolean) {
-        if (!checkInputData(emailOrPhone, isPhone)) return
-
-        utils.launchSuspend {
-            viewState.blockInterface(true, true)
-            fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when (isPhone) {
-                    true -> accountManager.login(null, LoginHelper.formatPhone(emailOrPhone), password, true)
-                    false -> accountManager.login(emailOrPhone, null, password, true)
-                }
-            }
-                .also {
-                    it.error?.let { e ->
-                        viewState.setError(e)
-                        logLoginEvent(Analytics.RESULT_FAIL)
-                    }
-
-                    it.isSuccess()?.let {
-                        viewState.showErrorText(false)
-                        logLoginEvent(Analytics.RESULT_SUCCESS)
-                        registerPushToken()
-                        router.exit()
-                    }
-                }
-            viewState.blockInterface(false)
-        }
-    }
+    /* Analytics */
 
     private fun logLoginEvent(result: String) {
         val map = mutableMapOf<String, Any>()
@@ -108,6 +138,9 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
 
         analytics.logEvent(Analytics.EVENT_LOGIN, createStringBundle(Analytics.STATUS, result), map)
     }
+
+
+    /* Navigating */
 
     fun back() {
         router.replaceScreen(Screens.AuthorizationPager(nextScreen ?: Screens.CLOSE_AFTER_LOGIN, emailOrPhone))
