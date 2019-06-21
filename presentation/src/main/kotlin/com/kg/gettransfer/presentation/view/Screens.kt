@@ -14,6 +14,8 @@ import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.ui.*
+import com.kg.gettransfer.presentation.ui.SmsCodeFragment.Companion.EXTERNAL_EMAIL_OR_PHONE
+import com.kg.gettransfer.presentation.ui.SmsCodeFragment.Companion.EXTERNAL_IS_PHONE
 
 import java.io.File
 
@@ -180,8 +182,8 @@ object Screens {
     ) : SupportAppScreen() {
         override fun getFragment() = SmsCodeFragment.newInstance().apply {
             arguments = Bundle().apply {
-                putString(SmsCodeView.EXTERNAL_EMAIL_OR_PHONE, emailOrPhone)
-                putBoolean(SmsCodeView.EXTERNAL_IS_PHONE, isPhone)
+                putString(EXTERNAL_EMAIL_OR_PHONE, emailOrPhone)
+                putBoolean(EXTERNAL_IS_PHONE, isPhone)
                 putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
             }
         }
