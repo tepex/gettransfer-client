@@ -186,7 +186,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private fun redirectToLogin(existedEmailOrPhone: String) {
-        router.newRootScreen(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, existedEmailOrPhone))
+        router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, existedEmailOrPhone))
     }
 
     /*private fun isValid(input: String, isPhone: Boolean) =
