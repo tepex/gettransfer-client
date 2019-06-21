@@ -3,38 +3,27 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
-import com.kg.gettransfer.extensions.internationalExample
-
 import com.kg.gettransfer.extensions.setThrottledClickListener
-
 import com.kg.gettransfer.presentation.presenter.LogInPresenter
-
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
-
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_EMAIL_TO_LOGIN
-
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
-
 import kotlinx.android.synthetic.main.fragment_log_in.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 import kotlinx.android.synthetic.main.view_input_password.*
-
 import timber.log.Timber
 
 /**
@@ -103,6 +92,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
             val emailPhone = it.trim()
             btnLogin.isEnabled = emailPhone.isNotEmpty() && etPassword.text?.isNotEmpty() ?: false
             btnRequestCode.isEnabled = emailPhone.isNotEmpty()
+            presenter.emailOrPhone = it
         }
         etPassword.onTextChanged {
             btnLogin.isEnabled = emailLayout.fieldText.text?.isNotEmpty() ?: false && it.isNotEmpty()
@@ -127,8 +117,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         BottomSheetDialog
             .newInstance()
             .apply {
-                // title = this@LogInFragment.getString(errStringRes)
-                title = this@LogInFragment.getString(R.string.LNG_ERROR_CREDENTIALS)
+                title = errStringRes
                 onDismissCallBack = { hideLoading() }
             }
             .show(fragmentManager)
@@ -174,7 +163,10 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                     .newInstance()
                     .apply {
                         title =
-                            this@LogInFragment.getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.emailOrPhoneProfile)
+                            this@LogInFragment.getString(
+                                R.string.LNG_ACCOUNT_NOTFOUND,
+                                presenter.emailOrPhone //TODO вот тут возможно придется просить поле из презентера. Или всегда в метожд передавать лишний параметр.
+                            )
                         text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
                         buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
                         onClickOkButton = { changePage?.invoke() }

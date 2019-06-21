@@ -30,6 +30,8 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
 
     private val paymentInteractor: PaymentInteractor by inject()
 
+    var emailOrPhone: String = ""
+    //TODO переделать поля, убрать лишнее.
     internal var nextScreen: String? = null
     internal var transferId: Long = 0
     internal var offerId: Long? = null
@@ -153,14 +155,16 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         saveProfile(emailOrPhone)
         viewState.hideLoading()
         val isPhone = isPhone(emailOrPhone)
-        router.replaceScreen(Screens.SmsCode(
-            when (isPhone) {
-                true -> profile.phone
-                false -> profile.email
-            },
-            isPhone,
+        router.replaceScreen(
+            Screens.SmsCode(
+                when (isPhone) {
+                    true -> profile.phone
+                    false -> profile.email
+                },
+                isPhone,
                 nextScreen ?: ""
-        ))
+            )
+        )
     }
 
     fun saveProfile(emailOrPhone: String) {
@@ -182,7 +186,7 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
             viewState.showValidationError(MainLoginActivity.INVALID_PASSWORD)
             return
         }
-        if (emailOrPhone.isEmpty()) {
+        if (emailOrPhone.isEmpty() || !LoginHelper.emailIsValid(emailOrPhone)) {
             viewState.showValidationError(MainLoginActivity.INVALID_EMAIL)
             return
         }
@@ -215,6 +219,13 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
     }
 
     fun sendVerificationCode(emailOrPhone: String) {
+        if (emailOrPhone.isEmpty() ||
+            (!isPhone(emailOrPhone) && !LoginHelper.emailIsValid(emailOrPhone)) ||
+            (isPhone(emailOrPhone) && !LoginHelper.phoneIsValid(emailOrPhone))
+        ) {
+            viewState.showValidationError(MainLoginActivity.INVALID_EMAIL)
+            return
+        }
         val isPhone = isPhone(emailOrPhone)
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
