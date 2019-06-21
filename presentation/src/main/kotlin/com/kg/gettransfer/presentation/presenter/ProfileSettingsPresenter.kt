@@ -16,6 +16,11 @@ class ProfileSettingsPresenter : BasePresenter<ProfileSettingsView>() {
         viewState.initFields(profileMapper.toView(accountManager.remoteProfile))
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        accountManager.initTempUser()
+    }
+
     fun setName(name: String) {
         accountManager.tempProfile.fullName = name.trim()
         setEnabledBtnSave()
