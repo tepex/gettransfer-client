@@ -37,6 +37,7 @@ import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -210,12 +211,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private fun setClickListeners() {
         btnBack.setOnClickListener          { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
-        tripRate.setOnRatingChangeListener  { _, fl -> presenter.rateTrip(fl.toDouble(), true) }
+        tripRate.setOnRatingChangeListener  { _, fl -> presenter.rateTrip(fl, true) }
         topCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         bottomCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         topCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
         bottomCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
-        yourRateMark.setOnClickListener { presenter.rateTrip(yourRateMark.rbYourRateMark.rating.toDouble(), false) }
+        yourRateMark.setOnClickListener { presenter.rateTrip(yourRateMark.rbYourRateMark.rating, false) }
         yourComment.setOnClickListener { presenter.clickComment(yourComment.tvComment.text.toString()) }
     }
 
@@ -525,11 +526,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         showTrack(cameraUpdate) { updateMapBehaviorBounds() }
     }
 
-    override fun showDetailRate(vehicle: Double, driver: Double, punctuality: Double, offerId: Long, feedback: String) {
+    override fun showDetailRate(ratings: RatingsModel, offerId: Long, feedback: String) {
         if (supportFragmentManager.fragments.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
             RatingDetailDialogFragment
-                    .newInstance(vehicle, driver, punctuality, offerId, feedback)
-                    .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+                .newInstance(ratings, offerId, feedback)
+                .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }
 
@@ -576,8 +577,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     override fun showYourRateMark(isShow: Boolean, averageRate: Double) {
         yourRateMark.rbYourRateMark.setOnRatingChangeListener(null)
         yourRateMark.show(isShow)
-        yourRateMark.rbYourRateMark.rating = averageRate
-        yourRateMark.rbYourRateMark.setOnRatingChangeListener { _, fl -> presenter.rateTrip(fl.toDouble() , true) }
+        yourRateMark.rbYourRateMark.rating = averageRate.toFloat()
+        yourRateMark.rbYourRateMark.setOnRatingChangeListener { _, fl -> presenter.rateTrip(fl , true) }
     }
 
     override fun showYourComment(isShow: Boolean, comment: String) {

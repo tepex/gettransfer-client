@@ -1,24 +1,33 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+
+import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
+
 import com.kg.gettransfer.presentation.presenter.RatingLastTripPresenter
+
 import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.MapHelper
+
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RatingLastTripView
+
 import kotlinx.android.synthetic.main.view_last_trip_rate.*
 
 class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripView, OnMapReadyCallback {
@@ -123,8 +132,8 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     override fun showDetailedReview(rate: Float, offerId: Long) {
         if (fragmentManager?.fragments?.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
             RatingDetailDialogFragment
-                    .newInstance(rate, rate, rate, offerId)
-                    .show(fragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+                .newInstance(RatingsModel(RatingsModel.NO_RATING, rate, rate, rate), offerId)
+                .show(fragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }
 

@@ -239,31 +239,30 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    fun rateTrip(rating: Double, isNeedCheckStoreRate: Boolean) {
+    fun rateTrip(rating: Float, isNeedCheckStoreRate: Boolean) {
         if (isNeedCheckStoreRate) {
             if (rating.toInt() == ReviewInteractor.MAX_RATE) {
                 with(reviewInteractor) {
                     utils.launchSuspend { sendTopRate() }
-                    logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
+                    logAverageRate(ReviewInteractor.MAX_RATE.toFloat())
                     if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
                         viewState.askRateInPlayMarket()
                         logReviewRequest()
                     }
                 }
+                val doubleRating = rating.toDouble()
                 offer = offer?.copy(
                     ratings = offer?.ratings?.copy(
-                        vehicle = rating,
-                        driver = rating,
-                        fair = rating
+                        vehicle = doubleRating,
+                        driver = doubleRating,
+                        fair = doubleRating
                     )
                 )
                 updateRatingState()
             } else {
                 offer?.let {
                     viewState.showDetailRate(
-                        rating,
-                        rating,
-                        rating,
+                        RatingsModel(RatingsModel.NO_RATING, rating, rating, rating),
                         it.id,
                         it.passengerFeedback.orEmpty()
                     )
@@ -272,16 +271,14 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         } else
             offer?.let {
                 viewState.showDetailRate(
-                    it.ratings?.vehicle ?: 0f,
-                    it.ratings?.driver ?: 0f,
-                    it.ratings?.fair ?: 0f,
+                    it.ratings?.map() ?: RatingsModel.EMPTY,
                     it.id,
                     it.passengerFeedback.orEmpty()
                 )
             }
     }
 
-    private fun logAverageRate(rate: Double) =
+    private fun logAverageRate(rate: Float) =
         analytics.logEvent(
             Analytics.REVIEW_AVERAGE,
             createStringBundle(Analytics.REVIEW, rate.toString()),
@@ -337,9 +334,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun ratingChanged(list: List<ReviewRateModel>, userFeedback: String) {
         offer = offer?.copy(
             ratings = offer?.ratings?.copy(
-                vehicle = list.firstOrNull { it.rateType == VEHICLE }?.rateValue?.toFloat() ?: 0f,
-                driver = list.firstOrNull { it.rateType == DRIVER }?.rateValue?.toFloat() ?: 0f,
-                fair = list.firstOrNull { it.rateType == PUNCTUALITY }?.rateValue?.toFloat() ?: 0f
+                vehicle = list.firstOrNull { it.rateType == VEHICLE }?.rateValue?.toDouble() ?: 0.0,
+                driver = list.firstOrNull { it.rateType == DRIVER }?.rateValue?.toDouble() ?: 0.0,
+                fair = list.firstOrNull { it.rateType == PUNCTUALITY }?.rateValue?.toDouble() ?: 0.0
             ),
             passengerFeedback = userFeedback
         )
@@ -380,7 +377,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         val isRated = offer?.isOfferRatedByUser() ?: false
         if (available && !isRated) reviewInteractor.offerIdForReview = offer?.id ?: 0
         viewState.showCommonRating(available && !isRated)
-        viewState.showYourRateMark(isRated, offer?.ratings?.averageRating ?: 0f)
+        viewState.showYourRateMark(isRated, offer?.ratings?.average ?: 0.0)
         viewState.showYourComment(isRated, offer?.passengerFeedback.orEmpty())
     }
 

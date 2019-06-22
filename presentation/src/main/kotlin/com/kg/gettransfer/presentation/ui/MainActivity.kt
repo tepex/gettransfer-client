@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v4.app.FragmentTransaction
@@ -14,37 +15,51 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatDelegate
+
 import android.transition.Fade
+
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+
 import android.widget.TextView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.ApiException
+
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
+
 import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
+
 import com.kg.gettransfer.presentation.presenter.MainPresenter
+
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
+
 import com.kg.gettransfer.presentation.view.MainRequestView
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.MainView.Companion.MAP_SCREEN
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SplashView
+
 import kotlinx.android.synthetic.main.a_b_orange_view.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.navigation_view_menu_item.view.*
@@ -53,7 +68,9 @@ import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_navigation.*
 import kotlinx.android.synthetic.main.view_switcher.*
+
 import pub.devrel.easypermissions.EasyPermissions
+
 import timber.log.Timber
 
 class MainActivity :
@@ -626,7 +643,7 @@ class MainActivity :
                 it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG
             } == null) {
             RatingDetailDialogFragment
-                .newInstance(tappedRate, tappedRate, tappedRate, offerId)
+                .newInstance(RatingsModel(RatingsModel.NO_RATING, tappedRate, tappedRate, tappedRate), offerId)
                 .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }

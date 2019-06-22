@@ -3,10 +3,14 @@ package com.kg.gettransfer.presentation.delegate
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.strikeText
+
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
+
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
@@ -14,8 +18,10 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.MoneyModel
+
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
+
 import kotlinx.android.synthetic.main.offer_expanded.view.*
 import kotlinx.android.synthetic.main.offer_expanded_no_photo.view.*
 import kotlinx.android.synthetic.main.offer_tiny.view.*
@@ -161,28 +167,31 @@ object OfferItemBindDelegate {
             }
 
     internal fun bindRating(rateView: View, rating: RatingsModel, approved: Boolean = false): Boolean =
-            with(rateView) {
-                imgApproved.isVisible = approved
-                if (rating.average != null && rating.average != NO_RATING) {
-                    tv_drivers_rate.text  = rating.average.toString().replace(".", ",")
-                    tv_drivers_rate.isVisible = true
-                    imgStar.isVisible = true
-                    isVisible = true
-                    return@with RATE_SHOWN
-                }
-                isVisible = approved
-                return@with approved
+        with(rateView) {
+            imgApproved.isVisible = approved
+            if (rating.average != RatingsModel.NO_RATING) {
+                tv_drivers_rate.text  = rating.average.toString().replace(".", ",")
+                tv_drivers_rate.isVisible = true
+                imgStar.isVisible = true
+                isVisible = true
+                return@with RATE_SHOWN
             }
+            isVisible = approved
+            return@with approved
+        }
 
-    internal fun bindLanguages(singleLineContainer: LinearLayout? = null, multiLineContainer: LinearLayout? = null,
-                               languages: List<LocaleModel>, rowNumber: Int = LanguageDrawer.ITEM_COLUMNS) {
+    internal fun bindLanguages(
+        singleLineContainer: LinearLayout? = null,
+        multiLineContainer: LinearLayout? = null,
+        languages: List<LocaleModel>,
+        rowNumber: Int = LanguageDrawer.ITEM_COLUMNS
+    ) {
 
         if (singleLineContainer == null && multiLineContainer == null)
             throw IllegalArgumentException("One of containers must not be null in ${this::class.java.name}")
 
         if (singleLineContainer != null) LanguageDrawer.drawSingleLine(singleLineContainer, languages = languages)
         else LanguageDrawer.drawMultipleLine(multiLineContainer!!, languages = languages, rowNumber = rowNumber)
-
     }
 
     private fun bindPrice(viewWithPrice: View, base: MoneyModel, withoutDiscount: MoneyModel? = null) =
@@ -194,6 +203,5 @@ object OfferItemBindDelegate {
                 }
             }
 
-    private const val NO_RATING  = 0.0F
     private const val RATE_SHOWN = true
 }
