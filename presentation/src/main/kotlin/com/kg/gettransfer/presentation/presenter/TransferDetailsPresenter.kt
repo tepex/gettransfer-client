@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Handler
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
@@ -17,6 +18,7 @@ import com.kg.gettransfer.domain.model.Coordinate
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
@@ -120,11 +122,14 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         if (transfer.to != null) {
             fetchResult {
                 orderInteractor.getRouteInfo(
-                    transfer.from.point!!,
-                    transfer.to!!.point!!,
-                    false,
-                    false,
-                    sessionInteractor.currency.code
+                    RouteInfoRequest(
+                        transfer.from.point!!,
+                        transfer.to!!.point!!,
+                        false,
+                        false,
+                        sessionInteractor.currency.code,
+                        null
+                    )
                 )
             }.also {
                 it.cacheError?.let { e -> viewState.setError(e) }

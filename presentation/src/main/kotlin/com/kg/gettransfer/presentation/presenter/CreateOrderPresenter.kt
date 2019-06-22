@@ -26,10 +26,13 @@ import com.kg.gettransfer.extensions.simpleFormat
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 import com.kg.gettransfer.presentation.mapper.*
+
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+
 import com.kg.gettransfer.presentation.ui.Utils
+
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
@@ -121,12 +124,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             var route: RouteInfo? = null
             fetchData {
                 orderInteractor.getRouteInfo(
-                    from.point!!,
-                    to.point!!,
-                    true,
-                    false,
-                    sessionInteractor.currency.code,
-                    dateTime
+                    RouteInfoRequest(
+                        from.point!!,
+                        to.point!!,
+                        true,
+                        false,
+                        sessionInteractor.currency.code,
+                        dateTime
+                    )
                 )
             }?.let {
                 route = it
@@ -175,15 +180,16 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         utils.launchSuspend {
             fetchData {
                 orderInteractor.getRouteInfo(
-                    from.point!!,
-                    to.point!!,
-                    true,
-                    returnWay,
-                    sessionInteractor.currency.code,
-                    dateTime
+                    RouteInfoRequest(
+                        from.point!!,
+                        to.point!!,
+                        true,
+                        returnWay,
+                        sessionInteractor.currency.code,
+                        dateTime
+                    )
                 )
-            }
-                ?.let { prices = it.prices }
+            }?.let { prices = it.prices }
             setTransportTypePrices(prices ?: emptyMap())
         }
     }
@@ -200,10 +206,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         utils.launchSuspend {
             fetchData {
                 orderInteractor.getRouteInfoHourlyTransfer(
-                    from.point!!,
-                    duration,
-                    sessionInteractor.currency.code,
-                    dateTime
+                    RouteInfoHourlyRequest(
+                        from.point!!,
+                        duration,
+                        sessionInteractor.currency.code,
+                        dateTime
+                    )
                 )
             }
                 ?.let { prices = it.prices }

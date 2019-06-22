@@ -1,17 +1,25 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
+
+import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
+
 import com.kg.gettransfer.prefs.PreferencesImpl
+
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.RatingLastTripView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
+
 import org.koin.standalone.inject
 
 @InjectViewState
@@ -49,8 +57,15 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
         val route = transfer.from.point?.let { from ->
             transfer.to?.point?.let { to ->
                 orderInteractor.getRouteInfo(
-                        from, to, false, false,
-                        sessionInteractor.currency.code).model
+                    RouteInfoRequest(
+                        from,
+                        to,
+                        false,
+                        false,
+                        sessionInteractor.currency.code,
+                        null
+                    )
+                ).model
             }
         }
 

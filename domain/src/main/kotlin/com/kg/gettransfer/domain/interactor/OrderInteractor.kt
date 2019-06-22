@@ -11,9 +11,10 @@ import java.util.Date
 import kotlin.math.absoluteValue
 
 class OrderInteractor(
-        private val geoRepository: GeoRepository,
-        private val routeRepository: RouteRepository,
-        private val sessionRepository: SessionRepository) {
+    private val geoRepository: GeoRepository,
+    private val routeRepository: RouteRepository,
+    private val sessionRepository: SessionRepository
+) {
 
     var from: GTAddress?       = null
     var to: GTAddress?         = null
@@ -63,45 +64,51 @@ class OrderInteractor(
         val result = geoRepository.getAutocompletePredictions(prediction, sessionRepository.account.locale.language)
         return if (result.error == null && !result.model.isNullOrEmpty()) {
             val addresses = result.model
-                    .filter { noPointPlaces.none { n -> it.cityPoint.placeId == n.cityPoint.placeId }} // if result has addresses without placeId,
+                .filter { noPointPlaces.none { n -> it.cityPoint.placeId == n.cityPoint.placeId }} // if result has addresses without placeId,
             Result(addresses)                                                                   // exclude such from result
-        } else Result(emptyList(), result.error)
+        } else {
+            Result(emptyList(), result.error)
+        }
     }
 
     suspend fun updatePoint(isTo: Boolean, placeId: String): Result<GTAddress> {
         val result = geoRepository.getPlaceDetails(placeId, sessionRepository.account.locale.language)
         return if (result.error == null) {
-            if (isTo) to = result.model
-            else from = result.model
+            if (isTo) to = result.model else from = result.model
             Result(result.model)
-        } else Result(GTAddress.EMPTY, result.error)
+        } else {
+            Result(GTAddress.EMPTY, result.error)
+        }
     }
 
-    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String, dateTime: Date? = null): Result<RouteInfo> {
-        val routeInfo = routeRepository.getRouteInfo(from, to, withPrices, returnWay, currency, dateTime)
+//    suspend fun getRouteInfo(from: Point, to: Point, withPrices: Boolean, returnWay: Boolean, currency: String, dateTime: Date? = null): Result<RouteInfo> {
+    suspend fun getRouteInfo(request: RouteInfoRequest): Result<RouteInfo> {
+        val routeInfo = routeRepository.getRouteInfo(request)
         duration = routeInfo.model.duration
         return routeInfo
     }
 
-    suspend fun getRouteInfoHourlyTransfer(from: Point, hourlyDuration: Int, currency: String, dateTime: Date? = null): Result<RouteInfo> {
-        val routeInfo = routeRepository.getRouteInfo(from, hourlyDuration, currency, dateTime)
+//    suspend fun getRouteInfoHourlyTransfer(from: Point, hourlyDuration: Int, currency: String, dateTime: Date? = null): Result<RouteInfo> {
+    suspend fun getRouteInfoHourlyTransfer(request: RouteInfoHourlyRequest): Result<RouteInfo> {
+        val routeInfo = routeRepository.getRouteInfo(request)
         duration = routeInfo.model.duration
         return routeInfo
     }
 
-    fun isAddressesValid() =
-            (from != null && (to != null || hourlyDuration != null ))
+    fun isAddressesValid() = (from != null && (to != null || hourlyDuration != null ))
 
     fun isDistanceFine() =
-            if (from!!.cityPoint.point != null && to!!.cityPoint.point != null)
-                (from!!.lat!! - to!!.lat!!).absoluteValue > MIN_LAT_DIFF ||
-                        (from!!.lon!! - to!!.lon!!).absoluteValue > MIN_LON_DIFF
-    else false
+        if (from!!.cityPoint.point != null && to!!.cityPoint.point != null) {
+            (from!!.lat!! - to!!.lat!!).absoluteValue > MIN_LAT_DIFF ||
+            (from!!.lon!! - to!!.lon!!).absoluteValue > MIN_LON_DIFF
+        } else {
+            false
+        }
     //0.002 lat
     //0.003 lon
 
-    fun isCanCreateOrder() = (from?.cityPoint != null &&
-            ((to?.cityPoint != null && isDistanceFine()) || hourlyDuration != null))
+    fun isCanCreateOrder() =
+        (from?.cityPoint != null && ((to?.cityPoint != null && isDistanceFine()) || hourlyDuration != null))
 
     companion object {
         const val MIN_LAT_DIFF = 0.002
