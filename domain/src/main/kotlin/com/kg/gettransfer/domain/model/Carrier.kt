@@ -10,4 +10,4 @@ data class Carrier(
     val languages: List<Locale>,
     val ratings: Ratings,
     val canUpdateOffers: Boolean
-) : Entity()
+) : Entity

@@ -19,7 +19,7 @@ data class CarrierTripBase(
     val waterTaxi: Boolean,
     val price: String,
     val vehicle: VehicleInfo
-) : Entity() {
+) : Entity {
     companion object {
         val EMPTY = CarrierTripBase(
             id                    = 0,

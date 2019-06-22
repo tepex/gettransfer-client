@@ -1,8 +1,8 @@
 package com.kg.gettransfer.domain.model
 
 import java.util.Date
-/*
 
+/*
 
 
 
@@ -61,7 +61,7 @@ data class Transfer(
     val showOfferInfo: Boolean,
     val lastOffersUpdatedAt: Date?
 
-) : Entity() {
+) : Entity {
 
     fun checkStatusCategory() = when (status) {
         Status.NEW       -> STATUS_CATEGORY_ACTIVE

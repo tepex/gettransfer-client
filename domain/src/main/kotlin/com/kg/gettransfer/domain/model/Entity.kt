@@ -2,7 +2,7 @@ package com.kg.gettransfer.domain.model
 
 import java.util.Collections
 
-abstract class Entity {
+interface Entity {
     abstract val id: Long
 }
 

@@ -22,4 +22,4 @@ data class Message(
     val readAt: Date?,
     val text: String,
     val sendAt: Long? = null
-) : Entity()
+) : Entity
