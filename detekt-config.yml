@@ -200,7 +200,7 @@ exceptions:
 
 formatting:
   active: true
-  android: false
+  android: true
   autoCorrect: true
   ChainWrapping:
     active: true
@@ -214,7 +214,7 @@ formatting:
     active: true
     autoCorrect: true
   ImportOrdering:
-    active: true
+    active: false
   Indentation:
     active: true
     autoCorrect: true
@@ -456,6 +456,7 @@ style:
   NestedClassesVisibility:
     active: true
   NewLineAtEndOfFile:
+    autoCorrect: true
     active: true
   NoTabs:
     active: true

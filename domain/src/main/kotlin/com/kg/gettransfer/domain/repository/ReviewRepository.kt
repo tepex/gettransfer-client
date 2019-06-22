@@ -7,6 +7,7 @@ interface ReviewRepository {
     var currentOfferRateID: Long
     var currentComment: String
     var rates: MutableSet<ReviewRate>
+
     suspend fun rateTrip(): Result<Unit>
     suspend fun sendComment(offerId: Long, comment: String): Result<Unit>
     suspend fun pushComment(): Result<Unit>
