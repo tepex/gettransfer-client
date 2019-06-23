@@ -1,5 +1,8 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.Carrier
+import com.kg.gettransfer.domain.model.Profile
+
 import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
@@ -26,3 +29,25 @@ data class CarrierEntity(
         const val CAN_UPDATE_OFFERS   = "can_update_offers"
     }
 }
+
+fun CarrierEntity.map() =
+    Carrier(
+        id,
+        profile?.let { it.map() },
+        approved,
+        completedTransfers,
+        languages.map { it.map() },
+        ratings.map(),
+        canUpdateOffers ?: false
+    )
+
+fun Carrier.map() =
+    CarrierEntity(
+        id,
+        profile?.let { it.map() },
+        approved,
+        completedTransfers,
+        languages.map { it.map() },
+        ratings.map(),
+        canUpdateOffers
+    )
