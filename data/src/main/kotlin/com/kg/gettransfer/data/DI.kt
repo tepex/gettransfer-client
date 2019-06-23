@@ -50,7 +50,6 @@ val dataModule = module {
         }
     }
 
-    single { OfferMapper() }
     single { OfferDataStoreCache() }
     single { OfferDataStoreRemote() }
     single { OfferRepositoryImpl(DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>(get(), get())) } bind OfferRepository::class
