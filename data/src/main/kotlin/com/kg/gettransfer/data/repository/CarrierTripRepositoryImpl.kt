@@ -7,8 +7,6 @@ import com.kg.gettransfer.data.ds.CarrierTripDataStoreCache
 import com.kg.gettransfer.data.ds.CarrierTripDataStoreRemote
 import com.kg.gettransfer.data.ds.DataStoreFactory
 
-import com.kg.gettransfer.data.mapper.CarrierTripMapper
-
 import com.kg.gettransfer.data.model.CarrierTripBaseEntity
 import com.kg.gettransfer.data.model.CarrierTripEntity
 import com.kg.gettransfer.data.model.ResultEntity
@@ -33,8 +31,7 @@ class CarrierTripRepositoryImpl(
     private val preferencesCache: PreferencesCache
 ) : BaseRepository(), CarrierTripRepository {
 
-    private val carrierTripMapper = get<CarrierTripMapper>()
-    private val dateFormat        = get<ThreadLocal<DateFormat>>("iso_date")
+    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
 
     override var backGroundCoordinates: Int
         get() = preferencesCache.driverCoordinatesInBackGround
@@ -60,7 +57,7 @@ class CarrierTripRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addCarrierTrip(it) }
         return Result(
-            result.entity?.let { carrierTripMapper.fromEntity(it) } ?: CarrierTrip.EMPTY,
+            result.entity?.let { it.map(dateFormat.get()) } ?: CarrierTrip.EMPTY,
             result.error?.let { it.map() },
             result.error != null && result.entity != null
         )
@@ -71,7 +68,7 @@ class CarrierTripRepositoryImpl(
             factory.retrieveCacheDataStore().getCarrierTrip(id)
         }
         return Result(
-            result.entity?.let { carrierTripMapper.fromEntity(it) } ?: CarrierTrip.EMPTY,
+            result.entity?.let { it.map(dateFormat.get()) } ?: CarrierTrip.EMPTY,
             null,
             result.entity != null,
             result.cacheError?.let { it.map() }

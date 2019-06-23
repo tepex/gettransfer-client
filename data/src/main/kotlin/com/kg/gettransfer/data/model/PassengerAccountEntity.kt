@@ -1,7 +1,6 @@
 package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.PassengerAccount
-
 import java.text.DateFormat
 
 data class PassengerAccountEntity(
@@ -19,6 +18,6 @@ data class PassengerAccountEntity(
 
 fun PassengerAccount.map(dateFormat: DateFormat) =
     PassengerAccountEntity(id, profile.map(), dateFormat.format(lastSeen))
-    
+
 fun PassengerAccountEntity.map(dateFormat: DateFormat) =
     PassengerAccount(id, profile.map(), dateFormat.parse(lastSeen))

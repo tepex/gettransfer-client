@@ -80,7 +80,6 @@ val dataModule = module {
     single { RouteDataStoreRemote() }
     single<RouteRepository> { RouteRepositoryImpl(DataStoreFactory<RouteDataStore, RouteDataStoreCache, RouteDataStoreRemote>(get(), get())) }
 
-    single { CarrierTripMapper() }
     single { CarrierTripDataStoreCache() }
     single { CarrierTripDataStoreRemote() }
     single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get()), get()) }

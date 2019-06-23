@@ -1,5 +1,10 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.CarrierTrip
+import com.kg.gettransfer.domain.model.CarrierTripBase
+import com.kg.gettransfer.domain.model.CityPoint
+import java.text.DateFormat
+
 data class CarrierTripEntity(
     override val id: Long,
     override val transferId: Long,
@@ -54,3 +59,32 @@ data class CarrierTripEntity(
         const val PASSENGER_ACCOUNT = "passenger_account"
     }
 }
+
+fun CarrierTripEntity.map(dateFormat: DateFormat) =
+    CarrierTrip(
+        CarrierTripBase(
+            id,
+            transferId,
+            from.map(),
+            to?.let { it.map() } ?: CityPoint.EMPTY,
+            dateFormat.parse(dateLocal),
+            duration,
+            distance,
+            time,
+            childSeats,
+            childSeatsInfant,
+            childSeatsConvertible,
+            childSeatsBooster,
+            comment,
+            waterTaxi,
+            price,
+            vehicle.map()
+        ),
+        pax,
+        nameSign,
+        flightNumber,
+        paidSum,
+        remainsToPay,
+        paidPercentage,
+        passengerAccount?.let { it.map(dateFormat) }
+    )
