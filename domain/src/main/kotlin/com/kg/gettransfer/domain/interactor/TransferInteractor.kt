@@ -8,19 +8,13 @@ import com.kg.gettransfer.domain.repository.TransferRepository
 
 class TransferInteractor(private val repository: TransferRepository) {
 
-    suspend fun createTransfer(transferNew: TransferNew): Result<Transfer> {
-        return repository.createTransfer(transferNew)
-    }
+    suspend fun createTransfer(transferNew: TransferNew) = repository.createTransfer(transferNew)
 
     suspend fun getTransfer(id: Long, fromCache: Boolean = false, role: String = "passenger") =
-            when(fromCache) {
-                false -> repository.getTransfer(id, role)
-                true -> repository.getTransferCached(id, role)
-            }
+        if (fromCache) repository.getTransferCached(id, role) else repository.getTransfer(id, role)
 
     suspend fun cancelTransfer(id: Long, reason: String) = repository.cancelTransfer(id, reason)
-        /*val cancelledTransfer = repository.cancelTransfer(transfer!!.id, reason)
-        if(allTransfers != null) allTransfers!!.map { if(it.id == transfer!!.id) it.status = cancelledTransfer.status }*/
+
     suspend fun setOffersUpdatedDate(id: Long) = repository.setOffersUpdateDate(id)
 
     suspend fun getAllTransfers() = repository.getAllTransfers()

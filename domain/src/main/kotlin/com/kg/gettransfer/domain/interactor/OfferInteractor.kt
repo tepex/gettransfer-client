@@ -18,11 +18,12 @@ class OfferInteractor(private val repository: OfferRepository) {
         repository.offerViewExpanded = value
     }
 
-    suspend fun getOffers(transferId: Long, fromCache: Boolean = false) =
-            when(fromCache){
-                false -> repository.getOffers(transferId)
-                true -> repository.getOffersCached(transferId)
-            }.also { offers = it .model }
+    suspend fun getOffers(transferId: Long, fromCache: Boolean = false): Result<List<Offer>> {
+        val result = if (fromCache) repository.getOffersCached(transferId) else repository.getOffers(transferId)
+        offers = result.model
+        return result
+    }
+
     fun getOffer(id: Long) = offers.find { it.id == id }
 
     fun newOffer(offer: Offer): Result<Offer> {
@@ -37,5 +38,4 @@ class OfferInteractor(private val repository: OfferRepository) {
     }
 
     fun onNewOfferEvent(offer: Offer) = eventReceiver?.onNewOfferEvent(offer)
-
 }

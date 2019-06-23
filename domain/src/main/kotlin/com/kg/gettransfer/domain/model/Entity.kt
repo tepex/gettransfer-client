@@ -3,7 +3,7 @@ package com.kg.gettransfer.domain.model
 import java.util.Collections
 
 interface Entity {
-    abstract val id: Long
+    val id: Long
 }
 
 /* For API < v.24 */

@@ -25,7 +25,6 @@ class ReviewInteractor(private val repository: ReviewRepository) {
 
     fun rateCanceled() { isReviewSuggested = true }
 
-
     suspend fun sendRates(): Result<Unit> {
         isReviewSuggested = true
         return repository.rateTrip()

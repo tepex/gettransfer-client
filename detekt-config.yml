@@ -521,4 +521,4 @@ style:
     active: true
   WildcardImport:
     active: true
-    excludeImports: 'kotlinx.android.synthetic.*,su.tepex.foaas.core.ui.*'
+    excludeImports: 'kotlinx.android.synthetic.*,kotlinx.coroutines.*'
