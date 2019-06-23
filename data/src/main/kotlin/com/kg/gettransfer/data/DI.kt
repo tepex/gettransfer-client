@@ -84,7 +84,6 @@ val dataModule = module {
     single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get()), get()) }
 
     single { TransferMapper() }
-    single { TransferNewMapper() }
     single { TransferDataStoreCache() }
     single { TransferDataStoreRemote() }
     single { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get())) } bind TransferRepository::class

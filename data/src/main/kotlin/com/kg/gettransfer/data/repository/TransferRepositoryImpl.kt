@@ -7,7 +7,6 @@ import com.kg.gettransfer.data.ds.TransferDataStoreCache
 import com.kg.gettransfer.data.ds.TransferDataStoreRemote
 
 import com.kg.gettransfer.data.mapper.TransferMapper
-import com.kg.gettransfer.data.mapper.TransferNewMapper
 
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
@@ -33,14 +32,17 @@ class TransferRepositoryImpl(
 ) : BaseRepository(), TransferRepository {
 
     private val preferencesCache = get<PreferencesCache>()
-    private val transferNewMapper = get<TransferNewMapper>()
     private val transferMapper = get<TransferMapper>()
 
     private val dateFormatTZ = get<ThreadLocal<DateFormat>>("iso_date_TZ")
+    private val serverDateFormat = get<ThreadLocal<DateFormat>>("server_date")
+    private val serverTimeFormat = get<ThreadLocal<DateFormat>>("server_time")
 
     override suspend fun createTransfer(transferNew: TransferNew): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().createTransfer(transferNewMapper.toEntity(transferNew))
+            factory.retrieveRemoteDataStore().createTransfer(
+                transferNew.map(serverDateFormat.get(), serverTimeFormat.get())
+            )
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
