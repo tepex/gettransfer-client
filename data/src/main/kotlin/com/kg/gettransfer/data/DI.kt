@@ -97,9 +97,6 @@ val dataModule = module {
     single { ReviewDataStoreRemote() }
     single<ReviewRepository> { ReviewRepositoryImpl(get()) }
 
-    single { ChatAccountMapper() }
-    single { ChatMapper() }
-    single { MessageMapper() }
     single { ChatDataStoreCache() }
     single { ChatDataStoreRemote() }
     single <ChatDataStoreReceiver> { ChatSocketDataStoreInput() }

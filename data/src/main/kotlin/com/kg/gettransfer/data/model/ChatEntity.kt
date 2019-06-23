@@ -1,5 +1,8 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.Chat
+import com.kg.gettransfer.domain.model.ChatAccount
+import java.text.DateFormat
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -29,3 +32,12 @@ data class ChatAccountEntity(
         const val ROLES     = "roles"
     }
 }
+
+fun ChatAccountEntity.map() = ChatAccount(email, fullName, roles)
+
+fun ChatEntity.map(dateFormat: DateFormat) =
+    Chat(
+        accounts.mapValues { it.value.map() },
+        accountId,
+        messages.map { it.map(dateFormat) }
+    )
