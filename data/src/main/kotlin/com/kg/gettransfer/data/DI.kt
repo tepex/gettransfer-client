@@ -100,7 +100,6 @@ val dataModule = module {
     single { ChatAccountMapper() }
     single { ChatMapper() }
     single { MessageMapper() }
-    single { ChatBadgeEventMapper() }
     single { ChatDataStoreCache() }
     single { ChatDataStoreRemote() }
     single <ChatDataStoreReceiver> { ChatSocketDataStoreInput() }
