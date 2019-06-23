@@ -8,12 +8,23 @@ import com.kg.gettransfer.data.SessionDataStore
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SessionDataStoreCache
 import com.kg.gettransfer.data.ds.SessionDataStoreRemote
-
-import com.kg.gettransfer.data.mapper.*
-import com.kg.gettransfer.data.model.*
+import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.ConfigsEntity
+import com.kg.gettransfer.data.model.EndpointEntity
+import com.kg.gettransfer.data.model.MobileConfigEntity
+import com.kg.gettransfer.data.model.ResultEntity
+import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.Endpoint
+import com.kg.gettransfer.domain.model.MobileConfig
+import com.kg.gettransfer.domain.model.RegistrationAccount
+import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.repository.SessionRepository
 
 import java.util.Locale
@@ -73,9 +84,7 @@ class SessionRepositoryImpl(
             ?.map { TransportType.ID.parse(it) }
             ?.toSet()
         set(value) {
-            preferencesCache.favoriteTransportTypes =
-                value?.map { it.name }
-                    ?.toSet()
+            preferencesCache.favoriteTransportTypes = value?.map { it.name }?.toSet()
         }
 
     override suspend fun coldStart(): Result<Account> {
@@ -104,7 +113,7 @@ class SessionRepositoryImpl(
             val result: ResultEntity<MobileConfigEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getMobileConfigs()
             }
-            if (result.error != null && result.entity == null) return Result(account, ExceptionMapper.map(result.error))
+            if (result.error != null && result.entity == null) return Result(account, result.error.map())
             result.entity?.let {
                 mobileConfig = it.map()
                 if (result.error == null) factory.retrieveCacheDataStore().setMobileConfigs(it)
@@ -152,7 +161,7 @@ class SessionRepositoryImpl(
             }
             if (pass != null && repeatedPass != null) this.userPassword = pass
         }
-        return Result(this.account, result.error?.let { ExceptionMapper.map(it) })
+        return Result(this.account, result.error?.let { it.map() })
     }
 
     override suspend fun putNoAccount(account: Account): Result<Account> {
@@ -180,7 +189,7 @@ class SessionRepositoryImpl(
                 this.userPassword = password
             }
         }
-        return Result(account, result.error?.let { ExceptionMapper.map(it) })
+        return Result(account, result.error?.let { it.map() })
     }
 
     override suspend fun register(registerAccount: RegistrationAccount): Result<Account> {
@@ -202,7 +211,7 @@ class SessionRepositoryImpl(
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().getVerificationCode(email, phone)
         }
-        return Result(result.entity != null && result.entity, result.error?.let { ExceptionMapper.map(it) })
+        return Result(result.entity != null && result.entity, result.error?.let { it.map() })
     }
 
     override suspend fun logout(): Result<Account> {
@@ -222,7 +231,7 @@ class SessionRepositoryImpl(
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().getCodeForChangeEmail(email)
         }
-        return Result(result.entity != null && result.entity, result.error?.let { ExceptionMapper.map(it) })
+        return Result(result.entity != null && result.entity, result.error?.let { it.map() })
     }
 
     override suspend fun changeEmail(email: String, code: String): Result<Boolean> {
@@ -233,7 +242,7 @@ class SessionRepositoryImpl(
             this.account.user.profile.email = email
             this.userEmail = email
         }
-        return Result(result.entity != null && result.entity, result.error?.let { ExceptionMapper.map(it) })
+        return Result(result.entity != null && result.entity, result.error?.let { it.map() })
     }
 
     companion object {

@@ -4,12 +4,14 @@ import com.kg.gettransfer.data.LocationException
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.ds.GeoDataStore
 
-import com.kg.gettransfer.data.mapper.*
 import com.kg.gettransfer.data.model.PlaceLocationMapper
 import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.CityPoint
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.GeoRepository
 
 import java.util.Locale
@@ -33,7 +35,7 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
             val locationEntity = geoDataStore.getCurrentLocation()
             Result(locationEntity.map())
         } catch (e: LocationException) {
-            Result(Point.EMPTY, geoException = ExceptionMapper.map(e))
+            Result(Point.EMPTY, geoException = e.map())
         }
     }
 
@@ -42,7 +44,7 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
             val locationEntity = geoDataStore.getMyLocationByIp()
             Result(locationEntity.map())
         } catch (e: RemoteException) {
-            Result(Point.EMPTY, ExceptionMapper.map(e))
+            Result(Point.EMPTY, e.map())
         }
     }
 
@@ -55,10 +57,9 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
                 Result(it.copy(cityPoint = it.cityPoint.copy(point = Point(point.latitude, point.longitude))))
             } ?: Result(GTAddress.EMPTY)
         } catch (e: LocationException) {
-            Result(GTAddress.EMPTY, geoException = ExceptionMapper.map(e))
+            Result(GTAddress.EMPTY, geoException = e.map())
         }
     }
-
 
     override suspend fun getAutocompletePredictions(query: String, lang: String): Result<List<GTAddress>> {
         val result = retrieveRemoteEntity { geoDataStore.getAutocompletePredictions(query, lang) }
@@ -76,7 +77,7 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
                 )
             })
         } else {// exclude such from result
-            Result(emptyList(), result.error?.let { ExceptionMapper.map(it) })
+            Result(emptyList(), result.error?.let { it.map() })
         }
     }
 
@@ -96,7 +97,7 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
                 ))
             }
         } else {
-            Result(GTAddress.EMPTY, result.error?.let { ExceptionMapper.map(it) })
+            Result(GTAddress.EMPTY, result.error?.let { it.map() })
         }
     }
 }

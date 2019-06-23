@@ -3,7 +3,6 @@ package com.kg.gettransfer.data.repository
 import com.kg.gettransfer.data.CacheException
 import com.kg.gettransfer.data.RemoteException
 
-import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.mapper.Mapper
 
 import com.kg.gettransfer.data.model.ResultEntity
@@ -48,7 +47,7 @@ abstract class BaseRepository : KoinComponent {
         val entity = try { getEntity() }
         catch (e: RemoteException) {
             log.error("error for $defaultModel", e)
-            return Result(defaultModel, ExceptionMapper.map(e))
+            return Result(defaultModel, e.map())
         }
         return Result(mapper.fromEntity(entity))
     }
@@ -57,7 +56,7 @@ abstract class BaseRepository : KoinComponent {
         val entityList = try { getEntityList() }
         catch (e: RemoteException) {
             log.error("remote list error", e)
-            return Result(emptyList<M>(), ExceptionMapper.map(e))
+            return Result(emptyList<M>(), e.map())
         }
         return Result(entityList.map { mapper.fromEntity(it) })
     }

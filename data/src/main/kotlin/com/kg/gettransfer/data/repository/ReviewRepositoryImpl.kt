@@ -2,7 +2,6 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.ds.ReviewDataStoreRemote
-import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.Result
@@ -24,7 +23,7 @@ class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRe
             }
             Result(Unit)
         } catch (e: RemoteException) {
-            Result(Unit, ExceptionMapper.map(e))
+            Result(Unit, e.map())
         }
     }
 
@@ -32,7 +31,7 @@ class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRe
         return try {
             remote.sendFeedBackComment(offerId, comment)
             Result(Unit)
-        } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
+        } catch (e: RemoteException) { Result(Unit, e.map()) }
     }
 
     override suspend fun pushComment(): Result<Unit> {
@@ -40,7 +39,7 @@ class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRe
             remote.sendFeedBackComment(currentOfferRateID, currentComment)
             Result(Unit)
         } catch (e: RemoteException) {
-            Result(Unit, ExceptionMapper.map(e))
+            Result(Unit, e.map())
         }
     }
 

@@ -7,7 +7,6 @@ import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.PromoDataStoreCache
 import com.kg.gettransfer.data.ds.PromoDataStoreRemote
 
-import com.kg.gettransfer.data.mapper.ExceptionMapper
 import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.model.PromoDiscount
