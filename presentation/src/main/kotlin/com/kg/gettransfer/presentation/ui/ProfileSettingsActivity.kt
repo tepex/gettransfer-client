@@ -10,6 +10,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.ProfileSettingsPresenter
 import com.kg.gettransfer.presentation.view.ProfileSettingsView
+import com.kg.gettransfer.utilities.PhoneNumberFormatter
 import kotlinx.android.synthetic.main.activity_profile_settings.*
 import kotlinx.android.synthetic.main.activity_profile_settings.toolbar
 import kotlinx.android.synthetic.main.view_settings_editable_field.view.*
@@ -52,6 +53,7 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
                 emailField.field_input.setText(email)
             }
 
+            phoneField.field_input.addTextChangedListener(PhoneNumberFormatter())
             if (!phone.isNullOrEmpty()) {
                 setEnabledPhoneField(false)
                 phoneField.field_input.setText(phone)
@@ -73,7 +75,6 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
                     setSelection(1)
                 }
             }
-            addTextChangedListener(com.kg.gettransfer.utilities.PhoneNumberFormatter())
             setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) phone.let {
                     val phoneCode = Utils.getPhoneCodeByCountryIso(context!!)
