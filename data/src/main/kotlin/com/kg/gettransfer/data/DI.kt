@@ -5,10 +5,6 @@ import com.kg.gettransfer.data.ds.io.*
 
 import com.kg.gettransfer.data.socket.CoordinateDataStoreReceiver
 
-import com.kg.gettransfer.data.mapper.*
-
-import com.kg.gettransfer.data.model.PlaceLocationMapper
-
 import com.kg.gettransfer.data.repository.*
 
 import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
@@ -83,7 +79,6 @@ val dataModule = module {
     single { CarrierTripDataStoreRemote() }
     single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>(get(), get()), get()) }
 
-    single { TransferMapper() }
     single { TransferDataStoreCache() }
     single { TransferDataStoreRemote() }
     single { TransferRepositoryImpl(DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>(get(), get())) } bind TransferRepository::class
@@ -108,6 +103,4 @@ val dataModule = module {
     single { CoordinateRepositoryImpl(get()) } bind CoordinateRepository::class
 
     single { CountEventsRepositoryImpl() } bind CountEventsRepository::class
-
-    single { PlaceLocationMapper() }
 }

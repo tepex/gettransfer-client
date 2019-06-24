@@ -4,7 +4,6 @@ import com.kg.gettransfer.data.LocationException
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.ds.GeoDataStore
 
-import com.kg.gettransfer.data.model.PlaceLocationMapper
 import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.ApiException
@@ -19,7 +18,6 @@ import java.util.Locale
 import org.koin.standalone.get
 
 class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository(), GeoRepository {
-    private val placeLocationMapper = get<PlaceLocationMapper>()
 
     override val isGpsEnabled: Boolean
         get() = geoDataStore.isGpsEnabled()
@@ -88,7 +86,7 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
                 Result(GTAddress(
                     CityPoint(
                         name,
-                        placeLocationMapper.fromEntity(location),
+                        location.map(),
                         placeId
                     ),
                     types,

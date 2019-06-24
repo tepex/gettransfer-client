@@ -1,9 +1,14 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.TransportType
+import java.text.DateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
-/* Align to line :8 */
 @Serializable
 open class TransferEntity(
     @SerialName(ID)                      val id: Long,
@@ -109,3 +114,80 @@ open class TransferEntity(
         const val LAST_OFFERS_UPDATED_AT  = "ast_offers_updated_at"
     }
 }
+
+fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateFormat, dateFormatTZ: DateFormat) =
+    Transfer(
+        id,
+        dateFormat.parse(createdAt),
+        duration,
+        distance,
+        Transfer.Status.valueOf(status.toUpperCase(Locale.US)),
+        from.map(),
+        to?.let { it.map() },
+        dateFormat.parse(dateToLocal),
+        dateFormatTZ.parse(dateToLocal),
+        dateReturnLocal?.let { dateFormat.parse(it) },
+        dateReturnLocal?.let { dateFormatTZ.parse(it) },
+        flightNumber,
+/* ================================================== */
+        flightNumberReturn,
+        transportTypeIds.map { TransportType.ID.parse(it) },
+        pax,
+        bookNow?.let { TransportType.ID.parse(it) },
+        time,
+        nameSign,
+        comment,
+        childSeats,
+        childSeatsInfant,
+        childSeatsConvertible,
+/* ================================================== */
+        childSeatsBooster,
+        promoCode,
+        passengerOfferedPrice,
+        price?.let { it.map() },
+        paidSum?.let { it.map() },
+        remainsToPay?.let { it.map() },
+        paidPercentage,
+        watertaxi,
+        bookNowOffers.map { entry ->
+            entry.value.map(
+                transportTypes.find { it.id === TransportType.ID.parse(entry.key) } ?: transportTypes.first()
+            )
+        },
+        offersCount,
+/* ================================================== */
+        relevantCarriersCount,
+        offersUpdatedAt?.let { dateFormat.parse(it) },
+        dateRefund?.let { dateFormat.parse(it) },
+        paypalOnly,
+        carrierMainPhone,
+        pendingPaymentId,
+        analyticsSent,
+        rubPrice,
+        refundedPrice?.let { it.map() },
+        campaign,
+/* ================================================== */
+        editableFields,
+        airlineCard,
+        paymentPercentages,
+        unreadMessagesCount,
+        allowOfferInfo(dateFormat.parse(dateReturnLocal ?: dateToLocal)),
+        lastOffersUpdatedAt?.let { dateFormat.parse(it) }
+    )
+
+fun TransferEntity.allowOfferInfo(date: Date): Boolean =
+    if (status != Transfer.Status.NEW.name.toLowerCase() &&
+        status != Transfer.Status.CANCELED.name.toLowerCase() &&
+        status != Transfer.Status.OUTDATED.name.toLowerCase() &&
+        status != Transfer.Status.PERFORMED.name.toLowerCase()) {
+
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.add(Calendar.MINUTE, time ?: duration?.times(60) ?: 0)
+        calendar.add(Calendar.MINUTE, HOURS_TO_SHOWING_OFFER_INFO.times(60))
+        calendar.time.after(Calendar.getInstance().time)
+    } else {
+        status == Transfer.Status.PERFORMED.name.toLowerCase()
+    }
+
+const val HOURS_TO_SHOWING_OFFER_INFO = 24

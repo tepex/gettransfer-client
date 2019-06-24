@@ -6,12 +6,10 @@ import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.TransferDataStoreCache
 import com.kg.gettransfer.data.ds.TransferDataStoreRemote
 
-import com.kg.gettransfer.data.mapper.TransferMapper
-
 import com.kg.gettransfer.data.model.ResultEntity
+import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.map
 
-import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Result
@@ -19,10 +17,11 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.TransportType
 
+import com.kg.gettransfer.domain.repository.SessionRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
 
-import java.util.Date
 import java.util.Calendar
+import java.util.Date
 import java.text.DateFormat
 
 import org.koin.standalone.get
@@ -32,9 +31,10 @@ class TransferRepositoryImpl(
 ) : BaseRepository(), TransferRepository {
 
     private val preferencesCache = get<PreferencesCache>()
-    private val transferMapper = get<TransferMapper>()
+    private val transportTypes   = get<SessionRepository>().configs.transportTypes
 
-    private val dateFormatTZ = get<ThreadLocal<DateFormat>>("iso_date_TZ")
+    private val dateFormat       = get<ThreadLocal<DateFormat>>("iso_date")
+    private val dateFormatTZ     = get<ThreadLocal<DateFormat>>("iso_date_TZ")
     private val serverDateFormat = get<ThreadLocal<DateFormat>>("server_date")
     private val serverTimeFormat = get<ThreadLocal<DateFormat>>("server_time")
 
@@ -46,7 +46,7 @@ class TransferRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
-            result.entity?.let { transferMapper.fromEntity(it) } ?: DEFAULT,
+            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: DEFAULT,
             result.error?.let { it.map() }
         )
     }
@@ -57,7 +57,7 @@ class TransferRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
-            result.entity?.let { transferMapper.fromEntity(it) } ?: DEFAULT,
+            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: DEFAULT,
             result.error?.let { it.map() }
         )
     }
@@ -87,7 +87,7 @@ class TransferRepositoryImpl(
         }
 
         return Result(
-            result.entity?.let { transferMapper.fromEntity(it) } ?: DEFAULT,
+            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: DEFAULT,
             result.error?.let { it.map() },
             result.error != null && result.entity != null
         )
@@ -98,7 +98,7 @@ class TransferRepositoryImpl(
             factory.retrieveCacheDataStore().getTransfer(id, role)
         }
         return Result(
-            result.entity?.let { transferMapper.fromEntity(it) } ?: DEFAULT,
+            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: DEFAULT,
             null,
             result.entity != null,
             result.cacheError?.let { it.map() }
@@ -111,7 +111,7 @@ class TransferRepositoryImpl(
 
         var eventsCount = 0
         val mappedTransfers = transfersList.map {
-            transferMapper.fromEntity(it).apply {
+            it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()).apply {
                 eventsCount += checkNewMessagesAndOffersCount(this, mapCountNewMessages, mapCountNewOffers)
             }
         }
