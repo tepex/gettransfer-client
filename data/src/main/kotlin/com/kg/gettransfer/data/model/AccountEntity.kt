@@ -45,4 +45,5 @@ fun AccountEntity.map(configs: Configs) =
         carrierId
     )
 
-fun Account.map() = AccountEntity(user.map(), locale.language, currency.code, distanceUnit.name, groups, carrierId)
+fun Account.map() =
+    AccountEntity(user.map(), locale.language, currency.code, distanceUnit.name.toLowerCase(), groups, carrierId)
