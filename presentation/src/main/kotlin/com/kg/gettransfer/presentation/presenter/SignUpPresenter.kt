@@ -17,9 +17,22 @@ import org.koin.standalone.KoinComponent
 
 @InjectViewState
 class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
+    var phone = ""
+        set(value) {
+            field = value.replace(" ", "")
+        }
+    var email = ""
+        set(value) {
+            field = value.trim()
+        }
+    var name = ""
+        set(value) {
+            field = value.trim()
+        }
+    var termsAccepted = false
 
-    fun registration(name: String, phone: String, email: String, termsAccepted: Boolean) {
-        if (!checkFieldsIsValid(phone, email)) {
+    fun registration() {
+        if (!checkFieldsIsValid()) {
             viewState.showValidationErrorDialog(Utils.phoneUtil.internationalExample(sessionInteractor.locale))
             return
         }
@@ -50,11 +63,13 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
         analytics.logEvent(Analytics.EVENT_SIGN_UP, createStringBundle(Analytics.STATUS, result), map)
     }
 
-    private fun checkFieldsIsValid(phone: String, email: String): Boolean =
+    private fun checkFieldsIsValid(): Boolean =
         LoginHelper.phoneIsValid(phone) && LoginHelper.emailIsValid(email)
 
-    fun checkFieldsIsEmpty(fieldValues: List<String>): Boolean =
-        fieldValues.all { fieldValue -> fieldValue.isNotEmpty() }
+    fun checkFieldsIsEmpty(): Boolean = name.isNotEmpty() && phone.isNotEmpty() && email.isNotEmpty() && termsAccepted
 
-    fun showLicenceAgreement() = router.navigateTo(Screens.LicenceAgree)
+    fun showLicenceAgreement() {
+        router.navigateTo(Screens.LicenceAgree)
+        viewState.hideLoading()
+    }
 }

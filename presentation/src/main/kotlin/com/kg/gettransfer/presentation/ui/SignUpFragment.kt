@@ -43,18 +43,6 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     @ProvidePresenter
     fun createLoginPresenter() = SignUpPresenter()
 
-    private val phone
-        get() = phoneLayout.fieldText.text.toString().replace(" ", "")
-
-    private val name
-        get() = nameLayout.fieldText.text.toString().trim()
-
-    private val email
-        get() = emailLayout.fieldText.text.toString().trim()
-
-    private val termsAccepted
-        get() = switchAgreementTb.isChecked
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_sign_up, container, false)
 
@@ -66,7 +54,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         initPhoneTextChangeListeners()
         btnLogin.setThrottledClickListener(1000L) {
             showLoading()
-            presenter.registration(name, phone, email, termsAccepted)
+            presenter.registration()
         }
         licenseAgreementTv.setThrottledClickListener {
             showLoading()
@@ -103,19 +91,23 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
 
     private fun initTextChangeListeners() {
         nameLayout.fieldText.onTextChanged {
-            btnLogin.isEnabled = checkAbleEnableButton()
+            presenter.name = it
+            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
         phoneLayout.fieldText.onTextChanged {
-            btnLogin.isEnabled = checkAbleEnableButton()
+            presenter.phone = it
+            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
         emailLayout.fieldText.onTextChanged {
-            btnLogin.isEnabled = checkAbleEnableButton()
+            presenter.email = it
+            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
-        switchAgreementTb.setOnCheckedChangeListener { _, _ ->
-            btnLogin.isEnabled = checkAbleEnableButton()
+        switchAgreementTb.setOnCheckedChangeListener { _, isChecked ->
+            presenter.termsAccepted = isChecked
+            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
         }
     }
 
@@ -129,13 +121,13 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             }
             addTextChangedListener(PhoneNumberFormatter())
             setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) phone.let {
+                if (hasFocus) phoneLayout.fieldText.text.toString().let {
                     val phoneCode = Utils.getPhoneCodeByCountryIso(context!!)
                     if (it.isEmpty()) {
                         setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
                     }
                 }
-                else phone.let {
+                else phoneLayout.fieldText.text.toString().let {
                     if (it.length <= 4) {
                         setText("")
                     }
@@ -143,9 +135,6 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             }
         }
     }
-
-    private fun checkAbleEnableButton(): Boolean =
-        presenter.checkFieldsIsEmpty(fieldValues = listOf(name, phone, email)) && termsAccepted
 
     companion object {
         fun newInstance() = SignUpFragment()
