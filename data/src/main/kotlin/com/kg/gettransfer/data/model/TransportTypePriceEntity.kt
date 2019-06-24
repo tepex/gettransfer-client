@@ -1,5 +1,8 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.TransportTypePrice
+
 data class TransportTypePriceEntity(
     val minFloat: Float,
     val min: String,
@@ -12,3 +15,6 @@ data class TransportTypePriceEntity(
         const val BOOK_NOW  = "bookNow"
     }
 }
+
+fun TransportTypePrice.map() = TransportTypePriceEntity(minFloat, min, bookNow?.toString())
+fun TransportTypePriceEntity.map() = TransportTypePrice(minFloat, min, bookNow?.let { TransportType.ID.parse(it) })

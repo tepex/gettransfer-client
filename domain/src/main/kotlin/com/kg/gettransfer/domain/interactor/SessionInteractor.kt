@@ -1,14 +1,23 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Currency
+import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.MobileConfig
+import com.kg.gettransfer.domain.model.RegistrationAccount
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.User
+
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.SessionRepository
+
 import java.util.Locale
 
 class SessionInteractor(
     private val sessionRepository: SessionRepository,
     private val geoRepository: GeoRepository
 ) {
+
     val isInitialized: Boolean
         get() = sessionRepository.isInitialized
 
@@ -39,8 +48,9 @@ class SessionInteractor(
     val paymentCommission: Float
         get() = sessionRepository.configs.paymentCommission
 
-    val currencies: List<Currency> /* Dirty hack. GAA-298 */
-        get() = sessionRepository.configs.supportedCurrencies//.filter { currenciesFilterList.contains(it.currencyCode) }
+    /* Dirty hack. GAA-298 */
+    val currencies: List<Currency>
+        get() = sessionRepository.configs.supportedCurrencies
 
     val mobileConfigs: MobileConfig
         get() = sessionRepository.mobileConfig
@@ -91,7 +101,7 @@ class SessionInteractor(
     suspend fun changeEmail(email: String, code: String) = sessionRepository.changeEmail(email, code)
 
     companion object {
-        //private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
+        // private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
         private val localesFilterList = arrayOf("en", "ru", "de", "es", "it", "pt", "fr", "zh")
     }
 }

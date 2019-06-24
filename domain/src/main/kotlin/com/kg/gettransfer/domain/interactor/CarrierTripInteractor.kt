@@ -7,20 +7,18 @@ class CarrierTripInteractor(private val repository: CarrierTripRepository) {
 
     var bgCoordinatesPermission: Int
         get() = repository.backGroundCoordinates
-        private set(value) { repository.backGroundCoordinates = value }
+        private set(value) {
+            repository.backGroundCoordinates = value
+        }
 
     fun permissionChanged(accepted: Boolean) {
-        bgCoordinatesPermission =
-                if (accepted) BG_COORDINATES_ACCEPTED
-                else BG_COORDINATES_REJECTED
+        bgCoordinatesPermission = if (accepted) BG_COORDINATES_ACCEPTED else BG_COORDINATES_REJECTED
     }
 
     suspend fun getCarrierTrips() = repository.getCarrierTrips()
+
     suspend fun getCarrierTrip(id: Long, fromCache: Boolean = false) =
-            when (fromCache) {
-                false -> repository.getCarrierTrip(id)
-                true -> repository.getCarrierTripCached(id)
-            }
+        if (fromCache) repository.getCarrierTripCached(id) else repository.getCarrierTrip(id)
 
     suspend fun clearCarrierTripsCache(): Result<Unit> {
         repository.clearCarrierTripsCache()

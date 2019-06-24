@@ -37,7 +37,6 @@ val cacheModule = module {
     single { CityPointEntityMapper() }
     single { MoneyEntityMapper() }
     single { PriceEntityMapper() }
-    single { RatingsEntityMapper() }
     single { CarrierEntityMapper() }
     single { ProfileEntityMapper() }
     single { VehicleEntityMapper() }

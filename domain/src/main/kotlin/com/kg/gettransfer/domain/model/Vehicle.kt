@@ -8,4 +8,4 @@ data class Vehicle(
     val color: String?,
     val transportType: TransportType,
     val photos: List<String>
-) : Entity()
+) : Entity

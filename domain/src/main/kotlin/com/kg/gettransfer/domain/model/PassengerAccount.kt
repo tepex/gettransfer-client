@@ -6,7 +6,7 @@ data class PassengerAccount(
     override val id: Long,
     val profile: Profile,
     val lastSeen: Date
-) : Entity() {
+) : Entity {
 
     companion object {
         val EMPTY = PassengerAccount(0, Profile.EMPTY.copy(), Date())

@@ -10,6 +10,7 @@ import com.kg.gettransfer.domain.model.CarrierTrip
 
 import com.kg.gettransfer.domain.model.CarrierTripBase
 import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.RouteInfoRequest
 
 import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
@@ -66,12 +67,16 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
 
     private suspend fun setTripType(tripBase: CarrierTripBase) {
         if (tripBase.to != null && tripBase.to!!.point != null) {
-            fetchData { orderInteractor.getRouteInfo(tripBase.from.point!!,
+            fetchData {
+                orderInteractor.getRouteInfo(RouteInfoRequest(
+                    tripBase.from.point!!,
                     tripBase.to!!.point!!,
                     false,
                     false,
-                    sessionInteractor.currency.code) }
-                    ?.let { setRouteTransfer(tripBase, it) }
+                    sessionInteractor.currency.code,
+                    null
+                ))
+            }?.let { setRouteTransfer(tripBase, it) }
         }
         else if (tripBase.duration != null) {
             setHourlyTransfer(tripBase)

@@ -11,4 +11,3 @@ class CoordinateInteractor(private val repository: CoordinateRepository) {
     fun initCoordinatesReceiving(transferId: Long) = repository.initCoordinateReceiving(transferId)
     fun sendOwnCoordinates(coordinate: Coordinate) = repository.sendOwnCoordinate(coordinate)
 }
-

@@ -1,5 +1,9 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.CarrierTripBase
+import com.kg.gettransfer.domain.model.CityPoint
+import java.text.DateFormat
+
 open class CarrierTripBaseEntity(
     open val id: Long,
     open val transferId: Long,
@@ -39,3 +43,23 @@ open class CarrierTripBaseEntity(
         const val VEHICLE                 = "vehicle"
     }
 }
+
+fun CarrierTripBaseEntity.map(dateFormat: DateFormat) =
+    CarrierTripBase(
+        id,
+        transferId,
+        from.map(),
+        to?.map() ?: CityPoint.EMPTY,
+        dateFormat.parse(dateLocal),
+        duration,
+        distance,
+        time,
+        childSeats,
+        childSeatsInfant,
+        childSeatsConvertible,
+        childSeatsBooster,
+        comment,
+        waterTaxi,
+        price,
+        vehicle.map()
+    )

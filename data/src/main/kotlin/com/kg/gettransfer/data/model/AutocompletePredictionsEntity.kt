@@ -8,6 +8,7 @@ data class AutocompletePredictionsEntity(
     @SerialName(RESULT)      val result: String?,
     @SerialName(PREDICTIONS) val predictions: List<PredictionEntity>?
 ) {
+
     companion object {
         const val RESULT = "result"
         const val PREDICTIONS = "predictions"
@@ -20,6 +21,7 @@ data class PredictionEntity(
     @SerialName(PLACE_ID)    val placeId: String?,
     @SerialName(TYPES)       val types: List<String>?
 ) {
+
     companion object {
         const val DESCRIPTION = "description"
         const val PLACE_ID    = "place_id"

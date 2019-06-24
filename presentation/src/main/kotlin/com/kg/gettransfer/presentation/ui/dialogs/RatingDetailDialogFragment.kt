@@ -12,15 +12,22 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+
 import com.kg.gettransfer.domain.model.ReviewRate
+
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.setUneditable
 import com.kg.gettransfer.extensions.show
+
+import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
+
 import com.kg.gettransfer.presentation.presenter.RatingDetailPresenter
+
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment.Companion.COMMENT_DIALOG_TAG
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment.Companion.COMMENT_REQUEST_CODE
+
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RatingDetailView
 
@@ -212,19 +219,14 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         private const val PUNCTUALITY_RATING = "punctuality rating"
         private const val CURRENT_COMMENT = "current comment"
 
-        fun newInstance(
-                vehicle: Float,
-                driver: Float,
-                punctuality: Float,
-                offerId: Long,
-                feedback: String = ""
-        ) = RatingDetailDialogFragment().apply {
-            arguments = Bundle().apply {
-                putLong(OFFER_ID, offerId)
-                putFloat(VEHICLE_RATING, vehicle)
-                putFloat(DRIVER_RATING, driver)
-                putFloat(PUNCTUALITY_RATING, punctuality)
-                putString(CURRENT_COMMENT, feedback)
+        fun newInstance(ratings: RatingsModel, offerId: Long, feedback: String = "") =
+            RatingDetailDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putLong(OFFER_ID, offerId)
+                    putFloat(VEHICLE_RATING, ratings.vehicle)
+                    putFloat(DRIVER_RATING, ratings.driver)
+                    putFloat(PUNCTUALITY_RATING, ratings.fair)
+                    putString(CURRENT_COMMENT, feedback)
             }
         }
     }

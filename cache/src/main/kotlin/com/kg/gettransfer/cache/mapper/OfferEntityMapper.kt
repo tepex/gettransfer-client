@@ -1,13 +1,14 @@
 package com.kg.gettransfer.cache.mapper
 
 import com.kg.gettransfer.cache.model.OfferCached
+import com.kg.gettransfer.cache.model.map
+
 import com.kg.gettransfer.data.model.OfferEntity
 
 import org.koin.standalone.get
 
 open class OfferEntityMapper : EntityMapper<OfferCached, OfferEntity> {
     private val priceMapper = get<PriceEntityMapper>()
-    private val ratingsMapper = get<RatingsEntityMapper>()
     private val carrierMapper = get<CarrierEntityMapper>()
     private val vehicleMapper = get<VehicleEntityMapper>()
     private val profileMapper = get<ProfileEntityMapper>()
@@ -24,7 +25,7 @@ open class OfferEntityMapper : EntityMapper<OfferCached, OfferEntity> {
                     createdAt = type.createdAt,
                     updatedAt = type.updatedAt,
                     price = priceMapper.fromCached(type.price),
-                    ratings = type.ratings?.let { ratingsMapper.fromCached(it) },
+                    ratings = type.ratings?.let { it.map() },
                     passengerFeedback = type.passengerFeedback,
                     carrier = carrierMapper.fromCached(type.carrier),
                     vehicle = vehicleMapper.fromCached(type.vehicle),
@@ -43,7 +44,7 @@ open class OfferEntityMapper : EntityMapper<OfferCached, OfferEntity> {
                     createdAt = type.createdAt,
                     updatedAt = type.updatedAt,
                     price = priceMapper.toCached(type.price),
-                    ratings = type.ratings?.let { ratingsMapper.toCached(it) },
+                    ratings = type.ratings?.let { it.map() },
                     passengerFeedback = type.passengerFeedback,
                     carrier = carrierMapper.toCached(type.carrier),
                     vehicle = vehicleMapper.toCached(type.vehicle),

@@ -1,5 +1,8 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.Params
+import com.kg.gettransfer.domain.model.Payment
+
 data class PaymentEntity(
     val type: String,
     val url: String?,
@@ -15,12 +18,25 @@ data class PaymentEntity(
     }
 }
 
-data class ParamsEntity(val amount: String,
-                        val currency: String,
-                        val paymentId: Long) {
+data class ParamsEntity(
+    val amount: String,
+    val currency: String,
+    val paymentId: Long
+) {
+
     companion object {
         const val AMOUNT     = "amount"
         const val CURRENCY   = "currency"
-        const val PAYMENT_ID    = "payment_id"
+        const val PAYMENT_ID = "payment_id"
     }
 }
+
+fun ParamsEntity.map() = Params(amount, currency, paymentId)
+
+fun PaymentEntity.map() =
+    Payment(
+        Payment.Type.values().find { it.name.toLowerCase() == type } ?: Payment.Type.NOTHING,
+        url,
+        id,
+        params?.map()
+    )

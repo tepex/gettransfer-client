@@ -1,8 +1,8 @@
 package com.kg.gettransfer.domain.repository
 
-import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Chat
 import com.kg.gettransfer.domain.model.Message
+import com.kg.gettransfer.domain.model.Result
 
 interface ChatRepository {
     suspend fun getChatRemote(transferId: Long): Result<Chat>

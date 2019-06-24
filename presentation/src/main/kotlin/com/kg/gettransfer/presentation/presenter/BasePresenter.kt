@@ -42,7 +42,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val transferMapper: TransferMapper by inject()
     protected val offerMapper: OfferMapper by inject()
     protected val bookNowOfferMapper: BookNowOfferMapper by inject()
-    protected val offerEntityMapper: com.kg.gettransfer.data.mapper.OfferMapper by inject()
     protected val notificationManager: GTNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()

@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.Vehicle
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
@@ -27,3 +29,27 @@ data class VehicleEntity(
         const val PHOTOS              = "photos"
     }
 }
+
+fun Vehicle.map() =
+    VehicleEntity(
+        id,
+        name,
+        registrationNumber,
+        year,
+        color,
+        transportType.id.toString(),
+        transportType.paxMax,
+        transportType.luggageMax,
+        photos
+    )
+
+fun VehicleEntity.map() =
+    Vehicle(
+        id,
+        name,
+        registrationNumber,
+        year,
+        color,
+        TransportType(TransportType.ID.parse(transportTypeId), paxMax, luggageMax),
+        photos
+    )

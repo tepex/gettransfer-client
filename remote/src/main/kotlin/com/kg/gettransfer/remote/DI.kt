@@ -34,8 +34,6 @@ val remoteMappersModule = module {
 
     single { PassengerAccountMapper() }
 
-    single { ReviewRateMapper() }
-
     single { PaymentMapper() }
     single { PaymentRequestMapper() }
     single { PaymentStatusMapper() }
@@ -47,7 +45,6 @@ val remoteMappersModule = module {
     single { ProfileMapper() }
     single { PromoMapper() }
 
-    single { RatingsMapper() }
     single { RouteInfoMapper() }
 
     single { TransferMapper() }

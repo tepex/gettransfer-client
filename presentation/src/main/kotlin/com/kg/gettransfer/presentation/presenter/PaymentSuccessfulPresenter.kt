@@ -1,15 +1,24 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.domain.interactor.OrderInteractor
+
+import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
+
 import com.kg.gettransfer.extensions.newChainFromMain
+
 import com.kg.gettransfer.presentation.mapper.RouteMapper
+
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
+
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
+
 import org.koin.standalone.inject
 
 @InjectViewState
@@ -32,14 +41,16 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             else {
                 if (transfer.to != null) {
                     val r = utils.asyncAwait {
-                        orderInteractor
-                            .getRouteInfo(
+                        orderInteractor.getRouteInfo(
+                            RouteInfoRequest(
                                 transfer.from.point!!,
                                 transfer.to!!.point!!,
                                 false,
                                 false,
-                                sessionInteractor.currency.code
+                                sessionInteractor.currency.code,
+                                null
                             )
+                        )
                     }
                     r.cacheError?.let { viewState.setError(it) }
                     if (r.error == null || (r.error != null && r.fromCache)) {
@@ -55,8 +66,9 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                         viewState.setRoute(Utils.getPolyline(routeModel))
                     }
                 } else {
-                    if (transfer.duration != null)
+                    if (transfer.duration != null) {
                         setHourlyTransfer(transfer)
+                    }
                 }
                 val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
                 viewState.setRemainTime(days, hours, minutes)

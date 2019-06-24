@@ -2,12 +2,12 @@ package com.kg.gettransfer.domain.model
 
 import java.util.Collections
 
-abstract class Entity {
-    abstract val id: Long
+interface Entity {
+    val id: Long
 }
 
 /* For API < v.24 */
-fun <E: Entity> List<E>.sortDescendant() = ArrayList(this).apply {
+fun <E : Entity> List<E>.sortDescendant() = ArrayList(this).apply {
     Collections.sort(this, object : Comparator<E> {
         override fun compare(a: E, b: E) = (b.id - a.id).toInt()
     })

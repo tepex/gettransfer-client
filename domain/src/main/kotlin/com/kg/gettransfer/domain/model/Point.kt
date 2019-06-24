@@ -6,7 +6,7 @@ data class Point(
 ) {
 
     override fun toString() = "($latitude,$longitude)"
-    
+
     companion object {
         val EMPTY = Point(Double.NaN, Double.NaN)
     }

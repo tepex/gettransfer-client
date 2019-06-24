@@ -5,20 +5,20 @@ import com.kg.gettransfer.data.RouteCache
 import com.kg.gettransfer.data.RouteDataStore
 
 import com.kg.gettransfer.data.model.RouteInfoEntity
+import com.kg.gettransfer.data.model.RouteInfoRequestEntity
+import com.kg.gettransfer.data.model.RouteInfoHourlyRequestEntity
 
 import org.koin.standalone.inject
-import java.lang.UnsupportedOperationException
-import java.util.Date
 
 /**
  * Implementation of the [RouteDataStore] interface to provide a means of communicating with the cache data source.
  */
-open class RouteDataStoreCache: RouteDataStore {
+open class RouteDataStoreCache : RouteDataStore {
     private val cache: RouteCache by inject()
 
-    override suspend fun getRouteInfo(from: String, to: String, withPrices: Boolean?, returnWay: Boolean?, currency: String?, dateTime: Date?): RouteInfoEntity? {
+    override suspend fun getRouteInfo(request: RouteInfoRequestEntity): RouteInfoEntity? {
         return try {
-            cache.getRouteInfo(from, to)
+            cache.getRouteInfo(request.from, request.to)
         } catch (e: CacheException) { throw e }
     }
 
@@ -28,7 +28,7 @@ open class RouteDataStoreCache: RouteDataStore {
         } catch (e: CacheException) { throw e }
     }
 
-    override suspend fun getRouteInfo(from: String, hourlyDuration: Int, currency: String, dateTime: Date?): RouteInfoEntity? {
+    override suspend fun getRouteInfo(request: RouteInfoHourlyRequestEntity): RouteInfoEntity? {
         throw UnsupportedOperationException()
     }
 }

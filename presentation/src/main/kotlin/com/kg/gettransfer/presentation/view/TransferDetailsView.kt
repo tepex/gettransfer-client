@@ -2,10 +2,12 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
@@ -14,12 +16,12 @@ interface TransferDetailsView: BaseView, RouteView {
     fun setOffer(offer: OfferModel, childSeats: Int)
     fun showAlertCancelRequest()
     fun copyText(text: String)
-    fun showDetailRate(vehicle: Float, driver: Float, punctuality: Float, offerId: Long, feedback: String)
+    fun showDetailRate(ratings: RatingsModel, offerId: Long, feedback: String)
     fun closeRateWindow()
     fun askRateInPlayMarket()
     fun thanksForRate()
     fun showCommonRating(isShow: Boolean)
-    fun showYourRateMark(isShow: Boolean, averageRate: Float = 0f)
+    fun showYourRateMark(isShow: Boolean, averageRate: Double = 0.0)
     fun showYourComment(isShow: Boolean, comment: String = "")
     fun showYourDataProgress(isShow: Boolean)
     fun showCommentEditor(comment: String)

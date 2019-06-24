@@ -6,7 +6,12 @@ data class Chat(
     val accounts: Map<Long, ChatAccount>,
     val accountId: Long,
     val messages: List<Message>
-)
+) {
+
+    companion object {
+        val EMPTY = Chat(emptyMap<Long, ChatAccount>(), 0, emptyList<Message>())
+    }
+}
 
 data class ChatAccount(
     val email: String,
@@ -22,4 +27,9 @@ data class Message(
     val readAt: Date?,
     val text: String,
     val sendAt: Long? = null
-) : Entity()
+) : Entity {
+
+    companion object {
+        val EMPTY = Message(0, 0, 0, Date(), null, "")
+    }
+}

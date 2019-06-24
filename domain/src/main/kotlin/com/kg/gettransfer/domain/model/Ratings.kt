@@ -1,18 +1,16 @@
 package com.kg.gettransfer.domain.model
 
 data class Ratings(
-    val average: Float?,
-    val vehicle: Float?,
-    val driver: Float?,
-    val fair: Float?
+    private val hiddenAverage: Double?,
+    val vehicle: Double,
+    val driver: Double,
+    val fair: Double
 ) {
 
-	val vehicleNn = vehicle ?: 0f
-	val driverNn = driver ?: 0f
-	val fairNn = fair ?: 0f
+    val average: Double
+        get() = hiddenAverage ?: arrayOf(vehicle, driver, fair).average()
 
-	val averageRating: Float
-		get() = average ?: (vehicleNn + driverNn + fairNn) / 3
-
+    companion object {
+        const val NO_RATE = 0.0
+    }
 }
-

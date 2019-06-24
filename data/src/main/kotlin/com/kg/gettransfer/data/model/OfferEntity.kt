@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.Offer
+import java.text.DateFormat
 import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
@@ -42,3 +44,41 @@ data class OfferEntity(
         const val CHARGER            = "charger"
     }
 }
+
+fun OfferEntity.map(dateFormat: DateFormat) =
+    Offer(
+        id,
+        transferId ?: 0,
+        status,
+        currency,
+        wifi,
+        refreshments,
+        charger,
+        dateFormat.parse(createdAt),
+        updatedAt?.let { dateFormat.parse(it) },
+        price.map(),
+        ratings?.map(),
+        passengerFeedback,
+        carrier.map(),
+        vehicle.map(),
+        driver?.map()
+    )
+
+fun Offer.map(dateFormat: DateFormat) =
+    OfferEntity(
+        id,
+        transferId,
+        status,
+        currency,
+        wifi,
+        refreshments,
+        charger,
+        dateFormat.format(createdAt),
+        updatedAt?.let { dateFormat.format(it) },
+        price.map(),
+        ratings?.map(),
+        passengerFeedback,
+        carrier.map(),
+        vehicle.map(),
+        driver?.map()
+    )

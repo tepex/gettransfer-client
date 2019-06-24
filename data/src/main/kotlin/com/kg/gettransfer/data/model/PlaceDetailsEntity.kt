@@ -1,5 +1,6 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.Point
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -52,3 +53,5 @@ data class PlaceLocationEntity(
         const val LNG = "lng"
     }
 }
+
+fun PlaceLocationEntity.map() = Point(lat, lng)

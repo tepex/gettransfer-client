@@ -13,7 +13,7 @@ data class Result<M>(
 ) {
 
     fun isError()     = error != null
-    fun isSuccess()   = if (error == null) model else null    //get data if no need to handle error
+    fun isSuccess()   = if (error == null) model else null    // get data if no need to handle error
     fun hasData()     = if (error == null || fromCache) model else null
     fun isDataError() = if (error != null && !fromCache) error else null
 }

@@ -155,8 +155,8 @@ class SocketManager(): KoinComponent {
         log.info("$SOCKET_TAG onReceiveOffer: $offerJson")
         tryParse {
             JSON.nonstrict.parse(OfferEntity.serializer(), offerJson)
-                    .apply { this.transferId = transferId }
-                    .also { offerEventer.onNewOffer(it) }
+                .apply { this.transferId = transferId }
+                .also { offerEventer.onNewOffer(it) }
         }
     }
 

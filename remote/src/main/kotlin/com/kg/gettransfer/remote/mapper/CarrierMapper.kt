@@ -4,6 +4,7 @@ import com.kg.gettransfer.data.model.CarrierEntity
 import com.kg.gettransfer.data.model.ProfileEntity
 
 import com.kg.gettransfer.remote.model.CarrierModel
+import com.kg.gettransfer.remote.model.map
 
 import org.koin.standalone.get
 
@@ -12,7 +13,6 @@ import org.koin.standalone.get
  */
 open class CarrierMapper : EntityMapper<CarrierModel, CarrierEntity> {
     private val localeMapper  = get<LocaleMapper>()
-    private val ratingsMapper = get<RatingsMapper>()
 
     override fun fromRemote(type: CarrierModel) =
         CarrierEntity(
@@ -25,7 +25,7 @@ open class CarrierMapper : EntityMapper<CarrierModel, CarrierEntity> {
             approved = type.approved,
             completedTransfers = type.completedTransfers,
             languages = type.languages.map { localeMapper.fromRemote(it) },
-            ratings = ratingsMapper.fromRemote(type.ratings),
+            ratings = type.ratings.map(),
             canUpdateOffers = type.canUpdateOffers
         )
 

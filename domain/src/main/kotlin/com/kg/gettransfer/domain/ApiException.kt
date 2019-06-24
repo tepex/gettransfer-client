@@ -1,22 +1,10 @@
 package com.kg.gettransfer.domain
 
-class ApiException(val code: Int, val details: String, val type: String? = null) : RuntimeException(details) {
-    companion object {
-        @JvmField val APP_ERROR = 0
-        @JvmField val NETWORK_ERROR = -1
-        @JvmField val GEOCODER_ERROR = -2
-        @JvmField val NO_USER       = 400
-        @JvmField val NOT_LOGGED_IN = 403
-        @JvmField val NOT_FOUND     = 404
-
-        @JvmField val UNPROCESSABLE = 422
-
-        @JvmField val INTERNAL_SERVER_ERROR   = 500
-        @JvmField val CONNECTION_TIMED_OUT    = 522
-
-        @JvmField val EMAIL_EXISTED = "email_existed"
-        @JvmField val PHONE_EXISTED = "phone_existed"
-    }
+class ApiException(
+    val code: Int,
+    val details: String,
+    val type: String? = null
+) : RuntimeException(details) {
 
     fun isNoUser() = code == NO_USER
     fun isNotLoggedIn() = code == NOT_LOGGED_IN
@@ -35,4 +23,20 @@ class ApiException(val code: Int, val details: String, val type: String? = null)
 
     /* PAYMENT ERRORS */
     fun isBigPriceError() = code == UNPROCESSABLE && details == "{price=[is_too_big]}"
+
+    companion object {
+        const val APP_ERROR      = 0
+        const val NETWORK_ERROR  = -1
+        const val GEOCODER_ERROR = -2
+        const val NO_USER        = 400
+        const val NOT_LOGGED_IN  = 403
+        const val NOT_FOUND      = 404
+        const val UNPROCESSABLE  = 422
+
+        const val INTERNAL_SERVER_ERROR = 500
+        const val CONNECTION_TIMED_OUT  = 522
+
+        const val EMAIL_EXISTED = "email_existed"
+        const val PHONE_EXISTED = "phone_existed"
+    }
 }

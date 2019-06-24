@@ -49,7 +49,7 @@ class SystemInteractor(private val systemRepository: SystemRepository) {
         get()  = systemRepository.appEnters
         set(value) { systemRepository.appEnters = value }
 
-    var startScreenOrder = false //for analytics
+    var startScreenOrder = false // for analytics
 
     var isDebugMenuShowed: Boolean
         get() = systemRepository.isDebugMenuShowed

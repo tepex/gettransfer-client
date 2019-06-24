@@ -13,7 +13,7 @@ data class CarrierTrip(
 
     companion object {
         val EMPTY = CarrierTrip(
-            base = CarrierTripBase.EMPTY,
+            base             = CarrierTripBase.EMPTY,
             pax              = 0,
             nameSign         = null,
             flightNumber     = null,

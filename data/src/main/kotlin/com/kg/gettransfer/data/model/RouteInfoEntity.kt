@@ -1,5 +1,8 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.TransportType
+
 data class RouteInfoEntity(
     val success: Boolean,
     val distance: Int?,
@@ -26,3 +29,15 @@ data class RouteInfoEntity(
         const val HINTS_TO_COMMENTS     = "hints_to_comments"
     }
 }
+
+fun RouteInfoEntity.map() =
+    RouteInfo(
+        success,
+        distance,
+        duration,
+        prices.entries.associate { TransportType.ID.parse(it.key) to it.value.map() },
+        watertaxi,
+        polyLines,
+        overviewPolyline,
+        hintsToComments
+    )

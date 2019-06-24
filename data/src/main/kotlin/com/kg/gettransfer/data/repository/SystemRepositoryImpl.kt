@@ -1,20 +1,15 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
-import com.kg.gettransfer.data.mapper.EndpointMapper
 import com.kg.gettransfer.data.model.map
-
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
-
 import com.kg.gettransfer.domain.repository.SystemRepository
-
 import org.koin.standalone.get
 
-class SystemRepositoryImpl : BaseRepository(), SystemRepository{
+class SystemRepositoryImpl : BaseRepository(), SystemRepository {
 
     private val preferencesCache = get<PreferencesCache>()
-    private val endpointMapper   = get<EndpointMapper>()
 
     override var lastMode: String
         get() = preferencesCache.lastMode
@@ -44,12 +39,12 @@ class SystemRepositoryImpl : BaseRepository(), SystemRepository{
         get() = preferencesCache.selectedField
         set(value) { preferencesCache.selectedField = value }
 
-    override val endpoints = preferencesCache.endpoints.map { endpointMapper.fromEntity(it) }
+    override val endpoints = preferencesCache.endpoints.map { it.map() }
 
     override var endpoint: Endpoint
-        get() = endpointMapper.fromEntity(preferencesCache.endpoint)
+        get() = preferencesCache.endpoint.map()
         set(value) {
-            val endpointEntity = endpointMapper.toEntity(value)
+            val endpointEntity = value.map()
             preferencesCache.endpoint = endpointEntity
         }
 

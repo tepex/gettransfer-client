@@ -56,8 +56,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
     private suspend fun confirmPayment() {
         val result = utils.asyncAwait { paymentInteractor.confirmPaypal(paymentId, nonce) }
         if (result.error == null) {
-            if (result.model.success) showSuccessfulPayment()
-            else showFailedPayment()
+            if (result.model.isSuccess) showSuccessfulPayment() else showFailedPayment()
             viewState.blockInterface(false)
         } else {
             Timber.e(result.error!!)
@@ -75,12 +74,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
     }
 
     private fun showSuccessfulPayment() {
-        router.newChainFromMain(
-                Screens.PaymentSuccess(
-                        transferId,
-                        offerId
-                )
-        )
+        router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
         logEventEcommercePurchase()
     }
 
@@ -93,10 +87,15 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
         }
 
         var price = 0.0
-        if (offer != null) price = offer?.price?.amount ?: 0.0
-         else if (bookNowOffer != null) price = bookNowOffer?.amount ?: 0.0
+        if (offer != null) {
+            price = offer?.price?.amount ?: 0.0
+        } else if (bookNowOffer != null) {
+            price = bookNowOffer?.amount ?: 0.0
+        }
 
-        if (percentage == OfferModel.PRICE_30) price *= PaymentOfferPresenter.PRICE_30
+        if (percentage == OfferModel.PRICE_30) {
+            price *= PaymentOfferPresenter.PRICE_30
+        }
 
         val purchase = analytics.EcommercePurchase(
                 transferId.toString(),
