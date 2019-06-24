@@ -1,3 +1,4 @@
+@file:Suppress("TooManyFunctions")
 package com.kg.gettransfer.data.ds
 
 import com.kg.gettransfer.data.SessionCache
@@ -7,7 +8,6 @@ import com.kg.gettransfer.data.model.MobileConfigEntity
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.RegistrationAccountEntity
 import com.kg.gettransfer.data.model.EndpointEntity
-
 import org.koin.standalone.inject
 
 /**
@@ -17,7 +17,7 @@ open class SessionDataStoreCache : SessionDataStore {
 
     private val cache: SessionCache by inject()
 
-    override suspend fun getConfigs() = cache.getConfigs() //: ConfigsEntity { throw UnsupportedOperationException() }
+    override suspend fun getConfigs() = cache.getConfigs() // : ConfigsEntity { throw UnsupportedOperationException() }
     override suspend fun setConfigs(configsEntity: ConfigsEntity) = cache.setConfigs(configsEntity)
 
     override suspend fun getMobileConfigs() = cache.getMobileConfigs()

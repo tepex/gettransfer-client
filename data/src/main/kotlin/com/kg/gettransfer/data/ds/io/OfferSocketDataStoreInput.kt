@@ -6,7 +6,8 @@ import com.kg.gettransfer.data.socket.OfferDataStoreReceiver
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class OfferSocketDataStoreInput: OfferDataStoreReceiver, KoinComponent {
+class OfferSocketDataStoreInput : OfferDataStoreReceiver, KoinComponent {
+
     private val repository: OfferRepositoryImpl by inject()
 
     override fun onNewOffer(offer: OfferEntity) { repository.onNewOfferEvent(offer) }

@@ -6,7 +6,8 @@ import com.kg.gettransfer.data.socket.CoordinateDataStoreReceiver
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class CoordinateSocketDataStoreInput: KoinComponent, CoordinateDataStoreReceiver {
+class CoordinateSocketDataStoreInput : KoinComponent, CoordinateDataStoreReceiver {
+
     private val repository: CoordinateRepositoryImpl by inject()
 
     override fun onLocationReceived(coordinate: CoordinateEntity) { repository.onCoordinateReceived(coordinate) }

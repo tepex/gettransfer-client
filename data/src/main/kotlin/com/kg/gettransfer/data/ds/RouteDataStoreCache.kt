@@ -10,11 +10,10 @@ import com.kg.gettransfer.data.model.RouteInfoHourlyRequestEntity
 
 import org.koin.standalone.inject
 
-
 /**
  * Implementation of the [RouteDataStore] interface to provide a means of communicating with the cache data source.
  */
-open class RouteDataStoreCache: RouteDataStore {
+open class RouteDataStoreCache : RouteDataStore {
     private val cache: RouteCache by inject()
 
     override suspend fun getRouteInfo(request: RouteInfoRequestEntity): RouteInfoEntity? {
