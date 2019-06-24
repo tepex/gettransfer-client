@@ -20,6 +20,12 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
         viewState.setToolbar(accountManager.remoteProfile.email)
     }
 
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
+        accountManager.initTempUser()
+    }
+
     fun setEmail(email: String) {
         newEmail = email.trim()
         smsSent = false
@@ -44,7 +50,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
     fun onChangeEmailClicked() {
         utils.launchSuspend {
-            if (!smsSent) {
+            if (!smsSent && !accountManager.remoteProfile.email.isNullOrEmpty()) {
                 if (Utils.checkEmail(newEmail)) {
                     sendEmailCode()
                 } else {
@@ -67,9 +73,9 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
             } else {
                 result.error?.let {
                     when {
-                        it.details.indexOf("account=[email_not_manually_changeable]") >= 0 ->
+                        it.isEmailNotChangebleError() ->
                             viewState.setError(false, R.string.LNG_EMAIL_NOT_CHANGEABLE)
-                        it.details.indexOf("new_email=[already_taken]") >= 0 ->
+                        it.isEmailAlreadyTakenError() ->
                             viewState.setError(false, R.string.LNG_EMAIL_TAKEN_ERROR)
                         else -> viewState.setError(it)
                     }
@@ -79,23 +85,44 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
     }
 
     private suspend fun changeEmail() {
-        newEmail?.let { email ->
-            emailCode?.let { code ->
-                val result = fetchResultOnly { sessionInteractor.changeEmail(email, code) }
-                if (result.error == null && result.model) {
-                    router.exit()
-                } else {
-                    result.error?.let {
-                        when {
-                            it.details.indexOf("bad_code_or_email") >= 0 ->
-                                viewState.setWrongCodeError()
-                            else -> viewState.setError(it)
-                        }
-                    }
-                }
-            }
+        if (!Utils.checkEmail(newEmail)) {
+            viewState.setError(false, R.string.LNG_ERROR_EMAIL)
+            return
+        }
+
+        if (accountManager.remoteProfile.email.isNullOrEmpty()) {
+            setEmailInAccount()
+        } else {
+            changeEmailInAccount()
         }
     }
+
+    private suspend fun setEmailInAccount() {
+        accountManager.tempProfile.email = newEmail
+        fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
+            .run {
+                when {
+                    error?.isAccountExistError() ?: false -> viewState.setError(false, R.string.LNG_EMAIL_TAKEN_ERROR)
+                    error != null -> viewState.setError(error!!)
+                    else -> emailChanged()
+                }
+            }
+    }
+
+    private suspend fun changeEmailInAccount() {
+        emailCode?.let { code ->
+            fetchResultOnly { sessionInteractor.changeEmail(newEmail!!, code) }
+                .run {
+                    when {
+                        error?.isBadCodeError() ?: false -> viewState.setWrongCodeError()
+                        error != null -> viewState.setError(error!!)
+                        else -> emailChanged()
+                    }
+                }
+        }
+    }
+
+    private fun emailChanged() { router.exit() }
 
     companion object {
         const val SEC_IN_MILLIS = 1_000L
