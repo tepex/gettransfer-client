@@ -384,7 +384,7 @@ class MainActivity :
         presenter.enablePinAnimation()
     }
 
-    fun checkPermission() {
+    private fun checkPermission() {
         if (!EasyPermissions.hasPermissions(this, *PERMISSIONS))
             EasyPermissions.requestPermissions(
                 this,
