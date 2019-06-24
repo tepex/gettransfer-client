@@ -24,6 +24,9 @@ class ApiException(val code: Int, val details: String, val type: String? = null)
     fun isPhoneTaken() = type == "phone_taken"
 
     fun isAccountExistError() = type == "account_exists"
+    fun isBadCodeError() = details.indexOf("bad_code_or_email") >= 0
+    fun isEmailNotChangebleError() = details.indexOf("account=[email_not_manually_changeable]") >= 0
+    fun isEmailAlreadyTakenError() = details.indexOf("new_email=[already_taken]") >= 0
     fun checkExistedAccountField() = when {
         details.indexOf("phone") >= 0 -> PHONE_EXISTED
         details.indexOf("email") >= 0 -> EMAIL_EXISTED
