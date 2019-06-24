@@ -88,7 +88,7 @@ fun ConfigsEntity.map() =
         // defaultCardGateways = type.defaultCardGateways,
         paymentCommission,
         supportedCurrencies.map { it.map() },
-        supportedDistanceUnits.map { DistanceUnit.valueOf(it) }
+        supportedDistanceUnits.map { DistanceUnit.valueOf(it.toUpperCase()) }
         // officePhone = type.officePhone,
         // baseUrl = type.baseUrl
     )
