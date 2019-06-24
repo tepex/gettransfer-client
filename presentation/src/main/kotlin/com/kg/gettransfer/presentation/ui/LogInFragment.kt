@@ -79,7 +79,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         }
     }
 
-    private fun  initTextChangeListeners() {
+    private fun initTextChangeListeners() {
         emailLayout.fieldText.onTextChanged {
             presenter.emailOrPhone = it
             btnLogin.isEnabled = presenter.isEnabledButtonLogin
