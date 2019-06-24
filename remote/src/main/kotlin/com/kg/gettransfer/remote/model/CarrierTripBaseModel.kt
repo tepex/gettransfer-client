@@ -2,7 +2,6 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 import com.kg.gettransfer.data.model.CarrierTripBaseEntity
 
 data class CarrierTripsBaseModel(@SerializedName("trips") @Expose val trips: List<CarrierTripBaseModel>)
@@ -25,3 +24,23 @@ open class CarrierTripBaseModel(
     @SerializedName(CarrierTripBaseEntity.PRICE) @Expose val price: String,
     @SerializedName(CarrierTripBaseEntity.VEHICLE) @Expose val vehicle: VehicleInfoModel
 )
+
+fun CarrierTripBaseModel.map() =
+    CarrierTripBaseEntity(
+        id,
+        transferId,
+        from.map(),
+        to?.map(),
+        dateLocal,
+        duration,
+        distance,
+        time,
+        childSeats,
+        childSeatsInfant,
+        childSeatsConvertible,
+        childSeatsBooster,
+        comment,
+        waterTaxi,
+        price,
+        vehicle.map()
+    )

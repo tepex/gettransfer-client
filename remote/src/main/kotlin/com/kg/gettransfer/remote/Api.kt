@@ -1,9 +1,7 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.remote.model.*
-
 import kotlinx.coroutines.Deferred
-
 import retrofit2.http.*
 
 interface Api {
@@ -180,7 +178,7 @@ interface Api {
     ): Deferred<ResponseModel<String>>
 
     @GET(MOBILE_CONFIGS)
-    fun getMobileConfigs(): Deferred<MobileConfig>
+    fun getMobileConfigs(): Deferred<MobileConfigModel>
 
     @GET("$API_MESSAGES/{id}")
     fun getChat(

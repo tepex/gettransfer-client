@@ -2,7 +2,6 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 import com.kg.gettransfer.data.model.PaymentRequestEntity
 
 data class PaymentRequestModel(
@@ -12,3 +11,11 @@ data class PaymentRequestModel(
     @SerializedName(PaymentRequestEntity.PERCENTAGE)  @Expose val percentage: Int,
     @SerializedName(PaymentRequestEntity.BOOK_NOW_TRANSPORT_TYPE)  @Expose val bookNowTransportType: String?
 )
+
+fun PaymentRequestEntity.map() =
+    PaymentRequestModel(
+        transferId,
+        offerId,
+        gatewayId,
+        percentage,
+        bookNowTransportType)

@@ -19,7 +19,6 @@ import com.kg.gettransfer.data.dataModule
 import com.kg.gettransfer.di.*
 import com.kg.gettransfer.presentation.FileLoggingTree
 
-import com.kg.gettransfer.remote.remoteMappersModule
 import com.kg.gettransfer.remote.remoteModule
 import com.kg.gettransfer.remote.socketModule
 
@@ -59,7 +58,6 @@ class GTApplication : MultiDexApplication() {
             prefsModule,
             loggingModule,
             fileModule,
-            remoteMappersModule,
             remoteModule,
             cacheModule,
             dataModule,

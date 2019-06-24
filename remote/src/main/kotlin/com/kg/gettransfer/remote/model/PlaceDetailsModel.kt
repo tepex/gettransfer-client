@@ -28,3 +28,18 @@ data class PlaceLocationModel(
     @SerializedName(PlaceLocationEntity.LAT) val lat: Double,
     @SerializedName(PlaceLocationEntity.LNG) val lng: Double
 )
+
+fun PlaceLocationModel.map() = PlaceLocationEntity(lat, lng)
+
+fun AddressComponentModel.map() = AddressComponentEntity(longName, shortName, types)
+
+fun PlaceDetailsModel.map() =
+    PlaceDetailsEntity(
+        addressComponents.map { it.map() },
+        formattedAddress,
+        location.map(),
+        name,
+        types
+    )
+
+fun PlaceDetailsResultModel.map() = PlaceDetailsResultEntity(result?.let { it.map() })

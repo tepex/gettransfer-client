@@ -3,16 +3,18 @@ package com.kg.gettransfer.remote.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.RegistrationAccountEntity
 
 /**
  *
  *
  * @author П. Густокашин (Diwixis)
  */
+data class RegistrationAccountEntityWrapper(
+    @SerializedName(AccountEntity.ENTITY_NAME) @Expose val account: RegistrationAccountModel
+)
 
-data class RegistrationAccountEntityWrapper(@SerializedName(AccountEntity.ENTITY_NAME) @Expose val account: RegistrationAccount)
-
-data class RegistrationAccount(
+data class RegistrationAccountModel(
     @SerializedName(FULL_NAME) val fullName: String? = null,
     @SerializedName(EMAIL) val email: String? = null,
     @SerializedName(PHONE) val phone: String? = null,
@@ -26,3 +28,5 @@ data class RegistrationAccount(
         const val TERMS_ACCEPTED = "terms_accepted"
     }
 }
+
+fun RegistrationAccountEntity.map() = RegistrationAccountModel(fullName, email, phone, termsAccepted)

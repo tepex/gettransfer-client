@@ -9,3 +9,7 @@ data class VehicleInfoModel(
     @SerializedName(VehicleInfoEntity.NAME) @Expose val name: String,
     @SerializedName(VehicleInfoEntity.REGISTRATION_NUMBER) @Expose val registrationNumber: String
 )
+
+fun VehicleInfoModel.map() = VehicleInfoEntity(name, registrationNumber)
+
+fun VehicleInfoEntity.map() = VehicleInfoModel(name, registrationNumber)
