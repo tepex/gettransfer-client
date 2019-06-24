@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.CountDownTimer
-import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.firstSign
@@ -23,13 +22,14 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
     var emailOrPhone = ""
     var nextScreen: String? = null
     var pinItemsCount = PIN_ITEMS_COUNT
-    val smsResendDelaySec = sessionInteractor.mobileConfigs.smsResendDelaySec * SEC_IN_MILLIS
-    
+    val smsResendDelaySec
+        get() = sessionInteractor.mobileConfigs.smsResendDelaySec * SEC_IN_MILLIS
+
     private val timerBtnResendCode: CountDownTimer = object : CountDownTimer(smsResendDelaySec, SEC_IN_MILLIS) {
         override fun onTick(millisUntilFinished: Long) {
             viewState.tickTimer(millisUntilFinished, SEC_IN_MILLIS)
         }
-        
+
         override fun onFinish() {
             viewState.finishTimer()
         }
@@ -39,7 +39,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
         super.attachView(view)
         setTimer()
     }
-    
+
     override fun detachView(view: SmsCodeView) {
         super.detachView(view)
         timerBtnResendCode.cancel()
@@ -135,10 +135,10 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
         viewState.showErrorText(false)
         viewState.setBtnDoneIsEnabled(pinCode.length == pinItemsCount)
     }
-    
+
     fun setTimer() {
         viewState.startTimer()
-        timerBtnResendCode.start()        
+        timerBtnResendCode.start()
     }
 
     companion object {
