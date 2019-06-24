@@ -28,7 +28,7 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job) : CoroutineScope 
         suspend fun CoroutineScope.tryCatch(tryBlock: Task, catchBlock: TaskThrowable) {
             try {
                 tryBlock()
-            } catch (e: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
                 if (e !is CancellationException) catchBlock(e) else throw e
             }
         }

@@ -38,5 +38,5 @@ fun PaymentEntity.map() =
         Payment.Type.values().find { it.name.toLowerCase() == type } ?: Payment.Type.NOTHING,
         url,
         id,
-        params?.let { it.map() }
+        params?.map()
     )

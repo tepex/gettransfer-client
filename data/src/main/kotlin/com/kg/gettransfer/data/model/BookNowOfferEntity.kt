@@ -24,6 +24,6 @@ fun BookNowOfferEntity.map(transportType: TransportType) =
     BookNowOffer(
         amount,
         base.map(),
-        withoutDiscount?.let { it.map() },
+        withoutDiscount?.map(),
         transportType
     )

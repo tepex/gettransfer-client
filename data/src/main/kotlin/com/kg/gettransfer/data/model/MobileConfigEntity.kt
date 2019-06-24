@@ -22,7 +22,7 @@ data class MobileConfigEntity(
 }
 
 data class BuildsConfigsEntity(
-        val updateRequired: Boolean?
+    val updateRequired: Boolean?
 ) {
 
     companion object {
@@ -37,6 +37,6 @@ fun MobileConfigEntity.map() =
         pushShowDelay,
         orderMinimumMinutes,
         termsUrl,
-        smsResendDelaySec ?: 90, //Default value
+        smsResendDelaySec ?: MobileConfig.SMS_RESEND_DELAY_SEC_DEFAULT,
         buildsConfigs?.mapValues { it.value.map() }
     )

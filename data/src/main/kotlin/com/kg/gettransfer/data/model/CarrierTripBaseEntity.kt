@@ -49,7 +49,7 @@ fun CarrierTripBaseEntity.map(dateFormat: DateFormat) =
         id,
         transferId,
         from.map(),
-        to?.let { it.map() } ?: CityPoint.EMPTY,
+        to?.map() ?: CityPoint.EMPTY,
         dateFormat.parse(dateLocal),
         duration,
         distance,

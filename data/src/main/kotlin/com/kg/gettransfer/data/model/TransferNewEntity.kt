@@ -70,7 +70,7 @@ fun TransferNew.map(serverDateFormat: DateFormat, serverTimeFormat: DateFormat) 
         from.map(),
         dest.map(),
         tripTo.map(serverDateFormat, serverTimeFormat),
-        tripReturn?.let { it.map(serverDateFormat, serverTimeFormat) },
+        tripReturn?.map(serverDateFormat, serverTimeFormat),
         transportTypeIds.map { it.toString() },
         pax,
         childSeatsInfant,

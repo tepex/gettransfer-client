@@ -27,7 +27,8 @@ open class TransferEntity(
     @SerialName(PAX)                     val pax: Int,
     @SerialName(BOOK_NOW)                val bookNow: String?,
     @SerialName(TIME)                    val time: Int?,
-    @SerialName(NAME_SIGN)               val nameSign: String?, /* Имя на табличке, которую держит встречающий (сейчас поле full_name) */
+    /* Имя на табличке, которую держит встречающий (сейчас поле full_name) */
+    @SerialName(NAME_SIGN)               val nameSign: String?,
     @SerialName(COMMENT)                 val comment: String?,
     @SerialName(CHILD_SEATS)             val childSeats: Int,
     @SerialName(CHILD_SEATS_INFANT)      val childSeatsInfant: Int,
@@ -115,6 +116,7 @@ open class TransferEntity(
     }
 }
 
+@Suppress("ComplexMethod")
 fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateFormat, dateFormatTZ: DateFormat) =
     Transfer(
         id,
@@ -123,7 +125,7 @@ fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateForm
         distance,
         Transfer.Status.valueOf(status.toUpperCase(Locale.US)),
         from.map(),
-        to?.let { it.map() },
+        to?.map(),
         dateFormat.parse(dateToLocal),
         dateFormatTZ.parse(dateToLocal),
         dateReturnLocal?.let { dateFormat.parse(it) },
@@ -144,9 +146,9 @@ fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateForm
         childSeatsBooster,
         promoCode,
         passengerOfferedPrice,
-        price?.let { it.map() },
-        paidSum?.let { it.map() },
-        remainsToPay?.let { it.map() },
+        price?.map(),
+        paidSum?.map(),
+        remainsToPay?.map(),
         paidPercentage,
         watertaxi,
         bookNowOffers.map { entry ->
@@ -164,7 +166,7 @@ fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateForm
         pendingPaymentId,
         analyticsSent,
         rubPrice,
-        refundedPrice?.let { it.map() },
+        refundedPrice?.map(),
         campaign,
 /* ================================================== */
         editableFields,
@@ -176,6 +178,7 @@ fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateForm
     )
 
 fun TransferEntity.allowOfferInfo(date: Date): Boolean =
+    @Suppress("ComplexCondition")
     if (status != Transfer.Status.NEW.name.toLowerCase() &&
         status != Transfer.Status.CANCELED.name.toLowerCase() &&
         status != Transfer.Status.OUTDATED.name.toLowerCase() &&
@@ -183,11 +186,12 @@ fun TransferEntity.allowOfferInfo(date: Date): Boolean =
 
         val calendar = Calendar.getInstance()
         calendar.time = date
-        calendar.add(Calendar.MINUTE, time ?: duration?.times(60) ?: 0)
-        calendar.add(Calendar.MINUTE, HOURS_TO_SHOWING_OFFER_INFO.times(60))
+        calendar.add(Calendar.MINUTE, time ?: duration?.times(SEC_PER_MINUTE) ?: 0)
+        calendar.add(Calendar.MINUTE, MINUTES_TO_SHOWING_OFFER_INFO)
         calendar.time.after(Calendar.getInstance().time)
     } else {
         status == Transfer.Status.PERFORMED.name.toLowerCase()
     }
 
-const val HOURS_TO_SHOWING_OFFER_INFO = 24
+const val SEC_PER_MINUTE = 60
+const val MINUTES_TO_SHOWING_OFFER_INFO = 24 * SEC_PER_MINUTE

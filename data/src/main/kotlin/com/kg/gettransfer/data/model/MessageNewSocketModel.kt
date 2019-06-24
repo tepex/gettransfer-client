@@ -5,9 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MessageNewSocketModel(
-        @SerialName(ROOM) val room: Long,
-        @SerialName(TEXT) val text: String
+    @SerialName(ROOM) val room: Long,
+    @SerialName(TEXT) val text: String
 ) {
+
     companion object {
         const val ROOM = "room"
         const val TEXT = "text"

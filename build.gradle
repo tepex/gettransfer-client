@@ -94,7 +94,8 @@ detekt {
     toolVersion = "1.0.0-RC15"
     filters = ".*build.*,.*/resources/.*,.*/tmp/.*"
     input = files(
-        "domain/src"
+        "domain/src",
+        "data/src/main/kotlin/com/kg/gettransfer/data/model"
     )
     config = files("detekt-config.yml")
 }

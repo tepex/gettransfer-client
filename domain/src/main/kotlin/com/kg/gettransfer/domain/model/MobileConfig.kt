@@ -10,6 +10,8 @@ data class MobileConfig(
 
     companion object {
         const val FROM_REMOTE = true
+
+        const val SMS_RESEND_DELAY_SEC_DEFAULT = 90
     }
 }
 

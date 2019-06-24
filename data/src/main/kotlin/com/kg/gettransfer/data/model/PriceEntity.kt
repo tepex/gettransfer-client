@@ -28,16 +28,16 @@ data class PriceEntity(
 fun Price.map() =
     PriceEntity(
         base.map(),
-        withoutDiscount?.let { it.map() },
+        withoutDiscount?.map(),
         percentage30,
         percentage70,
         amount
     )
-    
-fun PriceEntity.map() = 
+
+fun PriceEntity.map() =
     Price(
         base.map(),
-        withoutDiscount?.let { it.map() },
+        withoutDiscount?.map(),
         percentage30,
         percentage70,
         amount

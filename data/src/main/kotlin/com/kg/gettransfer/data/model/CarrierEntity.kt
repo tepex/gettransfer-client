@@ -33,7 +33,7 @@ data class CarrierEntity(
 fun CarrierEntity.map() =
     Carrier(
         id,
-        profile?.let { it.map() },
+        profile?.map(),
         approved,
         completedTransfers,
         languages.map { it.map() },
@@ -44,7 +44,7 @@ fun CarrierEntity.map() =
 fun Carrier.map() =
     CarrierEntity(
         id,
-        profile?.let { it.map() },
+        profile?.map(),
         approved,
         completedTransfers,
         languages.map { it.map() },

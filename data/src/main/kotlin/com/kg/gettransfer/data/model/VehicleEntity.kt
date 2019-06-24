@@ -2,7 +2,6 @@ package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.Vehicle
-
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
@@ -43,7 +42,7 @@ fun Vehicle.map() =
         transportType.luggageMax,
         photos
     )
-    
+
 fun VehicleEntity.map() =
     Vehicle(
         id,

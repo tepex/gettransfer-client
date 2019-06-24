@@ -66,7 +66,7 @@ fun CarrierTripEntity.map(dateFormat: DateFormat) =
             id,
             transferId,
             from.map(),
-            to?.let { it.map() } ?: CityPoint.EMPTY,
+            to?.map() ?: CityPoint.EMPTY,
             dateFormat.parse(dateLocal),
             duration,
             distance,
@@ -86,5 +86,5 @@ fun CarrierTripEntity.map(dateFormat: DateFormat) =
         paidSum,
         remainsToPay,
         paidPercentage,
-        passengerAccount?.let { it.map(dateFormat) }
+        passengerAccount?.map(dateFormat)
     )

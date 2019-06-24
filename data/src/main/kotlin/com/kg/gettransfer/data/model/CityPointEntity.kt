@@ -13,17 +13,15 @@ data class CityPointEntity(
     @SerialName(PLACE_ID) val placeId: String?
 ) {
 
-    fun mapPoint(): Point? {
-        if (point == null) return null
-        val latLng = POINT_REGEX.find(point)!!.groupValues
-        return Point(latLng.get(1).toDouble(), latLng.get(2).toDouble())
+    fun mapPoint(): Point? = point?.let { p ->
+        POINT_REGEX.find(p)?.groupValues?.let { Point(it.get(1).toDouble(), it.get(2).toDouble()) }
     }
-    
+
     companion object {
         const val NAME     = "name"
         const val POINT    = "point"
         const val PLACE_ID = "place_id"
-        
+
         private val POINT_REGEX = "\\(([\\d\\.\\-]+)\\,([\\d\\.\\-]+)\\)".toRegex()
     }
 }

@@ -57,11 +57,11 @@ fun OfferEntity.map(dateFormat: DateFormat) =
         dateFormat.parse(createdAt),
         updatedAt?.let { dateFormat.parse(it) },
         price.map(),
-        ratings?.let { it.map() },
+        ratings?.map(),
         passengerFeedback,
         carrier.map(),
         vehicle.map(),
-        driver?.let { it.map() }
+        driver?.map()
     )
 
 fun Offer.map(dateFormat: DateFormat) =
@@ -76,9 +76,9 @@ fun Offer.map(dateFormat: DateFormat) =
         dateFormat.format(createdAt),
         updatedAt?.let { dateFormat.format(it) },
         price.map(),
-        ratings?.let { it.map() },
+        ratings?.map(),
         passengerFeedback,
         carrier.map(),
         vehicle.map(),
-        driver?.let { it.map() }
+        driver?.map()
     )
