@@ -1,11 +1,8 @@
 package com.kg.gettransfer.presentation.view
 
-import android.support.annotation.StringRes
-
 interface LogInView : BaseView {
     fun setEmail(login: String)
     fun showValidationError(errorType: Int)
-    fun showLoginInfo(@StringRes title: Int, @StringRes info: Int)
     fun showLoading()
     fun hideLoading()
 

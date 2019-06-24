@@ -52,7 +52,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
         with(presenter) {
             arguments?.let {
-                saveProfile(it.getString(EXTRA_EMAIL_TO_LOGIN, ""))
+                emailOrPhone = it.getString(EXTRA_EMAIL_TO_LOGIN, "")
                 nextScreen = it.getString(LogInView.EXTRA_NEXT_SCREEN) ?: ""
                 transferId = it.getLong(LogInView.EXTRA_TRANSFER_ID, 0L)
                 offerId = it.getLong(LogInView.EXTRA_OFFER_ID, 0L)
@@ -68,44 +68,32 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         emailLayout.fieldText.requestFocus()
     }
 
-    @CallSuper
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val emailOrPhone = emailLayout.fieldText.text.toString()
-        outState.putString(LOG_IN_EMAIL, emailOrPhone)
-        presenter.saveProfile(emailOrPhone)
-    }
-
     private fun initClickListeners() {
         btnLogin.setThrottledClickListener {
             showLoading()
-            presenter.onLoginClick(emailLayout.fieldText.text.toString(), etPassword.text.toString())
+            presenter.onLoginClick()
         }
         btnRequestCode.setThrottledClickListener {
             showLoading()
-            presenter.sendVerificationCode(emailLayout.fieldText.text.toString())
+            presenter.sendVerificationCode()
         }
     }
 
-    private fun initTextChangeListeners() {
+    private fun  initTextChangeListeners() {
         emailLayout.fieldText.onTextChanged {
-            val emailPhone = it.trim()
-            btnLogin.isEnabled = emailPhone.isNotEmpty() && etPassword.text?.isNotEmpty() ?: false
-            btnRequestCode.isEnabled = emailPhone.isNotEmpty()
             presenter.emailOrPhone = it
+            btnLogin.isEnabled = presenter.isEnabledButtonLogin
+            btnRequestCode.isEnabled = presenter.isEnabledRequestCodeButton
         }
         etPassword.onTextChanged {
-            btnLogin.isEnabled = emailLayout.fieldText.text?.isNotEmpty() ?: false && it.isNotEmpty()
+            presenter.password = it
+            btnLogin.isEnabled = presenter.isEnabledButtonLogin
         }
     }
 
     override fun setEmail(login: String) {
         emailLayout.fieldText.setText(login)
         etPassword.requestFocus()
-    }
-
-    override fun showLoginInfo(title: Int, info: Int) {
-        Utils.showLoginDialog(context!!, message = getString(info), title = getString(title))
     }
 
     override fun showValidationError(errorType: Int) {

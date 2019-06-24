@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui.helpers
 
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.presentation.ui.Utils
-import java.lang.IllegalArgumentException
 
 //TODO mb we can add this in extensions?
 object LoginHelper {
@@ -11,8 +10,8 @@ object LoginHelper {
     const val INVALID_EMAIL = 1
     const val INVALID_PHONE = 2
 
-    fun formatPhone(phone: String?) =
-        phone?.let {
+    fun formatPhone(phone: String) =
+        phone.let {
             when {
                 it.firstSign() == "8" -> "+7${it.substring(1)}"
                 it.firstSign() == "7" -> "+$it"
