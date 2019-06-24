@@ -13,7 +13,7 @@ data class CityPointEntity(
 ) {
 
     fun mapPoint(): Point? = point?.let { p ->
-        POINT_REGEX.find(p)?.groupValues?.let { Point(it[1].toDouble(), it.get(2).toDouble()) }
+        POINT_REGEX.find(p)?.groupValues?.let { Point(it[1].toDouble(), it[2].toDouble()) }
     }
 
     companion object {

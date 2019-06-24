@@ -11,6 +11,6 @@ class LocationException(
 
     companion object {
         const val NOT_FOUND      = GeoException.NOT_FOUND
-        @JvmField val GEOCODER_ERROR = GeoException.GEOCODER_ERROR
+        const val GEOCODER_ERROR = GeoException.GEOCODER_ERROR
     }
 }

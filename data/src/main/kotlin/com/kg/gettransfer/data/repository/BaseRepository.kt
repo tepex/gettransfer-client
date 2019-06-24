@@ -4,11 +4,12 @@ import com.kg.gettransfer.data.CacheException
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.model.ResultEntity
 import org.koin.standalone.KoinComponent
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 abstract class BaseRepository : KoinComponent {
 
-    protected val log = LoggerFactory.getLogger(TAG)
+    protected val log: Logger = LoggerFactory.getLogger(TAG)
 
     protected suspend fun <E> retrieveEntity(getEntity: suspend (Boolean) -> E?): ResultEntity<E?> {
         /* First, try retrieve from remote */

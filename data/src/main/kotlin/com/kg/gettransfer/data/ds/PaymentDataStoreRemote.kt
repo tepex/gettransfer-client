@@ -1,14 +1,14 @@
 package com.kg.gettransfer.data.ds
 
-import com.kg.gettransfer.data.PaymentRemote
 import com.kg.gettransfer.data.PaymentDataStore
+import com.kg.gettransfer.data.PaymentRemote
 import com.kg.gettransfer.data.model.BraintreeTokenEntity
 import com.kg.gettransfer.data.model.PaymentRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
 import org.koin.standalone.inject
 
 /**
- * Implementation of the [RemoteDataStore] interface to provide a means of communicating with the remote data source.
+ * Implementation of the [PaymentDataStore] interface to provide a means of communicating with the remote data source.
  */
 open class PaymentDataStoreRemote : PaymentDataStore {
 
