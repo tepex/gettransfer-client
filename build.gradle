@@ -96,7 +96,8 @@ detekt {
     input = files(
         "domain/src",
         "data/src/main/kotlin/com/kg/gettransfer/data/ds",
-        "data/src/main/kotlin/com/kg/gettransfer/data/model"
+        "data/src/main/kotlin/com/kg/gettransfer/data/model",
+        "data/src/main/kotlin/com/kg/gettransfer/data/socket"
     )
     config = files("detekt-config.yml")
 }
