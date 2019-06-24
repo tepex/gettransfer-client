@@ -93,6 +93,61 @@ data class Transfer(
         const val STATUS_CATEGORY_UNFINISHED = "unfinished_status"
         const val STATUS_CATEGORY_FINISHED   = "finished_status"
 
+        val EMPTY = Transfer(
+            id              = 0,
+            createdAt       = Date(),
+            duration        = null,
+            distance        = null,
+            status          = Transfer.Status.NEW,
+            from            = CityPoint.EMPTY,
+            to              = null,
+            dateToLocal     = Date(),
+            dateToTZ        = Date(),
+            dateReturnLocal = null,
+            dateReturnTZ    = null,
+            flightNumber    = null,
+/* ================================================== */
+            flightNumberReturn    = null,
+            transportTypeIds      = emptyList<TransportType.ID>(),
+            pax                   = 0,
+            bookNow               = null,
+            time                  = 0,
+            nameSign              = null,
+            comment               = null,
+            childSeats            = 0,
+            childSeatsInfant      = 0,
+            childSeatsConvertible = 0,
+/* ================================================== */
+            childSeatsBooster     = 0,
+            promoCode             = null,
+            passengerOfferedPrice = null,
+            price                 = null,
+            paidSum               = null,
+            remainsToPay          = null,
+            paidPercentage        = 0,
+            watertaxi             = false,
+            bookNowOffers         = emptyList<BookNowOffer>(),
+            offersCount           = 0,
+/* ================================================== */
+            relevantCarriersCount = 0,
+            offersUpdatedAt       = null,
+            dateRefund            = null,
+            paypalOnly            = null,
+            carrierMainPhone      = null,
+            pendingPaymentId      = null,
+            analyticsSent         = false,
+            rubPrice              = null,
+            refundedPrice         = null,
+            campaign              = null,
+/* ================================================== */
+            editableFields      = emptyList<String>(),
+            airlineCard         = null,
+            paymentPercentages  = emptyList<Int>(),
+            unreadMessagesCount = 0,
+            showOfferInfo       = false,
+            lastOffersUpdatedAt = null
+        )
+
         fun List<Transfer>.filterActive() = filter { tr ->
             tr.status == Status.NEW ||
             tr.status == Status.DRAFT ||
@@ -108,6 +163,6 @@ data class Transfer(
         }
 
         fun List<Transfer>.filterRateable() =
-                filterCompleted() + filter { it.status == Status.PENDING_CONFIRMATION }
+            filterCompleted() + filter { it.status == Status.PENDING_CONFIRMATION }
     }
 }

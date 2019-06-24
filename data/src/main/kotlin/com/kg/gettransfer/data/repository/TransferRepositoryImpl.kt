@@ -1,3 +1,4 @@
+@file:Suppress("TooManyFunctions")
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
@@ -5,25 +6,19 @@ import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.TransferDataStoreCache
 import com.kg.gettransfer.data.ds.TransferDataStoreRemote
-
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.map
-
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.TransportType
-
 import com.kg.gettransfer.domain.repository.SessionRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
-
 import java.util.Calendar
-import java.util.Date
 import java.text.DateFormat
-
 import org.koin.standalone.get
 
 class TransferRepositoryImpl(
@@ -46,7 +41,7 @@ class TransferRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
-            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: DEFAULT,
+            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: Transfer.EMPTY,
             result.error?.let { it.map() }
         )
     }
@@ -57,7 +52,7 @@ class TransferRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
-            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: DEFAULT,
+            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: Transfer.EMPTY,
             result.error?.let { it.map() }
         )
     }
@@ -87,7 +82,7 @@ class TransferRepositoryImpl(
         }
 
         return Result(
-            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: DEFAULT,
+            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: Transfer.EMPTY,
             result.error?.let { it.map() },
             result.error != null && result.entity != null
         )
@@ -98,7 +93,7 @@ class TransferRepositoryImpl(
             factory.retrieveCacheDataStore().getTransfer(id, role)
         }
         return Result(
-            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: DEFAULT,
+            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: Transfer.EMPTY,
             null,
             result.entity != null,
             result.cacheError?.let { it.map() }
@@ -213,14 +208,12 @@ class TransferRepositoryImpl(
         val result: ResultEntity<List<TransferEntity>?> = retrieveCacheEntity {
             factory.retrieveCacheDataStore().getAllTransfers()
         }
-        result.entity?.let { cachedTransfers ->
-            if (cachedTransfers.isNotEmpty()) {
-                remoteTransfers.forEach { remoteTransfer ->
-                    cachedTransfers.find { it.id == remoteTransfer.id}?.let { cachedTransfer ->
-                        if (remoteTransfer.offersUpdatedAt == null) return
-                        remoteTransfer.lastOffersUpdatedAt = cachedTransfer.lastOffersUpdatedAt
-                    }
-                }
+        if (result.entity == null) return
+
+        remoteTransfers.forEach { remoteTransfer ->
+            result.entity.find { it.id == remoteTransfer.id }?.let { cachedTransfer ->
+                if (remoteTransfer.offersUpdatedAt == null) return
+                remoteTransfer.lastOffersUpdatedAt = cachedTransfer.lastOffersUpdatedAt
             }
         }
     }
@@ -230,63 +223,5 @@ class TransferRepositoryImpl(
             factory.retrieveCacheDataStore().getTransfer(remoteTransfer.id, role)
         }
         resultCached.entity?.let { remoteTransfer.lastOffersUpdatedAt = it.lastOffersUpdatedAt }
-    }
-
-    companion object {
-        private val DEFAULT =
-            Transfer(
-                id              = 0,
-                createdAt       = Date(),
-                duration        = null,
-                distance        = null,
-                status          = Transfer.Status.NEW,
-                from            = CityPoint("", null, null),
-                to              = null,
-                dateToLocal     = Date(),
-                dateToTZ        = Date(),
-                dateReturnLocal = null,
-                dateReturnTZ    = null,
-                flightNumber    = null,
-/* ================================================== */
-                flightNumberReturn    = null,
-                transportTypeIds      = emptyList<TransportType.ID>(),
-                pax                   = 0,
-                bookNow               = null,
-                time                  = 0,
-                nameSign              = null,
-                comment               = null,
-                childSeats            = 0,
-                childSeatsInfant      = 0,
-                childSeatsConvertible = 0,
-/* ================================================== */
-                childSeatsBooster     = 0,
-                promoCode             = null,
-                passengerOfferedPrice = null,
-                price                 = null,
-                paidSum               = null,
-                remainsToPay          = null,
-                paidPercentage        = 0,
-                watertaxi             = false,
-                bookNowOffers         = emptyList<BookNowOffer>(),
-                offersCount           = 0,
-/* ================================================== */
-                relevantCarriersCount = 0,
-                offersUpdatedAt       = null,
-                dateRefund            = null,
-                paypalOnly            = null,
-                carrierMainPhone      = null,
-                pendingPaymentId      = null,
-                analyticsSent         = false,
-                rubPrice              = null,
-                refundedPrice         = null,
-                campaign              = null,
-/* ================================================== */
-                editableFields      = emptyList<String>(),
-                airlineCard         = null,
-                paymentPercentages  = emptyList<Int>(),
-                unreadMessagesCount = 0,
-                showOfferInfo       = false,
-                lastOffersUpdatedAt = null
-            )
     }
 }
