@@ -24,6 +24,9 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
 
     override fun getPresenter(): ProfileSettingsPresenter = presenter
 
+    private val phone
+        get() = phoneField.field_input.text.toString().replace(" ", "")
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,13 +48,54 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
     override fun initFields(profile: ProfileModel) {
         with(profile) {
             nameField.field_input.setText(name)
-            emailField.field_input.setText(email)
-            phoneField.field_input.setText(phone)
+            if (!email.isNullOrEmpty()) {
+                emailField.field_input.setText(email)
+            }
+
+            if (!phone.isNullOrEmpty()) {
+                setEnabledPhoneField(false)
+                phoneField.field_input.setText(phone)
+            } else {
+                setEnabledPhoneField(true)
+                initPhoneTextChangeListeners()
+                with(phoneField.field_input) {
+                    onTextChanged { presenter.setPhone(it) }
+                }
+            }
+        }
+    }
+
+    private fun initPhoneTextChangeListeners() {
+        with(phoneField.field_input) {
+            onTextChanged { text ->
+                if (text.isEmpty() && isFocused) {
+                    setText("+")
+                    setSelection(1)
+                }
+            }
+            addTextChangedListener(com.kg.gettransfer.utilities.PhoneNumberFormatter())
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) phone.let {
+                    val phoneCode = Utils.getPhoneCodeByCountryIso(context!!)
+                    if (it.isEmpty()) {
+                        setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+                    }
+                }
+                else phone.let {
+                    if (it.length <= 4) {
+                        setText("")
+                    }
+                }
+            }
         }
     }
 
     override fun setEnabledBtnSave(enabled: Boolean) {
         btnSave.isEnabled = enabled
+    }
+
+    override fun setEnabledPhoneField(enabled: Boolean) {
+        phoneField.field_input.isFocusable = enabled
     }
 
     override fun onBackPressed() {

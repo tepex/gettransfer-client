@@ -83,6 +83,7 @@
         <attr name="settingsEditableFieldHint" format="string"/>
         <attr name="settingsEditableFieldEnabled" format="boolean"/>
         <attr name="settingsEditableFieldChevron" format="boolean"/>
+        <attr name="android:inputType"/>
     </declare-styleable>
 
     <declare-styleable name="SettingsFieldSwitch">

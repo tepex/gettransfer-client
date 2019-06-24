@@ -5,6 +5,7 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import kotlinx.android.extensions.LayoutContainer
@@ -25,6 +26,7 @@ class SettingsEditableField @JvmOverloads constructor(
                 field_input.isFocusable = it
                 if (!it) field_input.isClickable = true
             }
+            field_input.inputType = ta.getInt(R.styleable.SettingsEditableField_android_inputType, EditorInfo.TYPE_CLASS_TEXT)
             ta.recycle()
         }
     }

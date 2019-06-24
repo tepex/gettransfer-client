@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             app:settingsEditableFieldHint="@string/LNG_PHONE"
             app:settingsEditableFieldChevron="false"
-            app:settingsEditableFieldEnabled="false"/>
+            android:inputType="phone"/>
 
         <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
             android:id="@+id/passwordField"
