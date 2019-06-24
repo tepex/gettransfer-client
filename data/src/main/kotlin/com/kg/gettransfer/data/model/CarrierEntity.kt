@@ -1,11 +1,9 @@
 package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.Carrier
-import com.kg.gettransfer.domain.model.Profile
-
 import kotlinx.serialization.Optional
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class CarrierEntity(

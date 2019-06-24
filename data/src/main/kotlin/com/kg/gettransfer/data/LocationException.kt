@@ -10,7 +10,7 @@ class LocationException(
     fun map() = GeoException(code, details)
 
     companion object {
-        @JvmField val NOT_FOUND      = GeoException.NOT_FOUND
+        const val NOT_FOUND      = GeoException.NOT_FOUND
         @JvmField val GEOCODER_ERROR = GeoException.GEOCODER_ERROR
     }
 }

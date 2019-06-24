@@ -1,10 +1,8 @@
 package com.kg.gettransfer.data.model
 
-import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.RouteInfoHourlyRequest
-
+import com.kg.gettransfer.domain.model.RouteInfoRequest
 import java.text.DateFormat
-import java.util.Date
 
 data class RouteInfoRequestEntity(
     val from: String,

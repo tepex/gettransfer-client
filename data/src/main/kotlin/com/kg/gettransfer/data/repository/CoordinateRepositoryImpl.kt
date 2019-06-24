@@ -1,21 +1,17 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.ds.io.CoordinateSocketDataStoreOutput
-
 import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.model.map
-
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.model.Coordinate
 import com.kg.gettransfer.domain.repository.CoordinateRepository
-
 import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
 import org.koin.standalone.inject
 
 class CoordinateRepositoryImpl(
     private val socketDataStore: CoordinateSocketDataStoreOutput
-): CoordinateRepository, KoinComponent {
+) : CoordinateRepository, KoinComponent {
 
     private val coordinateInteractor: CoordinateInteractor by inject()
 

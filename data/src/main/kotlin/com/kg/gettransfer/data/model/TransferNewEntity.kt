@@ -1,9 +1,7 @@
 package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.TransferNew
-import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.Trip
-
 import java.text.DateFormat
 
 data class TransferNewEntity(

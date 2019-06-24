@@ -1,8 +1,6 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.TransferEntity
-import com.kg.gettransfer.data.model.TransferNewEntity
-
 import org.koin.standalone.KoinComponent
 
 interface TransferCache: KoinComponent {

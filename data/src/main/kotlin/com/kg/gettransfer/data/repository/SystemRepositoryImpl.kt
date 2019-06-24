@@ -2,15 +2,12 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.model.map
-
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
-
 import com.kg.gettransfer.domain.repository.SystemRepository
-
 import org.koin.standalone.get
 
-class SystemRepositoryImpl : BaseRepository(), SystemRepository{
+class SystemRepositoryImpl : BaseRepository(), SystemRepository {
 
     private val preferencesCache = get<PreferencesCache>()
 

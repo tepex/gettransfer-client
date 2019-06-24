@@ -1,11 +1,9 @@
 package com.kg.gettransfer.data.model
 
-import com.kg.gettransfer.data.model.MoneyEntity
 import com.kg.gettransfer.domain.model.Money
-
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class MoneyEntity(

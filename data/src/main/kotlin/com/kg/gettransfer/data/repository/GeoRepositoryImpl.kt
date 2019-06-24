@@ -3,19 +3,13 @@ package com.kg.gettransfer.data.repository
 import com.kg.gettransfer.data.LocationException
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.ds.GeoDataStore
-
 import com.kg.gettransfer.data.model.map
-
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.GeoRepository
-
 import java.util.Locale
-
-import org.koin.standalone.get
 
 class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository(), GeoRepository {
 
@@ -62,20 +56,21 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
     override suspend fun getAutocompletePredictions(query: String, lang: String): Result<List<GTAddress>> {
         val result = retrieveRemoteEntity { geoDataStore.getAutocompletePredictions(query, lang) }
         return if (result.error == null && !result.entity?.predictions.isNullOrEmpty()) {
-            Result(result.entity!!.predictions!!.map {
+            @Suppress("UnsafeCallOnNullableType")
+            Result(result.entity!!.predictions!!.map { entity ->
                 GTAddress(
                     CityPoint(
-                        it.description,
+                        entity.description,
                         null,
-                        it.placeId
+                        entity.placeId
                     ),
-                    it.types ?: emptyList<String>(),
-                    it.description,
-                    GTAddress.parseAddress(it.description)
+                    entity.types ?: emptyList(),
+                    entity.description,
+                    GTAddress.parseAddress(entity.description)
                 )
             })
-        } else {// exclude such from result
-            Result(emptyList(), result.error?.let { it.map() })
+        } else { // exclude such from result
+            Result(emptyList(), result.error?.map())
         }
     }
 
@@ -91,11 +86,11 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
                     ),
                     types,
                     "$name, $formattedAddress",
-                    Pair(name, formattedAddress)
+                    name to formattedAddress
                 ))
             }
         } else {
-            Result(GTAddress.EMPTY, result.error?.let { it.map() })
+            Result(GTAddress.EMPTY, result.error?.map())
         }
     }
 }

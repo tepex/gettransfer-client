@@ -9,16 +9,13 @@ import com.kg.gettransfer.data.ds.TransferDataStoreRemote
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.map
-import com.kg.gettransfer.domain.model.BookNowOffer
-import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
-import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.repository.SessionRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
-import java.util.Calendar
 import java.text.DateFormat
+import java.util.Calendar
 import org.koin.standalone.get
 
 class TransferRepositoryImpl(
@@ -41,8 +38,8 @@ class TransferRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
-            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: Transfer.EMPTY,
-            result.error?.let { it.map() }
+            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.error?.map()
         )
     }
 
@@ -52,8 +49,8 @@ class TransferRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
-            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: Transfer.EMPTY,
-            result.error?.let { it.map() }
+            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.error?.map()
         )
     }
 
@@ -61,10 +58,10 @@ class TransferRepositoryImpl(
         val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
             factory.retrieveCacheDataStore().getTransfer(id, "")
         }
-        result.entity?.let {
-            if (it.offersUpdatedAt != null) {
-                it.lastOffersUpdatedAt = dateFormatTZ.get().format(Calendar.getInstance().time)
-                factory.retrieveCacheDataStore().addTransfer(it)
+        result.entity?.let { entity ->
+            if (entity.offersUpdatedAt != null) {
+                entity.lastOffersUpdatedAt = dateFormatTZ.get().format(Calendar.getInstance().time)
+                factory.retrieveCacheDataStore().addTransfer(entity)
             }
         }
         return Result(Unit)
@@ -82,8 +79,8 @@ class TransferRepositoryImpl(
         }
 
         return Result(
-            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: Transfer.EMPTY,
-            result.error?.let { it.map() },
+            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.error?.map(),
             result.error != null && result.entity != null
         )
     }
@@ -93,10 +90,10 @@ class TransferRepositoryImpl(
             factory.retrieveCacheDataStore().getTransfer(id, role)
         }
         return Result(
-            result.entity?.let { it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) } ?: Transfer.EMPTY,
+            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
             null,
             result.entity != null,
-            result.cacheError?.let { it.map() }
+            result.cacheError?.map()
         )
     }
 
@@ -105,8 +102,8 @@ class TransferRepositoryImpl(
         val mapCountNewOffers = preferencesCache.mapCountNewOffers.toMutableMap()
 
         var eventsCount = 0
-        val mappedTransfers = transfersList.map {
-            it.map(transportTypes, dateFormat.get(), dateFormatTZ.get()).apply {
+        val mappedTransfers = transfersList.map { entity ->
+            entity.map(transportTypes, dateFormat.get(), dateFormatTZ.get()).apply {
                 eventsCount += checkNewMessagesAndOffersCount(this, mapCountNewMessages, mapCountNewOffers)
             }
         }
@@ -161,7 +158,7 @@ class TransferRepositoryImpl(
         }
         return Result(
             result.entity?.let { mapTransfersList(it) } ?: emptyList(),
-            result.error?.let { it.map() },
+            result.error?.map(),
             result.error != null && result.entity != null
         )
     }
@@ -178,7 +175,7 @@ class TransferRepositoryImpl(
         }
         return Result(
             result.entity?.let { mapTransfersList(it) } ?: emptyList(),
-            result.error?.let { it.map() },
+            result.error?.map(),
             result.error != null && result.entity != null
         )
     }
@@ -195,7 +192,7 @@ class TransferRepositoryImpl(
         }
         return Result(
             result.entity?.let { mapTransfersList(it) } ?: emptyList(),
-            result.error?.let { it.map() },
+            result.error?.map(),
             result.error != null && result.entity != null
         )
     }

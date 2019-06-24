@@ -28,7 +28,7 @@ fun GTAddress.map() =
 fun GTAddressEntity.map() =
     GTAddress(
         if (lat == null || lon == null) CityPoint.EMPTY else CityPoint(address, Point(lat, lon), null),
-        placeTypes ?: emptyList<String>(),
+        placeTypes ?: emptyList(),
         address,
         null
     )

@@ -1,11 +1,10 @@
 package com.kg.gettransfer.data.model
 
-import com.kg.gettransfer.domain.model.CardGateways
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Representation for a [ConfigsEntity] fetched from an external layer data source

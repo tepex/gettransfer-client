@@ -4,8 +4,6 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.User
-
 import java.util.Locale
 
 /**
@@ -43,7 +41,7 @@ fun AccountEntity.map(configs: Configs) =
             ?.let { Locale(it.language, Locale.getDefault().country) } ?: Locale.getDefault(),
         configs.supportedCurrencies.find { it.code == currency } ?: Currency("USD", "\$"),
         distanceUnit?.let { DistanceUnit.valueOf(it) } ?: DistanceUnit.KM,
-        groups ?: emptyList<String>(),
+        groups ?: emptyList(),
         carrierId
     )
 

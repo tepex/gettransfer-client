@@ -25,8 +25,8 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.repository.SessionRepository
-import java.util.Locale
 import org.koin.standalone.get
+import java.util.Locale
 
 class SessionRepositoryImpl(
     private val factory: DataStoreFactory<SessionDataStore, SessionDataStoreCache, SessionDataStoreRemote>
@@ -84,7 +84,7 @@ class SessionRepositoryImpl(
             preferencesCache.favoriteTransportTypes = value?.map { it.name }?.toSet()
         }
 
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "ReturnCount")
     override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
 
@@ -92,17 +92,17 @@ class SessionRepositoryImpl(
             val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getConfigs()
             }
-            result.entity?.let {
+            result.entity?.let { entity ->
                 /* Save to cache only fresh data from remote */
-                if (result.error == null) factory.retrieveCacheDataStore().setConfigs(it)
-                configs = it.map()
+                if (result.error == null) factory.retrieveCacheDataStore().setConfigs(entity)
+                configs = entity.map()
             }
             /* No chance to go further */
-            //if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
+            // if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
 
-            account = factory.retrieveCacheDataStore().getAccount()?.let { it.map(configs) } ?: NO_ACCOUNT
+            account = factory.retrieveCacheDataStore().getAccount()?.map(configs) ?: NO_ACCOUNT
             if (result.error != null) {
-                configs = factory.retrieveCacheDataStore().getConfigs()?.let { it.map() } ?: CONFIGS_DEFAULT
+                configs = factory.retrieveCacheDataStore().getConfigs()?.map() ?: CONFIGS_DEFAULT
                 return Result(account, result.error.map())
             }
         }
@@ -112,9 +112,9 @@ class SessionRepositoryImpl(
                 factory.retrieveDataStore(fromRemote).getMobileConfigs()
             }
             if (result.error != null && result.entity == null) return Result(account, result.error.map())
-            result.entity?.let {
-                mobileConfig = it.map()
-                if (result.error == null) factory.retrieveCacheDataStore().setMobileConfigs(it)
+            result.entity?.let { entity ->
+                mobileConfig = entity.map()
+                if (result.error == null) factory.retrieveCacheDataStore().setMobileConfigs(entity)
             }
         }
 
@@ -122,9 +122,9 @@ class SessionRepositoryImpl(
         val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getAccount()
         }
-        result.entity?.let {
-            if (result.error == null) factory.retrieveCacheDataStore().setAccount(it)
-            account = it.map(configs)
+        result.entity?.let { entity ->
+            if (result.error == null) factory.retrieveCacheDataStore().setAccount(entity)
+            account = entity.map(configs)
         }
         result.error?.let { error = it.map() }
         isInitialized = true
@@ -153,13 +153,13 @@ class SessionRepositoryImpl(
             factory.retrieveRemoteDataStore().setAccount(accountEntity)
         }
         if (result.error == null) {
-            result.entity?.let {
-                factory.retrieveCacheDataStore().setAccount(it)
-                this.account = it.map(configs)
+            result.entity?.let { entity ->
+                factory.retrieveCacheDataStore().setAccount(entity)
+                this.account = entity.map(configs)
             }
             if (pass != null && repeatedPass != null) this.userPassword = pass
         }
-        return Result(this.account, result.error?.let { it.map() })
+        return Result(this.account, result.error?.map())
     }
 
     override suspend fun putNoAccount(account: Account): Result<Account> {
@@ -177,9 +177,9 @@ class SessionRepositoryImpl(
             factory.retrieveRemoteDataStore().login(email, phone, password)
         }
         if (result.error == null) {
-            result.entity?.let {
-                factory.retrieveCacheDataStore().setAccount(it)
-                account = it.map(configs)
+            result.entity?.let { entity ->
+                factory.retrieveCacheDataStore().setAccount(entity)
+                account = entity.map(configs)
             }
             if (!withSmsCode) {
                 this.userEmail = email
@@ -187,7 +187,7 @@ class SessionRepositoryImpl(
                 this.userPassword = password
             }
         }
-        return Result(account, result.error?.let { it.map() })
+        return Result(account, result.error?.map())
     }
 
     override suspend fun register(registerAccount: RegistrationAccount): Result<Account> {
@@ -197,19 +197,19 @@ class SessionRepositoryImpl(
             ResultEntity(null, e)
         }
         if (result.error == null) {
-            result.entity?.let {
-                factory.retrieveCacheDataStore().setAccount(it)
-                account = it.map(configs)
+            result.entity?.let { entity ->
+                factory.retrieveCacheDataStore().setAccount(entity)
+                account = entity.map(configs)
             }
         }
-        return Result(account, result.error?.let { it.map() })
+        return Result(account, result.error?.map())
     }
 
     override suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean> {
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().getVerificationCode(email, phone)
         }
-        return Result(result.entity != null && result.entity, result.error?.let { it.map() })
+        return Result(result.entity != null && result.entity, result.error?.map())
     }
 
     override suspend fun logout(): Result<Account> {
@@ -229,7 +229,7 @@ class SessionRepositoryImpl(
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().getCodeForChangeEmail(email)
         }
-        return Result(result.entity != null && result.entity, result.error?.let { it.map() })
+        return Result(result.entity != null && result.entity, result.error?.map())
     }
 
     override suspend fun changeEmail(email: String, code: String): Result<Boolean> {
@@ -240,7 +240,7 @@ class SessionRepositoryImpl(
             this.account.user.profile.email = email
             this.userEmail = email
         }
-        return Result(result.entity != null && result.entity, result.error?.let { it.map() })
+        return Result(result.entity != null && result.entity, result.error?.map())
     }
 
     companion object {
@@ -251,7 +251,7 @@ class SessionRepositoryImpl(
             locale = Locale.getDefault(),
             currency = defineNoAccountCurrency(),
             distanceUnit = DistanceUnit.KM,
-            groups = emptyList<String>(),
+            groups = emptyList(),
             carrierId = null
         )
 
@@ -264,11 +264,14 @@ class SessionRepositoryImpl(
         )
 
         private fun defineNoAccountCurrency() =
-            java.util.Currency.getInstance(Locale.getDefault()).let {
-                com.kg.gettransfer.domain.model.Currency(it.currencyCode, it.symbol)
+            java.util.Currency.getInstance(Locale.getDefault()).let { currency ->
+                com.kg.gettransfer.domain.model.Currency(currency.currencyCode, currency.symbol)
                     .let { dc ->
-                        if (CONFIGS_DEFAULT.supportedCurrencies.contains(dc)) dc
-                        else CONFIGS_DEFAULT.supportedCurrencies.first { c -> c.code == "USD" }
+                        if (CONFIGS_DEFAULT.supportedCurrencies.contains(dc)) {
+                            dc
+                        } else {
+                            CONFIGS_DEFAULT.supportedCurrencies.first { c -> c.code == "USD" }
+                        }
                     }
             }
     }

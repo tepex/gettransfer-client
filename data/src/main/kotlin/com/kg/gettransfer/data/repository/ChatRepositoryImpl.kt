@@ -13,7 +13,6 @@ import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.domain.interactor.ChatInteractor
 import com.kg.gettransfer.domain.model.Chat
-import com.kg.gettransfer.domain.model.ChatAccount
 import com.kg.gettransfer.domain.model.Message
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.ChatRepository
@@ -54,8 +53,8 @@ class ChatRepositoryImpl(
         }
         */
         return Result(
-            result.entity?.let { it.map(dateFormat.get()) } ?: Chat.EMPTY,
-            result.error?.let { it.map() }
+            result.entity?.map(dateFormat.get()) ?: Chat.EMPTY,
+            result.error?.map()
         )
     }
 
@@ -64,14 +63,14 @@ class ChatRepositoryImpl(
             factory.retrieveCacheDataStore().getChat(transferId)
         }
         return Result(
-            result.entity?.let { it.map(dateFormat.get()) } ?: Chat.EMPTY,
+            result.entity?.map(dateFormat.get()) ?: Chat.EMPTY,
             null,
             result.entity != null,
-            result.cacheError?.let { it.map() }
+            result.cacheError?.map()
         )
     }
 
-    override suspend fun newMessage(message: Message): Result<Chat>{
+    override suspend fun newMessage(message: Message): Result<Chat> {
         factory.retrieveCacheDataStore().newMessageToCache(message.map(dateFormat.get()))
         sendAllNewMessages(message.transferId)
         return getChatCached(message.transferId)
@@ -130,8 +129,8 @@ class ChatRepositoryImpl(
     }
 
     internal fun onMessageReadEvent(messageId: Long) {
-        factory.retrieveCacheDataStore().getMessage(messageId)?.let { it.map(dateFormat.get()) }?.let {
-            val message = it.copy(readAt = Calendar.getInstance().time)
+        factory.retrieveCacheDataStore().getMessage(messageId)?.map(dateFormat.get())?.let { msg ->
+            val message = msg.copy(readAt = Calendar.getInstance().time)
             factory.retrieveCacheDataStore().addMessage(message.map(dateFormat.get()))
             chatReceiver.onMessageReadEvent(message)
         }

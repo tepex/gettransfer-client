@@ -1,11 +1,10 @@
 package com.kg.gettransfer.data.ds
 
-import com.kg.gettransfer.data.RouteRemote
 import com.kg.gettransfer.data.RouteDataStore
+import com.kg.gettransfer.data.RouteRemote
 import com.kg.gettransfer.data.model.RouteInfoEntity
-import com.kg.gettransfer.data.model.RouteInfoRequestEntity
 import com.kg.gettransfer.data.model.RouteInfoHourlyRequestEntity
-import org.koin.standalone.get
+import com.kg.gettransfer.data.model.RouteInfoRequestEntity
 import org.koin.standalone.inject
 
 /**

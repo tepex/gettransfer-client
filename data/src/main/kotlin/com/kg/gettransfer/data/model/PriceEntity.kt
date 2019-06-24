@@ -1,11 +1,9 @@
 package com.kg.gettransfer.data.model
 
-import com.kg.gettransfer.data.model.PriceEntity
 import com.kg.gettransfer.domain.model.Price
-
 import kotlinx.serialization.Optional
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class PriceEntity(

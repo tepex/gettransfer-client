@@ -2,34 +2,26 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PaymentDataStore
 import com.kg.gettransfer.data.RemoteException
-
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.PaymentDataStoreCache
 import com.kg.gettransfer.data.ds.PaymentDataStoreRemote
-
-import com.kg.gettransfer.data.model.PaymentEntity
-import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.data.model.map
-
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-
-import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.OfferItem
-import com.kg.gettransfer.domain.model.PaymentRequest
-import com.kg.gettransfer.domain.model.Payment
-import com.kg.gettransfer.domain.model.PaymentStatusRequest
-import com.kg.gettransfer.domain.model.PaymentStatus
 import com.kg.gettransfer.domain.model.BraintreeToken
+import com.kg.gettransfer.domain.model.OfferItem
+import com.kg.gettransfer.domain.model.Payment
+import com.kg.gettransfer.domain.model.PaymentRequest
+import com.kg.gettransfer.domain.model.PaymentStatus
+import com.kg.gettransfer.domain.model.PaymentStatusRequest
 import com.kg.gettransfer.domain.model.Result
-
+import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.repository.PaymentRepository
-
-import org.koin.standalone.get
 import org.koin.standalone.inject
 
 class PaymentRepositoryImpl(
     private val factory: DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>
-): BaseRepository(), PaymentRepository {
+) : BaseRepository(), PaymentRepository {
+
     private val paymentReceiver: PaymentInteractor by inject()
 
     override var selectedTransfer: Transfer? = null

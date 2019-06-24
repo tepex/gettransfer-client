@@ -52,7 +52,7 @@ class OfferRepositoryImpl(
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().setOffers(result.entity) }
         return Result(
             result.entity?.map { it.map(dateFormat.get()) } ?: emptyList(),
-            result.error?.let { it.map() },
+            result.error?.map(),
             result.error != null && result.entity != null
         )
     }
@@ -65,7 +65,7 @@ class OfferRepositoryImpl(
             result.entity?.map { it.map(dateFormat.get()) } ?: emptyList(),
             null,
             result.error != null && result.entity != null,
-            result.cacheError?.let { it.map() }
+            result.cacheError?.map()
         )
     }
 
