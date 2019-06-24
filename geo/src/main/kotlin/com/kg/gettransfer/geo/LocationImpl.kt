@@ -5,13 +5,9 @@ import android.location.Geocoder
 import android.location.LocationManager
 
 import android.os.Bundle
-import android.os.Looper
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 
 import com.kg.gettransfer.data.Location
@@ -57,23 +53,11 @@ class LocationImpl(private val context: Context) :
     }
 
     override suspend fun getCurrentLocation(): LocationEntity = suspendCoroutine { cont ->
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                if (locationResult == null) return
-            }
-        }
-        locationProviderClient.requestLocationUpdates(createLocationRequest(), locationCallback, Looper.getMainLooper())
         locationProviderClient.lastLocation
-                // In some rare situations Location can be null. https://developer.android.com/training/location/retrieve-current#last-known
+                // In some rare situations Location can be null.
+                // https://developer.android.com/training/location/retrieve-current#last-known
                 .addOnSuccessListener { l: android.location.Location? -> l?.let { cont.resume(LocationEntity(it.latitude, it.longitude)) } }
                 .addOnFailureListener { cont.resumeWithException(LocationException(LocationException.NOT_FOUND, "Unknown")) }
-        LocationServices.getFusedLocationProviderClient(context).removeLocationUpdates(locationCallback)
-    }
-
-    private fun createLocationRequest() = LocationRequest.create()?.apply {
-        interval = LOCATION_UPDATE_INTERVAL
-        fastestInterval = LOCATION_UPDATE_FASTEST_INTERVAL
-        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
     override fun getAddressByLocation(point: LocationEntity): String {
@@ -113,10 +97,5 @@ class LocationImpl(private val context: Context) :
 
     override fun onConnectionFailed(p0: ConnectionResult) {
 
-    }
-
-    companion object {
-        private const val LOCATION_UPDATE_INTERVAL = 10000L
-        private const val LOCATION_UPDATE_FASTEST_INTERVAL = 5000L
     }
 }
