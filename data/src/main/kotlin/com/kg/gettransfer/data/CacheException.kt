@@ -8,7 +8,7 @@ class CacheException(
 ) : RuntimeException(details) {
 
     fun map() = DatabaseException(code, details)
-    
+
     companion object {
         const val ILLEGAL_STATE = DatabaseException.ILLEGAL_STATE
     }

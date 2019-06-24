@@ -63,32 +63,32 @@ import com.kg.gettransfer.domain.repository.SessionRepository
 import com.kg.gettransfer.domain.repository.SocketRepository
 import com.kg.gettransfer.domain.repository.SystemRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
-import org.koin.dsl.module.module
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
+import org.koin.dsl.module.module
 
 val dataModule = module {
     single<ThreadLocal<DateFormat>>("iso_date") {
-        object: ThreadLocal<DateFormat>() {
+        object : ThreadLocal<DateFormat>() {
             override fun initialValue(): DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
         }
     }
 
     single<ThreadLocal<DateFormat>>("server_date") {
-        object: ThreadLocal<DateFormat>() {
+        object : ThreadLocal<DateFormat>() {
             override fun initialValue(): DateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.US)
         }
     }
 
     single<ThreadLocal<DateFormat>>("server_time") {
-        object: ThreadLocal<DateFormat>() {
+        object : ThreadLocal<DateFormat>() {
             override fun initialValue(): DateFormat = SimpleDateFormat("HH:mm", Locale.US)
         }
     }
 
     single<ThreadLocal<DateFormat>>("iso_date_TZ") {
-        object: ThreadLocal<DateFormat>() {
+        object : ThreadLocal<DateFormat>() {
             override fun initialValue(): DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
         }
     }
