@@ -53,15 +53,16 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
             override fun onTabReselected(p0: TabLayout.Tab) {}
             override fun onTabUnselected(tab: TabLayout.Tab) {
                 (((loginTitleTabs.getChildAt(0) as ViewGroup)
-                        .getChildAt(tab.position) as LinearLayout)
-                        .getChildAt(1) as TextView)
-                        .typeface = regularFontRes
+                    .getChildAt(tab.position) as LinearLayout)
+                    .getChildAt(1) as TextView)
+                    .typeface = regularFontRes
             }
+
             override fun onTabSelected(tab: TabLayout.Tab) {
                 (((loginTitleTabs.getChildAt(0) as ViewGroup)
-                        .getChildAt(tab.position) as LinearLayout)
-                        .getChildAt(1) as TextView)
-                        .typeface = semiboldFontRes
+                    .getChildAt(tab.position) as LinearLayout)
+                    .getChildAt(1) as TextView)
+                    .typeface = semiboldFontRes
             }
         })
         loginPager.adapter = LoginPagerAdapter(fragmentManager!!)

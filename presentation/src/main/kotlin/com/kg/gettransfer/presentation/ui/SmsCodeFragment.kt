@@ -13,6 +13,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.SmsCodePresenter
@@ -56,14 +57,21 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
             presenter.checkAfterPinChanged()
         }
 
-        loginBackButton.setOnClickListener { presenter.back() }
+        loginBackButton.setOnClickListener {
+            it.hideKeyboard()
+            presenter.back()
+        }
 
         btnResendCode.setOnClickListener {
+            it.hideKeyboard()
             presenter.sendVerificationCode()
             presenter.setTimer()
         }
 
-        btnDone.setThrottledClickListener { presenter.onLoginClick() }
+        btnDone.setThrottledClickListener {
+            it.hideKeyboard()
+            presenter.onLoginClick()
+        }
     }
 
     override fun setBtnDoneIsEnabled(isEnabled: Boolean) {
