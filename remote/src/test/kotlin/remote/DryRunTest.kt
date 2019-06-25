@@ -1,3 +1,4 @@
+@file:Suppress("TooManyFunctions", "WildcardImport", "MagicNumber")
 package com.kg.gettransfer.remote
 
 import com.google.gson.GsonBuilder
@@ -118,7 +119,7 @@ class DryRunTest : KoinTest {
             locale = "ru",
             currency = "RUB",
             distanceUnit = "km",
-            groups = listOf("gr1","gr2"),
+            groups = listOf("gr1", "gr2"),
             termsAccepted = true,
             carrierId = 33
         )

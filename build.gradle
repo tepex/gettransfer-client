@@ -95,7 +95,9 @@ detekt {
     filters = ".*build.*,.*/resources/.*,.*/tmp/.*"
     input = files(
         "domain/src",
-        "data/src"
+        "data/src",
+        "remote/src"
+//        "remote/src/main/kotlin/com/kg/gettransfer/remote/ApiCore.kt"
     )
     config = files("detekt-config.yml")
 }

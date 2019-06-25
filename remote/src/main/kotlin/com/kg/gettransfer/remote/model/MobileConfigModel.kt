@@ -26,4 +26,4 @@ fun MobileConfigModel.map() =
         buildsConfigs?.mapValues { it.value.map() }
     )
 
-fun BuildsConfigsModel.map() = BuildsConfigsEntity (updateRequired)
+fun BuildsConfigsModel.map() = BuildsConfigsEntity(updateRequired)

@@ -17,12 +17,14 @@ class CarrierTripRemoteImpl : CarrierTripRemote {
 
     override suspend fun getCarrierTrips(): List<CarrierTripBaseEntity> {
         val response: ResponseModel<CarrierTripsBaseModel> = core.tryTwice { core.api.getCarrierTrips() }
+        @Suppress("UnsafeCallOnNullableType")
         val carrierTrips: List<CarrierTripBaseModel> = response.data!!.trips
         return carrierTrips.map { it.map() }
     }
 
     override suspend fun getCarrierTrip(id: Long): CarrierTripEntity {
         val response: ResponseModel<CarrierTripModelWrapper> = core.tryTwice(id) { _id -> core.api.getCarrierTrip(_id) }
+        @Suppress("UnsafeCallOnNullableType")
         val carrierTrip: CarrierTripModel = response.data!!.trip
         return carrierTrip.map()
     }

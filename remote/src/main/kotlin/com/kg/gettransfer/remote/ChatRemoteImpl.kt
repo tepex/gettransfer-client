@@ -9,7 +9,6 @@ import com.kg.gettransfer.remote.model.MessageWrapperModel
 import com.kg.gettransfer.remote.model.MessageNewWrapperModel
 import com.kg.gettransfer.remote.model.MessageNewModel
 import com.kg.gettransfer.remote.model.map
-
 import org.koin.standalone.get
 
 class ChatRemoteImpl : ChatRemote {
@@ -18,6 +17,7 @@ class ChatRemoteImpl : ChatRemote {
 
     override suspend fun getChat(transferId: Long): ChatEntity {
         val response: ResponseModel<ChatModel> = core.tryTwice(transferId) { id -> core.api.getChat(id) }
+        @Suppress("UnsafeCallOnNullableType")
         return response.data!!.map()
     }
 
@@ -25,6 +25,7 @@ class ChatRemoteImpl : ChatRemote {
         val response: ResponseModel<MessageWrapperModel> = core.tryTwice(transferId) { id ->
             core.api.newMessage(id, MessageNewWrapperModel(MessageNewModel(text)))
         }
+        @Suppress("UnsafeCallOnNullableType")
         return response.data?.message!!.map()
     }
 

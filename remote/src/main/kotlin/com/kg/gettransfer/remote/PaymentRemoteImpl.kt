@@ -15,10 +15,11 @@ import com.kg.gettransfer.remote.model.map
 import org.koin.standalone.get
 
 class PaymentRemoteImpl : PaymentRemote {
-    private val core                       = get<ApiCore>()
+    private val core = get<ApiCore>()
 
     override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
         val response: ResponseModel<PaymentModel> = core.tryTwice { core.api.createNewPayment(paymentRequest.map()) }
+        @Suppress("UnsafeCallOnNullableType")
         return response.data!!.map()
     }
 
@@ -30,13 +31,16 @@ class PaymentRemoteImpl : PaymentRemote {
         }
         val request = paymentStatusRequest.map()
         val response: ResponseModel<PaymentStatusWrapperModel> = core.tryTwice {
+            @Suppress("UnsafeCallOnNullableType")
             core.api.changePaymentStatus(status, request.pgOrderId!!, request.withoutRedirect!!)
         }
+        @Suppress("UnsafeCallOnNullableType")
         return response.data!!.payment.map()
     }
 
     override suspend fun getBraintreeToken(): BraintreeTokenEntity {
         val responce: ResponseModel<BraintreeTokenModel> = core.tryTwice { core.api.getBraintreeToken() }
+        @Suppress("UnsafeCallOnNullableType")
         return responce.data!!.map()
     }
 
@@ -44,6 +48,7 @@ class PaymentRemoteImpl : PaymentRemote {
         val response: ResponseModel<PaymentStatusWrapperModel> = core.tryTwice {
             core.api.confirmPaypal(paymentId, nonce)
         }
+        @Suppress("UnsafeCallOnNullableType")
         return response.data!!.payment.map()
     }
 }

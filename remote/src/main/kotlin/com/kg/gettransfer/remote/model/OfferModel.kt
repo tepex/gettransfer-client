@@ -35,7 +35,7 @@ fun OfferModel.map(transferId: Long) =
         createdAt,
         updatedAt,
         price.map(),
-        ratings?.let { it.map() },
+        ratings?.map(),
         passengerFeedback,
         carrier.map(),
         vehicle.map(),

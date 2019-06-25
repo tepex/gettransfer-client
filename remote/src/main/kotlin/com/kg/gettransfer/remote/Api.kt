@@ -1,3 +1,4 @@
+@file:Suppress("TooManyFunctions", "WildcardImport")
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.remote.model.*
@@ -78,7 +79,7 @@ interface Api {
 
     @POST(API_CODE_FOR_CHANGE_EMAIL)
     fun getCodeForChangeEmail(
-            @Query("new_email") email: String
+        @Query("new_email") email: String
     ): Deferred<ResponseModel<String?>>
 
     @POST(API_CHANGE_EMAIL)
@@ -87,6 +88,7 @@ interface Api {
         @Query("code") code: String
     ): Deferred<ResponseModel<String?>>
 
+    @Suppress("LongParameterList")
     @GET(API_ROUTE_INFO)
     fun getRouteInfo(
         @Query("points[]") points: Array<String>,
@@ -209,15 +211,16 @@ interface Api {
         @Field("nonce") nonce: String
     ): Deferred<ResponseModel<PaymentStatusWrapperModel>>
 
-
     /*Autocomplete*/
     @GET(API_AUTOCOMPLETE)
     fun getAutocompletePredictions(
-            @Query("query") query: String,
-            @Query("lang") lang: String) : Deferred<AutocompletePredictionsModel>
+        @Query("query") query: String,
+        @Query("lang") lang: String
+    ): Deferred<AutocompletePredictionsModel>
 
     @GET(API_PLACE_DETAILS)
     fun getPlaceDetails(
-            @Query("place_id") placeId: String,
-            @Query("lang") lang: String) : Deferred<PlaceDetailsResultModel>
+        @Query("place_id") placeId: String,
+        @Query("lang") lang: String
+    ): Deferred<PlaceDetailsResultModel>
 }

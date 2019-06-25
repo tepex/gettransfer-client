@@ -3,7 +3,6 @@ package com.kg.gettransfer.remote.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.RouteInfoEntity
-import com.kg.gettransfer.remote.model.RouteInfoModel
 
 data class RouteInfoModel(
     @SerializedName(RouteInfoEntity.SUCCESS) @Expose val success: Boolean,

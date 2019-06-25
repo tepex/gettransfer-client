@@ -42,4 +42,4 @@ fun PlaceDetailsModel.map() =
         types
     )
 
-fun PlaceDetailsResultModel.map() = PlaceDetailsResultEntity(result?.let { it.map() })
+fun PlaceDetailsResultModel.map() = PlaceDetailsResultEntity(result?.map())

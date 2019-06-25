@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.CityPointEntity
 import com.kg.gettransfer.data.model.DestDurationEntity
-import com.kg.gettransfer.data.model.DestEntity
 import com.kg.gettransfer.data.model.DestPointEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
 import com.kg.gettransfer.data.model.TripEntity
@@ -102,13 +101,13 @@ fun TripModel.map() = TripEntity(date, time, flight)
 fun TripEntity.map() = TripModel(date, time, flight)
 
 fun TransferNewEntity.map(): TransferNewBase {
-    val type = dest
-    return when (type) {
+    return when (val type = dest) {
         is DestDurationEntity -> this.map(type.duration)
         is DestPointEntity    -> this.map(type.to)
     }
 }
 
+@Suppress("MagicNumber")
 fun TransferNewEntity.map(duration: Int) =
     TransferHourlyNewModel(
         from.map(),
@@ -126,6 +125,7 @@ fun TransferNewEntity.map(duration: Int) =
         duration
     )
 
+@Suppress("MagicNumber")
 fun TransferNewEntity.map(to: CityPointEntity) =
     TransferPointToPointNewModel(
         from.map(),

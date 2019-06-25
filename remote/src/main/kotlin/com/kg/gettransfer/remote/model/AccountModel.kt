@@ -25,6 +25,7 @@ class AccountModel(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false
+        @Suppress("UnsafeCast")
         other as AccountModel
         return email == other.email
     }

@@ -17,7 +17,7 @@ data class ConfigsModel(
 /**
  * Wrapper is used to intercept API `transport_types` and convert it into List<TransportTypeModel> with origin order.
  */
-class TransportTypesWrapperModel: ArrayList<TransportTypeModel>()
+class TransportTypesWrapperModel : ArrayList<TransportTypeModel>()
 
 data class PaypalCredentialsModel(
     @SerializedName(PaypalCredentialsEntity.ID) @Expose val id: String,

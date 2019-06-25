@@ -12,33 +12,34 @@ import com.kg.gettransfer.remote.model.MobileConfigModel
 import com.kg.gettransfer.remote.model.RegistrationAccountEntityWrapper
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.map
-import org.koin.core.parameter.parametersOf
 import org.koin.standalone.get
-import org.koin.standalone.inject
-import org.slf4j.Logger
 
 class SessionRemoteImpl : SessionRemote {
+
     private val core = get<ApiCore>()
-    private val log: Logger by inject { parametersOf("GTR-remote") }
 
     override suspend fun getConfigs(): ConfigsEntity {
         val response: ResponseModel<ConfigsModel> = core.tryTwice { core.api.getConfigs() }
+        @Suppress("UnsafeCallOnNullableType")
         return response.data!!.map()
     }
 
     override suspend fun getAccount(): AccountEntity? {
         val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.getAccount() }
+        @Suppress("UnsafeCallOnNullableType")
         return response.data?.account?.map()
     }
 
     override suspend fun setAccount(accountEntity: AccountEntity): AccountEntity {
         val response: ResponseModel<AccountModelWrapper> =
             core.tryTwice { core.api.putAccount(AccountModelWrapper(accountEntity.map())) }
+        @Suppress("UnsafeCallOnNullableType")
         return response.data?.account!!.map()
     }
 
     override suspend fun login(email: String?, phone: String?, password: String): AccountEntity {
         val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.login(email, phone, password) }
+        @Suppress("UnsafeCallOnNullableType")
         return response.data?.account!!.map()
     }
 
@@ -46,6 +47,7 @@ class SessionRemoteImpl : SessionRemote {
         val response: ResponseModel<AccountModelWrapper> = core.tryTwice {
             core.api.register(RegistrationAccountEntityWrapper(account.map()))
         }
+        @Suppress("UnsafeCallOnNullableType")
         return response.data?.account!!.map()
     }
 
