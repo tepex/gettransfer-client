@@ -181,6 +181,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     }
 
     override fun showLoading() {
+        if (loadingFragment.isAdded) return
         fragmentManager?.beginTransaction()?.apply {
             add(R.id.container, loadingFragment)
             commit()
@@ -188,6 +189,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     }
 
     override fun hideLoading() {
+        if (!loadingFragment.isAdded) return
         fragmentManager?.beginTransaction()?.apply {
             remove(loadingFragment)
             commit()
