@@ -71,10 +71,24 @@ val encryptModule = module {
 
 val prefsModule = module {
     single<PreferencesCache> {
+        val prodEndpointName = androidContext().getString(R.string.endpoint_prod)
+        val demoEndpointName = androidContext().getString(R.string.endpoint_demo)
+
         val endpoints = listOf(
-                EndpointEntity("Demo", androidContext().getString(R.string.api_key_demo), androidContext().getString(R.string.api_url_demo), true),
-                EndpointEntity("Prod", androidContext().getString(R.string.api_key_prod), androidContext().getString(R.string.api_url_prod)))
-        PreferencesImpl(androidContext(), endpoints, get())
+                EndpointEntity(
+                        demoEndpointName,
+                        androidContext().getString(R.string.api_key_demo),
+                        androidContext().getString(R.string.api_url_demo), true),
+
+                EndpointEntity(
+                        prodEndpointName,
+                        androidContext().getString(R.string.api_key_prod),
+                        androidContext().getString(R.string.api_url_prod)))
+
+        var defaultEndpointName = prodEndpointName
+        if (BuildConfig.FLAVOR == "dev") defaultEndpointName = demoEndpointName
+
+        PreferencesImpl(androidContext(), endpoints, defaultEndpointName, get())
     }
 }
 
