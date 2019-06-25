@@ -93,7 +93,6 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
         if (openSettingsScreen) {
             router.replaceScreen(Screens.Settings)
         }
-        viewState.hideLoading()
     }
 
     private fun checkInputData() = emailOrPhone.isNotEmpty() && validateInput()
@@ -165,9 +164,10 @@ class LogInPresenter : BasePresenter<LogInView>(), KoinComponent {
                     registerPushToken()
                     router.exit()
                 }
+
+                viewState.hideLoading()
             }
         }
-        viewState.hideLoading()
     }
 
     fun sendVerificationCode() {

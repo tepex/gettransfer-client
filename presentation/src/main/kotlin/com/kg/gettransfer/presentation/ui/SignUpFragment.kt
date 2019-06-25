@@ -149,6 +149,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     override fun showLoading() {
+        if (loadingFragment.isAdded) return
         fragmentManager?.beginTransaction()?.apply {
             add(R.id.container, loadingFragment)
             commit()
@@ -156,6 +157,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     override fun hideLoading() {
+        if (!loadingFragment.isAdded) return
         fragmentManager?.beginTransaction()?.apply {
             remove(loadingFragment)
             commit()
