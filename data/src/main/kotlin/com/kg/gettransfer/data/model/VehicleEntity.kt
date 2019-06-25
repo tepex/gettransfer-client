@@ -9,7 +9,7 @@ import kotlinx.serialization.SerialName
 data class VehicleEntity(
     @SerialName(ID) val id: Long,
     @SerialName(NAME) val name: String,
-    @SerialName(REGISTRATION_NUMBER) val registrationNumber: String,
+    @SerialName(REGISTRATION_NUMBER) val registrationNumber: String?,
     @SerialName(YEAR) val year: Int,
     @SerialName(COLOR) val color: String?,
     /* Dirty hack. Splitting TransportType.id and Vehicle.id */

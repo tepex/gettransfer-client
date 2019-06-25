@@ -8,7 +8,7 @@ import com.kg.gettransfer.data.model.VehicleEntity
 data class VehicleCached(
         @PrimaryKey @ColumnInfo(name = VehicleEntity.ID) val id: Long,
         @ColumnInfo(name = VehicleEntity.NAME) val name: String,
-        @ColumnInfo(name = VehicleEntity.REGISTRATION_NUMBER) val registrationNumber: String,
+        @ColumnInfo(name = VehicleEntity.REGISTRATION_NUMBER) val registrationNumber: String?,
         @ColumnInfo(name = VehicleEntity.YEAR) val year: Int,
         @ColumnInfo(name = VehicleEntity.COLOR) val color: String?,
         /* Dirty hack. Splitting TransportType.id and Vehicle.id */
