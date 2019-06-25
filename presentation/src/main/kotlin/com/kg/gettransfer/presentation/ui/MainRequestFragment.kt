@@ -11,6 +11,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.RETURN_DATE
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
@@ -74,8 +75,8 @@ class MainRequestFragment :
         //Address panel
         with(request_search_panel) {
             rl_hourly.setOnClickListener  { mParent.showNumberPicker(true) }
-            searchFrom.setOnClickListener { mParent.performClick(false, true) }
-            searchTo.setOnClickListener   { mParent.performClick(true, true) }
+            searchFrom.setThrottledClickListener { mParent.performClick(false, true) }
+            searchTo.setThrottledClickListener   { mParent.performClick(true, true) }
             searchFrom.setUneditable()
             searchTo.setUneditable()
         }

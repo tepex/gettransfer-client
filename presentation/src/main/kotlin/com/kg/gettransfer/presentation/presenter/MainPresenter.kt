@@ -4,7 +4,6 @@ import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
@@ -316,16 +315,13 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     private fun navigateToFindAddress(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false) {
-        orderInteractor.from
-                ?.let {
-                    router.navigateTo(Screens.FindAddress(
-                            from,
-                            to,
-                            isClickTo,
-                            bounds,
-                            returnBack)
-                    )
-                }
+        router.navigateTo(Screens.FindAddress(
+                from,
+                to,
+                isClickTo,
+                bounds,
+                returnBack)
+        )
     }
 
     fun onNextClick(block: (Boolean) -> Unit) {
