@@ -56,12 +56,11 @@ class OffersPresenter : BasePresenter<OffersView>() {
                         }
 
                         it.hasData()?.let { transfer ->
-                            if (transfer.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE)
+                            if (transfer.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE ||
+                                    (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_ACTIVE &&
+                                            transfer.paidPercentage > 0))
                                 checkIfNeedNewChain()
-                            else if (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_ACTIVE &&
-                                    transfer.paidPercentage > 0) {
-                                checkIfNeedNewChain()
-                            } else {
+                            else {
                                 viewState.setTransfer(transferMapper.toView(transfer))
                                 checkNewOffersSuspended(transfer)
                             }
