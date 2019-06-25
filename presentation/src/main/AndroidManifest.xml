@@ -235,6 +235,13 @@
                 <action android:name="com.kg.gettransfer.service.CoordinateService" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".receiver.SilentPushReceiver">
+            <intent-filter>
+                <!-- Receive silent push notifications. -->
+                <action android:name="${applicationId}.action.ymp.SILENT_PUSH_RECEIVE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
