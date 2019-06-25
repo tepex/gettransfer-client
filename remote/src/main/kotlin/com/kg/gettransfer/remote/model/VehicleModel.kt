@@ -9,7 +9,7 @@ import com.kg.gettransfer.data.model.VehicleEntity
 data class VehicleModel(
     @SerializedName(VehicleEntity.ID) @Expose val id: Long,
     @SerializedName(VehicleEntity.NAME) @Expose val name: String,
-    @SerializedName(VehicleEntity.REGISTRATION_NUMBER) @Expose val registrationNumber: String,
+    @SerializedName(VehicleEntity.REGISTRATION_NUMBER) @Expose val registrationNumber: String?,
     @SerializedName(VehicleEntity.YEAR) @Expose val year: Int,
     @SerializedName(VehicleEntity.COLOR) @Expose val color: String?,
 
