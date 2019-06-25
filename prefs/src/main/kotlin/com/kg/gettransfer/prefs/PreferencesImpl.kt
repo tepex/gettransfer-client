@@ -14,6 +14,7 @@ import kotlinx.serialization.json.JSON
 
 class PreferencesImpl(context: Context,
                       override val endpoints: List<EndpointEntity>,
+                      private val defaultEndpointName: String,
                       private val encryptPass: EncryptPass): PreferencesCache {
     companion object {
         @JvmField val INVALID_TOKEN       = "invalid_token"
@@ -197,9 +198,8 @@ class PreferencesImpl(context: Context,
     override var endpoint: EndpointEntity
         get() {
             if(_endpoint == null) {
-                val name = configsPrefs.getString(ENDPOINT, null)
-                if(name != null) _endpoint = endpoints.find { it.name == name }
-                if(_endpoint == null) _endpoint = endpoints.first()
+                val name = configsPrefs.getString(ENDPOINT, defaultEndpointName)
+                _endpoint = endpoints.find { it.name == name }
             }
             return _endpoint!!
         }
