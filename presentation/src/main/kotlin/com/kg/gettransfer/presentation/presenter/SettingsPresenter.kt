@@ -28,19 +28,15 @@ import java.util.Locale
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
-    //private lateinit var currencies: List<CurrencyModel>
     private lateinit var locales: List<LocaleModel>
-    //private lateinit var distanceUnits: List<DistanceUnitModel>
     private lateinit var endpoints: List<EndpointModel>
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
 
     private val localeMapper       = get<LocaleMapper>()
     private val currencyMapper     = get<CurrencyMapper>()
-    //private val distanceUnitMapper = get<DistanceUnitMapper>()
     private val endpointMapper     = get<EndpointMapper>()
     private val reviewInteractor   = get<ReviewInteractor>()
-    private val profileMapper      = get<ProfileMapper>()
 
     private var localeWasChanged = false
     private var restart = true
@@ -54,14 +50,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     companion object {
         const val CLOSE_FRAGMENT  = 0
         const val CURRENCIES_VIEW = 1
-        //const val PASSWORD_VIEW   = 2
     }
-
-    /*companion object {
-        private const val CURRENCY_GBP = "GBP"
-        private const val LOCALE_RU = "ru"
-        private const val GBP_RU = "Фунт стерлингов"
-    }*/
 
     @CallSuper
     override fun attachView(view: SettingsView) {
@@ -69,7 +58,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         if (restart) initConfigs()
         initGeneralSettings()
         if (accountManager.isLoggedIn) {
-            //initLoggedInUserSettings()
             viewState.initProfileField()
             viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
         }
@@ -90,10 +78,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private fun initGeneralSettings(){
         viewState.initGeneralSettingsLayout()
 
-        /*viewState.setCurrencies(currencies)
-        val currency = systemInteractor.currency
-        val currencyModel = currencies.find { it.delegate == currency }
-        viewState.setCurrency(currencyModel?.name ?: "")*/
         viewState.setCurrency(sessionInteractor.currency.let { currencyMapper.toView(it) }.name)
 
         viewState.setLocales(locales)
@@ -104,11 +88,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
         viewState.setLogoutButtonEnabled(accountManager.hasAccount)
     }
-
-    /*private fun initLoggedInUserSettings() {
-        viewState.initLoggedInUserSettings(accountManager.remoteProfile.let { profileMapper.toView(it) })
-        viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
-    }*/
 
     private fun initCarrierSettings(){
         viewState.initCarrierLayout()
@@ -141,14 +120,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.showDebugMenu()
     }
 
-    /*fun changeCurrency(selected: Int) {
-        val currencyModel = currencies.get(selected)
-        systemInteractor.currency = currencyModel.delegate
-        viewState.setCurrency(currencyModel.name)
-        saveAccount()
-        logEvent(Analytics.CURRENCY_PARAM, currencyModel.code)
-    }*/
-
     override fun currencyChanged() {
         val currencyModel = sessionInteractor.currency.let { currencyMapper.toView(it) }
         viewState.setCurrency(currencyModel.name)
@@ -170,7 +141,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
         Locale.setDefault(sessionInteractor.locale)
         initConfigs()
-        //viewState.setCurrencies(currencies)
         viewState.setCalendarModes(calendarModes)
 
         return sessionInteractor.locale
@@ -187,14 +157,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         systemInteractor.lastCarrierTripsTypeView = selected
         viewState.setCalendarMode(selected)
     }
-
-    /*fun changeDistanceUnit(selected: Int) {
-        val distanceUnit = distanceUnits.get(selected)
-        systemInteractor.distanceUnit = distanceUnit.delegate
-        viewState.setDistanceUnit(distanceUnit.name)
-        saveAccount()
-        logEvent(Analytics.UNITS_PARAM, distanceUnit.name)
-    }*/
 
     fun changeEndpoint(selected: Int) {
         val endpoint = endpoints[selected]
@@ -248,14 +210,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun onPasswordClicked() {
-        //showingFragment = PASSWORD_VIEW
-        //viewState.showFragment(PASSWORD_VIEW)
         router.navigateTo(Screens.ChangePassword())
     }
 
     fun onProfileFieldClicked() {
         router.navigateTo(Screens.ProfileSettings())
-        //router.replaceScreen(Screens.ProfileSettings())
     }
 
     @CallSuper
@@ -277,18 +236,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun initConfigs() {
         endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
-        /*currencies = systemInteractor.currencies.map {
-            currencyMapper.toView(it)*//*.apply {
-                if (it.code == CURRENCY_GBP) {
-                    if (systemInteractor.locale.language == LOCALE_RU)
-                        this.name = "$GBP_RU ($symbol)"
-                }
-            }*//*
-        }*/
         locales = sessionInteractor.locales.map { localeMapper.toView(it) }
-        //distanceUnits = systemInteractor.distanceUnits.map { distanceUnitMapper.toView(it) }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
-     //   daysOfWeek = GTDayOfWeek.values().toList().map { dayOfWeekMapper.toView(it) }
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false
     }
