@@ -5,14 +5,10 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v4.app.FragmentManager
 import android.view.View
-
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
-
 import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
-
 import kotlinx.android.synthetic.main.view_bottomsheet_dialog.*
 
 /**
