@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.view
 
+import kotlinx.serialization.Serializable
+
 interface LogInView : BaseView {
     fun setEmail(login: String)
     fun showValidationError(errorType: Int)
@@ -7,10 +9,15 @@ interface LogInView : BaseView {
     fun hideLoading()
 
     companion object {
-        val EXTRA_NEXT_SCREEN = "${LogInView::class.java.name}.next_screen"
-        val EXTRA_EMAIL_TO_LOGIN = "${LogInView::class.java.name}.email_to_login"
-        val EXTRA_TRANSFER_ID = "${LogInView::class.java.name}.transfer_id"
-        val EXTRA_OFFER_ID = "${LogInView::class.java.name}.offer_id"
-        val EXTRA_RATE = "${LogInView::class.java.name}.rate"
+        val EXTRA_PARAMS = "${LogInView::class.java.name}.params"
     }
+
+    @Serializable
+    data class Params(
+        val nextScreen: String,
+        val transferId: Long = 0L,
+        val offerId: Long = 0L,
+        val rate: Int = 0,
+        var emailOrPhone: String = ""
+    )
 }

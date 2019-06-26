@@ -44,11 +44,9 @@ import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.RatingsModel
-import com.kg.gettransfer.presentation.model.ReviewRateModel
 
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 
-import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -58,7 +56,6 @@ import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.MainView.Companion.MAP_SCREEN
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.presentation.view.SplashView
 
 import kotlinx.android.synthetic.main.a_b_orange_view.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -179,11 +176,10 @@ class MainActivity :
 
     private fun getIntents() {
         with(intent) {
-            if (getBooleanExtra(SplashView.EXTRA_SHOW_RATE, false)) {
-                val transferId = getLongExtra(SplashView.EXTRA_TRANSFER_ID, 0)
-                val rate = getIntExtra(SplashView.EXTRA_RATE, 0)
-                presenter.rateTransfer(transferId, rate)
-            }
+            val transferId = getLongExtra(MainView.EXTRA_RATE_TRANSFER_ID, 0L)
+            val rate = getIntExtra(MainView.EXTRA_RATE_VALUE, 0)
+            if (transferId != 0L) presenter.rateTransfer(transferId, rate)
+
             if (getBooleanExtra(Screens.MAIN_MENU, false))
                 Handler().postDelayed({ drawer.openDrawer(Gravity.START, true) }, 500)
         }

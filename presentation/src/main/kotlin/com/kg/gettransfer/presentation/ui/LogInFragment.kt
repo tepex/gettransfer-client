@@ -18,12 +18,12 @@ import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EM
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
 import com.kg.gettransfer.presentation.view.LogInView
-import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_EMAIL_TO_LOGIN
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_log_in.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 import kotlinx.android.synthetic.main.view_input_password.*
+import kotlinx.serialization.json.JSON
 import timber.log.Timber
 
 /**
@@ -51,12 +51,8 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         super.onViewCreated(view, savedInstanceState)
 
         with(presenter) {
-            arguments?.let {
-                emailOrPhone = it.getString(EXTRA_EMAIL_TO_LOGIN, "")
-                nextScreen = it.getString(LogInView.EXTRA_NEXT_SCREEN) ?: ""
-                transferId = it.getLong(LogInView.EXTRA_TRANSFER_ID, 0L)
-                offerId = it.getLong(LogInView.EXTRA_OFFER_ID, 0L)
-                rate = it.getInt(LogInView.EXTRA_RATE, 0)
+            arguments?.let { args ->
+                params = JSON.parse(LogInView.Params.serializer(), args.getString(LogInView.EXTRA_PARAMS) ?: "")
             }
         }
         initTextChangeListeners()
@@ -81,7 +77,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     private fun initTextChangeListeners() {
         emailLayout.fieldText.onTextChanged {
-            presenter.emailOrPhone = it
+            presenter.setEmailOrPhone(it)
             btnLogin.isEnabled = presenter.isEnabledButtonLogin
             btnRequestCode.isEnabled = presenter.isEnabledRequestCodeButton
         }
@@ -154,7 +150,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                         title =
                             this@LogInFragment.getString(
                                 R.string.LNG_ACCOUNT_NOTFOUND,
-                                presenter.emailOrPhone //TODO вот тут возможно придется просить поле из презентера. Или всегда в метожд передавать лишний параметр.
+                                presenter.params.emailOrPhone //TODO вот тут возможно придется просить поле из презентера. Или всегда в метожд передавать лишний параметр.
                             )
                         text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
                         buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)

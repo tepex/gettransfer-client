@@ -10,17 +10,17 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
+import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SmsCodeView
 import com.kg.gettransfer.utilities.Analytics
+import kotlinx.serialization.json.JSON
 
 @InjectViewState
-class SmsCodePresenter : BasePresenter<SmsCodeView>() {
+class SmsCodePresenter : LogInBasePresenter<SmsCodeView>() {
 
     var isPhone = false
     var pinCode = ""
-    var emailOrPhone = ""
-    var nextScreen: String? = null
     var pinItemsCount = PIN_ITEMS_COUNT
     val smsResendDelaySec
         get() = sessionInteractor.mobileConfigs.smsResendDelaySec * SEC_IN_MILLIS
@@ -51,8 +51,8 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> sessionInteractor.getVerificationCode(null, LoginHelper.formatPhone(emailOrPhone))
-                    false -> sessionInteractor.getVerificationCode(emailOrPhone, null)
+                    true -> sessionInteractor.getVerificationCode(null, LoginHelper.formatPhone(params.emailOrPhone))
+                    false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
                 }
             }.also { result ->
                 if (result.error != null) {
@@ -66,7 +66,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
 
     private fun checkInputData() = checkIfEmailOrPhone() && validateInput()
 
-    private fun checkIfEmailOrPhone() = emailOrPhone.run {
+    private fun checkIfEmailOrPhone() = params.emailOrPhone.run {
         if (firstSign() == PHONE_ATTRIBUTE || any { it.toString() == EMAIL_ATTRIBUTE }) {
             true
         } else {
@@ -80,7 +80,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
     }
 
     private fun validateInput(): Boolean {
-        LoginHelper.validateInput(emailOrPhone, isPhone) //force unwrap because null-check is already done
+        LoginHelper.validateInput(params.emailOrPhone, isPhone) //force unwrap because null-check is already done
             .also {
                 when (it) {
                     INVALID_EMAIL -> viewState.showValidationError(true, INVALID_EMAIL)
@@ -98,8 +98,8 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> accountManager.login(null, LoginHelper.formatPhone(emailOrPhone), pinCode, true)
-                    false -> accountManager.login(emailOrPhone, null, pinCode, true)
+                    true -> accountManager.login(null, LoginHelper.formatPhone(params.emailOrPhone), pinCode, true)
+                    false -> accountManager.login(params.emailOrPhone, null, pinCode, true)
                 }
             }.also {
                 it.error?.let { e ->
@@ -109,6 +109,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
 
                 it.isSuccess()?.let {
                     viewState.showErrorText(false)
+                    openNextScreen()
                     logLoginEvent(Analytics.RESULT_SUCCESS)
                     registerPushToken()
                     router.exit()
@@ -126,7 +127,7 @@ class SmsCodePresenter : BasePresenter<SmsCodeView>() {
     }
 
     fun back() {
-        router.replaceScreen(Screens.AuthorizationPager(nextScreen ?: Screens.CLOSE_AFTER_LOGIN, emailOrPhone))
+        router.replaceScreen(Screens.AuthorizationPager(JSON.stringify(LogInView.Params.serializer(), params)))
     }
 
     fun getTitleId(): Int = if (isPhone) R.string.LNG_LOGIN_SEND_SMS_CODE else R.string.LNG_LOGIN_SEND_EMAIL_CODE
