@@ -1,15 +1,12 @@
 package com.kg.gettransfer.cache.model
 
 import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-
 import com.kg.gettransfer.data.model.CardGatewaysEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.CurrencyEntity
 import com.kg.gettransfer.data.model.PaypalCredentialsEntity
-
 import kotlinx.serialization.Serializable
 
 @Entity(tableName = ConfigsEntity.ENTITY_NAME)

@@ -12,13 +12,14 @@ import com.kg.gettransfer.data.model.MessageEntity
 
 @Dao
 interface ChatCachedDao {
-    @Query("SELECT * FROM ${ChatEntity.ENTITY_NAME} WHERE ${MessageEntity.TRANSFER_ID} = :transferId")
+
+    @Query("""SELECT * FROM ${ChatEntity.ENTITY_NAME} WHERE ${MessageEntity.TRANSFER_ID} = :transferId""")
     fun getChat(transferId: Long): ChatCached?
 
-    @Query("SELECT * FROM ${MessageEntity.ENTITY_NAME} WHERE ${MessageEntity.TRANSFER_ID} = :transferId")
+    @Query("""SELECT * FROM ${MessageEntity.ENTITY_NAME} WHERE ${MessageEntity.TRANSFER_ID} = :transferId""")
     fun getMessages(transferId: Long): List<MessageCached>?
 
-    @Query("SELECT * FROM ${MessageEntity.ENTITY_NAME} WHERE ${MessageEntity.ID} = :messageId")
+    @Query("""SELECT * FROM ${MessageEntity.ENTITY_NAME} WHERE ${MessageEntity.ID} = :messageId""")
     fun getMessage(messageId: Long): MessageCached?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -30,16 +31,15 @@ interface ChatCachedDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMessage(message: MessageCached)
 
-
-    @Query("SELECT * FROM ${MessageEntity.NEW_MESSAGE} WHERE ${MessageEntity.TRANSFER_ID} = :transferId")
+    @Query("""SELECT * FROM ${MessageEntity.NEW_MESSAGE} WHERE ${MessageEntity.TRANSFER_ID} = :transferId""")
     fun getNewMessagesForTransfer(transferId: Long): List<NewMessageCached>?
 
-    @Query("SELECT * FROM ${MessageEntity.NEW_MESSAGE}")
+    @Query("""SELECT * FROM ${MessageEntity.NEW_MESSAGE}""")
     fun getAllNewMessages(): List<NewMessageCached>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNewMessage(newMessage: NewMessageCached)
 
-    @Query("DELETE FROM ${MessageEntity.NEW_MESSAGE} WHERE ${MessageEntity.ID} = :messageId")
+    @Query("""DELETE FROM ${MessageEntity.NEW_MESSAGE} WHERE ${MessageEntity.ID} = :messageId""")
     fun deleteNewMessage(messageId: Long)
 }
