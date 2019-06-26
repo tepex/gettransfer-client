@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -57,7 +58,7 @@ class OffersAdapter(private val offers: MutableList<OfferItemModel>,
                     }
                     OFFER_NO_PHOTO -> {
                         OfferItemBindDelegate.bindOfferNoPhoto(this, offerItem as OfferModel)
-                        containerView.offer_bottom_noPhoto.btn_book.setOnClickListener { clickListener(offerItem, false) }
+                        containerView.offer_bottom_noPhoto.btn_book.setThrottledClickListener { clickListener(offerItem, false) }
                         /*  set listener to view to open bottom sheet  */
                     }
                     else           -> {
@@ -70,7 +71,7 @@ class OffersAdapter(private val offers: MutableList<OfferItemModel>,
         }
 
         private fun hangListeners(bookView: View, initDetails: View, clickHandler: OfferClickListener, offerItem: OfferItemModel) {
-            bookView.setOnClickListener { clickHandler(offerItem, false) }
+            bookView.setThrottledClickListener { clickHandler(offerItem, false) }
             initDetails.setOnClickListener { clickHandler(offerItem, true) }
         }
     }
