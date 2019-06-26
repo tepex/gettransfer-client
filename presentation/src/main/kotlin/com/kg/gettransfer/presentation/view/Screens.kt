@@ -29,6 +29,7 @@ object Screens {
     @JvmField val MAIN = "main"
     @JvmField val MAIN_MENU = "show_menu"
     @JvmField val OFFERS = "offers"
+    @JvmField val DETAILS = "details"
 
     @JvmField val CARRIER_MODE = "carrier_mode"
     @JvmField val PASSENGER_MODE = "passenger_mode"
@@ -55,17 +56,22 @@ object Screens {
     private var canSendEmail: Boolean? = null
 
     data class MainPassenger(
-        val showDrawer: Boolean = false,
-        val rateBundle: Bundle? = null
+        val showDrawer: Boolean = false
     ) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
             .apply {
                 putExtra(MAIN_MENU, showDrawer)
-                rateBundle?.apply {
-                    putExtra(SplashView.EXTRA_TRANSFER_ID, getLong(SplashView.EXTRA_TRANSFER_ID, 0))
-                    putExtra(SplashView.EXTRA_RATE, getInt(SplashView.EXTRA_RATE, 0))
-                    putExtra(SplashView.EXTRA_SHOW_RATE, getBoolean(SplashView.EXTRA_SHOW_RATE, false))
-                }
+            }
+    }
+
+    data class MainPassengerToRateTransfer(
+            val transferId: Long,
+            val rate: Int
+    ) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
+            .apply {
+                putExtra(MainView.EXTRA_RATE_TRANSFER_ID, transferId)
+                putExtra(MainView.EXTRA_RATE_VALUE, rate)
             }
     }
 
@@ -78,14 +84,6 @@ object Screens {
                 }
                 else -> throw IllegalArgumentException("Unknown intent key when try to navigate to Carrier mode in ${this.javaClass.name}")
             }
-    }
-
-    data class Splash(val transferId: Long?, val rate: Int?, val showRate: Boolean) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SplashActivity::class.java).apply {
-            putExtra(SplashView.EXTRA_TRANSFER_ID, transferId)
-            putExtra(SplashView.EXTRA_RATE, rate)
-            putExtra(SplashView.EXTRA_SHOW_RATE, showRate)
-        }
     }
 
     object ShareLogs : SupportAppScreen() {
@@ -194,8 +192,7 @@ object Screens {
         }
     }
 
-    data class LoginToGetOffers(val transferId: Long, val email: String?) :
-        SupportAppScreen() {
+    data class LoginToGetOffers(val transferId: Long, val email: String?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
@@ -204,6 +201,19 @@ object Screens {
                         Screens.OFFERS,
                         transferId,
                         emailOrPhone = email ?: "")
+                )
+            )
+        }
+    }
+
+    data class LoginToShowDetails(val transferId: Long) : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+            putExtra(LogInView.EXTRA_PARAMS,
+                JSON.stringify(
+                    LogInView.Params.serializer(),
+                    LogInView.Params(
+                        Screens.DETAILS,
+                        transferId)
                 )
             )
         }
@@ -224,18 +234,17 @@ object Screens {
     }
 
     data class LoginToRateTransfer(val transferId: Long, val rate: Int) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?): Intent =
-            Intent(context, MainLoginActivity::class.java).apply {
-                putExtra(LogInView.EXTRA_PARAMS,
-                    JSON.stringify(
-                        LogInView.Params.serializer(),
-                        LogInView.Params(
-                            Screens.RATE_TRANSFER,
-                            transferId,
-                            rate = rate)
-                    )
+        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+            putExtra(LogInView.EXTRA_PARAMS,
+                JSON.stringify(
+                    LogInView.Params.serializer(),
+                    LogInView.Params(
+                        Screens.RATE_TRANSFER,
+                        transferId,
+                        rate = rate)
                 )
-            }
+            )
+        }
     }
 
     data class FindAddress(

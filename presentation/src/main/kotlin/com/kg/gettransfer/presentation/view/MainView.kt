@@ -5,8 +5,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransferModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface MainView: BaseView {
@@ -36,5 +34,8 @@ interface MainView: BaseView {
     companion object {
         const val MAP_SCREEN     = 1
         const val REQUEST_SCREEN = 2
+
+        val EXTRA_RATE_TRANSFER_ID = "${MainView::class.java.name}.rate_transfer_id"
+        val EXTRA_RATE_VALUE = "${MainView::class.java.name}.rate_value"
     }
 }

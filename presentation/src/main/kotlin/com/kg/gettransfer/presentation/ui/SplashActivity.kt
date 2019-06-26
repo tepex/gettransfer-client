@@ -2,26 +2,22 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.CallSuper
 
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
-import android.util.Log
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.BuildConfig
-import com.kg.gettransfer.presentation.view.AboutView
 import net.hockeyapp.android.CrashManager
 import net.hockeyapp.android.CrashManagerListener
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.SplashPresenter
-import com.kg.gettransfer.presentation.ui.helpers.BuildsConfigsHelper
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SplashView
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
@@ -77,11 +73,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
         updateAppDialogIsShowed = true
         Utils.showAlertUpdateApp(this) {
             if (it) redirectToUpdateApp()
-            else presenter.startApp(
-                    intent.getLongExtra(SplashView.EXTRA_TRANSFER_ID, 0),
-                    intent.getIntExtra(SplashView.EXTRA_RATE, 0),
-                    intent.getBooleanExtra(SplashView.EXTRA_SHOW_RATE, false)
-            )
+            else presenter.startApp()
         }
     }
 

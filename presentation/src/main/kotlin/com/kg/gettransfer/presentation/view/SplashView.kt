@@ -8,10 +8,4 @@ interface SplashView: MvpView {
     fun checkLaunchType()
     fun onNeedAppUpdateInfo()
     fun dispatchAppState()
-
-    companion object {
-        val EXTRA_TRANSFER_ID = "transfer_id"
-        val EXTRA_RATE = "rate"
-        val EXTRA_SHOW_RATE = "show_rate"
-    }
 }

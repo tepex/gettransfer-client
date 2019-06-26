@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.domain.AsyncUtils
@@ -58,11 +56,9 @@ class SplashPresenter: MvpPresenter<SplashView>(), KoinComponent {
         return false
     }
 
-    fun startApp(transferId: Long = 0,
-                 rate: Int = 0,
-                 showRate: Boolean = false) {
+    fun startApp() {
         viewState.dispatchAppState()
-        openStartScreen(transferId, rate, showRate)
+        openStartScreen()
     }
 
     /* TODO: Magic values here! */
@@ -73,18 +69,15 @@ class SplashPresenter: MvpPresenter<SplashView>(), KoinComponent {
         else -> false
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    private fun openStartScreen(transferId: Long = 0, rate: Int = 0, showRate: Boolean = false) {
-
+    private fun openStartScreen() {
         if (!systemInteractor.isOnboardingShowed) {
             router.replaceScreen(Screens.About(systemInteractor.isOnboardingShowed))
             systemInteractor.isOnboardingShowed = true
         }
-        else
-            when (systemInteractor.lastMode) {
-                Screens.CARRIER_MODE   -> router.replaceScreen(Screens.Carrier(Screens.CARRIER_MODE))
-                else                   -> router.newRootScreen(Screens.MainPassenger(!systemInteractor.isOnboardingShowed))
-            }
+        else when (systemInteractor.lastMode) {
+            Screens.CARRIER_MODE -> router.replaceScreen(Screens.Carrier(Screens.CARRIER_MODE))
+            else -> { router.newRootScreen(Screens.MainPassenger(!systemInteractor.isOnboardingShowed)) }
+        }
     }
 
     fun enterByPush() {
@@ -99,14 +92,5 @@ class SplashPresenter: MvpPresenter<SplashView>(), KoinComponent {
     interface LateAccessLogs {
         fun getLog(): String
     }
-
-    private fun createBundle(transferId: Long = 0,
-                             rate: Int = 0,
-                             showRate: Boolean = false) =
-            Bundle().apply {
-                putLong(SplashView.EXTRA_TRANSFER_ID, transferId)
-                putInt(SplashView.EXTRA_RATE, rate)
-                putBoolean(SplashView.EXTRA_SHOW_RATE, showRate)
-            }
 
 }

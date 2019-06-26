@@ -28,6 +28,9 @@ open class LogInBasePresenter<BV : BaseView>: BasePresenter<BV>() {
             Screens.OFFERS -> {
                 router.newChainFromMain(Screens.Offers(params.transferId))
             }
+            Screens.DETAILS -> {
+                router.newChainFromMain(Screens.Details(params.transferId))
+            }
             Screens.PAYMENT_OFFER -> {
                 utils.launchSuspend {
                     val transferResult = fetchData(NO_CACHE_CHECK) { transferInteractor.getTransfer(params.transferId) }
@@ -45,7 +48,7 @@ open class LogInBasePresenter<BV : BaseView>: BasePresenter<BV>() {
                 }
             }
             Screens.RATE_TRANSFER -> {
-                router.newRootScreen(Screens.Splash(params.transferId, params.rate, true))
+                router.newRootScreen(Screens.MainPassengerToRateTransfer(params.transferId, params.rate))
             }
         }
     }

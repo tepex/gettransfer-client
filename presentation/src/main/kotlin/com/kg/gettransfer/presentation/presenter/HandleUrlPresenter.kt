@@ -65,7 +65,7 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
                 fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
             }
             if (!accountManager.isLoggedIn)
-                router.createStartChain(Screens.LoginToGetOffers(transferId, ""))
+                router.createStartChain(Screens.LoginToShowDetails(transferId))
             else {
                 fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
                         .also {
@@ -84,11 +84,13 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
     }
 
     fun rateTransfer(transferId: Long, rate: Int) {
-        if (!sessionInteractor.isInitialized) {
-            utils.launchSuspend { sessionInteractor.coldStart() }
+        utils.launchSuspend {
+            if (!sessionInteractor.isInitialized) {
+                fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
+            }
+            if (!accountManager.isLoggedIn) router.replaceScreen(Screens.LoginToRateTransfer(transferId, rate))
+            else router.newRootScreen(Screens.MainPassengerToRateTransfer(transferId, rate))
         }
-        if (!accountManager.isLoggedIn) router.replaceScreen(Screens.LoginToRateTransfer(transferId, rate))
-        else router.newRootScreen(Screens.Splash(transferId, rate, true))
     }
 
     fun openMainScreen() = router.replaceScreen(Screens.MainPassenger())
