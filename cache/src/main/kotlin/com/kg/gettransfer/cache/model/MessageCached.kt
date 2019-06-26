@@ -3,9 +3,7 @@ package com.kg.gettransfer.cache.model
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-
 import com.kg.gettransfer.data.model.MessageEntity
-
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,3 +17,7 @@ data class MessageCached(
     @ColumnInfo(name = MessageEntity.TEXT)           val text: String,
     @ColumnInfo(name = MessageEntity.SEND_AT)        val sendAt: Long? = null
 )
+
+fun MessageCached.map() = MessageEntity(id, accountId, transferId, createdAt, readAt, text, sendAt)
+
+fun MessageEntity.map() = MessageCached(id, accountId, transferId, createdAt, readAt, text, sendAt)

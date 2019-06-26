@@ -96,6 +96,7 @@ detekt {
     input = files(
 //        "cache/src",
         "cache/src/main/kotlin/com/kg/gettransfer/cache/dao",
+        "cache/src/main/kotlin/com/kg/gettransfer/cache/model",
         "data/src",
         "domain/src",
         "encrypt/src",

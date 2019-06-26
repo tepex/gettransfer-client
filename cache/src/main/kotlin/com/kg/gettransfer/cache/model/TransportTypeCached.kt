@@ -1,9 +1,7 @@
 package com.kg.gettransfer.cache.model
 
 import android.arch.persistence.room.ColumnInfo
-
 import com.kg.gettransfer.data.model.TransportTypeEntity
-
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -15,3 +13,7 @@ data class TransportTypeCached(
 
 @Serializable
 data class TransportTypesCachedList(val list: List<TransportTypeCached>)
+
+fun TransportTypeCached.map() = TransportTypeEntity(id, paxMax, luggageMax)
+
+fun TransportTypeEntity.map() = TransportTypeCached(id, paxMax, luggageMax)

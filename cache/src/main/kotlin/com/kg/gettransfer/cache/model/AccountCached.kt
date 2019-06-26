@@ -3,8 +3,8 @@ package com.kg.gettransfer.cache.model
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-
 import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.ProfileEntity
 import com.kg.gettransfer.data.model.UserEntity
 
 @Entity(tableName = AccountEntity.ENTITY_NAME)
@@ -20,3 +20,26 @@ class AccountCached(
     @ColumnInfo(name = AccountEntity.CARRIER_ID) val carrierId: Long?,
     @PrimaryKey(autoGenerate = true) val id: Long = 0
 ) : ProfileCached(fullName, email, phone)
+
+fun AccountCached.map() =
+    AccountEntity(
+        UserEntity(ProfileEntity(fullName, email, phone), termsAccepted ?: false),
+        locale,
+        currency,
+        distanceUnit,
+        groups?.list,
+        carrierId
+    )
+
+fun AccountEntity.map() =
+    AccountCached(
+        user.profile.fullName,
+        user.profile.email,
+        user.profile.phone,
+        locale,
+        currency,
+        distanceUnit,
+        groups?.let { StringList(it) },
+        user.termsAccepted,
+        carrierId
+    )

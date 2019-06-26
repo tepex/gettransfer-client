@@ -1,22 +1,28 @@
 package com.kg.gettransfer.cache
 
-import com.kg.gettransfer.cache.mapper.TransferEntityMapper
+import com.kg.gettransfer.cache.model.map
 import com.kg.gettransfer.data.TransferCache
 import com.kg.gettransfer.data.model.TransferEntity
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class TransferCacheImpl: TransferCache, KoinComponent {
+class TransferCacheImpl : TransferCache, KoinComponent {
+
     private val db: CacheDatabase by inject()
-    private val transferMapper: TransferEntityMapper by inject()
 
-    override fun insertAllTransfers(transfers: List<TransferEntity>) = db.transferCacheDao().insertAll(transfers.map { transferMapper.toCached(it) })
-    override fun insertTransfer(transfer: TransferEntity) = db.transferCacheDao().insert(transferMapper.toCached(transfer))
+    override fun insertAllTransfers(transfers: List<TransferEntity>) =
+        db.transferCacheDao().insertAll(transfers.map { it.map() })
 
-    override fun getTransfer(id: Long) = db.transferCacheDao().getTransfer(id)?.let { transferMapper.fromCached(it) }
-    override fun getAllTransfers() = db.transferCacheDao().getAllTransfers().map { transferMapper.fromCached(it) }
-    override fun getTransfersArchive() = db.transferCacheDao().getTransfersArchive().map { transferMapper.fromCached(it) }
-    override fun getTransfersActive() = db.transferCacheDao().getTransfersActive().map { transferMapper.fromCached(it) }
+    override fun insertTransfer(transfer: TransferEntity) =
+        db.transferCacheDao().insert(transfer.map())
+
+    override fun getTransfer(id: Long) = db.transferCacheDao().getTransfer(id)?.map()
+
+    override fun getAllTransfers() = db.transferCacheDao().getAllTransfers().map { it.map() }
+
+    override fun getTransfersArchive() = db.transferCacheDao().getTransfersArchive().map { it.map() }
+
+    override fun getTransfersActive() = db.transferCacheDao().getTransfersActive().map { it.map() }
 
     override fun deleteAllTransfers() = db.transferCacheDao().deleteAll()
 }
