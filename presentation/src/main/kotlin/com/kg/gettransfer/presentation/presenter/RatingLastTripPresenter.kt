@@ -29,8 +29,11 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     private val routeMapper: RouteMapper by inject()
 
     internal var transferId: Long = 0L
-    private val offerId: Long
+    private var offerId: Long
         get() = reviewInteractor.offerIdForReview
+        set(value) {
+            reviewInteractor.offerIdForReview = value
+        }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -96,15 +99,22 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     fun onRateClicked(rate: Float) {
         if (rate.toInt() == ReviewInteractor.MAX_RATE) {
             logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
-            reviewInteractor.apply {
-                utils.launchSuspend { fetchDataOnly { sendTopRate() } }
-                viewState.thanksForRate()
-                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
-                    viewState.askRateInPlayMarket()
-                    logAppReviewRequest()
+            utils.launchSuspend {
+                with(fetchResultOnly { reviewInteractor.sendTopRate() }) {
+                    if (!isError()) {
+                        viewState.cancelReview()
+                        viewState.thanksForRate()
+                        if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
+                            viewState.askRateInPlayMarket()
+                            logAppReviewRequest()
+                        }
+                    }
                 }
             }
-        } else viewState.showDetailedReview(rate, offerId)
+        } else {
+            viewState.cancelReview()
+            viewState.showDetailedReview(rate, offerId)
+        }
     }
 
     private fun logAppReviewRequest() =
