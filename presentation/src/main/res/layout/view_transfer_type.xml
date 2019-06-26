@@ -145,7 +145,7 @@
                 android:id="@+id/from"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="6sp"
+                android:textSize="@dimen/transfer_types_cost_title"
                 android:text="@string/LNG_RIDE_FROM"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
@@ -162,18 +162,17 @@
                 android:maxLines="1"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical|end"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/transport__price_margin_top"
+                android:layout_marginBottom="@dimen/transport__price_margin_bottom"
                 android:textSize="@dimen/transport_time_server_price_max_text_size"
                 app:autoSizeTextType="uniform"
                 app:autoSizeMinTextSize="@dimen/transport_time_server_price_min_text_size"
                 app:autoSizeMaxTextSize="@dimen/transport_time_server_price_max_text_size"
-                app:autoSizeStepGranularity="2sp"
                 android:fontFamily="@font/sf_pro_text_semibold"
                 android:textColor="@color/color_gtr_green"
                 android:layout_alignParentEnd="true"
                 android:layout_toEndOf="@+id/from"
-                tools:text="$11111111111000111000" />
+                tools:text="$11" />
 
         </RelativeLayout>
 
