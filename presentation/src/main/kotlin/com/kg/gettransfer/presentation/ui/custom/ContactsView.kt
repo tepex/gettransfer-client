@@ -18,7 +18,7 @@ class ContactsView @JvmOverloads constructor(
     init {
         attrs?.let {
             context.obtainStyledAttributes(attrs, R.styleable.ContactsView).apply {
-                val drawableResId = getResourceId(R.styleable.ContactsView_icon_country, -1)
+                val drawableResId = getResourceId(R.styleable.ContactsView_icon_country, View.NO_ID)
                 ivIcon.setImageResource(drawableResId)
                 tvTitle.text = getString(R.styleable.ContactsView_title_country)
                 tvPhone.text = getString(R.styleable.ContactsView_phone)

@@ -13,7 +13,8 @@
         <attr name="hint"/>
         <attr name="icon_img" format="reference" />
         <attr name="isFocusable" format="boolean"/>
-        <attr name="inputType" format="integer"/>
+        <attr name="showChevron" format="boolean"/>
+        <attr name="android:inputType"/>
     </declare-styleable>
 
     <declare-styleable name="TransferDetailsField" parent="EditableView">

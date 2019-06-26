@@ -20,7 +20,7 @@ class NavigationViewMenuItem @JvmOverloads constructor(
     init {
         if (attrs != null) {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.NavigationViewMenuItem)
-            val drawableResId = ta.getResourceId(R.styleable.NavigationViewMenuItem_menu_icon_img, -1)
+            val drawableResId = ta.getResourceId(R.styleable.NavigationViewMenuItem_menu_icon_img, View.NO_ID)
             menu_item_image.setImageDrawable(ContextCompat.getDrawable(context, drawableResId))
             menu_item_title.text = ta.getString(R.styleable.NavigationViewMenuItem_menu_title_text)
             menu_item_subtitle.text = ta.getString(R.styleable.NavigationViewMenuItem_menu_subtitle_text)

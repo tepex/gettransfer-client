@@ -391,7 +391,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     //TODO create custom view for new bottom sheet
     private fun initFieldsViews() {
-        Utils.setDrawables(price_field_input.field_input, 0, 0, R.drawable.ic_arrow_right, 0)
+        //Utils.setDrawables(price_field_input.field_input, 0, 0, R.drawable.ic_arrow_right, 0)
         price_field_input.field_input.compoundDrawablePadding = 0
         passengers_count.person_count.text = getString(R.string.passenger_number_default)
     }
