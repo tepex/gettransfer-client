@@ -22,4 +22,5 @@ data class ProfileEntity(
 }
 
 fun Profile.map() = ProfileEntity(fullName, email, phone)
+
 fun ProfileEntity.map() = Profile(fullName, email, phone)

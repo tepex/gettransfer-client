@@ -1,3 +1,4 @@
+@file:Suppress("TooManyFunctions")
 package com.kg.gettransfer.domain
 
 class ApiException(
@@ -7,21 +8,30 @@ class ApiException(
 ) : RuntimeException(details) {
 
     fun isNoUser() = code == NO_USER
+
     fun isNotLoggedIn() = code == NOT_LOGGED_IN
+
     fun isNotFound() = code == NOT_FOUND
 
     fun isPhoneTaken() = type == TYPE_PHONE_TAKEN
+
     fun isAccountExistError() = type == TYPE_ACCOUNT_EXIST
 
     fun isBadCodeError() = checkDetailsText(DETAILS_BAD_CODE_OR_EMAIL)
+
     fun isEmailNotChangeableError() = checkDetailsText(DETAILS_EMAIL_NOT_CHANGEABLE)
+
     fun isNewEmailAlreadyTakenError() = checkDetailsText(DETAILS_NEW_EMAIL_TAKEN)
-    fun isNewEmailInvalid() = checkDetailsText(DETAILS_NEW_EMAIL_INVALID_1) || checkDetailsText(DETAILS_NEW_EMAIL_INVALID_2)
+
+    fun isNewEmailInvalid() =
+        checkDetailsText(DETAILS_NEW_EMAIL_INVALID_1) || checkDetailsText(DETAILS_NEW_EMAIL_INVALID_2)
+
     fun checkExistedAccountField() = when {
         checkDetailsText(DETAILS_REDIRECT_PHONE) -> PHONE_EXISTED
         checkDetailsText(DETAILS_REDIRECT_EMAIL) -> EMAIL_EXISTED
         else -> PHONE_EXISTED
     }
+
     private fun checkDetailsText(str: String) = details.indexOf(str) >= 0
 
     /* PAYMENT ERRORS */

@@ -1,9 +1,7 @@
 package com.kg.gettransfer.cache.model
 
 import android.arch.persistence.room.ColumnInfo
-
 import com.kg.gettransfer.data.model.LocaleEntity
-
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,3 +12,7 @@ data class LocaleCached(
 
 @Serializable
 data class LocaleCachedList(val list: List<LocaleCached>)
+
+fun LocaleCached.map() = LocaleEntity(code, title)
+
+fun LocaleEntity.map() = LocaleCached(code, title)

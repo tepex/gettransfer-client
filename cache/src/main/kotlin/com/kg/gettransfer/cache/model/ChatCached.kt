@@ -3,11 +3,9 @@ package com.kg.gettransfer.cache.model
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-
 import com.kg.gettransfer.data.model.ChatAccountEntity
 import com.kg.gettransfer.data.model.ChatEntity
 import com.kg.gettransfer.data.model.MessageEntity
-
 import kotlinx.serialization.Serializable
 
 @Entity(tableName = ChatEntity.ENTITY_NAME)
@@ -25,4 +23,22 @@ data class ChatAccountCached(
 )
 
 @Serializable
-data class ChatAccountsCachedMap (val map: Map<Long, ChatAccountCached>)
+data class ChatAccountsCachedMap(val map: Map<Long, ChatAccountCached>)
+
+fun ChatAccountCached.map() = ChatAccountEntity(email, fullName, roles.list)
+
+fun ChatAccountEntity.map() = ChatAccountCached(email, fullName, StringList(roles))
+
+fun ChatCached.map(messages: List<MessageCached>, newMessages: List<NewMessageCached>) =
+    ChatEntity(
+        accounts.map.mapValues { it.value.map() },
+        accountId,
+        messages.map { it.map() }.toMutableList().apply { addAll(newMessages.map { it.map() }) }
+    )
+
+fun ChatEntity.map(transferId: Long) =
+    ChatCached(
+        transferId,
+        ChatAccountsCachedMap(accounts.mapValues { it.value.map() }),
+        accountId
+    )

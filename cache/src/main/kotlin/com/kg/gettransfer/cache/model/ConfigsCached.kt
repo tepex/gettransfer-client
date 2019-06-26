@@ -1,31 +1,21 @@
 package com.kg.gettransfer.cache.model
 
 import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-
-import com.kg.gettransfer.data.model.CardGatewaysEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.CurrencyEntity
 import com.kg.gettransfer.data.model.PaypalCredentialsEntity
-
 import kotlinx.serialization.Serializable
 
 @Entity(tableName = ConfigsEntity.ENTITY_NAME)
 data class ConfigsCached(
     @ColumnInfo(name = ConfigsEntity.TRANSPORT_TYPES) val transportTypes: TransportTypesCachedList,
-    //@Embedded(prefix = ConfigsEntity.PAYPAL_CREDENTIALS) val paypalCredentials: PaypalCredentialsCached,
     @ColumnInfo(name = ConfigsEntity.AVAILABLE_LOCALES) val availableLocales: LocaleCachedList,
-    //@ColumnInfo(name = ConfigsEntity.PREFERRED_LOCALE) val preferredLocale: String,
-    //@Embedded(prefix = ConfigsEntity.CARD_GATEWAYS) val cardGateways: CardGatewaysCached,
-    //@ColumnInfo(name = ConfigsEntity.DEFAULT_CARD_GATEWAYS) val defaultCardGateways: String,
     @ColumnInfo(name = ConfigsEntity.PAYMENT_COMMISSION) val paymentCommission: Float,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_CURRENCIES) val supportedCurrencies: CurrencyCachedList,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: StringList,
-    //@ColumnInfo(name = ConfigsEntity.OFFICE_PHONE) val officePhone: String,
-    //@ColumnInfo(name = ConfigsEntity.BASE_URL) val baseUrl: String,
-    @PrimaryKey(autoGenerate = true) val id: Long = 14
+    @PrimaryKey(autoGenerate = true) val id: Long = 15
 )
 
 data class PaypalCredentialsCached(
@@ -42,7 +32,28 @@ data class CurrencyCached(
 @Serializable
 data class CurrencyCachedList(val list: List<CurrencyCached>)
 
-data class CardGatewaysCached(
-    @ColumnInfo(name = CardGatewaysEntity.DEFAULT) val def: String,
-    @ColumnInfo(name = CardGatewaysEntity.ISO_COUNTRY_CODE) val countryCode: String?
-)
+fun PaypalCredentialsCached.map() = PaypalCredentialsEntity(id, env)
+
+fun PaypalCredentialsEntity.map() = PaypalCredentialsCached(id, env)
+
+fun CurrencyCached.map() = CurrencyEntity(code, symbol)
+
+fun CurrencyEntity.map() = CurrencyCached(code, symbol)
+
+fun ConfigsCached.map() =
+    ConfigsEntity(
+        transportTypes.list.map { it.map() },
+        availableLocales.list.map { it.map() },
+        paymentCommission,
+        supportedCurrencies.list.map { it.map() },
+        supportedDistanceUnits.list
+    )
+
+fun ConfigsEntity.map() =
+    ConfigsCached(
+        TransportTypesCachedList(transportTypes.map { it.map() }),
+        LocaleCachedList(availableLocales.map { it.map() }),
+        paymentCommission,
+        CurrencyCachedList(supportedCurrencies.map { it.map() }),
+        StringList(supportedDistanceUnits)
+    )
