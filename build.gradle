@@ -97,7 +97,8 @@ detekt {
         "domain/src",
         "data/src",
         "remote/src",
-        "geo/src"
+        "geo/src",
+        "logging/src"
 //        "remote/src/main/kotlin/com/kg/gettransfer/remote/ApiCore.kt"
     )
     config = files("detekt-config.yml")

@@ -1,13 +1,15 @@
 package com.kg.gettransfer.logging
 
 import android.content.Context
-
 import com.kg.gettransfer.domain.repository.LoggingRepository
-
 import java.io.File
 import java.io.FileInputStream
 
-class LoggingRepositoryImpl(private val context: Context, private val logFileName: String): LoggingRepository {
+class LoggingRepositoryImpl(
+    private val context: Context,
+    private val logFileName: String
+) : LoggingRepository {
+
     override val file = File(context.filesDir.path.toString().plus("/$logFileName"))
     override val logs: String
         get() = FileInputStream(file).bufferedReader().use { it.readText() }
