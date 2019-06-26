@@ -25,7 +25,7 @@ class PasswordFragment : MvpAppCompatFragment() {
         parent = parentFragment as LogInFragment
         mPresenter = parent.presenter
 
-        currentUser.text = mPresenter.emailOrPhone
+        currentUser.text = mPresenter.params.emailOrPhone
 
         etPassword.onTextChanged {
             val pas = it.trim()

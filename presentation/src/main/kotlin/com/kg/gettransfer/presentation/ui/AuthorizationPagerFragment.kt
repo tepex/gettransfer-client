@@ -23,6 +23,7 @@ import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 
 import kotlinx.android.synthetic.main.fragment_pager_authorization.*
+import kotlinx.serialization.json.JSON
 
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
@@ -37,8 +38,8 @@ import ru.terrakok.cicerone.Router
 class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
 
     private val router by inject<Router>()
+    private lateinit var params: String
     private var nextScreen = ""
-    private var emailOrPhone = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_pager_authorization, container, false)
@@ -69,8 +70,10 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
 
         loginBackButton.setOnClickListener { router.exit() }
 
-        nextScreen = arguments?.getString(LogInView.EXTRA_NEXT_SCREEN) ?: ""
-        emailOrPhone = arguments?.getString(LogInView.EXTRA_EMAIL_TO_LOGIN) ?: ""
+        arguments?.let { args ->
+            params = args.getString(LogInView.EXTRA_PARAMS) ?: ""
+            JSON.parse(LogInView.Params.serializer(), params).let { nextScreen = it.nextScreen }
+        }
     }
 
     fun showOtherPage() {
@@ -95,8 +98,7 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
             0 -> LogInFragment.newInstance().apply {
                 changePage = { showOtherPage() }
                 arguments = Bundle().apply {
-                    putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
-                    putString(LogInView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
+                    putString(LogInView.EXTRA_PARAMS, params)
                 }
             }
             1 -> {

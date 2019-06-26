@@ -14,9 +14,8 @@ import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 
 import com.kg.gettransfer.presentation.presenter.MainLoginPresenter
+import com.kg.gettransfer.presentation.view.LogInView
 
-import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_EMAIL_TO_LOGIN
-import com.kg.gettransfer.presentation.view.LogInView.Companion.EXTRA_NEXT_SCREEN
 import com.kg.gettransfer.presentation.view.MainLoginView
 
 import com.kg.gettransfer.utilities.LocaleManager
@@ -52,9 +51,7 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_login)
-        val nextScreen = intent?.getStringExtra(EXTRA_NEXT_SCREEN) ?: ""
-        val emailOrPhone = intent.getStringExtra(EXTRA_EMAIL_TO_LOGIN) ?: ""
-        presenter.showLoginFragment(nextScreen, emailOrPhone)
+        presenter.showLoginFragment(intent.getStringExtra(LogInView.EXTRA_PARAMS))
     }
 
     @CallSuper

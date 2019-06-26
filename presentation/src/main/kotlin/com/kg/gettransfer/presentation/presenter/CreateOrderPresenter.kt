@@ -528,8 +528,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             router.navigateTo(
                 Screens.LoginToGetOffers(
                     id,
-                    if (!phone.isNullOrEmpty()) phone else email,
-                    Screens.OFFERS
+                    if (!phone.isNullOrEmpty()) phone else email
                 )
             )
         }

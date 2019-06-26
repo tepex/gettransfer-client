@@ -22,6 +22,7 @@ import com.kg.gettransfer.presentation.view.SmsCodeView
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_sms_code.*
+import kotlinx.serialization.json.JSON
 import timber.log.Timber
 
 class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
@@ -43,14 +44,13 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
 
         with(presenter) {
             arguments?.let {
-                nextScreen = it.getString(LogInView.EXTRA_NEXT_SCREEN) ?: null
-                emailOrPhone = arguments?.getString(EXTERNAL_EMAIL_OR_PHONE) ?: ""
-                isPhone = arguments?.getBoolean(EXTERNAL_IS_PHONE) ?: false
+                params = JSON.parse(LogInView.Params.serializer(), it.getString(LogInView.EXTRA_PARAMS) ?: "")
+                isPhone = it.getBoolean(EXTERNAL_IS_PHONE)
             }
             pinItemsCount = pinView.itemCount
         }
 
-        smsTitle.text = "${getString(presenter.getTitleId())} ${presenter.emailOrPhone}"
+        smsTitle.text = "${getString(presenter.getTitleId())} ${presenter.params.emailOrPhone}"
 
         pinView.onTextChanged { code ->
             presenter.pinCode = code
@@ -126,7 +126,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
                 BottomSheetDialog
                     .newInstance()
                     .apply {
-                        title = this@SmsCodeFragment.getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.emailOrPhone)
+                        title = this@SmsCodeFragment.getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.params.emailOrPhone)
                         buttonOkText = this@SmsCodeFragment.getString(R.string.LNG_OK)
                         onDismissCallBack = {
                             presenter.back()
