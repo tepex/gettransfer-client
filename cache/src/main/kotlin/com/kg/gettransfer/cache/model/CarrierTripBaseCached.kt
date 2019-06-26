@@ -71,7 +71,7 @@ fun CarrierTripBaseCached.map(typeMore: CarrierTripMoreCached?) =
         typeMore?.paidSum,
         typeMore?.remainsToPay,
         typeMore?.paidPercentage,
-        typeMore?.passengerAccount?.it.map()
+        typeMore?.passengerAccount?.map()
     )
 
 fun CarrierTripBaseEntity.map() =
