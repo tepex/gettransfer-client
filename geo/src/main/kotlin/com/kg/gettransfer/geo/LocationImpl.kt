@@ -72,17 +72,20 @@ class LocationImpl(private val context: Context) :
         } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             throw LocationException(LocationException.GEOCODER_ERROR, e.message ?: "Unknown")
         }
+        if (list.isEmpty()) return ""
+
         /* TODO: refactoring needed */
-        val street = list.firstOrNull()?.thoroughfare
-        val house = list.firstOrNull()?.subThoroughfare
-        val city = list.firstOrNull()?.locality
-        val area = list.firstOrNull()?.adminArea
-        val country = list.firstOrNull()?.countryName
+        val addr = list.first()
+        val street = addr.thoroughfare
+        val line = addr.getAddressLine(0) ?: ""
+        val house = addr.subThoroughfare
+        val city = addr.locality
+        val area = addr.adminArea
+        val country = addr.countryName
 
         return buildString {
             when {
-                street == null && list.isNotEmpty() && !list.firstOrNull()?.getAddressLine(0)?.isNullOrEmpty() ->
-                    append(list.firstOrNull()?.getAddressLine(0))
+                street == null && line.isNotEmpty()                 -> append(line)
                 !street.isNullOrEmpty() && street != "Unnamed Road" -> append(street).append(", ")
                 !house.isNullOrEmpty()                              -> append(house).append(", ")
                 !city.isNullOrEmpty()                               -> append(city).append(", ")
