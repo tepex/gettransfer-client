@@ -105,7 +105,8 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         BottomSheetDialog
             .newInstance()
             .apply {
-                title = errStringRes
+                title = this@LogInFragment.getString(R.string.LNG_ERROR_CREDENTIALS)
+                text = errStringRes
                 onDismissCallBack = { hideLoading() }
             }
             .show(fragmentManager)
