@@ -20,8 +20,8 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class LocationImpl(private val context: Context) : 
-    Location, 
+class LocationImpl(private val context: Context) :
+    Location,
     GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
 
@@ -30,8 +30,9 @@ class LocationImpl(private val context: Context) :
     private var googleApiClient: GoogleApiClient? = null
 
     override val isGpsEnabled: Boolean
-        get() = (context.getSystemService(Context.LOCATION_SERVICE)
-                as LocationManager).isProviderEnabled(LocationManager.GPS_PROVIDER)
+        @Suppress("UnsafeCast")
+        get() = (context.getSystemService(Context.LOCATION_SERVICE) as LocationManager)
+            .isProviderEnabled(LocationManager.GPS_PROVIDER)
 
     override fun initGeocoder(locale: Locale) {
         geocoder = Geocoder(context, locale)
@@ -40,10 +41,10 @@ class LocationImpl(private val context: Context) :
     override fun initGoogleApiClient() {
         if (googleApiClient == null) {
             googleApiClient = GoogleApiClient.Builder(context)
-                    .addApi(LocationServices.API)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build()
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build()
         }
         googleApiClient?.connect()
     }
@@ -54,19 +55,24 @@ class LocationImpl(private val context: Context) :
 
     override suspend fun getCurrentLocation(): LocationEntity = suspendCoroutine { cont ->
         locationProviderClient.lastLocation
-                // In some rare situations Location can be null.
-                // https://developer.android.com/training/location/retrieve-current#last-known
-                .addOnSuccessListener { l: android.location.Location? -> l?.let { cont.resume(LocationEntity(it.latitude, it.longitude)) } }
-                .addOnFailureListener { cont.resumeWithException(LocationException(LocationException.NOT_FOUND, "Unknown")) }
+            // In some rare situations Location can be null.
+            // https://developer.android.com/training/location/retrieve-current#last-known
+            .addOnSuccessListener { l: android.location.Location? ->
+                l?.let { cont.resume(LocationEntity(it.latitude, it.longitude)) }
+            }
+            .addOnFailureListener {
+                cont.resumeWithException(LocationException(LocationException.NOT_FOUND, "Unknown"))
+            }
     }
 
+    @Suppress("ComplexMethod")
     override fun getAddressByLocation(point: LocationEntity): String {
         val list = try {
             geocoder.getFromLocation(point.latitude, point.longitude, 1)
-        } catch (e: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             throw LocationException(LocationException.GEOCODER_ERROR, e.message ?: "Unknown")
         }
-
+        /* TODO: refactoring needed */
         val street = list.firstOrNull()?.thoroughfare
         val house = list.firstOrNull()?.subThoroughfare
         val city = list.firstOrNull()?.locality
@@ -74,28 +80,22 @@ class LocationImpl(private val context: Context) :
         val country = list.firstOrNull()?.countryName
 
         return buildString {
-            if (street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty())
-                append(list.firstOrNull()?.getAddressLine(0))
-            else {
-                if (!street.isNullOrEmpty() && street != "Unnamed Road") append(street).append(", ")
-                if (!house.isNullOrEmpty()) append(house).append(", ")
-                if (!city.isNullOrEmpty()) append(city).append(", ")
-                if (!country.isNullOrEmpty()) append(country).append(", ")
-                if (!area.isNullOrEmpty() && area != city) append(area).append(", ")
-                if (this.lastIndexOf(", ") == this.length - 2) delete(this.length - 2, this.length)
+            when {
+                street == null && list.isNotEmpty() && !list.firstOrNull()?.getAddressLine(0)?.isNullOrEmpty() ->
+                    append(list.firstOrNull()?.getAddressLine(0))
+                !street.isNullOrEmpty() && street != "Unnamed Road" -> append(street).append(", ")
+                !house.isNullOrEmpty()                              -> append(house).append(", ")
+                !city.isNullOrEmpty()                               -> append(city).append(", ")
+                !country.isNullOrEmpty()                            -> append(country).append(", ")
+                !area.isNullOrEmpty() && area != city               -> append(area).append(", ")
+                this.lastIndexOf(", ") == this.length - 2           -> delete(this.length - 2, this.length)
             }
         }
     }
 
-    override fun onConnected(p0: Bundle?) {
+    override fun onConnected(p0: Bundle?) {}
 
-    }
+    override fun onConnectionSuspended(p0: Int) {}
 
-    override fun onConnectionSuspended(p0: Int) {
-
-    }
-
-    override fun onConnectionFailed(p0: ConnectionResult) {
-
-    }
+    override fun onConnectionFailed(p0: ConnectionResult) {}
 }
