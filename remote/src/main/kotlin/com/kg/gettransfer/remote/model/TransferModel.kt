@@ -2,10 +2,7 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 import com.kg.gettransfer.data.model.TransferEntity
-
-
 
 data class TransferModel(
     @SerializedName(TransferEntity.ID) @Expose                val id: Long,
@@ -32,8 +29,8 @@ data class TransferModel(
 /* ================================================== */
     @SerializedName(TransferEntity.CHILD_SEATS_BOOSTER) @Expose     val childSeatsBooster: Int,
     @SerializedName(TransferEntity.PROMO_CODE) @Expose              val promoCode: String?,
-    @SerializedName(TransferEntity.PASSENGER_OFFERED_PRICE) @Expose val passengerOfferedPrice: String?, // Can be Null!!!
-    @SerializedName(TransferEntity.PRICE) @Expose                   val price: MoneyModel?, // Can be Null!!!
+    @SerializedName(TransferEntity.PASSENGER_OFFERED_PRICE) @Expose val passengerOfferedPrice: String?, // Nullable!
+    @SerializedName(TransferEntity.PRICE) @Expose                   val price: MoneyModel?, // Nullable!
     @SerializedName(TransferEntity.PAID_SUM) @Expose                val paidSum: MoneyModel?,
     @SerializedName(TransferEntity.REMAINS_TO_PAY) @Expose          val remainsToPay: MoneyModel?,
     @SerializedName(TransferEntity.PAID_PERCENTAGE) @Expose         val paidPercentage: Int,
@@ -61,3 +58,55 @@ data class TransferModel(
 data class TransfersModel(@SerializedName("transfers") @Expose val transfers: List<TransferModel>)
 
 data class TransferWrapperModel(@SerializedName(TransferEntity.ENTITY_NAME) @Expose val transfer: TransferModel)
+
+fun TransferModel.map() =
+    TransferEntity(
+        id,
+        createdAt,
+        duration,
+        distance,
+        status,
+        from.map(),
+        to?.map(),
+        dateToLocal,
+        dateReturnLocal,
+        flightNumber,
+/* ================================================== */
+        flightNumberReturn,
+        transportTypeIds,
+        pax,
+        bookNow,
+        time,
+        nameSign,
+        comment,
+        childSeats,
+        childSeatsInfant,
+        childSeatsConvertible,
+/* ================================================== */
+        childSeatsBooster,
+        promoCode,
+        passengerOfferedPrice,
+        price?.map(),
+        paidSum?.map(),
+        remainsToPay?.map(),
+        paidPercentage,
+        watertaxi,
+        bookNowOffers?.mapValues { it.map() } ?: emptyMap(),
+        offersCount,
+/* ================================================== */
+        relevantCarriersCount,
+        offersUpdatedAt,
+        dateRefund,
+        paypalOnly,
+        carrierMainPhone,
+        pendingPaymentId,
+        analyticsSent,
+        rubPrice,
+        refundedPrice?.map(),
+        campaign,
+/* ================================================== */
+        editableFields,
+        airlineCard,
+        paymentPercentages,
+        unreadMessagesCount
+    )

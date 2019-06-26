@@ -3,9 +3,7 @@ package com.kg.gettransfer.remote
 import com.kg.gettransfer.data.ReviewRemote
 import com.kg.gettransfer.data.model.ReviewRateEntity
 import com.kg.gettransfer.remote.model.FeedBackToRemote
-import com.kg.gettransfer.remote.model.RateToRemote
 import com.kg.gettransfer.remote.model.map
-
 import org.koin.standalone.get
 
 class ReviewRemoteImpl : ReviewRemote {
@@ -19,5 +17,4 @@ class ReviewRemoteImpl : ReviewRemote {
     override suspend fun sendFeedBackComment(id: Long, comment: String) {
         core.tryTwice { core.api.sendFeedBack(id, FeedBackToRemote(comment)) }
     }
-
 }

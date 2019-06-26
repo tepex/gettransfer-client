@@ -12,3 +12,7 @@ data class PriceModel(
     @SerializedName(PriceEntity.PERCENTAGE_70) @Expose val percentage70: String,
     @SerializedName(PriceEntity.AMOUNT) @Expose val amount: Double
 )
+
+fun PriceModel.map() = PriceEntity(base.map(), withoutDiscount?.map(), percentage30, percentage70, amount)
+
+fun PriceEntity.map() = PriceModel(base.map(), withoutDiscount?.map(), percentage30, percentage70, amount)

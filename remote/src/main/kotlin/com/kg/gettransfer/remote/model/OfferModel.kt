@@ -2,7 +2,6 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 import com.kg.gettransfer.data.model.OfferEntity
 
 data class OffersModel(@SerializedName("offers") @Expose val offers: List<OfferModel>)
@@ -23,3 +22,22 @@ data class OfferModel(
     @SerializedName(OfferEntity.VEHICLE)             @Expose val vehicle: VehicleModel,
     @SerializedName(OfferEntity.DRIVER)              @Expose val driver: ProfileModel?
 )
+
+fun OfferModel.map(transferId: Long) =
+    OfferEntity(
+        id,
+        transferId,
+        status,
+        currency,
+        wifi,
+        refreshments,
+        charger,
+        createdAt,
+        updatedAt,
+        price.map(),
+        ratings?.map(),
+        passengerFeedback,
+        carrier.map(),
+        vehicle.map(),
+        driver?.map()
+    )

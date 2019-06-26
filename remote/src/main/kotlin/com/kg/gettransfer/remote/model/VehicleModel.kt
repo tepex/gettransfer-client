@@ -2,7 +2,6 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 import com.kg.gettransfer.data.model.TransportTypeEntity
 import com.kg.gettransfer.data.model.VehicleEntity
 
@@ -19,3 +18,16 @@ data class VehicleModel(
 
     @SerializedName(VehicleEntity.PHOTOS) @Expose var photos: List<String>
 )
+
+fun VehicleModel.map() =
+    VehicleEntity(
+        id,
+        name,
+        registrationNumber,
+        year,
+        color,
+        transportTypeId,
+        paxMax,
+        luggageMax,
+        photos
+    )

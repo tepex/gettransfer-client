@@ -2,7 +2,6 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 import com.kg.gettransfer.data.model.ChatAccountEntity
 import com.kg.gettransfer.data.model.ChatEntity
 
@@ -17,3 +16,12 @@ data class ChatAccountModel(
     @SerializedName(ChatAccountEntity.FULL_NAME) @Expose val fullName: String?,
     @SerializedName(ChatAccountEntity.ROLES) @Expose     val roles: List<String>
 )
+
+fun ChatAccountModel.map() = ChatAccountEntity(email, fullName, roles)
+
+fun ChatModel.map() =
+    ChatEntity(
+        accounts.mapValues { it.value.map() },
+        accountId,
+        messages.map { it.map() }.toMutableList()
+    )

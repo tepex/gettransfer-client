@@ -2,7 +2,6 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 import com.kg.gettransfer.data.model.UserEntity
 
 class UserModel(
@@ -11,3 +10,5 @@ class UserModel(
     phone: String?,
     @SerializedName(UserEntity.TERMS_ACCEPTED) @Expose val termsAccepted: Boolean = true
 ) : ProfileModel(fullName, email, phone)
+
+fun UserEntity.map() = UserModel(profile.fullName ?: "", profile.email, profile.phone, termsAccepted)

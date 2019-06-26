@@ -2,7 +2,6 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
 import com.kg.gettransfer.data.model.RouteInfoEntity
 
 data class RouteInfoModel(
@@ -21,6 +20,21 @@ data class RoutesModel(
 )
 
 data class PointsModel(@SerializedName("points") @Expose val points: String)
+
 data class LegModel(@SerializedName("steps") @Expose val steps: List<StepModel>)
+
 data class StepModel(@SerializedName("polyline") @Expose val polyline: PolylineModel)
+
 data class PolylineModel(@SerializedName("points") @Expose val points: String)
+
+fun RouteInfoModel.map() =
+    RouteInfoEntity(
+        success,
+        distance,
+        duration,
+        prices?.mapValues { it.map() } ?: emptyMap(),
+        watertaxi,
+        routes?.first()?.legs?.first()?.steps?.map { it.polyline.points } ?: emptyList(),
+        routes?.first()?.overviewPolyline?.points,
+        hintsToComments
+    )

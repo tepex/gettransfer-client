@@ -1,9 +1,8 @@
 package com.kg.gettransfer.remote.model
 
-import com.kg.gettransfer.data.model.PaymentEntity
-
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.kg.gettransfer.data.model.PaymentEntity
 import com.kg.gettransfer.data.model.ParamsEntity
 
 data class PaymentModel(
@@ -13,6 +12,12 @@ data class PaymentModel(
     @SerializedName(PaymentEntity.PARAMS) @Expose val params: Params?
 )
 
-data class Params(@SerializedName(ParamsEntity.AMOUNT) @Expose val amount: String,
-                  @SerializedName(ParamsEntity.CURRENCY) @Expose val currency: String,
-                  @SerializedName(ParamsEntity.PAYMENT_ID) @Expose val paymentId: Long)
+data class Params(
+    @SerializedName(ParamsEntity.AMOUNT) @Expose val amount: String,
+    @SerializedName(ParamsEntity.CURRENCY) @Expose val currency: String,
+    @SerializedName(ParamsEntity.PAYMENT_ID) @Expose val paymentId: Long
+)
+
+fun Params.map() = ParamsEntity(amount, currency, paymentId)
+
+fun PaymentModel.map() = PaymentEntity(type, url, id, params?.map())

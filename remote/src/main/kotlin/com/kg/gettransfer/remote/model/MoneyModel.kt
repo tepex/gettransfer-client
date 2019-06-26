@@ -9,3 +9,7 @@ data class MoneyModel(
     @SerializedName(MoneyEntity.DEFAULT) @Expose val def: String,
     @SerializedName(MoneyEntity.PREFERRED) @Expose val preferred: String?
 )
+
+fun MoneyModel.map() = MoneyEntity(def, preferred)
+
+fun MoneyEntity.map() = MoneyModel(def, preferred)
