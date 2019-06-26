@@ -9,20 +9,23 @@ class ApiException(
     fun isNoUser() = code == NO_USER
     fun isNotLoggedIn() = code == NOT_LOGGED_IN
     fun isNotFound() = code == NOT_FOUND
-    fun isPhoneTaken() = type == "phone_taken"
 
-    fun isAccountExistError() = type == "account_exists"
-    fun isBadCodeError() = details.indexOf("bad_code_or_email") >= 0
-    fun isEmailNotChangebleError() = details.indexOf("account=[email_not_manually_changeable]") >= 0
-    fun isEmailAlreadyTakenError() = details.indexOf("new_email=[already_taken]") >= 0
+    fun isPhoneTaken() = type == TYPE_PHONE_TAKEN
+    fun isAccountExistError() = type == TYPE_ACCOUNT_EXIST
+
+    fun isBadCodeError() = checkDetailsText(DETAILS_BAD_CODE_OR_EMAIL)
+    fun isEmailNotChangeableError() = checkDetailsText(DETAILS_EMAIL_NOT_CHANGEABLE)
+    fun isNewEmailAlreadyTakenError() = checkDetailsText(DETAILS_NEW_EMAIL_TAKEN)
+    fun isNewEmailInvalid() = checkDetailsText(DETAILS_NEW_EMAIL_INVALID_1) || checkDetailsText(DETAILS_NEW_EMAIL_INVALID_2)
     fun checkExistedAccountField() = when {
-        details.indexOf("phone") >= 0 -> PHONE_EXISTED
-        details.indexOf("email") >= 0 -> EMAIL_EXISTED
+        checkDetailsText(DETAILS_REDIRECT_PHONE) -> PHONE_EXISTED
+        checkDetailsText(DETAILS_REDIRECT_EMAIL) -> EMAIL_EXISTED
         else -> PHONE_EXISTED
     }
+    private fun checkDetailsText(str: String) = details.indexOf(str) >= 0
 
     /* PAYMENT ERRORS */
-    fun isBigPriceError() = code == UNPROCESSABLE && details == "{price=[is_too_big]}"
+    fun isBigPriceError() = code == UNPROCESSABLE && details == DETAILS_BIG_PRICE
 
     companion object {
         const val APP_ERROR      = 0
@@ -35,6 +38,19 @@ class ApiException(
 
         const val INTERNAL_SERVER_ERROR = 500
         const val CONNECTION_TIMED_OUT  = 522
+
+        const val DETAILS_BIG_PRICE = "{price=[is_too_big]}"
+
+        const val TYPE_ACCOUNT_EXIST = "account_exists"
+        const val TYPE_PHONE_TAKEN = "phone_taken"
+
+        const val DETAILS_NEW_EMAIL_INVALID_1 = "new_email=[invalid]"
+        const val DETAILS_NEW_EMAIL_INVALID_2 = "Email address is invalid"
+        const val DETAILS_NEW_EMAIL_TAKEN = "new_email=[already_taken]"
+        const val DETAILS_EMAIL_NOT_CHANGEABLE = "account=[email_not_manually_changeable]"
+        const val DETAILS_BAD_CODE_OR_EMAIL = "bad_code_or_email"
+        const val DETAILS_REDIRECT_EMAIL = "email"
+        const val DETAILS_REDIRECT_PHONE = "phone"
 
         const val EMAIL_EXISTED = "email_existed"
         const val PHONE_EXISTED = "phone_existed"

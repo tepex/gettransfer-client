@@ -1,8 +1,9 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
+import android.support.annotation.StringRes
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 
@@ -14,13 +15,11 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
     private var smsSent = false
 
-    @CallSuper
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.setToolbar(accountManager.remoteProfile.email)
     }
 
-    @CallSuper
     override fun onDestroy() {
         super.onDestroy()
         accountManager.initTempUser()
@@ -51,11 +50,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
     fun onChangeEmailClicked() {
         utils.launchSuspend {
             if (!smsSent && !accountManager.remoteProfile.email.isNullOrEmpty()) {
-                if (Utils.checkEmail(newEmail)) {
-                    sendEmailCode()
-                } else {
-                    viewState.setError(false, R.string.LNG_ERROR_EMAIL)
-                }
+                if (Utils.checkEmail(newEmail)) sendEmailCode() else viewState.setError(false, R.string.LNG_ERROR_EMAIL)
             } else {
                 changeEmail()
             }
@@ -71,15 +66,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
                 smsSent = true
                 checkBtnVisibility()
             } else {
-                result.error?.let {
-                    when {
-                        it.isEmailNotChangebleError() ->
-                            viewState.setError(false, R.string.LNG_EMAIL_NOT_CHANGEABLE)
-                        it.isEmailAlreadyTakenError() ->
-                            viewState.setError(false, R.string.LNG_EMAIL_TAKEN_ERROR)
-                        else -> viewState.setError(it)
-                    }
-                }
+                result.error?.let { checkEmailErrors(it) }
             }
         }
     }
@@ -89,24 +76,29 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
             viewState.setError(false, R.string.LNG_ERROR_EMAIL)
             return
         }
-
-        if (accountManager.remoteProfile.email.isNullOrEmpty()) {
-            setEmailInAccount()
-        } else {
-            changeEmailInAccount()
-        }
+        if (accountManager.remoteProfile.email.isNullOrEmpty()) setEmailInAccount() else changeEmailInAccount()
     }
 
     private suspend fun setEmailInAccount() {
         accountManager.tempProfile.email = newEmail
         fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
             .run {
-                when {
-                    error?.isAccountExistError() ?: false -> viewState.setError(false, R.string.LNG_EMAIL_TAKEN_ERROR)
-                    error != null -> viewState.setError(error!!)
-                    else -> emailChanged()
-                }
+                if (error != null) checkEmailErrors(error!!) else emailChanged()
             }
+    }
+
+    private fun checkEmailErrors(e: ApiException) =
+        showError(e, when {
+            e.isAccountExistError() -> R.string.LNG_EMAIL_TAKEN_ERROR
+            e.isNewEmailInvalid() -> R.string.LNG_ERROR_EMAIL
+            e.isEmailNotChangeableError() -> R.string.LNG_EMAIL_NOT_CHANGEABLE
+            e.isNewEmailAlreadyTakenError() -> R.string.LNG_EMAIL_TAKEN_ERROR
+            e.isNewEmailInvalid() -> R.string.LNG_ERROR_EMAIL
+            else -> null
+        })
+
+    private fun showError(e: ApiException, @StringRes errId: Int?) {
+        if (errId != null) viewState.setError(false, errId) else viewState.setError(e)
     }
 
     private suspend fun changeEmailInAccount() {
