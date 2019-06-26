@@ -47,7 +47,6 @@ import com.kg.gettransfer.utilities.Analytics.Companion.CAR_INFO_CLICKED
 import com.kg.gettransfer.utilities.Analytics.Companion.COMMENT_INPUT
 import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
-import com.kg.gettransfer.utilities.PhoneNumberFormatter
 
 import kotlinx.android.synthetic.main.activity_create_order.*
 import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
@@ -290,8 +289,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {
-        user_name_field.field_input.setText(user.profile.name ?: "")
-
         if (isLoggedIn && user.termsAccepted) {
             layoutAgreement.isVisible = false
         } else {
@@ -401,7 +398,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         price_field_input.field_input.setOnFocusChangeListener  { _, hasFocus ->
             if (hasFocus) presenter.logTransferSettingsEvent(OFFER_PRICE_FOCUSED)
         }
-        user_name_field.field_input.onTextChanged        { presenter.setName(it.trim()) }
+        sign_name_field.field_input.onTextChanged             { presenter.setName(it.trim()) }
         flight_number_field.field_input.onTextChanged         { presenter.setFlightNumber(it.trim(), false) }
         flight_numberReturn_field.field_input.onTextChanged   { presenter.setFlightNumber(it.trim(), true) }
         promo_field.field_input.onTextChanged                 { presenter.setPromo(promo_field.field_input.text.toString()) }
@@ -436,7 +433,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         }
 
         cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input.field_input)  }
-        user_name_field.setOnClickListener                  { fieldTouched(user_name_field.field_input) }
+        sign_name_field.setOnClickListener                  { fieldTouched(sign_name_field.field_input) }
         flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
         comment_field.field_input.setOnClickListener        {
             presenter.commentClick(comment_field.field_input.text.toString().trim())

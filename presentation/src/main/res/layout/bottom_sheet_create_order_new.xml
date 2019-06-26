@@ -201,10 +201,10 @@
                 app:showChevron="true"/>
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
-                android:id="@+id/user_name_field"
+                android:id="@+id/sign_name_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="@string/LNG_RIDE_NAME"
+                app:hint="@string/LNG_RIDE_SIGN"
                 app:icon_img="@drawable/ic_passport" />
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
