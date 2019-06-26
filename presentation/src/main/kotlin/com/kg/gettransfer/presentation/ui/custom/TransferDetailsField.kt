@@ -22,7 +22,7 @@ class TransferDetailsField @JvmOverloads constructor(
             context.obtainStyledAttributes(attrs, R.styleable.TransferDetailsField).apply {
                 field_title.text = getString(R.styleable.TransferDetailsField_title_transfer_details)
                 field_text.text  = getString(R.styleable.TransferDetailsField_input_transfer_details)
-           //     val drawableResId = getResourceId(R.styleable.TransferDetailsField_icon_img_transfer_details, -1)
+           //     val drawableResId = getResourceId(R.styleable.TransferDetailsField_icon_img_transfer_details, View.NO_ID)
           //      field_icon.setImageDrawable(ContextCompat.getDrawable(context, drawableResId))
                 recycle()
             }

@@ -27,7 +27,7 @@ class AboutItem @JvmOverloads constructor(
         if(attrs != null) {
             val ta           = context.obtainStyledAttributes(attrs, R.styleable.AboutItem)
             tvTitle.text = ta.getString(R.styleable.AboutItem_title_about_item)
-            val drawableResId = ta.getResourceId(R.styleable.AboutItem_img_about_item, -1)
+            val drawableResId = ta.getResourceId(R.styleable.AboutItem_img_about_item, View.NO_ID)
             ivOnboard.setImageDrawable(ContextCompat.getDrawable(context, drawableResId))
             ta.recycle()
         }

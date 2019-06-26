@@ -107,8 +107,7 @@
                         android:layout_height="wrap_content"
                         android:paddingStart="@dimen/create_transfer_price_field_input_padding_start"
                         app:hint="@string/LNG_RIDE_PRICE"
-                        app:icon_img="@android:drawable/btn_star_big_on"
-                        app:inputType="@integer/inputType_number" />
+                        android:inputType="number"/>
                 </LinearLayout>
 
                 <View
@@ -127,8 +126,9 @@
 
                 app:hint="@string/LNG_RIDE_DATE"
                 app:icon_img="@drawable/ic_calendar"
-                app:inputType="@integer/inputType_NoSuggestion"
-                app:isFocusable="false" />
+                app:isFocusable="false"
+                app:showChevron="true"
+                android:inputType="textNoSuggestions"/>
 
             <RelativeLayout
                 android:id="@+id/rl_returnWayTime"
@@ -142,8 +142,9 @@
 
                     app:hint="@string/LNG_RIDE_DATE_RETURN_PLACEHOLDER"
                     app:icon_img="@drawable/ic_plus"
-                    app:inputType="@integer/inputType_NoSuggestion"
-                    app:isFocusable="false" />
+                    app:isFocusable="false"
+                    app:showChevron="true"
+                    android:inputType="textNoSuggestions"/>
 
                 <ImageView
                     android:id="@+id/fl_DeleteReturnDate"
@@ -196,7 +197,8 @@
                 android:layout_height="wrap_content"
                 app:hint="@string/LNG_RIDE_CHILDREN"
                 app:isFocusable="false"
-                app:icon_img="@drawable/ic_child_seat"/>
+                app:icon_img="@drawable/ic_child_seat"
+                app:showChevron="true"/>
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/user_name_field"
@@ -234,7 +236,8 @@
 
                 app:hint="@string/LNG_RIDE_COMMENT"
                 app:icon_img="@drawable/ic_comment"
-                app:isFocusable="false" />
+                app:isFocusable="false"
+                app:showChevron="true"/>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layoutAgreement"
