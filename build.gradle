@@ -94,11 +94,12 @@ detekt {
     toolVersion = "1.0.0-RC15"
     filters = ".*build.*,.*/resources/.*,.*/tmp/.*"
     input = files(
-        "domain/src",
         "data/src",
-        "remote/src",
+        "domain/src",
+        "encrypt/src",
         "geo/src",
-        "logging/src"
+        "logging/src",
+        "remote/src",
 //        "remote/src/main/kotlin/com/kg/gettransfer/remote/ApiCore.kt"
     )
     config = files("detekt-config.yml")
