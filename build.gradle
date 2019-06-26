@@ -99,6 +99,7 @@ detekt {
         "encrypt/src",
         "geo/src",
         "logging/src",
+        "prefs/src",
         "remote/src",
 //        "remote/src/main/kotlin/com/kg/gettransfer/remote/ApiCore.kt"
     )
