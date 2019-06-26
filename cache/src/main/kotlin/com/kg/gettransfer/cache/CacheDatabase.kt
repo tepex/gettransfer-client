@@ -23,16 +23,34 @@ import com.kg.gettransfer.cache.model.OfferCached
 import com.kg.gettransfer.cache.model.RouteInfoCached
 import com.kg.gettransfer.cache.model.TransferCached
 
-@Database(entities = [ConfigsCached::class, MobileConfigsCached::class, AccountCached::class, TransferCached::class, OfferCached::class, RouteInfoCached::class, CarrierTripBaseCached::class, CarrierTripMoreCached::class, ChatCached::class, MessageCached::class, NewMessageCached::class], version = 13, exportSchema = false)
+@Database(entities = [
+    ConfigsCached::class,
+    MobileConfigsCached::class,
+    AccountCached::class,
+    TransferCached::class,
+    OfferCached::class,
+    RouteInfoCached::class,
+    CarrierTripBaseCached::class,
+    CarrierTripMoreCached::class,
+    ChatCached::class,
+    MessageCached::class,
+    NewMessageCached::class], version = 13, exportSchema = false)
 @TypeConverters(RoomConverters::class)
-abstract class CacheDatabase: RoomDatabase() {
+abstract class CacheDatabase : RoomDatabase() {
 
     abstract fun configsCachedDao(): ConfigsCachedDao
+
     abstract fun mobileConfigsCachedDao(): MobileConfigsCachedDao
+
     abstract fun accountCachedDao(): AccountCachedDao
+
     abstract fun transferCacheDao(): TransferCachedDao
+
     abstract fun offersCacheDao(): OfferCachedDao
+
     abstract fun routeCacheDao(): RouteCacheDao
+
     abstract fun carrierTripCachedDao(): CarrierTripCacheDao
-    abstract fun chatCacheDao() : ChatCachedDao
+
+    abstract fun chatCacheDao(): ChatCachedDao
 }

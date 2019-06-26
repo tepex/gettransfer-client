@@ -7,16 +7,16 @@ import com.kg.gettransfer.data.model.RouteInfoEntity
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-class RouteCacheImpl: RouteCache, KoinComponent {
+class RouteCacheImpl : RouteCache, KoinComponent {
+
     private val db: CacheDatabase by inject()
 
-    override suspend fun getRouteInfo(from: String, to: String): RouteInfoEntity? {
+    override suspend fun getRouteInfo(from: String, to: String): RouteInfoEntity? =
         try {
-            return db.routeCacheDao().getRouteInfo(from, to)?.map()
+            db.routeCacheDao().getRouteInfo(from, to)?.map()
         } catch (e: IllegalStateException) {
             throw CacheException(CacheException.ILLEGAL_STATE, e.message ?: "IllegalStateException")
         }
-    }
 
     override suspend fun setRouteInfo(from: String, to: String, routeInfo: RouteInfoEntity) {
         try {

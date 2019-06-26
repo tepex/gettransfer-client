@@ -94,9 +94,7 @@ detekt {
     toolVersion = "1.0.0-RC15"
     filters = ".*build.*,.*/resources/.*,.*/tmp/.*"
     input = files(
-//        "cache/src",
-        "cache/src/main/kotlin/com/kg/gettransfer/cache/dao",
-        "cache/src/main/kotlin/com/kg/gettransfer/cache/model",
+        "cache/src",
         "data/src",
         "domain/src",
         "encrypt/src",

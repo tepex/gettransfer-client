@@ -23,7 +23,7 @@ data class ChatAccountCached(
 )
 
 @Serializable
-data class ChatAccountsCachedMap (val map: Map<Long, ChatAccountCached>)
+data class ChatAccountsCachedMap(val map: Map<Long, ChatAccountCached>)
 
 fun ChatAccountCached.map() = ChatAccountEntity(email, fullName, roles.list)
 

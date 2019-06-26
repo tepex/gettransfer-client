@@ -5,12 +5,12 @@ import com.kg.gettransfer.data.model.BuildsConfigsEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BuildsConfigsCached (
+data class BuildsConfigsCached(
     @ColumnInfo(name = BuildsConfigsEntity.UPDATE_REQUIRED) val updateRequired: Boolean?
 )
 
 @Serializable
-data class BuildsConfigsCachedMap (val map: Map<String, BuildsConfigsCached>)
+data class BuildsConfigsCachedMap(val map: Map<String, BuildsConfigsCached>)
 
 fun BuildsConfigsCached.map() = BuildsConfigsEntity(updateRequired)
 

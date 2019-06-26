@@ -53,6 +53,7 @@ fun CarrierTripEntity.map() =
             paidSum ?: "",
             remainsToPay ?: "",
             paidPercentage ?: 0,
+            @Suppress("UnsafeCallOnNullableType")
             passengerAccount!!.map()
         )
     )

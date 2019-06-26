@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey
 import com.kg.gettransfer.data.model.TransferEntity
 
 @Entity(tableName = TransferEntity.ENTITY_NAME)
-data class TransferCached (
+data class TransferCached(
     @PrimaryKey @ColumnInfo(name = TransferEntity.ID)          val id: Long,
     @ColumnInfo(name = TransferEntity.CREATED_AT)              val createdAt: String,
     @ColumnInfo(name = TransferEntity.DURATION)                val duration: Int?,
