@@ -65,33 +65,29 @@ class LocationImpl(private val context: Context) :
             }
     }
 
-    @Suppress("ComplexMethod")
     override fun getAddressByLocation(point: LocationEntity): String {
         val list = try {
             geocoder.getFromLocation(point.latitude, point.longitude, 1)
         } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             throw LocationException(LocationException.GEOCODER_ERROR, e.message ?: "Unknown")
         }
-        if (list.isEmpty()) return ""
 
-        /* TODO: refactoring needed */
-        val addr = list.first()
-        val street = addr.thoroughfare
-        val line = addr.getAddressLine(0) ?: ""
-        val house = addr.subThoroughfare
-        val city = addr.locality
-        val area = addr.adminArea
-        val country = addr.countryName
+        val street = list.firstOrNull()?.thoroughfare
+        val house = list.firstOrNull()?.subThoroughfare
+        val city = list.firstOrNull()?.locality
+        val area = list.firstOrNull()?.adminArea
+        val country = list.firstOrNull()?.countryName
 
         return buildString {
-            when {
-                street == null && line.isNotEmpty()                 -> append(line)
-                !street.isNullOrEmpty() && street != "Unnamed Road" -> append(street).append(", ")
-                !house.isNullOrEmpty()                              -> append(house).append(", ")
-                !city.isNullOrEmpty()                               -> append(city).append(", ")
-                !country.isNullOrEmpty()                            -> append(country).append(", ")
-                !area.isNullOrEmpty() && area != city               -> append(area).append(", ")
-                this.lastIndexOf(", ") == this.length - 2           -> delete(this.length - 2, this.length)
+            if (street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
+                append(list.firstOrNull()?.getAddressLine(0))
+            } else {
+                if (!street.isNullOrEmpty() && street != "Unnamed Road") append(street).append(", ")
+                if (!house.isNullOrEmpty()) append(house).append(", ")
+                if (!city.isNullOrEmpty()) append(city).append(", ")
+                if (!country.isNullOrEmpty()) append(country).append(", ")
+                if (!area.isNullOrEmpty() && area != city) append(area).append(", ")
+                if (this.lastIndexOf(", ") == this.length - 2) delete(this.length - 2, this.length)
             }
         }
     }
