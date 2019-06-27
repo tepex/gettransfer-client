@@ -122,7 +122,7 @@ class SearchActivity : BaseActivity(), SearchView {
     private fun setupToolbar() {
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
+        toolbar.ivBack.setThrottledClickListener { presenter.onBackCommandClick() }
         toolbar.toolbar_title.text = getString(R.string.LNG_SEARCH)
     }
 
