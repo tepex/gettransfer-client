@@ -154,7 +154,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                             )
                         text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
                         buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
-                        onClickOkButton = { changePage?.invoke(presenter.emailOrPhone, presenter.isPhone()) }
+                        onClickOkButton = { changePage?.invoke(presenter.params.emailOrPhone, presenter.isPhone()) }
                         onDismissCallBack = { hideLoading() }
                         isShowCloseButton = true
                     }

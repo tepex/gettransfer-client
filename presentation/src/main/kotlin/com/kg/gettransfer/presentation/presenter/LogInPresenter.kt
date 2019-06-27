@@ -14,7 +14,7 @@ import com.kg.gettransfer.utilities.Analytics
 import org.koin.standalone.KoinComponent
 
 @InjectViewState
-class LogInPresenter : LogInBasePresenter<LogInView>(), KoinComponent {
+class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
 
     var password: String = ""
 
@@ -138,5 +138,4 @@ class LogInPresenter : LogInBasePresenter<LogInView>(), KoinComponent {
     }
 
     fun getPhoneExample(): String = Utils.phoneUtil.internationalExample(sessionInteractor.locale)
-
 }

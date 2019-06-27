@@ -8,7 +8,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import org.koin.standalone.inject
 
-open class LogInBasePresenter<BV : BaseView>: BasePresenter<BV>() {
+open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
 
     private val paymentInteractor: PaymentInteractor by inject()
 
@@ -35,7 +35,7 @@ open class LogInBasePresenter<BV : BaseView>: BasePresenter<BV>() {
                 utils.launchSuspend {
                     val transferResult = fetchData(NO_CACHE_CHECK) { transferInteractor.getTransfer(params.transferId) }
                     val offerResult =
-                            fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(params.transferId) }?.find { it.id == params.offerId }
+                        fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(params.transferId) }?.find { it.id == params.offerId }
                     transferResult?.let { transfer ->
                         offerResult?.let { offer ->
                             with(paymentInteractor) {
