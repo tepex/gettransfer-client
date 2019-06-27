@@ -22,6 +22,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.strikeText
 import com.kg.gettransfer.presentation.adapter.OffersAdapter
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
@@ -89,7 +90,7 @@ class OffersActivity : BaseActivity(), OffersView {
         with(toolbar) {
             setSupportActionBar(this as Toolbar)
             btn_back.setOnClickListener { navigateBackWithTransition() }
-            btn_forward.setOnClickListener { presenter.onRequestInfoClicked() }
+            btn_forward.setThrottledClickListener { presenter.onRequestInfoClicked() }
             tv_title.isSelected = true
         }
 
