@@ -10,4 +10,6 @@ interface SignUpView : BaseView {
     fun showValidationErrorDialog(phoneExample: String)
     fun showLoading()
     fun hideLoading()
+    fun updateTextPhone(phone: String)
+    fun updateTextEmail(email: String)
 }

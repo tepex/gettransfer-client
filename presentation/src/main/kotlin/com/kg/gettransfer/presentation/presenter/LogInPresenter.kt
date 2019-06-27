@@ -23,7 +23,7 @@ class LogInPresenter : LogInBasePresenter<LogInView>(), KoinComponent {
     val isEnabledRequestCodeButton
         get() = params.emailOrPhone.isNotEmpty()
 
-    private fun isPhone(value: String = params.emailOrPhone) = LoginHelper.checkIsNumber(value)
+    fun isPhone(value: String = params.emailOrPhone) = LoginHelper.checkIsNumber(value)
 
     override fun attachView(view: LogInView) {
         super.attachView(view)
