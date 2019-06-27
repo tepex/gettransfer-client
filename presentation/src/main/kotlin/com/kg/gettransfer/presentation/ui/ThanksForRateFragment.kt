@@ -64,7 +64,6 @@ class ThanksForRateFragment : BaseBottomSheetDialogFragment(), ThanksForRateView
 
     private fun setComment(comment: String) {
         presenter.setComment(comment)
-        etComment.setText(comment)
         dismiss()
     }
 

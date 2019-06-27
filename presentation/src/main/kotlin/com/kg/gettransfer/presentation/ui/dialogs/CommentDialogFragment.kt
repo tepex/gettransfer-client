@@ -65,6 +65,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
     override fun onDismiss(dialog: DialogInterface?) {
         super.onDismiss(dialog)
         hideKeyboard()
+        sendCommentToTargetFragment(comment)
     }
 
     override fun onDetach() {

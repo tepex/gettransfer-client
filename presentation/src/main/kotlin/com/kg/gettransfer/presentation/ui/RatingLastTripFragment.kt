@@ -22,7 +22,6 @@ import com.kg.gettransfer.presentation.presenter.RatingLastTripPresenter
 
 import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
-import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 
 import com.kg.gettransfer.presentation.view.BaseView
