@@ -83,9 +83,7 @@ class GTApplication : MultiDexApplication() {
                 .addObserver(AppLifeCycleObserver(applicationContext))
     }
 
-    private fun setupPushSdk() {
-        YandexMetricaPush.init(applicationContext)
-    }
+    private fun setupPushSdk() = YandexMetricaPush.init(applicationContext)
 
     private fun setupAppsFlyer() {
         val conversionListener = object : AppsFlyerConversionListener {

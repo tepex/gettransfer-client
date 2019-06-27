@@ -211,8 +211,10 @@
                 android:resource="@xml/file_provider_path" />
         </provider>
 
-        <service android:name=".service.OffersPushService">
-            <intent-filter>
+        <service android:name=".service.OffersPushService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter android:priority="100">
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
@@ -242,6 +244,8 @@
                 <action android:name="${applicationId}.action.ymp.SILENT_PUSH_RECEIVE"/>
             </intent-filter>
         </receiver>
+
+        <service android:name="com.yandex.metrica.push.firebase.MetricaMessagingService" tools:node="remove"/>
     </application>
 
 </manifest>

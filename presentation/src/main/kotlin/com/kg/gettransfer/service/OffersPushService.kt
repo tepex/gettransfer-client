@@ -3,6 +3,7 @@ package com.kg.gettransfer.service
 import android.support.annotation.CallSuper
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.SystemInteractor
@@ -11,6 +12,10 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 import org.koin.standalone.inject
 import timber.log.Timber
+import android.R.id.message
+import com.yandex.metrica.push.firebase.MetricaMessagingService
+
+
 
 class OffersPushService : KoinComponent, FirebaseMessagingService() {
     private val compositeDisposable = Job()
@@ -44,4 +49,8 @@ class OffersPushService : KoinComponent, FirebaseMessagingService() {
         */
     }
     // [END on_new_token]
+
+    override fun onMessageReceived(message: RemoteMessage) {
+        MetricaMessagingService().processPush(this, message)
+    }
 }
