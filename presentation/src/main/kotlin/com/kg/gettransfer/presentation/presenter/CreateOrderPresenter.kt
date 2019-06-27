@@ -369,7 +369,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val result = fetchResultOnly { transferInteractor.createTransfer(transferNew) }
 
             if (result.error == null) {
-                val logResult = fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
+                val logResult = fetchResultOnly { accountManager.putAccount(connectSocket = true) }
                 if (logResult.error == null) {
                     handleSuccess()
                     router.replaceScreen(Screens.Offers(result.model.id))

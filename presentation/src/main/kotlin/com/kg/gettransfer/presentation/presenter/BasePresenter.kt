@@ -259,7 +259,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     fun saveAccount(withRestartApp: Boolean = false) = utils.launchSuspend {
         viewState.blockInterface(true)
-        val result = utils.asyncAwait { accountManager.putAccount(updateTempUser = false) }
+        val result = utils.asyncAwait { accountManager.putAccount(isTempAccount = false) }
         result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
         if (result.error == null && withRestartApp) {
             restartApp()
@@ -278,7 +278,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     fun onAppStateChanged(isForeGround: Boolean) {
         with(socketInteractor) {
-            if (isForeGround) {
+            if (isForeGround && accountManager.hasAccount) {
                 openSocketConnection()
             } else if (systemInteractor.lastMode != Screens.CARRIER_MODE ||
                 carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_REJECTED
@@ -286,10 +286,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
                 closeSocketConnection()
             }
         }
-    }
-
-    fun openSocketConnection() {
-        socketInteractor.openSocketConnection()
     }
 
     private fun increaseEventsOffersCounter(transferId: Long) = with(countEventsInteractor) {
@@ -330,12 +326,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
             } else {
                 remove(transferId)
             }
-        }
-    }
-
-    fun onDriverModeExit() {
-        if (systemInteractor.lastMode == Screens.CARRIER_MODE) {
-            socketInteractor.closeSocketConnection()
         }
     }
 

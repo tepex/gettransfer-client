@@ -32,8 +32,10 @@ class SocketRepositoryImpl(
 
     private val socketListeners = mutableSetOf<SocketEventListener>()
 
-    override fun accessTokenChanged(accessToken: String) { connectionChanged() }
-    override fun endpointChanged(endpointEntity: EndpointEntity) { connectionChanged() }
+    override fun accessTokenChanged(accessToken: String) {
+        connectionChanged()
+    }
+    override fun endpointChanged(endpointEntity: EndpointEntity) {}
 
     override fun addSocketListener(listener: SocketEventListener)    { socketListeners.add(listener) }
     override fun removeSocketListener(listener: SocketEventListener) { socketListeners.remove(listener) }

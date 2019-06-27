@@ -60,7 +60,7 @@ class ProfileSettingsPresenter : BasePresenter<ProfileSettingsView>() {
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
+            val result = fetchResultOnly { accountManager.putAccount() }
             if (result.error == null) {
                 viewState.setEnabledBtnSave(false)
                 if (phoneChanged) {

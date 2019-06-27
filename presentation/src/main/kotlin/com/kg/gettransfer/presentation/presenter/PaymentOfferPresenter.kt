@@ -163,7 +163,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun pushAccount() =
-        fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
+        fetchResultOnly { accountManager.putAccount() }
             .run {
                 when {
                     error?.isAccountExistError() ?: false -> onAccountExists(error!!.checkExistedAccountField())

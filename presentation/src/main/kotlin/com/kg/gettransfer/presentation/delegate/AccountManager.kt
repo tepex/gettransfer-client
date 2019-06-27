@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.delegate
 
 import com.kg.gettransfer.domain.interactor.SessionInteractor
+import com.kg.gettransfer.domain.interactor.SocketInteractor
 
 import com.kg.gettransfer.domain.model.*
 
@@ -12,6 +13,7 @@ import org.koin.standalone.get
 
 class AccountManager : KoinComponent {
     val sessionInteractor: SessionInteractor = get()
+    val socketInteractor: SocketInteractor = get()
 
     /* REMOTE ACCOUNT */
 
@@ -84,7 +86,10 @@ class AccountManager : KoinComponent {
 
     suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean): Result<Account> {
         val result = sessionInteractor.login(email, phone, password, withSmsCode)
-        if (result.error == null) initTempUser(result.model.user)
+        if (result.error == null) {
+            initTempUser(result.model.user)
+            socketInteractor.openSocketConnection()
+        }
         return result
     }
 
@@ -96,13 +101,17 @@ class AccountManager : KoinComponent {
 
     suspend fun logout(): Result<Account> {
         tempUser.profile = Profile.EMPTY.copy()
+        socketInteractor.closeSocketConnection()
         return sessionInteractor.logout()
     }
 
-    suspend fun putAccount(isTempAccount: Boolean = false, updateTempUser: Boolean): Result<Account> {
+    suspend fun putAccount(isTempAccount: Boolean = true, connectSocket: Boolean = false): Result<Account> {
         val result =
             sessionInteractor.putAccount(if (isTempAccount) remoteAccount.copy(user = tempUser) else remoteAccount)
-        if (result.error == null && updateTempUser) initTempUser(result.model.user)
+        if (result.error == null) {
+            if (connectSocket && hasAccount) socketInteractor.openSocketConnection()
+            if (isTempAccount) initTempUser(result.model.user)
+        }
         return result
     }
 }

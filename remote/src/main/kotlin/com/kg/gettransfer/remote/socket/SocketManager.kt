@@ -48,11 +48,11 @@ class SocketManager : KoinComponent {
     }
 
     fun startConnection(endpoint: EndpointModel, accessToken: String) {
-        prepareSocket(endpoint, accessToken, false)
+        prepareSocket(endpoint, accessToken, statusOpened)
     }
 
     fun changeConnection(endpoint: EndpointModel, accessToken: String) {
-        prepareSocket(endpoint, accessToken, true)
+        if (statusOpened) prepareSocket(endpoint, accessToken, true)
     }
 
     private fun prepareSocket(endpoint: EndpointModel, accessToken: String, withReconnect: Boolean) {
@@ -70,7 +70,6 @@ class SocketManager : KoinComponent {
     }
 
     fun disconnect(withReconnect: Boolean) {
-        statusOpened = false
         shouldReconnect = withReconnect
         socket?.let { s ->
             s.off()
@@ -154,7 +153,7 @@ class SocketManager : KoinComponent {
     private fun retrievePacket(someTrash: Any): JSONArray? {
         return if (someTrash is Packet<*>) {
             val packetData: Any? = someTrash.data
-            if (packetData != null || packetData !is JSONArray) null else packetData
+            if (packetData == null || packetData !is JSONArray) null else packetData
         } else {
             null
         }
