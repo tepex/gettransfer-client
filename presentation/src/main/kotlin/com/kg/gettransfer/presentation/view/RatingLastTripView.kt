@@ -12,8 +12,6 @@ interface RatingLastTripView: BaseView {
 
     fun cancelReview()
 
-    fun askRateInPlayMarket()
-
     fun thanksForRate()
 
     fun showDetailedReview(rate: Float, offerId: Long)

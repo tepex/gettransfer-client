@@ -14,6 +14,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment.Companion.COMMENT_DIALOG_TAG
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment.Companion.COMMENT_REQUEST_CODE
+import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.view.ThanksForRateView
 import kotlinx.android.synthetic.main.view_thanks_for_rate.*
 
@@ -67,7 +68,10 @@ class ThanksForRateFragment : BaseBottomSheetDialogFragment(), ThanksForRateView
     }
 
     override fun onDismiss(dialog: DialogInterface?) {
-        super.onDismiss(dialog)
         presenter.sendThanks()
+        super.onDismiss(dialog)
     }
+
+    override fun askRateInPlayMarket() =
+        StoreDialogFragment.newInstance().show(fragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
 }

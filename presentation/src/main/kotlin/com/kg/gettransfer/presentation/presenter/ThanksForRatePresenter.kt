@@ -24,8 +24,16 @@ class ThanksForRatePresenter: MvpPresenter<ThanksForRateView>(), KoinComponent {
                     utils.asyncAwait { pushComment() }
                 }
                 releaseReviewData()
+                showStoreDialog(shouldAskRateInMarket)
             }
             compositeDisposable.cancel()
+        }
+    }
+
+    private fun showStoreDialog(shouldAskRateInMarket: Boolean) {
+        if (shouldAskRateInMarket) {
+            reviewInteractor.shouldAskRateInMarket = false
+            viewState.askRateInPlayMarket()
         }
     }
 

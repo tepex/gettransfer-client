@@ -103,11 +103,12 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                 with(fetchResultOnly { reviewInteractor.sendTopRate() }) {
                     if (!isError()) {
                         viewState.cancelReview()
-                        viewState.thanksForRate()
-                        if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
-                            viewState.askRateInPlayMarket()
+                        val showStoreDialog = systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE
+                        if (showStoreDialog) {
+                            reviewInteractor.shouldAskRateInMarket = true
                             logAppReviewRequest()
                         }
+                        viewState.thanksForRate()
                     }
                 }
             }
