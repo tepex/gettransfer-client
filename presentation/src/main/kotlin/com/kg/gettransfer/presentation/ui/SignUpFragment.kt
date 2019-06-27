@@ -136,6 +136,14 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         }
     }
 
+    override fun updateTextPhone(phone: String) {
+        phoneLayout.fieldText.setText(phone)
+    }
+
+    override fun updateTextEmail(email: String) {
+        emailLayout.fieldText.setText(email)
+    }
+
     companion object {
         fun newInstance() = SignUpFragment()
     }

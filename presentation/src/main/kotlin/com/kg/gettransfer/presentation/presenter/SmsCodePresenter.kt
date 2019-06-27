@@ -17,7 +17,7 @@ import com.kg.gettransfer.utilities.Analytics
 import kotlinx.serialization.json.JSON
 
 @InjectViewState
-class SmsCodePresenter : LogInBasePresenter<SmsCodeView>() {
+class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
 
     var isPhone = false
     var pinCode = ""

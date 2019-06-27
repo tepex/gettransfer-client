@@ -14,7 +14,7 @@ import com.kg.gettransfer.utilities.Analytics
 import org.koin.standalone.KoinComponent
 
 @InjectViewState
-class LogInPresenter : LogInBasePresenter<LogInView>(), KoinComponent {
+class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
 
     var password: String = ""
 
@@ -23,7 +23,7 @@ class LogInPresenter : LogInBasePresenter<LogInView>(), KoinComponent {
     val isEnabledRequestCodeButton
         get() = params.emailOrPhone.isNotEmpty()
 
-    private fun isPhone(value: String = params.emailOrPhone) = LoginHelper.checkIsNumber(value)
+    fun isPhone(value: String = params.emailOrPhone) = LoginHelper.checkIsNumber(value)
 
     override fun attachView(view: LogInView) {
         super.attachView(view)
@@ -138,5 +138,4 @@ class LogInPresenter : LogInBasePresenter<LogInView>(), KoinComponent {
     }
 
     fun getPhoneExample(): String = Utils.phoneUtil.internationalExample(sessionInteractor.locale)
-
 }

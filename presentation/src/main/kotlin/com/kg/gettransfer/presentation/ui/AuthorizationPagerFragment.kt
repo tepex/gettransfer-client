@@ -1,33 +1,27 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-
 import android.support.annotation.CallSuper
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.content.res.ResourcesCompat
-
+import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-
 import com.arellomobile.mvp.MvpAppCompatFragment
-
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
-
 import kotlinx.android.synthetic.main.fragment_pager_authorization.*
 import kotlinx.serialization.json.JSON
 
 import org.koin.android.ext.android.inject
 import org.koin.standalone.KoinComponent
-
 import ru.terrakok.cicerone.Router
 
 /**
@@ -76,17 +70,24 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         }
     }
 
-    fun showOtherPage() {
+    fun showOtherPage(emailOrPhone: String, isPhone: Boolean) {
         loginPager.currentItem = if (loginPager.currentItem == 0) 1 else 0
+
+        (loginPager.adapter as LoginPagerAdapter).getItem(loginPager.currentItem).let { fragment ->
+            if (fragment is SignUpFragment) fragment.presenter.updateEmailOrPhone(emailOrPhone, isPhone)
+        }
     }
 
     companion object {
+        const val COUNT_PAGE_FRAGMENTS = 2
         fun newInstance() = AuthorizationPagerFragment()
     }
 
-    /* TODO: Magic numbers! */
     private inner class LoginPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-        override fun getCount(): Int = 2
+        //TODO for translate emailOrPhone to otherFragment
+        val fragments = SparseArray<Fragment>()
+
+        override fun getCount(): Int = COUNT_PAGE_FRAGMENTS
 
         override fun getPageTitle(position: Int): CharSequence? = when (position) {
             0 -> getString(R.string.LNG_MENU_TITLE_LOGIN)
@@ -95,17 +96,40 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         }
 
         override fun getItem(position: Int): Fragment = when (position) {
-            0 -> LogInFragment.newInstance().apply {
-                changePage = { showOtherPage() }
+            0 -> {
+                getFragment(position) { createLoginFragment() }
+            }
+            1 -> {
+                if (nextScreen == Screens.CARRIER_MODE) {
+                    SignUpCarrierFragment.newInstance()
+                } else {
+                    getFragment(position) { createSignUpFragment() }
+                }
+            }
+            else -> throw UnsupportedOperationException()
+        }
+
+        //TODO for translate emailOrPhone to otherFragment
+        private fun getFragment(position: Int, createFragment: (() -> Fragment)): Fragment {
+            if (fragments[position] == null) {
+                fragments.put(position, createFragment())
+            }
+            return fragments[position]
+        }
+
+        //TODO for translate emailOrPhone to otherFragment
+        private fun createLoginFragment(): Fragment {
+            return LogInFragment.newInstance().apply {
+                changePage = { emailOrPhone, isPhone -> showOtherPage(emailOrPhone, isPhone) }
                 arguments = Bundle().apply {
                     putString(LogInView.EXTRA_PARAMS, params)
                 }
             }
-            1 -> {
-                if (nextScreen == Screens.CARRIER_MODE) SignUpCarrierFragment.newInstance()
-                else SignUpFragment.newInstance()
-            }
-            else -> throw UnsupportedOperationException()
+        }
+
+        //TODO for translate emailOrPhone to otherFragment
+        private fun createSignUpFragment(): Fragment {
+            return SignUpFragment.newInstance()
         }
     }
 }

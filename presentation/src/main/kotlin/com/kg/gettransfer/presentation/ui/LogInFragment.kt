@@ -39,7 +39,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     @ProvidePresenter
     fun createLoginPresenter() = LogInPresenter()
 
-    var changePage: (() -> Unit)? = null
+    var changePage: ((String, Boolean) -> Unit)? = null
 
     private val loadingFragment by lazy { LoadingFragment() }
 
@@ -154,7 +154,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                             )
                         text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
                         buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
-                        onClickOkButton = { changePage?.invoke() }
+                        onClickOkButton = { changePage?.invoke(presenter.params.emailOrPhone, presenter.isPhone()) }
                         onDismissCallBack = { hideLoading() }
                         isShowCloseButton = true
                     }

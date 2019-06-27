@@ -72,4 +72,12 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
         router.navigateTo(Screens.LicenceAgree)
         viewState.hideLoading()
     }
+
+    fun updateEmailOrPhone(emailOrPhone: String, isPhone: Boolean) {
+        if (isPhone) {
+            viewState.updateTextPhone(emailOrPhone)
+        } else {
+            viewState.updateTextEmail(emailOrPhone)
+        }
+    }
 }
