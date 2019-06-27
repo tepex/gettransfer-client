@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.ui.TransferRequestItem
@@ -42,7 +43,7 @@ class RequestsRVAdapter(
         fun bind(item: TransferModel, eventsCount: Int, listener: ItemClickListener) = with(containerView) {
             (this as TransferRequestItem).setInfo(item)
             showEvents(item, eventsCount)
-            setOnClickListener { listener(item) }
+            setThrottledClickListener { listener(item) }
         }
 
         private fun showEvents(item: TransferModel, eventsCount: Int) {
