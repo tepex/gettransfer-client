@@ -75,7 +75,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
-        tvDone.setOnClickListener {
+        tvSend.setOnClickListener {
             comment = etComment.text.toString().trim()
             onCommentLister?.onSetComment(comment)
             sendCommentToTargetFragment(comment)

@@ -9,7 +9,7 @@
     android:minHeight="@dimen/comment_dialog_min_height">
 
     <TextView
-        android:id="@+id/tvDone"
+        android:id="@+id/tvSend"
         style="@style/sf_font_semi_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         android:layout_margin="16dp"
         android:layout_marginBottom="0dp"
         android:padding="8dp"
-        android:text="@string/LNG_DONE"
+        android:text="@string/LNG_SEND"
         android:textAllCaps="true"
         android:textColor="@color/color_gtr_green"
         android:textSize="14sp" />
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/scrollHints"
-        android:layout_below="@+id/tvDone">
+        android:layout_below="@+id/tvSend">
 
         <EditText
             android:id="@+id/etComment"
