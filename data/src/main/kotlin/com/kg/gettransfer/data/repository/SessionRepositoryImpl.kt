@@ -46,7 +46,7 @@ class SessionRepositoryImpl(
 
     override var configs = CONFIGS_DEFAULT
         private set
-    override var account = NO_ACCOUNT
+    override var account = NO_ACCOUNT.copy()
         private set
     override var tempUser = User.EMPTY.copy()
     override var mobileConfig = MOBILE_CONFIGS_DEFAULT
@@ -100,7 +100,7 @@ class SessionRepositoryImpl(
             /* No chance to go further */
             // if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
 
-            account = factory.retrieveCacheDataStore().getAccount()?.map(configs) ?: NO_ACCOUNT
+            account = factory.retrieveCacheDataStore().getAccount()?.map(configs) ?: NO_ACCOUNT.copy()
             if (result.error != null) {
                 configs = factory.retrieveCacheDataStore().getConfigs()?.map() ?: CONFIGS_DEFAULT
                 return Result(account, result.error.map())

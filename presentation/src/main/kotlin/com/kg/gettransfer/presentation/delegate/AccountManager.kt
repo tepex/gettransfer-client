@@ -48,22 +48,11 @@ class AccountManager : KoinComponent {
     val tempProfile: Profile
         get() = tempUser.profile
 
-    fun setTermsAccepted(isAccepted: Boolean) {
-        tempUser.termsAccepted = isAccepted
-    }
-
     fun initTempUser(user: User? = null) {
         val settedUser = user ?: remoteUser
-        tempUser.profile.apply {
-            fullName = settedUser.profile.fullName
-            email = settedUser.profile.email
-            phone = settedUser.profile.phone
-        }
+        tempUser.profile = settedUser.profile.copy()
         tempUser.termsAccepted = settedUser.termsAccepted
     }
-
-    private fun overwriteField(newField: String, tempField: String?, saveTempUserData: Boolean) =
-        newField.isNotEmpty() && (tempField.isNullOrEmpty() || !saveTempUserData)
 
     fun isValidProfileForCreateOrder() =
         when {
@@ -110,7 +99,7 @@ class AccountManager : KoinComponent {
             sessionInteractor.putAccount(if (isTempAccount) remoteAccount.copy(user = tempUser) else remoteAccount)
         if (result.error == null) {
             if (connectSocket && hasAccount) socketInteractor.openSocketConnection()
-            if (isTempAccount) initTempUser(result.model.user)
+            if (isTempAccount) initTempUser(result.model.user.copy())
         }
         return result
     }
