@@ -28,6 +28,7 @@ import com.squareup.leakcanary.LeakCanary
 
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
+import com.yandex.metrica.push.YandexMetricaPush
 
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
@@ -74,12 +75,15 @@ class GTApplication : MultiDexApplication() {
         setupSentry()
         setupAppsFlyer()
         Timber.plant(FileLoggingTree())
+        setupPushSdk()
 
         ProcessLifecycleOwner
                 .get()
                 .lifecycle
                 .addObserver(AppLifeCycleObserver(applicationContext))
     }
+
+    private fun setupPushSdk() = YandexMetricaPush.init(applicationContext)
 
     private fun setupAppsFlyer() {
         val conversionListener = object : AppsFlyerConversionListener {
