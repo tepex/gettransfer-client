@@ -81,7 +81,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
     private suspend fun setEmailInAccount() {
         accountManager.tempProfile.email = newEmail
-        fetchResultOnly { accountManager.putAccount(true, updateTempUser = true) }
+        fetchResultOnly { accountManager.putAccount() }
             .run {
                 if (error != null) checkEmailErrors(error!!) else emailChanged()
             }
