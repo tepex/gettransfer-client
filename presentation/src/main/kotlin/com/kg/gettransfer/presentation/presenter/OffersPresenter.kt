@@ -150,6 +150,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                     is OfferModel -> offers.filter { offer -> offer is Offer }.find { offer -> (offer as Offer).id == offerItem.id }
                     is BookNowOfferModel -> offers.filter { offer -> offer is BookNowOffer }.find { offer -> (offer as BookNowOffer).transportType.id == offerItem.transportType.id }
                 }
+                viewState.blockInterface(true, true)
                 router.navigateTo(Screens.PaymentOffer())
             }
         }
