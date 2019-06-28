@@ -1,4 +1,5 @@
 @file:Suppress("TooManyFunctions")
+
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
@@ -14,19 +15,19 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.repository.SessionRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
-import java.text.DateFormat
-import java.util.Calendar
 import org.koin.standalone.get
+import java.text.DateFormat
+import java.util.*
 
 class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>
 ) : BaseRepository(), TransferRepository {
 
     private val preferencesCache = get<PreferencesCache>()
-    private val transportTypes   = get<SessionRepository>().configs.transportTypes
+    private val transportTypes = get<SessionRepository>().configs.transportTypes
 
-    private val dateFormat       = get<ThreadLocal<DateFormat>>("iso_date")
-    private val dateFormatTZ     = get<ThreadLocal<DateFormat>>("iso_date_TZ")
+    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
+    private val dateFormatTZ = get<ThreadLocal<DateFormat>>("iso_date_TZ")
     private val serverDateFormat = get<ThreadLocal<DateFormat>>("server_date")
     private val serverTimeFormat = get<ThreadLocal<DateFormat>>("server_time")
 
@@ -104,7 +105,9 @@ class TransferRepositoryImpl(
         var eventsCount = 0
         val mappedTransfers = transfersList.map { entity ->
             entity.map(transportTypes, dateFormat.get(), dateFormatTZ.get()).apply {
-                eventsCount += checkNewMessagesAndOffersCount(this, mapCountNewMessages, mapCountNewOffers)
+                if (!entity.isBookNow()) {
+                    eventsCount += checkNewMessagesAndOffersCount(this, mapCountNewMessages, mapCountNewOffers)
+                }
             }
         }
         preferencesCache.eventsCount = eventsCount
