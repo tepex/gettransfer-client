@@ -234,10 +234,12 @@ class PreferencesImpl(
     override fun logout() {
         _accessToken  = INVALID_TOKEN
         _userEmail    = INVALID_EMAIL
+        _userPhone    = INVALID_PHONE
         _userPassword = INVALID_PASSWORD
         with(configsPrefs.edit()) {
             remove(ACCESS_TOKEN)
             remove(USER_EMAIL)
+            remove(USER_PHONE)
             remove(USER_PASSWORD)
             apply()
         }
