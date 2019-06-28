@@ -22,7 +22,6 @@ import com.kg.gettransfer.presentation.presenter.RatingLastTripPresenter
 
 import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
-import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 
 import com.kg.gettransfer.presentation.view.BaseView
@@ -122,9 +121,6 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     override fun cancelReview() {
         dismiss()
     }
-
-    override fun askRateInPlayMarket() =
-        StoreDialogFragment.newInstance().show(fragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
 
     override fun thanksForRate() = (activity as MainActivity).thanksForRate()
 
