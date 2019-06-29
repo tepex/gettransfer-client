@@ -8,5 +8,6 @@ data class PolylineModel(
     val startPoint: LatLng?,
     val finishPoint: LatLng?,
     val line: PolylineOptions?,
-    val track: CameraUpdate?
+    val track: CameraUpdate?,
+    val isVerticalRoute: Boolean
 )
