@@ -8,7 +8,7 @@ import com.kg.gettransfer.remote.model.AutocompletePredictionsModel
 import com.kg.gettransfer.remote.model.LocationModel
 import com.kg.gettransfer.remote.model.PlaceDetailsResultModel
 import com.kg.gettransfer.remote.model.map
-import org.koin.standalone.get
+import org.koin.core.get
 
 class GeoRemoteImpl : GeoRemote {
 

@@ -2,7 +2,7 @@ package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.CarrierTripBaseEntity
 import com.kg.gettransfer.data.model.CarrierTripEntity
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 interface CarrierTripRemote : KoinComponent {
 

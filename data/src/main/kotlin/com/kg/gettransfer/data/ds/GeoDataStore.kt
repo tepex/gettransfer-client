@@ -3,8 +3,8 @@ package com.kg.gettransfer.data.ds
 import com.kg.gettransfer.data.GeoRemote
 import com.kg.gettransfer.data.Location
 import com.kg.gettransfer.data.model.LocationEntity
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.Locale
 
 open class GeoDataStore : KoinComponent {

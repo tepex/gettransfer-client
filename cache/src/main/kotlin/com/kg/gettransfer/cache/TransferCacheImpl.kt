@@ -3,8 +3,8 @@ package com.kg.gettransfer.cache
 import com.kg.gettransfer.cache.model.map
 import com.kg.gettransfer.data.TransferCache
 import com.kg.gettransfer.data.model.TransferEntity
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class TransferCacheImpl : TransferCache, KoinComponent {
 

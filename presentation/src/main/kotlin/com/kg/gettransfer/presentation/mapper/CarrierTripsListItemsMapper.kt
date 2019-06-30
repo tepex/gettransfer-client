@@ -14,8 +14,8 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 import java.util.Calendar
 import java.util.Date
 
-import org.koin.standalone.get
-import org.koin.standalone.KoinComponent
+import org.koin.core.get
+import org.koin.core.KoinComponent
 
 open class CarrierTripsListItemsMapper: KoinComponent {
     private val carrierTripBaseMapper = get<CarrierTripBaseMapper>()

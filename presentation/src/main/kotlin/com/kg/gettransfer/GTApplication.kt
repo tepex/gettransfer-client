@@ -33,7 +33,8 @@ import com.yandex.metrica.push.YandexMetricaPush
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 
-import org.koin.android.ext.android.startKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 import timber.log.Timber
 
@@ -53,21 +54,24 @@ class GTApplication : MultiDexApplication() {
             //DELETE CrashManager.register(this)
         }
         // Start Koin
-        startKoin(this, listOf(
-            ciceroneModule,
-            geoModule,
-            prefsModule,
-            loggingModule,
-            fileModule,
-            remoteModule,
-            cacheModule,
-            dataModule,
-            encryptModule,
-            domainModule,
-            mappersModule,
-            androidModule,
-            socketModule
-        ))
+        startKoin {
+            androidContext(this@GTApplication)
+            modules(listOf(
+                ciceroneModule,
+                geoModule,
+                prefsModule,
+                loggingModule,
+                fileModule,
+                remoteModule,
+                cacheModule,
+                dataModule,
+                encryptModule,
+                domainModule,
+                mappersModule,
+                androidModule,
+                socketModule
+            ))
+        }
 
         //setUpLeakCanary()
         setupFcm()

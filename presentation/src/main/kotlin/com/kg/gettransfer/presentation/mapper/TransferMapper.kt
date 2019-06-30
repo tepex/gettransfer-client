@@ -11,7 +11,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 import kotlin.math.absoluteValue
 
-import org.koin.standalone.get
+import org.koin.core.get
 import java.util.Date
 
 open class TransferMapper : Mapper<TransferModel, Transfer> {

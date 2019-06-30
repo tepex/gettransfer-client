@@ -15,9 +15,9 @@ import kotlinx.coroutines.Deferred
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 import org.koin.core.parameter.parametersOf
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
 import org.slf4j.Logger
 import retrofit2.HttpException
 import retrofit2.Retrofit

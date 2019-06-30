@@ -17,14 +17,15 @@ import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.domain.repository.OfferRepository
 import java.text.DateFormat
-import org.koin.standalone.get
-import org.koin.standalone.inject
+import org.koin.core.get
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 
 class OfferRepositoryImpl(
     private val factory: DataStoreFactory<OfferDataStore, OfferDataStoreCache, OfferDataStoreRemote>
 ) : BaseRepository(), OfferRepository {
 
-    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
+    private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
     private val preferencesCache = get<PreferencesCache>()
     private val offerReceiver: OfferInteractor by inject()
 

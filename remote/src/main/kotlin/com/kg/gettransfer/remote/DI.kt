@@ -20,7 +20,8 @@ import com.kg.gettransfer.remote.socket.OfferSocketImpl
 import com.kg.gettransfer.remote.socket.PaymentSocketEventer
 import com.kg.gettransfer.remote.socket.SocketManager
 import com.kg.gettransfer.remote.socket.SystemSocketImp
-import org.koin.dsl.module.module
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import org.slf4j.LoggerFactory
 
 val remoteModule = module {

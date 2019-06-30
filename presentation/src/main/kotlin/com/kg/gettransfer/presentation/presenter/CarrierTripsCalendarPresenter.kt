@@ -9,7 +9,7 @@ import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.CarrierTripsCalendarFragmentView
 import com.kg.gettransfer.presentation.view.Screens
-import org.koin.standalone.inject
+import org.koin.core.inject
 import java.util.Calendar
 
 @InjectViewState

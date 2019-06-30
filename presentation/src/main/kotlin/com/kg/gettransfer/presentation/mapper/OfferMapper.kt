@@ -7,7 +7,7 @@ import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
-import org.koin.standalone.get
+import org.koin.core.get
 
 open class OfferMapper : Mapper<OfferModel, Offer> {
     private val priceMapper   = get<PriceMapper>()

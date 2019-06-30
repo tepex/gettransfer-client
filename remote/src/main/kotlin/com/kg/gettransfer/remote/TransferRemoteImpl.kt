@@ -13,7 +13,7 @@ import com.kg.gettransfer.remote.model.TransfersModel
 import com.kg.gettransfer.remote.model.TransferWrapperModel
 import com.kg.gettransfer.remote.model.map
 
-import org.koin.standalone.get
+import org.koin.core.get
 
 class TransferRemoteImpl : TransferRemote {
     private val core = get<ApiCore>()

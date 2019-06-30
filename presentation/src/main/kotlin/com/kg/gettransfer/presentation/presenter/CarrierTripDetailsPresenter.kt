@@ -24,7 +24,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CarrierTripDetailsView
 import com.kg.gettransfer.presentation.view.Screens
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 @InjectViewState
 class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {

@@ -23,7 +23,7 @@ import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.MainState
 import com.kg.gettransfer.utilities.ScreenNavigationState
 import kotlinx.coroutines.delay
-import org.koin.standalone.inject
+import org.koin.core.inject
 import timber.log.Timber
 
 @InjectViewState

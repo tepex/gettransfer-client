@@ -2,7 +2,7 @@ package com.kg.gettransfer.data.ds
 
 import com.kg.gettransfer.data.CarrierTripRemote
 import com.kg.gettransfer.data.CarrierTripDataStore
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 /**
  * Implementation of the [CarrierTripDataStore] interface to provide

@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_pager_authorization.*
 import kotlinx.serialization.json.JSON
 
 import org.koin.android.ext.android.inject
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 import ru.terrakok.cicerone.Router
 
 /**

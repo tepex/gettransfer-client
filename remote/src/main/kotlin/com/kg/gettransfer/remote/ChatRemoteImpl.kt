@@ -9,7 +9,7 @@ import com.kg.gettransfer.remote.model.MessageWrapperModel
 import com.kg.gettransfer.remote.model.MessageNewWrapperModel
 import com.kg.gettransfer.remote.model.MessageNewModel
 import com.kg.gettransfer.remote.model.map
-import org.koin.standalone.get
+import org.koin.core.get
 
 class ChatRemoteImpl : ChatRemote {
 

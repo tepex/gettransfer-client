@@ -19,7 +19,7 @@ import com.kg.gettransfer.presentation.view.SearchView
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.MainState
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 @InjectViewState
 class SearchPresenter : BasePresenter<SearchView>() {

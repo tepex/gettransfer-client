@@ -12,8 +12,8 @@ import com.kg.gettransfer.presentation.ui.helpers.BuildsConfigsHelper
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SplashView
 import kotlinx.coroutines.Job
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import ru.terrakok.cicerone.Router
 
 @InjectViewState

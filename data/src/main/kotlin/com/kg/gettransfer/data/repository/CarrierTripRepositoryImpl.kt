@@ -13,7 +13,8 @@ import com.kg.gettransfer.domain.model.CarrierTrip
 import com.kg.gettransfer.domain.model.CarrierTripBase
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.CarrierTripRepository
-import org.koin.standalone.get
+import org.koin.core.get
+import org.koin.core.qualifier.named
 import java.text.DateFormat
 
 class CarrierTripRepositoryImpl(
@@ -21,7 +22,7 @@ class CarrierTripRepositoryImpl(
     private val preferencesCache: PreferencesCache
 ) : BaseRepository(), CarrierTripRepository {
 
-    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
+    private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
 
     override var backGroundCoordinates: Int
         get() = preferencesCache.driverCoordinatesInBackGround

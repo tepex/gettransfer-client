@@ -11,7 +11,7 @@ import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 import timber.log.Timber
 

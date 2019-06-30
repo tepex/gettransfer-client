@@ -12,7 +12,7 @@ import com.kg.gettransfer.remote.model.PaymentStatusRequestModel
 import com.kg.gettransfer.remote.model.PaymentStatusWrapperModel
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.map
-import org.koin.standalone.get
+import org.koin.core.get
 
 class PaymentRemoteImpl : PaymentRemote {
     private val core = get<ApiCore>()

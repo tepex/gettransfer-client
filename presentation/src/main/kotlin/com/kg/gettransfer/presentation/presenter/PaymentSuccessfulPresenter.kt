@@ -19,7 +19,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {

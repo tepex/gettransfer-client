@@ -65,8 +65,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
+import org.koin.core.inject
+import org.koin.core.KoinComponent
 
 import timber.log.Timber
 

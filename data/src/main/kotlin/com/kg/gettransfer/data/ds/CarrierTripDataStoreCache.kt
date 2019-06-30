@@ -6,7 +6,7 @@ import com.kg.gettransfer.data.CarrierTripDataStore
 import com.kg.gettransfer.data.model.CarrierTripBaseEntity
 import com.kg.gettransfer.data.model.CarrierTripEntity
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 /**
  * Implementation of the [CarrierTripDataStore] interface to provide

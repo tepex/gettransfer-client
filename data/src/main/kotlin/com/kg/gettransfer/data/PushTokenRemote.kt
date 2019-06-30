@@ -1,6 +1,6 @@
 package com.kg.gettransfer.data
 
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 interface PushTokenRemote : KoinComponent {
 

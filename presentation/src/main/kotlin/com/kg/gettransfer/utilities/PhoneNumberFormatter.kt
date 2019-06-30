@@ -7,8 +7,8 @@ import android.text.TextWatcher
 import android.widget.EditText
 import io.michaelrocks.libphonenumber.android.AsYouTypeFormatter
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.*
 
 class PhoneNumberFormatter : TextWatcher, KoinComponent {

@@ -6,7 +6,7 @@ import android.content.Context
 import android.os.Build
 import com.kg.gettransfer.common.BoundDatePickerDialog
 import com.kg.gettransfer.common.BoundTimePickerDialog
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 import java.util.*
 
 object DateTimePickerHelper : KoinComponent {

@@ -4,7 +4,7 @@ import com.kg.gettransfer.data.ReviewRemote
 import com.kg.gettransfer.data.model.ReviewRateEntity
 import com.kg.gettransfer.remote.model.FeedBackToRemote
 import com.kg.gettransfer.remote.model.map
-import org.koin.standalone.get
+import org.koin.core.get
 
 class ReviewRemoteImpl : ReviewRemote {
 

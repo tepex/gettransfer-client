@@ -5,7 +5,7 @@ import com.kg.gettransfer.data.PaymentRemote
 import com.kg.gettransfer.data.model.BraintreeTokenEntity
 import com.kg.gettransfer.data.model.PaymentRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 /**
  * Implementation of the [PaymentDataStore] interface to provide a means of communicating with the remote data source.

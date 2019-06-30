@@ -3,7 +3,7 @@ package com.kg.gettransfer.data.ds
 import com.kg.gettransfer.data.ReviewDataStore
 import com.kg.gettransfer.data.ReviewRemote
 import com.kg.gettransfer.data.model.ReviewRateEntity
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 class ReviewDataStoreRemote : ReviewDataStore {
 

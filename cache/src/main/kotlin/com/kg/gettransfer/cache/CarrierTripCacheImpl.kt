@@ -4,8 +4,8 @@ import com.kg.gettransfer.cache.model.map
 import com.kg.gettransfer.data.CarrierTripCache
 import com.kg.gettransfer.data.model.CarrierTripBaseEntity
 import com.kg.gettransfer.data.model.CarrierTripEntity
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class CarrierTripCacheImpl : CarrierTripCache, KoinComponent {
 

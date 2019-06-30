@@ -44,7 +44,7 @@ import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 
-import org.koin.dsl.module.module
+import org.koin.dsl.module
 
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router

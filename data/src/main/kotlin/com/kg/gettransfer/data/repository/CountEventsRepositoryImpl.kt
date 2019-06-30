@@ -3,8 +3,8 @@ package com.kg.gettransfer.data.repository
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.repository.CountEventsRepository
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 class CountEventsRepositoryImpl : KoinComponent, CountEventsRepository {
 

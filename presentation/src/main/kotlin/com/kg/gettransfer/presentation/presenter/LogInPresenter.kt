@@ -11,7 +11,7 @@ import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_PHONE
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 @InjectViewState
 class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {

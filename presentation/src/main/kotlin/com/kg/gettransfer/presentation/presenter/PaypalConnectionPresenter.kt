@@ -13,7 +13,7 @@ import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.view.PaypalConnectionView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
-import org.koin.standalone.inject
+import org.koin.core.inject
 import timber.log.Timber
 import java.util.Currency
 

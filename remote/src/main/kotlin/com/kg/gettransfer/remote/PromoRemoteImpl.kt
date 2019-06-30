@@ -3,7 +3,7 @@ package com.kg.gettransfer.remote
 import com.kg.gettransfer.data.PromoRemote
 import com.kg.gettransfer.data.model.PromoDiscountEntity
 import com.kg.gettransfer.remote.model.ResponseModel
-import org.koin.standalone.get
+import org.koin.core.get
 
 class PromoRemoteImpl : PromoRemote {
 

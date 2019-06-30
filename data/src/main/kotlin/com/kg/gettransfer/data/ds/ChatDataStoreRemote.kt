@@ -4,7 +4,7 @@ import com.kg.gettransfer.data.ChatDataStore
 import com.kg.gettransfer.data.ChatRemote
 import com.kg.gettransfer.data.model.ChatEntity
 import com.kg.gettransfer.data.model.MessageEntity
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 class ChatDataStoreRemote : ChatDataStore {
 

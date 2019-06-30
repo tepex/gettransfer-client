@@ -16,8 +16,8 @@ import com.kg.gettransfer.presentation.ui.icons.seats.SeatImageProvider
 import kotlinx.android.synthetic.main.bottom_sheet_child_seats.*
 import kotlinx.android.synthetic.main.view_child_seat_type_counter.view.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class ChildSeatsFragment: BaseBottomSheetFragment(), ChildSeatsView, KoinComponent{
     override val layout = R.layout.bottom_sheet_child_seats

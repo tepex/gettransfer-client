@@ -8,8 +8,8 @@ import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_NOT_ASKED
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 
 @InjectViewState

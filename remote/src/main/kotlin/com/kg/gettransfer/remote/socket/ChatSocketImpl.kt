@@ -11,9 +11,9 @@ import com.kg.gettransfer.remote.socket.emitters.ChatSocketEmitter.Companion.LEA
 import com.kg.gettransfer.remote.socket.emitters.ChatSocketEmitter.Companion.READ_MESSAGE_EVENTS
 import com.kg.gettransfer.remote.socket.emitters.ChatSocketEmitter.Companion.SEND_MESSAGE_EVENTS
 import org.json.JSONObject
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
 
 class ChatSocketImpl : ChatSocketEmitter, KoinComponent {
 

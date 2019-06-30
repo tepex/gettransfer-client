@@ -8,7 +8,7 @@ import com.kg.gettransfer.presentation.model.TotalPriceModel
 
 import java.util.Calendar
 
-import org.koin.standalone.get
+import org.koin.core.get
 
 open class CarrierTripMapper : Mapper<CarrierTripModel, CarrierTrip> {
     private val carrierTripBaseMapper  = get<CarrierTripBaseMapper>()

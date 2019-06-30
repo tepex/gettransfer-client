@@ -15,9 +15,10 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.repository.SessionRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
-import org.koin.standalone.get
+import org.koin.core.get
+import org.koin.core.qualifier.named
 import java.text.DateFormat
-import java.util.*
+import java.util.Calendar
 
 class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>
@@ -26,10 +27,10 @@ class TransferRepositoryImpl(
     private val preferencesCache = get<PreferencesCache>()
     private val transportTypes = get<SessionRepository>().configs.transportTypes
 
-    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
-    private val dateFormatTZ = get<ThreadLocal<DateFormat>>("iso_date_TZ")
-    private val serverDateFormat = get<ThreadLocal<DateFormat>>("server_date")
-    private val serverTimeFormat = get<ThreadLocal<DateFormat>>("server_time")
+    private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
+    private val dateFormatTZ = get<ThreadLocal<DateFormat>>(named("iso_date_TZ"))
+    private val serverDateFormat = get<ThreadLocal<DateFormat>>(named("server_date"))
+    private val serverTimeFormat = get<ThreadLocal<DateFormat>>(named("server_time"))
 
     override suspend fun createTransfer(transferNew: TransferNew): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveRemoteEntity {

@@ -6,7 +6,7 @@ import com.kg.gettransfer.presentation.model.PassengerAccountModel
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
-import org.koin.standalone.get
+import org.koin.core.get
 
 open class PassengerAccountMapper : Mapper<PassengerAccountModel, PassengerAccount> {
     private val profileMapper = get<ProfileMapper>()
