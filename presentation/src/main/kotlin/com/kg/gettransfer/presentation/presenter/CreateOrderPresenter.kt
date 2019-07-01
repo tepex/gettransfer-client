@@ -64,6 +64,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var selectedCurrency = INVALID_CURRENCY_INDEX
     private var hintsToComments: List<String>? = null
 
+    private var isMapInitialized = false
+
     private var isTimeSetByUser = false
         set(value) {
             field = value
@@ -71,11 +73,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
 
     @CallSuper
-    override fun attachView(view: CreateOrderView) {
-        super.attachView(view)
-        /*viewState.setCurrencies(currencies)
-        val i = systemInteractor.currentCurrencyIndex
-        if (i != -1) setCurrency(i)*/
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        setTransportTypePrices(emptyMap(), true)
+        initMapAndPrices()
         setCurrency()
         with(orderInteractor) {
             viewState.setUser(userMapper.toView(accountManager.tempUser), accountManager.isLoggedIn)
@@ -84,7 +85,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             if (promoCode.isNotEmpty()) checkPromoCode()
         }
         updateChildSeatsInfo()
-        transportTypes?.let { viewState.setTransportTypes(it) }
         checkOrderDateTime()
     }
 
@@ -100,17 +100,43 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         }
 
-    fun initMapAndPrices() {
+    private fun initMapAndPrices() {
         with(orderInteractor) {
             if (from == null || (to == null && hourlyDuration == null)) {
 //                Timber.w("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
-                return
             } else if (hourlyDuration != null) { // not need route info when hourly
-                setUIWithoutRoute(hourlyDuration!!)
-                return
+                getPricesForHourlyTransfer(hourlyDuration!!)
+            } else {
+                getRouteAndPricesForPointToPointTransfer()
             }
         }
+    }
 
+    private fun getPricesForHourlyTransfer(duration: Int) {
+        val from = orderInteractor.from?.cityPoint
+        val dateTime = orderInteractor.orderStartTime
+        if (from?.point == null) {
+//            Timber.w("NPE! from: $from")
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set"))
+            return
+        }
+        var prices: Map<TransportType.ID, TransportTypePrice>? = null
+        utils.launchSuspend {
+            fetchData {
+                orderInteractor.getRouteInfoHourlyTransfer(
+                        RouteInfoHourlyRequest(
+                                from.point!!,
+                                duration,
+                                sessionInteractor.currency.code,
+                                dateTime
+                        )
+                )
+            }?.let { prices = it.prices }
+            setTransportTypePrices(prices ?: emptyMap())
+        }
+    }
+
+    private fun getRouteAndPricesForPointToPointTransfer() {
         val from = orderInteractor.from!!.cityPoint
         val to = orderInteractor.to!!.cityPoint
         val dateTime = orderInteractor.orderStartTime
@@ -138,7 +164,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 duration = it.duration
                 hintsToComments = it.hintsToComments
             }
-            setTransportTypePrices(route?.prices ?: emptyMap(), true)
+            setTransportTypePrices(route?.prices ?: emptyMap())
 
             routeModel = routeMapper.getView(
                 route?.distance,
@@ -150,18 +176,48 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 dateDelegate.run { startOrderedTime ?: getCurrentDatePlusMinimumHours().time.simpleFormat() }
             )
 
-            routeModel?.let {
-                polyline = Utils.getPolyline(it)
-                track = polyline!!.track
-                viewState.setRoute(polyline!!, it, false)
-            }
+            if (isMapInitialized) setRoute()
+
             viewState.blockInterface(false)
+        }
+    }
+
+    fun mapInitialized() {
+        isMapInitialized = true
+        with(orderInteractor) {
+            if (from == null || (to == null && hourlyDuration == null)) {
+//                Timber.w("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
+                return
+            } else if (hourlyDuration != null) { // not need route info when hourly
+                setHourlyPoint()
+                return
+            } else {
+                if (routeModel != null) setRoute()
+            }
+        }
+    }
+
+    private fun setHourlyPoint() {
+        orderInteractor.from?.let { from ->
+            from.cityPoint.point?.let { p ->
+                val point = LatLng(p.latitude, p.longitude)
+                track = Utils.getCameraUpdateForPin(point)
+                viewState.setPinHourlyTransfer(from.address ?: "", from.variants?.first ?: "", point, track!!)
+            }
+        }
+    }
+
+    private fun setRoute() {
+        routeModel?.let {
+            polyline = Utils.getPolyline(it)
+            track = polyline!!.track
+            viewState.setRoute(polyline!!, it, false)
         }
     }
 
     private fun getNewPrices() {
         if (orderInteractor.hourlyDuration != null) {
-            initPrices(orderInteractor.hourlyDuration!!, false)
+            initPrices(orderInteractor.hourlyDuration!!)
         } else {
             initPrices(dateDelegate.returnDate != null)
         }
@@ -194,7 +250,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    private fun initPrices(duration: Int, selectTransport: Boolean) {
+    private fun initPrices(duration: Int) {
         val from = orderInteractor.from?.cityPoint
         val dateTime = orderInteractor.orderStartTime
         if (from?.point == null) {
@@ -215,7 +271,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 )
             }
                 ?.let { prices = it.prices }
-            setTransportTypePrices(prices ?: emptyMap(), selectTransport)
+            setTransportTypePrices(prices ?: emptyMap())
         }
     }
 
@@ -236,17 +292,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         transportTypes = newTransportTypes
         if (selectTransport) selectTransport()
         viewState.setTransportTypes(transportTypes!!)
-    }
-
-    private fun setUIWithoutRoute(duration: Int) {
-        initPrices(duration, true)
-        orderInteractor.from?.let { from ->
-            from.cityPoint.point?.let { p ->
-                val point = LatLng(p.latitude, p.longitude)
-                track = Utils.getCameraUpdateForPin(point)
-                viewState.setPinHourlyTransfer(from.address ?: "", from.variants?.first ?: "", point, track!!)
-            }
-        }
     }
 
     fun changeDate(isStartDate: Boolean) {
