@@ -4,7 +4,6 @@ import com.kg.gettransfer.data.SessionRemote
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
 import com.kg.gettransfer.data.model.RegistrationAccountEntity
 import com.kg.gettransfer.remote.model.AccountModelWrapper
 import com.kg.gettransfer.remote.model.ConfigsModel
@@ -67,9 +66,4 @@ class SessionRemoteImpl : SessionRemote {
     }
 
     override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpoint.map())
-
-    override suspend fun getMobileConfigs(): MobileConfigEntity {
-        val response: MobileConfigModel = core.tryTwice { core.api.getMobileConfigs() }
-        return response.map()
-    }
 }

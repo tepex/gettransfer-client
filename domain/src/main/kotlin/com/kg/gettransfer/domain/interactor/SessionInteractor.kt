@@ -3,7 +3,6 @@ package com.kg.gettransfer.domain.interactor
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.MobileConfig
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.User
@@ -51,9 +50,6 @@ class SessionInteractor(
     /* Dirty hack. GAA-298 */
     val currencies: List<Currency>
         get() = sessionRepository.configs.supportedCurrencies
-
-    val mobileConfigs: MobileConfig
-        get() = sessionRepository.mobileConfig
 
     var locale: Locale
         get() = account.locale

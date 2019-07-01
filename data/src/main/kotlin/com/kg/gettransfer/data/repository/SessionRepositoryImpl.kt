@@ -5,34 +5,40 @@ import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.SessionDataStore
+
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SessionDataStoreCache
 import com.kg.gettransfer.data.ds.SessionDataStoreRemote
+
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
-import com.kg.gettransfer.domain.model.MobileConfig
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.User
+
 import com.kg.gettransfer.domain.repository.SessionRepository
-import org.koin.core.get
+import com.kg.gettransfer.domain.repository.SystemRepository
+
 import java.util.Locale
+
+import org.koin.core.inject
 
 class SessionRepositoryImpl(
     private val factory: DataStoreFactory<SessionDataStore, SessionDataStoreCache, SessionDataStoreRemote>
 ) : BaseRepository(), SessionRepository, PreferencesListener {
 
-    private val preferencesCache = get<PreferencesCache>()
+    private val preferencesCache: PreferencesCache by inject()
+    private val systemRepository: SystemRepository by inject()
 
     init {
         preferencesCache.addListener(this)
@@ -46,11 +52,11 @@ class SessionRepositoryImpl(
 
     override var configs = CONFIGS_DEFAULT
         private set
+
     override var account = NO_ACCOUNT.copy()
         private set
+
     override var tempUser = User.EMPTY.copy()
-    override var mobileConfig = MOBILE_CONFIGS_DEFAULT
-        private set
 
     override var accessToken: String
         get() = preferencesCache.accessToken
@@ -88,6 +94,9 @@ class SessionRepositoryImpl(
     override suspend fun coldStart(): Result<Account> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
 
+        val r = systemRepository.coldStart()
+        if (r.error != null) return Result(account, r.error)
+
         if (configs === CONFIGS_DEFAULT) {
             val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getConfigs()
@@ -104,17 +113,6 @@ class SessionRepositoryImpl(
             if (result.error != null) {
                 configs = factory.retrieveCacheDataStore().getConfigs()?.map() ?: CONFIGS_DEFAULT
                 return Result(account, result.error.map())
-            }
-        }
-
-        if (mobileConfig === MOBILE_CONFIGS_DEFAULT) {
-            val result: ResultEntity<MobileConfigEntity?> = retrieveEntity { fromRemote ->
-                factory.retrieveDataStore(fromRemote).getMobileConfigs()
-            }
-            if (result.error != null && result.entity == null) return Result(account, result.error.map())
-            result.entity?.let { entity ->
-                mobileConfig = entity.map()
-                if (result.error == null) factory.retrieveCacheDataStore().setMobileConfigs(entity)
             }
         }
 
@@ -253,14 +251,6 @@ class SessionRepositoryImpl(
             distanceUnit = DistanceUnit.KM,
             groups = emptyList(),
             carrierId = null
-        )
-
-        private val MOBILE_CONFIGS_DEFAULT = MobileConfig(
-            pushShowDelay = 5,
-            orderMinimumMinutes = 120,
-            termsUrl = "terms_of_use",
-            smsResendDelaySec = 90,
-            buildsConfigs = null
         )
 
         private fun defineNoAccountCurrency() =

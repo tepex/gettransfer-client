@@ -2,6 +2,8 @@ package com.kg.gettransfer.domain.repository
 
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.MobileConfig
+import com.kg.gettransfer.domain.model.Result
 
 interface SystemRepository {
     val endpoints: List<Endpoint>
@@ -17,4 +19,7 @@ interface SystemRepository {
     var addressHistory: List<GTAddress>
     var appEnters: Int
     var isDebugMenuShowed: Boolean
+    val mobileConfig: MobileConfig
+
+    suspend fun coldStart(): Result<Unit>
 }

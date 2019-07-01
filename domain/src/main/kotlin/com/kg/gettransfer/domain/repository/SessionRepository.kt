@@ -3,7 +3,6 @@ package com.kg.gettransfer.domain.repository
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Endpoint
-import com.kg.gettransfer.domain.model.MobileConfig
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
@@ -21,7 +20,6 @@ interface SessionRepository {
     var userEmail: String?
     var userPhone: String?
     var userPassword: String
-    val mobileConfig: MobileConfig
 
     var favoriteTransportTypes: Set<TransportType.ID>?
 

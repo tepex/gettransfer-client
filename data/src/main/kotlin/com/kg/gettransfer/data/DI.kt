@@ -18,8 +18,11 @@ import com.kg.gettransfer.data.ds.RouteDataStoreCache
 import com.kg.gettransfer.data.ds.RouteDataStoreRemote
 import com.kg.gettransfer.data.ds.SessionDataStoreCache
 import com.kg.gettransfer.data.ds.SessionDataStoreRemote
+import com.kg.gettransfer.data.ds.SystemDataStoreCache
+import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 import com.kg.gettransfer.data.ds.TransferDataStoreCache
 import com.kg.gettransfer.data.ds.TransferDataStoreRemote
+
 import com.kg.gettransfer.data.ds.io.ChatSocketDataStoreInput
 import com.kg.gettransfer.data.ds.io.ChatSocketDataStoreOutput
 import com.kg.gettransfer.data.ds.io.CoordinateSocketDataStoreInput
@@ -28,6 +31,7 @@ import com.kg.gettransfer.data.ds.io.OfferSocketDataStoreInput
 import com.kg.gettransfer.data.ds.io.PaymentSocketDataStoreInput
 import com.kg.gettransfer.data.ds.io.SystemSocketDataStoreInput
 import com.kg.gettransfer.data.ds.io.SystemSocketDataStoreOutput
+
 import com.kg.gettransfer.data.repository.CarrierTripRepositoryImpl
 import com.kg.gettransfer.data.repository.ChatRepositoryImpl
 import com.kg.gettransfer.data.repository.CoordinateRepositoryImpl
@@ -43,11 +47,13 @@ import com.kg.gettransfer.data.repository.SessionRepositoryImpl
 import com.kg.gettransfer.data.repository.SocketRepositoryImpl
 import com.kg.gettransfer.data.repository.SystemRepositoryImpl
 import com.kg.gettransfer.data.repository.TransferRepositoryImpl
+
 import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
 import com.kg.gettransfer.data.socket.CoordinateDataStoreReceiver
 import com.kg.gettransfer.data.socket.OfferDataStoreReceiver
 import com.kg.gettransfer.data.socket.PaymentDataStoreReceiver
 import com.kg.gettransfer.data.socket.SystemDataStoreReceiver
+
 import com.kg.gettransfer.domain.repository.CarrierTripRepository
 import com.kg.gettransfer.domain.repository.ChatRepository
 import com.kg.gettransfer.domain.repository.CoordinateRepository
@@ -63,10 +69,12 @@ import com.kg.gettransfer.domain.repository.SessionRepository
 import com.kg.gettransfer.domain.repository.SocketRepository
 import com.kg.gettransfer.domain.repository.SystemRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
-import org.koin.core.qualifier.named
+
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
+
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.dsl.bind
 
@@ -104,11 +112,11 @@ val dataModule = module {
     single { PaymentDataStoreRemote() }
     single { PaymentRepositoryImpl(DataStoreFactory(get(), get())) } bind PaymentRepository::class
 
-    single { SessionDataStoreCache() }
-    single { SessionDataStoreRemote() }
     single { SystemSocketDataStoreOutput(get()) }
     single <SystemDataStoreReceiver> { SystemSocketDataStoreInput() }
-    single { SystemRepositoryImpl() } bind SystemRepository::class
+    single { SystemDataStoreCache() }
+    single { SystemDataStoreRemote() }
+    single { SystemRepositoryImpl(DataStoreFactory(get(), get())) } bind SystemRepository::class
 
     single { GeoDataStore() }
     single <GeoRepository> { GeoRepositoryImpl(get()) }
@@ -118,6 +126,8 @@ val dataModule = module {
 
     single { SocketRepositoryImpl(get()) } bind SocketRepository::class
 
+    single { SessionDataStoreCache() }
+    single { SessionDataStoreRemote() }
     single { SessionRepositoryImpl(DataStoreFactory(get(), get())) } bind SessionRepository::class
 
     single { RouteDataStoreCache() }

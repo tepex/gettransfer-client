@@ -1,19 +1,26 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.CountDownTimer
+
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.extensions.internationalExample
+
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
+
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SmsCodeView
+
 import com.kg.gettransfer.utilities.Analytics
+
 import kotlinx.serialization.json.JSON
 
 @InjectViewState
@@ -23,7 +30,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     var pinCode = ""
     var pinItemsCount = PIN_ITEMS_COUNT
     val smsResendDelaySec
-        get() = sessionInteractor.mobileConfigs.smsResendDelaySec * SEC_IN_MILLIS
+        get() = systemInteractor.mobileConfigs.smsResendDelaySec * SEC_IN_MILLIS
 
     private val timerBtnResendCode: CountDownTimer = object : CountDownTimer(smsResendDelaySec, SEC_IN_MILLIS) {
         override fun onTick(millisUntilFinished: Long) {
@@ -55,11 +62,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
                     false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
                 }
             }.also { result ->
-                if (result.error != null) {
-                    viewState.setError(result.error!!)
-                } else {
-                    setTimer()
-                }
+                if (result.error != null) viewState.setError(result.error!!) else  setTimer()
             }
         }
     }
