@@ -494,6 +494,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         updateMapBehaviorBounds()
     }
 
+    override fun setMapBottomPadding() {
+        mapView.setPadding(0, 0, 0, 150)
+    }
+
     override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
         btnCenterRoute.isVisible = false

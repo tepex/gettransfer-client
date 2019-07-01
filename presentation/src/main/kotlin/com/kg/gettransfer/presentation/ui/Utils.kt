@@ -257,12 +257,18 @@ object Utils : KoinComponent {
         }
 
         Timber.d("latLngBuilder: $latLngBuilder")
-        track = try { CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150) }
+
+        val build = latLngBuilder.build()
+        val northeast = build.northeast
+        val southwest = build.southwest
+        val isVerticalRoute = northeast.latitude - southwest.latitude >= northeast.longitude - southwest.longitude
+
+        track = try { CameraUpdateFactory.newLatLngBounds(build, 150) }
         catch (e: Exception) {
             Timber.w(e, "Create order error: $latLngBuilder")
             null
         }
-        return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track)
+        return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track, isVerticalRoute)
     }
 
     fun getCameraUpdate(list: List<LatLng>): CameraUpdate  =

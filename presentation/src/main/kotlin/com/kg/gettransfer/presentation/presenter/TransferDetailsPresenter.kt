@@ -197,6 +197,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         routeModel?.let {
             polyline = Utils.getPolyline(it)
             track = polyline!!.track
+            if (polyline!!.isVerticalRoute) viewState.setMapBottomPadding()
             viewState.setRoute(polyline!!, it)
         }
     }
