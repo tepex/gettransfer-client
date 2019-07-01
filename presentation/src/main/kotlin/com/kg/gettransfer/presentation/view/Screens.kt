@@ -362,7 +362,7 @@ object Screens {
             }
             return if (checkEmailIntent(context!!, emailIntent)) Intent.createChooser(
                 emailIntent,
-                context.getString(R.string.send_email)
+                context.getString(R.string.LNG_SEND_EMAIL)
             )
             else Intent()
         }
@@ -393,19 +393,15 @@ object Screens {
         }
     }
 
-    data class CallPhone(val phoneCarrier: String?) : SupportAppScreen() {
+    data class CallPhone(val phoneCarrier: String) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
-            if (phoneCarrier != null) Intent(Intent.ACTION_DIAL, Uri.fromParts(DIAL_SCHEME, phoneCarrier, null))
-            else {
-                context!!.toast(context.getString(R.string.driver_not_number))
-                null
-            }
+            Intent(Intent.ACTION_DIAL, Uri.fromParts(DIAL_SCHEME, phoneCarrier, null))
     }
 
     private fun checkEmailIntent(context: Context, intent: Intent): Boolean {
         if (canSendEmail == null) canSendEmail =
             context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isNotEmpty()
-        if (!canSendEmail!!) context.toast(context.getString(R.string.no_email_apps))
+        if (!canSendEmail!!) context.toast(context.getString(R.string.LNG_NO_EMAIL_APPS))
         return canSendEmail!!
     }
 

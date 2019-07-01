@@ -392,7 +392,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun redirectToPlayMarket() {
         systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
-        val url = getString(R.string.market_link) + getString(R.string.app_package)
+        val url = getString(R.string.market_link) + getString(R.string.app_market_package)
         startActivityForResult(
             Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse(url)

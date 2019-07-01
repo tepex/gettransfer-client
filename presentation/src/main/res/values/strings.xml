@@ -1,84 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- urls and keys -->
-    <string name="licence_agreement_url">https://gettransfer.com/en/terms_of_use</string>
-
-    <string name="api_key_demo">android_e3996c61be6786dfac7413d53be26e64</string>
-    <string name="api_url_demo">https://stgtr.org</string>
-    <string name="api_key_prod">android_9614f456a934e340353e6c60c5fb9a48</string>
-    <string name="api_url_prod">https://gettransfer.com</string>
-    <string name="endpoint_demo" translatable="false">Demo</string>
-    <string name="endpoint_prod" translatable="false">Prod</string>
-
-    <string name="api_url_transfers">/carrier/cabinet/transfers</string>
-    <string name="api_url_restore_password">/forgot_password</string>
-    <string name="api_url_carrier_new">/carrier/new</string>
-    <string name="api_url_carrier">/carrier</string>
-
-    <!-- FCM -->
-    <string name="new_offer_notification_channel_id" translatable="false">new_offer_channel</string>
-    <string name="new_offer_notification_channel_name" translatable="true">New Offer</string>
-
-    <!-- logs -->
-    <string name="logs_file_name">Logs.txt</string>
-    <string name="limited_logs_file_name">LimitedLogFile.txt</string>
-    <string name="file_provider_authority">com.kg.gettransfer.fileprovider</string>
-    <string name="share_extra_subject">GTR Logs</string>
-    <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
-
-    <!-- Not used in iOS -->
-    <string name="err_address_service_xxx">Ошибка определения адреса!</string>
-    <string name="err_server">Ошибка: %1$s</string>
-    <string name="err_server_code">Ошибка сервера %1$s! %2$s</string>
-
-    <string name="navigation_drawer_open" translatable="false">Open</string>
-    <string name="navigation_drawer_close" translatable="false">Close</string>
-
-    <string name="search_start">Loading…</string>
-    <string name="search_nothing"></string>
-    <string name="searchTransitionName">SEARCH_FORM</string>
-
-    <string name="transfer_start_sign">A</string>
-    <string name="transfer_end_sign">B</string>
-    <string name="rub">₽</string>
-
-    <string name="count_persons_and_baggage"> x%1$d</string>
-    <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string>
-
-    <string name="share">Share</string>
-    <string name="debug">Debug</string>
-    <string name="endpoint">Endpoint</string>
-    <string name="logs">Logs</string>
     <string name="LNG_SEARCH">Search</string>
-    <string name="reset_onboarding">Reset onboarding</string>
-    <string name="reset_rate">Reset play market rate</string>
-    <string name="clear_access_token">Clear access token</string>
-
-    <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
-    <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
-
-    <string name="passenger_number_default">0</string>
-    <string name="child_number_default">0</string>
-
     <string name="LNG_LOGIN_LOGIN_TO_CONTINUE">Log in to see transfers and offers</string>
-
-    <string name="tag_read_more" translatable="false">read_more_dialog</string>
-    <string name="email_support" translatable="false">info@gettransfer.com</string>
-    <string name="send_email">Send mail...</string>
-    <string name="no_email_apps">There are no email apps installed.</string>
-    <string name="driver_not_number">Driver has not a phone number</string>
-
-    <string name="market_link">market://details?id=</string>
-    <string name="app_package">com.gettransfer</string>
-
-    <string name="text_in_parentheses">%1$s</string>
-    <string name="chat_transfer_date_transfer_id_format">%1$s (%2$s)</string>
-
-    <string name="X_SIGN">x</string>
-
-
-    <string name="LNG_MISKO">TEST</string>
     <string name="LNG_OK">OK</string>
     <string name="LNG_CANCEL">Cancel</string>
     <string name="LNG_CLOSE"><u>Close</u></string>
@@ -344,15 +267,6 @@
     <string name="LNG_TRANSPORT_EXAMPLES_BUSINESS"><b>BMW 3-series, Honda Accord, Lexus IS, Hyundai Equus Toyota Camry, Mercedes E-class, Audi a6, BMW 5-series</b> \nFor transferring passengers to events, business meetings and appointments.\n- Dress-code for the driver\n- Fixed price\n- Without extra payment for luggage</string>
     <string name="LNG_TRANSPORT_EXAMPLES_VAN"><b>Toyota Alphard, Ford S-MAX, Chrysler Voyager, Honda Stream, Volkswagen Sharan, Mercedes Vito, Mercedes V-class, Volkswagen Transporter</b>\nFor long-time excursions around the city, transferring foreign colleagues to conferences and seminars.\n- Conditioner \n- Comfortable cabin</string>
     <string name="LNG_TRANSPORT_EXAMPLES_SUV"><b>Chevrolet Tahoe, Volkswagen Tiguan, Hyundai Creta, Nissan X-Trail</b>\nFor off-road trips, safe transferring between cities and ski resorts\n- Fixed price\n- Spacious luggage compartment</string>
-    <string name="LNG_TRANSPORT_1">Passenger car</string>
-    <string name="LNG_TRANSPORT_2">Minivan</string>
-    <string name="LNG_TRANSPORT_3">Porter</string>
-    <string name="LNG_TRANSPORT_4">Transit</string>
-    <string name="LNG_TRANSPORT_5">Hauler</string>
-    <string name="LNG_TRANSPORT_6">Carrier</string>
-    <string name="LNG_TRANSPORT_7">5-ton truck</string>
-    <string name="LNG_TRANSPORT_8">20-ton truck</string>
-    <string name="LNG_TRANSPORT_9">Container</string>
     <string name="LNG_DIRECTION">Direction</string>
     <string name="LNG_MADE">made</string>
     <string name="LNG_MADE_RIDES">made transfers: %d</string>
@@ -501,7 +415,6 @@
     <string name="LNG_YES">Yes</string>
     <string name="LNG_NO">No</string>
     <string name="LNG_PHONE_REQUIRED_ERROR">Please enter phone number in cabinet on the site</string>
-
     <string name="LNG_LOGIN_SEND_SMS_CODE">We sent an SMS with a code to \nnumber"</string>
     <string name="LNG_LOGIN_SEND_EMAIL_CODE">We sent an E-mail with a code to\n</string>
     <string name="LNG_LOGIN_ENTER_CODE">Enter the received code:"</string>
@@ -532,14 +445,6 @@
     <string name="LNG_PROFILE">Profile</string>
     <string name="LNG_CHANGE_EMAIL">Change e-mail</string>
     <string name="LNG_CHANGING_EMAIL">Changing e-mail</string>
-    <!-- tags for api params-->
-    <string name="VEHICLE">vehicle</string>
-    <string name="DRIVER">driver</string>
-    <string name="PUNCTUALITY">fair</string>
-
-    <string name="offer_channel_name">Offer</string>
-    <string name="offer_channel_description">@string/offer_channel_name</string>
-    <string name="new_offers">New offers</string>
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
     <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">Add a return transfer</string>
     <string name="LNG_RIDE_DATE_RETURN">Return date and time</string>
@@ -553,7 +458,6 @@
     <string name="LNG_PLEASE_WAIT">Please wait</string>
     <string name="LNG_PLEASE_WAIT_PAYPAL">we are connecting to PayPal…</string>
     <string name="LNG_PAYMENT_INSTALL_PAYPAL">Install PayPal app or browser to pay</string>
-
     <string name="LNG_CUSTOMER_SUPPORT_SPEAK_YOUR_LANG">"We speak"</string>
     <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSENGER">"Write us a message"</string>
     <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE">"Write us"</string>
@@ -569,31 +473,11 @@
     <string name="LNG_RIDE_PAY_CHARGE2"><b>You will be charged %s</b></string>
     <string name="LNG_TRANSFER_CANCELED">Transfer canceled</string>
     <string name="LNG_LOGIN_LOGIN_TITLE">Log in &amp; Sign up</string>
-
-    <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
-    <string name="switzerland_phone" translatable="false">+41 22 518 04 00</string>
-    <string name="cyprus_phone" translatable="false">+357 24 022300</string>
-    <string name="russia_phone" translatable="false">+7 495 414 23 87</string>
-    <string name="florida_phone" translatable="false">+1 786 870 1567</string>
-    <string name="china_phone" translatable="false">+852 5803 1035</string>
     <string name="LNG_LOGIN_CARRIER_SIGNUP_TITLE">Begin to earn more with GetTransfer.com!</string>
     <string name="LNG_LOGIN_CARRIER_SIGNUP_HINT">Carrier registration is available on our web site gettransfer.com</string>
     <string name="LNG_LOGIN_CARRIER_SIGNUP_BUTTON">Sign up on gettransfer.com</string>
     <string name="LNG_SIGNUP">Sign up</string>
     <string name="LNG_SIGNIN">Log in</string>
-
-    <plurals name="days">
-        <item quantity="one">@string/LNG_DAY</item>
-        <item quantity="few">@string/LNG_DAY_FEW</item>
-        <item quantity="many">@string/LNG_DAYS</item>
-        <item quantity="other">@string/LNG_DAYS</item>
-    </plurals>
-
-    <plurals name="hours">
-        <item quantity="one">@string/LNG_HOUR</item>
-        <item quantity="few">@string/LNG_HOUR_FEW</item>
-        <item quantity="many">@string/LNG_HOURS</item>
-        <item quantity="other">@string/LNG_HOURS</item>
-    </plurals>
-    
+    <string name="LNG_SEND_EMAIL">Send email...</string>
+    <string name="LNG_NO_EMAIL_APPS">There are no email apps installed.</string>
 </resources>
