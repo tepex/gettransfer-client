@@ -15,7 +15,7 @@ data class PlaceDetailsModel(
     @SerializedName(PlaceDetailsEntity.GT_FORMATTED_ADDRESS) val formattedAddress: String,
     @SerializedName(PlaceDetailsEntity.LOCATION)             val location: PlaceLocationModel,
     @SerializedName(PlaceDetailsEntity.NAME)                 val name: String,
-    @SerializedName(PlaceDetailsEntity.TYPES)                val types: List<String>
+    @SerializedName(PlaceDetailsEntity.TYPES)                val types: List<String>?
 )
 
 data class AddressComponentModel(
@@ -39,7 +39,7 @@ fun PlaceDetailsModel.map() =
         formattedAddress,
         location.map(),
         name,
-        types
+        types ?: emptyList()
     )
 
 fun PlaceDetailsResultModel.map() = PlaceDetailsResultEntity(result?.map())

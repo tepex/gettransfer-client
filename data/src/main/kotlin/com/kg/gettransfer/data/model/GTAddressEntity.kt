@@ -12,7 +12,7 @@ data class GTAddressEntity(
     val lat: Double?,
     val lon: Double?,
     val address: String,
-    val placeTypes: List<String>?,
+    val placeTypes: List<String>,
     @Optional
     val variants: Pair<String?, String?>? = null
 )
@@ -28,7 +28,7 @@ fun GTAddress.map() =
 fun GTAddressEntity.map() =
     GTAddress(
         if (lat == null || lon == null) CityPoint.EMPTY else CityPoint(address, Point(lat, lon), null),
-        placeTypes ?: emptyList(),
+        placeTypes,
         address,
         null
     )
