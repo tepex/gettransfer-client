@@ -47,7 +47,7 @@ import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 @InjectViewState
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SocketEventListener {

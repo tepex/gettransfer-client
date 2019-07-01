@@ -7,7 +7,7 @@ import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
 import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.view.RatingDetailView
 import com.kg.gettransfer.utilities.Analytics
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 
 @InjectViewState

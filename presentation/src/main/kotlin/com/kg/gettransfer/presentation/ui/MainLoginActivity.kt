@@ -21,7 +21,7 @@ import com.kg.gettransfer.presentation.view.MainLoginView
 import com.kg.gettransfer.utilities.LocaleManager
 
 import org.koin.android.ext.android.inject
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder

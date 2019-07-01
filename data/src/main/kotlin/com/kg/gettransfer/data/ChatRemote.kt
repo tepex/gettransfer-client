@@ -2,7 +2,7 @@ package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.ChatEntity
 import com.kg.gettransfer.data.model.MessageEntity
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 interface ChatRemote : KoinComponent {
 

@@ -12,7 +12,7 @@ import com.kg.gettransfer.remote.model.MobileConfigModel
 import com.kg.gettransfer.remote.model.RegistrationAccountEntityWrapper
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.map
-import org.koin.standalone.get
+import org.koin.core.get
 
 class SessionRemoteImpl : SessionRemote {
 

@@ -3,7 +3,7 @@ package com.kg.gettransfer.data.ds
 import com.kg.gettransfer.data.OfferCache
 import com.kg.gettransfer.data.OfferDataStore
 import com.kg.gettransfer.data.model.OfferEntity
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 open class OfferDataStoreCache : OfferDataStore {
     private val cache: OfferCache by inject()

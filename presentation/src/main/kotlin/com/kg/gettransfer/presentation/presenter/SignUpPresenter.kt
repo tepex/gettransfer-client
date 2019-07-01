@@ -13,7 +13,7 @@ import com.kg.gettransfer.presentation.view.SignUpView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 @InjectViewState
 class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {

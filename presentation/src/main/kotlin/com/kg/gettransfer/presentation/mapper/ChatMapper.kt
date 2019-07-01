@@ -6,8 +6,8 @@ import com.kg.gettransfer.domain.model.ChatAccount
 import com.kg.gettransfer.presentation.model.ChatAccountModel
 import com.kg.gettransfer.presentation.model.ChatModel
 
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 open class ChatMapper : KoinComponent {
     private val chatAccountMapper  = get<ChatAccountMapper>()

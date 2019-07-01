@@ -27,8 +27,8 @@ import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.view_switcher.*
 
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 //TODO add presenter
 class MainRequestFragment :

@@ -8,7 +8,7 @@ import com.kg.gettransfer.data.model.RouteInfoEntity
 import com.kg.gettransfer.data.model.RouteInfoRequestEntity
 import com.kg.gettransfer.data.model.RouteInfoHourlyRequestEntity
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 /**
  * Implementation of the [RouteDataStore] interface to provide a means of communicating with the cache data source.

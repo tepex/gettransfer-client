@@ -6,7 +6,7 @@ import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.ProfileSettingsView
 import com.kg.gettransfer.presentation.view.Screens
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 @InjectViewState
 class ProfileSettingsPresenter : BasePresenter<ProfileSettingsView>() {

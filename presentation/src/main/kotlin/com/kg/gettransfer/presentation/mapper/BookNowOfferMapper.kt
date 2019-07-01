@@ -4,7 +4,7 @@ import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 
-import org.koin.standalone.get
+import org.koin.core.get
 
 open class BookNowOfferMapper : Mapper<BookNowOfferModel, BookNowOffer> {
     private val moneyMapper  = get<MoneyMapper>()

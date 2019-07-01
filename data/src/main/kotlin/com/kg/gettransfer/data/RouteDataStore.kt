@@ -3,7 +3,7 @@ package com.kg.gettransfer.data
 import com.kg.gettransfer.data.model.RouteInfoEntity
 import com.kg.gettransfer.data.model.RouteInfoRequestEntity
 import com.kg.gettransfer.data.model.RouteInfoHourlyRequestEntity
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 interface RouteDataStore : KoinComponent {
 

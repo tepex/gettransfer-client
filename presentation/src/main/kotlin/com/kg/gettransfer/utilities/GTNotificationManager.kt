@@ -24,8 +24,8 @@ import com.kg.gettransfer.presentation.ui.ChatActivity
 import com.kg.gettransfer.presentation.view.ChatView
 import com.kg.gettransfer.presentation.view.OffersView
 import kotlinx.coroutines.Job
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import java.lang.UnsupportedOperationException
 
 class GTNotificationManager(val context: Context) : ContextWrapper(context), KoinComponent {

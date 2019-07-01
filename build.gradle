@@ -11,7 +11,7 @@ buildscript {
         serialization_version = "0.9.1"
         //gradle_version        = "3.4.0-alpha07"
         gradle_version        = '3.4.0'
-        koin_version          = "1.0.2"
+        koin_version          = "2.0.1"
         gms_version           = "16.0.0"
         gs_version            = "4.2.0"
         hockeyapp_version     = "3.7.6"
@@ -31,6 +31,7 @@ buildscript {
             coroutines    : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
             serialization : ("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"),
             koin_core     : ("org.koin:koin-core:$koin_version"),
+            koin_core_ext : ("org.koin:koin-core-ext:$koin_version"),
             koin_android  : ("org.koin:koin-android:$koin_version"),
             psLocation    : ("com.google.android.gms:play-services-location:$gms_version"),
             psPlaces      : ("com.google.android.gms:play-services-places:$gms_version"),

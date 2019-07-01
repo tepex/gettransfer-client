@@ -24,7 +24,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import java.util.Calendar
 
 import org.koin.core.parameter.parametersOf
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 import org.slf4j.Logger
 

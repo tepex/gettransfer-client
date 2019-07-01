@@ -7,9 +7,9 @@ import com.kg.gettransfer.remote.socket.emitters.CoordinateSocketEmitter
 import com.kg.gettransfer.remote.socket.emitters.CoordinateSocketEmitter.Companion.INIT_LOCATION_EVENTS
 import com.kg.gettransfer.remote.socket.emitters.CoordinateSocketEmitter.Companion.OWN_LOCATION
 import kotlinx.serialization.json.JSON
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
 
 class CoordinateSocketImpl : CoordinateSocketEmitter, KoinComponent {
 

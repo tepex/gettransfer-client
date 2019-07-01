@@ -6,7 +6,7 @@ import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
 

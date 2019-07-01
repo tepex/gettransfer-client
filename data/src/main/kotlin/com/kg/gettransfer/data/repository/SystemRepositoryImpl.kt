@@ -5,7 +5,7 @@ import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.repository.SystemRepository
-import org.koin.standalone.get
+import org.koin.core.get
 
 class SystemRepositoryImpl : BaseRepository(), SystemRepository {
 

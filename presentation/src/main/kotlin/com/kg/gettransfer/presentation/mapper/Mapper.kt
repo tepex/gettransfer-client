@@ -4,7 +4,7 @@ import android.location.Location
 
 import com.kg.gettransfer.domain.model.Point
 
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 /**
  * Interface for ui mappers. It provides helper methods that facilitate

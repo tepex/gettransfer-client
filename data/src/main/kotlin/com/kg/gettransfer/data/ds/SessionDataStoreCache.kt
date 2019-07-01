@@ -8,7 +8,7 @@ import com.kg.gettransfer.data.model.MobileConfigEntity
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.RegistrationAccountEntity
 import com.kg.gettransfer.data.model.EndpointEntity
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 /**
  * Implementation of the [SessionDataStore] interface to provide a means of communicating with the local data source.

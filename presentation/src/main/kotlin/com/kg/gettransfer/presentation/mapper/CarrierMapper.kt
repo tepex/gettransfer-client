@@ -5,7 +5,7 @@ import com.kg.gettransfer.domain.model.Carrier
 import com.kg.gettransfer.presentation.model.CarrierModel
 import com.kg.gettransfer.presentation.model.map
 
-import org.koin.standalone.get
+import org.koin.core.get
 
 open class CarrierMapper : Mapper<CarrierModel, Carrier> {
     private val profileMapper = get<ProfileMapper>()

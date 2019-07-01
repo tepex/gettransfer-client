@@ -4,7 +4,7 @@ import com.kg.gettransfer.data.ChatCache
 import com.kg.gettransfer.data.ChatDataStore
 import com.kg.gettransfer.data.model.ChatEntity
 import com.kg.gettransfer.data.model.MessageEntity
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 class ChatDataStoreCache : ChatDataStore {
 

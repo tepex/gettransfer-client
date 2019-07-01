@@ -3,7 +3,7 @@ package com.kg.gettransfer.data.ds
 import com.kg.gettransfer.data.TransferRemote
 import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.model.TransferNewEntity
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 /**
  * Implementation of the [TransferDataStore] interface to provide a means of communicating with the remote data source.

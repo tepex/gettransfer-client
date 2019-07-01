@@ -5,8 +5,8 @@ import com.kg.gettransfer.domain.model.Vehicle
 
 import com.kg.gettransfer.presentation.model.VehicleModel
 
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 open class VehicleMapper : KoinComponent {
     private val transportTypeMapper = get<TransportTypeMapper>()

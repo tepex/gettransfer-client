@@ -16,7 +16,7 @@ import com.kg.gettransfer.domain.model.PaymentStatusRequest
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.repository.PaymentRepository
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 class PaymentRepositoryImpl(
     private val factory: DataStoreFactory<PaymentDataStore, PaymentDataStoreCache, PaymentDataStoreRemote>

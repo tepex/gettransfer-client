@@ -23,16 +23,16 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTNotificationManager
 import kotlinx.coroutines.Job
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
 import ru.terrakok.cicerone.Router
 import timber.log.Timber
 
 open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     OfferEventListener,
     ChatBadgeEventListener,
-    KoinComponent {
+        KoinComponent {
 
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)

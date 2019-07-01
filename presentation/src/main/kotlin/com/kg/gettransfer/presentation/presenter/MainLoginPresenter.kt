@@ -5,8 +5,8 @@ import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.presentation.view.MainLoginView
 import com.kg.gettransfer.presentation.view.Screens
 
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 import ru.terrakok.cicerone.Router
 

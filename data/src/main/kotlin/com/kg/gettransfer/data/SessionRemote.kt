@@ -5,7 +5,7 @@ import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.MobileConfigEntity
 import com.kg.gettransfer.data.model.RegistrationAccountEntity
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 interface SessionRemote : KoinComponent {
 

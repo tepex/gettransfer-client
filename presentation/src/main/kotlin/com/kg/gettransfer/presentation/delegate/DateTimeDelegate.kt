@@ -9,8 +9,8 @@ import com.kg.gettransfer.extensions.simpleFormat
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeHandler
 import com.kg.gettransfer.presentation.ui.helpers.DateTimePickerHelper
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import java.util.*
 
 class DateTimeDelegate : KoinComponent {

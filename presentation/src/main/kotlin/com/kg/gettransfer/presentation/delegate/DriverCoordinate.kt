@@ -7,8 +7,8 @@ import android.view.animation.LinearInterpolator
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Coordinate
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.ArrayList
 import kotlin.properties.Delegates
 

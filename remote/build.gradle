@@ -33,6 +33,7 @@ dependencies {
     implementation libs.kotlin
     implementation libs.coroutines
     implementation libs.koin_core
+    implementation libs.koin_core_ext
     implementation libs.serialization
     implementation project(":data")
     implementation project(":domain")

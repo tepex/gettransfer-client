@@ -5,8 +5,8 @@ import com.kg.gettransfer.cache.model.mapNew
 import com.kg.gettransfer.data.ChatCache
 import com.kg.gettransfer.data.model.ChatEntity
 import com.kg.gettransfer.data.model.MessageEntity
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class ChatCacheImpl : ChatCache, KoinComponent {
 

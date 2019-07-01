@@ -25,7 +25,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import io.sentry.Sentry
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 import timber.log.Timber
 import java.util.Currency

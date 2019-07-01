@@ -4,9 +4,9 @@ import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.socket.SystemDataStoreReceiver
 import com.kg.gettransfer.data.socket.SystemEventEmitter
 import com.kg.gettransfer.remote.model.map
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
 
 class SystemSocketImp : SystemEventEmitter, KoinComponent {
 

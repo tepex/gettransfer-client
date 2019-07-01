@@ -2,8 +2,8 @@ package com.kg.gettransfer.data.ds.io
 
 import com.kg.gettransfer.data.repository.PaymentRepositoryImpl
 import com.kg.gettransfer.data.socket.PaymentDataStoreReceiver
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class PaymentSocketDataStoreInput : PaymentDataStoreReceiver, KoinComponent {
 

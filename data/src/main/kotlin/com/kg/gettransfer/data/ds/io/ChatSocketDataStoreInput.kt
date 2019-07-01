@@ -4,8 +4,8 @@ import com.kg.gettransfer.data.model.ChatBadgeEventEntity
 import com.kg.gettransfer.data.model.MessageEntity
 import com.kg.gettransfer.data.repository.ChatRepositoryImpl
 import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class ChatSocketDataStoreInput : ChatDataStoreReceiver, KoinComponent {
 

@@ -9,7 +9,7 @@ import com.kg.gettransfer.data.TransferCache
 import com.kg.gettransfer.data.CarrierTripCache
 import com.kg.gettransfer.data.ChatCache
 
-import org.koin.dsl.module.module
+import org.koin.dsl.module
 
 val cacheModule = module {
     single {

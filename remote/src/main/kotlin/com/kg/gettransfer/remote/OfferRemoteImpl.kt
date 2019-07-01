@@ -6,7 +6,7 @@ import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.OfferModel
 import com.kg.gettransfer.remote.model.OffersModel
 import com.kg.gettransfer.remote.model.map
-import org.koin.standalone.get
+import org.koin.core.get
 
 class OfferRemoteImpl : OfferRemote {
 

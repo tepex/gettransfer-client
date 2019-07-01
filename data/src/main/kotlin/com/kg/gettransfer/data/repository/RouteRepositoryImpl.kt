@@ -13,14 +13,15 @@ import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.RouteInfoHourlyRequest
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.repository.RouteRepository
-import org.koin.standalone.get
+import org.koin.core.get
+import org.koin.core.qualifier.named
 import java.text.DateFormat
 
 class RouteRepositoryImpl(
     private val factory: DataStoreFactory<RouteDataStore, RouteDataStoreCache, RouteDataStoreRemote>
 ) : BaseRepository(), RouteRepository {
 
-    private val dateFormatTZ = get<ThreadLocal<DateFormat>>("iso_date_TZ")
+    private val dateFormatTZ = get<ThreadLocal<DateFormat>>(named("iso_date_TZ"))
 
     override suspend fun getRouteInfo(request: RouteInfoRequest): Result<RouteInfo> {
 

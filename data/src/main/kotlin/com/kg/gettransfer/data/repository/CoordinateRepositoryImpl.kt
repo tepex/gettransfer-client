@@ -6,8 +6,8 @@ import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.model.Coordinate
 import com.kg.gettransfer.domain.repository.CoordinateRepository
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class CoordinateRepositoryImpl(
     private val socketDataStore: CoordinateSocketDataStoreOutput

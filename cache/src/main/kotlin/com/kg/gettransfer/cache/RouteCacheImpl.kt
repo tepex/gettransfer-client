@@ -4,8 +4,8 @@ import com.kg.gettransfer.cache.model.map
 import com.kg.gettransfer.data.CacheException
 import com.kg.gettransfer.data.RouteCache
 import com.kg.gettransfer.data.model.RouteInfoEntity
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class RouteCacheImpl : RouteCache, KoinComponent {
 

@@ -7,8 +7,8 @@ import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.presentation.view.ThanksForRateView
 import kotlinx.coroutines.Job
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 @InjectViewState
 class ThanksForRatePresenter: MvpPresenter<ThanksForRateView>(), KoinComponent {

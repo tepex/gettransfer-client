@@ -11,8 +11,8 @@ import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.repository.SocketRepository
 
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 class SocketRepositoryImpl(
     private val socketDataStore: SystemSocketDataStoreOutput

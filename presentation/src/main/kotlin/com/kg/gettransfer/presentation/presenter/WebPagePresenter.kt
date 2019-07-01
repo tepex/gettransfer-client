@@ -7,8 +7,8 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.view.WebPageView
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import ru.terrakok.cicerone.Router
 
 @InjectViewState

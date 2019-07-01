@@ -25,7 +25,7 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.repository.SessionRepository
-import org.koin.standalone.get
+import org.koin.core.get
 import java.util.Locale
 
 class SessionRepositoryImpl(

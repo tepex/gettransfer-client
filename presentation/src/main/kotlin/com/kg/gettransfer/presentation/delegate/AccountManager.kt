@@ -8,8 +8,8 @@ import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 class AccountManager : KoinComponent {
     val sessionInteractor: SessionInteractor = get()

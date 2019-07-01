@@ -16,8 +16,9 @@ import com.kg.gettransfer.domain.model.Chat
 import com.kg.gettransfer.domain.model.Message
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.ChatRepository
-import org.koin.standalone.get
-import org.koin.standalone.inject
+import org.koin.core.get
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 import java.text.DateFormat
 import java.util.Calendar
 
@@ -27,7 +28,7 @@ class ChatRepositoryImpl(
 ) : BaseRepository(), ChatRepository {
 
     private val chatReceiver: ChatInteractor by inject()
-    private val dateFormat = get<ThreadLocal<DateFormat>>("iso_date")
+    private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
 
     override suspend fun getChatRemote(transferId: Long): Result<Chat> {
         val result: ResultEntity<ChatEntity?> = retrieveRemoteEntity {

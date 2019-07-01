@@ -8,9 +8,9 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 import kotlinx.coroutines.Job
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
 import timber.log.Timber
 import android.R.id.message
 import com.yandex.metrica.push.firebase.MetricaMessagingService

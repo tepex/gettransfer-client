@@ -5,7 +5,7 @@ import com.kg.gettransfer.data.RouteRemote
 import com.kg.gettransfer.data.model.RouteInfoEntity
 import com.kg.gettransfer.data.model.RouteInfoHourlyRequestEntity
 import com.kg.gettransfer.data.model.RouteInfoRequestEntity
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 /**
  * Implementation of the [RouteDataStore] interface to provide a means of communicating with the remote data source

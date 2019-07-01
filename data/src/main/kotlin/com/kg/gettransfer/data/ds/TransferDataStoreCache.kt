@@ -6,7 +6,7 @@ import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 /**
  * Implementation of the [TransferDataStore] interface to provide a means of communicating with the local data source.

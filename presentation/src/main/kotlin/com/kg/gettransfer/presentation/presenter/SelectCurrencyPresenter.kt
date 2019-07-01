@@ -6,8 +6,8 @@ import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 @InjectViewState
 class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinComponent {

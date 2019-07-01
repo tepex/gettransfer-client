@@ -4,7 +4,7 @@ import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.presentation.model.UserModel
 
-import org.koin.standalone.get
+import org.koin.core.get
 
 open class UserMapper : Mapper<UserModel, User> {
     private val profileMapper = get<ProfileMapper>()

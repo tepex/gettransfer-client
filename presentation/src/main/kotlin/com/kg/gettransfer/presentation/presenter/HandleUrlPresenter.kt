@@ -8,7 +8,7 @@ import com.kg.gettransfer.extensions.createStartChain
 import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.presentation.view.Screens
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 @InjectViewState
 class HandleUrlPresenter : BasePresenter<HandleUrlView>() {

@@ -22,7 +22,7 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.standalone.get
+import org.koin.core.get
 import java.lang.IllegalArgumentException
 import java.util.Locale
 
