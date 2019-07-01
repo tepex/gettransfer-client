@@ -83,14 +83,16 @@ import kotlinx.android.synthetic.main.view_your_comment.view.*
 import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
 
 import org.jetbrains.anko.longToast
+import pub.devrel.easypermissions.EasyPermissions
 
 //import java.util.*
 
 class TransferDetailsActivity : BaseGoogleMapActivity(),
-    TransferDetailsView,
-    RatingDetailDialogFragment.OnRatingChangeListener,
-    StoreDialogFragment.OnStoreListener,
-    CommentDialogFragment.OnCommentListener {
+        TransferDetailsView,
+        RatingDetailDialogFragment.OnRatingChangeListener,
+        StoreDialogFragment.OnStoreListener,
+        CommentDialogFragment.OnCommentListener, EasyPermissions.PermissionCallbacks,
+        EasyPermissions.RationaleCallbacks {
 
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
@@ -309,8 +311,25 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             setRemainToPayInfo(remainsToPay, getString(R.string.LNG_RIDE_PAYMENT_REMAINS))
         } else {
             setRemainToPayInfo(getString(R.string.LNG_RIDE_PAYMENT_PAID))
+            setVoucher()
         }
         setFullPrice(price ?: "", paidPercentage)
+    }
+
+    private fun setVoucher() {
+        layoutVoucher.isVisible = true
+        layoutVoucher.setOnClickListener { checkPermissionForWrite() }
+    }
+
+    private fun checkPermissionForWrite() {
+        val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (EasyPermissions.hasPermissions(this, *perms)) {
+            downloadVoucher(presenter.transferId)
+        } else EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
+                RC_WRITE_FILE,
+                *perms)
     }
 
     private fun setPassengerOfferedPrice(price: String) {
@@ -621,8 +640,27 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         presenter.commentChanged(comment)
     }
 
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        downloadVoucher(presenter.transferId)
+    }
+
+    override fun onRationaleDenied(requestCode: Int) {
+        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+    }
+
+    override fun onRationaleAccepted(requestCode: Int) {}
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
 
     companion object {
         const val THANKS_DELAY = 3000L
+        private const val RC_WRITE_FILE = 111
     }
 }

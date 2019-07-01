@@ -29,6 +29,7 @@ interface Api {
         const val API_MESSAGES = "/api/messages"
         const val API_BRAINTREE_TOKEN = "/payments/braintree/client_token"
         const val API_BRAINTREE_CONFIRM = "/payments/braintree/confirm"
+        const val API_VOUCHER = "/api/transfers/voucher/"
 
         const val MOBILE_CONFIGS = "/mobile/mobile.conf"
 

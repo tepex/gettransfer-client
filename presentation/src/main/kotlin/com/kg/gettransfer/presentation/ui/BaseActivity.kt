@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,10 +11,7 @@ import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.PersistableBundle
+import android.os.*
 import android.support.annotation.CallSuper
 import android.support.annotation.ColorRes
 import android.support.annotation.IdRes
@@ -29,8 +27,10 @@ import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.webkit.URLUtil
 import android.widget.PopupWindow
 import com.arellomobile.mvp.MvpAppCompatActivity
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
@@ -44,12 +44,14 @@ import com.kg.gettransfer.extensions.showKeyboard
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.remote.Api
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
 import com.kg.gettransfer.utilities.LocaleManager
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import org.jetbrains.anko.longToast
 import org.koin.android.ext.android.inject
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
@@ -413,8 +415,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         const val TOOLBAR_NO_TITLE = 0
         const val PLAY_MARKET_RATE = 42
 
-        const val DIM_AMOUNT = 0.5f
-        const val SCREEN_WIDTH_REQUIRING_SMALL_TEXT_SIZE = 768
+        private const val MIME_TYPE_VOUCHER = "application/pdf"
     }
 
     protected fun setStatusBarColor(@ColorRes color: Int) {
@@ -446,4 +447,28 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             .beginTransaction()
             .replace(id, fragment, tag)
             .commit()
+
+    protected fun downloadVoucher(transferId: Long) {
+        val apiUrl =
+                if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home")
+                    getString(R.string.api_url_prod)
+                else getString(R.string.api_url_demo)
+
+        val url = apiUrl + Api.API_VOUCHER + transferId
+
+        setupDownloadManager(url, null, MIME_TYPE_VOUCHER)
+    }
+
+    protected fun setupDownloadManager(url: String, contentDisposition: String?, mimeType: String?) {
+        val request = DownloadManager.Request(Uri.parse(url)).apply {
+            allowScanningByMediaScanner()
+            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_DOWNLOADS,
+                    URLUtil.guessFileName(url, contentDisposition, mimeType))
+        }
+        val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        dm.enqueue(request)
+        longToast(getString(R.string.LNG_DOWNLOADING))
+    }
 }
