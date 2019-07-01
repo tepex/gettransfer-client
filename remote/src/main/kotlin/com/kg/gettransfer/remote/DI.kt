@@ -10,18 +10,22 @@ import com.kg.gettransfer.data.PushTokenRemote
 import com.kg.gettransfer.data.ReviewRemote
 import com.kg.gettransfer.data.RouteRemote
 import com.kg.gettransfer.data.SessionRemote
+import com.kg.gettransfer.data.SystemRemote
 import com.kg.gettransfer.data.TransferRemote
 import com.kg.gettransfer.data.socket.ChatEventEmitter
 import com.kg.gettransfer.data.socket.CoordinateEventEmitter
 import com.kg.gettransfer.data.socket.SystemEventEmitter
+
 import com.kg.gettransfer.remote.socket.ChatSocketImpl
 import com.kg.gettransfer.remote.socket.CoordinateSocketImpl
 import com.kg.gettransfer.remote.socket.OfferSocketImpl
 import com.kg.gettransfer.remote.socket.PaymentSocketEventer
 import com.kg.gettransfer.remote.socket.SocketManager
 import com.kg.gettransfer.remote.socket.SystemSocketImp
+
 import org.koin.dsl.bind
 import org.koin.dsl.module
+
 import org.slf4j.LoggerFactory
 
 val remoteModule = module {
@@ -30,6 +34,7 @@ val remoteModule = module {
     single { ApiCore() }
     single<RouteRemote> { RouteRemoteImpl() }
     single<SessionRemote> { SessionRemoteImpl() }
+    single<SystemRemote> { SystemRemoteImpl() }
     single<CarrierTripRemote> { CarrierTripRemoteImpl() }
     single<TransferRemote> { TransferRemoteImpl() }
     single<OfferRemote> { OfferRemoteImpl() }

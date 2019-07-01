@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.support.annotation.StringRes
+
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.ui.Utils
@@ -12,7 +14,6 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
     private var newEmail: String? = null
     private var emailCode: String? = null
-
     private var smsSent = false
 
     override fun onFirstViewAttach() {
@@ -62,7 +63,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
             val result = fetchResultOnly { sessionInteractor.getCodeForChangeEmail(it) }
             if (result.error == null && result.model) {
                 viewState.showCodeLayout()
-                viewState.setTimer(sessionInteractor.mobileConfigs.smsResendDelaySec * SEC_IN_MILLIS)
+                viewState.setTimer(systemInteractor.mobileConfigs.smsResendDelaySec * SEC_IN_MILLIS)
                 smsSent = true
                 checkBtnVisibility()
             } else {

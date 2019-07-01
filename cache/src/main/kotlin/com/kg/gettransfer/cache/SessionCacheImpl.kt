@@ -4,7 +4,7 @@ import com.kg.gettransfer.cache.model.map
 import com.kg.gettransfer.data.SessionCache
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
+
 import org.koin.core.inject
 import org.koin.core.KoinComponent
 
@@ -15,10 +15,6 @@ class SessionCacheImpl : SessionCache, KoinComponent {
     override fun getConfigs() = db.configsCachedDao().selectAll().firstOrNull()?.map()
 
     override fun setConfigs(configs: ConfigsEntity) = db.configsCachedDao().update(configs.map())
-
-    override fun getMobileConfigs() = db.mobileConfigsCachedDao().selectAll().firstOrNull()?.map()
-
-    override fun setMobileConfigs(configs: MobileConfigEntity) = db.mobileConfigsCachedDao().update(configs.map())
 
     override fun getAccount() = db.accountCachedDao().selectAll().firstOrNull()?.map()
 

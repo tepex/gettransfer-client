@@ -1,13 +1,28 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
+import com.kg.gettransfer.data.SystemDataStore
+
+import com.kg.gettransfer.data.ds.DataStoreFactory
+import com.kg.gettransfer.data.ds.SystemDataStoreCache
+import com.kg.gettransfer.data.ds.SystemDataStoreRemote
+
+import com.kg.gettransfer.data.model.MobileConfigEntity
+import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
+
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.MobileConfig
+import com.kg.gettransfer.domain.model.Result
+
 import com.kg.gettransfer.domain.repository.SystemRepository
+
 import org.koin.core.get
 
-class SystemRepositoryImpl : BaseRepository(), SystemRepository {
+class SystemRepositoryImpl(
+    private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>
+) : BaseRepository(), SystemRepository {
 
     private val preferencesCache = get<PreferencesCache>()
 
@@ -59,4 +74,22 @@ class SystemRepositoryImpl : BaseRepository(), SystemRepository {
     override var isDebugMenuShowed: Boolean
         get() = preferencesCache.isDebugMenuShowed
         set(value) { preferencesCache.isDebugMenuShowed = value }
+
+    override var mobileConfig = MobileConfig.EMPTY
+        private set
+
+    override suspend fun coldStart(): Result<Unit> {
+        if (mobileConfig === MobileConfig.EMPTY) {
+            val result: ResultEntity<MobileConfigEntity?> = retrieveEntity { fromRemote ->
+                factory.retrieveDataStore(fromRemote).getMobileConfigs()
+            }
+            if (result.error != null && result.entity == null) return Result(Unit, result.error.map())
+
+            result.entity?.let { entity ->
+                mobileConfig = entity.map()
+                if (result.error == null) factory.retrieveCacheDataStore().setMobileConfigs(entity)
+            }
+        }
+        return Result(Unit)
+    }
 }

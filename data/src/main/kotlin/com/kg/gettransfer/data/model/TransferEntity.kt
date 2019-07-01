@@ -2,10 +2,14 @@ package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransportType
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
 import java.text.DateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @Serializable
 open class TransferEntity(
