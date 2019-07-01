@@ -109,6 +109,18 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
+        <include
+            android:id="@+id/layoutVoucher"
+            android:visibility="gone"
+            tools:visibility="visible"
+            layout="@layout/transfer_details_voucher"/>
+
+        <include
+            android:id="@+id/comment_view"
+            layout="@layout/view_transfer_details_comment"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -129,12 +141,6 @@
                 android:layout_marginEnd="16dp" />
 
         </RelativeLayout>
-
-        <include
-            android:id="@+id/comment_view"
-            layout="@layout/view_transfer_details_comment"
-            android:visibility="gone"
-            tools:visibility="visible" />
 
         <include
             android:id="@+id/layoutAboutRequest"

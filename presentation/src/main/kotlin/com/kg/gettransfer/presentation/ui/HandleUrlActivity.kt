@@ -1,12 +1,10 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.TargetApi
-import android.app.DownloadManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.webkit.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -18,7 +16,6 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
 import kotlinx.android.synthetic.main.activity_handle_url.*
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.toast
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -117,16 +114,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
     private fun downloadVoucher(url: String) {
         webView.loadUrl(url)
         webView.setDownloadListener { _, _, contentDisposition, mimetype, _ ->
-            val request = DownloadManager.Request(Uri.parse(url)).apply {
-                allowScanningByMediaScanner()
-                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                setDestinationInExternalPublicDir(
-                        Environment.DIRECTORY_DOWNLOADS,
-                        URLUtil.guessFileName(url, contentDisposition, mimetype))
-            }
-            val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-            dm.enqueue(request)
-            longToast(getString(R.string.LNG_DOWNLOADING))
+            setupDownloadManager(url, contentDisposition, mimetype)
         }
     }
 
