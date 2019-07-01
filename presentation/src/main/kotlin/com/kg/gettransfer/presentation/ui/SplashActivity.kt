@@ -91,7 +91,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
     }
 
     private fun redirectToUpdateApp() {
-        val url = getString(R.string.market_link) + getString(R.string.app_package)
+        val url = getString(R.string.market_link) + getString(R.string.app_market_package)
         startActivity(
                 Intent(Intent.ACTION_VIEW).apply {
                     data = Uri.parse(url)

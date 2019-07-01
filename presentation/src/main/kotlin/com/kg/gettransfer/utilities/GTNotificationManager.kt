@@ -132,7 +132,7 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
 
         return NotificationCompat.Builder(context, chanelId)
                 .setSmallIcon(R.drawable.ic_offer_notification)
-                .setContentText(context.getString(com.kg.gettransfer.R.string.new_offers))
+                .setContentText(context.getString(R.string.LNG_NEW_OFFER_TITLE))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setGroup(group)
                 .setGroupSummary(true)
