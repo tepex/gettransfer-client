@@ -91,8 +91,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private suspend fun checkNewOffersSuspended(transfer: Transfer) {
         this.transfer = transfer
-        val checkNewOffers = checkNewOffers(transfer.offersUpdatedAt, transfer.lastOffersUpdatedAt)
-        fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) { offerInteractor.getOffers(transfer.id, !checkNewOffers) }
+        fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) { offerInteractor.getOffers(transfer.id) }
                 .also {
                     if (it.error == null && transfer.offersUpdatedAt != null) fetchResultOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
                     if (it.error != null && !it.fromCache) offers = emptyList()
@@ -103,15 +102,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
                             addAll(transfer.bookNowOffers) }
                     } }
         processOffers()
-    }
-
-    private fun checkNewOffers(offersUpdateAt: Date?, getLastOffersAt: Date?): Boolean {
-        if (offersUpdateAt == null) return false
-        return if (getLastOffersAt != null) {
-            offersUpdateAt.after(getLastOffersAt)
-        } else {
-            true
-        }
     }
 
     override fun onNewOffer(offer: Offer): OfferModel {
