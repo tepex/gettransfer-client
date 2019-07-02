@@ -50,8 +50,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val childSeatsDelegate: PassengersDelegate = get()
 
     private val routeMapper = get<RouteMapper>()
-    private val transportTypeMapper: TransportTypeMapper by inject()
-    private val transportTypePriceMapper: TransportTypePriceMapper by inject()
     private val userMapper = get<UserMapper>()
 
     private val currencies = sessionInteractor.currencies.map { it.map() }
@@ -277,8 +275,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         prices: Map<TransportType.ID, TransportTypePrice>,
         selectTransport: Boolean = false
     ) {
-        transportTypeMapper.prices = prices.mapValues { transportTypePriceMapper.toView(it.value) }
-        val newTransportTypes = sessionInteractor.transportTypes.map { transportTypeMapper.toView(it) }
+        val pr = prices.mapValues { it.value.map() }
+        val newTransportTypes = sessionInteractor.transportTypes.map { it.map(pr) }
         transportTypes?.let {
             newTransportTypes.forEach { type ->
                 type.checked = it

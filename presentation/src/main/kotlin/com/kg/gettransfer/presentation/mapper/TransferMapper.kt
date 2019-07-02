@@ -8,6 +8,7 @@ import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.map
 
 import kotlin.math.absoluteValue
 
@@ -16,11 +17,10 @@ import java.util.Date
 
 open class TransferMapper : Mapper<TransferModel, Transfer> {
     private val bookNowOfferMapper  = get<BookNowOfferMapper>()
-    private val transportTypeMapper  = get<TransportTypeMapper>()
     private val systemTransportTypes = get<SessionInteractor>().transportTypes
 
     override fun toView(type: Transfer): TransferModel {
-        val transportTypesModels = systemTransportTypes.map { transportTypeMapper.toView(it) }
+        val transportTypesModels = systemTransportTypes.map { it.map() }
 
         return TransferModel(
             id             = type.id,

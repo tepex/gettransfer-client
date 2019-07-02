@@ -1,14 +1,15 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.mapper.EndpointMapper
-import com.kg.gettransfer.presentation.mapper.LocaleMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
+
 import com.kg.gettransfer.presentation.model.*
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
 
@@ -19,9 +20,9 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.core.get
-import java.lang.IllegalArgumentException
 import java.util.Locale
+
+import org.koin.core.get
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
@@ -31,7 +32,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
 
-    private val localeMapper       = get<LocaleMapper>()
     private val endpointMapper     = get<EndpointMapper>()
     private val reviewInteractor   = get<ReviewInteractor>()
 
@@ -231,7 +231,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun initConfigs() {
         endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
-        locales = sessionInteractor.locales.map { localeMapper.toView(it) }
+        locales = sessionInteractor.locales.map { it.map() }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false

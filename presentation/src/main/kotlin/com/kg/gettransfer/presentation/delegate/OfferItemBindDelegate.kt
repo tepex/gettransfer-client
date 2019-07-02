@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.delegate
 
 import android.view.View
+
 import android.widget.LinearLayout
 import android.widget.TextView
 
@@ -9,8 +10,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.strikeText
 
-import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
-
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
@@ -18,6 +17,9 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.MoneyModel
+import com.kg.gettransfer.presentation.model.getEmptyImageRes
+import com.kg.gettransfer.presentation.model.getImageRes
+import com.kg.gettransfer.presentation.model.getModelsRes
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
@@ -59,12 +61,12 @@ object OfferItemBindDelegate {
 
     private fun bindBookNow(offer: BookNowOfferModel, view: View) {
         with(view) {
-            tv_car_model.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
+            tv_car_model.text = context.getString(offer.transportType.id.getModelsRes())
             tv_car_class.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
             bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
             bindRating(view_offer_rate, RatingsModel.BOOK_NOW_RATING).also { offer_rating_bg.isVisible = true }
             bindPrice(offer_bottom, offer.base)
-            Utils.bindMainOfferPhoto(imgOffer_mainPhoto, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
+            Utils.bindMainOfferPhoto(imgOffer_mainPhoto, view, resource = offer.transportType.id.getImageRes())
         }
     }
 
@@ -116,7 +118,7 @@ object OfferItemBindDelegate {
                             img_car_photo_tiny,
                             view,
                             path = it,
-                            resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id)
+                            resource = offer.vehicle.transportType.id.getEmptyImageRes()
                         )
                     }
             }
@@ -133,7 +135,7 @@ object OfferItemBindDelegate {
 
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) {
         with(view) {
-            tv_car_model_tiny.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
+            tv_car_model_tiny.text = context.getString(offer.transportType.id.getModelsRes())
             tv_car_model_tiny.maxLines = 2
 
             tv_car_year_tiny.isVisible = false
@@ -141,7 +143,7 @@ object OfferItemBindDelegate {
 
             with(offer.transportType) {
                 tv_car_class_tiny.text = nameId?.let { context.getString(it) } ?: ""
-                Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(id))
+                Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = id.getImageRes())
             }
             bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING, true)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))

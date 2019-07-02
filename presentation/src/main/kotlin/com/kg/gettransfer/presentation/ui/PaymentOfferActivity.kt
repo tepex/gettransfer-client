@@ -6,8 +6,9 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.annotation.StringRes
 
+import android.support.annotation.CallSuper
+import android.support.annotation.StringRes
 import android.support.v7.widget.Toolbar
 
 import android.view.View
@@ -15,6 +16,7 @@ import android.widget.EditText
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.braintreepayments.api.BraintreeFragment
 import com.braintreepayments.api.PayPal
 import com.braintreepayments.api.dropin.DropInActivity
@@ -31,8 +33,9 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.extensions.isVisible
+
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
-import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
+
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -41,13 +44,17 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.OfferItemModel
-import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.getEmptyImageRes
+import com.kg.gettransfer.presentation.model.getImageRes
+import com.kg.gettransfer.presentation.model.getModelsRes
+import com.kg.gettransfer.presentation.model.getNameRes
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
+
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
@@ -62,11 +69,14 @@ import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
-import timber.log.Timber
-import java.lang.Exception
 
-class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonceCreatedListener,
-    BraintreeErrorListener, BraintreeCancelListener {
+import timber.log.Timber
+
+class PaymentOfferActivity : BaseActivity(),
+    PaymentOfferView,
+    PaymentMethodNonceCreatedListener,
+    BraintreeErrorListener,
+    BraintreeCancelListener {
 
     companion object {
         const val PAYMENT_REQUEST_CODE = 100
@@ -86,6 +96,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
 
     private var selectedPercentage = PaymentRequestModel.FULL_PRICE
 
+    @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //presenter.params = JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
@@ -248,9 +259,9 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     private fun showCarInfoBookNow(transportTypeId: TransportType.ID) {
-        tvClass.text = getString(TransportTypeMapper.getNameById(transportTypeId))
-        tvModel.text = getString(TransportTypeMapper.getModelsById(transportTypeId))
-        Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(transportTypeId))
+        tvClass.text = getString(transportTypeId.getNameRes())
+        tvModel.text = getString(transportTypeId.getModelsRes())
+        Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = transportTypeId.getImageRes())
         OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(
             multiLineContainer = languages_container_tiny,
@@ -357,6 +368,7 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         }
     }
 
+    @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PAYMENT_REQUEST_CODE) {
