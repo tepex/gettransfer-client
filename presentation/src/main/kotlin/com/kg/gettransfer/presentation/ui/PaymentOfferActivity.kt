@@ -250,7 +250,6 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     private fun showCarInfoBookNow(transportTypeId: TransportType.ID) {
         tvClass.text = getString(TransportTypeMapper.getNameById(transportTypeId))
         tvModel.text = getString(TransportTypeMapper.getModelsById(transportTypeId))
-        ivCarColor.isVisible = false
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(transportTypeId))
         OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(
@@ -263,9 +262,11 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     private fun showCarInfoOffer(offer: OfferModel) {
         with(offer.vehicle) {
             tvModel.text = name
-            color?.let {
-                ivCarColor.isVisible = true
-                ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this@PaymentOfferActivity, it))
+            if (photos.isEmpty()) {
+                color?.let {
+                    ivCarColor.isVisible = true
+                    ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this@PaymentOfferActivity, it))
+                }
             }
             photos.firstOrNull()
                 .also {
