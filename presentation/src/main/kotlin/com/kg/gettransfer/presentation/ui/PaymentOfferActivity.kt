@@ -36,14 +36,15 @@ import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 
-import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.TransferModel
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
-import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
-import com.kg.gettransfer.presentation.model.RatingsModel
+import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.OfferItemModel
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.RatingsModel
+import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.getEmptyImageRes
 import com.kg.gettransfer.presentation.model.getImageRes
 import com.kg.gettransfer.presentation.model.getModelsRes
@@ -285,7 +286,7 @@ class PaymentOfferActivity : BaseActivity(),
                         ivCarPhoto,
                         content,
                         path = it,
-                        resource = TransportTypeMapper.getEmptyImageById(transportType.id)
+                        resource = transportType.id.getEmptyImageRes()
                     )
                 }
             tvClass.text = transportType.nameId?.let { getString(it) ?: "" }

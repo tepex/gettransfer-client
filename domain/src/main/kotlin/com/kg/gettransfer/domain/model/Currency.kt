@@ -7,7 +7,11 @@ data class Currency(
 
     override fun hashCode() = code.hashCode()
 
-    override fun equals(other: Any?) = code.equals(other)
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || other !is Currency) return false
+        return code == other.code
+    }
 
     companion object {
         val DEFAULT = Currency("USD", "\$")

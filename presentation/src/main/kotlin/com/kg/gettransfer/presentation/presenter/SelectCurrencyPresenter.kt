@@ -10,6 +10,8 @@ import com.kg.gettransfer.presentation.view.SelectCurrencyView
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
+import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 
 @InjectViewState
 class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinComponent {

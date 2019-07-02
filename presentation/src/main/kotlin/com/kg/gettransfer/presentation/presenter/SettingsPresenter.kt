@@ -71,7 +71,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
     }
 
-    private fun initGeneralSettings(){
+    private fun initGeneralSettings() {
         viewState.initGeneralSettingsLayout()
 
         viewState.setCurrency(sessionInteractor.currency.map().name)
@@ -85,7 +85,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setLogoutButtonEnabled(accountManager.hasAccount)
     }
 
-    private fun initCarrierSettings(){
+    private fun initCarrierSettings() {
         viewState.initCarrierLayout()
 
         viewState.setCalendarModes(calendarModes)
