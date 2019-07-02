@@ -19,6 +19,7 @@ import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.RegistrationAccount
@@ -50,10 +51,10 @@ class SessionRepositoryImpl(
     override var isInitialized = false
         private set
 
-    override var configs = CONFIGS_DEFAULT
+    override var configs = Configs.EMPTY
         private set
 
-    override var account = NO_ACCOUNT.copy()
+    override var account = Account.EMPTY
         private set
 
     override var tempUser = User.EMPTY.copy()
@@ -97,7 +98,7 @@ class SessionRepositoryImpl(
         val r = systemRepository.coldStart()
         if (r.error != null) return Result(account, r.error)
 
-        if (configs === CONFIGS_DEFAULT) {
+        if (configs === Configs.EMPTY) {
             val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getConfigs()
             }
@@ -109,9 +110,9 @@ class SessionRepositoryImpl(
             /* No chance to go further */
             // if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
 
-            account = factory.retrieveCacheDataStore().getAccount()?.map(configs) ?: NO_ACCOUNT.copy()
+            account = factory.retrieveCacheDataStore().getAccount()?.map(configs) ?: Account.EMPTY
             if (result.error != null) {
-                configs = factory.retrieveCacheDataStore().getConfigs()?.map() ?: CONFIGS_DEFAULT
+                configs = factory.retrieveCacheDataStore().getConfigs()?.map() ?: Configs.EMPTY
                 return Result(account, result.error.map())
             }
         }
@@ -239,30 +240,5 @@ class SessionRepositoryImpl(
             this.userEmail = email
         }
         return Result(result.entity != null && result.entity, result.error?.map())
-    }
-
-    companion object {
-        private val CONFIGS_DEFAULT = Configs.DEFAULT_CONFIGS
-
-        private val NO_ACCOUNT = Account(
-            user = User.EMPTY.copy(),
-            locale = Locale.getDefault(),
-            currency = defineNoAccountCurrency(),
-            distanceUnit = DistanceUnit.KM,
-            groups = emptyList(),
-            carrierId = null
-        )
-
-        private fun defineNoAccountCurrency() =
-            java.util.Currency.getInstance(Locale.getDefault()).let { currency ->
-                com.kg.gettransfer.domain.model.Currency(currency.currencyCode, currency.symbol)
-                    .let { dc ->
-                        if (CONFIGS_DEFAULT.supportedCurrencies.contains(dc)) {
-                            dc
-                        } else {
-                            CONFIGS_DEFAULT.supportedCurrencies.first { c -> c.code == "USD" }
-                        }
-                    }
-            }
     }
 }
