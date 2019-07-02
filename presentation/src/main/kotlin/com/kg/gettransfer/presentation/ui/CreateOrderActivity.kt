@@ -194,7 +194,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     protected override fun initMap() {
         super.initMap()
-        presenter.initMapAndPrices()
+        presenter.mapInitialized()
     }
 
     private fun showDatePickerDialog(field: Boolean) {
