@@ -167,6 +167,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 GTAddress.parseAddress(transferModel.from)
             )
         }
+
         toPoint?.let { to ->
             orderInteractor.to = GTAddress(
                 cityPointMapper.fromView(to),
@@ -175,7 +176,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 transferModel.to?.let { GTAddress.parseAddress(it) }
             )
         }
-        hourlyDuration?.let { orderInteractor.hourlyDuration = it }
+        if(toPoint == null) orderInteractor.to = null
+
+        orderInteractor.hourlyDuration = hourlyDuration
 
         if (orderInteractor.isCanCreateOrder()) router.navigateTo(Screens.CreateOrder)
     }
