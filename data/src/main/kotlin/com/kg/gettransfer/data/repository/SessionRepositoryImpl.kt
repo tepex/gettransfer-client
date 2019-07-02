@@ -50,12 +50,6 @@ class SessionRepositoryImpl(
 
     override var tempUser = User.EMPTY.copy()
 
-    override var accessToken: String
-        get() = preferencesCache.accessToken
-        set(value) {
-            preferencesCache.accessToken = value
-        }
-
     override var userEmail: String?
         get() = preferencesCache.userEmail
         set(value) {

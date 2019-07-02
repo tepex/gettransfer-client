@@ -32,8 +32,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
 
-    private val endpointMapper     = get<EndpointMapper>()
-    private val reviewInteractor   = get<ReviewInteractor>()
+    private val endpointMapper   = get<EndpointMapper>()
+    private val reviewInteractor = get<ReviewInteractor>()
 
     private var localeWasChanged = false
     private var restart = true
@@ -195,7 +195,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
 
-    fun onClearAccessTokenClicked() { sessionInteractor.accessToken = "" }
+    fun onClearAccessTokenClicked() { systemInteractor.accessToken = "" }
 
     fun onDriverCoordinatesSwitched(checked: Boolean) =
             carrierTripInteractor.permissionChanged(checked)

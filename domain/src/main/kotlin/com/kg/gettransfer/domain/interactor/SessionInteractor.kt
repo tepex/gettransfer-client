@@ -20,12 +20,6 @@ class SessionInteractor(
     val isInitialized: Boolean
         get() = sessionRepository.isInitialized
 
-    var accessToken: String
-        get() = sessionRepository.accessToken
-        set(value) {
-            sessionRepository.accessToken = value
-        }
-
     val account: Account
         get() = sessionRepository.account
 

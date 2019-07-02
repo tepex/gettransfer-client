@@ -84,6 +84,12 @@ class SystemRepositoryImpl(
     override var mobileConfig = MobileConfig.EMPTY
         private set
 
+    override var accessToken: String
+        get() = preferencesCache.accessToken
+        set(value) {
+            preferencesCache.accessToken = value
+        }
+
     override suspend fun coldStart(): Result<Unit> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
         if (mobileConfig === MobileConfig.EMPTY) {

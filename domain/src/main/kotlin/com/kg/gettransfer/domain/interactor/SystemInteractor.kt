@@ -58,4 +58,10 @@ class SystemInteractor(private val systemRepository: SystemRepository) {
 
     val mobileConfigs: MobileConfig
         get() = systemRepository.mobileConfig
+
+    var accessToken: String
+        get() = systemRepository.accessToken
+        set(value) {
+            systemRepository.accessToken = value
+        }
 }

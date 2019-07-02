@@ -14,7 +14,6 @@ interface SessionRepository {
     val configs: Configs
     val account: Account
     val tempUser: User
-    var accessToken: String
     var userEmail: String?
     var userPhone: String?
     var userPassword: String

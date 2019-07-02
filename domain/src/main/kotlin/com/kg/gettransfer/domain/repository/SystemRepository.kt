@@ -20,6 +20,7 @@ interface SystemRepository {
     var appEnters: Int
     var isDebugMenuShowed: Boolean
     val mobileConfig: MobileConfig
+    var accessToken: String
 
     suspend fun coldStart(): Result<Unit>
 }
