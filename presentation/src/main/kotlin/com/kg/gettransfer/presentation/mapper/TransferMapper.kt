@@ -3,7 +3,7 @@ package com.kg.gettransfer.presentation.mapper
 import android.support.annotation.StringRes
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.interactor.SessionInteractor
+import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.Transfer
 
@@ -12,12 +12,13 @@ import com.kg.gettransfer.presentation.model.map
 
 import kotlin.math.absoluteValue
 
-import org.koin.core.get
 import java.util.Date
+
+import org.koin.core.get
 
 open class TransferMapper : Mapper<TransferModel, Transfer> {
     private val bookNowOfferMapper  = get<BookNowOfferMapper>()
-    private val systemTransportTypes = get<SessionInteractor>().transportTypes
+    private val systemTransportTypes = get<SystemInteractor>().transportTypes
 
     override fun toView(type: Transfer): TransferModel {
         val transportTypesModels = systemTransportTypes.map { it.map() }

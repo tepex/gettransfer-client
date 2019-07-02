@@ -52,7 +52,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val routeMapper = get<RouteMapper>()
     private val userMapper = get<UserMapper>()
 
-    private val currencies = sessionInteractor.currencies.map { it.map() }
+    private val currencies = systemInteractor.currencies.map { it.map() }
     private var duration: Int? = null
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
@@ -276,7 +276,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         selectTransport: Boolean = false
     ) {
         val pr = prices.mapValues { it.value.map() }
-        val newTransportTypes = sessionInteractor.transportTypes.map { it.map(pr) }
+        val newTransportTypes = systemInteractor.transportTypes.map { it.map(pr) }
         transportTypes?.let {
             newTransportTypes.forEach { type ->
                 type.checked = it
@@ -517,7 +517,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setFavoriteTransportTypes() =
-        sessionInteractor.favoriteTransports?.let {
+        systemInteractor.favoriteTransports?.let {
             selectTransportTypes(it)
             setPassengersCountForSelectedTransportTypes()
         }
@@ -537,7 +537,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun saveChosenTransportTypes() {
-        sessionInteractor.favoriteTransports = getSelectedTransportTypes()
+        systemInteractor.favoriteTransports = getSelectedTransportTypes()
     }
 
     private fun saveSelectedTransportTypes() {

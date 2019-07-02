@@ -1,4 +1,3 @@
-@file:Suppress("TooManyFunctions")
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
@@ -16,13 +15,10 @@ import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.domain.repository.SessionRepository
@@ -40,9 +36,6 @@ class SessionRepositoryImpl(
     private val systemRepository: SystemRepository by inject()
 
     override var isInitialized = false
-        private set
-
-    override var configs = Configs.EMPTY
         private set
 
     override var account = Account.EMPTY
@@ -68,37 +61,10 @@ class SessionRepositoryImpl(
             preferencesCache.userPassword = value
         }
 
-    override var favoriteTransportTypes: Set<TransportType.ID>?
-        get() = preferencesCache.favoriteTransportTypes
-            ?.map { TransportType.ID.parse(it) }
-            ?.toSet()
-        set(value) {
-            preferencesCache.favoriteTransportTypes = value?.map { it.name }?.toSet()
-        }
-
     @Suppress("ComplexMethod", "ReturnCount")
     override suspend fun coldStart(): Result<Account> {
         val r = systemRepository.coldStart()
         if (r.error != null) return Result(account, r.error)
-
-        if (configs === Configs.EMPTY) {
-            val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
-                factory.retrieveDataStore(fromRemote).getConfigs()
-            }
-            result.entity?.let { entity ->
-                /* Save to cache only fresh data from remote */
-                if (result.error == null) factory.retrieveCacheDataStore().setConfigs(entity)
-                configs = entity.map()
-            }
-            /* No chance to go further */
-            // if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
-
-            account = factory.retrieveCacheDataStore().getAccount()?.map(configs) ?: Account.EMPTY
-            if (result.error != null) {
-                configs = factory.retrieveCacheDataStore().getConfigs()?.map() ?: Configs.EMPTY
-                return Result(account, result.error.map())
-            }
-        }
 
         var error: ApiException? = null
         val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
@@ -106,7 +72,7 @@ class SessionRepositoryImpl(
         }
         result.entity?.let { entity ->
             if (result.error == null) factory.retrieveCacheDataStore().setAccount(entity)
-            account = entity.map(configs)
+            account = entity.map(systemRepository.configs)
         }
         result.error?.let { error = it.map() }
         isInitialized = true
@@ -137,7 +103,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
-                this.account = entity.map(configs)
+                this.account = entity.map(systemRepository.configs)
             }
             if (pass != null && repeatedPass != null) this.userPassword = pass
         }
@@ -161,7 +127,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
-                account = entity.map(configs)
+                account = entity.map(systemRepository.configs)
             }
             if (!withSmsCode) {
                 this.userEmail = email
@@ -181,7 +147,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
-                account = entity.map(configs)
+                account = entity.map(systemRepository.configs)
             }
         }
         return Result(account, result.error?.map())

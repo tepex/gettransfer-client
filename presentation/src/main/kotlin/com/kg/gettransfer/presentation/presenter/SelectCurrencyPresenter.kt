@@ -14,7 +14,7 @@ import org.koin.core.get
 @InjectViewState
 class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinComponent {
 
-    private val currencies = sessionInteractor.currencies.map { it.map() }
+    private val currencies = systemInteractor.currencies.map { it.map() }
     private val popularCurrencies = currencies.filter { Currency.POPULAR.contains(it.code) }
 
     override fun attachView(view: SelectCurrencyView) {

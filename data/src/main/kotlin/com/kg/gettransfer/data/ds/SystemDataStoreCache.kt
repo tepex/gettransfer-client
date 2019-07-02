@@ -3,6 +3,7 @@ package com.kg.gettransfer.data.ds
 import com.kg.gettransfer.data.SystemCache
 import com.kg.gettransfer.data.SystemDataStore
 
+import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.MobileConfigEntity
 
@@ -14,6 +15,10 @@ import org.koin.core.inject
 open class SystemDataStoreCache : SystemDataStore {
 
     private val cache: SystemCache by inject()
+
+    override suspend fun getConfigs() = cache.getConfigs() // : ConfigsEntity { throw UnsupportedOperationException() }
+
+    override suspend fun setConfigs(configsEntity: ConfigsEntity) = cache.setConfigs(configsEntity)
 
     override suspend fun getMobileConfigs() = cache.getMobileConfigs()
 

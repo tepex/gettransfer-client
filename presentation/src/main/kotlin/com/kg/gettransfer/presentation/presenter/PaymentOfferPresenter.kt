@@ -65,7 +65,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         transfer?.let { transfer ->
             viewState.setToolbarTitle(transferMapper.toView(transfer))
             transfer.dateRefund?.let { dateRefund ->
-                val commission = sessionInteractor.paymentCommission
+                val commission = systemInteractor.paymentCommission
                 viewState.setCommission(
                     if (commission % 1.0 == 0.0) commission.toInt().toString() else commission.toString(),
                     SystemUtils.formatDateTime(dateRefund)

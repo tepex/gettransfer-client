@@ -123,7 +123,7 @@ val domainModule = module {
     single { PushTokenInteractor(get()) }
     single { SocketInteractor(get()) }
     single { LogsInteractor(get()) }
-    single { SessionInteractor(get(), get()) }
+    single { SessionInteractor(get(), get(), get()) }
 }
 
 val mappersModule = module {

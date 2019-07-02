@@ -1,10 +1,15 @@
 package com.kg.gettransfer.domain.interactor
 
+import com.kg.gettransfer.domain.model.Currency
+import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.MobileConfig
+import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.repository.SystemRepository
+
+import java.util.Locale
 
 class SystemInteractor(private val systemRepository: SystemRepository) {
 
@@ -64,4 +69,28 @@ class SystemInteractor(private val systemRepository: SystemRepository) {
         set(value) {
             systemRepository.accessToken = value
         }
+
+    val transportTypes: List<TransportType>
+        get() = systemRepository.configs.transportTypes
+
+    var favoriteTransports: Set<TransportType.ID>?
+        get() = systemRepository.favoriteTransportTypes
+        set(value) {
+            systemRepository.favoriteTransportTypes = value
+        }
+
+    val locales: List<Locale>
+        get() = systemRepository.configs.availableLocales.filter { localesFilterList.contains(it.language) }
+
+    val paymentCommission: Float
+        get() = systemRepository.configs.paymentCommission
+
+    /* Dirty hack. GAA-298 */
+    val currencies: List<Currency>
+        get() = systemRepository.configs.supportedCurrencies
+
+    companion object {
+        // private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
+        private val localesFilterList = arrayOf("en", "ru", "de", "es", "it", "pt", "fr", "zh")
+    }
 }

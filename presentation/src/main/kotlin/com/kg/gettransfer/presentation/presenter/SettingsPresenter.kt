@@ -231,7 +231,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun initConfigs() {
         endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
-        locales = sessionInteractor.locales.map { it.map() }
+        locales = systemInteractor.locales.map { it.map() }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false

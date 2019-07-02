@@ -1,5 +1,4 @@
 @file:Suppress("TooManyFunctions")
-
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
@@ -13,19 +12,21 @@ import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
-import com.kg.gettransfer.domain.repository.SessionRepository
+import com.kg.gettransfer.domain.repository.SystemRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
-import org.koin.core.get
-import org.koin.core.qualifier.named
+
 import java.text.DateFormat
 import java.util.Calendar
+
+import org.koin.core.get
+import org.koin.core.qualifier.named
 
 class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>
 ) : BaseRepository(), TransferRepository {
 
     private val preferencesCache = get<PreferencesCache>()
-    private val transportTypes = get<SessionRepository>().configs.transportTypes
+    private val transportTypes = get<SystemRepository>().configs.transportTypes
 
     private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
     private val dateFormatTZ = get<ThreadLocal<DateFormat>>(named("iso_date_TZ"))

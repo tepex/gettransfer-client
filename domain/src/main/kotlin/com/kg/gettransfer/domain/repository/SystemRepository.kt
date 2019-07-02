@@ -1,9 +1,11 @@
 package com.kg.gettransfer.domain.repository
 
+import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.MobileConfig
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.TransportType
 
 interface SystemRepository {
     val endpoints: List<Endpoint>
@@ -21,6 +23,8 @@ interface SystemRepository {
     var isDebugMenuShowed: Boolean
     val mobileConfig: MobileConfig
     var accessToken: String
+    val configs: Configs
+    var favoriteTransportTypes: Set<TransportType.ID>?
 
     suspend fun coldStart(): Result<Unit>
 }
