@@ -16,7 +16,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 interface PaymentOfferView : BaseView {
 
     fun setOffer(offer: OfferModel, paymentPercentages: List<Int>)
-    fun setBookNowOffer(bookNowOffer: BookNowOfferModel?)
+    fun setBookNowOffer(bookNowOffer: BookNowOfferModel)
     fun showOfferError()
     fun setCommission(paymentCommission: String, dateRefund: String)
     fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String)
