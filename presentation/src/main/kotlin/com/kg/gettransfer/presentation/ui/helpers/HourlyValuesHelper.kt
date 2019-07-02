@@ -4,22 +4,10 @@ import android.content.Context
 import com.kg.gettransfer.R
 
 object HourlyValuesHelper {
+    
+    var durationValues = arrayListOf(2, 3, 4, 5, 6, 8, 10, 24, 48, 72, 96, 120, 240, 360, 720)
 
-    lateinit var durationValues: ArrayList<Int>
-
-
-    fun getHourlyValues(context: Context): ArrayList<String> {
-        val possibleMinutes = intArrayOf(120, 180, 240, 300, 360, 480, 600, 1440, 2880, 4320, 5760, 7200, 14400, 21600, 43200)
-        val displayedValues = ArrayList<String>()
-        durationValues = ArrayList()
-        possibleMinutes.forEach {
-            val hours = it / 60
-            val value = getValue(hours, context)
-            displayedValues.add(value)
-            durationValues.add(hours)
-        }
-        return displayedValues
-    }
+    fun getHourlyValues(context: Context) = durationValues.map { getValue(it, context) }
 
     fun getValue(hours: Int, context: Context): String {
         var stringValue: String
