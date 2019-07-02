@@ -133,7 +133,6 @@ val mappersModule = module {
     single { CarrierTripMapper() }
     single { CarrierTripsListItemsMapper() }
     single { CarrierTripsCalendarItemsMapper() }
-    single { CurrencyMapper() }
     single { DistanceUnitMapper() }
     single { EndpointMapper() }
     single { LocaleMapper() }

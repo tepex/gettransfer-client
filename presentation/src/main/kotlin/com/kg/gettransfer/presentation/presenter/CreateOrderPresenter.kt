@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
 
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
@@ -30,6 +29,7 @@ import com.kg.gettransfer.presentation.mapper.*
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.Utils
 
@@ -49,13 +49,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val dateDelegate: DateTimeDelegate = get()
     private val childSeatsDelegate: PassengersDelegate = get()
 
-    private val currencyMapper = get<CurrencyMapper>()
     private val routeMapper = get<RouteMapper>()
     private val transportTypeMapper: TransportTypeMapper by inject()
     private val transportTypePriceMapper: TransportTypePriceMapper by inject()
     private val userMapper = get<UserMapper>()
 
-    private val currencies = sessionInteractor.currencies.map { currencyMapper.toView(it) }
+    private val currencies = sessionInteractor.currencies.map { it.map() }
     private var duration: Int? = null
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
@@ -72,7 +71,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             if (value) viewState.enableReturnTimeChoose()
         }
 
-    @CallSuper
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         setTransportTypePrices(emptyMap(), true)
@@ -317,7 +315,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setCurrency(hideCurrencies: Boolean = false) {
-        val currency = sessionInteractor.currency.let { currencyMapper.toView(it) }
+        val currency = sessionInteractor.currency.map()
         viewState.setCurrency(currency.symbol, hideCurrencies)
         selectedCurrency = currencies.indexOf(currency)
     }

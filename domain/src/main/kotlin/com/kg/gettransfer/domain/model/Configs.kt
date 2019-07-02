@@ -116,12 +116,3 @@ data class CardGateways(
     val def: String,
     val countryCode: String?
 )
-
-data class Currency(
-    val code: String,
-    val symbol: String
-) {
-    companion object {
-        val POPULAR_CURRENCIES = arrayOf("USD", "EUR", "GBP", "RUB")
-    }
-}
