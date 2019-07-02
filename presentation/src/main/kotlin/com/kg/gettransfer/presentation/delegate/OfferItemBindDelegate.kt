@@ -99,8 +99,14 @@ object OfferItemBindDelegate {
                 tv_car_year_tiny.text = year.toString()
                 tv_car_year_tiny.isVisible = true
 
-                color?.let { iv_car_color_tiny.setImageDrawable(Utils.getCarColorFormRes(view.context, it)) }
-                iv_car_color_tiny.isVisible = color != null
+                with(iv_car_color_tiny) {
+                    if (color != null && photos.isEmpty()) {
+                        isVisible = true
+                        setImageDrawable(Utils.getCarColorFormRes(view.context, color))
+                    } else {
+                        isVisible = false
+                    }
+                }
 
                 tv_car_class_tiny.text = transportType.nameId?.let { context.getString(it) ?: "" }
 

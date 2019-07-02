@@ -210,7 +210,7 @@ class OffersActivity : BaseActivity(), OffersView {
     override fun showBottomSheetOfferDetails(offer: OfferItemModel) {
         when (offer) {
             is OfferModel -> {
-                setVehicleName(vehicle = offer.vehicle)
+                setVehicleNameAndColor(vehicle = offer.vehicle)
                 Utils.initCarrierLanguages(languages_container_bs, offer.carrier.languages)
                 setCapacity(offer.vehicle.transportType)
                 with(offer_conditions_bs.vehicle_conveniences) {
@@ -225,7 +225,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 setRating(offer.carrier)
             }
             is BookNowOfferModel -> {
-                setVehicleName(nameById = getString(TransportTypeMapper.getModelsById(offer.transportType.id)))
+                setVehicleNameAndColor(nameById = getString(TransportTypeMapper.getModelsById(offer.transportType.id)))
                 Utils.initCarrierLanguages(languages_container_bs, listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
                 setCapacity(offer.transportType)
                 offer_conditions_bs.vehicle_conveniences.isVisible = false
@@ -309,14 +309,16 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
-    private fun setVehicleName(nameById: String? = null, vehicle: VehicleModel? = null) {
+    private fun setVehicleNameAndColor(nameById: String? = null, vehicle: VehicleModel? = null) {
         if (nameById == null && vehicle == null) throw IllegalArgumentException()
         tv_car_model_bs.text = vehicle?.name ?: nameById
-        if (vehicle?.color != null) {
-            ivCarColor.isVisible = true
-            ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this, vehicle.color))
-        } else {
-            ivCarColor.isVisible = false
+        with(ivCarColor) {
+            if (vehicle?.color != null && vehicle.photos.isEmpty()) {
+                isVisible = true
+                setImageDrawable(Utils.getCarColorFormRes(this@OffersActivity, vehicle.color))
+            } else {
+                isVisible = false
+            }
         }
     }
 

@@ -29,6 +29,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
+import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
@@ -40,6 +41,7 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.OfferItemModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -56,6 +58,7 @@ import kotlinx.android.synthetic.main.offer_tiny_payment.*
 import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
 import kotlinx.android.synthetic.main.view_currency_converting_info.view.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
+import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
@@ -214,6 +217,21 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         }
         setCarInfo(offer)
         setPriceInfo(offer.price.base.def, offer.price.base.preferred)
+        setCapacity(offer.vehicle.transportType)
+    }
+
+    override fun setBookNowOffer(bookNowOffer: BookNowOfferModel) {
+        hidePaymentPercentage()
+        setCarInfo(bookNowOffer)
+        setPriceInfo(bookNowOffer.base.def, bookNowOffer.base.preferred)
+        setCapacity(bookNowOffer.transportType)
+    }
+
+    private fun setCapacity(transport: TransportTypeModel) {
+        with(view_capacity) {
+            transportType_сountPassengers.text = "x".plus(transport.paxMax)
+            transportType_сountBaggage.text = "x".plus(transport.luggageMax)
+        }
     }
 
     private fun setPriceInfo(default: String?, preferredPrice: String?) {
@@ -222,24 +240,16 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
         else getString(R.string.LNG_RIDE_PAY_CHARGE2, default)
     }
 
-    override fun setBookNowOffer(bookNowOffer: BookNowOfferModel?) {
-        hidePaymentPercentage()
-        setCarInfo(bookNowOffer)
-        setPriceInfo(bookNowOffer?.base?.def, bookNowOffer?.base?.preferred)
-    }
-
     private fun setCarInfo(offer: OfferItemModel?) {
         when (offer) {
             is OfferModel -> showCarInfoOffer(offer)
-            is BookNowOfferModel -> showCarInfoBookNow(offer)
+            is BookNowOfferModel -> showCarInfoBookNow(offer.transportType.id)
         }
     }
 
-    private fun showCarInfoBookNow(bookNowOffer: BookNowOfferModel) {
-        val transportTypeId = bookNowOffer.transportType.id
+    private fun showCarInfoBookNow(transportTypeId: TransportType.ID) {
         tvClass.text = getString(TransportTypeMapper.getNameById(transportTypeId))
         tvModel.text = getString(TransportTypeMapper.getModelsById(transportTypeId))
-        ivCarColor.isVisible = false
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = TransportTypeMapper.getImageById(transportTypeId))
         OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(
@@ -250,25 +260,33 @@ class PaymentOfferActivity : BaseActivity(), PaymentOfferView, PaymentMethodNonc
     }
 
     private fun showCarInfoOffer(offer: OfferModel) {
-        tvModel.text = offer.vehicle.name
-        ivCarColor.isVisible = true
-        ivCarColor.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(this, it) })
-        offer.vehicle.photos.firstOrNull()
-            .also {
-                Utils.bindMainOfferPhoto(
-                    ivCarPhoto,
-                    content,
-                    path = it,
-                    resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id)
-                )
+        with(offer.vehicle) {
+            tvModel.text = name
+            if (photos.isEmpty()) {
+                color?.let {
+                    ivCarColor.isVisible = true
+                    ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this@PaymentOfferActivity, it))
+                }
             }
-        tvClass.text = offer.vehicle.transportType.nameId?.let { getString(it) ?: "" }
-        OfferItemBindDelegate.bindLanguages(
-            multiLineContainer = languages_container_tiny,
-            languages = offer.carrier.languages,
-            rowNumber = 6
-        )
-        OfferItemBindDelegate.bindRating(layoutRating, offer.carrier.ratings, offer.carrier.approved)
+            photos.firstOrNull()
+                .also {
+                    Utils.bindMainOfferPhoto(
+                        ivCarPhoto,
+                        content,
+                        path = it,
+                        resource = TransportTypeMapper.getEmptyImageById(transportType.id)
+                    )
+                }
+            tvClass.text = transportType.nameId?.let { getString(it) ?: "" }
+        }
+        with(offer.carrier) {
+            OfferItemBindDelegate.bindLanguages(
+                multiLineContainer = languages_container_tiny,
+                languages = languages,
+                rowNumber = 6
+            )
+            OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
+        }
     }
 
     private fun hidePaymentPercentage() {
