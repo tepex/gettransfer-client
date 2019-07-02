@@ -58,7 +58,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> sessionInteractor.getVerificationCode(null, LoginHelper.formatPhone(params.emailOrPhone))
+                    true -> sessionInteractor.getVerificationCode(null, params.emailOrPhone)
                     false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
                 }
             }.also { result ->
@@ -101,7 +101,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> accountManager.login(null, LoginHelper.formatPhone(params.emailOrPhone), pinCode, true)
+                    true -> accountManager.login(null, params.emailOrPhone, pinCode, true)
                     false -> accountManager.login(params.emailOrPhone, null, pinCode, true)
                 }
             }.also {

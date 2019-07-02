@@ -105,12 +105,12 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     fun setEmail(email: String) {
-        accountManager.tempProfile.email = email
+        accountManager.tempProfile.email = email.trim()
         enablePaymentBtn()
     }
 
     fun setPhone(phone: String) {
-        accountManager.tempProfile.phone = phone
+        accountManager.tempProfile.phone = phone.trim()
         enablePaymentBtn()
     }
 

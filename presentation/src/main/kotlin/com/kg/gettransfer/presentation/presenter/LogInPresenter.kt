@@ -31,7 +31,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
     }
 
     fun setEmailOrPhone(value: String) {
-        params.emailOrPhone = if (isPhone(value)) LoginHelper.formatPhone(value) else value
+        params.emailOrPhone = value.trim()
     }
 
     private fun validateInput(): Boolean {
@@ -91,7 +91,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone()) {
-                    true -> accountManager.login(null, LoginHelper.formatPhone(params.emailOrPhone), password, false)
+                    true -> accountManager.login(null, params.emailOrPhone, password, false)
                     false -> accountManager.login(params.emailOrPhone, null, password, false)
                 }
             }.also {
@@ -124,7 +124,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> sessionInteractor.getVerificationCode(null, LoginHelper.formatPhone(params.emailOrPhone))
+                    true -> sessionInteractor.getVerificationCode(null, params.emailOrPhone)
                     false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
                 }
             }.also {

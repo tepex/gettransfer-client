@@ -136,7 +136,7 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun initEmailTextChangeListeners() {
         emailLayout.fieldText.onTextChanged {
-            presenter.setEmail(it.trim())
+            presenter.setEmail(it)
         }
     }
 
