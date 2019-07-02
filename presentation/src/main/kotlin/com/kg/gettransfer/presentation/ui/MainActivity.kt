@@ -316,6 +316,7 @@ class MainActivity :
             String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         navHeaderMode.isVisible = false
         navNewTransfer.isVisible = true
+        navRequests.isVisible = true
         setMenuIconsColorFilter()
 
         readMoreListener.let {
