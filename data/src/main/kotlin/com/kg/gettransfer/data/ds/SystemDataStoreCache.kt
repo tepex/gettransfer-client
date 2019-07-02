@@ -2,6 +2,8 @@ package com.kg.gettransfer.data.ds
 
 import com.kg.gettransfer.data.SystemCache
 import com.kg.gettransfer.data.SystemDataStore
+
+import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.MobileConfigEntity
 
 import org.koin.core.inject
@@ -17,4 +19,8 @@ open class SystemDataStoreCache : SystemDataStore {
 
     override suspend fun setMobileConfigs(mobileConfigsEntity: MobileConfigEntity) =
         cache.setMobileConfigs(mobileConfigsEntity)
+
+    override fun changeEndpoint(endpoint: EndpointEntity) {
+        throw UnsupportedOperationException()
+    }
 }

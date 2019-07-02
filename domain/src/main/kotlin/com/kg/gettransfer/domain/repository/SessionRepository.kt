@@ -10,8 +10,6 @@ import com.kg.gettransfer.domain.model.User
 
 interface SessionRepository {
 
-    val endpoint: Endpoint
-
     val isInitialized: Boolean
     val configs: Configs
     val account: Account

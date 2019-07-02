@@ -2,6 +2,8 @@ package com.kg.gettransfer.data.ds
 
 import com.kg.gettransfer.data.SystemRemote
 import com.kg.gettransfer.data.SystemDataStore
+
+import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.MobileConfigEntity
 
 import org.koin.core.inject
@@ -18,4 +20,6 @@ open class SystemDataStoreRemote : SystemDataStore {
     override suspend fun setMobileConfigs(mobileConfigsEntity: MobileConfigEntity) {
         throw UnsupportedOperationException()
     }
+
+    override fun changeEndpoint(endpoint: EndpointEntity) = remote.changeEndpoint(endpoint)
 }

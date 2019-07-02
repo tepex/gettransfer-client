@@ -1,16 +1,18 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.SessionRemote
+
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.RegistrationAccountEntity
+
 import com.kg.gettransfer.remote.model.AccountModelWrapper
 import com.kg.gettransfer.remote.model.ConfigsModel
 import com.kg.gettransfer.remote.model.MobileConfigModel
 import com.kg.gettransfer.remote.model.RegistrationAccountEntityWrapper
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.map
+
 import org.koin.core.get
 
 class SessionRemoteImpl : SessionRemote {
@@ -64,6 +66,4 @@ class SessionRemoteImpl : SessionRemote {
         val response: ResponseModel<String?> = core.tryTwice { core.api.changeEmail(email, code) }
         return response.error == null
     }
-
-    override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpoint.map())
 }

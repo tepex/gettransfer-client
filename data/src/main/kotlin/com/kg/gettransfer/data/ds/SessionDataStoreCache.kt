@@ -6,7 +6,7 @@ import com.kg.gettransfer.data.SessionDataStore
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.RegistrationAccountEntity
-import com.kg.gettransfer.data.model.EndpointEntity
+
 import org.koin.core.inject
 
 /**
@@ -32,10 +32,6 @@ open class SessionDataStoreCache : SessionDataStore {
     }
 
     override suspend fun getVerificationCode(email: String?, phone: String?): Boolean {
-        throw UnsupportedOperationException()
-    }
-
-    override fun changeEndpoint(endpoint: EndpointEntity) {
         throw UnsupportedOperationException()
     }
 

@@ -2,7 +2,6 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
-import com.kg.gettransfer.data.PreferencesListener
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.SessionDataStore
 
@@ -12,7 +11,6 @@ import com.kg.gettransfer.data.ds.SessionDataStoreRemote
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
 
@@ -36,17 +34,10 @@ import org.koin.core.inject
 
 class SessionRepositoryImpl(
     private val factory: DataStoreFactory<SessionDataStore, SessionDataStoreCache, SessionDataStoreRemote>
-) : BaseRepository(), SessionRepository, PreferencesListener {
+) : BaseRepository(), SessionRepository {
 
     private val preferencesCache: PreferencesCache by inject()
     private val systemRepository: SystemRepository by inject()
-
-    init {
-        preferencesCache.addListener(this)
-    }
-
-    override val endpoint: Endpoint
-        get() = preferencesCache.endpoint.map()
 
     override var isInitialized = false
         private set
@@ -93,8 +84,6 @@ class SessionRepositoryImpl(
 
     @Suppress("ComplexMethod", "ReturnCount")
     override suspend fun coldStart(): Result<Account> {
-        factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
-
         val r = systemRepository.coldStart()
         if (r.error != null) return Result(account, r.error)
 
@@ -217,11 +206,6 @@ class SessionRepositoryImpl(
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()
         return Result(account)
-    }
-
-    override fun accessTokenChanged(accessToken: String) {}
-    override fun endpointChanged(endpointEntity: EndpointEntity) {
-        factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
     }
 
     override suspend fun getCodeForChangeEmail(email: String): Result<Boolean> {

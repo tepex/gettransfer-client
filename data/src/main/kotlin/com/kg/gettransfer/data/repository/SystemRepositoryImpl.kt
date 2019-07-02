@@ -1,12 +1,14 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
+import com.kg.gettransfer.data.PreferencesListener
 import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.SystemDataStoreCache
 import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 
+import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.MobileConfigEntity
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
@@ -22,9 +24,13 @@ import org.koin.core.get
 
 class SystemRepositoryImpl(
     private val factory: DataStoreFactory<SystemDataStore, SystemDataStoreCache, SystemDataStoreRemote>
-) : BaseRepository(), SystemRepository {
+) : BaseRepository(), SystemRepository, PreferencesListener {
 
     private val preferencesCache = get<PreferencesCache>()
+
+    init {
+        preferencesCache.addListener(this)
+    }
 
     override var lastMode: String
         get() = preferencesCache.lastMode
@@ -79,6 +85,7 @@ class SystemRepositoryImpl(
         private set
 
     override suspend fun coldStart(): Result<Unit> {
+        factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
         if (mobileConfig === MobileConfig.EMPTY) {
             val result: ResultEntity<MobileConfigEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getMobileConfigs()
@@ -91,5 +98,11 @@ class SystemRepositoryImpl(
             }
         }
         return Result(Unit)
+    }
+
+    override fun accessTokenChanged(accessToken: String) {}
+
+    override fun endpointChanged(endpointEntity: EndpointEntity) {
+        factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
     }
 }
