@@ -10,6 +10,7 @@ import com.facebook.appevents.AppEventsLogger
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.yandex.metrica.Revenue
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
@@ -39,9 +40,6 @@ class Analytics(
     fun logEventToAppsFlyer(event: String, data: Map<String, Any?>?) =
         AppsFlyerLib.getInstance().trackEvent(context, event, data)
 
-    fun requestResult(positive: Boolean) =
-        if (positive) REVIEW_APP_ACCEPTED else REVIEW_APP_REJECTED
-
     fun reviewDetailKey(value: String) = when (value) {
         ReviewRate.RateType.PUNCTUALITY.type -> "punctuality"
         ReviewRate.RateType.VEHICLE.type -> "vehicle"
@@ -57,8 +55,7 @@ class Analytics(
         private val requestType: String,
         private val currency: Currency,
         private val currencyCode: String,
-        private val price: Double
-    ) {
+        private val price: Double) {
 
         fun sendAnalytics() {
             paymentType = if (paymentType == PaymentRequestModel.PLATRON) CARD else PAYPAL
@@ -76,6 +73,15 @@ class Analytics(
             map[STATUS] = value
             bundle.putString(STATUS, value)
             logEvent(EVENT_MAKE_PAYMENT, bundle, map)
+        }
+
+        private fun sendRevenue() {
+            val priceMicros = price * 1000000
+            val revenue = Revenue.newBuilderWithMicros(priceMicros.toLong(), currency)
+                    .withProductID(transactionId)
+                    .withQuantity(1)
+                    .build()
+            YandexMetrica.reportRevenue(revenue)
         }
 
         private fun sendToAppsFlyer() {
@@ -102,6 +108,8 @@ class Analytics(
             map[CURRENCY] = currencyCode
             map[VALUE] = price
             logEventToYandex(EVENT_ECOMMERCE_PURCHASE, map)
+
+            sendRevenue()
         }
 
         private fun sendToFacebook() {
