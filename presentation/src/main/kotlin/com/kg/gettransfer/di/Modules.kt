@@ -123,7 +123,7 @@ val domainModule = module {
     single { PushTokenInteractor(get()) }
     single { SocketInteractor(get()) }
     single { LogsInteractor(get()) }
-    single { SessionInteractor(get(), get()) }
+    single { SessionInteractor(get(), get(), get()) }
 }
 
 val mappersModule = module {
@@ -133,10 +133,7 @@ val mappersModule = module {
     single { CarrierTripMapper() }
     single { CarrierTripsListItemsMapper() }
     single { CarrierTripsCalendarItemsMapper() }
-    single { CurrencyMapper() }
-    single { DistanceUnitMapper() }
     single { EndpointMapper() }
-    single { LocaleMapper() }
     single { MoneyMapper() }
     single { OfferMapper() }
     single { PassengerAccountMapper() }
@@ -148,8 +145,6 @@ val mappersModule = module {
     single { ReviewRateMapper() }
     single { RouteMapper() }
     single { TransferMapper() }
-    single { TransportTypeMapper() }
-    single { TransportTypePriceMapper() }
     single { UserMapper() }
     single { VehicleInfoMapper() }
     single { VehicleMapper() }

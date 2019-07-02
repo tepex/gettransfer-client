@@ -1,14 +1,11 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.AccountEntity
-import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.RegistrationAccountEntity
+
 import org.koin.core.KoinComponent
 
 interface SessionRemote : KoinComponent {
-
-    suspend fun getConfigs(): ConfigsEntity
 
     suspend fun getAccount(): AccountEntity?
 
@@ -23,6 +20,4 @@ interface SessionRemote : KoinComponent {
     suspend fun getCodeForChangeEmail(email: String): Boolean
 
     suspend fun changeEmail(email: String, code: String): Boolean
-
-    fun changeEndpoint(endpoint: EndpointEntity)
 }

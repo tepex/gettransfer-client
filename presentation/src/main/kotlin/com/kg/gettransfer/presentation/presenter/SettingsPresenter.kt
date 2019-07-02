@@ -1,17 +1,15 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
 
-import com.kg.gettransfer.presentation.mapper.CurrencyMapper
 import com.kg.gettransfer.presentation.mapper.EndpointMapper
-import com.kg.gettransfer.presentation.mapper.LocaleMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
+
 import com.kg.gettransfer.presentation.model.*
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
 
@@ -22,21 +20,20 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.core.get
-import java.lang.IllegalArgumentException
 import java.util.Locale
+
+import org.koin.core.get
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
+
     private lateinit var locales: List<LocaleModel>
     private lateinit var endpoints: List<EndpointModel>
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
 
-    private val localeMapper       = get<LocaleMapper>()
-    private val currencyMapper     = get<CurrencyMapper>()
-    private val endpointMapper     = get<EndpointMapper>()
-    private val reviewInteractor   = get<ReviewInteractor>()
+    private val endpointMapper   = get<EndpointMapper>()
+    private val reviewInteractor = get<ReviewInteractor>()
 
     private var localeWasChanged = false
     private var restart = true
@@ -52,7 +49,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         const val CURRENCIES_VIEW = 1
     }
 
-    @CallSuper
     override fun attachView(view: SettingsView) {
         super.attachView(view)
         if (restart) initConfigs()
@@ -75,10 +71,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
     }
 
-    private fun initGeneralSettings(){
+    private fun initGeneralSettings() {
         viewState.initGeneralSettingsLayout()
 
-        viewState.setCurrency(sessionInteractor.currency.let { currencyMapper.toView(it) }.name)
+        viewState.setCurrency(sessionInteractor.currency.map().name)
 
         viewState.setLocales(locales)
         val locale = sessionInteractor.locale
@@ -89,7 +85,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setLogoutButtonEnabled(accountManager.hasAccount)
     }
 
-    private fun initCarrierSettings(){
+    private fun initCarrierSettings() {
         viewState.initCarrierLayout()
 
         viewState.setCalendarModes(calendarModes)
@@ -121,7 +117,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     override fun currencyChanged() {
-        val currencyModel = sessionInteractor.currency.let { currencyMapper.toView(it) }
+        val currencyModel = sessionInteractor.currency.map()
         viewState.setCurrency(currencyModel.name)
         viewState.showFragment(CLOSE_FRAGMENT)
         logEvent(Analytics.CURRENCY_PARAM, currencyModel.code)
@@ -199,7 +195,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
 
-    fun onClearAccessTokenClicked() { sessionInteractor.accessToken = "" }
+    fun onClearAccessTokenClicked() { systemInteractor.accessToken = "" }
 
     fun onDriverCoordinatesSwitched(checked: Boolean) =
             carrierTripInteractor.permissionChanged(checked)
@@ -217,7 +213,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         router.navigateTo(Screens.ProfileSettings())
     }
 
-    @CallSuper
     override fun onBackCommandClick() {
         if (showingFragment != null) {
             viewState.showFragment(CLOSE_FRAGMENT)
@@ -236,7 +231,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun initConfigs() {
         endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
-        locales = sessionInteractor.locales.map { localeMapper.toView(it) }
+        locales = systemInteractor.locales.map { it.map() }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false

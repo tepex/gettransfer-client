@@ -23,7 +23,7 @@ data class TransportType(
     }
 
     companion object {
-        val DEFAULT_TRANSPORT_TYPES = arrayListOf<TransportType>(
+        val DEFAULT_LIST = arrayListOf<TransportType>(
             TransportType(ID.ECONOMY, 3, 3),
             TransportType(ID.COMFORT, 3, 3),
             TransportType(ID.BUSINESS, 3, 3),

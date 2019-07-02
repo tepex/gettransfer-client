@@ -9,6 +9,7 @@ import android.support.annotation.CallSuper
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
+
 import android.view.MotionEvent
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -22,12 +23,12 @@ import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
+
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_communication_button.*
 import kotlinx.android.synthetic.main.view_settings_field_picker.view.*
 import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
-import java.lang.UnsupportedOperationException
 
 class SettingsActivity : BaseActivity(), SettingsView {
 
@@ -221,8 +222,12 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun setFirstDayOfWeek(dayOfWeek: String) { settingsFirstDayOfWeek.field_text.text = dayOfWeek }
+
     override fun setEndpoint(endpoint: EndpointModel)  { settingsEndpoint.field_text.text = endpoint.name }
-    override fun setCalendarMode(calendarModeKey: String) { settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey) }
+
+    override fun setCalendarMode(calendarModeKey: String) {
+        settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey)
+    }
 
     override fun setLogoutButtonEnabled(enabled: Boolean) {
         layoutSettingsBtnLogout.isVisible = enabled
@@ -239,12 +244,11 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     override fun onBackPressed() { presenter.onBackCommandClick() }
 
-    private fun getCalendarModeName(calendarModeKey: String) =
-            when (calendarModeKey) {
-                Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR -> getString(R.string.LNG_CALENDAR)
-                Screens.CARRIER_TRIPS_TYPE_VIEW_LIST -> getString(R.string.LNG_LIST)
-                else -> throw UnsupportedOperationException()
-            }
+    private fun getCalendarModeName(calendarModeKey: String) = when (calendarModeKey) {
+        Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR -> getString(R.string.LNG_CALENDAR)
+        Screens.CARRIER_TRIPS_TYPE_VIEW_LIST -> getString(R.string.LNG_LIST)
+        else -> throw UnsupportedOperationException()
+    }
 
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
         if (event?.action == MotionEvent.ACTION_UP) {

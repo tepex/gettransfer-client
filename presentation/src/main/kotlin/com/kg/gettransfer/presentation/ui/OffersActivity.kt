@@ -3,29 +3,37 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 import android.graphics.drawable.Animatable
 import android.os.Bundle
+
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+
 import android.view.MotionEvent
 import android.view.View
+
 import android.widget.ImageView
 import android.widget.RelativeLayout
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.strikeText
+
 import com.kg.gettransfer.presentation.adapter.OffersAdapter
-import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
+
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -35,12 +43,18 @@ import com.kg.gettransfer.presentation.model.MoneyModel
 import com.kg.gettransfer.presentation.model.CarrierModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.VehicleModel
+import com.kg.gettransfer.presentation.model.getImageRes
+import com.kg.gettransfer.presentation.model.getModelsRes
+
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
+
 import com.kg.gettransfer.presentation.ui.custom.RatingFieldView
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.ScrollGalleryInflater
+
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
+
 import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.activity_offers.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_offers.*
@@ -52,6 +66,7 @@ import kotlinx.android.synthetic.main.view_offer_conditions.view.*
 import kotlinx.android.synthetic.main.view_offer_rating_details.*
 import kotlinx.android.synthetic.main.view_offer_rating_field.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
+
 import timber.log.Timber
 
 class OffersActivity : BaseActivity(), OffersView {
@@ -225,13 +240,13 @@ class OffersActivity : BaseActivity(), OffersView {
                 setRating(offer.carrier)
             }
             is BookNowOfferModel -> {
-                setVehicleNameAndColor(nameById = getString(TransportTypeMapper.getModelsById(offer.transportType.id)))
+                setVehicleNameAndColor(nameById = getString(offer.transportType.id.getModelsRes()))
                 Utils.initCarrierLanguages(languages_container_bs, listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
                 setCapacity(offer.transportType)
                 offer_conditions_bs.vehicle_conveniences.isVisible = false
                 setWithoutDiscount(offer.withoutDiscount)
                 setPrice(offer.base.preferred ?: offer.base.def)
-                addSinglePhoto(resId = TransportTypeMapper.getImageById(offer.transportType.id))
+                addSinglePhoto(resId = offer.transportType.id.getImageRes())
                 view_offer_rating_bs.isVisible = false
                 offer_ratingDivider_bs.isVisible = false
             }

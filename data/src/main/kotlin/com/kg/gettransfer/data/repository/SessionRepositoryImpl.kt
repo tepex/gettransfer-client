@@ -1,8 +1,6 @@
-@file:Suppress("TooManyFunctions")
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
-import com.kg.gettransfer.data.PreferencesListener
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.SessionDataStore
 
@@ -12,18 +10,15 @@ import com.kg.gettransfer.data.ds.SessionDataStoreRemote
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.EndpointEntity
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Configs
+import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.domain.repository.SessionRepository
@@ -35,34 +30,18 @@ import org.koin.core.inject
 
 class SessionRepositoryImpl(
     private val factory: DataStoreFactory<SessionDataStore, SessionDataStoreCache, SessionDataStoreRemote>
-) : BaseRepository(), SessionRepository, PreferencesListener {
+) : BaseRepository(), SessionRepository {
 
     private val preferencesCache: PreferencesCache by inject()
     private val systemRepository: SystemRepository by inject()
 
-    init {
-        preferencesCache.addListener(this)
-    }
-
-    override val endpoint: Endpoint
-        get() = preferencesCache.endpoint.map()
-
     override var isInitialized = false
         private set
 
-    override var configs = CONFIGS_DEFAULT
-        private set
-
-    override var account = NO_ACCOUNT.copy()
+    override var account = Account.EMPTY
         private set
 
     override var tempUser = User.EMPTY.copy()
-
-    override var accessToken: String
-        get() = preferencesCache.accessToken
-        set(value) {
-            preferencesCache.accessToken = value
-        }
 
     override var userEmail: String?
         get() = preferencesCache.userEmail
@@ -82,39 +61,10 @@ class SessionRepositoryImpl(
             preferencesCache.userPassword = value
         }
 
-    override var favoriteTransportTypes: Set<TransportType.ID>?
-        get() = preferencesCache.favoriteTransportTypes
-            ?.map { TransportType.ID.parse(it) }
-            ?.toSet()
-        set(value) {
-            preferencesCache.favoriteTransportTypes = value?.map { it.name }?.toSet()
-        }
-
     @Suppress("ComplexMethod", "ReturnCount")
     override suspend fun coldStart(): Result<Account> {
-        factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
-
         val r = systemRepository.coldStart()
         if (r.error != null) return Result(account, r.error)
-
-        if (configs === CONFIGS_DEFAULT) {
-            val result: ResultEntity<ConfigsEntity?> = retrieveEntity { fromRemote ->
-                factory.retrieveDataStore(fromRemote).getConfigs()
-            }
-            result.entity?.let { entity ->
-                /* Save to cache only fresh data from remote */
-                if (result.error == null) factory.retrieveCacheDataStore().setConfigs(entity)
-                configs = entity.map()
-            }
-            /* No chance to go further */
-            // if (result.error != null) return Result(account, ExceptionMapper.map(result.error))
-
-            account = factory.retrieveCacheDataStore().getAccount()?.map(configs) ?: NO_ACCOUNT.copy()
-            if (result.error != null) {
-                configs = factory.retrieveCacheDataStore().getConfigs()?.map() ?: CONFIGS_DEFAULT
-                return Result(account, result.error.map())
-            }
-        }
 
         var error: ApiException? = null
         val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
@@ -122,7 +72,7 @@ class SessionRepositoryImpl(
         }
         result.entity?.let { entity ->
             if (result.error == null) factory.retrieveCacheDataStore().setAccount(entity)
-            account = entity.map(configs)
+            account = entity.map(systemRepository.configs)
         }
         result.error?.let { error = it.map() }
         isInitialized = true
@@ -153,7 +103,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
-                this.account = entity.map(configs)
+                this.account = entity.map(systemRepository.configs)
             }
             if (pass != null && repeatedPass != null) this.userPassword = pass
         }
@@ -177,7 +127,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
-                account = entity.map(configs)
+                account = entity.map(systemRepository.configs)
             }
             if (!withSmsCode) {
                 this.userEmail = email
@@ -197,7 +147,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
-                account = entity.map(configs)
+                account = entity.map(systemRepository.configs)
             }
         }
         return Result(account, result.error?.map())
@@ -218,11 +168,6 @@ class SessionRepositoryImpl(
         return Result(account)
     }
 
-    override fun accessTokenChanged(accessToken: String) {}
-    override fun endpointChanged(endpointEntity: EndpointEntity) {
-        factory.retrieveRemoteDataStore().changeEndpoint(endpointEntity)
-    }
-
     override suspend fun getCodeForChangeEmail(email: String): Result<Boolean> {
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().getCodeForChangeEmail(email)
@@ -239,30 +184,5 @@ class SessionRepositoryImpl(
             this.userEmail = email
         }
         return Result(result.entity != null && result.entity, result.error?.map())
-    }
-
-    companion object {
-        private val CONFIGS_DEFAULT = Configs.DEFAULT_CONFIGS
-
-        private val NO_ACCOUNT = Account(
-            user = User.EMPTY.copy(),
-            locale = Locale.getDefault(),
-            currency = defineNoAccountCurrency(),
-            distanceUnit = DistanceUnit.KM,
-            groups = emptyList(),
-            carrierId = null
-        )
-
-        private fun defineNoAccountCurrency() =
-            java.util.Currency.getInstance(Locale.getDefault()).let { currency ->
-                com.kg.gettransfer.domain.model.Currency(currency.currencyCode, currency.symbol)
-                    .let { dc ->
-                        if (CONFIGS_DEFAULT.supportedCurrencies.contains(dc)) {
-                            dc
-                        } else {
-                            CONFIGS_DEFAULT.supportedCurrencies.first { c -> c.code == "USD" }
-                        }
-                    }
-            }
     }
 }

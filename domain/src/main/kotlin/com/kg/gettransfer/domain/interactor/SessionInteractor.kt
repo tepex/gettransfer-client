@@ -14,42 +14,18 @@ import java.util.Locale
 
 class SessionInteractor(
     private val sessionRepository: SessionRepository,
+    private val systemInteractor: SystemInteractor,
     private val geoRepository: GeoRepository
 ) {
 
     val isInitialized: Boolean
         get() = sessionRepository.isInitialized
 
-    var accessToken: String
-        get() = sessionRepository.accessToken
-        set(value) {
-            sessionRepository.accessToken = value
-        }
-
     val account: Account
         get() = sessionRepository.account
 
     val tempUser: User
         get() = sessionRepository.tempUser
-
-    val transportTypes: List<TransportType>
-        get() = sessionRepository.configs.transportTypes
-
-    var favoriteTransports: Set<TransportType.ID>?
-        get() = sessionRepository.favoriteTransportTypes
-        set(value) {
-            sessionRepository.favoriteTransportTypes = value
-        }
-
-    val locales: List<Locale>
-        get() = sessionRepository.configs.availableLocales.filter { localesFilterList.contains(it.language) }
-
-    val paymentCommission: Float
-        get() = sessionRepository.configs.paymentCommission
-
-    /* Dirty hack. GAA-298 */
-    val currencies: List<Currency>
-        get() = sessionRepository.configs.supportedCurrencies
 
     var locale: Locale
         get() = account.locale
@@ -59,7 +35,7 @@ class SessionInteractor(
         }
 
     var currency: Currency
-        get() = if (currencies.contains(account.currency)) account.currency else Currency("USD", "\$")
+        get() = if (systemInteractor.currencies.contains(account.currency)) account.currency else Currency.DEFAULT
         set(value) {
             account.currency = value
         }
@@ -95,9 +71,4 @@ class SessionInteractor(
 
     suspend fun getCodeForChangeEmail(email: String) = sessionRepository.getCodeForChangeEmail(email)
     suspend fun changeEmail(email: String, code: String) = sessionRepository.changeEmail(email, code)
-
-    companion object {
-        // private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
-        private val localesFilterList = arrayOf("en", "ru", "de", "es", "it", "pt", "fr", "zh")
-    }
 }

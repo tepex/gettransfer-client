@@ -9,7 +9,6 @@ import org.koin.core.get
 
 open class CarrierMapper : Mapper<CarrierModel, Carrier> {
     private val profileMapper = get<ProfileMapper>()
-    private val localeMapper  = get<LocaleMapper>()
 
     override fun toView(type: Carrier) =
         CarrierModel(
@@ -17,7 +16,7 @@ open class CarrierMapper : Mapper<CarrierModel, Carrier> {
             profile            = type.profile?.let { profileMapper.toView(it) },
             approved           = type.approved,
             completedTransfers = type.completedTransfers,
-            languages          = type.languages.map { localeMapper.toView(it) },
+            languages          = type.languages.map { it.map() },
             ratings            = type.ratings.map(),
             canUpdateOffers    = type.canUpdateOffers
         )
