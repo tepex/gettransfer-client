@@ -359,8 +359,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     fun onBecomeACarrierClick() {
         logEvent(Analytics.DRIVER_CLICKED)
         if (accountManager.isLoggedIn) {
-            if (accountManager.remoteAccount.isDriver) router.newRootScreen(Screens.Carrier(Screens.CARRIER_MODE))
-            else router.navigateTo(Screens.Carrier(Screens.REG_CARRIER))
+            router.navigateTo(Screens.Carrier(Screens.REG_CARRIER))
         } else {
             login(Screens.CARRIER_MODE, "")
         }

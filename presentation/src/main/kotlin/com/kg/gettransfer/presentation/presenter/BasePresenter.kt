@@ -220,31 +220,23 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     }
 
     override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
-        if (accountManager.remoteAccount.isDriver) {
-            notificationManager.showNewMessageNotification(
-                chatBadgeEvent.transferId,
-                0,
-                false
-            )
-        } else {
-            if (!chatBadgeEvent.clearBadge) {
-                utils.launchSuspend {
-                    fetchDataOnly { transferInteractor.getTransfer(chatBadgeEvent.transferId) }?.let { transfer ->
-                        increaseEventsMessagesCounter(chatBadgeEvent.transferId, transfer.unreadMessagesCount)
-                        notificationManager.showNewMessageNotification(
-                            chatBadgeEvent.transferId,
-                            transfer.unreadMessagesCount,
-                            true
-                        )
-                    }
+        if (!chatBadgeEvent.clearBadge) {
+            utils.launchSuspend {
+                fetchDataOnly { transferInteractor.getTransfer(chatBadgeEvent.transferId) }?.let { transfer ->
+                    increaseEventsMessagesCounter(chatBadgeEvent.transferId, transfer.unreadMessagesCount)
+                    notificationManager.showNewMessageNotification(
+                        chatBadgeEvent.transferId,
+                        transfer.unreadMessagesCount,
+                        true
+                    )
                 }
-            } else {
-                with(countEventsInteractor) {
-                    mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
-                        this[chatBadgeEvent.transferId]?.let {
-                            eventsCount -= it
-                            remove(chatBadgeEvent.transferId)
-                        }
+            }
+        } else {
+            with(countEventsInteractor) {
+                mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
+                    this[chatBadgeEvent.transferId]?.let {
+                        eventsCount -= it
+                        remove(chatBadgeEvent.transferId)
                     }
                 }
             }

@@ -6,6 +6,8 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.core.domain.Second
+
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.extensions.internationalExample
 
@@ -19,22 +21,27 @@ import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SmsCodeView
 
+import com.kg.gettransfer.sys.domain.GetSmsResendDelayInteractor
+
 import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.serialization.json.JSON
 
+import org.koin.core.inject
+
 @InjectViewState
 class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
+
+    private val getSmsResendDelay: GetSmsResendDelayInteractor by inject()
+    private val smsResendDelay = getSmsResendDelay().millis
 
     var isPhone = false
     var pinCode = ""
     var pinItemsCount = PIN_ITEMS_COUNT
-    val smsResendDelaySec
-        get() = systemInteractor.mobileConfigs.smsResendDelaySec * SEC_IN_MILLIS
 
-    private val timerBtnResendCode: CountDownTimer = object : CountDownTimer(smsResendDelaySec, SEC_IN_MILLIS) {
+    private val timerBtnResendCode: CountDownTimer = object : CountDownTimer(smsResendDelay, Second.MILLIS_PER_SECOND) {
         override fun onTick(millisUntilFinished: Long) {
-            viewState.tickTimer(millisUntilFinished, SEC_IN_MILLIS)
+            viewState.tickTimer(millisUntilFinished, Second.MILLIS_PER_SECOND)
         }
 
         override fun onFinish() {
@@ -148,7 +155,6 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     companion object {
         const val PHONE_ATTRIBUTE = "+"
         const val EMAIL_ATTRIBUTE = "@"
-        const val SEC_IN_MILLIS = 1_000L
         const val PIN_ITEMS_COUNT = 4
     }
 }

@@ -1,11 +1,15 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+
 import com.kg.gettransfer.extensions.newChainFromMain
+
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
+
 import org.koin.core.inject
 
 open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
@@ -18,19 +22,13 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
         if (params.nextScreen.isEmpty()) return
         when (params.nextScreen) {
             Screens.CLOSE_AFTER_LOGIN -> router.exit()
-            Screens.CARRIER_MODE -> {
-                checkCarrierMode()
-            }
+            Screens.CARRIER_MODE -> router.replaceScreen(Screens.Carrier(Screens.REG_CARRIER))
             Screens.PASSENGER_MODE -> {
                 router.exit()
                 analytics.logProfile(Analytics.PASSENGER_TYPE)
             }
-            Screens.OFFERS -> {
-                router.newChainFromMain(Screens.Offers(params.transferId))
-            }
-            Screens.DETAILS -> {
-                router.newChainFromMain(Screens.Details(params.transferId))
-            }
+            Screens.OFFERS -> router.newChainFromMain(Screens.Offers(params.transferId))
+            Screens.DETAILS -> router.newChainFromMain(Screens.Details(params.transferId))
             Screens.PAYMENT_OFFER -> {
                 utils.launchSuspend {
                     val transferResult = fetchData(NO_CACHE_CHECK) { transferInteractor.getTransfer(params.transferId) }
@@ -51,15 +49,5 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
                 router.newRootScreen(Screens.MainPassengerToRateTransfer(params.transferId, params.rate))
             }
         }
-    }
-
-    private fun checkCarrierMode() {
-        if (accountManager.remoteAccount.isDriver) {
-            if (accountManager.remoteAccount.isManager) analytics.logProfile(Analytics.CARRIER_TYPE)
-            else analytics.logProfile(Analytics.DRIVER_TYPE)
-            router.newRootScreen(Screens.Carrier(Screens.CARRIER_MODE))
-            return
-        }
-        router.replaceScreen(Screens.Carrier(Screens.REG_CARRIER))
     }
 }

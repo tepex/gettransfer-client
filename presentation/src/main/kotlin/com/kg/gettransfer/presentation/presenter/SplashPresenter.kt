@@ -15,6 +15,8 @@ import com.kg.gettransfer.presentation.ui.helpers.BuildsConfigsHelper
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SplashView
 
+import com.kg.gettransfer.sys.domain.GetBuildsConfigsInteractor
+
 import kotlinx.coroutines.Job
 
 import org.koin.core.KoinComponent
@@ -34,6 +36,9 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     private val systemInteractor: SystemInteractor by inject()
     private val router: Router by inject()
 
+    private val getBuildsConfigs: GetBuildsConfigsInteractor by inject()
+
+
     fun onLaunchContinue() {
         viewState.initBuildConfigs(object :
                 LateAccessLogs { override fun getLog() = logsInteractor.onLogRequested() }
@@ -52,13 +57,11 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     }
 
     private fun checkNeededUpdateApp(): Boolean {
-        systemInteractor.mobileConfigs.buildsConfigs?.let { buildsConfigs ->
-            BuildsConfigsHelper.getConfigsForCurrentBuildByField(
-                BuildsConfigsHelper.SETTINGS_FIELD_UPDATE_REQUIRED,
-                buildsConfigs
-            )?.let { return it.updateRequired ?: false }
-        }
-        return false
+        val buildsConfigs = BuildsConfigsHelper.getConfigsForCurrentBuildByField(
+            BuildsConfigsHelper.SETTINGS_FIELD_UPDATE_REQUIRED,
+            getBuildsConfigs()
+        )
+        return if (buildsConfigs != null) buildsConfigs.updateRequired else false
     }
 
     fun startApp() {

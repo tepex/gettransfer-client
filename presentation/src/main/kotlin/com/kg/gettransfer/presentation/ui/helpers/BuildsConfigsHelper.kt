@@ -1,8 +1,7 @@
 package com.kg.gettransfer.presentation.ui.helpers
 
-import com.kg.gettransfer.domain.model.BuildsConfigs
-import com.kg.gettransfer.prefs.BuildConfig
-import java.lang.UnsupportedOperationException
+import com.kg.gettransfer.BuildConfig
+import com.kg.gettransfer.sys.domain.BuildsConfigs
 
 object BuildsConfigsHelper {
     const val SETTINGS_FIELD_UPDATE_REQUIRED = "settings_field_update_required"
@@ -48,12 +47,15 @@ object BuildsConfigsHelper {
         return null
     }
 
-    private fun filterVersionConfigsByPriority(operator: String, appVersion: Int, buildsConfigs: Map<String, BuildsConfigs>) =
-            buildsConfigs.entries.filter {
-                if (operator != OPERATOR_EQUALS) it.key.indexOf(operator) == 0
-                else {
-                    val firstSymbol = it.key.substring(0, 1)
-                    firstSymbol != OPERATOR_LESS && firstSymbol != OPERATOR_MORE && it.key.toInt() == appVersion
-                }
-            }
+    private fun filterVersionConfigsByPriority(
+        operator: String,
+        appVersion: Int,
+        buildsConfigs: Map<String, BuildsConfigs>
+    ) = buildsConfigs.entries.filter {
+        if (operator != OPERATOR_EQUALS) it.key.indexOf(operator) == 0
+        else {
+            val firstSymbol = it.key.substring(0, 1)
+            firstSymbol != OPERATOR_LESS && firstSymbol != OPERATOR_MORE && it.key.toInt() == appVersion
+        }
+    }
 }

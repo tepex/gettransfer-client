@@ -2,6 +2,7 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+
 import com.kg.gettransfer.data.model.MobileConfigEntity
 import com.kg.gettransfer.data.model.BuildsConfigsEntity
 
@@ -26,4 +27,4 @@ fun MobileConfigModel.map() =
         buildsConfigs?.mapValues { it.value.map() }
     )
 
-fun BuildsConfigsModel.map() = BuildsConfigsEntity(updateRequired)
+fun BuildsConfigsModel.map() = BuildsConfigsEntity(updateRequired ?: false)
