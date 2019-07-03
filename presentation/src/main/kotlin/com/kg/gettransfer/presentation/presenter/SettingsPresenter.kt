@@ -33,8 +33,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private var localeWasChanged = false
     private var restart = true
-    val isDriverMode get() =
-        systemInteractor.lastMode == Screens.CARRIER_MODE
+
     val isBackGroundAccepted get() =
         carrierTripInteractor.bgCoordinatesPermission != CarrierTripsMainView.BG_COORDINATES_REJECTED
 
@@ -53,7 +52,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             viewState.initProfileField()
             viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
         }
-        if (isDriverMode) initCarrierSettings()
 
         initDebugMenu()
     }
@@ -79,19 +77,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
         viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
         viewState.setLogoutButtonEnabled(accountManager.hasAccount)
-    }
-
-    private fun initCarrierSettings() {
-        viewState.initCarrierLayout()
-
-        viewState.setCalendarModes(calendarModes)
-        if (systemInteractor.lastCarrierTripsTypeView.isEmpty()) {
-            systemInteractor.lastCarrierTripsTypeView = Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR
-        }
-        viewState.setCalendarMode(systemInteractor.lastCarrierTripsTypeView)
-
-        viewState.setDaysOfWeek(daysOfWeek)
-        viewState.setFirstDayOfWeek(daysOfWeek[systemInteractor.firstDayOfWeek - 1].name)
     }
 
     fun switchDebugSettings() {
