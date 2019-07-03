@@ -370,11 +370,22 @@
 	<dimen name="view_transfer_details_transport_type_item_img_baggage_margin_start">6dp</dimen>
 	<dimen name="view_transfer_details_transport_type_item_img_baggage_width">10dp</dimen>
 	<dimen name="view_transfer_details_transport_type_item_img_baggage_height">9dp</dimen>
+
 	<dimen name="view_transport_capacity_img_passenger_width">10dp</dimen>
 	<dimen name="view_transport_capacity_img_passenger_height">12dp</dimen>
 	<dimen name="view_transport_capacity_img_baggage_width">13dp</dimen>
 	<dimen name="view_transport_capacity_img_baggage_height">12dp</dimen>
+	<dimen name="view_transport_capacity_img_baggage_margin_start">6dp</dimen>
 	<dimen name="view_transport_capacity_text_margin_start">4dp</dimen>
+	<dimen name="view_transport_capacity_text_size">13sp</dimen>
+
+	<dimen name="view_transport_capacity_small_img_passenger_width">7dp</dimen>
+	<dimen name="view_transport_capacity_small_img_passenger_height">9dp</dimen>
+	<dimen name="view_transport_capacity_small_img_baggage_width">10dp</dimen>
+	<dimen name="view_transport_capacity_small_img_baggage_height">9dp</dimen>
+	<dimen name="view_transport_capacity_small_img_baggage_margin_start">4dp</dimen>
+	<dimen name="view_transport_capacity_small_text_margin_start">2dp</dimen>
+	<dimen name="view_transport_capacity_small_text_size">11sp</dimen>
 
 	<dimen name="view_transfer_details_communicate_buttons_height">68dp</dimen>
 	<dimen name="view_transfer_details_communicate_buttons_padding_top">16dp</dimen>
