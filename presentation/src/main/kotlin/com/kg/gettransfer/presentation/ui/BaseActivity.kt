@@ -63,6 +63,7 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
+import java.io.File
 
 abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
@@ -419,13 +420,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun closePopUp() = popupWindowRate.dismiss()
 
-    companion object {
-        const val TOOLBAR_NO_TITLE = 0
-        const val PLAY_MARKET_RATE = 42
-
-        private const val MIME_TYPE_VOUCHER = "application/pdf"
-    }
-
     protected fun setStatusBarColor(@ColorRes color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -456,27 +450,42 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             .replace(id, fragment, tag)
             .commitAllowingStateLoss()
 
-    protected fun downloadVoucher(transferId: Long) {
-        val apiUrl =
-                if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home")
-                    getString(R.string.api_url_prod)
-                else getString(R.string.api_url_demo)
-
-        val url = apiUrl + Api.API_VOUCHER + transferId
-
-        setupDownloadManager(url, null, MIME_TYPE_VOUCHER)
-    }
+//    protected fun downloadVoucher(transferId: Long) {
+//        val apiUrl =
+//                if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home")
+//                    getString(R.string.api_url_prod)
+//                else getString(R.string.api_url_demo)
+//
+//        val url = apiUrl + Api.API_VOUCHER + transferId
+//        val contentDisposition = "$CONTENT_DISPOSITION_VOUCHER$transferId$VOUCHER_EXTENSION\""
+//
+//        setupDownloadManager(url, contentDisposition, MIME_TYPE_VOUCHER)
+//    }
 
     protected fun setupDownloadManager(url: String, contentDisposition: String?, mimeType: String?) {
+        val downloadFolder = getString(R.string.app_name) + File.separator + VOUCHERS_FOLDER
+        val fileName = URLUtil.guessFileName(url, contentDisposition, mimeType)
+
         val request = DownloadManager.Request(Uri.parse(url)).apply {
             allowScanningByMediaScanner()
+            setMimeType(mimeType)
             setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             setDestinationInExternalPublicDir(
-                    Environment.DIRECTORY_DOWNLOADS,
-                    URLUtil.guessFileName(url, contentDisposition, mimeType))
+                    downloadFolder,
+                    fileName)
         }
         val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         dm.enqueue(request)
         longToast(getString(R.string.LNG_DOWNLOADING))
+    }
+
+    companion object {
+        const val TOOLBAR_NO_TITLE = 0
+        const val PLAY_MARKET_RATE = 42
+
+        private const val MIME_TYPE_VOUCHER = "application/pdf"
+        private const val CONTENT_DISPOSITION_VOUCHER = "attachment; filename=\"voucher_"
+        private const val VOUCHERS_FOLDER = "Vouchers"
+        private const val VOUCHER_EXTENSION = ".pdf"
     }
 }

@@ -7,6 +7,7 @@ import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
 
 import org.koin.core.inject
+import java.io.InputStream
 
 /**
  * Implementation of the [TransferDataStore] interface to provide a means of communicating with the local data source.
@@ -30,6 +31,10 @@ open class TransferDataStoreCache : TransferDataStore {
     }
 
     override suspend fun cancelTransfer(id: Long, reason: String): TransferEntity {
+        throw UnsupportedOperationException()
+    }
+
+    override suspend fun downloadVoucher(transferId: Long): InputStream {
         throw UnsupportedOperationException()
     }
 }

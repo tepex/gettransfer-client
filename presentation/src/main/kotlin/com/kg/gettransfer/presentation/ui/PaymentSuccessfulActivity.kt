@@ -66,7 +66,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     private fun checkPermissionForWrite() {
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
-            downloadVoucher(presenter.transferId)
+            presenter.downloadVoucher(presenter.transferId)
         } else EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
@@ -119,7 +119,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        downloadVoucher(presenter.transferId)
+        presenter.downloadVoucher(presenter.transferId)
     }
 
     override fun onRationaleDenied(requestCode: Int) {

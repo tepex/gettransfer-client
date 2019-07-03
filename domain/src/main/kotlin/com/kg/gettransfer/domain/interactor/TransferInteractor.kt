@@ -25,4 +25,6 @@ class TransferInteractor(private val repository: TransferRepository) {
         repository.clearTransfersCache()
         return Result(Unit)
     }
+
+    suspend fun downloadVoucher(transferId: Long) = repository.downloadVoucher(transferId)
 }

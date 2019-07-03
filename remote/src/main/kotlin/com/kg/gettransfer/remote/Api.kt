@@ -3,6 +3,7 @@ package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.remote.model.*
 import kotlinx.coroutines.Deferred
+import okhttp3.ResponseBody
 import retrofit2.http.*
 
 interface Api {
@@ -224,4 +225,8 @@ interface Api {
         @Query("place_id") placeId: String,
         @Query("lang") lang: String
     ): Deferred<PlaceDetailsResultModel>
+
+    @GET("$API_VOUCHER{id}")
+    fun downloadVoucher(
+            @Path("id") transferId: Long): Deferred<ResponseBody>
 }

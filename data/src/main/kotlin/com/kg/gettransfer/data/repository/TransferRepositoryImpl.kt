@@ -227,3 +227,11 @@ class TransferRepositoryImpl(
         resultCached.entity?.let { remoteTransfer.lastOffersUpdatedAt = it.lastOffersUpdatedAt }
     }
 }
+
+    override suspend fun downloadVoucher(transferId: Long): Result<InputStream?> {
+        val result: ResultEntity<InputStream?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().downloadVoucher(transferId)
+        }
+        return Result(result.entity)
+    }
+}

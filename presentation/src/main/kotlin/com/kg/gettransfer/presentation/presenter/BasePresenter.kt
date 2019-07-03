@@ -38,6 +38,7 @@ import org.koin.core.parameter.parametersOf
 import org.slf4j.Logger
 
 import ru.terrakok.cicerone.Router
+import java.io.InputStream
 
 open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     OfferEventListener,
@@ -331,6 +332,17 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
                 remove(transferId)
             }
         }
+    }
+
+    fun downloadVoucher(transferId: Long) {
+        utils.launchSuspend {
+            fetchResultOnly { transferInteractor.downloadVoucher(transferId) }
+                    .isSuccess()
+                    ?.let { saveVoucher(it) }
+        }
+    }
+
+    private fun saveVoucher(content: InputStream) {
     }
 
     /*
