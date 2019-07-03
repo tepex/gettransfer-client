@@ -43,11 +43,7 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
     override suspend fun getAddressByLocation(point: Point, lang: String): Result<GTAddress> {
         return try {
             val address = geoDataStore.getAddressByLocation(point.map())
-            val result = getAutocompletePredictions(address, lang)
-            if (result.error != null) Result(GTAddress.EMPTY, result.error)
-            result.model.firstOrNull()?.let {
-                Result(it.copy(cityPoint = it.cityPoint.copy(point = Point(point.latitude, point.longitude))))
-            } ?: Result(GTAddress.EMPTY)
+            Result(GTAddress(CityPoint(address, point, null), emptyList(), address, GTAddress.parseAddress(address)))
         } catch (e: LocationException) {
             Result(GTAddress.EMPTY, geoException = e.map())
         }
