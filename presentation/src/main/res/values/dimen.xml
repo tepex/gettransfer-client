@@ -1031,9 +1031,8 @@
 	<dimen name="payment_offer_tiny_cardElevation">10dp</dimen>
 	<dimen name="payment_offer_tiny_ivCarPhoto_width">130dp</dimen>
 	<dimen name="payment_offer_tiny_ivCarPhoto_height">80dp</dimen>
-	<dimen name="payment_offer_tiny_tvModel_margin_start">8dp</dimen>
-	<dimen name="payment_offer_tiny_tvModel_margin_end">8dp</dimen>
-	<dimen name="payment_offer_tiny_tvModel_margin_top">8dp</dimen>
+	<dimen name="payment_offer_tiny_tvModel_margins">8dp</dimen>
+	<dimen name="payment_offer_tiny_ivCarColor_margins">12dp</dimen>
 	<dimen name="payment_offer_tiny_tvClass_margin_top">3dp</dimen>
 	<dimen name="payment_offer_tiny_tvClass_margin_bottom">5dp</dimen>
 	<dimen name="payment_offer_tiny_tvClass_margin_end">8dp</dimen>
@@ -1042,7 +1041,7 @@
 	<dimen name="payment_offer_tiny_rating_margin_bottom">10dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_top">2dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_start">8dp</dimen>
-	<dimen name="payment_offer_tiny_capacity_margin_end">8dp</dimen>
+	<dimen name="payment_offer_tiny_capacity_margin_end">12dp</dimen>
 	<dimen name="payment_dialog_corner_radius">16dp</dimen>
 	<dimen name="payment_ivGtrBonus_layout_marginTop">16dp</dimen>
 	<dimen name="payment_ilAuthPhone_layout_marginTop">16dp</dimen>
