@@ -4,7 +4,6 @@ import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.MobileConfig
 import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.repository.SystemRepository
@@ -60,9 +59,6 @@ class SystemInteractor(private val systemRepository: SystemRepository) {
     var isDebugMenuShowed: Boolean
         get() = systemRepository.isDebugMenuShowed
         set(value) { systemRepository.isDebugMenuShowed = value }
-
-    val mobileConfigs: MobileConfig
-        get() = systemRepository.mobileConfig
 
     var accessToken: String
         get() = systemRepository.accessToken

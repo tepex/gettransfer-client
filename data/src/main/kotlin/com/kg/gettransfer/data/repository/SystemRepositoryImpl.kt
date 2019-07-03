@@ -17,11 +17,12 @@ import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.MobileConfig
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.repository.SystemRepository
+
+import com.kg.gettransfer.sys.domain.MobileConfigs
 
 import org.koin.core.get
 
@@ -38,7 +39,7 @@ class SystemRepositoryImpl(
     override var configs = Configs.EMPTY
         private set
 
-    override var mobileConfig = MobileConfig.EMPTY
+    override var mobileConfig = MobileConfigs.EMPTY
         private set
 
     override var lastMode: String
@@ -106,7 +107,7 @@ class SystemRepositoryImpl(
 
     override suspend fun coldStart(): Result<Unit> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
-        if (mobileConfig === MobileConfig.EMPTY) {
+        if (mobileConfig === MobileConfigs.EMPTY) {
             val result: ResultEntity<MobileConfigEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getMobileConfigs()
             }

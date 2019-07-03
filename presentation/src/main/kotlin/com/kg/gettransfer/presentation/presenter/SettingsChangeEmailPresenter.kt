@@ -5,12 +5,21 @@ import android.support.annotation.StringRes
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.domain.ApiException
+
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 
+import com.kg.gettransfer.sys.domain.GetSmsResendDelayInteractor
+
+import org.koin.core.inject
+
 @InjectViewState
 class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
+
+    private val getSmsResendDelay: GetSmsResendDelayInteractor by inject()
+    private val smsResendDelay = getSmsResendDelay().millis
 
     private var newEmail: String? = null
     private var emailCode: String? = null
@@ -63,7 +72,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
             val result = fetchResultOnly { sessionInteractor.getCodeForChangeEmail(it) }
             if (result.error == null && result.model) {
                 viewState.showCodeLayout()
-                viewState.setTimer(systemInteractor.mobileConfigs.smsResendDelaySec * SEC_IN_MILLIS)
+                viewState.setTimer(smsResendDelay)
                 smsSent = true
                 checkBtnVisibility()
             } else {

@@ -1,7 +1,10 @@
 package com.kg.gettransfer.data.model
 
-import com.kg.gettransfer.domain.model.MobileConfig
-import com.kg.gettransfer.domain.model.BuildsConfigs
+import com.kg.gettransfer.core.domain.Minute
+import com.kg.gettransfer.core.domain.Second
+
+import com.kg.gettransfer.sys.domain.BuildsConfigs
+import com.kg.gettransfer.sys.domain.MobileConfigs
 
 data class MobileConfigEntity(
     val pushShowDelay: Int,
@@ -22,7 +25,7 @@ data class MobileConfigEntity(
 }
 
 data class BuildsConfigsEntity(
-    val updateRequired: Boolean?
+    val updateRequired: Boolean
 ) {
 
     companion object {
@@ -33,10 +36,11 @@ data class BuildsConfigsEntity(
 fun BuildsConfigsEntity.map() = BuildsConfigs(updateRequired)
 
 fun MobileConfigEntity.map() =
-    MobileConfig(
-        pushShowDelay,
-        orderMinimumMinutes,
+    MobileConfigs(
+        /*
+        pushShowDelay,*/
+        Minute(orderMinimumMinutes),
         termsUrl,
-        smsResendDelaySec ?: MobileConfig.SMS_RESEND_DELAY_SEC_DEFAULT,
-        buildsConfigs?.mapValues { it.value.map() }
+        smsResendDelaySec?.let { Second(it) } ?: MobileConfigs.SMS_RESEND_DELAY_SEC_DEFAULT,
+        buildsConfigs?.mapValues { it.value.map() } ?: emptyMap()
     )

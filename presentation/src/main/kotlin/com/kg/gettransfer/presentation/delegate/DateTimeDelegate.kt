@@ -5,7 +5,6 @@ import android.content.Context
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.simpleFormat
 
@@ -13,18 +12,24 @@ import com.kg.gettransfer.presentation.ui.helpers.DateTimeHandler
 import com.kg.gettransfer.presentation.ui.helpers.DateTimePickerHelper
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 
+import com.kg.gettransfer.sys.domain.GetOrderMinimumInteractor
+
 import org.koin.core.KoinComponent
 import org.koin.core.get
+import org.koin.core.inject
 
 import java.util.Calendar
 import java.util.Date
 
 class DateTimeDelegate : KoinComponent {
-    val systemInteractor: SystemInteractor = get()
+
     val orderInteractor: OrderInteractor = get()
     val sessionInteractor: SessionInteractor = get()
 
+    private val getOrderMinimum: GetOrderMinimumInteractor by inject()
+
     lateinit var currentData: Calendar
+
     var startDate: Date = Date()
         set(value) {
             field = value
@@ -35,8 +40,9 @@ class DateTimeDelegate : KoinComponent {
             field = value
             orderInteractor.orderReturnTime = value
         }
-    private val futureHour
-        get() = systemInteractor.mobileConfigs.orderMinimumMinutes / 60
+
+    private val futureHour = getOrderMinimum().hours
+
     val startOrderedTime
         get() = orderInteractor.orderStartTime?.simpleFormat()
     val returnOrderedTime
@@ -58,6 +64,7 @@ class DateTimeDelegate : KoinComponent {
             context,
             getCurrentDateForField(fieldStart),
             object : DateTimeHandler {
+
                 override fun onDateChosen(date: Date) {
                     handleDateChoice(date, fieldStart)
                 }
@@ -82,7 +89,7 @@ class DateTimeDelegate : KoinComponent {
     fun getCurrentDatePlusMinimumHours(): Calendar {
         val calendar = Calendar.getInstance(sessionInteractor.locale)
         /* Server must send current locale time */
-        calendar.add(Calendar.HOUR_OF_DAY, futureHour)
+        calendar.add(Calendar.HOUR_OF_DAY, futureHour.hours)
         calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
         return calendar
     }
@@ -93,8 +100,7 @@ class DateTimeDelegate : KoinComponent {
 
     private fun handleTimeChoice(date: Date, startField: Boolean): Date =
         getCurrentDatePlusMinimumHours().run {
-            (if (date.after(time)) date else time)
-                .also { if (startField) startDate = it else returnDate = it }
+            (if (date.after(time)) date else time).also { if (startField) startDate = it else returnDate = it }
         }
 
     private fun getDisplayText(date: Date, context: Context) =
@@ -102,7 +108,7 @@ class DateTimeDelegate : KoinComponent {
 
     private fun getTextForMinDate(context: Context) = context.getString(R.string.LNG_DATE_IN_HOURS)
         .plus(" ")
-        .plus(futureHour)
+        .plus(futureHour.hours)
         .plus(" ")
         .plus(context.getString(R.string.LNG_HOUR_FEW))
 

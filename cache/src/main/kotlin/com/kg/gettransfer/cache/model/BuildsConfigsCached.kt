@@ -1,12 +1,14 @@
 package com.kg.gettransfer.cache.model
 
 import android.arch.persistence.room.ColumnInfo
+
 import com.kg.gettransfer.data.model.BuildsConfigsEntity
+
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class BuildsConfigsCached(
-    @ColumnInfo(name = BuildsConfigsEntity.UPDATE_REQUIRED) val updateRequired: Boolean?
+    @ColumnInfo(name = BuildsConfigsEntity.UPDATE_REQUIRED) val updateRequired: Boolean
 )
 
 @Serializable
