@@ -193,12 +193,17 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    private fun setHourlyPoint() {
+    private fun setHourlyPoint(isDateChanged: Boolean = false) {
         orderInteractor.from?.let { from ->
             from.cityPoint.point?.let { p ->
                 val point = LatLng(p.latitude, p.longitude)
                 track = Utils.getCameraUpdateForPin(point)
-                viewState.setPinHourlyTransfer(from.address ?: "", from.variants?.first ?: "", point, track!!)
+                viewState.setPinHourlyTransfer(
+                    from.address ?: "",
+                    dateDelegate.run { startOrderedTime ?: getCurrentDatePlusMinimumHours().time.simpleFormat() },
+                    point,
+                    track!!,
+                    isDateChanged)
             }
         }
     }
@@ -293,9 +298,13 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun changeDate(isStartDate: Boolean) {
         if (isStartDate) {
             isTimeSetByUser = true
-            routeModel?.let {
-                it.dateTime = dateDelegate.startOrderedTime!!  //value came from DateDelegate, so start_time was set
-                viewState.setRoute(polyline!!, it, true)
+            if (orderInteractor.hourlyDuration != null) {
+                setHourlyPoint(true)
+            } else {
+                routeModel?.let {
+                    it.dateTime = dateDelegate.startOrderedTime!!  //value came from DateDelegate, so start_time was set
+                    viewState.setRoute(polyline!!, it, true)
+                }
             }
             getNewPrices()
         }
