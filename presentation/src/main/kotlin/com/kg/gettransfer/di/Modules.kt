@@ -33,6 +33,11 @@ import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 
 import com.kg.gettransfer.presentation.mapper.*
 
+import com.kg.gettransfer.sys.domain.GetBuildsConfigsInteractor
+import com.kg.gettransfer.sys.domain.GetOrderMinimumInteractor
+import com.kg.gettransfer.sys.domain.GetSmsResendDelayInteractor
+import com.kg.gettransfer.sys.domain.GetTermsUrlInteractor
+
 import com.kg.gettransfer.utilities.Analytics
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
@@ -124,6 +129,11 @@ val domainModule = module {
     single { SocketInteractor(get()) }
     single { LogsInteractor(get()) }
     single { SessionInteractor(get(), get(), get()) }
+
+    single { GetBuildsConfigsInteractor(get()) }
+    single { GetOrderMinimumInteractor(get()) }
+    single { GetSmsResendDelayInteractor(get()) }
+    single { GetTermsUrlInteractor(get()) }
 }
 
 val mappersModule = module {
