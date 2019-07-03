@@ -7,9 +7,6 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
 
-import com.kg.gettransfer.presentation.mapper.EndpointMapper
-import com.kg.gettransfer.presentation.mapper.ProfileMapper
-
 import com.kg.gettransfer.presentation.model.*
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
 
@@ -32,7 +29,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
 
-    private val endpointMapper   = get<EndpointMapper>()
     private val reviewInteractor = get<ReviewInteractor>()
 
     private var localeWasChanged = false
@@ -112,7 +108,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun showDebugMenu() {
         viewState.setEndpoints(endpoints)
-        viewState.setEndpoint(endpointMapper.toView(systemInteractor.endpoint))
+        viewState.setEndpoint(systemInteractor.endpoint.map())
         viewState.showDebugMenu()
     }
 
@@ -221,7 +217,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         if (localeWasChanged) {
             localeWasChanged = false
             val screen = when (systemInteractor.lastMode) {
-                Screens.CARRIER_MODE -> Screens.Carrier()
+                Screens.CARRIER_MODE   -> Screens.Carrier()
                 Screens.PASSENGER_MODE -> Screens.MainPassenger()
                 else                   -> throw IllegalArgumentException("Wrong last mode in onBackCommandClick in ${this.javaClass.name}")
             }
@@ -230,7 +226,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     private fun initConfigs() {
-        endpoints = systemInteractor.endpoints.map { endpointMapper.toView(it) }
+        endpoints = systemInteractor.endpoints.map { it.map() }
         locales = systemInteractor.locales.map { it.map() }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
