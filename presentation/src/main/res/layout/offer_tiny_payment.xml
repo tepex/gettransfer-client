@@ -96,7 +96,7 @@
 
         <include
             android:id="@+id/view_capacity"
-            layout="@layout/view_transport_capacity"
+            layout="@layout/view_transport_capacity_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
