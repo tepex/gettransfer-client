@@ -180,7 +180,7 @@ val androidModule = module {
     single { PassengersDelegate() }
     single { MainState() }
     single { AccountManager() }
-    single { DownloadManager(androidApplication().applicationContext) }
+    single { GTDownloadManager(androidApplication().applicationContext) }
 }
 
 val testModule = module {

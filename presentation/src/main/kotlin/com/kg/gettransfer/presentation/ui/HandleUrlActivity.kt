@@ -15,6 +15,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
+import com.kg.gettransfer.utilities.GTDownloadManager.Companion.VOUCHERS_FOLDER
 import kotlinx.android.synthetic.main.activity_handle_url.*
 import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -47,7 +48,6 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
         const val EQUAL = "="
         const val QUESTION = "?"
         const val RATE = "rate_val"
-        private const val VOUCHERS_FOLDER = "Vouchers"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
