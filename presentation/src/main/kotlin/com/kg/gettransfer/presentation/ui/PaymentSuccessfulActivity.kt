@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_payment_successful.*
 import kotlinx.android.synthetic.main.dialog_payment_successful.*
 import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.EasyPermissions
+import java.io.InputStream
 
 class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView,
         EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
@@ -66,7 +67,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     private fun checkPermissionForWrite() {
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
-            presenter.downloadVoucher(presenter.transferId)
+            presenter.onDownloadVoucherClick()
         } else EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
@@ -114,12 +115,14 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         btnCall.setOnClickListener { presenter.onCallClick() }
     }
 
+    override fun onDownloadCompleted(voucher: InputStream?, transferId: Long) = saveVoucher(voucher, transferId)
+
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        presenter.downloadVoucher(presenter.transferId)
+        presenter.onDownloadVoucherClick()
     }
 
     override fun onRationaleDenied(requestCode: Int) {

@@ -334,16 +334,8 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
     }
 
-    fun downloadVoucher(transferId: Long) {
-        utils.launchSuspend {
-            fetchResultOnly { transferInteractor.downloadVoucher(transferId) }
-                    .isSuccess()
-                    ?.let { saveVoucher(it) }
-        }
-    }
-
-    private fun saveVoucher(content: InputStream) {
-    }
+    suspend fun downloadVoucher(transferId: Long): InputStream? =
+            fetchResultOnly { transferInteractor.downloadVoucher(transferId) }.isSuccess()
 
     /*
     First - work with error: check login error. CheckResultError returns

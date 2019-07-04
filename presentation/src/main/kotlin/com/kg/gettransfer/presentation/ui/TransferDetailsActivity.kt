@@ -84,6 +84,7 @@ import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
 
 import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.EasyPermissions
+import java.io.InputStream
 
 //import java.util.*
 
@@ -324,13 +325,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private fun checkPermissionForWrite() {
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
-            presenter.downloadVoucher(presenter.transferId)
+            presenter.onDownloadVoucherClick()
+
         } else EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
                 RC_WRITE_FILE,
                 *perms)
     }
+
+    override fun onDownloadCompleted(voucher: InputStream?, transferId: Long) = saveVoucher(voucher, transferId)
 
     private fun setPassengerOfferedPrice(price: String) {
         transfer_details_main.apply {
@@ -643,7 +647,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        presenter.downloadVoucher(presenter.transferId)
+        presenter.onDownloadVoucherClick()
     }
 
     override fun onRationaleDenied(requestCode: Int) {
