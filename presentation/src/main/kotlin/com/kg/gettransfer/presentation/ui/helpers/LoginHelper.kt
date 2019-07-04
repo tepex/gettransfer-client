@@ -36,4 +36,10 @@ object LoginHelper {
             false
         }
     }
+
+    fun getInternationalNumber(phone: String) =
+            if (checkIsInternationalNumber(phone)) phone
+            else Utils.convertToInternationalPhone(phone)
+
+    private fun checkIsInternationalNumber(phone: String) = phone.firstSign() == "+"
 }

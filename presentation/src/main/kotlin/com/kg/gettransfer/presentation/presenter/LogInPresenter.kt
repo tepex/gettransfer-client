@@ -8,6 +8,7 @@ import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_PHONE
+import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.getInternationalNumber
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
@@ -91,7 +92,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone()) {
-                    true -> accountManager.login(null, params.emailOrPhone, password, false)
+                    true -> accountManager.login(null, getInternationalNumber(params.emailOrPhone), password, false)
                     false -> accountManager.login(params.emailOrPhone, null, password, false)
                 }
             }.also {
@@ -124,7 +125,10 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
-                    true -> sessionInteractor.getVerificationCode(null, params.emailOrPhone)
+                    true -> {
+                        params.emailOrPhone = getInternationalNumber(params.emailOrPhone)
+                        sessionInteractor.getVerificationCode(null, params.emailOrPhone)
+                    }
                     false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
                 }
             }.also {
