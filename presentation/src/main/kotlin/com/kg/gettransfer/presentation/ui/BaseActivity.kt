@@ -446,7 +446,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         supportFragmentManager
             .beginTransaction()
             .replace(id, fragment, tag)
-            .commit()
+            .commitAllowingStateLoss()
 
     protected fun downloadVoucher(transferId: Long) {
         val apiUrl =

@@ -76,7 +76,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 presenter.showingFragment = null
                 supportFragmentManager.fragments.firstOrNull()?.let { remove(it) }
             }
-        }?.commit()
+        }?.commitAllowingStateLoss()
         setTitleText(showingView)
     }
 
