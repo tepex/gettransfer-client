@@ -524,10 +524,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun updateMapBehaviorBounds() {
-        mapView.getMapAsync {
-            mapView.getMapAsync { gm ->
-                mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
-            }
+        mapView.getMapAsync { gm ->
+            mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
         }
     }
 
