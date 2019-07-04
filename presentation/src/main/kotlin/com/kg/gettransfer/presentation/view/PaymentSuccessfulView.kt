@@ -10,5 +10,4 @@ interface PaymentSuccessfulView: BaseView {
     fun setRemainTime(days: Int, hours: Int, minutes: Int)
     fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate)
     fun initCallButton()
-    fun onDownloadCompleted(voucher: InputStream?, transferId: Long)
 }

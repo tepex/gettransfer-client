@@ -94,9 +94,5 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         router.newChainFromMain(Screens.Details(transferId))
     }
 
-    fun onDownloadVoucherClick() {
-        utils.launchSuspend {
-            viewState.onDownloadCompleted(downloadVoucher(transferId), transferId)
-        }
-    }
+    fun onDownloadVoucherClick() = downloadManager.downloadVoucher(transferId)
 }

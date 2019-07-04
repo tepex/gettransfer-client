@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_handle_url.*
 import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.io.File
 
 class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.PermissionCallbacks,
         EasyPermissions.RationaleCallbacks {
@@ -46,6 +47,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
         const val EQUAL = "="
         const val QUESTION = "?"
         const val RATE = "rate_val"
+        private const val VOUCHERS_FOLDER = "Vouchers"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,6 +137,10 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
         dm.enqueue(request)
         longToast(getString(R.string.LNG_DOWNLOADING))
     }
+
+    private fun getVouchersFolderName(): String
+            = getString(R.string.app_name) + File.separator + VOUCHERS_FOLDER
+
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         onPermissionDenied()

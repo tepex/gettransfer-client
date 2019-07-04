@@ -115,8 +115,6 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         btnCall.setOnClickListener { presenter.onCallClick() }
     }
 
-    override fun onDownloadCompleted(voucher: InputStream?, transferId: Long) = saveVoucher(voucher, transferId)
-
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
     }

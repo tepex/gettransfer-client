@@ -29,7 +29,6 @@ interface TransferDetailsView: BaseView, RouteView {
 
     fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)
     fun updateCamera(latLngList: List<LatLng>)
-    fun onDownloadCompleted(voucher: InputStream?, transferId: Long)
 
     companion object {
         val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"

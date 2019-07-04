@@ -26,6 +26,7 @@ import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_CO
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.DownloadManager
 import com.kg.gettransfer.utilities.GTNotificationManager
 
 import kotlinx.coroutines.Job
@@ -65,6 +66,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val logsInteractor: LogsInteractor by inject()
     protected val sessionInteractor: SessionInteractor by inject()
     protected val accountManager: AccountManager by inject()
+    protected val downloadManager: DownloadManager by inject()
 
     //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
@@ -333,9 +335,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
             }
         }
     }
-
-    suspend fun downloadVoucher(transferId: Long): InputStream? =
-            fetchResultOnly { transferInteractor.downloadVoucher(transferId) }.isSuccess()
 
     /*
     First - work with error: check login error. CheckResultError returns

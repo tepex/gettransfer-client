@@ -62,8 +62,6 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
-import java.io.File
-import java.io.InputStream
 
 abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
@@ -450,36 +448,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             .replace(id, fragment, tag)
             .commitAllowingStateLoss()
 
-    protected fun getVouchersFolderName(): String = getString(R.string.app_name) + File.separator + VOUCHERS_FOLDER
-
-    protected fun saveVoucher(content: InputStream?, transferId: Long) {
-        content?.let {
-            val folderName = getVouchersFolderName()
-            val root = getVouchersFolder(folderName)
-            val voucher = File(root, "$VOUCHER_START_NAME$transferId$VOUCHER_EXTENSION")
-
-            content.use { input ->
-                voucher.outputStream().use {
-                    input.copyTo(it)
-                }
-            }
-        }
-    }
-
-    private fun getVouchersFolder(downloadFolder: String): File {
-        val file = Environment.getExternalStoragePublicDirectory(downloadFolder)
-        if (!file.mkdirs()) {
-            Timber.e("Directory not created")
-        }
-        return file
-    }
-
     companion object {
         const val TOOLBAR_NO_TITLE = 0
         const val PLAY_MARKET_RATE = 42
-
-        private const val VOUCHERS_FOLDER = "Vouchers"
-        private const val VOUCHER_EXTENSION = ".pdf"
-        private const val VOUCHER_START_NAME = "voucher_"
     }
 }

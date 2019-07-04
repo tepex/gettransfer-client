@@ -326,15 +326,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
             presenter.onDownloadVoucherClick()
-
         } else EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
                 RC_WRITE_FILE,
                 *perms)
     }
-
-    override fun onDownloadCompleted(voucher: InputStream?, transferId: Long) = saveVoucher(voucher, transferId)
 
     private fun setPassengerOfferedPrice(price: String) {
         transfer_details_main.apply {
