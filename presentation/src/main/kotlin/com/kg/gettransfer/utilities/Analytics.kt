@@ -105,7 +105,7 @@ class Analytics(
         }
 
         private fun sendRevenue() {
-            val priceMicros = price.roundToLong() * 1000000L
+            val priceMicros = price.roundToLong() * 1000000L // priceMicros = price × 10^6
             val revenue = Revenue.newBuilderWithMicros(priceMicros, currency)
                     .withProductID(requestType)
                     .withQuantity(1)
