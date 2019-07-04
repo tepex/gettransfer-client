@@ -15,7 +15,7 @@ open class PassengerAccountMapper : Mapper<PassengerAccountModel, PassengerAccou
         PassengerAccountModel(
             id       = type.id,
             profile  = profileMapper.toView(type.profile),
-            lastSeen = SystemUtils.formatDateTime(type.lastSeen)
+            lastSeen = type.lastSeen?.let { SystemUtils.formatDateTime(it) }
         )
 
     override fun fromView(type: PassengerAccountModel): PassengerAccount { throw UnsupportedOperationException() }
