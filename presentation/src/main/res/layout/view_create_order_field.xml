@@ -19,7 +19,7 @@
         tools:hint="450"
         android:theme="@style/editTextHintCreateOrder">
 
-        <android.support.design.widget.TextInputEditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/field_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

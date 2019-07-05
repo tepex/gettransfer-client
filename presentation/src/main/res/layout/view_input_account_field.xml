@@ -10,7 +10,7 @@
         android:layout_centerInParent="true"
         android:theme="@style/editTextLogin">
 
-        <android.support.design.widget.TextInputEditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/fieldText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
