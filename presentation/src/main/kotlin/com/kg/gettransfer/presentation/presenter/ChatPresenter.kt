@@ -23,14 +23,10 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import java.util.Calendar
 
-import org.koin.core.parameter.parametersOf
 import org.koin.core.inject
-
-import org.slf4j.Logger
 
 @InjectViewState
 class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventListener {
-    private val log: Logger by inject { parametersOf("GTR-chat") }
 
     private val chatMapper: ChatMapper by inject()
     private val messageMapper: MessageMapper by inject()
@@ -74,7 +70,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
             } else {
                 offerModel = utils.asyncAwait { offerInteractor.getOffers(transferId, true) }
                     .model.firstOrNull()?.let { offerMapper.toView(it) }
-                transferModel?.let { 
+                transferModel?.let {
                     viewState.setToolbar(it, offerModel, tripId == NO_ID && userRole == ROLE_PASSENGER)
                 }
             }

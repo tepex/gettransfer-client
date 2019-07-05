@@ -66,6 +66,8 @@ class SessionRepositoryImpl(
         val r = systemRepository.coldStart()
         if (r.error != null) return Result(account, r.error)
 
+        account = factory.retrieveCacheDataStore().getAccount()?.map(systemRepository.configs) ?: Account.EMPTY
+
         var error: ApiException? = null
         val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getAccount()
@@ -80,21 +82,15 @@ class SessionRepositoryImpl(
         return Result(account, error)
     }
 
-    override suspend fun putAccount(account: Account, pass: String?, repeatedPass: String?): Result<Account> {
-        /*val accountEntity = try { factory.retrieveRemoteDataStore().setAccount(accountMapper.toEntity(account)) }
-        catch(e: RemoteException) { return Result(account, ExceptionMapper.map(e)) }
-
-        factory.retrieveCacheDataStore().setAccount(accountEntity)
-        this.account = accountMapper.fromEntity(accountEntity)
-        return Result(this.account)*/
+    override suspend fun putAccount(newAccount: Account, pass: String?, repeatedPass: String?): Result<Account> {
         val accountEntity =
             if (pass != null && repeatedPass != null) {
-                account.map().apply {
+                newAccount.map().apply {
                     password = pass
                     repeatedPassword = repeatedPass
                 }
             } else {
-                account.map()
+                newAccount.map()
             }
 
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
@@ -103,16 +99,16 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
-                this.account = entity.map(systemRepository.configs)
+                account = entity.map(systemRepository.configs)
             }
             if (pass != null && repeatedPass != null) this.userPassword = pass
         }
-        return Result(this.account, result.error?.map())
+        return Result(account, result.error?.map())
     }
 
-    override suspend fun putNoAccount(account: Account): Result<Account> {
-        factory.retrieveCacheDataStore().setAccount(account.map())
-        return Result(account)
+    override suspend fun putNoAccount(newAccount: Account): Result<Account> {
+        factory.retrieveCacheDataStore().setAccount(newAccount.map())
+        return Result(newAccount)
     }
 
     override suspend fun login(

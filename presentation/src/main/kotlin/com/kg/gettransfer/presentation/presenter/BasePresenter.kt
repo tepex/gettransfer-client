@@ -1,8 +1,11 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
+
 import com.arellomobile.mvp.MvpPresenter
+
 import com.google.firebase.iid.FirebaseInstanceId
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -12,6 +15,7 @@ import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.model.ChatBadgeEvent
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Result
+
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.mapper.BookNowOfferMapper
 import com.kg.gettransfer.presentation.mapper.OfferMapper
@@ -20,19 +24,25 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_REJECTED
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTNotificationManager
+
 import kotlinx.coroutines.Job
+
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
+
+import org.slf4j.Logger
+
 import ru.terrakok.cicerone.Router
-import timber.log.Timber
 
 open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     OfferEventListener,
     ChatBadgeEventListener,
-        KoinComponent {
+    KoinComponent {
 
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
@@ -57,6 +67,8 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
+
+    protected val log: Logger by inject { parametersOf("GTR-presenter") }
 
     open fun onBackCommandClick() {
         val map = mutableMapOf<String, Any>()
@@ -177,12 +189,12 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
             if (it.isSuccessful) {
                 it.result?.token?.let {
-                    Timber.d("[FCM token]: $it")
+                    log.debug("[FCM token]: $it")
                     utils.launchSuspend {
                         fetchResult { pushTokenInteractor.registerPushToken(it) }
                     }
                 }
-            } else Timber.w("getInstanceId failed", it.exception)
+            } else log.warn("getInstanceId failed", it.exception)
         }
     }
 
@@ -342,7 +354,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
                 if (withCacheCheck) !it.fromCache else true
             }?.let { resultCheck ->
                 if (!processError && resultCheck) it.error?.let { e -> viewState.setError(e) }
-                Timber.e(it.error)
+                log.error("BasePresenter.fetchResult", it.error)
             }
     }
 

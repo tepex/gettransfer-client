@@ -15,8 +15,8 @@ interface SessionRepository {
     var userPassword: String
 
     suspend fun coldStart(): Result<Account>
-    suspend fun putAccount(account: Account, pass: String? = null, repeatedPass: String? = null): Result<Account>
-    suspend fun putNoAccount(account: Account): Result<Account>
+    suspend fun putAccount(newAccount: Account, pass: String? = null, repeatedPass: String? = null): Result<Account>
+    suspend fun putNoAccount(newAccount: Account): Result<Account>
     suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean): Result<Account>
     suspend fun register(registerAccount: RegistrationAccount): Result<Account>
     suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean>
