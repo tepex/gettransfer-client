@@ -29,7 +29,9 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.webkit.URLUtil
 import android.widget.PopupWindow
+
 import com.arellomobile.mvp.MvpAppCompatActivity
+
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -47,14 +49,19 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.remote.Api
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
 import com.kg.gettransfer.utilities.LocaleManager
+
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
+
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+
 import org.jetbrains.anko.longToast
 import org.koin.android.ext.android.inject
+
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
+
 import timber.log.Timber
 
 abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
@@ -319,6 +326,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     //protected fun openScreen(screen: String) { router.navigateTo(screen) }
 
+    @CallSuper
     override fun attachBaseContext(newBase: Context?) {
         if (newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
         else super.attachBaseContext(null)
