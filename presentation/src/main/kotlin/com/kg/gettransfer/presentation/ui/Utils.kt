@@ -14,7 +14,6 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 
 import android.support.v4.content.ContextCompat
-import android.support.v4.text.HtmlCompat
 import android.support.v7.app.AlertDialog
 
 import android.telephony.TelephonyManager
@@ -224,11 +223,17 @@ object Utils : KoinComponent {
         try {
             /*return if(!PHONE_PATTERN.matcher(phone.trim()).matches()) false
             else phoneUtil.isValidNumber(phoneUtil.parse(phone, null))*/
-            return phoneUtil.isValidNumber(phoneUtil.parse(phone, null))
+            return phoneUtil.isValidNumber(phoneUtil.parse(phone, Locale.getDefault().country))
         } catch (e: Exception) {
             Timber.w(e, "phone parse error: $phone")
             return false
         }
+    }
+
+    fun convertToInternationalPhone(phone: String): String {
+        val phoneNumber = phoneUtil.parse(phone, Locale.getDefault().country)
+        val internationalPhone = phoneUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL).replace(Regex("\\D"), "")
+        return "+".plus(internationalPhone)
     }
 
     fun getPolyline(routeModel: RouteModel): PolylineModel {
