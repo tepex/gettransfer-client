@@ -39,9 +39,10 @@ class CarrierTripsCalendarPresenter : BasePresenter<CarrierTripsCalendarFragment
 
     fun onDateClick(date: String){
         selectedDate = date
+        viewState.selectDate(selectedDate)
         if (!carrierTripsCalendarItems.isNullOrEmpty()) {
             val dailyTrips = carrierTripsCalendarItems!![date]
-            viewState.setItemsInRVDailyTrips(dailyTrips?: listOf(), selectedDate)
+            viewState.setItemsInRVDailyTrips(dailyTrips?: emptyList())
         }
     }
 

@@ -83,20 +83,17 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
         viewPager.setCurrentItem(1, false)
     }
 
-    private fun selectDate(selectedDate: String) {
-        for (i in 0 until CarrierTripsCalendarMonthPagerAdapter.MONTHS_COUNT) {
-            val fragment = (viewPager.adapter as CarrierTripsCalendarMonthPagerAdapter).instantiateItem(
-                viewPager,
-                i
-            ) as CarrierTripsCalendarMonthFragment
-            fragment.selectDate(selectedDate)
-        }
-    }
-
-    override fun setItemsInRVDailyTrips(items: List<CarrierTripBaseModel>, selectedDate: String) {
+    override fun setItemsInRVDailyTrips(items: List<CarrierTripBaseModel>) {
         rvCarrierTrips.adapter = CarrierTripsCalendarRVAdapter(presenter, items)
         textNoTrips.isVisible = items.isEmpty()
-        selectDate(selectedDate)
+    }
+
+    override fun selectDate(selectedDate: String) {
+        for (i in 0 until CarrierTripsCalendarMonthPagerAdapter.MONTHS_COUNT) {
+            val fragment = (viewPager.adapter as CarrierTripsCalendarMonthPagerAdapter)
+                    .instantiateItem(viewPager, i) as CarrierTripsCalendarMonthFragment
+            fragment.selectDate(selectedDate)
+        }
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) =
