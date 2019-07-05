@@ -140,7 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    app:hint="@string/LNG_RIDE_DATE_RETURN_PLACEHOLDER"
+                    app:hint="@string/LNG_RIDE_DATE_RETURN"
                     app:icon_img="@drawable/ic_plus"
                     app:isFocusable="false"
                     app:showChevron="true"

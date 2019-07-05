@@ -490,7 +490,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         if (!show) {
             transfer_return_date_field.field_input.text?.clear()
             flight_numberReturn_field.field_input.text?.clear()
-            transfer_return_date_field.input_layout.hint = getString(R.string.LNG_RIDE_DATE_RETURN_PLACEHOLDER)
+            transfer_return_date_field.input_layout.hint = getString(R.string.LNG_RIDE_DATE_RETURN)
         } else transfer_return_date_field.input_layout.hint = getString(R.string.LNG_RIDE_RETURN_TRANSFER)
         changeReturnTransferIcon(show)
     }
