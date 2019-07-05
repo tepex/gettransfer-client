@@ -20,6 +20,7 @@ import java.util.Calendar
 
 import org.koin.core.get
 import org.koin.core.qualifier.named
+import java.io.InputStream
 
 class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>
@@ -226,7 +227,6 @@ class TransferRepositoryImpl(
         }
         resultCached.entity?.let { remoteTransfer.lastOffersUpdatedAt = it.lastOffersUpdatedAt }
     }
-}
 
     override suspend fun downloadVoucher(transferId: Long): Result<InputStream?> {
         val result: ResultEntity<InputStream?> = retrieveRemoteEntity {
