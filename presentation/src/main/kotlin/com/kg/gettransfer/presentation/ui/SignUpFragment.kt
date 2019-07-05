@@ -65,8 +65,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
 
     @CallSuper
     override fun onDetach() {
-        super.onDetach()
-
+        /* dirty hack https://stackoverflow.com/a/15656428 */
         try {
             val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
             childFragmentManager.isAccessible = true
@@ -77,6 +76,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         } catch (e: IllegalAccessException) {
             throw RuntimeException(e)
         }
+        super.onDetach()
     }
 
     override fun showValidationErrorDialog(phoneExample: String) {

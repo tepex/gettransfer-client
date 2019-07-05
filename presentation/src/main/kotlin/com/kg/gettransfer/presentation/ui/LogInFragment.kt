@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
@@ -19,12 +21,15 @@ import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EM
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
 import com.kg.gettransfer.presentation.view.LogInView
+
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
+
 import kotlinx.android.synthetic.main.fragment_log_in.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 import kotlinx.android.synthetic.main.view_input_password.*
 import kotlinx.serialization.json.JSON
+
 import timber.log.Timber
 
 /**
@@ -67,8 +72,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     @CallSuper
     override fun onDetach() {
-        super.onDetach()
-
+        /* dirty hack https://stackoverflow.com/a/15656428 */
         try {
             val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
             childFragmentManager.isAccessible = true
@@ -79,6 +83,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         } catch (e: IllegalAccessException) {
             throw RuntimeException(e)
         }
+        super.onDetach()
     }
 
     private fun initClickListeners() {

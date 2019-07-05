@@ -49,8 +49,7 @@ class SignUpCarrierFragment : MvpAppCompatFragment(), SignUpCarrierView {
 
     @CallSuper
     override fun onDetach() {
-        super.onDetach()
-
+        /* dirty hack https://stackoverflow.com/a/15656428 */
         try {
             val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
             childFragmentManager.isAccessible = true
@@ -61,6 +60,7 @@ class SignUpCarrierFragment : MvpAppCompatFragment(), SignUpCarrierView {
         } catch (e: IllegalAccessException) {
             throw RuntimeException(e)
         }
+        super.onDetach()
     }
 
     companion object {
