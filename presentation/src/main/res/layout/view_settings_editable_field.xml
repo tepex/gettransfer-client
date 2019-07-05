@@ -25,7 +25,7 @@
         android:layout_marginBottom="@dimen/settings_editable_field_input_layout_margins"
         android:layout_marginEnd="@dimen/settings_editable_field_input_layout_margins">
 
-        <android.support.design.widget.TextInputEditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/field_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
