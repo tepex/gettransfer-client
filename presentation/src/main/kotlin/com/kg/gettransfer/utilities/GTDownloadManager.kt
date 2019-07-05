@@ -53,10 +53,12 @@ class GTDownloadManager(val context: Context): KoinComponent {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Voucher"
-            val descriptionText = "Downloading voucher"
+            val name = context.getString(R.string.LNG_VOUCHER)
+            val descriptionText =
+                    context.getString(R.string.LNG_DOWNLOADING)
+                    .plus(" " + context.getString(R.string.LNG_VOUCHER))
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("download chanel", name, importance).apply {
+            val channel = NotificationChannel(CHANEL_ID, name, importance).apply {
                 description = descriptionText
             }
 
@@ -67,9 +69,9 @@ class GTDownloadManager(val context: Context): KoinComponent {
     }
 
     private fun createNotification() {
-        builder = NotificationCompat.Builder(context, "download chanel").apply {
-            setContentTitle("Voucher Download")
-            setContentText("Download in progress")
+        builder = NotificationCompat.Builder(context, CHANEL_ID).apply {
+            setContentTitle(context.getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER))
+            setContentText(context.getString(R.string.LNG_DOWNLOADING))
             setSmallIcon(R.drawable.ic_download)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             setAutoCancel(false)
@@ -97,11 +99,14 @@ class GTDownloadManager(val context: Context): KoinComponent {
 
     private fun showCompletedNotification(voucher: File, fileName: String, transferId: Long) {
         val pendingIntent = createPendingIntent(voucher)
-        builder.setContentIntent(pendingIntent)
-        builder.setContentTitle(fileName)
-        builder.setContentText("Download complete").setProgress(0, 0, false)
-        builder.setAutoCancel(true)
-        builder.setOngoing(false)
+        builder.apply {
+            setContentIntent(pendingIntent)
+            setContentTitle(fileName)
+            setContentText(context.getString(R.string.LNG_DOWNLOAD_COMPLETED))
+            setProgress(0, 0, false)
+            setAutoCancel(true)
+            setOngoing(false)
+        }
         notificationManager.notify(transferId.toInt(), builder.build())
     }
 
@@ -111,7 +116,7 @@ class GTDownloadManager(val context: Context): KoinComponent {
             flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
                     Intent.FLAG_ACTIVITY_CLEAR_TOP
-            setDataAndType(data, "application/pdf")
+            setDataAndType(data, VOUCHER_MIME_TYPE)
         }
 
         return PendingIntent.getActivity(context, 0, target, PendingIntent.FLAG_CANCEL_CURRENT)
@@ -130,8 +135,10 @@ class GTDownloadManager(val context: Context): KoinComponent {
     }
 
     companion object {
+        private const val CHANEL_ID = "voucher chanel"
         const val VOUCHERS_FOLDER = "Vouchers"
         private const val VOUCHER_EXTENSION = ".pdf"
         private const val VOUCHER_START_NAME = "voucher_"
+        private const val VOUCHER_MIME_TYPE = "application/pdf"
     }
 }

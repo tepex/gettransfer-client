@@ -480,4 +480,6 @@
     <string name="LNG_SIGNIN">Log in</string>
     <string name="LNG_SEND_EMAIL">Send email...</string>
     <string name="LNG_NO_EMAIL_APPS">There are no email apps installed.</string>
+    <string name="LNG_DOWNLOAD_COMPLETED">Download completed</string>
+    <string name="LNG_VOUCHER">Voucher</string>
 </resources>
