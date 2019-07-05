@@ -52,11 +52,11 @@ class CarrierTripModel(
 )
 
 class PassengerAccountModel(
-    fullName: String,
+    fullName: String?,
     email: String,
     phone: String,
     @SerializedName(PassengerAccountEntity.ID) @Expose val id: Long,
-    @SerializedName(PassengerAccountEntity.LAST_SEEN) @Expose val lastSeen: String
+    @SerializedName(PassengerAccountEntity.LAST_SEEN) @Expose val lastSeen: String?
 ) : ProfileModel(fullName, email, phone)
 
 fun PassengerAccountModel.map() = PassengerAccountEntity(id, ProfileEntity(fullName, email, phone), lastSeen)

@@ -6,7 +6,7 @@ import java.text.DateFormat
 data class PassengerAccountEntity(
     val id: Long,
     val profile: ProfileEntity,
-    var lastSeen: String
+    var lastSeen: String?
 ) {
 
     companion object {
@@ -17,7 +17,7 @@ data class PassengerAccountEntity(
 }
 
 fun PassengerAccount.map(dateFormat: DateFormat) =
-    PassengerAccountEntity(id, profile.map(), dateFormat.format(lastSeen))
+    PassengerAccountEntity(id, profile.map(), lastSeen?.let { dateFormat.format(it) })
 
 fun PassengerAccountEntity.map(dateFormat: DateFormat) =
-    PassengerAccount(id, profile.map(), dateFormat.parse(lastSeen))
+    PassengerAccount(id, profile.map(), lastSeen?.let { dateFormat.parse(lastSeen) })

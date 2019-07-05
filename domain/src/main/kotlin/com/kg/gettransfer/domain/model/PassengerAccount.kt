@@ -5,10 +5,10 @@ import java.util.Date
 data class PassengerAccount(
     override val id: Long,
     val profile: Profile,
-    val lastSeen: Date
+    val lastSeen: Date?
 ) : Entity {
 
     companion object {
-        val EMPTY = PassengerAccount(0, Profile.EMPTY.copy(), Date())
+        val EMPTY = PassengerAccount(0, Profile.EMPTY.copy(), null)
     }
 }
