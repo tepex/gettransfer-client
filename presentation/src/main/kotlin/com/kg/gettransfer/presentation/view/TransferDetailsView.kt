@@ -6,9 +6,9 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.TransferModel
+import java.io.InputStream
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface TransferDetailsView: BaseView, RouteView {

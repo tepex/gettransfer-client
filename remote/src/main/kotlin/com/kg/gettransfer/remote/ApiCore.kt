@@ -35,6 +35,7 @@ class ApiCore : KoinComponent {
 
     private lateinit var apiKey: String
     private val gson = GsonBuilder()
+            .setLenient()
             .registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer())
             .create()
 

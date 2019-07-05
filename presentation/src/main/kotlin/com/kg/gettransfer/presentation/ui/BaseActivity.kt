@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -419,13 +418,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun closePopUp() = popupWindowRate.dismiss()
 
-    companion object {
-        const val TOOLBAR_NO_TITLE = 0
-        const val PLAY_MARKET_RATE = 42
-
-        private const val MIME_TYPE_VOUCHER = "application/pdf"
-    }
-
     protected fun setStatusBarColor(@ColorRes color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -456,27 +448,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             .replace(id, fragment, tag)
             .commitAllowingStateLoss()
 
-    protected fun downloadVoucher(transferId: Long) {
-        val apiUrl =
-                if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home")
-                    getString(R.string.api_url_prod)
-                else getString(R.string.api_url_demo)
-
-        val url = apiUrl + Api.API_VOUCHER + transferId
-
-        setupDownloadManager(url, null, MIME_TYPE_VOUCHER)
-    }
-
-    protected fun setupDownloadManager(url: String, contentDisposition: String?, mimeType: String?) {
-        val request = DownloadManager.Request(Uri.parse(url)).apply {
-            allowScanningByMediaScanner()
-            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            setDestinationInExternalPublicDir(
-                    Environment.DIRECTORY_DOWNLOADS,
-                    URLUtil.guessFileName(url, contentDisposition, mimeType))
-        }
-        val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        dm.enqueue(request)
-        longToast(getString(R.string.LNG_DOWNLOADING))
+    companion object {
+        const val TOOLBAR_NO_TITLE = 0
+        const val PLAY_MARKET_RATE = 42
     }
 }

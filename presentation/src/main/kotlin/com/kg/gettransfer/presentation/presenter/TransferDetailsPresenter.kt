@@ -396,6 +396,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     override fun onSocketDisconnected() {}
 
+    fun onDownloadVoucherClick() = downloadManager.downloadVoucher(transferId)
+
     companion object {
         const val FIELD_EMAIL = "field_email"
         const val FIELD_PHONE = "field_phone"

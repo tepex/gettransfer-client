@@ -9,7 +9,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.Location
-import com.kg.gettransfer.utilities.LocaleManager
 
 import com.kg.gettransfer.logging.LoggingRepositoryImpl
 
@@ -32,6 +31,7 @@ import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 
 import com.kg.gettransfer.presentation.mapper.*
+import com.kg.gettransfer.utilities.*
 
 import com.kg.gettransfer.sys.domain.GetBuildsConfigsInteractor
 import com.kg.gettransfer.sys.domain.GetOrderMinimumInteractor
@@ -41,8 +41,6 @@ import com.kg.gettransfer.sys.domain.GetTermsUrlInteractor
 import com.kg.gettransfer.utilities.Analytics
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import com.kg.gettransfer.utilities.GTNotificationManager
-import com.kg.gettransfer.utilities.MainState
 
 import kotlinx.coroutines.Dispatchers
 
@@ -182,6 +180,7 @@ val androidModule = module {
     single { PassengersDelegate() }
     single { MainState() }
     single { AccountManager() }
+    single { GTDownloadManager(androidApplication().applicationContext) }
 }
 
 val testModule = module {

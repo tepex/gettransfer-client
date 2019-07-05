@@ -12,8 +12,10 @@ import com.kg.gettransfer.remote.model.TransferNewWrapperModel
 import com.kg.gettransfer.remote.model.TransfersModel
 import com.kg.gettransfer.remote.model.TransferWrapperModel
 import com.kg.gettransfer.remote.model.map
+import okhttp3.ResponseBody
 
 import org.koin.core.get
+import java.io.InputStream
 
 class TransferRemoteImpl : TransferRemote {
     private val core = get<ApiCore>()
@@ -58,5 +60,10 @@ class TransferRemoteImpl : TransferRemote {
         @Suppress("UnsafeCallOnNullableType")
         val transfers: List<TransferModel> = response.data!!.transfers
         return transfers.map { it.map() }
+    }
+
+    override suspend fun downloadVoucher(transferId: Long): InputStream {
+        val response: ResponseBody = core.tryTwice { core.api.downloadVoucher(transferId) }
+        return response.byteStream()
     }
 }

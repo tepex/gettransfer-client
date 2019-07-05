@@ -93,4 +93,6 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     fun onDetailsClick() {
         router.newChainFromMain(Screens.Details(transferId))
     }
+
+    fun onDownloadVoucherClick() = downloadManager.downloadVoucher(transferId)
 }

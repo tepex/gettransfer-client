@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.TargetApi
+import android.app.DownloadManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -14,10 +15,12 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
+import com.kg.gettransfer.utilities.GTDownloadManager.Companion.VOUCHERS_FOLDER
 import kotlinx.android.synthetic.main.activity_handle_url.*
 import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.io.File
 
 class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.PermissionCallbacks,
         EasyPermissions.RationaleCallbacks {
@@ -117,6 +120,27 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
             setupDownloadManager(url, contentDisposition, mimetype)
         }
     }
+
+    private fun setupDownloadManager(url: String, contentDisposition: String?, mimeType: String?) {
+        val folderName = getVouchersFolderName()
+        val fileName = URLUtil.guessFileName(url, contentDisposition, mimeType)
+
+        val request = DownloadManager.Request(Uri.parse(url)).apply {
+            allowScanningByMediaScanner()
+            setMimeType(mimeType)
+            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            setDestinationInExternalPublicDir(
+                    folderName,
+                    fileName)
+        }
+        val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        dm.enqueue(request)
+        longToast(getString(R.string.LNG_DOWNLOADING))
+    }
+
+    private fun getVouchersFolderName(): String
+            = getString(R.string.app_name) + File.separator + VOUCHERS_FOLDER
+
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         onPermissionDenied()

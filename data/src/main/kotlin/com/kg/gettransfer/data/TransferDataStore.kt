@@ -3,6 +3,7 @@ package com.kg.gettransfer.data
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
 import org.koin.core.KoinComponent
+import java.io.InputStream
 
 interface TransferDataStore : KoinComponent {
 
@@ -19,4 +20,6 @@ interface TransferDataStore : KoinComponent {
     suspend fun getTransfersActive(): List<TransferEntity>
 
     fun clearTransfersCache()
+
+    suspend fun downloadVoucher(transferId: Long): InputStream
 }
