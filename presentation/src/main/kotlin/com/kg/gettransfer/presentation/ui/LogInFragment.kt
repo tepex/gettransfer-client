@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,6 +63,22 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     override fun onResume() {
         super.onResume()
         emailLayout.fieldText.requestFocus()
+    }
+
+    @CallSuper
+    override fun onDetach() {
+        super.onDetach()
+
+        try {
+            val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
+            childFragmentManager.isAccessible = true
+            childFragmentManager.set(this, null)
+
+        } catch (e: NoSuchFieldException) {
+            throw RuntimeException(e)
+        } catch (e: IllegalAccessException) {
+            throw RuntimeException(e)
+        }
     }
 
     private fun initClickListeners() {

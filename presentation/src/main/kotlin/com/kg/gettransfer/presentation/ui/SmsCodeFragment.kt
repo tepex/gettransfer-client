@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.StringRes
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -71,6 +72,22 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         btnDone.setThrottledClickListener {
             it.hideKeyboard()
             presenter.onLoginClick()
+        }
+    }
+
+    @CallSuper
+    override fun onDetach() {
+        super.onDetach()
+
+        try {
+            val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
+            childFragmentManager.isAccessible = true
+            childFragmentManager.set(this, null)
+
+        } catch (e: NoSuchFieldException) {
+            throw RuntimeException(e)
+        } catch (e: IllegalAccessException) {
+            throw RuntimeException(e)
         }
     }
 
