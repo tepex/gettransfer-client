@@ -15,6 +15,7 @@ import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
 import java.util.Currency
+import kotlin.math.roundToLong
 
 class Analytics(
     private val context: Context,
@@ -75,15 +76,6 @@ class Analytics(
             logEvent(EVENT_MAKE_PAYMENT, bundle, map)
         }
 
-        private fun sendRevenue() {
-            val priceMicros = price * 1000000
-            val revenue = Revenue.newBuilderWithMicros(priceMicros.toLong(), currency)
-                    .withProductID(transactionId)
-                    .withQuantity(1)
-                    .build()
-            YandexMetrica.reportRevenue(revenue)
-        }
-
         private fun sendToAppsFlyer() {
             val map = mutableMapOf<String, Any?>()
             map[TRANSACTION_ID] = transactionId
@@ -110,6 +102,15 @@ class Analytics(
             logEventToYandex(EVENT_ECOMMERCE_PURCHASE, map)
 
             sendRevenue()
+        }
+
+        private fun sendRevenue() {
+            val priceMicros = price.roundToLong() * 1000000L // priceMicros = price × 10^6
+            val revenue = Revenue.newBuilderWithMicros(priceMicros, currency)
+                    .withProductID(requestType)
+                    .withQuantity(1)
+                    .build()
+            YandexMetrica.reportRevenue(revenue)
         }
 
         private fun sendToFacebook() {
