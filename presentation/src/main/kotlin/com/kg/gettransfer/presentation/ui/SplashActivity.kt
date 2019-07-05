@@ -8,21 +8,32 @@ import android.support.annotation.CallSuper
 
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
+
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.BuildConfig
-import net.hockeyapp.android.CrashManager
-import net.hockeyapp.android.CrashManagerListener
-import org.koin.android.ext.android.inject
-import timber.log.Timber
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.presentation.presenter.SplashPresenter
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SplashView
+
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
+import com.kg.gettransfer.utilities.LocaleManager
+
+import java.util.Locale
+
+import net.hockeyapp.android.CrashManager
+import net.hockeyapp.android.CrashManagerListener
+
+import org.koin.android.ext.android.inject
+
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
+
+import timber.log.Timber
 
 class SplashActivity : MvpAppCompatActivity(), SplashView {
     @InjectPresenter
@@ -33,6 +44,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
 
     private val navigatorHolder: NavigatorHolder by inject()
     private val navigator = SupportAppNavigator(this, Screens.NOT_USED)
+    private val localeManager: LocaleManager by inject()
 
     private var updateAppDialogIsShowed = false
 
@@ -63,8 +75,9 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
 
         if (!BuildConfig.DEBUG) {
-            CrashManager.register(applicationContext,
-                    object : CrashManagerListener() { override fun getDescription() = logsProvider.getLog() }
+            CrashManager.register(
+                applicationContext,
+                object : CrashManagerListener() { override fun getDescription() = logsProvider.getLog() }
             )
         }
     }
@@ -72,8 +85,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
     override fun onNeedAppUpdateInfo() {
         updateAppDialogIsShowed = true
         Utils.showAlertUpdateApp(this) {
-            if (it) redirectToUpdateApp()
-            else presenter.startApp()
+            if (it) redirectToUpdateApp() else presenter.startApp()
         }
     }
 
@@ -98,7 +110,8 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
                 })
     }
 
-    override fun dispatchAppState() {
+    override fun dispatchAppState(locale: Locale) {
+        localeManager.updateResources(this, locale)
         val intent = Intent(AppLifeCycleObserver.APP_STATE).apply { putExtra(AppLifeCycleObserver.STATUS, true) }
         Handler().postDelayed({ LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent) }, 1000)
     }
@@ -109,5 +122,4 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
             true
         } else false
     }
-
 }

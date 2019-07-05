@@ -16,6 +16,7 @@ import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarGridAdapter
 import com.kg.gettransfer.presentation.adapter.ClickOnDateHandler
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
+import io.sentry.Sentry
 import kotlinx.android.synthetic.main.carrier_trips_calendar_month_fragment.*
 import org.koin.android.ext.android.inject
 import java.util.Calendar
@@ -103,6 +104,6 @@ class CarrierTripsCalendarMonthFragment : Fragment() {
             ?: GTDayOfWeek.getWeekDays().first()).offset
 
     fun selectDate(selectedDate: String) {
-        mAdapterCarrierTripsCalendar!!.selectDate(selectedDate)
+        mAdapterCarrierTripsCalendar?.selectDate(selectedDate)
     }
 }

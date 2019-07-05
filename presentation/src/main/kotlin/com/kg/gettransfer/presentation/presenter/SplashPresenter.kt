@@ -17,6 +17,8 @@ import com.kg.gettransfer.presentation.view.SplashView
 
 import com.kg.gettransfer.sys.domain.GetBuildsConfigsInteractor
 
+import java.util.Locale
+
 import kotlinx.coroutines.Job
 
 import org.koin.core.KoinComponent
@@ -40,9 +42,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
 
 
     fun onLaunchContinue() {
-        viewState.initBuildConfigs(object :
-                LateAccessLogs { override fun getLog() = logsInteractor.onLogRequested() }
-        )
+        viewState.initBuildConfigs(object : LateAccessLogs { override fun getLog() = logsInteractor.onLogRequested() })
         /* Check PUSH notification */
         viewState.checkLaunchType()
         reviewInteractor.shouldAskRateInMarket = shouldAskForRateApp()
@@ -52,6 +52,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     private fun onAppLaunched() {
         utils.launchSuspend {
             utils.asyncAwait { sessionInteractor.coldStart() }
+
             if (checkNeededUpdateApp()) viewState.onNeedAppUpdateInfo() else startApp()
         }
     }
@@ -65,7 +66,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     }
 
     fun startApp() {
-        viewState.dispatchAppState()
+        viewState.dispatchAppState(sessionInteractor.locale)
         openStartScreen()
     }
 

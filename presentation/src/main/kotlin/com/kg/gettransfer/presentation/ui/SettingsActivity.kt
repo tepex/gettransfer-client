@@ -24,11 +24,15 @@ import com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
+import java.util.Locale
+
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_communication_button.*
 import kotlinx.android.synthetic.main.view_settings_field_picker.view.*
 import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
+
+import timber.log.Timber
 
 class SettingsActivity : BaseActivity(), SettingsView {
 
@@ -97,6 +101,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun initGeneralSettingsLayout() {
+        Timber.d("current locale: ${Locale.getDefault()}")
         settingsCurrency.setOnClickListener { presenter.onCurrencyClicked() }
         settingsBtnLogout.setOnClickListener { presenter.onLogout() }
         settingsBtnSupport.setOnClickListener { presenter.sendEmail(null, null) }
@@ -200,15 +205,15 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun setLocales(locales: List<LocaleModel>) =
-            Utils.setLocalesDialogListener(this, settingsLanguage, locales) {
-                localeManager.updateResources(this, presenter.changeLocale(it))
-            }
+        Utils.setLocalesDialogListener(this, settingsLanguage, locales) {
+            localeManager.updateResources(this, presenter.changeLocale(it))
+        }
 
     override fun setDaysOfWeek(daysOfWeek: List<CharSequence>) =
-            Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { presenter.changeFirstDayOfWeek(it) }
+        Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { presenter.changeFirstDayOfWeek(it) }
 
     override fun setEndpoints(endpoints: List<EndpointModel>) =
-            Utils.setEndpointsDialogListener(this, settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
+        Utils.setEndpointsDialogListener(this, settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
 
     override fun setCurrency(currency: String) { settingsCurrency.field_text.text = currency }
 
