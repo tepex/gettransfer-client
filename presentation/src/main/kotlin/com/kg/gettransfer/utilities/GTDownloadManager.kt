@@ -40,10 +40,13 @@ class GTDownloadManager(val context: Context): KoinComponent {
                 builder.setProgress(0, 0, true)
                 notify(transferId.toInt(), builder.build())
 
-                utils.asyncAwait { transferInteractor.downloadVoucher(transferId) }
-                        .isSuccess().let {
-                            saveVoucher(it, transferId)
-                        }
+                val result = utils.asyncAwait { transferInteractor.downloadVoucher(transferId) }
+                if (result.isSuccess() != null) {
+                    saveVoucher(result.model, transferId)
+                } else {
+                    builder.setAutoCancel(true)
+                    builder.setOngoing(false)
+                }
             }
         }
     }
@@ -79,27 +82,35 @@ class GTDownloadManager(val context: Context): KoinComponent {
         content?.let {
             val folderName = getVouchersFolderName()
             val root = getVouchersFolder(folderName)
-            val voucher = File(root, "$VOUCHER_START_NAME$transferId$VOUCHER_EXTENSION")
+            val fileName = "$VOUCHER_START_NAME$transferId$VOUCHER_EXTENSION"
+            val voucher = File(root, fileName)
 
             content.use { input ->
                 voucher.outputStream().use {
                     input.copyTo(it)
 
-                    val pendingIntent = createPendingIntent(voucher)
-                    builder.setContentIntent(pendingIntent)
-                    builder.setContentText("Download complete").setProgress(0, 0, false)
-                    builder.setAutoCancel(true)
-                    builder.setOngoing(false)
-                    notificationManager.notify(transferId.toInt(), builder.build())
+                    showCompletedNotification(voucher, fileName, transferId)
                 }
             }
         }
     }
 
+    private fun showCompletedNotification(voucher: File, fileName: String, transferId: Long) {
+        val pendingIntent = createPendingIntent(voucher)
+        builder.setContentIntent(pendingIntent)
+        builder.setContentTitle(fileName)
+        builder.setContentText("Download complete").setProgress(0, 0, false)
+        builder.setAutoCancel(true)
+        builder.setOngoing(false)
+        notificationManager.notify(transferId.toInt(), builder.build())
+    }
+
     private fun createPendingIntent(voucher: File): PendingIntent {
         val data = FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority), voucher)
         val target = Intent(Intent.ACTION_VIEW).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP
             setDataAndType(data, "application/pdf")
         }
 
@@ -110,7 +121,8 @@ class GTDownloadManager(val context: Context): KoinComponent {
             context.getString(R.string.app_name) + File.separator + VOUCHERS_FOLDER
 
     private fun getVouchersFolder(downloadFolder: String): File {
-        val file = Environment.getExternalStoragePublicDirectory(downloadFolder)
+        val storage = Environment.getExternalStorageDirectory()
+        val file = File(storage, downloadFolder)
         if (!file.mkdirs()) {
             Timber.e("Directory not created")
         }
