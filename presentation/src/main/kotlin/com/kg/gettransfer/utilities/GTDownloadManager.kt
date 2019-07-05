@@ -2,11 +2,14 @@ package com.kg.gettransfer.utilities
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Environment
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
+import android.support.v4.content.FileProvider
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.interactor.TransferInteractor
@@ -66,7 +69,8 @@ class GTDownloadManager(val context: Context): KoinComponent {
             setContentText("Download in progress")
             setSmallIcon(R.drawable.ic_download)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            setAutoCancel(true)
+            setAutoCancel(false)
+            setOngoing(true)
             priority = NotificationCompat.PRIORITY_LOW
         }
     }
@@ -80,11 +84,26 @@ class GTDownloadManager(val context: Context): KoinComponent {
             content.use { input ->
                 voucher.outputStream().use {
                     input.copyTo(it)
+
+                    val pendingIntent = createPendingIntent(voucher)
+                    builder.setContentIntent(pendingIntent)
                     builder.setContentText("Download complete").setProgress(0, 0, false)
+                    builder.setAutoCancel(true)
+                    builder.setOngoing(false)
                     notificationManager.notify(transferId.toInt(), builder.build())
                 }
             }
         }
+    }
+
+    private fun createPendingIntent(voucher: File): PendingIntent {
+        val data = FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority), voucher)
+        val target = Intent(Intent.ACTION_VIEW).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            setDataAndType(data, "application/pdf")
+        }
+
+        return PendingIntent.getActivity(context, 0, target, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
     private fun getVouchersFolderName(): String =
