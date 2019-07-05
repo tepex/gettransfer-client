@@ -90,7 +90,7 @@ class MainRequestFragment :
         ivSetMyLocation.setOnClickListener       {
             //mParent.checkPermission()
             //mPresenter.updateCurrentLocation()
-            switch_mode_.isChecked = true
+            switcher_map_.switch_mode_.isChecked = true
         }
         fl_DeleteReturnDate.setOnClickListener   { clearReturnDate() }
     }
