@@ -234,7 +234,7 @@ class MainActivity :
                 }
                 supportFragmentManager.fragments.firstOrNull()?.let { requestView = null;remove(it) }
             }
-        }?.commit()
+        }?.commitAllowingStateLoss()
     }
 
     private fun isFragmentExists() =
