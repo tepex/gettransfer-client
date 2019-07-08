@@ -1026,7 +1026,7 @@
 	<dimen name="payment_button_pay_margin_top">16dp</dimen>
 	<dimen name="payment_button_pay_margin_start">30dp</dimen>
 	<dimen name="payment_button_pay_margin_end">30dp</dimen>
-	<dimen name="payment_button_pay_margin_bottom">24dp</dimen>
+	<dimen name="payment_button_pay_margin_bottom">16dp</dimen>
 	<dimen name="payment_offer_tiny_cardCornerRadius">8dp</dimen>
 	<dimen name="payment_offer_tiny_cardElevation">10dp</dimen>
 	<dimen name="payment_offer_tiny_ivCarPhoto_width">130dp</dimen>
@@ -1143,6 +1143,6 @@
 	<dimen name="fragment_sms_pin_view_item_width">35dp</dimen>
 	<dimen name="fragment_sms_pin_view_line_width">1dp</dimen>
     <dimen name="payment_car_name_min_size">9sp</dimen>
-    <dimen name="payment_car_name_max_size">16sp</dimen>
+    <dimen name="payment_car_name_max_size">14sp</dimen>
 
 </resources>

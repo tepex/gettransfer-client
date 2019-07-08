@@ -63,6 +63,8 @@ import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.layout_payments.*
 import kotlinx.android.synthetic.main.layout_prices.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
+import kotlinx.android.synthetic.main.payment_refund.*
+import kotlinx.android.synthetic.main.paymet_gtr_bonus.*
 import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
 import kotlinx.android.synthetic.main.view_currency_converting_info.view.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
