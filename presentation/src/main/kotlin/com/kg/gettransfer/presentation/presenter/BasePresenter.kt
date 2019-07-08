@@ -18,7 +18,6 @@ import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.mapper.OfferMapper
-import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_REJECTED
@@ -51,7 +50,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
     protected val systemInteractor: SystemInteractor by inject()
-    protected val transferMapper: TransferMapper by inject()
     protected val offerMapper: OfferMapper by inject()
     protected val notificationManager: GTNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()

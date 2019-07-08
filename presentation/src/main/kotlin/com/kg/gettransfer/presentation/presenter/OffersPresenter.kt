@@ -59,7 +59,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                                             transfer.paidPercentage > 0))
                                 checkIfNeedNewChain()
                             else {
-                                viewState.setTransfer(transferMapper.toView(transfer))
+                                viewState.setTransfer(transfer.map(systemInteractor.transportTypes.map { it.map() }))
                                 checkNewOffersSuspended(transfer)
                             }
                         }

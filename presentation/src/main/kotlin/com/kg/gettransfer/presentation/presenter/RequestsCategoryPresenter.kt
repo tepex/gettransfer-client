@@ -1,15 +1,17 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.model.Transfer
+
+import com.kg.gettransfer.presentation.model.map
+
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
-import timber.log.Timber
 
 @InjectViewState
 class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
@@ -21,20 +23,17 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     private var transfers: List<Transfer>? = null
     private var eventsCount: Map<Long, Int>? = null
 
-    @CallSuper
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.blockInterface(true, true)
     }
 
-    @CallSuper
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
         getTransfers()
     }
 
-    @CallSuper
     override fun detachView(view: RequestsFragmentView?) {
         super.detachView(view)
         transfers = null
@@ -54,16 +53,16 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     }
 
     private suspend fun prepareDataAsync() {
-        transfers?.let {
-            if (it.isNotEmpty()) {
-                utils
-                    .compute { transfers?.map { t -> transferMapper.toView(t) } }
-                    ?.also { viewList ->
-                        viewState.updateTransfers(viewList)
-                        updateEventsCount()
-                    }
-            } else
+        transfers?.let { trs ->
+            if (trs.isNotEmpty()) {
+                val transportTypes = systemInteractor.transportTypes.map { it.map() }
+                utils.compute { transfers?.map { it.map(transportTypes) } }?.also { viewList ->
+                    viewState.updateTransfers(viewList)
+                    updateEventsCount()
+                }
+            } else {
                 viewState.onEmptyList()
+            }
         }
     }
 
@@ -89,7 +88,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     }
 
     fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int) {
-        Timber.d("Open Transfer details. id: $id")
+        log.debug("Open Transfer details. id: $id")
         if (status == Transfer.Status.NEW && paidPercentage == 0) {
             router.navigateTo(Screens.Offers(id))
         } else {

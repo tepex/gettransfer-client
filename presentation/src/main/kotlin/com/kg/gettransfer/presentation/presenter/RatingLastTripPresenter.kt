@@ -13,7 +13,10 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.prefs.PreferencesImpl
 
 import com.kg.gettransfer.presentation.mapper.RouteMapper
+
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.map
+
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.RatingLastTripView
 import com.kg.gettransfer.presentation.view.Screens
@@ -27,6 +30,7 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     private val reviewInteractor: ReviewInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
     private val routeMapper: RouteMapper by inject()
+    private val transportTypes = systemInteractor.transportTypes.map { it.map() }
 
     internal var transferId: Long = 0L
     private var offerId: Long
@@ -42,18 +46,17 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
 
     private fun getTransferAndSetupReview() {
         utils.launchSuspend {
-            fetchResultOnly { transferInteractor.getTransfer(transferId) }
-                    .isSuccess()
-                    ?.let { setupReview(it) }
+            fetchResultOnly { transferInteractor.getTransfer(transferId) }.isSuccess()?.let { setupReview(it) }
         }
     }
 
     private suspend fun setupReview(transfer: Transfer) {
         val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
         viewState.setupReviewForLastTrip(
-                transferMapper.toView(transfer),
-                LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
-                routeModel)
+            transfer.map(transportTypes),
+            LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
+            routeModel
+        )
     }
 
     private suspend fun createRouteModel(transfer: Transfer): RouteModel? {
@@ -81,7 +84,7 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                         transfer.to?.name,
                         fromPoint,
                         toPoint,
-                        SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
+                        SystemUtils.formatDateTime(transfer.map(transportTypes).dateTime)
                 )
             }
         }

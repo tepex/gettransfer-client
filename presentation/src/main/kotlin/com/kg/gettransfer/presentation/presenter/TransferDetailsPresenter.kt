@@ -103,7 +103,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         transfer.to?.let { toPoint = cityPointMapper.toView(it) }
         hourlyDuration = transfer.duration
 
-        transferModel = transferMapper.toView(transfer)
+        transferModel = transfer.map(systemInteractor.transportTypes.map { it.map() })
     }
 
     private suspend fun setOffer(transferId: Long) =
