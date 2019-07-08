@@ -195,7 +195,7 @@
                 android:id="@+id/children_seat_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="@string/LNG_RIDE_CHILDREN"
+                app:hint="@string/LNG_NO_SEATS_REQUIRED"
                 app:isFocusable="false"
                 app:icon_img="@drawable/ic_child_seat"
                 app:showChevron="true"/>
@@ -204,7 +204,7 @@
                 android:id="@+id/sign_name_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="@string/LNG_RIDE_SIGN"
+                app:hint="@string/LNG_RIDE_NAME_PLACEHOLDER"
                 app:icon_img="@drawable/ic_passport" />
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
