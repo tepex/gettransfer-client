@@ -50,11 +50,13 @@
                 </LinearLayout>
 
                 <FrameLayout
-                        android:id="@+id/fl_drivers_count_text"
-                        android:layout_width="match_parent"
-                        android:visibility="gone"
-                        android:background="@color/colorPrimary"
-                        android:layout_height="@dimen/activity_offers_drivers_connecting_text_height">
+                    android:id="@+id/fl_drivers_count_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/activity_offers_drivers_connecting_text_height"
+                    android:background="@color/colorPrimary"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
                     <ProgressBar
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -72,8 +74,8 @@
                         android:gravity="center"
                         android:paddingStart="50dp"
                         android:paddingEnd="50dp"
-                        tools:text="Соединяем с 33 ближайшими перевозчиками"
-                        android:textColor="@color/colorWhite" />
+                        android:textColor="@color/colorWhite"
+                        tools:text="Соединяем с 33 ближайшими перевозчиками" />
                 </FrameLayout>
 
                 <LinearLayout

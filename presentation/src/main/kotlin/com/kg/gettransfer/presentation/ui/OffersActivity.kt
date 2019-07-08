@@ -161,24 +161,27 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun setOffers(offers: List<OfferItemModel>) {
         hideSheetOfferDetails()
-        rvOffers.adapter = OffersAdapter(offers.toMutableList()) { offer, showDetails ->
-            presenter.onSelectOfferClicked(
-                offer,
-                showDetails
-            )
-        }
+        setupAdapter(offers)
+        setupPriceOrDriversInfo(offers)
+    }
+
+    private fun setupPriceOrDriversInfo(offers: List<OfferItemModel>) {
         if (offers.isNotEmpty()) {
             noOffers.isVisible = false
-            if (offers.any { it is OfferModel }) {
-                fl_drivers_count_text.isVisible = false
-                cl_fixPrice.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
-            } else {
-                fl_drivers_count_text.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
-                cl_fixPrice.isVisible = false
-            }
+            fl_drivers_count_text.isVisible = false
+            cl_fixPrice.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
         } else {
             setAnimation()
             fl_drivers_count_text.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
+        }
+    }
+
+    private fun setupAdapter(offers: List<OfferItemModel>) {
+        rvOffers.adapter = OffersAdapter(offers.toMutableList()) { offer, showDetails ->
+            presenter.onSelectOfferClicked(
+                    offer,
+                    showDetails
+            )
         }
     }
 
