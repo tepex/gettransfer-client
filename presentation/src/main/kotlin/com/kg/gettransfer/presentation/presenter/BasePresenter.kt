@@ -17,7 +17,6 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.presentation.delegate.AccountManager
-import com.kg.gettransfer.presentation.mapper.BookNowOfferMapper
 import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.mapper.TransferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -29,6 +28,8 @@ import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
 import com.kg.gettransfer.utilities.GTNotificationManager
 
+import java.io.InputStream
+
 import kotlinx.coroutines.Job
 
 import org.koin.core.KoinComponent
@@ -39,7 +40,6 @@ import org.koin.core.parameter.parametersOf
 import org.slf4j.Logger
 
 import ru.terrakok.cicerone.Router
-import java.io.InputStream
 
 open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     OfferEventListener,
@@ -53,7 +53,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val systemInteractor: SystemInteractor by inject()
     protected val transferMapper: TransferMapper by inject()
     protected val offerMapper: OfferMapper by inject()
-    protected val bookNowOfferMapper: BookNowOfferMapper by inject()
     protected val notificationManager: GTNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()

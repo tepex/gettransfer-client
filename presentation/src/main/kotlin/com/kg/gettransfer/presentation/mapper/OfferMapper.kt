@@ -10,7 +10,6 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 import org.koin.core.get
 
 open class OfferMapper : Mapper<OfferModel, Offer> {
-    private val priceMapper   = get<PriceMapper>()
     private val carrierMapper = get<CarrierMapper>()
     private val vehicleMapper = get<VehicleMapper>()
     private val profileMapper = get<ProfileMapper>()
@@ -25,7 +24,7 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
             type.refreshments,
             type.charger,
             SystemUtils.formatDateTime(type.createdAt),
-            priceMapper.toView(type.price),
+            type.price,
             type.ratings?.let { it.map() },
             type.passengerFeedback,
             carrierMapper.toView(type.carrier),

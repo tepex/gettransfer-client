@@ -17,7 +17,6 @@ import java.util.Date
 import org.koin.core.get
 
 open class TransferMapper : Mapper<TransferModel, Transfer> {
-    private val bookNowOfferMapper  = get<BookNowOfferMapper>()
     private val systemTransportTypes = get<SystemInteractor>().transportTypes
 
     override fun toView(type: Transfer): TransferModel {
@@ -58,7 +57,7 @@ open class TransferMapper : Mapper<TransferModel, Transfer> {
             remainsToPay          = type.remainsToPay?.def,
             paidPercentage        = type.paidPercentage,
             watertaxi             = type.watertaxi,
-            bookNowOffers         = type.bookNowOffers.map { bookNowOfferMapper.toView(it) },
+            bookNowOffers         = type.bookNowOffers.map { it.map() },
             offersCount           = type.offersCount,
 /* ================================================== */
             relevantCarriersCount = type.relevantCarriersCount,

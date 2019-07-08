@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
@@ -11,19 +9,20 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
 
+import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.BookNowOfferModel
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-import org.koin.core.inject
 
-import timber.log.Timber
 import java.util.Date
+
+import org.koin.core.inject
 
 @InjectViewState
 class OffersPresenter : BasePresenter<OffersView>() {
@@ -43,10 +42,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private var sortHigherToLower = false
     var isViewRoot: Boolean = false
 
-    @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
-        Timber.d("OffersPresenter.attachView")
+        log.debug("OffersPresenter.attachView")
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
@@ -194,7 +192,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
         viewState.setOffers(offers.map {
             when (it) {
                 is Offer -> offerMapper.toView(it)
-                is BookNowOffer -> bookNowOfferMapper.toView(it)
+                is BookNowOffer -> it.map()
             }
         })
         viewState.setSortState(sortCategory, sortHigherToLower)

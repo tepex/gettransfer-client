@@ -142,19 +142,16 @@ val domainModule = module {
 }
 
 val mappersModule = module {
-    single { BookNowOfferMapper() }
     single { CarrierMapper() }
     single { CarrierTripBaseMapper() }
     single { CarrierTripMapper() }
     single { CarrierTripsListItemsMapper() }
     single { CarrierTripsCalendarItemsMapper() }
-    single { MoneyMapper() }
     single { OfferMapper() }
     single { PassengerAccountMapper() }
     single { PaymentRequestMapper() }
     single { PaymentStatusRequestMapper() }
     single { PointMapper() }
-    single { PriceMapper() }
     single { ProfileMapper() }
     single { ReviewRateMapper() }
     single { RouteMapper() }

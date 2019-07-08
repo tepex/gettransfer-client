@@ -1,10 +1,11 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
+
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.models.PayPalRequest
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
@@ -12,17 +13,20 @@ import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
+
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
+
 import io.sentry.Sentry
 import org.koin.core.inject
-import timber.log.Timber
 
 @InjectViewState
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
@@ -51,7 +55,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private lateinit var paymentRequest: PaymentRequestModel
 
-    @CallSuper
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
         viewState.blockInterface(false)
@@ -75,7 +78,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         enablePaymentBtn()
         transfer?.paymentPercentages?.let { percentages ->
             offer?.let { offer ->
-                if (isBookNowOffer) viewState.setBookNowOffer(bookNowOfferMapper.toView(offer as BookNowOffer))
+                if (isBookNowOffer) viewState.setBookNowOffer((offer as BookNowOffer).map())
                 else viewState.setOffer(offerMapper.toView(offer as Offer), percentages)
             }
         }
@@ -87,7 +90,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    @CallSuper
     override fun onDestroy() {
         super.onDestroy()
         accountManager.initTempUser()
@@ -134,7 +136,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                     val paymentResult =
                         utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(it)) }
                     if (paymentResult.error != null) {
-                        Timber.e(paymentResult.error!!)
+                        log.error("get payment error", paymentResult.error!!)
                         viewState.setError(paymentResult.error!!)
                     } else {
                         url = paymentResult.model.url
@@ -214,7 +216,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private suspend fun createNewPayment() {
         val result = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
         if (result.error != null) {
-            Timber.e(result.error!!)
+            log.error("create new payment error", result.error!!)
             viewState.setError(result.error!!)
             viewState.blockInterface(false)
         } else {
