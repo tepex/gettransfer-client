@@ -1,11 +1,15 @@
 package com.kg.gettransfer.presentation.model
 
+import com.kg.gettransfer.domain.model.BookNowOffer
+import com.kg.gettransfer.domain.model.Money
+import com.kg.gettransfer.domain.model.Price
+
 sealed class OfferItemModel
 
 data class BookNowOfferModel(
     val amount: Double,
-    val base: MoneyModel,
-    val withoutDiscount: MoneyModel?,
+    val base: Money,
+    val withoutDiscount: Money?,
     var transportType: TransportTypeModel
 ) : OfferItemModel()
 
@@ -18,7 +22,7 @@ data class OfferModel(
     val refreshments: Boolean,
     val charger: Boolean,
     val createdAt: String,
-    val price: PriceModel,
+    val price: Price,
     val ratings: RatingsModel?,
     val passengerFeedback: String?,
     val carrier: CarrierModel,
@@ -33,3 +37,5 @@ data class OfferModel(
         const val PRICE_70   = 70
     }
 }
+
+fun BookNowOffer.map() = BookNowOfferModel(amount, base, withoutDiscount, transportType.map())

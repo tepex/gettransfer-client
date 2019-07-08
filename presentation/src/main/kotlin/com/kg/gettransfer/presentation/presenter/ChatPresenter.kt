@@ -12,11 +12,13 @@ import com.kg.gettransfer.domain.model.Message
 import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
 import com.kg.gettransfer.presentation.mapper.ChatMapper
 import com.kg.gettransfer.presentation.mapper.MessageMapper
+
 import com.kg.gettransfer.presentation.model.ChatModel
 import com.kg.gettransfer.presentation.model.MessageModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.CarrierTripModel
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.ChatView
 import com.kg.gettransfer.presentation.view.Screens
@@ -53,7 +55,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
             val transferCachedResult = utils.asyncAwait { transferInteractor.getTransfer(transferId, false, userRole) }
             val chatCachedResult = utils.asyncAwait { chatInteractor.getChat(transferId, true) }
 
-            transferModel = transferMapper.toView(transferCachedResult.model)
+            transferModel = transferCachedResult.model.map(systemInteractor.transportTypes.map { it.map() })
             chatModel = chatMapper.toView(chatCachedResult.model)
             chatModel?.let { viewState.setChat(it) }
 

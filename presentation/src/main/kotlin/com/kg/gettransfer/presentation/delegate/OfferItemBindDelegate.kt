@@ -10,13 +10,14 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.strikeText
 
+import com.kg.gettransfer.domain.model.Money
+
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
-import com.kg.gettransfer.presentation.model.MoneyModel
 import com.kg.gettransfer.presentation.model.getEmptyImageRes
 import com.kg.gettransfer.presentation.model.getImageRes
 import com.kg.gettransfer.presentation.model.getModelsRes
@@ -202,7 +203,7 @@ object OfferItemBindDelegate {
         else LanguageDrawer.drawMultipleLine(multiLineContainer!!, languages = languages, rowNumber = rowNumber)
     }
 
-    private fun bindPrice(viewWithPrice: View, base: MoneyModel, withoutDiscount: MoneyModel? = null) =
+    private fun bindPrice(viewWithPrice: View, base: Money, withoutDiscount: Money? = null) =
             with(viewWithPrice) {
                 tv_current_price.text = base.preferred ?: base.def
                 withoutDiscount?.let {

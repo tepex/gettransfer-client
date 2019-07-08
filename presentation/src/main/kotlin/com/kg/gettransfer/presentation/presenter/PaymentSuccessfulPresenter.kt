@@ -12,6 +12,7 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -36,7 +37,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             val transfer = result.model
-            val transferModel = transferMapper.toView(transfer)
+            val transferModel = transfer.map(systemInteractor.transportTypes.map { it.map() })
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 if (transfer.to != null) {

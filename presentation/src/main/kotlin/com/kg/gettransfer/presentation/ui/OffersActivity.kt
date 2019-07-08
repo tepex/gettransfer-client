@@ -34,12 +34,13 @@ import com.kg.gettransfer.extensions.strikeText
 
 import com.kg.gettransfer.presentation.adapter.OffersAdapter
 
+import com.kg.gettransfer.domain.model.Money
+
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.LocaleModel
-import com.kg.gettransfer.presentation.model.MoneyModel
 import com.kg.gettransfer.presentation.model.CarrierModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.VehicleModel
@@ -262,7 +263,7 @@ class OffersActivity : BaseActivity(), OffersView {
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    private fun setWithoutDiscount(withoutDiscount: MoneyModel?) {
+    private fun setWithoutDiscount(withoutDiscount: Money?) {
         with(offer_bottom_bs) {
             withoutDiscount?.let { tv_old_price.strikeText = it.preferred ?: it.def }
             tv_old_price.isVisible = withoutDiscount != null

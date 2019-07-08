@@ -1,30 +1,38 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
+
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
+
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
+
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
+
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.map
+
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.MainState
 import com.kg.gettransfer.utilities.ScreenNavigationState
+
 import kotlinx.coroutines.delay
+
 import org.koin.core.inject
-import timber.log.Timber
 
 @InjectViewState
 class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
@@ -50,7 +58,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private var idleAndMoveCamera = true
 
-    @CallSuper
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
@@ -69,7 +76,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         // https://developer.android.com/training/location/receive-location-updates
     }
 
-    @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
@@ -78,14 +84,13 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         } else {
             viewState.showBadge(false)
         }
-        Timber.d("MainPresenter.is user logged in: ${accountManager.isLoggedIn}")
+        log.debug("MainPresenter.is user logged in: ${accountManager.isLoggedIn}")
         if (!setAddressFields()) setOwnLocation()
         checkAccount()
         changeUsedField(systemInteractor.selectedField)
         viewState.setTripMode(orderInteractor.hourlyDuration)
     }
 
-    @CallSuper
     override fun detachView(view: MainView?) {
         super.detachView(view)
         countEventsInteractor.removeCounterListener(this)
@@ -130,7 +135,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         return super.onNewOffer(offer)
     }
 
-    @CallSuper
     override fun systemInitialized() {
         super.systemInitialized()
         checkAccount()
@@ -451,7 +455,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     fun onShareClick() {
-        Timber.d("Share action")
+        log.debug("Share action")
         logEvent(Analytics.SHARE)
         router.navigateTo(Screens.Share())
     }
@@ -472,7 +476,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                 else viewState.setError(err)
             } else {
                 val transfer = transferResult.model
-                val transferModel = transferMapper.toView(transfer)
+                val transferModel = transfer.map(systemInteractor.transportTypes.map { it.map() })
 
                 if (transferModel.status.checkOffers) {
                     val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
