@@ -22,7 +22,7 @@ import java.util.Locale
 import org.koin.core.get
 
 @InjectViewState
-class SettingsPresenter : BasePresenter<SettingsView>() {
+class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener {
 
     private lateinit var locales: List<LocaleModel>
     private lateinit var endpoints: List<EndpointModel>
@@ -97,11 +97,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.showDebugMenu()
     }
 
-    override fun currencyChanged() {
-        val currencyModel = sessionInteractor.currency.map()
-        viewState.setCurrency(currencyModel.name)
+    override fun currencyChanged(currency: CurrencyModel) {
+        viewState.setCurrency(currency.name)
         viewState.showFragment(CLOSE_FRAGMENT)
-        logEvent(Analytics.CURRENCY_PARAM, currencyModel.code)
+        logEvent(Analytics.CURRENCY_PARAM, currency.code)
     }
 
     fun passwordChanged() {

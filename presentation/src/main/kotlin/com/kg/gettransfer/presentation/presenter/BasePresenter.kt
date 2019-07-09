@@ -255,8 +255,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
     }
 
-    open fun currencyChanged() {}
-
     fun saveGeneralSettings(withRestartApp: Boolean = false) {
         if (accountManager.hasAccount) saveAccount(withRestartApp) else saveNoAccount(withRestartApp)
     }
