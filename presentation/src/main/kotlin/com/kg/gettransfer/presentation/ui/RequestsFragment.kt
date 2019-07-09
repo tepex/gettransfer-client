@@ -66,7 +66,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
         val layoutRes = setFragmentTransferListType()
         rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rvRequests.adapter = RequestsRVAdapter(layoutRes) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
+        rvRequests.adapter = RequestsRVAdapter(layoutRes) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage, it.pendingPaymentId) }
         initClickListeners()
     }
 

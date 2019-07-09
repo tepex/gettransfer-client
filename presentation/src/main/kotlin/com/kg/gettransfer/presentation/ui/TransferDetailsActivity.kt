@@ -82,10 +82,12 @@ import kotlinx.android.synthetic.main.view_transfer_details_field.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.view.*
 import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
+import kotlinx.android.synthetic.main.view_trips_info.*
 import kotlinx.android.synthetic.main.view_your_comment.view.*
 import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
 
 import org.jetbrains.anko.longToast
+
 import pub.devrel.easypermissions.EasyPermissions
 
 class TransferDetailsActivity : BaseGoogleMapActivity(),
@@ -229,29 +231,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         topCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
         bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
 
-        booking_info.text = when (transfer.status) {
-            Transfer.Status.NEW -> {
-                val suff = if (transfer.offersCount > 0 && !transfer.isBookNow()) R.string.LNG_BOOK_OFFER
-                else R.string.LNG_WAIT_FOR_OFFERS
-                getString(R.string.LNG_TRANSFER)
-                        .plus(" #${transfer.id} ")
-                        .plus(getString(suff))
-            }
-            Transfer.Status.PERFORMED -> {
-                if (transfer.dateTimeTZ.after(Date())) getString(R.string.LNG_TRANSFER)
-                        .plus(" #${transfer.id} ")
-                        .plus(getString(R.string.LNG_WILL_START_IN))
-                        .plus(" ")
-                        .plus(Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer)))
-                else getString(R.string.LNG_TRANSFER)
-                        .plus(" #${transfer.id} ")
-                        .plus(getString(R.string.LNG_IN_PROGRESS))
-            }
-            else -> transfer.statusName?.let { getString(R.string.LNG_TRANSFER_WAS)
-                    .plus(" #${transfer.id} ")
-                    .plus(" ")
-                    .plus(getString(transfer.statusName).toLowerCase()) }
-        }
+        setBookingInfo(transfer)
 
         if (transfer.status == Transfer.Status.REJECTED)
             transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(this@TransferDetailsActivity, R.color.color_transfer_details_text_red))
@@ -269,6 +249,40 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         if (status == Transfer.STATUS_CATEGORY_FINISHED || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
             topCommunicationButtons.btnRepeatTransfer.isVisible = true
             bottomCommunicationButtons.btnRepeatTransfer.isVisible = true
+        }
+    }
+
+    private fun setBookingInfo(transfer: TransferModel) {
+        booking_info.text = when (transfer.status) {
+            Transfer.Status.NEW -> {
+                val status = if (transfer.offersCount > 0 && !transfer.isBookNow() && transfer.pendingPaymentId == null)
+                                 getString(R.string.LNG_BOOK_OFFER)
+                             else if (transfer.pendingPaymentId != null)
+                                      getString(R.string.LNG_WILL_START_IN)
+                                              .plus(" ")
+                                              .plus(Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer)))
+                             else getString(R.string.LNG_WAIT_FOR_OFFERS)
+
+                getString(R.string.LNG_TRANSFER)
+                        .plus(" #${transfer.id} ")
+                        .plus(status)
+            }
+            Transfer.Status.PERFORMED -> {
+                if (transfer.dateTimeTZ.after(Date())) getString(R.string.LNG_TRANSFER)
+                        .plus(" #${transfer.id} ")
+                        .plus(getString(R.string.LNG_WILL_START_IN))
+                        .plus(" ")
+                        .plus(Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer)))
+                else getString(R.string.LNG_TRANSFER)
+                        .plus(" #${transfer.id} ")
+                        .plus(getString(R.string.LNG_IN_PROGRESS))
+            }
+            else -> transfer.statusName?.let {
+                getString(R.string.LNG_TRANSFER_WAS)
+                        .plus(" #${transfer.id} ")
+                        .plus(" ")
+                        .plus(getString(it).toLowerCase())
+            }
         }
     }
 
@@ -304,6 +318,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             transfer.let { setPricesForPaidTransfer(it.remainsToPay, it.price, it.paidPercentage) }
         } else {
             transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) }
+            transfer.pendingPaymentId?.let {
+                transfer_details_main.apply {
+                    tv_price.text = getString(R.string.LNG_RIDE_PAYMENT)
+                    tv_price_dash.isVisible = false
+                    tv_price_title.isVisible = false
+                }
+            }
         }
     }
 
