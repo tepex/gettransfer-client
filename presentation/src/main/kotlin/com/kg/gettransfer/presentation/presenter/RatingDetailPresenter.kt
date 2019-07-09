@@ -108,7 +108,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		val map = mutableMapOf<String, String?>()
 		val bundle = Bundle()
 		list.forEach {
-			val key = analytics.reviewDetailKey(it.rateType.type)
+			val key = analytics.reviewDetailKey(it.rateType.name)
 			bundle.putInt(key, it.rateValue)
 			map[key] = it.rateValue.toString()
 		}

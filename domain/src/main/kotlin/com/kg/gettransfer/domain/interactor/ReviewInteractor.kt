@@ -50,7 +50,7 @@ class ReviewInteractor(private val repository: ReviewRepository) {
     fun createListOfDetailedRates(): List<ReviewRate> {
         val list = arrayListOf<ReviewRate>().apply {
             driverRating?.let { add(ReviewRate(ReviewRate.RateType.DRIVER, it.toInt())) }
-            communicationRating?.let { add(ReviewRate(ReviewRate.RateType.PUNCTUALITY, it.toInt())) }
+            communicationRating?.let { add(ReviewRate(ReviewRate.RateType.COMMUNICATION, it.toInt())) }
             vehicleRating?.let { add(ReviewRate(ReviewRate.RateType.VEHICLE, it.toInt())) }
         }
         rates = list.toMutableSet()

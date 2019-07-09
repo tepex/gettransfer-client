@@ -5,7 +5,7 @@ data class ReviewRate(
     val rateValue: Int
 ) {
 
-    enum class RateType(val type: String) {
-        VEHICLE("vehicle"), DRIVER("driver"), PUNCTUALITY("communication")
+    enum class RateType {
+        VEHICLE, DRIVER, COMMUNICATION
     }
 }

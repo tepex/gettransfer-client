@@ -22,7 +22,7 @@ import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
-import com.kg.gettransfer.domain.model.ReviewRate.RateType.PUNCTUALITY
+import com.kg.gettransfer.domain.model.ReviewRate.RateType.COMMUNICATION
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
 
 import com.kg.gettransfer.extensions.finishChainAndBackTo
@@ -323,7 +323,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             ratings = offer?.ratings?.copy(
                 vehicle = list.firstOrNull { it.rateType == VEHICLE }?.rateValue?.toDouble(),
                 driver = list.firstOrNull { it.rateType == DRIVER }?.rateValue?.toDouble(),
-                communication = list.firstOrNull { it.rateType == PUNCTUALITY }?.rateValue?.toDouble()
+                communication = list.firstOrNull { it.rateType == COMMUNICATION }?.rateValue?.toDouble()
             ),
             passengerFeedback = userFeedback
         )
