@@ -6,9 +6,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.TransferModel
-import java.io.InputStream
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface TransferDetailsView: BaseView, RouteView {
@@ -16,7 +14,7 @@ interface TransferDetailsView: BaseView, RouteView {
     fun setOffer(offer: OfferModel, childSeats: Int)
     fun showAlertCancelRequest()
     fun copyText(text: String)
-    fun showDetailRate(ratings: RatingsModel, offerId: Long, feedback: String)
+    fun showDetailRate()
     fun closeRateWindow()
     fun askRateInPlayMarket()
     fun thanksForRate()

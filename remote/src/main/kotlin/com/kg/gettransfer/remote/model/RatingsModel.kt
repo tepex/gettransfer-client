@@ -9,7 +9,7 @@ data class RatingsModel(
     @SerializedName(RatingsEntity.AVERAGE) @Expose val average: Double?,
     @SerializedName(RatingsEntity.VEHICLE) @Expose val vehicle: Double?,
     @SerializedName(RatingsEntity.DRIVER) @Expose val driver: Double?,
-    @SerializedName(RatingsEntity.FAIR) @Expose val fair: Double?
+    @SerializedName(RatingsEntity.COMMUNICATION) @Expose val communication: Double?
 )
 
-fun RatingsModel.map() = RatingsEntity(average, vehicle, driver, fair)
+fun RatingsModel.map() = RatingsEntity(average, vehicle, driver, communication)

@@ -43,7 +43,6 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.RatingsModel
 
 import com.kg.gettransfer.presentation.presenter.MainPresenter
 
@@ -627,20 +626,18 @@ class MainActivity :
 
     override fun showRateForLastTrip(transferId: Long, vehicle: String, color: String) {
         if (supportFragmentManager.fragments.firstOrNull {
-                it.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG
-            } == null) {
+                it.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG } == null) {
             RatingLastTripFragment
                 .newInstance(transferId, vehicle, color)
                 .show(supportFragmentManager, RatingLastTripFragment.RATING_LAST_TRIP_TAG)
         }
     }
 
-    override fun showDetailedReview(tappedRate: Float, offerId: Long) {
+    override fun showDetailedReview() {
         if (supportFragmentManager.fragments.firstOrNull {
-                it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG
-            } == null) {
+                it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG } == null) {
             RatingDetailDialogFragment
-                .newInstance(RatingsModel(RatingsModel.NO_RATING, tappedRate, tappedRate, tappedRate), offerId)
+                .newInstance()
                 .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }

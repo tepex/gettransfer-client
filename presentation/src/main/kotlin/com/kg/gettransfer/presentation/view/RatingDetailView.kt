@@ -20,6 +20,8 @@ interface RatingDetailView : BaseView {
 	@StateStrategyType(AddToEndSingleStrategy::class)
 	fun setRatingPunctuality(rating: Float)
 	@StateStrategyType(AddToEndSingleStrategy::class)
+	fun setDividersVisibility()
+	@StateStrategyType(AddToEndSingleStrategy::class)
 	fun showComment(comment: String)
 
 	@StateStrategyType(OneExecutionStateStrategy::class)

@@ -37,7 +37,6 @@ import com.kg.gettransfer.extensions.*
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -85,8 +84,6 @@ import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
 import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.InputStream
-
-//import java.util.*
 
 class TransferDetailsActivity : BaseGoogleMapActivity(),
         TransferDetailsView,
@@ -548,10 +545,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         showTrack(cameraUpdate) { updateMapBehaviorBounds() }
     }
 
-    override fun showDetailRate(ratings: RatingsModel, offerId: Long, feedback: String) {
-        if (supportFragmentManager.fragments.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
+    override fun showDetailRate() {
+        if (supportFragmentManager.fragments.firstOrNull {
+                it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
             RatingDetailDialogFragment
-                .newInstance(ratings, offerId, feedback)
+                .newInstance()
                 .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }

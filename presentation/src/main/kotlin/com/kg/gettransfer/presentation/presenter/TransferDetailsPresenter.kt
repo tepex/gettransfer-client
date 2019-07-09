@@ -80,18 +80,18 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchData { transferInteractor.getTransfer(transferId) }
-                    ?.let { transfer ->
-                        setTransferFields(transfer)
-                        setOffer(transfer.id)
-                                ?.let {
-                                    if (transferModel.status.checkOffers)
-                                        offer = it
-                                }
-                        viewState.setTransfer(transferModel)
-
-                        updateRatingState()
-                        setTransferType(transfer)
-                    }
+                ?.let { transfer ->
+                    setTransferFields(transfer)
+                    setOffer(transfer.id)
+                        ?.let {
+                            if (transferModel.status.checkOffers) {
+                                offer = it
+                                updateRatingState()
+                            }
+                        }
+                    viewState.setTransfer(transferModel)
+                    setTransferType(transfer)
+                }
             viewState.blockInterface(false)
         }
         socketInteractor.addSocketListener(this)
@@ -112,7 +112,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 if (it.size == 1) {
                     val offer = it.first()
                     offerModel = offerMapper.toView(offer)
-                    reviewInteractor.offerIdForReview = offer.id
+                    reviewInteractor.offerRateID = offer.id
                     if (transferModel.showOfferInfo) viewState.setOffer(offerModel, transferModel.countChilds)
                     offer
                 } else null
@@ -249,42 +249,20 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun rateTrip(rating: Float, isNeedCheckStoreRate: Boolean) {
+        reviewInteractor.setOfferReview(offer!!) // In this line offer can't be null
         if (isNeedCheckStoreRate) {
+            reviewInteractor.setRates(rating)
             if (rating.toInt() == ReviewInteractor.MAX_RATE) {
-                with(reviewInteractor) {
-                    utils.launchSuspend { sendTopRate() }
-                    logAverageRate(ReviewInteractor.MAX_RATE.toFloat())
-                    if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
-                        viewState.askRateInPlayMarket()
-                        logReviewRequest()
-                    }
+                utils.launchSuspend { reviewInteractor.sendRates() }
+                logAverageRate(ReviewInteractor.MAX_RATE.toFloat())
+                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
+                    viewState.askRateInPlayMarket()
+                    logReviewRequest()
                 }
-                val doubleRating = rating.toDouble()
-                offer = offer?.copy(
-                    ratings = offer?.ratings?.copy(
-                        vehicle = doubleRating,
-                        driver = doubleRating,
-                        fair = doubleRating
-                    )
-                )
-                updateRatingState()
-            } else {
-                offer?.let {
-                    viewState.showDetailRate(
-                        RatingsModel(RatingsModel.NO_RATING, rating, rating, rating),
-                        it.id,
-                        it.passengerFeedback.orEmpty()
-                    )
-                }
+                return
             }
-        } else
-            offer?.let {
-                viewState.showDetailRate(
-                    it.ratings?.map() ?: RatingsModel.EMPTY,
-                    it.id,
-                    it.passengerFeedback.orEmpty()
-                )
-            }
+        }
+        viewState.showDetailRate()
     }
 
     private fun logAverageRate(rate: Float) =
@@ -343,9 +321,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun ratingChanged(list: List<ReviewRateModel>, userFeedback: String) {
         offer = offer?.copy(
             ratings = offer?.ratings?.copy(
-                vehicle = list.firstOrNull { it.rateType == VEHICLE }?.rateValue?.toDouble() ?: 0.0,
-                driver = list.firstOrNull { it.rateType == DRIVER }?.rateValue?.toDouble() ?: 0.0,
-                fair = list.firstOrNull { it.rateType == PUNCTUALITY }?.rateValue?.toDouble() ?: 0.0
+                vehicle = list.firstOrNull { it.rateType == VEHICLE }?.rateValue?.toDouble(),
+                driver = list.firstOrNull { it.rateType == DRIVER }?.rateValue?.toDouble(),
+                communication = list.firstOrNull { it.rateType == PUNCTUALITY }?.rateValue?.toDouble()
             ),
             passengerFeedback = userFeedback
         )
@@ -383,11 +361,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     private fun updateRatingState() {
         val available = offer?.isRateAvailable() ?: false
-        val isRated = offer?.isOfferRatedByUser() ?: false
-        if (available && !isRated) reviewInteractor.offerIdForReview = offer?.id ?: 0
-        viewState.showCommonRating(available && !isRated)
-        viewState.showYourRateMark(isRated, offer?.ratings?.average ?: 0.0)
-        viewState.showYourComment(isRated, offer?.passengerFeedback.orEmpty())
+        val neededRate = offer?.isNeededRateOffer() ?: false
+        if (available && neededRate) reviewInteractor.offerRateID = offer?.id ?: 0
+        viewState.showCommonRating(available && neededRate)
+        viewState.showYourRateMark(!neededRate, offer?.ratings?.average ?: 0.0)
+        viewState.showYourComment(!neededRate, offer?.passengerFeedback.orEmpty())
     }
 
     override fun onSocketConnected() {

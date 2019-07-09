@@ -416,21 +416,58 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                     .firstOrNull()
 
     private suspend fun checkToShowReview(transfer: Transfer) =
-            fetchResultOnly { offerInteractor.getOffers(transfer.id) }
-                    .isSuccess()
-                    ?.firstOrNull()
-                    ?.let { offer ->
-                        if (transfer.offersUpdatedAt != null) fetchDataOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
-                        if (offer.isRateAvailable() && !offer.isOfferRatedByUser()) {
-                            reviewInteractor.offerIdForReview = offer.id
-                            viewState.showRateForLastTrip(
-                                    transfer.id,
-                                    offer.vehicle.name,
-                                    offer.vehicle.color ?: ""
-                            )
-                            logTransferReviewRequested()
-                        }
-                    }
+        fetchResultOnly { offerInteractor.getOffers(transfer.id) }
+            .isSuccess()
+            ?.firstOrNull()
+            ?.let { offer ->
+                if (transfer.offersUpdatedAt != null) fetchDataOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
+                if (offer.isRateAvailable() && offer.isNeededRateOffer()) {
+                    reviewInteractor.setOfferReview(offer)
+                    viewState.showRateForLastTrip(
+                        transfer.id,
+                        offer.vehicle.name,
+                        offer.vehicle.color ?: ""
+                    )
+                    logTransferReviewRequested()
+                }
+            }
+
+    fun rateTransfer(transferId: Long, rate: Int) {
+        utils.launchSuspend {
+            if (!checkTransferForRate(transferId)) return@launchSuspend
+            val offersResult = utils.asyncAwait { offerInteractor.getOffers(transferId) }
+            if (offersResult.error == null && offersResult.model.size == 1) {
+                offersResult.model.first().let {
+                    if (it.isRateAvailable() && it.isNeededRateOffer()) rateOffer(it, rate)
+                }
+            }
+        }
+    }
+
+    private suspend fun checkTransferForRate(transferId: Long): Boolean {
+        val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+        return if (transferResult.error != null) {
+            val err = transferResult.error!!
+            if (err.isNotFound()) viewState.setTransferNotFoundError(transferId)
+            else viewState.setError(err)
+            false
+        } else {
+            val transfer = transferResult.model
+            val transferModel = transfer.map(systemInteractor.transportTypes.map { it.map() })
+            transferModel.status.checkOffers
+        }
+    }
+
+    private suspend fun rateOffer(offer: Offer, rate: Int) {
+        reviewInteractor.setOfferReview(offer)
+        reviewInteractor.setRates(rate.toFloat())
+        if (rate == ReviewInteractor.MAX_RATE) {
+            reviewInteractor.sendRates()
+            viewState.thanksForRate()
+        } else {
+            viewState.showDetailedReview()
+        }
+    }
 
     private fun logTransferReviewRequested() =
             analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
@@ -466,36 +503,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                     createEmptyBundle(),
                     mapOf()
             )
-
-    fun rateTransfer(transferId: Long, rate: Int) {
-        utils.launchSuspend {
-            val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if (transferResult.error != null) {
-                val err = transferResult.error!!
-                if (err.isNotFound()) viewState.setTransferNotFoundError(transferId)
-                else viewState.setError(err)
-            } else {
-                val transfer = transferResult.model
-                val transferModel = transfer.map(systemInteractor.transportTypes.map { it.map() })
-
-                if (transferModel.status.checkOffers) {
-                    val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-                    if (offersResult.error == null && offersResult.model.size == 1) {
-                        val offer = offersResult.model.first()
-                        reviewInteractor.offerIdForReview = offer.id
-                        if (rate == ReviewInteractor.MAX_RATE) {
-                            reviewInteractor.apply {
-                                sendTopRate()
-                                viewState.thanksForRate()
-                            }
-                        } else {
-                            viewState.showDetailedReview(rate.toFloat(), offer.id)
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     fun onStartScreenOrderNote() {
         systemInteractor.startScreenOrder = true
