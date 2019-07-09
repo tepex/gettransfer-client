@@ -217,7 +217,10 @@ class Analytics(
 
     /** [см. табл.][https://docs.google.com/spreadsheets/d/1RP-96GhITF8j-erfcNXQH5kM6zw17ASmnRZ96qHvkOw/edit#gid=0] */
     companion object {
-        const val EVENT_LOGIN = "login"
+        const val EVENT_LOGIN_PASS = "login_pass"
+        const val EVENT_LOGIN_CODE = "login_code"
+        const val EVENT_GET_CODE = "get_code"
+        const val EVENT_RESEND_CODE = "resend_code"
         const val EVENT_SIGN_UP = "signup"
         const val EVENT_TRANSFER = "create_transfer"
         const val EVENT_ADD_TO_CART = "add_to_cart"
@@ -251,6 +254,10 @@ class Analytics(
         const val TRANSFER_CLICKED = "transfers"
         const val LOGIN_CLICKED = "login"
 
+        const val GET_CODE_CLICKED = "get_code"
+        const val RESEND_CODE_CLICKED = "resend_code"
+        const val VERIFY_CODE_CLICKED = "verify_code"
+        const val VERIFY_PASSWORD_CLICKED = "verify_password"
         const val MY_PLACE_CLICKED = "my_place"
         const val SHOW_ROUTE_CLICKED = "show_route"
         const val CAR_INFO_CLICKED = "car_info"
