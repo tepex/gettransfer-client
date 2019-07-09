@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.model
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Money
 import com.kg.gettransfer.domain.model.Price
+import com.kg.gettransfer.domain.model.Ratings
 
 sealed class OfferItemModel
 
@@ -23,7 +24,7 @@ data class OfferModel(
     val charger: Boolean,
     val createdAt: String,
     val price: Price,
-    val ratings: RatingsModel?,
+    val ratings: Ratings?,
     val passengerFeedback: String?,
     val carrier: CarrierModel,
     val vehicle: VehicleModel,

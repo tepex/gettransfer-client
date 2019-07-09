@@ -34,7 +34,7 @@ data class Offer(
             ratings?.run {
                 neededRateField(vehicle) || neededRateField(driver) || neededRateField(communication) } ?: false
 
-    private fun neededRateField(fieldRating: Double?) = fieldRating == Ratings.NO_RATE
+    private fun neededRateField(fieldRating: Double?) = fieldRating == Ratings.NO_RATING
 }
 
 data class BookNowOffer(
