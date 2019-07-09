@@ -256,12 +256,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         booking_info.text = when (transfer.status) {
             Transfer.Status.NEW -> {
                 val status = if (transfer.offersCount > 0 && !transfer.isBookNow() && transfer.pendingPaymentId == null)
-                    R.string.LNG_BOOK_OFFER
-                else if (transfer.pendingPaymentId != null) R.string.LNG_RIDE_PAYMENT
-                else R.string.LNG_WAIT_FOR_OFFERS
+                                 getString(R.string.LNG_BOOK_OFFER)
+                             else if (transfer.pendingPaymentId != null)
+                                      getString(R.string.LNG_WILL_START_IN)
+                                              .plus(" ")
+                                              .plus(Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer)))
+                             else getString(R.string.LNG_WAIT_FOR_OFFERS)
+
                 getString(R.string.LNG_TRANSFER)
                         .plus(" #${transfer.id} ")
-                        .plus(getString(status))
+                        .plus(status)
             }
             Transfer.Status.PERFORMED -> {
                 if (transfer.dateTimeTZ.after(Date())) getString(R.string.LNG_TRANSFER)
