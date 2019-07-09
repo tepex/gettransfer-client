@@ -14,4 +14,4 @@ data class ReviewRateEntity(
     }
 }
 
-fun ReviewRate.map() = ReviewRateEntity(rateType.type, rateValue)
+fun ReviewRate.map() = ReviewRateEntity(rateType.name.toLowerCase(), rateValue)

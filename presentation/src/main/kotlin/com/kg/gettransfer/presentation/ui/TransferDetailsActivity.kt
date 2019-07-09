@@ -32,13 +32,16 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.extensions.*
+
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.isNonZero
+import com.kg.gettransfer.extensions.visibleText
+import com.kg.gettransfer.extensions.show
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.RatingsModel
-import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
@@ -84,9 +87,6 @@ import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
 
 import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.EasyPermissions
-import java.io.InputStream
-
-//import java.util.*
 
 class TransferDetailsActivity : BaseGoogleMapActivity(),
         TransferDetailsView,
@@ -548,10 +548,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         showTrack(cameraUpdate) { updateMapBehaviorBounds() }
     }
 
-    override fun showDetailRate(ratings: RatingsModel, offerId: Long, feedback: String) {
-        if (supportFragmentManager.fragments.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
+    override fun showDetailRate() {
+        if (supportFragmentManager.fragments.firstOrNull {
+                it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
             RatingDetailDialogFragment
-                .newInstance(ratings, offerId, feedback)
+                .newInstance()
                 .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }
@@ -618,7 +619,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         yourRateMark.show(!isShow)
     }
 
-    override fun onRatingChanged(list: List<ReviewRateModel>, comment: String) {
+    override fun onRatingChanged(list: List<ReviewRate>, comment: String) {
         presenter.ratingChanged(list, comment)
     }
 

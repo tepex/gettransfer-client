@@ -30,16 +30,11 @@ data class Offer(
 
     fun isRateAvailable() = ratings != null   // call this first
 
-    fun isOfferRatedByUser() =                // call after check
-        ratings?.run {
-            vehicle != Ratings.NO_RATE && driver != Ratings.NO_RATE && fair != Ratings.NO_RATE } ?: true
+    fun isNeededRateOffer() =                 // call after check
+            ratings?.run {
+                neededRateField(vehicle) || neededRateField(driver) || neededRateField(communication) } ?: false
 
-    companion object {
-        const val STATUS_NEW       = "new"
-        const val STATUS_PERFORMED = "performed"
-        const val STATUS_BLOCKED   = "blocked"
-        const val STATUS_CANCELED  = "canceled"
-    }
+    private fun neededRateField(fieldRating: Double?) = fieldRating == Ratings.NO_RATE
 }
 
 data class BookNowOffer(

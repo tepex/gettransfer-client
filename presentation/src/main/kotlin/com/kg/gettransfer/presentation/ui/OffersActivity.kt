@@ -346,7 +346,7 @@ class OffersActivity : BaseActivity(), OffersView {
         offer_ratingDivider_bs.isVisible = true
         carrier.ratings.let { ratings ->
             setRating(ratings.driver, ratingDriver)
-            setRating(ratings.fair, ratingPunctuality)
+            setRating(ratings.communication, ratingPunctuality)
             setRating(ratings.vehicle, ratingVehicle)
         }
         layoutTopSelection.isVisible = carrier.approved

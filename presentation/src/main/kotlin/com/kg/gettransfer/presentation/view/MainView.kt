@@ -21,7 +21,7 @@ interface MainView: BaseView {
     fun onBackClick(isAddressNavigating: Boolean, isTo: Boolean)
     fun showReadMoreDialog()
     fun setTripMode(duration: Int?)
-    fun showDetailedReview(tappedRate: Float, offerId: Long)
+    fun showDetailedReview()
     fun askRateInPlayMarket()
     fun thanksForRate()
     fun showBadge(show: Boolean)

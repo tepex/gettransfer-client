@@ -41,11 +41,6 @@
     <string name="reset_rate">Reset play market rate</string>
     <string name="clear_access_token">Clear access token</string>
 
-    <!-- Tags for api params-->
-    <string name="VEHICLE">vehicle</string>
-    <string name="DRIVER">driver</string>
-    <string name="PUNCTUALITY">fair</string>
-
     <!--Technical strings-->
     <string name="searchTransitionName">SEARCH_FORM</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>

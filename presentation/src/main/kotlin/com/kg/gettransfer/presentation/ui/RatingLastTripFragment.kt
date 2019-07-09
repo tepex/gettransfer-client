@@ -14,7 +14,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 
-import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
@@ -124,10 +123,11 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
 
     override fun thanksForRate() = (activity as MainActivity).thanksForRate()
 
-    override fun showDetailedReview(rate: Float, offerId: Long) {
-        if (fragmentManager?.fragments?.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
+    override fun showDetailedReview() {
+        if (fragmentManager?.fragments?.firstOrNull {
+                it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG } == null) {
             RatingDetailDialogFragment
-                .newInstance(RatingsModel(RatingsModel.NO_RATING, rate, rate, rate), offerId)
+                .newInstance()
                 .show(fragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }
