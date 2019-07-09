@@ -26,6 +26,7 @@ import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 import com.kg.gettransfer.presentation.mapper.*
 
+import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
@@ -43,7 +44,7 @@ import org.koin.core.get
 import org.koin.core.inject
 
 @InjectViewState
-class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
+class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedListener {
     private val orderInteractor: OrderInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
     private val dateDelegate: DateTimeDelegate = get()
@@ -73,7 +74,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         super.onFirstViewAttach()
         setTransportTypePrices(emptyMap(), true)
         initMapAndPrices()
-        setCurrency()
+        setCurrency(sessionInteractor.currency.map())
         with(orderInteractor) {
             viewState.setUser(userMapper.toView(accountManager.tempUser), accountManager.isLoggedIn)
             viewState.setPassengers(passengers)
@@ -316,13 +317,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         initPrices(false)
     }
 
-    override fun currencyChanged() {
-        setCurrency(true)
+    override fun currencyChanged(currency: CurrencyModel) {
+        setCurrency(currency, true)
         getNewPrices()
     }
 
-    private fun setCurrency(hideCurrencies: Boolean = false) {
-        val currency = sessionInteractor.currency.map()
+    private fun setCurrency(currency: CurrencyModel, hideCurrencies: Boolean = false) {
         viewState.setCurrency(currency.symbol, hideCurrencies)
         selectedCurrency = currencies.indexOf(currency)
     }

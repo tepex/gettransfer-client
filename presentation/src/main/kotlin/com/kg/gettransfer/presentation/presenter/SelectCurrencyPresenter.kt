@@ -18,6 +18,7 @@ class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinCompone
 
     private val currencies = systemInteractor.currencies.map { it.map() }
     private val popularCurrencies = currencies.filter { Currency.POPULAR.contains(it.code) }
+    private var currencyChangedListener: CurrencyChangedListener? = null
 
     override fun attachView(view: SelectCurrencyView) {
         super.attachView(view)
@@ -28,9 +29,17 @@ class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinCompone
         )
     }
 
+    fun addCurrencyChangedListener(currencyChangedListener: CurrencyChangedListener) {
+        this.currencyChangedListener = currencyChangedListener
+    }
+
+    fun removeCurrencyChangedListener() {
+        currencyChangedListener = null
+    }
+
     fun changeCurrency(selected: CurrencyModel) {
         sessionInteractor.currency = selected.delegate
         saveGeneralSettings()
-        viewState.currencyChanged()
+        currencyChangedListener?.currencyChanged(selected)
     }
 }
