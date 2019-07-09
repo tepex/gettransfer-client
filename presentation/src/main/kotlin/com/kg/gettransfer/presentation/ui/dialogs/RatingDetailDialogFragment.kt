@@ -12,14 +12,13 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.domain.model.ReviewRate
 
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.setUneditable
 import com.kg.gettransfer.extensions.show
-
-import com.kg.gettransfer.presentation.model.ReviewRateModel
 
 import com.kg.gettransfer.presentation.presenter.RatingDetailPresenter
 
@@ -172,7 +171,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     override fun setTransferNotFoundError(transferId: Long) =
             (activity as BaseView).setTransferNotFoundError(transferId)
 
-    override fun exitAndReportSuccess(list: List<ReviewRateModel>, comment: String) {
+    override fun exitAndReportSuccess(list: List<ReviewRate>, comment: String) {
         ratingListener?.onRatingChanged(list, comment)
         isExitWithResult = true
         dismiss()
@@ -194,7 +193,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     private fun setComment(comment: String) = etComment.setText(comment)
 
     interface OnRatingChangeListener {
-        fun onRatingChanged(list: List<ReviewRateModel>, comment: String)
+        fun onRatingChanged(list: List<ReviewRate>, comment: String)
         fun onRatingChangeCancelled()
     }
 }

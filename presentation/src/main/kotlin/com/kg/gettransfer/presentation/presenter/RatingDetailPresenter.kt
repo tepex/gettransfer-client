@@ -3,8 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Bundle
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
-import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
-import com.kg.gettransfer.presentation.model.ReviewRateModel
+import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.presentation.view.RatingDetailView
 import com.kg.gettransfer.utilities.Analytics
 import org.koin.core.inject
@@ -14,7 +13,6 @@ import org.koin.core.inject
 class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 
 	private val reviewInteractor: ReviewInteractor by inject()
-	private val reviewRateMapper: ReviewRateMapper by inject()
 
 	internal var offerId
 		get() = reviewInteractor.offerRateID
@@ -80,7 +78,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 	}
 
 	fun onClickSend() = utils.launchSuspend {
-		val listRates = reviewInteractor.createListOfDetailedRates().map { reviewRateMapper.toView(it) }
+		val listRates = reviewInteractor.createListOfDetailedRates()
 		viewState.showProgress(true)
 		viewState.blockInterface(true, true)
 		val rateResult = fetchResult { reviewInteractor.sendRates(false) }
@@ -104,7 +102,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 					mapOf(Analytics.REVIEW to rate)
 			)
 
-	private fun logDetailRate(list: List<ReviewRateModel>, comment: String) {
+	private fun logDetailRate(list: List<ReviewRate>, comment: String) {
 		val map = mutableMapOf<String, String?>()
 		val bundle = Bundle()
 		list.forEach {

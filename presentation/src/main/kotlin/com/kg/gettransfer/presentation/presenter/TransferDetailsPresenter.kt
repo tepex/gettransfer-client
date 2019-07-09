@@ -20,6 +20,7 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.ReviewRate
 
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.COMMUNICATION
@@ -318,7 +319,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     fun getMarkerIcon(offerModel: OfferModel) = CarIconResourceProvider.getVehicleIcon(offerModel.vehicle)
 
-    fun ratingChanged(list: List<ReviewRateModel>, userFeedback: String) {
+    fun ratingChanged(list: List<ReviewRate>, userFeedback: String) {
         offer = offer?.copy(
             ratings = offer?.ratings?.copy(
                 vehicle = list.firstOrNull { it.rateType == VEHICLE }?.rateValue?.toDouble(),
