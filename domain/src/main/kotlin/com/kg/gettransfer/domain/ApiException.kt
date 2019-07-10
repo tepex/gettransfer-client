@@ -34,6 +34,8 @@ class ApiException(
 
     private fun checkDetailsText(str: String) = details.indexOf(str) >= 0
 
+    fun isEarlyDateError() = details == DETAILS_DATE_EARLY
+
     /* PAYMENT ERRORS */
     fun isBigPriceError() = code == UNPROCESSABLE && details == DETAILS_BIG_PRICE
 
@@ -50,6 +52,7 @@ class ApiException(
         const val CONNECTION_TIMED_OUT  = 522
 
         const val DETAILS_BIG_PRICE = "{price=[is_too_big]}"
+        const val DETAILS_DATE_EARLY = "{date=[is too early]}"
 
         const val TYPE_ACCOUNT_EXIST = "account_exists"
         const val TYPE_PHONE_TAKEN = "phone_taken"
