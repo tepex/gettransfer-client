@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.mapper
 import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
@@ -25,7 +24,7 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
             type.charger,
             SystemUtils.formatDateTime(type.createdAt),
             type.price,
-            type.ratings?.let { it.map() },
+            type.ratings,
             type.passengerFeedback,
             carrierMapper.toView(type.carrier),
             vehicleMapper.toView(type.vehicle),

@@ -69,6 +69,7 @@ import kotlinx.android.synthetic.main.view_offer_rating_field.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 import timber.log.Timber
+import java.math.RoundingMode
 
 class OffersActivity : BaseActivity(), OffersView {
 
@@ -352,9 +353,9 @@ class OffersActivity : BaseActivity(), OffersView {
         layoutTopSelection.isVisible = carrier.approved
     }
 
-    private fun setRating(rate: Float?, ratingLayout: RatingFieldView) {
+    private fun setRating(rate: Double?, ratingLayout: RatingFieldView) {
         with(ratingLayout) {
-            val rating = rate ?: 0.0f
+            val rating = (rate ?: 0.0).toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
             ratingBar.rating = rating
             ratingNumber.text = rating.toString().replace(".", ",")
         }

@@ -17,7 +17,7 @@ open class CarrierMapper : Mapper<CarrierModel, Carrier> {
             approved           = type.approved,
             completedTransfers = type.completedTransfers,
             languages          = type.languages.map { it.map() },
-            ratings            = type.ratings.map(),
+            ratings            = type.ratings,
             canUpdateOffers    = type.canUpdateOffers
         )
 

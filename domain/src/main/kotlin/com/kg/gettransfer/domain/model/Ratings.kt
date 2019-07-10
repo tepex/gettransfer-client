@@ -9,10 +9,11 @@ data class Ratings(
 
     val average: Double
         get() = hiddenAverage ?: listOfNotNull<Double>(vehicle, driver, communication).let {
-            if (it.isNotEmpty()) it.average() else NO_RATE }
+            if (it.isNotEmpty()) it.average() else NO_RATING }
 
     companion object {
-        const val NO_RATE = 0.0
+        const val NO_RATING = 0.0
         val EMPTY = Ratings(null, null, null, null)
+        val BOOK_NOW_RATING = Ratings(4.5, null, null, null)
     }
 }

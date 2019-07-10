@@ -31,6 +31,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
+import com.kg.gettransfer.domain.model.Ratings
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.extensions.isVisible
 
@@ -42,7 +43,6 @@ import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.RatingsModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.getEmptyImageRes
@@ -265,7 +265,7 @@ class PaymentOfferActivity : BaseActivity(),
         tvClass.text = getString(transportTypeId.getNameRes())
         tvModel.text = getString(transportTypeId.getModelsRes())
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = transportTypeId.getImageRes())
-        OfferItemBindDelegate.bindRating(layoutRating, RatingsModel.BOOK_NOW_RATING, true)
+        OfferItemBindDelegate.bindRating(layoutRating, Ratings.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(
             multiLineContainer = languages_container_tiny,
             languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
