@@ -646,14 +646,14 @@
     <dimen name="view_offer_car_img_height">40dp</dimen>
     <dimen name="view_offer_car_img_margin_top">2dp</dimen>
     <dimen name="view_offer_car_img_margin_start">-3dp</dimen>
-    <dimen name="view_offer_btn_book_width">104dp</dimen>
+    <dimen name="view_offer_btn_book_width">122dp</dimen>
     <dimen name="view_offer_btn_book_height">32dp</dimen>
     <dimen name="view_offer_btn_book_margin_top">6dp</dimen>
     <dimen name="view_offer_btn_book_margin_bottom">8dp</dimen>
     <dimen name="view_offer_car_info_margin_start">8dp</dimen>
     <dimen name="view_offer_languages_container_margin_start">8dp</dimen>
     <dimen name="view_offer_languages_container_margin_end">7dp</dimen>
-    <dimen name="view_offer_btn_book_text_size">14sp</dimen>
+    <dimen name="view_offer_btn_book_text_size">13sp</dimen>
 	<dimen name="view_offer_language_icon_width">12dp</dimen>
 	<dimen name="view_offer_language_icon_height">8dp</dimen>
 	<dimen name="view_offer_language_icon_start_end_margin">2dp</dimen>
