@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.extensions.internationalExample
+
 import com.kg.gettransfer.presentation.ui.MainLoginActivity
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
@@ -9,9 +11,12 @@ import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_PHONE
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.getInternationalNumber
+
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
+
 import org.koin.core.KoinComponent
 
 @InjectViewState
@@ -51,7 +56,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
 
     private fun checkInputData() = params.emailOrPhone.isNotEmpty() && validateInput()
 
-    private fun logEvent(event:String, result: String) {
+    private fun logEvent(event: String, result: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.STATUS] = result
 
@@ -70,13 +75,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
     private fun loginWithCode() {
         if (!checkInputData()) return
         viewState.hideLoading()
-        val isPhone = isPhone()
-        router.replaceScreen(
-            Screens.SmsCode(
-                params,
-                isPhone
-            )
-        )
+        router.replaceScreen(Screens.SmsCode(params, isPhone()))
     }
 
     fun onLoginClick() {

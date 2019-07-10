@@ -75,24 +75,12 @@
 			android:layout_marginEnd="32dp"
 			android:layout_marginStart="32dp"
 			android:layout_marginTop="16dp"
-			android:tag="@string/DRIVER"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/tvRateDesc"
 			app:rate_sub_title="@string/LNG_PAYMENT_PROFFESSIONALISM"
-			app:rate_title="@string/LNG_DRIVER" />
-
-		<View
-			android:id="@+id/dividerDriver"
-			android:layout_width="match_parent"
-			android:layout_height="0.5dp"
-			android:layout_marginEnd="32dp"
-			android:layout_marginStart="32dp"
-			android:layout_marginTop="8dp"
-			android:background="@color/color_transfer_details_horizontal_divider"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/driverRate" />
+			app:rate_title="@string/LNG_DRIVER"
+			android:visibility="gone"/>
 
 		<com.kg.gettransfer.presentation.ui.custom.RateField
 			android:id="@+id/punctualityRate"
@@ -101,24 +89,12 @@
 			android:layout_marginEnd="32dp"
 			android:layout_marginStart="32dp"
 			android:layout_marginTop="16dp"
-			android:tag="@string/PUNCTUALITY"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/dividerDriver"
+			app:layout_constraintTop_toBottomOf="@+id/driverRate"
 			app:rate_sub_title="@string/LNG_PAYMENT_ARRIVAL_TIME"
-			app:rate_title="@string/LNG_PAYMENT_PUNCTUALITY" />
-
-		<View
-			android:id="@+id/dividerPunctuality"
-			android:layout_width="match_parent"
-			android:layout_height="0.5dp"
-			android:layout_marginEnd="32dp"
-			android:layout_marginStart="32dp"
-			android:layout_marginTop="8dp"
-			android:background="@color/color_transfer_details_horizontal_divider"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/punctualityRate" />
+			app:rate_title="@string/LNG_PAYMENT_PUNCTUALITY"
+			android:visibility="gone"/>
 
 		<com.kg.gettransfer.presentation.ui.custom.RateField
 			android:id="@+id/vehicleRate"
@@ -127,12 +103,12 @@
 			android:layout_marginEnd="32dp"
 			android:layout_marginStart="32dp"
 			android:layout_marginTop="16dp"
-			android:tag="@string/VEHICLE"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/dividerPunctuality"
+			app:layout_constraintTop_toBottomOf="@+id/punctualityRate"
 			app:rate_sub_title="@string/LNG_PAYMENT_CAR_CONDITIONAL"
-			app:rate_title="@string/LNG_VEHICLE_RATING" />
+			app:rate_title="@string/LNG_VEHICLE_RATING"
+			android:visibility="gone"/>
 
 		<TextView
 			android:id="@+id/tvCommentTitle"

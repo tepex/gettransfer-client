@@ -87,9 +87,9 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         return eventsMap
     }
 
-    fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int) {
+    fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int, pendingPaymentId: Int?) {
         log.debug("Open Transfer details. id: $id")
-        if (status == Transfer.Status.NEW && paidPercentage == 0) {
+        if (status == Transfer.Status.NEW && paidPercentage == 0 && pendingPaymentId == null) {
             router.navigateTo(Screens.Offers(id))
         } else {
             router.navigateTo(Screens.Details(id))

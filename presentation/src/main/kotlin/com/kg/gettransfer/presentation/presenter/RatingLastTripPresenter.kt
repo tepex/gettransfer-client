@@ -33,11 +33,6 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     private val transportTypes = systemInteractor.transportTypes.map { it.map() }
 
     internal var transferId: Long = 0L
-    private var offerId: Long
-        get() = reviewInteractor.offerIdForReview
-        set(value) {
-            reviewInteractor.offerIdForReview = value
-        }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -100,10 +95,11 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     }
 
     fun onRateClicked(rate: Float) {
+        reviewInteractor.setRates(rate)
         if (rate.toInt() == ReviewInteractor.MAX_RATE) {
             logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
             utils.launchSuspend {
-                with(fetchResultOnly { reviewInteractor.sendTopRate() }) {
+                with(fetchResultOnly { reviewInteractor.sendRates() }) {
                     if (!isError()) {
                         viewState.cancelReview()
                         val showStoreDialog = systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE
@@ -117,7 +113,7 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
             }
         } else {
             viewState.cancelReview()
-            viewState.showDetailedReview(rate, offerId)
+            viewState.showDetailedReview()
         }
     }
 

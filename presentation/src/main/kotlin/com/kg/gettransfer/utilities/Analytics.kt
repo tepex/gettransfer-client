@@ -42,9 +42,8 @@ class Analytics(
         AppsFlyerLib.getInstance().trackEvent(context, event, data)
 
     fun reviewDetailKey(value: String) = when (value) {
-        ReviewRate.RateType.PUNCTUALITY.type -> "punctuality"
-        ReviewRate.RateType.VEHICLE.type -> "vehicle"
-        else -> "driver"
+        ReviewRate.RateType.COMMUNICATION.name -> "punctuality"
+        else -> value.toLowerCase()
     }
 
     inner class EcommercePurchase(

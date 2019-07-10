@@ -14,5 +14,5 @@ interface RatingLastTripView: BaseView {
 
     fun thanksForRate()
 
-    fun showDetailedReview(rate: Float, offerId: Long)
+    fun showDetailedReview()
 }
