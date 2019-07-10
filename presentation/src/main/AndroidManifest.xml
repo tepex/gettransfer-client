@@ -164,6 +164,11 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".presentation.ui.DriverModeNotSupportedActivity"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".presentation.ui.HandleUrlActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter android:autoVerify="true">

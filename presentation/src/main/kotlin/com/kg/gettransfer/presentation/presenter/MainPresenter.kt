@@ -373,7 +373,8 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                 router.navigateTo(Screens.Carrier(Screens.REG_CARRIER))
             }
         } else {
-            login(Screens.CARRIER_MODE, "")
+            // TODO check config login(Screens.CARRIER_MODE, "")
+            router.navigateTo(Screens.DriverModeNotSupport)
         }
     }
 

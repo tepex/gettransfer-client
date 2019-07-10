@@ -399,13 +399,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun redirectToPlayMarket() {
         systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
-        val url = getString(R.string.market_link) + getString(R.string.app_market_package)
-        startActivityForResult(
-            Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(url)
-                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            }, PLAY_MARKET_RATE
-        )
+        Utils.goToGooglePlay(this, getString(R.string.app_market_package), PLAY_MARKET_RATE)
     }
 
     @CallSuper

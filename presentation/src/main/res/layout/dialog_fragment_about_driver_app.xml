@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin16"
+        android:layout_marginEnd="@dimen/margin16"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close_x" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin64"
+        android:src="@drawable/icon_logo_rounded"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/sf_font_semi_bold_17_sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginStart="@dimen/margin80"
+        android:layout_marginTop="@dimen/margin48"
+        android:layout_marginEnd="@dimen/margin80"
+        android:text="@string/LNG_ABOUT_DRIVER_APP"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/icon" />
+
+    <TextView
+        android:id="@+id/tv_info"
+        style="@style/sf_font"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin32"
+        android:layout_marginTop="@dimen/margin24"
+        android:layout_marginEnd="@dimen/margin32"
+        android:gravity="center_horizontal"
+        android:text="@string/LNG_ABOUT_DRIVER_APP_INFO"
+        android:textColor="@color/black_a30"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+    <Button
+        android:id="@+id/btn_continue"
+        style="@style/sf_pro_text_semibold_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin20"
+        android:layout_marginTop="@dimen/margin40"
+        android:layout_marginEnd="@dimen/margin20"
+        android:background="@drawable/btn_bg_rounded"
+        android:text="@string/LNG_ABOUT_DRIVE_APP_ANDROID_CONTINUE"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_info" />
+
+    <TextView
+        android:id="@+id/btn_cancel"
+        style="@style/sf_font"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin32"
+        android:layout_marginBottom="@dimen/margin32"
+        android:text="@string/LNG_ABOUT_DRIVE_APP_NOT_NOW"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_continue" />
+
+</android.support.constraint.ConstraintLayout>

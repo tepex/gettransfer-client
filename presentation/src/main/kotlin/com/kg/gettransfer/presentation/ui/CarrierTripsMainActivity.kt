@@ -27,6 +27,7 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.CarrierTripsMainPresenter
+import com.kg.gettransfer.presentation.ui.dialogs.AboutDriverAppDialogFragment
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.activity_carrier_trips_main.*
@@ -37,7 +38,9 @@ import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
 import java.lang.IllegalStateException
 
-class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
+class CarrierTripsMainActivity : BaseActivity(),
+        AboutDriverAppDialogFragment.OnAboutDriverAppListener,
+        CarrierTripsMainView {
     @InjectPresenter
     internal lateinit var presenter: CarrierTripsMainPresenter
 
@@ -118,11 +121,13 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-
     @CallSuper
     protected override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         toggle.syncState()
+
+        AboutDriverAppDialogFragment.newInstance()
+                .show(supportFragmentManager, AboutDriverAppDialogFragment.DIALOG_TAG)
     }
 
     @CallSuper
@@ -232,6 +237,8 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
             presenter.permissionResult(result)
         }
     }
+
+    override fun onClickGoToDriverApp() = Utils.goToGooglePlay(this, getString(R.string.driver_app_market_package))
 
     private val connectionService = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {}

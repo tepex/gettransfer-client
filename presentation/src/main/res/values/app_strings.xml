@@ -14,7 +14,9 @@
     <string name="api_url_carrier">/carrier</string>
 
     <string name="market_link">market://details?id=</string>
+    <string name="market_site_link">https://play.google.com/store/apps/details?id=</string>
     <string name="app_market_package">com.gettransfer</string>
+    <string name="driver_app_market_package">com.kg.gettransferdriver</string>
 
     <!-- FCM -->
     <string name="new_offer_notification_channel_id" translatable="false">new_offer_channel</string>

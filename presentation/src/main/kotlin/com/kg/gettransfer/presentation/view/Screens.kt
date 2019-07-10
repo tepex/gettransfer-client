@@ -79,11 +79,19 @@ object Screens {
         override fun getActivityIntent(context: Context?) =
             when (forIntent) {
                 CARRIER_MODE -> Intent(context, CarrierTripsMainActivity()::class.java)
-                REG_CARRIER -> Intent(context, WebPageActivity()::class.java).apply {
-                    putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
+                REG_CARRIER -> {
+                    // TODO check config
+                    //Intent(context, WebPageActivity()::class.java).apply {
+                    //    putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
+                    //}
+                    Intent(context, DriverModeNotSupportedActivity()::class.java)
                 }
                 else -> throw IllegalArgumentException("Unknown intent key when try to navigate to Carrier mode in ${this.javaClass.name}")
             }
+    }
+
+    object DriverModeNotSupport : SupportAppScreen() {
+        override fun getActivityIntent(context: Context?) = Intent(context, DriverModeNotSupportedActivity()::class.java)
     }
 
     object ShareLogs : SupportAppScreen() {
