@@ -514,7 +514,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
     fun onCenterRouteClick() {
         track?.let { viewState.centerRoute(it) }
-        logButtons(Analytics.SHOW_ROUTE_CLICKED)
+        logSingleEvent(Analytics.SHOW_ROUTE_CLICKED)
     }
 
     private fun selectTransport() {
@@ -571,7 +571,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
         //childSeatsDelegate.clearSeats()
         saveSelectedTransportTypes()
         router.exit()
-        logButtons(Analytics.BACK_TO_MAP)
+        logSingleEvent(Analytics.BACK_TO_MAP)
     }
 
     fun redirectToLogin(id: Long) {
@@ -587,17 +587,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
     /////////Analytics////////
 
-    fun logButtons(event: String) {
-        analytics.logEventToFirebase(event, null)
-        analytics.logEventToYandex(event, null)
-    }
-
-    fun logTransferSettingsEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_FIELD] = value
-
-        analytics.logEvent(Analytics.EVENT_TRANSFER_SETTINGS, createStringBundle(Analytics.PARAM_KEY_FIELD, value), map)
-    }
+    fun logTransferSettingsEvent(value: String) =
+        logEvent(Analytics.EVENT_TRANSFER_SETTINGS, Analytics.PARAM_KEY_FIELD, value)
 
     private fun logCreateTransfer(value: String) {
         val bundle = Bundle()
@@ -676,12 +667,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
     private fun logStartScreenOrder() {
         val pair = Pair(
-            Analytics.ORDER_CREATED_FROM,
-            if (systemInteractor.startScreenOrder) Analytics.FROM_FORM else Analytics.FROM_MAP
-        )
-        analytics.logEvent(Analytics.EVENT_TRANSFER, Bundle().apply {
-            putString(pair.first, pair.second)
-        }, mapOf(pair))
+                Analytics.ORDER_CREATED_FROM,
+                if (systemInteractor.startScreenOrder) Analytics.FROM_FORM else Analytics.FROM_MAP)
+        logEvent(Analytics.EVENT_TRANSFER, pair.first, pair.second)
     }
 
     private fun logGetOffers() {

@@ -95,12 +95,7 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		viewState.showCommentDialog(comment)
 	}
 
-	private fun logAverageRate(rate: Double) =
-			analytics.logEvent(
-					Analytics.REVIEW_AVERAGE,
-					createStringBundle(Analytics.REVIEW,rate.toString()),
-					mapOf(Analytics.REVIEW to rate)
-			)
+	private fun logAverageRate(rate: Double) = logEvent(Analytics.EVENT_REVIEW_AVERAGE, Analytics.REVIEW, rate)
 
 	private fun logDetailRate(list: List<ReviewRate>, comment: String) {
 		val map = mutableMapOf<String, String?>()

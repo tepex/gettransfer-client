@@ -22,6 +22,7 @@ import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.ChatView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.Analytics
 
 import java.util.Calendar
 
@@ -122,7 +123,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         chatModel?.apply { messages = messages.plus(newMessage) }
         viewState.scrollToEnd()
         utils.launchSuspend { fetchResult { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
-        sendAnalytics(MESSAGE_OUT)
+        logSingleEvent(Analytics.MESSAGE_OUT)
     }
 
     fun onTransferInfoClick() {
@@ -143,7 +144,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         utils.launchSuspend {
             fetchResult { chatInteractor.getChat(transferId, true) }
                 .also { if (it.fromCache) initChatModel(it.model) }
-            chatModel?.accountId?.let { if (isIdValid(message, it)) sendAnalytics(MESSAGE_IN) }
+            chatModel?.accountId?.let { if (isIdValid(message, it)) logSingleEvent(Analytics.MESSAGE_IN) }
         }
     }
 
@@ -158,15 +159,9 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
     override fun onSocketDisconnected() {}
 
-    private fun sendAnalytics(event: String) =
-        analytics.logEvent(event, createEmptyBundle(), emptyMap())
-
     private fun isIdValid(message: Message, accountId: Long) = message.accountId != accountId && accountId != NO_ID
 
     companion object {
-        const val MESSAGE_IN  = "message_in"
-        const val MESSAGE_OUT = "message_out"
-
         const val ROLE_CARRIER = "carrier"
         const val ROLE_PASSENGER = "passenger"
 

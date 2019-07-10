@@ -117,17 +117,8 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
         }
     }
 
-    private fun logAppReviewRequest() =
-            analytics.logEvent(
-                    Analytics.EVENT_APP_REVIEW_REQUESTED,
-                    createEmptyBundle(),
-                    emptyMap()
-            )
+    private fun logAppReviewRequest() = logSingleEvent(Analytics.EVENT_APP_REVIEW_REQUESTED)
 
     private fun logAverageRate(rate: Double) =
-            analytics.logEvent(
-                    Analytics.REVIEW_AVERAGE,
-                    createStringBundle(Analytics.REVIEW, rate.toString()),
-                    mapOf(Analytics.REVIEW to rate)
-            )
+            logEvent(Analytics.EVENT_REVIEW_AVERAGE, Analytics.REVIEW, rate)
 }

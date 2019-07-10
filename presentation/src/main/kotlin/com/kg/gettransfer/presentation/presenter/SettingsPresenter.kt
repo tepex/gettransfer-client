@@ -100,11 +100,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     override fun currencyChanged(currency: CurrencyModel) {
         viewState.setCurrency(currency.name)
         viewState.showFragment(CLOSE_FRAGMENT)
-        logEvent(Analytics.CURRENCY_PARAM, currency.code)
-    }
-
-    fun passwordChanged() {
-        viewState.showFragment(CLOSE_FRAGMENT)
+        logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, currency.code)
     }
 
     fun changeLocale(selected: Int): Locale {
@@ -113,7 +109,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         sessionInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name, localeModel.locale)
         saveGeneralSettings(true)
-        logEvent(Analytics.LANGUAGE_PARAM, localeModel.name)
+        logEvent(Analytics.EVENT_SETTINGS, Analytics.LANGUAGE_PARAM, localeModel.name)
 
         Locale.setDefault(sessionInteractor.locale)
         initConfigs()
@@ -153,14 +149,14 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
             clearAllCachedData()
             router.exit()
         }
-        logEvent(Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
+        logEvent(Analytics.EVENT_SETTINGS, Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
     }
 
     fun onDistanceUnitSwitched(isChecked: Boolean) {
         sessionInteractor.distanceUnit = when (isChecked) {
             true  -> DistanceUnit.MI
             false -> DistanceUnit.KM
-        }.apply { logEvent(Analytics.UNITS_PARAM, name) }
+        }.apply { logEvent(Analytics.EVENT_SETTINGS, Analytics.UNITS_PARAM, name) }
         saveGeneralSettings()
     }
 
@@ -215,13 +211,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false
-    }
-
-    private fun logEvent(param: String, value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[param] = value
-
-        analytics.logEvent(Analytics.EVENT_SETTINGS, createStringBundle(param, value), map)
     }
 
     override fun restartApp() { viewState.restartApp() }

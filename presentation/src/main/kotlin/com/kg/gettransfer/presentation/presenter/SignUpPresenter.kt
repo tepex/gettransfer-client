@@ -56,12 +56,8 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
         }
     }
 
-    private fun logLoginEvent(result: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.STATUS] = result
-
-        analytics.logEvent(Analytics.EVENT_SIGN_UP, createStringBundle(Analytics.STATUS, result), map)
-    }
+    private fun logLoginEvent(value: String) =
+        logEvent(Analytics.EVENT_SIGN_UP, Analytics.STATUS, value)
 
     private fun checkFieldsIsValid(): Boolean =
         LoginHelper.phoneIsValid(phone) && LoginHelper.emailIsValid(email)

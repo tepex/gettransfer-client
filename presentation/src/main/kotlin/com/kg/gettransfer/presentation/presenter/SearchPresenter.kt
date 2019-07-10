@@ -9,7 +9,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.model.PopularPlace
 
@@ -42,7 +41,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
     fun onSearchFieldEmpty() = viewState.setSuggestedAddresses(systemInteractor.addressHistory)
 
     fun onPopularSelected(selected: PopularPlace) {
-        logButtons(Analytics.PREDEFINED_CLICKED + selected.title.toLowerCase())
+        logSingleEvent(Analytics.PREDEFINED_CLICKED + selected.title.toLowerCase())
         viewState.onFindPopularPlace(isTo, selected.title)
     }
 
@@ -58,7 +57,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
                         }
             }
             val newAddress = updatedGTAddress ?: selected
-            logButtons(Analytics.LAST_PLACE_CLICKED)
+            logSingleEvent(Analytics.LAST_PLACE_CLICKED)
             val placeType = checkPlaceType(newAddress)
             val isDoubleClickOnRoute =
                     if (oldAddress?.cityPoint?.point != null) oldAddress.cityPoint.point == updatedGTAddress?.cityPoint?.point else false
@@ -128,19 +127,14 @@ class SearchPresenter : BasePresenter<SearchView>() {
         fillHistory()
         if (backwards) router.exit()
         else router.replaceScreen(Screens.CreateOrder)
-        logButtons(Analytics.REQUEST_FORM)
+        logSingleEvent(Analytics.REQUEST_FORM)
     }
 
     fun selectFinishPointOnMap() {
-        logButtons(Analytics.POINT_ON_MAP_CLICKED)
+        logSingleEvent(Analytics.POINT_ON_MAP_CLICKED)
         systemInteractor.selectedField = if (isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
         nState.currentState = MainState.CHOOSE_POINT_ON_MAP
         router.exit()
-    }
-
-    private fun logButtons(event: String) {
-        analytics.logEventToFirebase(event, null)
-        analytics.logEventToYandex(event, null)
     }
 
     fun isHourly() = orderInteractor.hourlyDuration != null
@@ -151,7 +145,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
     }
 
     fun inverseWay() {
-        logButtons(Analytics.SWAP_CLICKED)
+        logSingleEvent(Analytics.SWAP_CLICKED)
         isTo = !isTo
         val copyTo = orderInteractor.to
         orderInteractor.to = orderInteractor.from

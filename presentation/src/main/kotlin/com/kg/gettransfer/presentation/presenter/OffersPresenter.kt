@@ -130,9 +130,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
         transfer?.let {
             if (isShowingOfferDetails) {
                 viewState.showBottomSheetOfferDetails(offerItem)
-                logButtons(Analytics.OFFER_DETAILS)
+                logSingleEvent(Analytics.OFFER_DETAILS)
             } else {
-                logButtons(Analytics.OFFER_BOOK)
+                logSingleEvent(Analytics.OFFER_BOOK)
                 paymentInteractor.selectedTransfer = transfer
                 paymentInteractor.selectedOffer = when (offerItem) {
                     is OfferModel -> offers.filter { offer -> offer is Offer }.find { offer -> (offer as Offer).id == offerItem.id }
@@ -144,15 +144,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
     }
 
-    fun logButtons(event: String) {
-        analytics.logEventToFirebase(event, null)
-        analytics.logEventToYandex(event, null)
-    }
-
-    fun onCancelRequestClicked() {
-        viewState.showAlertCancelRequest()
-    }
-
     override fun onBackCommandClick() {
         if (isViewRoot)
             router.newRootScreen(Screens.MainPassenger(true)).also { isViewRoot = false }
@@ -161,7 +152,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     fun cancelRequest(isCancel: Boolean) {
         if (!isCancel) return
-        logButtons(Analytics.CANCEL_TRANSFER_BTN)
+        logSingleEvent(Analytics.CANCEL_TRANSFER_BTN)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResult (withCacheCheck = false) { transferInteractor.cancelTransfer(transferId, "") }
@@ -230,15 +221,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
             }
         }
         if (sortHigherToLower) offers = offers.reversed()
-        logFilterEvent(sortType)
-    }
-
-    private fun logFilterEvent(sortType: SortType) {
-        val map = mutableMapOf<String, Any>()
-        val value = sortType.name.toLowerCase()
-        map[Analytics.PARAM_KEY_FILTER] = value
-
-        analytics.logEvent(Analytics.EVENT_OFFERS, createStringBundle(Analytics.PARAM_KEY_FILTER, value), map)
+        logEvent(Analytics.EVENT_OFFERS, Analytics.PARAM_KEY_FILTER, sortType.name.toLowerCase())
     }
 
     fun updateBanners() {

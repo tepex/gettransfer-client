@@ -23,9 +23,8 @@ class Analytics(
     private val facebook: AppEventsLogger
 ) {
 
-    fun logEvent(event: String, bundle: Bundle, map: Map<String, Any?>) {
+    fun logEvent(event: String, bundle: Bundle?, map: Map<String, Any?>?) {
         logEventToFirebase(event, bundle)
-        logEventToFacebook(event, bundle)
         logEventToYandex(event, map)
     }
 
@@ -323,7 +322,7 @@ class Analytics(
         const val HOURS = "hours"
 
         const val REVIEW = "review"
-        const val REVIEW_AVERAGE = "transfer_review"
+        const val EVENT_REVIEW_AVERAGE = "transfer_review"
         const val REVIEW_COMMENT = "comment"
         const val REVIEW_APP_REJECTED = "rejected"
         const val REVIEW_APP_ACCEPTED = "accepted"
@@ -352,5 +351,8 @@ class Analytics(
         const val ORDER_CREATED_FROM = "create_from"
         const val FROM_MAP = "map"
         const val FROM_FORM = "form"
+
+        const val MESSAGE_IN  = "message_in"
+        const val MESSAGE_OUT = "message_out"
     }
 }

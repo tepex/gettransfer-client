@@ -27,7 +27,6 @@ import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
 import com.kg.gettransfer.utilities.GTNotificationManager
 
-import java.io.InputStream
 
 import kotlinx.coroutines.Job
 
@@ -71,13 +70,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val log: Logger by inject { parametersOf("GTR-presenter") }
 
     open fun onBackCommandClick() {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_NAME] = Analytics.BACK_CLICKED
-        analytics.logEvent(
-            Analytics.EVENT_MAIN,
-            createStringBundle(Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED),
-            map
-        )
+        logEvent(Analytics.EVENT_MAIN, Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED)
         router.exit()
     }
 
@@ -148,19 +141,25 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     protected open fun systemInitialized() {}
 
-    protected fun createEmptyBundle() = createStringBundle("", "")
-
-    protected fun createStringBundle(key: String, value: String): Bundle {
-        val bundle = Bundle(SINGLE_CAPACITY)
-        bundle.putString(key, value)
-        return bundle
+    private fun createMultipleBundle(map: Map<String, Any>): Bundle {
+        return Bundle().apply {
+            map.forEach { (k, v) ->
+                when (v) {
+                    is String -> putString(k, v)
+                    is Int -> putInt(k, v)
+                    is Double -> putDouble(k, v)
+                }
+            }
+        }
     }
 
-    protected fun createMultipleBundle(map: Map<String, Any>): Bundle {
-        val bundle = Bundle()
-        map.forEach { (k, v) -> bundle.putString(k, v.toString()) }
-        return bundle
+    protected fun logEvent(event: String, key: String, value: Any) {
+        val map = mapOf(key to value)
+        val bundle = createMultipleBundle(map)
+        analytics.logEvent(event, bundle, map)
     }
+
+    internal fun logSingleEvent(event: String) = analytics.logEvent(event, null, null)
 
     internal fun sendEmail(emailCarrier: String?, transferId: Long?) {
         utils.launchSuspend {

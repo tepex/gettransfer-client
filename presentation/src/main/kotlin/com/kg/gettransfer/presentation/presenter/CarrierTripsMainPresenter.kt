@@ -60,7 +60,7 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
 
     fun onShareClick() {
         Timber.d("Share action")
-        logEvent(Analytics.SHARE)
+        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
         router.navigateTo(Screens.Share())
     }
 
@@ -70,12 +70,6 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     }
     fun permissionResult(accepted: Boolean) =
         carrierTripInteractor.permissionChanged(accepted)
-
-    private fun logEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_NAME] = value
-        analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
-    }
 
     fun initGoogleApiClient() = geoInteractor.initGoogleApiClient()
 

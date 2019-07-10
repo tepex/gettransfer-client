@@ -169,7 +169,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun updateCurrentLocation() {
         updateCurrentLocationAsync()
-        logButtons(Analytics.MY_PLACE_CLICKED)
+        logSingleEvent(Analytics.MY_PLACE_CLICKED)
     }
 
     private fun setLastLocation() {
@@ -337,31 +337,31 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun onAboutClick() {
         router.navigateTo(Screens.About(systemInteractor.isOnboardingShowed))
-        logEvent(Analytics.ABOUT_CLICKED)
+        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.ABOUT_CLICKED)
     }
 
     fun readMoreClick() {
         viewState.showReadMoreDialog()
-        logEvent(Analytics.BEST_PRICE_CLICKED)
+        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.BEST_PRICE_CLICKED)
     }
 
     fun onSettingsClick() {
         router.navigateTo(Screens.Settings)
-        logEvent(Analytics.SETTINGS_CLICKED)
+        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SETTINGS_CLICKED)
     }
 
     fun onRequestsClick() {
         router.navigateTo(Screens.Requests)
-        logEvent(Analytics.TRANSFER_CLICKED)
+        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.TRANSFER_CLICKED)
     }
 
     fun onLoginClick() {
         login(Screens.PASSENGER_MODE, "")
-        logEvent(Analytics.LOGIN_CLICKED)
+        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.LOGIN_CLICKED)
     }
 
     fun onBecomeACarrierClick() {
-        logEvent(Analytics.DRIVER_CLICKED)
+        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.DRIVER_CLICKED)
         if (accountManager.isLoggedIn) {
             if (accountManager.remoteAccount.isDriver) {
                 router.newRootScreen(Screens.Carrier(Screens.CARRIER_MODE))
@@ -469,21 +469,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
     }
 
-    private fun logTransferReviewRequested() =
-            analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
-                    createEmptyBundle(),
-                    emptyMap())
-
-    private fun logEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_NAME] = value
-        analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
-    }
-
-    private fun logButtons(event: String) {
-        analytics.logEventToFirebase(event, null)
-        analytics.logEventToYandex(event, null)
-    }
+    private fun logTransferReviewRequested() = logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
 
     fun onBackClick() {
         if (systemInteractor.selectedField == FIELD_TO) switchUsedField()
@@ -493,16 +479,11 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun onShareClick() {
         log.debug("Share action")
-        logEvent(Analytics.SHARE)
+        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
         router.navigateTo(Screens.Share())
     }
 
-    private fun logIpapiRequest() =
-            analytics.logEvent(
-                    Analytics.EVENT_IPAPI_REQUEST,
-                    createEmptyBundle(),
-                    mapOf()
-            )
+    private fun logIpapiRequest() = logSingleEvent(Analytics.EVENT_IPAPI_REQUEST)
 
     fun onStartScreenOrderNote() {
         systemInteractor.startScreenOrder = true

@@ -377,7 +377,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         val fragment = TransportTypeFragment()
         fragment.transportTypeModel = transportTypeModel
         replaceFragment(fragment, R.id.secondary_bottom_sheet)
-        presenter.logButtons(CAR_INFO_CLICKED)
+        presenter.logSingleEvent(CAR_INFO_CLICKED)
     }
 
     @CallSuper

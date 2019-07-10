@@ -60,7 +60,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     }
 
     fun sendVerificationCode() {
-        logButtons(Analytics.RESEND_CODE_CLICKED)
+        logSingleEvent(Analytics.RESEND_CODE_CLICKED)
         if (!checkInputData()) return
 
         utils.launchSuspend {
@@ -109,7 +109,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     }
 
     fun onLoginClick() {
-        logButtons(Analytics.VERIFY_CODE_CLICKED)
+        logSingleEvent(Analytics.VERIFY_CODE_CLICKED)
         if (!checkInputData()) return
 
         utils.launchSuspend {
@@ -137,17 +137,8 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
         }
     }
 
-    private fun logEvent(event:String, result: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.STATUS] = result
-
-        analytics.logEvent(event, createStringBundle(Analytics.STATUS, result), map)
-    }
-
-    fun logButtons(event: String) {
-        analytics.logEventToFirebase(event, null)
-        analytics.logEventToYandex(event, null)
-    }
+    private fun logEvent(event:String, value: String) =
+        logEvent(event, Analytics.STATUS, value)
 
     fun back() {
         router.replaceScreen(Screens.AuthorizationPager(JSON.stringify(LogInView.Params.serializer(), params)))
