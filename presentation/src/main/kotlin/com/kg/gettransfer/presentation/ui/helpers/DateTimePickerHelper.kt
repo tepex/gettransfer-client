@@ -10,9 +10,9 @@ import org.koin.core.KoinComponent
 import java.util.*
 
 object DateTimePickerHelper : KoinComponent {
-    private val calendar: Calendar = Calendar.getInstance()
 
-    fun showDatePickerDialog(context: Context, current: Calendar, handler: DateTimeHandler) {
+    fun showDatePickerDialog(context: Context, selectedDate: Calendar, current: Calendar, handler: DateTimeHandler) {
+        val calendar: Calendar = selectedDate
         val boundDatePickerDialog = BoundDatePickerDialog(context,
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -25,6 +25,7 @@ object DateTimePickerHelper : KoinComponent {
                 when {
                     calendarWithoutTime.time.after(current.time) -> showTimePickerDialog(
                         context,
+                        calendar,
                         -1,
                         24,
                         calendar.get(Calendar.HOUR_OF_DAY),
@@ -35,6 +36,7 @@ object DateTimePickerHelper : KoinComponent {
                     calendar.time.after(current.time) ->
                         showTimePickerDialog(
                             context,
+                            calendar,
                             current.get(Calendar.HOUR_OF_DAY),
                             current.get(Calendar.MINUTE),
                             calendar.get(Calendar.HOUR_OF_DAY),
@@ -44,6 +46,7 @@ object DateTimePickerHelper : KoinComponent {
 
                     else -> showTimePickerDialog(
                         context,
+                        calendar,
                         current.get(Calendar.HOUR_OF_DAY),
                         current.get(Calendar.MINUTE),
                         current.get(Calendar.HOUR_OF_DAY),
@@ -69,6 +72,7 @@ object DateTimePickerHelper : KoinComponent {
 
     private fun showTimePickerDialog(
         context: Context,
+        selectedDate: Calendar,
         minHour: Int,
         minMinute: Int,
         setHour: Int,
@@ -79,9 +83,9 @@ object DateTimePickerHelper : KoinComponent {
             context,
             @Suppress("DEPRECATION") AlertDialog.THEME_HOLO_LIGHT,
             { _, hour, minute ->
-                calendar.set(Calendar.HOUR_OF_DAY, hour)
-                calendar.set(Calendar.MINUTE, minute)
-                handler.onTimeChosen(calendar.time)
+                selectedDate.set(Calendar.HOUR_OF_DAY, hour)
+                selectedDate.set(Calendar.MINUTE, minute)
+                handler.onTimeChosen(selectedDate.time)
             },
             setHour,
             setMinute,
