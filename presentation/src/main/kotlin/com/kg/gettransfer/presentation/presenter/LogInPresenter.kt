@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.extensions.internationalExample
+
 import com.kg.gettransfer.presentation.ui.MainLoginActivity
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
@@ -9,9 +11,12 @@ import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_PHONE
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.getInternationalNumber
+
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
+
 import org.koin.core.KoinComponent
 
 @InjectViewState
@@ -51,11 +56,16 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
 
     private fun checkInputData() = params.emailOrPhone.isNotEmpty() && validateInput()
 
-    private fun logLoginEvent(result: String) {
+    private fun logEvent(event: String, result: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.STATUS] = result
 
-        analytics.logEvent(Analytics.EVENT_LOGIN, createStringBundle(Analytics.STATUS, result), map)
+        analytics.logEvent(event, createStringBundle(Analytics.STATUS, result), map)
+    }
+
+    fun logButtons(event: String) {
+        analytics.logEventToFirebase(event, null)
+        analytics.logEventToYandex(event, null)
     }
 
     override fun onBackCommandClick() {
@@ -65,16 +75,11 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
     private fun loginWithCode() {
         if (!checkInputData()) return
         viewState.hideLoading()
-        val isPhone = isPhone()
-        router.replaceScreen(
-            Screens.SmsCode(
-                params,
-                isPhone
-            )
-        )
+        router.replaceScreen(Screens.SmsCode(params, isPhone()))
     }
 
     fun onLoginClick() {
+        logButtons(Analytics.VERIFY_PASSWORD_CLICKED)
         if (password.isEmpty()) {
             viewState.showValidationError(MainLoginActivity.INVALID_PASSWORD)
             return
@@ -98,12 +103,12 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
             }.also {
                 it.error?.let { e ->
                     viewState.setError(e)
-                    logLoginEvent(Analytics.RESULT_FAIL)
+                    logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.RESULT_FAIL)
                 }
 
                 it.isSuccess()?.let {
                     openNextScreen()
-                    logLoginEvent(Analytics.RESULT_SUCCESS)
+                    logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.RESULT_SUCCESS)
                     registerPushToken()
                     router.exit()
                 }
@@ -114,6 +119,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
     }
 
     fun sendVerificationCode() {
+        logButtons(Analytics.GET_CODE_CLICKED)
         if (params.emailOrPhone.isEmpty() ||
             (!isPhone() && !LoginHelper.emailIsValid(params.emailOrPhone)) ||
             (isPhone() && !LoginHelper.phoneIsValid(params.emailOrPhone))
@@ -132,10 +138,12 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
                     false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
                 }
             }.also {
-                if (it.error != null)
+                if (it.error != null) {
                     viewState.setError(it.error!!)
-                else {
+                    logEvent(Analytics.EVENT_GET_CODE, Analytics.RESULT_FAIL)
+                } else {
                     loginWithCode()
+                    logEvent(Analytics.EVENT_GET_CODE, Analytics.RESULT_SUCCESS)
                 }
             }
         }

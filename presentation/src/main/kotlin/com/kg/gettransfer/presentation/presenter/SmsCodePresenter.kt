@@ -60,6 +60,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     }
 
     fun sendVerificationCode() {
+        logButtons(Analytics.RESEND_CODE_CLICKED)
         if (!checkInputData()) return
 
         utils.launchSuspend {
@@ -69,7 +70,13 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
                     false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
                 }
             }.also { result ->
-                if (result.error != null) viewState.setError(result.error!!) else  setTimer()
+                if (result.error != null) {
+                    viewState.setError(result.error!!)
+                    logEvent(Analytics.EVENT_RESEND_CODE, Analytics.RESULT_FAIL)
+                } else {
+                    setTimer()
+                    logEvent(Analytics.EVENT_RESEND_CODE, Analytics.RESULT_SUCCESS)
+                }
             }
         }
     }
@@ -102,6 +109,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     }
 
     fun onLoginClick() {
+        logButtons(Analytics.VERIFY_CODE_CLICKED)
         if (!checkInputData()) return
 
         utils.launchSuspend {
@@ -114,13 +122,13 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
             }.also {
                 it.error?.let { e ->
                     viewState.setError(e)
-                    logLoginEvent(Analytics.RESULT_FAIL)
+                    logEvent(Analytics.EVENT_LOGIN_CODE, Analytics.RESULT_FAIL)
                 }
 
                 it.isSuccess()?.let {
                     viewState.showErrorText(false)
                     openNextScreen()
-                    logLoginEvent(Analytics.RESULT_SUCCESS)
+                    logEvent(Analytics.EVENT_LOGIN_CODE, Analytics.RESULT_SUCCESS)
                     registerPushToken()
                     router.exit()
                 }
@@ -129,11 +137,16 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
         }
     }
 
-    private fun logLoginEvent(result: String) {
+    private fun logEvent(event:String, result: String) {
         val map = mutableMapOf<String, Any>()
         map[Analytics.STATUS] = result
 
-        analytics.logEvent(Analytics.EVENT_LOGIN, createStringBundle(Analytics.STATUS, result), map)
+        analytics.logEvent(event, createStringBundle(Analytics.STATUS, result), map)
+    }
+
+    fun logButtons(event: String) {
+        analytics.logEventToFirebase(event, null)
+        analytics.logEventToYandex(event, null)
     }
 
     fun back() {
