@@ -437,6 +437,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
                             )
                         )
                     }
+                    result.error!!.isEarlyDateError() -> viewState.setError(false, R.string.LNG_DATE_EARLY_ERROR)
                     result.error!!.code == ApiException.NETWORK_ERROR -> viewState.setError(
                         false,
                         R.string.LNG_NETWORK_ERROR
