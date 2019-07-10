@@ -64,7 +64,9 @@
         <include
             android:id="@+id/yourRateMark"
             layout="@layout/view_your_rate_mark"
-            android:visibility="gone" />
+            android:visibility="gone"
+            
+            tools:visibility="visible"/>
 
         <include
             android:id="@+id/yourComment"

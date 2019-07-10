@@ -12,6 +12,7 @@ import com.kg.gettransfer.extensions.strikeText
 
 import com.kg.gettransfer.domain.model.Money
 import com.kg.gettransfer.domain.model.Ratings
+import com.kg.gettransfer.extensions.toHalfEvenRoundedFloat
 
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -179,7 +180,7 @@ object OfferItemBindDelegate {
         with(rateView) {
             imgApproved.isVisible = approved
             if (rating.average != Ratings.NO_RATING) {
-                tv_drivers_rate.text  = rating.average.toString().replace(".", ",")
+                tv_drivers_rate.text  = rating.average.toHalfEvenRoundedFloat().toString().replace(".", ",")
                 tv_drivers_rate.isVisible = true
                 imgStar.isVisible = true
                 isVisible = true

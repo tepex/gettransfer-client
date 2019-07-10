@@ -31,6 +31,7 @@ import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.strikeText
+import com.kg.gettransfer.extensions.toHalfEvenRoundedFloat
 
 import com.kg.gettransfer.presentation.adapter.OffersAdapter
 
@@ -69,7 +70,6 @@ import kotlinx.android.synthetic.main.view_offer_rating_field.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 import timber.log.Timber
-import java.math.RoundingMode
 
 class OffersActivity : BaseActivity(), OffersView {
 
@@ -355,9 +355,9 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun setRating(rate: Double?, ratingLayout: RatingFieldView) {
         with(ratingLayout) {
-            val rating = (rate ?: 0.0).toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
-            ratingBar.rating = rating
-            ratingNumber.text = rating.toString().replace(".", ",")
+            val rating = rate ?: 0.0
+            ratingBar.rating = rating.toFloat()
+            ratingNumber.text = rating.toHalfEvenRoundedFloat().toString().replace(".", ",")
         }
     }
 
