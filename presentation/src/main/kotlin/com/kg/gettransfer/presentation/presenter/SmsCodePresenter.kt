@@ -144,12 +144,6 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
         analytics.logEvent(event, createStringBundle(Analytics.STATUS, result), map)
     }
 
-    private fun logEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_NAME] = value
-        analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
-    }
-
     fun logButtons(event: String) {
         analytics.logEventToFirebase(event, null)
         analytics.logEventToYandex(event, null)
