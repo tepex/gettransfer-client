@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
-
 import com.arellomobile.mvp.MvpPresenter
 
 import com.google.firebase.iid.FirebaseInstanceId
@@ -19,6 +17,7 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_REJECTED
 import com.kg.gettransfer.presentation.view.Screens
@@ -141,21 +140,9 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     protected open fun systemInitialized() {}
 
-    private fun createMultipleBundle(map: Map<String, Any>): Bundle {
-        return Bundle().apply {
-            map.forEach { (k, v) ->
-                when (v) {
-                    is String -> putString(k, v)
-                    is Int -> putInt(k, v)
-                    is Double -> putDouble(k, v)
-                }
-            }
-        }
-    }
-
-    protected fun logEvent(event: String, key: String, value: Any) {
-        val map = mapOf(key to value)
-        val bundle = createMultipleBundle(map)
+    protected fun logEvent(event: String, key: String, value: Any?) {
+        val map = mutableMapOf(key to value)
+        val bundle = Utils.createBundleFromMap(map)
         analytics.logEvent(event, bundle, map)
     }
 

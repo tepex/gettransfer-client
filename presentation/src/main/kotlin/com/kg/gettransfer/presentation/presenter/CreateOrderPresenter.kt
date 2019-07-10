@@ -2,12 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 
-import com.appsflyer.AFInAppEventParameterName
-import com.appsflyer.AFInAppEventType
-
 import com.arellomobile.mvp.InjectViewState
-
-import com.facebook.appevents.AppEventsConstants
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
@@ -465,21 +460,18 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        with(orderInteractor) {
-            var errorField = when {
-                !isTimeSetByUser -> FieldError.TIME_NOT_SELECTED
-                !dateDelegate.validate() -> FieldError.RETURN_TIME
-                transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
-                //passengers == 0                             -> FieldError.PASSENGERS_COUNT
-                else -> null
-            }
-            if (errorField == null) errorField = accountManager.isValidProfileForCreateOrder()
-            if (errorField == null) return true
-            logCreateTransfer(errorField.value)
-            viewState.showEmptyFieldError(errorField.stringId)
-            viewState.highLightErrorField(errorField)
-            return false
+        var errorField = when {
+            !isTimeSetByUser -> FieldError.TIME_NOT_SELECTED
+            !dateDelegate.validate() -> FieldError.RETURN_TIME
+            transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
+            else -> null
         }
+        if (errorField == null) errorField = accountManager.isValidProfileForCreateOrder()
+        if (errorField == null) return true
+        logCreateTransfer(errorField.value)
+        viewState.showEmptyFieldError(errorField.stringId)
+        viewState.highLightErrorField(errorField)
+        return false
     }
 
     fun onTransportChosen() {
@@ -590,79 +582,42 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
     fun logTransferSettingsEvent(value: String) =
         logEvent(Analytics.EVENT_TRANSFER_SETTINGS, Analytics.PARAM_KEY_FIELD, value)
 
-    private fun logCreateTransfer(value: String) {
-        val bundle = Bundle()
-        val map = mutableMapOf<String, Any?>()
+    private fun logCreateTransfer(result: String) {
 
-        map[Analytics.PARAM_KEY_RESULT] = value
-        bundle.putString(Analytics.PARAM_KEY_RESULT, value)
+        val currency = if (selectedCurrency != INVALID_CURRENCY_INDEX)
+                            currencies[selectedCurrency].name
+                       else null
 
-        orderInteractor.offeredPrice?.let {
-            bundle.putString(Analytics.VALUE, it.toString())
-            map[Analytics.VALUE] = it.toString()
-        }
-
-        if (selectedCurrency != INVALID_CURRENCY_INDEX) {
-            bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
-            map[Analytics.CURRENCY] = currencies[selectedCurrency].name
-        }
-        duration?.let { bundle.putInt(Analytics.HOURS, it) }
-        duration?.let { map[Analytics.HOURS] = it }
-
-        analytics.logEvent(Analytics.EVENT_TRANSFER, bundle, map)
+        analytics.logCreateTransfer(
+                result,
+                orderInteractor.offeredPrice?.let { it.toString() },
+                currency,
+                duration?.let { it })
     }
 
-    private fun logEventAddToCart(value: String) {
-        val bundle = Bundle()
-        val fbBundle = Bundle()
-        val map = mutableMapOf<String, Any?>()
-        val afMap = mutableMapOf<String, Any?>()
-
-        orderInteractor.passengers.let {
-            bundle.putInt(Analytics.NUMBER_OF_PASSENGERS, it)
-            map[Analytics.NUMBER_OF_PASSENGERS] = it
-        }
-
-        bundle.putString(Analytics.ORIGIN, orderInteractor.from?.variants?.first)
-        map[Analytics.ORIGIN] = orderInteractor.from?.variants?.first
-        bundle.putString(Analytics.DESTINATION, orderInteractor.to?.variants?.first)
-        map[Analytics.DESTINATION] = orderInteractor.to?.variants?.first
-
-        bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
-        map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
-
-        duration?.let { bundle.putInt(Analytics.HOURS, it) }
-        duration?.let { map[Analytics.HOURS] = it }
-
-        when {
+    private fun logEventAddToCart() {
+        val tripType = when {
             duration != null -> Analytics.TRIP_HOURLY
             dateDelegate.returnDate != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
-        }.let {
-            bundle.putString(Analytics.TRIP_TYPE, it)
-            map[Analytics.TRIP_TYPE] = it
-        }
+        }.let { it }
 
-        fbBundle.putAll(bundle)
-        afMap.putAll(map)
+        val value = orderInteractor.offeredPrice?.let { it.toString() }
 
-        orderInteractor.offeredPrice?.let {
-            bundle.putString(Analytics.VALUE, it.toString())
-            map[Analytics.VALUE] = it.toString()
-        }
+        val currency =
+                if (selectedCurrency != INVALID_CURRENCY_INDEX)
+                    currencies[selectedCurrency].name
+                else null
 
-        if (selectedCurrency != INVALID_CURRENCY_INDEX) {
-            val currency = currencies[selectedCurrency].name
-            bundle.putString(Analytics.CURRENCY, currency)
-            fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currency)
-            map[Analytics.CURRENCY] = currency
-            afMap[AFInAppEventParameterName.CURRENCY] = currency
-        }
-
-        analytics.logEventToFirebase(value, bundle)
-        analytics.logEventToFacebook(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, fbBundle)
-        analytics.logEventToYandex(value, map)
-        analytics.logEventToAppsFlyer(AFInAppEventType.ADD_TO_CART, afMap)
+        analytics.logEventAddToCart(
+                orderInteractor.passengers,
+                orderInteractor.from?.variants?.first,
+                        orderInteractor.to?.variants?.first,
+                transportTypes?.filter { it.checked }?.joinToString(),
+                duration?.let { it },
+                tripType,
+                value,
+                currency)
     }
 
     private fun logStartScreenOrder() {
@@ -674,7 +629,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
     private fun logGetOffers() {
         logCreateTransfer(Analytics.RESULT_SUCCESS)
-        logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
+        logEventAddToCart()
         logStartScreenOrder()
     }
 
