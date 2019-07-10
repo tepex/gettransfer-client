@@ -57,7 +57,7 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
     }
 
     private fun logLoginEvent(value: String) =
-        logEvent(Analytics.EVENT_SIGN_UP, Analytics.STATUS, value)
+            analytics.logEvent(Analytics.EVENT_SIGN_UP, Analytics.STATUS, value)
 
     private fun checkFieldsIsValid(): Boolean =
         LoginHelper.phoneIsValid(phone) && LoginHelper.emailIsValid(email)

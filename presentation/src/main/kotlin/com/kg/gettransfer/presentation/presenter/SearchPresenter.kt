@@ -41,7 +41,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
     fun onSearchFieldEmpty() = viewState.setSuggestedAddresses(systemInteractor.addressHistory)
 
     fun onPopularSelected(selected: PopularPlace) {
-        logSingleEvent(Analytics.PREDEFINED_CLICKED + selected.title.toLowerCase())
+        analytics.logSingleEvent(Analytics.PREDEFINED_CLICKED + selected.title.toLowerCase())
         viewState.onFindPopularPlace(isTo, selected.title)
     }
 
@@ -57,7 +57,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
                         }
             }
             val newAddress = updatedGTAddress ?: selected
-            logSingleEvent(Analytics.LAST_PLACE_CLICKED)
+            analytics.logSingleEvent(Analytics.LAST_PLACE_CLICKED)
             val placeType = checkPlaceType(newAddress)
             val isDoubleClickOnRoute =
                     if (oldAddress?.cityPoint?.point != null) oldAddress.cityPoint.point == updatedGTAddress?.cityPoint?.point else false
@@ -127,11 +127,11 @@ class SearchPresenter : BasePresenter<SearchView>() {
         fillHistory()
         if (backwards) router.exit()
         else router.replaceScreen(Screens.CreateOrder)
-        logSingleEvent(Analytics.REQUEST_FORM)
+        analytics.logSingleEvent(Analytics.REQUEST_FORM)
     }
 
     fun selectFinishPointOnMap() {
-        logSingleEvent(Analytics.POINT_ON_MAP_CLICKED)
+        analytics.logSingleEvent(Analytics.POINT_ON_MAP_CLICKED)
         systemInteractor.selectedField = if (isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
         nState.currentState = MainState.CHOOSE_POINT_ON_MAP
         router.exit()
@@ -145,7 +145,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
     }
 
     fun inverseWay() {
-        logSingleEvent(Analytics.SWAP_CLICKED)
+        analytics.logSingleEvent(Analytics.SWAP_CLICKED)
         isTo = !isTo
         val copyTo = orderInteractor.to
         orderInteractor.to = orderInteractor.from

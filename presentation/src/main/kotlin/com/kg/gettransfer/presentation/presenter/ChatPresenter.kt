@@ -123,15 +123,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         chatModel?.apply { messages = messages.plus(newMessage) }
         viewState.scrollToEnd()
         utils.launchSuspend { fetchResult { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
-        logSingleEvent(Analytics.MESSAGE_OUT)
-    }
-
-    fun onTransferInfoClick() {
-        if (tripId != NO_ID) {
-            router.navigateTo(Screens.TripDetails(tripId, transferId))
-        } else if (userRole != ROLE_CARRIER) {
-            router.navigateTo(Screens.Details(transferId))
-        }
+        analytics.logSingleEvent(Analytics.MESSAGE_OUT)
     }
 
     fun readMessage(messageId: Long) {
@@ -144,7 +136,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         utils.launchSuspend {
             fetchResult { chatInteractor.getChat(transferId, true) }
                 .also { if (it.fromCache) initChatModel(it.model) }
-            chatModel?.accountId?.let { if (isIdValid(message, it)) logSingleEvent(Analytics.MESSAGE_IN) }
+            chatModel?.accountId?.let { if (isIdValid(message, it)) analytics.logSingleEvent(Analytics.MESSAGE_IN) }
         }
     }
 

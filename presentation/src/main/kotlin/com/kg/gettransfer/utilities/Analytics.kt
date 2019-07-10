@@ -24,7 +24,22 @@ class Analytics(
     private val facebook: AppEventsLogger
 ) {
 
-    fun logEvent(event: String, bundle: Bundle?, map: Map<String, Any?>?) {
+    fun logEvent(event: String, key: String, value: Any?) {
+        val map = mutableMapOf(key to value)
+        val bundle = Utils.createBundleFromMap(map)
+        logEvent(event, bundle, map)
+    }
+
+    fun logSingleEvent(event: String) = logEvent(event, null, null)
+
+    fun logEvent(event: String, pairs: List<Pair<String, Any?>>) {
+        val map = mutableMapOf<String, Any?>()
+        pairs.forEach { map[it.first] = it.second }
+        val bundle = Utils.createBundleFromMap(map)
+        logEvent(event, bundle, map)
+    }
+
+    private fun logEvent(event: String, bundle: Bundle?, map: Map<String, Any?>?) {
         logEventToFirebase(event, bundle)
         logEventToYandex(event, map)
     }
@@ -63,16 +78,7 @@ class Analytics(
             sendToFacebook()
             sendToYandex()
             sendToAppsFlyer()
-            logEvent(RESULT_SUCCESS)
-        }
-
-        private fun logEvent(value: String) {
-            val map = mutableMapOf<String, Any>()
-            val bundle = Bundle()
-
-            map[STATUS] = value
-            bundle.putString(STATUS, value)
-            logEvent(EVENT_MAKE_PAYMENT, bundle, map)
+            logEvent(EVENT_MAKE_PAYMENT, STATUS, RESULT_SUCCESS)
         }
 
         private fun sendToAppsFlyer() {

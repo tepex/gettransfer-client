@@ -474,20 +474,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
         return false
     }
 
-    fun onTransportChosen() {
-        val tripTime = duration?.let { String.format("%d:%d", it / 60, it % 60) }
-        val checkedTransport = transportTypes?.filter { it.checked }
-        if (!checkedTransport.isNullOrEmpty()) {
-            try {
-                viewState.setFairPrice(checkedTransport.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
-            } catch (e: NullPointerException) {
-                viewState.setFairPrice(null, null)
-            }
-        } else {
-            viewState.setFairPrice(null, null)
-        }
-    }
-
     fun setPassengersCountForSelectedTransportTypes(setSavedPax: Boolean = false) {
         if (setSavedPax) {
             viewState.setPassengers(orderInteractor.passengers)
@@ -506,7 +492,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
     fun onCenterRouteClick() {
         track?.let { viewState.centerRoute(it) }
-        logSingleEvent(Analytics.SHOW_ROUTE_CLICKED)
+        analytics.logSingleEvent(Analytics.SHOW_ROUTE_CLICKED)
     }
 
     private fun selectTransport() {
@@ -515,7 +501,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
         } else {
             setFavoriteTransportTypes()
         }
-//        onTransportChosen()
     }
 
     private fun setFavoriteTransportTypes() =
@@ -560,10 +545,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
     fun onBackClick() = onBackCommandClick()
 
     override fun onBackCommandClick() {
-        //childSeatsDelegate.clearSeats()
         saveSelectedTransportTypes()
         router.exit()
-        logSingleEvent(Analytics.BACK_TO_MAP)
+        analytics.logSingleEvent(Analytics.BACK_TO_MAP)
     }
 
     fun redirectToLogin(id: Long) {
@@ -580,7 +564,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
     /////////Analytics////////
 
     fun logTransferSettingsEvent(value: String) =
-        logEvent(Analytics.EVENT_TRANSFER_SETTINGS, Analytics.PARAM_KEY_FIELD, value)
+        analytics.logEvent(Analytics.EVENT_TRANSFER_SETTINGS, Analytics.PARAM_KEY_FIELD, value)
 
     private fun logCreateTransfer(result: String) {
 
@@ -624,7 +608,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
         val pair = Pair(
                 Analytics.ORDER_CREATED_FROM,
                 if (systemInteractor.startScreenOrder) Analytics.FROM_FORM else Analytics.FROM_MAP)
-        logEvent(Analytics.EVENT_TRANSFER, pair.first, pair.second)
+        analytics.logEvent(Analytics.EVENT_TRANSFER, pair.first, pair.second)
     }
 
     private fun logGetOffers() {
@@ -639,6 +623,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
     fun commentClick(comment: String) {
         viewState.showCommentDialog(comment, hintsToComments)
+    }
+
+    fun onTransportTypeClicked() {
+        analytics.logSingleEvent(Analytics.CAR_INFO_CLICKED)
     }
 
     companion object {

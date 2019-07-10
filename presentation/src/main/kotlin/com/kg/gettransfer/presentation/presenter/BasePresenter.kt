@@ -17,7 +17,6 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_REJECTED
 import com.kg.gettransfer.presentation.view.Screens
@@ -69,7 +68,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val log: Logger by inject { parametersOf("GTR-presenter") }
 
     open fun onBackCommandClick() {
-        logEvent(Analytics.EVENT_MAIN, Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MAIN, Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED)
         router.exit()
     }
 
@@ -139,14 +138,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     }
 
     protected open fun systemInitialized() {}
-
-    protected fun logEvent(event: String, key: String, value: Any?) {
-        val map = mutableMapOf(key to value)
-        val bundle = Utils.createBundleFromMap(map)
-        analytics.logEvent(event, bundle, map)
-    }
-
-    internal fun logSingleEvent(event: String) = analytics.logEvent(event, null, null)
 
     internal fun sendEmail(emailCarrier: String?, transferId: Long?) {
         utils.launchSuspend {
@@ -366,8 +357,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
     companion object {
-        const val SINGLE_CAPACITY = 1
-        const val DOUBLE_CAPACITY = 2
 
         //when you want to handle error in child presenter
         const val SHOW_ERROR = true

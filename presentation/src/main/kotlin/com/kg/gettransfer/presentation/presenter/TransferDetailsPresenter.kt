@@ -255,10 +255,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             reviewInteractor.setRates(rating)
             if (rating.toInt() == ReviewInteractor.MAX_RATE) {
                 utils.launchSuspend { reviewInteractor.sendRates() }
-                logEvent(Analytics.EVENT_REVIEW_AVERAGE, Analytics.REVIEW, ReviewInteractor.MAX_RATE.toFloat())
+                analytics.logEvent(Analytics.EVENT_REVIEW_AVERAGE, Analytics.REVIEW, ReviewInteractor.MAX_RATE.toFloat())
                 if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
                     viewState.askRateInPlayMarket()
-                    logSingleEvent(Analytics.EVENT_APP_REVIEW_REQUESTED)
+                    analytics.logSingleEvent(Analytics.EVENT_APP_REVIEW_REQUESTED)
                 }
                 return
             }
@@ -266,7 +266,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         viewState.showDetailRate()
     }
 
-    fun logTransferReviewRequested() = logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
+    fun logTransferReviewRequested() = analytics.logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
 
     private val coordinateRequester = object : CoordinateRequester {
         override fun request() = coordinateInteractor.initCoordinatesReceiving(transferId)

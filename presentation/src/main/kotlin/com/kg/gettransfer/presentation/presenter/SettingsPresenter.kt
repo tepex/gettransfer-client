@@ -100,7 +100,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     override fun currencyChanged(currency: CurrencyModel) {
         viewState.setCurrency(currency.name)
         viewState.showFragment(CLOSE_FRAGMENT)
-        logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, currency.code)
+        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, currency.code)
     }
 
     fun changeLocale(selected: Int): Locale {
@@ -109,7 +109,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         sessionInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name, localeModel.locale)
         saveGeneralSettings(true)
-        logEvent(Analytics.EVENT_SETTINGS, Analytics.LANGUAGE_PARAM, localeModel.name)
+        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LANGUAGE_PARAM, localeModel.name)
 
         Locale.setDefault(sessionInteractor.locale)
         initConfigs()
@@ -149,14 +149,14 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
             clearAllCachedData()
             router.exit()
         }
-        logEvent(Analytics.EVENT_SETTINGS, Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
+        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
     }
 
     fun onDistanceUnitSwitched(isChecked: Boolean) {
         sessionInteractor.distanceUnit = when (isChecked) {
             true  -> DistanceUnit.MI
             false -> DistanceUnit.KM
-        }.apply { logEvent(Analytics.EVENT_SETTINGS, Analytics.UNITS_PARAM, name) }
+        }.apply { analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.UNITS_PARAM, name) }
         saveGeneralSettings()
     }
 

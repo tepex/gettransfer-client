@@ -70,7 +70,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
     private fun showFailedPayment() {
         router.exit()
         router.navigateTo(Screens.PaymentError(transferId))
-        logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
+        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {

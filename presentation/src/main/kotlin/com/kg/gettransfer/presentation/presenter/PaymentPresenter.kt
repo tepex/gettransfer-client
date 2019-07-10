@@ -112,7 +112,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
         viewState.blockInterface(false)
         router.exit()
         router.navigateTo(Screens.PaymentError(transfer!!.id))
-        logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
+        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {

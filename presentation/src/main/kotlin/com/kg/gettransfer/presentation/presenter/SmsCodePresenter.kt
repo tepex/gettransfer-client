@@ -60,7 +60,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     }
 
     fun sendVerificationCode() {
-        logSingleEvent(Analytics.RESEND_CODE_CLICKED)
+        analytics.logSingleEvent(Analytics.RESEND_CODE_CLICKED)
         if (!checkInputData()) return
 
         utils.launchSuspend {
@@ -109,7 +109,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     }
 
     fun onLoginClick() {
-        logSingleEvent(Analytics.VERIFY_CODE_CLICKED)
+        analytics.logSingleEvent(Analytics.VERIFY_CODE_CLICKED)
         if (!checkInputData()) return
 
         utils.launchSuspend {
@@ -138,7 +138,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     }
 
     private fun logEvent(event:String, value: String) =
-        logEvent(event, Analytics.STATUS, value)
+            analytics.logEvent(event, Analytics.STATUS, value)
 
     fun back() {
         router.replaceScreen(Screens.AuthorizationPager(JSON.stringify(LogInView.Params.serializer(), params)))

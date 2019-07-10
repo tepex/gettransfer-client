@@ -130,9 +130,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
         transfer?.let {
             if (isShowingOfferDetails) {
                 viewState.showBottomSheetOfferDetails(offerItem)
-                logSingleEvent(Analytics.OFFER_DETAILS)
+                analytics.logSingleEvent(Analytics.OFFER_DETAILS)
             } else {
-                logSingleEvent(Analytics.OFFER_BOOK)
+                analytics.logSingleEvent(Analytics.OFFER_BOOK)
                 paymentInteractor.selectedTransfer = transfer
                 paymentInteractor.selectedOffer = when (offerItem) {
                     is OfferModel -> offers.filter { offer -> offer is Offer }.find { offer -> (offer as Offer).id == offerItem.id }
@@ -152,7 +152,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     fun cancelRequest(isCancel: Boolean) {
         if (!isCancel) return
-        logSingleEvent(Analytics.CANCEL_TRANSFER_BTN)
+        analytics.logSingleEvent(Analytics.CANCEL_TRANSFER_BTN)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResult (withCacheCheck = false) { transferInteractor.cancelTransfer(transferId, "") }
@@ -221,7 +221,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
             }
         }
         if (sortHigherToLower) offers = offers.reversed()
-        logEvent(Analytics.EVENT_OFFERS, Analytics.PARAM_KEY_FILTER, sortType.name.toLowerCase())
+        analytics.logEvent(Analytics.EVENT_OFFERS, Analytics.PARAM_KEY_FILTER, sortType.name.toLowerCase())
     }
 
     fun updateBanners() {

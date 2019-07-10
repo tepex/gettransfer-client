@@ -117,8 +117,8 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
         }
     }
 
-    private fun logAppReviewRequest() = logSingleEvent(Analytics.EVENT_APP_REVIEW_REQUESTED)
+    private fun logAppReviewRequest() = analytics.logSingleEvent(Analytics.EVENT_APP_REVIEW_REQUESTED)
 
     private fun logAverageRate(rate: Double) =
-            logEvent(Analytics.EVENT_REVIEW_AVERAGE, Analytics.REVIEW, rate)
+            analytics.logEvent(Analytics.EVENT_REVIEW_AVERAGE, Analytics.REVIEW, rate)
 }

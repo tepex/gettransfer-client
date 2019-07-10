@@ -46,9 +46,7 @@ class StoreDialogFragment : BaseBottomSheetDialogFragment() {
 	private fun logReviewDialogResult(positive: Boolean) {
 		with(Analytics) {
 			val p = Pair(if (positive) REVIEW_APP_ACCEPTED else REVIEW_APP_REJECTED,"")
-			analytics.logEvent(EVENT_APP_REVIEW_REQUESTED,
-					Bundle(1).apply { putString(p.first, p.second) },
-					mapOf(p))
+			analytics.logEvent(EVENT_APP_REVIEW_REQUESTED, p.first, p.second)
 		}
 	}
 

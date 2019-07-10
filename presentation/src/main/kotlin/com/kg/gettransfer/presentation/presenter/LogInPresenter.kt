@@ -67,7 +67,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
     }
 
     fun onLoginClick() {
-        logSingleEvent(Analytics.VERIFY_PASSWORD_CLICKED)
+        analytics.logSingleEvent(Analytics.VERIFY_PASSWORD_CLICKED)
         if (password.isEmpty()) {
             viewState.showValidationError(MainLoginActivity.INVALID_PASSWORD)
             return
@@ -91,12 +91,12 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
             }.also {
                 it.error?.let { e ->
                     viewState.setError(e)
-                    logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.STATUS, Analytics.RESULT_FAIL)
+                    analytics.logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.STATUS, Analytics.RESULT_FAIL)
                 }
 
                 it.isSuccess()?.let {
                     openNextScreen()
-                    logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.STATUS, Analytics.RESULT_SUCCESS)
+                    analytics.logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.STATUS, Analytics.RESULT_SUCCESS)
                     registerPushToken()
                     router.exit()
                 }
@@ -107,7 +107,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
     }
 
     fun sendVerificationCode() {
-        logSingleEvent(Analytics.GET_CODE_CLICKED)
+        analytics.logSingleEvent(Analytics.GET_CODE_CLICKED)
         if (params.emailOrPhone.isEmpty() ||
             (!isPhone() && !LoginHelper.emailIsValid(params.emailOrPhone)) ||
             (isPhone() && !LoginHelper.phoneIsValid(params.emailOrPhone))
@@ -128,10 +128,10 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
             }.also {
                 if (it.error != null) {
                     viewState.setError(it.error!!)
-                    logEvent(Analytics.EVENT_GET_CODE, Analytics.STATUS, Analytics.RESULT_FAIL)
+                    analytics.logEvent(Analytics.EVENT_GET_CODE, Analytics.STATUS, Analytics.RESULT_FAIL)
                 } else {
                     loginWithCode()
-                    logEvent(Analytics.EVENT_GET_CODE, Analytics.STATUS, Analytics.RESULT_SUCCESS)
+                    analytics.logEvent(Analytics.EVENT_GET_CODE, Analytics.STATUS, Analytics.RESULT_SUCCESS)
                 }
             }
         }

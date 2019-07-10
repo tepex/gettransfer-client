@@ -169,7 +169,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun updateCurrentLocation() {
         updateCurrentLocationAsync()
-        logSingleEvent(Analytics.MY_PLACE_CLICKED)
+        analytics.logSingleEvent(Analytics.MY_PLACE_CLICKED)
     }
 
     private fun setLastLocation() {
@@ -337,31 +337,31 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun onAboutClick() {
         router.navigateTo(Screens.About(systemInteractor.isOnboardingShowed))
-        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.ABOUT_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.ABOUT_CLICKED)
     }
 
     fun readMoreClick() {
         viewState.showReadMoreDialog()
-        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.BEST_PRICE_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.BEST_PRICE_CLICKED)
     }
 
     fun onSettingsClick() {
         router.navigateTo(Screens.Settings)
-        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SETTINGS_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SETTINGS_CLICKED)
     }
 
     fun onRequestsClick() {
         router.navigateTo(Screens.Requests)
-        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.TRANSFER_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.TRANSFER_CLICKED)
     }
 
     fun onLoginClick() {
         login(Screens.PASSENGER_MODE, "")
-        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.LOGIN_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.LOGIN_CLICKED)
     }
 
     fun onBecomeACarrierClick() {
-        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.DRIVER_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.DRIVER_CLICKED)
         if (accountManager.isLoggedIn) {
             if (accountManager.remoteAccount.isDriver) {
                 router.newRootScreen(Screens.Carrier(Screens.CARRIER_MODE))
@@ -469,7 +469,8 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
     }
 
-    private fun logTransferReviewRequested() = logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
+    private fun logTransferReviewRequested() =
+            analytics.logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
 
     fun onBackClick() {
         if (systemInteractor.selectedField == FIELD_TO) switchUsedField()
@@ -479,11 +480,11 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun onShareClick() {
         log.debug("Share action")
-        logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
         router.navigateTo(Screens.Share())
     }
 
-    private fun logIpapiRequest() = logSingleEvent(Analytics.EVENT_IPAPI_REQUEST)
+    private fun logIpapiRequest() = analytics.logSingleEvent(Analytics.EVENT_IPAPI_REQUEST)
 
     fun onStartScreenOrderNote() {
         systemInteractor.startScreenOrder = true

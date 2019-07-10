@@ -17,7 +17,7 @@ class AboutPresenter : BasePresenter<AboutView>() {
     fun logExitStep(value: Int) {
         if (systemInteractor.isFirstLaunch) {
             systemInteractor.isFirstLaunch = false
-            logEvent(Analytics.EVENT_ONBOARDING, Analytics.EXIT_STEP, value)
+            analytics.logEvent(Analytics.EVENT_ONBOARDING, Analytics.EXIT_STEP, value)
         }
     }
 }
