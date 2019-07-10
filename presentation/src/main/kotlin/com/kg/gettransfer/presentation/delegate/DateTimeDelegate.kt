@@ -62,6 +62,7 @@ class DateTimeDelegate : KoinComponent {
     fun chooseOrderTime(context: Context, fieldStart: Boolean, screen: DateTimeScreen?) =
         DateTimePickerHelper.showDatePickerDialog(
             context,
+            Calendar.getInstance().apply { time = if (fieldStart) startDate else returnDate ?: startDate},
             getCurrentDateForField(fieldStart),
             object : DateTimeHandler {
 
