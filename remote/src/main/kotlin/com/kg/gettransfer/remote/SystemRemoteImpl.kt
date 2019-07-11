@@ -4,12 +4,14 @@ import com.kg.gettransfer.data.SystemRemote
 
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
 
 import com.kg.gettransfer.remote.model.ConfigsModel
-import com.kg.gettransfer.remote.model.MobileConfigModel
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.map
+
+import com.kg.gettransfer.sys.data.MobileConfigsEntity
+import com.kg.gettransfer.sys.remote.MobileConfigsModel
+import com.kg.gettransfer.sys.remote.map
 
 import org.koin.core.get
 
@@ -23,8 +25,8 @@ class SystemRemoteImpl : SystemRemote {
         return response.data!!.map()
     }
 
-    override suspend fun getMobileConfigs(): MobileConfigEntity {
-        val response: MobileConfigModel = core.tryTwice { core.api.getMobileConfigs() }
+    override suspend fun getMobileConfigs(): MobileConfigsEntity {
+        val response: MobileConfigsModel = core.tryTwice { core.api.getMobileConfigs() }
         return response.map()
     }
 

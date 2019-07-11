@@ -2,6 +2,7 @@
 package com.kg.gettransfer.cache
 
 import android.arch.persistence.room.TypeConverter
+
 import com.kg.gettransfer.cache.model.CurrencyCachedList
 import com.kg.gettransfer.cache.model.LocaleCachedList
 import com.kg.gettransfer.cache.model.StringList
@@ -9,7 +10,7 @@ import com.kg.gettransfer.cache.model.TransportTypesCachedList
 import com.kg.gettransfer.cache.model.IntList
 import com.kg.gettransfer.cache.model.BookNowOfferCachedMap
 import com.kg.gettransfer.cache.model.ChatAccountsCachedMap
-import com.kg.gettransfer.cache.model.BuildsConfigsCachedMap
+
 import kotlinx.serialization.json.JSON
 
 object RoomConverters {
@@ -77,14 +78,4 @@ object RoomConverters {
     @JvmStatic
     fun toChatAccountCachedMap(s: String?): ChatAccountsCachedMap? =
         s?.let { JSON.parse(ChatAccountsCachedMap.serializer(), it) }
-
-    @TypeConverter
-    @JvmStatic
-    fun fromBuildsConfigsCachedMap(map: BuildsConfigsCachedMap?): String? =
-        map?.let { JSON.stringify(BuildsConfigsCachedMap.serializer(), it) }
-
-    @TypeConverter
-    @JvmStatic
-    fun toBuildsConfigsCachedMap(s: String?): BuildsConfigsCachedMap? =
-        s?.let { JSON.parse(BuildsConfigsCachedMap.serializer(), it) }
 }

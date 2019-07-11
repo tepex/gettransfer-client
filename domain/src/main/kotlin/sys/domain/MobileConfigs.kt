@@ -10,15 +10,13 @@ data class MobileConfigs(
     val orderMinimum: Minute,
     val termsUrl: String,
     val smsResendDelay: Second,
-    val driverAppNotify: Boolean,
-    val driverModeBlock: Boolean,
+    val isDriverAppNotify: Boolean,
+    val isDriverModeBlock: Boolean,
     val buildsConfigs: Map<String, BuildsConfigs>
 ) {
 
     companion object {
         val SMS_RESEND_DELAY_SEC_DEFAULT = Second(90)
-        val DRIVER_APP_NOTIFY_DEFAULT = false
-        val DRIVER_MODE_BLOCK_DEFAULT = false
 
         val EMPTY = MobileConfigs(
             /*
@@ -26,8 +24,8 @@ data class MobileConfigs(
             orderMinimum = Hour(2).minutes,
             termsUrl = "terms_of_use",
             smsResendDelay = SMS_RESEND_DELAY_SEC_DEFAULT,
-            driverAppNotify = DRIVER_APP_NOTIFY_DEFAULT,
-            driverModeBlock = DRIVER_MODE_BLOCK_DEFAULT,
+            isDriverAppNotify = false,
+            isDriverModeBlock = false,
             buildsConfigs = emptyMap()
         )
     }

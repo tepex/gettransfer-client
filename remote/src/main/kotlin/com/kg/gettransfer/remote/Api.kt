@@ -2,11 +2,15 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.remote.model.*
+import com.kg.gettransfer.sys.remote.SystemApi
+
 import kotlinx.coroutines.Deferred
+
 import okhttp3.ResponseBody
+
 import retrofit2.http.*
 
-interface Api {
+interface Api : SystemApi {
     companion object {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
 
@@ -31,8 +35,6 @@ interface Api {
         const val API_BRAINTREE_TOKEN = "/payments/braintree/client_token"
         const val API_BRAINTREE_CONFIRM = "/payments/braintree/confirm"
         const val API_VOUCHER = "/api/transfers/voucher/"
-
-        const val MOBILE_CONFIGS = "/mobile/mobile.conf"
 
         const val API_LOCATION = "/json"
 
@@ -180,9 +182,6 @@ interface Api {
     fun unregisterPushToken(
         @Path("id") token: String
     ): Deferred<ResponseModel<String>>
-
-    @GET(MOBILE_CONFIGS)
-    fun getMobileConfigs(): Deferred<MobileConfigModel>
 
     @GET("$API_MESSAGES/{id}")
     fun getChat(

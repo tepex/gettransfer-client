@@ -5,7 +5,8 @@ import com.kg.gettransfer.data.SystemDataStore
 
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
+
+import com.kg.gettransfer.sys.data.MobileConfigsEntity
 
 import org.koin.core.inject
 
@@ -22,7 +23,7 @@ open class SystemDataStoreCache : SystemDataStore {
 
     override suspend fun getMobileConfigs() = cache.getMobileConfigs()
 
-    override suspend fun setMobileConfigs(mobileConfigsEntity: MobileConfigEntity) =
+    override suspend fun setMobileConfigs(mobileConfigsEntity: MobileConfigsEntity) =
         cache.setMobileConfigs(mobileConfigsEntity)
 
     override fun changeEndpoint(endpoint: EndpointEntity) {

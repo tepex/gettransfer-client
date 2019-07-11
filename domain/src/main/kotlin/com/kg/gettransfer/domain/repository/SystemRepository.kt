@@ -22,7 +22,7 @@ interface SystemRepository {
     var addressHistory: List<GTAddress>
     var appEnters: Int
     var isDebugMenuShowed: Boolean
-    val mobileConfig: MobileConfigs
+    val mobileConfigs: MobileConfigs
     var accessToken: String
     val configs: Configs
     var favoriteTransportTypes: Set<TransportType.ID>?

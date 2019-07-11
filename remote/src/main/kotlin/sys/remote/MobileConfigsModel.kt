@@ -1,12 +1,12 @@
-package com.kg.gettransfer.remote.model
+package com.kg.gettransfer.sys.remote
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-import com.kg.gettransfer.data.model.MobileConfigEntity
-import com.kg.gettransfer.data.model.BuildsConfigsEntity
+import com.kg.gettransfer.sys.data.BuildsConfigsEntity
+import com.kg.gettransfer.sys.data.MobileConfigsEntity
 
-data class MobileConfigModel(
+data class MobileConfigsModel(
     @SerializedName(MobileConfigEntity.INTERNAL_PUSH_SHOW_DELAY) @Expose val pushShowDelay: Int,
     @SerializedName(MobileConfigEntity.ORDER_MINIMUM_MINUTES) @Expose val orderMinimumMinutes: Int,
     @SerializedName(MobileConfigEntity.LICENSE_URL) @Expose val termsOfUseUrl: String,
@@ -20,14 +20,14 @@ data class BuildsConfigsModel(
     @SerializedName(BuildsConfigsEntity.UPDATE_REQUIRED) @Expose val updateRequired: Boolean?
 )
 
-fun MobileConfigModel.map() =
-    MobileConfigEntity(
+fun MobileConfigsModel.map() =
+    MobileConfigsEntity(
         pushShowDelay,
         orderMinimumMinutes,
         termsOfUseUrl,
         smsResendDelaySec,
-        driverAppNotify,
-        driverModeBlock,
+        driverAppNotify ?: false,
+        driverModeBlock ?: false,
         buildsConfigs?.mapValues { it.value.map() }
     )
 

@@ -46,7 +46,6 @@ import com.kg.gettransfer.data.repository.RouteRepositoryImpl
 import com.kg.gettransfer.data.repository.SessionRepositoryImpl
 import com.kg.gettransfer.data.repository.SocketRepositoryImpl
 import com.kg.gettransfer.data.repository.SystemRepositoryImpl
-import com.kg.gettransfer.data.repository.MobileConfigsRepositoryImpl
 import com.kg.gettransfer.data.repository.TransferRepositoryImpl
 
 import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
@@ -121,8 +120,6 @@ val dataModule = module {
     single { SystemDataStoreCache() }
     single { SystemDataStoreRemote() }
     single { SystemRepositoryImpl(DataStoreFactory(get(), get())) } bind SystemRepository::class
-
-    single { MobileConfigsRepositoryImpl() } bind Repository::class
 
     single { GeoDataStore() }
     single <GeoRepository> { GeoRepositoryImpl(get()) }
