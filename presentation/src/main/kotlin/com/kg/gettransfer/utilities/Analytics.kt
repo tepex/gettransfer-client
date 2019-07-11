@@ -2,20 +2,27 @@ package com.kg.gettransfer.utilities
 
 import android.content.Context
 import android.os.Bundle
+
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
+
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
+
 import com.google.firebase.analytics.FirebaseAnalytics
+
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.ui.Utils
+
 import com.yandex.metrica.Revenue
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
+
 import java.util.Currency
+
 import kotlin.math.roundToLong
 
 class Analytics(

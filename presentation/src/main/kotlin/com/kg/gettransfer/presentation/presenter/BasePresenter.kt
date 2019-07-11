@@ -25,7 +25,6 @@ import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
 import com.kg.gettransfer.utilities.GTNotificationManager
 
-
 import kotlinx.coroutines.Job
 
 import org.koin.core.KoinComponent
