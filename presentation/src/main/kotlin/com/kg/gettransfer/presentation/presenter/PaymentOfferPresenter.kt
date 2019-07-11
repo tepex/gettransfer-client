@@ -68,7 +68,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             offer?.let { isBookNowOffer = offer is BookNowOffer }
         }
         getPaymentRequest()
-        viewState.setAuthUiVisible(accountManager.hasAccount, profileMapper.toView(accountManager.remoteProfile))
+        with(accountManager) {
+            val balance = remoteAccount.partner?.availableMoney?.default
+
+            viewState.setAuthUiVisible(
+                    hasAccount,
+                    profileMapper.toView(remoteProfile),
+                    balance)
+        }
         transfer?.let { transfer ->
             viewState.setToolbarTitle(transfer.map(systemInteractor.transportTypes.map { it.map() }))
             transfer.dateRefund?.let { dateRefund ->

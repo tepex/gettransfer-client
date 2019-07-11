@@ -562,7 +562,7 @@ class MainActivity :
     override fun setBalance(balance: String?) {
         navHeaderBalance.apply {
             isGone = balance.isNullOrEmpty()
-            text = getString(R.string.LNG_PAYMENT_BALANCE).plus(" $balance")
+            text = getString(R.string.LNG_PAYMENT_BALANCE, balance)
         }
     }
 

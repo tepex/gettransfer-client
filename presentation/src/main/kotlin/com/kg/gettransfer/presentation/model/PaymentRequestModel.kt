@@ -8,7 +8,7 @@ data class PaymentRequestModel(val transferId: Long, val offerId: Long?,
         
         const val PLATRON     = "platron"
         const val PAYPAL      = "braintree"
-        const val PAYMENTWALL = "paymentwall"
+        const val GROUND      = "ground"
     }
     
     var gatewayId = PLATRON
