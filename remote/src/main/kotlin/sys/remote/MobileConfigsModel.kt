@@ -7,13 +7,13 @@ import com.kg.gettransfer.sys.data.BuildsConfigsEntity
 import com.kg.gettransfer.sys.data.MobileConfigsEntity
 
 data class MobileConfigsModel(
-    @SerializedName(MobileConfigEntity.INTERNAL_PUSH_SHOW_DELAY) @Expose val pushShowDelay: Int,
-    @SerializedName(MobileConfigEntity.ORDER_MINIMUM_MINUTES) @Expose val orderMinimumMinutes: Int,
-    @SerializedName(MobileConfigEntity.LICENSE_URL) @Expose val termsOfUseUrl: String,
-    @SerializedName(MobileConfigEntity.SMS_RESEND_DELAY_SEC) @Expose val smsResendDelaySec: Int?,
-    @SerializedName(MobileConfigEntity.DRIVER_APP_NOTIFY) @Expose val driverAppNotify: Boolean?,
-    @SerializedName(MobileConfigEntity.DRIVER_MODE_BLOCK) @Expose val driverModeBlock: Boolean?,
-    @SerializedName(MobileConfigEntity.BUILDS_CONFIGS) @Expose val buildsConfigs: Map<String, BuildsConfigsModel>?
+    @SerializedName(MobileConfigsEntity.INTERNAL_PUSH_SHOW_DELAY) @Expose val pushShowDelay: Int,
+    @SerializedName(MobileConfigsEntity.ORDER_MINIMUM_MINUTES) @Expose val orderMinimumMinutes: Int,
+    @SerializedName(MobileConfigsEntity.LICENSE_URL) @Expose val termsOfUseUrl: String,
+    @SerializedName(MobileConfigsEntity.SMS_RESEND_DELAY_SEC) @Expose val smsResendDelaySec: Int?,
+    @SerializedName(MobileConfigsEntity.DRIVER_APP_NOTIFY) @Expose val driverAppNotify: Boolean?,
+    @SerializedName(MobileConfigsEntity.DRIVER_MODE_BLOCK) @Expose val driverModeBlock: Boolean?,
+    @SerializedName(MobileConfigsEntity.BUILDS_CONFIGS) @Expose val buildsConfigs: Map<String, BuildsConfigsModel>?
 )
 
 data class BuildsConfigsModel(

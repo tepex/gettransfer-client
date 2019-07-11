@@ -37,6 +37,7 @@ import com.kg.gettransfer.data.repository.ChatRepositoryImpl
 import com.kg.gettransfer.data.repository.CoordinateRepositoryImpl
 import com.kg.gettransfer.data.repository.CountEventsRepositoryImpl
 import com.kg.gettransfer.data.repository.GeoRepositoryImpl
+import com.kg.gettransfer.data.repository.MobileConfigsRepositoryImpl
 import com.kg.gettransfer.data.repository.OfferRepositoryImpl
 import com.kg.gettransfer.data.repository.PaymentRepositoryImpl
 import com.kg.gettransfer.data.repository.PromoRepositoryImpl
@@ -71,7 +72,6 @@ import com.kg.gettransfer.domain.repository.SystemRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
 
 import com.kg.gettransfer.core.domain.Repository
-import com.kg.gettransfer.sys.domain.MobileConfigs
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -126,6 +126,8 @@ val dataModule = module {
 
     single { PushTokenDataStoreRemote() }
     single { PushTokenRepositoryImpl(get()) } bind PushTokenRepository::class
+
+    single { MobileConfigsRepositoryImpl() } bind Repository::class
 
     single { SocketRepositoryImpl(get()) } bind SocketRepository::class
 

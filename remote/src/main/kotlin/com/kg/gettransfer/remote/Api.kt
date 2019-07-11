@@ -10,7 +10,7 @@ import okhttp3.ResponseBody
 
 import retrofit2.http.*
 
-interface Api : SystemApi {
+interface Api {
     companion object {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
 

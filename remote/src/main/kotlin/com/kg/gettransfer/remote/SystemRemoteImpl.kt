@@ -11,6 +11,7 @@ import com.kg.gettransfer.remote.model.map
 
 import com.kg.gettransfer.sys.data.MobileConfigsEntity
 import com.kg.gettransfer.sys.remote.MobileConfigsModel
+import com.kg.gettransfer.sys.remote.SystemApiImpl
 import com.kg.gettransfer.sys.remote.map
 
 import org.koin.core.get
@@ -18,6 +19,7 @@ import org.koin.core.get
 class SystemRemoteImpl : SystemRemote {
 
     private val core = get<ApiCore>()
+    private val system = SystemApiImpl()
 
     override suspend fun getConfigs(): ConfigsEntity {
         val response: ResponseModel<ConfigsModel> = core.tryTwice { core.api.getConfigs() }
@@ -26,9 +28,13 @@ class SystemRemoteImpl : SystemRemote {
     }
 
     override suspend fun getMobileConfigs(): MobileConfigsEntity {
-        val response: MobileConfigsModel = core.tryTwice { core.api.getMobileConfigs() }
+        val response: MobileConfigsModel = system.api.getMobileConfigs().await()
         return response.map()
     }
 
-    override fun changeEndpoint(endpoint: EndpointEntity) = core.changeEndpoint(endpoint.map())
+    override fun changeEndpoint(endpoint: EndpointEntity) {
+        val endpointModel = endpoint.map()
+        core.changeEndpoint(endpointModel)
+        system.changeEndpoint(endpointModel)
+    }
 }
