@@ -14,7 +14,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
-import com.kg.gettransfer.presentation.ui.Utils
 
 import com.yandex.metrica.Revenue
 import com.yandex.metrica.YandexMetrica
@@ -33,16 +32,22 @@ class Analytics(
 
     fun logEvent(event: String, key: String, value: Any?) {
         val map = mutableMapOf(key to value)
-        val bundle = Utils.createBundleFromMap(map)
+        val bundle = createBundleFromMap(map)
         logEvent(event, bundle, map)
     }
 
+    /**
+     * log event without keys and values
+     */
     fun logSingleEvent(event: String) = logEvent(event, null, null)
 
+    /**
+     * @param pairs list of Pair for multiple event values
+     */
     fun logEvent(event: String, pairs: List<Pair<String, Any?>>) {
         val map = mutableMapOf<String, Any?>()
         pairs.forEach { map[it.first] = it.second }
-        val bundle = Utils.createBundleFromMap(map)
+        val bundle = createBundleFromMap(map)
         logEvent(event, bundle, map)
     }
 
@@ -66,6 +71,18 @@ class Analytics(
     fun reviewDetailKey(value: String) = when (value) {
         ReviewRate.RateType.COMMUNICATION.name -> "punctuality"
         else -> value.toLowerCase()
+    }
+
+    private fun createBundleFromMap(map: MutableMap<String, Any?>): Bundle {
+        return Bundle().apply {
+            map.forEach { (k, v) ->
+                when (v) {
+                    is String -> putString(k, v)
+                    is Int -> putInt(k, v)
+                    is Double -> putDouble(k, v)
+                }
+            }
+        }
     }
 
     inner class EcommercePurchase(
@@ -242,7 +259,7 @@ class Analytics(
         map[Analytics.HOURS] = hours
         map[Analytics.TRIP_TYPE] = tripType
 
-        val bundle = Utils.createBundleFromMap(map)
+        val bundle = createBundleFromMap(map)
         fbBundle.putAll(bundle)
         afMap.putAll(map)
 
@@ -275,7 +292,7 @@ class Analytics(
         currency?.let { map[Analytics.CURRENCY] = it }
         map[Analytics.HOURS] = hours
 
-        val bundle = Utils.createBundleFromMap(map)
+        val bundle = createBundleFromMap(map)
 
         logEvent(Analytics.EVENT_TRANSFER, bundle, map)
     }
