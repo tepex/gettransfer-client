@@ -47,6 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
+                android:paddingBottom="@dimen/nav_header_padding_bottom"
                 app:layout_constraintTop_toBottomOf="@+id/navHeaderLogo"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginTop="@dimen/nav_header_account_info_layout_margin_top">
@@ -75,10 +76,21 @@
                     style="@style/nav_item_subtitle"
                     android:textColor="@color/colorWhite"
                     android:layout_below="@+id/navHeaderName"
-                    android:layout_marginBottom="6dp"
                     android:layout_marginStart="@dimen/nav_header_logo_start"
                     android:visibility="visible"
                     tools:text="android.studio@android.com"/>
+
+                <TextView
+                    android:id="@+id/navHeaderBalance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/nav_item_subtitle"
+                    android:textColor="@color/colorWhite"
+                    android:layout_below="@+id/navHeaderEmail"
+                    android:layout_marginStart="@dimen/nav_header_logo_start"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:text="@string/LNG_PAYMENT_BALANCE"/>
 
             </RelativeLayout>
 

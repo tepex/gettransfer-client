@@ -483,4 +483,6 @@
     <string name="LNG_DOWNLOAD_COMPLETED">Download completed</string>
     <string name="LNG_VOUCHER">Voucher</string>
     <string name="LNG_NO_SEATS_REQUIRED">No child seats required</string>
+    <string name="LNG_PAYMENT_BALANCE">Balance:</string>
+    <string name="LNG_PAYMENT_FROM_BALANCE">From balance</string>
 </resources>

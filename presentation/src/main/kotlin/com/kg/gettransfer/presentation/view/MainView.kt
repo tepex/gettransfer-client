@@ -30,6 +30,7 @@ interface MainView: BaseView {
     fun recreateRequestFragment()
     fun defineAddressRetrieving(block:(withGps: Boolean) -> Unit)
     fun showRateForLastTrip(transferId: Long, vehicle: String, color: String)
+    fun setBalance(balance: String?)
 
     companion object {
         const val MAP_SCREEN     = 1

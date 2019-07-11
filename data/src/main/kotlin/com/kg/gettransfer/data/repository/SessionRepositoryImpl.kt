@@ -159,6 +159,7 @@ class SessionRepositoryImpl(
     override suspend fun logout(): Result<Account> {
         tempUser = User.EMPTY.copy()
         account.user = User.EMPTY.copy()
+        account.partner = null
         factory.retrieveCacheDataStore().clearAccount()
         preferencesCache.logout()
         return Result(account)

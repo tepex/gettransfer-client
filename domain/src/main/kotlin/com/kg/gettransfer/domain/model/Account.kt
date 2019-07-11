@@ -9,7 +9,7 @@ data class Account(
     var distanceUnit: DistanceUnit,
     var groups: List<String>,
     var carrierId: Long?,
-    val partner: Partner?
+    var partner: Partner?
 ) {
 
     var isEmailNotificationsEnabled: Boolean
@@ -25,6 +25,9 @@ data class Account(
 
     val isManager: Boolean
         get() = groups.indexOf(GROUP_MANAGER_VIEW_TRANSFERS) >= 0
+
+    val isBusinessAccount: Boolean
+        get() = partner != null
 
     companion object {
         const val GROUP_CARRIER_DRIVER = "carrier/driver"

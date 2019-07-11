@@ -109,6 +109,10 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     private fun checkAccount() {
         with(accountManager) {
             viewState.setProfile(profileMapper.toView(remoteProfile), isLoggedIn, hasAccount)
+            if (remoteAccount.isBusinessAccount) {
+                val balance = remoteAccount.partner?.availableMoney?.default
+                viewState.setBalance(balance)
+            }
         }
     }
 
