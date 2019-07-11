@@ -9,7 +9,7 @@ import org.koin.core.KoinComponent
 
 interface PaymentRemote : KoinComponent {
 
-    suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity
+    suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity?
 
     suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity): PaymentStatusEntity
 

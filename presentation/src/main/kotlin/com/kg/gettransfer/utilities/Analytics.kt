@@ -46,6 +46,7 @@ class Analytics(
 
     /**
      * log some values for one event
+     *
      * @param pairs list of Pair for multiple event values
      */
     fun logEvent(event: String, pairs: List<Pair<String, Any?>>) {
@@ -101,7 +102,11 @@ class Analytics(
         private val price: Double) {
 
         fun sendAnalytics() {
-            paymentType = if (paymentType == PaymentRequestModel.PLATRON) CARD else PAYPAL
+            paymentType = when (paymentType) {
+                PaymentRequestModel.PLATRON -> CARD
+                PaymentRequestModel.PAYPAL -> PAYPAL
+                else -> BALANCE
+            }
             sendToFirebase()
             sendToFacebook()
             sendToYandex()
@@ -150,7 +155,7 @@ class Analytics(
             val bundle = Bundle()
             bundle.putString(TRANSACTION_ID, transactionId)
             bundle.putString(PROMOCODE, promocode)
-            hours?.let { bundle.putInt(Analytics.HOURS, it) }
+            hours?.let { bundle.putInt(HOURS, it) }
             bundle.putString(PAYMENT_TYPE, paymentType)
             bundle.putString(OFFER_TYPE, offerType)
             bundle.putString(TRIP_TYPE, requestType)
@@ -161,7 +166,7 @@ class Analytics(
             val bundle = Bundle()
             bundle.putString(TRANSACTION_ID, transactionId)
             bundle.putString(PROMOCODE, promocode)
-            hours?.let { bundle.putInt(Analytics.HOURS, it) }
+            hours?.let { bundle.putInt(HOURS, it) }
             bundle.putString(PAYMENT_TYPE, paymentType)
             bundle.putString(OFFER_TYPE, offerType)
             bundle.putString(TRIP_TYPE, requestType)
@@ -183,7 +188,11 @@ class Analytics(
     ) {
 
         fun sendAnalytics() {
-            paymentType = if (paymentType == PaymentRequestModel.PLATRON) CARD else PAYPAL
+            paymentType = when (paymentType) {
+                PaymentRequestModel.PLATRON -> CARD
+                PaymentRequestModel.PAYPAL -> PAYPAL
+                else -> BALANCE
+            }
             sendToFirebase()
             sendToFacebook()
             sendToYandex()
@@ -220,7 +229,7 @@ class Analytics(
             val bundle = Bundle()
             bundle.putInt(SHARE, share)
             bundle.putString(PROMOCODE, promocode)
-            hours?.let { bundle.putInt(Analytics.HOURS, it) }
+            hours?.let { bundle.putInt(HOURS, it) }
             bundle.putString(PAYMENT_TYPE, paymentType)
             bundle.putString(OFFER_TYPE, offerType)
             bundle.putString(TRIP_TYPE, requestType)
@@ -232,7 +241,7 @@ class Analytics(
             val bundle = Bundle()
             bundle.putInt(SHARE, share)
             bundle.putString(PROMOCODE, promocode)
-            hours?.let { bundle.putInt(Analytics.HOURS, it) }
+            hours?.let { bundle.putInt(HOURS, it) }
             bundle.putString(PAYMENT_TYPE, paymentType)
             bundle.putString(OFFER_TYPE, offerType)
             bundle.putString(TRIP_TYPE, requestType)
@@ -256,30 +265,30 @@ class Analytics(
         val map = mutableMapOf<String, Any?>()
         val afMap = mutableMapOf<String, Any?>()
 
-        map[Analytics.NUMBER_OF_PASSENGERS] = numberOfPassengers
-        map[Analytics.ORIGIN] = origin
-        map[Analytics.DESTINATION] = destination
-        map[Analytics.TRAVEL_CLASS] = travelClass
-        map[Analytics.HOURS] = hours
-        map[Analytics.TRIP_TYPE] = tripType
+        map[NUMBER_OF_PASSENGERS] = numberOfPassengers
+        map[ORIGIN] = origin
+        map[DESTINATION] = destination
+        map[TRAVEL_CLASS] = travelClass
+        map[HOURS] = hours
+        map[TRIP_TYPE] = tripType
 
         val bundle = createBundleFromMap(map)
         fbBundle.putAll(bundle)
         afMap.putAll(map)
 
-        bundle.putString(Analytics.VALUE, value)
-        map[Analytics.VALUE] = value
+        bundle.putString(VALUE, value)
+        map[VALUE] = value
 
         currency?.let {
-            bundle.putString(Analytics.CURRENCY, currency)
+            bundle.putString(CURRENCY, currency)
             fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currency)
-            map[Analytics.CURRENCY] = currency
+            map[CURRENCY] = currency
             afMap[AFInAppEventParameterName.CURRENCY] = currency
         }
 
-        logEventToFirebase(Analytics.EVENT_ADD_TO_CART, bundle)
+        logEventToFirebase(EVENT_ADD_TO_CART, bundle)
         logEventToFacebook(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, fbBundle)
-        logEventToYandex(Analytics.EVENT_ADD_TO_CART, map)
+        logEventToYandex(EVENT_ADD_TO_CART, map)
         logEventToAppsFlyer(AFInAppEventType.ADD_TO_CART, afMap)
     }
 
@@ -291,14 +300,14 @@ class Analytics(
 
         val map = mutableMapOf<String, Any?>()
 
-        map[Analytics.PARAM_KEY_RESULT] = result
-        map[Analytics.VALUE] = value
-        currency?.let { map[Analytics.CURRENCY] = it }
-        map[Analytics.HOURS] = hours
+        map[PARAM_KEY_RESULT] = result
+        map[VALUE] = value
+        currency?.let { map[CURRENCY] = it }
+        map[HOURS] = hours
 
         val bundle = createBundleFromMap(map)
 
-        logEvent(Analytics.EVENT_TRANSFER, bundle, map)
+        logEvent(EVENT_TRANSFER, bundle, map)
     }
 
     fun logProfile(attribute: String) {
@@ -436,6 +445,7 @@ class Analytics(
         const val PAYMENT_TYPE = "payment_type"
         const val CARD = "card"
         const val PAYPAL = "paypal"
+        const val BALANCE = "balance"
 
         const val USER_TYPE = "usertype"
         const val DRIVER_TYPE = "driver"

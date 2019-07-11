@@ -17,10 +17,10 @@ import org.koin.core.get
 class PaymentRemoteImpl : PaymentRemote {
     private val core = get<ApiCore>()
 
-    override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
+    override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity? {
         val response: ResponseModel<PaymentModel> = core.tryTwice { core.api.createNewPayment(paymentRequest.map()) }
         @Suppress("UnsafeCallOnNullableType")
-        return response.data!!.map()
+        return response.data?.map()
     }
 
     override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity): PaymentStatusEntity {

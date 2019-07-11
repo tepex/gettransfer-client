@@ -27,9 +27,9 @@ class PaymentRepositoryImpl(
     override var selectedTransfer: Transfer? = null
     override var selectedOffer: OfferItem? = null
 
-    override suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment> =
+    override suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment?> =
         try {
-            Result(factory.retrieveRemoteDataStore().createPayment(paymentRequest.map()).map())
+            Result(factory.retrieveRemoteDataStore().createPayment(paymentRequest.map())?.map())
         } catch (e: RemoteException) {
             Result(Payment.EMPTY, e.map())
         }

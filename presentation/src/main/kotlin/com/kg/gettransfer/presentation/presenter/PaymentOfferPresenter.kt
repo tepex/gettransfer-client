@@ -9,11 +9,12 @@ import com.braintreepayments.api.models.PayPalRequest
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
+
+import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
@@ -31,6 +32,8 @@ import com.kg.gettransfer.utilities.Analytics
 import io.sentry.Sentry
 
 import org.koin.core.inject
+import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.Payment
 
 @InjectViewState
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
@@ -49,7 +52,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private var offer: OfferItem? = null
     private var isBookNowOffer: Boolean = false
 
-    //internal lateinit var params: PaymentOfferView.Params
     private var url: String? = null
     internal var braintreeToken = ""
     private var paymentId = 0L
@@ -143,24 +145,48 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             viewState.blockInterface(true, true)
             paymentRequest.let {
                 it.gatewayId = selectedPayment
-                if (it.gatewayId == PaymentRequestModel.PLATRON) {
-                    val paymentResult =
-                        utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(it)) }
-                    if (paymentResult.error != null) {
-                        log.error("get payment error", paymentResult.error!!)
-                        viewState.setError(paymentResult.error!!)
-                    } else {
-                        url = paymentResult.model.url
-                        navigateToPayment()
+                when (it.gatewayId) {
+                    PaymentRequestModel.PLATRON -> {
+                        payByCard(it)
                     }
-                    viewState.blockInterface(false)
-                } else {
-                    getBraintreeToken()
+                    PaymentRequestModel.PAYPAL -> {
+                        getBraintreeToken()
+                    }
+                    else -> {
+                        payByBalance(it)
+                    }
                 }
                 logEventBeginCheckout()
             }
         }
     }
+
+    private suspend fun payByBalance(paymentModel: PaymentRequestModel) {
+        val paymentResult = getPaymentResult(paymentModel)
+        if (paymentResult.error != null) {
+            log.error("get payment error", paymentResult.error!!)
+            router.navigateTo(Screens.PaymentError(paymentRequest.transferId))
+            analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
+        } else {
+            router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))
+        }
+        viewState.blockInterface(false)
+    }
+
+    private suspend fun payByCard(paymentModel: PaymentRequestModel) {
+        val paymentResult = getPaymentResult(paymentModel)
+        if (paymentResult.error != null) {
+            log.error("get payment error", paymentResult.error!!)
+            viewState.setError(paymentResult.error!!)
+        } else {
+            url = paymentResult.model?.url
+            navigateToPayment()
+        }
+        viewState.blockInterface(false)
+    }
+
+    private suspend fun getPaymentResult(paymentModel: PaymentRequestModel): Result<Payment?> =
+            utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentModel)) }
 
     fun onPaymentClicked() {
         if (accountManager.hasData) getPayment() else putAccount()
@@ -202,15 +228,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, existedEmailOrPhone))
     }
 
-    /*private fun isValid(input: String, isPhone: Boolean) =
-        LoginHelper
-                .validateInput(input, isPhone)
-                .let {
-                    if (it != CREDENTIALS_VALID)
-                        viewState.showBadCredentialsInfo(it)
-                    it == CREDENTIALS_VALID
-                }*/
-
     private fun getBraintreeToken() {
         utils.launchSuspend {
             val tokenResult = utils.asyncAwait { paymentInteractor.getBrainTreeToken() }
@@ -225,13 +242,13 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun createNewPayment() {
-        val result = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
+        val result = getPaymentResult(paymentRequest)
         if (result.error != null) {
             log.error("create new payment error", result.error!!)
             viewState.setError(result.error!!)
             viewState.blockInterface(false)
         } else {
-            val params = result.model.params
+            val params = result.model?.params
             paymentId = params?.paymentId ?: 0L
             setupPaypal(params?.amount, params?.currency)
         }

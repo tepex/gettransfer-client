@@ -28,15 +28,4 @@ interface PaymentOfferView : BaseView {
 
     fun showFieldError(@StringRes stringId: Int)
     fun enablePayment(enable: Boolean)
-
-    /*companion object {
-        val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"
-    }
-
-    @Serializable
-    data class Params(
-            @Serializable(with = DateSerializer::class) val dateRefund: Date?,
-            val transferId: Long,
-            val paymentPercentages: List<Int>
-    )*/
 }

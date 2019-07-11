@@ -1,7 +1,7 @@
 package com.kg.gettransfer.domain.model
 
 data class Payment(
-    val type: Type,
+    val type: Type?,
     val url: String?,
     val id: Long?,
     val params: Params?
