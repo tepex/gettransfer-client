@@ -30,6 +30,9 @@ class Analytics(
     private val facebook: AppEventsLogger
 ) {
 
+    /**
+     * log single value for event
+     */
     fun logEvent(event: String, key: String, value: Any?) {
         val map = mutableMapOf(key to value)
         val bundle = createBundleFromMap(map)
@@ -42,6 +45,7 @@ class Analytics(
     fun logSingleEvent(event: String) = logEvent(event, null, null)
 
     /**
+     * log some values for one event
      * @param pairs list of Pair for multiple event values
      */
     fun logEvent(event: String, pairs: List<Pair<String, Any?>>) {
