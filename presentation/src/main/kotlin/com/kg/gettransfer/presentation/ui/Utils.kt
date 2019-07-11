@@ -434,18 +434,6 @@ object Utils : KoinComponent {
                 )
         )
         .into(view)
-
-    fun createBundleFromMap(map: MutableMap<String, Any?>): Bundle {
-        return Bundle().apply {
-            map.forEach { (k, v) ->
-                when (v) {
-                    is String -> putString(k, v)
-                    is Int -> putInt(k, v)
-                    is Double -> putDouble(k, v)
-                }
-            }
-        }
-    }
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {
