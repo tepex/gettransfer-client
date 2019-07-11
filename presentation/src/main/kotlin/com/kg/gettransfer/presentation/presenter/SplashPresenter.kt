@@ -84,7 +84,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
             systemInteractor.isOnboardingShowed = true
         }
         else when (systemInteractor.lastMode) {
-            Screens.CARRIER_MODE -> router.replaceScreen(Screens.Carrier(Screens.CARRIER_MODE))
+            Screens.CARRIER_MODE -> router.replaceScreen(Screens.CarrierMode)
             else -> { router.newRootScreen(Screens.MainPassenger(!systemInteractor.isOnboardingShowed)) }
         }
     }

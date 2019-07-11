@@ -85,6 +85,12 @@ class SystemInteractor(private val systemRepository: SystemRepository) {
     val currencies: List<Currency>
         get() = systemRepository.configs.supportedCurrencies
 
+    val driverAppNotify: Boolean
+        get() = systemRepository.mobileConfig.driverAppNotify
+
+    val driverModeBlock: Boolean
+        get() = systemRepository.mobileConfig.driverModeBlock
+
     companion object {
         // private val currenciesFilterList = arrayOf("RUB", "THB", "USD", "GBP", "CNY", "EUR" )
         private val localesFilterList = arrayOf("en", "ru", "de", "es", "it", "pt", "fr", "zh")

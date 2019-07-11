@@ -10,6 +10,7 @@ interface CarrierTripsMainView : BaseView{
     fun initNavigation(profile: ProfileModel)
     fun showReadMoreDialog()
     fun askForBackGroundCoordinates()
+    fun showDriverAppNotify()
 
     companion object {
         const val BG_COORDINATES_NOT_ASKED = 0

@@ -125,9 +125,7 @@ class CarrierTripsMainActivity : BaseActivity(),
     protected override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         toggle.syncState()
-
-        AboutDriverAppDialogFragment.newInstance()
-                .show(supportFragmentManager, AboutDriverAppDialogFragment.DIALOG_TAG)
+        presenter.checkDriverAppNotify()
     }
 
     @CallSuper
@@ -154,6 +152,11 @@ class CarrierTripsMainActivity : BaseActivity(),
 
     /** @see {@link android.support.v7.app.ActionBarDrawerToggle} */
     override fun onOptionsItemSelected(item: MenuItem) = toggle.onOptionsItemSelected(item)
+
+    override fun showDriverAppNotify() {
+        AboutDriverAppDialogFragment.newInstance()
+                .show(supportFragmentManager, AboutDriverAppDialogFragment.DIALOG_TAG)
+    }
 
     private fun initNavigation() {
         navViewHeader.setPadding(0, getStatusBarHeight(), 0, 0)

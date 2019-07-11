@@ -366,15 +366,27 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun onBecomeACarrierClick() {
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.DRIVER_CLICKED)
-        if (accountManager.isLoggedIn) {
-            if (accountManager.remoteAccount.isDriver) {
-                router.newRootScreen(Screens.Carrier(Screens.CARRIER_MODE))
-            } else {
-                router.navigateTo(Screens.Carrier(Screens.REG_CARRIER))
-            }
-        } else {
-            // TODO check config login(Screens.CARRIER_MODE, "")
+        if (systemInteractor.driverModeBlock) {
             router.navigateTo(Screens.DriverModeNotSupport)
+        } else {
+            if (accountManager.isLoggedIn) {
+                if (accountManager.remoteAccount.isDriver) {
+                    router.newRootScreen(Screens.CarrierMode)
+                } else {
+                    if (systemInteractor.driverAppNotify) {
+                        router.navigateTo(Screens.DriverModeNotSupport)
+                    } else {
+                        router.navigateTo(Screens.CarrierRegister)
+                    }
+                }
+
+            } else {
+                if (systemInteractor.driverAppNotify) {
+                    router.navigateTo(Screens.DriverModeNotSupport)
+                } else {
+                    login(Screens.CARRIER_MODE, "")
+                }
+            }
         }
     }
 

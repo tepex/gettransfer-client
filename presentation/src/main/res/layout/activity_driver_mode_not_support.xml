@@ -36,7 +36,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin32"
-                android:layout_marginTop="@dimen/margin24"
+                android:layout_marginTop="@dimen/margin48"
                 android:layout_marginEnd="@dimen/margin32"
                 android:gravity="center_horizontal"
                 android:text="@string/LNG_ABOUT_DRIVER_APP_NOT_SUPPORT"

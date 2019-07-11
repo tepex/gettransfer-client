@@ -58,9 +58,9 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
             } else {
                 analytics.logProfile(Analytics.DRIVER_TYPE)
             }
-            router.newRootScreen(Screens.Carrier(Screens.CARRIER_MODE))
+            router.newRootScreen(Screens.CarrierMode)
         } else {
-            router.replaceScreen(Screens.Carrier(Screens.REG_CARRIER))
+            router.replaceScreen(Screens.CarrierRegister)
         }
     }
 }

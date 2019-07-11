@@ -74,4 +74,9 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     fun initGoogleApiClient() = geoInteractor.initGoogleApiClient()
 
     fun disconnectGoogleApiClient() = geoInteractor.disconnectGoogleApiClient()
+
+    fun checkDriverAppNotify() {
+        if (systemInteractor.driverAppNotify)
+            viewState.showDriverAppNotify()
+    }
 }

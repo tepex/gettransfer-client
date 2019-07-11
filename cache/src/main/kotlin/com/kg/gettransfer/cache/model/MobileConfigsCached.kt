@@ -12,6 +12,8 @@ data class MobileConfigsCached(
     @ColumnInfo(name = MobileConfigEntity.ORDER_MINIMUM_MINUTES) val orderMinimumMinutes: Int,
     @ColumnInfo(name = MobileConfigEntity.LICENSE_URL) val termsUrl: String,
     @ColumnInfo(name = MobileConfigEntity.SMS_RESEND_DELAY_SEC) val smsResendDelaySec: Int?,
+    @ColumnInfo(name = MobileConfigEntity.DRIVER_APP_NOTIFY) val driverAppNotify: Int?,
+    @ColumnInfo(name = MobileConfigEntity.DRIVER_MODE_BLOCK) val driverModeBlock: Int?,
     @ColumnInfo(name = MobileConfigEntity.BUILDS_CONFIGS) val buildsConfigs: BuildsConfigsCachedMap?
 )
 
@@ -21,6 +23,8 @@ fun MobileConfigsCached.map() =
         orderMinimumMinutes,
         termsUrl,
         smsResendDelaySec,
+        driverAppNotify?.let { it==1 } ?: false,
+        driverModeBlock?.let { it==1 } ?: false,
         buildsConfigs?.map?.mapValues { it.value.map() }
     )
 
@@ -31,5 +35,7 @@ fun MobileConfigEntity.map() =
         orderMinimumMinutes,
         termsUrl,
         smsResendDelaySec,
+        driverAppNotify?.let { if (it) 1 else 0 },
+        driverModeBlock?.let { if (it) 1 else 0 },
         buildsConfigs?.let { configs -> BuildsConfigsCachedMap(configs.mapValues { it.value.map() }) }
     )
