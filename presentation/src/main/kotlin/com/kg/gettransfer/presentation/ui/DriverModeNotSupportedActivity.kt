@@ -32,6 +32,6 @@ class DriverModeNotSupportedActivity : BaseActivity(), DriverModeNotSupportedVie
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
-        toolbar.toolbar_title.text = getString(R.string.LNG_ABOUT_DRIVER_APP)
+        toolbar.toolbar_title.text = getString(R.string.LNG_MENU_TITLE_DRIVE)
     }
 }
