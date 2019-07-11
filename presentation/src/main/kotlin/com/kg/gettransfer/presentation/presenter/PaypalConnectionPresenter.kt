@@ -70,7 +70,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
     private fun showFailedPayment() {
         router.exit()
         router.navigateTo(Screens.PaymentError(transferId))
-        logEvent(Analytics.RESULT_FAIL)
+        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {
@@ -108,11 +108,5 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
                 sessionInteractor.currency.code,
                 price)
         purchase.sendAnalytics()
-    }
-
-    private fun logEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.STATUS] = value
-        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, createStringBundle(Analytics.STATUS, value), map)
     }
 }

@@ -8,7 +8,6 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.newChainFromMain
 
@@ -113,7 +112,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
         viewState.blockInterface(false)
         router.exit()
         router.navigateTo(Screens.PaymentError(transfer!!.id))
-        logEvent(Analytics.RESULT_FAIL)
+        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {
@@ -161,11 +160,5 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
             price
         )
         purchase.sendAnalytics()
-    }
-
-    private fun logEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.STATUS] = value
-        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, createStringBundle(Analytics.STATUS, value), map)
     }
 }

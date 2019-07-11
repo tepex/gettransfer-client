@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
-
 import com.arellomobile.mvp.MvpPresenter
 
 import com.google.firebase.iid.FirebaseInstanceId
@@ -26,8 +24,6 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
 import com.kg.gettransfer.utilities.GTNotificationManager
-
-import java.io.InputStream
 
 import kotlinx.coroutines.Job
 
@@ -71,13 +67,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val log: Logger by inject { parametersOf("GTR-presenter") }
 
     open fun onBackCommandClick() {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_NAME] = Analytics.BACK_CLICKED
-        analytics.logEvent(
-            Analytics.EVENT_MAIN,
-            createStringBundle(Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED),
-            map
-        )
+        analytics.logEvent(Analytics.EVENT_MAIN, Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED)
         router.exit()
     }
 
@@ -147,20 +137,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     }
 
     protected open fun systemInitialized() {}
-
-    protected fun createEmptyBundle() = createStringBundle("", "")
-
-    protected fun createStringBundle(key: String, value: String): Bundle {
-        val bundle = Bundle(SINGLE_CAPACITY)
-        bundle.putString(key, value)
-        return bundle
-    }
-
-    protected fun createMultipleBundle(map: Map<String, Any>): Bundle {
-        val bundle = Bundle()
-        map.forEach { (k, v) -> bundle.putString(k, v.toString()) }
-        return bundle
-    }
 
     internal fun sendEmail(emailCarrier: String?, transferId: Long?) {
         utils.launchSuspend {
@@ -380,8 +356,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
     companion object {
-        const val SINGLE_CAPACITY = 1
-        const val DOUBLE_CAPACITY = 2
 
         //when you want to handle error in child presenter
         const val SHOW_ERROR = true

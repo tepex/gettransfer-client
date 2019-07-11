@@ -2,12 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Bundle
 
-import com.appsflyer.AFInAppEventParameterName
-import com.appsflyer.AFInAppEventType
-
 import com.arellomobile.mvp.InjectViewState
-
-import com.facebook.appevents.AppEventsConstants
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
@@ -465,35 +460,18 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        with(orderInteractor) {
-            var errorField = when {
-                !isTimeSetByUser -> FieldError.TIME_NOT_SELECTED
-                !dateDelegate.validate() -> FieldError.RETURN_TIME
-                transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
-                //passengers == 0                             -> FieldError.PASSENGERS_COUNT
-                else -> null
-            }
-            if (errorField == null) errorField = accountManager.isValidProfileForCreateOrder()
-            if (errorField == null) return true
-            logCreateTransfer(errorField.value)
-            viewState.showEmptyFieldError(errorField.stringId)
-            viewState.highLightErrorField(errorField)
-            return false
+        var errorField = when {
+            !isTimeSetByUser -> FieldError.TIME_NOT_SELECTED
+            !dateDelegate.validate() -> FieldError.RETURN_TIME
+            transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
+            else -> null
         }
-    }
-
-    fun onTransportChosen() {
-        val tripTime = duration?.let { String.format("%d:%d", it / 60, it % 60) }
-        val checkedTransport = transportTypes?.filter { it.checked }
-        if (!checkedTransport.isNullOrEmpty()) {
-            try {
-                viewState.setFairPrice(checkedTransport.minBy { it.price!!.minFloat }?.price!!.min, tripTime)
-            } catch (e: NullPointerException) {
-                viewState.setFairPrice(null, null)
-            }
-        } else {
-            viewState.setFairPrice(null, null)
-        }
+        if (errorField == null) errorField = accountManager.isValidProfileForCreateOrder()
+        if (errorField == null) return true
+        logCreateTransfer(errorField.value)
+        viewState.showEmptyFieldError(errorField.stringId)
+        viewState.highLightErrorField(errorField)
+        return false
     }
 
     fun setPassengersCountForSelectedTransportTypes(setSavedPax: Boolean = false) {
@@ -514,7 +492,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
     fun onCenterRouteClick() {
         track?.let { viewState.centerRoute(it) }
-        logButtons(Analytics.SHOW_ROUTE_CLICKED)
+        analytics.logSingleEvent(Analytics.SHOW_ROUTE_CLICKED)
     }
 
     private fun selectTransport() {
@@ -523,7 +501,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
         } else {
             setFavoriteTransportTypes()
         }
-//        onTransportChosen()
     }
 
     private fun setFavoriteTransportTypes() =
@@ -568,10 +545,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
     fun onBackClick() = onBackCommandClick()
 
     override fun onBackCommandClick() {
-        //childSeatsDelegate.clearSeats()
         saveSelectedTransportTypes()
         router.exit()
-        logButtons(Analytics.BACK_TO_MAP)
+        analytics.logSingleEvent(Analytics.BACK_TO_MAP)
     }
 
     fun redirectToLogin(id: Long) {
@@ -587,106 +563,57 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
     /////////Analytics////////
 
-    fun logButtons(event: String) {
-        analytics.logEventToFirebase(event, null)
-        analytics.logEventToYandex(event, null)
+    fun logTransferSettingsEvent(value: String) =
+        analytics.logEvent(Analytics.EVENT_TRANSFER_SETTINGS, Analytics.PARAM_KEY_FIELD, value)
+
+    private fun logCreateTransfer(result: String) {
+
+        val currency = if (selectedCurrency != INVALID_CURRENCY_INDEX)
+                            currencies[selectedCurrency].name
+                       else null
+
+        analytics.logCreateTransfer(
+                result,
+                orderInteractor.offeredPrice?.let { it.toString() },
+                currency,
+                duration?.let { it })
     }
 
-    fun logTransferSettingsEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_FIELD] = value
-
-        analytics.logEvent(Analytics.EVENT_TRANSFER_SETTINGS, createStringBundle(Analytics.PARAM_KEY_FIELD, value), map)
-    }
-
-    private fun logCreateTransfer(value: String) {
-        val bundle = Bundle()
-        val map = mutableMapOf<String, Any?>()
-
-        map[Analytics.PARAM_KEY_RESULT] = value
-        bundle.putString(Analytics.PARAM_KEY_RESULT, value)
-
-        orderInteractor.offeredPrice?.let {
-            bundle.putString(Analytics.VALUE, it.toString())
-            map[Analytics.VALUE] = it.toString()
-        }
-
-        if (selectedCurrency != INVALID_CURRENCY_INDEX) {
-            bundle.putString(Analytics.CURRENCY, currencies[selectedCurrency].name)
-            map[Analytics.CURRENCY] = currencies[selectedCurrency].name
-        }
-        duration?.let { bundle.putInt(Analytics.HOURS, it) }
-        duration?.let { map[Analytics.HOURS] = it }
-
-        analytics.logEvent(Analytics.EVENT_TRANSFER, bundle, map)
-    }
-
-    private fun logEventAddToCart(value: String) {
-        val bundle = Bundle()
-        val fbBundle = Bundle()
-        val map = mutableMapOf<String, Any?>()
-        val afMap = mutableMapOf<String, Any?>()
-
-        orderInteractor.passengers.let {
-            bundle.putInt(Analytics.NUMBER_OF_PASSENGERS, it)
-            map[Analytics.NUMBER_OF_PASSENGERS] = it
-        }
-
-        bundle.putString(Analytics.ORIGIN, orderInteractor.from?.variants?.first)
-        map[Analytics.ORIGIN] = orderInteractor.from?.variants?.first
-        bundle.putString(Analytics.DESTINATION, orderInteractor.to?.variants?.first)
-        map[Analytics.DESTINATION] = orderInteractor.to?.variants?.first
-
-        bundle.putString(Analytics.TRAVEL_CLASS, transportTypes?.filter { it.checked }?.joinToString())
-        map[Analytics.TRAVEL_CLASS] = transportTypes?.filter { it.checked }?.joinToString()
-
-        duration?.let { bundle.putInt(Analytics.HOURS, it) }
-        duration?.let { map[Analytics.HOURS] = it }
-
-        when {
+    private fun logEventAddToCart() {
+        val tripType = when {
             duration != null -> Analytics.TRIP_HOURLY
             dateDelegate.returnDate != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
-        }.let {
-            bundle.putString(Analytics.TRIP_TYPE, it)
-            map[Analytics.TRIP_TYPE] = it
-        }
+        }.let { it }
 
-        fbBundle.putAll(bundle)
-        afMap.putAll(map)
+        val value = orderInteractor.offeredPrice?.let { it.toString() }
 
-        orderInteractor.offeredPrice?.let {
-            bundle.putString(Analytics.VALUE, it.toString())
-            map[Analytics.VALUE] = it.toString()
-        }
+        val currency =
+                if (selectedCurrency != INVALID_CURRENCY_INDEX)
+                    currencies[selectedCurrency].name
+                else null
 
-        if (selectedCurrency != INVALID_CURRENCY_INDEX) {
-            val currency = currencies[selectedCurrency].name
-            bundle.putString(Analytics.CURRENCY, currency)
-            fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currency)
-            map[Analytics.CURRENCY] = currency
-            afMap[AFInAppEventParameterName.CURRENCY] = currency
-        }
-
-        analytics.logEventToFirebase(value, bundle)
-        analytics.logEventToFacebook(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, fbBundle)
-        analytics.logEventToYandex(value, map)
-        analytics.logEventToAppsFlyer(AFInAppEventType.ADD_TO_CART, afMap)
+        analytics.logEventAddToCart(
+                orderInteractor.passengers,
+                orderInteractor.from?.variants?.first,
+                        orderInteractor.to?.variants?.first,
+                transportTypes?.filter { it.checked }?.joinToString(),
+                duration?.let { it },
+                tripType,
+                value,
+                currency)
     }
 
     private fun logStartScreenOrder() {
         val pair = Pair(
-            Analytics.ORDER_CREATED_FROM,
-            if (systemInteractor.startScreenOrder) Analytics.FROM_FORM else Analytics.FROM_MAP
-        )
-        analytics.logEvent(Analytics.EVENT_TRANSFER, Bundle().apply {
-            putString(pair.first, pair.second)
-        }, mapOf(pair))
+                Analytics.ORDER_CREATED_FROM,
+                if (systemInteractor.startScreenOrder) Analytics.FROM_FORM else Analytics.FROM_MAP)
+        analytics.logEvent(Analytics.EVENT_TRANSFER, pair.first, pair.second)
     }
 
     private fun logGetOffers() {
         logCreateTransfer(Analytics.RESULT_SUCCESS)
-        logEventAddToCart(Analytics.EVENT_ADD_TO_CART)
+        logEventAddToCart()
         logStartScreenOrder()
     }
 
@@ -696,6 +623,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
     fun commentClick(comment: String) {
         viewState.showCommentDialog(comment, hintsToComments)
+    }
+
+    fun onTransportTypeClicked() {
+        analytics.logSingleEvent(Analytics.CAR_INFO_CLICKED)
     }
 
     companion object {

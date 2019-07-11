@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 
 import android.os.Build
+import android.os.Bundle
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
@@ -433,6 +434,18 @@ object Utils : KoinComponent {
                 )
         )
         .into(view)
+
+    fun createBundleFromMap(map: MutableMap<String, Any?>): Bundle {
+        return Bundle().apply {
+            map.forEach { (k, v) ->
+                when (v) {
+                    is String -> putString(k, v)
+                    is Int -> putInt(k, v)
+                    is Double -> putDouble(k, v)
+                }
+            }
+        }
+    }
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

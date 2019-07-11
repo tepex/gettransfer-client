@@ -2,19 +2,27 @@ package com.kg.gettransfer.utilities
 
 import android.content.Context
 import android.os.Bundle
+
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
+
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
+
 import com.google.firebase.analytics.FirebaseAnalytics
+
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.presentation.ui.Utils
+
 import com.yandex.metrica.Revenue
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
+
 import java.util.Currency
+
 import kotlin.math.roundToLong
 
 class Analytics(
@@ -23,22 +31,36 @@ class Analytics(
     private val facebook: AppEventsLogger
 ) {
 
-    fun logEvent(event: String, bundle: Bundle, map: Map<String, Any?>) {
+    fun logEvent(event: String, key: String, value: Any?) {
+        val map = mutableMapOf(key to value)
+        val bundle = Utils.createBundleFromMap(map)
+        logEvent(event, bundle, map)
+    }
+
+    fun logSingleEvent(event: String) = logEvent(event, null, null)
+
+    fun logEvent(event: String, pairs: List<Pair<String, Any?>>) {
+        val map = mutableMapOf<String, Any?>()
+        pairs.forEach { map[it.first] = it.second }
+        val bundle = Utils.createBundleFromMap(map)
+        logEvent(event, bundle, map)
+    }
+
+    private fun logEvent(event: String, bundle: Bundle?, map: Map<String, Any?>?) {
         logEventToFirebase(event, bundle)
-        logEventToFacebook(event, bundle)
         logEventToYandex(event, map)
     }
 
-    fun logEventToFirebase(event: String, data: Bundle?) =
+    private fun logEventToFirebase(event: String, data: Bundle?) =
         firebase.logEvent(event, data)
 
-    fun logEventToFacebook(event: String, data: Bundle) =
+    private fun logEventToFacebook(event: String, data: Bundle) =
         facebook.logEvent(event, data)
 
-    fun logEventToYandex(event: String, data: Map<String, Any?>?) =
+    private fun logEventToYandex(event: String, data: Map<String, Any?>?) =
         YandexMetrica.reportEvent(event, data)
 
-    fun logEventToAppsFlyer(event: String, data: Map<String, Any?>?) =
+    private fun logEventToAppsFlyer(event: String, data: Map<String, Any?>?) =
         AppsFlyerLib.getInstance().trackEvent(context, event, data)
 
     fun reviewDetailKey(value: String) = when (value) {
@@ -63,16 +85,7 @@ class Analytics(
             sendToFacebook()
             sendToYandex()
             sendToAppsFlyer()
-            logEvent(RESULT_SUCCESS)
-        }
-
-        private fun logEvent(value: String) {
-            val map = mutableMapOf<String, Any>()
-            val bundle = Bundle()
-
-            map[STATUS] = value
-            bundle.putString(STATUS, value)
-            logEvent(EVENT_MAKE_PAYMENT, bundle, map)
+            logEvent(EVENT_MAKE_PAYMENT, STATUS, RESULT_SUCCESS)
         }
 
         private fun sendToAppsFlyer() {
@@ -208,6 +221,65 @@ class Analytics(
         }
     }
 
+    fun logEventAddToCart(
+            numberOfPassengers: Int,
+            origin: String?,
+            destination: String?,
+            travelClass: String?,
+            hours: Int?,
+            tripType: String,
+            value: String?,
+            currency: String?) {
+
+        val fbBundle = Bundle()
+        val map = mutableMapOf<String, Any?>()
+        val afMap = mutableMapOf<String, Any?>()
+
+        map[Analytics.NUMBER_OF_PASSENGERS] = numberOfPassengers
+        map[Analytics.ORIGIN] = origin
+        map[Analytics.DESTINATION] = destination
+        map[Analytics.TRAVEL_CLASS] = travelClass
+        map[Analytics.HOURS] = hours
+        map[Analytics.TRIP_TYPE] = tripType
+
+        val bundle = Utils.createBundleFromMap(map)
+        fbBundle.putAll(bundle)
+        afMap.putAll(map)
+
+        bundle.putString(Analytics.VALUE, value)
+        map[Analytics.VALUE] = value
+
+        currency?.let {
+            bundle.putString(Analytics.CURRENCY, currency)
+            fbBundle.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, currency)
+            map[Analytics.CURRENCY] = currency
+            afMap[AFInAppEventParameterName.CURRENCY] = currency
+        }
+
+        logEventToFirebase(Analytics.EVENT_ADD_TO_CART, bundle)
+        logEventToFacebook(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, fbBundle)
+        logEventToYandex(Analytics.EVENT_ADD_TO_CART, map)
+        logEventToAppsFlyer(AFInAppEventType.ADD_TO_CART, afMap)
+    }
+
+    fun logCreateTransfer(
+            result: String,
+            value: String?,
+            currency: String?,
+            hours: Int?) {
+
+        val map = mutableMapOf<String, Any?>()
+
+        map[Analytics.PARAM_KEY_RESULT] = result
+        map[Analytics.VALUE] = value
+        currency?.let { map[Analytics.CURRENCY] = it }
+        map[Analytics.HOURS] = hours
+
+        val bundle = Utils.createBundleFromMap(map)
+
+        logEvent(Analytics.EVENT_TRANSFER, bundle, map)
+    }
+
     fun logProfile(attribute: String) {
         val userProfile = UserProfile.newBuilder()
             .apply(Attribute.customString(USER_TYPE).withValue(attribute))
@@ -323,7 +395,7 @@ class Analytics(
         const val HOURS = "hours"
 
         const val REVIEW = "review"
-        const val REVIEW_AVERAGE = "transfer_review"
+        const val EVENT_REVIEW_AVERAGE = "transfer_review"
         const val REVIEW_COMMENT = "comment"
         const val REVIEW_APP_REJECTED = "rejected"
         const val REVIEW_APP_ACCEPTED = "accepted"
@@ -352,5 +424,8 @@ class Analytics(
         const val ORDER_CREATED_FROM = "create_from"
         const val FROM_MAP = "map"
         const val FROM_FORM = "form"
+
+        const val MESSAGE_IN  = "message_in"
+        const val MESSAGE_OUT = "message_out"
     }
 }
