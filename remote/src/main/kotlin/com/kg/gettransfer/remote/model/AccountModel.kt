@@ -19,7 +19,8 @@ class AccountModel(
     @SerializedName(UserEntity.TERMS_ACCEPTED) @Expose val termsAccepted: Boolean = true,
     @SerializedName(AccountEntity.CARRIER_ID) @Expose val carrierId: Long? = null,
     @SerializedName(AccountEntity.PASSWORD) @Expose val password: String? = null,
-    @SerializedName(AccountEntity.PASSWORD_CONFIRMATION) @Expose val repeatedPassword: String? = null
+    @SerializedName(AccountEntity.PASSWORD_CONFIRMATION) @Expose val repeatedPassword: String? = null,
+    @SerializedName(AccountEntity.PARTNER) @Expose val partner: PartnerModel? = null
 ) : ProfileModel(fullName, email, phone) {
 
     override fun equals(other: Any?): Boolean {
@@ -40,7 +41,10 @@ fun AccountModel.map() =
         currency,
         distanceUnit,
         groups,
-        carrierId
+        carrierId,
+        password,
+        repeatedPassword,
+        partner?.map()
     )
 
 fun AccountEntity.map() =
