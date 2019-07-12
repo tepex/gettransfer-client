@@ -65,15 +65,7 @@
             android:id="@+id/yourRateMark"
             layout="@layout/view_your_rate_mark"
             android:visibility="gone"
-            
             tools:visibility="visible"/>
-
-        <include
-            android:id="@+id/yourComment"
-            layout="@layout/view_your_comment"
-            android:visibility="gone"
-
-            tools:visibility="visible" />
 
         <ProgressBar
             android:id="@+id/pbYourData"
