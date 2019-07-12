@@ -35,13 +35,13 @@ data class Account(
         const val GROUP_EMAIL_NOTIFICATION_PASSENGER = "email_notifications/passenger"
 
         val EMPTY = Account(
-                user = User.EMPTY,
-                locale = Locale.getDefault(),
-                currency = Currency.DEFAULT,
-                distanceUnit = DistanceUnit.KM,
-                groups = emptyList(),
-                carrierId = null,
-                partner = null
+            user = User.EMPTY,
+            locale = Locale.getDefault(),
+            currency = Currency.DEFAULT,
+            distanceUnit = DistanceUnit.KM,
+            groups = emptyList(),
+            carrierId = null,
+            partner = null
         )
     }
 }

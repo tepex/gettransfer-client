@@ -9,18 +9,19 @@ import com.kg.gettransfer.data.ds.TransferDataStoreRemote
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.map
+
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.repository.SystemRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
 
+import java.io.InputStream
 import java.text.DateFormat
 import java.util.Calendar
 
 import org.koin.core.get
 import org.koin.core.qualifier.named
-import java.io.InputStream
 
 class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>
