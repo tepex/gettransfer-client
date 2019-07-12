@@ -6,23 +6,27 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.ui.OffersActivity.Companion.PHOTO_CORNER
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.ScrollGalleryInflater
+
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_vehicle_photos.*
 
 class VehiclePhotosView @JvmOverloads constructor(
-        context: Context,
-        attribute: AttributeSet? = null,
-        defStyleAttr: Int = 0): ConstraintLayout(context, attribute, defStyleAttr), LayoutContainer {
+    context: Context,
+    attribute: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ConstraintLayout(context, attribute, defStyleAttr), LayoutContainer {
 
     override val containerView: View? = LayoutInflater.from(context).inflate(R.layout.view_vehicle_photos, this, true)
 
