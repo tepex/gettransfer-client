@@ -18,12 +18,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 
-import android.widget.ImageView
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-
-import com.bumptech.glide.Glide
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
@@ -82,7 +78,6 @@ import kotlinx.android.synthetic.main.view_transfer_details_field.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.view.*
 import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
-import kotlinx.android.synthetic.main.view_trips_info.*
 import kotlinx.android.synthetic.main.view_your_comment.view.*
 import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
 
@@ -522,11 +517,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 }
             }
         }
-        if (offerModel.vehicle.photos.isNotEmpty()) {
-            Glide.with(this).load(offerModel.vehicle.photos.first()).into(carPhoto)
-            carPhoto.scaleType = ImageView.ScaleType.CENTER_CROP
-        }
-        else carPhoto.setImageDrawable(ContextCompat.getDrawable(this, offerModel.vehicle.transportType.imageId!!))
+        vehiclePhotosView.setPhotos(offerModel.vehicle.transportType.imageId!!, offerModel.vehicle.photos)
     }
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
