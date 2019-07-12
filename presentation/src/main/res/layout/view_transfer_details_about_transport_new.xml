@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-            android:id="@+id/car_model_field"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:title_transfer_details="Mercedes-Benz E-Class "
-            tools:input_transfer_details="C786EO77"
-    />
+        android:id="@+id/car_model_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:input_transfer_details="C786EO77"
+        tools:title_transfer_details="Mercedes-Benz E-Class " />
 
     <include
-            android:id="@+id/view_conveniences"
-            layout="@layout/view_transport_conveniences"/>
-    <ImageView
-            android:id="@+id/carPhoto"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/view_transfer_details_about_transport_car_photo_height_new"
-            android:src="@drawable/ic_transport_type_economy"/>
+        android:id="@+id/view_conveniences"
+        layout="@layout/view_transport_conveniences" />
+
+    <com.kg.gettransfer.presentation.ui.custom.VehiclePhotosView
+        android:id="@+id/vehiclePhotosView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
