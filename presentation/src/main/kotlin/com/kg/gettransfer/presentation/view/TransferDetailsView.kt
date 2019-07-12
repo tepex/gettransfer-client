@@ -20,9 +20,7 @@ interface TransferDetailsView: BaseView, RouteView {
     fun thanksForRate()
     fun showCommonRating(isShow: Boolean)
     fun showYourRateMark(isShow: Boolean, averageRate: Double = 0.0)
-    fun showYourComment(isShow: Boolean, comment: String = "")
     fun showYourDataProgress(isShow: Boolean)
-    fun showCommentEditor(comment: String)
     fun showCancelRequestToast()
 
     fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)

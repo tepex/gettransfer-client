@@ -316,38 +316,12 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         updateRatingState()
     }
 
-    fun clickComment(comment: String) {
-        viewState.showCommentEditor(comment)
-    }
-
-    fun commentChanged(comment: String) {
-        offer?.let {
-            setComment(comment)
-            viewState.showYourDataProgress(true)
-            utils.launchSuspend {
-                fetchResult { reviewInteractor.pushComment() }
-                    .also {
-                        if (it.error == null) {
-                            offer = offer?.copy(passengerFeedback = comment)
-                            updateRatingState()
-                        }
-                        viewState.showYourDataProgress(false)
-                    }
-            }
-        }
-    }
-
-    private fun setComment(comment: String) {
-        reviewInteractor.comment = comment
-    }
-
     private fun updateRatingState() {
         val available = offer?.isRateAvailable() ?: false
         val neededRate = offer?.isNeededRateOffer() ?: false
         if (available && neededRate) reviewInteractor.offerRateID = offer?.id ?: 0
         viewState.showCommonRating(available && neededRate)
         viewState.showYourRateMark(!neededRate, offer?.ratings?.average ?: 0.0)
-        viewState.showYourComment(!neededRate, offer?.passengerFeedback.orEmpty())
     }
 
     override fun onSocketConnected() {

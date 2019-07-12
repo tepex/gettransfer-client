@@ -78,7 +78,7 @@ import kotlinx.android.synthetic.main.view_transfer_details_field.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item_new.view.*
 import kotlinx.android.synthetic.main.view_transfer_main_info.view.*
 import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
-import kotlinx.android.synthetic.main.view_your_comment.view.*
+
 import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
 
 import org.jetbrains.anko.longToast
@@ -86,11 +86,11 @@ import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.EasyPermissions
 
 class TransferDetailsActivity : BaseGoogleMapActivity(),
-        TransferDetailsView,
-        RatingDetailDialogFragment.OnRatingChangeListener,
-        StoreDialogFragment.OnStoreListener,
-        CommentDialogFragment.OnCommentListener, EasyPermissions.PermissionCallbacks,
-        EasyPermissions.RationaleCallbacks {
+    TransferDetailsView,
+    RatingDetailDialogFragment.OnRatingChangeListener,
+    StoreDialogFragment.OnStoreListener,
+    EasyPermissions.PermissionCallbacks,
+    EasyPermissions.RationaleCallbacks {
 
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
@@ -187,7 +187,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 _tintBackground.isVisible = false
                 hideKeyboard()
-                presenter.commentChanged(yourComment.tvComment.text.toString())
             }
         }
 
@@ -217,7 +216,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         topCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
         bottomCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
         yourRateMark.setOnClickListener { presenter.rateTrip(yourRateMark.rbYourRateMark.rating, false) }
-        yourComment.setOnClickListener { presenter.clickComment(yourComment.tvComment.text.toString()) }
     }
 
     override fun setTransfer(transfer: TransferModel) {
@@ -616,18 +614,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         yourRateMark.rbYourRateMark.setOnRatingChangeListener { _, fl -> presenter.rateTrip(fl , true) }
     }
 
-    override fun showYourComment(isShow: Boolean, comment: String) {
-        yourComment.show(isShow)
-        yourComment.tvComment.text = comment
-    }
-
-    override fun showCommentEditor(comment: String) =
-        CommentDialogFragment.newInstance(comment)
-                .show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
-
     override fun showYourDataProgress(isShow: Boolean) {
         pbYourData.show(isShow)
-        yourComment.show(!isShow)
         yourRateMark.show(!isShow)
     }
 
@@ -643,13 +631,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private fun clearMarker() {
         mCarMarker?.remove()
-    }
-
-    override fun onSetComment(comment: String) {
-        if (comment.isEmpty()) yourComment.tvTitile.text = getString(R.string.LNG_PAYMENT_LEAVE_COMMENT)
-        else yourComment.tvTitile.text = getString(R.string.LNG_RIDE_YOUR_COMMENT)
-        yourComment.tvComment.text = comment
-        presenter.commentChanged(comment)
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
