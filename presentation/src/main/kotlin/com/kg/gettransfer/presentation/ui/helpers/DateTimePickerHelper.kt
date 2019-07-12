@@ -7,10 +7,14 @@ import android.content.ContextWrapper
 import android.content.res.Resources
 import android.os.Build
 import android.support.annotation.NonNull
+
 import com.kg.gettransfer.common.BoundDatePickerDialog
 import com.kg.gettransfer.common.BoundTimePickerDialog
+
 import org.koin.core.KoinComponent
-import java.util.*
+
+import java.util.Calendar
+import java.util.IllegalFormatConversionException
 
 object DateTimePickerHelper : KoinComponent {
 
@@ -20,20 +24,19 @@ object DateTimePickerHelper : KoinComponent {
      *
      * I fixed it by forcing Samsung devices to use the Holo theme for the date picker.
      */
-    private fun isBrokenSamsungDevice(): Boolean {
-        return Build.MANUFACTURER.equals("samsung", ignoreCase = true) && isBetweenAndroidVersions(
-                Build.VERSION_CODES.LOLLIPOP,
-                Build.VERSION_CODES.LOLLIPOP_MR1)
-    }
+    private fun isBrokenSamsungDevice() =
+        Build.MANUFACTURER.equals("samsung", ignoreCase = true) && isBetweenAndroidVersions(
+            Build.VERSION_CODES.LOLLIPOP,
+            Build.VERSION_CODES.LOLLIPOP_MR1
+        )
 
-    private fun isBetweenAndroidVersions(min: Int, max: Int): Boolean {
-        return Build.VERSION.SDK_INT in min..max
-    }
+    private fun isBetweenAndroidVersions(min: Int, max: Int) = Build.VERSION.SDK_INT in min..max
 
     private fun getContextForDateTimePicker(context: Context) : Context {
         if (isBrokenSamsungDevice())
             return object : ContextWrapper(context) {
                 private var wrappedResources: Resources? = null
+
                 override fun getResources(): Resources? {
                     val r = super.getResources()
                     if (wrappedResources == null) {
@@ -111,7 +114,6 @@ object DateTimePickerHelper : KoinComponent {
                 current.get(Calendar.DAY_OF_MONTH)
             )
         } else {
-
             boundDatePickerDialog.datePicker.minDate = current.timeInMillis
         }
         boundDatePickerDialog.show()
