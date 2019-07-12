@@ -9,9 +9,12 @@ import com.braintreepayments.api.models.PayPalRequest
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
+
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.OfferItem
+import com.kg.gettransfer.domain.model.Payment
+import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.extensions.newChainFromMain
@@ -32,8 +35,6 @@ import com.kg.gettransfer.utilities.Analytics
 import io.sentry.Sentry
 
 import org.koin.core.inject
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.Payment
 
 @InjectViewState
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
@@ -186,7 +187,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun getPaymentResult(paymentModel: PaymentRequestModel): Result<Payment?> =
-            utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentModel)) }
+        utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentModel)) }
 
     fun onPaymentClicked() {
         if (accountManager.hasData) getPayment() else putAccount()

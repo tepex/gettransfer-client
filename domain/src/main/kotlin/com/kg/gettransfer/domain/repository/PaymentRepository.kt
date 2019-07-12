@@ -14,7 +14,10 @@ interface PaymentRepository {
     var selectedOffer: OfferItem?
 
     suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment?>
+
     suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequest): Result<PaymentStatus>
+
     suspend fun getBrainTreeToken(): Result<BraintreeToken>
+
     suspend fun confirmPaypal(paymentId: Long, nonce: String): Result<PaymentStatus>
 }
