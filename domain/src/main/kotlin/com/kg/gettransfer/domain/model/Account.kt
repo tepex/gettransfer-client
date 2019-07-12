@@ -8,7 +8,8 @@ data class Account(
     var currency: Currency,
     var distanceUnit: DistanceUnit,
     var groups: List<String>,
-    var carrierId: Long?
+    var carrierId: Long?,
+    var partner: Partner?
 ) {
 
     var isEmailNotificationsEnabled: Boolean
@@ -25,6 +26,9 @@ data class Account(
     val isManager: Boolean
         get() = groups.indexOf(GROUP_MANAGER_VIEW_TRANSFERS) >= 0
 
+    val isBusinessAccount: Boolean
+        get() = partner != null
+
     companion object {
         const val GROUP_CARRIER_DRIVER = "carrier/driver"
         const val GROUP_MANAGER_VIEW_TRANSFERS = "manager/view_transfers"
@@ -36,7 +40,8 @@ data class Account(
             currency = Currency.DEFAULT,
             distanceUnit = DistanceUnit.KM,
             groups = emptyList(),
-            carrierId = null
+            carrierId = null,
+            partner = null
         )
     }
 }

@@ -559,6 +559,13 @@ class MainActivity :
         }
     }
 
+    override fun setBalance(balance: String?) {
+        navHeaderBalance.apply {
+            isGone = balance.isNullOrEmpty()
+            text = getString(R.string.LNG_PAYMENT_BALANCE, balance)
+        }
+    }
+
     override fun selectFieldFrom() {
         mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.point_orange))
         switchButtons(false)

@@ -23,20 +23,9 @@ interface PaymentOfferView : BaseView {
     fun setToolbarTitle(transferModel: TransferModel)
     fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency)
 
-    fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel)
+    fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel, balance: String?)
     fun showBadCredentialsInfo(field: Int)
 
     fun showFieldError(@StringRes stringId: Int)
     fun enablePayment(enable: Boolean)
-
-    /*companion object {
-        val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"
-    }
-
-    @Serializable
-    data class Params(
-            @Serializable(with = DateSerializer::class) val dateRefund: Date?,
-            val transferId: Long,
-            val paymentPercentages: List<Int>
-    )*/
 }

@@ -12,7 +12,7 @@ import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
  */
 open class PaymentDataStoreCache : PaymentDataStore {
 
-    override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
+    override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity? {
         throw UnsupportedOperationException()
     }
 

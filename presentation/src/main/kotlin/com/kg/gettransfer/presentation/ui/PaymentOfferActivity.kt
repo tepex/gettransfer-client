@@ -33,6 +33,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.Ratings
 import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
@@ -129,6 +130,10 @@ class PaymentOfferActivity : BaseActivity(),
             rbPaypal.setOnClickListener(this)
             layoutPaypal.setOnClickListener(this)
         }
+        View.OnClickListener { changePayment(rbBalance, PaymentRequestModel.GROUND) }.apply {
+            rbBalance.setOnClickListener(this)
+            layoutBalance.setOnClickListener(this)
+        }
         addKeyBoardDismissListener {
             Handler().postDelayed({
                 if (it) sv_root.fling(2000)         //need to show "Payment" button
@@ -197,10 +202,17 @@ class PaymentOfferActivity : BaseActivity(),
             R.id.rbCard -> {
                 rbCard.isChecked = true
                 rbPaypal.isChecked = false
+                rbBalance.isChecked = false
             }
             R.id.rbPaypal -> {
                 rbPaypal.isChecked = true
                 rbCard.isChecked = false
+                rbBalance.isChecked = false
+            }
+            R.id.rbBalance -> {
+                rbBalance.isChecked = true
+                rbCard.isChecked = false
+                rbPaypal.isChecked = false
             }
         }
         presenter.selectedPayment = payment
@@ -442,7 +454,7 @@ class PaymentOfferActivity : BaseActivity(),
         toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
     }
 
-    override fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel) {
+    override fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel, balance: String?) {
         if (hasAccount && (profile.email.isNullOrEmpty() || profile.phone.isNullOrEmpty())) {
             ll_auth_container.isVisible = true
             initEmailTextChangeListeners()
@@ -451,8 +463,14 @@ class PaymentOfferActivity : BaseActivity(),
             profile.phone?.let { phoneLayout.fieldText.setText(it) }
         } else {
             ll_auth_container.isVisible = false
+            setBalance(balance)
         }
         presenter.enablePaymentBtn()
+    }
+
+    private fun setBalance(balance: String?) {
+        layoutBalance.isGone = balance.isNullOrEmpty()
+        tvBalance.text = getString(R.string.LNG_PAYMENT_FROM_BALANCE, balance)
     }
 
     override fun showBadCredentialsInfo(field: Int) {

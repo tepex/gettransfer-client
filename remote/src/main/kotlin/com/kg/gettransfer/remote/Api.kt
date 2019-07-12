@@ -228,5 +228,6 @@ interface Api {
 
     @GET("$API_VOUCHER{id}")
     fun downloadVoucher(
-            @Path("id") transferId: Long): Deferred<ResponseBody>
+        @Path("id") transferId: Long
+    ): Deferred<ResponseBody>
 }

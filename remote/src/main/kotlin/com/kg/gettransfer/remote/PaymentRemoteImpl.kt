@@ -1,26 +1,29 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.PaymentRemote
+
 import com.kg.gettransfer.data.model.BraintreeTokenEntity
 import com.kg.gettransfer.data.model.PaymentEntity
 import com.kg.gettransfer.data.model.PaymentRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
+
 import com.kg.gettransfer.remote.model.BraintreeTokenModel
 import com.kg.gettransfer.remote.model.PaymentModel
 import com.kg.gettransfer.remote.model.PaymentStatusRequestModel
 import com.kg.gettransfer.remote.model.PaymentStatusWrapperModel
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.map
+
 import org.koin.core.get
 
 class PaymentRemoteImpl : PaymentRemote {
     private val core = get<ApiCore>()
 
-    override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
+    override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity? {
         val response: ResponseModel<PaymentModel> = core.tryTwice { core.api.createNewPayment(paymentRequest.map()) }
         @Suppress("UnsafeCallOnNullableType")
-        return response.data!!.map()
+        return response.data?.map()
     }
 
     override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity): PaymentStatusEntity {

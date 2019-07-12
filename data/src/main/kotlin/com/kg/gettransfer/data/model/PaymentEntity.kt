@@ -4,7 +4,7 @@ import com.kg.gettransfer.domain.model.Params
 import com.kg.gettransfer.domain.model.Payment
 
 data class PaymentEntity(
-    val type: String,
+    val type: String?,
     val url: String?,
     val id: Long?,
     val params: ParamsEntity?

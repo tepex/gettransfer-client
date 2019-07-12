@@ -4,6 +4,7 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
+
 import java.util.Locale
 
 /**
@@ -18,7 +19,8 @@ data class AccountEntity(
     val carrierId: Long?,
 
     var password: String? = null,
-    var repeatedPassword: String? = null
+    var repeatedPassword: String? = null,
+    val partner: PartnerEntity? = null
 ) {
 
     companion object {
@@ -28,6 +30,7 @@ data class AccountEntity(
         const val DISTANCE_UNIT = "distance_unit"
         const val GROUPS        = "groups"
         const val CARRIER_ID    = "carrier_id"
+        const val PARTNER       = "partner"
 
         const val PASSWORD              = "password"
         const val PASSWORD_CONFIRMATION = "password_confirmation"
@@ -43,7 +46,8 @@ fun AccountEntity.map(configs: Configs) =
         configs.supportedCurrencies.find { it.code == currency } ?: Currency.DEFAULT,
         distanceUnit?.let { DistanceUnit.valueOf(it.toUpperCase()) } ?: DistanceUnit.KM,
         groups ?: emptyList(),
-        carrierId
+        carrierId,
+        partner?.map()
     )
 
 fun Account.map() =
