@@ -170,6 +170,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
         } else {
             router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))
+            analytics.EcommercePurchase(selectedPayment).sendAnalytics()
         }
         viewState.blockInterface(false)
     }
