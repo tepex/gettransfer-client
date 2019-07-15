@@ -99,9 +99,7 @@ class SystemRepositoryImpl(
         }
 
     override var favoriteTransportTypes: Set<TransportType.ID>?
-        get() = preferencesCache.favoriteTransportTypes
-            ?.map { TransportType.ID.parse(it) }
-            ?.toSet()
+        get() = preferencesCache.favoriteTransportTypes?.map { it.map() }?.toSet()
         set(value) {
             preferencesCache.favoriteTransportTypes = value?.map { it.name }?.toSet()
         }

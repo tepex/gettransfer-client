@@ -35,7 +35,7 @@ fun RouteInfoEntity.map() =
         success,
         distance,
         duration,
-        prices.entries.associate { TransportType.ID.parse(it.key) to it.value.map() },
+        prices.entries.associate { it.key.map() to it.value.map() },
         watertaxi,
         polyLines,
         overviewPolyline,

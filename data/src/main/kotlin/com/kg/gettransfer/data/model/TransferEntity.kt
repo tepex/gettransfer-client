@@ -137,9 +137,9 @@ fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateForm
         flightNumber,
 /* ================================================== */
         flightNumberReturn,
-        transportTypeIds.map { TransportType.ID.parse(it) },
+        transportTypeIds.map { it.map() },
         pax,
-        bookNow?.let { TransportType.ID.parse(it) },
+        bookNow?.map(),
         time,
         nameSign,
         comment,
@@ -157,7 +157,7 @@ fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateForm
         watertaxi,
         bookNowOffers.map { entry ->
             entry.value.map(
-                transportTypes.find { it.id === TransportType.ID.parse(entry.key) } ?: transportTypes.first()
+                transportTypes.find { it.id == entry.key.map() } ?: transportTypes.first()
             )
         },
         offersCount,
