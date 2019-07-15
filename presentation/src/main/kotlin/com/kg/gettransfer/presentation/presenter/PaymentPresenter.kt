@@ -42,6 +42,9 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
     internal var percentage = 0
     internal var paymentType = ""
 
+    private var showSuccessPayment = false
+    private var showFailedPayment = false
+
     override fun attachView(view: PaymentView) {
         super.attachView(view)
         with(paymentInteractor) {
@@ -109,21 +112,27 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
     }
 
     private fun showFailedPayment() {
-        viewState.blockInterface(false)
-        router.exit()
-        router.navigateTo(Screens.PaymentError(transfer!!.id))
-        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
+        if (!showFailedPayment) {
+            showFailedPayment = true
+            viewState.blockInterface(false)
+            router.exit()
+            router.navigateTo(Screens.PaymentError(transfer!!.id))
+            analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
+        }
     }
 
     private fun showSuccessfulPayment() {
-        viewState.blockInterface(false)
-        router.newChainFromMain(
-            Screens.PaymentSuccess(
-                transfer!!.id,
-                offer?.id
+        if (!showSuccessPayment) {
+            showSuccessPayment = true
+            viewState.blockInterface(false)
+            router.newChainFromMain(
+                    Screens.PaymentSuccess(
+                            transfer!!.id,
+                            offer?.id
+                    )
             )
-        )
-        logEventEcommercePurchase()
+            logEventEcommercePurchase()
+        }
     }
 
     private fun logEventEcommercePurchase() {
