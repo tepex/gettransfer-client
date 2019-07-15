@@ -301,7 +301,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         when(transfer.statusCategory) {
             Transfer.STATUS_CATEGORY_ACTIVE -> { setActiveCategoryPrices(transfer) }
             Transfer.STATUS_CATEGORY_CONFIRMED -> { transfer.let { setPricesForPaidTransfer(it.remainsToPay, it.price, it.paidPercentage) } }
-            Transfer.STATUS_CATEGORY_FINISHED -> { setRemainToPayInfo(transfer.price ?: "", getString(R.string.LNG_RIDE_PAYMENT_COST)) }
+            Transfer.STATUS_CATEGORY_FINISHED -> {
+                setRemainToPayInfo(transfer.price ?: "", getString(R.string.LNG_RIDE_PAYMENT_COST))
+                setVoucher()
+            }
             Transfer.STATUS_CATEGORY_UNFINISHED -> { transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) } }
         }
     }
