@@ -4,7 +4,6 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.eventListeners.PaymentStatusEventListener
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
@@ -13,10 +12,7 @@ import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 
-import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
-
-import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter.Companion.PRICE_30
 
 import com.kg.gettransfer.presentation.view.PaymentView
 import com.kg.gettransfer.presentation.view.Screens
@@ -25,15 +21,13 @@ import com.kg.gettransfer.utilities.Analytics
 
 import io.sentry.Sentry
 
-import java.util.Currency
-
 import org.koin.core.inject
 
 @InjectViewState
 class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListener {
+
     private val paymentInteractor: PaymentInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
-    private val orderInteractor: OrderInteractor by inject()
 
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
@@ -64,17 +58,15 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
         paymentInteractor.eventPaymentReceiver = null
     }
 
-    fun changePaymentStatus(orderId: Long, success: Boolean) {
-        utils.launchSuspend {
-            viewState.blockInterface(true)
-            val model = PaymentStatusRequestModel(null, orderId, true, success)
-            val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
-            result.error?.let { err ->
-                log.error("change payment status error", err)
-                viewState.setError(err)
-                router.exit()
-            } ?: if (result.model.isSuccess) isPaymentWasSuccessful() else showFailedPayment()
-        }
+    fun changePaymentStatus(orderId: Long, success: Boolean) = utils.launchSuspend {
+        viewState.blockInterface(true)
+        val model = PaymentStatusRequestModel(null, orderId, true, success)
+        val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
+        result.error?.let { err ->
+            log.error("change payment status error", err)
+            viewState.setError(err)
+            router.exit()
+        } ?: if (result.model.isSuccess) isPaymentWasSuccessful() else showFailedPayment()
     }
 
     override fun onNewPaymentStatusEvent(isSuccess: Boolean) {
@@ -106,47 +98,8 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
     }
 
     private fun showSuccessfulPayment() {
-        if (!showSuccessPayment) {
-            showSuccessPayment = true
-            viewState.blockInterface(false)
-            transfer?.let { router.newChainFromMain(Screens.PaymentSuccess(it.id, offer?.id)) }
-            logEventEcommercePurchase()
-        }
-    }
-
-    private fun logEventEcommercePurchase() {
-        val offerType = if (offer != null) Analytics.REGULAR else Analytics.NOW
-        val requestType = when {
-            transfer?.duration != null -> Analytics.TRIP_HOURLY
-            transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
-            else -> Analytics.TRIP_DESTINATION
-        }
-        val currency = sessionInteractor.currency.code
-        var price: Double = offer?.price?.amount ?: bookNowOffer?.amount ?: (-1.0).also {
-            Sentry.capture(
-                """when try to get offer for analytics of payment - server return invalid value:
-                    |offer is null  - ${offer == null}
-                    |offer.price is null  - ${offer?.price == null}
-                    |offer.price.amount is null  - ${offer?.price?.amount == null}
-                    |bookNowOffer is null  - ${bookNowOffer == null}
-                    |bookNowOffer.amount is null  - ${bookNowOffer?.amount == null}
-                 """.trimMargin()
-            )
-        }
-
-        if (percentage == OfferModel.PRICE_30) price *= PRICE_30
-
-        val purchase = analytics.EcommercePurchase(
-            transfer?.id.toString(),
-            transfer?.promoCode,
-            orderInteractor.duration,
-            paymentType,
-            offerType,
-            requestType,
-            Currency.getInstance(sessionInteractor.currency.code),
-            currency,
-            price
-        )
-        purchase.sendAnalytics()
+        viewState.blockInterface(false)
+        transfer?.let { router.newChainFromMain(Screens.PaymentSuccess(it.id, offer?.id)) }
+        analytics.EcommercePurchase(paymentType).sendAnalytics()
     }
 }

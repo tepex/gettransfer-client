@@ -11,8 +11,14 @@ import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.domain.interactor.PaymentInteractor
+import com.kg.gettransfer.domain.interactor.SessionInteractor
+import com.kg.gettransfer.domain.model.BookNowOffer
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.domain.model.ReviewRate
+import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.yandex.metrica.Revenue
@@ -20,15 +26,25 @@ import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
 
+import io.sentry.Sentry
+
 import java.util.Currency
+
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 import kotlin.math.roundToLong
 
+@Suppress("TooManyFunctions")
 class Analytics(
     private val context: Context,
     private val firebase: FirebaseAnalytics,
     private val facebook: AppEventsLogger
-) {
+) : KoinComponent {
+
+    private val paymentInteractor: PaymentInteractor by inject()
+    private val sessionInteractor: SessionInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
 
     /**
      * log single value for event
@@ -90,28 +106,70 @@ class Analytics(
         }
     }
 
-    inner class EcommercePurchase(
-        private val transactionId: String,
-        private val promocode: String?,
-        private val hours: Int?,
-        private var paymentType: String,
-        private val offerType: String,
-        private val requestType: String,
-        private val currency: Currency,
-        private val currencyCode: String,
-        private val price: Double) {
+    inner class EcommercePurchase(private var paymentType: String) {
+
+        private lateinit var transactionId: String
+        private var promocode: String? = null
+        private var hours: Int? = null
+        private lateinit var offerType: String
+        private lateinit var requestType: String
+        private lateinit var currency: Currency
+        private lateinit var currencyCode: String
+        private var price: Double = -1.0
+
+        private var offer: Offer? = null
+        private var bookNowOffer: BookNowOffer? = null
+        private var transfer: Transfer? = null
 
         fun sendAnalytics() {
-            paymentType = when (paymentType) {
-                PaymentRequestModel.PLATRON -> CARD
-                PaymentRequestModel.PAYPAL -> PAYPAL
-                else -> BALANCE
-            }
+            getTransferAndOffer()
+            prepareData()
             sendToFirebase()
             sendToFacebook()
             sendToYandex()
             sendToAppsFlyer()
             logEvent(EVENT_MAKE_PAYMENT, STATUS, RESULT_SUCCESS)
+        }
+
+        private fun prepareData() {
+            transactionId = transfer?.id.toString()
+            promocode = transfer?.promoCode
+            hours = orderInteractor.duration
+            offerType = if (offer != null) REGULAR else NOW
+            requestType = when {
+                transfer?.duration != null -> TRIP_HOURLY
+                transfer?.dateReturnLocal != null -> TRIP_ROUND
+                else -> TRIP_DESTINATION
+            }
+            currencyCode = sessionInteractor.currency.code
+            currency = Currency.getInstance(currencyCode)
+            price = offer?.price?.amount ?: bookNowOffer?.amount ?: (-1.0).also {
+                Sentry.capture(
+                        """when try to get offer for analytics of payment - server return invalid value:
+                            |offer is null  - ${offer == null}
+                            |offer.price is null  - ${offer?.price == null}
+                            |offer.price.amount is null  - ${offer?.price?.amount == null}
+                            |bookNowOffer is null  - ${bookNowOffer == null}
+                            |bookNowOffer.amount is null  - ${bookNowOffer?.amount == null}
+                         """.trimMargin()
+                )
+            }
+
+            paymentType = when (paymentType) {
+                PaymentRequestModel.PLATRON -> CARD
+                PaymentRequestModel.PAYPAL -> PAYPAL
+                else -> BALANCE
+            }
+        }
+
+        private fun getTransferAndOffer() = paymentInteractor.selectedTransfer?.let { st ->
+            paymentInteractor.selectedOffer?.let { so ->
+                transfer = st
+                when (so) {
+                    is Offer -> offer = so
+                    is BookNowOffer -> bookNowOffer = so
+                }
+            }
         }
 
         private fun sendToAppsFlyer() {
@@ -143,7 +201,8 @@ class Analytics(
         }
 
         private fun sendRevenue() {
-            val priceMicros = price.roundToLong() * 1000000L // priceMicros = price × 10^6
+            @Suppress("MagicNumber")
+            val priceMicros = price.roundToLong() * 1_000_000L // priceMicros = price × 10^6
             val revenue = Revenue.newBuilderWithMicros(priceMicros, currency)
                     .withProductID(requestType)
                     .withQuantity(1)
@@ -251,15 +310,17 @@ class Analytics(
         }
     }
 
+    @Suppress("LongParameterList")
     fun logEventAddToCart(
-            numberOfPassengers: Int,
-            origin: String?,
-            destination: String?,
-            travelClass: String?,
-            hours: Int?,
-            tripType: String,
-            value: String?,
-            currency: String?) {
+        numberOfPassengers: Int,
+        origin: String?,
+        destination: String?,
+        travelClass: String?,
+        hours: Int?,
+        tripType: String,
+        value: String?,
+        currency: String?
+    ) {
 
         val fbBundle = Bundle()
         val map = mutableMapOf<String, Any?>()
@@ -293,10 +354,11 @@ class Analytics(
     }
 
     fun logCreateTransfer(
-            result: String,
-            value: String?,
-            currency: String?,
-            hours: Int?) {
+        result: String,
+        value: String?,
+        currency: String?,
+        hours: Int?
+    ) {
 
         val map = mutableMapOf<String, Any?>()
 
