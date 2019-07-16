@@ -85,7 +85,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
             viewState.showBadge(false)
         }
         log.debug("MainPresenter.is user logged in: ${accountManager.isLoggedIn}")
-        if (!setAddressFields()) setOwnLocation()
+        checkingFillAddressFields()
         checkAccount()
         changeUsedField(systemInteractor.selectedField)
         viewState.setTripMode(orderInteractor.hourlyDuration)
@@ -94,6 +94,10 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     override fun detachView(view: MainView?) {
         super.detachView(view)
         countEventsInteractor.removeCounterListener(this)
+    }
+
+    fun checkingFillAddressFields() {
+        if (!setAddressFields()) setOwnLocation()
     }
 
     fun setScreenState(hasRequestView: Boolean) {
