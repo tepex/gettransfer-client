@@ -103,7 +103,8 @@ detekt {
         "logging/src",
         "prefs/src",
 //        "presentation/src",
-        "remote/src"
+        "remote/src",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",
     )
     config = files("detekt-config.yml")
 }
