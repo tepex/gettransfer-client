@@ -107,6 +107,9 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentOfferPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaypalConnectionPresenter.kt",
+
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
+
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt"
     )
     config = files("detekt-config.yml")

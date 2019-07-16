@@ -50,7 +50,7 @@ object OfferItemBindDelegate {
             tv_car_model.text = offer.vehicle.name
             ivCarColor.isVisible = true
             ivCarColor.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(view.context, it) })
-            tv_car_class.text = offer.vehicle.transportType.nameId?.let { context.getString(it) } ?: ""
+            tv_car_class.text = context.getString(offer.vehicle.transportType.nameId)
             bindCapacity(offer_conditions.view_capacity, offer.vehicle.transportType)
             bindConveniences(offer_conditions.vehicle_conveniences, offer)
             bindRating(view_offer_rate, offer.carrier.ratings, offer.carrier.approved).also { offer_rating_bg.isVisible = it }
@@ -64,7 +64,7 @@ object OfferItemBindDelegate {
     private fun bindBookNow(offer: BookNowOfferModel, view: View) {
         with(view) {
             tv_car_model.text = context.getString(offer.transportType.id.getModelsRes())
-            tv_car_class.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
+            tv_car_class.text = context.getString(offer.transportType.nameId)
             bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
             bindRating(view_offer_rate, Ratings.BOOK_NOW_RATING).also { offer_rating_bg.isVisible = true }
             bindPrice(offer_bottom, offer.base)
@@ -75,7 +75,7 @@ object OfferItemBindDelegate {
     fun bindOfferNoPhoto(view: View, offer: OfferModel) {
         with(view) {
             offer_header_noPhoto.tv_car_model_.text = offer.vehicle.name
-            tv_transport_class.text = offer.vehicle.transportType.nameId?.let { context.getString(it) } ?: ""
+            tv_transport_class.text = context.getString(offer.vehicle.transportType.nameId)
             bindCapacity(offer_conditions_noPhoto.view_capacity, offer.vehicle.transportType)
             bindConveniences(offer_conditions_noPhoto.vehicle_conveniences, offer)
             bindRating(view_offer_rate_noPhoto, offer.carrier.ratings, offer.carrier.approved)
@@ -112,7 +112,7 @@ object OfferItemBindDelegate {
                     }
                 }
 
-                tv_car_class_tiny.text = transportType.nameId?.let { context.getString(it) ?: "" }
+                tv_car_class_tiny.text = context.getString(transportType.nameId)
 
                 photos.firstOrNull()
                     .also {
@@ -144,7 +144,7 @@ object OfferItemBindDelegate {
             iv_car_color_tiny.isVisible = false
 
             with(offer.transportType) {
-                tv_car_class_tiny.text = nameId?.let { context.getString(it) } ?: ""
+                tv_car_class_tiny.text = context.getString(nameId)
                 Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = id.getImageRes())
             }
             bindRating(view_rating_tiny, Ratings.BOOK_NOW_RATING, true)

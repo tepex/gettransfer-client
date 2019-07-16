@@ -235,7 +235,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)
                 if (offer.vehicle.photos.isNotEmpty()) {
-                    vehiclePhotosView.setPhotos(offer.vehicle.transportType.imageId!!, offer.vehicle.photos)
+                    vehiclePhotosView.setPhotos(offer.vehicle.transportType.imageId, offer.vehicle.photos)
                 } else {
                     vehiclePhotosView.hidePhotos()
                 }

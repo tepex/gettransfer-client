@@ -303,7 +303,7 @@ class PaymentOfferActivity : BaseActivity(),
                         resource = transportType.id.getEmptyImageRes()
                     )
                 }
-            tvClass.text = transportType.nameId?.let { getString(it) ?: "" }
+            tvClass.text = getString(transportType.nameId)
         }
         with(offer.carrier) {
             OfferItemBindDelegate.bindLanguages(
