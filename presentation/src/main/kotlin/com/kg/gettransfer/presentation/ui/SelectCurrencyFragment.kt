@@ -24,6 +24,7 @@ import com.kg.gettransfer.presentation.view.SelectCurrencyView
 
 import kotlinx.android.synthetic.main.fragment_select_currency.*
 
+@Suppress("TooManyFunctions")
 class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
     override val layout = R.layout.fragment_select_currency
@@ -62,9 +63,9 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
     }
 
     private fun setRecyclerViewAdapter(recyclerView: RecyclerView, list: List<CurrencyModel>, selected: CurrencyModel) {
-        recyclerView.adapter = CurrenciesListAdapter(list, selected) {
-            presenter.changeCurrency(it)
-            changeSelectedCurrency(it)
+        recyclerView.adapter = CurrenciesListAdapter(list, selected) { currency ->
+            presenter.changeCurrency(currency)
+            changeSelectedCurrency(currency)
         }
     }
 
@@ -74,9 +75,10 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
     }
 
     private fun setNewSelectedCurrency(recyclerView: RecyclerView, newSelectedCurrency: CurrencyModel) {
-        (recyclerView.adapter as CurrenciesListAdapter).apply {
-            setNewSelectedCurrency(newSelectedCurrency)
-            notifyDataSetChanged()
+        val adapter = recyclerView.adapter
+        if (adapter is CurrenciesListAdapter) {
+            adapter.setNewSelectedCurrency(newSelectedCurrency)
+            adapter.notifyDataSetChanged()
         }
     }
 
