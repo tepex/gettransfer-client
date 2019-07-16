@@ -62,11 +62,15 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
         viewState.blockInterface(true)
         val model = PaymentStatusRequestModel(null, orderId, true, success)
         val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
-        result.error?.let { err ->
+        val err = result.error
+        if (err != null) {
             log.error("change payment status error", err)
             viewState.setError(err)
             router.exit()
-        } ?: if (result.model.isSuccess) isPaymentWasSuccessful() else showFailedPayment()
+        } else {
+            if (result.model.isSuccess) isPaymentWasSuccessful() else showFailedPayment()
+            analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, result.model.status.name)
+        }
     }
 
     override fun onNewPaymentStatusEvent(isSuccess: Boolean) {
@@ -88,13 +92,9 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
     }
 
     private fun showFailedPayment() {
-        if (!showFailedPayment) {
-            showFailedPayment = true
-            viewState.blockInterface(false)
-            router.exit()
-            transfer?.let { router.navigateTo(Screens.PaymentError(it.id)) }
-            analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
-        }
+        viewState.blockInterface(false)
+        router.exit()
+        transfer?.let { router.navigateTo(Screens.PaymentError(it.id)) }
     }
 
     private fun showSuccessfulPayment() {
