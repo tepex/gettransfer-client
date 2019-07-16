@@ -11,6 +11,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.RETURN_DATE
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
@@ -26,8 +27,8 @@ import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.view_switcher.*
 
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 //TODO add presenter
 class MainRequestFragment :
@@ -67,15 +68,15 @@ class MainRequestFragment :
             mParent.switch_mode.isChecked = isChecked
             tripModeSwitched(isChecked)
         }
-        switcher_map_.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
+        switcher_map_.switch_mode_.setOnCheckedChangeListener { _, _ ->
             mParent.switcher_map.switch_mode_.performClick()
         }
 
         //Address panel
         with(request_search_panel) {
             rl_hourly.setOnClickListener  { mParent.showNumberPicker(true) }
-            searchFrom.setOnClickListener { mParent.performClick(false, true) }
-            searchTo.setOnClickListener   { mParent.performClick(true, true) }
+            searchFrom.setThrottledClickListener { mParent.performClick(false, true) }
+            searchTo.setThrottledClickListener   { mParent.performClick(true, true) }
             searchFrom.setUneditable()
             searchTo.setUneditable()
         }
@@ -87,8 +88,9 @@ class MainRequestFragment :
         btnShowDrawerFragment.setOnClickListener { mParent.drawer.openDrawer(Gravity.START) }
         btnNextFragment.setOnClickListener       { onNextClick() }
         ivSetMyLocation.setOnClickListener       {
-            mParent.checkPermission()
-            mPresenter.updateCurrentLocation()
+            //mParent.checkPermission()
+            //mPresenter.updateCurrentLocation()
+            switcher_map_.switch_mode_.isChecked = true
         }
         fl_DeleteReturnDate.setOnClickListener   { clearReturnDate() }
     }
@@ -217,10 +219,10 @@ class MainRequestFragment :
         }
     }
 
-    override fun setVisibilityBtnMyLocation(isVisible: Boolean) {
+    /*override fun setVisibilityBtnMyLocation(isVisible: Boolean) {
         ivSetMyLocation.setImageDrawable(ContextCompat.getDrawable(mParent, when(isVisible) {
             true -> R.drawable.ic_pin_orange_border
             false -> R.drawable.ic_pin_gray_border
         }))
-    }
+    }*/
 }

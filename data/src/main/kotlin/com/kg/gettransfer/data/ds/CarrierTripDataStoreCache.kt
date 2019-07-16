@@ -6,12 +6,14 @@ import com.kg.gettransfer.data.CarrierTripDataStore
 import com.kg.gettransfer.data.model.CarrierTripBaseEntity
 import com.kg.gettransfer.data.model.CarrierTripEntity
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 /**
- * Implementation of the [CarrierTripDataStore] interface to provide a means of communicating with the local data source.
+ * Implementation of the [CarrierTripDataStore] interface to provide
+ * a means of communicating with the local data source.
  */
-open class CarrierTripDataStoreCache: CarrierTripDataStore {
+open class CarrierTripDataStoreCache : CarrierTripDataStore {
+
     private val cache: CarrierTripCache by inject()
 
     suspend fun addAllCarrierTrips(trips: List<CarrierTripBaseEntity>) = cache.insertAllBaseCarrierTrips(trips)

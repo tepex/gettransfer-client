@@ -6,12 +6,12 @@ buildscript {
     }
 
     ext {
-        kotlin_version        = "1.3.11"
+        kotlin_version        = "1.3.31"
         coroutines_version    = "1.1.1"
         serialization_version = "0.9.1"
         //gradle_version        = "3.4.0-alpha07"
         gradle_version        = '3.4.0'
-        koin_version          = "1.0.2"
+        koin_version          = "2.0.1"
         gms_version           = "16.0.0"
         gs_version            = "4.2.0"
         hockeyapp_version     = "3.7.6"
@@ -24,12 +24,14 @@ buildscript {
         gson_version          = "2.8.5"
         room_version          = "1.1.1"
         dexcount_version      = "0.8.4"
+        detekt_version        = "1.0.0-RC15"
 
         libs = [
             kotlin        : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
             coroutines    : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
             serialization : ("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"),
             koin_core     : ("org.koin:koin-core:$koin_version"),
+            koin_core_ext : ("org.koin:koin-core-ext:$koin_version"),
             koin_android  : ("org.koin:koin-android:$koin_version"),
             psLocation    : ("com.google.android.gms:play-services-location:$gms_version"),
             psPlaces      : ("com.google.android.gms:play-services-places:$gms_version"),
@@ -62,6 +64,8 @@ plugins {
     */
     id 'com.github.ben-manes.versions' version '0.20.0'
     id 'com.gladed.androidgitversion'  version '0.4.5'
+    /* code analysis tool  */
+    id 'io.gitlab.arturbosch.detekt' version '1.0.0-RC15'
 }
 
 allprojects {
@@ -81,6 +85,27 @@ allprojects {
             testLogging.showStandardStreams = true
         }
     }
+}
+
+dependencies {
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.0.0-RC15"
+}
+
+detekt {
+    toolVersion = "1.0.0-RC15"
+    filters = ".*build.*,.*/resources/.*,.*/tmp/.*"
+    input = files(
+        "cache/src",
+        "data/src",
+        "domain/src",
+        "encrypt/src",
+        "geo/src",
+        "logging/src",
+        "prefs/src",
+//        "presentation/src",
+        "remote/src"
+    )
+    config = files("detekt-config.yml")
 }
 
 task clean(type: Delete) {

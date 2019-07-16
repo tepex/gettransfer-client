@@ -8,15 +8,11 @@ import com.kg.gettransfer.presentation.model.TransferModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface RatingLastTripView: BaseView {
 
-    fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, vehicle: String, color: String, routeModel: RouteModel?)
+    fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, routeModel: RouteModel?)
 
     fun cancelReview()
 
-    fun askRateInPlayMarket()
-
     fun thanksForRate()
 
-    fun showDetailedReview(rate: Float, offerId: Long)
-
-    fun hideDialog()
+    fun showDetailedReview()
 }

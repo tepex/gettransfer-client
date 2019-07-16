@@ -42,7 +42,7 @@ class AddressAdapter(
 
         fun bindViews(address: GTAddress, isLastAddress: Boolean, listener: ClickHandler) = with(containerView) {
             addressItem.text = address.address
-            addressSecondaryItem.text = address.secondary
+            addressSecondaryItem.text = address.variants?.second
             setSelected(selected == adapterPosition)
 
             icon_for_last_place.isVisible = isLastAddress

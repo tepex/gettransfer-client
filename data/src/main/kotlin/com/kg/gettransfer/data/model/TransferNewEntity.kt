@@ -1,5 +1,9 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.TransferNew
+import com.kg.gettransfer.domain.model.Trip
+import java.text.DateFormat
+
 data class TransferNewEntity(
     val from: CityPointEntity,
     val dest: DestEntity<CityPointEntity, Int>,
@@ -51,3 +55,28 @@ data class TripEntity(
         const val FLIGHT_NUMBER = "flight_number"
     }
 }
+
+fun Trip.map(serverDateFormat: DateFormat, serverTimeFormat: DateFormat) =
+    TripEntity(
+        serverDateFormat.format(dateTime),
+        serverTimeFormat.format(dateTime),
+        flightNumber
+    )
+
+fun TransferNew.map(serverDateFormat: DateFormat, serverTimeFormat: DateFormat) =
+    TransferNewEntity(
+        from.map(),
+        dest.map(),
+        tripTo.map(serverDateFormat, serverTimeFormat),
+        tripReturn?.map(serverDateFormat, serverTimeFormat),
+        transportTypeIds.map { it.toString() },
+        pax,
+        childSeatsInfant,
+        childSeatsConvertible,
+        childSeatsBooster,
+        passengerOfferedPrice,
+        nameSign,
+        comment,
+        user.map(),
+        promoCode
+    )

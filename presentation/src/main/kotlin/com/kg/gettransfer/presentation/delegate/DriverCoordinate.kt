@@ -7,8 +7,8 @@ import android.view.animation.LinearInterpolator
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.Coordinate
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.ArrayList
 import kotlin.properties.Delegates
 
@@ -19,7 +19,7 @@ class DriverCoordinate(private val handler: Handler,
 
     init { requestCoordinates() }
 
-    var property: Coordinate by Delegates.observable(Coordinate(0, ZERO_COORDINATE, ZERO_COORDINATE)) { p, old, new ->
+    var property: Coordinate by Delegates.observable(Coordinate(0, ZERO_COORDINATE, ZERO_COORDINATE)) { _, old, new ->
         with(old) {
             if (lat != ZERO_COORDINATE && lon != ZERO_COORDINATE) showMoving = true
         }

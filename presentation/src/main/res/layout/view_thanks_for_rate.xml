@@ -1,36 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:gravity="center_horizontal"
     android:background="@drawable/back_top_rounded"
     android:padding="@dimen/rate_container_dialog_padding"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tvClose"
+    <ImageView
+        android:id="@+id/ivClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:padding="8dp"
-        android:textColor="@android:color/black"
-        android:text="@string/LNG_CLOSE"/>
+        app:srcCompat="@drawable/ic_close_x"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <com.willy.ratingbar.ScaleRatingBar
+        android:id="@+id/rating"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:padding="28dp"
-        android:background="@drawable/back_circle_thanks_rate"
-        android:src="@drawable/ic_thanks_for_rate"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="14dp"
+        android:gravity="center_horizontal"
+        app:srb_minimumStars="5"
+        app:srb_clearRatingEnabled="false"
+        app:srb_drawableEmpty="@drawable/ic_star_empty"
+        app:srb_drawableFilled="@drawable/ic_star_filled"
+        app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
+        app:srb_starWidth="@dimen/rating_bar_stars_enabled_width"
+        app:srb_isIndicator="true"
+        app:srb_numStars="5"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="40dp"
-        android:textColor="@color/colorTextBlack"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:textSize="17sp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="20dp"
+        style="@style/sf_font_semi_bold"
+        android:textSize="16sp"
         android:text="@string/LNG_PAYMENT_THANK_RATING"/>
 
+    <TextView
+        android:id="@+id/yv_comment_suggestion_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="56dp"
+        android:paddingEnd="56dp"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:text="@string/LNG_PAYMENT_LEAVE_COMMENT"
+        style="@style/sf_font_pro_text_regular_grey"/>
+
+    <EditText
+        android:id="@+id/etComment"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:hint="@string/LNG_RIDE_YOUR_COMMENT"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/color_gtr_light_grey"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:drawableEnd="@drawable/ic_arrow_right"
+        android:textColorHint="@color/colorGrey"
+        style="@style/transfer_details_secondary_text"/>
 </LinearLayout>

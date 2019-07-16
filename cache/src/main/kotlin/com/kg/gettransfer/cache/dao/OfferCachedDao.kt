@@ -5,16 +5,16 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.Transaction
-
 import com.kg.gettransfer.cache.model.OfferCached
 import com.kg.gettransfer.data.model.OfferEntity
 
 @Dao
 interface OfferCachedDao {
-    @Query("SELECT * FROM ${OfferEntity.ENTITY_NAME} WHERE ${OfferEntity.ID} = :id")
+
+    @Query("""SELECT * FROM ${OfferEntity.ENTITY_NAME} WHERE ${OfferEntity.ID} = :id""")
     fun getOffer(id: Long): OfferCached
 
-    @Query("SELECT * FROM ${OfferEntity.ENTITY_NAME} WHERE ${OfferEntity.TRANSFER_ID} = :transferId")
+    @Query("""SELECT * FROM ${OfferEntity.ENTITY_NAME} WHERE ${OfferEntity.TRANSFER_ID} = :transferId""")
     fun getOffers(transferId: Long): List<OfferCached>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -23,10 +23,10 @@ interface OfferCachedDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllOffers(offers: List<OfferCached>)
 
-    @Query("DELETE FROM ${OfferEntity.ENTITY_NAME}")
+    @Query("""DELETE FROM ${OfferEntity.ENTITY_NAME}""")
     fun deleteAll()
 
-    @Query("DELETE FROM ${OfferEntity.ENTITY_NAME} WHERE ${OfferEntity.TRANSFER_ID} = :transferId")
+    @Query("""DELETE FROM ${OfferEntity.ENTITY_NAME} WHERE ${OfferEntity.TRANSFER_ID} = :transferId""")
     fun deleteForTransfer(transferId: Long)
 
     @Transaction

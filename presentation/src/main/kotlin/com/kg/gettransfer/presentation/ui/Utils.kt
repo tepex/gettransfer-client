@@ -5,10 +5,11 @@ import android.app.Activity
 import android.content.Context
 
 import android.graphics.Bitmap
-import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 
 import android.os.Build
+import android.os.Bundle
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
@@ -20,10 +21,8 @@ import android.telephony.TelephonyManager
 
 import android.text.Html
 import android.text.Editable
-import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
-import android.text.style.ImageSpan
 
 import android.util.DisplayMetrics
 import android.util.Patterns
@@ -35,7 +34,9 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -50,30 +51,22 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
-import com.kg.gettransfer.domain.model.ReviewRate
-import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.ReviewRateModel
 import com.kg.gettransfer.presentation.model.RouteModel
 
-import com.yandex.metrica.impl.ob.it
-
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import kotlinx.android.synthetic.main.view_rate_field.*
 
 import java.text.SimpleDateFormat
 
 import java.util.Date
 import java.util.Locale
-import java.util.regex.Pattern
 
-import org.koin.standalone.inject
-import org.koin.standalone.KoinComponent
+import org.koin.core.inject
+import org.koin.core.KoinComponent
 
 import timber.log.Timber
 
@@ -148,10 +141,9 @@ object Utils : KoinComponent {
         }
     }
 
-    fun showScreenRedirectingAlert(context: Context, title: String, message: String, navigate: () -> Unit) {
+    fun showScreenRedirectingAlert(context: Context, title: String, navigate: () -> Unit) {
         getAlertDialogBuilder(context).apply {
             setTitle(title)
-            setMessage(message)
             setPositiveButton(R.string.LNG_OK) { dialog, _ ->
                 dialog.dismiss()
                 navigate()
@@ -160,26 +152,12 @@ object Utils : KoinComponent {
         }
     }
 
-    fun setCurrenciesDialogListener(
-        context: Context,
-        view: View,
-        items: List<CharSequence>,
-        listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_CURRENCY, items, listener) }
-
     fun setLocalesDialogListener(
         context: Context,
         view: View,
         items: List<CharSequence>,
         listener: (Int) -> Unit
     ) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
-
-    /*fun setDistanceUnitsDialogListener(
-        context: Context,
-        view: View,
-        items: List<CharSequence>,
-        listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_DISTANCE_UNIT, items, listener) }*/
 
     fun setFirstDayOfWeekDialogListener(
             context: Context,
@@ -246,11 +224,17 @@ object Utils : KoinComponent {
         try {
             /*return if(!PHONE_PATTERN.matcher(phone.trim()).matches()) false
             else phoneUtil.isValidNumber(phoneUtil.parse(phone, null))*/
-            return phoneUtil.isValidNumber(phoneUtil.parse(phone, null))
+            return phoneUtil.isValidNumber(phoneUtil.parse(phone, Locale.getDefault().country))
         } catch (e: Exception) {
-            Timber.w("phone parse error: $phone", e)
+            Timber.w(e, "phone parse error: $phone")
             return false
         }
+    }
+
+    fun convertToInternationalPhone(phone: String): String {
+        val phoneNumber = phoneUtil.parse(phone, Locale.getDefault().country)
+        val internationalPhone = phoneUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL).replace(Regex("\\D"), "")
+        return "+".plus(internationalPhone)
     }
 
     fun getPolyline(routeModel: RouteModel): PolylineModel {
@@ -279,12 +263,18 @@ object Utils : KoinComponent {
         }
 
         Timber.d("latLngBuilder: $latLngBuilder")
-        track = try { CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 150) }
+
+        val build = latLngBuilder.build()
+        val northeast = build.northeast
+        val southwest = build.southwest
+        val isVerticalRoute = northeast.latitude - southwest.latitude >= northeast.longitude - southwest.longitude
+
+        track = try { CameraUpdateFactory.newLatLngBounds(build, 150) }
         catch (e: Exception) {
-            Timber.w("Create order error: $latLngBuilder", e)
+            Timber.w(e, "Create order error: $latLngBuilder")
             null
         }
-        return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track)
+        return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track, isVerticalRoute)
     }
 
     fun getCameraUpdate(list: List<LatLng>): CameraUpdate  =
@@ -332,7 +322,7 @@ object Utils : KoinComponent {
 
     fun getSpannedStringFromHtmlString(htmlString: String): Spanned {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
-               else Html.fromHtml(htmlString)
+        else Html.fromHtml(htmlString)
     }
 
     @DrawableRes
@@ -341,22 +331,20 @@ object Utils : KoinComponent {
         return (imageRes?.call() as Int?) ?: R.drawable.ic_language_unknown
     }
 
-    fun getVehicleNameWithColor(context: Context, name: String, color: String): SpannableStringBuilder {
-        val drawableCompat = getVehicleColorFormRes(context, color)
-            .also { it.setBounds(4, 0, it.intrinsicWidth + 4, it.intrinsicHeight) }
-        return SpannableStringBuilder("$name ").apply {
-            setSpan(ImageSpan(drawableCompat, ImageSpan.ALIGN_BASELINE), length - 1, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
+    fun getCarColorFormRes(context: Context, color: String): Drawable {
+        val colorRes = R.color::class.members.find({ it.name == "color_vehicle_$color" })
+        val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
+        return getCarColorDrawable(context, colorId)
     }
 
-    fun getVehicleColorFormRes(context: Context, color: String): Drawable {
-        val colorRes = R.color::class.members.find( { it.name == "color_vehicle_$color" } )
-        val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
-
-        return ContextCompat.getDrawable(context, R.drawable.ic_circle_car_color_indicator)!!
-            .constantState!!.newDrawable().mutate().apply {
-                setColorFilter(ContextCompat.getColor(context, colorId), PorterDuff.Mode.SRC_IN)
-            }
+    private fun getCarColorDrawable(context: Context, colorId: Int): Drawable {
+        return GradientDrawable().apply {
+            setColor(ContextCompat.getColor(context, colorId))
+            if (colorId == R.color.color_vehicle_white)
+                setStroke(dpToPxInt(context, 1f), ContextCompat.getColor(context, R.color.color_gtr_light_grey))
+            shape = GradientDrawable.OVAL
+            cornerRadius = 5.0f
+        }
     }
 
     fun getPhoneCodeByCountryIso(context: Context): Int {
@@ -427,19 +415,25 @@ object Utils : KoinComponent {
                      bottom: Drawable?) =
             textView.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
 
-    fun bindMainOfferPhoto(view: ImageView, parent: View, path: String? = null,
-                           @DrawableRes resource: Int = 0) =
-            Glide.with(parent)
-                    .let {
-                        if (path != null) it.load(path)
-                        else it.load(resource) }
-                    .apply(RequestOptions()
-                            .error(resource)
-                            .placeholder(resource)
-                            .transforms(path?.let { CenterCrop() } ?: FitCenter(),
-                            RoundedCorners(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))))
-                    .into(view)
-
+    fun bindMainOfferPhoto(
+        view: ImageView,
+        parent: View,
+        path: String? = null,
+        @DrawableRes resource: Int = 0
+    ) = Glide
+        .with(parent).let { if (path != null) it.load(path) else it.load(resource) }
+        .apply(
+            RequestOptions()
+                .error(resource)
+                .placeholder(resource)
+                .transform(
+                    *arrayOf<Transformation<Bitmap>>(
+                        path?.let { CenterCrop() } ?: FitCenter(),
+                        RoundedCorners(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))
+                    )
+                )
+        )
+        .into(view)
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

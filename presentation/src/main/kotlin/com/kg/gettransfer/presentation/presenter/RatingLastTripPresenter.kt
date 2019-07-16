@@ -1,80 +1,72 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
+
+import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
+
 import com.kg.gettransfer.prefs.PreferencesImpl
+
 import com.kg.gettransfer.presentation.mapper.RouteMapper
+
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.map
+
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.RatingLastTripView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
-import org.koin.standalone.inject
+
+import org.koin.core.inject
 
 @InjectViewState
 class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     private val reviewInteractor: ReviewInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
     private val routeMapper: RouteMapper by inject()
+    private val transportTypes = systemInteractor.transportTypes.map { it.map() }
 
-    private var transferId: Long = 0L
-    private var offerId: Long = 0L
+    internal var transferId: Long = 0L
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.hideDialog()
-        showRateForLastTrip()
+        getTransferAndSetupReview()
     }
 
-    private fun showRateForLastTrip() {
+    private fun getTransferAndSetupReview() {
         utils.launchSuspend {
-            fetchResultOnly { transferInteractor.getAllTransfers() }
-                    .isSuccess()
-                    ?.let {
-                        getLastTransfer(it.filterRateable())
-                                ?.let { lastTransfer ->
-                                    transferId = lastTransfer.id
-                                    checkToShowReview(lastTransfer) }
-                    }
+            fetchResultOnly { transferInteractor.getTransfer(transferId) }.isSuccess()?.let { setupReview(it) }
         }
     }
 
-    private fun getLastTransfer(transfers: List<Transfer>) =
-            transfers.filter { it.status.checkOffers }
-                    .sortedByDescending { it.dateToLocal }
-                    .firstOrNull()
-
-    private suspend fun checkToShowReview(transfer: Transfer) =
-            fetchResultOnly { offerInteractor.getOffers(transfer.id) }
-                    .isSuccess()
-                    ?.firstOrNull()
-                    ?.let { offer ->
-                        if (transfer.offersUpdatedAt != null) fetchDataOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
-                        if (!offer.isOfferRatedByUser()) {
-                            val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
-                            reviewInteractor.offerIdForReview = offer.id
-                            offerId = offer.id
-                            viewState.setupReviewForLastTrip(
-                                    transferMapper.toView(transfer),
-                                    LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
-                                    offer.vehicle.name,
-                                    offer.vehicle.color ?: "",
-                                    routeModel
-                            )
-                            logTransferReviewRequested()
-                        }
-                    }
+    private suspend fun setupReview(transfer: Transfer) {
+        val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
+        viewState.setupReviewForLastTrip(
+            transfer.map(transportTypes),
+            LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
+            routeModel
+        )
+    }
 
     private suspend fun createRouteModel(transfer: Transfer): RouteModel? {
         val route = transfer.from.point?.let { from ->
             transfer.to?.point?.let { to ->
                 orderInteractor.getRouteInfo(
-                        from, to, false, false,
-                        sessionInteractor.currency.code).model
+                    RouteInfoRequest(
+                        from,
+                        to,
+                        false,
+                        false,
+                        sessionInteractor.currency.code,
+                        null
+                    )
+                ).model
             }
         }
 
@@ -87,16 +79,11 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
                         transfer.to?.name,
                         fromPoint,
                         toPoint,
-                        SystemUtils.formatDateTime(transferMapper.toView(transfer).dateTime)
+                        SystemUtils.formatDateTime(transfer.map(transportTypes).dateTime)
                 )
             }
         }
     }
-
-    private fun logTransferReviewRequested() =
-            analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED,
-                    createEmptyBundle(),
-                    emptyMap())
 
     fun onTransferDetailsClick() {
         router.navigateTo(Screens.Details(transferId))
@@ -108,29 +95,30 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
     }
 
     fun onRateClicked(rate: Float) {
+        reviewInteractor.setRates(rate)
         if (rate.toInt() == ReviewInteractor.MAX_RATE) {
             logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
-            reviewInteractor.apply {
-                utils.launchSuspend { sendTopRate() }
-                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
-                    viewState.askRateInPlayMarket()
-                    logAppReviewRequest()
-                } else viewState.thanksForRate()
+            utils.launchSuspend {
+                with(fetchResultOnly { reviewInteractor.sendRates() }) {
+                    if (!isError()) {
+                        viewState.cancelReview()
+                        val showStoreDialog = systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE
+                        if (showStoreDialog) {
+                            reviewInteractor.shouldAskRateInMarket = true
+                            logAppReviewRequest()
+                        }
+                        viewState.thanksForRate()
+                    }
+                }
             }
-        } else viewState.showDetailedReview(rate, offerId)
+        } else {
+            viewState.cancelReview()
+            viewState.showDetailedReview()
+        }
     }
 
-    private fun logAppReviewRequest() =
-            analytics.logEvent(
-                    Analytics.EVENT_APP_REVIEW_REQUESTED,
-                    createEmptyBundle(),
-                    emptyMap()
-            )
+    private fun logAppReviewRequest() = analytics.logSingleEvent(Analytics.EVENT_APP_REVIEW_REQUESTED)
 
     private fun logAverageRate(rate: Double) =
-            analytics.logEvent(
-                    Analytics.REVIEW_AVERAGE,
-                    createStringBundle(Analytics.REVIEW, rate.toString()),
-                    mapOf(Analytics.REVIEW to rate)
-            )
+            analytics.logEvent(Analytics.EVENT_REVIEW_AVERAGE, Analytics.REVIEW, rate)
 }

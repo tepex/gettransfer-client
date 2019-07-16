@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="days">
+        <item quantity="one">@string/LNG_DAY</item>
+        <item quantity="few">@string/LNG_DAY_FEW</item>
+        <item quantity="many">@string/LNG_DAYS</item>
+        <item quantity="other">@string/LNG_DAYS</item>
+    </plurals>
+
+    <plurals name="hours">
+        <item quantity="one">@string/LNG_HOUR</item>
+        <item quantity="few">@string/LNG_HOUR_FEW</item>
+        <item quantity="many">@string/LNG_HOURS</item>
+        <item quantity="other">@string/LNG_HOURS</item>
+    </plurals>
+</resources>

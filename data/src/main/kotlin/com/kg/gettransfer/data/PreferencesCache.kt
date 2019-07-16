@@ -5,7 +5,8 @@ import com.kg.gettransfer.data.model.GTAddressEntity
 
 interface PreferencesCache {
     var accessToken: String
-    var userEmail: String
+    var userEmail: String?
+    var userPhone: String?
     var userPassword: String
     var lastMode: String
     var lastMainScreenMode: String
@@ -25,6 +26,7 @@ interface PreferencesCache {
     val endpoints: List<EndpointEntity>
     var driverCoordinatesInBackGround: Int
     var offerViewExpanded: Boolean
+    var isDebugMenuShowed: Boolean
 
     fun logout()
     fun addListener(listener: PreferencesListener)

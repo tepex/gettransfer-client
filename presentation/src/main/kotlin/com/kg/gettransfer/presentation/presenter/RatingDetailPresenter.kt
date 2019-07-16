@@ -3,114 +3,108 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Bundle
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
-import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
-import com.kg.gettransfer.presentation.model.ReviewRateModel
+import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.presentation.view.RatingDetailView
 import com.kg.gettransfer.utilities.Analytics
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 
 @InjectViewState
 class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 
 	private val reviewInteractor: ReviewInteractor by inject()
-	private val reviewRateMapper: ReviewRateMapper by inject()
 
-	internal var offerId = 0L
-		set(value) {
-			reviewInteractor.offerIdForReview = value
-			field = value
-		}
+	internal var offerId
+		get() = reviewInteractor.offerRateID
+		set(value) { reviewInteractor.offerRateID = value }
 
-	internal var vehicleRating = 0F
-	internal var driverRating = 0F
-	internal var punctualityRating = 0F
-	internal var currentComment = ""
+	internal var vehicleRating: Float?
+		get() = reviewInteractor.vehicleRating
+		set(value) { reviewInteractor.vehicleRating = value }
 
-	internal var hintComment: String = ""
+	internal var driverRating: Float?
+		get() = reviewInteractor.driverRating
+		set(value) { reviewInteractor.driverRating = value }
+
+	internal var communicationRating: Float?
+		get() = reviewInteractor.communicationRating
+		set(value) { reviewInteractor.communicationRating = value }
+
+	internal var comment: String
+		get() = reviewInteractor.comment
+		set(value) { reviewInteractor.comment = value }
+
 
 	override fun onFirstViewAttach() {
 		super.onFirstViewAttach()
-
-		viewState.setRatingVehicle(vehicleRating)
-		viewState.setRatingDriver(driverRating)
-		viewState.setRatingPunctuality(punctualityRating)
-		onSecondaryRatingsChanged(vehicleRating, driverRating, punctualityRating)
-
+		initRatingFields()
 		viewState.showProgress(false)
-		viewState.showComment(if (currentComment.isNotEmpty()) currentComment else hintComment)
 	}
 
-	fun onClickSend(list: List<ReviewRateModel>, comment: String, commonRating: Float) = utils.launchSuspend {
-		viewState.showProgress(true)
-		viewState.blockInterface(true)
-		fetchResult {
-			reviewInteractor.sendRates(
-				list.map { reviewRateMapper.fromView(it) }, getFeedBackText(comment))
-		}.also { result ->
-			logAverageRate(list.map { it.rateValue }.average())
-			logDetailRate(list, comment)
-			viewState.blockInterface(false)
-			viewState.showProgress(false)
-			result.isSuccess()
-					?.let {
-						viewState.exitAndReportSuccess(
-								list,
-								getFeedBackText(comment)
-						)
-					}
-		}
-	}
-
-	fun onClickComment(currentComment: String) {
-		viewState.showCommentEditor(getFeedBackText(currentComment))
-	}
-
-	fun commentChanged(newComment: String) {
-		viewState.showComment(
-			if (newComment.isEmpty())
-				hintComment
-			else
-				newComment
-		)
+	private fun initRatingFields() {
+		vehicleRating?.let { viewState.setRatingVehicle(it) }
+		driverRating?.let { viewState.setRatingDriver(it) }
+		communicationRating?.let { viewState.setRatingPunctuality(it) }
+		viewState.setDividersVisibility()
+		if (comment.isNotEmpty()) viewState.showComment(comment)
+		ratingChanged()
 	}
 
 	fun onCommonRatingChanged(rating: Float) {
 		updateSecondaryRatings(rating)
 	}
 
-	fun onSecondaryRatingsChanged(vararg rating: Float) {
-		val currentCommonRating = rating.sum() / rating.size
-		viewState.setRatingCommon(currentCommonRating)
+	private fun updateSecondaryRatings(rating: Float) {
+		if (vehicleRating != null) {
+			vehicleRating = rating
+			viewState.setRatingVehicle(rating)
+		}
+		if (driverRating != null) {
+			driverRating = rating
+			viewState.setRatingDriver(rating)
+		}
+		if (communicationRating != null) {
+			communicationRating = rating
+			viewState.setRatingPunctuality(rating)
+		}
 	}
 
-	private fun updateSecondaryRatings(rating: Float) {
-		viewState.setRatingVehicle(rating)
-		viewState.setRatingDriver(rating)
-		viewState.setRatingPunctuality(rating)
+	fun ratingChanged() {
+		listOfNotNull(vehicleRating, driverRating, communicationRating).let {
+			if (it.isNotEmpty()) {
+				viewState.setRatingCommon(it.sum() / it.size)
+			}
+		}
+	}
+
+	fun onClickSend() = utils.launchSuspend {
+		val listRates = reviewInteractor.createListOfDetailedRates()
+		viewState.showProgress(true)
+		viewState.blockInterface(true, true)
+		val rateResult = fetchResult { reviewInteractor.sendRates(false) }
+		val commentResult = fetchResult { reviewInteractor.pushComment() }
+		if (!rateResult.isError() && !commentResult.isError())
+			viewState.exitAndReportSuccess(listRates, comment)
+		logAverageRate(listRates.map { it.rateValue }.average())
+		logDetailRate(listRates, comment)
+		viewState.blockInterface(false)
+		viewState.showProgress(false)
+	}
+
+	fun onClickComment(comment: String) {
+		viewState.showCommentDialog(comment)
 	}
 
 	private fun logAverageRate(rate: Double) =
-		analytics.logEvent(
-			Analytics.REVIEW_AVERAGE,
-			createStringBundle(Analytics.REVIEW,rate.toString()),
-			mapOf(Analytics.REVIEW to rate)
-		)
+			analytics.logEvent(Analytics.EVENT_REVIEW_AVERAGE, Analytics.REVIEW, rate)
 
-	private fun logDetailRate(list: List<ReviewRateModel>, comment: String) {
-		val map = mutableMapOf<String, String?>()
-		val bundle = Bundle()
+	private fun logDetailRate(list: List<ReviewRate>, comment: String) {
+		val values = mutableListOf<Pair<String, Any>>()
 		list.forEach {
-			val key = analytics.reviewDetailKey(it.rateType.type)
-			bundle.putInt(key, it.rateValue)
-			map[key] = it.rateValue.toString()
+			val key = analytics.reviewDetailKey(it.rateType.name)
+			values.add(Pair(key, it.rateValue))
 		}
-		map[Analytics.REVIEW_COMMENT] = comment
-		bundle.putString(Analytics.REVIEW_COMMENT, comment)
-		analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, bundle, map)
+		values.add(Pair(Analytics.REVIEW_COMMENT, comment))
+		analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, values)
 	}
-
-	private fun getFeedBackText(text: String) =
-			if (text == hintComment) ""
-			else text
 }

@@ -63,7 +63,7 @@ fun View.show(isShow: Boolean, isGone: Boolean = true) {
 
 private var lastClickTimestamp = 0L
 
-fun View.setTrottledClickListener(delay: Long = 300L, clickListener: ((View) -> Unit)?) {
+fun View.setThrottledClickListener(delay: Long = 400L, clickListener: ((View) -> Unit)?) {
     clickListener?.let { listener ->
         setOnClickListener {
             val currentTimestamp = System.currentTimeMillis()

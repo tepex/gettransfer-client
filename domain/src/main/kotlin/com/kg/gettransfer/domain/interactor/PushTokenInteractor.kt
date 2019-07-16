@@ -5,8 +5,9 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.PushTokenRepository
 
 class PushTokenInteractor(
-        private val pushTokenRepository: PushTokenRepository
+    private val pushTokenRepository: PushTokenRepository
 ) {
+
     private var pushToken: String? = null
 
     suspend fun registerPushToken(token: String): Result<Unit> {

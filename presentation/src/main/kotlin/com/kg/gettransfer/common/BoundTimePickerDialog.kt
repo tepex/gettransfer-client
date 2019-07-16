@@ -1,14 +1,25 @@
 package com.kg.gettransfer.common
 
 import android.app.TimePickerDialog
+
 import android.content.Context
+
+import android.support.annotation.CallSuper
+import android.support.v4.content.ContextCompat
+
+import android.widget.NumberPicker
 import android.widget.TimePicker
 
-class BoundTimePickerDialog(context: Context,
-                            callBack: (TimePicker, Int, Int) -> Unit,
-                            hourOfDay: Int,
-                            minute: Int,
-                            is24HourView: Boolean): TimePickerDialog(context, callBack, hourOfDay, minute, is24HourView) {
+import com.kg.gettransfer.R
+
+class BoundTimePickerDialog(
+    context: Context,
+    themeId: Int,
+    callBack: (TimePicker, Int, Int) -> Unit,
+    hourOfDay: Int,
+    minute: Int,
+    is24HourView: Boolean
+) : TimePickerDialog(context, themeId, callBack, hourOfDay, minute, is24HourView) {
 
     private var minHour = -1
     private var minMinute = -1
@@ -18,16 +29,43 @@ class BoundTimePickerDialog(context: Context,
     private var currentHour = hourOfDay
     private var currentMinute = minute
 
-    fun setMin(hour: Int, minute: Int){
+    @CallSuper
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
+        try {
+            val hourId = context.resources.getIdentifier("android:id/hour", null, null)
+            val hourDivider = findViewById<NumberPicker>(hourId)
+            hourDivider.setDividerColor(R.color.primaryDriver)
+            val minuteId = context.resources.getIdentifier("android:id/minute", null, null)
+            val minuteDivider = findViewById<NumberPicker>(minuteId)
+            minuteDivider.setDividerColor(R.color.primaryDriver)
+        } catch (e: Exception) {
+        }
+    }
+
+    private fun NumberPicker.setDividerColor(color: Int) {
+        val dividerField =
+            NumberPicker::class.java.declaredFields.firstOrNull { it.name == "mSelectionDivider" } ?: return
+        try {
+            dividerField.isAccessible = true
+            dividerField.set(this, ContextCompat.getDrawable(context, color))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun setMin(hour: Int, minute: Int) {
         minHour = hour
         minMinute = minute
     }
 
-    fun setMax(hour: Int, minute: Int){
+    fun setMax(hour: Int, minute: Int) {
         maxHour = hour
         maxMinute = minute
     }
 
+    @CallSuper
     override fun onTimeChanged(view: TimePicker?, hourOfDay: Int, minute: Int) {
         super.onTimeChanged(view, hourOfDay, minute)
 
@@ -38,7 +76,7 @@ class BoundTimePickerDialog(context: Context,
             else -> true
         }
 
-        if(validTime){
+        if (validTime) {
             currentHour = hourOfDay
             currentMinute = minute
         } else {

@@ -1,6 +1,6 @@
 <resources xmlns:android="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -92,6 +92,10 @@
 
     <style name="sf_pro_text_regular_green" parent="sf_font">
         <item name="android:textColor">@color/color_gtr_green</item>
+    </style>
+
+    <style name="sf_font_pro_display_bold" parent="sf_font">
+        <item name="android:fontFamily">@font/sf_pro_display_bold</item>
     </style>
 
 
@@ -247,6 +251,11 @@
         <item name="android:fontFamily">@font/sf_pro_text_regular</item>
     </style>
 
+    <style name="tabs_text_style" parent="black_regular">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <style name="offerCard" parent="Base.CardView">
         <item name="android:layout_marginTop">@dimen/card_view_margin_top_bottom</item>
         <item name="android:layout_marginBottom">@dimen/card_view_margin_top_bottom</item>
@@ -276,7 +285,7 @@
         <item name="android:textColor">@color/colorGrey</item>
     </style>
     
-    <style name="editTextHintCreateOrder" parent="TextAppearance.AppCompat">
+    <style name="editTextHintCreateOrder" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:textColorHint">@color/black_a30</item>
         <item name="colorControlActivated">@color/black_a30</item>
     </style>
@@ -287,22 +296,20 @@
         <item name="android:textSize">17sp</item>
     </style>
 
+    <style name="CustomAlerDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorControlNormal">@color/colorPrimary</item>
+    </style>
 
     <style name="DialogStyle" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@color/transparent_white</item>
     </style>
 
     <!-- https://stackoverflow.com/questions/41591733/bottom-sheet-landscape-issue -->
     <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/back_top_rounded</item>
-    </style>
-
-    <style name="TransparentActivityTheme" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowMinWidthMajor">100%</item>
-        <item name="windowMinWidthMinor">100%</item>
     </style>
 
     <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.Dialog">

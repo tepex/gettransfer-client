@@ -1,12 +1,18 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.interactor.OrderInteractor
+
+import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
 
+import com.kg.gettransfer.extensions.newChainFromMain
+
 import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
@@ -14,7 +20,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
@@ -31,30 +37,39 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             val transfer = result.model
-            val transferModel = transferMapper.toView(transfer)
+            val transferModel = transfer.map(systemInteractor.transportTypes.map { it.map() })
             if (result.error != null && !result.fromCache) viewState.setError(result.error!!)
             else {
                 if (transfer.to != null) {
                     val r = utils.asyncAwait {
-                        orderInteractor
-                            .getRouteInfo(transfer.from.point!!, transfer.to!!.point!!, false, false, sessionInteractor.currency.code)
+                        orderInteractor.getRouteInfo(
+                            RouteInfoRequest(
+                                transfer.from.point!!,
+                                transfer.to!!.point!!,
+                                false,
+                                false,
+                                sessionInteractor.currency.code,
+                                null
+                            )
+                        )
                     }
                     r.cacheError?.let { viewState.setError(it) }
                     if (r.error == null || (r.error != null && r.fromCache)) {
                         val routeModel = routeMapper.getView(
-                                r.model.distance,
-                                r.model.polyLines,
-                                transfer.from.name!!,
-                                transfer.to!!.name!!,
-                                transfer.from.point!!,
-                                transfer.to!!.point!!,
-                                SystemUtils.formatDateTime(transferModel.dateTime)
+                            r.model.distance,
+                            r.model.polyLines,
+                            transfer.from.name,
+                            transfer.to!!.name,
+                            transfer.from.point!!,
+                            transfer.to!!.point!!,
+                            SystemUtils.formatDateTime(transferModel.dateTime)
                         )
                         viewState.setRoute(Utils.getPolyline(routeModel))
                     }
                 } else {
-                    if (transfer.duration != null)
+                    if (transfer.duration != null) {
                         setHourlyTransfer(transfer)
+                    }
                 }
                 val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
                 viewState.setRemainTime(days, hours, minutes)
@@ -77,6 +92,8 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     }
 
     fun onDetailsClick() {
-        router.navigateTo(Screens.Details(transferId))
+        router.newChainFromMain(Screens.Details(transferId))
     }
+
+    fun onDownloadVoucherClick() = downloadManager.downloadVoucher(transferId)
 }

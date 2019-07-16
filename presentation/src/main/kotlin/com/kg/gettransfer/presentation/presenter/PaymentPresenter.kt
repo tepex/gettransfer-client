@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.kg.gettransfer.domain.eventListeners.PaymentStatusEventListener
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
@@ -8,6 +9,7 @@ import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 
@@ -22,13 +24,13 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import io.sentry.Sentry
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 import timber.log.Timber
 import java.util.Currency
 
 @InjectViewState
-class PaymentPresenter : BasePresenter<PaymentView>() {
+class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListener {
     private val paymentInteractor: PaymentInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
     private val orderInteractor: OrderInteractor by inject()
@@ -37,38 +39,28 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
     private var bookNowOffer: BookNowOffer? = null
     private var transfer: Transfer? = null
 
-    internal var transferId = 0L
-    internal var offerId = 0L
     internal var percentage = 0
-    internal var bookNowTransportId = ""
     internal var paymentType = ""
 
     override fun attachView(view: PaymentView) {
         super.attachView(view)
-        offer = offerInteractor.getOffer(offerId)
-        utils.launchSuspend {
-            val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if (result.error == null || (result.error != null && result.fromCache)) {
-                transfer = result.model
-                if (offer == null) {
-                    transfer?.let {
-                        if (it.bookNowOffers.isNotEmpty()) {
-                            if (bookNowTransportId.isNotEmpty()) {
-                                val filteredBookNow =
-                                    it.bookNowOffers.filterKeys { predicate ->
-                                        predicate.toString() == bookNowTransportId
-                                    }
-                                if (filteredBookNow.isNotEmpty()) {
-                                    bookNowOffer = filteredBookNow.values.first()
-                                }
-                            }
-                        }
+        with(paymentInteractor) {
+            eventPaymentReceiver = this@PaymentPresenter
+            if (selectedTransfer != null && selectedOffer != null) {
+                transfer = selectedTransfer!!
+                selectedOffer?.let {
+                    when (it) {
+                        is Offer -> offer = it
+                        is BookNowOffer -> bookNowOffer = it
                     }
                 }
-            } else {
-                Sentry.capture(result.error)
             }
         }
+    }
+
+    override fun detachView(view: PaymentView?) {
+        super.detachView(view)
+        paymentInteractor.eventPaymentReceiver = null
     }
 
     fun changePaymentStatus(orderId: Long, success: Boolean) {
@@ -81,25 +73,56 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
                 viewState.setError(result.error!!)
                 router.exit()
             } else {
-                if (result.model.success) {
-                    showSuccessfulPayment()
+                if (result.model.isSuccess) {
+                    isPaymentWasSuccessful()
                 } else {
                     showFailedPayment()
                 }
             }
-            viewState.blockInterface(false)
         }
     }
 
+    override fun onNewPaymentStatusEvent(isSuccess: Boolean) {
+        if (isSuccess) {
+            utils.launchSuspend {
+               isPaymentWasSuccessful()
+            }
+        } else {
+            showFailedPayment()
+        }
+    }
+
+    private suspend fun isPaymentWasSuccessful() {
+        if (isOfferPaid()) showSuccessfulPayment()
+    }
+
+    private suspend fun isOfferPaid(): Boolean {
+        transfer?.let {
+            fetchResult { transferInteractor.getTransfer(transfer!!.id) }
+                .isSuccess()
+                ?.let { transfer ->
+                    this.transfer = transfer
+                    return transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
+                }
+        }
+        return false
+    }
+
     private fun showFailedPayment() {
+        viewState.blockInterface(false)
         router.exit()
-        router.navigateTo(Screens.PaymentError(transferId))
-        logEvent(Analytics.RESULT_FAIL)
+        router.navigateTo(Screens.PaymentError(transfer!!.id))
+        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {
-        router.navigateTo(Screens.ChangeMode(Screens.PASSENGER_MODE))
-        router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
+        viewState.blockInterface(false)
+        router.newChainFromMain(
+            Screens.PaymentSuccess(
+                transfer!!.id,
+                offer?.id
+            )
+        )
         logEventEcommercePurchase()
     }
 
@@ -126,7 +149,7 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
         if (percentage == OfferModel.PRICE_30) price *= PRICE_30
 
         val purchase = analytics.EcommercePurchase(
-            transferId.toString(),
+            transfer?.id.toString(),
             transfer?.promoCode,
             orderInteractor.duration,
             paymentType,
@@ -137,11 +160,5 @@ class PaymentPresenter : BasePresenter<PaymentView>() {
             price
         )
         purchase.sendAnalytics()
-    }
-
-    private fun logEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.STATUS] = value
-        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, createStringBundle(Analytics.STATUS, value), map)
     }
 }

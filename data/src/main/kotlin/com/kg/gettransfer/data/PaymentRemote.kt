@@ -1,12 +1,19 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.data.model.*
+import com.kg.gettransfer.data.model.BraintreeTokenEntity
+import com.kg.gettransfer.data.model.PaymentEntity
+import com.kg.gettransfer.data.model.PaymentRequestEntity
+import com.kg.gettransfer.data.model.PaymentStatusEntity
+import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
+import org.koin.core.KoinComponent
 
-import org.koin.standalone.KoinComponent
+interface PaymentRemote : KoinComponent {
 
-interface PaymentRemote: KoinComponent {
-    suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity
+    suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity?
+
     suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity): PaymentStatusEntity
+
     suspend fun getBraintreeToken(): BraintreeTokenEntity
+
     suspend fun confirmPaypal(paymentId: Long, nonce: String): PaymentStatusEntity
 }

@@ -5,6 +5,6 @@ import java.io.File
 interface LoggingRepository {
     val file: File
     val logs: String
-    
+
     fun clearLogs()
 }

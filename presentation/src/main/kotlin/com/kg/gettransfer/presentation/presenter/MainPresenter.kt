@@ -1,24 +1,26 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.interactor.GeoInteractor
-
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
+
+import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
-import com.kg.gettransfer.presentation.mapper.ReviewRateMapper
+
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.MainView
 import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
@@ -27,11 +29,10 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.MainState
 import com.kg.gettransfer.utilities.ScreenNavigationState
+
 import kotlinx.coroutines.delay
 
-import org.koin.standalone.inject
-
-import timber.log.Timber
+import org.koin.core.inject
 
 @InjectViewState
 class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
@@ -41,32 +42,28 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     private val nState: MainState by inject()  //to keep info about navigation
 
     private val pointMapper: PointMapper by inject()
+    private val profileMapper: ProfileMapper by inject()
 
     var screenType = REQUEST_SCREEN
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
     private var lastCurrentLocation: LatLng? = null
-    private var minDistance: Int = 30
 
-    private var available: Boolean = false
     private var currentLocation: String = ""
 
-    private val MARKER_ELEVATION = 5f
     private var markerStateLifted = false
-
     var isMarkerAnimating = true
     internal var isClickTo: Boolean? = null
 
     private var idleAndMoveCamera = true
 
-    @CallSuper
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         systemInteractor.lastMode = Screens.PASSENGER_MODE
         systemInteractor.selectedField = FIELD_FROM
         geoInteractor.initGeocoder()
-        if (sessionInteractor.account.user.loggedIn) {
+        if (accountManager.isLoggedIn) {
             registerPushToken()
             checkReview()
             utils.launchSuspend {
@@ -79,23 +76,21 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         // https://developer.android.com/training/location/receive-location-updates
     }
 
-    @CallSuper
     override fun attachView(view: MainView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
-        if (sessionInteractor.account.user.hasAccount) {
+        if (accountManager.hasAccount) {
             setCountEvents(countEventsInteractor.eventsCount)
         } else {
             viewState.showBadge(false)
         }
-        Timber.d("MainPresenter.is user logged in: ${sessionInteractor.account.user.loggedIn}")
+        log.debug("MainPresenter.is user logged in: ${accountManager.isLoggedIn}")
         if (!setAddressFields()) setOwnLocation()
         checkAccount()
         changeUsedField(systemInteractor.selectedField)
         viewState.setTripMode(orderInteractor.hourlyDuration)
     }
 
-    @CallSuper
     override fun detachView(view: MainView?) {
         super.detachView(view)
         countEventsInteractor.removeCounterListener(this)
@@ -112,8 +107,12 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     private fun checkAccount() {
-        with(sessionInteractor.account.user) {
-            viewState.setProfile(loggedIn, profile.email, profile.fullName)
+        with(accountManager) {
+            viewState.setProfile(profileMapper.toView(remoteProfile), isLoggedIn, hasAccount)
+            if (remoteAccount.isBusinessAccount) {
+                val balance = remoteAccount.partner?.availableMoney?.default
+                viewState.setBalance(balance)
+            }
         }
     }
 
@@ -140,7 +139,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         return super.onNewOffer(offer)
     }
 
-    @CallSuper
     override fun systemInitialized() {
         super.systemInitialized()
         checkAccount()
@@ -175,7 +173,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun updateCurrentLocation() {
         updateCurrentLocationAsync()
-        logButtons(Analytics.MY_PLACE_CLICKED)
+        analytics.logSingleEvent(Analytics.MY_PLACE_CLICKED)
     }
 
     private fun setLastLocation() {
@@ -191,26 +189,29 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         viewState.defineAddressRetrieving { withGps ->
             utils.launchSuspend {
                 if (geoInteractor.isGpsEnabled && withGps)
-                    fetchDataOnly { orderInteractor.getCurrentAddress() }
+                    fetchDataOnly { geoInteractor.getCurrentLocation() }
                             ?.let {
-                                lastCurrentLocation = it.cityPoint.point?.let { point -> pointMapper.toLatLng(point) }
-                                setPointAddress(it)
+                                lastCurrentLocation = pointMapper.toLatLng(it)
+                                fetchResult { geoInteractor.getAddressByLocation(it) }
+                                        .isSuccess()
+                                        ?.let { address ->
+                                            if (address.cityPoint.point != null) setPointAddress(address)
+                                        }
                             }
                 else
-                    with(fetchResultOnly { geoInteractor.getMyLocation() }) {
+                    with(fetchResultOnly { geoInteractor.getMyLocationByIp() }) {
                         logIpapiRequest()
-                        if (error == null && model.latitude != null && model.longitude != null)
+                        if (error == null && model.latitude != 0.0 && model.longitude != 0.0)
                             setLocation(model)
                     }
             }
         }
     }
 
-    private suspend fun setLocation(location: Location) {
-        val point = Point(location.latitude!!, location.longitude!!)
-        val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude!!, location.longitude!!)).build()
-        val latLonPair = getLatLonPair(lngBounds)
-        val result = fetchResultOnly { orderInteractor.getAddressByLocation(true, point, latLonPair) }
+    private suspend fun setLocation(point: Point) {
+        //val lngBounds = LatLngBounds.builder().include(LatLng(location.latitude, location.longitude)).build()
+        //val latLonPair = getLatLonPair(lngBounds)
+        val result = fetchResultOnly { orderInteractor.getAddressByLocation(true, point) }
         if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model)
     }
 
@@ -218,8 +219,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation(lastAddressPoint))
-        //viewState.setAddressFrom(currentAddress.cityPoint.name!!)
-        setAddressInSelectedField(currentAddress.cityPoint.name!!)
+        setAddressInSelectedField(currentAddress.cityPoint.name)
 
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
     }
@@ -229,42 +229,35 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
         if (idleAndMoveCamera) {
             if (!markerStateLifted && !isMarkerAnimating && animateMarker) {
-                viewState.setMarkerElevation(true, MARKER_ELEVATION)
+                viewState.setMarkerElevation(true)
                 markerStateLifted = true
             }
             this.lastPoint = lastPoint
             viewState.moveCenterMarker(lastPoint)
-            //viewState.blockInterface(true)
             viewState.blockSelectedField(true, systemInteractor.selectedField)
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onCameraIdle(latLngBounds: LatLngBounds) {
         if (idleAndMoveCamera) {
-            if (markerStateLifted && !isMarkerAnimating) {
-                viewState.setMarkerElevation(false, -MARKER_ELEVATION)
+            if (markerStateLifted) {
+                viewState.setMarkerElevation(false)
                 markerStateLifted = false
             }
             if (lastPoint == null) return
-            /* Не запрашивать адрес, если перемещение составило менее minDistance
-        val distance = FloatArray(2)
-        Location.distanceBetween(lastPoint!!.latitude, lastPoint!!.longitude,
-                                lastAddressPoint.latitude, lastAddressPoint.longitude, distance)
-        //if(distance.get(0) < minDistance) return
-        */
 
             lastAddressPoint = lastPoint!!
-            val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
+            //val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
 
             utils.launchSuspend {
-                fetchData {
+                fetchDataOnly {
                     orderInteractor.getAddressByLocation(
                             systemInteractor.selectedField == FIELD_FROM,
-                            pointMapper.fromLatLng(lastPoint!!),
-                            latLonPair)
+                            pointMapper.fromLatLng(lastPoint!!))
                 }
                         ?.let {
-                            currentLocation = it.cityPoint.name!!
+                            currentLocation = it.cityPoint.name
                             setAddressInSelectedField(currentLocation)
                         }
                 viewState.blockInterface(false)
@@ -275,13 +268,14 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         }
     }
 
-    private fun getLatLonPair(latLngBounds: LatLngBounds): Pair<Point, Point> {
+    // пригодится, если в запрос добавят bounds
+    /*private fun getLatLonPair(latLngBounds: LatLngBounds): Pair<Point, Point> {
         val latLonPair: Pair<Point, Point>
         val nePoint = Point(latLngBounds.northeast.latitude, latLngBounds.northeast.longitude)
         val swPoint = Point(latLngBounds.southwest.latitude, latLngBounds.southwest.longitude)
         latLonPair = Pair(nePoint, swPoint)
         return latLonPair
-    }
+    }*/
 
     private fun setAddressInSelectedField(address: String) {
         when (systemInteractor.selectedField) {
@@ -320,11 +314,22 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     fun onSearchClick(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false) {
         nState.currentState = ScreenNavigationState.NO_STATE
-        navigateToFindAddress(from, to, bounds, returnBack)
+        navigateToFindAddress(
+                from,
+                to,
+                bounds,
+                returnBack
+        )
     }
 
     private fun navigateToFindAddress(from: String, to: String, bounds: LatLngBounds, returnBack: Boolean = false) {
-        orderInteractor.from?.let { router.navigateTo(Screens.FindAddress(from, to, isClickTo, bounds, returnBack)) }
+        router.navigateTo(Screens.FindAddress(
+                from,
+                to,
+                isClickTo,
+                bounds,
+                returnBack)
+        )
     }
 
     fun onNextClick(block: (Boolean) -> Unit) {
@@ -335,35 +340,38 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     fun onAboutClick() {
-        router.navigateTo(Screens.About(false))
-        logEvent(Analytics.ABOUT_CLICKED)
+        router.navigateTo(Screens.About(systemInteractor.isOnboardingShowed))
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.ABOUT_CLICKED)
     }
 
     fun readMoreClick() {
         viewState.showReadMoreDialog()
-        logEvent(Analytics.BEST_PRICE_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.BEST_PRICE_CLICKED)
     }
 
     fun onSettingsClick() {
         router.navigateTo(Screens.Settings)
-        logEvent(Analytics.SETTINGS_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SETTINGS_CLICKED)
     }
 
     fun onRequestsClick() {
         router.navigateTo(Screens.Requests)
-        logEvent(Analytics.TRANSFER_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.TRANSFER_CLICKED)
     }
 
     fun onLoginClick() {
         login(Screens.PASSENGER_MODE, "")
-        logEvent(Analytics.LOGIN_CLICKED)
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.LOGIN_CLICKED)
     }
 
     fun onBecomeACarrierClick() {
-        logEvent(Analytics.DRIVER_CLICKED)
-        if (sessionInteractor.account.user.loggedIn) {
-            if (sessionInteractor.account.groups.indexOf(Account.GROUP_CARRIER_DRIVER) >= 0) router.navigateTo(Screens.ChangeMode(Screens.CARRIER_MODE))
-            else router.navigateTo(Screens.ChangeMode(Screens.REG_CARRIER))
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.DRIVER_CLICKED)
+        if (accountManager.isLoggedIn) {
+            if (accountManager.remoteAccount.isDriver) {
+                router.newRootScreen(Screens.Carrier(Screens.CARRIER_MODE))
+            } else {
+                router.navigateTo(Screens.Carrier(Screens.REG_CARRIER))
+            }
         } else {
             login(Screens.CARRIER_MODE, "")
         }
@@ -386,7 +394,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private fun checkReview() =
             with(reviewInteractor) {
-                if (!isReviewSuggested) viewState.showRateForLastTrip()
+                if (!isReviewSuggested) checkLastTrip()
                 else if (shouldAskRateInMarket)
                     utils.launchSuspend {
                         delay(ONE_SEC_DELAY)
@@ -394,16 +402,79 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
                     }
             }
 
-    private fun logEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.PARAM_KEY_NAME] = value
-        analytics.logEvent(Analytics.EVENT_MENU, createStringBundle(Analytics.PARAM_KEY_NAME, value), map)
+    private fun checkLastTrip() {
+        utils.launchSuspend {
+            fetchResultOnly { transferInteractor.getAllTransfers() }
+                    .isSuccess()
+                    ?.let {
+                        getLastTransfer(it.filterRateable())
+                                ?.let { lastTransfer ->
+                                    checkToShowReview(lastTransfer) }
+                    }
+        }
     }
 
-    private fun logButtons(event: String) {
-        analytics.logEventToFirebase(event, null)
-        analytics.logEventToYandex(event, null)
+    private fun getLastTransfer(transfers: List<Transfer>) =
+            transfers.filter { it.status.checkOffers }
+                    .sortedByDescending { it.dateToLocal }
+                    .firstOrNull()
+
+    private suspend fun checkToShowReview(transfer: Transfer) =
+        fetchResultOnly { offerInteractor.getOffers(transfer.id) }
+            .isSuccess()
+            ?.firstOrNull()
+            ?.let { offer ->
+                if (transfer.offersUpdatedAt != null) fetchDataOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
+                if (offer.isRateAvailable() && offer.isNeededRateOffer()) {
+                    reviewInteractor.setOfferReview(offer)
+                    viewState.showRateForLastTrip(
+                        transfer.id,
+                        offer.vehicle.name,
+                        offer.vehicle.color ?: ""
+                    )
+                    logTransferReviewRequested()
+                }
+            }
+
+    fun rateTransfer(transferId: Long, rate: Int) {
+        utils.launchSuspend {
+            if (!checkTransferForRate(transferId)) return@launchSuspend
+            val offersResult = utils.asyncAwait { offerInteractor.getOffers(transferId) }
+            if (offersResult.error == null && offersResult.model.size == 1) {
+                offersResult.model.first().let {
+                    if (it.isRateAvailable() && it.isNeededRateOffer()) rateOffer(it, rate)
+                }
+            }
+        }
     }
+
+    private suspend fun checkTransferForRate(transferId: Long): Boolean {
+        val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+        return if (transferResult.error != null) {
+            val err = transferResult.error!!
+            if (err.isNotFound()) viewState.setTransferNotFoundError(transferId)
+            else viewState.setError(err)
+            false
+        } else {
+            val transfer = transferResult.model
+            val transferModel = transfer.map(systemInteractor.transportTypes.map { it.map() })
+            transferModel.status.checkOffers
+        }
+    }
+
+    private suspend fun rateOffer(offer: Offer, rate: Int) {
+        reviewInteractor.setOfferReview(offer)
+        reviewInteractor.setRates(rate.toFloat())
+        if (rate == ReviewInteractor.MAX_RATE) {
+            reviewInteractor.sendRates()
+            viewState.thanksForRate()
+        } else {
+            viewState.showDetailedReview()
+        }
+    }
+
+    private fun logTransferReviewRequested() =
+            analytics.logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
 
     fun onBackClick() {
         if (systemInteractor.selectedField == FIELD_TO) switchUsedField()
@@ -412,52 +483,20 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     }
 
     fun onShareClick() {
-        Timber.d("Share action")
-        logEvent(Analytics.SHARE)
+        log.debug("Share action")
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
         router.navigateTo(Screens.Share())
     }
 
-    private fun logIpapiRequest() =
-            analytics.logEvent(
-                    Analytics.EVENT_IPAPI_REQUEST,
-                    createEmptyBundle(),
-                    mapOf()
-            )
-
-    fun rateTransfer(transferId: Long, rate: Int) {
-        utils.launchSuspend {
-            val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-            if (transferResult.error != null) {
-                val err = transferResult.error!!
-                if (err.isNotFound()) {
-                    viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
-                } else viewState.setError(err)
-            } else {
-                val transfer = transferResult.model
-                val transferModel = transferMapper.toView(transfer)
-
-                if (transferModel.status.checkOffers) {
-                    val offersResult = utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-                    if (offersResult.error == null && offersResult.model.size == 1) {
-                        val offer = offersResult.model.first()
-                        reviewInteractor.offerIdForReview = offer.id
-                        if (rate == ReviewInteractor.MAX_RATE) {
-                            reviewInteractor.apply {
-                                sendTopRate()
-                                viewState.thanksForRate()
-                            }
-                        } else {
-                            viewState.showDetailedReview(rate.toFloat(), offer.id)
-                        }
-                    }
-                }
-            }
-        }
-    }
+    private fun logIpapiRequest() = analytics.logSingleEvent(Analytics.EVENT_IPAPI_REQUEST)
 
     fun onStartScreenOrderNote() {
         systemInteractor.startScreenOrder = true
     }
+
+    fun initGoogleApiClient() = geoInteractor.initGoogleApiClient()
+
+    fun disconnectGoogleApiClient() = geoInteractor.disconnectGoogleApiClient()
 
     companion object {
         const val FIELD_FROM    = "field_from"
@@ -466,5 +505,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
         const val MIN_HOURLY    = 2
         const val ONE_SEC_DELAY = 1000L
+
+        const val MARKER_ELEVATION = 5f
     }
 }

@@ -2,33 +2,48 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.ds.ReviewDataStoreRemote
-import com.kg.gettransfer.data.mapper.ExceptionMapper
-import com.kg.gettransfer.data.mapper.ReviewRateMapper
-
+import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.repository.ReviewRepository
 
-import org.koin.standalone.get
+class ReviewRepositoryImpl(
+    private val remote: ReviewDataStoreRemote
+) : ReviewRepository, BaseRepository() {
 
-class ReviewRepositoryImpl(private val remote: ReviewDataStoreRemote) : ReviewRepository, BaseRepository() {
-    private val rateMapper = get<ReviewRateMapper>()
+    override var offerRateID: Long = DEFAULT_ID
+    override var comment: String = NO_COMMENT
+    override var rates: MutableSet<ReviewRate> = mutableSetOf()
 
-    override suspend fun rateTrip(offerId: Long, list: List<ReviewRate>, comment: String): Result<Unit> {
+    override suspend fun rateTrip(): Result<Unit> {
         return try {
-            list.forEach { rate ->
-                retrieveRemoteEntity { remote.sendReview(offerId, rateMapper.toEntity(rate)) }
+            rates.forEach { rateItem ->
+                retrieveRemoteEntity { remote.sendReview(offerRateID, rateItem.map()) }
             }
-            remote.sendFeedBackComment(offerId, comment)
             Result(Unit)
-        } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
+        } catch (e: RemoteException) {
+            Result(Unit, e.map())
+        }
     }
 
-    override suspend fun sendComment(offerId: Long, comment: String): Result<Unit> {
+    override suspend fun pushComment(): Result<Unit> {
         return try {
-            remote.sendFeedBackComment(offerId, comment)
+            remote.sendFeedBackComment(offerRateID, comment)
             Result(Unit)
-        } catch (e: RemoteException) { Result(Unit, ExceptionMapper.map(e)) }
+        } catch (e: RemoteException) {
+            Result(Unit, e.map())
+        }
     }
 
+    // call this when leave root screen (not dialogs!) with possible review working
+    override fun releaseReviewData() {
+        rates.clear()
+        comment = NO_COMMENT
+        offerRateID = DEFAULT_ID
+    }
+
+    companion object {
+        const val DEFAULT_ID = 0L
+        const val NO_COMMENT = ""
+    }
 }

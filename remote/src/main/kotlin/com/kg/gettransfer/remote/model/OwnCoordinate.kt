@@ -1,14 +1,12 @@
 package com.kg.gettransfer.remote.model
 
+import com.kg.gettransfer.data.model.CoordinateEntity
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OwnCoordinate(@SerialName(LATITUDE) val lat: Float,
-                         @SerialName(LONGITUDE) val lon: Float)
-{
-    companion object {
-        const val LATITUDE  = "lat"
-        const val LONGITUDE = "lng"
-    }
-}
+data class OwnCoordinate(
+    @SerialName(CoordinateEntity.LATITUDE) val lat: String,
+    @SerialName(CoordinateEntity.LONGITUDE) val lon: String
+)

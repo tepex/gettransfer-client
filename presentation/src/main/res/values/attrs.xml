@@ -13,7 +13,8 @@
         <attr name="hint"/>
         <attr name="icon_img" format="reference" />
         <attr name="isFocusable" format="boolean"/>
-        <attr name="inputType" format="integer"/>
+        <attr name="showChevron" format="boolean"/>
+        <attr name="android:inputType"/>
     </declare-styleable>
 
     <declare-styleable name="TransferDetailsField" parent="EditableView">
@@ -75,6 +76,15 @@
 
     <declare-styleable name="SettingsFieldPicker">
         <attr name="settingsTitlePicker" format="string"/>
+        <attr name="settingsPickerDivider" format="boolean"/>
+        <attr name="settingsPickerBlackText" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="SettingsEditableField">
+        <attr name="settingsEditableFieldHint" format="string"/>
+        <attr name="settingsEditableFieldEnabled" format="boolean"/>
+        <attr name="settingsEditableFieldChevron" format="boolean"/>
+        <attr name="android:inputType"/>
     </declare-styleable>
 
     <declare-styleable name="SettingsFieldSwitch">
@@ -111,5 +121,13 @@
 
     <declare-styleable name="InputPasswordView">
         <attr name="password_view_hint" format="string"/>
+        <attr name="password_view_divider_visible" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="InputAccountFieldView">
+        <attr name="account_field_view_hint" format="string"/>
+        <attr name="account_field_view_divider_visible" format="boolean"/>
+        <attr name="account_field_view_icon" format="reference"/>
+        <attr name="android:inputType"/>
     </declare-styleable>
 </resources>

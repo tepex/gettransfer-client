@@ -11,13 +11,14 @@ import com.kg.gettransfer.data.model.CarrierTripEntity
 
 @Dao
 interface CarrierTripCacheDao {
-    @Query("SELECT * FROM ${CarrierTripBaseEntity.ENTITY_NAME} ORDER BY ${CarrierTripBaseEntity.ID}")
+
+    @Query("""SELECT * FROM ${CarrierTripBaseEntity.ENTITY_NAME} ORDER BY ${CarrierTripBaseEntity.ID}""")
     fun getAllCarrierTripsBase(): List<CarrierTripBaseCached>
 
-    @Query("SELECT * FROM ${CarrierTripBaseEntity.ENTITY_NAME} WHERE ${CarrierTripBaseEntity.ID} = :id")
+    @Query("""SELECT * FROM ${CarrierTripBaseEntity.ENTITY_NAME} WHERE ${CarrierTripBaseEntity.ID} = :id""")
     fun getCarrierTripBase(id: Long): CarrierTripBaseCached
 
-    @Query("SELECT * FROM ${CarrierTripEntity.ENTITY_NAME_MORE} WHERE ${CarrierTripBaseEntity.ID} = :id")
+    @Query("""SELECT * FROM ${CarrierTripEntity.ENTITY_NAME_MORE} WHERE ${CarrierTripBaseEntity.ID} = :id""")
     fun getCarrierTripMore(id: Long): CarrierTripMoreCached?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -29,9 +30,9 @@ interface CarrierTripCacheDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCarrierTripMore(trip: CarrierTripMoreCached)
 
-    @Query("DELETE FROM ${CarrierTripBaseEntity.ENTITY_NAME}")
+    @Query("""DELETE FROM ${CarrierTripBaseEntity.ENTITY_NAME}""")
     fun deleteAllCarrierTripsBase()
 
-    @Query("DELETE FROM ${CarrierTripEntity.ENTITY_NAME_MORE}")
+    @Query("""DELETE FROM ${CarrierTripEntity.ENTITY_NAME_MORE}""")
     fun deleteAllCarrierTripsMore()
 }

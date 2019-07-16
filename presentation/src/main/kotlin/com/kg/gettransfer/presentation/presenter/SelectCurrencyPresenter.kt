@@ -1,32 +1,45 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.domain.model.Currency
-import com.kg.gettransfer.presentation.mapper.CurrencyMapper
+
 import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 
 @InjectViewState
 class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinComponent {
 
-    private val currencyMapper = get<CurrencyMapper>()
+    private val currencies = systemInteractor.currencies.map { it.map() }
+    private val popularCurrencies = currencies.filter { Currency.POPULAR.contains(it.code) }
+    private var currencyChangedListener: CurrencyChangedListener? = null
 
-    private val currencies = sessionInteractor.currencies.map { currencyMapper.toView(it) }
-    private val popularCurrencies = currencies.filter { Currency.POPULAR_CURRENCIES.contains(it.code) }
-
-    @CallSuper
     override fun attachView(view: SelectCurrencyView) {
         super.attachView(view)
-        viewState.setCurrencies(currencies.filter { !Currency.POPULAR_CURRENCIES.contains(it.code) },
-                popularCurrencies, sessionInteractor.currency.let { currencyMapper.toView(it) })
+        viewState.setCurrencies(
+            currencies.filter { !Currency.POPULAR.contains(it.code) },
+            popularCurrencies,
+            sessionInteractor.currency.map()
+        )
+    }
+
+    fun addCurrencyChangedListener(currencyChangedListener: CurrencyChangedListener) {
+        this.currencyChangedListener = currencyChangedListener
+    }
+
+    fun removeCurrencyChangedListener() {
+        currencyChangedListener = null
     }
 
     fun changeCurrency(selected: CurrencyModel) {
         sessionInteractor.currency = selected.delegate
-        saveAccount()
-        viewState.currencyChanged()
+        saveGeneralSettings()
+        currencyChangedListener?.currencyChanged(selected)
     }
 }

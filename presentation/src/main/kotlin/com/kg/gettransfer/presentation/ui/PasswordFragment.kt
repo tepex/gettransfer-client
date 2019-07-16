@@ -7,37 +7,36 @@ import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.presenter.LoginPresenterNew
+import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import kotlinx.android.synthetic.main.fragment_password.*
 
-class PasswordFragment: MvpAppCompatFragment() {
+class PasswordFragment : MvpAppCompatFragment() {
 
     private var passwordVisible = false
 
-    private lateinit var mActivity: LoginActivityNew
-    private lateinit var mPresenter: LoginPresenterNew
+    private lateinit var parent: LogInFragment
+    private lateinit var mPresenter: LogInPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_password, container, false)
+        inflater.inflate(R.layout.fragment_password, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mActivity = activity as LoginActivityNew
-        mPresenter = mActivity.presenter
+        parent = parentFragment as LogInFragment
+        mPresenter = parent.presenter
 
-        currentUser.text = mPresenter.emailOrPhone
+        currentUser.text = mPresenter.params.emailOrPhone
 
         etPassword.onTextChanged {
             val pas = it.trim()
-            mPresenter.setPassword(pas)
             btnLogin.isEnabled = pas.isNotEmpty()
         }
-        etPassword.setOnFocusChangeListener { v, hasFocus -> changePasswordToggle(hasFocus) }
+        etPassword.setOnFocusChangeListener { _, hasFocus -> changePasswordToggle(hasFocus) }
         ivPasswordToggle.setOnClickListener { togglePassword() }
-        btnLoginByCode.setOnClickListener { mPresenter.sendVerificationCode() }
+//        btnLoginByCode.setOnClickListener { mPresenter.loginWithCode() }
         //tvForgotPassword.setOnClickListener { mPresenter.onPassForgot() }
 
-        btnLogin.setOnClickListener { mPresenter.onLoginClick() }
+//        btnLogin.setOnClickListener { mPresenter.onLoginClick() }
     }
 
     private fun togglePassword() {

@@ -1,71 +1,32 @@
 package com.kg.gettransfer.remote
 
-import com.kg.gettransfer.data.*
+import com.kg.gettransfer.data.CarrierTripRemote
+import com.kg.gettransfer.data.ChatRemote
+import com.kg.gettransfer.data.GeoRemote
+import com.kg.gettransfer.data.OfferRemote
+import com.kg.gettransfer.data.PaymentRemote
+import com.kg.gettransfer.data.PromoRemote
+import com.kg.gettransfer.data.PushTokenRemote
+import com.kg.gettransfer.data.ReviewRemote
+import com.kg.gettransfer.data.RouteRemote
+import com.kg.gettransfer.data.SessionRemote
+import com.kg.gettransfer.data.SystemRemote
+import com.kg.gettransfer.data.TransferRemote
 import com.kg.gettransfer.data.socket.ChatEventEmitter
-import com.kg.gettransfer.data.socket.SystemEventEmitter
 import com.kg.gettransfer.data.socket.CoordinateEventEmitter
+import com.kg.gettransfer.data.socket.SystemEventEmitter
 
-import com.kg.gettransfer.remote.mapper.*
-import com.kg.gettransfer.remote.socket.*
+import com.kg.gettransfer.remote.socket.ChatSocketImpl
+import com.kg.gettransfer.remote.socket.CoordinateSocketImpl
+import com.kg.gettransfer.remote.socket.OfferSocketImpl
+import com.kg.gettransfer.remote.socket.PaymentSocketEventer
+import com.kg.gettransfer.remote.socket.SocketManager
+import com.kg.gettransfer.remote.socket.SystemSocketImp
 
-import org.koin.dsl.module.module
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
 import org.slf4j.LoggerFactory
-
-val remoteMappersModule = module {
-    single { AccountMapper() }
-    single { BookNowOfferMapper() }
-
-    single { CardGatewaysMapper() }
-    single { CarrierMapper() }
-    single { CarrierTripBaseMapper() }
-    single { CarrierTripMapper() }
-    single { CityPointMapper() }
-    single { ConfigsMapper() }
-    single { MobileConfigMapper() }
-    single { BuildsConfigsMapper() }
-    single { CurrencyMapper() }
-
-    single { EndpointMapper() }
-    single { LocaleMapper() }
-    single { MoneyMapper() }
-
-    single { OfferMapper() }
-
-    single { PassengerAccountMapper() }
-
-    single { ReviewRateMapper() }
-
-    single { PaymentMapper() }
-    single { PaymentRequestMapper() }
-    single { PaymentStatusMapper() }
-    single { PaymentStatusRequestMapper() }
-    single { PaypalCredentialsMapper() }
-    single { BraintreeTokenMapper() }
-    single { ParamsMapper() }
-    single { PriceMapper() }
-    single { ProfileMapper() }
-    single { PromoMapper() }
-
-    single { RatingsMapper() }
-    single { RouteInfoMapper() }
-
-    single { TransferMapper() }
-    single { TransferNewMapper() }
-    single { TransportTypeMapper() }
-    single { TransportTypePriceMapper() }
-    single { TripMapper() }
-
-    single { UserMapper() }
-    single { VehicleInfoMapper() }
-    single { VehicleMapper() }
-
-    single { ChatAccountMapper() }
-    single { MessageMapper() }
-    single { ChatMapper() }
-
-    single { LocationMapper() }
-}
 
 val remoteModule = module {
     factory { (tag: String) -> LoggerFactory.getLogger(tag) }
@@ -73,6 +34,7 @@ val remoteModule = module {
     single { ApiCore() }
     single<RouteRemote> { RouteRemoteImpl() }
     single<SessionRemote> { SessionRemoteImpl() }
+    single<SystemRemote> { SystemRemoteImpl() }
     single<CarrierTripRemote> { CarrierTripRemoteImpl() }
     single<TransferRemote> { TransferRemoteImpl() }
     single<OfferRemote> { OfferRemoteImpl() }
@@ -91,5 +53,6 @@ val socketModule = module {
     single { SystemSocketImp() } bind SystemEventEmitter::class
     single { OfferSocketImpl(get()) }
     single { ChatSocketImpl() }
+    single { PaymentSocketEventer() }
     single<ChatEventEmitter> { ChatSocketImpl() }
 }

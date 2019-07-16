@@ -32,9 +32,9 @@
         android:gravity="center"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_book"
         app:layout_constraintEnd_toStartOf="@+id/btn_book"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btn_book"
         tools:text="888.00 Р" />
 
 
@@ -43,6 +43,8 @@
         layout="@layout/btn_book"
         android:layout_width="@dimen/view_offer_bs_btn_book_width"
         android:layout_height="@dimen/view_offer_bs_btn_book_height"
+        android:layout_marginTop="@dimen/view_offer_bs_btn_book_margin_top"
+        android:layout_marginBottom="@dimen/view_offer_bs_btn_book_margin_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/toolbarLogin"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fragment_auth_title_height"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/colorWhite">
+
+        <ImageView
+            android:id="@+id/loginBackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/fragment_auth_back_btn_padding"
+            app:srcCompat="@drawable/ic_button_back_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/loginTitleText"
+            style="@style/sf_font_semi_bold_17_sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/LNG_LOGIN_LOGIN_TITLE"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/loginTitleTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorWhite"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLogin"
+        app:tabTextAppearance="@style/tabs_text_style"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabSelectedTextColor="@color/color_gtr_orange"
+        app:tabIndicatorColor="@color/color_gtr_orange"
+        android:elevation="@dimen/fragment_auth_tabs_elevation" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/loginPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginTitleTabs">
+    </android.support.v4.view.ViewPager>
+
+</android.support.constraint.ConstraintLayout>

@@ -2,8 +2,15 @@ package com.kg.gettransfer.presentation.model
 
 import android.support.annotation.StringRes
 
+import com.kg.gettransfer.R
+
+import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Status
 import com.kg.gettransfer.domain.model.TransportType
+
+import com.kg.gettransfer.presentation.mapper.Mapper
+
+import kotlin.math.absoluteValue
 
 import java.util.Date
 
@@ -67,6 +74,69 @@ data class TransferModel(
     var showOfferInfo: Boolean
 ) {
     fun isBookNow() = paidPercentage != 0 && bookNow != null
+
     fun getChildrenCount() = childSeatsInfant + childSeatsBooster + childSeatsConvertible
 }
 
+// private val systemTransportTypes = get<SystemInteractor>().transportTypes
+
+fun Transfer.map(transportTypesModels: List<TransportTypeModel>) =
+    TransferModel(
+        id,
+        createdAt,
+        duration,
+        to?.let { distance ?: Mapper.checkDistance(from.point!!, to!!.point) },
+        status,
+        R.string::class.members.find( { it.name == "LNG_RIDE_STATUS_${status.name}" } )?.call() as Int?,
+        from.name,
+        to?.name,
+        dateToLocal,
+        dateToTZ,
+        dateReturnLocal,
+        dateReturnTZ,
+        flightNumber,
+/* ================================================== */
+        flightNumberReturn,
+        transportTypesModels.filter { transportTypeIds.contains(it.id) },
+        pax,
+        bookNow,
+        time,
+        nameSign,
+        comment,
+        childSeats,
+        childSeatsInfant,
+        childSeatsConvertible,
+/* ================================================== */
+        childSeatsBooster,
+        promoCode,
+        passengerOfferedPrice,
+        price?.def,
+        paidSum?.def,
+        remainsToPay?.def,
+        paidPercentage,
+        watertaxi,
+        bookNowOffers.map { it.map() },
+        offersCount,
+/* ================================================== */
+        relevantCarriersCount,
+        /* offersUpdatedAt */
+        dateRefund,
+        paypalOnly,
+        carrierMainPhone,
+        pendingPaymentId,
+        analyticsSent,
+        rubPrice,
+        refundedPrice?.def,
+        campaign,
+/* ================================================== */
+        editableFields,
+        airlineCard,
+        paymentPercentages,
+        unreadMessagesCount,
+/* ================================================== */
+/* ================================================== */
+        checkStatusCategory(),
+        ((dateToTZ.time - Date().time).absoluteValue / 60_000).toInt(),
+        showOfferInfo
+        // checkOffers
+    )

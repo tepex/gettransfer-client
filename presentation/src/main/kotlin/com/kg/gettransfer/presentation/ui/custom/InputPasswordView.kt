@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isVisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_input_password.view.*
 
@@ -23,6 +24,7 @@ class InputPasswordView@JvmOverloads constructor(
         if(attrs != null) {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.InputPasswordView)
             passwordTextInputLayout.hint = ta.getString(R.styleable.InputPasswordView_password_view_hint)
+            divider.isVisible = ta.getBoolean(R.styleable.InputPasswordView_password_view_divider_visible, true)
             ta.recycle()
         }
 

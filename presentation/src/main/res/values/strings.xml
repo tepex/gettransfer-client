@@ -1,83 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- urls and keys -->
-    <string name="licence_agreement_url">https://gettransfer.com/en/terms_of_use</string>
-
-    <string name="api_key_demo">7dfea5095801332db75975c882361bbf</string>
-    <string name="api_url_demo">https://stgtr.org</string>
-    <string name="api_key_prod">3fe0f9208622274f1a21e78037eea83e</string>
-    <string name="api_url_prod">https://gettransfer.com</string>
-
-    <string name="api_url_transfers">/carrier/cabinet/transfers</string>
-    <string name="api_url_restore_password">/forgot_password</string>
-    <string name="api_url_carrier_new">/carrier/new</string>
-    <string name="api_url_carrier">/carrier</string>
-
-    <!-- FCM -->
-    <string name="new_offer_notification_channel_id" translatable="false">new_offer_channel</string>
-    <string name="new_offer_notification_channel_name" translatable="true">New Offer</string>
-
-    <!-- logs -->
-    <string name="logs_file_name">Logs.txt</string>
-    <string name="limited_logs_file_name">LimitedLogFile.txt</string>
-    <string name="file_provider_authority">com.kg.gettransfer.fileprovider</string>
-    <string name="share_extra_subject">GTR Logs</string>
-    <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
-
-    <!-- Not used in iOS -->
-    <string name="err_address_service_xxx">Ошибка определения адреса!</string>
-    <string name="err_server">Ошибка: %1$s</string>
-    <string name="err_server_code">Ошибка сервера %1$s! %2$s</string>
-
-    <string name="navigation_drawer_open" translatable="false">Open</string>
-    <string name="navigation_drawer_close" translatable="false">Close</string>
-
-    <string name="search_start">Loading…</string>
-    <string name="search_nothing"></string>
-    <string name="searchTransitionName">SEARCH_FORM</string>
-
-    <string name="transfer_start_sign">A</string>
-    <string name="transfer_end_sign">B</string>
-    <string name="rub">₽</string>
-
-    <string name="count_persons_and_baggage"> X %1$d</string>
-    <string name="activity_transfer_details_paid_sum">%1$s (%2$s\%%)</string>
-
-    <string name="share">Share</string>
-    <string name="debug">Debug</string>
-    <string name="endpoint">Endpoint</string>
-    <string name="logs">Logs</string>
     <string name="LNG_SEARCH">Search</string>
-    <string name="reset_onboarding">Reset onboarding</string>
-    <string name="reset_rate">Reset play market rate</string>
-    <string name="clear_access_token">Clear access token</string>
-
-    <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
-    <string name="activity_carrier_transfer_details_title">Trip details</string> <!-- Title, which not used in new design -->
-
-    <string name="passenger_number_default">0</string>
-    <string name="child_number_default">0</string>
-
     <string name="LNG_LOGIN_LOGIN_TO_CONTINUE">Log in to see transfers and offers</string>
-    <string name="LNG_LOGIN_NOT_LOGGED_IN">You are not logged in</string>
-
-    <string name="tag_read_more" translatable="false">read_more_dialog</string>
-    <string name="email_support" translatable="false">info@gettransfer.com</string>
-    <string name="send_email">Send mail...</string>
-    <string name="no_email_apps">There are no email apps installed.</string>
-    <string name="driver_not_number">Driver has not a phone number</string>
-
-    <string name="market_link">market://details?id=</string>
-    <string name="app_package">com.gettransfer</string>
-
-    <string name="text_in_parentheses">%1$s</string>
-    <string name="chat_transfer_date_transfer_id_format">%1$s (%2$s)</string>
-
-    <string name="X_SIGN">x</string>
-
-
-    <string name="LNG_MISKO">TEST</string>
     <string name="LNG_OK">OK</string>
     <string name="LNG_CANCEL">Cancel</string>
     <string name="LNG_CLOSE"><u>Close</u></string>
@@ -98,6 +22,8 @@
     <string name="LNG_NOT_FOUND">not found</string>
     <string name="LNG_ERROR_EMAIL">Invalid email</string>
     <string name="LNG_UNEXPECTED_ERROR">Unexpected error</string>
+    <string name="LNG_ACCOUNT_NOTFOUND">Account %s not found</string>
+    <string name="LNG_ERROR_ACCOUNT_CREATE_USER">Do you want to create it?</string>
     <string name="LNG_BAD_CREDENTIALS_ERROR">Login failed</string>
     <string name="LNG_NO_ACCOUNT_ERROR">Account didn\'t created</string>
     <string name="LNG_UNAUTHORIZED_ERROR">Not logged in</string>
@@ -132,6 +58,8 @@
     <string name="LNG_MENU_SUBTITLE_LOGIN">Passenger log in and sign up</string>
     <string name="LNG_MENU_TITLE_NEW">New</string>
     <string name="LNG_MENU_SUBTITLE_NEW">Create new transfer</string>
+    <string name="LNG_REGISTERED">Successful registration</string>
+    <string name="LNG_TRANSFER_CREATE_HINT">You can create a new transfers over the world</string>
     <string name="LNG_MENU_TITLE_RIDES">Requests</string>
     <string name="LNG_MENU_SUBTITLE_RIDES">Active and archived rides</string>
     <string name="LNG_MENU_TITLE_LAST_RIDES">Archived rides</string>
@@ -255,7 +183,7 @@
     <string name="LNG_RIDE_CONNECT_CARRIERS_NONUM">Connecting with nearby carriers</string>
     <string name="LNG_RIDE_CARRIERS">Carrier\'s offers</string>
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
-    <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting...</string>
+    <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting…</string>
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
     <string name="LNG_RIDE_OFFERT">I aggree with \n<a href='#'>License agreement</a></string>
     <string name="LNG_RIDE_PAYMENT_OFFER">By pressing \"\PAY\"\ you accept <a href="#">terms of the Agreement</a></string>
@@ -278,12 +206,13 @@
     <string name="LNG_PAYMENT_TERM_PAY">Pay %s%%</string>
     <string name="LNG_PAYMENT_TERM_NOW"> now</string>
     <string name="LNG_PAYMENT_TERM_LATER">(%s later to the driver)</string>
-    <string name="LNG_PAYMENT_METHOD">Method of payment</string>
-    <string name="LNG_PAYMENT_METHOD_CARD">Credit Card</string>
-    <string name="LNG_PAYMENT_METHOD_PAYPAL">Pay Pal</string>
+    <string name="LNG_PAYMENT_METHOD"><b>Select your payment method</b></string>
+    <string name="LNG_PAYMENT_COLLECT_MILES">To collect miles please  log in</string>
     <string name="LNG_SOON">Soon</string>
     <string name="LNG_PAYMENT_COMISSION">Commission 2%%.\nRefund is available before %s</string>
-    <string name="LNG_PAYMENT_COMISSION2">Commission %s%%.\nRefund is available before %s</string>
+    <string name="LNG_PAYMENT_COMISSION2">Payment commission is %s%%.\nFree cancellation before %s</string>
+    <string name="LNG_PAYMENT_COMISSION3">Payment commission is %s%%</string>
+    <string name="LNG_PAYMENT_REFUND">Free cancellation before %s</string>
     <string name="LNG_PAYMENT_PAY">Pay</string>
     <string name="LNG_RIDE_CANT_CREATE">Can\'t create transfer</string>
     <string name="LNG_RIDES_ALL">All</string>
@@ -316,17 +245,17 @@
     <string name="LNG_TRANSPORT_VIP">VIP</string>
     <string name="LNG_TRANSPORT_BUSINESS">Business</string>
     <string name="LNG_TRANSPORT_VAN">Van</string>
-    <string name="LNG_TRANSPORT_ECONOMY_MODELS">Economy</string>
-    <string name="LNG_TRANSPORT_COMFORT_MODELS">Comfort</string>
-    <string name="LNG_TRANSPORT_PREMIUM_MODELS">Premium</string>
-    <string name="LNG_TRANSPORT_SUV_MODELS">Suv</string>
-    <string name="LNG_TRANSPORT_MINIBUS_MODELS">Minibus</string>
-    <string name="LNG_TRANSPORT_BUS_MODELS">Bus</string>
-    <string name="LNG_TRANSPORT_HELICOPTER_MODELS">Helicopter</string>
-    <string name="LNG_TRANSPORT_LIMOUSINE_MODELS">Limousine</string>
-    <string name="LNG_TRANSPORT_VIP_MODELS">VIP</string>
-    <string name="LNG_TRANSPORT_BUSINESS_MODELS">Business</string>
-    <string name="LNG_TRANSPORT_VAN_MODELS">Van</string>
+    <string name="LNG_TRANSPORT_ECONOMY_MODELS">Hyundai Solaris, Volkswagen Polo or similar</string>
+    <string name="LNG_TRANSPORT_COMFORT_MODELS">Toyota Camry, Skoda Octavia or similar</string>
+    <string name="LNG_TRANSPORT_PREMIUM_MODELS">Mercedes-Benz S-Class, BMW 7 Series or similar</string>
+    <string name="LNG_TRANSPORT_SUV_MODELS">Mercedes-Benz GL, Toyota Land Cruiser or similar</string>
+    <string name="LNG_TRANSPORT_MINIBUS_MODELS">Mercedes-Benz Sprinter, Ford Transit or similar</string>
+    <string name="LNG_TRANSPORT_BUS_MODELS">Mercedes-Benz Tourismo, Scania Touring or similar</string>
+    <string name="LNG_TRANSPORT_HELICOPTER_MODELS">Airbus, Robinson or similar</string>
+    <string name="LNG_TRANSPORT_LIMOUSINE_MODELS">Mercedes-Benz S-Class Long, Mercedes-Maybach S-Class or similar</string>
+    <string name="LNG_TRANSPORT_VIP_MODELS">Mercedes-Benz S-Class, BMW 7 Series or similar</string>
+    <string name="LNG_TRANSPORT_BUSINESS_MODELS">Mercedes-Benz E-Class, BMW 5 Series or similar</string>
+    <string name="LNG_TRANSPORT_VAN_MODELS">Mercedes-Benz Vito, Volkswagen Caravelle or similar</string>
     <string name="LNG_TRANSPORT_EXAMPLES_ECONOMY"><b>Ford Focus, VW Jetta, Kia Rio, Hyundai Solaris, Chevrolet Cruze, LADA Granta, Honda Civic, Skoda rapid, Opel Astra and BMW 1-series.</b>\nFor a comfortable trip in any city of the world at the best price.\n- Personal driver \n- Fixed price\n- Without extra payment for luggage</string>
     <string name="LNG_TRANSPORT_EXAMPLES_COMFORT"><b>Ford Mondeo, Skoda Octavia, KIA Optima, Toyota Camry</b>\n-For taking people from any airport or station, safe transferring in cities and suburbs. \n- Spacious luggage compartment \n- Fixed price \n- Spacious passenger compartment</string>
     <string name="LNG_TRANSPORT_EXAMPLES_PREMIUM"><b>Mercedes V-class, Viano, Vito, Opel Vivaro, Renault Traffic and others.</b>\n- Dress-code for the driver\n- Fixed price\n- Without extra payment for luggage</string>
@@ -338,15 +267,6 @@
     <string name="LNG_TRANSPORT_EXAMPLES_BUSINESS"><b>BMW 3-series, Honda Accord, Lexus IS, Hyundai Equus Toyota Camry, Mercedes E-class, Audi a6, BMW 5-series</b> \nFor transferring passengers to events, business meetings and appointments.\n- Dress-code for the driver\n- Fixed price\n- Without extra payment for luggage</string>
     <string name="LNG_TRANSPORT_EXAMPLES_VAN"><b>Toyota Alphard, Ford S-MAX, Chrysler Voyager, Honda Stream, Volkswagen Sharan, Mercedes Vito, Mercedes V-class, Volkswagen Transporter</b>\nFor long-time excursions around the city, transferring foreign colleagues to conferences and seminars.\n- Conditioner \n- Comfortable cabin</string>
     <string name="LNG_TRANSPORT_EXAMPLES_SUV"><b>Chevrolet Tahoe, Volkswagen Tiguan, Hyundai Creta, Nissan X-Trail</b>\nFor off-road trips, safe transferring between cities and ski resorts\n- Fixed price\n- Spacious luggage compartment</string>
-    <string name="LNG_TRANSPORT_1">Passenger car</string>
-    <string name="LNG_TRANSPORT_2">Minivan</string>
-    <string name="LNG_TRANSPORT_3">Porter</string>
-    <string name="LNG_TRANSPORT_4">Transit</string>
-    <string name="LNG_TRANSPORT_5">Hauler</string>
-    <string name="LNG_TRANSPORT_6">Carrier</string>
-    <string name="LNG_TRANSPORT_7">5-ton truck</string>
-    <string name="LNG_TRANSPORT_8">20-ton truck</string>
-    <string name="LNG_TRANSPORT_9">Container</string>
     <string name="LNG_DIRECTION">Direction</string>
     <string name="LNG_MADE">made</string>
     <string name="LNG_MADE_RIDES">made transfers: %d</string>
@@ -409,7 +329,7 @@
     <string name="LNG_CUSTOMER_SUPPORT">Customer support</string>
     <string name="LNG_PAYMENT_DETAILS"><u>Details</u></string>
     <string name="LNG_TRANSFER_PAID_SUCCESSFULLY">Transfer paid successfully</string>
-    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER"><u>Download booking voucher</u></string>
+    <string name="LNG_DOWNLOAD_BOOKING_VOUCHER">Download booking voucher</string>
     <string name="LNG_PAYMENT_CALL">Call</string>
     <string name="LNG_PAYMENT_CHAT">Chat</string>
     <string name="LNG_PAYMENT_EMAIL_TITLE">Transfer support</string>
@@ -423,6 +343,7 @@
     <string name="LNG_PAYMENT_LEAVE_COMMENT">Please leave your comment about transfer:</string>
     <string name="LNG_PAYMENT_YOUR_COMMENT">Your comment</string>
     <string name="LNG_PAYMENT_TRANSFER_NUMBER">Transfer number</string>
+    <string name="LNG_ERROR_CREDENTIALS">Invalid credentials</string>
     <string name="LNG_TRANSFER_TITLE">Transfer paid</string>
     <string name="LNG_RIDE_ABOUT_REQUEST">About request</string>
     <string name="LNG_RIDE_ABOUT_DRIVER">About driver</string>
@@ -494,7 +415,6 @@
     <string name="LNG_YES">Yes</string>
     <string name="LNG_NO">No</string>
     <string name="LNG_PHONE_REQUIRED_ERROR">Please enter phone number in cabinet on the site</string>
-
     <string name="LNG_LOGIN_SEND_SMS_CODE">We sent an SMS with a code to \nnumber"</string>
     <string name="LNG_LOGIN_SEND_EMAIL_CODE">We sent an E-mail with a code to\n</string>
     <string name="LNG_LOGIN_ENTER_CODE">Enter the received code:"</string>
@@ -514,14 +434,17 @@
     <string name="LNG_NEW_PASSWORD_FAIL">Password doesn\'t match confirmation</string>
     <string name="LNG_AUTHORIZED">Successful authorization</string>
     <string name="LNG_PASSWORD_CREATE_HINT">You can create a new password in the application settings</string>
-    <!-- tags for api params-->
-    <string name="VEHICLE">vehicle</string>
-    <string name="DRIVER">driver</string>
-    <string name="PUNCTUALITY">fair</string>
-
-    <string name="offer_channel_name">Offer</string>
-    <string name="offer_channel_description">@string/offer_channel_name</string>
-    <string name="new_offers">New offers</string>
+    <string name="LNG_ERROR_PHONE_NOTFOUND">Phone is not found</string>
+    <string name="LNG_ERROR_EMAIL_NOTFOUND">Email is not found</string>
+    <string name="LNG_TRANSFER_NOT_FOUND">Sorry, but transfer #%s not found</string>
+    <string name="LNG_BIG_PRICE_ERROR">Price is too big</string>
+    <string name="LNG_EMAIL_NOT_CHANGEABLE">Email not changeable</string>
+    <string name="LNG_EMAIL_TAKEN_ERROR">Email already taken</string>
+    <string name="LNG_EMAIL_SENT_ACTIVATION_CODE">An activation code has been sent to \nyour email.</string>
+    <string name="LNG_ENTER_NEW_EMAIL">Enter new e-mail</string>
+    <string name="LNG_PROFILE">Profile</string>
+    <string name="LNG_CHANGE_EMAIL">Change e-mail</string>
+    <string name="LNG_CHANGING_EMAIL">Changing e-mail</string>
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
     <string name="LNG_RIDE_DATE_RETURN_PLACEHOLDER">Add a return transfer</string>
     <string name="LNG_RIDE_DATE_RETURN">Return date and time</string>
@@ -535,7 +458,6 @@
     <string name="LNG_PLEASE_WAIT">Please wait</string>
     <string name="LNG_PLEASE_WAIT_PAYPAL">we are connecting to PayPal…</string>
     <string name="LNG_PAYMENT_INSTALL_PAYPAL">Install PayPal app or browser to pay</string>
-
     <string name="LNG_CUSTOMER_SUPPORT_SPEAK_YOUR_LANG">"We speak"</string>
     <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSENGER">"Write us a message"</string>
     <string name="LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE">"Write us"</string>
@@ -550,26 +472,17 @@
     <string name="LNG_RIDE_PAY_CHARGE"><b>You will be charged %s,</b> equivalent\nto %s</string>
     <string name="LNG_RIDE_PAY_CHARGE2"><b>You will be charged %s</b></string>
     <string name="LNG_TRANSFER_CANCELED">Transfer canceled</string>
-
-    <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
-    <string name="switzerland_phone" translatable="false">+41 22 518 04 00</string>
-    <string name="cyprus_phone" translatable="false">+357 24 022300</string>
-    <string name="russia_phone" translatable="false">+7 495 414 23 87</string>
-    <string name="florida_phone" translatable="false">+1 786 870 1567</string>
-    <string name="china_phone" translatable="false">+852 5803 1035</string>
-
-    <plurals name="days">
-        <item quantity="one">@string/LNG_DAY</item>
-        <item quantity="few">@string/LNG_DAY_FEW</item>
-        <item quantity="many">@string/LNG_DAYS</item>
-        <item quantity="other">@string/LNG_DAYS</item>
-    </plurals>
-
-    <plurals name="hours">
-        <item quantity="one">@string/LNG_HOUR</item>
-        <item quantity="few">@string/LNG_HOUR_FEW</item>
-        <item quantity="many">@string/LNG_HOURS</item>
-        <item quantity="other">@string/LNG_HOURS</item>
-    </plurals>
-    
+    <string name="LNG_LOGIN_LOGIN_TITLE">Log in &amp; Sign up</string>
+    <string name="LNG_LOGIN_CARRIER_SIGNUP_TITLE">Begin to earn more with GetTransfer.com!</string>
+    <string name="LNG_LOGIN_CARRIER_SIGNUP_HINT">Carrier registration is available on our web site gettransfer.com</string>
+    <string name="LNG_LOGIN_CARRIER_SIGNUP_BUTTON">Sign up on gettransfer.com</string>
+    <string name="LNG_SIGNUP">Sign up</string>
+    <string name="LNG_SIGNIN">Log in</string>
+    <string name="LNG_SEND_EMAIL">Send email...</string>
+    <string name="LNG_NO_EMAIL_APPS">There are no email apps installed.</string>
+    <string name="LNG_DOWNLOAD_COMPLETED">Download completed</string>
+    <string name="LNG_VOUCHER">Voucher</string>
+    <string name="LNG_NO_SEATS_REQUIRED">No child seats required</string>
+    <string name="LNG_PAYMENT_BALANCE">Balance: %s</string>
+    <string name="LNG_PAYMENT_FROM_BALANCE">From balance (%s)</string>
 </resources>

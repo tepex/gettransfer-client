@@ -22,7 +22,7 @@ ext {
     markwon_version            = "2.0.0"
     socket_io_version          = "1.0.0"
     libphonenumber_version     = "8.9.14"
-    appmetrica_version         = "3.4.0"
+    appmetrica_version         = "3.6.4"
     facebook_version           = "4.38.1"
     leakcanary_version         = "1.6.2"
     anko_version               = "0.10.8"
@@ -37,6 +37,8 @@ ext {
     drop_in_version            = "3.7.1"
     pinview_version            = "1.4.2"
     fb_shimmer_version         = "0.4.0"
+    appmetrica_push            = "1.4.1"
+    play_services              = "16.1.0"
 }
 
 android {
@@ -286,6 +288,12 @@ dependencies {
 
     //Shimmer loading effect
     implementation "com.facebook.shimmer:shimmer:$fb_shimmer_version"
+
+    // AppMetrica Push
+    implementation "com.yandex.android:mobmetricapushlib:$appmetrica_push"
+
+    // Play services
+    implementation "com.google.android.gms:play-services-base:$play_services"
 }
 
 def getBuildNumber() {

@@ -2,9 +2,11 @@ package com.kg.gettransfer.encrypt
 
 import com.kg.gettransfer.prefs.EncryptPass
 
-class EncryptPassImpl: EncryptPass {
+class EncryptPassImpl : EncryptPass {
+
     override fun encryptDecrypt(input: String): String {
-        val key = charArrayOf('G', 'T', 'R') //Can be any chars, and any length array
+        // Can be any chars, and any length array
+        val key = charArrayOf('G', 'T', 'R')
         val output = StringBuilder()
 
         for (i in 0 until input.length) {
@@ -12,7 +14,6 @@ class EncryptPassImpl: EncryptPass {
             val b: Int = key[i % key.size].toInt()
             output.append((a xor b).toChar())
         }
-
         return output.toString()
     }
 }

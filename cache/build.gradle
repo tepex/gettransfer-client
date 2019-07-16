@@ -65,6 +65,7 @@ dependencies {
     implementation libs.serialization
     implementation libs.koin_android
     implementation libs.koin_core
+    implementation libs.koin_core_ext
     implementation project(":data")
 
     implementation libs.room

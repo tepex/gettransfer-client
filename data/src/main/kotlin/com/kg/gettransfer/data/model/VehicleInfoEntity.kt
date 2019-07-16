@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.VehicleInfo
+
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
@@ -14,3 +16,6 @@ data class VehicleInfoEntity(
         const val REGISTRATION_NUMBER = "registration_number"
     }
 }
+
+fun VehicleInfo.map() = VehicleInfoEntity(name, registrationNumber)
+fun VehicleInfoEntity.map() = VehicleInfo(name, registrationNumber)

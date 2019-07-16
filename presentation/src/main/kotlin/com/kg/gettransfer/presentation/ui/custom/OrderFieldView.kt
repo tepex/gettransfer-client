@@ -19,7 +19,7 @@ class OrderFieldView @JvmOverloads constructor(
         attrs?.let {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.OrderFieldView)
             hint_title.text = ta.getString(R.styleable.OrderFieldView_order_title)
-            val drawableResId = ta.getResourceId(R.styleable.OrderFieldView_icon, -1)
+            val drawableResId = ta.getResourceId(R.styleable.OrderFieldView_icon, View.NO_ID)
             img_icon.setImageDrawable(ContextCompat.getDrawable(context, drawableResId))
             ta.recycle()
         }

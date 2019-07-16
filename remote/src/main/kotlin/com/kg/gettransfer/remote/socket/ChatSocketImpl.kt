@@ -11,16 +11,23 @@ import com.kg.gettransfer.remote.socket.emitters.ChatSocketEmitter.Companion.LEA
 import com.kg.gettransfer.remote.socket.emitters.ChatSocketEmitter.Companion.READ_MESSAGE_EVENTS
 import com.kg.gettransfer.remote.socket.emitters.ChatSocketEmitter.Companion.SEND_MESSAGE_EVENTS
 import org.json.JSONObject
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
 
-class ChatSocketImpl: ChatSocketEmitter, KoinComponent {
+class ChatSocketImpl : ChatSocketEmitter, KoinComponent {
+
     private val eventReceiver: ChatDataStoreReceiver by inject()
     private val socketManager: SocketManager = get()
 
-    override fun onJoinRoomEmit(transferId: Long) { socketManager.emitEvent(JOIN_ROOM_EVENTS, transferId) }
-    override fun onLeaveRoomEmit(transferId: Long) { socketManager.emitEvent(LEAVE_ROOM_EVENTS, transferId, true) }
+    override fun onJoinRoomEmit(transferId: Long) {
+        socketManager.emitEvent(JOIN_ROOM_EVENTS, transferId)
+    }
+
+    override fun onLeaveRoomEmit(transferId: Long) {
+        socketManager.emitEvent(LEAVE_ROOM_EVENTS, transferId, true)
+    }
+
     override fun onSendMessageEmit(transferId: Long, text: String): Boolean {
         JSONObject().apply {
             put(MessageNewSocketModel.ROOM, transferId)
@@ -36,7 +43,9 @@ class ChatSocketImpl: ChatSocketEmitter, KoinComponent {
     }
 
     internal fun onMessageEvent(message: MessageEntity) = eventReceiver.onNewMessage(message)
-    internal fun onMessageReadEvent(messageId: Long) = eventReceiver.onMessageRead(messageId)
-    internal fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEventEntity) = eventReceiver.onChatBadgeChanged(chatBadgeEvent)
 
+    internal fun onMessageReadEvent(messageId: Long) = eventReceiver.onMessageRead(messageId)
+
+    internal fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEventEntity) =
+        eventReceiver.onChatBadgeChanged(chatBadgeEvent)
 }

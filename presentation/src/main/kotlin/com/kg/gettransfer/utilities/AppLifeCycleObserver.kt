@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.support.v4.content.LocalBroadcastManager
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 class AppLifeCycleObserver(context: Context): LifecycleObserver, KoinComponent {
     private var appContext: Context = context

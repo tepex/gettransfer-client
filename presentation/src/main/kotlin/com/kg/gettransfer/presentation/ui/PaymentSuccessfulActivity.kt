@@ -1,21 +1,13 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.app.DownloadManager
-import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.support.annotation.NonNull
 import android.support.design.widget.BottomSheetBehavior
 import android.view.View
-import android.webkit.URLUtil
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.google.android.gms.maps.CameraUpdate
-
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.kg.gettransfer.BuildConfig
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
@@ -26,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_payment_successful.*
 import kotlinx.android.synthetic.main.dialog_payment_successful.*
 import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.EasyPermissions
+import java.io.InputStream
 
 class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView,
         EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
@@ -74,31 +67,11 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     private fun checkPermissionForWrite() {
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
-            downloadVoucher()
+            presenter.onDownloadVoucherClick()
         } else EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
                 RC_WRITE_FILE, *perms)
-    }
-
-    private fun downloadVoucher() {
-        val apiUrl =
-                if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home")
-                    getString(R.string.api_url_prod)
-                else getString(R.string.api_url_demo)
-
-        val url = apiUrl + API_VOUCHER + presenter.transferId
-
-        val request = DownloadManager.Request(Uri.parse(url)).apply {
-            allowScanningByMediaScanner()
-            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            setDestinationInExternalPublicDir(
-                    Environment.DIRECTORY_DOWNLOADS,
-                    URLUtil.guessFileName(url, null, MIME_TYPE))
-        }
-        val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        dm.enqueue(request)
-        longToast(getString(R.string.LNG_DOWNLOADING))
     }
 
     private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -130,8 +103,6 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         const val TRANSFER_ID = "transferId"
         const val OFFER_ID = "offerId"
         private const val RC_WRITE_FILE = 111
-        private const val API_VOUCHER = "/api/transfers/voucher/"
-        private const val MIME_TYPE = "application/pdf"
     }
 
     override fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate) {
@@ -149,7 +120,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        downloadVoucher()
+        presenter.onDownloadVoucherClick()
     }
 
     override fun onRationaleDenied(requestCode: Int) {

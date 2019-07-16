@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.Log
 
 import com.kg.gettransfer.R
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 import timber.log.Timber
 import java.util.logging.Logger

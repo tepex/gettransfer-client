@@ -8,7 +8,7 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 
 import java.util.Calendar
 
-import org.koin.standalone.get
+import org.koin.core.get
 
 open class CarrierTripBaseMapper : Mapper<CarrierTripBaseModel, CarrierTripBase> {
     private val vehicleInfoMapper = get<VehicleInfoMapper>()
@@ -18,7 +18,7 @@ open class CarrierTripBaseMapper : Mapper<CarrierTripBaseModel, CarrierTripBase>
         return CarrierTripBaseModel(
             id                    = type.id,
             transferId            = type.transferId,
-            from                  = type.from.name!!,
+            from                  = type.from.name,
             to                    = type.to?.name,
             dateLocal             = type.dateLocal,
             duration              = type.duration,

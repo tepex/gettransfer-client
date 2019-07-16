@@ -3,10 +3,10 @@ package com.kg.gettransfer.data.repository
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.repository.CountEventsRepository
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.get
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
-class CountEventsRepositoryImpl: KoinComponent, CountEventsRepository {
+class CountEventsRepositoryImpl : KoinComponent, CountEventsRepository {
 
     private val preferencesCache = get<PreferencesCache>()
 
@@ -38,6 +38,10 @@ class CountEventsRepositoryImpl: KoinComponent, CountEventsRepository {
         set(value) { preferencesCache.eventsCount = value }
 
     override fun addCounterListener(listener: CounterEventListener) { countListeners.add(listener) }
+
     override fun removeCounterListener(listener: CounterEventListener) { countListeners.remove(listener) }
-    private fun notifyUpdateCounter() {countListeners.forEach{ it.updateCounter() }}
+
+    private fun notifyUpdateCounter() {
+        countListeners.forEach { it.updateCounter() }
+    }
 }

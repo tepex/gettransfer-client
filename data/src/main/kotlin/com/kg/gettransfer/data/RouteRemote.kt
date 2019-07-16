@@ -1,10 +1,13 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.RouteInfoEntity
+import com.kg.gettransfer.data.model.RouteInfoRequestEntity
+import com.kg.gettransfer.data.model.RouteInfoHourlyRequestEntity
+import org.koin.core.KoinComponent
 
-import org.koin.standalone.KoinComponent
+interface RouteRemote : KoinComponent {
 
-interface RouteRemote: KoinComponent {
-    suspend fun getRouteInfo(points: Array<String>, withPrices: Boolean, returnWay: Boolean, currency: String, dateTime: String?): RouteInfoEntity
-    suspend fun getRouteInfo(points: Array<String>, hourlyDuration: Int, currency: String, dateTime: String?): RouteInfoEntity
+    suspend fun getRouteInfo(request: RouteInfoRequestEntity): RouteInfoEntity
+
+    suspend fun getRouteInfo(request: RouteInfoHourlyRequestEntity): RouteInfoEntity
 }

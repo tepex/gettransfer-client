@@ -2,7 +2,9 @@ package com.kg.gettransfer.remote.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-
+import com.kg.gettransfer.data.model.CityPointEntity
+import com.kg.gettransfer.data.model.DestDurationEntity
+import com.kg.gettransfer.data.model.DestPointEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
 import com.kg.gettransfer.data.model.TripEntity
 
@@ -22,7 +24,6 @@ open class TransferNewBase(
     @SerializedName(TransferNewEntity.COMMENT) @Expose val comment: String?,
     @SerializedName(TransferNewEntity.PASSENGER_ACCOUNT) @Expose val user: UserModel,
     @SerializedName(TransferNewEntity.PROMO_CODE) @Expose val promoCode: String?
-
 )
 
 class TransferPointToPointNewModel(
@@ -43,7 +44,21 @@ class TransferPointToPointNewModel(
 
 /* Not used now
     @SerializedName("paypal_only") @Expose val paypalOnly: Boolean */
-) : TransferNewBase(from, to, tripTo, transportTypeIds, pax, childSeatsInfant, childSeatsConvertible, childSeatsBooster, passengerOfferedPrice, nameSign, comment, user, promoCode)
+) : TransferNewBase(
+    from,
+    to,
+    tripTo,
+    transportTypeIds,
+    pax,
+    childSeatsInfant,
+    childSeatsConvertible,
+    childSeatsBooster,
+    passengerOfferedPrice,
+    nameSign,
+    comment,
+    user,
+    promoCode
+)
 
 class TransferHourlyNewModel(
     from: CityPointModel,
@@ -59,10 +74,72 @@ class TransferHourlyNewModel(
     user: UserModel,
     promoCode: String?,
     @SerializedName(TransferNewEntity.DURATION) @Expose val duration: Int
-) : TransferNewBase(from, null, tripTo, transportTypeIds, pax, childSeatsInfant, childSeatsConvertible, childSeatsBooster, passengerOfferedPrice, nameSign, comment, user, promoCode)
+) : TransferNewBase(
+    from,
+    null,
+    tripTo,
+    transportTypeIds,
+    pax,
+    childSeatsInfant,
+    childSeatsConvertible,
+    childSeatsBooster,
+    passengerOfferedPrice,
+    nameSign,
+    comment,
+    user,
+    promoCode
+)
 
 data class TripModel(
     @SerializedName(TripEntity.DATE) @Expose val date: String,
     @SerializedName(TripEntity.TIME) @Expose val time: String,
     @SerializedName(TripEntity.FLIGHT_NUMBER) @Expose val flight: String?
 )
+
+fun TripModel.map() = TripEntity(date, time, flight)
+
+fun TripEntity.map() = TripModel(date, time, flight)
+
+fun TransferNewEntity.map(): TransferNewBase {
+    return when (val type = dest) {
+        is DestDurationEntity -> this.map(type.duration)
+        is DestPointEntity    -> this.map(type.to)
+    }
+}
+
+@Suppress("MagicNumber")
+fun TransferNewEntity.map(duration: Int) =
+    TransferHourlyNewModel(
+        from.map(),
+        tripTo.map(),
+        transportTypeIds,
+        pax,
+        childSeatsInfant,
+        childSeatsConvertible,
+        childSeatsBooster,
+        passengerOfferedPrice?.let { it.toDouble() / 100 },
+        nameSign,
+        comment,
+        user.map(),
+        promoCode,
+        duration
+    )
+
+@Suppress("MagicNumber")
+fun TransferNewEntity.map(to: CityPointEntity) =
+    TransferPointToPointNewModel(
+        from.map(),
+        to.map(),
+        tripTo.map(),
+        tripReturn?.map(),
+        transportTypeIds,
+        pax,
+        childSeatsInfant,
+        childSeatsConvertible,
+        childSeatsBooster,
+        passengerOfferedPrice?.let { it.toDouble() / 100 },
+        nameSign,
+        comment,
+        user.map(),
+        promoCode
+    )

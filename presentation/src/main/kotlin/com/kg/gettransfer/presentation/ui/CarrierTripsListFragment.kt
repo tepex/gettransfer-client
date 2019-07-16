@@ -107,9 +107,11 @@ class CarrierTripsListFragment : MvpAppCompatFragment(), CarrierTripsListFragmen
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
-        Utils.showError(context!!, false, getString(R.string.err_server, e.message))
+        Utils.showError(context!!, false, "${getString(R.string.LNG_ERROR)}: ${e.message}")
     }
 
     override fun setError(e: DatabaseException) =
-            (activity as BaseView).setError(e)
+        (activity as BaseView).setError(e)
+
+    override fun setTransferNotFoundError(transferId: Long) {}
 }

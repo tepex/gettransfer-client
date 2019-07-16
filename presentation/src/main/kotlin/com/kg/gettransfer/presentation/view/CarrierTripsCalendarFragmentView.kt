@@ -7,5 +7,6 @@ import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface CarrierTripsCalendarFragmentView : BaseView {
     fun setCalendarIndicators(calendarItems: Map<String, List<CarrierTripBaseModel>>)
-    fun setItemsInRVDailyTrips(items: List<CarrierTripBaseModel>, selectedDate: String)
+    fun setItemsInRVDailyTrips(items: List<CarrierTripBaseModel>)
+    fun selectDate(selectedDate: String)
 }

@@ -8,19 +8,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:orientation="horizontal"
-        android:gravity="center"
-        >
-
-        <!--<TextView-->
-            <!--android:id="@+id/transportTypeItemName"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textColor="@color/colorTextBlack"-->
-            <!--android:fontFamily="@font/sf_pro_text_regular"-->
-            <!--android:textSize="@dimen/activity_transfer_details_text_size_17sp"-->
-            <!--android:text="Business"/>-->
+        android:gravity="center">
 
         <ImageView
             android:layout_width="@dimen/view_transport_capacity_img_passenger_width"
@@ -34,14 +23,14 @@
             android:textColor="@color/colorTextBlack"
             android:fontFamily="@font/sf_pro_text_regular"
             android:layout_marginStart="@dimen/view_transport_capacity_text_margin_start"
-            android:textSize="@dimen/activity_transfer_details_text_size_13sp"
+            android:textSize="@dimen/view_transport_capacity_text_size"
             android:text="x3"/>
 
         <ImageView
             android:layout_width="@dimen/view_transport_capacity_img_baggage_width"
             android:layout_height="@dimen/view_transport_capacity_img_baggage_height"
             app:srcCompat="@drawable/ic_baggage_small"
-            android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_img_baggage_margin_start"/>
+            android:layout_marginStart="@dimen/view_transport_capacity_img_baggage_margin_start"/>
 
         <TextView
             android:id="@+id/transportType_сountBaggage"
@@ -50,7 +39,7 @@
             android:layout_marginStart="@dimen/view_transport_capacity_text_margin_start"
             android:textColor="@color/colorTextBlack"
             android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="@dimen/activity_transfer_details_text_size_13sp"
+            android:textSize="@dimen/view_transport_capacity_text_size"
             android:text="x3"/>
 
     </LinearLayout>

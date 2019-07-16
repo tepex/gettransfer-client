@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutPopup"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/comment_dialog_max_height"
+    android:background="@drawable/back_top_rounded"
+    android:maxHeight="@dimen/comment_dialog_max_height"
+    android:minHeight="@dimen/comment_dialog_min_height">
+
+    <TextView
+        android:id="@+id/tvSend"
+        style="@style/sf_font_semi_bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="0dp"
+        android:padding="8dp"
+        android:text="@string/LNG_DONE"
+        android:textAllCaps="true"
+        android:textColor="@color/color_gtr_green"
+        android:textSize="14sp" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/scrollHints"
+        android:layout_below="@+id/tvSend">
+
+        <EditText
+            android:id="@+id/etComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@null"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:gravity="top"
+            android:hint="@string/LNG_COMMENT_PLACEHOLDER"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine"
+            android:textColor="@color/colorTextBlack"
+            android:textColorHint="@color/colorGrey"
+            android:textSize="@dimen/create_transfer_additionals_top_text_size" />
+    </android.support.v4.widget.NestedScrollView>
+
+    <HorizontalScrollView
+        android:id="@+id/scrollHints"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp">
+
+        <android.support.design.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:chipSpacing="8dp"
+            app:singleLine="true" />
+    </HorizontalScrollView>
+</RelativeLayout>

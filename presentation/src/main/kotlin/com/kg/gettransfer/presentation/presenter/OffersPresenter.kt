@@ -1,19 +1,18 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
+import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
-import com.kg.gettransfer.presentation.model.OfferItem
-import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
-import com.kg.gettransfer.presentation.model.CarrierModel
+import com.kg.gettransfer.presentation.model.OfferItemModel
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
@@ -21,10 +20,9 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.standalone.inject
-
-import timber.log.Timber
 import java.util.Date
+
+import org.koin.core.inject
 
 @InjectViewState
 class OffersPresenter : BasePresenter<OffersView>() {
@@ -35,6 +33,8 @@ class OffersPresenter : BasePresenter<OffersView>() {
             offerInteractor.lastTransferId = value
         }
 
+    private val paymentInteractor: PaymentInteractor by inject()
+
     private var transfer: Transfer? = null
     private var offers: List<OfferItem> = emptyList()
 
@@ -42,24 +42,24 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private var sortHigherToLower = false
     var isViewRoot: Boolean = false
 
-    @CallSuper
     override fun attachView(view: OffersView) {
         super.attachView(view)
-        Timber.d("OffersPresenter.attachView")
+        log.debug("OffersPresenter.attachView")
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
                     .also {
                         it.error?.let { e ->
-                            if (e.isNotFound())
-                                viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
+                            if (e.isNotFound()) viewState.setTransferNotFoundError(transferId)
                         }
 
                         it.hasData()?.let { transfer ->
-                            if (transfer.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE)
-                                routeToScreen()
+                            if (transfer.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE ||
+                                    (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_ACTIVE &&
+                                            transfer.paidPercentage > 0))
+                                checkIfNeedNewChain()
                             else {
-                                viewState.setTransfer(transferMapper.toView(transfer))
+                                viewState.setTransfer(transfer.map(systemInteractor.transportTypes.map { it.map() }))
                                 checkNewOffersSuspended(transfer)
                             }
                         }
@@ -68,12 +68,19 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
     }
 
-    private fun routeToScreen() {
-        if (isViewRoot) {
-            isViewRoot = false
-            router.newChain(Screens.Main(), Screens.Requests, Screens.Details(transferId))
-        }
+    private fun checkIfNeedNewChain() {
+        if (isViewRoot)
+            routeForward()
         else router.exit()
+    }
+
+    private fun routeForward() {
+        isViewRoot = false
+        router.newChain(
+                Screens.MainPassenger(),
+                Screens.Requests,
+                Screens.Details(transferId)
+        )
     }
 
     fun checkNewOffers() {
@@ -82,42 +89,32 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private suspend fun checkNewOffersSuspended(transfer: Transfer) {
         this.transfer = transfer
-        val checkNewOffers = checkNewOffers(transfer.offersUpdatedAt, transfer.lastOffersUpdatedAt)
-        fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) { offerInteractor.getOffers(transfer.id, !checkNewOffers) }
+        fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) { offerInteractor.getOffers(transfer.id) }
                 .also {
                     if (it.error == null && transfer.offersUpdatedAt != null) fetchResultOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
                     if (it.error != null && !it.fromCache) offers = emptyList()
                     else {
                         offers = mutableListOf<OfferItem>().apply {
-                            addAll(it.model.map { offer -> offerMapper.toView(offer) })
+                            addAll(it.model)
                             notificationManager.clearOffers(it.model.map { offer -> offer.id.toInt() })
-                            addAll(transferMapper.toView(transfer).bookNowOffers) }
+                            addAll(transfer.bookNowOffers) }
                     } }
         processOffers()
-    }
-
-    private fun checkNewOffers(offersUpdateAt: Date?, getLastOffersAt: Date?): Boolean {
-        if (offersUpdateAt == null) return false
-        return if (getLastOffersAt != null) {
-            offersUpdateAt.after(getLastOffersAt)
-        } else {
-            true
-        }
     }
 
     override fun onNewOffer(offer: Offer): OfferModel {
         val offerModel = super.onNewOffer(offer)
         if (transferId != offer.transferId) return offerModel
-        if (!checkDuplicated(offerModel))
-            offers = offers.toMutableList().apply { add(offerModel) }
+        if (!checkDuplicated(offer))
+            offers = offers.toMutableList().apply { add(offer) }
         utils.launchSuspend { processOffers() }
         return offerModel
     }
 
-    private fun checkDuplicated(offer: OfferModel): Boolean {
+    private fun checkDuplicated(offer: Offer): Boolean {
         var duplicated = false
         offers.forEach {
-            if (it is OfferModel && it.id == offer.id) {
+            if (it is Offer && it.id == offer.id) {
                 offers = offers.toMutableList().apply { set(indexOf(it), offer) }
                 duplicated = true
             }
@@ -129,51 +126,33 @@ class OffersPresenter : BasePresenter<OffersView>() {
         router.navigateTo(Screens.Details(transferId))
     }
 
-    fun onSelectOfferClicked(offer: OfferItem, isShowingOfferDetails: Boolean) {
+    fun onSelectOfferClicked(offerItem: OfferItemModel, isShowingOfferDetails: Boolean) {
         transfer?.let {
             if (isShowingOfferDetails) {
-                viewState.showBottomSheetOfferDetails(offer)
-                logButtons(Analytics.OFFER_DETAILS)
+                viewState.showBottomSheetOfferDetails(offerItem)
+                analytics.logSingleEvent(Analytics.OFFER_DETAILS)
             } else {
-                logButtons(Analytics.OFFER_BOOK)
-                when(offer) {
-                    is OfferModel ->
-                        router.navigateTo(Screens.PaymentOffer(
-                                it.id,
-                                offer.id,
-                                it.dateRefund,
-                                it.paymentPercentages!!,
-                                null))
-                    is BookNowOfferModel ->
-                        router.navigateTo(Screens.PaymentOffer(
-                                it.id,
-                        null,
-                                it.dateRefund,
-                                it.paymentPercentages!!,
-                                offer.transportType.id.toString()))
+                analytics.logSingleEvent(Analytics.OFFER_BOOK)
+                paymentInteractor.selectedTransfer = transfer
+                paymentInteractor.selectedOffer = when (offerItem) {
+                    is OfferModel -> offers.filter { offer -> offer is Offer }.find { offer -> (offer as Offer).id == offerItem.id }
+                    is BookNowOfferModel -> offers.filter { offer -> offer is BookNowOffer }.find { offer -> (offer as BookNowOffer).transportType.id == offerItem.transportType.id }
                 }
+                viewState.blockInterface(true, true)
+                router.navigateTo(Screens.PaymentOffer())
             }
         }
     }
 
-    fun logButtons(event: String) {
-        analytics.logEventToFirebase(event, null)
-        analytics.logEventToYandex(event, null)
-    }
-
-    fun onCancelRequestClicked() {
-        viewState.showAlertCancelRequest()
-    }
-
     override fun onBackCommandClick() {
         if (isViewRoot)
-            router.navigateTo(Screens.Main()).also { isViewRoot = false }
+            router.newRootScreen(Screens.MainPassenger(true)).also { isViewRoot = false }
         else super.onBackCommandClick()
     }
 
     fun cancelRequest(isCancel: Boolean) {
         if (!isCancel) return
-        logButtons(Analytics.CANCEL_TRANSFER_BTN)
+        analytics.logSingleEvent(Analytics.CANCEL_TRANSFER_BTN)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResult (withCacheCheck = false) { transferInteractor.cancelTransfer(transferId, "") }
@@ -201,7 +180,12 @@ class OffersPresenter : BasePresenter<OffersView>() {
             val countNewOffers = (mapCountNewOffers[transferId] ?: 0) - (mapCountViewedOffers[transferId] ?: 0)
             if (countNewOffers > 0) increaseViewedOffersCounter(transferId, countNewOffers)
         }
-        viewState.setOffers(offers)
+        viewState.setOffers(offers.map {
+            when (it) {
+                is Offer -> offerMapper.toView(it)
+                is BookNowOffer -> it.map()
+            }
+        })
         viewState.setSortState(sortCategory, sortHigherToLower)
     }
 
@@ -212,7 +196,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 sortType = if (sortHigherToLower) SortType.YEAR_DESC else SortType.YEAR_ASC
                 offers.sortedWith(compareBy {
                     when (it) {
-                        is OfferModel -> it.vehicle.year
+                        is Offer -> it.vehicle.year
                         else -> 0
                     }
                 })
@@ -221,7 +205,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 sortType = if (sortHigherToLower) SortType.RATING_DESC else SortType.RATING_ASC
                 offers.sortedWith(compareBy {
                     when (it) {
-                        is OfferModel -> it.ratings?.average
+                        is Offer -> it.ratings?.average
                         else -> 0
                     }
                 })
@@ -230,33 +214,15 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 sortType = if (sortHigherToLower) SortType.PRICE_DESC else SortType.PRICE_ASC
                 offers.sortedWith(compareBy {
                     when (it) {
-                        is OfferModel -> it.price.amount
-                        is BookNowOfferModel -> it.amount
+                        is Offer-> it.price.amount
+                        is BookNowOffer -> it.amount
                     }
                 })
             }
         }
         if (sortHigherToLower) offers = offers.reversed()
-        logFilterEvent(sortType)
+        analytics.logEvent(Analytics.EVENT_OFFERS, Analytics.PARAM_KEY_FILTER, sortType.name.toLowerCase())
     }
-
-    private fun logFilterEvent(sortType: SortType) {
-        val map = mutableMapOf<String, Any>()
-        val value = sortType.name.toLowerCase()
-        map[Analytics.PARAM_KEY_FILTER] = value
-
-        analytics.logEvent(Analytics.EVENT_OFFERS, createStringBundle(Analytics.PARAM_KEY_FILTER, value), map)
-    }
-
-    fun hasAnyRate(carrier: CarrierModel) =
-            with(carrier.ratings) {
-                return@with (driver != null && driver != NO_RATE) ||
-                        (vehicle != null && vehicle != NO_RATE) ||
-                        (fair != null && fair != NO_RATE) ||
-                        carrier.approved
-
-
-            }
 
     fun updateBanners() {
         viewState.setBannersVisible(offers.isNotEmpty())
@@ -266,9 +232,5 @@ class OffersPresenter : BasePresenter<OffersView>() {
         RATING_ASC, RATING_DESC,
         PRICE_ASC, PRICE_DESC,
         YEAR_ASC, YEAR_DESC;
-    }
-
-    companion object {
-        const val NO_RATE = 0f
     }
 }

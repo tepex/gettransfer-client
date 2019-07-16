@@ -17,3 +17,7 @@ data class MessageCached(
     @ColumnInfo(name = MessageEntity.TEXT)           val text: String,
     @ColumnInfo(name = MessageEntity.SEND_AT)        val sendAt: Long? = null
 )
+
+fun MessageCached.map() = MessageEntity(id, accountId, transferId, createdAt, readAt, text, sendAt)
+
+fun MessageEntity.map() = MessageCached(id, accountId, transferId, createdAt, readAt, text, sendAt)

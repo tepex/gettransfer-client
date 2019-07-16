@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -31,6 +32,8 @@ import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.activity_carrier_trips_main.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
 import java.lang.IllegalStateException
 
@@ -40,6 +43,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
 
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
+    private var isServiceStart = false
 
     @ProvidePresenter
     fun createCarrierTripsMainPresenter() = CarrierTripsMainPresenter()
@@ -90,11 +94,30 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         setViewColor((toolbar as Toolbar), R.color.colorWhite)
         initNavigation()
         try {
-            startCoordinateService()
+            checkPermission()
         } catch (e: IllegalStateException) {
             Timber.e("Unexpected start of Coordiante service in ${this::class.java.name}")
         }
     }
+
+    @AfterPermissionGranted(RC_LOCATION)
+    private fun checkPermission() {
+        if (!EasyPermissions.hasPermissions(this, *PERMISSIONS))
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.LNG_LOCATION_ACCESS),
+                    RC_LOCATION, *PERMISSIONS)
+        else {
+            presenter.initGoogleApiClient()
+            startCoordinateService()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
 
     @CallSuper
     protected override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -105,7 +128,11 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
     @CallSuper
     override fun onDestroy() {
         super.onDestroy()
-        stopCoordinateService()
+        if (isServiceStart) {
+            isServiceStart = false
+            stopCoordinateService()
+            presenter.disconnectGoogleApiClient()
+        }
     }
 
     @CallSuper
@@ -145,12 +172,6 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
             navPassengerMode.setOnClickListener    (it)
             navCarrierTransfers.setOnClickListener (it)
         }
-
-    //    setViewColor(navViewHeader, R.color.colorWhite)
-    //    setViewColor(layoutAccountInfo, R.color.primaryDriver)
-//        navViewHeader.navHeaderMode.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-//        navViewHeader.navHeaderName.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
-//        navViewHeader.navHeaderEmail.setTextColor(ContextCompat.getColor(this, R.color.colorWhite))
     }
 
     override fun initNavigation(profile: ProfileModel) {
@@ -212,8 +233,6 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
         }
     }
 
-    /* Service */
-
     private val connectionService = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {}
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {}
@@ -225,6 +244,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
             startService(it)
             bindService(it, connectionService, Context.BIND_AUTO_CREATE)
         }
+        isServiceStart = true
     }
 
     private fun stopCoordinateService() {
@@ -238,5 +258,7 @@ class CarrierTripsMainActivity : BaseActivity(), CarrierTripsMainView {
     companion object {
         const val SERVICE_ACTION = "com.kg.gettransfer.service.CoordinateService"
         const val PACKAGE        = "com.kg.gettransfer"
+        val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        const val RC_LOCATION = 100
     }
 }

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="ic_launcher_background">#F9DB4B</color>
+
     <color name="colorPrimary">#ff6900</color>
     <color name="colorPrimaryDark">#ffffff</color>
     <color name="colorAccent">#216edd</color>
     <color name="colorYellow">#fffedb06</color>
     <color name="colorGreen">#98b71b</color>
     <color name="book_btn">#31b700</color>
+    <color name="book_btn_pressed">#2CA400</color>
     <color name="colorRed">#FF3B30</color>
     <color name="colorSplash">@color/color_gtr_orange</color>
     <color name="primaryDriver">#ff6900</color>

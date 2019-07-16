@@ -59,22 +59,13 @@
         <include
             android:id="@+id/view_rate_ride"
             layout="@layout/view_rate_your_transfer"
-            android:visibility="gone"
-            />
+            android:visibility="gone"/>
 
         <include
             android:id="@+id/yourRateMark"
             layout="@layout/view_your_rate_mark"
             android:visibility="gone"
-            />
-
-        <include
-            android:id="@+id/yourComment"
-            layout="@layout/view_your_comment"
-            android:visibility="gone"
-
-            tools:visibility="visible"
-            />
+            tools:visibility="visible"/>
 
         <ProgressBar
             android:id="@+id/pbYourData"
@@ -85,14 +76,12 @@
             android:indeterminate="true"
             android:indeterminateDrawable="@drawable/progress_rotate"
             android:indeterminateDuration="1200"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <include
             android:id="@+id/thanks_for_rate"
             layout="@layout/view_thanks_for_rate_small"
-            android:visibility="gone"
-           />
+            android:visibility="gone" />
 
 
         <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
@@ -111,6 +100,18 @@
         <include
             android:id="@+id/layoutAboutDriver"
             layout="@layout/view_transfer_details_about_driver"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <include
+            android:id="@+id/layoutVoucher"
+            android:visibility="gone"
+            tools:visibility="visible"
+            layout="@layout/transfer_details_voucher"/>
+
+        <include
+            android:id="@+id/comment_view"
+            layout="@layout/view_transfer_details_comment"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -134,12 +135,6 @@
                 android:layout_marginEnd="16dp" />
 
         </RelativeLayout>
-
-        <include
-            android:id="@+id/comment_view"
-            layout="@layout/view_transfer_details_comment"
-            android:visibility="gone"
-            tools:visibility="visible" />
 
         <include
             android:id="@+id/layoutAboutRequest"

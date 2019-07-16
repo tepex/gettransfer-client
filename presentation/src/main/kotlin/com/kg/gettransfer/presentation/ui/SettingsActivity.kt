@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
+import android.view.MotionEvent
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
@@ -21,17 +23,24 @@ import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
+
+import java.util.Locale
+
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_communication_button.*
 import kotlinx.android.synthetic.main.view_settings_field_picker.view.*
 import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
-import java.lang.UnsupportedOperationException
+
+import timber.log.Timber
 
 class SettingsActivity : BaseActivity(), SettingsView {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
+
+    private var count = 0
+    private var startMillis = 0L
 
     @ProvidePresenter
     fun createSettingsPresenter() = SettingsPresenter()
@@ -58,7 +67,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 presenter.showingFragment = showingView
                 when (showingView) {
                     SettingsPresenter.CURRENCIES_VIEW -> add(R.id.currenciesFragment, SelectCurrencyFragment())
-                    SettingsPresenter.PASSWORD_VIEW   -> add(R.id.currenciesFragment, ChangePasswordFragment())
+                    //SettingsPresenter.PASSWORD_VIEW   -> add(R.id.currenciesFragment, ChangePasswordFragment())
                     else -> throw UnsupportedOperationException()
                 }
                 /*add(R.id.currenciesFragment, when(showingView){
@@ -71,7 +80,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 presenter.showingFragment = null
                 supportFragmentManager.fragments.firstOrNull()?.let { remove(it) }
             }
-        }?.commit()
+        }?.commitAllowingStateLoss()
         setTitleText(showingView)
     }
 
@@ -84,7 +93,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     private fun setTitleText(showingView: Int) {
         toolbar.toolbar_title.text = getString(when (showingView) {
-            SettingsPresenter.PASSWORD_VIEW   -> R.string.LNG_LOGIN_PASSWORD_SECTION
+            //SettingsPresenter.PASSWORD_VIEW   -> R.string.LNG_LOGIN_PASSWORD_SECTION
             SettingsPresenter.CURRENCIES_VIEW -> R.string.LNG_CURRENCIES_CHOOSE
             else -> R.string.LNG_MENU_TITLE_SETTINGS
         })
@@ -92,17 +101,23 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun initGeneralSettingsLayout() {
+        Timber.d("current locale: ${Locale.getDefault()}")
         settingsCurrency.setOnClickListener { presenter.onCurrencyClicked() }
         settingsBtnLogout.setOnClickListener { presenter.onLogout() }
         settingsBtnSupport.setOnClickListener { presenter.sendEmail(null, null) }
     }
 
-    override fun initLoggedInUserSettings(profile: ProfileModel) {
+    /*override fun initLoggedInUserSettings(profile: ProfileModel) {
         profile.phone?.let { initInfoField(it, settingsUserPhone) }
         profile.email?.let { initInfoField(it, settingsUserEmail) }
 
         settingsUserPassword.isVisible = true
         settingsUserPassword.setOnClickListener { presenter.onPasswordClicked() }
+    }*/
+
+    override fun initProfileField() {
+        settingsProfile.isVisible = true
+        settingsProfile.setOnClickListener { presenter.onProfileFieldClicked() }
     }
 
     private fun initInfoField(text: String, field: SettingsFieldPicker){
@@ -133,12 +148,16 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
-    override fun initDebugLayout() {
+    override fun showDebugMenu() {
         layoutDebugSettings.isVisible = true
         settingsLogs.setOnClickListener { presenter.onLogsClicked() }
         settingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
         settingsResetRate.setOnClickListener { presenter.onResetRateClicked() }
         settingsClearAccessToken.setOnClickListener { presenter.onClearAccessTokenClicked() }
+    }
+
+    override fun hideDebugMenu() {
+        layoutDebugSettings.isVisible = false
     }
 
     override fun setDistanceUnit(inMiles: Boolean) {
@@ -159,7 +178,9 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun setEmailNotifications(enabled: Boolean) {
+        settingsEmailNotif.isVisible = true
         with(settingsEmailNotif) {
+            isVisible = true
             setOnClickListener {
                 with(it.switch_button) {
                     isChecked = !isChecked
@@ -183,22 +204,16 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
-    /*override fun setCurrencies(currencies: List<CurrencyModel>) =
-            Utils.setCurrenciesDialogListener(this, settingsCurrency, currencies) { presenter.changeCurrency(it) }*/
-
     override fun setLocales(locales: List<LocaleModel>) =
-            Utils.setLocalesDialogListener(this, settingsLanguage, locales) {
-                localeManager.updateResources(this, presenter.changeLocale(it))
-            }
-
-    /*override fun setDistanceUnits(distanceUnits: List<DistanceUnitModel>) =
-            Utils.setDistanceUnitsDialogListener(this, layoutSettingsDistanceUnits, distanceUnits) { presenter.changeDistanceUnit(it) }*/
+        Utils.setLocalesDialogListener(this, settingsLanguage, locales) {
+            localeManager.updateResources(this, presenter.changeLocale(it))
+        }
 
     override fun setDaysOfWeek(daysOfWeek: List<CharSequence>) =
-            Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { presenter.changeFirstDayOfWeek(it) }
+        Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { presenter.changeFirstDayOfWeek(it) }
 
     override fun setEndpoints(endpoints: List<EndpointModel>) =
-            Utils.setEndpointsDialogListener(this, settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
+        Utils.setEndpointsDialogListener(this, settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
 
     override fun setCurrency(currency: String) { settingsCurrency.field_text.text = currency }
 
@@ -210,10 +225,14 @@ class SettingsActivity : BaseActivity(), SettingsView {
             compoundDrawablePadding = Utils.dpToPxInt(this@SettingsActivity, 8f)
         }
     }
-    /*override fun setDistanceUnit(distanceUnit: String) { tvSelectedDistanceUnits.text = distanceUnit }*/
+
     override fun setFirstDayOfWeek(dayOfWeek: String) { settingsFirstDayOfWeek.field_text.text = dayOfWeek }
+
     override fun setEndpoint(endpoint: EndpointModel)  { settingsEndpoint.field_text.text = endpoint.name }
-    override fun setCalendarMode(calendarModeKey: String) { settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey) }
+
+    override fun setCalendarMode(calendarModeKey: String) {
+        settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey)
+    }
 
     override fun setLogoutButtonEnabled(enabled: Boolean) {
         layoutSettingsBtnLogout.isVisible = enabled
@@ -230,10 +249,35 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     override fun onBackPressed() { presenter.onBackCommandClick() }
 
-    private fun getCalendarModeName(calendarModeKey: String) =
-            when (calendarModeKey) {
-                Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR -> getString(R.string.LNG_CALENDAR)
-                Screens.CARRIER_TRIPS_TYPE_VIEW_LIST -> getString(R.string.LNG_LIST)
-                else -> throw UnsupportedOperationException()
+    private fun getCalendarModeName(calendarModeKey: String) = when (calendarModeKey) {
+        Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR -> getString(R.string.LNG_CALENDAR)
+        Screens.CARRIER_TRIPS_TYPE_VIEW_LIST -> getString(R.string.LNG_LIST)
+        else -> throw UnsupportedOperationException()
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        if (event?.action == MotionEvent.ACTION_UP) {
+            val time = System.currentTimeMillis()
+
+            //if it is the first time, or if it has been more than 3 seconds since the first tap
+            // (so it is like a new try), we reset everything
+            if (startMillis == 0L || (time - startMillis > TIME_FOR_DEBUG)) {
+                startMillis = time
+                count = 1
             }
+            //it is not the first, and it has been  less than 3 seconds since the first
+            else count++
+
+            if (count == COUNTS_FOR_DEBUG) {
+                count = 0
+                presenter.switchDebugSettings()
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
+
+    companion object {
+        private const val COUNTS_FOR_DEBUG = 7
+        private const val TIME_FOR_DEBUG = 3000L
+    }
 }

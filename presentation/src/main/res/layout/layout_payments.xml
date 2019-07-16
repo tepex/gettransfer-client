@@ -3,113 +3,175 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="16dp"
-    android:paddingEnd="0dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
 
-    <RadioButton
-        android:id="@+id/rbCard"
-        style="@style/sf_font"
+    <TextView
+        android:id="@+id/tvSelectPayment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/payment_radio_button_margin_start"
-        android:layout_marginTop="@dimen/payment_radio_button_margin_top"
-        android:button="@drawable/payment_selector"
-        android:checked="true"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:paddingStart="@dimen/payment_radio_button_padding_start"
-        android:paddingEnd="@dimen/payment_radio_button_padding_start"
-        android:text="@string/LNG_PAYMENT_METHOD_CARD"
-        android:textSize="13sp"
+        android:layout_marginTop="@dimen/payment_tvSelectPayment_margin_top"
+        android:text="@string/LNG_PAYMENT_METHOD"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/sf_font_pro_display_bold"/>
 
-    <ImageView
-        android:id="@+id/ivMasterCard"
-        android:layout_width="@dimen/payment_logo_card_width"
-        android:layout_height="@dimen/payment_logo_card_height"
-        app:layout_constraintBottom_toBottomOf="@+id/rbCard"
 
-        app:layout_constraintStart_toEndOf="@+id/rbCard"
-        app:layout_constraintTop_toTopOf="@+id/rbCard"
-        app:srcCompat="@drawable/ic_master_card" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutCard"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/payment_type_select_layout_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectPayment"
+        android:layout_marginTop="@dimen/payment_layout_card_margin_top"
+        android:paddingStart="@dimen/margin16"
+        android:paddingEnd="@dimen/margin16">
 
-    <ImageView
-        android:id="@+id/ivMaestro"
-        android:layout_width="@dimen/payment_logo_card_width"
-        android:layout_height="@dimen/payment_logo_card_height"
-        app:layout_constraintBottom_toBottomOf="@+id/ivMasterCard"
-        app:layout_constraintStart_toEndOf="@+id/ivMasterCard"
-        app:layout_constraintTop_toTopOf="@+id/ivMasterCard"
-        app:srcCompat="@drawable/ic_maestro" />
+        <RadioButton
+            android:id="@+id/rbCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/payment_selector"
+            android:checked="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <ImageView
-        android:id="@+id/ivVisa"
-        android:layout_width="@dimen/payment_logo_card_width"
-        android:layout_height="@dimen/payment_logo_card_height"
-        app:layout_constraintBottom_toBottomOf="@+id/ivMaestro"
-        app:layout_constraintStart_toEndOf="@+id/ivMaestro"
-        app:layout_constraintTop_toTopOf="@+id/ivMaestro"
-        app:srcCompat="@drawable/ic_visa" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/rbCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/margin16">
 
-    <ImageView
-        android:id="@+id/ivAmex"
-        android:layout_width="@dimen/payment_logo_card_width"
-        android:layout_height="@dimen/payment_logo_card_height"
-        app:layout_constraintBottom_toBottomOf="@+id/ivVisa"
-        app:layout_constraintStart_toEndOf="@+id/ivVisa"
-        app:layout_constraintTop_toTopOf="@+id/ivVisa"
-        app:srcCompat="@drawable/ic_amex" />
+            <ImageView
+                android:id="@+id/ivVisa"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/payment_logo_card_height"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/ic_visa"
+                tools:ignore="MissingConstraints" />
 
-    <ImageView
-        android:id="@+id/ivDiscover"
-        android:layout_width="@dimen/payment_logo_card_width"
-        android:layout_height="@dimen/payment_logo_card_height"
-        app:layout_constraintBottom_toBottomOf="@+id/ivAmex"
-        app:layout_constraintStart_toEndOf="@+id/ivAmex"
-        app:layout_constraintTop_toTopOf="@+id/ivAmex"
-        app:srcCompat="@drawable/ic_discover" />
+            <ImageView
+                android:id="@+id/ivMasterCard"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/payment_logo_card_height"
+                app:srcCompat="@drawable/ic_master_card"
+                app:layout_constraintStart_toEndOf="@+id/ivVisa"
+                app:layout_constraintEnd_toStartOf="@+id/ivAmex"
+                android:layout_weight="1"
+                tools:ignore="MissingConstraints" />
+
+            <ImageView
+                android:id="@+id/ivAmex"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/payment_logo_card_height"
+                app:srcCompat="@drawable/ic_amex"
+                app:layout_constraintStart_toEndOf="@+id/ivMasterCard"
+                app:layout_constraintEnd_toStartOf="@+id/ivDiscover"
+                android:layout_weight="1"
+                tools:ignore="MissingConstraints" />
+
+            <ImageView
+                android:id="@+id/ivDiscover"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/payment_logo_card_height"
+                app:srcCompat="@drawable/ic_discover"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_weight="1"
+                tools:ignore="MissingConstraints" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
     <View
-        android:id="@+id/divider2"
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/create_transfer_divider_height"
-        android:layout_marginStart="@dimen/divider_margin_start"
-        android:layout_marginTop="@dimen/payment_divider_margin_top"
-        android:layout_marginEnd="@dimen/divider_margin_end"
+        android:layout_marginStart="@dimen/margin16"
+        android:layout_marginEnd="@dimen/margin16"
         android:background="@color/create_order_fields_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rbCard" />
+        app:layout_constraintTop_toBottomOf="@+id/layoutCard" />
 
-    <RadioButton
-        android:id="@+id/rbPaypal"
-        style="@style/sf_font"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/payment_radio_button_margin_start"
-        android:layout_marginTop="@dimen/payment_radio_button_margin_top"
-        android:layout_marginBottom="@dimen/payment_radio_button_margin_bottom"
-        android:button="@drawable/payment_selector"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:paddingStart="@dimen/payment_radio_button_padding_start"
-        android:text="@string/LNG_PAYMENT_METHOD_PAYPAL"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutPaypal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/payment_type_select_layout_height"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        android:paddingStart="@dimen/margin16"
+        android:paddingEnd="@dimen/margin16">
 
-    <ImageView
-        android:id="@+id/ivPaypal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/rbPaypal"
-        app:layout_constraintLeft_toRightOf="@id/rbPaypal"
-        app:layout_constraintStart_toStartOf="@+id/ivMasterCard"
-        app:layout_constraintTop_toTopOf="@+id/rbPaypal"
-        app:srcCompat="@drawable/ic_paypal" />
+        <RadioButton
+            android:id="@+id/rbPaypal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/payment_selector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <ImageView
+            android:id="@+id/ivPaypal"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/payment_logo_card_height"
+            app:layout_constraintStart_toEndOf="@+id/rbPaypal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/margin16"
+            app:srcCompat="@drawable/ic_paypal" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layoutBalance"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/payment_type_select_layout_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutPaypal"
+        android:paddingStart="@dimen/margin16"
+        android:paddingEnd="@dimen/margin16"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/create_transfer_divider_height"
+            android:background="@color/create_order_fields_divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioButton
+            android:id="@+id/rbBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/payment_selector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/rbBalance"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/margin16"
+            android:text="@string/LNG_PAYMENT_FROM_BALANCE"
+            style="@style/sf_font_semi_bold_17_sp" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

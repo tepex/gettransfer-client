@@ -66,7 +66,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
         val layoutRes = setFragmentTransferListType()
         rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rvRequests.adapter = RequestsRVAdapter(layoutRes) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage) }
+        rvRequests.adapter = RequestsRVAdapter(layoutRes) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage, it.pendingPaymentId) }
         initClickListeners()
     }
 
@@ -123,9 +123,11 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}", e)
-        if(e.code != ApiException.NETWORK_ERROR) Utils.showError(context!!, false, getString(R.string.err_server, e.message))
+        if(e.code != ApiException.NETWORK_ERROR) Utils.showError(context!!, false, "${getString(R.string.LNG_ERROR)}: ${e.message}")
     }
 
     override fun setError(e: DatabaseException) =
-            (activity as BaseView).setError(e)
+        (activity as BaseView).setError(e)
+
+    override fun setTransferNotFoundError(transferId: Long) {}
 }

@@ -2,15 +2,15 @@ package com.kg.gettransfer.domain
 
 import com.kg.gettransfer.domain.model.Result
 
-import kotlinx.coroutines.*
-
 import java.io.IOException
 import java.util.concurrent.TimeoutException
+
+import kotlinx.coroutines.*
 
 /**
  * https://medium.com/@andrea.bresolin/playing-with-kotlin-in-android-coroutines-and-how-to-get-rid-of-the-callback-hell-a96e817c108b
  * Sequential code
- * 
+ *
  * val result1 = asyncAwait { ...do something asynchronous... }
  * val result2 = asyncAwait { ...do something asynchronous... }
  * processResults(result1, result2)
@@ -23,24 +23,32 @@ import java.util.concurrent.TimeoutException
  * root Job используем как предка для наших задач чтобы они не плодить безпризорщину.
  * В конце их всех удобно замочить одним ударом — прибив этого предка.
  */
-class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
+class AsyncUtils(private val cc: CoroutineContexts, root: Job) : CoroutineScope {
     companion object {
         suspend fun CoroutineScope.tryCatch(tryBlock: Task, catchBlock: TaskThrowable) {
-            try { tryBlock() }
-            catch(e: Throwable) { if(e !is CancellationException) catchBlock(e) else throw e }
+            try {
+                tryBlock()
+            } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+                if (e !is CancellationException) catchBlock(e) else throw e
+            }
         }
 
-        suspend fun CoroutineScope.tryCatchFinally(tryBlock: Task,
-                                                   catchBlock: TaskThrowable,
-                                                   finallyBlock: Task) {
+        suspend fun CoroutineScope.tryCatchFinally(tryBlock: Task, catchBlock: TaskThrowable, finallyBlock: Task) {
             var caughtThrowable: Throwable? = null
 
-            try { tryBlock() }
-            catch(e: TimeoutException) { catchBlock(e) }
-            catch(e: IOException) { catchBlock(e) }
-            catch(e: ApiException) { catchBlock(e) }
-            catch(e: CancellationException) { caughtThrowable = e }
-            finally { if(caughtThrowable is CancellationException) throw caughtThrowable else finallyBlock() }
+            try {
+                tryBlock()
+            } catch (e: TimeoutException) {
+                catchBlock(e)
+            } catch (e: IOException) {
+                catchBlock(e)
+            } catch (e: ApiException) {
+                catchBlock(e)
+            } catch (e: CancellationException) {
+                caughtThrowable = e
+            } finally {
+                if (caughtThrowable is CancellationException) throw caughtThrowable else finallyBlock()
+            }
         }
     }
 
@@ -48,12 +56,12 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job): CoroutineScope {
 
     @Synchronized
     fun launchSuspend(tryBlock: Task) = launch { tryBlock() }
-    
+
     @Synchronized
     fun <T> runAlien(task: TaskGeneric<T>) = launch {
         coroutineScope { async(context = cc.bg, block = task).await() }
     }
-/*    
+/*
     @Synchronized
     fun launchAsyncTryCatch(tryBlock: Task, catchBlock: TaskThrowable) = launch { tryCatch(tryBlock, catchBlock) }
 

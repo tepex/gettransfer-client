@@ -1,88 +1,97 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.interactor.PaymentInteractor
+import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.prefs.PreferencesImpl
+import com.kg.gettransfer.extensions.createStartChain
+import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.presentation.view.Screens
+import org.koin.core.inject
 
 @InjectViewState
 class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
+    private val paymentInteractor: PaymentInteractor by inject()
 
     fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) {
-        if (!isLoggedIn())
-            router.replaceScreen(Screens.LoginToPaymentOffer(transferId, offerId))
-        else {
-            utils.launchSuspend {
-
+        utils.launchSuspend {
+            if (!sessionInteractor.isInitialized) {
+                fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
+            }
+            if (!accountManager.isLoggedIn)
+                router.newChainFromMain(Screens.LoginToPaymentOffer(transferId, offerId))
+            else {
                 fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
                         .also {
                             it.error?.let { e ->
-                                if (e.isNotFound())
-                                    viewState.setError(ApiException(ApiException.NOT_FOUND, "Offer $offerId not found!"))
-                                router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE)) }
+                                if (e.isNotFound()) viewState.setTransferNotFoundError(transferId)
+                                router.replaceScreen(Screens.MainPassenger())
+                            }
 
                             it.isSuccess()?.let { transfer ->
-                                val transferModel = transferMapper.toView(transfer)
-                                router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
-                                router.navigateTo(Screens.PaymentOffer(
-                                        transferId, offerId, transferModel.dateRefund,
-                                        transferModel.paymentPercentages!!, bookNowTransportId))
+
+                                val offerItem: OfferItem? = when {
+                                    offerId != null -> {
+                                        fetchData(NO_CACHE_CHECK) {
+                                            offerInteractor.getOffers(transferId)
+                                        }?.find { offer -> offer.id == offerId }
+                                    }
+                                    bookNowTransportId != null -> transfer.bookNowOffers.find { offer -> offer.transportType.id.name == bookNowTransportId }
+                                    else -> null
+                                }
+
+                                offerItem?.let { offer ->
+                                    with(paymentInteractor) {
+                                        selectedTransfer = transfer
+                                        selectedOffer = offer
+                                    }
+                                    router.createStartChain(Screens.PaymentOffer())
+                                }
                             }
                         }
             }
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun openChat(chatId: String) {
 
     }
 
     fun openTransfer(transferId: Long) {
-        if (!isLoggedIn())
-            router.replaceScreen(Screens.LoginToGetOffers(transferId, ""))
-        else {
-            router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
-
-
-            utils.launchSuspend {
+        utils.launchSuspend {
+            if (!sessionInteractor.isInitialized) {
+                fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
+            }
+            if (!accountManager.isLoggedIn)
+                router.createStartChain(Screens.LoginToShowDetails(transferId))
+            else {
                 fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
                         .also {
                             it.error?.let { e ->
-                                if (e.isNotFound())
-                                    viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
+                                if (e.isNotFound()) viewState.setTransferNotFoundError(transferId)
                             }
 
                             it.isSuccess()?.let { t ->
                                 if (t.checkStatusCategory() == Transfer.STATUS_CATEGORY_CONFIRMED)
-                                    router.navigateTo(Screens.Details(transferId))
-                                else router.navigateTo(Screens.Offers(transferId))
+                                    router.createStartChain(Screens.Details(transferId))
+                                else router.createStartChain(Screens.Offers(transferId))
                             }
                         }
-
-
-//                val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
-//                if (transferResult.error != null) {
-//                    val err = transferResult.error!!
-//                    if (err.isNotFound()) {
-//                        viewState.setError(ApiException(ApiException.NOT_FOUND, "Transfer $transferId not found!"))
-//                    }
-//                } else {
-//                    if (transferResult.model.checkStatusCategory() == Transfer.STATUS_CATEGORY_CONFIRMED)
-//                        router.navigateTo(Screens.Details(transferId))
-//                    else router.navigateTo(Screens.Offers(transferId))
-//                }
             }
         }
     }
 
     fun rateTransfer(transferId: Long, rate: Int) {
-        if (!isLoggedIn()) router.replaceScreen(Screens.LoginToRateTransfer(transferId, rate))
-        else router.replaceScreen(Screens.Splash(transferId, rate, true))
+        utils.launchSuspend {
+            if (!sessionInteractor.isInitialized) {
+                fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
+            }
+            if (!accountManager.isLoggedIn) router.replaceScreen(Screens.LoginToRateTransfer(transferId, rate))
+            else router.newRootScreen(Screens.MainPassengerToRateTransfer(transferId, rate))
+        }
     }
 
-    private fun isLoggedIn() = sessionInteractor.userEmail != PreferencesImpl.INVALID_EMAIL
-
-    fun openMainScreen() = router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
+    fun openMainScreen() = router.replaceScreen(Screens.MainPassenger())
 }

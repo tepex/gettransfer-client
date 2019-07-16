@@ -1,5 +1,7 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.domain.model.ReviewRate
+
 data class ReviewRateEntity(
     val rateType: String,
     val value: Int
@@ -11,3 +13,5 @@ data class ReviewRateEntity(
         const val TOTAL_RATING   = "value"
     }
 }
+
+fun ReviewRate.map() = ReviewRateEntity(rateType.name.toLowerCase(), rateValue)

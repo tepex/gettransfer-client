@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
-import com.kg.gettransfer.presentation.model.OfferItem
+import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.offer_expanded.view.*
@@ -14,7 +15,7 @@ import kotlinx.android.synthetic.main.offer_expanded_no_photo.view.*
 import kotlinx.android.synthetic.main.offer_tiny.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 
-class OffersAdapter(private val offers: MutableList<OfferItem>,
+class OffersAdapter(private val offers: MutableList<OfferItemModel>,
                     private val clickHandler: OfferClickListener) : RecyclerView.Adapter<OffersAdapter.OfferItemViewHolder>() {
 
 
@@ -48,7 +49,7 @@ class OffersAdapter(private val offers: MutableList<OfferItem>,
     class OfferItemViewHolder(override val containerView: View) :
             RecyclerView.ViewHolder(containerView),
             LayoutContainer {
-        fun bindOffer(offerItem: OfferItem, clickListener: OfferClickListener) {
+        fun bindOffer(offerItem: OfferItemModel, clickListener: OfferClickListener) {
             with(containerView) {
                 when (itemViewType) {
                     OFFER_EXPANDED -> {
@@ -57,7 +58,7 @@ class OffersAdapter(private val offers: MutableList<OfferItem>,
                     }
                     OFFER_NO_PHOTO -> {
                         OfferItemBindDelegate.bindOfferNoPhoto(this, offerItem as OfferModel)
-                        containerView.offer_bottom_noPhoto.btn_book.setOnClickListener { clickListener(offerItem, false) }
+                        containerView.offer_bottom_noPhoto.btn_book.setThrottledClickListener { clickListener(offerItem, false) }
                         /*  set listener to view to open bottom sheet  */
                     }
                     else           -> {
@@ -69,8 +70,8 @@ class OffersAdapter(private val offers: MutableList<OfferItem>,
             }
         }
 
-        private fun hangListeners(bookView: View, initDetails: View, clickHandler: OfferClickListener, offerItem: OfferItem) {
-            bookView.setOnClickListener { clickHandler(offerItem, false) }
+        private fun hangListeners(bookView: View, initDetails: View, clickHandler: OfferClickListener, offerItem: OfferItemModel) {
+            bookView.setThrottledClickListener { clickHandler(offerItem, false) }
             initDetails.setOnClickListener { clickHandler(offerItem, true) }
         }
     }
@@ -98,4 +99,4 @@ class OffersAdapter(private val offers: MutableList<OfferItem>,
         }
     }
 }
-typealias OfferClickListener = (OfferItem, Boolean) -> Unit
+typealias OfferClickListener = (OfferItemModel, Boolean) -> Unit

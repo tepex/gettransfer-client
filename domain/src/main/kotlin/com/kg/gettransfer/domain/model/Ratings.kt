@@ -1,18 +1,19 @@
 package com.kg.gettransfer.domain.model
 
 data class Ratings(
-    val average: Float?,
-    val vehicle: Float?,
-    val driver: Float?,
-    val fair: Float?
+    private val hiddenAverage: Double?,
+    val vehicle: Double?,
+    val driver: Double?,
+    val communication: Double?
 ) {
 
-	val vehicleNn = vehicle ?: 0f
-	val driverNn = driver ?: 0f
-	val fairNn = fair ?: 0f
+    val average: Double
+        get() = hiddenAverage ?: listOfNotNull<Double>(vehicle, driver, communication).let {
+            if (it.isNotEmpty()) it.average() else NO_RATING }
 
-	val averageRating: Float
-		get() = average ?: (vehicleNn + driverNn + fairNn) / 3
-
+    companion object {
+        const val NO_RATING = 0.0
+        val EMPTY = Ratings(null, null, null, null)
+        val BOOK_NOW_RATING = Ratings(4.5, null, null, null)
+    }
 }
-

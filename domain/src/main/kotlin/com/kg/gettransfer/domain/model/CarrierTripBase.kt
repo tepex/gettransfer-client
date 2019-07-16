@@ -19,4 +19,25 @@ data class CarrierTripBase(
     val waterTaxi: Boolean,
     val price: String,
     val vehicle: VehicleInfo
-) : Entity()
+) : Entity {
+    companion object {
+        val EMPTY = CarrierTripBase(
+            id                    = 0,
+            transferId            = 0,
+            from                  = CityPoint.EMPTY,
+            to                    = CityPoint.EMPTY,
+            dateLocal             = Date(),
+            duration              = null,
+            distance              = null,
+            time                  = 0,
+            childSeats            = 0,
+            childSeatsInfant      = 0,
+            childSeatsConvertible = 0,
+            childSeatsBooster     = 0,
+            comment               = null,
+            waterTaxi             = false,
+            price                 = "",
+            vehicle               = VehicleInfo("", "")
+        )
+    }
+}

@@ -16,10 +16,9 @@ import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarGridAdapter
 import com.kg.gettransfer.presentation.adapter.ClickOnDateHandler
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
+import io.sentry.Sentry
 import kotlinx.android.synthetic.main.carrier_trips_calendar_month_fragment.*
 import org.koin.android.ext.android.inject
-import java.lang.UnsupportedOperationException
-import java.time.DayOfWeek
 import java.util.Calendar
 import java.util.Date
 
@@ -71,7 +70,6 @@ class CarrierTripsCalendarMonthFragment : Fragment() {
         val dayValueInCells = ArrayList<Date>()
         val mCal = cal.clone() as Calendar
         mCal.set(Calendar.DAY_OF_MONTH, 1)
-        println("FIRST_DAY_OF_WEEK = ${systemInteractor.firstDayOfWeek}")
         val firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) + getOffset()
         mCal.add(Calendar.DAY_OF_MONTH, -firstDayOfTheMonth)
         var i = 0
@@ -97,27 +95,15 @@ class CarrierTripsCalendarMonthFragment : Fragment() {
         val monthYear = SystemUtils.formatMonthYear(cal.time)
         monthAndYear?.text = monthYear.substring(0, 1).toUpperCase().plus(monthYear.substring(1))
         mAdapterCarrierTripsCalendar =
-            CarrierTripsCalendarGridAdapter(context!!, dayValueInCells, selectedDate, cal, calendarItems, listener)
+            CarrierTripsCalendarGridAdapter(context, dayValueInCells, selectedDate, cal, calendarItems, listener)
         gridViewCalendar?.adapter = mAdapterCarrierTripsCalendar
     }
 
-    private fun getOffsetToFirstDayOfWeek() =
-        when (systemInteractor.firstDayOfWeek) {
-            DayOfWeek.MONDAY.ordinal -> -1
-            DayOfWeek.TUESDAY.ordinal -> -2
-            DayOfWeek.WEDNESDAY.ordinal -> -3
-            DayOfWeek.THURSDAY.ordinal -> +3
-            DayOfWeek.FRIDAY.ordinal -> +2
-            DayOfWeek.SATURDAY.ordinal -> +1
-            DayOfWeek.SUNDAY.ordinal -> 0
-            else -> throw UnsupportedOperationException()
-        }
-
     private fun getOffset() =
         (GTDayOfWeek.getWeekDays().find { it.day == systemInteractor.firstDayOfWeek }
-            ?: GTDayOfWeek.getWeekDays().first()).getOffset()
+            ?: GTDayOfWeek.getWeekDays().first()).offset
 
     fun selectDate(selectedDate: String) {
-        mAdapterCarrierTripsCalendar!!.selectDate(selectedDate)
+        mAdapterCarrierTripsCalendar?.selectDate(selectedDate)
     }
 }

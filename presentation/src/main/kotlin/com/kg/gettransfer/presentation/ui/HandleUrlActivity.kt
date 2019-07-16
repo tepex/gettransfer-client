@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.webkit.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -14,12 +13,14 @@ import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
+import com.kg.gettransfer.utilities.GTDownloadManager.Companion.VOUCHERS_FOLDER
 import kotlinx.android.synthetic.main.activity_handle_url.*
 import org.jetbrains.anko.longToast
-import org.jetbrains.anko.toast
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.io.File
 
 class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.PermissionCallbacks,
         EasyPermissions.RationaleCallbacks {
@@ -115,19 +116,31 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
 
     private fun downloadVoucher(url: String) {
         webView.loadUrl(url)
-        webView.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
-            val request = DownloadManager.Request(Uri.parse(url)).apply {
-                allowScanningByMediaScanner()
-                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                setDestinationInExternalPublicDir(
-                        Environment.DIRECTORY_DOWNLOADS,
-                        URLUtil.guessFileName(url, contentDisposition, mimetype))
-            }
-            val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-            dm.enqueue(request)
-            longToast(getString(R.string.LNG_DOWNLOADING))
+        webView.setDownloadListener { _, _, contentDisposition, mimetype, _ ->
+            setupDownloadManager(url, contentDisposition, mimetype)
         }
     }
+
+    private fun setupDownloadManager(url: String, contentDisposition: String?, mimeType: String?) {
+        val folderName = getVouchersFolderName()
+        val fileName = URLUtil.guessFileName(url, contentDisposition, mimeType)
+
+        val request = DownloadManager.Request(Uri.parse(url)).apply {
+            allowScanningByMediaScanner()
+            setMimeType(mimeType)
+            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            setDestinationInExternalPublicDir(
+                    folderName,
+                    fileName)
+        }
+        val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        dm.enqueue(request)
+        longToast(getString(R.string.LNG_DOWNLOADING))
+    }
+
+    private fun getVouchersFolderName(): String
+            = getString(R.string.app_name) + File.separator + VOUCHERS_FOLDER
+
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         onPermissionDenied()
@@ -147,6 +160,7 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
     override fun onRationaleAccepted(requestCode: Int) {}
 
     private fun showWebView(url: String) {
+        splashLayout.isVisible = false
         webView.settings.javaScriptEnabled = true
         webView.setUserAgent()
         webView.webViewClient = object: WebViewClient() {

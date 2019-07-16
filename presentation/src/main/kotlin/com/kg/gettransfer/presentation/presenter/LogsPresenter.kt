@@ -4,7 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.presentation.view.LogsView
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 @InjectViewState
 class LogsPresenter : BasePresenter<LogsView>() {

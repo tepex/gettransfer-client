@@ -2,43 +2,39 @@ package com.kg.gettransfer
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.ProcessLifecycleOwner
-
-import android.content.Intent
-
 import android.os.Build
 
 import android.support.annotation.CallSuper
 import android.support.multidex.MultiDexApplication
+
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 
-import com.google.android.gms.tasks.OnCompleteListener
-
 import com.google.firebase.FirebaseApp
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 
 import com.kg.gettransfer.cache.cacheModule
 import com.kg.gettransfer.data.dataModule
 import com.kg.gettransfer.di.*
 import com.kg.gettransfer.presentation.FileLoggingTree
-import com.kg.gettransfer.remote.remoteMappersModule
+
 import com.kg.gettransfer.remote.remoteModule
 import com.kg.gettransfer.remote.socketModule
+
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
 
 import com.squareup.leakcanary.LeakCanary
 
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
+import com.yandex.metrica.push.YandexMetricaPush
+
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 
-import net.hockeyapp.android.CrashManager
-
-import org.koin.android.ext.android.startKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 import timber.log.Timber
 
@@ -58,22 +54,24 @@ class GTApplication : MultiDexApplication() {
             //DELETE CrashManager.register(this)
         }
         // Start Koin
-        startKoin(this, listOf(
-            ciceroneModule,
-            geoModule,
-            prefsModule,
-            loggingModule,
-            fileModule,
-            remoteMappersModule,
-            remoteModule,
-            cacheModule,
-            dataModule,
-            encryptModule,
-            domainModule,
-            mappersModule,
-            androidModule,
-            socketModule
-        ))
+        startKoin {
+            androidContext(this@GTApplication)
+            modules(listOf(
+                ciceroneModule,
+                geoModule,
+                prefsModule,
+                loggingModule,
+                fileModule,
+                remoteModule,
+                cacheModule,
+                dataModule,
+                encryptModule,
+                domainModule,
+                mappersModule,
+                androidModule,
+                socketModule
+            ))
+        }
 
         //setUpLeakCanary()
         setupFcm()
@@ -81,12 +79,15 @@ class GTApplication : MultiDexApplication() {
         setupSentry()
         setupAppsFlyer()
         Timber.plant(FileLoggingTree())
+        setupPushSdk()
 
         ProcessLifecycleOwner
                 .get()
                 .lifecycle
                 .addObserver(AppLifeCycleObserver(applicationContext))
     }
+
+    private fun setupPushSdk() = YandexMetricaPush.init(applicationContext)
 
     private fun setupAppsFlyer() {
         val conversionListener = object : AppsFlyerConversionListener {

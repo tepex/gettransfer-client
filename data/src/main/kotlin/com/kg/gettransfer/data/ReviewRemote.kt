@@ -2,7 +2,7 @@ package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.ReviewRateEntity
 
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 
 interface ReviewRemote : KoinComponent {
     suspend fun sendReview(id: Long, reviewRate: ReviewRateEntity)

@@ -11,8 +11,8 @@ import java.text.SimpleDateFormat
 
 import java.util.Date
 
-import org.koin.standalone.get
-import org.koin.standalone.KoinComponent
+import org.koin.core.get
+import org.koin.core.KoinComponent
 
 internal object SystemUtils : KoinComponent {
     private val systemInteractor = get<SystemInteractor>()

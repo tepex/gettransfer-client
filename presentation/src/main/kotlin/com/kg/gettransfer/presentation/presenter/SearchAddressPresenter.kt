@@ -11,7 +11,7 @@ import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
 
-import org.koin.standalone.inject
+import org.koin.core.inject
 
 import timber.log.Timber
 
@@ -36,15 +36,20 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
         }
 
         Timber.d("------ request list for prediction $prediction")
+        /*
         var latLonPair: Pair<Point, Point>? = null
         mBounds?.let {
             val nePoint = Point(it.northeast.latitude, it.northeast.longitude)
             val swPoint = Point(it.southwest.latitude, it.southwest.longitude)
             latLonPair = Pair(nePoint, swPoint)
         }
+        */
 
         utils.launchSuspend {
-            fetchData(checkLoginError = false) { orderInteractor.getAutocompletePredictions(prediction, latLonPair) }
+            fetchData(checkLoginError = false) {
+                //orderInteractor.getAutocompletePredictions(prediction, latLonPair)
+                orderInteractor.getAutoCompletePredictions(prediction)
+            }
                     ?.let {
                         lastResult = it
                         lastRequest = prediction

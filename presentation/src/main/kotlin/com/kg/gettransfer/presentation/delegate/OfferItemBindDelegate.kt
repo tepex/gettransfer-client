@@ -1,16 +1,31 @@
 package com.kg.gettransfer.presentation.delegate
 
-import android.util.TypedValue
 import android.view.View
+
 import android.widget.LinearLayout
 import android.widget.TextView
+
 import com.kg.gettransfer.R
+
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.strikeText
-import com.kg.gettransfer.presentation.mapper.TransportTypeMapper
-import com.kg.gettransfer.presentation.model.*
+
+import com.kg.gettransfer.domain.model.Money
+import com.kg.gettransfer.domain.model.Ratings
+import com.kg.gettransfer.extensions.toHalfEvenRoundedFloat
+
+import com.kg.gettransfer.presentation.model.OfferItemModel
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.BookNowOfferModel
+import com.kg.gettransfer.presentation.model.LocaleModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.getEmptyImageRes
+import com.kg.gettransfer.presentation.model.getImageRes
+import com.kg.gettransfer.presentation.model.getModelsRes
+
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
+
 import kotlinx.android.synthetic.main.offer_expanded.view.*
 import kotlinx.android.synthetic.main.offer_expanded_no_photo.view.*
 import kotlinx.android.synthetic.main.offer_tiny.view.*
@@ -24,7 +39,7 @@ import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 object OfferItemBindDelegate {
 
-    fun bindOfferExpanded(view: View, offer: OfferItem) =
+    fun bindOfferExpanded(view: View, offer: OfferItemModel) =
             when (offer) {
                 is OfferModel         -> bindOfferModel(offer, view)
                 is BookNowOfferModel  -> bindBookNow(offer, view)
@@ -32,9 +47,9 @@ object OfferItemBindDelegate {
 
     private fun bindOfferModel(offer: OfferModel, view: View) =
         with(view) {
-            tv_car_model.text =
-                    if (offer.vehicle.color != null) Utils.getVehicleNameWithColor(context, offer.vehicle.name, offer.vehicle.color)
-                    else offer.vehicle.name
+            tv_car_model.text = offer.vehicle.name
+            ivCarColor.isVisible = true
+            ivCarColor.setImageDrawable(offer.vehicle.color?.let { Utils.getCarColorFormRes(view.context, it) })
             tv_car_class.text = offer.vehicle.transportType.nameId?.let { context.getString(it) } ?: ""
             bindCapacity(offer_conditions.view_capacity, offer.vehicle.transportType)
             bindConveniences(offer_conditions.vehicle_conveniences, offer)
@@ -48,12 +63,12 @@ object OfferItemBindDelegate {
 
     private fun bindBookNow(offer: BookNowOfferModel, view: View) {
         with(view) {
-            tv_car_model.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
+            tv_car_model.text = context.getString(offer.transportType.id.getModelsRes())
             tv_car_class.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
             bindLanguages(singleLineContainer = driver_abilities.languages_container, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
-            bindRating(view_offer_rate, RatingsModel.BOOK_NOW_RATING).also { offer_rating_bg.isVisible = true }
+            bindRating(view_offer_rate, Ratings.BOOK_NOW_RATING).also { offer_rating_bg.isVisible = true }
             bindPrice(offer_bottom, offer.base)
-            Utils.bindMainOfferPhoto(imgOffer_mainPhoto, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
+            Utils.bindMainOfferPhoto(imgOffer_mainPhoto, view, resource = offer.transportType.id.getImageRes())
         }
     }
 
@@ -71,7 +86,7 @@ object OfferItemBindDelegate {
     }
 
 
-    fun bindOfferTiny(view: View, offer: OfferItem) {
+    fun bindOfferTiny(view: View, offer: OfferItemModel) {
         when (offer) {
             is OfferModel -> bindOfferModelTiny(view, offer)
             is BookNowOfferModel -> bindBookNowTiny(view, offer)
@@ -80,33 +95,59 @@ object OfferItemBindDelegate {
 
     private fun bindOfferModelTiny(view: View, offer: OfferModel) {
         with(view) {
-            tv_car_model_tiny.text =
-                    if (offer.vehicle.color != null) Utils.getVehicleNameWithColor(view.context, offer.vehicle.name, offer.vehicle.color)
-                    else offer.vehicle.name
-            tv_car_class_tiny.text = offer.vehicle.transportType.nameId?.let { context.getString(it) ?: "" }
-            offer.vehicle.photos.firstOrNull()
+            with(offer.vehicle) {
+                val yearStartIndex = name.indexOf(",")
+                tv_car_model_tiny.text = if (yearStartIndex > 0) name.substring(0, yearStartIndex) else name
+                tv_car_model_tiny.maxLines = 1
+
+                tv_car_year_tiny.text = year.toString()
+                tv_car_year_tiny.isVisible = true
+
+                with(iv_car_color_tiny) {
+                    if (color != null && photos.isEmpty()) {
+                        isVisible = true
+                        setImageDrawable(Utils.getCarColorFormRes(view.context, color))
+                    } else {
+                        isVisible = false
+                    }
+                }
+
+                tv_car_class_tiny.text = transportType.nameId?.let { context.getString(it) ?: "" }
+
+                photos.firstOrNull()
                     .also {
                         Utils.bindMainOfferPhoto(
-                                img_car_photo_tiny,
-                                view,
-                                path = it,
-                                resource = TransportTypeMapper.getEmptyImageById(offer.vehicle.transportType.id)
+                            img_car_photo_tiny,
+                            view,
+                            path = it,
+                            resource = offer.vehicle.transportType.id.getEmptyImageRes()
                         )
                     }
-            bindRating(view_rating_tiny, offer.carrier.ratings, offer.carrier.approved)
-            bindLanguages(multiLineContainer = languages_container_tiny, languages = offer.carrier.languages)
-            offer.price.withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
-            tv_price_final.text = offer.price.base.preferred ?: offer.price.base.def
+            }
+            with(offer.carrier) {
+                bindRating(view_rating_tiny, ratings, approved)
+                bindLanguages(multiLineContainer = languages_container_tiny, languages = languages)
+            }
+            with(offer.price) {
+                withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
+                tv_price_final.text = base.preferred ?: base.def
+            }
         }
     }
 
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) {
         with(view) {
-            tv_car_model_tiny.text = context.getString(TransportTypeMapper.getModelsById(offer.transportType.id))
-            tv_car_model_tiny.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.view_offer_book_now_title_text_size))
-            tv_car_class_tiny.text = offer.transportType.nameId?.let { context.getString(it) } ?: ""
-            Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = TransportTypeMapper.getImageById(offer.transportType.id))
-            bindRating(view_rating_tiny, RatingsModel.BOOK_NOW_RATING, true)
+            tv_car_model_tiny.text = context.getString(offer.transportType.id.getModelsRes())
+            tv_car_model_tiny.maxLines = 2
+
+            tv_car_year_tiny.isVisible = false
+            iv_car_color_tiny.isVisible = false
+
+            with(offer.transportType) {
+                tv_car_class_tiny.text = nameId?.let { context.getString(it) } ?: ""
+                Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = id.getImageRes())
+            }
+            bindRating(view_rating_tiny, Ratings.BOOK_NOW_RATING, true)
             bindLanguages(multiLineContainer = languages_container_tiny, languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
             offer.withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
             tv_price_final.text = offer.base.preferred ?: offer.base.def
@@ -135,32 +176,35 @@ object OfferItemBindDelegate {
                 /* imgGreen.isVisible = offer.green */
             }
 
-    internal fun bindRating(rateView: View, rating: RatingsModel, approved: Boolean = false): Boolean =
-            with(rateView) {
-                imgApproved.isVisible = approved
-                if (rating.average != null && rating.average != NO_RATING) {
-                    tv_drivers_rate.text  = rating.average.toString().replace(".", ",")
-                    tv_drivers_rate.isVisible = true
-                    imgStar.isVisible = true
-                    isVisible = true
-                    return@with RATE_SHOWN
-                }
-                isVisible = approved
-                return@with approved
+    internal fun bindRating(rateView: View, rating: Ratings, approved: Boolean = false): Boolean =
+        with(rateView) {
+            imgApproved.isVisible = approved
+            if (rating.average != Ratings.NO_RATING) {
+                tv_drivers_rate.text  = rating.average.toHalfEvenRoundedFloat().toString().replace(".", ",")
+                tv_drivers_rate.isVisible = true
+                imgStar.isVisible = true
+                isVisible = true
+                return@with RATE_SHOWN
             }
+            isVisible = approved
+            return@with approved
+        }
 
-    internal fun bindLanguages(singleLineContainer: LinearLayout? = null, multiLineContainer: LinearLayout? = null,
-                               languages: List<LocaleModel>, rowNumber: Int = LanguageDrawer.ITEM_COLUMNS) {
+    internal fun bindLanguages(
+        singleLineContainer: LinearLayout? = null,
+        multiLineContainer: LinearLayout? = null,
+        languages: List<LocaleModel>,
+        rowNumber: Int = LanguageDrawer.ITEM_COLUMNS
+    ) {
 
         if (singleLineContainer == null && multiLineContainer == null)
             throw IllegalArgumentException("One of containers must not be null in ${this::class.java.name}")
 
         if (singleLineContainer != null) LanguageDrawer.drawSingleLine(singleLineContainer, languages = languages)
         else LanguageDrawer.drawMultipleLine(multiLineContainer!!, languages = languages, rowNumber = rowNumber)
-
     }
 
-    private fun bindPrice(viewWithPrice: View, base: MoneyModel, withoutDiscount: MoneyModel? = null) =
+    private fun bindPrice(viewWithPrice: View, base: Money, withoutDiscount: Money? = null) =
             with(viewWithPrice) {
                 tv_current_price.text = base.preferred ?: base.def
                 withoutDiscount?.let {
@@ -169,6 +213,5 @@ object OfferItemBindDelegate {
                 }
             }
 
-    private const val NO_RATING  = 0.0F
     private const val RATE_SHOWN = true
 }

@@ -2,17 +2,17 @@ package com.kg.gettransfer.domain.model
 
 import java.util.Date
 
+/*
 
 
 
-
-/* Align to line:9 */
+ Align to line:9 */
 data class Transfer(
     override val id: Long,
     val createdAt: Date,
     val duration: Int?,
     val distance: Int?,
-    var status: Status,
+    val status: Status,
     val from: CityPoint,
     val to: CityPoint?,
     val dateToLocal: Date,
@@ -40,7 +40,7 @@ data class Transfer(
     val remainsToPay: Money?,
     val paidPercentage: Int,
     val watertaxi: Boolean,
-    val bookNowOffers: Map<TransportType.ID, BookNowOffer>,
+    val bookNowOffers: List<BookNowOffer>,
     val offersCount: Int,
 /* ================================================== */
     val relevantCarriersCount: Int,
@@ -58,10 +58,10 @@ data class Transfer(
     val airlineCard: String?,
     val paymentPercentages: List<Int>?,
     val unreadMessagesCount: Int,
-    var showOfferInfo: Boolean,
+    val showOfferInfo: Boolean,
     val lastOffersUpdatedAt: Date?
 
-) : Entity() {
+) : Entity {
 
     fun checkStatusCategory() = when (status) {
         Status.NEW       -> STATUS_CATEGORY_ACTIVE
@@ -93,10 +93,65 @@ data class Transfer(
         const val STATUS_CATEGORY_UNFINISHED = "unfinished_status"
         const val STATUS_CATEGORY_FINISHED   = "finished_status"
 
-        fun List<Transfer>.filterActive() = filter {
-            it.status == Status.NEW ||
-            it.status == Status.DRAFT ||
-            it.status == Status.PERFORMED
+        val EMPTY = Transfer(
+            id              = 0,
+            createdAt       = Date(),
+            duration        = null,
+            distance        = null,
+            status          = Transfer.Status.NEW,
+            from            = CityPoint.EMPTY,
+            to              = null,
+            dateToLocal     = Date(),
+            dateToTZ        = Date(),
+            dateReturnLocal = null,
+            dateReturnTZ    = null,
+            flightNumber    = null,
+/* ================================================== */
+            flightNumberReturn    = null,
+            transportTypeIds      = emptyList<TransportType.ID>(),
+            pax                   = 0,
+            bookNow               = null,
+            time                  = 0,
+            nameSign              = null,
+            comment               = null,
+            childSeats            = 0,
+            childSeatsInfant      = 0,
+            childSeatsConvertible = 0,
+/* ================================================== */
+            childSeatsBooster     = 0,
+            promoCode             = null,
+            passengerOfferedPrice = null,
+            price                 = null,
+            paidSum               = null,
+            remainsToPay          = null,
+            paidPercentage        = 0,
+            watertaxi             = false,
+            bookNowOffers         = emptyList<BookNowOffer>(),
+            offersCount           = 0,
+/* ================================================== */
+            relevantCarriersCount = 0,
+            offersUpdatedAt       = null,
+            dateRefund            = null,
+            paypalOnly            = null,
+            carrierMainPhone      = null,
+            pendingPaymentId      = null,
+            analyticsSent         = false,
+            rubPrice              = null,
+            refundedPrice         = null,
+            campaign              = null,
+/* ================================================== */
+            editableFields      = emptyList<String>(),
+            airlineCard         = null,
+            paymentPercentages  = emptyList<Int>(),
+            unreadMessagesCount = 0,
+            showOfferInfo       = false,
+            lastOffersUpdatedAt = null
+        )
+
+        fun List<Transfer>.filterActive() = filter { tr ->
+            tr.status == Status.NEW ||
+            tr.status == Status.DRAFT ||
+            tr.status == Status.PERFORMED
         }
 
         fun List<Transfer>.filterCompleted() = filter {
@@ -108,8 +163,6 @@ data class Transfer(
         }
 
         fun List<Transfer>.filterRateable() =
-                filterCompleted() +
-                        filter { it.status == Status.PERFORMED ||
-                                it.status == Status.PENDING_CONFIRMATION }
+            filterCompleted() + filter { it.status == Status.PENDING_CONFIRMATION }
     }
 }

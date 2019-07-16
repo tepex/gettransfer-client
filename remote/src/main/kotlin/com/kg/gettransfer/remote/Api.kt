@@ -1,36 +1,44 @@
+@file:Suppress("TooManyFunctions", "WildcardImport")
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.remote.model.*
-
 import kotlinx.coroutines.Deferred
-
+import okhttp3.ResponseBody
 import retrofit2.http.*
 
 interface Api {
     companion object {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
 
-        const val API_ACCESS_TOKEN       = "/api/access_token"
-        const val API_CONFIGS            = "/api/configs"
-        const val API_ACCOUNT            = "/api/account"
-        const val API_LOGIN              = "/api/login"
-        const val API_VERIFICATION_CODE  = "/api/account/verification_code"
-        const val API_ACCOUNT_LOGIN      = "/api/account/login"
-        const val API_ROUTE_INFO         = "/api/route_info"
-        const val API_CARRIER_TRIPS      = "/api/trips"
-        const val API_TRANSFERS          = "/api/transfers"
+        const val API_ACCESS_TOKEN = "/api/access_token"
+        const val API_CONFIGS = "/api/configs"
+        const val API_ACCOUNT = "/api/account"
+        const val API_LOGIN = "/api/login"
+        const val API_VERIFICATION_CODE = "/api/account/verification_code"
+        const val API_CODE_FOR_CHANGE_EMAIL = "/api/account/email_code"
+        const val API_CHANGE_EMAIL = "/api/account/change_email"
+        const val API_ACCOUNT_LOGIN = "/api/account/login"
+        const val API_ACCOUNT_REGISTER = "/api/account"
+        const val API_ROUTE_INFO = "/api/route_info"
+        const val API_CARRIER_TRIPS = "/api/trips"
+        const val API_TRANSFERS = "/api/transfers"
         const val API_CREATE_NEW_PAYMENT = "/api/payments"
-        const val API_PROMO              = "/api/promo_codes/search"
-        const val API_RATE_OFFER         = "/api/offers/rate"
-        const val API_FEEDBACK           = "/api/offers"
-        const val API_WEBPUSH_TOKENS     = "/api/webpush_tokens"
-        const val API_MESSAGES           = "/api/messages"
-        const val API_BRAINTREE_TOKEN    = "/payments/braintree/client_token"
-        const val API_BRAINTREE_CONFIRM  = "/payments/braintree/confirm"
+        const val API_PROMO = "/api/promo_codes/search"
+        const val API_RATE_OFFER = "/api/offers/rate"
+        const val API_FEEDBACK = "/api/offers"
+        const val API_WEBPUSH_TOKENS = "/api/webpush_tokens"
+        const val API_MESSAGES = "/api/messages"
+        const val API_BRAINTREE_TOKEN = "/payments/braintree/client_token"
+        const val API_BRAINTREE_CONFIRM = "/payments/braintree/confirm"
+        const val API_VOUCHER = "/api/transfers/voucher/"
 
-        const val MOBILE_CONFIGS         = "/mobile/mobile.conf"
+        const val MOBILE_CONFIGS = "/mobile/mobile.conf"
 
-        const val API_LOCATION           = "/json"
+        const val API_LOCATION = "/json"
+
+        /*Autocomplete & place*/
+        const val API_AUTOCOMPLETE  = "/api/address-lookup"
+        const val API_PLACE_DETAILS = "/api/place"
     }
 
     @GET(API_ACCESS_TOKEN)
@@ -52,27 +60,37 @@ interface Api {
     fun postAccount(@Body account: AccountModel): Deferred<ResponseModel<AccountWrapperModel>>
     */
 
-    @POST(API_LOGIN)
+    @POST(API_ACCOUNT_LOGIN)
     @FormUrlEncoded
     fun login(
-        @Field("email") email: String,
+        @Field("email") email: String?,
+        @Field("phone") phone: String?,
         @Field("password") password: String
     ): Deferred<ResponseModel<AccountModelWrapper>>
 
-    @POST(API_ACCOUNT_LOGIN)
-    @FormUrlEncoded
-    fun accountLogin(
-            @Field("email") email: String?,
-            @Field("phone") phone: String?,
-            @Field("password") password: String
+    @POST(API_ACCOUNT_REGISTER)
+    fun register(
+        @Body account: RegistrationAccountEntityWrapper
     ): Deferred<ResponseModel<AccountModelWrapper>>
 
     @GET(API_VERIFICATION_CODE)
     fun getVerificationCode(
-            @Query("email") email: String?,
-            @Query("phone") phone: String?
+        @Query("email") email: String?,
+        @Query("phone") phone: String?
     ): Deferred<ResponseModel<String?>>
 
+    @POST(API_CODE_FOR_CHANGE_EMAIL)
+    fun getCodeForChangeEmail(
+        @Query("new_email") email: String
+    ): Deferred<ResponseModel<String?>>
+
+    @POST(API_CHANGE_EMAIL)
+    fun changeEmail(
+        @Query("new_email") email: String,
+        @Query("code") code: String
+    ): Deferred<ResponseModel<String?>>
+
+    @Suppress("LongParameterList")
     @GET(API_ROUTE_INFO)
     fun getRouteInfo(
         @Query("points[]") points: Array<String>,
@@ -164,22 +182,22 @@ interface Api {
     ): Deferred<ResponseModel<String>>
 
     @GET(MOBILE_CONFIGS)
-    fun getMobileConfigs(): Deferred<MobileConfig>
+    fun getMobileConfigs(): Deferred<MobileConfigModel>
 
     @GET("$API_MESSAGES/{id}")
     fun getChat(
-            @Path("id") transferId: Long
+        @Path("id") transferId: Long
     ): Deferred<ResponseModel<ChatModel>>
 
     @POST("$API_MESSAGES/{id}")
     fun newMessage(
-            @Path("id") transferId: Long,
-            @Body message: MessageNewWrapperModel
+        @Path("id") transferId: Long,
+        @Body message: MessageNewWrapperModel
     ): Deferred<ResponseModel<MessageWrapperModel>>
 
     @POST("$API_MESSAGES/read/{id}")
     fun readMessage(
-            @Path("id") messageId: Long
+        @Path("id") messageId: Long
     ): Deferred<ResponseModel<MessageWrapperModel>>
 
     @GET(API_LOCATION)
@@ -191,6 +209,25 @@ interface Api {
     @POST(API_BRAINTREE_CONFIRM)
     @FormUrlEncoded
     fun confirmPaypal(
-            @Field("payment_id") paymentId: Long,
-            @Field("nonce") nonce: String) : Deferred<ResponseModel<PaymentStatusWrapperModel>>
+        @Field("payment_id") paymentId: Long,
+        @Field("nonce") nonce: String
+    ): Deferred<ResponseModel<PaymentStatusWrapperModel>>
+
+    /*Autocomplete*/
+    @GET(API_AUTOCOMPLETE)
+    fun getAutocompletePredictions(
+        @Query("query") query: String,
+        @Query("lang") lang: String
+    ): Deferred<AutocompletePredictionsModel>
+
+    @GET(API_PLACE_DETAILS)
+    fun getPlaceDetails(
+        @Query("place_id") placeId: String,
+        @Query("lang") lang: String
+    ): Deferred<PlaceDetailsResultModel>
+
+    @GET("$API_VOUCHER{id}")
+    fun downloadVoucher(
+        @Path("id") transferId: Long
+    ): Deferred<ResponseBody>
 }

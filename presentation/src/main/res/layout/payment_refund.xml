@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:paddingStart="@dimen/payment_layoutRefund_margins"
+    android:paddingEnd="@dimen/payment_layoutRefund_margins"
+
+    android:paddingBottom="@dimen/payment_layoutRefund_margins">
+
+    <ImageView
+        android:id="@+id/imgRefund"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/payment_imgRefund_margin_end"
+        app:srcCompat="@drawable/ic_check_green" />
+
+    <TextView
+        android:id="@+id/tvRefundDate"
+        style="@style/sf_font_pro_display_regular_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="@dimen/payment_text_size_14sp"
+        tools:text="Refund is available before 17 Oct 2018 at 15:30:00" />
+
+</LinearLayout>

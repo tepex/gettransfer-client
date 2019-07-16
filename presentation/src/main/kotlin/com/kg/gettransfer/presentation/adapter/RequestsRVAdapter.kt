@@ -2,16 +2,13 @@ package com.kg.gettransfer.presentation.adapter
 
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
-
 import android.view.View
 import android.view.ViewGroup
 import com.kg.gettransfer.domain.model.Transfer
-
 import com.kg.gettransfer.extensions.isVisible
-
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.ui.TransferRequestItem
-
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_request_info_enabled.*
 
@@ -26,9 +23,9 @@ class RequestsRVAdapter(
     override fun getItemCount() = transfers.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            RequestsRVAdapter.ViewHolder(
-                    TransferRequestItem(parent.context, layout).containerView
-            )
+        RequestsRVAdapter.ViewHolder(
+            TransferRequestItem(parent.context, layout).containerView
+        )
 
     override fun onBindViewHolder(holder: RequestsRVAdapter.ViewHolder, pos: Int) {
         val transfer = transfers[pos]
@@ -42,11 +39,14 @@ class RequestsRVAdapter(
         fun bind(item: TransferModel, eventsCount: Int, listener: ItemClickListener) = with(containerView) {
             (this as TransferRequestItem).setInfo(item)
             showEvents(item, eventsCount)
-            setOnClickListener { listener(item) }
+            setThrottledClickListener { listener(item) }
         }
 
         private fun showEvents(item: TransferModel, eventsCount: Int) {
-            if (eventsCount == 0 || (!item.showOfferInfo && item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE)) {
+            if (eventsCount == 0 ||
+                (!item.showOfferInfo && item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE) ||
+                item.isBookNow()
+            ) {
                 tvEventsCount.isVisible = false
             } else {
                 tvEventsCount.isVisible = true
@@ -55,10 +55,13 @@ class RequestsRVAdapter(
         }
     }
 
-    fun updateTransfers(tr: List<TransferModel>) {
+    fun updateTransfers(tr: List<TransferModel>, removeAll: Boolean = true) {
+        if (removeAll) transfers.clear()
         val start = transfers.size
         transfers.addAll(tr)
-        notifyItemRangeInserted(start, transfers.size)
+        if (removeAll)
+            notifyDataSetChanged()
+        else notifyItemRangeInserted(start, transfers.size)
     }
 
     fun updateEvents(eventsCount: Map<Long, Int>) {

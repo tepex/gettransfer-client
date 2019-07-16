@@ -103,7 +103,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         mvpDelegate.onAttach()
 
         presenter.mBounds = parent.mBounds
-//		if(isTo) addressField.requestFocus()
+// if(isTo) addressField.requestFocus()
         setClearButtonVisibility()
     }
 
@@ -197,4 +197,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         addressField.requestFocus()
         addressField.setSelection(addressField.text.length)
     }
+
+    override fun setTransferNotFoundError(transferId: Long) {}
 }

@@ -7,12 +7,13 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.view.PaypalConnectionView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
-import org.koin.standalone.inject
+import org.koin.core.inject
 import timber.log.Timber
 import java.util.Currency
 
@@ -42,9 +43,8 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
             if (offer == null) {
                 transfer?.let {
                     if (it.bookNowOffers.isNotEmpty()) {
-                        val filteredBookNow = it.bookNowOffers.filterKeys { it.toString() == bookNowTransportId }
-                        if (filteredBookNow.isNotEmpty()) {
-                            bookNowOffer = filteredBookNow.values.first()
+                        bookNowOffer = it.bookNowOffers.find { bookNowOffer ->
+                            bookNowOffer.transportType.id.name == bookNowTransportId
                         }
                     }
                 }
@@ -56,8 +56,7 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
     private suspend fun confirmPayment() {
         val result = utils.asyncAwait { paymentInteractor.confirmPaypal(paymentId, nonce) }
         if (result.error == null) {
-            if (result.model.success) showSuccessfulPayment()
-            else showFailedPayment()
+            if (result.model.isSuccess) showSuccessfulPayment() else showFailedPayment()
             viewState.blockInterface(false)
         } else {
             Timber.e(result.error!!)
@@ -71,12 +70,11 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
     private fun showFailedPayment() {
         router.exit()
         router.navigateTo(Screens.PaymentError(transferId))
-        logEvent(Analytics.RESULT_FAIL)
+        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {
-        router.replaceScreen(Screens.ChangeMode(Screens.PASSENGER_MODE))
-        router.navigateTo(Screens.PaymentSuccess(transferId, offerId))
+        router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
         logEventEcommercePurchase()
     }
 
@@ -87,8 +85,17 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
             transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
             else -> Analytics.TRIP_DESTINATION
         }
-        var price: Double = if (offer != null) offer!!.price.amount else bookNowOffer!!.amount
-        if (percentage == OfferModel.PRICE_30) price *= PaymentOfferPresenter.PRICE_30
+
+        var price = 0.0
+        if (offer != null) {
+            price = offer?.price?.amount ?: 0.0
+        } else if (bookNowOffer != null) {
+            price = bookNowOffer?.amount ?: 0.0
+        }
+
+        if (percentage == OfferModel.PRICE_30) {
+            price *= PaymentOfferPresenter.PRICE_30
+        }
 
         val purchase = analytics.EcommercePurchase(
                 transferId.toString(),
@@ -101,11 +108,5 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
                 sessionInteractor.currency.code,
                 price)
         purchase.sendAnalytics()
-    }
-
-    private fun logEvent(value: String) {
-        val map = mutableMapOf<String, Any>()
-        map[Analytics.STATUS] = value
-        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, createStringBundle(Analytics.STATUS, value), map)
     }
 }

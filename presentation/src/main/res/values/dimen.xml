@@ -21,7 +21,7 @@
 
 	<dimen name="transfer_start_end_sign_marker_text_size">14sp</dimen>
 	
-	<!--Main Activity, Fragments-->
+	<!--MainPassenger Activity, Fragments-->
 	<dimen name="switchers_vertical_margin">16dp</dimen>
 
 	<dimen name="internet_warning_horizontal_text_padding">12dp</dimen>
@@ -57,6 +57,7 @@
 	<dimen name="nav_header_mode_text_size">12sp</dimen>
     <dimen name="nav_header_account_info_layout_margin_top">2dp</dimen>
 	<dimen name="nav_header_account_info_layout_padding_top">6dp</dimen>
+	<dimen name="nav_header_padding_bottom">9dp</dimen>
 
 	<dimen name="nav_header_email_bottom">6dp</dimen>
 	<dimen name="nav_footer_title_text_size">12sp</dimen>
@@ -181,9 +182,30 @@
 	<dimen name="card_transfer_type_corner_radius_default">5dp</dimen>
 	<dimen name="card_transfer_type_elevation_default">2dp</dimen>
 	<dimen name="card_transfer_type_elevation">5dp</dimen>
+	<dimen name="card_transfer_type_width">112dp</dimen>
+	<dimen name="card_transfer_type_height">140dp</dimen>
+	<dimen name="card_transfer_type_margin">3dp</dimen>
+	<dimen name="card_transfer_type_ivPassanger_margin_top">9dp</dimen>
+	<dimen name="card_transfer_type_ivPassanger_width">11dp</dimen>
+	<dimen name="card_transfer_type_ivPassanger_height">10dp</dimen>
+	<dimen name="ivTransportInfo_width">13dp</dimen>
+	<dimen name="ivTransportInfo_height">13dp</dimen>
+	<dimen name="ivTransferType_height">35dp</dimen>
+	<dimen name="ivTransferType_width">95dp</dimen>
+	<dimen name="ivTransferType_margin_start">10dp</dimen>
+	<dimen name="ivTransferType_margin_end">10dp</dimen>
+	<dimen name="ivTransferType_margin_top">8dp</dimen>
+	<dimen name="cbTransferType_margin_start">10dp</dimen>
+	<dimen name="cbTransferType_margin_top">8dp</dimen>
+	<dimen name="cbTransferType_width">22dp</dimen>
+	<dimen name="cbTransferType_height">22dp</dimen>
+	<dimen name="tvCountBaggage_margin_start">2dp</dimen>
+	<dimen name="tvCountBaggage_margin_end">8dp</dimen>
 
-	<dimen name="transport_time_server_price_min_text_size">8sp</dimen>
+	<dimen name="transport_time_server_price_min_text_size">5sp</dimen>
 	<dimen name="transport_time_server_price_max_text_size">14sp</dimen>
+	<dimen name="transport__price_margin_top">5dp</dimen>
+	<dimen name="transport__price_margin_bottom">5dp</dimen>
 
 	<dimen name="circle_plus_height">35dp</dimen>
 	<dimen name="circle_minus_height">@dimen/circle_plus_height</dimen>
@@ -265,7 +287,10 @@
 
 	<!-- Transfer types -->
 	<dimen name="transfer_types_text_size">11sp</dimen>
-	<dimen name="transfer_types_title_text_size">9sp</dimen>
+	<dimen name="transfer_types_title_text_size">12sp</dimen>
+	<dimen name="transfer_types_title_min_text_size">5sp</dimen>
+	<dimen name="transfer_types_title_margin_start">5dp</dimen>
+	<dimen name="transfer_types_title_margin_end">10dp</dimen>
 	<dimen name="transfer_types_cost_title">12sp</dimen>
 	<dimen name="transfer_types_cost">14sp</dimen>
 	<dimen name="transfer_types_image_person_width">7dp</dimen>
@@ -346,11 +371,22 @@
 	<dimen name="view_transfer_details_transport_type_item_img_baggage_margin_start">6dp</dimen>
 	<dimen name="view_transfer_details_transport_type_item_img_baggage_width">10dp</dimen>
 	<dimen name="view_transfer_details_transport_type_item_img_baggage_height">9dp</dimen>
+
 	<dimen name="view_transport_capacity_img_passenger_width">10dp</dimen>
 	<dimen name="view_transport_capacity_img_passenger_height">12dp</dimen>
 	<dimen name="view_transport_capacity_img_baggage_width">13dp</dimen>
 	<dimen name="view_transport_capacity_img_baggage_height">12dp</dimen>
+	<dimen name="view_transport_capacity_img_baggage_margin_start">6dp</dimen>
 	<dimen name="view_transport_capacity_text_margin_start">4dp</dimen>
+	<dimen name="view_transport_capacity_text_size">13sp</dimen>
+
+	<dimen name="view_transport_capacity_small_img_passenger_width">7dp</dimen>
+	<dimen name="view_transport_capacity_small_img_passenger_height">9dp</dimen>
+	<dimen name="view_transport_capacity_small_img_baggage_width">10dp</dimen>
+	<dimen name="view_transport_capacity_small_img_baggage_height">9dp</dimen>
+	<dimen name="view_transport_capacity_small_img_baggage_margin_start">4dp</dimen>
+	<dimen name="view_transport_capacity_small_text_margin_start">2dp</dimen>
+	<dimen name="view_transport_capacity_small_text_size">11sp</dimen>
 
 	<dimen name="view_transfer_details_communicate_buttons_height">68dp</dimen>
 	<dimen name="view_transfer_details_communicate_buttons_padding_top">16dp</dimen>
@@ -603,21 +639,22 @@
 	<dimen name="offer_list_rv_padding">4dp</dimen>
 	<dimen name="card_view_margin_top_bottom">4dp</dimen>
 	<dimen name="card_view_margin_start_end">4dp</dimen>
-    <dimen name="card_view_padding_top_end">8dp</dimen>
+    <dimen name="card_view_padding_top">8dp</dimen>
+	<dimen name="card_view_padding_end">8dp</dimen>
     <dimen name="view_offer_car_model_margin_start_end">8dp</dimen>
     <dimen name="view_offer_price_no_discount_margin_end">8dp</dimen>
     <dimen name="view_offer_car_img_width">72dp</dimen>
     <dimen name="view_offer_car_img_height">40dp</dimen>
     <dimen name="view_offer_car_img_margin_top">2dp</dimen>
     <dimen name="view_offer_car_img_margin_start">-3dp</dimen>
-    <dimen name="view_offer_btn_book_width">104dp</dimen>
+    <dimen name="view_offer_btn_book_width">122dp</dimen>
     <dimen name="view_offer_btn_book_height">32dp</dimen>
     <dimen name="view_offer_btn_book_margin_top">6dp</dimen>
     <dimen name="view_offer_btn_book_margin_bottom">8dp</dimen>
     <dimen name="view_offer_car_info_margin_start">8dp</dimen>
     <dimen name="view_offer_languages_container_margin_start">8dp</dimen>
     <dimen name="view_offer_languages_container_margin_end">7dp</dimen>
-    <dimen name="view_offer_btn_book_text_size">14sp</dimen>
+    <dimen name="view_offer_btn_book_text_size">13sp</dimen>
 	<dimen name="view_offer_language_icon_width">12dp</dimen>
 	<dimen name="view_offer_language_icon_height">8dp</dimen>
 	<dimen name="view_offer_language_icon_start_end_margin">2dp</dimen>
@@ -625,13 +662,21 @@
 	<dimen name="view_offer_language_image_corner">3dp</dimen>
 	<dimen name="view_offer_book_now_title_text_size">9sp</dimen>
 	<dimen name="view_offer_photo_corner">8dp</dimen>
+	<dimen name="view_offer_text_car_name_height">24dp</dimen>
+	<dimen name="view_offer_text_car_name_min_size">9sp</dimen>
+	<dimen name="view_offer_text_car_name_max_size">14sp</dimen>
+	<dimen name="view_offer_text_car_name_step_size">1sp</dimen>
+	<dimen name="view_offer_img_car_color_size">8dp</dimen>
+	<dimen name="view_offer_img_car_color_margin_start">2dp</dimen>
+	<dimen name="view_offer_text_size_9sp">10sp</dimen>
     <dimen name="view_offer_text_size_10sp">10sp</dimen>
     <dimen name="view_offer_text_size_12sp">12sp</dimen>
-	<dimen name="view_offer_text_size_14sp">14sp</dimen>
     <dimen name="view_offer_text_size_15sp">15sp</dimen>
 
     <dimen name="view_offer_bs_btn_book_width">128dp</dimen>
     <dimen name="view_offer_bs_btn_book_height">32dp</dimen>
+    <dimen name="view_offer_bs_btn_book_margin_top">16dp</dimen>
+    <dimen name="view_offer_bs_btn_book_margin_bottom">16dp</dimen>
 
     <dimen name="view_offer_rating_text_size">12sp</dimen>
     <dimen name="view_offer_rating_img_size">12dp</dimen>
@@ -681,6 +726,7 @@
 	<dimen name="rounded_rectangle_margin_top">12dp</dimen>
 
 	<dimen name="toolbar_title_text_size">18sp</dimen>
+	<dimen name="toolbar_subtitle_text_size">12sp</dimen>
 	<dimen name="toolbar_nav_title_text_size">15sp</dimen>
 	<dimen name="toolbar_chat_driver_name_text_size">17sp</dimen>
 	<dimen name="toolbar_start_date_text_size">12sp</dimen>
@@ -694,10 +740,10 @@
 
 	<!--bottom_sheet_offer_details-->
 	<dimen name="bottom_sheet_offer_details_top_view_width">100dp</dimen>
-	<dimen name="bottom_sheet_offer_details_top_view_height">5dp</dimen>
+	<dimen name="bottom_sheet_offer_details_top_view_height">2dp</dimen>
 	<dimen name="bottom_sheet_offer_details_top_view_margin_top">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_elements_margin_start">14dp</dimen>
-	<dimen name="bottom_sheet_offer_details_text_size_17sp">17sp</dimen>
+	<dimen name="bottom_sheet_offer_details_text_size_17sp">15sp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_15sp">15sp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_14sp">14sp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_13sp">13sp</dimen>
@@ -731,8 +777,14 @@
 	<dimen name="bottom_sheet_offer_details_dimen1_margin_top">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_indicator_size">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_margin_16dp">16dp</dimen>
+	<dimen name="offer_car_color_margin_start">8dp</dimen>
+	<dimen name="offer_car_color_tiny_margin_bottom">4dp</dimen>
+	<dimen name="offer_car_color_margin_bottom">2dp</dimen>
+	<dimen name="bottom_sheet_offer_details_car_color_width">16dp</dimen>
+	<dimen name="bottom_sheet_offer_details_car_color_height">16dp</dimen>
+	<dimen name="bottom_sheet_offer_details_car_color_margin_top">11dp</dimen>
 	<dimen name="bottom_sheet_offer_details_padding_bottom">24dp</dimen>
-	<dimen name="bottom_sheet_offer_details_swipe_view_margin_top">25dp</dimen>
+	<dimen name="bottom_sheet_offer_details_swipe_view_margin_top">15dp</dimen>
 	<dimen name="bottom_sheet_offer_details_languages_container_margin_start">7dp</dimen>
 	<dimen name="bottom_sheet_offer_details_sv_photo_height">212dp</dimen>
 	<dimen name="bottom_sheet_offer_details_iv_offer_bs_booknow_height">225dp</dimen>
@@ -798,7 +850,7 @@
     <dimen name="activity_chat_not_my_message_date_text_margin">8dp</dimen>
 
 	<dimen name="activity_chat_transfer_info_text_size">12sp</dimen>
-	<dimen name="activity_chat_transfer_info_from_margin_start">16dp</dimen>
+	<dimen name="activity_chat_transfer_info_from_margin_start_end">16dp</dimen>
 	<dimen name="activity_chat_transfer_info_from_margin_top">9dp</dimen>
 	<dimen name="activity_chat_transfer_info_from_margin_end">8dp</dimen>
 	<dimen name="activity_chat_transfer_info_date_margin_top">3dp</dimen>
@@ -879,7 +931,7 @@
 	<!--vehicle_items-->
 	<dimen name="vehicle_items_margin_end">6dp</dimen>
 	<dimen name="vehicle_items_height">14dp</dimen>
-	<dimen name="vehicle_items_water_width">12dp</dimen>
+	<dimen name="vehicle_items_water_width">14dp</dimen>
 	<dimen name="vehicle_items_wifi_width">23dp</dimen>
 	<dimen name="vehicle_items_charge_width">12dp</dimen>
 	<dimen name="vehicle_items_green_width">16dp</dimen>
@@ -937,14 +989,21 @@
 	<dimen name="payment_radio_button_margin_start">8dp</dimen>
 	<dimen name="payment_rb_paypal_margin_start">25dp</dimen>
 	<dimen name="payment_radio_button_margin_end">16dp</dimen>
-	<dimen name="payment_radio_button_margin_top">21dp</dimen>
+	<dimen name="payment_radio_button_margin_top">33dp</dimen>
+	<dimen name="payment_tvSelectPayment_margin_top">16dp</dimen>
+	<dimen name="payment_tvSelectPayment_margin_start">8dp</dimen>
+	<dimen name="payment_tvSelectPayment_margin_end">5dp</dimen>
 	<dimen name="payment_radio_button_margin_bottom">21dp</dimen>
 	<dimen name="payment_radio_button_padding_start">5dp</dimen>
 	<dimen name="payment_radio_button_padding_end">5dp</dimen>
 	<dimen name="payment_layout_constraintGuide_begin">160dp</dimen>
 	<dimen name="payment_layout_constraintGuide_begin_payments">200dp</dimen>
+	<dimen name="payment_type_select_layout_height">64dp</dimen>
+	<dimen name="payment_layout_card_margin_top">12dp</dimen>
 	<dimen name="payment_logo_card_width">38dp</dimen>
-	<dimen name="payment_logo_card_height">30dp</dimen>
+	<dimen name="payment_logo_card_height">40dp</dimen>
+	<dimen name="payment_logo_card_margin_start">16dp</dimen>
+	<dimen name="payment_logo_card_margin_start2">24dp</dimen>
 	<dimen name="F">1dp</dimen>
 	<dimen name="payment_divider_margin_top">21dp</dimen>
 	<dimen name="payment_tvThirdOfPrice_margin_top">24dp</dimen>
@@ -957,36 +1016,134 @@
 	<dimen name="payment_offer_layout_margin_top">8dp</dimen>
 	<dimen name="payment_layout_prices_margin_top">16dp</dimen>
 	<dimen name="payment_layout_payments_margin_top">16dp</dimen>
-	<dimen name="payment_tvPriceInfo_margin_top">16dp</dimen>
-	<dimen name="payment_tvPriceInfo_padding_bottom">16dp</dimen>
+	<dimen name="payment_tvPriceInfo_margin_top">8dp</dimen>
+	<dimen name="payment_tvPriceInfo_padding_bottom">8dp</dimen>
 	<dimen name="payment_tvCommission_margin_top">16dp</dimen>
 	<dimen name="payment_tvCommission_margin_start">8dp</dimen>
 	<dimen name="payment_tvCommission_margin_end">8dp</dimen>
-	<dimen name="payment_tvPaymentAgreement_margin_top">8dp</dimen>
+	<dimen name="payment_tvPaymentAgreement_margin_top">2dp</dimen>
 	<dimen name="payment_tvPaymentAgreement_margin_start">8dp</dimen>
 	<dimen name="payment_tvPaymentAgreement_margin_end">8dp</dimen>
-	<dimen name="payment_button_pay_margin_top">24dp</dimen>
-	<dimen name="payment_button_pay_margin_start">24dp</dimen>
-	<dimen name="payment_button_pay_margin_end">24dp</dimen>
-	<dimen name="payment_button_pay_margin_bottom">24dp</dimen>
+	<dimen name="payment_button_pay_margin_top">16dp</dimen>
+	<dimen name="payment_button_pay_margin_start">30dp</dimen>
+	<dimen name="payment_button_pay_margin_end">30dp</dimen>
+	<dimen name="payment_button_pay_margin_bottom">16dp</dimen>
 	<dimen name="payment_offer_tiny_cardCornerRadius">8dp</dimen>
-	<dimen name="payment_offer_tiny_cardElevation">5dp</dimen>
+	<dimen name="payment_offer_tiny_cardElevation">10dp</dimen>
 	<dimen name="payment_offer_tiny_ivCarPhoto_width">130dp</dimen>
-	<dimen name="payment_offer_tiny_ivCarPhoto_height">75dp</dimen>
-	<dimen name="payment_offer_tiny_tvModel_margin_start">8dp</dimen>
-	<dimen name="payment_offer_tiny_tvModel_margin_end">8dp</dimen>
-	<dimen name="payment_offer_tiny_tvModel_margin_top">8dp</dimen>
+	<dimen name="payment_offer_tiny_ivCarPhoto_height">80dp</dimen>
+	<dimen name="payment_offer_tiny_tvModel_margins">8dp</dimen>
+	<dimen name="payment_offer_tiny_ivCarColor_margins">12dp</dimen>
 	<dimen name="payment_offer_tiny_tvClass_margin_top">3dp</dimen>
 	<dimen name="payment_offer_tiny_tvClass_margin_bottom">5dp</dimen>
 	<dimen name="payment_offer_tiny_tvClass_margin_end">8dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_bottom">5dp</dimen>
-	<dimen name="payment_offer_tiny_rating_margin_bottom">5dp</dimen>
+	<dimen name="payment_offer_tiny_rating_margin_top">6dp</dimen>
+	<dimen name="payment_offer_tiny_rating_margin_bottom">10dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_top">2dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_start">8dp</dimen>
+	<dimen name="payment_offer_tiny_capacity_margin_end">12dp</dimen>
 	<dimen name="payment_dialog_corner_radius">16dp</dimen>
+	<dimen name="payment_ivGtrBonus_layout_marginTop">16dp</dimen>
+	<dimen name="payment_ilAuthPhone_layout_marginTop">16dp</dimen>
+	<dimen name="payment_ll_auth_container_layout_paddingTop">8dp</dimen>
+	<dimen name="payment_divider_height">1dp</dimen>
+	<dimen name="payment_divider_marginStart">16dp</dimen>
+	<dimen name="payment_divider_marginEnd">16dp</dimen>
+	<dimen name="payment_layoutRefund_margins">16dp</dimen>
+	<dimen name="payment_imgRefund_margin_end">8dp</dimen>
+	<dimen name="payment_text_size_14sp">14sp</dimen>
+	<dimen name="payment_text_size_17sp">17sp</dimen>
+	<dimen name="payment_layout_padding_bottom">16dp</dimen>
+	<dimen name="payment_login_view_vertical_padding">16dp</dimen>
+	<dimen name="payment_login_view_margin_top">16dp</dimen>
+
+	<dimen name="btn_radius">22dp</dimen>
+	<dimen name="btn_rounded_height">56dp</dimen>
 
 	<!--Shimmer loader-->
 	<dimen name="line_height">20dp</dimen>
 	<dimen name="circle_diameter">42dp</dimen>
+
+	<dimen name="comment_dialog_min_height">400dp</dimen>
+	<dimen name="comment_dialog_max_height">500dp</dimen>
+	<dimen name="comment_hint_height">40dp</dimen>
+
+	<!--Profile settings-->
+	<dimen name="profile_settings_btn_save_vertical_margin">20dp</dimen>
+	<dimen name="profile_settings_btn_save_margin_bottom">16dp</dimen>
+
+	<!--Change email settings-->
+	<dimen name="change_email_sent_code_text_size">12sp</dimen>
+	<dimen name="change_email_sent_code_text_margin_top">24dp</dimen>
+	<dimen name="change_email_code_text_size">24sp</dimen>
+	<dimen name="change_email_code_text_margin_top">24dp</dimen>
+	<dimen name="change_email_code_text_cursor_width">2dp</dimen>
+	<dimen name="change_email_code_text_height">40dp</dimen>
+	<dimen name="change_email_code_text_item_width">35dp</dimen>
+	<dimen name="change_email_code_text_line_width">1dp</dimen>
+	<dimen name="change_email_btn_resend_code_text_size">12sp</dimen>
+	<dimen name="change_email_btn_resend_code_margin_top">14dp</dimen>
+	<dimen name="change_email_btn_resend_code_padding">10dp</dimen>
+	<dimen name="change_email_field_min_height">64dp</dimen>
+	<dimen name="change_email_field_vertical_padding">16dp</dimen>
+	<dimen name="change_email_field_edit_text_padding_top">6dp</dimen>
+	<dimen name="change_email_field_edit_text_drawable_padding">8dp</dimen>
+	<dimen name="change_email_layout_code_vertical_padding">16dp</dimen>
+	<dimen name="change_email_bth_change_email_margins">20dp</dimen>
+
+	<!--Change password settings-->
+	<dimen name="change_pass_fields_layout_vertical_padding">16dp</dimen>
+	<dimen name="change_pass_btn_done_margins">20dp</dimen>
+
+	<!--Settings editable field-->
+	<dimen name="settings_editable_field_min_height">64dp</dimen>
+	<dimen name="settings_editable_field_vertical_padding">16dp</dimen>
+	<dimen name="settings_editable_field_input_layout_margins">12dp</dimen>
+	<dimen name="settings_editable_field_edit_text_parring_top">6dp</dimen>
+	<dimen name="settings_editable_field_edit_text_drawable_padding">8dp</dimen>
+	<dimen name="settings_editable_field_divider_height">1dp</dimen>
+
+	<!--Fragment authorization-->
+	<dimen name="fragment_auth_title_height">44dp</dimen>
+	<dimen name="fragment_auth_back_btn_padding">8dp</dimen>
+	<dimen name="fragment_auth_tabs_elevation">2dp</dimen>
+
+	<!--Fragment log in-->
+	<dimen name="fragment_log_in_vertical_padding">16dp</dimen>
+	<dimen name="fragment_log_in_padding_top">12dp</dimen>
+	<dimen name="fragment_log_in_field_height">64dp</dimen>
+	<dimen name="fragment_log_in_variant_text_margin_top">10dp</dimen>
+	<dimen name="fragment_log_in_variant_text_size">17sp</dimen>
+	<dimen name="fragment_log_in_btn_with_code_margin_top">14dp</dimen>
+
+	<!--Fragment sign up-->
+	<dimen name="fragment_sign_up_vertical_padding">16dp</dimen>
+	<dimen name="fragment_sign_up_agreement_margin_top">8dp</dimen>
+	<dimen name="fragment_sign_up_switch_width">54dp</dimen>
+	<dimen name="fragment_sign_up_switch_height">34dp</dimen>
+	<dimen name="fragment_sign_up_btn_login_margin_top">12dp</dimen>
+
+	<!--Fragment SMS code-->
+	<dimen name="fragment_sms_text_size_18sp">18sp</dimen>
+	<dimen name="fragment_sms_text_size_16sp">16sp</dimen>
+	<dimen name="fragment_sms_text_size_30sp">30sp</dimen>
+	<dimen name="fragment_sms_text_size_12sp">12sp</dimen>
+	<dimen name="fragment_sms_btn_done_margin_bottom">10dp</dimen>
+	<dimen name="fragment_sms_btn_done_vertical_margin">16dp</dimen>
+	<dimen name="fragment_sms_back_btn_padding">8dp</dimen>
+	<dimen name="fragment_sms_title_margin_top">8dp</dimen>
+	<dimen name="fragment_sms_subtitle_margin_top">24dp</dimen>
+	<dimen name="fragment_sms_code_error_margin_top">8dp</dimen>
+	<dimen name="fragment_sms_resend_code_margin_bottom">10dp</dimen>
+	<dimen name="fragment_sms_resend_code_padding">8dp</dimen>
+	<dimen name="fragment_sms_pin_view_margin_top">32dp</dimen>
+	<dimen name="fragment_sms_pin_view_cursor_width">2dp</dimen>
+	<dimen name="fragment_sms_pin_view_item_height">40dp</dimen>
+	<dimen name="fragment_sms_pin_view_item_spacing">15dp</dimen>
+	<dimen name="fragment_sms_pin_view_item_width">35dp</dimen>
+	<dimen name="fragment_sms_pin_view_line_width">1dp</dimen>
+    <dimen name="payment_car_name_min_size">9sp</dimen>
+    <dimen name="payment_car_name_max_size">14sp</dimen>
 
 </resources>

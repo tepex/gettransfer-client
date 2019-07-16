@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="0dp"
-        android:paddingTop="@dimen/card_view_padding_top_end"
-        android:paddingEnd="@dimen/card_view_padding_top_end">
+        android:paddingTop="@dimen/card_view_padding_top"
+        android:paddingEnd="@dimen/card_view_padding_end">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_car_name_and_price"
@@ -21,27 +21,56 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/tv_car_model_tiny"
-                style="@style/black_semiBold"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_car"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/view_offer_car_model_margin_start_end"
-                android:layout_marginEnd="@dimen/view_offer_car_model_margin_start_end"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textSize="@dimen/view_offer_text_size_14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/tv_price_no_discount"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Mercedes-Benz E-Class" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_car_model_tiny"
+                    style="@style/black_semiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/view_offer_car_model_margin_start_end"
+                    android:layout_marginEnd="@dimen/view_offer_price_no_discount_margin_end"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/view_offer_text_size_9sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Mercedes-Benz E-Class" />
+
+                <TextView
+                    android:id="@+id/tv_car_year_tiny"
+                    style="@style/black_semiBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/view_offer_car_model_margin_start_end"
+                    android:textSize="@dimen/view_offer_text_size_9sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_car_model_tiny"
+                    tools:text="2013" />
+
+                <ImageView
+                    android:id="@+id/iv_car_color_tiny"
+                    android:layout_width="@dimen/view_offer_img_car_color_size"
+                    android:layout_height="@dimen/view_offer_img_car_color_size"
+                    android:layout_marginStart="@dimen/view_offer_img_car_color_margin_start"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_car_year_tiny"
+                    app:layout_constraintStart_toEndOf="@+id/tv_car_year_tiny"
+                    app:layout_constraintTop_toTopOf="@+id/tv_car_year_tiny" />
+
+            </android.support.constraint.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_price_no_discount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/view_offer_price_no_discount_margin_end"
-                android:layout_weight="1"
                 android:fontFamily="@font/sf_pro_text_regular"
                 android:textColor="@color/color_gtr_red"
                 android:textSize="@dimen/view_offer_text_size_10sp"
@@ -56,11 +85,13 @@
                 style="@style/black_semiBold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginStart="8dp"
                 android:lines="1"
                 android:textSize="@dimen/view_offer_text_size_15sp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="@+id/layout_car"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/layout_car"
                 tools:text="220.00p" />
 
         </android.support.constraint.ConstraintLayout>

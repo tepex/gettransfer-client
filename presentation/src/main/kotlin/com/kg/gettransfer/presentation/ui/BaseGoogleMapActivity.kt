@@ -53,7 +53,6 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         _mapView.onStart()
-        initMap()
     }
 
     @CallSuper
@@ -94,7 +93,10 @@ abstract class BaseGoogleMapActivity : BaseActivity() {
         val mapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
         _mapView.onCreate(mapViewBundle)
         googleMapJob = utils.launch {
-            googleMap = suspendCoroutine { cont -> _mapView.getMapAsync { cont.resume(it) } }
+            googleMap = suspendCoroutine { cont -> _mapView.getMapAsync {
+                initMap()
+                cont.resume(it)
+            } }
             customizeGoogleMaps(googleMap)
         }
     }

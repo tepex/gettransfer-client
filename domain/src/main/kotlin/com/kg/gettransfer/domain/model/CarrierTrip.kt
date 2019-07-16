@@ -1,7 +1,5 @@
 package com.kg.gettransfer.domain.model
 
-import java.util.Date
-
 data class CarrierTrip(
     val base: CarrierTripBase,
     val pax: Int?, /*may be null only from cache*/
@@ -11,10 +9,18 @@ data class CarrierTrip(
     val remainsToPay: String?, /*may be null only from cache*/
     val paidPercentage: Int?, /*may be null only from cache*/
     val passengerAccount: PassengerAccount? /*may be null only from cache*/
-)
+) {
 
-data class PassengerAccount(
-    override val id: Long,
-    val profile: Profile,
-    val lastSeen: Date
-) : Entity()
+    companion object {
+        val EMPTY = CarrierTrip(
+            base             = CarrierTripBase.EMPTY,
+            pax              = 0,
+            nameSign         = null,
+            flightNumber     = null,
+            paidSum          = "",
+            remainsToPay     = "",
+            paidPercentage   = 0,
+            passengerAccount = PassengerAccount.EMPTY
+        )
+    }
+}

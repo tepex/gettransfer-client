@@ -1,65 +1,64 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.*
-
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
-
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.PersistableBundle
-import android.support.annotation.*
-
+import android.os.*
+import android.support.annotation.CallSuper
+import android.support.annotation.ColorRes
+import android.support.annotation.IdRes
+import android.support.annotation.StringRes
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
-
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.*
-
 import android.view.inputmethod.InputMethodManager
-
-import android.widget.LinearLayout
+import android.webkit.URLUtil
 import android.widget.PopupWindow
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
-
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
-
-import com.kg.gettransfer.extensions.*
-
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.isGone
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.showKeyboard
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
-
+import com.kg.gettransfer.remote.Api
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
-
 import com.kg.gettransfer.utilities.LocaleManager
+
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import kotlinx.android.synthetic.main.view_navigation.*
 
+import org.jetbrains.anko.longToast
 import org.koin.android.ext.android.inject
 
 import ru.terrakok.cicerone.NavigatorHolder
-import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
@@ -69,7 +68,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     internal val systemInteractor: SystemInteractor by inject()
     internal val sessionInteractor: SessionInteractor by inject()
 
-    internal val router: Router by inject()
     protected val navigatorHolder: NavigatorHolder by inject()
     protected val localeManager: LocaleManager by inject()
 
@@ -79,7 +77,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     private lateinit var popupWindowRate: PopupWindow
 
-    protected open var navigator = SupportAppNavigator(this, Screens.NOT_USED)
+    protected var baseNavigator = SupportAppNavigator(this, Screens.NOT_USED)
 
     protected var viewNetworkNotAvailable: View? = null
 
@@ -88,12 +86,14 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected lateinit var _tintBackground: View
     protected val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN)
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
                 _tintBackground.isVisible = false
+                hideKeyboard()
+            }
         }
 
-        override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
             _tintBackground.isVisible = true
             _tintBackground.alpha = slideOffset
         }
@@ -114,7 +114,12 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         view.setBackgroundColor(ContextCompat.getColor(this, color))
     }
 
-    protected fun hideBottomSheet(bottomSheet: BottomSheetBehavior<View>, bottomSheetLayout: View, hiddenState: Int, event: MotionEvent): Boolean{
+    protected fun hideBottomSheet(
+        bottomSheet: BottomSheetBehavior<View>,
+        bottomSheetLayout: View,
+        hiddenState: Int,
+        event: MotionEvent
+    ): Boolean {
         val outRect = Rect()
         bottomSheetLayout.getGlobalVisibleRect(outRect)
         if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
@@ -138,13 +143,13 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     private val appStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            intent?.let { if (it.action == AppLifeCycleObserver.APP_STATE)
-                              it.getBooleanExtra(AppLifeCycleObserver.STATUS, false)
-                              .also { state -> getPresenter().onAppStateChanged(state) } } }
-
-
+            intent?.let {
+                if (it.action == AppLifeCycleObserver.APP_STATE)
+                    it.getBooleanExtra(AppLifeCycleObserver.STATUS, false)
+                        .also { state -> getPresenter().onAppStateChanged(state) }
+            }
+        }
     }
-
 
     protected open fun setNetworkAvailability(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -162,7 +167,13 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     abstract fun getPresenter(): BasePresenter<*>
 
-    protected fun setToolbar(toolbar: Toolbar, @StringRes titleId: Int = TOOLBAR_NO_TITLE, hasBackAction: Boolean = true, firstLetterToUpperCase: Boolean = false) {
+    protected fun setToolbar(
+        toolbar: Toolbar,
+        @StringRes titleId: Int = TOOLBAR_NO_TITLE,
+        hasBackAction: Boolean = true,
+        firstLetterToUpperCase: Boolean = false,
+        subTitle: String? = null
+    ) {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
@@ -173,11 +184,15 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             val title = getString(titleId)
             toolbar.toolbar_title.text =
                 if (!firstLetterToUpperCase) title else title.substring(0, 1).toUpperCase().plus(title.substring(1))
+            subTitle?.let {
+                with(toolbar_subtitle) {
+                    isVisible = true
+                    text = it
+                }
+            }
         }
         if (hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
     }
-
-
 
     /********************************************************************************************************/
     /************************************************ Life cycles *******************************************/
@@ -191,7 +206,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onStart() {
         LocalBroadcastManager.getInstance(applicationContext)
-                .registerReceiver(appStateReceiver, IntentFilter(AppLifeCycleObserver.APP_STATE))
+            .registerReceiver(appStateReceiver, IntentFilter(AppLifeCycleObserver.APP_STATE))
         super.onStart()
 
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
@@ -201,7 +216,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @CallSuper
     protected override fun onResume() {
         super.onResume()
-        navigatorHolder.setNavigator(navigator)
+        navigatorHolder.setNavigator(baseNavigator)
     }
 
     @CallSuper
@@ -215,12 +230,11 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         super.onStop()
         Handler().postDelayed({
             LocalBroadcastManager.getInstance(this).apply {
-    //            unregisterReceiver(offerReceiver)
+                //            unregisterReceiver(offerReceiver)
                 unregisterReceiver(appStateReceiver)
             }
         }, 2000)
         unregisterReceiver(inetReceiver)
-
     }
 
     @CallSuper
@@ -230,7 +244,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if (block) {
-            if(useSpinner) showLoading()
+            if (useSpinner) showLoading()
         } else hideLoading()
     }
 
@@ -241,10 +255,14 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     override fun setError(e: ApiException) {
-        Timber.e("code: ${e.code}", e)
+        Timber.e(e, "code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
-        if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, false, getString(R.string.LNG_ERROR) + ": " + e.message)
+        if (e.code != ApiException.NETWORK_ERROR) Utils.showError(
+            this,
+            false,
+            getString(R.string.LNG_ERROR) + ": " + e.message
+        )
     }
 
     override fun setError(e: DatabaseException) {
@@ -252,14 +270,27 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         Sentry.capture(e)
     }
 
+    override fun setTransferNotFoundError(transferId: Long) {
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                imageId = R.drawable.transfer_error
+                title = this@BaseActivity.getString(R.string.LNG_ERROR)
+                text = this@BaseActivity.getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString())
+                isShowCloseButton = true
+                isShowOkButton = false
+            }
+            .show(supportFragmentManager)
+    }
+
     protected fun showKeyboard() {
         currentFocus?.showKeyboard()
     }
 
     protected fun hideKeyboard(): Boolean {
-        currentFocus?.run {
-            hideKeyboard()
-            clearFocus()
+        currentFocus?.let {
+            it.hideKeyboard()
+            it.clearFocus()
         }
         return true
     }
@@ -282,10 +313,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         rootView = findViewById(android.R.id.content)
         rootView!!.viewTreeObserver.addOnGlobalLayoutListener {
             val state = countDifference()
-            if (!state && !isKeyBoardOpened){
+            if (!state && !isKeyBoardOpened) {
                 isKeyBoardOpened = true
                 checkKeyBoardState(isKeyBoardOpened)
-            } else if (state && isKeyBoardOpened){
+            } else if (state && isKeyBoardOpened) {
                 isKeyBoardOpened = false
                 checkKeyBoardState(isKeyBoardOpened)
             }
@@ -294,6 +325,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     //protected fun openScreen(screen: String) { router.navigateTo(screen) }
 
+    @CallSuper
     override fun attachBaseContext(newBase: Context?) {
         if (newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
         else super.attachBaseContext(null)
@@ -314,12 +346,13 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             commit()
         }
     }
+
     /*
     Use this method to fix UI, which depends on screen size.
     Returns Point, that has x = display width, y = display height
      */
     protected open fun fixUIDependedOnScreenSize() =
-            Point().also { windowManager.defaultDisplay.getSize(it) }
+        Point().also { windowManager.defaultDisplay.getSize(it) }
 
     protected fun getScreenSide(height: Boolean): Int {
         val displayMetrics = DisplayMetrics()
@@ -359,19 +392,20 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         else screenHeight - actionBarHeight - statusBarHeight
     }
 
-    protected fun getStatusBarHeight(): Int{
+    protected fun getStatusBarHeight(): Int {
         val statusBarResource = resources.getIdentifier("status_bar_height", "dimen", "android")
-        return if(statusBarResource > 0) resources.getDimensionPixelSize(statusBarResource) else 0
+        return if (statusBarResource > 0) resources.getDimensionPixelSize(statusBarResource) else 0
     }
 
     protected fun redirectToPlayMarket() {
         systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
-        val url = getString(R.string.market_link) + getString(R.string.app_package)
+        val url = getString(R.string.market_link) + getString(R.string.app_market_package)
         startActivityForResult(
             Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse(url)
                 addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            }, PLAY_MARKET_RATE)
+            }, PLAY_MARKET_RATE
+        )
     }
 
     @CallSuper
@@ -384,14 +418,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun closePopUp() = popupWindowRate.dismiss()
 
-    companion object {
-        const val TOOLBAR_NO_TITLE = 0
-        const val PLAY_MARKET_RATE = 42
-
-        const val DIM_AMOUNT = 0.5f
-        const val SCREEN_WIDTH_REQUIRING_SMALL_TEXT_SIZE = 768
-    }
-
     protected fun setStatusBarColor(@ColorRes color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -400,19 +426,30 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         }
     }
 
-    protected fun popupShowAtLocation(popup: PopupWindow, parent: View, y: Int){
-        if(isResumed()) {
+    protected fun popupShowAtLocation(popup: PopupWindow, parent: View, y: Int) {
+        if (isResumed()) {
             try {
                 popup.showAtLocation(parent, Gravity.CENTER, 0, y)
-            } catch (e: WindowManager.BadTokenException){
+            } catch (e: WindowManager.BadTokenException) {
                 e.printStackTrace()
             }
         }
     }
 
     private fun isResumed(): Boolean {
-        val fieldPaused = FragmentActivity::class.java.getDeclaredField("mResumed"); //NoSuchFieldException
+        val fieldPaused = FragmentActivity::class.java.getDeclaredField("mResumed") //NoSuchFieldException
         fieldPaused.setAccessible(true)
         return fieldPaused.get(this) as Boolean
+    }
+
+    protected fun replaceFragment(fragment: Fragment, @IdRes id: Int, tag: String? = null) =
+        supportFragmentManager
+            .beginTransaction()
+            .replace(id, fragment, tag)
+            .commitAllowingStateLoss()
+
+    companion object {
+        const val TOOLBAR_NO_TITLE = 0
+        const val PLAY_MARKET_RATE = 42
     }
 }

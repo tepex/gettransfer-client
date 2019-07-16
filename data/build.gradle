@@ -27,6 +27,7 @@ dependencies {
     implementation libs.serialization
     implementation project(":domain")
     implementation libs.koin_core
+    implementation libs.koin_core_ext
     implementation libs.slf4j
 
     testImplementation libs.junit
