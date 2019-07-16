@@ -39,7 +39,7 @@ class TransferTypeAdapter(
         LayoutContainer {
 
         fun bind(item: TransportTypeModel, listener: ChangeListener) = with(containerView) {
-            tvTransferType.setText(item.nameId!!)
+            tvTransferType.setText(item.nameId)
             tvNumberPersonsTransfer.text = Utils.formatPersons(context, item.paxMax)
             tvCountBaggage.text          = Utils.formatLuggage(context, item.luggageMax)
 
@@ -49,7 +49,7 @@ class TransferTypeAdapter(
                 tvPriceFrom.text = item.price.min
             }
 
-            ivTransferType.setImageResource(item.imageId!!)
+            ivTransferType.setImageResource(item.imageId)
             cbTransferType.isChecked = item.checked
             setVisibilityShadow(context, item)
             setOnClickListener {

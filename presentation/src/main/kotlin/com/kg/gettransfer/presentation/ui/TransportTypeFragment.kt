@@ -21,8 +21,8 @@ class TransportTypeFragment: BaseBottomSheetFragment() {
         btnOk.setOnClickListener { setBottomSheetState(view, BottomSheetBehavior.STATE_HIDDEN) }
 
         transportTypeModel?.apply {
-            nameId?.let { tvTypeTransfer.setText(it) }
-            imageId?.let { ivTypeTransfer.setImageResource(it) }
+            tvTypeTransfer.setText(nameId)
+            ivTypeTransfer.setImageResource(imageId)
             price?.min?.let { tvPrice.text = it }
             description?.let { tvCars.setText(it) }
             tvCountPassengers.text = paxMax.toString()

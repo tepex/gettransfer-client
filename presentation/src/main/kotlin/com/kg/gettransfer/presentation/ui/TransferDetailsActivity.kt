@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.ClipboardManager
+import android.content.ClipData
 import android.content.Context
 
 import android.os.Build
@@ -85,6 +87,7 @@ import org.jetbrains.anko.longToast
 
 import pub.devrel.easypermissions.EasyPermissions
 
+@Suppress("TooManyFunctions")
 class TransferDetailsActivity : BaseGoogleMapActivity(),
     TransferDetailsView,
     RatingDetailDialogFragment.OnRatingChangeListener,
@@ -114,6 +117,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         setContentView(R.layout.activity_transfer_details)
         setupStatusBar()
 
+        @Suppress("UnsafeCast")
         mapCollapseBehavior = (mapView.layoutParams as CoordinatorLayout.LayoutParams).behavior as MapCollapseBehavior
 
         _mapView = mapView
@@ -145,6 +149,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun setupToolbar() {
+        @Suppress("UnsafeCast")
         setSupportActionBar(toolbar as Toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
@@ -154,8 +159,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private fun initButtonTitles() {
         topCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT).replace(" ", "\n")
         bottomCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT).replace(" ", "\n")
-        topCommunicationButtons.btnRepeatTransfer.btnName.text = getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
-        bottomCommunicationButtons.btnRepeatTransfer.btnName.text = getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
+        topCommunicationButtons.btnRepeatTransfer.btnName.text =
+            getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
+        bottomCommunicationButtons.btnRepeatTransfer.btnName.text =
+            getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
         topCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
         bottomCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
     }
@@ -171,15 +178,17 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun setupBottomSheetHeight() {
-        val lp = sheetTransferDetails.layoutParams as CoordinatorLayout.LayoutParams
-        lp.height = getHeightForBottomSheetDetails()
-        sheetTransferDetails.layoutParams = lp
+        val lp = sheetTransferDetails.layoutParams
+        if (lp is CoordinatorLayout.LayoutParams) {
+            lp.height = getHeightForBottomSheetDetails()
+            sheetTransferDetails.layoutParams = lp
+        }
     }
 
     @CallSuper
     override fun onStop() {
-        super.onStop()
         clearMarker()
+        super.onStop()
     }
 
     private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -226,11 +235,17 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
         setBookingInfo(transfer)
 
-        if (transfer.status == Transfer.Status.REJECTED)
-            transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(this@TransferDetailsActivity, R.color.color_transfer_details_text_red))
+        if (transfer.status == Transfer.Status.REJECTED) {
+            transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(
+                this@TransferDetailsActivity,
+                R.color.color_transfer_details_text_red
+            ))
+        }
 
         val status = transfer.statusCategory
-        if (status == Transfer.STATUS_CATEGORY_ACTIVE || status == Transfer.STATUS_CATEGORY_UNFINISHED || status == Transfer.STATUS_CATEGORY_CONFIRMED) {
+        if (status == Transfer.STATUS_CATEGORY_ACTIVE ||
+            status == Transfer.STATUS_CATEGORY_UNFINISHED ||
+            status == Transfer.STATUS_CATEGORY_CONFIRMED) {
             initTableLayoutTransportTypes(transfer.transportTypes)
             layoutTransportTypes.isVisible = true
         }
@@ -245,36 +260,46 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
     }
 
+    @Suppress("ComplexMethod")
     private fun setBookingInfo(transfer: TransferModel) {
         booking_info.text = when (transfer.status) {
-            Transfer.Status.NEW -> {
-                val status = if (transfer.offersCount > 0 && !transfer.isBookNow() && transfer.pendingPaymentId == null)
-                                 getString(R.string.LNG_BOOK_OFFER)
-                             else if (transfer.pendingPaymentId != null)
-                                      getString(R.string.LNG_WILL_START_IN)
-                                              .plus(" ")
-                                              .plus(Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer)))
-                             else getString(R.string.LNG_WAIT_FOR_OFFERS)
-
-                getString(R.string.LNG_TRANSFER)
-                        .plus(" #${transfer.id} ")
-                        .plus(status)
+            Transfer.Status.NEW -> buildString {
+                append(getString(R.string.LNG_TRANSFER))
+                append(" #${transfer.id} ")
+                if (transfer.offersCount > 0 && !transfer.isBookNow() && transfer.pendingPaymentId == null) {
+                    append(getString(R.string.LNG_BOOK_OFFER))
+                } else if (transfer.pendingPaymentId != null) {
+                    append(getString(R.string.LNG_WILL_START_IN))
+                    append(" ")
+                    append(Utils.durationToString(
+                        this@TransferDetailsActivity,
+                        Utils.convertDuration(transfer.timeToTransfer)
+                    ))
+                } else {
+                    append(getString(R.string.LNG_WAIT_FOR_OFFERS))
+                }
             }
-            Transfer.Status.PERFORMED -> {
-                if (transfer.dateTimeTZ.after(Date())) getString(R.string.LNG_TRANSFER)
-                        .plus(" #${transfer.id} ")
-                        .plus(getString(R.string.LNG_WILL_START_IN))
-                        .plus(" ")
-                        .plus(Utils.durationToString(this, Utils.convertDuration(transfer.timeToTransfer)))
-                else getString(R.string.LNG_TRANSFER)
-                        .plus(" #${transfer.id} ")
-                        .plus(getString(R.string.LNG_IN_PROGRESS))
+            Transfer.Status.PERFORMED -> buildString {
+                append(getString(R.string.LNG_TRANSFER))
+                append(" #${transfer.id} ")
+                if (transfer.dateTimeTZ.after(Date())) {
+                    append(getString(R.string.LNG_WILL_START_IN))
+                    append(" ")
+                    append(Utils.durationToString(
+                        this@TransferDetailsActivity,
+                        Utils.convertDuration(transfer.timeToTransfer)
+                    ))
+                } else {
+                    append(getString(R.string.LNG_IN_PROGRESS))
+                }
             }
-            else -> transfer.statusName?.let {
-                getString(R.string.LNG_TRANSFER_WAS)
-                        .plus(" #${transfer.id} ")
-                        .plus(" ")
-                        .plus(getString(it).toLowerCase())
+            else -> transfer.statusName?.let { statusName ->
+                buildString {
+                    append(getString(R.string.LNG_TRANSFER_WAS))
+                    append(" #${transfer.id} ")
+                    append(" ")
+                    append(getString(statusName).toLowerCase())
+                }
             }
         }
     }
@@ -298,11 +323,18 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun setPrices(transfer: TransferModel) {
-        when(transfer.statusCategory) {
-            Transfer.STATUS_CATEGORY_ACTIVE -> { setActiveCategoryPrices(transfer) }
-            Transfer.STATUS_CATEGORY_CONFIRMED -> { transfer.let { setPricesForPaidTransfer(it.remainsToPay, it.price, it.paidPercentage) } }
-            Transfer.STATUS_CATEGORY_FINISHED -> { setRemainToPayInfo(transfer.price ?: "", getString(R.string.LNG_RIDE_PAYMENT_COST)) }
-            Transfer.STATUS_CATEGORY_UNFINISHED -> { transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) } }
+        when (transfer.statusCategory) {
+            Transfer.STATUS_CATEGORY_ACTIVE -> setActiveCategoryPrices(transfer)
+            Transfer.STATUS_CATEGORY_CONFIRMED -> setPricesForPaidTransfer(
+                transfer.remainsToPay,
+                transfer.price,
+                transfer.paidPercentage
+            )
+            Transfer.STATUS_CATEGORY_FINISHED -> {
+                setRemainToPayInfo(transfer.price ?: "", getString(R.string.LNG_RIDE_PAYMENT_COST))
+                setVoucher()
+            }
+            Transfer.STATUS_CATEGORY_UNFINISHED -> transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) }
         }
     }
 
@@ -322,7 +354,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun setPricesForPaidTransfer(remainsToPay: String?, price: String?, paidPercentage: Int) {
-        if(remainsToPay != null && remainsToPay != "0") {
+        if (remainsToPay != null && remainsToPay != "0") {
             setRemainToPayInfo(remainsToPay, getString(R.string.LNG_RIDE_PAYMENT_REMAINS))
         } else {
             setRemainToPayInfo(getString(R.string.LNG_RIDE_PAYMENT_PAID))
@@ -364,6 +396,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 tv_price_title.isVisible = false
             }
         }
+        @Suppress("MagicNumber")
         setFullPrice(remainsToPay, 100)
     }
 
@@ -376,23 +409,24 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
     }
 
-    private fun setBookNow(transfer: TransferModel){
+    private fun setBookNow(transfer: TransferModel) {
         tv_bookNow_info.isVisible = transfer.isBookNow()
         if (layoutAboutDriver.isShown) tv_bookNow_info.isVisible = false
     }
 
+    @Suppress("ComplexMethod")
     private fun initAboutRequestView(transfer: TransferModel) {
         transfer.nameSign?.let { initField(passenger_name, it) }
         with(transfer) {
             flightNumber?.let { initField(flight_number, it) }
             dateTimeReturn?.let { initField(back_trip, SystemUtils.formatDateTime(it)) }
             flightNumberReturn?.let { initField(back_flight_number, it) }
-            promoCode?.let {
-                promo_code.field_text.text = Utils.getSpannedStringFromHtmlString(it)
+            promoCode?.let { promoCode ->
+                promo_code.field_text.text = Utils.getSpannedStringFromHtmlString(promoCode)
                 promo_code.isVisible = true
             }
-            comment?.let {
-                comment_view.tv_comment_text.text = it
+            comment?.let { comment ->
+                comment_view.tv_comment_text.text = comment
                 comment_view.isVisible = true
             }
         }
@@ -401,16 +435,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             tv_countPassengers.text = getString(R.string.X_SIGN).plus("${transfer.countPassengers}")
             imgPassengers.isVisible = true
             tv_countPassengers.isVisible = true
-            transfer.getChildrenCount()
-                    .isNonZero()
-                    ?.let {
-                        tvCountChildren.visibleText = getString(R.string.X_SIGN).plus("$it")
-                        imgChildSeats.isVisible =  true
-                    }
+            transfer.getChildrenCount().isNonZero()?.let { children ->
+                tvCountChildren.visibleText = "${getString(R.string.X_SIGN)}$children"
+                imgChildSeats.isVisible =  true
+            }
         }
     }
 
-    private fun initField(field: TransferDetailsField, text: String, title: String? = null){
+    private fun initField(field: TransferDetailsField, text: String, title: String? = null) {
         title?.let { field.field_title.text = title }
         field.field_text.text = text
         field.isVisible = true
@@ -418,13 +450,27 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private fun initTableLayoutTransportTypes(transportTypes: List<TransportTypeModel>) {
         flexboxTransportTypes.removeAllViews()
-        transportTypes.forEach {
-            flexboxTransportTypes.addView(LayoutInflater.from(this).inflate(R.layout.view_transfer_details_transport_type_item_new, null, false).apply {
-                transportType_Name.text = getString(it.nameId!!)
-                transportType_Img.setImageDrawable(ContextCompat.getDrawable(this@TransferDetailsActivity, it.imageId!!))
-                view_seats_and_lugg_count.transportType_сountPassengers.text = Utils.formatPersons(this@TransferDetailsActivity, it.paxMax)
-                view_seats_and_lugg_count.transportType_сountBaggage.text = Utils.formatPersons(this@TransferDetailsActivity, it.luggageMax)
-            })
+        transportTypes.forEach { transportType ->
+            flexboxTransportTypes.addView(
+                LayoutInflater
+                    .from(this)
+                    .inflate(R.layout.view_transfer_details_transport_type_item_new, null, false)
+                    .apply {
+                        transportType_Name.text = getString(transportType.nameId)
+                        transportType_Img.setImageDrawable(ContextCompat.getDrawable(
+                            this@TransferDetailsActivity,
+                            transportType.imageId
+                        ))
+                        view_seats_and_lugg_count.transportType_сountPassengers.text = Utils.formatPersons(
+                            this@TransferDetailsActivity,
+                            transportType.paxMax
+                        )
+                        view_seats_and_lugg_count.transportType_сountBaggage.text = Utils.formatPersons(
+                            this@TransferDetailsActivity,
+                            transportType.luggageMax
+                        )
+                    }
+                )
         }
     }
 
@@ -454,8 +500,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
 
         val operations = listOf<Pair<CharSequence, String>>(
-                Pair(getString(R.string.LNG_COPY), TransferDetailsPresenter.OPERATION_COPY),
-                Pair(getString(R.string.LNG_OPEN), TransferDetailsPresenter.OPERATION_OPEN))
+            getString(R.string.LNG_COPY) to TransferDetailsPresenter.OPERATION_COPY,
+            getString(R.string.LNG_OPEN) to TransferDetailsPresenter.OPERATION_OPEN
+        )
         val operationsName: List<CharSequence> = operations.map { it.first }
 
         offer.driver?.let { driver ->
@@ -491,7 +538,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
             }
 
-            Utils.initCarrierLanguages(layoutAboutDriver.view_driver_languages.layoutCarrierLanguages, offer.carrier.languages)
+            Utils.initCarrierLanguages(
+                layoutAboutDriver.view_driver_languages.layoutCarrierLanguages,
+                offer.carrier.languages
+            )
             layoutAboutDriver.isVisible = true
         }
     }
@@ -504,18 +554,18 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             car_model_field.isVisible = true
 
             view_conveniences.apply {
-                conveniences_field.field_title.text = getString(offerModel.vehicle.transportType.nameId!!)
+                conveniences_field.field_title.text = getString(offerModel.vehicle.transportType.nameId)
                 imgFreeWater.isVisible = offerModel.refreshments
                 imgFreeWiFi.isVisible  = offerModel.wifi
                 imgCharge.isVisible    = offerModel.charger
 
-                offerModel.vehicle.color?.let{
+                offerModel.vehicle.color?.let { color ->
                     carColor.isVisible = true
-                    carColor.setImageDrawable(Utils.getCarColorFormRes(this@TransferDetailsActivity, it))
+                    carColor.setImageDrawable(Utils.getCarColorFormRes(this@TransferDetailsActivity, color))
                 }
             }
         }
-        vehiclePhotosView.setPhotos(offerModel.vehicle.transportType.imageId!!, offerModel.vehicle.photos)
+        vehiclePhotosView.setPhotos(offerModel.vehicle.transportType.imageId, offerModel.vehicle.photos)
     }
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
@@ -525,10 +575,17 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun setMapBottomPadding() {
+        @Suppress("MagicNumber")
         mapView.setPadding(0, 0, 0, 150)
     }
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate, isDateChanged: Boolean) {
+    override fun setPinHourlyTransfer(
+        placeName: String,
+        info: String,
+        point: LatLng,
+        cameraUpdate: CameraUpdate,
+        isDateChanged: Boolean
+    ) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
         btnCenterRoute.isVisible = false
         updateMapBehaviorBounds()
@@ -541,9 +598,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun copyText(text: String) {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-        val clip = android.content.ClipData.newPlainText("Copied Text", text)
-        clipboard.primaryClip = clip
+        val systemService = getSystemService(Context.CLIPBOARD_SERVICE)
+        if (systemService is ClipboardManager) {
+            systemService.primaryClip = ClipData.newPlainText("Copied Text", text)
+        }
     }
 
     override fun showAlertCancelRequest() {
@@ -559,12 +617,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun showDetailRate() {
-        if (supportFragmentManager.fragments.firstOrNull {
-                it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG} == null) {
-            RatingDetailDialogFragment
-                .newInstance()
-                .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
-        }
+        supportFragmentManager.fragments.firstOrNull { fragment ->
+            fragment.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG
+        } ?: RatingDetailDialogFragment.newInstance().show(
+            supportFragmentManager,
+            RatingDetailDialogFragment.RATE_DIALOG_TAG
+        )
     }
 
     override fun askRateInPlayMarket() {
@@ -575,7 +633,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         thanks_for_rate.isVisible = true
         thanks_for_rate.apply {
             isVisible = true
-            Handler().postDelayed( { isVisible = false }, THANKS_DELAY)
+            Handler().postDelayed(
+                { isVisible = false },
+                THANKS_DELAY
+            )
         }
     }
 
@@ -584,7 +645,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private fun initCarMarker(offer: OfferModel) {
         processGoogleMap(false) {
             mCarMarker = addCarToMap(presenter.getMarkerIcon(offer))
-            presenter.initCoordinates() }
+            presenter.initCoordinates()
+        }
     }
 
     override fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean) {
@@ -611,7 +673,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         yourRateMark.rbYourRateMark.setOnRatingChangeListener(null)
         yourRateMark.show(isShow)
         yourRateMark.rbYourRateMark.rating = averageRate.toFloat()
-        yourRateMark.rbYourRateMark.setOnRatingChangeListener { _, fl -> presenter.rateTrip(fl , true) }
+        yourRateMark.rbYourRateMark.setOnRatingChangeListener { _, fl -> presenter.rateTrip(fl, true) }
     }
 
     override fun showYourDataProgress(isShow: Boolean) {
