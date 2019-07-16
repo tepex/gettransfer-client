@@ -5,6 +5,7 @@ import com.kg.gettransfer.domain.model.DistanceUnit
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.*
 
 /**
  * Representation for a [ConfigsEntity] fetched from an external layer data source
@@ -34,5 +35,5 @@ fun ConfigsEntity.map() =
         availableLocales.map { it.map() },
         paymentCommission,
         supportedCurrencies.map { it.map() },
-        supportedDistanceUnits.map { DistanceUnit.valueOf(it.toUpperCase()) }
+        supportedDistanceUnits.map { DistanceUnit.valueOf(it.toUpperCase(Locale.US)) }
     )
