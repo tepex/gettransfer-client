@@ -1,21 +1,24 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
+
 import com.kg.gettransfer.extensions.newChainFromMain
+
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.view.PaypalConnectionView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.utilities.Analytics
+
 import org.koin.core.inject
-import timber.log.Timber
 
 @InjectViewState
-class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
+class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
 
     private val paymentInteractor: PaymentInteractor by inject()
 
@@ -30,36 +33,29 @@ class PaypalConnectionPresenter: BasePresenter<PaypalConnectionView>() {
     private var offer: Offer? = null
     private var bookNowOffer: BookNowOffer? = null
 
-    @CallSuper
     override fun attachView(view: PaypalConnectionView) {
         super.attachView(view)
-        utils.launchSuspend {
-            with(paymentInteractor) {
-                if (selectedTransfer != null && selectedOffer != null) {
-                    transfer = selectedTransfer!!
-                    selectedOffer?.let {
-                        when (it) {
-                            is Offer -> offer = it
-                            is BookNowOffer -> bookNowOffer = it
-                        }
-                    }
+        paymentInteractor.selectedTransfer?.let { st ->
+            paymentInteractor.selectedOffer?.let { so ->
+                transfer = st
+                when (so) {
+                    is Offer -> offer = so
+                    is BookNowOffer -> bookNowOffer = so
                 }
-                confirmPayment()
             }
         }
+        confirmPayment()
     }
 
-    private suspend fun confirmPayment() {
+    private fun confirmPayment() = utils.launchSuspend {
         val result = utils.asyncAwait { paymentInteractor.confirmPaypal(paymentId, nonce) }
-        if (result.error == null) {
-            if (result.model.isSuccess) showSuccessfulPayment() else showFailedPayment()
-            viewState.blockInterface(false)
-        } else {
-            Timber.e(result.error!!)
-            viewState.setError(result.error!!)
+        result.error?.let { err ->
+            log.error("confirm payment error", err)
+            viewState.setError(err)
             viewState.blockInterface(false)
             showFailedPayment()
-        }
+        } ?: if (result.model.isSuccess) showSuccessfulPayment() else showFailedPayment()
+        viewState.blockInterface(false)
         viewState.stopAnimation()
     }
 

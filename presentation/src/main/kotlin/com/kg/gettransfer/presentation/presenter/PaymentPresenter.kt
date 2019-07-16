@@ -25,6 +25,7 @@ import org.koin.core.inject
 
 @InjectViewState
 class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListener {
+
     private val paymentInteractor: PaymentInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
 
@@ -57,17 +58,15 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
         paymentInteractor.eventPaymentReceiver = null
     }
 
-    fun changePaymentStatus(orderId: Long, success: Boolean) {
-        utils.launchSuspend {
-            viewState.blockInterface(true)
-            val model = PaymentStatusRequestModel(null, orderId, true, success)
-            val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
-            result.error?.let { err ->
-                log.error("change payment status error", err)
-                viewState.setError(err)
-                router.exit()
-            } ?: if (result.model.isSuccess) isPaymentWasSuccessful() else showFailedPayment()
-        }
+    fun changePaymentStatus(orderId: Long, success: Boolean) = utils.launchSuspend {
+        viewState.blockInterface(true)
+        val model = PaymentStatusRequestModel(null, orderId, true, success)
+        val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
+        result.error?.let { err ->
+            log.error("change payment status error", err)
+            viewState.setError(err)
+            router.exit()
+        } ?: if (result.model.isSuccess) isPaymentWasSuccessful() else showFailedPayment()
     }
 
     override fun onNewPaymentStatusEvent(isSuccess: Boolean) {
@@ -100,12 +99,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
 
     private fun showSuccessfulPayment() {
         viewState.blockInterface(false)
-        router.newChainFromMain(
-            Screens.PaymentSuccess(
-                transfer!!.id,
-                offer?.id
-            )
-        )
+        transfer?.let { router.newChainFromMain(Screens.PaymentSuccess(it.id, offer?.id)) }
         analytics.EcommercePurchase(paymentType).sendAnalytics()
     }
 }

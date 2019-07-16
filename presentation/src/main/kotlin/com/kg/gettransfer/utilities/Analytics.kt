@@ -25,19 +25,22 @@ import com.yandex.metrica.Revenue
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
-import io.sentry.Sentry
-import org.koin.core.KoinComponent
 
-import org.koin.core.inject
+import io.sentry.Sentry
 
 import java.util.Currency
 
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+
 import kotlin.math.roundToLong
 
+@Suppress("TooManyFunctions")
 class Analytics(
     private val context: Context,
     private val firebase: FirebaseAnalytics,
-    private val facebook: AppEventsLogger) : KoinComponent {
+    private val facebook: AppEventsLogger
+) : KoinComponent {
 
     private val paymentInteractor: PaymentInteractor by inject()
     private val sessionInteractor: SessionInteractor by inject()
@@ -159,18 +162,15 @@ class Analytics(
             }
         }
 
-        private fun getTransferAndOffer() =
-                with(paymentInteractor) {
-                    if (selectedTransfer != null && selectedOffer != null) {
-                        transfer = selectedTransfer
-                        selectedOffer?.let {
-                            when (it) {
-                                is Offer -> offer = it
-                                is BookNowOffer -> bookNowOffer = it
-                            }
-                        }
-                    }
+        private fun getTransferAndOffer() = paymentInteractor.selectedTransfer?.let { st ->
+            paymentInteractor.selectedOffer?.let { so ->
+                transfer = st
+                when (so) {
+                    is Offer -> offer = so
+                    is BookNowOffer -> bookNowOffer = so
                 }
+            }
+        }
 
         private fun sendToAppsFlyer() {
             val map = mutableMapOf<String, Any?>()
@@ -201,7 +201,8 @@ class Analytics(
         }
 
         private fun sendRevenue() {
-            val priceMicros = price.roundToLong() * 1000000L // priceMicros = price × 10^6
+            @Suppress("MagicNumber")
+            val priceMicros = price.roundToLong() * 1_000_000L // priceMicros = price × 10^6
             val revenue = Revenue.newBuilderWithMicros(priceMicros, currency)
                     .withProductID(requestType)
                     .withQuantity(1)
@@ -309,15 +310,17 @@ class Analytics(
         }
     }
 
+    @Suppress("LongParameterList")
     fun logEventAddToCart(
-            numberOfPassengers: Int,
-            origin: String?,
-            destination: String?,
-            travelClass: String?,
-            hours: Int?,
-            tripType: String,
-            value: String?,
-            currency: String?) {
+        numberOfPassengers: Int,
+        origin: String?,
+        destination: String?,
+        travelClass: String?,
+        hours: Int?,
+        tripType: String,
+        value: String?,
+        currency: String?
+    ) {
 
         val fbBundle = Bundle()
         val map = mutableMapOf<String, Any?>()
@@ -351,10 +354,11 @@ class Analytics(
     }
 
     fun logCreateTransfer(
-            result: String,
-            value: String?,
-            currency: String?,
-            hours: Int?) {
+        result: String,
+        value: String?,
+        currency: String?,
+        hours: Int?
+    ) {
 
         val map = mutableMapOf<String, Any?>()
 
