@@ -1,4 +1,4 @@
-package com.kg.gettransfer.data.model
+package com.kg.gettransfer.sys.data
 
 import com.kg.gettransfer.core.domain.Minute
 import com.kg.gettransfer.core.domain.Second
@@ -6,11 +6,13 @@ import com.kg.gettransfer.core.domain.Second
 import com.kg.gettransfer.sys.domain.BuildsConfigs
 import com.kg.gettransfer.sys.domain.MobileConfigs
 
-data class MobileConfigEntity(
+data class MobileConfigsEntity(
     val pushShowDelay: Int,
     val orderMinimumMinutes: Int,
     val termsUrl: String,
     val smsResendDelaySec: Int?,
+    val isDriverAppNotify: Boolean,
+    val isDriverModeBlock: Boolean,
     val buildsConfigs: Map<String, BuildsConfigsEntity>?
 ) {
 
@@ -20,6 +22,8 @@ data class MobileConfigEntity(
         const val ORDER_MINIMUM_MINUTES    = "order_minimum_minutes"
         const val LICENSE_URL              = "license_url"
         const val SMS_RESEND_DELAY_SEC     = "sms_resend_delay_sec"
+        const val DRIVER_APP_NOTIFY        = "driver_app_notify"
+        const val DRIVER_MODE_BLOCK        = "driver_mode_block"
         const val BUILDS_CONFIGS           = "android"
     }
 }
@@ -35,12 +39,14 @@ data class BuildsConfigsEntity(
 
 fun BuildsConfigsEntity.map() = BuildsConfigs(updateRequired)
 
-fun MobileConfigEntity.map() =
+fun MobileConfigsEntity.map() =
     MobileConfigs(
         /*
         pushShowDelay,*/
         Minute(orderMinimumMinutes),
         termsUrl,
         smsResendDelaySec?.let { Second(it) } ?: MobileConfigs.SMS_RESEND_DELAY_SEC_DEFAULT,
+        isDriverAppNotify,
+        isDriverModeBlock,
         buildsConfigs?.mapValues { it.value.map() } ?: emptyMap()
     )

@@ -10,7 +10,6 @@ import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 
 import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.EndpointEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
 
@@ -22,6 +21,8 @@ import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
+import com.kg.gettransfer.sys.data.MobileConfigsEntity
+import com.kg.gettransfer.sys.data.map
 import com.kg.gettransfer.sys.domain.MobileConfigs
 
 import org.koin.core.get
@@ -39,7 +40,7 @@ class SystemRepositoryImpl(
     override var configs = Configs.EMPTY
         private set
 
-    override var mobileConfig = MobileConfigs.EMPTY
+    override var mobileConfigs = MobileConfigs.EMPTY
         private set
 
     override var lastMode: String
@@ -107,14 +108,14 @@ class SystemRepositoryImpl(
 
     override suspend fun coldStart(): Result<Unit> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
-        if (mobileConfig === MobileConfigs.EMPTY) {
-            val result: ResultEntity<MobileConfigEntity?> = retrieveEntity { fromRemote ->
+        if (mobileConfigs === MobileConfigs.EMPTY) {
+            val result: ResultEntity<MobileConfigsEntity?> = retrieveEntity { fromRemote ->
                 factory.retrieveDataStore(fromRemote).getMobileConfigs()
             }
             if (result.error != null && result.entity == null) return Result(Unit, result.error.map())
 
             result.entity?.let { entity ->
-                mobileConfig = entity.map()
+                mobileConfigs = entity.map()
                 if (result.error == null) factory.retrieveCacheDataStore().setMobileConfigs(entity)
             }
         }

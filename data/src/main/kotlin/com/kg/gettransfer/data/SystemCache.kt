@@ -1,7 +1,8 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.ConfigsEntity
-import com.kg.gettransfer.data.model.MobileConfigEntity
+
+import com.kg.gettransfer.sys.data.MobileConfigsEntity
 
 import org.koin.core.KoinComponent
 
@@ -11,7 +12,7 @@ interface SystemCache : KoinComponent {
 
     fun setConfigs(configs: ConfigsEntity)
 
-    fun getMobileConfigs(): MobileConfigEntity?
+    fun getMobileConfigs(): MobileConfigsEntity?
 
-    fun setMobileConfigs(configs: MobileConfigEntity)
+    fun setMobileConfigs(configs: MobileConfigsEntity)
 }

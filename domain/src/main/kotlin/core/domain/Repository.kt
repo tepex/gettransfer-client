@@ -1,5 +1,5 @@
 package com.kg.gettransfer.core.domain
 
-interface Repository<T> {
+interface Repository<out T : Any> {
     fun get(): T
 }

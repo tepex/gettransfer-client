@@ -10,6 +10,6 @@ import com.kg.gettransfer.presentation.view.SignUpCarrierView
  */
 class SignUpCarrierPresenter : BasePresenter<SignUpCarrierView>() {
     fun registration() {
-        router.navigateTo(Screens.Carrier(Screens.REG_CARRIER))
+        router.navigateTo(Screens.CarrierMode)
     }
 }

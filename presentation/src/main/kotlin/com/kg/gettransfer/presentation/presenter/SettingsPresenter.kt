@@ -197,7 +197,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         if (localeWasChanged) {
             localeWasChanged = false
             val screen = when (systemInteractor.lastMode) {
-                Screens.CARRIER_MODE   -> Screens.Carrier()
+                Screens.CARRIER_MODE   -> Screens.CarrierMode
                 Screens.PASSENGER_MODE -> Screens.MainPassenger()
                 else                   -> throw IllegalArgumentException("Wrong last mode in onBackCommandClick in ${this.javaClass.name}")
             }

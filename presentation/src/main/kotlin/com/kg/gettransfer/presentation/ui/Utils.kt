@@ -1,18 +1,22 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 
 import android.content.Context
+import android.content.Intent
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 
 import android.os.Build
 import android.os.Bundle
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import android.support.v4.app.FragmentActivity
 
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
@@ -214,6 +218,42 @@ object Utils : KoinComponent {
             setNegativeButton(R.string.LNG_NO) { _, _ -> clickResult(false)}
             setPositiveButton(R.string.LNG_YES) { _, _ -> clickResult(true)}
             show()
+        }
+    }
+
+    /**
+     * Go to google play with return result
+     */
+    fun goToGooglePlay(context: FragmentActivity, packageName: String) {
+        try {
+            context.startActivity(
+                    createGooglePlayIntent(Uri.parse(context.getString(R.string.market_link) + packageName)))
+        } catch (anfe: ActivityNotFoundException) {
+            context.startActivity(
+                    createGooglePlayIntent(Uri.parse(context.getString(R.string.market_site_link) + packageName))
+            )
+        }
+    }
+
+    /**
+     * Go to google play without result
+     */
+    fun goToGooglePlay(context: FragmentActivity, packageName: String, requestCode: Int) {
+        try {
+            context.startActivityForResult(
+                    createGooglePlayIntent(Uri.parse(context.getString(R.string.market_link) + packageName)),
+                    requestCode)
+        } catch (anfe: ActivityNotFoundException) {
+            context.startActivityForResult(
+                    createGooglePlayIntent(Uri.parse(context.getString(R.string.market_site_link) + packageName)),
+                    requestCode)
+        }
+    }
+
+    private fun createGooglePlayIntent(uri: Uri) : Intent {
+        return Intent(Intent.ACTION_VIEW).apply {
+            data = uri
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
     }
 

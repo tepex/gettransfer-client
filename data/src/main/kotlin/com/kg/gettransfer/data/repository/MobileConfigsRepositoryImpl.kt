@@ -13,7 +13,5 @@ class MobileConfigsRepositoryImpl : Repository<MobileConfigs>, KoinComponent {
 
     private val systemRepository: SystemRepository by inject()
 
-    private var mobileConfigs = MobileConfigs.EMPTY
-
-    override fun get() = systemRepository.mobileConfig
+    override fun get() = systemRepository.mobileConfigs
 }
