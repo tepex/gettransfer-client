@@ -17,4 +17,4 @@ data class TransportTypePriceEntity(
 }
 
 fun TransportTypePrice.map() = TransportTypePriceEntity(minFloat, min, bookNow?.toString())
-fun TransportTypePriceEntity.map() = TransportTypePrice(minFloat, min, bookNow?.let { TransportType.ID.parse(it) })
+fun TransportTypePriceEntity.map() = TransportTypePrice(minFloat, min, bookNow?.map())

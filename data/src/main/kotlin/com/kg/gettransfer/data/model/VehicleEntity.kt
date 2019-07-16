@@ -50,6 +50,6 @@ fun VehicleEntity.map() =
         registrationNumber,
         year,
         color,
-        TransportType(TransportType.ID.parse(transportTypeId), paxMax, luggageMax),
+        TransportType(transportTypeId.map(), paxMax, luggageMax),
         photos
     )
