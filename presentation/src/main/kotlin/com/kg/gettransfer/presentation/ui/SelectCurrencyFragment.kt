@@ -46,6 +46,8 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
             val parentPresenter = parentActivity.getPresenter()
             if (parentPresenter is CurrencyChangedListener) presenter.addCurrencyChangedListener(parentPresenter)
         }
+
+        presenter.init()
     }
 
     @CallSuper

@@ -20,8 +20,7 @@ class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinCompone
     private val popularCurrencies = currencies.filter { Currency.POPULAR.contains(it.code) }
     private var currencyChangedListener: CurrencyChangedListener? = null
 
-    override fun attachView(view: SelectCurrencyView) {
-        super.attachView(view)
+    fun init() {
         viewState.setCurrencies(
             currencies.filter { !Currency.POPULAR.contains(it.code) },
             popularCurrencies,
