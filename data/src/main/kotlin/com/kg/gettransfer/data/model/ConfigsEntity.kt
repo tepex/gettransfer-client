@@ -3,9 +3,10 @@ package com.kg.gettransfer.data.model
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
 
+import java.util.Locale
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.util.*
 
 /**
  * Representation for a [ConfigsEntity] fetched from an external layer data source
