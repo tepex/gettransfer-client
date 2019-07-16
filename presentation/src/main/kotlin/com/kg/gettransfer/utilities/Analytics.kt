@@ -128,7 +128,6 @@ class Analytics(
             sendToFacebook()
             sendToYandex()
             sendToAppsFlyer()
-            logEvent(EVENT_MAKE_PAYMENT, STATUS, RESULT_SUCCESS)
         }
 
         private fun prepareData() {

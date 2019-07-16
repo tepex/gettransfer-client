@@ -56,13 +56,13 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
             showFailedPayment()
         } ?: if (result.model.isSuccess) showSuccessfulPayment() else showFailedPayment()
         viewState.blockInterface(false)
+        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, result.model.status.name)
         viewState.stopAnimation()
     }
 
     private fun showFailedPayment() {
         router.exit()
         router.navigateTo(Screens.PaymentError(transferId))
-        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
     }
 
     private fun showSuccessfulPayment() {
