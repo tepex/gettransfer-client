@@ -673,7 +673,11 @@ class MainActivity :
 
     override fun setNetworkAvailability(context: Context) =
         super.setNetworkAvailability(context)
-            .also { requestView?.onNetworkWarning(!it) }
+            .also {
+                requestView?.onNetworkWarning(!it)
+                if (it)
+                    presenter.checkingFillAddressFields()
+            }
 
     companion object {
         @JvmField val PERMISSIONS =
