@@ -3,6 +3,8 @@ package com.kg.gettransfer.data.model
 import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.DistanceUnit
 
+import java.util.Locale
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -34,5 +36,5 @@ fun ConfigsEntity.map() =
         availableLocales.map { it.map() },
         paymentCommission,
         supportedCurrencies.map { it.map() },
-        supportedDistanceUnits.map { DistanceUnit.valueOf(it.toUpperCase()) }
+        supportedDistanceUnits.map { DistanceUnit.valueOf(it.toUpperCase(Locale.US)) }
     )
