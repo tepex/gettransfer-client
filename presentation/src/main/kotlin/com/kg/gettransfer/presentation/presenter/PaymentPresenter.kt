@@ -94,7 +94,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
     private fun showFailedPayment() {
         viewState.blockInterface(false)
         router.exit()
-        router.navigateTo(Screens.PaymentError(transfer!!.id))
+        transfer?.let { router.navigateTo(Screens.PaymentError(it.id)) }
     }
 
     private fun showSuccessfulPayment() {
