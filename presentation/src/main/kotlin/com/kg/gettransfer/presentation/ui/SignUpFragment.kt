@@ -36,6 +36,7 @@ import timber.log.Timber
  *
  * @author П. Густокашин (Diwixis)
  */
+@Suppress("TooManyFunctions")
 class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     @InjectPresenter
     internal lateinit var presenter: SignUpPresenter
@@ -53,7 +54,8 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
 
         initTextChangeListeners()
         initPhoneTextChangeListeners()
-        btnLogin.setThrottledClickListener(1000L) {
+        @Suppress("MagicNumber")
+        btnLogin.setThrottledClickListener(1_000L) {
             showLoading()
             presenter.registration()
         }
@@ -70,10 +72,11 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
             childFragmentManager.isAccessible = true
             childFragmentManager.set(this, null)
-
         } catch (e: NoSuchFieldException) {
+            @Suppress("TooGenericExceptionThrown")
             throw RuntimeException(e)
         } catch (e: IllegalAccessException) {
+            @Suppress("TooGenericExceptionThrown")
             throw RuntimeException(e)
         }
         super.onDetach()
@@ -107,18 +110,18 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     private fun initTextChangeListeners() {
-        nameLayout.fieldText.onTextChanged {
-            presenter.name = it
+        nameLayout.fieldText.onTextChanged { text ->
+            presenter.name = text
             btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
-        phoneLayout.fieldText.onTextChanged {
-            presenter.phone = it
+        phoneLayout.fieldText.onTextChanged { text ->
+            presenter.phone = text
             btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
-        emailLayout.fieldText.onTextChanged {
-            presenter.email = it
+        emailLayout.fieldText.onTextChanged { text ->
+            presenter.email = text
             btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
@@ -128,6 +131,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         }
     }
 
+    @Suppress("ComplexMethod")
     private fun initPhoneTextChangeListeners() {
         with(phoneLayout.fieldText) {
             onTextChanged { text ->
@@ -138,17 +142,14 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             }
             addTextChangedListener(PhoneNumberFormatter())
             setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) phoneLayout.fieldText.text.toString().let {
-                    val phoneCode = Utils.getPhoneCodeByCountryIso(context!!)
-                    if (it.isEmpty()) {
-                        setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+                if (hasFocus) {
+                    phoneLayout.fieldText.text.toString().let { phone ->
+                        context?.let { context ->
+                            val phoneCode = Utils.getPhoneCodeByCountryIso(context)
+                            if (phone.isEmpty()) setText(if (phoneCode > 0) "+$phoneCode" else "+")
+                        }
                     }
-                }
-                else phoneLayout.fieldText.text.toString().let {
-                    if (it.length <= 4) {
-                        setText("")
-                    }
-                }
+                } else if (phoneLayout.fieldText.text.toString().length <= MIN_PHONE_LENGTH) setText("")
             }
         }
     }
@@ -161,11 +162,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         emailLayout.fieldText.setText(email)
     }
 
-    companion object {
-        fun newInstance() = SignUpFragment()
-    }
-
-    //---- Shit from base classes ------
+    // ---- Shit from base classes ------
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if (block) {
@@ -174,24 +171,25 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     override fun showLoading() {
-        if (loadingFragment.isAdded) return
-        fragmentManager?.beginTransaction()?.apply {
-            replace(android.R.id.content, loadingFragment)
-            commit()
+        if (!loadingFragment.isAdded) {
+            fragmentManager?.beginTransaction()?.apply {
+                replace(android.R.id.content, loadingFragment)
+                commit()
+            }
         }
     }
 
     override fun hideLoading() {
-        if (!loadingFragment.isAdded) return
-        fragmentManager?.beginTransaction()?.apply {
-            remove(loadingFragment)
-            commit()
+        if (loadingFragment.isAdded) {
+            fragmentManager?.beginTransaction()?.apply {
+                remove(loadingFragment)
+                commit()
+            }
         }
     }
 
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
-        //TODO remove BaseView or add code.
-    }
+    // TODO remove BaseView or add code.
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
@@ -210,11 +208,15 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             .show(fragmentManager)
     }
 
-    override fun setError(e: DatabaseException) {
-        //TODO remove BaseView or add code.
-    }
+    // TODO remove BaseView or add code.
+    override fun setError(e: DatabaseException) {}
 
-    override fun setTransferNotFoundError(transferId: Long) {
-        //TODO remove BaseView or add code.
+    // TODO remove BaseView or add code.
+    override fun setTransferNotFoundError(transferId: Long) {}
+
+    companion object {
+        const val MIN_PHONE_LENGTH = 4
+
+        fun newInstance() = SignUpFragment()
     }
 }
