@@ -202,7 +202,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     override fun showLoading() {
         if (loadingFragment.isAdded) return
         fragmentManager?.beginTransaction()?.apply {
-            replace(R.id.container, loadingFragment)
+            replace(android.R.id.content, loadingFragment)
             commit()
         }
     }
