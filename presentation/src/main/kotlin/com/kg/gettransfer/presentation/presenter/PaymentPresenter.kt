@@ -92,14 +92,20 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
     }
 
     private fun showFailedPayment() {
-        viewState.blockInterface(false)
-        router.exit()
-        transfer?.let { router.navigateTo(Screens.PaymentError(it.id)) }
+        if (!showFailedPayment) {
+            showFailedPayment = true
+            viewState.blockInterface(false)
+            router.exit()
+            transfer?.let { router.navigateTo(Screens.PaymentError(it.id)) }
+        }
     }
 
     private fun showSuccessfulPayment() {
-        viewState.blockInterface(false)
-        transfer?.let { router.newChainFromMain(Screens.PaymentSuccess(it.id, offer?.id)) }
-        analytics.EcommercePurchase(paymentType).sendAnalytics()
+        if (!showSuccessPayment) {
+            showSuccessPayment = true
+            viewState.blockInterface(false)
+            transfer?.let { router.newChainFromMain(Screens.PaymentSuccess(it.id, offer?.id)) }
+            analytics.EcommercePurchase(paymentType).sendAnalytics()
+        }
     }
 }
