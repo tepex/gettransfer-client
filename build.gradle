@@ -111,7 +111,9 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectCurrencyPresenter.kt",
 
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/LogInFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCurrencyFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt"

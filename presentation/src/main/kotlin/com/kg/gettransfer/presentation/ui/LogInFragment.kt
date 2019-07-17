@@ -37,6 +37,7 @@ import timber.log.Timber
  *
  * @author П. Густокашин (Diwixis)
  */
+@Suppress("TooManyFunctions")
 class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     @InjectPresenter
@@ -77,10 +78,11 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
             val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
             childFragmentManager.isAccessible = true
             childFragmentManager.set(this, null)
-
         } catch (e: NoSuchFieldException) {
+            @Suppress("TooGenericExceptionThrown")
             throw RuntimeException(e)
         } catch (e: IllegalAccessException) {
+            @Suppress("TooGenericExceptionThrown")
             throw RuntimeException(e)
         }
         super.onDetach()
@@ -98,13 +100,13 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     }
 
     private fun initTextChangeListeners() {
-        emailLayout.fieldText.onTextChanged {
-            presenter.setEmailOrPhone(it)
+        emailLayout.fieldText.onTextChanged { text ->
+            presenter.setEmailOrPhone(text)
             btnLogin.isEnabled = presenter.isEnabledButtonLogin
             btnRequestCode.isEnabled = presenter.isEnabledRequestCodeButton
         }
-        etPassword.onTextChanged {
-            presenter.password = it
+        etPassword.onTextChanged { text ->
+            presenter.password = text
             btnLogin.isEnabled = presenter.isEnabledButtonLogin
         }
     }
@@ -135,7 +137,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         fun newInstance() = LogInFragment()
     }
 
-    //--------------------------------------------
+    // --------------------------------------------
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if (block) {
@@ -143,54 +145,47 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         } else hideLoading()
     }
 
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        //TODO remove BaseView or add code.
-    }
+    // TODO remove BaseView or add code.
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {}
 
-    override fun setTransferNotFoundError(transferId: Long) {
-        //TODO remove BaseView or add code.
-    }
+    // TODO remove BaseView or add code.
+    override fun setTransferNotFoundError(transferId: Long) {}
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         when (e.code) {
-            ApiException.NO_USER -> {
-                BottomSheetDialog
-                    .newInstance()
-                    .apply {
-                        title = this@LogInFragment.getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
-                        onDismissCallBack = { hideLoading() }
-                    }
-                    .show(fragmentManager)
-            }
-            ApiException.NOT_FOUND -> {
-                BottomSheetDialog
-                    .newInstance()
-                    .apply {
-                        title =
-                            this@LogInFragment.getString(
-                                R.string.LNG_ACCOUNT_NOTFOUND,
-                                presenter.params.emailOrPhone //TODO вот тут возможно придется просить поле из презентера. Или всегда в метожд передавать лишний параметр.
-                            )
-                        text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
-                        buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
-                        onClickOkButton = { changePage?.invoke(presenter.params.emailOrPhone, presenter.isPhone()) }
-                        onDismissCallBack = { hideLoading() }
-                        isShowCloseButton = true
-                    }
-                    .show(fragmentManager)
-            }
-            else -> {
-                BottomSheetDialog
-                    .newInstance()
-                    .apply {
-                        title = e.message ?: "Error"
-                        onDismissCallBack = { hideLoading() }
-                    }
-                    .show(fragmentManager)
-            }
+            ApiException.NO_USER -> BottomSheetDialog
+                .newInstance()
+                .apply {
+                    title = this@LogInFragment.getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
+                    onDismissCallBack = { hideLoading() }
+                }
+                .show(fragmentManager)
+            ApiException.NOT_FOUND -> BottomSheetDialog
+                .newInstance()
+                .apply {
+                    title = this@LogInFragment.getString(
+                        R.string.LNG_ACCOUNT_NOTFOUND,
+                        /* TODO вот тут возможно придется просить поле из презентера.
+                           Или всегда в метод передавать лишний параметр. */
+                        presenter.params.emailOrPhone
+                    )
+                    text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
+                    buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
+                    onClickOkButton = { changePage?.invoke(presenter.params.emailOrPhone, presenter.isPhone()) }
+                    onDismissCallBack = { hideLoading() }
+                    isShowCloseButton = true
+                }
+                .show(fragmentManager)
+            else -> BottomSheetDialog
+                .newInstance()
+                .apply {
+                    title = e.message ?: "Error"
+                    onDismissCallBack = { hideLoading() }
+                }
+                .show(fragmentManager)
         }
     }
 
