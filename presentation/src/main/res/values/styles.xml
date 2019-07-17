@@ -320,4 +320,9 @@
     <style name="shimmer_item">
         <item name="android:background">@color/shimmer</item>
     </style>
+
+    <style name="dialog_animation_fade">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
 </resources>

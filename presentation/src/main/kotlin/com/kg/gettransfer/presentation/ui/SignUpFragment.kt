@@ -15,6 +15,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.extensions.hideKeyboard
 
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
@@ -55,7 +56,8 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         initTextChangeListeners()
         initPhoneTextChangeListeners()
         @Suppress("MagicNumber")
-        btnLogin.setThrottledClickListener(1_000L) {
+        btnLogin.setThrottledClickListener(1_000L) { view ->
+            view.hideKeyboard()
             showLoading()
             presenter.registration()
         }
