@@ -27,7 +27,7 @@ class AccountManager : KoinComponent {
         get() = remoteUser.profile
 
     val isLoggedIn: Boolean //is authorized user
-        get() = (!remoteProfile.email.isNullOrEmpty() || !remoteProfile.phone.isNullOrEmpty()) && remoteUser.termsAccepted
+        get() = !remoteProfile.email.isNullOrEmpty() || !remoteProfile.phone.isNullOrEmpty()
 
     val hasAccount: Boolean //is temporary or authorized user
         get() = isLoggedIn || (remoteProfile.email.isNullOrEmpty() && remoteProfile.phone.isNullOrEmpty() && remoteUser.termsAccepted)
