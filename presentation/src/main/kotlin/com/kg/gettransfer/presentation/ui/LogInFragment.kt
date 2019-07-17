@@ -15,6 +15,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EMAIL
@@ -90,10 +91,12 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     private fun initClickListeners() {
         btnLogin.setThrottledClickListener {
+            it.hideKeyboard()
             showLoading()
             presenter.onLoginClick()
         }
         btnRequestCode.setThrottledClickListener {
+            it.hideKeyboard()
             showLoading()
             presenter.sendVerificationCode()
         }

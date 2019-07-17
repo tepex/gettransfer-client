@@ -39,6 +39,14 @@ class BottomSheetDialog : BaseBottomSheetDialogFragment() {
     var isShowCloseButton = false
     var isShowOkButton = true
 
+    override fun onStart() {
+        super.onStart()
+
+        if (dialog == null) return
+
+        dialog?.window?.setWindowAnimations(R.style.dialog_animation_fade)
+    }
+
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
