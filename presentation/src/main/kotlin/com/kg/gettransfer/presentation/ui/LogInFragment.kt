@@ -90,13 +90,13 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     }
 
     private fun initClickListeners() {
-        btnLogin.setThrottledClickListener {
-            it.hideKeyboard()
+        btnLogin.setThrottledClickListener { view ->
+            view.hideKeyboard()
             showLoading()
             presenter.onLoginClick()
         }
-        btnRequestCode.setThrottledClickListener {
-            it.hideKeyboard()
+        btnRequestCode.setThrottledClickListener { view ->
+            view.hideKeyboard()
             showLoading()
             presenter.sendVerificationCode()
         }
