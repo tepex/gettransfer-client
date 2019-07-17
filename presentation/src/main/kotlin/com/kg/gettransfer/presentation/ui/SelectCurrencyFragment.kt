@@ -54,6 +54,8 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
     @CallSuper
     override fun onDestroyView() {
         presenter.removeCurrencyChangedListener()
+        rvAllCurrencies.adapter = null
+        rvPopularCurrencies.adapter = null
         super.onDestroyView()
     }
 
