@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.PaymentDataStoreCache
 import com.kg.gettransfer.data.ds.PaymentDataStoreRemote
 import com.kg.gettransfer.data.model.map
+
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.BraintreeToken
 import com.kg.gettransfer.domain.model.OfferItem
@@ -16,6 +17,7 @@ import com.kg.gettransfer.domain.model.PaymentStatusRequest
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.repository.PaymentRepository
+
 import org.koin.core.inject
 
 class PaymentRepositoryImpl(
@@ -27,9 +29,9 @@ class PaymentRepositoryImpl(
     override var selectedTransfer: Transfer? = null
     override var selectedOffer: OfferItem? = null
 
-    override suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment?> =
+    override suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment> =
         try {
-            Result(factory.retrieveRemoteDataStore().createPayment(paymentRequest.map())?.map())
+            Result(factory.retrieveRemoteDataStore().createPayment(paymentRequest.map()).map())
         } catch (e: RemoteException) {
             Result(Payment.EMPTY, e.map())
         }
