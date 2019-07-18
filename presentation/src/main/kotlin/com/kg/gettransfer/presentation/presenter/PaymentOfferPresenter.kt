@@ -40,10 +40,6 @@ import org.koin.core.inject
 @Suppress("TooManyFunctions")
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
-    companion object {
-        const val PRICE_30 = 0.3
-    }
-
     private val paymentInteractor: PaymentInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
 
@@ -140,21 +136,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             paymentRequest.gatewayId = selectedPayment
-            if (selectedPayment == PaymentRequestModel.PLATRON) {
-                val paymentResult =
-                    utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
-                if (paymentResult.error != null) {
-                    paymentResult.error?.let { err ->
-                        log.error("get payment error", err)
-                        viewState.setError(err)
-                    }
-                } else {
-                    url = paymentResult.model.url
-                    navigateToPayment()
-                }
-                viewState.blockInterface(false)
-            } else {
-                getBraintreeToken()
+            when (selectedPayment) {
+                PaymentRequestModel.PLATRON -> payByCard(paymentRequest)
+                PaymentRequestModel.PAYPAL  -> getBraintreeToken()
+                else                        -> payByBalance(paymentRequest)
             }
             logEventBeginCheckout()
         }
@@ -216,13 +201,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         val phoneOrEmail = when (existedField) {
             ApiException.EMAIL_EXISTED -> accountManager.tempProfile.email
             ApiException.PHONE_EXISTED -> accountManager.tempProfile.phone
-            else -> throw UnsupportedOperationException()
+            else                       -> throw UnsupportedOperationException()
         }
-        phoneOrEmail?.let { redirectToLogin(it) }
-    }
-
-    private fun redirectToLogin(existedEmailOrPhone: String) {
-        router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, existedEmailOrPhone))
+        phoneOrEmail?.let { router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, it)) }
     }
 
     private fun getBraintreeToken() {
@@ -285,16 +266,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private fun navigateToPayment() {
-        router.navigateTo(
-            Screens.Payment(
-                url,
-                paymentRequest.percentage,
-                selectedPayment
-            )
-        )
-    }
-
     @Suppress("ComplexMethod")
     private fun logEventBeginCheckout() {
         val offerType = if (offer != null) Analytics.REGULAR else Analytics.NOW
@@ -333,4 +304,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     fun onAgreementClicked() = router.navigateTo(Screens.LicenceAgree)
+
+    companion object {
+        const val PRICE_30 = 0.3
+    }
 }
