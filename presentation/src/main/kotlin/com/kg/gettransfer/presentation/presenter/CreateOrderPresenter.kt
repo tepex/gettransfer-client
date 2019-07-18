@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
-
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate

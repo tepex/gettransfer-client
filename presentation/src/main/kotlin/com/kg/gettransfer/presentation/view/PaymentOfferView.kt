@@ -1,9 +1,12 @@
 package com.kg.gettransfer.presentation.view
 
 import android.support.annotation.StringRes
+
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+
 import com.braintreepayments.api.dropin.DropInRequest
+
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 
@@ -27,5 +30,16 @@ interface PaymentOfferView : BaseView {
     fun showBadCredentialsInfo(field: Int)
 
     fun showFieldError(@StringRes stringId: Int)
-    fun enablePayment(enable: Boolean)
+    fun highLightError(error: CreateOrderView.FieldError?)
+
+    /*companion object {
+        val EXTRA_PARAMS = "${PaymentOfferView::class.java.name}.params"
+    }
+
+    @Serializable
+    data class Params(
+            @Serializable(with = DateSerializer::class) val dateRefund: Date?,
+            val transferId: Long,
+            val paymentPercentages: List<Int>
+    )*/
 }

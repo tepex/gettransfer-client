@@ -89,7 +89,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 )
             }
         }
-        enablePaymentBtn()
+
         transfer?.paymentPercentages?.let { percentages ->
             offer?.let { offer ->
                 when (offer) {
@@ -98,6 +98,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 }
             }
         }
+
         if (loginScreenIsShowed) {
             loginScreenIsShowed = false
             if (accountManager.hasData) {
@@ -124,18 +125,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     fun setEmail(email: String) {
         accountManager.tempProfile.email = email.trim()
-        enablePaymentBtn()
     }
 
     fun setPhone(phone: String) {
         accountManager.tempProfile.phone = phone.trim()
-        enablePaymentBtn()
-    }
-
-    fun enablePaymentBtn() {
-        with(accountManager.tempProfile) {
-            viewState.enablePayment(!email.isNullOrEmpty() && !phone.isNullOrEmpty())
-        }
     }
 
     private fun getPayment() {
@@ -196,6 +189,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             utils.launchSuspend { pushAccount() }
         } else {
             viewState.showFieldError(error.stringId)
+            viewState.highLightError(error)
         }
     }
 
