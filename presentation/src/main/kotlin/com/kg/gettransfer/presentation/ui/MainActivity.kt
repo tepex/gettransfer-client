@@ -146,8 +146,6 @@ class MainActivity :
         viewNetworkNotAvailable = textNetworkNotAvailable
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
 
-        btnShowDrawerLayout.setOnClickListener { drawer.openDrawer(Gravity.START) }
-        btnBack.setOnClickListener { presenter.onBackClick() }
         ivSelectFieldTo.setOnClickListener { presenter.switchUsedField() }
         drawer = drawerLayout as DrawerLayout
         drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
@@ -542,7 +540,10 @@ class MainActivity :
 
     private fun defineMapModeStrategy() {
         btnNext.setOnClickListener { performNextClick() }
-        btnBack.setOnClickListener { presenter.onBackClick() }
+        btnBack.setOnClickListener {
+            // hide map
+            switcher_map.switch_mode_.isChecked = false
+        }
     }
 
     override fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean) {
@@ -568,7 +569,6 @@ class MainActivity :
 
     override fun selectFieldFrom() {
         mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.point_orange))
-        switchButtons(false)
         setAlpha(ALPHA_FULL)
         ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.btn_pin_location))
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.START)
@@ -576,15 +576,9 @@ class MainActivity :
 
     override fun setFieldTo() {
         mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b))
-        switchButtons(true)
         setAlpha(ALPHA_DISABLED)
         ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.btn_pin_enabled))
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
-    }
-
-    private fun switchButtons(isBackVisible: Boolean) {
-        btnBack.isVisible = isBackVisible
-        btnShowDrawerLayout.isVisible = !isBackVisible
     }
 
     private fun setAlpha(alpha: Float) {

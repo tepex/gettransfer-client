@@ -88,16 +88,6 @@
 						android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
 						android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end">
 
-						<ImageView
-							android:id="@+id/btnShowDrawerLayout"
-							android:layout_width="@dimen/activity_main_buttons_size"
-							android:layout_height="@dimen/activity_main_buttons_size"
-							app:layout_constraintTop_toTopOf="parent"
-							app:layout_constraintStart_toStartOf="parent"
-							app:srcCompat="@drawable/ic_menu"
-							android:background="@drawable/back_circle_white_buttons"
-							android:clickable="true"
-							android:focusable="true"/>
 
 						<ImageView
 							android:id="@+id/btnBack"
@@ -108,8 +98,7 @@
 							app:srcCompat="@drawable/ic_back"
 							android:background="@drawable/back_circle_white_buttons"
 							android:clickable="true"
-							android:focusable="true"
-							android:visibility="gone"/>
+							android:focusable="true"/>
 
 					</FrameLayout>
 
@@ -219,15 +208,6 @@
 			android:id="@+id/hourly_sheet"
 			layout="@layout/view_hourly_picker"
 			tools:visibility="gone"/>
-
-
-		<ProgressBar android:id="@+id/progress"
-			style="?android:attr/progressBarStyleLarge"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="8dp"
-			android:layout_centerInParent="true"
-			android:visibility="gone" />
 
 	</android.support.design.widget.CoordinatorLayout>
 
