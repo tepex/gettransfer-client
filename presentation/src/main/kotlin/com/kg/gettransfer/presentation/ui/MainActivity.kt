@@ -194,6 +194,7 @@ class MainActivity :
         btnBack.setOnClickListener {
             // hide map
             screenModeChanged(false)
+            presenter.resetState()
         }
 
         enableBtnNext()
