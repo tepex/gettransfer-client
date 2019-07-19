@@ -63,7 +63,6 @@ import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_navigation.*
-import kotlinx.android.synthetic.main.view_switcher.*
 
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -161,7 +160,6 @@ class MainActivity :
 
         switchMain(withMap = systemInteractor.lastMainScreenMode == Screens.MAIN_WITH_MAP, firstAttach = true)
         switch_mode.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
-        switcher_map.switch_mode_.setOnCheckedChangeListener { _, isChecked -> screenModeChanged(isChecked) }
 
         isFirst = savedInstanceState == null
 
@@ -209,7 +207,7 @@ class MainActivity :
         }
     }
 
-    private fun screenModeChanged(isChecked: Boolean) {
+    fun screenModeChanged(isChecked: Boolean) {
         screenType = if (isChecked) MAP_SCREEN else REQUEST_SCREEN
         switchMain(isChecked)
         defineNavigationStrategy()
@@ -430,7 +428,6 @@ class MainActivity :
     }
 
     private fun setSwitchersVisibility(visible: Boolean) {
-        switcher_map.isVisible = visible
         switch_panel.isVisible = visible
     }
 
@@ -542,7 +539,7 @@ class MainActivity :
         btnNext.setOnClickListener { performNextClick() }
         btnBack.setOnClickListener {
             // hide map
-            switcher_map.switch_mode_.isChecked = false
+            screenModeChanged(false)
         }
     }
 
