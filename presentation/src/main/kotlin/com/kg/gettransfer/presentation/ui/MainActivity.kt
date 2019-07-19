@@ -427,11 +427,6 @@ class MainActivity :
 
     override fun openMapToSetPoint() {
         switchMain(true)
-        setSwitchersVisibility(false)
-    }
-
-    private fun setSwitchersVisibility(visible: Boolean) {
-        switch_panel.isVisible = visible
     }
 
     override fun setMarkerElevation(up: Boolean) {
@@ -563,7 +558,6 @@ class MainActivity :
 
             screenType == MainView.REQUEST_SCREEN && isAddressNavigating -> {
                 performClick(isTo, true)
-                setSwitchersVisibility(true)
             }
 
             hourlySheet.state == BottomSheetBehavior.STATE_COLLAPSED -> showNumberPicker(false)
