@@ -1,27 +1,37 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import android.support.annotation.NonNull
 import android.support.design.widget.BottomSheetBehavior
 import android.view.View
+
 import com.arellomobile.mvp.presenter.InjectPresenter
+
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
-import kotlinx.android.synthetic.main.activity_payment_successful.*
-import kotlinx.android.synthetic.main.dialog_payment_successful.*
-import org.jetbrains.anko.longToast
-import pub.devrel.easypermissions.EasyPermissions
+
 import java.io.InputStream
 
-class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView,
-        EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
+import kotlinx.android.synthetic.main.activity_payment_successful.*
+import kotlinx.android.synthetic.main.dialog_payment_successful.*
+
+import org.jetbrains.anko.longToast
+
+import pub.devrel.easypermissions.EasyPermissions
+
+class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
+    PaymentSuccessfulView,
+    EasyPermissions.PermissionCallbacks,
+    EasyPermissions.RationaleCallbacks {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentSuccessfulPresenter
@@ -30,6 +40,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
     override fun getPresenter(): PaymentSuccessfulPresenter = presenter
 
+    @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_successful)
@@ -44,10 +55,9 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
         bsPayment.setBottomSheetCallback(bsCallback)
 
-        sheetSuccessPayment.layoutParams.height =
-                getScreenSide(true) - Utils.dpToPxInt(this, 8f)
+        sheetSuccessPayment.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, 8f)
 
-        _mapView = mapViewRoute
+        baseMapView = mapViewRoute
         initMapView(savedInstanceState)
         presenter.setMapRoute()
 
@@ -68,16 +78,17 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
             presenter.onDownloadVoucherClick()
-        } else EasyPermissions.requestPermissions(
+        } else {
+            EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
-                RC_WRITE_FILE, *perms)
+                RC_WRITE_FILE, *perms
+            )
+        }
     }
 
     private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onSlide(p0: View, p1: Float) {
-
-        }
+        override fun onSlide(p0: View, p1: Float) {}
 
         override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_DRAGGING) {
@@ -86,6 +97,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         }
     }
 
+    @CallSuper
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
         gm.uiSettings.isScrollGesturesEnabled = false
@@ -97,12 +109,6 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     override fun setRemainTime(days: Int, hours: Int, minutes: Int) {
         val time = "$days${getString(R.string.LNG_D)}:$hours${getString(R.string.LNG_H)}:$minutes${getString(R.string.LNG_M)}"
         tvRemainTime.text = time
-    }
-
-    companion object {
-        const val TRANSFER_ID = "transferId"
-        const val OFFER_ID = "offerId"
-        private const val RC_WRITE_FILE = 111
     }
 
     override fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate) {
@@ -129,8 +135,15 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
     override fun onRationaleAccepted(requestCode: Int) {}
 
+    @CallSuper
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    companion object {
+        const val TRANSFER_ID = "transferId"
+        const val OFFER_ID = "offerId"
+        private const val RC_WRITE_FILE = 111
     }
 }

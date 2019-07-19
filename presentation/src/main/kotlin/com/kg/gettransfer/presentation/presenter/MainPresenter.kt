@@ -23,7 +23,6 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.MainView
-import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
@@ -43,8 +42,6 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
 
     private val pointMapper: PointMapper by inject()
     private val profileMapper: ProfileMapper by inject()
-
-    var screenType = REQUEST_SCREEN
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
@@ -105,7 +102,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
             nState.currentState == MainState.CHOOSE_POINT_ON_MAP ->
                 viewState.openMapToSetPoint()
 
-            screenType == REQUEST_SCREEN && !hasRequestView      ->
+            systemInteractor.lastMainScreenMode == Screens.MAIN_WITHOUT_MAP && !hasRequestView      ->
                 viewState.recreateRequestFragment()
         }
     }

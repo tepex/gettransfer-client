@@ -56,8 +56,8 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         initTextChangeListeners()
         initPhoneTextChangeListeners()
         @Suppress("MagicNumber")
-        btnLogin.setThrottledClickListener(1_000L) { view ->
-            view.hideKeyboard()
+        btnLogin.setThrottledClickListener(1_000L) { v ->
+            v.hideKeyboard()
             showLoading()
             presenter.registration()
         }

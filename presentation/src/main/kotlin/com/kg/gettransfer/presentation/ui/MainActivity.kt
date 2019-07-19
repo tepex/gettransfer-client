@@ -52,8 +52,6 @@ import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import com.kg.gettransfer.presentation.view.MainRequestView
 import com.kg.gettransfer.presentation.view.MainView
-import com.kg.gettransfer.presentation.view.MainView.Companion.MAP_SCREEN
-import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import com.kg.gettransfer.presentation.view.Screens
 
 import kotlinx.android.synthetic.main.a_b_orange_view.*
@@ -63,19 +61,19 @@ import kotlinx.android.synthetic.main.search_address.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_hourly_picker.*
 import kotlinx.android.synthetic.main.view_navigation.*
-import kotlinx.android.synthetic.main.view_switcher.*
 
 import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
 
-class MainActivity :
-    BaseGoogleMapActivity(),
+@Suppress("TooManyFunctions")
+class MainActivity : BaseGoogleMapActivity(),
     MainView,
     StoreDialogFragment.OnStoreListener {
 
     @InjectPresenter
     internal lateinit var presenter: MainPresenter
+
     var requestView: MainRequestView? = null
         set(value) {
             field = value
@@ -83,11 +81,6 @@ class MainActivity :
                 initHourly()
                 setRequestView()
             }
-        }
-    var screenType = REQUEST_SCREEN
-        set(value) {
-            field = value
-            presenter.screenType = value
         }
 
     lateinit var drawer: DrawerLayout
@@ -105,9 +98,9 @@ class MainActivity :
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
-    private val itemsNavigationViewListener = View.OnClickListener {
+    private val itemsNavigationViewListener = View.OnClickListener { view ->
         with(presenter) {
-            when (it.id) {
+            when (view.id) {
                 R.id.navNewTransfer -> drawer.closeDrawer(GravityCompat.START)
                 R.id.navLogin -> onLoginClick()
                 R.id.navAbout -> onAboutClick()
@@ -133,22 +126,22 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) window.statusBarColor = Color.TRANSPARENT
-        else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.statusBarColor = Color.TRANSPARENT
+        } else {
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
             viewGradient.isVisible = false
         }
 
-        _mapView = mapView
-        _btnCenter = btnMyLocation
+        baseMapView = mapView
+        baseBtnCenter = btnMyLocation
         markerTranslationY = mMarker.translationY
         initMapView(savedInstanceState)
         viewNetworkNotAvailable = textNetworkNotAvailable
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
 
-        btnShowDrawerLayout.setOnClickListener { drawer.openDrawer(Gravity.START) }
-        btnBack.setOnClickListener { presenter.onBackClick() }
         ivSelectFieldTo.setOnClickListener { presenter.switchUsedField() }
+        @Suppress("UnsafeCast")
         drawer = drawerLayout as DrawerLayout
         drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             @CallSuper
@@ -163,12 +156,12 @@ class MainActivity :
 
         switchMain(withMap = systemInteractor.lastMainScreenMode == Screens.MAIN_WITH_MAP, firstAttach = true)
         switch_mode.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
-        switcher_map.switch_mode_.setOnCheckedChangeListener { _, isChecked -> screenModeChanged(isChecked) }
 
         isFirst = savedInstanceState == null
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.exitTransition = Fade().apply { duration = FADE_DURATION }
+        }
         getIntents()
         presenter.initGoogleApiClient()
     }
@@ -179,8 +172,9 @@ class MainActivity :
             val rate = getIntExtra(MainView.EXTRA_RATE_VALUE, 0)
             if (transferId != 0L) presenter.rateTransfer(transferId, rate)
 
-            if (getBooleanExtra(Screens.MAIN_MENU, false))
-                Handler().postDelayed({ drawer.openDrawer(Gravity.START, true) }, 500)
+            if (getBooleanExtra(Screens.MAIN_MENU, false)) {
+                Handler().postDelayed({ drawer.openDrawer(Gravity.START, true) }, MAGIC_DELAY)
+            }
         }
     }
 
@@ -195,12 +189,41 @@ class MainActivity :
         searchTo.setOnClickListener { performClick(true) }
         rl_hourly.setOnClickListener { showNumberPicker(true) }
         btnNext.setThrottledClickListener { performNextClick() }
+        btnBack.setOnClickListener {
+            // hide map
+            switchMain(false)
+            presenter.resetState()
+        }
+
         enableBtnNext()
     }
 
-    override fun onResume() {
+    @CallSuper
+    protected override fun onStart() {
+        super.onStart()
+        hideKeyboard()
+    }
+
+    @CallSuper
+    protected override fun onResume() {
         super.onResume()
         presenter.setScreenState(requestView != null)
+    }
+
+    @CallSuper
+    override fun onBackPressed() = presenter.onBackClick()
+
+    @CallSuper
+    protected override fun onStop() {
+        nextClicked = false
+        enableBtnNext()
+        super.onStop()
+    }
+
+    @CallSuper
+    protected override fun onDestroy() {
+        presenter.disconnectGoogleApiClient()
+        super.onDestroy()
     }
 
     fun performNextClick() {
@@ -211,14 +234,8 @@ class MainActivity :
         }
     }
 
-    private fun screenModeChanged(isChecked: Boolean) {
-        screenType = if (isChecked) MAP_SCREEN else REQUEST_SCREEN
-        switchMain(isChecked)
-        defineNavigationStrategy()
-    }
-
     @SuppressLint("CommitTransaction")
-    private fun switchMain(withMap: Boolean, firstAttach: Boolean = false) {
+    fun switchMain(withMap: Boolean, firstAttach: Boolean = false) {
         with(supportFragmentManager.beginTransaction()) {
             if (!firstAttach) setAnimation(withMap, this)
             if (!withMap) {
@@ -231,21 +248,21 @@ class MainActivity :
                     isPermissionRequested = true
                     checkPermission()
                 }
-                supportFragmentManager.fragments.firstOrNull()?.let { requestView = null;remove(it) }
+                supportFragmentManager.fragments.firstOrNull()?.let { fragment ->
+                    requestView = null
+                    remove(fragment)
+                }
             }
         }?.commitAllowingStateLoss()
     }
 
-    private fun isFragmentExists() =
-        supportFragmentManager.fragments.any {
-            it is MainRequestFragment
-        }
+    private fun isFragmentExists() = supportFragmentManager.fragments.any { it is MainRequestFragment }
 
     private fun setRequestView() {
         val addressTo = if (rl_searchForm.isVisible) searchTo.text else null
         val duration = if (rl_hourly.isVisible) tvCurrent_hours.text.toString() else null
-        requestView?.let {
-            with(it) {
+        requestView?.let { requestView ->
+            with(requestView) {
                 setView(searchFrom.text, addressTo, duration, !(viewNetworkNotAvailable?.isVisible ?: false))
                 setBadge(tvEventsCount.text.toString())
                 showBadge(tvEventsCount.isVisible)
@@ -263,11 +280,11 @@ class MainActivity :
 
     fun performClick(clickedTo: Boolean, returnBack: Boolean = false) {
         presenter.isClickTo = clickedTo
-        processGoogleMap(true) {
+        processGoogleMap(true) { googleMap ->
             presenter.onSearchClick(
                 searchFrom.text,
                 searchTo.text,
-                it.projection.visibleRegion.latLngBounds,
+                googleMap.projection.visibleRegion.latLngBounds,
                 returnBack
             )
         }
@@ -279,31 +296,8 @@ class MainActivity :
     }
 
     private fun onPickerExpanded(expanded: Boolean) {
-        expanded.let {
-            switch_mode.isEnabled = !it
-            search_panel.isClickable = !it
-        }
-    }
-
-    @CallSuper
-    protected override fun onStart() {
-        super.onStart()
-        hideKeyboard()
-    }
-
-    @CallSuper
-    override fun onBackPressed() = presenter.onBackClick()
-
-    @CallSuper
-    protected override fun onStop() {
-        super.onStop()
-        nextClicked = false
-        enableBtnNext()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.disconnectGoogleApiClient()
+        switch_mode.isEnabled = !expanded
+        search_panel.isClickable = !expanded
     }
 
     private fun initNavigation() {
@@ -311,6 +305,7 @@ class MainActivity :
 
         val versionName = BuildConfig.VERSION_NAME
         val versionCode = BuildConfig.VERSION_CODE
+        @Suppress("UnsafeCast")
         (navFooterVersion as TextView).text =
             String.format(getString(R.string.nav_footer_version), versionName, versionCode)
         navHeaderMode.isVisible = false
@@ -318,32 +313,32 @@ class MainActivity :
         navRequests.isVisible = true
         setMenuIconsColorFilter()
 
-        readMoreListener.let {
-            navFooterStamp.setOnClickListener(it)
-            navFooterReadMore.setOnClickListener(it)
+        with(readMoreListener) {
+            navFooterStamp.setOnClickListener(this)
+            navFooterReadMore.setOnClickListener(this)
         }
-        itemsNavigationViewListener.let {
-            navNewTransfer.setOnClickListener(it)
-            navHeaderShare.setOnClickListener(it)
-            navLogin.setOnClickListener(it)
-            navRequests.setOnClickListener(it)
-            navSettings.setOnClickListener(it)
-            navSupport.setOnClickListener(it)
-            navAbout.setOnClickListener(it)
-            navBecomeACarrier.setOnClickListener(it)
-            navPassengerMode.setOnClickListener(it)
+        with(itemsNavigationViewListener) {
+            navNewTransfer.setOnClickListener(this)
+            navHeaderShare.setOnClickListener(this)
+            navLogin.setOnClickListener(this)
+            navRequests.setOnClickListener(this)
+            navSettings.setOnClickListener(this)
+            navSupport.setOnClickListener(this)
+            navAbout.setOnClickListener(this)
+            navBecomeACarrier.setOnClickListener(this)
+            navPassengerMode.setOnClickListener(this)
         }
     }
 
     private fun setMenuIconsColorFilter() {
-        ContextCompat.getColor(this, R.color.color_gtr_orange).let {
-            navNewTransfer.menu_item_image.setColorFilter(it)
-            navLogin.menu_item_image.setColorFilter(it)
-            navRequests.menu_item_image.setColorFilter(it)
-            navSettings.menu_item_image.setColorFilter(it)
-            navSupport.menu_item_image.setColorFilter(it)
-            navAbout.menu_item_image.setColorFilter(it)
-            navBecomeACarrier.menu_item_image.setColorFilter(it)
+        ContextCompat.getColor(this, R.color.color_gtr_orange).apply {
+            navNewTransfer.menu_item_image.setColorFilter(this)
+            navLogin.menu_item_image.setColorFilter(this)
+            navRequests.menu_item_image.setColorFilter(this)
+            navSettings.menu_item_image.setColorFilter(this)
+            navSupport.menu_item_image.setColorFilter(this)
+            navAbout.menu_item_image.setColorFilter(this)
+            navBecomeACarrier.menu_item_image.setColorFilter(this)
         }
     }
 
@@ -365,34 +360,40 @@ class MainActivity :
         tv_okBtn.setOnClickListener { showNumberPicker(false) }
     }
 
+    @CallSuper
     protected override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
         btnMyLocation.setOnClickListener {
             checkPermission()
             presenter.updateCurrentLocation()
         }
-        gm.setOnCameraMoveListener { presenter.onCameraMove(gm.cameraPosition!!.target, true) }
+        gm.setOnCameraMoveListener {
+            gm.cameraPosition?.let { presenter.onCameraMove(it.target, true) }
+        }
         gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
     }
 
+    @CallSuper
     override fun enablePinAnimation() {
         super.enablePinAnimation()
         presenter.enablePinAnimation()
     }
 
     private fun checkPermission() {
-        if (!EasyPermissions.hasPermissions(this, *PERMISSIONS))
+        if (!EasyPermissions.hasPermissions(this, *PERMISSIONS)) {
             EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_LOCATION_ACCESS),
                 PERMISSION_REQUEST, *PERMISSIONS
             )
+        }
     }
 
     override fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit) {
         block(EasyPermissions.hasPermissions(this, *PERMISSIONS))
     }
 
+    @CallSuper
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
@@ -405,35 +406,31 @@ class MainActivity :
 
     override fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean) {
         val zoom = resources.getInteger(R.integer.map_min_zoom).toFloat()
-        processGoogleMap(false) {
+        processGoogleMap(false) { googleMap ->
             if (centerMarker != null) {
-                it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
                 moveCenterMarker(point)
             } else {
                 /* Грязный хак!!! */
-                if (isFirst || it.cameraPosition.zoom <= MAX_INIT_ZOOM) {
+                if (isFirst || googleMap.cameraPosition.zoom <= MAX_INIT_ZOOM) {
                     val zoom1 = resources.getInteger(R.integer.map_min_zoom).toFloat()
-                    it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom1))
                     isFirst = false
                 } else {
-                    if (withAnimation) it.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
-                    else it.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                    if (withAnimation) {
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                    } else {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoom))
+                    }
                 }
             }
         }
         btnMyLocation.isVisible = showBtnMyLocation
-        //requestView?.setVisibilityBtnMyLocation(showBtnMyLocation)
+        // requestView?.setVisibilityBtnMyLocation(showBtnMyLocation)
     }
 
     override fun openMapToSetPoint() {
         switchMain(true)
-        setSwitchersVisibility(false)
-        defineNavigationStrategy()
-    }
-
-    private fun setSwitchersVisibility(visible: Boolean) {
-        switcher_map.isVisible = visible
-        switch_panel.isVisible = visible
     }
 
     override fun setMarkerElevation(up: Boolean) {
@@ -442,15 +439,15 @@ class MainActivity :
             .withEndAction {
                 presenter.isMarkerAnimating = false
                 if (!up) markerShadow.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        this,
-                        R.drawable.default_position_shadow
-                    )
+                    ContextCompat.getDrawable(this, R.drawable.default_position_shadow)
                 )
             }
-            .setDuration(150L)
-        if (up) animator.translationYBy(Utils.convertDpToPixels(this, -MainPresenter.MARKER_ELEVATION))
-        else animator.translationY(markerTranslationY)
+            .setDuration(MAGIC_DURATION)
+        if (up) {
+            animator.translationYBy(Utils.convertDpToPixels(this, -MainPresenter.MARKER_ELEVATION))
+        } else {
+            animator.translationY(markerTranslationY)
+        }
 
         animator.start()
 
@@ -475,6 +472,7 @@ class MainActivity :
         }
     }
 
+    @CallSuper
     override fun setError(e: ApiException) {
         searchFrom.text = getString(R.string.search_nothing)
         if (e.isNotFound()) super.setError(e)
@@ -519,41 +517,15 @@ class MainActivity :
         btnNext.isEnabled = searchFrom.text.isNotEmpty() && (searchTo.text.isNotEmpty() || presenter.isHourly())
     }
 
-    private fun defineNavigationStrategy() {
-        if (screenType == REQUEST_SCREEN) definePointSelectionStrategy()
-        else defineMapModeStrategy()
-    }
-
-    /*
-    Is used when in no-map mode, but in SearchPresenter selectFinishPointOnMap() was called
-     */
-    private fun definePointSelectionStrategy() {
-        btnNext.setOnClickListener {
-            switchMain(false)
-            setSwitchersVisibility(true)
-            presenter.resetState()
-        }
-        btnBack.setOnClickListener {
-            performClick(true, true)
-            setSwitchersVisibility(true)
-            presenter.resetState()
-        }
-    }
-
-    private fun defineMapModeStrategy() {
-        btnNext.setOnClickListener { performNextClick() }
-        btnBack.setOnClickListener { presenter.onBackClick() }
-    }
-
     override fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean) {
         navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_PASSENGER)
         with(profile) {
             navHeaderName.isVisible = isLoggedIn && !name.isNullOrEmpty()
             navHeaderEmail.isVisible = isLoggedIn && !email.isNullOrEmpty()
-            navLogin.isVisible = (!isLoggedIn && hasAccount) || !hasAccount
+            navLogin.isVisible = !isLoggedIn && hasAccount || !hasAccount
             layoutAccountInfo.isVisible = navHeaderName.isVisible || navHeaderEmail.isVisible
             if (isLoggedIn) {
-                name?.let { navHeaderName.text = it }
+                name?.let  { navHeaderName.text = it }
                 email?.let { navHeaderEmail.text = it }
             }
         }
@@ -568,7 +540,6 @@ class MainActivity :
 
     override fun selectFieldFrom() {
         mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.point_orange))
-        switchButtons(false)
         setAlpha(ALPHA_FULL)
         ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.btn_pin_location))
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.START)
@@ -576,15 +547,9 @@ class MainActivity :
 
     override fun setFieldTo() {
         mMarker.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_map_label_b))
-        switchButtons(true)
         setAlpha(ALPHA_DISABLED)
         ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.btn_pin_enabled))
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END)
-    }
-
-    private fun switchButtons(isBackVisible: Boolean) {
-        btnBack.isVisible = isBackVisible
-        btnShowDrawerLayout.isVisible = !isBackVisible
     }
 
     private fun setAlpha(alpha: Float) {
@@ -595,12 +560,8 @@ class MainActivity :
     override fun onBackClick(isAddressNavigating: Boolean, isTo: Boolean) {
         when {
             drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
-
-            screenType == MainView.REQUEST_SCREEN && isAddressNavigating -> {
+            systemInteractor.lastMainScreenMode == Screens.MAIN_WITHOUT_MAP && isAddressNavigating ->
                 performClick(isTo, true)
-                setSwitchersVisibility(true)
-            }
-
             hourlySheet.state == BottomSheetBehavior.STATE_COLLAPSED -> showNumberPicker(false)
             else -> presenter.onBackCommandClick()
         }
@@ -622,31 +583,29 @@ class MainActivity :
     }
 
     override fun setTripMode(duration: Int?) {
-        duration?.let {
+        duration?.let { d ->
             switch_mode.isChecked = true
             with(HourlyValuesHelper) {
-                np_hours.value = durationValues.indexOf(it)
-                tvCurrent_hours.text = getValue(it, this@MainActivity)
+                np_hours.value = durationValues.indexOf(d)
+                tvCurrent_hours.text = getValue(d, this@MainActivity)
             }
         }
     }
 
     override fun showRateForLastTrip(transferId: Long, vehicle: String, color: String) {
-        if (supportFragmentManager.fragments.firstOrNull {
-                it.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG } == null) {
-            RatingLastTripFragment
-                .newInstance(transferId, vehicle, color)
-                .show(supportFragmentManager, RatingLastTripFragment.RATING_LAST_TRIP_TAG)
-        }
+        supportFragmentManager.fragments.firstOrNull { fragment ->
+            fragment.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG
+        } ?: RatingLastTripFragment
+            .newInstance(transferId, vehicle, color)
+            .show(supportFragmentManager, RatingLastTripFragment.RATING_LAST_TRIP_TAG)
     }
 
     override fun showDetailedReview() {
-        if (supportFragmentManager.fragments.firstOrNull {
-                it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG } == null) {
-            RatingDetailDialogFragment
-                .newInstance()
-                .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
-        }
+        supportFragmentManager.fragments.firstOrNull { fragment ->
+            fragment.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG
+        } ?: RatingDetailDialogFragment
+            .newInstance()
+            .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
     }
 
     override fun askRateInPlayMarket() =
@@ -671,13 +630,12 @@ class MainActivity :
         requestView?.setBadge(count.toString())
     }
 
+    @CallSuper
     override fun setNetworkAvailability(context: Context) =
-        super.setNetworkAvailability(context)
-            .also {
-                requestView?.onNetworkWarning(!it)
-                if (it)
-                    presenter.checkingFillAddressFields()
-            }
+        super.setNetworkAvailability(context).also { available ->
+            requestView?.onNetworkWarning(!available)
+            if (available) presenter.checkingFillAddressFields()
+        }
 
     companion object {
         @JvmField val PERMISSIONS =
@@ -688,5 +646,8 @@ class MainActivity :
 
         const val ALPHA_FULL = 1f
         const val ALPHA_DISABLED = 0.3f
+
+        const val MAGIC_DURATION = 150L
+        const val MAGIC_DELAY = 500L
     }
 }
