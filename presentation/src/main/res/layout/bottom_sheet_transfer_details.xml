@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/back_top_rounded"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/bottom_sheet_carrier_trip_details_free_space_height">
 
         <View
             android:layout_width="@dimen/bottom_sheet_transfer_details_swiped_view_width"
@@ -54,7 +55,8 @@
             android:textColor="@color/color_gtr_green"
             android:textSize="17sp"
             android:gravity="center"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <include
             android:id="@+id/view_rate_ride"
@@ -83,7 +85,6 @@
             layout="@layout/view_thanks_for_rate_small"
             android:visibility="gone" />
 
-
         <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
             android:id="@+id/back_trip"
             android:layout_width="match_parent"
@@ -93,7 +94,7 @@
 
         <include
             android:id="@+id/layoutAboutTransport"
-            layout="@layout/view_transfer_details_about_transport_new"
+            layout="@layout/view_transfer_details_about_transport"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -115,26 +116,9 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
-
-            <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:input_transfer_details=""
-                app:title_transfer_details="@string/LNG_RIDE_PASSENGERS" />
-
-            <com.kg.gettransfer.presentation.ui.custom.SeatsView
-                android:id="@+id/transfer_details_view_seats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp" />
-
-        </RelativeLayout>
+        <include
+            android:id="@+id/passengersAndSeats"
+            layout="@layout/layout_passengers_seats"/>
 
         <include
             android:id="@+id/layoutAboutRequest"
@@ -162,9 +146,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_sheet_carrier_trip_details_free_space_height" />
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

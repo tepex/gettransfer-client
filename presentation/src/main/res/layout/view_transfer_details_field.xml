@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingStart="@dimen/view_transfer_details_field_container_horizontal_padding"
     android:paddingEnd="@dimen/view_transfer_details_field_container_horizontal_padding">
 
@@ -15,7 +16,7 @@
         android:fontFamily="@font/sf_pro_text_regular"
         android:lines="1"
         android:maxWidth="@dimen/view_transfer_details_field_title_max_width"
-        android:text="Phone"
+        tools:text="Phone"
         android:textColor="@color/colorGrey"
         android:textSize="@dimen/activity_transfer_details_text_size_17sp"
         app:layout_constraintEnd_toStartOf="@id/layout_field_text"
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/sf_pro_text_regular"
             android:gravity="end"
-            android:text="+7 900 123 56 78"
+            tools:text="+7 900 123 56 78"
             android:textColor="@color/colorTextBlack"
             android:textSize="@dimen/activity_transfer_details_text_size_17sp" />
 
@@ -50,7 +51,7 @@
             android:layout_marginTop="@dimen/view_transfer_details_field_more_info_margin_top"
             android:fontFamily="@font/sf_pro_text_regular"
             android:gravity="end"
-            android:text="оплачено 100%"
+            tools:text="оплачено 100%"
             android:textColor="@color/color_gtr_grey"
             android:textSize="@dimen/activity_transfer_details_text_size_12sp"
             android:visibility="gone" />

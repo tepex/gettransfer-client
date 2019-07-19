@@ -35,7 +35,6 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.isNonZero
-import com.kg.gettransfer.extensions.visibleText
 import com.kg.gettransfer.extensions.show
 
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -57,6 +56,7 @@ import java.util.Date
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
+import kotlinx.android.synthetic.main.layout_passengers_seats.view.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
@@ -69,10 +69,9 @@ import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
 import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.*
 
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
-import kotlinx.android.synthetic.main.view_seats_number.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.view.*
-import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.*
-import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.view.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_transport.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_transport.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_comment.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_driver_languages.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_field.view.*
@@ -430,15 +429,28 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 comment_view.isVisible = true
             }
         }
+        setPassengersAndSeats(transfer)
+    }
 
-        with(transfer_details_view_seats) {
-            tv_countPassengers.text = getString(R.string.X_SIGN).plus("${transfer.countPassengers}")
-            imgPassengers.isVisible = true
-            tv_countPassengers.isVisible = true
-            transfer.getChildrenCount().isNonZero()?.let { children ->
-                tvCountChildren.visibleText = "${getString(R.string.X_SIGN)}$children"
-                imgChildSeats.isVisible =  true
+    private fun setPassengersAndSeats(transfer: TransferModel) {
+        with(passengersAndSeats) {
+            passengers.field_text.text = transfer.countPassengers.toString()
+            transfer.childSeatsInfant.isNonZero()?.let {
+                setCountSeats(infantSeat, it)
             }
+            transfer.childSeatsConvertible.isNonZero()?.let {
+                setCountSeats(convertibleSeat, it)
+            }
+            transfer.childSeatsBooster.isNonZero()?.let {
+                setCountSeats(boosterSeat, it)
+            }
+        }
+    }
+
+    private fun setCountSeats(view: TransferDetailsField, countSeats: Int) {
+        view.apply {
+            isVisible = true
+            field_text.text = countSeats.toString()
         }
     }
 
@@ -554,7 +566,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             car_model_field.isVisible = true
 
             view_conveniences.apply {
-                conveniences_field.field_title.text = getString(offerModel.vehicle.transportType.nameId)
+                conveniences_field.text = getString(offerModel.vehicle.transportType.nameId)
                 imgFreeWater.isVisible = offerModel.refreshments
                 imgFreeWiFi.isVisible  = offerModel.wifi
                 imgCharge.isVisible    = offerModel.charger

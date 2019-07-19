@@ -1,231 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <TextView
-        android:id="@+id/tvTitleAboutTransport"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_transfer_details_title_height"
-        android:background="@color/color_transfer_details_background_gray"
-        android:text="@string/LNG_RIDE_ABOUT"
-        android:textAllCaps="true"
-        android:textSize="@dimen/activity_transfer_details_text_size_13sp"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:textColor="@color/color_transfer_details_header_text_color"
-        android:paddingStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-        android:paddingEnd="@dimen/activity_transfer_details_margin_start_end_16dp"
-        android:gravity="center_vertical"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_transfer_details_horizontal_divider_height"
-        android:background="@color/color_transfer_details_horizontal_divider"/>
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/view_transfer_details_about_transport_car_layout_padding">
-
-        <ImageView
-            android:id="@+id/carPhoto"
-            android:layout_width="@dimen/view_transfer_details_about_transport_car_photo_width"
-            android:layout_height="@dimen/view_transfer_details_about_transport_car_photo_height"
-            android:src="@drawable/ic_transport_type_economy"/>
-
-        <ImageView
-            android:id="@+id/ivManyPhotos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_gallery_small_white"
-            app:layout_constraintTop_toTopOf="@+id/carPhoto"
-            app:layout_constraintEnd_toEndOf="@+id/carPhoto"
-            android:layout_margin="@dimen/view_transfer_details_about_transport_image_many_photos_margin"
-            android:visibility="gone"/>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="@dimen/view_transfer_details_about_transport_rating_layout_height"
-            android:background="@color/colorLayoutsOnImageBack"
-            app:layout_constraintStart_toStartOf="@+id/carPhoto"
-            app:layout_constraintEnd_toEndOf="@+id/carPhoto"
-            app:layout_constraintBottom_toBottomOf="@+id/carPhoto"
-            android:gravity="center">
-
-            <com.willy.ratingbar.ScaleRatingBar
-                android:id="@+id/ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srb_numStars="5"
-                app:srb_minimumStars="0"
-                app:srb_starHeight="@dimen/rating_bar_stars_height_width"
-                app:srb_starPadding="@dimen/rating_bar_stars_padding"
-                app:srb_starWidth="@dimen/rating_bar_stars_height_width"
-                app:srb_stepSize="0.1"
-                app:srb_isIndicator="true"
-                app:srb_clickable="false"
-                app:srb_drawableEmpty="@drawable/ic_star_empty"
-                app:srb_drawableFilled="@drawable/ic_star_filled"/>
-
-            <ImageView
-                android:id="@+id/ivLike"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_like_button"
-                android:layout_marginStart="@dimen/view_offer_image_like_margin_start"
-                android:visibility="gone"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/carName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/carPhoto"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-            android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:textColor="@color/colorTextBlack"
-            android:text="Mercedes-Benz E-Class Station Wagon 2017"/>
-
-        <LinearLayout
-            android:id="@+id/layoutCarLicensePlate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/carName"
-            app:layout_constraintStart_toStartOf="@+id/carName"
-            android:layout_marginTop="@dimen/view_transfer_details_about_transport_license_plate_margin_top"
-            android:padding="@dimen/view_transfer_details_about_transport_license_plate_padding"
-            android:background="@drawable/bg_license_plate">
-
-            <TextView
-                android:id="@+id/carLicensePlate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:textColor="@color/colorTextBlack"
-                android:text="A123NV777"
-                android:background="@drawable/bg_border_textview_license_plate"
-                android:padding="@dimen/view_transfer_details_about_transport_license_plate_text_padding"/>
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/carColor"
-            android:layout_width="@dimen/view_transfer_details_about_transport_car_color_image_size"
-            android:layout_height="@dimen/view_transfer_details_about_transport_car_color_image_size"
-            app:layout_constraintTop_toTopOf="@+id/layoutCarLicensePlate"
-            app:layout_constraintBottom_toBottomOf="@+id/layoutCarLicensePlate"
-            app:layout_constraintStart_toEndOf="@+id/layoutCarLicensePlate"
-            android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-            app:srcCompat="@drawable/ic_circle_car_color_indicator"
-            android:background="@drawable/border_car_color_indicator"/>
-
-    </android.support.constraint.ConstraintLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_transfer_details_horizontal_divider_height"
-        android:background="@color/color_transfer_details_horizontal_divider"/>
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_transfer_details_about_transport_transport_type_height">
-
-        <TextView
-            android:id="@+id/carType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-            android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-            android:textColor="@color/colorTextBlack"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:text="Business"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="@dimen/activity_transfer_details_margin_start_end_16dp"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/imgPassengers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_passenger_without_padding"/>
-
-            <TextView
-                android:id="@+id/tvCountPassengers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_texts_margin_start"
-                android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-                android:textColor="@color/colorTextBlack"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:text=" X 3"/>
-
-            <ImageView
-                android:id="@+id/imgBaggage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-                app:srcCompat="@drawable/ic_baggage" />
-
-            <TextView
-                android:id="@+id/tvCountBaggage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_texts_margin_start"
-                android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-                android:textColor="@color/colorTextBlack"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:text=" X 3"/>
-
-            <ImageView
-                android:id="@+id/imgFreeWiFi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-                app:srcCompat="@drawable/ic_wifi"
-                android:visibility="visible"/>
-
-            <ImageView
-                android:id="@+id/imgFreeWater"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-                app:srcCompat="@drawable/ic_free_water"
-                android:visibility="visible"/>
-
-        </LinearLayout>
-
-    </android.support.constraint.ConstraintLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_transfer_details_horizontal_divider_height"
-        android:background="@color/color_transfer_details_horizontal_divider"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-        android:id="@+id/child_seats_field"
+        android:id="@+id/car_model_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:input_transfer_details="C786EO77"
+        tools:title_transfer_details="Mercedes-Benz E-Class " />
 
-        app:title_transfer_details="@string/LNG_RIDE_CHILDREN"
-        app:input_transfer_details="2"
+    <include
+        android:id="@+id/view_conveniences"
+        layout="@layout/view_transport_conveniences"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car_model_field" />
 
-        android:visibility="visible"/>
+    <com.kg.gettransfer.presentation.ui.custom.VehiclePhotosView
+        android:id="@+id/vehiclePhotosView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_conveniences" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

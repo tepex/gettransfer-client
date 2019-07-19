@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+        android:id="@+id/passengers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title_transfer_details="@string/LNG_RIDE_PASSENGERS"
+        tools:input_transfer_details="2" />
+
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+        android:id="@+id/infantSeat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passengers"
+        app:title_transfer_details="@string/LNG_SEAT_INFANT_FULL"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:input_transfer_details="1" />
+
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+        android:id="@+id/convertibleSeat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infantSeat"
+        app:title_transfer_details="@string/LNG_SEAT_CONVERTIBLE_FULL"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:input_transfer_details="1" />
+
+    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
+        android:id="@+id/boosterSeat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/convertibleSeat"
+        app:title_transfer_details="@string/LNG_SEAT_BOOSTER_FULL"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:input_transfer_details="1" />
+
+</android.support.constraint.ConstraintLayout>
