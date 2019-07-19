@@ -62,9 +62,10 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         geoInteractor.initGeocoder()
         if (accountManager.isLoggedIn) {
             registerPushToken()
-            checkReview()
+
             utils.launchSuspend {
-                utils.asyncAwait { transferInteractor.getAllTransfers() }
+                fetchResultOnly { transferInteractor.getAllTransfers() }
+                    .isSuccess()?.let { checkReview(it) }
                 setCountEvents(countEventsInteractor.eventsCount)
             }
         }
@@ -406,26 +407,20 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         return latDiff < criteria && lngDiff < criteria
     }
 
-    private fun checkReview() =
-            with(reviewInteractor) {
-                if (!isReviewSuggested) checkLastTrip()
-                else if (shouldAskRateInMarket)
-                    utils.launchSuspend {
-                        delay(ONE_SEC_DELAY)
-                        viewState.askRateInPlayMarket()
-                    }
-            }
-
-    private fun checkLastTrip() {
-        utils.launchSuspend {
-            fetchResultOnly { transferInteractor.getAllTransfers() }
-                    .isSuccess()
-                    ?.let {
-                        getLastTransfer(it.filterRateable())
-                                ?.let { lastTransfer ->
-                                    checkToShowReview(lastTransfer) }
-                    }
+    private suspend fun checkReview(transfers: List<Transfer>) =
+        with(reviewInteractor) {
+            if (!isReviewSuggested) checkLastTrip(transfers)
+            else if (shouldAskRateInMarket)
+                utils.launchSuspend {
+                    delay(ONE_SEC_DELAY)
+                    viewState.askRateInPlayMarket()
+                }
         }
+
+    private suspend fun checkLastTrip(transfers: List<Transfer>) {
+        getLastTransfer(transfers.filterRateable())
+            ?.let { lastTransfer ->
+                checkToShowReview(lastTransfer) }
     }
 
     private fun getLastTransfer(transfers: List<Transfer>) =
