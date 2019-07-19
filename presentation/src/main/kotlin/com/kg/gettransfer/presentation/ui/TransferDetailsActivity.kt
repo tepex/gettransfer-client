@@ -120,8 +120,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         @Suppress("UnsafeCast")
         mapCollapseBehavior = (mapView.layoutParams as CoordinatorLayout.LayoutParams).behavior as MapCollapseBehavior
 
-        _mapView = mapView
-        _btnCenter = btnCenterRoute
+        baseMapView = mapView
+        baseBtnCenter = btnCenterRoute
         initBottomSheets()
         setClickListeners()
         initMapView(savedInstanceState)
@@ -130,6 +130,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         setClickListeners()
     }
 
+    @CallSuper
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
         gm.setPadding(0, 0, 0, bsTransferDetails.peekHeight)
@@ -709,6 +710,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     override fun onRationaleAccepted(requestCode: Int) {}
 
+    @CallSuper
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)

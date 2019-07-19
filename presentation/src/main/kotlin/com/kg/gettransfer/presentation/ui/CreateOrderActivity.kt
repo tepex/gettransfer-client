@@ -95,8 +95,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             viewGradient.visibility = View.GONE
         }
 
-        _mapView = mapView
-        _btnCenter = btnCenterRoute
+        baseMapView = mapView
+        baseBtnCenter = btnCenterRoute
         initMapView(savedInstanceState)
 
         initFieldsViews()

@@ -521,4 +521,4 @@ style:
     active: true
   WildcardImport:
     active: true
-    excludeImports: 'kotlinx.android.synthetic.*,kotlinx.coroutines.*'
+    excludeImports: 'kotlinx.android.synthetic.*,kotlinx.coroutines.*,com.google.android.gms.maps.model.*'

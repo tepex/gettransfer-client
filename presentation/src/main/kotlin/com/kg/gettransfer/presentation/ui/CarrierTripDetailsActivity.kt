@@ -73,8 +73,8 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
 
         setupStatusBar()
 
-        _mapView = mapView
-        _btnCenter = btnCenterRoute
+        baseMapView = mapView
+        baseBtnCenter = btnCenterRoute
         initMapView(savedInstanceState)
         setupToolbar()
 

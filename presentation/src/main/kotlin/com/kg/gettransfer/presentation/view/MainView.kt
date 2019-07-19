@@ -4,10 +4,12 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.presentation.model.ProfileModel
 
+@Suppress("TooManyFunctions")
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface MainView: BaseView {
+interface MainView : BaseView {
     fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean)
     fun moveCenterMarker(point: LatLng)
     fun setAddressFrom(address: String)
@@ -28,7 +30,7 @@ interface MainView: BaseView {
     fun setCountEvents(count: Int)
     fun openMapToSetPoint()
     fun recreateRequestFragment()
-    fun defineAddressRetrieving(block:(withGps: Boolean) -> Unit)
+    fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit)
     fun showRateForLastTrip(transferId: Long, vehicle: String, color: String)
     fun setBalance(balance: String?)
 
