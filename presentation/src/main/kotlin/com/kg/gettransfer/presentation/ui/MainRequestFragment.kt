@@ -69,7 +69,7 @@ class MainRequestFragment :
             tripModeSwitched(isChecked)
         }
         switcher_map_.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
-            mParent.screenModeChanged(isChecked)
+            mParent.switchMain(isChecked)
         }
 
         //Address panel

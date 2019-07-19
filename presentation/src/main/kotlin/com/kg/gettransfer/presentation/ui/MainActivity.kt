@@ -52,8 +52,6 @@ import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 
 import com.kg.gettransfer.presentation.view.MainRequestView
 import com.kg.gettransfer.presentation.view.MainView
-import com.kg.gettransfer.presentation.view.MainView.Companion.MAP_SCREEN
-import com.kg.gettransfer.presentation.view.MainView.Companion.REQUEST_SCREEN
 import com.kg.gettransfer.presentation.view.Screens
 
 import kotlinx.android.synthetic.main.a_b_orange_view.*
@@ -82,11 +80,6 @@ class MainActivity :
                 initHourly()
                 setRequestView()
             }
-        }
-    var screenType = REQUEST_SCREEN
-        set(value) {
-            field = value
-            presenter.screenType = value
         }
 
     lateinit var drawer: DrawerLayout
@@ -193,7 +186,7 @@ class MainActivity :
         btnNext.setThrottledClickListener { performNextClick() }
         btnBack.setOnClickListener {
             // hide map
-            screenModeChanged(false)
+            switchMain(false)
             presenter.resetState()
         }
 
@@ -213,13 +206,8 @@ class MainActivity :
         }
     }
 
-    fun screenModeChanged(isChecked: Boolean) {
-        screenType = if (isChecked) MAP_SCREEN else REQUEST_SCREEN
-        switchMain(isChecked)
-    }
-
     @SuppressLint("CommitTransaction")
-    private fun switchMain(withMap: Boolean, firstAttach: Boolean = false) {
+    fun switchMain(withMap: Boolean, firstAttach: Boolean = false) {
         with(supportFragmentManager.beginTransaction()) {
             if (!firstAttach) setAnimation(withMap, this)
             if (!withMap) {
@@ -557,7 +545,7 @@ class MainActivity :
         when {
             drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
 
-            screenType == MainView.REQUEST_SCREEN && isAddressNavigating -> {
+            systemInteractor.lastMainScreenMode == Screens.MAIN_WITHOUT_MAP && isAddressNavigating -> {
                 performClick(isTo, true)
             }
 

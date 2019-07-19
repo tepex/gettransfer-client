@@ -33,9 +33,6 @@ interface MainView: BaseView {
     fun setBalance(balance: String?)
 
     companion object {
-        const val MAP_SCREEN     = 1
-        const val REQUEST_SCREEN = 2
-
         val EXTRA_RATE_TRANSFER_ID = "${MainView::class.java.name}.rate_transfer_id"
         val EXTRA_RATE_VALUE = "${MainView::class.java.name}.rate_value"
     }
