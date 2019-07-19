@@ -191,6 +191,11 @@ class MainActivity :
         searchTo.setOnClickListener { performClick(true) }
         rl_hourly.setOnClickListener { showNumberPicker(true) }
         btnNext.setThrottledClickListener { performNextClick() }
+        btnBack.setOnClickListener {
+            // hide map
+            screenModeChanged(false)
+        }
+
         enableBtnNext()
     }
 
@@ -210,7 +215,6 @@ class MainActivity :
     fun screenModeChanged(isChecked: Boolean) {
         screenType = if (isChecked) MAP_SCREEN else REQUEST_SCREEN
         switchMain(isChecked)
-        defineNavigationStrategy()
     }
 
     @SuppressLint("CommitTransaction")
@@ -424,7 +428,6 @@ class MainActivity :
     override fun openMapToSetPoint() {
         switchMain(true)
         setSwitchersVisibility(false)
-        defineNavigationStrategy()
     }
 
     private fun setSwitchersVisibility(visible: Boolean) {
@@ -512,35 +515,6 @@ class MainActivity :
 
     private fun enableBtnNext() {
         btnNext.isEnabled = searchFrom.text.isNotEmpty() && (searchTo.text.isNotEmpty() || presenter.isHourly())
-    }
-
-    private fun defineNavigationStrategy() {
-        if (screenType == REQUEST_SCREEN) definePointSelectionStrategy()
-        else defineMapModeStrategy()
-    }
-
-    /*
-    Is used when in no-map mode, but in SearchPresenter selectFinishPointOnMap() was called
-     */
-    private fun definePointSelectionStrategy() {
-        btnNext.setOnClickListener {
-            switchMain(false)
-            setSwitchersVisibility(true)
-            presenter.resetState()
-        }
-        btnBack.setOnClickListener {
-            performClick(true, true)
-            setSwitchersVisibility(true)
-            presenter.resetState()
-        }
-    }
-
-    private fun defineMapModeStrategy() {
-        btnNext.setOnClickListener { performNextClick() }
-        btnBack.setOnClickListener {
-            // hide map
-            screenModeChanged(false)
-        }
     }
 
     override fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean) {
