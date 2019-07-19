@@ -13,7 +13,7 @@ interface PaymentRepository {
     var selectedTransfer: Transfer?
     var selectedOffer: OfferItem?
 
-    suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment?>
+    suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment>
 
     suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequest): Result<PaymentStatus>
 

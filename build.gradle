@@ -104,6 +104,7 @@ detekt {
         "prefs/src",
 //        "presentation/src",
         "remote/src",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CreateOrderPresenter.kt",
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/MainPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentOfferPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",

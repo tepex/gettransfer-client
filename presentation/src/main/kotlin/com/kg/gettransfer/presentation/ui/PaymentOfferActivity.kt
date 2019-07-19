@@ -53,6 +53,7 @@ import com.kg.gettransfer.presentation.model.getNameRes
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
+import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
@@ -90,6 +91,8 @@ class PaymentOfferActivity : BaseActivity(),
         const val INVALID_PHONE = 2
     }
 
+    private var errorField: View? = null
+
     @InjectPresenter
     internal lateinit var presenter: PaymentOfferPresenter
 
@@ -121,7 +124,10 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun initListeners() {
         tvPaymentAgreement.setOnClickListener { presenter.onAgreementClicked() }
-        btnGetPayment.setOnClickListener { presenter.onPaymentClicked() }
+        btnGetPayment.setOnClickListener {
+            clearHighLightErrorField(errorField)
+            presenter.onPaymentClicked()
+        }
         View.OnClickListener { changePayment(rbCard, PaymentRequestModel.PLATRON) }.apply {
             rbCard.setOnClickListener(this)
             layoutCard.setOnClickListener(this)
@@ -144,12 +150,14 @@ class PaymentOfferActivity : BaseActivity(),
     private fun initEmailTextChangeListeners() {
         emailLayout.fieldText.onTextChanged {
             presenter.setEmail(it)
+            clearHighLightErrorField(emailLayout)
         }
     }
 
     private fun initPhoneTextChangeListeners() {
         with(phoneLayout.fieldText) {
             onTextChanged {
+                clearHighLightErrorField(phoneLayout)
                 if (it.isEmpty() && isFocused) {
                     setText("+")
                     setSelection(1)
@@ -193,9 +201,23 @@ class PaymentOfferActivity : BaseActivity(),
         }
     }
 
-    override fun enablePayment(enable: Boolean) {
-        btnGetPayment.isEnabled = enable
+    override fun highLightError(error: CreateOrderView.FieldError?) {
+        when (error) {
+            CreateOrderView.FieldError.PHONE_FIELD -> highLightErrorField(phoneLayout)
+            CreateOrderView.FieldError.EMAIL_FIELD -> highLightErrorField(emailLayout)
+            CreateOrderView.FieldError.INVALID_PHONE -> highLightErrorField(phoneLayout)
+            CreateOrderView.FieldError.INVALID_EMAIL -> highLightErrorField(emailLayout)
+            else -> return
+        }
     }
+
+    private fun highLightErrorField(view: View) {
+        errorField = view
+        view.setBackgroundResource(R.drawable.background_field_error)
+        sv_root.smoothScrollTo(0, view.bottom)
+    }
+
+    private fun clearHighLightErrorField(view: View?) = view?.setBackgroundResource(0)
 
     private fun changePayment(view: View, payment: String) {
         when (view.id) {
@@ -465,7 +487,6 @@ class PaymentOfferActivity : BaseActivity(),
             ll_auth_container.isVisible = false
             setBalance(balance)
         }
-        presenter.enablePaymentBtn()
     }
 
     private fun setBalance(balance: String?) {
@@ -497,7 +518,10 @@ class PaymentOfferActivity : BaseActivity(),
     override fun showFieldError(@StringRes stringId: Int) {
         Utils.getAlertDialogBuilder(this).apply {
             setTitle(getString(stringId))
-            setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
+            setPositiveButton(R.string.LNG_OK) { dialog, _ ->
+                dialog.dismiss()
+                hideKeyboard()
+            }
             show()
         }
     }
