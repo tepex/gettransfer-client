@@ -2,23 +2,32 @@ package com.kg.gettransfer.remote
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
+
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.RemoteException
+
 import com.kg.gettransfer.domain.repository.SessionRepository
+
 import com.kg.gettransfer.remote.model.EndpointModel
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.TokenModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
+
 import java.io.IOException
+
 import kotlinx.coroutines.Deferred
+
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
+
 import org.koin.core.parameter.parametersOf
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import org.koin.core.inject
 import org.slf4j.Logger
+
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
