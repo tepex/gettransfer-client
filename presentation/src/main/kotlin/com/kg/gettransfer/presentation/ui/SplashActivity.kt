@@ -13,7 +13,6 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
-import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.presentation.presenter.SplashPresenter
@@ -24,9 +23,6 @@ import com.kg.gettransfer.utilities.AppLifeCycleObserver
 import com.kg.gettransfer.utilities.LocaleManager
 
 import java.util.Locale
-
-import net.hockeyapp.android.CrashManager
-import net.hockeyapp.android.CrashManagerListener
 
 import org.koin.android.ext.android.inject
 
@@ -56,6 +52,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
         if (checkIsTaskRoot()) {
             return
         }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
         presenter.onLaunchContinue()
 
         Timber.d(getString(R.string.title_starting_session))
@@ -68,17 +65,6 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
                 presenter.enterByPush()
                 return
             }
-        }
-    }
-
-    override fun initBuildConfigs(logsProvider: SplashPresenter.LateAccessLogs) {
-        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
-
-        if (!BuildConfig.DEBUG) {
-            CrashManager.register(
-                applicationContext,
-                object : CrashManagerListener() { override fun getDescription() = logsProvider.getLog() }
-            )
         }
     }
 

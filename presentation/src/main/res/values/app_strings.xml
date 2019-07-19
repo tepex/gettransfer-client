@@ -38,7 +38,6 @@
     <string name="share">Share</string>
     <string name="debug">Debug</string>
     <string name="endpoint">Endpoint</string>
-    <string name="logs">Logs</string>
     <string name="reset_onboarding">Reset onboarding</string>
     <string name="reset_rate">Reset play market rate</string>
     <string name="clear_access_token">Clear access token</string>

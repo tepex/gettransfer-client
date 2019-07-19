@@ -89,10 +89,6 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, DriverModeNotSupportedActivity()::class.java)
     }
 
-    object ShareLogs : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LogsActivity::class.java)
-    }
-
     object Settings : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, SettingsActivity::class.java)
     }
@@ -334,8 +330,9 @@ object Screens {
     }
 
     data class SendEmail(
-        val emailCarrier: String?, val logsFile: File?,
-        val transferId: Long?, val userEmail: String?
+        val emailCarrier: String?,
+        val transferId: Long?,
+        val userEmail: String?
     ) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?): Intent? {
             val emailSelectorIntent = Intent(Intent.ACTION_SENDTO).apply {
@@ -355,13 +352,6 @@ object Screens {
                 putExtra(Intent.EXTRA_TEXT, createSignature())
 
                 selector = emailSelectorIntent
-
-                logsFile?.let {
-                    putExtra(
-                        Intent.EXTRA_STREAM,
-                        FileProvider.getUriForFile(context!!, context.getString(R.string.file_provider_authority), it)
-                    )
-                }
             }
             return if (checkEmailIntent(context!!, emailIntent)) Intent.createChooser(
                 emailIntent,

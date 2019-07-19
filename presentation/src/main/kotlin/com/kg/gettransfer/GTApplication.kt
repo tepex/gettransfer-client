@@ -17,7 +17,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.kg.gettransfer.cache.cacheModule
 import com.kg.gettransfer.data.dataModule
 import com.kg.gettransfer.di.*
-import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.remote.remoteModule
 import com.kg.gettransfer.remote.socketModule
@@ -60,8 +59,6 @@ class GTApplication : MultiDexApplication() {
                 ciceroneModule,
                 geoModule,
                 prefsModule,
-                loggingModule,
-                fileModule,
                 remoteModule,
                 cacheModule,
                 dataModule,
@@ -78,7 +75,6 @@ class GTApplication : MultiDexApplication() {
         setupAppMetrica()
         setupSentry()
         setupAppsFlyer()
-        Timber.plant(FileLoggingTree())
         setupPushSdk()
 
         ProcessLifecycleOwner

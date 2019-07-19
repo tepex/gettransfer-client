@@ -10,19 +10,15 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.data.Location
 
-import com.kg.gettransfer.logging.LoggingRepositoryImpl
-
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.model.EndpointEntity
 
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
-import com.kg.gettransfer.domain.repository.*
 
 import com.kg.gettransfer.prefs.EncryptPass
 
 import com.kg.gettransfer.prefs.PreferencesImpl
-import com.kg.gettransfer.presentation.FileLoggingTree
 
 import com.kg.gettransfer.encrypt.EncryptPassImpl
 import com.kg.gettransfer.geo.LocationImpl
@@ -51,9 +47,6 @@ import org.koin.dsl.module
 
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
-import java.util.logging.FileHandler
-import java.util.logging.Logger
-import java.util.logging.SimpleFormatter
 
 /**
  * Koin main module
@@ -95,28 +88,6 @@ val prefsModule = module {
     }
 }
 
-val loggingModule = module {
-    single { LoggingRepositoryImpl(androidContext(), FileLoggingTree.LOGGER_NAME) as LoggingRepository }
-}
-
-const val FILE_LIMIT = 1024 * 1024  //1 Mb
-const val FILES_COUNT = 1
-val fileModule = module {
-    single {
-        Logger.getLogger(FileLoggingTree.LOGGER_NAME).also { l ->
-            try {
-                FileHandler(androidContext().filesDir.path.toString().plus("/${l.name}"), FILE_LIMIT, FILES_COUNT, true)
-                    .also { h ->
-                        h.formatter = SimpleFormatter()
-                        l.addHandler(h)
-                    }
-            } catch (e: Exception) {
-                System.err.println(e)
-            }
-        }
-    }
-}
-
 val domainModule = module {
     single { OfferInteractor(get()) }
     single { PaymentInteractor(get()) }
@@ -132,7 +103,6 @@ val domainModule = module {
     single { GeoInteractor(get(), get()) }
     single { PushTokenInteractor(get()) }
     single { SocketInteractor(get()) }
-    single { LogsInteractor(get()) }
     single { SessionInteractor(get(), get(), get()) }
 
     single { GetBuildsConfigsInteractor(get()) }

@@ -56,7 +56,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     private val pushTokenInteractor: PushTokenInteractor by inject()
     protected val socketInteractor: SocketInteractor by inject()
-    protected val logsInteractor: LogsInteractor by inject()
     protected val sessionInteractor: SessionInteractor by inject()
     protected val accountManager: AccountManager by inject()
     protected val downloadManager: GTDownloadManager by inject()
@@ -149,7 +148,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
             router.navigateTo(
                 Screens.SendEmail(
                     emailCarrier,
-                    logsInteractor.logsFile,
                     transferID,
                     accountManager.remoteProfile.email
                 )
