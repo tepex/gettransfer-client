@@ -179,7 +179,6 @@ dependencies {
     implementation project(":data")
     implementation project(":geo")
     implementation project(":prefs")
-    implementation project(':logging')
     implementation project(":remote")
     implementation project(":cache")
     implementation project(":encrypt")

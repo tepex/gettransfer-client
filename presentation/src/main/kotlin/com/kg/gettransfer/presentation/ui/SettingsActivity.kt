@@ -150,7 +150,6 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     override fun showDebugMenu() {
         layoutDebugSettings.isVisible = true
-        settingsLogs.setOnClickListener { presenter.onLogsClicked() }
         settingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
         settingsResetRate.setOnClickListener { presenter.onResetRateClicked() }
         settingsClearAccessToken.setOnClickListener { presenter.onClearAccessTokenClicked() }

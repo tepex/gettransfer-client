@@ -6,7 +6,6 @@ import com.arellomobile.mvp.MvpPresenter
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 
-import com.kg.gettransfer.domain.interactor.LogsInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
@@ -16,8 +15,6 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SplashView
 
 import com.kg.gettransfer.sys.domain.GetBuildsConfigsInteractor
-
-import java.util.Locale
 
 import kotlinx.coroutines.Job
 
@@ -33,7 +30,6 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     private val coroutineContexts: CoroutineContexts by inject()
     private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
     private val reviewInteractor: ReviewInteractor by inject()
-    private val logsInteractor: LogsInteractor by inject()
     private val sessionInteractor: SessionInteractor by inject()
     private val systemInteractor: SystemInteractor by inject()
     private val router: Router by inject()
@@ -42,7 +38,6 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
 
 
     fun onLaunchContinue() {
-        viewState.initBuildConfigs(object : LateAccessLogs { override fun getLog() = logsInteractor.onLogRequested() })
         /* Check PUSH notification */
         viewState.checkLaunchType()
         reviewInteractor.shouldAskRateInMarket = shouldAskForRateApp()
@@ -96,9 +91,5 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     override fun detachView(view: SplashView?) {
         super.detachView(view)
         compositeDisposable.cancel()
-    }
-
-    interface LateAccessLogs {
-        fun getLog(): String
     }
 }

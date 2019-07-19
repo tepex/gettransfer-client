@@ -140,12 +140,6 @@
                     app:settingsTitlePicker="@string/endpoint" />
 
                 <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
-                    android:id="@+id/settingsLogs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:settingsTitlePicker="@string/logs" />
-
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
                     android:id="@+id/settingsResetOnboarding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

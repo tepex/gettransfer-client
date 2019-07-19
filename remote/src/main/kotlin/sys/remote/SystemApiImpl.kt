@@ -49,8 +49,8 @@ class SystemApiImpl : KoinComponent {
             try {
                 chain.proceed(builder.build())
             } catch (e: Exception) {
-                log.error("Maybe DNS Exception", e)
-                throw IOException(e)
+                log.error("Maybe DNS Exception: ${e.message}")
+                throw RemoteException(RemoteException.NOT_HTTP, e.message ?: "")
             }
         }
         .cookieJar(CookieJar.NO_COOKIES)

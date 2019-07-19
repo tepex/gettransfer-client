@@ -132,10 +132,6 @@
             android:name=".presentation.ui.CarrierTripDetailsActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.ui.LogsActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait" />
 
         <activity android:name=".presentation.ui.MainLoginActivity"
             android:resizeableActivity="false"

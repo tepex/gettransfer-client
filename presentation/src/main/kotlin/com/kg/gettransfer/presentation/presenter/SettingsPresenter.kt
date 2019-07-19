@@ -165,16 +165,13 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         saveAccount()
     }
 
-    fun onLogsClicked() = router.navigateTo(Screens.ShareLogs)
-
     fun onResetOnboardingClicked() { systemInteractor.isOnboardingShowed = false }
 
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
 
     fun onClearAccessTokenClicked() { systemInteractor.accessToken = "" }
 
-    fun onDriverCoordinatesSwitched(checked: Boolean) =
-            carrierTripInteractor.permissionChanged(checked)
+    fun onDriverCoordinatesSwitched(checked: Boolean) = carrierTripInteractor.permissionChanged(checked)
 
     fun onCurrencyClicked() {
         showingFragment = CURRENCIES_VIEW
