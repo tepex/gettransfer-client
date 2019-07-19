@@ -154,6 +154,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected open fun setNetworkAvailability(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val available = cm.activeNetworkInfo?.isConnected ?: false
+        if (available) getPresenter().networkConnected()
         viewNetworkNotAvailable?.let { it.isGone = available }
         return available
     }

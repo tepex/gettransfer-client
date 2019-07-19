@@ -20,9 +20,7 @@ class ThanksForRatePresenter: MvpPresenter<ThanksForRateView>(), KoinComponent {
     fun sendThanks() {
         utils.launchSuspend {
             with(reviewInteractor) {
-                if (comment.isNotEmpty()) {
-                    utils.asyncAwait { pushComment() }
-                }
+                if (comment.isNotEmpty()) utils.asyncAwait { pushComment() }
                 releaseReviewData()
                 showStoreDialog(shouldAskRateInMarket)
             }

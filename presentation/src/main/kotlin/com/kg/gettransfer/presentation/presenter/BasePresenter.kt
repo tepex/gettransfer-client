@@ -53,6 +53,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val carrierTripInteractor: CarrierTripInteractor by inject()
     protected val chatInteractor: ChatInteractor by inject()
     protected val countEventsInteractor: CountEventsInteractor by inject()
+    protected val reviewInteractor: ReviewInteractor by inject()
 
     private val pushTokenInteractor: PushTokenInteractor by inject()
     protected val socketInteractor: SocketInteractor by inject()
@@ -113,6 +114,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         utils.asyncAwait { transferInteractor.clearTransfersCache() }
         utils.asyncAwait { offerInteractor.clearOffersCache() }
         utils.asyncAwait { carrierTripInteractor.clearCarrierTripsCache() }
+        utils.asyncAwait { reviewInteractor.clearReviewCache() }
 
         countEventsInteractor.clearCountEvents()
     }
@@ -136,6 +138,12 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     }
 
     protected open fun systemInitialized() {}
+
+    fun networkConnected() {
+        utils.launchSuspend {
+            utils.asyncAwait { reviewInteractor.checkNotSendedReviews() }
+        }
+    }
 
     internal fun sendEmail(emailCarrier: String?, transferId: Long?) {
         utils.launchSuspend {

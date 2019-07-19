@@ -37,7 +37,6 @@ import org.koin.core.inject
 class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     private val geoInteractor: GeoInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
-    private val reviewInteractor: ReviewInteractor by inject()
     private val nState: MainState by inject()  //to keep info about navigation
 
     private val pointMapper: PointMapper by inject()
@@ -475,7 +474,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         reviewInteractor.setOfferReview(offer)
         reviewInteractor.setRates(rate.toFloat())
         if (rate == ReviewInteractor.MAX_RATE) {
-            reviewInteractor.sendRates()
+            utils.asyncAwait { reviewInteractor.sendRates() }
             viewState.thanksForRate()
         } else {
             viewState.showDetailedReview()

@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Bundle
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.ReviewRate
@@ -11,8 +10,6 @@ import org.koin.core.inject
 
 @InjectViewState
 class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
-
-	private val reviewInteractor: ReviewInteractor by inject()
 
 	internal var offerId
 		get() = reviewInteractor.offerRateID
@@ -81,10 +78,9 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 		val listRates = reviewInteractor.createListOfDetailedRates()
 		viewState.showProgress(true)
 		viewState.blockInterface(true, true)
-		val rateResult = fetchResult { reviewInteractor.sendRates(false) }
-		val commentResult = fetchResult { reviewInteractor.pushComment() }
-		if (!rateResult.isError() && !commentResult.isError())
-			viewState.exitAndReportSuccess(listRates, comment)
+		utils.asyncAwait { reviewInteractor.sendRates(false) }
+		utils.asyncAwait { reviewInteractor.pushComment() }
+		viewState.exitAndReportSuccess(listRates, comment)
 		logAverageRate(listRates.map { it.rateValue }.average())
 		logDetailRate(listRates, comment)
 		viewState.blockInterface(false)

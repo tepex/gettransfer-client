@@ -57,7 +57,8 @@ object RoomConverters {
 
     @TypeConverter
     @JvmStatic
-    fun toLocaleCachedList(s: String?): LocaleCachedList? = s?.let { JSON.parse(LocaleCachedList.serializer(), it) }
+    fun toLocaleCachedList(s: String?): LocaleCachedList? =
+        s?.let { JSON.parse(LocaleCachedList.serializer(), it) }
 
     @TypeConverter
     @JvmStatic
