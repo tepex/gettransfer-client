@@ -13,7 +13,7 @@
     app:behavior_peekHeight="@dimen/bottom_sheet_carrier_trip_details_bs_peek_height"
     app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/back_top_rounded"
@@ -22,15 +22,23 @@
         android:paddingBottom="@dimen/bottom_sheet_carrier_trip_details_free_space_height">
 
         <View
+            android:id="@+id/divider"
             android:layout_width="@dimen/bottom_sheet_transfer_details_swiped_view_width"
             android:layout_height="@dimen/bottom_sheet_transfer_details_swiped_view_height"
             android:layout_marginTop="@dimen/bottom_sheet_transfer_details_swiped_view_margin_top"
-            android:layout_marginBottom="@dimen/bottom_sheet_transfer_details_swiped_view_margin_bottom"
-            android:background="@drawable/rectangle_swipe_down" />
+            android:background="@drawable/rectangle_swipe_down"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <include
             android:id="@+id/transfer_details_header"
-            layout="@layout/transfer_details_header" />
+            layout="@layout/transfer_details_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
         <com.kg.gettransfer.presentation.ui.custom.TransferMainInfoView
             android:id="@+id/transfer_details_main"
@@ -39,6 +47,9 @@
             android:layout_marginTop="@dimen/bottom_sheet_transfer_details_main_margin_top"
             android:visibility="visible"
             app:distance_title="@string/LNG_RIDE_DISTANCE"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/transfer_details_header"
             app:price_title="@string/LNG_RIDE_PRICE_YOUR"
             app:time_title="@string/LNG_RIDE_TIME" />
 
@@ -46,106 +57,152 @@
             android:id="@+id/tv_bookNow_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
-            android:layout_marginBottom="@dimen/bottom_sheet_transfer_details_book_now_margin_bottom"
+            android:paddingTop="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
+            android:paddingBottom="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
             android:fontFamily="@font/sf_pro_text_regular"
+            android:gravity="center"
             android:paddingStart="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
             android:paddingEnd="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
             android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"
             android:textColor="@color/color_gtr_green"
             android:textSize="17sp"
-            android:gravity="center"
             android:visibility="gone"
-            tools:visibility="visible"/>
-
-        <include
-            android:id="@+id/view_rate_ride"
-            layout="@layout/view_rate_your_transfer"
-            android:visibility="gone"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transfer_details_main" />
 
         <include
             android:id="@+id/yourRateMark"
             layout="@layout/view_your_rate_mark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:visibility="visible"/>
-
-        <ProgressBar
-            android:id="@+id/pbYourData"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/progress_rotate"
-            android:indeterminateDuration="1200"
-            android:visibility="gone" />
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transfer_details_main"
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/thanks_for_rate"
             layout="@layout/view_thanks_for_rate_small"
-            android:visibility="gone" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/yourRateMark" />
+
+        <include
+            android:id="@+id/view_rate_ride"
+            layout="@layout/view_rate_your_transfer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/thanks_for_rate" />
+
+        <include
+            android:id="@+id/layoutAboutTransport"
+            layout="@layout/view_transfer_details_about_transport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_rate_ride"
+            tools:visibility="visible" />
 
         <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
             android:id="@+id/back_trip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:title_transfer_details="@string/LNG_RIDE_RETURN_TRANSFER" />
-
-        <include
-            android:id="@+id/layoutAboutTransport"
-            layout="@layout/view_transfer_details_about_transport"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutAboutTransport"
+            app:title_transfer_details="@string/LNG_RIDE_RETURN_TRANSFER"
+            tools:visibility="visible"/>
 
         <include
             android:id="@+id/layoutAboutDriver"
             layout="@layout/view_transfer_details_about_driver"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/back_trip"
             tools:visibility="visible" />
 
         <include
             android:id="@+id/layoutVoucher"
+            layout="@layout/transfer_details_voucher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:visibility="visible"
-            layout="@layout/transfer_details_voucher"/>
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutAboutDriver"
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/comment_view"
             layout="@layout/view_transfer_details_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutVoucher"
             tools:visibility="visible" />
 
         <include
             android:id="@+id/passengersAndSeats"
-            layout="@layout/layout_passengers_seats"/>
+            layout="@layout/layout_passengers_seats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/comment_view" />
 
         <include
             android:id="@+id/layoutAboutRequest"
             layout="@layout/view_transfer_details_about_request"
-            android:visibility="visible" />
-
-        <LinearLayout
-            android:id="@+id/layoutTransportTypes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/bottom_sheet_transfer_details_support_bottom_layout_buttons_padding_bottom"
-            android:visibility="gone">
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/passengersAndSeats" />
 
-            <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/flexboxTransportTypes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end"
-                android:paddingTop="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom"
-                android:paddingEnd="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end"
-                android:paddingBottom="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom"
-                android:visibility="visible"
-                app:flexWrap="wrap" />
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/flexboxTransportTypes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end"
+            android:paddingTop="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom"
+            android:paddingEnd="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end"
+            android:paddingBottom="@dimen/bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom"
+            android:visibility="gone"
+            app:flexWrap="wrap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutAboutRequest" />
 
-        </LinearLayout>
+        <ProgressBar
+            android:id="@+id/pbYourData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress_rotate"
+            android:indeterminateDuration="1200"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v4.widget.NestedScrollView>

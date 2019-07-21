@@ -66,7 +66,6 @@ import kotlinx.android.synthetic.main.view_communication_buttons.view.*
 
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
-import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.*
 
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.view.*
@@ -111,6 +110,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setBackgroundDrawable(null)
         presenter.transferId = intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0)
         setContentView(R.layout.activity_transfer_details)
         setupStatusBar()
@@ -246,7 +246,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             status == Transfer.STATUS_CATEGORY_UNFINISHED ||
             status == Transfer.STATUS_CATEGORY_CONFIRMED) {
             initTableLayoutTransportTypes(transfer.transportTypes)
-            layoutTransportTypes.isVisible = true
         }
 
         if (status == Transfer.STATUS_CATEGORY_ACTIVE) {
@@ -461,6 +460,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun initTableLayoutTransportTypes(transportTypes: List<TransportTypeModel>) {
+        flexboxTransportTypes.isVisible = true
         flexboxTransportTypes.removeAllViews()
         transportTypes.forEach { transportType ->
             flexboxTransportTypes.addView(
@@ -473,11 +473,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                             this@TransferDetailsActivity,
                             transportType.imageId
                         ))
-                        view_seats_and_lugg_count.transportType_сountPassengers.text = Utils.formatPersons(
+                        transportType_сountPassengers.text = Utils.formatPersons(
                             this@TransferDetailsActivity,
                             transportType.paxMax
                         )
-                        view_seats_and_lugg_count.transportType_сountBaggage.text = Utils.formatPersons(
+                        transportType_сountBaggage.text = Utils.formatPersons(
                             this@TransferDetailsActivity,
                             transportType.luggageMax
                         )

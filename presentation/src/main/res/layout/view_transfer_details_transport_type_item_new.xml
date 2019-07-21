@@ -1,41 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="4dp"
+    android:paddingBottom="8dp"
+    android:background="@drawable/bg_transfer_details_transport_type_item"
+    android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/transportType_Name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/bg_transfer_details_transport_type_item"
-        android:gravity="center_horizontal"
-        android:padding="8dp"
-        android:paddingTop="11dp">
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/transport_type_name_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Economy" />
 
-        <TextView
-            android:id="@+id/transportType_Name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/sf_pro_text_semibold"
-            android:text="Economy"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/transport_type_name_text_size" />
+    <ImageView
+        android:id="@+id/transportType_Img"
+        android:layout_width="87.5dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transportType_Name"
+        app:srcCompat="@drawable/ic_transport_type_economy" />
 
-        <ImageView
-            android:id="@+id/transportType_Img"
-            android:layout_width="87.5dp"
-            android:layout_height="43dp"
-            app:srcCompat="@drawable/ic_transport_type_economy" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/view_transfer_details_transport_type_item_img_passenger_width"
+        android:layout_height="@dimen/view_transfer_details_transport_type_item_img_passenger_height"
 
-        <include
-            android:id="@+id/view_seats_and_lugg_count"
-            layout="@layout/view_transfer_details_transport_type_item" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/transportType_Img"
+        app:layout_constraintTop_toBottomOf="@+id/transportType_Img"
+        app:srcCompat="@drawable/ic_passenger_without_padding" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/transportType_сountPassengers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/activity_transfer_details_text_size_11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        tools:text="X 3" />
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="@dimen/view_transfer_details_transport_type_item_img_baggage_width"
+        android:layout_height="@dimen/view_transfer_details_transport_type_item_img_baggage_height"
+        app:layout_constraintBottom_toBottomOf="@+id/transportType_сountBaggage"
+        app:layout_constraintEnd_toStartOf="@+id/transportType_сountBaggage"
+        app:layout_constraintTop_toTopOf="@+id/transportType_сountBaggage"
+        app:srcCompat="@drawable/ic_baggage" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/transportType_сountBaggage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/activity_transfer_details_text_size_11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/transportType_сountPassengers"
+        app:layout_constraintEnd_toEndOf="@+id/transportType_Img"
+        app:layout_constraintTop_toTopOf="@+id/transportType_сountPassengers"
+        tools:text="X 3" />
+
+</android.support.constraint.ConstraintLayout>
+
