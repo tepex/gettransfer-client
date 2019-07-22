@@ -99,7 +99,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
 
     private var fragment: Fragment? = null
-    private lateinit var stubAboutDriver: View
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
