@@ -5,19 +5,20 @@
     android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="22dp">
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="16dp" >
 
     <TextView
         android:id="@+id/conveniences_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/LNG_TRANSPORT_BUSINESS"
         android:fontFamily="@font/sf_pro_text_regular"
         android:textColor="@color/colorGrey"
-        android:textSize="@dimen/activity_transfer_details_text_size_17sp"/>
+        android:textSize="@dimen/activity_transfer_details_text_size_17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/LNG_TRANSPORT_BUSINESS" />
 
 
     <ImageView
@@ -71,5 +72,17 @@
         app:layout_constraintTop_toTopOf="@+id/conveniences_field"
         app:srcCompat="@drawable/ic_free_water"
         tools:visibility="visible" />
+
+    <View
+        android:id="@+id/divider_transfer_details_field"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/color_transfer_details_horizontal_divider_new"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/conveniences_field" />
 
 </android.support.constraint.ConstraintLayout>

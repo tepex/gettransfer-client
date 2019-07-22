@@ -357,7 +357,7 @@
 	<dimen name="view_transfer_details_comment_container_vertical_padding">16dp</dimen>
 	<dimen name="view_transfer_details_field_divider_margin_top">11dp</dimen>
 	<dimen name="view_transfer_details_field_container_horizontal_padding">16dp</dimen>
-	<dimen name="view_transfer_details_field_container_vertical_padding">22dp</dimen>
+	<dimen name="view_transfer_details_field_container_vertical_padding">16dp</dimen>
     <dimen name="view_transfer_details_field_title_max_width">220dp</dimen>
     <dimen name="view_transfer_details_field_more_info_margin_top">4dp</dimen>
 
@@ -420,7 +420,7 @@
 	<dimen name="bottom_sheet_transfer_details_support_top_button_margin_top">16dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_support_bottom_button_margin_top_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_support_bottom_layout_buttons_padding_bottom">8dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom">4dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end">12dp</dimen>
     <dimen name="bottom_sheet_transfer_details_book_now_margin_top">16dp</dimen>
     <dimen name="bottom_sheet_transfer_details_book_now_margin_bottom">8dp</dimen>
@@ -716,7 +716,6 @@
 	<dimen name="view_offer_car_photo_height">96dp</dimen>
 	<dimen name="book_now_photo_corner_radius">5dp</dimen>
 
-	<dimen name="rate_your_transfer_height">154dp</dimen>
 	<dimen name="rate_your_rate_mark_height">100dp</dimen>
 
 	<dimen name="general_button_width">300dp</dimen>

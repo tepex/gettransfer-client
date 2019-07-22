@@ -14,9 +14,9 @@ class CommunicationButton @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
         LinearLayout(context, attrs, defStyleAttr), LayoutContainer {
 
-    override val containerView: View
+    override val containerView: View = LayoutInflater.from(context).inflate(R.layout.view_communication_button, this, true)
+
     init {
-        containerView = LayoutInflater.from(context).inflate(R.layout.view_communication_button, this, true)
 
         if(attrs != null) {
             val ta      = context.obtainStyledAttributes(attrs, R.styleable.CommunicationButton)

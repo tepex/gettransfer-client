@@ -35,7 +35,6 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.isNonZero
-import com.kg.gettransfer.extensions.show
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -100,6 +99,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
 
     private var fragment: Fragment? = null
+    private lateinit var stubAboutDriver: View
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
@@ -218,7 +218,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private fun setClickListeners() {
         btnBack.setOnClickListener          { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
-        tripRate.setOnRatingChangeListener  { _, fl -> presenter.rateTrip(fl, true) }
+        tripRate.setOnRatingBarChangeListener { _, rating, _ -> presenter.rateTrip(rating, true) }
         topCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         bottomCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         topCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
@@ -504,6 +504,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun initAboutDriverView(offer: OfferModel) {
+        layoutAboutDriver.isVisible = true
         offer.phoneToCall?.let { phone ->
             topCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
             bottomCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
@@ -554,7 +555,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 layoutAboutDriver.view_driver_languages.layoutCarrierLanguages,
                 offer.carrier.languages
             )
-            layoutAboutDriver.isVisible = true
         }
     }
 
@@ -682,15 +682,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun showYourRateMark(isShow: Boolean, averageRate: Double) {
-        yourRateMark.rbYourRateMark.setOnRatingChangeListener(null)
-        yourRateMark.show(isShow)
+        yourRateMark.rbYourRateMark.onRatingBarChangeListener = null
+        yourRateMark.isVisible = isShow
         yourRateMark.rbYourRateMark.rating = averageRate.toFloat()
-        yourRateMark.rbYourRateMark.setOnRatingChangeListener { _, fl -> presenter.rateTrip(fl, true) }
+        yourRateMark.rbYourRateMark.setOnRatingBarChangeListener { _, rating, _ -> presenter.rateTrip(rating, true) }
     }
 
     override fun showYourDataProgress(isShow: Boolean) {
-        pbYourData.show(isShow)
-        yourRateMark.show(!isShow)
+        pbYourData.isVisible = isShow
+        yourRateMark.isVisible = !isShow
     }
 
     override fun onRatingChanged(list: List<ReviewRate>, comment: String) {

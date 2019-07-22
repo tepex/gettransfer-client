@@ -45,31 +45,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/bottom_sheet_transfer_details_main_margin_top"
-            android:visibility="visible"
             app:distance_title="@string/LNG_RIDE_DISTANCE"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/transfer_details_header"
             app:price_title="@string/LNG_RIDE_PRICE_YOUR"
             app:time_title="@string/LNG_RIDE_TIME" />
-
-        <TextView
-            android:id="@+id/tv_bookNow_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
-            android:paddingBottom="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:gravity="center"
-            android:paddingStart="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
-            android:paddingEnd="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
-            android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"
-            android:textColor="@color/color_gtr_green"
-            android:textSize="17sp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transfer_details_main" />
 
         <include
             android:id="@+id/yourRateMark"
@@ -132,8 +113,25 @@
             android:visibility="gone"
             app:layout_constraintEnd_toStartOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/back_trip"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toBottomOf="@+id/back_trip" />
+
+        <TextView
+            android:id="@+id/tv_bookNow_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
+            android:paddingBottom="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:gravity="center"
+            android:paddingStart="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
+            android:paddingEnd="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
+            android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"
+            android:textColor="@color/color_gtr_green"
+            android:textSize="17sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutAboutDriver" />
 
         <include
             android:id="@+id/layoutVoucher"
@@ -143,7 +141,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toStartOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutAboutDriver"
+            app:layout_constraintTop_toBottomOf="@+id/tv_bookNow_info"
             tools:visibility="visible" />
 
         <include

@@ -19,44 +19,43 @@
         tools:text="Phone"
         android:textColor="@color/colorGrey"
         android:textSize="@dimen/activity_transfer_details_text_size_17sp"
-        app:layout_constraintEnd_toStartOf="@id/layout_field_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/layout_field_text"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/field_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/view_transfer_details_field_text_margin_start"
-        android:orientation="vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="end"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/activity_transfer_details_text_size_17sp"
         app:layout_constraintBottom_toBottomOf="@+id/field_title"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/field_title"
-        app:layout_constraintTop_toTopOf="@+id/field_title">
+        app:layout_constraintTop_toTopOf="@+id/field_title"
+        app:layout_constrainedWidth="true"
+        tools:text="+7 900 123 56 78" />
 
-        <TextView
-            android:id="@+id/field_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:gravity="end"
-            tools:text="+7 900 123 56 78"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/activity_transfer_details_text_size_17sp" />
-
-        <TextView
-            android:id="@+id/field_more_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/view_transfer_details_field_more_info_margin_top"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:gravity="end"
-            tools:text="оплачено 100%"
-            android:textColor="@color/color_gtr_grey"
-            android:textSize="@dimen/activity_transfer_details_text_size_12sp"
-            android:visibility="gone" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/field_more_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="end"
+        android:textColor="@color/color_gtr_grey"
+        android:textSize="@dimen/activity_transfer_details_text_size_12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/field_text"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/field_text"
+        app:layout_constraintTop_toBottomOf="@+id/field_text"
+        tools:text="оплачено 100%" />
 
     <View
         android:id="@+id/divider_transfer_details_field"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <HorizontalScrollView
         android:id="@+id/sv_photos"
@@ -12,7 +12,10 @@
         android:fillViewport="true"
         android:overScrollMode="never"
         android:scrollbars="none"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/photos_container_bs"
@@ -35,6 +38,9 @@
         android:adjustViewBounds="true"
         android:maxHeight="@dimen/bottom_sheet_offer_details_sv_photo_height"
         android:scaleType="centerCrop"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sv_photos" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
