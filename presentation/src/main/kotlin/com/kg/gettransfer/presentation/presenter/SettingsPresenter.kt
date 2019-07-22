@@ -29,8 +29,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
 
-    private val reviewInteractor = get<ReviewInteractor>()
-
     private var localeWasChanged = false
     private var restart = true
 

@@ -37,7 +37,6 @@ import org.koin.core.inject
 class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
     private val geoInteractor: GeoInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
-    private val reviewInteractor: ReviewInteractor by inject()
     private val nState: MainState by inject()  //to keep info about navigation
 
     private val pointMapper: PointMapper by inject()
@@ -62,9 +61,10 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         geoInteractor.initGeocoder()
         if (accountManager.isLoggedIn) {
             registerPushToken()
-            checkReview()
+
             utils.launchSuspend {
-                utils.asyncAwait { transferInteractor.getAllTransfers() }
+                fetchResultOnly { transferInteractor.getAllTransfers() }
+                    .isSuccess()?.let { checkReview(it) }
                 setCountEvents(countEventsInteractor.eventsCount)
             }
         }
@@ -406,26 +406,20 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         return latDiff < criteria && lngDiff < criteria
     }
 
-    private fun checkReview() =
-            with(reviewInteractor) {
-                if (!isReviewSuggested) checkLastTrip()
-                else if (shouldAskRateInMarket)
-                    utils.launchSuspend {
-                        delay(ONE_SEC_DELAY)
-                        viewState.askRateInPlayMarket()
-                    }
-            }
-
-    private fun checkLastTrip() {
-        utils.launchSuspend {
-            fetchResultOnly { transferInteractor.getAllTransfers() }
-                    .isSuccess()
-                    ?.let {
-                        getLastTransfer(it.filterRateable())
-                                ?.let { lastTransfer ->
-                                    checkToShowReview(lastTransfer) }
-                    }
+    private suspend fun checkReview(transfers: List<Transfer>) =
+        with(reviewInteractor) {
+            if (!isReviewSuggested) checkLastTrip(transfers)
+            else if (shouldAskRateInMarket)
+                utils.launchSuspend {
+                    delay(ONE_SEC_DELAY)
+                    viewState.askRateInPlayMarket()
+                }
         }
+
+    private suspend fun checkLastTrip(transfers: List<Transfer>) {
+        getLastTransfer(transfers.filterRateable())
+            ?.let { lastTransfer ->
+                checkToShowReview(lastTransfer) }
     }
 
     private fun getLastTransfer(transfers: List<Transfer>) =
@@ -480,7 +474,7 @@ class MainPresenter : BasePresenter<MainView>(), CounterEventListener {
         reviewInteractor.setOfferReview(offer)
         reviewInteractor.setRates(rate.toFloat())
         if (rate == ReviewInteractor.MAX_RATE) {
-            reviewInteractor.sendRates()
+            utils.asyncAwait { reviewInteractor.sendRates() }
             viewState.thanksForRate()
         } else {
             viewState.showDetailedReview()

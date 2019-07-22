@@ -53,7 +53,6 @@ import org.koin.core.inject
 @InjectViewState
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SocketEventListener {
     private val orderInteractor: OrderInteractor by inject()
-    private val reviewInteractor: ReviewInteractor by inject()
     private val coordinateInteractor: CoordinateInteractor by inject()
 
     private val routeMapper: RouteMapper by inject()
@@ -254,7 +253,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         if (isNeedCheckStoreRate) {
             reviewInteractor.setRates(rating)
             if (rating.toInt() == ReviewInteractor.MAX_RATE) {
-                utils.launchSuspend { reviewInteractor.sendRates() }
+                utils.launchSuspend { utils.asyncAwait { reviewInteractor.sendRates() } }
                 analytics.logEvent(Analytics.EVENT_REVIEW_AVERAGE, Analytics.REVIEW, ReviewInteractor.MAX_RATE.toFloat())
                 if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
                     viewState.askRateInPlayMarket()

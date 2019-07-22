@@ -107,7 +107,7 @@ class OffersActivity : BaseActivity(), OffersView {
     private fun initBottomSheet() {
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
         bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
-        _tintBackground = tintBackground
+        tintBackgroundShadow = tintBackground
         bsOfferDetails.setBottomSheetCallback(bottomSheetCallback)
     }
 

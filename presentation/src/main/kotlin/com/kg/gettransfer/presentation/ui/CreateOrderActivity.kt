@@ -115,7 +115,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN && bsOrder.state == BottomSheetBehavior.STATE_HIDDEN)
-                _tintBackground.isVisible = false
+                tintBackgroundShadow.isVisible = false
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 presenter.updateChildSeatsInfo()
                 hideKeyboard()
@@ -124,8 +124,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
             if (bsOrder.state == BottomSheetBehavior.STATE_COLLAPSED) {
-                _tintBackground.isVisible = true
-                _tintBackground.alpha = slideOffset
+                tintBackgroundShadow.isVisible = true
+                tintBackgroundShadow.alpha = slideOffset
             }
         }
     }
@@ -135,7 +135,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         bsSecondarySheet = BottomSheetBehavior.from(secondary_bottom_sheet)
         bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
 
-        _tintBackground = tintBackground
+        tintBackgroundShadow = tintBackground
         bsOrder.setBottomSheetCallback(bottomSheetCallback)
         bsSecondarySheet.setBottomSheetCallback(bsCallback)
     }

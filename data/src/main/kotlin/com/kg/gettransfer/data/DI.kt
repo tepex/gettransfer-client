@@ -13,6 +13,7 @@ import com.kg.gettransfer.data.ds.PaymentDataStoreRemote
 import com.kg.gettransfer.data.ds.PromoDataStoreCache
 import com.kg.gettransfer.data.ds.PromoDataStoreRemote
 import com.kg.gettransfer.data.ds.PushTokenDataStoreRemote
+import com.kg.gettransfer.data.ds.ReviewDataStoreCache
 import com.kg.gettransfer.data.ds.ReviewDataStoreRemote
 import com.kg.gettransfer.data.ds.RouteDataStoreCache
 import com.kg.gettransfer.data.ds.RouteDataStoreRemote
@@ -108,7 +109,7 @@ val dataModule = module {
 
     single { OfferDataStoreCache() }
     single { OfferDataStoreRemote() }
-    single { OfferRepositoryImpl(DataStoreFactory(get(), get())) } bind OfferRepository::class
+    single { OfferRepositoryImpl(DataStoreFactory(get(), get()), get()) } bind OfferRepository::class
     single<OfferDataStoreReceiver> { OfferSocketDataStoreInput() }
 
     single { PaymentDataStoreCache() }
@@ -151,8 +152,9 @@ val dataModule = module {
     single { PromoDataStoreRemote() }
     single<PromoRepository> { PromoRepositoryImpl(DataStoreFactory(get(), get())) }
 
+    single { ReviewDataStoreCache() }
     single { ReviewDataStoreRemote() }
-    single<ReviewRepository> { ReviewRepositoryImpl(get()) }
+    single<ReviewRepository> { ReviewRepositoryImpl(DataStoreFactory(get(), get())) }
 
     single { ChatDataStoreCache() }
     single { ChatDataStoreRemote() }

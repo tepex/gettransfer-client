@@ -27,7 +27,6 @@ import org.koin.core.inject
 
 @InjectViewState
 class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
-    private val reviewInteractor: ReviewInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
     private val routeMapper: RouteMapper by inject()
     private val transportTypes = systemInteractor.transportTypes.map { it.map() }
@@ -98,19 +97,14 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
         reviewInteractor.setRates(rate)
         if (rate.toInt() == ReviewInteractor.MAX_RATE) {
             logAverageRate(ReviewInteractor.MAX_RATE.toDouble())
-            utils.launchSuspend {
-                with(fetchResultOnly { reviewInteractor.sendRates() }) {
-                    if (!isError()) {
-                        viewState.cancelReview()
-                        val showStoreDialog = systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE
-                        if (showStoreDialog) {
-                            reviewInteractor.shouldAskRateInMarket = true
-                            logAppReviewRequest()
-                        }
-                        viewState.thanksForRate()
-                    }
-                }
+            utils.launchSuspend { utils.asyncAwait { reviewInteractor.sendRates() } }
+            viewState.cancelReview()
+            val showStoreDialog = systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE
+            if (showStoreDialog) {
+                reviewInteractor.shouldAskRateInMarket = true
+                logAppReviewRequest()
             }
+            viewState.thanksForRate()
         } else {
             viewState.cancelReview()
             viewState.showDetailedReview()

@@ -104,13 +104,23 @@ detekt {
         "prefs/src",
 //        "presentation/src",
         "remote/src",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CreateOrderPresenter.kt",
+
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BasePresenter.kt",
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/MainPresenter.kt",
+// presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/RatingDetailPresenter.kt
+// presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/RatingLastTripPresenter.kt
+// presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SettingsPresenter.kt
+// presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/ThanksForRatePresenter.kt
+// presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/TransferDetailsPresenter.kt
+
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CreateOrderPresenter.kt",
+
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentOfferPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaypalConnectionPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectCurrencyPresenter.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
