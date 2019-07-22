@@ -48,7 +48,6 @@ import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
 import com.kg.gettransfer.presentation.ui.behavior.MapCollapseBehavior
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -195,14 +194,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                _tintBackground.isVisible = false
+                tintBackgroundShadow.isVisible = false
                 hideKeyboard()
             }
         }
 
         override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
-            _tintBackground.isVisible = true
-            _tintBackground.alpha = slideOffset
+            tintBackgroundShadow.isVisible = true
+            tintBackgroundShadow.alpha = slideOffset
         }
     }
 
@@ -213,7 +212,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
         bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
 
-        _tintBackground = tintBackground
+        tintBackgroundShadow = tintBackground
         bsSecondarySheet.setBottomSheetCallback(bsCallback)
     }
 

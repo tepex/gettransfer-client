@@ -87,12 +87,10 @@ class OfferRepositoryImpl(
         val cachedRatesResult = retrieveCacheEntity { reviewCache.getAllRates() }.entity
         val cachedFeedbacksResult = retrieveCacheEntity { reviewCache.getAllFeedbacks() }.entity
 
-        return offers.map {
-            if (!cachedRatesResult.isNullOrEmpty())
-                checkOfferCachedRates(it, cachedRatesResult) else it
-        }.map {
-            if (!cachedFeedbacksResult.isNullOrEmpty())
-                checkOfferCachedFeedback(it, cachedFeedbacksResult) else it
+        return offers.map { item ->
+            if (!cachedRatesResult.isNullOrEmpty()) checkOfferCachedRates(item, cachedRatesResult) else item
+        }.map { item ->
+            if (!cachedFeedbacksResult.isNullOrEmpty()) checkOfferCachedFeedback(item, cachedFeedbacksResult) else item
         }
     }
 
@@ -100,13 +98,17 @@ class OfferRepositoryImpl(
         val offerRates = rates.filter { it.offerId == offer.id }
 
         with(offer.ratings) {
-            return if (offerRates.isNullOrEmpty()) offer
-            else offer.copy(
-                ratings = RatingsEntity(
-                    vehicle = findRating(this?.vehicle, offerRates, ReviewRate.RateType.VEHICLE),
-                    driver = findRating(this?.driver, offerRates, ReviewRate.RateType.DRIVER),
-                    communication = findRating(this?.communication, offerRates, ReviewRate.RateType.COMMUNICATION))
-            )
+            return if (offerRates.isNullOrEmpty()) {
+                offer
+            } else {
+                offer.copy(
+                    ratings = RatingsEntity(
+                        vehicle = findRating(this?.vehicle, offerRates, ReviewRate.RateType.VEHICLE),
+                        driver = findRating(this?.driver, offerRates, ReviewRate.RateType.DRIVER),
+                        communication = findRating(this?.communication, offerRates, ReviewRate.RateType.COMMUNICATION)
+                    )
+                )
+            }
         }
     }
 
@@ -119,8 +121,7 @@ class OfferRepositoryImpl(
     private fun checkOfferCachedFeedback(offer: OfferEntity, feedbacks: List<OfferFeedbackEntity>): OfferEntity {
         val offerComment = feedbacks.find { it.offerId == offer.id }?.comment
 
-        return if (offerComment.isNullOrEmpty()) offer
-        else offer.copy(passengerFeedback = offerComment)
+        return if (offerComment.isNullOrEmpty()) offer else offer.copy(passengerFeedback = offerComment)
     }
 
     override fun clearOffersCache() { factory.retrieveCacheDataStore().clearOffersCache() }

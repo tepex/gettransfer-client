@@ -28,8 +28,9 @@ class ReviewRepositoryImpl(
             val result: ResultEntity<Unit?> = retrieveRemoteEntity {
                 factory.retrieveRemoteDataStore().sendReview(offerRateID, rate)
             }
-            if (result.error != null && offerRateID != DEFAULT_ID)
+            if (result.error != null && offerRateID != DEFAULT_ID) {
                 factory.retrieveCacheDataStore().saveRate(OfferRateEntity(0, offerRateID, rate))
+            }
         }
         return Result(Unit)
     }
@@ -38,7 +39,9 @@ class ReviewRepositoryImpl(
         val result: ResultEntity<Unit?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().sendFeedBackComment(offerRateID, comment)
         }
-        if (result.error != null) factory.retrieveCacheDataStore().saveFeedback(OfferFeedbackEntity(offerRateID, comment))
+        if (result.error != null) {
+            factory.retrieveCacheDataStore().saveFeedback(OfferFeedbackEntity(offerRateID, comment))
+        }
         return Result(Unit)
     }
 

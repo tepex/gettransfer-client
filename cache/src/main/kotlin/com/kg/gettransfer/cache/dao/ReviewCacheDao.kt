@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy
 
 import com.kg.gettransfer.cache.model.OfferFeedbackCached
 import com.kg.gettransfer.cache.model.OfferRateCached
+
 import com.kg.gettransfer.data.model.OfferFeedbackEntity
 import com.kg.gettransfer.data.model.OfferRateEntity
 import com.kg.gettransfer.data.model.ReviewRateEntity
@@ -25,13 +26,13 @@ interface ReviewCacheDao {
 
     @Query("""
         DELETE FROM ${OfferRateEntity.ENTITY_NAME} WHERE
-        ${OfferRateEntity.OFFER_ID} = :offerId AND 
-        ${OfferRateEntity.REVIEW_RATE.plus(ReviewRateEntity.RATE_TYPE)} = :rateType""")
+        ${OfferRateEntity.OFFER_ID} = :offerId AND
+        ${OfferRateEntity.REVIEW_RATE.plus(ReviewRateEntity.RATE_TYPE)} = :rateType"""
+    )
     fun deleteRate(offerId: Long, rateType: String)
 
     @Query("""DELETE FROM ${OfferRateEntity.ENTITY_NAME} WHERE ${OfferRateEntity.ID} = :rateId""")
     fun deleteRate(rateId: Long)
-
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertFeedback(offerFeedback: OfferFeedbackCached)
@@ -43,7 +44,8 @@ interface ReviewCacheDao {
     fun deleteAllFeedbacks()
 
     @Query("""
-        DELETE FROM ${OfferFeedbackEntity.ENTITY_NAME} WHERE 
-        ${OfferFeedbackEntity.OFFER_ID} = :offerId""")
+        DELETE FROM ${OfferFeedbackEntity.ENTITY_NAME} WHERE
+        ${OfferFeedbackEntity.OFFER_ID} = :offerId"""
+    )
     fun deleteOfferFeedback(offerId: Long)
 }

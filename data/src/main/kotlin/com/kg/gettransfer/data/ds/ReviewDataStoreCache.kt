@@ -8,8 +8,6 @@ import com.kg.gettransfer.data.model.OfferRateEntity
 
 import org.koin.core.inject
 
-import java.lang.UnsupportedOperationException
-
 class ReviewDataStoreCache : ReviewDataStore {
 
     private val cache: ReviewCache by inject()
@@ -20,16 +18,13 @@ class ReviewDataStoreCache : ReviewDataStore {
 
     override suspend fun deleteRate(rateId: Long) = cache.deleteRate(rateId)
 
-
     override suspend fun saveFeedback(offerFeedback: OfferFeedbackEntity) = cache.insertFeedback(offerFeedback)
 
     override suspend fun getAllFeedbacks() = cache.getAllFeedbacks()
 
     override suspend fun deleteOfferFeedback(offerId: Long) = cache.deleteOfferFeedback(offerId)
 
-
     override suspend fun deleteReviews() = cache.deleteReviews()
-
 
     override suspend fun sendReview(offerId: Long, reviewRate: ReviewRateEntity) =
         throw UnsupportedOperationException()

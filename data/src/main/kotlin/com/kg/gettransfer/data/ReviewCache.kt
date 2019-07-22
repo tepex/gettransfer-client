@@ -13,13 +13,11 @@ interface ReviewCache : KoinComponent {
 
     suspend fun deleteRate(rateId: Long)
 
-
     suspend fun insertFeedback(offerFeedback: OfferFeedbackEntity)
 
     suspend fun getAllFeedbacks(): List<OfferFeedbackEntity>
 
     suspend fun deleteOfferFeedback(offerId: Long)
-
 
     suspend fun deleteReviews()
 }

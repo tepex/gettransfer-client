@@ -11,7 +11,8 @@ import com.kg.gettransfer.data.model.OfferRateEntity
 data class OfferRateCached(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = OfferRateEntity.ID) val id: Long = 0,
     @ColumnInfo(name = OfferRateEntity.OFFER_ID) val offerId: Long,
-    @Embedded(prefix = OfferRateEntity.REVIEW_RATE) val reviewRate: ReviewRateCached)
+    @Embedded(prefix = OfferRateEntity.REVIEW_RATE) val reviewRate: ReviewRateCached
+)
 
 fun OfferRateCached.map() = OfferRateEntity(id, offerId, reviewRate.map())
 fun OfferRateEntity.map() = OfferRateCached(0L, offerId, reviewRate.map())

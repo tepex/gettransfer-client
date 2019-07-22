@@ -21,13 +21,12 @@ class ReviewCacheImpl : ReviewCache, KoinComponent {
 
     override suspend fun deleteRate(rateId: Long) = db.reviewCacheDao().deleteRate(rateId)
 
-
-    override suspend fun insertFeedback(offerFeedback: OfferFeedbackEntity) = db.reviewCacheDao().insertFeedback(offerFeedback.map())
+    override suspend fun insertFeedback(offerFeedback: OfferFeedbackEntity) =
+        db.reviewCacheDao().insertFeedback(offerFeedback.map())
 
     override suspend fun getAllFeedbacks() = db.reviewCacheDao().getAllFeedbacks().map { it.map() }
 
     override suspend fun deleteOfferFeedback(offerId: Long) = db.reviewCacheDao().deleteOfferFeedback(offerId)
-
 
     override suspend fun deleteReviews() {
         db.reviewCacheDao().deleteAllRates()

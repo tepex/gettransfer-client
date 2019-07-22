@@ -8,8 +8,6 @@ import com.kg.gettransfer.data.model.OfferRateEntity
 
 import org.koin.core.inject
 
-import java.lang.UnsupportedOperationException
-
 class ReviewDataStoreRemote : ReviewDataStore {
 
     private val remote: ReviewRemote by inject()
@@ -19,7 +17,6 @@ class ReviewDataStoreRemote : ReviewDataStore {
 
     override suspend fun sendFeedBackComment(offerId: Long, comment: String) =
         remote.sendFeedBackComment(offerId, comment)
-
 
     override suspend fun saveRate(offerRate: OfferRateEntity) =
         throw UnsupportedOperationException()
