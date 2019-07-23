@@ -125,17 +125,22 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainRequestFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RatingLastTripFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCurrencyFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RateField.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RatingFieldView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsField.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/RatingDetailDialogFragment.kt",
 
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/MainView.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt"
+
     )
     config = files("detekt-config.yml")
 }

@@ -69,6 +69,7 @@ fabric.properties
 *.jks
 log.sh
 /tmp
+.kotlintest/
 
 keystore.properties
 keystore-prod.properties

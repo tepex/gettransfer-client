@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import android.widget.RatingBar
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -33,12 +34,11 @@ import com.kg.gettransfer.presentation.view.RatingDetailView
 import kotlinx.android.synthetic.main.dialog_fragment_rating_detail.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 
+@Suppress("TooManyFunctions")
 class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetailView {
 
     override val layout: Int = R.layout.dialog_fragment_rating_detail
-
     private var ratingListener: OnRatingChangeListener? = null
-
     private var isExitWithResult = false
 
     private val commonRateListener = RatingBar.OnRatingBarChangeListener { _, rate, _ ->
@@ -63,16 +63,19 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     @ProvidePresenter
     fun providePresenter() = RatingDetailPresenter()
 
+    @CallSuper
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        ratingListener = (activity as? OnRatingChangeListener)
+        ratingListener = activity as? OnRatingChangeListener
     }
 
+    @CallSuper
     override fun onDetach() {
-        super.onDetach()
         ratingListener = null
+        super.onDetach()
     }
 
+    @CallSuper
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
         btnSend.setOnClickListener { presenter.onClickSend() }
@@ -133,17 +136,17 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     override fun showComment(comment: String) {
         etComment.setText(comment)
     }
-    
+
     override fun showCommentDialog(comment: String) {
         val commentDialog = CommentDialogFragment.newInstance(comment)
         commentDialog.setTargetFragment(this@RatingDetailDialogFragment, COMMENT_REQUEST_CODE)
         commentDialog.show(fragmentManager, COMMENT_DIALOG_TAG)
     }
 
+    @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK &&
-                requestCode == COMMENT_REQUEST_CODE) {
+        if (resultCode == Activity.RESULT_OK && requestCode == COMMENT_REQUEST_CODE) {
             val comment = data?.getStringExtra(CommentDialogFragment.EXTRA_COMMENT) ?: ""
             presenter.comment = comment
             setComment(comment)
@@ -151,24 +154,23 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     }
 
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
-        context?.let {
-            val errMessage = getString(errId, *args)
-            Utils.showError(it, finish, errMessage)
-        }
+        context?.let { Utils.showError(it, finish, getString(errId, *args)) }
     }
 
     override fun setError(e: ApiException) {
-        context?.let {
-            if (e.code != ApiException.NETWORK_ERROR) Utils.showError(it, false, getString(R.string.LNG_ERROR) + ": " + e.message)
+        if (e.code != ApiException.NETWORK_ERROR) {
+            context?.let { Utils.showError(it, false, getString(R.string.LNG_ERROR) + ": " + e.message) }
         }
     }
 
-    override fun setError(e: DatabaseException) {
-        //empty
-    }
+    override fun setError(e: DatabaseException) {}
 
-    override fun setTransferNotFoundError(transferId: Long) =
-            (activity as BaseView).setTransferNotFoundError(transferId)
+    override fun setTransferNotFoundError(transferId: Long) {
+        val act = activity
+        if (act is BaseView) {
+            act.setTransferNotFoundError(transferId)
+        }
+    }
 
     override fun exitAndReportSuccess(list: List<ReviewRate>, comment: String) {
         ratingListener?.onRatingChanged(list, comment)
@@ -176,6 +178,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         dismiss()
     }
 
+    @CallSuper
     override fun onDismiss(dialog: DialogInterface?) {
         super.onDismiss(dialog)
         if (isExitWithResult) {
@@ -183,16 +186,16 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         }
     }
 
-    companion object {
-        const val RATE_DIALOG_TAG = "rate_dialog_tag"
-
-        fun newInstance() = RatingDetailDialogFragment()
-    }
-
     private fun setComment(comment: String) = etComment.setText(comment)
 
     interface OnRatingChangeListener {
         fun onRatingChanged(list: List<ReviewRate>, comment: String)
         fun onRatingChangeCancelled()
+    }
+
+    companion object {
+        const val RATE_DIALOG_TAG = "rate_dialog_tag"
+
+        fun newInstance() = RatingDetailDialogFragment()
     }
 }

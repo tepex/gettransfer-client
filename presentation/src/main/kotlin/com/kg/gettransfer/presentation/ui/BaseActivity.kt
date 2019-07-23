@@ -379,6 +379,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         return if (height) displayMetrics.heightPixels else displayMetrics.widthPixels
     }
 
+    @ExperimentalUnsignedTypes
     protected fun applyDim(parent: ViewGroup, dimAmount: Float) {
         parent.overlay.add(ColorDrawable(Color.BLACK).apply {
             setBounds(0, 0, parent.width, parent.height)
