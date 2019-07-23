@@ -129,6 +129,10 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsField.kt",
+
+
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/MainView.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt"
