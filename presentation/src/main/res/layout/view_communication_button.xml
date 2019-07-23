@@ -13,7 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:fabCustomSize="@dimen/view_communication_button_img_size"
-        android:background="@color/color_gtr_red"
         app:backgroundTint="@color/colorPrimaryDark"
         app:srcCompat="@drawable/ic_call"
         app:layout_constraintTop_toTopOf="parent"

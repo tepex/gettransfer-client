@@ -1,66 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <include
-            android:id="@+id/view_driver_languages"
-            layout="@layout/view_transfer_details_driver_languages"/>
+        android:id="@+id/view_driver_languages"
+        layout="@layout/view_transfer_details_driver_languages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-            android:id="@+id/driver_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title_transfer_details="@string/LNG_DRIVER_EMAIL"
-            android:visibility="gone"
-
-            tools:input_transfer_details="driver@gmail.com"
-            tools:visibility="visible"
-            />
+        android:id="@+id/driver_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_driver_languages"
+        app:title_transfer_details="@string/LNG_DRIVER_EMAIL"
+        tools:input_transfer_details="driver@gmail.com"
+        tools:visibility="visible" />
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/driver_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title_transfer_details="@string/LNG_DRIVER_PHONE"
         android:visibility="gone"
 
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/driver_email"
+        app:title_transfer_details="@string/LNG_DRIVER_PHONE"
         tools:input_transfer_details="+7 900 123 56 78"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-            android:id="@+id/carrier_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title_transfer_details="@string/LNG_CARRIER"
-            tools:input_transfer_details="Antarctica Travel"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+        android:id="@+id/carrier_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/driver_phone"
+        app:title_transfer_details="@string/LNG_CARRIER"
+        tools:input_transfer_details="Antarctica Travel"
+        tools:visibility="visible" />
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-            android:id="@+id/carrier_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        android:id="@+id/carrier_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
-            app:title_transfer_details="@string/LNG_CARRIER_EMAIL"
-            tools:input_transfer_details="carriere@gmail.com"
-            android:visibility="gone"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
 
-            tools:visibility="visible"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/carrier_name"
+        app:title_transfer_details="@string/LNG_CARRIER_EMAIL"
+        tools:input_transfer_details="carriere@gmail.com"
+        tools:visibility="visible" />
 
     <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
         android:id="@+id/carrier_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title_transfer_details="@string/LNG_CARRIER_PHONE"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
 
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/carrier_email"
+        app:title_transfer_details="@string/LNG_CARRIER_PHONE"
         tools:input_transfer_details="+7 900 123 56 78"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

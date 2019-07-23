@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/transferDetailsParent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:layout_height="match_parent">
 
     <View
         android:id="@+id/tintBackground"
@@ -15,7 +14,7 @@
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="top"
         app:layout_anchor="@+id/sheetTransferDetails"
         app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.MapCollapseBehavior" />
@@ -73,13 +72,6 @@
         android:layout_height="wrap_content"
         app:layout_anchor="@+id/sheetTransferDetails"
         app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.CommunicationButtonsLayoutAboveBottomSheetBehavior">
-
-        <View
-            android:id="@+id/viewGradient"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/activity_main_gradient_layout_height"
-            android:layout_gravity="bottom"
-            android:background="@drawable/back_bottom_sheet_bar_gradient" />
 
         <include
             android:id="@+id/topCommunicationButtons"

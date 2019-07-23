@@ -35,8 +35,6 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.isNonZero
-import com.kg.gettransfer.extensions.visibleText
-import com.kg.gettransfer.extensions.show
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -57,6 +55,7 @@ import java.util.Date
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
+import kotlinx.android.synthetic.main.layout_passengers_seats.view.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
@@ -66,13 +65,11 @@ import kotlinx.android.synthetic.main.view_communication_buttons.view.*
 
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_request.*
-import kotlinx.android.synthetic.main.view_transfer_details_transport_type_item.view.*
 
 import kotlinx.android.synthetic.main.view_rate_your_transfer.*
-import kotlinx.android.synthetic.main.view_seats_number.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.view.*
-import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.*
-import kotlinx.android.synthetic.main.view_transfer_details_about_transport_new.view.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_transport.*
+import kotlinx.android.synthetic.main.view_transfer_details_about_transport.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_comment.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_driver_languages.view.*
 import kotlinx.android.synthetic.main.view_transfer_details_field.view.*
@@ -112,6 +109,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setBackgroundDrawable(null)
         presenter.transferId = intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0)
         setContentView(R.layout.activity_transfer_details)
         setupStatusBar()
@@ -219,7 +217,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private fun setClickListeners() {
         btnBack.setOnClickListener          { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
-        tripRate.setOnRatingChangeListener  { _, fl -> presenter.rateTrip(fl, true) }
+        tripRate.setOnRatingBarChangeListener { _, rating, _ -> presenter.rateTrip(rating, true) }
         topCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         bottomCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         topCommunicationButtons.btnRepeatTransfer.setOnClickListener { presenter.onRepeatTransferClicked() }
@@ -247,7 +245,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             status == Transfer.STATUS_CATEGORY_UNFINISHED ||
             status == Transfer.STATUS_CATEGORY_CONFIRMED) {
             initTableLayoutTransportTypes(transfer.transportTypes)
-            layoutTransportTypes.isVisible = true
         }
 
         if (status == Transfer.STATUS_CATEGORY_ACTIVE) {
@@ -430,15 +427,28 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 comment_view.isVisible = true
             }
         }
+        setPassengersAndSeats(transfer)
+    }
 
-        with(transfer_details_view_seats) {
-            tv_countPassengers.text = getString(R.string.X_SIGN).plus("${transfer.countPassengers}")
-            imgPassengers.isVisible = true
-            tv_countPassengers.isVisible = true
-            transfer.getChildrenCount().isNonZero()?.let { children ->
-                tvCountChildren.visibleText = "${getString(R.string.X_SIGN)}$children"
-                imgChildSeats.isVisible =  true
+    private fun setPassengersAndSeats(transfer: TransferModel) {
+        with(passengersAndSeats) {
+            passengers.field_text.text = transfer.countPassengers.toString()
+            transfer.childSeatsInfant.isNonZero()?.let {
+                setCountSeats(infantSeat, it)
             }
+            transfer.childSeatsConvertible.isNonZero()?.let {
+                setCountSeats(convertibleSeat, it)
+            }
+            transfer.childSeatsBooster.isNonZero()?.let {
+                setCountSeats(boosterSeat, it)
+            }
+        }
+    }
+
+    private fun setCountSeats(view: TransferDetailsField, countSeats: Int) {
+        view.apply {
+            isVisible = true
+            field_text.text = countSeats.toString()
         }
     }
 
@@ -449,6 +459,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun initTableLayoutTransportTypes(transportTypes: List<TransportTypeModel>) {
+        flexboxTransportTypes.isVisible = true
         flexboxTransportTypes.removeAllViews()
         transportTypes.forEach { transportType ->
             flexboxTransportTypes.addView(
@@ -461,11 +472,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                             this@TransferDetailsActivity,
                             transportType.imageId
                         ))
-                        view_seats_and_lugg_count.transportType_сountPassengers.text = Utils.formatPersons(
+                        transportType_сountPassengers.text = Utils.formatPersons(
                             this@TransferDetailsActivity,
                             transportType.paxMax
                         )
-                        view_seats_and_lugg_count.transportType_сountBaggage.text = Utils.formatPersons(
+                        transportType_сountBaggage.text = Utils.formatPersons(
                             this@TransferDetailsActivity,
                             transportType.luggageMax
                         )
@@ -492,6 +503,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun initAboutDriverView(offer: OfferModel) {
+        layoutAboutDriver.isVisible = true
         offer.phoneToCall?.let { phone ->
             topCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
             bottomCommunicationButtons.btnCall.setOnClickListener { presenter.callPhone(phone) }
@@ -542,7 +554,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 layoutAboutDriver.view_driver_languages.layoutCarrierLanguages,
                 offer.carrier.languages
             )
-            layoutAboutDriver.isVisible = true
         }
     }
 
@@ -554,7 +565,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             car_model_field.isVisible = true
 
             view_conveniences.apply {
-                conveniences_field.field_title.text = getString(offerModel.vehicle.transportType.nameId)
+                conveniences_field.text = getString(offerModel.vehicle.transportType.nameId)
                 imgFreeWater.isVisible = offerModel.refreshments
                 imgFreeWiFi.isVisible  = offerModel.wifi
                 imgCharge.isVisible    = offerModel.charger
@@ -670,15 +681,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun showYourRateMark(isShow: Boolean, averageRate: Double) {
-        yourRateMark.rbYourRateMark.setOnRatingChangeListener(null)
-        yourRateMark.show(isShow)
+        yourRateMark.rbYourRateMark.onRatingBarChangeListener = null
+        yourRateMark.isVisible = isShow
         yourRateMark.rbYourRateMark.rating = averageRate.toFloat()
-        yourRateMark.rbYourRateMark.setOnRatingChangeListener { _, fl -> presenter.rateTrip(fl, true) }
+        yourRateMark.rbYourRateMark.setOnRatingBarChangeListener { _, rating, _ -> presenter.rateTrip(rating, true) }
     }
 
     override fun showYourDataProgress(isShow: Boolean) {
-        pbYourData.show(isShow)
-        yourRateMark.show(!isShow)
+        pbYourData.isVisible = isShow
+        yourRateMark.isVisible = !isShow
     }
 
     override fun onRatingChanged(list: List<ReviewRate>, comment: String) {
