@@ -172,7 +172,7 @@
 	<dimen name="create_transfer_additionals_bottom_text_size">14sp</dimen>
 	<dimen name="car_type_description">17sp</dimen>
 	<dimen name="car_type_description_min">11sp</dimen>
-	<dimen name="child_seats_counter_title_text_size">17sp</dimen>
+	<dimen name="child_seats_counter_title_text_size">16sp</dimen>
 	<dimen name="height_title_sheet_order">35dp</dimen>
 	<dimen name="create_transfer_editText_22">22dp</dimen>
 	<dimen name="create_transfer_textView_20">20dp</dimen>
@@ -256,7 +256,7 @@
 	<dimen name="seat_type_cell_padding_start">16dp</dimen>
 	<dimen name="seat_type_cell_padding_end">20dp</dimen>
 	<dimen name="seat_count_controller_margin_top">24dp</dimen>
-	<dimen name="seat_count_controller_margin_bottom">16dp</dimen>
+	<dimen name="seat_count_controller_margin_bottom">13dp</dimen>
 
 	<!-- Search address -->
 	<dimen name="address_item_size">16sp</dimen>
