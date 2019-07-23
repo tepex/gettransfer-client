@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 
-import android.support.constraint.ConstraintLayout
 import android.support.v4.content.ContextCompat
 
 import android.util.AttributeSet
