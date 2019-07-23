@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/progress_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_50"
     android:orientation="vertical"
-    android:gravity="center"
-    android:clickable="true">
+    android:gravity="center">
 
     <TextView
         android:id="@+id/tvMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/LNG_RIDE_CREATION_SPINNER"
+        android:text="@string/LNG_PLEASE_WAIT"
         android:textColor="@color/colorWhite"
         android:layout_marginBottom="24dp"
         android:layout_gravity="center"

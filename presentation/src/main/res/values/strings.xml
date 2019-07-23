@@ -183,7 +183,6 @@
     <string name="LNG_RIDE_CONNECT_CARRIERS_NONUM">Connecting with nearby carriers</string>
     <string name="LNG_RIDE_CARRIERS">Carrier\'s offers</string>
     <string name="LNG_RIDE_COMPLETED">Completed transfers: %s</string>
-    <string name="LNG_RIDE_CREATION_SPINNER">Please wait, connecting…</string>
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
     <string name="LNG_RIDE_OFFERT">I aggree with \n<a href='#'>License agreement</a></string>
     <string name="LNG_RIDE_PAYMENT_OFFER">By pressing \"\PAY\"\ you accept <a href="#">terms of the Agreement</a></string>
