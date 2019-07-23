@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="horizontal"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/img_minus_seat"
         android:layout_width="@dimen/circle_plus_height"
         android:layout_height="@dimen/circle_plus_height"
 
+        app:layout_constraintEnd_toStartOf="@+id/person_count"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_minus_disabled" />
 
     <TextView
         android:id="@+id/person_count"
         android:layout_width="42dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-
-
         android:fontFamily="@font/sf_pro_text_semibold"
-
-        android:gravity="center|top"
-
-        android:text="0"
-        tools:text="0"
+        android:gravity="center"
         android:textColor="@color/colorTextBlack"
-        android:textSize="@dimen/number_size" />
+        android:textSize="@dimen/number_size"
+
+        app:layout_constraintBottom_toBottomOf="@+id/img_minus_seat"
+        app:layout_constraintEnd_toStartOf="@+id/img_plus_seat"
+        app:layout_constraintStart_toEndOf="@+id/img_minus_seat"
+        app:layout_constraintTop_toTopOf="@+id/img_minus_seat"
+        tools:text="0" />
 
     <ImageView
         android:id="@+id/img_plus_seat"
-        android:layout_width="@dimen/circle_minus_height"
-        android:layout_height="@dimen/circle_minus_height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
+        app:layout_constraintBottom_toBottomOf="@+id/img_minus_seat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/person_count"
+        app:layout_constraintTop_toTopOf="@+id/img_minus_seat"
         app:srcCompat="@drawable/ic_circle_plus_org" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
-
-    android:paddingStart="@dimen/seat_type_cell_padding_start"
-    android:paddingEnd="@dimen/seat_type_cell_padding_end">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/child_seat_title"
         style="@style/black_regular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="22dp"
         android:textSize="@dimen/child_seats_counter_title_text_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Infant carrier" />
 
     <TextView
@@ -22,24 +23,30 @@
         style="@style/sf_font_pro_display_regular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/child_seat_title"
         android:layout_marginTop="3dp"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/child_seat_title"
+        app:layout_constraintTop_toBottomOf="@+id/child_seat_title"
         tools:text="Up to 10kg, 6 mount" />
 
     <View
-        android:layout_width="match_parent"
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_below="@+id/child_seat_description"
-        android:layout_marginTop="@dimen/seat_count_controller_margin_bottom"
-        android:background="@drawable/sh_divider_1dp" />
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/sh_divider_1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/child_seat_description" />
 
     <include
         android:id="@+id/view_counter_btns"
         layout="@layout/view_count_controller"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="@dimen/seat_count_controller_margin_top"
-        android:layout_marginBottom="@dimen/seat_count_controller_margin_bottom" />
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
