@@ -1,11 +1,15 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.support.annotation.CallSuper
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -28,7 +32,8 @@ import com.kg.gettransfer.presentation.view.RatingLastTripView
 
 import kotlinx.android.synthetic.main.view_last_trip_rate.*
 
-class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripView, OnMapReadyCallback {
+@Suppress("TooManyFunctions")
+class RatingLastTripFragment : BaseBottomSheetDialogFragment(), RatingLastTripView, OnMapReadyCallback {
 
     private lateinit var googleMap: GoogleMap
 
@@ -40,38 +45,29 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     @ProvidePresenter
     fun providePresenter() = RatingLastTripPresenter()
 
-    companion object {
-        const val RATING_LAST_TRIP_TAG = "rating_last_trip_tag"
-        private const val EXTRA_TRANSFER_ID = "transfer_id"
-        private const val EXTRA_VEHICLE = "vehicle"
-        private const val EXTRA_COLOR = "color"
-
-        fun newInstance(transferId: Long, vehicle: String, color: String) = RatingLastTripFragment().apply {
-            arguments = Bundle().apply {
-                putLong(EXTRA_TRANSFER_ID, transferId)
-                putString(EXTRA_VEHICLE, vehicle)
-                putString(EXTRA_COLOR, color)
-            }
-        }
-    }
-
+    @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = arguments?.getLong(EXTRA_TRANSFER_ID) ?: 0L
     }
 
+    @CallSuper
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
         tv_transfer_details.setOnClickListener { presenter.onTransferDetailsClick() }
         ivClose.setOnClickListener { presenter.onReviewCanceled() }
-        rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
-            presenter.onRateClicked(fl)
+        rate_bar_last_trip.setOnRatingBarChangeListener {
+            _, rating, _ ->  presenter.onRateClicked(rating)
         }
     }
 
+    @CallSuper
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
-        (fragmentManager?.findFragmentById(R.id.rate_map) as SupportMapFragment).getMapAsync(this)
+        val fragment = fragmentManager?.findFragmentById(R.id.rate_map)
+        if (fragment != null && fragment is SupportMapFragment) {
+            fragment.getMapAsync(this)
+        }
     }
 
     override fun onMapReady(map: GoogleMap) {
@@ -99,20 +95,27 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     private fun drawMapForReview(routeModel: RouteModel?, from: String, startPoint: LatLng) {
         if (routeModel != null) {
             val polyline = Utils.getPolyline(routeModel)
-            if (MapHelper.isEmptyPolyline(polyline, routeModel)) return
-            else context?.let { MapHelper.setPolyline(it, layoutInflater, googleMap, polyline, routeModel) }
+            if (MapHelper.isEmptyPolyline(polyline, routeModel)) {
+                return
+            } else {
+                context?.let { MapHelper.setPolyline(it, layoutInflater, googleMap, polyline, routeModel) }
+            }
         } else {
             setPinForHourlyTransfer(from, "", startPoint, Utils.getCameraUpdateForPin(startPoint))
         }
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate, driver: Boolean = false) {
+    private fun setPinForHourlyTransfer(
+        placeName: String,
+        info: String,
+        point: LatLng,
+        cameraUpdate: CameraUpdate,
+        driver: Boolean = false
+    ) {
         val markerRes = R.drawable.ic_map_label_a
         val bmPinA = MapHelper.getPinBitmap(layoutInflater, placeName, info, markerRes)
-        val startMakerOptions = MarkerOptions()
-                .position(point)
-                .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
+        val startMakerOptions = MarkerOptions().position(point).icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
         googleMap.addMarker(startMakerOptions)
         googleMap.moveCamera(cameraUpdate)
     }
@@ -121,11 +124,15 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
         dismiss()
     }
 
-    override fun thanksForRate() = (activity as MainActivity).thanksForRate()
+    override fun thanksForRate() {
+        val act = activity
+        if (act is MainActivity) {
+            act.thanksForRate()
+        }
+    }
 
     override fun showDetailedReview() {
-        if (fragmentManager?.fragments?.firstOrNull {
-                it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG } == null) {
+        if (fragmentManager?.fragments?.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG } == null) {
             RatingDetailDialogFragment
                 .newInstance()
                 .show(fragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
@@ -138,6 +145,25 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
     override fun setError(e: ApiException) {}
     override fun setError(e: DatabaseException) {}
 
-    override fun setTransferNotFoundError(transferId: Long) =
-        (activity as BaseView).setTransferNotFoundError(transferId)
+    override fun setTransferNotFoundError(transferId: Long) {
+        val act = activity
+        if (act is BaseView) {
+            act.setTransferNotFoundError(transferId)
+        }
+    }
+
+    companion object {
+        const val RATING_LAST_TRIP_TAG = "rating_last_trip_tag"
+        private const val EXTRA_TRANSFER_ID = "transfer_id"
+        private const val EXTRA_VEHICLE = "vehicle"
+        private const val EXTRA_COLOR = "color"
+
+        fun newInstance(transferId: Long, vehicle: String, color: String) = RatingLastTripFragment().apply {
+            arguments = Bundle().apply {
+                putLong(EXTRA_TRANSFER_ID, transferId)
+                putString(EXTRA_VEHICLE, vehicle)
+                putString(EXTRA_COLOR, color)
+            }
+        }
+    }
 }
