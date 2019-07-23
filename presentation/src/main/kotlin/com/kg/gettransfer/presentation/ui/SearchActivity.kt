@@ -18,8 +18,6 @@ import android.widget.Toast
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
-import com.google.android.gms.maps.model.LatLngBounds
-
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
@@ -33,7 +31,6 @@ import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SearchView
 
-import com.kg.gettransfer.utilities.Analytics
 import kotlinx.android.synthetic.main.a_b_orange_view.*
 import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 import kotlinx.android.synthetic.main.activity_search.*
@@ -49,9 +46,6 @@ class SearchActivity : BaseActivity(), SearchView {
     internal lateinit var presenter: SearchPresenter
 
     private lateinit var current: SearchAddress
-
-    // WTF?
-    var mBounds: LatLngBounds? = null
 
     private lateinit var predefinedPopularPlaces: List<PopularPlace>
 
@@ -92,7 +86,6 @@ class SearchActivity : BaseActivity(), SearchView {
     }
 
     private fun getIntents() {
-        mBounds = intent.getParcelableExtra(SearchView.EXTRA_BOUNDS)
         presenter.backwards = intent.getBooleanExtra(Screens.RETURN_MAIN, false)
     }
 

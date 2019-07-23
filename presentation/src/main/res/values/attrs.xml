@@ -9,6 +9,11 @@
         <attr name="hint"/>
     </declare-styleable>
 
+    <declare-styleable name="SearchAddressReadOnly" parent="EditableView">
+        <attr name="hint"/>
+        <attr name="title" format="string"/>
+    </declare-styleable>
+
     <declare-styleable name="CreateOrderField" parent="EditableView">
         <attr name="hint"/>
         <attr name="icon_img" format="reference" />
@@ -97,6 +102,11 @@
 
     <declare-styleable name="SearchFormView">
         <attr name="isInverseInvisible" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="SearchFormMainView">
+        <attr name="ivSelectFieldToGone" format="boolean"/>
+        <attr name="ivSelectFieldFromGone" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="OrderFieldView">

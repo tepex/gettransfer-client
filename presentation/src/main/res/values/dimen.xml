@@ -12,7 +12,7 @@
 	<dimen name="activity_main_events_count_margin_bottom_without_button_shadow">34dp</dimen>
 	<dimen name="activity_main_events_count_padding_start_end">4dp</dimen>
 
-	<dimen name="margin_for_area_behind_rounded_corners">-8dp</dimen>
+	<dimen name="margin_for_area_behind_rounded_corners">-16dp</dimen>
 	<dimen name="transfer_start_end_sign_marker_text_size">14sp</dimen>
 	<dimen name="activity_main_gradient_layout_height">48dp</dimen>
 

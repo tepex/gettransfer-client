@@ -95,7 +95,12 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
 
         baseMapView = mapView
         baseBtnCenter = btnCenterRoute
+
         initMapView(savedInstanceState)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
 
         initFieldsViews()
         scrollContent.setOnTouchListener(onTouchListener)
@@ -108,6 +113,11 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         initPromoSection()
         initKeyBoardListener()
         initBottomSheets()
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        presenter.init()
     }
 
     private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {

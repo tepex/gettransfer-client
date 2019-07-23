@@ -8,116 +8,119 @@
     android:background="@drawable/back_top_rounded"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="false"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:transitionName="@string/searchTransitionName">
+
+    <include
+        android:id="@+id/icons_container"
+        layout="@layout/a_b_orange_view"
+        android:layout_width="@dimen/search_marginStart"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="15dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        
-        <include
-            android:id="@+id/icons_container"
-            layout="@layout/a_b_orange_view"
-            android:layout_gravity="bottom"
-            android:layout_width="@dimen/search_marginStart"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"/>
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <com.kg.gettransfer.presentation.ui.SearchAddress
+            <com.kg.gettransfer.presentation.ui.SearchAddressReadOnly
                 android:id="@+id/searchFrom"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:hint="@string/LNG_FIELD_SOURCE" />
+                app:hint="@string/LNG_FIELD_SOURCE"
+                app:layout_constraintEnd_toStartOf="@id/ivSelectFieldFrom"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/LNG_FIELD_SOURCE_PICKUP" />
 
             <View
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/create_transfer_divider_height"
-                android:background="@color/colorDividerGray" />
+                android:background="@color/colorDividerGray"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchFrom" />
 
-            <RelativeLayout
-                android:id="@+id/rl_searchForm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <com.kg.gettransfer.presentation.ui.SearchAddressReadOnly
+                android:id="@+id/searchTo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:hint="@string/LNG_FIELD_DESTINATION_WHERE"
+                app:layout_constraintEnd_toStartOf="@id/ivSelectFieldTo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider"
+                app:title="@string/LNG_FIELD_DESTINATION" />
 
-                <com.kg.gettransfer.presentation.ui.SearchAddress
-                    android:id="@+id/searchTo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:hint="@string/LNG_FIELD_DESTINATION_WHERE" />
+            <ImageView
+                android:id="@+id/ivSelectFieldFrom"
+                android:layout_width="@dimen/pin_clickable_width"
+                android:layout_height="@dimen/pin_clickable_height"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/margin8"
+                android:padding="@dimen/pin_iv_padding"
+                app:layout_constraintBottom_toBottomOf="@id/searchFrom"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/searchFrom"
+                app:srcCompat="@drawable/btn_pin_location" />
 
-                <ImageView
-                    android:id="@+id/ivSelectFieldTo"
-                    android:layout_width="@dimen/pin_clickable_width"
-                    android:layout_height="@dimen/pin_clickable_height"
-                    android:padding="@dimen/pin_iv_padding"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    app:srcCompat="@drawable/btn_pin_location"/>
+            <ImageView
+                android:id="@+id/ivSelectFieldTo"
+                android:layout_width="@dimen/pin_clickable_width"
+                android:layout_height="@dimen/pin_clickable_height"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/margin8"
+                android:padding="@dimen/pin_iv_padding"
+                app:layout_constraintBottom_toBottomOf="@id/searchTo"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/searchTo"
+                app:srcCompat="@drawable/btn_pin_location" />
 
-            </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/rl_hourly"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        </android.support.constraint.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/hourly_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/search_sub_title_height"
-                    android:layout_marginTop="@dimen/search_sub_title_marginTop"
-                    android:fontFamily="@font/sf_pro_text_regular"
-                    android:textSize="@dimen/search_sub_title_textSize"
-                    android:text="@string/LNG_FIELD_PER_HOUSE"/>
+        <RelativeLayout
+            android:layout_marginEnd="@dimen/margin8"
+            android:id="@+id/rl_hourly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/tvCurrent_hours"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/hourly_title"
-                    android:paddingBottom="@dimen/search_main_paddingBottom"
+            <TextView
+                android:id="@+id/hourly_title"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/search_sub_title_height"
+                android:layout_marginTop="@dimen/search_sub_title_marginTop"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:text="@string/LNG_FIELD_PER_HOUSE"
+                android:textSize="@dimen/search_sub_title_textSize" />
 
-                    android:fontFamily="@font/sf_pro_text_semibold"
-                    android:textColor="@color/colorTextBlack"
-                    android:textSize="@dimen/search_main_textSize"/>
+            <TextView
+                android:id="@+id/tvCurrent_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/hourly_title"
+                android:fontFamily="@font/sf_pro_text_semibold"
+                android:paddingBottom="@dimen/search_main_paddingBottom"
+                android:textColor="@color/colorTextBlack"
+                android:textSize="@dimen/search_main_textSize" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/hourly_arrow_margin_end"
-                    android:rotation="90"
-                    android:src="@drawable/ic_arrow_down"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/hourly_arrow_margin_end"
+                android:rotation="90"
+                android:paddingRight="@dimen/pin_iv_padding"
+                android:src="@drawable/ic_arrow_down" />
 
-
-            </RelativeLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/create_transfer_divider_height"
-        android:background="@color/colorDividerGray"/>
-
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="@dimen/general_button_width"
-        android:layout_height="@dimen/general_button_height"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/btn_next_main_margin_16dp"
-        android:background="@drawable/btn_bg_rounded"
-        android:enabled="false"
-        style="?android:attr/borderlessButtonStyle"
-        android:text="@string/LNG_NEXT"
-
-        android:textColor="@color/colorWhite" />
-
 </LinearLayout>

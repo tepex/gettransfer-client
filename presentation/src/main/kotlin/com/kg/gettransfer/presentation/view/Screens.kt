@@ -14,6 +14,8 @@ import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.ui.*
+import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
+import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
 import kotlinx.serialization.json.JSON
 
 import java.io.File
@@ -58,7 +60,7 @@ object Screens {
     data class MainPassenger(
         val showDrawer: Boolean = false
     ) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
+        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java)
             .apply {
                 putExtra(MAIN_MENU, showDrawer)
             }
@@ -68,10 +70,10 @@ object Screens {
             val transferId: Long,
             val rate: Int
     ) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
+        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java)
             .apply {
-                putExtra(MainView.EXTRA_RATE_TRANSFER_ID, transferId)
-                putExtra(MainView.EXTRA_RATE_VALUE, rate)
+                putExtra(EXTRA_RATE_TRANSFER_ID, transferId)
+                putExtra(EXTRA_RATE_VALUE, rate)
             }
     }
 
@@ -250,14 +252,12 @@ object Screens {
         val from: String,
         val to: String,
         val isClickTo: Boolean?,
-        val bounds: LatLngBounds,
         val returnMain: Boolean = false
     ) :
         SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, SearchActivity::class.java).apply {
             putExtra(SearchView.EXTRA_ADDRESS_FROM, from)
             putExtra(SearchView.EXTRA_ADDRESS_TO, to)
-            putExtra(SearchView.EXTRA_BOUNDS, bounds)
             putExtra(RETURN_MAIN, returnMain)
             isClickTo?.let { putExtra(SearchView.EXTRA_IS_CLICK_TO, it) }
         }

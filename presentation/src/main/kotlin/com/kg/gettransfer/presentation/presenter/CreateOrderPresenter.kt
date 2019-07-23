@@ -32,6 +32,8 @@ import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.launch
 
 import org.koin.core.get
 import org.koin.core.inject
@@ -40,13 +42,13 @@ import org.koin.core.inject
 class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedListener {
     private val orderInteractor: OrderInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
-    private val dateDelegate: DateTimeDelegate = get()
-    private val childSeatsDelegate: PassengersDelegate = get()
+    private val dateDelegate: DateTimeDelegate by inject()
+    private val childSeatsDelegate: PassengersDelegate by inject()
 
-    private val routeMapper = get<RouteMapper>()
-    private val userMapper = get<UserMapper>()
+    private val routeMapper: RouteMapper by inject()
+    private val userMapper: UserMapper by inject()
 
-    private val currencies = systemInteractor.currencies.map { it.map() }
+    private val currencies by lazy { systemInteractor.currencies.map { it.map() } }
     private var duration: Int? = null
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
@@ -63,9 +65,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
             if (value) viewState.enableReturnTimeChoose()
         }
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        setTransportTypePrices(emptyMap(), true)
+    fun init() {
         initMapAndPrices()
         setCurrency(sessionInteractor.currency.map())
         with(orderInteractor) {
@@ -110,19 +110,19 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
             viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set"))
             return
         }
-        var prices: Map<TransportType.ID, TransportTypePrice>? = null
         utils.launchSuspend {
-            fetchData {
-                orderInteractor.getRouteInfoHourlyTransfer(
-                        RouteInfoHourlyRequest(
-                                from.point!!,
-                                duration,
-                                sessionInteractor.currency.code,
-                                dateTime
-                        )
-                )
-            }?.let { prices = it.prices }
+            viewState.blockInterface(true, true)
+            val prices = utils.asyncAwait {
+                    orderInteractor.getRouteInfoHourlyTransfer(
+                            RouteInfoHourlyRequest(
+                                    from.point!!,
+                                    duration,
+                                    sessionInteractor.currency.code,
+                                    dateTime
+                            )
+                    )}.model.prices
             setTransportTypePrices(prices ?: emptyMap())
+            viewState.blockInterface(false)
         }
     }
 
@@ -136,38 +136,38 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
             return
         }
         utils.launchSuspend {
-            viewState.blockInterface(true)
-            var route: RouteInfo? = null
-            fetchData {
+            viewState.blockInterface(true, true)
+            val route: RouteInfo? = utils.asyncAwait {
                 orderInteractor.getRouteInfo(
-                    RouteInfoRequest(
-                        from.point!!,
-                        to.point!!,
-                        true,
-                        false,
-                        sessionInteractor.currency.code,
-                        dateTime
-                    )
+                        RouteInfoRequest(
+                                from.point!!,
+                                to.point!!,
+                                true,
+                                false,
+                                sessionInteractor.currency.code,
+                                dateTime
+                        )
                 )
-            }?.let {
-                route = it
+            }.model
+            route?.let {
                 duration = it.duration
                 hintsToComments = it.hintsToComments
             }
             setTransportTypePrices(route?.prices ?: emptyMap())
 
             routeModel = routeMapper.getView(
-                route?.distance,
-                route?.polyLines,
-                from.name,
-                to.name,
-                from.point!!,
-                to.point!!,
-                dateDelegate.run { startOrderedTime ?: getCurrentDatePlusMinimumHours().time.simpleFormat() }
+                    route?.distance,
+                    route?.polyLines,
+                    from.name,
+                    to.name,
+                    from.point!!,
+                    to.point!!,
+                    dateDelegate.run {
+                        startOrderedTime ?: getCurrentDatePlusMinimumHours().time.simpleFormat()
+                    }
             )
 
             if (isMapInitialized) setRoute()
-
             viewState.blockInterface(false)
         }
     }
@@ -227,21 +227,20 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
             viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
             return
         }
-        var prices: Map<TransportType.ID, TransportTypePrice>? = null
         utils.launchSuspend {
-            fetchData {
-                orderInteractor.getRouteInfo(
+            viewState.blockInterface(true, true)
+            val prices = utils.asyncAwait {orderInteractor.getRouteInfo(
                     RouteInfoRequest(
-                        from.point!!,
-                        to.point!!,
-                        true,
-                        returnWay,
-                        sessionInteractor.currency.code,
-                        dateTime
+                            from.point!!,
+                            to.point!!,
+                            true,
+                            returnWay,
+                            sessionInteractor.currency.code,
+                            dateTime
                     )
-                )
-            }?.let { prices = it.prices }
+            )}.model.prices
             setTransportTypePrices(prices ?: emptyMap())
+            viewState.blockInterface(false)
         }
     }
 
@@ -253,20 +252,20 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
             viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set"))
             return
         }
-        var prices: Map<TransportType.ID, TransportTypePrice>? = null
         utils.launchSuspend {
-            fetchData {
+            viewState.blockInterface(true, true)
+            val prices = utils.asyncAwait {
                 orderInteractor.getRouteInfoHourlyTransfer(
-                    RouteInfoHourlyRequest(
-                        from.point!!,
-                        duration,
-                        sessionInteractor.currency.code,
-                        dateTime
-                    )
+                        RouteInfoHourlyRequest(
+                                from.point!!,
+                                duration,
+                                sessionInteractor.currency.code,
+                                dateTime
+                        )
                 )
-            }
-                ?.let { prices = it.prices }
+            }.model.prices
             setTransportTypePrices(prices ?: emptyMap())
+            viewState.blockInterface(false)
         }
     }
 
@@ -409,10 +408,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = fetchResultOnly { transferInteractor.createTransfer(transferNew) }
-
+            val result = utils.asyncAwait { transferInteractor.createTransfer(transferNew) }
             if (result.error == null) {
-                val logResult = fetchResultOnly { accountManager.putAccount(connectSocket = true) }
+                val logResult = utils.asyncAwait { accountManager.putAccount(connectSocket = true) }
                 if (logResult.error == null) {
                     handleSuccess()
                     router.replaceScreen(Screens.Offers(result.model.id))

@@ -24,6 +24,5 @@ interface SearchView : BaseView {
         val EXTRA_ADDRESS_FROM = "${SearchView::class.java.name}.address_from"
         val EXTRA_ADDRESS_TO   = "${SearchView::class.java.name}.address_to"
         val EXTRA_IS_CLICK_TO  = "${SearchView::class.java.name}.to_click"
-        val EXTRA_BOUNDS       = "${SearchView::class.java.name}.bounds"
     }
 }

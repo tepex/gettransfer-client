@@ -132,7 +132,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
 
     fun selectFinishPointOnMap() {
         analytics.logSingleEvent(Analytics.POINT_ON_MAP_CLICKED)
-        systemInteractor.selectedField = if (isTo) MainPresenter.FIELD_TO else MainPresenter.FIELD_FROM
+        systemInteractor.selectedField = if (isTo) FIELD_TO else FIELD_FROM
         nState.currentState = MainState.CHOOSE_POINT_ON_MAP
         router.exit()
     }
@@ -182,5 +182,8 @@ class SearchPresenter : BasePresenter<SearchView>() {
         const val SUITABLE_TYPE       = 0
         const val NO_TYPE             = -1
         const val NO_POINT            = 0.0
+
+        const val FIELD_FROM = "field_from"
+        const val FIELD_TO = "field_to"
     }
 }

@@ -62,7 +62,7 @@
         </activity>
         <activity
             android:launchMode="singleTask"
-            android:name=".presentation.ui.MainActivity"
+            android:name=".presentation.ui.MainNavigateActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeTransparentStatusBar"

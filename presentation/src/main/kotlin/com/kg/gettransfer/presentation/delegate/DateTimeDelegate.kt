@@ -23,8 +23,8 @@ import java.util.Date
 
 class DateTimeDelegate : KoinComponent {
 
-    val orderInteractor: OrderInteractor = get()
-    val sessionInteractor: SessionInteractor = get()
+    val orderInteractor: OrderInteractor by inject()
+    val sessionInteractor: SessionInteractor by inject()
 
     private val getOrderMinimum: GetOrderMinimumInteractor by inject()
 
