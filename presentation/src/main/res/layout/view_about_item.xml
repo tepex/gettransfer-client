@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/ivOnboard"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/about_item_height"
         app:srcCompat="@drawable/onboarding_0" />
 
     <TextView
@@ -22,8 +22,6 @@
         android:layout_marginStart="@dimen/about_item_description_margin_start"
         android:layout_marginEnd="@dimen/about_item_description_margin_end"
         tools:text="@string/LNG_PRESENTATION_TITLE_0"
-        android:layout_gravity="center"
-        android:gravity="center"
         style="@style/sf_font_semi_bold_17_sp"/>
 
 </LinearLayout>

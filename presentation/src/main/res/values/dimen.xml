@@ -137,6 +137,7 @@
 	<dimen name="about_item_description_margin_top">30dp</dimen>
 	<dimen name="about_item_description_margin_start">8dp</dimen>
 	<dimen name="about_item_description_margin_end">8dp</dimen>
+	<dimen name="about_item_height">260dp</dimen>
 
 	<!-- Read more -->
 	<dimen name="read_more_content_margin">10dp</dimen>
