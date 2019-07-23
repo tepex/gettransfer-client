@@ -68,20 +68,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rate_bar_last_trip" />
 
-    <com.willy.ratingbar.ScaleRatingBar
+    <RatingBar
         android:id="@+id/rate_bar_last_trip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
+        android:numStars="@integer/stars_number"
+        android:stepSize="1"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:transformPivotX="45dp"
+        android:transformPivotY="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_transfer_date_rate"
-        app:srb_drawableEmpty="@drawable/ic_star_empty"
-        app:srb_drawableFilled="@drawable/ic_star_filled"
-        app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
-        app:srb_starWidth="@dimen/rating_bar_stars_enabled_width" />
+        style="@style/CustomRatingBar"/>
 
 
     <fragment

@@ -12,10 +12,10 @@ import kotlinx.android.synthetic.main.view_rate_field.*
 class RateField @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer {
-    override val containerView: View
-    init {
-        containerView = LayoutInflater.from(context).inflate(R.layout.view_rate_field, this, true)
 
+    override val containerView: View = LayoutInflater.from(context).inflate(R.layout.view_rate_field, this, true)
+
+    init {
         if (attrs != null) {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.RateField)
             tv_rate_title.text = ta.getString(R.styleable.RateField_rate_title)
@@ -23,5 +23,4 @@ class RateField @JvmOverloads constructor(
             ta.recycle()
         }
     }
-
 }

@@ -12,9 +12,9 @@ import kotlinx.android.synthetic.main.view_offer_rating_field.view.*
 class RatingFieldView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer {
-    override val containerView: View
+    override val containerView: View = LayoutInflater.from(context).inflate(R.layout.view_offer_rating_field, this, true)
+
     init {
-        containerView = LayoutInflater.from(context).inflate(R.layout.view_offer_rating_field, this, true)
 
         if (attrs != null) {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.RatingFieldView)

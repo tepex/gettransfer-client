@@ -64,8 +64,8 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
         super.initUx(savedInstanceState)
         tv_transfer_details.setOnClickListener { presenter.onTransferDetailsClick() }
         ivClose.setOnClickListener { presenter.onReviewCanceled() }
-        rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
-            presenter.onRateClicked(fl)
+        rate_bar_last_trip.setOnRatingBarChangeListener {
+            _, rating, _ ->  presenter.onRateClicked(rating)
         }
     }
 
