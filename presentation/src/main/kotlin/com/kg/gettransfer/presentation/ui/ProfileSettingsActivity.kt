@@ -32,7 +32,7 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_settings)
-        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
+        setToolbar(toolbar as Toolbar, R.string.LNG_PROFILE)
 
         nameField.field_input.onTextChanged { presenter.setName(it) }
 

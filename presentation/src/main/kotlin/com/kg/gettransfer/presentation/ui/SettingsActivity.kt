@@ -107,27 +107,9 @@ class SettingsActivity : BaseActivity(), SettingsView {
         settingsBtnSupport.setOnClickListener { presenter.sendEmail(null, null) }
     }
 
-    /*override fun initLoggedInUserSettings(profile: ProfileModel) {
-        profile.phone?.let { initInfoField(it, settingsUserPhone) }
-        profile.email?.let { initInfoField(it, settingsUserEmail) }
-
-        settingsUserPassword.isVisible = true
-        settingsUserPassword.setOnClickListener { presenter.onPasswordClicked() }
-    }*/
-
     override fun initProfileField() {
         settingsProfile.isVisible = true
         settingsProfile.setOnClickListener { presenter.onProfileFieldClicked() }
-    }
-
-    private fun initInfoField(text: String, field: SettingsFieldPicker){
-        if (text.isNotEmpty()) {
-            field.apply {
-                field_text.text = text
-                field_chevron.isVisible = false
-                isVisible = true
-            }
-        }
     }
 
     override fun initCarrierLayout() {
