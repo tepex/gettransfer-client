@@ -40,7 +40,6 @@ class SupportActivity : BaseActivity(), SupportView {
         setContentView(R.layout.activity_support)
         setupToolbar()
         fabFacebook.setOnClickListener { facebookClick() }
-//        fabWhatsapp.setOnClickListener { whatsAppClick() }
         fabViber.setOnClickListener { viberClick() }
         fabTelegram.setOnClickListener { telegramClick() }
         fabEmail.setOnClickListener { presenter.sendEmail(null, null) }
@@ -54,12 +53,6 @@ class SupportActivity : BaseActivity(), SupportView {
 
     private fun facebookClick() =
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL)))
-
-
-    private fun whatsAppClick() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(""))
-        startActivity(intent)
-    }
 
     private fun viberClick() {
         val intent: Intent = try {
@@ -80,5 +73,9 @@ class SupportActivity : BaseActivity(), SupportView {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
         toolbar.toolbar_title.text = getString(R.string.LNG_CUSTOMER_SUPPORT)
+    }
+
+    override fun showEmail(email: String) {
+        tvEmail.text = email
     }
 }

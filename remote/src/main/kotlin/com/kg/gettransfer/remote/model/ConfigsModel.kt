@@ -10,12 +10,15 @@ data class ConfigsModel(
     @SerializedName(ConfigsEntity.AVAILABLE_LOCALES) @Expose val availableLocales: List<LocaleModel>,
     @SerializedName(ConfigsEntity.PAYMENT_COMMISSION) @Expose val paymentCommission: Float,
     @SerializedName(ConfigsEntity.SUPPORTED_CURRENCIES) @Expose val supportedCurrencies: List<CurrencyModel>,
-    @SerializedName(ConfigsEntity.SUPPORTED_DISTANCE_UNITS) @Expose val supportedDistanceUnits: List<String>
+    @SerializedName(ConfigsEntity.SUPPORTED_DISTANCE_UNITS) @Expose val supportedDistanceUnits: List<String>,
+    @SerializedName(ConfigsEntity.CONTACT_EMAILS) @Expose val contactEmails: ContactEmailsWrapperModel
 )
 /**
  * Wrapper is used to intercept API `transport_types` and convert it into List<TransportTypeModel> with origin order.
  */
 class TransportTypesWrapperModel : ArrayList<TransportTypeModel>()
+
+class ContactEmailsWrapperModel : ArrayList<ContactEmailModel>()
 
 fun ConfigsModel.map() =
     ConfigsEntity(
@@ -23,5 +26,6 @@ fun ConfigsModel.map() =
         availableLocales.map { it.map() },
         paymentCommission,
         supportedCurrencies.map { it.map() },
-        supportedDistanceUnits
+        supportedDistanceUnits,
+        contactEmails.map { it.map() }
     )

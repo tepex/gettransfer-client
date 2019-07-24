@@ -15,6 +15,7 @@ data class ConfigsCached(
     @ColumnInfo(name = ConfigsEntity.PAYMENT_COMMISSION) val paymentCommission: Float,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_CURRENCIES) val supportedCurrencies: CurrencyCachedList,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: StringList,
+    @ColumnInfo(name = ConfigsEntity.CONTACT_EMAILS) val contactEmails: ContactEmailsCachedList,
     @PrimaryKey(autoGenerate = true) val id: Long = 15
 )
 
@@ -24,7 +25,8 @@ fun ConfigsCached.map() =
         availableLocales.list.map { it.map() },
         paymentCommission,
         supportedCurrencies.list.map { it.map() },
-        supportedDistanceUnits.list
+        supportedDistanceUnits.list,
+        contactEmails.list.map { it.map() }
     )
 
 fun ConfigsEntity.map() =
@@ -33,5 +35,6 @@ fun ConfigsEntity.map() =
         LocaleCachedList(availableLocales.map { it.map() }),
         paymentCommission,
         CurrencyCachedList(supportedCurrencies.map { it.map() }),
-        StringList(supportedDistanceUnits)
+        StringList(supportedDistanceUnits),
+        ContactEmailsCachedList(contactEmails.map { it.map() })
     )
