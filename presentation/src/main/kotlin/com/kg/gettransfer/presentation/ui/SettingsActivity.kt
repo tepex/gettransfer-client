@@ -17,8 +17,10 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.extensions.*
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.presentation.model.EndpointModel
+import com.kg.gettransfer.presentation.model.LocaleModel
+
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
 import com.kg.gettransfer.presentation.view.Screens
@@ -34,6 +36,7 @@ import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
 
 import timber.log.Timber
 
+@Suppress("TooManyFunctions")
 class SettingsActivity : BaseActivity(), SettingsView {
 
     @InjectPresenter
@@ -51,10 +54,11 @@ class SettingsActivity : BaseActivity(), SettingsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        @Suppress("UnsafeCast")
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
-        Utils.dpToPxInt(this, 8f).let {
-            settingsBtnLogout.btnName.setPadding(0, it, 0, 0)
-            settingsBtnSupport.btnName.setPadding(0, it, 0, 0)
+        Utils.dpToPxInt(this, COMPOUND_DRAWABLE_PADDING).also { px ->
+            settingsBtnLogout.btnName.setPadding(0, px, 0, 0)
+            settingsBtnSupport.btnName.setPadding(0, px, 0, 0)
         }
     }
 
@@ -67,7 +71,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 presenter.showingFragment = showingView
                 when (showingView) {
                     SettingsPresenter.CURRENCIES_VIEW -> add(R.id.currenciesFragment, SelectCurrencyFragment())
-                    //SettingsPresenter.PASSWORD_VIEW   -> add(R.id.currenciesFragment, ChangePasswordFragment())
+                    // SettingsPresenter.PASSWORD_VIEW   -> add(R.id.currenciesFragment, ChangePasswordFragment())
                     else -> throw UnsupportedOperationException()
                 }
                 /*add(R.id.currenciesFragment, when(showingView){
@@ -75,8 +79,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
                     SettingsPresenter.PASSWORD_VIEW   -> ChangePasswordFragment()
                     else -> throw UnsupportedOperationException()
                 })*/
-            }
-            else {
+            } else {
                 presenter.showingFragment = null
                 supportFragmentManager.fragments.firstOrNull()?.let { remove(it) }
             }
@@ -85,19 +88,17 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     @SuppressLint("PrivateResource")
-    private fun setAnimation(opens: Boolean, transaction: FragmentTransaction) =
-            transaction.apply {
-                val anim = if(opens) R.anim.enter_from_right else R.anim.exit_to_right
-                setCustomAnimations(anim, anim)
-            }
+    private fun setAnimation(opens: Boolean, transaction: FragmentTransaction) = transaction.apply {
+        val anim = if (opens) R.anim.enter_from_right else R.anim.exit_to_right
+        setCustomAnimations(anim, anim)
+    }
 
     private fun setTitleText(showingView: Int) {
         toolbar.toolbar_title.text = getString(when (showingView) {
-            //SettingsPresenter.PASSWORD_VIEW   -> R.string.LNG_LOGIN_PASSWORD_SECTION
+            // SettingsPresenter.PASSWORD_VIEW   -> R.string.LNG_LOGIN_PASSWORD_SECTION
             SettingsPresenter.CURRENCIES_VIEW -> R.string.LNG_CURRENCIES_CHOOSE
             else -> R.string.LNG_MENU_TITLE_SETTINGS
         })
-
     }
 
     override fun initGeneralSettingsLayout() {
@@ -115,17 +116,15 @@ class SettingsActivity : BaseActivity(), SettingsView {
     override fun initCarrierLayout() {
         layoutCarrierSettings.isVisible = true
         with(settingsCoordinatesInBackground) {
-            setOnClickListener {
-                with(it.switch_button) {
+            setOnClickListener { view ->
+                with(view.switch_button) {
                     isChecked = !isChecked
                     presenter.onDriverCoordinatesSwitched(isChecked)
                 }
             }
             switch_button.apply {
                 isChecked = presenter.isBackGroundAccepted
-                setOnCheckedChangeListener { _, isChecked ->
-                    presenter.onDriverCoordinatesSwitched(isChecked)
-                }
+                setOnCheckedChangeListener { _, isChecked -> presenter.onDriverCoordinatesSwitched(isChecked) }
             }
         }
     }
@@ -143,17 +142,15 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     override fun setDistanceUnit(inMiles: Boolean) {
         with(settingsDistanceUnit) {
-            setOnClickListener {
-                with(it.switch_button) {
+            setOnClickListener { view ->
+                with(view.switch_button) {
                     isChecked = !isChecked
                     presenter.onDistanceUnitSwitched(isChecked)
                 }
             }
             switch_button.apply {
                 isChecked = inMiles
-                setOnCheckedChangeListener { _, isChecked ->
-                    presenter.onDistanceUnitSwitched(isChecked)
-                }
+                setOnCheckedChangeListener { _, isChecked -> presenter.onDistanceUnitSwitched(isChecked) }
             }
         }
     }
@@ -162,36 +159,39 @@ class SettingsActivity : BaseActivity(), SettingsView {
         settingsEmailNotif.isVisible = true
         with(settingsEmailNotif) {
             isVisible = true
-            setOnClickListener {
-                with(it.switch_button) {
+            setOnClickListener { view ->
+                with(view.switch_button) {
                     isChecked = !isChecked
                     presenter.onEmailNotificationSwitched(isChecked)
                 }
             }
             switch_button.apply {
                 isChecked = enabled
-                setOnCheckedChangeListener { _, isChecked ->
-                    presenter.onEmailNotificationSwitched(isChecked)
-                }
+                setOnCheckedChangeListener { _, isChecked -> presenter.onEmailNotificationSwitched(isChecked) }
             }
         }
     }
 
     override fun setCalendarModes(calendarModesKeys: List<String>) {
-        val calendarModes = calendarModesKeys.map { Pair<CharSequence, String>(getCalendarModeName(it), it) }
+        val calendarModes = calendarModesKeys.map { getCalendarModeName(it) to it }
         val calendarModesNames = calendarModes.map { it.first }
-        Utils.setCalendarModesDialogListener(this, settingsCalendarMode, calendarModesNames, R.string.LNG_CALENDAR_MODE) {
-            presenter.changeCalendarMode(calendarModes[it].second)
-        }
+        Utils.setCalendarModesDialogListener(
+            this,
+            settingsCalendarMode,
+            calendarModesNames,
+            R.string.LNG_CALENDAR_MODE
+        ) { presenter.changeCalendarMode(calendarModes[it].second) }
     }
 
     override fun setLocales(locales: List<LocaleModel>) =
-        Utils.setLocalesDialogListener(this, settingsLanguage, locales) {
-            localeManager.updateResources(this, presenter.changeLocale(it))
+        Utils.setLocalesDialogListener(this, settingsLanguage, locales) { selected ->
+            localeManager.updateResources(this, presenter.changeLocale(selected))
         }
 
     override fun setDaysOfWeek(daysOfWeek: List<CharSequence>) =
-        Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { presenter.changeFirstDayOfWeek(it) }
+        Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { selected ->
+            presenter.changeFirstDayOfWeek(selected)
+        }
 
     override fun setEndpoints(endpoints: List<EndpointModel>) =
         Utils.setEndpointsDialogListener(this, settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
@@ -202,8 +202,13 @@ class SettingsActivity : BaseActivity(), SettingsView {
         settingsLanguage.field_text.text = locale
         with(settingsLanguage.field_text) {
             text = locale
-            setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(this@SettingsActivity, Utils.getLanguageImage(code)), null)
-            compoundDrawablePadding = Utils.dpToPxInt(this@SettingsActivity, 8f)
+            setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                null,
+                ContextCompat.getDrawable(this@SettingsActivity, Utils.getLanguageImage(code)),
+                null
+            )
+            compoundDrawablePadding = Utils.dpToPxInt(this@SettingsActivity, COMPOUND_DRAWABLE_PADDING)
         }
     }
 
@@ -220,9 +225,9 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun restartApp() {
-        packageManager.getLaunchIntentForPackage(packageName)?.let {
-            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(it)
+        packageManager.getLaunchIntentForPackage(packageName)?.let { intent ->
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
         }
         finish()
         Runtime.getRuntime().exit(0)
@@ -236,18 +241,20 @@ class SettingsActivity : BaseActivity(), SettingsView {
         else -> throw UnsupportedOperationException()
     }
 
+    @CallSuper
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
         if (event?.action == MotionEvent.ACTION_UP) {
             val time = System.currentTimeMillis()
 
-            //if it is the first time, or if it has been more than 3 seconds since the first tap
+            // if it is the first time, or if it has been more than 3 seconds since the first tap
             // (so it is like a new try), we reset everything
-            if (startMillis == 0L || (time - startMillis > TIME_FOR_DEBUG)) {
+            if (startMillis == 0L || time - startMillis > TIME_FOR_DEBUG) {
                 startMillis = time
                 count = 1
+            } else {
+                // it is not the first, and it has been  less than 3 seconds since the first
+                count++
             }
-            //it is not the first, and it has been  less than 3 seconds since the first
-            else count++
 
             if (count == COUNTS_FOR_DEBUG) {
                 count = 0
@@ -260,5 +267,6 @@ class SettingsActivity : BaseActivity(), SettingsView {
     companion object {
         private const val COUNTS_FOR_DEBUG = 7
         private const val TIME_FOR_DEBUG = 3000L
+        private const val COMPOUND_DRAWABLE_PADDING = 8f
     }
 }

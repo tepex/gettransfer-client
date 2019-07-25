@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v7.widget.Toolbar
 import android.view.View
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.ProfileSettingsPresenter
 import com.kg.gettransfer.presentation.view.ProfileSettingsView
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
+
 import kotlinx.android.synthetic.main.activity_profile_settings.*
 import kotlinx.android.synthetic.main.activity_profile_settings.toolbar
 import kotlinx.android.synthetic.main.view_settings_editable_field.view.*
@@ -32,14 +35,15 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_settings)
+        @Suppress("UnsafeCast")
         setToolbar(toolbar as Toolbar, R.string.LNG_PROFILE)
 
         nameField.field_input.onTextChanged { presenter.setName(it) }
 
-        View.OnClickListener { presenter.onChangeEmailClicked() }.let {
+        View.OnClickListener { presenter.onChangeEmailClicked() }.also { listener ->
             with(emailField) {
-                setOnClickListener(it)
-                field_input.setOnClickListener(it)
+                setOnClickListener(listener)
+                field_input.setOnClickListener(listener)
             }
         }
         passwordField.setOnClickListener { presenter.onChangePasswordClicked() }
@@ -67,6 +71,7 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
         }
     }
 
+    @Suppress("ComplexMethod")
     private fun initPhoneTextChangeListeners() {
         with(phoneField.field_input) {
             onTextChanged { text ->
@@ -76,16 +81,15 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
                 }
             }
             setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) phone.let {
-                    val phoneCode = Utils.getPhoneCodeByCountryIso(context!!)
-                    if (it.isEmpty()) {
-                        setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+                if (hasFocus) {
+                    if (phone.isEmpty()) {
+                        context?.let { c ->
+                            val phoneCode = Utils.getPhoneCodeByCountryIso(c)
+                            setText(if (phoneCode > 0) "+$phoneCode" else "+")
+                        }
                     }
-                }
-                else phone.let {
-                    if (it.length <= 4) {
-                        setText("")
-                    }
+                } else if (phone.length < MIN_PHONE_LENGTH) {
+                    setText("")
                 }
             }
         }
@@ -101,5 +105,9 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
 
     override fun onBackPressed() {
         presenter.onBackCommandClick()
+    }
+
+    companion object {
+        const val MIN_PHONE_LENGTH = 5
     }
 }

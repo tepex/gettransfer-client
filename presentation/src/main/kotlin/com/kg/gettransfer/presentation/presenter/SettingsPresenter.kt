@@ -37,11 +37,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
 
     internal var showingFragment: Int? = null
 
-    companion object {
-        const val CLOSE_FRAGMENT  = 0
-        const val CURRENCIES_VIEW = 1
-    }
-
     override fun attachView(view: SettingsView) {
         super.attachView(view)
         if (restart) initConfigs()
@@ -209,4 +204,9 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     }
 
     override fun restartApp() { viewState.restartApp() }
+
+    companion object {
+        const val CLOSE_FRAGMENT  = 0
+        const val CURRENCIES_VIEW = 1
+    }
 }
