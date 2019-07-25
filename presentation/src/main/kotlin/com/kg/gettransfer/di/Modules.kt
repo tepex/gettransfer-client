@@ -69,17 +69,23 @@ val prefsModule = module {
     single<PreferencesCache> {
         val prodEndpointName = androidContext().getString(R.string.endpoint_prod)
         val demoEndpointName = androidContext().getString(R.string.endpoint_demo)
+        val devEndpointName = androidContext().getString(R.string.endpoint_dev)
 
         val endpoints = listOf(
-                EndpointEntity(
-                        demoEndpointName,
-                        androidContext().getString(R.string.api_key_demo),
-                        androidContext().getString(R.string.api_url_demo), true),
-
-                EndpointEntity(
-                        prodEndpointName,
-                        androidContext().getString(R.string.api_key_prod),
-                        androidContext().getString(R.string.api_url_prod)))
+            EndpointEntity(
+                demoEndpointName,
+                androidContext().getString(R.string.api_key_demo),
+                androidContext().getString(R.string.api_url_demo), true),
+            EndpointEntity(
+                prodEndpointName,
+                androidContext().getString(R.string.api_key_prod),
+                androidContext().getString(R.string.api_url_prod)),
+            EndpointEntity(
+                devEndpointName,
+                androidContext().getString(R.string.api_key_dev),
+                androidContext().getString(R.string.api_url_dev),
+                false, isDev = true)
+        )
 
         var defaultEndpointName = prodEndpointName
         if (BuildConfig.FLAVOR == "dev") defaultEndpointName = demoEndpointName

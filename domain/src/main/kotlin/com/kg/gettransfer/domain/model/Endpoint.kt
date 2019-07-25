@@ -4,5 +4,6 @@ data class Endpoint(
     val name: String,
     val key: String,
     val url: String,
-    val isDemo: Boolean
+    val isDemo: Boolean,
+    val isDev: Boolean
 )
