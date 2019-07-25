@@ -187,6 +187,8 @@
 	<dimen name="card_transfer_type_height">140dp</dimen>
 	<dimen name="card_transfer_type_margin">3dp</dimen>
 	<dimen name="card_transfer_type_ivPassanger_margin_top">9dp</dimen>
+	<dimen name="card_transfer_type_ivPassanger_margin_bottom">12dp</dimen>
+	<dimen name="card_transfer_type_price_info_height">35dp</dimen>
 	<dimen name="card_transfer_type_ivPassanger_width">11dp</dimen>
 	<dimen name="card_transfer_type_ivPassanger_height">10dp</dimen>
 	<dimen name="ivTransportInfo_width">13dp</dimen>
