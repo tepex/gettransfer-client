@@ -7,7 +7,8 @@ data class Configs(
     val availableLocales: List<Locale>,
     val paymentCommission: Float,
     val supportedCurrencies: List<Currency>,
-    val supportedDistanceUnits: List<DistanceUnit>
+    val supportedDistanceUnits: List<DistanceUnit>,
+    val contactEmails: List<ContactEmail>
 ) {
 
     companion object {
@@ -27,7 +28,8 @@ data class Configs(
             availableLocales       = DEFAULT_LOCALES,
             paymentCommission      = 2f,
             supportedCurrencies    = Currency.DEFAULT_LIST,
-            supportedDistanceUnits = DistanceUnit.DEFAULT_LIST
+            supportedDistanceUnits = DistanceUnit.DEFAULT_LIST,
+            contactEmails          = ContactEmail.DEFAULT_LIST
         )
     }
 }

@@ -1,10 +1,10 @@
 package com.kg.gettransfer.domain.interactor
 
 import com.kg.gettransfer.domain.model.Currency
-import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Endpoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.ContactEmail
 
 import com.kg.gettransfer.domain.repository.SystemRepository
 
@@ -80,6 +80,9 @@ class SystemInteractor(private val systemRepository: SystemRepository) {
 
     val paymentCommission: Float
         get() = systemRepository.configs.paymentCommission
+
+    val contactEmails: List<ContactEmail>
+        get() = systemRepository.configs.contactEmails
 
     /* Dirty hack. GAA-298 */
     val currencies: List<Currency>

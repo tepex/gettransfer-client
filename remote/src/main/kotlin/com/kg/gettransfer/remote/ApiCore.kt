@@ -14,6 +14,7 @@ import com.kg.gettransfer.remote.model.EndpointModel
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.TokenModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
+import com.kg.gettransfer.remote.model.ContactEmailsWrapperModel
 
 import java.io.IOException
 
@@ -46,6 +47,7 @@ class ApiCore : KoinComponent {
     private val gson = GsonBuilder()
             .setLenient()
             .registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer())
+            .registerTypeAdapter(ContactEmailsWrapperModel::class.java, ContactEmailsDeserializer())
             .create()
 
     private var okHttpClient = OkHttpClient.Builder().apply {

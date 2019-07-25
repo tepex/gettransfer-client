@@ -17,7 +17,8 @@ data class ConfigsEntity(
     @SerialName(AVAILABLE_LOCALES) val availableLocales: List<LocaleEntity>,
     @SerialName(PAYMENT_COMMISSION) val paymentCommission: Float,
     @SerialName(SUPPORTED_CURRENCIES) val supportedCurrencies: List<CurrencyEntity>,
-    @SerialName(SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: List<String>
+    @SerialName(SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: List<String>,
+    @SerialName(CONTACT_EMAILS) val contactEmails: List<ContactEmailEntity>
 ) {
 
     companion object {
@@ -27,6 +28,7 @@ data class ConfigsEntity(
         const val PAYMENT_COMMISSION       = "payment_commission"
         const val SUPPORTED_CURRENCIES     = "supported_currencies"
         const val SUPPORTED_DISTANCE_UNITS = "supported_distance_units"
+        const val CONTACT_EMAILS           = "contact_emails"
     }
 }
 
@@ -36,5 +38,6 @@ fun ConfigsEntity.map() =
         availableLocales.map { it.map() },
         paymentCommission,
         supportedCurrencies.map { it.map() },
-        supportedDistanceUnits.map { DistanceUnit.valueOf(it.toUpperCase(Locale.US)) }
+        supportedDistanceUnits.map { DistanceUnit.valueOf(it.toUpperCase(Locale.US)) },
+        contactEmails.map { it.map() }
     )
