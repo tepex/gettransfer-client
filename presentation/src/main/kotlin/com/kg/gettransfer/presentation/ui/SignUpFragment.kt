@@ -56,7 +56,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         initTextChangeListeners()
         initPhoneTextChangeListeners()
         @Suppress("MagicNumber")
-        btnLogin.setThrottledClickListener(1_000L) { v ->
+        btnSignUp.setThrottledClickListener(1_000L) { v ->
             v.hideKeyboard()
             showLoading()
             presenter.registration()
@@ -114,22 +114,22 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     private fun initTextChangeListeners() {
         nameLayout.fieldText.onTextChanged { text ->
             presenter.name = text
-            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
+            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
         phoneLayout.fieldText.onTextChanged { text ->
             presenter.phone = text
-            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
+            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
         emailLayout.fieldText.onTextChanged { text ->
             presenter.email = text
-            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
+            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
         switchAgreementTb.setOnCheckedChangeListener { _, isChecked ->
             presenter.termsAccepted = isChecked
-            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
+            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
         }
     }
 
@@ -198,9 +198,18 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         var textError = e.message ?: "Error"
-        when (e.code) {
-            ApiException.UNPROCESSABLE -> textError = getString(R.string.LNG_UNPROCESSABLE_ERROR)
+        when (e.type) {
+            ApiException.TYPE_EMAIL_TAKEN -> textError = getString(R.string.LNG_EMAIL_TAKEN_ERROR)
+            ApiException.TYPE_PHONE_TAKEN -> textError = getString(R.string.LNG_PHONE_TAKEN_ERROR)
+            ApiException.TYPE_EMAIL_INVALID -> textError = getString(R.string.LNG_ERROR_EMAIL)
+            ApiException.TYPE_PHONE_INVALID -> textError = getString(R.string.LNG_ERROR_PHONE)
+            ApiException.TYPE_PHONE_UNPROCESSABLE -> textError = getString(R.string.LNG_UNPROCESSABLE_ERROR)
         }
+
+        when (e.code) {
+            ApiException.TOO_MANY_REQUESTS -> textError = getString(R.string.LNG_ERROR_RATE_LIMIT)
+        }
+
         BottomSheetDialog
             .newInstance()
             .apply {

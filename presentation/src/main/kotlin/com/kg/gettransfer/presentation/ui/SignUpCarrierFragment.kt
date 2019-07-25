@@ -19,8 +19,7 @@ import com.kg.gettransfer.domain.DatabaseException
 
 import com.kg.gettransfer.presentation.presenter.SignUpCarrierPresenter
 import com.kg.gettransfer.presentation.view.SignUpCarrierView
-
-import kotlinx.android.synthetic.main.fragment_sign_up.*
+import kotlinx.android.synthetic.main.fragment_carrier_sign_up.*
 
 /**
  * Fragment for carrier registration.
@@ -48,13 +47,13 @@ class SignUpCarrierFragment : MvpAppCompatFragment(), SignUpCarrierView {
     }
 
     @CallSuper
+    @Suppress("TooGenericExceptionThrown")
     override fun onDetach() {
         /* dirty hack https://stackoverflow.com/a/15656428 */
         try {
             val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
             childFragmentManager.isAccessible = true
             childFragmentManager.set(this, null)
-
         } catch (e: NoSuchFieldException) {
             throw RuntimeException(e)
         } catch (e: IllegalAccessException) {
@@ -67,24 +66,12 @@ class SignUpCarrierFragment : MvpAppCompatFragment(), SignUpCarrierView {
         fun newInstance() = SignUpCarrierFragment()
     }
 
-    //-----Plz, delete "Base" classes------
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        //TODO remove BaseView or add code.
-    }
+    // -----Plz, delete "Base" classes------
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
+    override fun setError(e: ApiException) {}
+    override fun setError(e: DatabaseException) {}
 
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
-        //TODO remove BaseView or add code.
-    }
-
-    override fun setError(e: ApiException) {
-        //TODO remove BaseView or add code.
-    }
-
-    override fun setError(e: DatabaseException) {
-        //TODO remove BaseView or add code.
-    }
-
-    override fun setTransferNotFoundError(transferId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    // To change body of created functions use File | Settings | File Templates.
+    override fun setTransferNotFoundError(transferId: Long) {}
 }
