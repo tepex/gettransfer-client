@@ -106,15 +106,17 @@ class SystemRepositoryImpl(
 
     override suspend fun coldStart(): Result<Unit> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
-        if (mobileConfigs === MobileConfigs.EMPTY) {
-            val result: ResultEntity<MobileConfigsEntity?> = retrieveEntity { fromRemote ->
-                factory.retrieveDataStore(fromRemote).getMobileConfigs()
-            }
-            if (result.error != null && result.entity == null) return Result(Unit, result.error.map())
+        if (!endpoint.isDev) { // there're no mobile configs in the development endpoint
+            if (mobileConfigs === MobileConfigs.EMPTY) {
+                val result: ResultEntity<MobileConfigsEntity?> = retrieveEntity { fromRemote ->
+                    factory.retrieveDataStore(fromRemote).getMobileConfigs()
+                }
+                if (result.error != null && result.entity == null) return Result(Unit, result.error.map())
 
-            result.entity?.let { entity ->
-                mobileConfigs = entity.map()
-                if (result.error == null) factory.retrieveCacheDataStore().setMobileConfigs(entity)
+                result.entity?.let { entity ->
+                    mobileConfigs = entity.map()
+                    if (result.error == null) factory.retrieveCacheDataStore().setMobileConfigs(entity)
+                }
             }
         }
 

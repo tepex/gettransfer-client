@@ -83,7 +83,8 @@ val prefsModule = module {
             EndpointEntity(
                 devEndpointName,
                 androidContext().getString(R.string.api_key_dev),
-                androidContext().getString(R.string.api_url_dev))
+                androidContext().getString(R.string.api_url_dev),
+                false, isDev = true)
         )
 
         var defaultEndpointName = prodEndpointName
