@@ -16,4 +16,3 @@ data class ContactEmailsCachedList(val list: List<ContactEmailCached>)
 fun ContactEmailCached.map() = ContactEmailEntity(id, email)
 
 fun ContactEmailEntity.map() = ContactEmailCached(id, email)
-
