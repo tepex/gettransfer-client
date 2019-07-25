@@ -104,6 +104,7 @@ class SystemRepositoryImpl(
             preferencesCache.favoriteTransportTypes = value?.map { it.name }?.toSet()
         }
 
+    @Suppress("NestedBlockDepth")
     override suspend fun coldStart(): Result<Unit> {
         factory.retrieveRemoteDataStore().changeEndpoint(endpoint.map())
         if (!endpoint.isDev) { // there're no mobile configs in the development endpoint
