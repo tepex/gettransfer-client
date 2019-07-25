@@ -417,7 +417,7 @@
     <string name="LNG_LOGIN_SEND_SMS_CODE">We sent an SMS with a code to \nnumber"</string>
     <string name="LNG_LOGIN_SEND_EMAIL_CODE">We sent an E-mail with a code to\n</string>
     <string name="LNG_LOGIN_ENTER_CODE">Enter the received code:"</string>
-    <string name="LNG_ERROR_PHONE">Invalid phone"</string>
+    <string name="LNG_ERROR_PHONE">Invalid phone</string>
     <string name="LNG_ERROR_ACCOUNT">Account not found"</string>
     <string name="LNG_LOGIN_RESEND_CODE">"Resend code"</string>
     <string name="LNG_ERROR_EMAIL_PHONE">Please enter valid email or international phone number (ex. %s)</string>
@@ -491,4 +491,6 @@
     <string name="LNG_ABOUT_DRIVER_APP_NOT_SUPPORT">Unfortunately, the driver mode in your version of the application is no longer supported. Try a separate application for drivers. Now it will be more convenient to find applications and plan trips.</string>
     <string name="LNG_ABOUT_DRIVE_APP_ANDROID_CONTINUE">Open in Google Play</string>
     <string name="LNG_ABOUT_DRIVE_APP_NOT_NOW">Thanks, not now!</string>
+    
+    <string name="LNG_ERROR_RATE_LIMIT">Too many requests</string>
 </resources>

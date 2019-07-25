@@ -19,8 +19,7 @@ import com.kg.gettransfer.domain.DatabaseException
 
 import com.kg.gettransfer.presentation.presenter.SignUpCarrierPresenter
 import com.kg.gettransfer.presentation.view.SignUpCarrierView
-
-import kotlinx.android.synthetic.main.fragment_sign_up.*
+import kotlinx.android.synthetic.main.fragment_carrier_sign_up.*
 
 /**
  * Fragment for carrier registration.
