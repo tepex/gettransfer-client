@@ -301,14 +301,12 @@ class MainActivity : BaseGoogleMapActivity(),
     }
 
     private fun initNavigation() {
-        navViewHeader.setPadding(0, getStatusBarHeight(), 0, 0)
 
         val versionName = BuildConfig.VERSION_NAME
         val versionCode = BuildConfig.VERSION_CODE
         @Suppress("UnsafeCast")
         (navFooterVersion as TextView).text =
             String.format(getString(R.string.nav_footer_version), versionName, versionCode)
-        navHeaderMode.isVisible = false
         navNewTransfer.isVisible = true
         navRequests.isVisible = true
         setMenuIconsColorFilter()
@@ -518,7 +516,6 @@ class MainActivity : BaseGoogleMapActivity(),
     }
 
     override fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean) {
-        navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_PASSENGER)
         with(profile) {
             navHeaderName.isVisible = isLoggedIn && !name.isNullOrEmpty()
             navHeaderEmail.isVisible = isLoggedIn && !email.isNullOrEmpty()
@@ -532,10 +529,8 @@ class MainActivity : BaseGoogleMapActivity(),
     }
 
     override fun setBalance(balance: String?) {
-        navHeaderBalance.apply {
-            isGone = balance.isNullOrEmpty()
-            text = getString(R.string.LNG_PAYMENT_BALANCE, balance)
-        }
+        navHeaderBalance.text = getString(R.string.LNG_PAYMENT_BALANCE, balance)
+        groupBalance.isVisible = true
     }
 
     override fun selectFieldFrom() {

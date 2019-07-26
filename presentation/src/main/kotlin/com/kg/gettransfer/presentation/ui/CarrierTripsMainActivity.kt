@@ -159,7 +159,6 @@ class CarrierTripsMainActivity : BaseActivity(),
     }
 
     private fun initNavigation() {
-        navViewHeader.setPadding(0, getStatusBarHeight(), 0, 0)
 
         val versionName = BuildConfig.VERSION_NAME
         val versionCode = BuildConfig.VERSION_CODE
@@ -184,7 +183,7 @@ class CarrierTripsMainActivity : BaseActivity(),
 
     override fun initNavigation(profile: ProfileModel) {
         navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_DRIVE)
-        navHeaderMode.isVisible = true
+        groupMode.isVisible = true
         navHeaderName.isVisible = true
         navHeaderEmail.isVisible = true
         navHeaderName.text = profile.name
