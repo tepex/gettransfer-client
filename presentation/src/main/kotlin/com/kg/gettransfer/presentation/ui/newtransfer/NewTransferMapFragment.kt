@@ -153,7 +153,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
     fun performNextClick() {
         presenter.onNextClick { process ->
-            btnBack.isEnabled = false
+            btnNext.isEnabled = false
         }
     }
 

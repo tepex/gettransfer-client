@@ -34,7 +34,7 @@ class NewTransferFragment : Fragment(), KoinComponent, NewTransferSwitchListener
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
         try {
-            listener = parentFragment as NavigationMenuClickListener
+            listener = activity as NavigationMenuClickListener
         } catch (e: ClassCastException) {
             Timber.e("%s must implement NavigationMenuClickListener", activity.toString())
         }
