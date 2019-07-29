@@ -1,19 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/splash_padding_top"
     android:background="@color/colorPrimary">
 
     <ImageView
+        android:id="@+id/ivCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_splash_city" />
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="@dimen/splash_logo_width"
+        android:layout_height="@dimen/splash_logo_height"
+        app:layout_constraintEnd_toEndOf="@+id/ivCity"
+        app:layout_constraintStart_toStartOf="@+id/ivCity"
+        app:layout_constraintTop_toBottomOf="@+id/ivCity"
+        app:srcCompat="@drawable/logo" />
+
+    <ImageView
+        android:id="@+id/ivInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_splash_background"
-        android:layout_gravity="top|center_horizontal"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/splash_ivInfo_margin_top"
+        android:layout_marginBottom="@dimen/splash_ivInfo_margin_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.66"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivLogo"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ic_splash_info" />
 
 </android.support.constraint.ConstraintLayout>

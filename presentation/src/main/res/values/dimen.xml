@@ -1156,4 +1156,10 @@
     <dimen name="payment_car_name_min_size">9sp</dimen>
     <dimen name="payment_car_name_max_size">14sp</dimen>
 
+	<dimen name="splash_logo_width">185dp</dimen>
+	<dimen name="splash_logo_height">100dp</dimen>
+	<dimen name="splash_padding_top">90dp</dimen>
+	<dimen name="splash_ivInfo_margin_top">16dp</dimen>
+	<dimen name="splash_ivInfo_margin_bottom">32dp</dimen>
+
 </resources>
