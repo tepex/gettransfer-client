@@ -5,11 +5,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import com.kg.gettransfer.R
 import android.content.res.Configuration
+
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+
 import android.support.annotation.CallSuper
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
@@ -17,30 +18,38 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
+
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.BuildConfig
+import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.CarrierTripsMainPresenter
 import com.kg.gettransfer.presentation.ui.dialogs.AboutDriverAppDialogFragment
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 import com.kg.gettransfer.presentation.view.Screens
+
 import kotlinx.android.synthetic.main.activity_carrier_trips_main.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_navigation.*
+
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
-import timber.log.Timber
-import java.lang.IllegalStateException
 
+import timber.log.Timber
+
+@Suppress("TooManyFunctions")
 class CarrierTripsMainActivity : BaseActivity(),
-        AboutDriverAppDialogFragment.OnAboutDriverAppListener,
-        CarrierTripsMainView {
+    AboutDriverAppDialogFragment.OnAboutDriverAppListener,
+    CarrierTripsMainView {
+
     @InjectPresenter
     internal lateinit var presenter: CarrierTripsMainPresenter
 
@@ -53,9 +62,9 @@ class CarrierTripsMainActivity : BaseActivity(),
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
-    private val itemsNavigationViewListener = View.OnClickListener {
+    private val itemsNavigationViewListener = View.OnClickListener { view ->
         with(presenter) {
-            when (it.id) {
+            when (view.id) {
                 R.id.navCarrierTrips     -> onCarrierTripsClick()
                 R.id.navAbout            -> onAboutClick()
                 R.id.navSettings         -> onSettingsClick()
@@ -63,7 +72,7 @@ class CarrierTripsMainActivity : BaseActivity(),
                 R.id.navPassengerMode    -> onPassengerModeClick()
                 R.id.navCarrierTransfers -> onTransfersClick()
                 R.id.navHeaderShare      -> onShareClick()
-                else -> Timber.d("No route")
+                else                     -> Timber.d("No route")
             }
             drawer.closeDrawer(GravityCompat.START)
         }
@@ -72,6 +81,7 @@ class CarrierTripsMainActivity : BaseActivity(),
     override fun getPresenter(): CarrierTripsMainPresenter = presenter
 
     @CallSuper
+    @Suppress("UnsafeCast")
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -87,14 +97,20 @@ class CarrierTripsMainActivity : BaseActivity(),
 
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_TRIPS, false, true)
         drawer = drawerLayout as DrawerLayout
-        toggle = ActionBarDrawerToggle(this, drawer, toolbar as Toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        toggle = ActionBarDrawerToggle(
+            this,
+            drawer,
+            toolbar as Toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
 
         with(toolbar as Toolbar) {
             carrierTripsChangingTypeViewButtons.isVisible = true
             buttonListView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_LIST) }
             buttonCalendarView.setOnClickListener { presenter.changeTypeView(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR) }
         }
-        setViewColor((toolbar as Toolbar), R.color.colorWhite)
+        setViewColor(toolbar as Toolbar, R.color.colorWhite)
         initNavigation()
         try {
             checkPermission()
@@ -105,12 +121,13 @@ class CarrierTripsMainActivity : BaseActivity(),
 
     @AfterPermissionGranted(RC_LOCATION)
     private fun checkPermission() {
-        if (!EasyPermissions.hasPermissions(this, *PERMISSIONS))
+        if (!EasyPermissions.hasPermissions(this, *PERMISSIONS)) {
             EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.LNG_LOCATION_ACCESS),
-                    RC_LOCATION, *PERMISSIONS)
-        else {
+                this,
+                getString(R.string.LNG_LOCATION_ACCESS),
+                RC_LOCATION, *PERMISSIONS
+            )
+        } else {
             presenter.initGoogleApiClient()
             startCoordinateService()
         }
@@ -154,37 +171,36 @@ class CarrierTripsMainActivity : BaseActivity(),
     override fun onOptionsItemSelected(item: MenuItem) = toggle.onOptionsItemSelected(item)
 
     override fun showDriverAppNotify() {
-        AboutDriverAppDialogFragment.newInstance()
-                .show(supportFragmentManager, AboutDriverAppDialogFragment.DIALOG_TAG)
+        AboutDriverAppDialogFragment.newInstance().show(supportFragmentManager, AboutDriverAppDialogFragment.DIALOG_TAG)
     }
 
     private fun initNavigation() {
-        navViewHeader.setPadding(0, getStatusBarHeight(), 0, 0)
-
         val versionName = BuildConfig.VERSION_NAME
         val versionCode = BuildConfig.VERSION_CODE
+        @Suppress("UnsafeCast")
         (navFooterVersion as TextView).text =
-                String.format(getString(R.string.nav_footer_version), versionName, versionCode)
-        //navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
-        readMoreListener.let {
-            navFooterStamp.setOnClickListener    (it)
-            navFooterReadMore.setOnClickListener (it)
+            String.format(getString(R.string.nav_footer_version), versionName, versionCode)
+        // navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
+
+        with(readMoreListener) {
+            navFooterStamp.setOnClickListener(this)
+            navFooterReadMore.setOnClickListener(this)
         }
 
-        itemsNavigationViewListener.let {
-            navHeaderShare.setOnClickListener      (it)
-            navCarrierTrips.setOnClickListener     (it)
-            navSettings.setOnClickListener         (it)
-            navSupport.setOnClickListener          (it)
-            navAbout.setOnClickListener            (it)
-            navPassengerMode.setOnClickListener    (it)
-            navCarrierTransfers.setOnClickListener (it)
+        with(itemsNavigationViewListener) {
+            navHeaderShare.setOnClickListener(this)
+            navCarrierTrips.setOnClickListener(this)
+            navSettings.setOnClickListener(this)
+            navSupport.setOnClickListener(this)
+            navAbout.setOnClickListener(this)
+            navPassengerMode.setOnClickListener(this)
+            navCarrierTransfers.setOnClickListener(this)
         }
     }
 
     override fun initNavigation(profile: ProfileModel) {
         navHeaderMode.text = getString(R.string.LNG_MENU_TITLE_DRIVE)
-        navHeaderMode.isVisible = true
+        groupMode.isVisible = true
         navHeaderName.isVisible = true
         navHeaderEmail.isVisible = true
         navHeaderName.text = profile.name
@@ -207,38 +223,27 @@ class CarrierTripsMainActivity : BaseActivity(),
     }
 
     override fun changeTypeView(type: String) {
-        val transaction: FragmentTransaction
-        when(type){
-            Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR -> {
-                transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(fragmentsFrameLayout.id, CarrierTripsCalendarFragment())
-                changeButtonModeInTitle(true)
-            }
-            Screens.CARRIER_TRIPS_TYPE_VIEW_LIST -> {
-                transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(fragmentsFrameLayout.id, CarrierTripsListFragment())
-                changeButtonModeInTitle(false)
-            }
-            else -> {
-                transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(fragmentsFrameLayout.id, CarrierTripsCalendarFragment())
-                changeButtonModeInTitle(true)
-            }
+        val transaction = supportFragmentManager.beginTransaction()
+        if (type == Screens.CARRIER_TRIPS_TYPE_VIEW_LIST) {
+            transaction.replace(fragmentsFrameLayout.id, CarrierTripsListFragment())
+            changeButtonModeInTitle(false)
+        } else {
+            transaction.replace(fragmentsFrameLayout.id, CarrierTripsCalendarFragment())
+            changeButtonModeInTitle(true)
         }
         transaction.commitAllowingStateLoss()
     }
 
-    private fun changeButtonModeInTitle(isCalendarMode: Boolean){
-        with((toolbar as Toolbar)) {
+    private fun changeButtonModeInTitle(isCalendarMode: Boolean) {
+        @Suppress("UnsafeCast")
+        with(toolbar as Toolbar) {
             buttonListView.isVisible = isCalendarMode
             buttonCalendarView.isVisible = !isCalendarMode
         }
     }
 
     override fun askForBackGroundCoordinates() {
-        Utils.showBackGroundPermissionDialog(this) { result ->
-            presenter.permissionResult(result)
-        }
+        Utils.showBackGroundPermissionDialog(this) { presenter.permissionResult(it) }
     }
 
     override fun onClickGoToDriverApp() = Utils.goToGooglePlay(this, getString(R.string.driver_app_market_package))
@@ -249,19 +254,19 @@ class CarrierTripsMainActivity : BaseActivity(),
     }
 
     private fun startCoordinateService() {
-        Intent(SERVICE_ACTION).also {
-            it.setPackage(PACKAGE)
-            startService(it)
-            bindService(it, connectionService, Context.BIND_AUTO_CREATE)
+        Intent(SERVICE_ACTION).also { intent ->
+            intent.setPackage(PACKAGE)
+            startService(intent)
+            bindService(intent, connectionService, Context.BIND_AUTO_CREATE)
         }
         isServiceStart = true
     }
 
     private fun stopCoordinateService() {
-        Intent(SERVICE_ACTION).also {
-            it.setPackage(PACKAGE)
+        Intent(SERVICE_ACTION).also { intent ->
+            intent.setPackage(PACKAGE)
             unbindService(connectionService)
-            stopService(it)
+            stopService(intent)
         }
     }
 
