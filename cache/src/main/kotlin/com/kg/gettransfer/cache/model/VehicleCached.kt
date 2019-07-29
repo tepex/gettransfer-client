@@ -8,6 +8,7 @@ import com.kg.gettransfer.data.model.VehicleEntity
 data class VehicleCached(
     @PrimaryKey @ColumnInfo(name = VehicleEntity.ID) val id: Long,
     @ColumnInfo(name = VehicleEntity.NAME) val name: String,
+    @ColumnInfo(name = VehicleEntity.MODEL) val model: String,
     @ColumnInfo(name = VehicleEntity.REGISTRATION_NUMBER) val registrationNumber: String?,
     @ColumnInfo(name = VehicleEntity.YEAR) val year: Int,
     @ColumnInfo(name = VehicleEntity.COLOR) val color: String?,
@@ -22,6 +23,7 @@ fun VehicleCached.map() =
     VehicleEntity(
         id,
         name,
+        model,
         registrationNumber,
         year,
         color,
@@ -35,6 +37,7 @@ fun VehicleEntity.map() =
     VehicleCached(
         id,
         name,
+        model,
         registrationNumber,
         year,
         color,

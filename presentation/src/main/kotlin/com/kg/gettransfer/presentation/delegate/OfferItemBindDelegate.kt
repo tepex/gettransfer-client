@@ -96,8 +96,7 @@ object OfferItemBindDelegate {
     private fun bindOfferModelTiny(view: View, offer: OfferModel) {
         with(view) {
             with(offer.vehicle) {
-                val yearStartIndex = name.indexOf(",")
-                tv_car_model_tiny.text = if (yearStartIndex > 0) name.substring(0, yearStartIndex) else name
+                tv_car_model_tiny.text = model
                 tv_car_model_tiny.maxLines = 1
 
                 tv_car_year_tiny.text = year.toString()

@@ -13,16 +13,17 @@ open class VehicleMapper : KoinComponent {
     private val systemInteractor = get<SystemInteractor>()
 
     fun toView(type: Vehicle) =
-            VehicleModel(
-                    id = type.id,
-                    name = type.name,
-                    registrationNumber = type.registrationNumber,
-                    year = type.year,
-                    color = type.color,
-                    transportType = type.transportType.map(),
-                    photos = type.photos.map { photo ->
-                        if (photo.startsWith(systemInteractor.endpoint.url)) photo
-                        else "${systemInteractor.endpoint.url}$photo"
-                    }
-            )
+        VehicleModel(
+            id = type.id,
+            name = type.name,
+            model = type.model,
+            registrationNumber = type.registrationNumber,
+            year = type.year,
+            color = type.color,
+            transportType = type.transportType.map(),
+            photos = type.photos.map { photo ->
+                if (photo.startsWith(systemInteractor.endpoint.url)) photo
+                else "${systemInteractor.endpoint.url}$photo"
+            }
+        )
 }

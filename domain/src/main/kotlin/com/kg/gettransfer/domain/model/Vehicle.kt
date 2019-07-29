@@ -3,6 +3,7 @@ package com.kg.gettransfer.domain.model
 data class Vehicle(
     override val id: Long,
     val name: String,
+    val model: String,
     val registrationNumber: String?,
     val year: Int,
     val color: String?,
