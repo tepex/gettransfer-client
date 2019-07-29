@@ -74,6 +74,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
         const val SHOW = true
         const val HIDE = false
+
+        const val SIGN_NAME_FIELD_MAX_LENGTH = 20
     }
 
     @ProvidePresenter
@@ -394,6 +396,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         //Utils.setDrawables(price_field_input.field_input, 0, 0, R.drawable.ic_arrow_right, 0)
         price_field_input.field_input.compoundDrawablePadding = 0
         passengers_count.person_count.text = getString(R.string.passenger_number_default)
+        sign_name_field.field_input.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(SIGN_NAME_FIELD_MAX_LENGTH))
     }
 
     private fun initChangeTextListeners() {
