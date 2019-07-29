@@ -17,8 +17,8 @@
         android:lines="1"
         android:maxWidth="@dimen/view_transfer_details_field_title_max_width"
         tools:text="Phone"
-        android:textColor="@color/colorGrey"
-        android:textSize="@dimen/activity_transfer_details_text_size_17sp"
+        android:textColor="@color/color_gtr_grey"
+        android:textSize="@dimen/activity_transfer_details_text_size_16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

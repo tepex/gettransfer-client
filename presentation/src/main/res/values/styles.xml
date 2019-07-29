@@ -81,7 +81,7 @@
     </style>
 
     <style name="sf_font_pro_text_regular_grey">
-        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textColor">@color/color_gtr_grey</item>
         <item name="android:fontFamily">@font/sf_pro_text_regular</item>
     </style>
 

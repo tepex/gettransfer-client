@@ -3,30 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relativeLayout3"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/activity_transfer_details_field_height"
+    android:paddingStart="@dimen/margin16"
+    android:paddingEnd="@dimen/margin16">
 
-    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-        android:id="@+id/transferDetailsField"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/layoutCarrierLanguages"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/divider_transfer_details_field"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/layoutCarrierLanguages"
-        app:title_transfer_details="@string/LNG_LANGUAGES" />
+        style="@style/sf_font_pro_text_regular_grey"
+        android:textSize="@dimen/activity_transfer_details_text_size_16sp"
+        android:text="@string/LNG_LANGUAGES"/>
 
     <LinearLayout
         android:id="@+id/layoutCarrierLanguages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/divider_transfer_details_field"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/transferDetailsField"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+        android:id="@+id/divider_transfer_details_field"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_transfer_details_field_horizontal_divider_height"
+        android:background="@color/color_transfer_details_horizontal_divider_new"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

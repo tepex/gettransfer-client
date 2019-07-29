@@ -493,4 +493,18 @@
     <string name="LNG_ABOUT_DRIVE_APP_NOT_NOW">Thanks, not now!</string>
     
     <string name="LNG_ERROR_RATE_LIMIT">Too many requests</string>
+
+    <string name="LNG_COLOR_BLACK">black</string>
+    <string name="LNG_COLOR_WHITE">white</string>
+    <string name="LNG_COLOR_RED">red</string>
+    <string name="LNG_COLOR_BLUE">blue</string>
+    <string name="LNG_COLOR_YELLOW">yellow</string>
+    <string name="LNG_COLOR_BROWN">brown</string>
+    <string name="LNG_COLOR_SILVER">silver</string>
+    <string name="LNG_COLOR_GREEN">green</string>
+    <string name="LNG_COLOR_GRAY">gray</string>
+    <string name="LNG_COLOR_PURPLE">purple</string>
+    <string name="LNG_COLOR_ORANGE">orange</string>
+    <string name="LNG_COLOR_BEIGE">beige</string>
+    <string name="LNG_COLOR_GOLD">gold</string>
 </resources>

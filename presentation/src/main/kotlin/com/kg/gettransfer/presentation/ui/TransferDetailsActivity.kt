@@ -571,8 +571,22 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 imgCharge.isVisible    = offerModel.charger
 
                 offerModel.vehicle.color?.let { color ->
-                    carColor.isVisible = true
-                    carColor.setImageDrawable(Utils.getCarColorFormRes(this@TransferDetailsActivity, color))
+                    with(carColor) {
+                        isVisible = true
+                        Utils.getCarColorTextRes(color).let {
+                            text = getString(it)
+                            setTextColor(ContextCompat.getColor(this@TransferDetailsActivity,
+                                when (it) {
+                                    R.string.LNG_COLOR_BEIGE,
+                                    R.string.LNG_COLOR_GOLD,
+                                    R.string.LNG_COLOR_SILVER,
+                                    R.string.LNG_COLOR_WHITE,
+                                    R.string.LNG_COLOR_YELLOW -> R.color.colorTextBlack
+                                    else -> R.color.colorWhite
+                                }))
+                        }
+                        background = Utils.getCarColorTextBackFormRes(this@TransferDetailsActivity, color)
+                    }
                 }
             }
         }
