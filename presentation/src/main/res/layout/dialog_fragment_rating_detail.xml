@@ -65,7 +65,8 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/tvRateTitle"
-			style="@style/transfer_details_secondary_text" />
+			style="@style/sf_font_pro_text_regular_grey"
+			android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"/>
 
 
 		<com.kg.gettransfer.presentation.ui.custom.RateField
@@ -137,11 +138,12 @@
 			android:paddingTop="16dp"
 			android:paddingBottom="18dp"
 			android:hint="@string/LNG_PAYMENT_YOUR_COMMENT"
-			android:textColorHint="@color/colorGrey"
+			android:textColorHint="@color/color_gtr_grey"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/tvCommentTitle"
-			style="@style/transfer_details_secondary_text"
+			style="@style/sf_font_pro_text_regular_grey"
+			android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
 			android:maxLines="1"
 			android:ellipsize="end"/>
 

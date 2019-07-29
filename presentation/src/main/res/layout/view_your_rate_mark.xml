@@ -6,7 +6,8 @@
 
     <TextView
         android:id="@+id/tvYourMark"
-        style="@style/transfer_details_secondary_text"
+        style="@style/sf_font_pro_text_regular_grey"
+        android:textSize="@dimen/activity_transfer_details_text_size_16sp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

@@ -42,7 +42,7 @@
             android:imeOptions="actionDone"
             android:inputType="textMultiLine"
             android:textColor="@color/colorTextBlack"
-            android:textColorHint="@color/colorGrey"
+            android:textColorHint="@color/color_gtr_grey"
             android:textSize="@dimen/create_transfer_additionals_top_text_size" />
     </android.support.v4.widget.NestedScrollView>
 
