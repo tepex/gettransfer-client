@@ -30,7 +30,8 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.extensions.isVisible
+
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
@@ -55,7 +56,12 @@ import kotlinx.android.synthetic.main.view_create_order_field.view.*
 
 import org.koin.android.ext.android.inject
 
-class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeScreen, CommentDialogFragment.OnCommentListener {
+@Suppress("TooManyFunctions")
+class CreateOrderActivity : BaseGoogleMapActivity(),
+    CreateOrderView,
+    DateTimeScreen,
+    CommentDialogFragment.OnCommentListener {
+
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
     private val dateDelegate: DateTimeDelegate by inject()
@@ -67,14 +73,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     private var hasErrorFields = false
     private var errorFieldView: View? = null
-
-    companion object {
-        const val FIELD_START  = true
-        const val FIELD_RETURN = false
-
-        const val SHOW = true
-        const val HIDE = false
-    }
 
     @ProvidePresenter
     fun createCreateOrderPresenter() = CreateOrderPresenter()
@@ -114,8 +112,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 
     private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN && bsOrder.state == BottomSheetBehavior.STATE_HIDDEN)
+            if (newState == BottomSheetBehavior.STATE_HIDDEN && bsOrder.state == BottomSheetBehavior.STATE_HIDDEN) {
                 tintBackgroundShadow.isVisible = false
+            }
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 presenter.updateChildSeatsInfo()
                 hideKeyboard()
@@ -141,16 +140,25 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            when {
-                bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED ->
-                    if(hideBottomSheet(bsSecondarySheet, secondary_bottom_sheet, BottomSheetBehavior.STATE_HIDDEN, event)) return true
-
-                bsOrder.state == BottomSheetBehavior.STATE_EXPANDED ->
-                    if(hideBottomSheet(bsOrder, sheetOrder, BottomSheetBehavior.STATE_COLLAPSED, event)) return true
-            }
+        if (event.action != MotionEvent.ACTION_DOWN) {
+            return super.dispatchTouchEvent(event)
         }
-        return super.dispatchTouchEvent(event)
+        val ret = when {
+            bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED && hideBottomSheet(
+                bsSecondarySheet,
+                secondary_bottom_sheet,
+                BottomSheetBehavior.STATE_HIDDEN,
+                event
+            ) -> true
+            bsOrder.state == BottomSheetBehavior.STATE_EXPANDED && hideBottomSheet(
+                bsOrder,
+                sheetOrder,
+                BottomSheetBehavior.STATE_COLLAPSED,
+                event
+            ) -> true
+            else -> false
+        }
+        return if (ret) ret else super.dispatchTouchEvent(event)
     }
 
     fun hideBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
@@ -158,28 +166,30 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     fun expandBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_EXPANDED }
 
     private fun toggleSheetOrder() {
-        if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
-        else {
+        if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
+            bsOrder.state = BottomSheetBehavior.STATE_EXPANDED
+        } else {
             bsOrder.state = BottomSheetBehavior.STATE_COLLAPSED
             scrollContent.fullScroll(View.FOCUS_UP)
         }
     }
 
-    private fun initPromoSection() {
-        with(promo_field) {
-            field_input.filters = arrayOf(InputFilter.AllCaps())
-            field_input.setOnFocusChangeListener { _, hasFocus -> if (!hasFocus) presenter.checkPromoCode() }
-            defaultPromoText = input_layout.hint?.toString()
-        }
+    private fun initPromoSection() = with(promo_field) {
+        field_input.filters = arrayOf(InputFilter.AllCaps())
+        field_input.setOnFocusChangeListener { _, hasFocus -> if (!hasFocus) presenter.checkPromoCode() }
+        defaultPromoText = input_layout.hint?.toString()
     }
 
     private fun initKeyBoardListener() {
         addKeyBoardDismissListener { closed ->
-            if (!closed) btnGetOffers.isVisible = !closed
-            else {
-                // postDelayed нужен, чтобы кнопка не морагала посередине экрана
-                Handler().postDelayed({ btnGetOffers.isVisible = closed }, 100)
-                if (promo_field.field_input.isFocused) presenter.checkPromoCode()
+            if (!closed) {
+                btnGetOffers.isVisible = !closed
+            } else {
+                // Suppress button flashing
+                Handler().postDelayed({ btnGetOffers.isVisible = closed }, DELAY)
+                if (promo_field.field_input.isFocused) {
+                    presenter.checkPromoCode()
+                }
             }
         }
     }
@@ -192,6 +202,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
     */
 
+    @CallSuper
     protected override fun initMap() {
         super.initMap()
         presenter.mapInitialized()
@@ -201,19 +212,25 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         dateDelegate.chooseOrderTime(this, field, this)
     }
 
-    //DateTimeScreen interface method
+    // DateTimeScreen interface method
     override fun setFieldDate(date: String, field: Boolean) {
         presenter.changeDate(field)
-        (if (field == START_DATE) transfer_date_time_field
-        else transfer_return_date_field.also { showReturnFlight(SHOW) })
-                .apply { field_input.setText(date) }
+        if (field == START_DATE) {
+            transfer_date_time_field.field_input.setText(date)
+        } else {
+            showReturnFlight(SHOW)
+            transfer_return_date_field.field_input.setText(date)
+        }
         checkErrorField(transfer_date_time_field)
     }
 
     override fun setDateTimeTransfer(dateTimeString: String, startField: Boolean) {
-        (if (startField) transfer_date_time_field
-        else transfer_return_date_field.also { showReturnFlight(SHOW) })
-                .also { it.field_input.setText(dateTimeString) }
+        if (startField) {
+            transfer_date_time_field.field_input.setText(dateTimeString)
+        } else {
+            showReturnFlight(SHOW)
+            transfer_return_date_field.field_input.setText(dateTimeString)
+        }
     }
 
     override fun setTripType(withReturnWay: Boolean) {
@@ -225,15 +242,23 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     private fun checkMinusButton(count: Int, view: ImageView) {
-        val imgRes = if (count == CreateOrderPresenter.MIN_PASSENGERS) R.drawable.ic_minus_disabled else R.drawable.ic_minus
+        val imgRes =
+            if (count == CreateOrderPresenter.MIN_PASSENGERS) R.drawable.ic_minus_disabled else R.drawable.ic_minus
         view.setImageDrawable(ContextCompat.getDrawable(this, imgRes))
     }
 
-    override fun setEditableFields(offeredPrice: Double?, flightNumber: String?, flightNumberReturn: String?, promo: String) {
+    override fun setEditableFields(
+        offeredPrice: Double?,
+        flightNumber: String?,
+        flightNumberReturn: String?,
+        promo: String
+    ) {
         offeredPrice?.let { price_field_input.field_input.setText(it.toString()) }
         flightNumber?.let { flight_number_field.field_input.setText(it) }
         flightNumberReturn?.let { flight_numberReturn_field.field_input.setText(it) }
-        if (promo.isNotEmpty()) { promo_field.field_input.setText(promo) }
+        if (promo.isNotEmpty()) {
+            promo_field.field_input.setText(promo)
+        }
     }
 
     override fun setPassengers(count: Int) {
@@ -246,28 +271,28 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             children_seat_field.field_input.setText("")
             return
         }
-        with(StringBuilder()) {
-            if (total > 1) append("$total ")
-            append("(")
-            setOf.forEach {
-                if (it.count > 1) {
-                    append(it.count)
-                    append("x ")
-                }
-                append(getString(it.stringId))
-                append(", ")
+
+        val text = buildString {
+            if (total > 1) {
+                append("$total ")
             }
-            trimEnd()
-            delete(length - 2, length)
-            append(")")
-        }.also {
-            children_seat_field.field_input.setText(it)
+            append(setOf.joinToString(prefix = "(", postfix = ")") { item ->
+                buildString {
+                    if (item.count > 1) {
+                        append("${item.count}x ")
+                    }
+                    append(getString(item.stringId))
+                }
+            })
         }
+        children_seat_field.field_input.setText(text)
     }
 
     override fun setCurrency(currency: String, hideCurrencies: Boolean) {
         tv_currency.text = currency
-        if(hideCurrencies) hideBottomSheet()
+        if (hideCurrencies) {
+            hideBottomSheet()
+        }
     }
 
     override fun setTransportTypes(transportTypes: List<TransportTypeModel>) {
@@ -275,7 +300,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
 //            presenter.onTransportChosen()
             presenter.setPassengersCountForSelectedTransportTypes()
             checkErrorField(rvTransferType)
-            if (showInfo) transportTypeClicked(transportType)
+            if (showInfo) {
+                transportTypeClicked(transportType)
+            }
         }
     }
 
@@ -283,9 +310,11 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
         tvRate.text = when {
             price != null && time != null -> String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT), price, time)
             price != null && time == null -> String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT_HOURLY), price)
-            else -> ""
-         }
-        if (price == null && time == null) tvRate.isVisible = false
+            else                          -> ""
+        }
+        if (price == null && time == null) {
+            tvRate.isVisible = false
+        }
     }
 
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {
@@ -297,15 +326,25 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
-        if (isDateChanged) clearMarkersAndPolylines()
+        if (isDateChanged) {
+            clearMarkersAndPolylines()
+        }
         setPolyline(polyline, routeModel)
         btnCenterRoute.isVisible = false
     }
 
     override fun setMapBottomPadding() {}
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate, isDateChanged: Boolean) {
-        if (isDateChanged) clearMarkersAndPolylines()
+    override fun setPinHourlyTransfer(
+        placeName: String,
+        info: String,
+        point: LatLng,
+        cameraUpdate: CameraUpdate,
+        isDateChanged: Boolean
+    ) {
+        if (isDateChanged) {
+            clearMarkersAndPolylines()
+        }
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
         btnCenterRoute.isVisible = false
     }
@@ -313,12 +352,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 
     override fun setPromoResult(discountInfo: String?) {
-        @ColorRes var colorText = R.color.color_error
+        @ColorRes
+        var colorText = R.color.color_error
         var text = getString(R.string.LNG_RIDE_PROMOCODE_INVALID)
 
-        discountInfo?.let {
+        discountInfo?.let { di ->
             colorText = R.color.colorGreen
-            text = it
+            text = di
         }
         promo_field.field_input.setTextColor(ContextCompat.getColor(this, colorText))
         promo_field.input_layout.hint = text
@@ -382,79 +422,83 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     @CallSuper
     override fun onBackPressed() {
         when {
-            isKeyBoardOpened                                          -> hideKeyboard()
-            bsSecondarySheet.state  == BottomSheetBehavior.STATE_EXPANDED  -> hideBottomSheet()
-            bsOrder.state      == BottomSheetBehavior.STATE_EXPANDED  -> toggleSheetOrder()
-            else                                                      -> presenter.onBackClick()
+            isKeyBoardOpened                                             -> hideKeyboard()
+            bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED -> hideBottomSheet()
+            bsOrder.state == BottomSheetBehavior.STATE_EXPANDED          -> toggleSheetOrder()
+            else                                                         -> presenter.onBackClick()
         }
     }
 
-    //TODO create custom view for new bottom sheet
+    // TODO create custom view for new bottom sheet
     private fun initFieldsViews() {
-        //Utils.setDrawables(price_field_input.field_input, 0, 0, R.drawable.ic_arrow_right, 0)
+        // Utils.setDrawables(price_field_input.field_input, 0, 0, R.drawable.ic_arrow_right, 0)
         price_field_input.field_input.compoundDrawablePadding = 0
         passengers_count.person_count.text = getString(R.string.passenger_number_default)
+        sign_name_field.field_input.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(SIGN_NAME_FIELD_MAX_LENGTH))
     }
 
     private fun initChangeTextListeners() {
         price_field_input.field_input.onTextChanged             { presenter.setOfferedPrice(it.toDoubleOrNull()) }
         price_field_input.field_input.setOnFocusChangeListener  { _, hasFocus ->
-            if (hasFocus) presenter.logTransferSettingsEvent(OFFER_PRICE_FOCUSED)
+            if (hasFocus) {
+                presenter.logTransferSettingsEvent(OFFER_PRICE_FOCUSED)
+            }
         }
-        sign_name_field.field_input.onTextChanged             { presenter.setName(it.trim()) }
-        flight_number_field.field_input.onTextChanged         { presenter.setFlightNumber(it.trim(), false) }
-        flight_numberReturn_field.field_input.onTextChanged   { presenter.setFlightNumber(it.trim(), true) }
-        promo_field.field_input.onTextChanged                 { presenter.setPromo(promo_field.field_input.text.toString()) }
+        sign_name_field.field_input.onTextChanged           { presenter.setName(it.trim()) }
+        flight_number_field.field_input.onTextChanged       { presenter.setFlightNumber(it.trim(), false) }
+        flight_numberReturn_field.field_input.onTextChanged { presenter.setFlightNumber(it.trim(), true) }
+        promo_field.field_input.onTextChanged               {
+            presenter.setPromo(promo_field.field_input.text.toString())
+        }
     }
 
     private fun initClickListeners() {
-        View.OnClickListener {
+        val dateTimeListener = View.OnClickListener {
             showDatePickerDialog(FIELD_START)
             presenter.logTransferSettingsEvent(DATE_TIME_CHANGED)
-        }.let {
-            transfer_date_time_field.setOnClickListener(it)
-            transfer_date_time_field.field_input.setOnClickListener(it)
         }
+        transfer_date_time_field.setOnClickListener(dateTimeListener)
+        transfer_date_time_field.field_input.setOnClickListener(dateTimeListener)
 
-        fl_DeleteReturnDate.setOnClickListener              { presenter.clearReturnDate()
+        fl_DeleteReturnDate.setOnClickListener {
+            presenter.clearReturnDate()
             showReturnFlight(HIDE)
         }
-        passengers_count.img_plus_seat.setOnClickListener   {
+        passengers_count.img_plus_seat.setOnClickListener {
             checkErrorField(passengers_count_field)
             presenter.changePassengers(1)
         }
-        passengers_count.img_minus_seat.setOnClickListener  {
+        passengers_count.img_minus_seat.setOnClickListener {
             presenter.changePassengers(-1)
         }
 
-        View.OnClickListener {
+        val childrenSeatListener = View.OnClickListener {
             hideKeyboard()
             replaceFragment(ChildSeatsFragment(), R.id.secondary_bottom_sheet)
-        }.let {
-            children_seat_field.setOnClickListener(it)
-            children_seat_field.field_input.setOnClickListener(it)
         }
+        children_seat_field.setOnClickListener(childrenSeatListener)
+        children_seat_field.field_input.setOnClickListener(childrenSeatListener)
 
-        cl_offer_price.setOnClickListener                   { fieldTouched(price_field_input.field_input)  }
-        sign_name_field.setOnClickListener                  { fieldTouched(sign_name_field.field_input) }
-        flight_number_field.setOnClickListener              { fieldTouched(flight_number_field.field_input) }
-        comment_field.field_input.setOnClickListener        {
+        cl_offer_price.setOnClickListener { fieldTouched(price_field_input.field_input)  }
+        sign_name_field.setOnClickListener { fieldTouched(sign_name_field.field_input) }
+        flight_number_field.setOnClickListener { fieldTouched(flight_number_field.field_input) }
+        comment_field.field_input.setOnClickListener {
             presenter.commentClick(comment_field.field_input.text.toString().trim())
             presenter.logTransferSettingsEvent(COMMENT_INPUT)
         }
 
-        tvAgreement1.setOnClickListener                     { presenter.showLicenceAgreement() }
-        switchAgreement.setOnCheckedChangeListener          {
-            _, isChecked -> presenter.setAgreeLicence(isChecked)
+        tvAgreement1.setOnClickListener { presenter.showLicenceAgreement() }
+        switchAgreement.setOnCheckedChangeListener { _, isChecked ->
+            presenter.setAgreeLicence(isChecked)
             checkErrorField(layoutAgreement)
         }
 
-        btnGetOffers.setOnClickListener                     {
+        btnGetOffers.setOnClickListener {
             clearHighLightErrorField(errorFieldView)
             presenter.onGetTransferClick()
         }
-        btnCenterRoute.setOnClickListener                   { presenter.onCenterRouteClick() }
-        btnBack.setOnClickListener                          { presenter.onBackClick() }
+        btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
+        btnBack.setOnClickListener { presenter.onBackClick() }
 
         fl_currency.setOnClickListener {
             hideKeyboard()
@@ -463,17 +507,16 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun enableReturnTimeChoose() {
-        View.OnClickListener {
-            showDatePickerDialog(FIELD_RETURN)
-        }.let {
-            transfer_return_date_field.setOnClickListener(it)
-            transfer_return_date_field.field_input.setOnClickListener(it)
-        }
+        val listener = View.OnClickListener { showDatePickerDialog(FIELD_RETURN) }
+        transfer_return_date_field.setOnClickListener(listener)
+        transfer_return_date_field.field_input.setOnClickListener(listener)
     }
 
     private fun fieldTouched(viewForFocus: EditText) {
-        if (!isKeyBoardOpened) showKeyboard()
-        viewForFocus.apply {
+        if (!isKeyBoardOpened) {
+            showKeyboard()
+        }
+        with(viewForFocus) {
             requestFocus()
             post { setSelection(text.length) }
         }
@@ -491,19 +534,24 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
             transfer_return_date_field.field_input.text?.clear()
             flight_numberReturn_field.field_input.text?.clear()
             transfer_return_date_field.input_layout.hint = getString(R.string.LNG_RIDE_DATE_RETURN)
-        } else transfer_return_date_field.input_layout.hint = getString(R.string.LNG_RIDE_RETURN_TRANSFER)
+        } else {
+            transfer_return_date_field.input_layout.hint = getString(R.string.LNG_RIDE_RETURN_TRANSFER)
+        }
         changeReturnTransferIcon(show)
     }
 
     private fun changeReturnTransferIcon(show: Boolean) {
-        if (show)
+        if (show) {
+            Utils.setDrawables(transfer_return_date_field.field_input, R.drawable.ic_calendar, 0, 0, 0)
+        } else {
             Utils.setDrawables(
-                    transfer_return_date_field.field_input,
-                    R.drawable.ic_calendar, 0, 0, 0)
-
-        else Utils.setDrawables(
                 transfer_return_date_field.field_input,
-                R.drawable.ic_plus, 0, R.drawable.ic_arrow_right, 0)
+                R.drawable.ic_plus,
+                0,
+                R.drawable.ic_arrow_right,
+                0
+            )
+        }
     }
 
     override fun onSetComment(comment: String) {
@@ -512,6 +560,19 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView, DateTimeSc
     }
 
     override fun showCommentDialog(comment: String, hintsToComments: List<String>?) =
-            CommentDialogFragment.newInstance(comment, hintsToComments?.toTypedArray())
-                    .show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
+        CommentDialogFragment.newInstance(
+            comment,
+            hintsToComments?.toTypedArray()
+        ).show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
+
+    companion object {
+        const val FIELD_START  = true
+        const val FIELD_RETURN = false
+
+        const val SHOW = true
+        const val HIDE = false
+
+        const val SIGN_NAME_FIELD_MAX_LENGTH = 20
+        const val DELAY = 100L
+    }
 }
