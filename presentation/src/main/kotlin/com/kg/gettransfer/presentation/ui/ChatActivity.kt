@@ -66,10 +66,10 @@ class ChatActivity : BaseActivity(), ChatView {
     }
 
     override fun setToolbar(transfer: TransferModel, offer: OfferModel?, isShowChevron: Boolean) {
-        with(transfer) {
-            initToolbar(offer?.driver?.name ?: nameSign ?: offer?.carrier?.profile?.name, offer?.phoneToCall)
-            if (id != ChatPresenter.NO_ID) {
-                initTransferInfoLayout(from, dateTime, id, isShowChevron)
+        offer?.let { initToolbar(it.driver?.name ?: it.carrier.profile?.name, it.phoneToCall) }
+        transfer.let {
+            if (it.id != ChatPresenter.NO_ID) {
+                initTransferInfoLayout(it.from, it.dateTime, it.id, isShowChevron)
             }
         }
     }
@@ -125,7 +125,10 @@ class ChatActivity : BaseActivity(), ChatView {
                 rvMessages.adapter?.notifyDataSetChanged()
             }
         }
-        if (oldMessagesSize ?: 0 < chat.messages.size /*&& chat.messages.lastOrNull()!!.accountId != chat.currentAccountId*/) scrollToEnd()
+        /* && chat.messages.lastOrNull()!!.accountId != chat.currentAccountId */
+        if (oldMessagesSize ?: 0 < chat.messages.size) {
+            scrollToEnd()
+        }
     }
 
     private fun copyMessage(text: String) {
