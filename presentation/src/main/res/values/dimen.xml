@@ -389,6 +389,14 @@
 	<dimen name="view_transfer_details_transport_type_item_img_baggage_margin_start">6dp</dimen>
 	<dimen name="view_transfer_details_transport_type_item_img_baggage_width">10dp</dimen>
 	<dimen name="view_transfer_details_transport_type_item_img_baggage_height">9dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_capacity_margin_top">4dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_car_img_horizontal_margin">8dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_car_img_margin_top">4dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_car_img_width">87.5dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_car_img_height">43dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_transport_name_margins">8dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_layout_padding">4dp</dimen>
+	<dimen name="view_transfer_details_transport_type_item_padding_bottom">8dp</dimen>
 
 	<dimen name="view_transport_capacity_img_passenger_width">10dp</dimen>
 	<dimen name="view_transport_capacity_img_passenger_height">12dp</dimen>
@@ -438,7 +446,7 @@
 	<dimen name="bottom_sheet_transfer_details_support_top_button_margin_top">16dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_support_bottom_button_margin_top_bottom">8dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_support_bottom_layout_buttons_padding_bottom">8dp</dimen>
-	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom">8dp</dimen>
+	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom">6dp</dimen>
 	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_start_end">12dp</dimen>
     <dimen name="bottom_sheet_transfer_details_book_now_margin_top">16dp</dimen>
     <dimen name="bottom_sheet_transfer_details_book_now_margin_bottom">8dp</dimen>
