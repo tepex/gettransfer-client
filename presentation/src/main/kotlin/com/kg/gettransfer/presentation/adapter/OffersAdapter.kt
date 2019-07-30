@@ -4,51 +4,51 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
+
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.offer_expanded.view.*
 import kotlinx.android.synthetic.main.offer_expanded_no_photo.view.*
 import kotlinx.android.synthetic.main.offer_tiny.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 
-class OffersAdapter(private val offers: MutableList<OfferItemModel>,
-                    private val clickHandler: OfferClickListener) : RecyclerView.Adapter<OffersAdapter.OfferItemViewHolder>() {
-
+class OffersAdapter(
+    private val offers: MutableList<OfferItemModel>,
+    private val clickHandler: OfferClickListener
+) : RecyclerView.Adapter<OffersAdapter.OfferItemViewHolder>() {
 
     override fun getItemCount() = offers.size
     override fun onBindViewHolder(p0: OfferItemViewHolder, p1: Int) =
-            p0.bindOffer(offers[p0.adapterPosition], clickHandler)
+        p0.bindOffer(offers[p0.adapterPosition], clickHandler)
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int) =
         when (p1) {
             OFFER_EXPANDED -> R.layout.offer_expanded
             OFFER_NO_PHOTO -> R.layout.offer_expanded_no_photo
             else -> R.layout.offer_tiny
-        }
-                .let { LayoutInflater.from(p0.context).inflate(it, p0, false) }
-                .let { OfferItemViewHolder(it) }
-
-
-
+        }.let { LayoutInflater.from(p0.context).inflate(it, p0, false) }.let { OfferItemViewHolder(it) }
 
     override fun getItemViewType(position: Int) =
-            if (viewType == PRESENTATION.TINY) OFFER_TINY
-            else
-                with(offers[position]) {
-                    when {
-                        this is OfferModel -> if (vehicle.photos.isEmpty()) OFFER_NO_PHOTO else OFFER_EXPANDED
-                        else -> OFFER_EXPANDED
-                    }
+        if (viewType == PRESENTATION.TINY) {
+            OFFER_TINY
+        } else {
+            with(offers[position]) {
+                when {
+                    this is OfferModel -> if (vehicle.photos.isEmpty()) OFFER_NO_PHOTO else OFFER_EXPANDED
+                    else               -> OFFER_EXPANDED
                 }
+            }
+        }
 
+    class OfferItemViewHolder(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-    class OfferItemViewHolder(override val containerView: View) :
-            RecyclerView.ViewHolder(containerView),
-            LayoutContainer {
         fun bindOffer(offerItem: OfferItemModel, clickListener: OfferClickListener) {
             with(containerView) {
                 when (itemViewType) {
@@ -70,7 +70,12 @@ class OffersAdapter(private val offers: MutableList<OfferItemModel>,
             }
         }
 
-        private fun hangListeners(bookView: View, initDetails: View, clickHandler: OfferClickListener, offerItem: OfferItemModel) {
+        private fun hangListeners(
+            bookView: View,
+            initDetails: View,
+            clickHandler: OfferClickListener,
+            offerItem: OfferItemModel
+        ) {
             bookView.setThrottledClickListener { clickHandler(offerItem, false) }
             initDetails.setOnClickListener { clickHandler(offerItem, true) }
         }
@@ -82,9 +87,7 @@ class OffersAdapter(private val offers: MutableList<OfferItemModel>,
     }
 
     fun changeItemRepresentation() {
-        viewType =
-                if (viewType == PRESENTATION.TINY) PRESENTATION.EXPANDED
-                else PRESENTATION.TINY
+        viewType = if (viewType == PRESENTATION.TINY) PRESENTATION.EXPANDED else PRESENTATION.TINY
         notifyDataSetChanged()
     }
 
@@ -99,4 +102,5 @@ class OffersAdapter(private val offers: MutableList<OfferItemModel>,
         }
     }
 }
+
 typealias OfferClickListener = (OfferItemModel, Boolean) -> Unit

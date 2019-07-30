@@ -27,9 +27,9 @@ import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.strikeText
 import com.kg.gettransfer.extensions.toHalfEvenRoundedFloat
 
-import com.kg.gettransfer.presentation.adapter.OffersAdapter
-
 import com.kg.gettransfer.domain.model.Money
+
+import com.kg.gettransfer.presentation.adapter.OffersAdapter
 
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.OfferItemModel
@@ -64,6 +64,7 @@ import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 import timber.log.Timber
 
+@Suppress("TooManyFunctions")
 class OffersActivity : BaseActivity(), OffersView {
 
     @InjectPresenter
@@ -98,6 +99,7 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun initToolBar() =
         with(toolbar) {
+            @Suppress("UnsafeCast")
             setSupportActionBar(this as Toolbar)
             btn_back.setOnClickListener { navigateBackWithTransition() }
             btn_forward.setThrottledClickListener { presenter.onRequestInfoClicked() }
@@ -132,26 +134,25 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun setTransfer(transferModel: TransferModel) {
-        toolbar.tv_title.text = transferModel.from
-            .let { from ->
-                transferModel.to?.let {
-                    from.plus(" - ").plus(it)
-                } ?: transferModel.duration?.let {
-                    from.plus(" - ").plus(HourlyValuesHelper.getValue(it, this))
-                } ?: from
-            }
+        toolbar.tv_title.text = transferModel.from.also { from ->
+            transferModel.to?.let { "$from - $it" } ?: transferModel.duration?.let { duration ->
+                "$from - ${HourlyValuesHelper.getValue(duration, this)}"
+            } ?: from
+        }
         toolbar.tv_subtitle.text = SystemUtils.formatDateTime(transferModel.dateTime)
         fl_drivers_count_text.apply {
             tv_drivers_count.text =
-                if (transferModel.relevantCarriersCount ?: 0 > 4)
+                if (transferModel.relevantCarriersCount ?: 0 > MAX_CARRIERS_COUNT) {
                     getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
-                else
+                } else {
                     getString(R.string.LNG_RIDE_CONNECT_CARRIERS_NONUM)
+                }
         }
     }
 
     private fun initAdapter() {
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        swipe_rv_offers_container.setOnRefreshListener { presenter.checkNewOffers(true) }
     }
 
     override fun setOffers(offers: List<OfferItemModel>) {
@@ -172,31 +173,27 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun setupAdapter(offers: List<OfferItemModel>) {
-        rvOffers.adapter = OffersAdapter(offers.toMutableList()) { offer, showDetails ->
-            presenter.onSelectOfferClicked(
-                    offer,
-                    showDetails
-            )
-        }
+        rvOffers.adapter = OffersAdapter(offers.toMutableList(), presenter::onSelectOfferClicked)
     }
 
     override fun setBannersVisible(hasOffers: Boolean) {
-        if (hasOffers) cl_fixPrice.isVisible = true
-        else fl_drivers_count_text.isVisible = true
+        if (hasOffers) cl_fixPrice.isVisible = true else fl_drivers_count_text.isVisible = true
     }
 
     private fun setAnimation() {
         noOffers.isVisible = true
-        val drawable = ivClock.drawable as Animatable
-        drawable.start()
+        val drawable = ivClock.drawable
+        if (drawable is Animatable) {
+            drawable.start()
+        }
     }
 
     override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
         cleanSortState()
         when (sortCategory) {
-            Sort.YEAR -> selectSort(sortYear, triangleYear, sortHigherToLower)
+            Sort.YEAR   -> selectSort(sortYear, triangleYear, sortHigherToLower)
             Sort.RATING -> selectSort(sortRating, triangleRating, sortHigherToLower)
-            Sort.PRICE -> selectSort(sortPrice, trianglePrice, sortHigherToLower)
+            Sort.PRICE  -> selectSort(sortPrice, trianglePrice, sortHigherToLower)
         }
     }
 
@@ -213,7 +210,7 @@ class OffersActivity : BaseActivity(), OffersView {
     private fun selectSort(layout: RelativeLayout, triangleImage: ImageView, higherToLower: Boolean) {
         layout.isSelected = true
         triangleImage.isVisible = true
-        if (!higherToLower) triangleImage.rotation = 180f else triangleImage.rotation = 0f
+        if (!higherToLower) triangleImage.rotation = SEMI_ROUND else triangleImage.rotation = 0f
     }
 
     override fun showAlertCancelRequest() {
@@ -315,25 +312,39 @@ class OffersActivity : BaseActivity(), OffersView {
         bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    @CallSuper
     override fun onBackPressed() {
-        if (bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) hideSheetOfferDetails() else navigateBackWithTransition()
+        if (bsOfferDetails.state == BottomSheetBehavior.STATE_EXPANDED) {
+            hideSheetOfferDetails()
+        } else {
+            navigateBackWithTransition()
+        }
     }
 
     override fun addNewOffer(offer: OfferModel) {
-        (rvOffers.adapter as OffersAdapter).add(offer)
+        val adapter = rvOffers.adapter
+        if (adapter is OffersAdapter) adapter.add(offer)
     }
 
     override fun setError(e: ApiException) {
-        if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, true, e.details)
+        if (e.code != ApiException.NETWORK_ERROR) {
+            Utils.showError(this, true, e.details)
+        }
     }
 
+    override fun hideRefreshSpinner() {
+        swipe_rv_offers_container.isRefreshing = false
+    }
+
+    @CallSuper
     override fun setNetworkAvailability(context: Context): Boolean {
         val available = super.setNetworkAvailability(context)
-        if (available) presenter.checkNewOffers()
+        if (available) {
+            presenter.checkNewOffers()
+        }
         offer_bottom_bs.btn_book.isEnabled = !textNetworkNotAvailable.isVisible
-        if (available) presenter.updateBanners()
-        else {
+        if (available) {
+            presenter.updateBanners()
+        } else {
             cl_fixPrice.isVisible = false
             fl_drivers_count_text.isVisible = false
         }
@@ -341,6 +352,8 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     companion object {
-        const val PHOTO_CORNER = 7F
+        const val PHOTO_CORNER = 7f
+        const val MAX_CARRIERS_COUNT = 4
+        const val SEMI_ROUND = 180f
     }
 }

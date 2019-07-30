@@ -641,9 +641,9 @@
 	<dimen name="activity_offers_iv_lock_margin_end">12dp</dimen>
 	<dimen name="offers_tv_excellent_price_margin_end">12dp</dimen>
 	<dimen name="activity_offers_sorted_layout_height">40dp</dimen>
-	<dimen name="activity_offers_sorted_layout_padding_top_bottom">8dp</dimen>
-	<dimen name="activity_offers_sorted_layout_padding_start">5dp</dimen>
-	<dimen name="activity_offers_sorted_layout_padding_start_end">16dp</dimen>
+	<dimen name="activity_offers_sorted_layout_padding_top">8dp</dimen>
+	<dimen name="activity_offers_sorted_layout_padding_bottom">5dp</dimen>
+	<dimen name="activity_offers_sorted_layout_padding_start_end">8dp</dimen>
 	<dimen name="activity_offers_sorted_layout_left_right_elements_margin_side">18dp</dimen>
 	<dimen name="activity_offers_sorted_layout_center_element_margin_side">8dp</dimen>
 	<dimen name="activity_offers_sorted_layout_texts_size">14sp</dimen>

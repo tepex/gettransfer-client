@@ -121,6 +121,7 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/VehicleModel.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/OffersPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentOfferPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaypalConnectionPresenter.kt",
@@ -129,11 +130,12 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripsMainActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CreateOrderActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainRequestFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/OffersActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ProfileSettingsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RatingLastTripFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCurrencyFragment.kt",
@@ -153,6 +155,7 @@ detekt {
 
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/MainView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/OffersView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SupportView.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt"

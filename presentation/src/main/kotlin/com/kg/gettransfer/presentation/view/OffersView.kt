@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -16,12 +17,13 @@ interface OffersView : BaseView {
     fun showBottomSheetOfferDetails(offer: OfferItemModel)
     fun addNewOffer(offer: OfferModel)
     fun setBannersVisible(hasOffers: Boolean)
-    //fun redirectView()
+    fun hideRefreshSpinner()
+//    fun redirectView()
 
     companion object {
         val EXTRA_TRANSFER_ID = "${OffersView::class.java.name}.transferId"
-        const val EXTRA_ORIGIN      = "source"
 
+        const val EXTRA_ORIGIN = "source"
         const val SOURCE_NOTIFICATION = "push_tap"
     }
 
