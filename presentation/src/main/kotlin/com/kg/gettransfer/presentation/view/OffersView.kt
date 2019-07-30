@@ -16,6 +16,7 @@ interface OffersView : BaseView {
     fun showBottomSheetOfferDetails(offer: OfferItemModel)
     fun addNewOffer(offer: OfferModel)
     fun setBannersVisible(hasOffers: Boolean)
+    fun hideRefreshSpinner()
     //fun redirectView()
 
     companion object {

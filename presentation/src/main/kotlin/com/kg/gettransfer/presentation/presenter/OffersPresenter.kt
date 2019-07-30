@@ -20,8 +20,6 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import java.util.Date
-
 import org.koin.core.inject
 
 @InjectViewState
@@ -48,22 +46,22 @@ class OffersPresenter : BasePresenter<OffersView>() {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
-                    .also {
-                        it.error?.let { e ->
-                            if (e.isNotFound()) viewState.setTransferNotFoundError(transferId)
-                        }
+                .also {
+                    it.error?.let { e ->
+                        if (e.isNotFound()) viewState.setTransferNotFoundError(transferId)
+                    }
 
-                        it.hasData()?.let { transfer ->
-                            if (transfer.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE ||
-                                    (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_ACTIVE &&
-                                            transfer.paidPercentage > 0))
-                                checkIfNeedNewChain()
-                            else {
-                                viewState.setTransfer(transfer.map(systemInteractor.transportTypes.map { it.map() }))
-                                checkNewOffersSuspended(transfer)
-                            }
+                    it.hasData()?.let { transfer ->
+                        if (transfer.checkStatusCategory() != Transfer.STATUS_CATEGORY_ACTIVE ||
+                            (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_ACTIVE &&
+                                transfer.paidPercentage > 0))
+                            checkIfNeedNewChain()
+                        else {
+                            viewState.setTransfer(transfer.map(systemInteractor.transportTypes.map { it.map() }))
+                            checkNewOffersSuspended(transfer)
                         }
                     }
+                }
             viewState.blockInterface(false)
         }
     }
@@ -83,22 +81,27 @@ class OffersPresenter : BasePresenter<OffersView>() {
         )
     }
 
-    fun checkNewOffers() {
-        transfer?.let { tr -> utils.launchSuspend { checkNewOffersSuspended(tr) } }
+    fun checkNewOffers(hideRefreshSpinner: Boolean = false) {
+        transfer?.let { tr ->
+            utils.launchSuspend {
+                checkNewOffersSuspended(tr)
+                if (hideRefreshSpinner) viewState.hideRefreshSpinner()
+            } }
     }
 
     private suspend fun checkNewOffersSuspended(transfer: Transfer) {
         this.transfer = transfer
         fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) { offerInteractor.getOffers(transfer.id) }
-                .also {
-                    if (it.error == null && transfer.offersUpdatedAt != null) fetchResultOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
-                    if (it.error != null && !it.fromCache) offers = emptyList()
-                    else {
-                        offers = mutableListOf<OfferItem>().apply {
-                            addAll(it.model)
-                            notificationManager.clearOffers(it.model.map { offer -> offer.id.toInt() })
-                            addAll(transfer.bookNowOffers) }
-                    } }
+            .also {
+                if (it.error == null && transfer.offersUpdatedAt != null) fetchResultOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
+                if (it.error != null && !it.fromCache) offers = emptyList()
+                else {
+                    offers = mutableListOf<OfferItem>().apply {
+                        addAll(it.model)
+                        notificationManager.clearOffers(it.model.map { offer -> offer.id.toInt() })
+                        addAll(transfer.bookNowOffers) }
+                }
+            }
         processOffers()
     }
 

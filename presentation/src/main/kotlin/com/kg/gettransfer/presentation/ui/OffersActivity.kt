@@ -152,6 +152,7 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun initAdapter() {
         rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        swipe_rv_offers_container.setOnRefreshListener { presenter.checkNewOffers(true) }
     }
 
     override fun setOffers(offers: List<OfferItemModel>) {
@@ -326,6 +327,10 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun setError(e: ApiException) {
         if (e.code != ApiException.NETWORK_ERROR) Utils.showError(this, true, e.details)
+    }
+
+    override fun hideRefreshSpinner() {
+        swipe_rv_offers_container.isRefreshing = false
     }
 
     override fun setNetworkAvailability(context: Context): Boolean {
