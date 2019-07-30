@@ -11,7 +11,6 @@ import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.presentation.view.NewTransferMapView
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.utilities.ScreenNavigationState
 import org.koin.core.KoinComponent
 
 @InjectViewState
@@ -40,11 +39,15 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
         resetState()
         if (!isVisibleView) return
 
+        if (nState.isSwitchToMain) {//returned from create order
+            viewState.switchToMain()
+            return
+        }
         fillViewFromState()
     }
 
     fun resetState() {
-        nState.currentState = ScreenNavigationState.NO_STATE
+        nState.reset()
     }
 
     override fun changeUsedField(field: String) {

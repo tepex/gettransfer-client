@@ -32,10 +32,8 @@ import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.launch
+import com.kg.gettransfer.utilities.NewTransferState
 
-import org.koin.core.get
 import org.koin.core.inject
 
 @InjectViewState
@@ -47,6 +45,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
 
     private val routeMapper: RouteMapper by inject()
     private val userMapper: UserMapper by inject()
+
+    private val nState: NewTransferState by inject()
 
     private val currencies by lazy { systemInteractor.currencies.map { it.map() } }
     private var duration: Int? = null
@@ -536,6 +536,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
         dateDelegate.resetAfterOrder()
         childSeatsDelegate.clearSeats()
         orderInteractor.clear()
+        nState.switchToMain()
     }
 
     fun onBackClick() = onBackCommandClick()

@@ -104,8 +104,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
             search_panel.setIvSelectFieldToClickListener{ presenter.switchUsedField() }
             btnNext.setThrottledClickListener { performNextClick() }
             btnBack.setOnClickListener {
-                listener?.switchToMain()
-                presenter.resetState()
+                switchToMain()
             }
             btnMyLocation.setOnClickListener {
                 checkPermission()
@@ -119,7 +118,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
             view.requestFocus()
             view.setOnKeyListener(View.OnKeyListener { view, keyCode, keyEvent ->
                 if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_DOWN) {
-                    listener?.switchToMain()
+                    switchToMain()
                     return@OnKeyListener true
                 }
                 return@OnKeyListener false
@@ -151,6 +150,11 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         }
     }
 
+    override fun switchToMain() {
+        listener?.switchToMain()
+        presenter.resetState()
+    }
+
     fun performNextClick() {
         presenter.onNextClick { process ->
             btnNext?.isEnabled = false
@@ -161,7 +165,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         HourlyDurationDialogFragment
                 .newInstance(durationIndex, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
                     override fun onDone(durationValue: Int) {
-                        presenter.tripDurationSelected(durationValue)
+                        presenter.updateDuration(durationValue)
                     }
                 })
                 .show(childFragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)

@@ -25,7 +25,6 @@ class NewTransferFragment : Fragment(), KoinComponent, NewTransferSwitchListener
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_new_transfer, container, false)
 
-
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
         try {

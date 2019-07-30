@@ -129,7 +129,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         HourlyDurationDialogFragment
                 .newInstance(hourlyDuration, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
                     override fun onDone(durationValue: Int) {
-                        presenter.tripDurationSelected(durationValue)
+                        presenter.updateDuration(durationValue)
                     }
                 })
                 .show(fragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)

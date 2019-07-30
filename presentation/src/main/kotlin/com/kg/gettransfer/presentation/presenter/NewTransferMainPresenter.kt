@@ -12,7 +12,6 @@ import com.kg.gettransfer.presentation.view.NewTransferMainView
 
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.utilities.MainState
 import org.koin.core.KoinComponent
 
 import org.koin.core.inject
@@ -45,7 +44,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     override fun updateView(isVisibleView: Boolean) {
         if (!isVisibleView) return
 
-        if (nState.currentState == MainState.CHOOSE_POINT_ON_MAP) {//returned from search activity
+        if (nState.isChoosePointOnMap) {//returned from search activity
             viewState.switchToMap()
         } else {
             countEventsInteractor.addCounterListener(this)
@@ -85,6 +84,5 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     companion object {
         const val FIELD_FROM = "field_from"
         const val FIELD_TO = "field_to"
-        const val EMPTY_ADDRESS = ""
     }
 }

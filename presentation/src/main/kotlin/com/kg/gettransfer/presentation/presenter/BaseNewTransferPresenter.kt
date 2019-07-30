@@ -19,7 +19,7 @@ import com.kg.gettransfer.presentation.view.BaseNewTransferView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.MainState
+import com.kg.gettransfer.utilities.NewTransferState
 import kotlinx.coroutines.Job
 import org.koin.core.KoinComponent
 import org.koin.core.get
@@ -36,7 +36,7 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     protected val geoInteractor: GeoInteractor by inject()
     protected val orderInteractor: OrderInteractor by inject()
     protected val systemInteractor: SystemInteractor by inject()
-    protected val nState: MainState by inject()  //to keep info about navigation
+    protected val nState: NewTransferState by inject()  //to keep info about navigation
 
     protected val pointMapper: PointMapper by inject()
 
@@ -82,9 +82,9 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
      */
     fun fillAddressFieldsCheckIsEmpty(): Boolean {
         with(orderInteractor) {
-            viewState.setAddressTo(to?.address ?: NewTransferMainPresenter.EMPTY_ADDRESS)
+            viewState.setAddressTo(to?.address ?: EMPTY_ADDRESS)
             return from.also {
-                viewState.setAddressFrom(it?.address ?: NewTransferMainPresenter.EMPTY_ADDRESS)
+                viewState.setAddressFrom(it?.address ?: EMPTY_ADDRESS)
             } == null
         }
     }
@@ -92,13 +92,6 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     fun updateCurrentLocation() {
         updateCurrentLocationAsync()
         analytics.logSingleEvent(Analytics.MY_PLACE_CLICKED)
-    }
-
-    private fun setLastLocation() {
-        blockSelectedField(FIELD_FROM)
-        orderInteractor.from?.let {
-            setPointAddress(it)
-        }
     }
 
     private fun updateCurrentLocationAsync() {
@@ -134,6 +127,10 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     open fun setPointAddress(currentAddress: GTAddress) {
+        when (systemInteractor.selectedField) {
+            FIELD_FROM -> orderInteractor.from = currentAddress
+            FIELD_TO -> orderInteractor.to = currentAddress
+        }
     }
 
     private fun showBtnMyLocation(point: LatLng) = lastCurrentLocation == null || point != lastCurrentLocation
@@ -153,15 +150,12 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     fun tripModeSwitched(hourly: Boolean) {
-        orderInteractor.apply {
-            hourlyDuration = if (hourly) hourlyDuration ?: MIN_HOURLY else null
-            viewState.setHourlyDuration(hourlyDuration)
-        }
+        updateDuration(if (hourly) orderInteractor.hourlyDuration ?: MIN_HOURLY else null)
         viewState.updateTripView(hourly)
         if (systemInteractor.selectedField == FIELD_TO) changeUsedField(FIELD_FROM)
     }
 
-    fun tripDurationSelected(hours: Int) {
+    fun updateDuration(hours: Int?) {
         orderInteractor.apply {
             hourlyDuration = hours
             viewState.setHourlyDuration(hourlyDuration)
@@ -169,15 +163,6 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     fun isHourly() = orderInteractor.hourlyDuration != null
-
-    fun setAddressFields(): Boolean {
-        with(orderInteractor) {
-            viewState.setAddressTo(to?.address ?: EMPTY_ADDRESS)
-            return from.also {
-                viewState.setAddressFrom(it?.address ?: EMPTY_ADDRESS)
-            } != null
-        }
-    }
 
     fun navigateToFindAddress(from: String, to: String, isClickTo: Boolean = false, returnBack: Boolean = false) {
         router.navigateTo(Screens.FindAddress(
