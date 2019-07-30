@@ -535,7 +535,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
     private fun releaseDelegates() {
         dateDelegate.resetAfterOrder()
         childSeatsDelegate.clearSeats()
-        orderInteractor.clearSelectedFields()
+        orderInteractor.clear()
     }
 
     fun onBackClick() = onBackCommandClick()

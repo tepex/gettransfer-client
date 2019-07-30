@@ -52,6 +52,17 @@ class OrderInteractor(
         nameSign = null
     }
 
+    fun clear() {
+        from            = null
+        to              = null
+        hourlyDuration  = null
+        duration        = null
+        orderStartTime  = null
+        orderReturnTime = null
+
+        clearSelectedFields()
+    }
+
     suspend fun getAddressByLocation(isFrom: Boolean, point: Point): Result<GTAddress> {
         val gtAddress = geoRepository.getAddressByLocation(point, sessionRepository.account.locale.language)
 

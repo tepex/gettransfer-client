@@ -1,38 +1,21 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.CoroutineContexts
-
-import com.kg.gettransfer.domain.interactor.GeoInteractor
-import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
-import com.kg.gettransfer.presentation.mapper.PointMapper
-
 import com.kg.gettransfer.presentation.view.NewTransferMapView
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.MainState
 import com.kg.gettransfer.utilities.ScreenNavigationState
-import kotlinx.coroutines.Job
 import org.koin.core.KoinComponent
-import org.koin.core.get
-
-import org.koin.core.inject
-import ru.terrakok.cicerone.Router
 
 @InjectViewState
 class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), KoinComponent {
-
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
@@ -57,9 +40,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
         resetState()
         if (!isVisible) return
 
-        if (!setAddressFields()) setOwnLocation()
-        changeUsedField(systemInteractor.selectedField)
-        viewState.setHourlyDuration(orderInteractor.hourlyDuration)
+        fillViewFromState()
     }
 
     fun resetState() {
@@ -134,7 +115,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
             }
         } else {
             idleAndMoveCamera = true
-            setAddressFields()
+            fillAddressFieldsCheckIsEmpty()
         }
     }
 

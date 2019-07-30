@@ -42,7 +42,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         // https://developer.android.com/training/location/receive-location-updates
     }
 
-    override fun updateView(isVisible: Boolean) {
+    override fun updateView(isVisibleView: Boolean) {
         if (!isVisible) return
 
         if (nState.currentState == MainState.CHOOSE_POINT_ON_MAP) {//returned from search activity
@@ -51,9 +51,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
             countEventsInteractor.addCounterListener(this)
             updateCounter()
 
-            if (fillAddressFieldsCheckIsEmpty()) setOwnLocation()
-            changeUsedField(systemInteractor.selectedField)
-            viewState.setHourlyDuration(orderInteractor.hourlyDuration)
+            fillViewFromState()
         }
     }
 
@@ -68,7 +66,6 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
 
     override fun changeUsedField(field: String) {
         super.changeUsedField(field)
-        systemInteractor.selectedField = field
         when (systemInteractor.selectedField) {
             FIELD_FROM -> viewState.selectFieldFrom()
             FIELD_TO -> viewState.setFieldTo()
@@ -79,27 +76,9 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         setAddressInSelectedField(currentAddress.cityPoint.name)
     }
 
-    /**
-     * Fill address fields
-     * @return true - from address is empty
-     */
-    private fun fillAddressFieldsCheckIsEmpty(): Boolean {
-        with(orderInteractor) {
-            viewState.setAddressTo(to?.address ?: EMPTY_ADDRESS)
-            return from.also {
-                viewState.setAddressFrom(it?.address ?: EMPTY_ADDRESS)
-            } == null
-        }
-    }
-
     override fun destroyView(view: NewTransferMainView) {
         geoInteractor.disconnectGoogleApiClient()
         super.destroyView(view)
-    }
-
-    override fun onDestroy() {
-        compositeDisposable.cancel()
-        super.onDestroy()
     }
 
     companion object {

@@ -28,7 +28,6 @@ import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.NewTransferMainView
-import kotlinx.android.synthetic.main.activity_about.*
 
 import kotlinx.android.synthetic.main.create_order_field.view.*
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
@@ -80,7 +79,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         try {
             listener = parentFragment as NewTransferSwitchListener
         } catch (e: ClassCastException) {
-            Timber.e("%s must implement NavigationMenuClickListener", activity.toString())
+            Timber.e("%s must implement NavigationMenuListener", activity.toString())
         }
     }
 
@@ -105,7 +104,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         order_time_view.setOnClickListener  { openPicker(START_DATE) }
 
         // Buttons
-        btnShowDrawerFragment.setOnClickListener { listener?.openNewTransfer() }
+        btnShowDrawerFragment.setOnClickListener { listener?.openMenu() }
         fl_DeleteReturnDate.setOnClickListener   { clearReturnDate() }
         btnNextFragment.setOnClickListener       { onNextClick() }
     }
@@ -145,7 +144,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
                             .show()
                 }) {
             presenter.onNextClick { process ->
-                btnNext.isEnabled = false
+                btnNextFragment?.isEnabled = false
             }
         }
     }

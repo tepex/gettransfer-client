@@ -2,14 +2,13 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.annotation.CallSuper
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.common.NavigationMenuClickListener
+import com.kg.gettransfer.common.NavigationMenuListener
 import com.kg.gettransfer.common.NewTransferSwitchListener
 
 import org.koin.core.KoinComponent
@@ -21,30 +20,28 @@ class NewTransferFragment : Fragment(), KoinComponent, NewTransferSwitchListener
 
     private val newTransferFragment by lazy { NewTransferMapFragment() }
 
-    var listener: NavigationMenuClickListener? = null
+    var listener: NavigationMenuListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_new_transfer, container, false)
 
-    @CallSuper
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
 
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
         try {
-            listener = activity as NavigationMenuClickListener
+            listener = activity as NavigationMenuListener
         } catch (e: ClassCastException) {
-            Timber.e("%s must implement NavigationMenuClickListener", activity.toString())
+            Timber.e("%s must implement NavigationMenuListener", activity.toString())
         }
     }
 
-    override fun openNewTransfer() {
-        listener?.openNewTransfer()
+    override fun openMenu() {
+        listener?.openMenu()
     }
 
     override fun switchToMap() {
+        listener?.disablingNavigation()
+        //Adding or showing new transfer fragment with map
         val ft = childFragmentManager.beginTransaction()
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
         if (childFragmentManager.findFragmentByTag(MAP_FRG_TAG) == null) {
@@ -54,13 +51,16 @@ class NewTransferFragment : Fragment(), KoinComponent, NewTransferSwitchListener
             newTransferFragment.userVisibleHint = true
         }
         ft.commitAllowingStateLoss()
-        //Don't update after hide other fragment
+        //Don't update after show other fragment
         childFragmentManager.fragments.find { it is NewTransferMainFragment }?.let {
             (it as NewTransferMainFragment).userVisibleHint = false
         }
     }
 
     override fun switchToMain() {
+        listener?.enablingNavigation()
+
+        //Hiding new transfer fragment with map
         val ft = childFragmentManager.beginTransaction()
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
         childFragmentManager.findFragmentByTag(MAP_FRG_TAG).let {
@@ -68,7 +68,7 @@ class NewTransferFragment : Fragment(), KoinComponent, NewTransferSwitchListener
             newTransferFragment.userVisibleHint = false
         }
         ft.commitAllowingStateLoss()
-        //Don't update after hide other fragment
+        //Can update after hide other fragment
         childFragmentManager.fragments.find { it is NewTransferMainFragment }?.let {
             (it as NewTransferMainFragment).userVisibleHint = true
         }

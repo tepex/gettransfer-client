@@ -22,13 +22,14 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
-import com.kg.gettransfer.common.NavigationMenuClickListener
+import com.kg.gettransfer.common.NavigationMenuListener
 
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainNavigatePresenter
+import com.kg.gettransfer.presentation.ui.custom.LockableSwipeDrawerLayout
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
@@ -45,15 +46,16 @@ import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
 
+
 @Suppress("TooManyFunctions")
 class MainNavigateActivity : BaseActivity(), MainNavigateView,
-        NavigationMenuClickListener,
+        NavigationMenuListener,
         StoreDialogFragment.OnStoreListener {
 
     @InjectPresenter
     internal lateinit var presenter: MainNavigatePresenter
 
-    lateinit var drawer: DrawerLayout
+    lateinit var drawer: LockableSwipeDrawerLayout
 
     @ProvidePresenter
     fun createMainPresenter() = MainNavigatePresenter()
@@ -63,7 +65,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     private val itemsNavigationViewListener = View.OnClickListener { view ->
         with(presenter) {
             when (view.id) {
-                R.id.navNewTransfer -> drawer.closeDrawer(GravityCompat.START)
+                R.id.navNewTransfer -> onNewTransferClick()
                 R.id.navLogin -> onLoginClick()
                 R.id.navAbout -> onAboutClick()
                 R.id.navSettings -> onSettingsClick()
@@ -91,7 +93,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         }
 
         @Suppress("UnsafeCast")
-        drawer = drawerLayout as DrawerLayout
+        drawer = drawerLayout as LockableSwipeDrawerLayout
         drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             @CallSuper
             override fun onDrawerStateChanged(newState: Int) {
@@ -118,7 +120,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             if (transferId != 0L) presenter.rateTransfer(transferId, rate)
 
             if (getBooleanExtra(Screens.MAIN_MENU, false)) {
-                Handler().postDelayed({ openNewTransfer() }, MAGIC_DELAY)
+                Handler().postDelayed({ openMenu() }, MAGIC_DELAY)
             }
         }
     }
@@ -152,8 +154,16 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         }
     }
 
-    override fun openNewTransfer() {
+    override fun openMenu() {
         drawer.openDrawer(Gravity.START, true)
+    }
+
+    override fun enablingNavigation() {
+        drawer.isSwipeOpenEnabled = true
+    }
+
+    override fun disablingNavigation() {
+        drawer.isSwipeOpenEnabled = false
     }
 
     @CallSuper
@@ -225,7 +235,6 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     private fun onBackClick() {
         when {
             drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
-//            systemInteractor.lastMainScreenMode == Screens.MAIN_WITHOUT_MAP && isAddressNavigating -> performClick(isTo, true)
             else -> presenter.onBackCommandClick()
         }
     }

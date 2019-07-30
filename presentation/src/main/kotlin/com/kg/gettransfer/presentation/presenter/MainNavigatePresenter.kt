@@ -1,8 +1,10 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.support.v4.view.GravityCompat
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
 import com.kg.gettransfer.domain.model.Offer
@@ -27,6 +29,7 @@ import org.koin.core.inject
 class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventListener {
     private val reviewInteractor: ReviewInteractor by inject()
 
+    private val orderInteractor: OrderInteractor by inject()
     private val profileMapper: ProfileMapper by inject()
 
     override fun onFirstViewAttach() {
@@ -79,6 +82,11 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     override fun systemInitialized() {
         super.systemInitialized()
         checkAccount()
+    }
+
+    fun onNewTransferClick() {
+        orderInteractor.clear()
+        viewState.openMenu()
     }
 
     fun onAboutClick() {

@@ -53,6 +53,18 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
         this.isVisible = isVisibleView
     }
 
+    fun fillViewFromState() {
+        if (fillAddressFieldsCheckIsEmpty()) setOwnLocation()
+
+        if (!orderInteractor.isAddressesValid())
+            changeUsedField(NewTransferMainPresenter.FIELD_FROM)
+        else
+            changeUsedField(systemInteractor.selectedField)
+
+        viewState.setHourlyDuration(orderInteractor.hourlyDuration)
+        viewState.updateTripView(isHourly())
+    }
+
     protected fun setOwnLocation() {
         if (orderInteractor.from != null) setLastLocation() else updateCurrentLocation()
     }
@@ -66,6 +78,19 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     open fun changeUsedField(field: String) {
         systemInteractor.selectedField = field
+    }
+
+    /**
+     * Fill address fields
+     * @return true - from address is empty
+     */
+    fun fillAddressFieldsCheckIsEmpty(): Boolean {
+        with(orderInteractor) {
+            viewState.setAddressTo(to?.address ?: NewTransferMainPresenter.EMPTY_ADDRESS)
+            return from.also {
+                viewState.setAddressFrom(it?.address ?: NewTransferMainPresenter.EMPTY_ADDRESS)
+            } == null
+        }
     }
 
     fun updateCurrentLocation() {

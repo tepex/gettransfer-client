@@ -147,13 +147,13 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         try {
             listener = parentFragment as NewTransferSwitchListener
         } catch (e: ClassCastException) {
-            Timber.e("%s must implement NavigationMenuClickListener", activity.toString())
+            Timber.e("%s must implement NavigationMenuListener", activity.toString())
         }
     }
 
     fun performNextClick() {
         presenter.onNextClick { process ->
-            btnNext.isEnabled = false
+            btnNext?.isEnabled = false
         }
     }
 
