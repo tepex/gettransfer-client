@@ -31,6 +31,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_conveniences" />
+        app:layout_constraintTop_toBottomOf="@+id/view_conveniences"
+        app:multiple_photos_width="@dimen/bottom_sheet_transfer_details_multiple_photos_width"
+        app:multiple_photos_height="@dimen/bottom_sheet_transfer_details_multiple_photos_height"
+        app:single_photo_height="@dimen/bottom_sheet_transfer_details_single_photo_height"/>
 
 </android.support.constraint.ConstraintLayout>

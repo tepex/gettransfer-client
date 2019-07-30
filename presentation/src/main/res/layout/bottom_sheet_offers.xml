@@ -89,7 +89,10 @@
             <com.kg.gettransfer.presentation.ui.custom.VehiclePhotosView
                 android:id="@+id/vehiclePhotosView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:multiple_photos_width="@dimen/bottom_sheet_offer_details_multiple_photos_width"
+                app:multiple_photos_height="@dimen/bottom_sheet_offer_details_multiple_photos_height"
+                app:single_photo_height="@dimen/bottom_sheet_offer_details_single_photo_height"/>
 
             <include
                 layout="@layout/view_divider_horizontal"

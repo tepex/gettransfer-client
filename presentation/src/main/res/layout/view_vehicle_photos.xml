@@ -36,8 +36,6 @@
         android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
         android:layout_marginEnd="@dimen/bottom_sheet_offer_details_margin_16dp"
         android:adjustViewBounds="true"
-        android:maxHeight="@dimen/bottom_sheet_offer_details_sv_photo_height"
-        android:scaleType="centerCrop"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

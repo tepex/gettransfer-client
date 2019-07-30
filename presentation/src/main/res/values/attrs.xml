@@ -135,4 +135,10 @@
         <attr name="carrier_field_title" format="string"/>
         <attr name="carrier_field_text" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="VehiclePhotosView">
+        <attr name="multiple_photos_width" format="dimension"/>
+        <attr name="multiple_photos_height" format="dimension"/>
+        <attr name="single_photo_height" format="dimension"/>
+    </declare-styleable>
 </resources>
