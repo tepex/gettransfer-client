@@ -627,6 +627,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
         analytics.logSingleEvent(Analytics.CAR_INFO_CLICKED)
     }
 
+    fun onChangeCurrencyClick() {
+        if (!accountManager.remoteAccount.isBusinessAccount) {
+            viewState.showCurrencies()
+        }
+    }
+
     companion object {
         private const val INVALID_CURRENCY_INDEX = -1
 
