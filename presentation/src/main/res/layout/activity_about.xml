@@ -24,8 +24,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:overScrollMode="never"
-		android:layout_marginTop="@dimen/about_activity_view_pager_margin_top"
-		android:layout_marginBottom="@dimen/about_activity_view_pager_margin_bottom"
 		app:layout_constraintBottom_toTopOf="@+id/btnNext"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
