@@ -68,41 +68,54 @@
         app:layout_constraintStart_toEndOf="@+id/iv_convertible_child_seat"
         app:srcCompat="@drawable/booster_seat_disabled" />
 
-    <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
-        android:id="@+id/view_infant_seat"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="22dp"
-
-        app:counter_description="@string/LNG_SEAT_INFANT_WEIGHT"
-        app:counter_title="@string/LNG_SEAT_INFANT_FULL"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_infant_child_seat" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_infant_child_seat"
+        app:layout_constraintBottom_toTopOf="@+id/btnOkChildSeats">
 
-    <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
-        android:id="@+id/view_convertible_seat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        app:counter_description="@string/LNG_SEAT_CONVERTIBLE_WEIGHT"
-        app:counter_title="@string/LNG_SEAT_CONVERTIBLE_FULL"
+            <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
+                android:id="@+id/view_infant_seat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_infant_seat" />
+                app:counter_description="@string/LNG_SEAT_INFANT_WEIGHT"
+                app:counter_title="@string/LNG_SEAT_INFANT_FULL"
 
-    <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
-        android:id="@+id/view_booster_seat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        app:counter_description="@string/LNG_SEAT_BOOSTER_WEIGHT"
-        app:counter_title="@string/LNG_SEAT_BOOSTER_FULL"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_convertible_seat" />
+            <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
+                android:id="@+id/view_convertible_seat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:counter_description="@string/LNG_SEAT_CONVERTIBLE_WEIGHT"
+                app:counter_title="@string/LNG_SEAT_CONVERTIBLE_FULL"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_infant_seat" />
+
+            <com.kg.gettransfer.presentation.ui.custom.ChildCounterView
+                android:id="@+id/view_booster_seat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:counter_description="@string/LNG_SEAT_BOOSTER_WEIGHT"
+                app:counter_title="@string/LNG_SEAT_BOOSTER_FULL"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_convertible_seat" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
     <android.support.design.button.MaterialButton
         android:id="@+id/btnOkChildSeats"
@@ -110,7 +123,8 @@
         android:layout_height="@dimen/btn_rounded_height"
         android:layout_marginStart="@dimen/margin24"
         android:layout_marginEnd="@dimen/margin24"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="@dimen/margin16"
+        android:layout_marginTop="@dimen/margin16"
         android:text="@string/LNG_OK"
         android:textColor="@color/colorWhite"
         android:gravity="center"
