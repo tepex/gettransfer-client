@@ -117,8 +117,8 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
             // back return to main
             view.isFocusableInTouchMode = true
             view.requestFocus()
-            view.setOnKeyListener(View.OnKeyListener { _, keyCode, _ ->
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
+            view.setOnKeyListener(View.OnKeyListener { view, keyCode, keyEvent ->
+                if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_DOWN) {
                     listener?.switchToMain()
                     return@OnKeyListener true
                 }
@@ -164,7 +164,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
                         presenter.tripDurationSelected(durationValue)
                     }
                 })
-                .show(requireFragmentManager(), HourlyDurationDialogFragment.DIALOG_TAG)
+                .show(childFragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
     }
 
     @CallSuper
