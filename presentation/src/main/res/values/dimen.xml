@@ -80,6 +80,7 @@
 	<dimen name="best_price_logo_image_size">80dp</dimen>
 	<dimen name="best_price_logo_margin_start">16dp</dimen>
 	<dimen name="best_price_logo_margin_bottom">8dp</dimen>
+	<dimen name="best_price_logo_margin_top">16dp</dimen>
 
 	<dimen name="nav_icons_size">20dp</dimen>
 	<dimen name="nav_icons_margin_start_end">16dp</dimen>
