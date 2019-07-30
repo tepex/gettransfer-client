@@ -22,8 +22,7 @@ open class VehicleMapper : KoinComponent {
             color = type.color,
             transportType = type.transportType.map(),
             photos = type.photos.map { photo ->
-                if (photo.startsWith(systemInteractor.endpoint.url)) photo
-                else "${systemInteractor.endpoint.url}$photo"
+                if (photo.startsWith(systemInteractor.endpoint.url)) photo else "${systemInteractor.endpoint.url}$photo"
             }
         )
 }
