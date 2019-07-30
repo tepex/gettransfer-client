@@ -37,15 +37,18 @@ class VehiclePhotosView @JvmOverloads constructor(
         if (attrs != null) {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.VehiclePhotosView)
 
-            multiplePhotosSize = Pair(
-                ta.getDimensionPixelSize(R.styleable.VehiclePhotosView_multiple_photos_width,
-                    resources.getDimensionPixelSize(R.dimen.bottom_sheet_offer_details_multiple_photos_width)),
-                ta.getDimensionPixelSize(R.styleable.VehiclePhotosView_multiple_photos_height,
-                    resources.getDimensionPixelSize(R.dimen.bottom_sheet_offer_details_multiple_photos_height))
+            multiplePhotosSize = ta.getDimensionPixelSize(
+                R.styleable.VehiclePhotosView_multiple_photos_width,
+                resources.getDimensionPixelSize(R.dimen.bottom_sheet_offer_details_multiple_photos_width)
+            ) to ta.getDimensionPixelSize(
+                R.styleable.VehiclePhotosView_multiple_photos_height,
+                resources.getDimensionPixelSize(R.dimen.bottom_sheet_offer_details_multiple_photos_height)
             )
 
-            singlePhotoHeight = ta.getDimensionPixelSize(R.styleable.VehiclePhotosView_single_photo_height,
-                resources.getDimensionPixelSize(R.dimen.bottom_sheet_offer_details_single_photo_height))
+            singlePhotoHeight = ta.getDimensionPixelSize(
+                R.styleable.VehiclePhotosView_single_photo_height,
+                resources.getDimensionPixelSize(R.dimen.bottom_sheet_offer_details_single_photo_height)
+            )
 
             ta.recycle()
         }
@@ -67,24 +70,21 @@ class VehiclePhotosView @JvmOverloads constructor(
         sv_photos.isVisible = true
         inflatePhotoScrollView(photos.size)
         for (i in 0 until photos_container_bs.childCount) {
-            Glide.with(this)
-                .load(photos[i])
-                .apply(RequestOptions().transform(
-                    CenterCrop(),
-                    RoundedCorners(Utils.dpToPxInt(context, PHOTO_CORNER)))
-                ).into(photos_container_bs.getChildAt(i) as ImageView)
+            @Suppress("UnsafeCast")
+            Glide.with(this).load(photos[i]).apply(RequestOptions().transform(
+                CenterCrop(),
+                RoundedCorners(Utils.dpToPxInt(context, PHOTO_CORNER)))
+            ).into(photos_container_bs.getChildAt(i) as ImageView)
         }
     }
 
     private fun addSinglePhoto(resId: Int = 0, path: String? = null) {
         iv_single_photo.isVisible = true
         if (path != null) iv_single_photo.layoutParams.apply { height = singlePhotoHeight }
-        Glide.with(this)
-            .load(path ?: resId)
-            .apply(RequestOptions().transform(
-                if (path != null) CenterCrop() else CenterInside(),
-                RoundedCorners(Utils.dpToPxInt(context, PHOTO_CORNER)))
-            ).into(iv_single_photo)
+        Glide.with(this).load(path ?: resId).apply(RequestOptions().transform(
+            if (path != null) CenterCrop() else CenterInside(),
+            RoundedCorners(Utils.dpToPxInt(context, PHOTO_CORNER))
+        )).into(iv_single_photo)
     }
 
     private fun inflatePhotoScrollView(imagesCount: Int) {
