@@ -85,7 +85,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     }
 
     fun onNewTransferClick() {
-        orderInteractor.clear()
         viewState.openMenu()
     }
 

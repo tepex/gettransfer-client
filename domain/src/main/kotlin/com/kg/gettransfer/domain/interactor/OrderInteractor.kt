@@ -53,7 +53,6 @@ class OrderInteractor(
     }
 
     fun clear() {
-        from            = null
         to              = null
         hourlyDuration  = null
         duration        = null

@@ -43,7 +43,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     }
 
     override fun updateView(isVisibleView: Boolean) {
-        if (!isVisible) return
+        if (!isVisibleView) return
 
         if (nState.currentState == MainState.CHOOSE_POINT_ON_MAP) {//returned from search activity
             viewState.switchToMap()
@@ -73,6 +73,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     }
 
     override fun setPointAddress(currentAddress: GTAddress) {
+        super.setPointAddress(currentAddress)
         setAddressInSelectedField(currentAddress.cityPoint.name)
     }
 

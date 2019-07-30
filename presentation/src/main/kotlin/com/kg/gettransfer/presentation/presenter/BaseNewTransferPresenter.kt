@@ -54,19 +54,15 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     fun fillViewFromState() {
-        if (fillAddressFieldsCheckIsEmpty()) setOwnLocation()
-
         if (!orderInteractor.isAddressesValid())
             changeUsedField(NewTransferMainPresenter.FIELD_FROM)
         else
             changeUsedField(systemInteractor.selectedField)
 
+        if (fillAddressFieldsCheckIsEmpty()) updateCurrentLocation()
+
         viewState.setHourlyDuration(orderInteractor.hourlyDuration)
         viewState.updateTripView(isHourly())
-    }
-
-    protected fun setOwnLocation() {
-        if (orderInteractor.from != null) setLastLocation() else updateCurrentLocation()
     }
 
     fun switchUsedField() {
@@ -137,7 +133,8 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
         if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model)
     }
 
-    open fun setPointAddress(currentAddress: GTAddress) {}
+    open fun setPointAddress(currentAddress: GTAddress) {
+    }
 
     private fun showBtnMyLocation(point: LatLng) = lastCurrentLocation == null || point != lastCurrentLocation
 

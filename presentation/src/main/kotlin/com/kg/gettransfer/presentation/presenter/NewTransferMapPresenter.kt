@@ -38,7 +38,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
 
     override fun updateView(isVisibleView: Boolean) {
         resetState()
-        if (!isVisible) return
+        if (!isVisibleView) return
 
         fillViewFromState()
     }
@@ -68,6 +68,8 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
     }
 
     override fun setPointAddress(currentAddress: GTAddress) {
+        super.setPointAddress(currentAddress)
+
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation(lastAddressPoint))
