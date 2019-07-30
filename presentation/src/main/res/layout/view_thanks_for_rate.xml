@@ -65,6 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:drawableEnd="@drawable/ic_arrow_right"
-        android:textColorHint="@color/colorGrey"
-        style="@style/transfer_details_secondary_text"/>
+        android:textColorHint="@color/color_gtr_grey"
+        style="@style/sf_font_pro_text_regular_grey"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"/>
 </LinearLayout>

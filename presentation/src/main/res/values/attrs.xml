@@ -130,4 +130,9 @@
         <attr name="account_field_view_icon" format="reference"/>
         <attr name="android:inputType"/>
     </declare-styleable>
+
+    <declare-styleable name="TransferDetailsCarrierInfoField">
+        <attr name="carrier_field_title" format="string"/>
+        <attr name="carrier_field_text" format="string"/>
+    </declare-styleable>
 </resources>

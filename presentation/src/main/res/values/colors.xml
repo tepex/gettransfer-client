@@ -54,7 +54,6 @@
     <color name="colorTextPriceWithoutDiscount">#ff3b30</color>
 
     <color name="colorBack">#efeff4</color>
-    <color name="colorGrey">#4c000000</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorWhitePressed">#d2d2d2</color>
     <color name="colorAdditionalText">#6D6D72</color>
@@ -97,19 +96,6 @@
     <color name="colorCarImageBackground">#e4e4e4</color>
     <color name="colorStarsInRatingBar">#f6dc66</color>
 
-    <!--vehicle_colors-->
-    <color name="color_vehicle_black">#000000</color>
-    <color name="color_vehicle_white">#FFFFFF</color>
-    <color name="color_vehicle_red">#FF0000</color>
-    <color name="color_vehicle_blue">#0000ff</color>
-    <color name="color_vehicle_yellow">#FFFF00</color>
-    <color name="color_vehicle_brown">#A52A2A</color>
-    <color name="color_vehicle_silver">#C0C0C0</color>
-    <color name="color_vehicle_green">#008000</color>
-    <color name="color_vehicle_gray">#808080</color>
-    <color name="color_vehicle_purple">#800080</color>
-    <color name="color_vehicle_orange">#FFA500</color>
-
     <color name="bg_point_on_map">#f7f7f7</color>
     <color name="switch_activated">#98b71b</color>
     <color name="black_50">#80000000</color>
@@ -149,7 +135,7 @@
     <color name="rate_comment_border">#979797</color>
     
     <color name="color_gtr_black">#000000</color>
-    <color name="color_gtr_grey">#B2B2B2</color>
+    <color name="color_gtr_grey">#7F7F7F</color>
     <color name="color_gtr_light_grey">#E5E5E5</color>
     <color name="color_gtr_super_light_grey">#F6F6F6</color>
     <color name="color_gtr_yellow">#FEDB06</color>
@@ -157,6 +143,20 @@
     <color name="color_gtr_blue">#2CAEE9</color>
     <color name="color_gtr_orange">#FF6900</color>
     <color name="color_gtr_red">#FF3B30</color>
+
+    <color name="color_car_black">#000000</color>
+    <color name="color_car_white">#ffffff</color>
+    <color name="color_car_red">#ff3b30</color>
+    <color name="color_car_blue">#015db8</color>
+    <color name="color_car_yellow">#fbff06</color>
+    <color name="color_car_brown">#8b400d</color>
+    <color name="color_car_silver">#e5e5e5</color>
+    <color name="color_car_green">#31b700</color>
+    <color name="color_car_gray">#b2b2b2</color>
+    <color name="color_car_purple">#800083</color>
+    <color name="color_car_orange">#ff6900</color>
+    <color name="color_car_beige">#ffe9c9</color>
+    <color name="color_car_gold">#ffd410</color>
 
     <color name="color_gtr_chat_not_my_message_back">#E7F1FD</color>
     <color name="color_grey_48">#48000000</color>

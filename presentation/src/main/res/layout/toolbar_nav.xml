@@ -46,7 +46,7 @@
             android:layout_below="@id/tv_title"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/sf_pro_text_regular"
-            android:textColor="@color/colorGrey" />
+            android:textColor="@color/color_gtr_grey" />
 
         <ImageView
             android:id="@+id/btn_forward"

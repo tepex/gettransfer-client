@@ -5,41 +5,46 @@
     android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="16dp" >
+    android:minHeight="@dimen/activity_transfer_details_field_height"
+    android:paddingStart="@dimen/margin16"
+    android:paddingEnd="@dimen/margin16">
 
     <TextView
         android:id="@+id/conveniences_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/colorGrey"
-        android:textSize="@dimen/activity_transfer_details_text_size_17sp"
+        android:textColor="@color/color_gtr_grey"
+        android:textSize="@dimen/activity_transfer_details_text_size_16sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider_transfer_details_field"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/LNG_TRANSPORT_BUSINESS" />
 
-
-    <ImageView
+    <TextView
         android:id="@+id/carColor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/border_car_color_indicator"
+        android:layout_marginEnd="@dimen/activity_transfer_details_car_color_margin_end"
+        android:elevation="@dimen/activity_transfer_details_car_color_elevation"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:paddingStart="@dimen/activity_transfer_details_car_color_horizontal_padding"
+        android:paddingTop="@dimen/activity_transfer_details_car_color_top_padding"
+        android:paddingEnd="@dimen/activity_transfer_details_car_color_horizontal_padding"
+        android:paddingBottom="@dimen/activity_transfer_details_car_color_bottom_padding"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/activity_transfer_details_car_color_text_size"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/imgFreeWiFi"
         app:layout_constraintEnd_toStartOf="@+id/imgFreeWiFi"
         app:layout_constraintTop_toTopOf="@+id/imgFreeWiFi"
-        app:srcCompat="@drawable/ic_circle_car_color_indicator"
+        tools:text="@string/LNG_COLOR_BLUE"
         tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/imgFreeWiFi"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
+        android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
         android:layout_marginEnd="8dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/imgCharge"
@@ -50,9 +55,8 @@
 
     <ImageView
         android:id="@+id/imgCharge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
+        android:layout_width="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
         android:layout_marginEnd="8dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/imgFreeWater"
@@ -64,8 +68,7 @@
     <ImageView
         android:id="@+id/imgFreeWater"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
+        android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/conveniences_field"
         app:layout_constraintEnd_toEndOf="parent"
@@ -77,12 +80,9 @@
         android:id="@+id/divider_transfer_details_field"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="16dp"
         android:background="@color/color_transfer_details_horizontal_divider_new"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/conveniences_field" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

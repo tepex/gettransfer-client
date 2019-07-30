@@ -9,7 +9,9 @@ import android.os.Bundle
 import android.os.Handler
 
 import android.support.annotation.CallSuper
+import android.support.annotation.ColorRes
 import android.support.annotation.NonNull
+import android.support.annotation.StringRes
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
@@ -557,22 +559,38 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
+    @Suppress("UNUSED_PARAMETER", "NestedBlockDepth")
     private fun initAboutTransportView(offerModel: OfferModel, childSeats: Int) {
-        layoutAboutTransport .apply {
+        with(layoutAboutTransport) {
             car_model_field.field_title.text = offerModel.vehicle.name
             car_model_field.field_text.text  = offerModel.vehicle.registrationNumber
             car_model_field.isVisible = true
 
-            view_conveniences.apply {
+            with(view_conveniences) {
                 conveniences_field.text = getString(offerModel.vehicle.transportType.nameId)
-                imgFreeWater.isVisible = offerModel.refreshments
-                imgFreeWiFi.isVisible  = offerModel.wifi
-                imgCharge.isVisible    = offerModel.charger
+                imgFreeWater.isVisible  = offerModel.refreshments
+                imgFreeWiFi.isVisible   = offerModel.wifi
+                imgCharge.isVisible     = offerModel.charger
 
                 offerModel.vehicle.color?.let { color ->
-                    carColor.isVisible = true
-                    carColor.setImageDrawable(Utils.getCarColorFormRes(this@TransferDetailsActivity, color))
+                    @ColorRes
+                    val colorId = Utils.getCarColorTextRes(color)
+                    @StringRes
+                    val colorNameId = when (colorId) {
+                        R.string.LNG_COLOR_BEIGE,
+                        R.string.LNG_COLOR_GOLD,
+                        R.string.LNG_COLOR_SILVER,
+                        R.string.LNG_COLOR_WHITE,
+                        R.string.LNG_COLOR_YELLOW -> R.color.colorTextBlack
+                        else -> R.color.colorWhite
+                    }
+
+                    with(carColor) {
+                        text = getString(colorId)
+                        setTextColor(ContextCompat.getColor(this@TransferDetailsActivity, colorNameId))
+                        background = Utils.getCarColorTextBackFormRes(this@TransferDetailsActivity, color)
+                        isVisible = true
+                    }
                 }
             }
         }
@@ -603,9 +621,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun updateMapBehaviorBounds() {
-        mapView.getMapAsync { gm ->
-            mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
-        }
+        mapView.getMapAsync { mapCollapseBehavior.setLatLngBounds(it.projection.visibleRegion.latLngBounds) }
     }
 
     override fun copyText(text: String) {
@@ -616,7 +632,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun showAlertCancelRequest() {
-        Utils.showAlertCancelRequest(this) { presenter.cancelRequest(it) }
+        Utils.showAlertCancelRequest(this, presenter::cancelRequest)
     }
 
     override fun showCancelRequestToast() {
