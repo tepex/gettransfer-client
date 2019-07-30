@@ -36,6 +36,7 @@ import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isVisible
 
+import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
@@ -301,8 +302,8 @@ class PaymentOfferActivity : BaseActivity(),
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = transportTypeId.getImageRes())
         OfferItemBindDelegate.bindRating(layoutRating, Ratings.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(
-            multiLineContainer = languages_container_tiny,
-            languages = listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
+            Either.Multi(languages_container_tiny),
+            listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
             rowNumber = 6
         )
     }
@@ -328,11 +329,7 @@ class PaymentOfferActivity : BaseActivity(),
             tvClass.text = getString(transportType.nameId)
         }
         with(offer.carrier) {
-            OfferItemBindDelegate.bindLanguages(
-                multiLineContainer = languages_container_tiny,
-                languages = languages,
-                rowNumber = 6
-            )
+            OfferItemBindDelegate.bindLanguages(Either.Multi(languages_container_tiny), languages, 6)
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
     }
