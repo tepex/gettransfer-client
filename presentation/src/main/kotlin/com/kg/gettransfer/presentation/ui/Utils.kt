@@ -13,6 +13,7 @@ import android.net.Uri
 
 import android.os.Build
 
+import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v4.app.FragmentActivity
@@ -370,42 +371,45 @@ object Utils : KoinComponent {
         return (imageRes?.call() as Int?) ?: R.drawable.ic_language_unknown
     }
 
+    @StringRes
     fun getCarColorTextRes(color: String): Int {
         val colorRes = R.string::class.members.find({ it.name == "LNG_COLOR_${color.toUpperCase()}" })
         return (colorRes?.call() as Int?) ?: R.string.LNG_COLOR_WHITE
     }
 
+    @ColorRes
     private fun getCarColorResId(color: String): Int {
         val colorRes = R.color::class.members.find({ it.name == "color_car_$color" })
         return (colorRes?.call() as Int?) ?: R.color.color_car_white
     }
 
-    fun getCarColorTextBackFormRes(context: Context, color: String): Drawable {
-        return getCarColorTextBackDrawable(context, getCarColorResId(color))
-    }
+    fun getCarColorTextBackFormRes(context: Context, color: String) =
+        getCarColorTextBackDrawable(context, getCarColorResId(color))
 
-    private fun getCarColorTextBackDrawable(context: Context, colorId: Int): Drawable {
-        return GradientDrawable().apply {
-            setColor(ContextCompat.getColor(context, colorId))
-            if (colorId == R.color.color_car_white)
-                setStroke(dpToPxInt(context, 1f), ContextCompat.getColor(context, R.color.color_gtr_light_grey))
-            shape = GradientDrawable.RECTANGLE
-            cornerRadius = convertDpToPixels(context, 24.0f)
+    private fun getCarColorTextBackDrawable(context: Context, colorId: Int) = GradientDrawable().apply {
+        setColor(ContextCompat.getColor(context, colorId))
+        if (colorId == R.color.color_car_white) {
+            setStroke(
+                dpToPxInt(context, 1f),
+                ContextCompat.getColor(context, R.color.color_gtr_light_grey)
+            )
         }
+        shape = GradientDrawable.RECTANGLE
+        cornerRadius = convertDpToPixels(context, 24.0f)
     }
 
-    fun getCarColorFormRes(context: Context, color: String): Drawable {
-        return getCarColorDrawable(context, getCarColorResId(color))
-    }
+    fun getCarColorFormRes(context: Context, color: String) = getCarColorDrawable(context, getCarColorResId(color))
 
-    private fun getCarColorDrawable(context: Context, colorId: Int): Drawable {
-        return GradientDrawable().apply {
-            setColor(ContextCompat.getColor(context, colorId))
-            if (colorId == R.color.color_car_white)
-                setStroke(dpToPxInt(context, 1f), ContextCompat.getColor(context, R.color.color_gtr_light_grey))
-            shape = GradientDrawable.OVAL
-            cornerRadius = 5.0f
+    private fun getCarColorDrawable(context: Context, colorId: Int) = GradientDrawable().apply {
+        setColor(ContextCompat.getColor(context, colorId))
+        if (colorId == R.color.color_car_white) {
+            setStroke(
+                dpToPxInt(context, 1f),
+                ContextCompat.getColor(context, R.color.color_gtr_light_grey)
+            )
         }
+        shape = GradientDrawable.OVAL
+        cornerRadius = 5.0f
     }
 
     fun getPhoneCodeByCountryIso(context: Context): Int {
