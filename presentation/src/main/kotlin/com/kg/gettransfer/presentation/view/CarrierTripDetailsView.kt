@@ -7,7 +7,7 @@ import com.kg.gettransfer.presentation.model.CarrierTripModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface CarrierTripDetailsView : BaseView, RouteView {
     fun setTripInfo(trip: CarrierTripModel)
-    fun copyText(text: String)
+    fun copyField(text: String)
 
     companion object {
         val EXTRA_TRIP_ID = "${CarrierTripDetailsView::class.java.name}.tripId"

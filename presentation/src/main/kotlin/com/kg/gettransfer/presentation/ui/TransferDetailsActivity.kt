@@ -1,9 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.ClipboardManager
-import android.content.ClipData
-import android.content.Context
-
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -624,11 +620,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         mapView.getMapAsync { mapCollapseBehavior.setLatLngBounds(it.projection.visibleRegion.latLngBounds) }
     }
 
-    override fun copyText(text: String) {
-        val systemService = getSystemService(Context.CLIPBOARD_SERVICE)
-        if (systemService is ClipboardManager) {
-            systemService.primaryClip = ClipData.newPlainText("Copied Text", text)
-        }
+    override fun copyField(text: String) {
+        copyText(text)
     }
 
     override fun showAlertCancelRequest() {

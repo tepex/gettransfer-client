@@ -14,6 +14,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.adapter.ChatAdapter
+import com.kg.gettransfer.presentation.adapter.CopyMessageListener
+import com.kg.gettransfer.presentation.adapter.MessageReadListener
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.ChatModel
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -26,6 +28,8 @@ import java.util.Date
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
+import org.jetbrains.anko.toast
+
 class ChatActivity : BaseActivity(), ChatView {
     @InjectPresenter
     internal lateinit var presenter: ChatPresenter
@@ -34,6 +38,9 @@ class ChatActivity : BaseActivity(), ChatView {
     fun createChatPresenter() = ChatPresenter()
 
     override fun getPresenter(): ChatPresenter = presenter
+
+    private val messageReadListener: MessageReadListener = { presenter.readMessage(it) }
+    private val copyMessageListener: CopyMessageListener = { copyMessage(it) }
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +52,7 @@ class ChatActivity : BaseActivity(), ChatView {
 
         rvMessages.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         btnSend.setOnClickListener {
-            if(messageText.text.isNotEmpty()) {
+            if (messageText.text.isNotEmpty()) {
                 presenter.onSentClick(messageText.text.toString())
                 messageText.setText("")
             }
@@ -59,10 +66,10 @@ class ChatActivity : BaseActivity(), ChatView {
     }
 
     override fun setToolbar(transfer: TransferModel, offer: OfferModel?, isShowChevron: Boolean) {
-        transfer.let {
-            initToolbar(offer?.driver?.name ?: it.nameSign ?: offer?.carrier?.profile?.name, offer?.phoneToCall)
-            if (it.id != ChatPresenter.NO_ID) {
-                initTransferInfoLayout(it.from, it.dateTime, it.id, isShowChevron)
+        with(transfer) {
+            initToolbar(offer?.driver?.name ?: nameSign ?: offer?.carrier?.profile?.name, offer?.phoneToCall)
+            if (id != ChatPresenter.NO_ID) {
+                initTransferInfoLayout(from, dateTime, id, isShowChevron)
             }
         }
     }
@@ -70,9 +77,9 @@ class ChatActivity : BaseActivity(), ChatView {
     override fun setToolbar(carrierTrip: CarrierTripModel) {
         val userProfile = carrierTrip.passenger?.profile
         initToolbar(userProfile?.name, userProfile?.phone)
-        carrierTrip.base.let {
-            if (it.id != ChatPresenter.NO_ID) {
-                initTransferInfoLayout(it.from, it.dateLocal, it.transferId, true)
+        with(carrierTrip.base) {
+            if (id != ChatPresenter.NO_ID) {
+                initTransferInfoLayout(from, dateLocal, transferId, true)
             }
         }
     }
@@ -90,32 +97,40 @@ class ChatActivity : BaseActivity(), ChatView {
     }
 
     private fun initTransferInfoLayout(
-        from: String, date: Date,
+        from: String,
+        date: Date,
         transferId: Long,
         @Suppress("UNUSED_PARAMETER") isShowChevron: Boolean
     ) {
-        //imgChevron.isVisible = isShowChevron
+        // imgChevron.isVisible = isShowChevron
         layoutTransferInfo.apply {
             isVisible = true
             textTransferInfoFrom.text = from
-            textTransferInfoDate.text = getString(R.string.chat_transfer_date_transfer_id_format,
-                    SystemUtils.formatDateTime(date),
-                    getString(R.string.LNG_TRANSFER).plus(" №$transferId"))
-            //setOnClickListener { presenter.onTransferInfoClick() }
+            textTransferInfoDate.text = getString(
+                R.string.chat_transfer_date_transfer_id_format,
+                SystemUtils.formatDateTime(date),
+                getString(R.string.LNG_TRANSFER).plus(" №$transferId")
+            )
+            // setOnClickListener { presenter.onTransferInfoClick() }
         }
     }
 
     override fun setChat(chat: ChatModel) {
         val oldMessagesSize = rvMessages.adapter?.itemCount
         rvMessages.apply {
-            if(adapter == null){
-                adapter = ChatAdapter(chat) { presenter.readMessage(it) }
+            if (adapter == null) {
+                adapter = ChatAdapter(chat, messageReadListener, copyMessageListener)
             } else {
                 (adapter as ChatAdapter).changeModel(chat)
                 rvMessages.adapter?.notifyDataSetChanged()
             }
         }
         if (oldMessagesSize ?: 0 < chat.messages.size /*&& chat.messages.lastOrNull()!!.accountId != chat.currentAccountId*/) scrollToEnd()
+    }
+
+    private fun copyMessage(text: String) {
+        copyText(text)
+        toast(getString(R.string.LNG_MESSAGE_COPIED))
     }
 
     override fun scrollToEnd() {

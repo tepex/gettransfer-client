@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-
 import android.os.Build
 import android.os.Bundle
 
@@ -81,11 +79,12 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         setOnClickListeners()
     }
 
+    @CallSuper
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
         gm.setPadding(0, 0, 0, bsCarrierTripDetails.peekHeight)
         gm.setOnCameraMoveListener {
-            if(isMapMovingByUser) {
+            if (isMapMovingByUser) {
                 mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
             }
         }
@@ -107,6 +106,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         setViewColor((toolbar as Toolbar), R.color.colorWhite)
     }
 
+    @CallSuper
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         initBottomSheetDetails()
@@ -115,9 +115,11 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     private fun initBottomSheetDetails() {
         bsCarrierTripDetails = BottomSheetTripleStatesBehavior.from(sheetCarrierTripDetails)
 
-        val lp = sheetCarrierTripDetails.layoutParams as CoordinatorLayout.LayoutParams
-        lp.height = getHeightForBottomSheetDetails()
-        sheetCarrierTripDetails.layoutParams = lp
+        val lp = sheetCarrierTripDetails.layoutParams
+        if (lp is CoordinatorLayout.LayoutParams) {
+            lp.height = getHeightForBottomSheetDetails()
+            sheetCarrierTripDetails.layoutParams = lp
+        }
 
         bsCarrierTripDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
@@ -130,24 +132,32 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     override fun setTripInfo(trip: CarrierTripModel) {
         initInfoView(trip)
         initAboutTripInfo(trip)
-        topCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, trip.base.transferId) }
+        topCommunicationButtons.btnSupport.setOnClickListener    { presenter.sendEmail(null, trip.base.transferId) }
         bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, trip.base.transferId) }
     }
 
-    private fun initInfoView(item: CarrierTripModel){
+    private fun initInfoView(item: CarrierTripModel) {
         val transferDateTimePair = Utils.getDateTimeTransferDetails(sessionInteractor.locale, item.base.dateLocal, true)
         transfer_details_header.apply {
             tvTransferDate.text = transferDateTimePair.first
             tvTransferTime.text = transferDateTimePair.second
         }
         val transferStatus = when (item.base.tripStatus) {
-            CarrierTripBaseModel.FUTURE_TRIP -> getString(R.string.LNG_WILL_START_IN).plus(" ")
-                    .plus(Utils.durationToString(this, Utils.convertDuration(item.base.timeToTransfer)))
+            CarrierTripBaseModel.FUTURE_TRIP      -> buildString {
+                append(getString(R.string.LNG_WILL_START_IN))
+                append(" ")
+                append(
+                    Utils.durationToString(
+                        this@CarrierTripDetailsActivity,
+                        Utils.convertDuration(item.base.timeToTransfer)
+                    )
+                )
+            }
             CarrierTripBaseModel.IN_PROGRESS_TRIP -> getString(R.string.LNG_IN_PROGRESS)
-            CarrierTripBaseModel.PAST_TRIP -> getString(R.string.LNG_RIDE_STATUS_COMPLETED)
+            CarrierTripBaseModel.PAST_TRIP        -> getString(R.string.LNG_RIDE_STATUS_COMPLETED)
             else -> ""
         }
-        booking_info.text = getString(R.string.LNG_TRANSFER).plus(" #${item.base.transferId}").plus(" ${transferStatus?: ""}")
+        booking_info.text = "${getString(R.string.LNG_TRANSFER)} #${item.base.transferId} ${transferStatus ?: ""}"
 
         layoutCarrierTripInfo.setInfo(item.base)
 
@@ -155,21 +165,23 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
             transfer_details_main.tv_time.text = HourlyValuesHelper.getValue(item.base.duration ?: 0, this)
         } else {
             transfer_details_main.tv_distance.text = SystemUtils.formatDistance(this, item.base.distance, false)
-            transfer_details_main.tv_time.text = Utils.durationToString(this, Utils.convertDuration(item.base.time ?: 0))
+            transfer_details_main.tv_time.text =
+                Utils.durationToString(this, Utils.convertDuration(item.base.time ?: 0))
             transfer_details_main.tv_distance_dash.isVisible = false
 
         }
         transfer_details_main.tv_price_title.text = getString(R.string.LNG_TOTAL_PRICE).plus(" ${item.base.price}")
-        item.totalPrice?.let {
-            transfer_details_main.tv_price.text = it.remainsToPay
+        item.totalPrice?.let { totalPrice ->
+            transfer_details_main.tv_price.text = totalPrice.remainsToPay
             transfer_details_main.tv_price_dash.isVisible = false
         }
     }
 
-    private fun initAboutTripInfo(item: CarrierTripModel){
+    private fun initAboutTripInfo(item: CarrierTripModel) {
         val operations = listOf<Pair<CharSequence, String>>(
-                Pair(getString(R.string.LNG_COPY), CarrierTripDetailsPresenter.OPERATION_COPY),
-                Pair(getString(R.string.LNG_OPEN), CarrierTripDetailsPresenter.OPERATION_OPEN))
+            getString(R.string.LNG_COPY) to CarrierTripDetailsPresenter.OPERATION_COPY,
+            getString(R.string.LNG_OPEN) to CarrierTripDetailsPresenter.OPERATION_OPEN
+        )
         val operationsName: List<CharSequence> = operations.map { it.first }
         with(item) {
             layoutPassengersChilds.isVisible = item.countPassengers != null || item.base.countChild > 0
@@ -179,7 +191,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                     imgPassengers.isVisible = true
                     tv_countPassengers.isVisible = true
                 }
-                if(item.base.countChild > 0) {
+                if (item.base.countChild > 0) {
                     tvCountChildren.text = getString(R.string.X_SIGN).plus("${item.base.countChild}")
                     imgChildSeats.isVisible = true
                     tvCountChildren.isVisible = true
@@ -187,9 +199,9 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
             }
             base.vehicle.let { initField(car_model_field, it.registrationNumber, it.name) }
 
-            if(showPassengerInfo) {
-                base.comment?.let {
-                    comment_view.tv_comment_text.text = it
+            if (showPassengerInfo) {
+                base.comment?.let { comment ->
+                    comment_view.tv_comment_text.text = comment
                     comment_view.isVisible = true
                 }
                 flightNumber?.let { initField(flight_number, it) }
@@ -197,18 +209,38 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
                 passenger?.profile?.let { profile ->
                     profile.email?.let {email ->
                         initField(passenger_email, email)
-                        Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_email, operationsName, R.string.LNG_EMAIL) {
-                            presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
+                        Utils.setSelectOperationListener(
+                            this@CarrierTripDetailsActivity,
+                            passenger_email,
+                            operationsName,
+                            R.string.LNG_EMAIL
+                        ) {
+                            presenter.makeFieldOperation(
+                                CarrierTripDetailsPresenter.FIELD_EMAIL,
+                                operations[it].second,
+                                email
+                            )
+                        }
                     }
                     profile.phone?.let { phone ->
                         initField(passenger_phone, phone)
-                        initCommunicationButton(topCommunicationButtons.btnCall) { presenter.callPhone(phone) }
+                        initCommunicationButton(topCommunicationButtons.btnCall)    { presenter.callPhone(phone) }
                         initCommunicationButton(bottomCommunicationButtons.btnCall) { presenter.callPhone(phone) }
-                        Utils.setSelectOperationListener(this@CarrierTripDetailsActivity, passenger_phone, operationsName, R.string.LNG_PHONE) {
-                            presenter.makeFieldOperation(CarrierTripDetailsPresenter.FIELD_PHONE, operations[it].second, phone) }
+                        Utils.setSelectOperationListener(
+                            this@CarrierTripDetailsActivity,
+                            passenger_phone,
+                            operationsName,
+                            R.string.LNG_PHONE
+                        ) {
+                            presenter.makeFieldOperation(
+                                CarrierTripDetailsPresenter.FIELD_PHONE,
+                                operations[it].second,
+                                phone
+                            )
+                        }
                     }
                 }
-                initCommunicationButton(topCommunicationButtons.btnChat) { presenter.onChatClick() }
+                initCommunicationButton(topCommunicationButtons.btnChat)    { presenter.onChatClick() }
                 initCommunicationButton(bottomCommunicationButtons.btnChat) { presenter.onChatClick() }
             }
         }
@@ -219,7 +251,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         btn.isVisible = true
     }
 
-    private fun initField(field: TransferDetailsField, text: String, title: String? = null){
+    private fun initField(field: TransferDetailsField, text: String, title: String? = null) {
         title?.let { field.field_title.text = title }
         field.field_text.text = text
         field.isVisible = true
@@ -235,7 +267,13 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         mapView.setPadding(0, 0, 0, 150)
     }
 
-    override fun setPinHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate, isDateChanged: Boolean) {
+    override fun setPinHourlyTransfer(
+        placeName: String,
+        info: String,
+        point: LatLng,
+        cameraUpdate: CameraUpdate,
+        isDateChanged: Boolean
+    ) {
         processGoogleMap(false) { setPinForHourlyTransfer(placeName, info, point, cameraUpdate) }
         btnCenterRoute.isVisible = false
         updateMapBehaviorBounds()
@@ -246,14 +284,10 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
     }
 
     private fun updateMapBehaviorBounds() {
-        mapView.getMapAsync { gm ->
-            mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
-        }
+        mapView.getMapAsync { mapCollapseBehavior.setLatLngBounds(it.projection.visibleRegion.latLngBounds) }
     }
 
-    override fun copyText(text: String) {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-        val clip = android.content.ClipData.newPlainText("Copied Text", text)
-        clipboard.primaryClip = clip
+    override fun copyField(text: String) {
+        copyText(text)
     }
 }

@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.ClipboardManager
+import android.content.ClipData
 
 import android.graphics.Color
 import android.graphics.Point
@@ -441,6 +443,13 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = ContextCompat.getColor(this, color)
+        }
+    }
+
+    protected fun copyText(text: String) {
+        val systemService = getSystemService(Context.CLIPBOARD_SERVICE)
+        if (systemService is ClipboardManager) {
+            systemService.primaryClip = ClipData.newPlainText("Copied Text", text)
         }
     }
 

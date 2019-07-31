@@ -238,7 +238,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     fun makeFieldOperation(field: String, operation: String, text: String) {
         when (operation) {
-            OPERATION_COPY -> viewState.copyText(text)
+            OPERATION_COPY -> viewState.copyField(text)
             OPERATION_OPEN -> {
                 when (field) {
                     FIELD_PHONE -> callPhone(text)
