@@ -68,6 +68,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/navHeaderMode"
+            android:maxLines="2"
+            android:ellipsize="end"
             tools:text="Maluta Skuratov" />
 
         <TextView
@@ -80,6 +82,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/navHeaderName"
+            android:maxLines="2"
+            android:ellipsize="end"
             tools:text="android.studio@android.com" />
 
         <TextView
