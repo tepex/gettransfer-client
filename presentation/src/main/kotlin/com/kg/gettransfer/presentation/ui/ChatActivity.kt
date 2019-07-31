@@ -14,6 +14,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.adapter.ChatAdapter
+import com.kg.gettransfer.presentation.adapter.CopyMessageListener
+import com.kg.gettransfer.presentation.adapter.MessageReadListener
 import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.ChatModel
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -25,6 +27,7 @@ import java.util.Date
 
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import org.jetbrains.anko.toast
 
 class ChatActivity : BaseActivity(), ChatView {
     @InjectPresenter
@@ -109,13 +112,21 @@ class ChatActivity : BaseActivity(), ChatView {
         val oldMessagesSize = rvMessages.adapter?.itemCount
         rvMessages.apply {
             if(adapter == null){
-                adapter = ChatAdapter(chat) { presenter.readMessage(it) }
+                adapter = ChatAdapter(chat, messageReadListener, copyMessageListener)
             } else {
                 (adapter as ChatAdapter).changeModel(chat)
                 rvMessages.adapter?.notifyDataSetChanged()
             }
         }
         if (oldMessagesSize ?: 0 < chat.messages.size /*&& chat.messages.lastOrNull()!!.accountId != chat.currentAccountId*/) scrollToEnd()
+    }
+
+    private val messageReadListener: MessageReadListener = { presenter.readMessage(it) }
+    private val copyMessageListener: CopyMessageListener = { copyMessage(it) }
+
+    private fun copyMessage(text: String) {
+        copyText(text)
+        toast(getString(R.string.LNG_MESSAGE_COPIED))
     }
 
     override fun scrollToEnd() {

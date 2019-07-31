@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
-
 import android.os.Build
 import android.os.Bundle
 
@@ -251,9 +249,7 @@ class CarrierTripDetailsActivity : BaseGoogleMapActivity(), CarrierTripDetailsVi
         }
     }
 
-    override fun copyText(text: String) {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-        val clip = android.content.ClipData.newPlainText("Copied Text", text)
-        clipboard.primaryClip = clip
+    override fun copyField(text: String) {
+        copyText(text)
     }
 }

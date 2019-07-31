@@ -13,7 +13,7 @@ interface TransferDetailsView: BaseView, RouteView {
     fun setTransfer(transfer: TransferModel)
     fun setOffer(offer: OfferModel, childSeats: Int)
     fun showAlertCancelRequest()
-    fun copyText(text: String)
+    fun copyField(text: String)
     fun showDetailRate()
     fun closeRateWindow()
     fun askRateInPlayMarket()

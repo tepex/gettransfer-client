@@ -20,7 +20,8 @@ import java.lang.IllegalArgumentException
 
 class ChatAdapter(
         private var chatItems: ChatModel,
-        private val listener: MessageReadListener
+        private val messageReadListener: MessageReadListener,
+        private val copyMessageListener: CopyMessageListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     fun changeModel(chatItems: ChatModel){
@@ -36,8 +37,8 @@ class ChatAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
         val message = chatItems.messages[pos]
         when(chatItems.getMessageType(pos)){
-            Type.CURRENT_ACCOUNT_MESSAGE     -> (holder as ViewHolderMyMessage).bind(message)
-            Type.NOT_CURRENT_ACCOUNT_MESSAGE -> (holder as ViewHolderNotMyMessage).bind(message, listener)
+            Type.CURRENT_ACCOUNT_MESSAGE     -> (holder as ViewHolderMyMessage).bind(message, copyMessageListener)
+            Type.NOT_CURRENT_ACCOUNT_MESSAGE -> (holder as ViewHolderNotMyMessage).bind(message, messageReadListener, copyMessageListener)
         }
     }
 
@@ -51,7 +52,7 @@ class ChatAdapter(
             RecyclerView.ViewHolder(containerView),
             LayoutContainer {
 
-        fun bind(message: MessageModel) = with(containerView) {
+        fun bind(message: MessageModel, copyMessageListener: CopyMessageListener) = with(containerView) {
             myMessageText.text = message.text
             myMessageTimeText.text = SystemUtils.formatMessageDateTimePattern(message.createdAt).let {
                 it.substring(0, 1).toUpperCase().plus(it.substring(1)) }
@@ -63,6 +64,11 @@ class ChatAdapter(
                         else -> R.drawable.ic_message_read
                     }
             ))
+            setOnLongClickListener {
+                copyMessageListener(message.text)
+                return@setOnLongClickListener true
+            }
+            setOnClickListener { copyMessageListener(message.text) }
         }
     }
 
@@ -70,13 +76,18 @@ class ChatAdapter(
             RecyclerView.ViewHolder(containerView),
             LayoutContainer {
 
-        fun bind(message: MessageModel, listener: MessageReadListener) = with(containerView) {
+        fun bind(message: MessageModel, messageReadListener: MessageReadListener, copyMessageListener: CopyMessageListener) = with(containerView) {
             notMyMessageText.text = message.text
             notMyMessageTimeText.text = SystemUtils.formatMessageDateTimePattern(message.createdAt).let {
                 it.substring(0, 1).toUpperCase().plus(it.substring(1)) }
-            if(message.readAt == null) listener(message.id)
+            if(message.readAt == null) messageReadListener(message.id)
+            setOnLongClickListener {
+                copyMessageListener(message.text)
+                return@setOnLongClickListener true
+            }
         }
     }
 }
 
 typealias MessageReadListener = (Long) -> Unit
+typealias CopyMessageListener = (String) -> Unit
