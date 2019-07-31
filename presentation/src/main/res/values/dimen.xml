@@ -162,7 +162,7 @@
 	<dimen name="currency_symbol_wight">16dp</dimen>
 	<dimen name="currency_symbol_height">29dp</dimen>
 	<dimen name="currency_symbol_margin_start">20dp</dimen>
-	<dimen name="fl_currency_wight">30dp</dimen>
+	<dimen name="fl_currency_wight">50dp</dimen>
 	<dimen name="fl_currency_height">32dp</dimen>
 	<dimen name="currency_symbol_min_size">1sp</dimen>
 	<dimen name="triangle_currency_width">8dp</dimen>

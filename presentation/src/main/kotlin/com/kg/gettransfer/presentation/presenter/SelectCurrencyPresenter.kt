@@ -1,31 +1,45 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
+import com.kg.gettransfer.domain.interactor.SessionInteractor
 
 import com.kg.gettransfer.domain.model.Currency
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
+import kotlinx.coroutines.*
 
 import org.koin.core.KoinComponent
-import org.koin.core.get
 import org.koin.core.inject
-import org.koin.core.parameter.parametersOf
+import kotlin.coroutines.CoroutineContext
 
 @InjectViewState
-class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinComponent {
+class SelectCurrencyPresenter : MvpPresenter<SelectCurrencyView>(), CoroutineScope, KoinComponent {
 
-    private val currencies = systemInteractor.currencies.map { it.map() }
-    private val popularCurrencies = currencies.filter { Currency.POPULAR.contains(it.code) }
+    private val sessionInteractor: SessionInteractor by inject()
+
+    private val job = Job()
+    override val coroutineContext: CoroutineContext = job + Dispatchers.IO
+
     private var currencyChangedListener: CurrencyChangedListener? = null
 
-    fun init() {
-        viewState.setCurrencies(
-            currencies.filter { !Currency.POPULAR.contains(it.code) },
-            popularCurrencies,
-            sessionInteractor.currency.map()
-        )
+    override fun attachView(view: SelectCurrencyView?) {
+        super.attachView(view)
+        // This launch uses the coroutineContext defined
+        // by the coroutine presenter.
+        launch {
+            val selectedCurrency = sessionInteractor.currency.map()
+            val currencies = sessionInteractor.systemInteractor.currencies.map { it.map() }
+            withContext(Dispatchers.Main) {
+                viewState.setCurrencies(currencies, selectedCurrency)
+            }
+            val popularCurrencies = currencies.filter { Currency.POPULAR.contains(it.code) }
+            withContext(Dispatchers.Main) {
+                viewState.setPopularCurrencies(popularCurrencies, selectedCurrency)
+            }
+        }
     }
 
     fun addCurrencyChangedListener(currencyChangedListener: CurrencyChangedListener) {
@@ -38,7 +52,14 @@ class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinCompone
 
     fun changeCurrency(selected: CurrencyModel) {
         sessionInteractor.currency = selected.delegate
-        saveGeneralSettings()
+        // TODO BasePresenter.saveGeneralSettings()
         currencyChangedListener?.currencyChanged(selected)
     }
+
+    override fun onDestroy() {
+        job.cancel()
+        super.onDestroy()
+    }
+
+
 }

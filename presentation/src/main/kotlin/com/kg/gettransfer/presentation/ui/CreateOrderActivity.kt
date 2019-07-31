@@ -316,17 +316,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         }
     }
 
-    override fun setFairPrice(price: String?, time: String?) {
-        tvRate.text = when {
-            price != null && time != null -> String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT), price, time)
-            price != null && time == null -> String.format(getString(R.string.LNG_RIDE_FAIR_PRICE_FORMAT_HOURLY), price)
-            else                          -> ""
-        }
-        if (price == null && time == null) {
-            tvRate.isVisible = false
-        }
-    }
-
     override fun setUser(user: UserModel, isLoggedIn: Boolean) {
         if (isLoggedIn && user.termsAccepted) {
             layoutAgreement.isVisible = false
@@ -511,7 +500,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         btnBack.setOnClickListener { presenter.onBackClick() }
 
         fl_currency.setOnClickListener {
-            presenter.onChangeCurrencyClick()
+            replaceFragment(SelectCurrencyFragment(), R.id.secondary_bottom_sheet)
+//            SelectCurrencyFragment().show(supportFragmentManager, "select")
+            hideKeyboard()
         }
     }
 
@@ -537,8 +528,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         }
 
     val showReturnFlight: (show: Boolean) -> Unit = { show ->
-        flight_numberReturn_field.isVisible = show
-        fl_DeleteReturnDate.isVisible       = show
+        flight_numberReturn_field.isVisible   = show
+        flight_numberReturn_divider.isVisible = show
+        fl_DeleteReturnDate.isVisible         = show
         if (!show) {
             transfer_return_date_field.field_input.text?.clear()
             flight_numberReturn_field.field_input.text?.clear()

@@ -19,7 +19,7 @@ import com.kg.gettransfer.utilities.Analytics
 interface CreateOrderView : BaseView, RouteView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setTripType(withReturnWay: Boolean)
-    fun setFairPrice(price: String?, time: String?)
+//    TODO not used fun setFairPrice(price: String?, time: String?)
     //fun setCurrencies(currencies: List<CurrencyModel>)
     fun setUser(user: UserModel, isLoggedIn: Boolean)
     fun setEditableFields(offeredPrice: Double?, flightNumber: String?, flightNumberReturn: String?, promo: String)

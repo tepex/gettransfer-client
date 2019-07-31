@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="5dp"
-    tools:context=".presentation.ui.custom.CreateOrderField">
-
     <android.support.design.widget.TextInputLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/input_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:paddingStart="@dimen/margin16"
+    android:paddingTop="@dimen/margin4"
+    android:paddingEnd="@dimen/margin16"
+    android:paddingBottom="@dimen/divider_create_order_margin_top"
+    android:layout_height="wrap_content"
         android:gravity="center"
         app:hintAnimationEnabled="false"
         tools:hint="450"
@@ -25,7 +21,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="6dp"
             android:background="@null"
-            android:drawableStart="@drawable/wrapped_ic_comment"
+            tools:drawableStart="@drawable/wrapped_ic_comment"
             android:drawablePadding="8dp"
             android:ellipsize="end"
             android:gravity="start|center"
@@ -33,12 +29,3 @@
             android:singleLine="true"
             style="@style/sf_font"/>
     </android.support.design.widget.TextInputLayout>
-
-    <View
-        android:id="@+id/field_divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/create_transfer_divider_height"
-        android:layout_marginTop="@dimen/divider_create_order_margin_top"
-        android:background="@color/create_order_fields_divider" />
-
-</LinearLayout>

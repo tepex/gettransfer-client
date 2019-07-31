@@ -1,10 +1,13 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.animation.Animator
+import android.animation.AnimatorInflater
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
 
 import android.view.View
@@ -13,8 +16,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.DatabaseException
 
 import com.kg.gettransfer.presentation.adapter.CurrenciesListAdapter
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -23,10 +24,15 @@ import com.kg.gettransfer.presentation.presenter.SelectCurrencyPresenter
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
 
 import kotlinx.android.synthetic.main.fragment_select_currency.*
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v4.content.ContextCompat
+
 
 @Suppress("TooManyFunctions")
 class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
+    private lateinit var adapterPopular: CurrenciesListAdapter
+    private lateinit var adapterAll: CurrenciesListAdapter
     override val layout = R.layout.fragment_select_currency
 
     @InjectPresenter
@@ -38,8 +44,6 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        rvAllCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rvPopularCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
         val parentActivity = activity
@@ -48,7 +52,24 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
             if (parentPresenter is CurrencyChangedListener) presenter.addCurrencyChangedListener(parentPresenter)
         }
 
-        presenter.init()
+        val itemDecorator = DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
+        ContextCompat.getDrawable(requireContext(), R.drawable.sh_divider_light_gray)?.let { itemDecorator.setDrawable(it) }
+
+        adapterAll = CurrenciesListAdapter { currency ->
+            presenter.changeCurrency(currency)
+            changeSelectedCurrency(currency)
+        }
+        rvAllCurrencies.adapter = adapterAll
+        rvAllCurrencies.itemAnimator = DefaultItemAnimator()
+        rvAllCurrencies.addItemDecoration(itemDecorator)
+
+        adapterPopular = CurrenciesListAdapter { currency ->
+            presenter.changeCurrency(currency)
+            changeSelectedCurrency(currency)
+        }
+        rvPopularCurrencies.adapter = adapterPopular
+        rvPopularCurrencies.itemAnimator = DefaultItemAnimator()
+        rvPopularCurrencies.addItemDecoration(itemDecorator)
     }
 
     @CallSuper
@@ -59,16 +80,31 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
         super.onDestroyView()
     }
 
-    override fun setCurrencies(all: List<CurrencyModel>, popular: List<CurrencyModel>, selected: CurrencyModel) {
-        setRecyclerViewAdapter(rvAllCurrencies, all, selected)
-        setRecyclerViewAdapter(rvPopularCurrencies, popular, selected)
+    // TODO move to base animation fragment
+    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
+        val animatorId: Int = if (enter) android.R.animator.fade_in else android.R.animator.fade_out
+        val anim = AnimatorInflater.loadAnimator(activity, animatorId)
+        anim.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator?) {
+                super.onAnimationEnd(animation)
+                if (enter) {
+                    adapterAll.notifyDataSetChanged()
+                    adapterPopular.notifyDataSetChanged()
+                }
+            }
+        })
+
+        return anim
     }
 
-    private fun setRecyclerViewAdapter(recyclerView: RecyclerView, list: List<CurrencyModel>, selected: CurrencyModel) {
-        recyclerView.adapter = CurrenciesListAdapter(list, selected) { currency ->
-            presenter.changeCurrency(currency)
-            changeSelectedCurrency(currency)
-        }
+    override fun setCurrencies(all: List<CurrencyModel>, selected: CurrencyModel) {
+        adapterAll.setNewSelectedCurrency(selected)
+        adapterAll.update(all)
+    }
+
+    override fun setPopularCurrencies(popular: List<CurrencyModel>, selected: CurrencyModel) {
+        adapterPopular.setNewSelectedCurrency(selected)
+        adapterPopular.update(popular)
     }
 
     private fun changeSelectedCurrency(newSelectedCurrency: CurrencyModel) {
@@ -83,10 +119,4 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
             adapter.notifyDataSetChanged()
         }
     }
-
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
-    override fun setError(e: ApiException) {}
-    override fun setError(e: DatabaseException) {}
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
-    override fun setTransferNotFoundError(transferId: Long) {}
 }

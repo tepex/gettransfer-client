@@ -32,7 +32,7 @@
     <color name="colorWhitePressed">#d2d2d2</color>
 
     <color name="colorBtnRed">#FF0000</color>
-    <color name="colorDividerGray">#FFBCBBC1</color>
+    <color name="colorDividerGray">@color/colorDivider</color>
     <color name="create_order_fields_divider">@color/color_gtr_light_grey</color>
 
     <color name="btn_login_disable">@color/color_gtr_light_grey</color>
@@ -55,6 +55,9 @@
     <color name="black_a30">#4d000000</color>
     <color name="black_a10">#1a000000</color>
 
+    <color name="colorDivider">#bcbbc1</color>
+    <color name="colorDividerLight">@color/color_gtr_light_grey</color>
+
     <color name="colorBackNetworkNotAvailable">#ff3b30</color>
     <color name="separator_color">#d8d8d8</color>
 
@@ -64,8 +67,9 @@
 
     <!-- Transfer details -->
     <color name="color_transfer_details_vertical_divider">#d8d8d8</color>
-    <color name="color_transfer_details_horizontal_divider">#bcbbc1</color>
-    <color name="color_transfer_details_horizontal_divider_new">#F6F6F6</color>
+    <color name="color_transfer_details_horizontal_divider">@color/colorDivider</color> <!--TODO remove and replace all gray dividers to sh_divider_gray.xml-->
+    <color name="color_transfer_details_horizontal_divider_new">@color/colorDividerLight</color> <!--TODO remove and replace all gray dividers to sh_divider_light_gray.xml-->
+    <color name="color_transfer_details_text_green">#98b71b</color>
     <color name="color_transfer_details_text_gray">#B2B2B2</color>
     <color name="color_transfer_details_text_red">#ff3b30</color>
 
