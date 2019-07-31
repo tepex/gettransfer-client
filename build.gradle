@@ -115,23 +115,29 @@ detekt {
 
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CreateOrderPresenter.kt",
 
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/ChatAdapter.kt",
+
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/OfferItemBindDelegate.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/VehicleMapper.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/VehicleModel.kt",
 
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CarrierTripDetailsPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/OffersPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentOfferPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaypalConnectionPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectCurrencyPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SupportPresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/TransferDetailsPresenter.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripsMainActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripDetailsActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ChatActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CreateOrderActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainRequestFragment.kt",
@@ -156,9 +162,11 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/ScrollGalleryInflater.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/CarrierTripDetailsView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/MainView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/OffersView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SupportView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/TransferDetailsView.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt"
 

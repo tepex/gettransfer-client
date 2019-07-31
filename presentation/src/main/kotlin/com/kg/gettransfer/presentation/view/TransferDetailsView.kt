@@ -8,8 +8,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
+@Suppress("TooManyFunctions")
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface TransferDetailsView: BaseView, RouteView {
+interface TransferDetailsView : BaseView, RouteView {
     fun setTransfer(transfer: TransferModel)
     fun setOffer(offer: OfferModel, childSeats: Int)
     fun showAlertCancelRequest()
