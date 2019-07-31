@@ -501,8 +501,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         btnBack.setOnClickListener { presenter.onBackClick() }
 
         fl_currency.setOnClickListener {
-            hideKeyboard()
-            replaceFragment(SelectCurrencyFragment(), R.id.secondary_bottom_sheet)
+            presenter.onChangeCurrencyClick()
         }
     }
 
@@ -560,10 +559,13 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
     }
 
     override fun showCommentDialog(comment: String, hintsToComments: List<String>?) =
-        CommentDialogFragment.newInstance(
-            comment,
-            hintsToComments?.toTypedArray()
-        ).show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
+        CommentDialogFragment.newInstance(comment, hintsToComments?.toTypedArray())
+            .show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
+
+    override fun showCurrencies() {
+        hideKeyboard()
+        replaceFragment(SelectCurrencyFragment(), R.id.secondary_bottom_sheet)
+    }
 
     companion object {
         const val FIELD_START  = true

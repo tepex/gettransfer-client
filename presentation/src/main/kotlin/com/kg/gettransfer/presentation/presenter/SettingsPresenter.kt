@@ -167,8 +167,10 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     fun onDriverCoordinatesSwitched(checked: Boolean) = carrierTripInteractor.permissionChanged(checked)
 
     fun onCurrencyClicked() {
-        showingFragment = CURRENCIES_VIEW
-        viewState.showFragment(CURRENCIES_VIEW)
+        if (!accountManager.remoteAccount.isBusinessAccount) {
+            showingFragment = CURRENCIES_VIEW
+            viewState.showFragment(CURRENCIES_VIEW)
+        }
     }
 
     fun onPasswordClicked() {
