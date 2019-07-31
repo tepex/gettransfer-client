@@ -18,7 +18,7 @@ interface Api {
         const val API_CONFIGS = "/api/configs"
         const val API_ACCOUNT = "/api/account"
         const val API_LOGIN = "/api/login"
-        const val API_VERIFICATION_CODE = "/api/account/verification_code"
+        const val API_VERIFICATION_CODE = "/api/account/request_verification_code"
         const val API_CODE_FOR_CHANGE_EMAIL = "/api/account/email_code"
         const val API_CHANGE_EMAIL = "/api/account/change_email"
         const val API_ACCOUNT_LOGIN = "/api/account/login"
@@ -75,10 +75,11 @@ interface Api {
         @Body account: RegistrationAccountEntityWrapper
     ): Deferred<ResponseModel<AccountModelWrapper>>
 
-    @GET(API_VERIFICATION_CODE)
+    @POST(API_VERIFICATION_CODE)
+    @FormUrlEncoded
     fun getVerificationCode(
-        @Query("email") email: String?,
-        @Query("phone") phone: String?
+        @Field("email") email: String?,
+        @Field("phone") phone: String?
     ): Deferred<ResponseModel<String?>>
 
     @POST(API_CODE_FOR_CHANGE_EMAIL)
