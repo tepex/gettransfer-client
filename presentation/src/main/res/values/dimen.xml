@@ -204,8 +204,6 @@
 	<dimen name="ivTransferType_margin_top">8dp</dimen>
 	<dimen name="cbTransferType_margin_start">10dp</dimen>
 	<dimen name="cbTransferType_margin_top">8dp</dimen>
-	<dimen name="cbTransferType_width">22dp</dimen>
-	<dimen name="cbTransferType_height">22dp</dimen>
 	<dimen name="tvCountBaggage_margin_start">2dp</dimen>
 	<dimen name="tvCountBaggage_margin_end">8dp</dimen>
 
