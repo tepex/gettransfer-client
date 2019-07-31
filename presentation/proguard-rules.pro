@@ -14,11 +14,11 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-renamesourcefileattribute SourceFile
 
 -dontwarn sun.misc.**
 
@@ -38,7 +38,73 @@
 
 -dontwarn com.google.appengine.api.urlfetch.*
 
-#-keep class kotlinx.coroutines.experimental.android.AndroidExceptionPreHandler { *; }
+# ServiceLoader support
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-keepnames class kotlinx.coroutines.android.AndroidExceptionPreHandler {}
+-keepnames class kotlinx.coroutines.android.AndroidDispatcherFactory {}
+
+# Most of volatile fields are updated with AFU and should not be mangled
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
+}
+
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+-keep class com.appsflyer.** { *; }
+
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
+
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# OkHttp platform used only on JVM and when Conscrypt dependency is available.
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+# Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
+# EnclosingMethod is required to use InnerClasses.
+-keepattributes Signature, InnerClasses, EnclosingMethod
+
+# Retrofit does reflection on method and parameter annotations.
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+
+# Retain service method parameters when optimizing.
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+
+# Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
+-dontwarn kotlin.Unit
+
+# Top-level functions that can only be used by Kotlin.
+-dontwarn retrofit2.KotlinExtensions
+-dontwarn retrofit2.KotlinExtensions$*
+
+# With R8 full mode, it sees no subtypes of Retrofit interfaces since they are created with a Proxy
+# and replaces all potential values with null. Explicitly keeping the interfaces prevents this.
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface <1>
+
+-keep class kotlin.** { *; }
+-keep class kotlin.Metadata { *; }
+-dontwarn kotlin.**
+-dontwarn kotlin.reflect.jvm.internal.**
+-keep class kotlin.reflect.jvm.internal.** { *; }
+-keepclassmembers class **$WhenMappings {
+    <fields>;
+}
+-keepclassmembers class kotlin.Metadata {
+    public <methods>;
+}
+-assumenosideeffects class kotlin.jvm.internal.Intrinsics {
+    static void checkParameterIsNotNull(java.lang.Object, java.lang.String);
 }
