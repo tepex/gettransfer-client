@@ -16,9 +16,9 @@
 
 		<ImageView
 			android:id="@+id/ivBack"
-			android:layout_width="@dimen/back_circle_size"
-			android:layout_height="@dimen/back_circle_size"
-			app:srcCompat="@drawable/ic_circle_back"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:srcCompat="@drawable/ic_back"
 			android:clickable="true"
 			style="@style/BorderlessBackground" />
 
