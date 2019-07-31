@@ -1,87 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingBottom="8dp"
-    android:background="@drawable/bg_transfer_details_transport_type_item"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:padding="@dimen/view_transfer_details_transport_type_item_layout_padding">
 
-    <TextView
-        android:id="@+id/transportType_Name"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:textColor="@color/colorTextBlack"
-        android:textSize="@dimen/transport_type_name_text_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Economy" />
+        android:background="@drawable/bg_transfer_details_transport_type_item"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/view_transfer_details_transport_type_item_padding_bottom">
 
-    <ImageView
-        android:id="@+id/transportType_Img"
-        android:layout_width="87.5dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transportType_Name"
-        app:srcCompat="@drawable/ic_transport_type_economy" />
+        <TextView
+            android:id="@+id/transportType_Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_transport_name_margins"
+            android:layout_marginTop="@dimen/view_transfer_details_transport_type_item_transport_name_margins"
+            android:layout_marginEnd="@dimen/view_transfer_details_transport_type_item_transport_name_margins"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/transport_type_name_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Economy" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="@dimen/view_transfer_details_transport_type_item_img_passenger_width"
-        android:layout_height="@dimen/view_transfer_details_transport_type_item_img_passenger_height"
+        <ImageView
+            android:id="@+id/transportType_Img"
+            android:layout_width="@dimen/view_transfer_details_transport_type_item_car_img_width"
+            android:layout_height="@dimen/view_transfer_details_transport_type_item_car_img_height"
+            android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_car_img_horizontal_margin"
+            android:layout_marginTop="@dimen/view_transfer_details_transport_type_item_car_img_margin_top"
+            android:layout_marginEnd="@dimen/view_transfer_details_transport_type_item_car_img_horizontal_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transportType_Name"
+            app:srcCompat="@drawable/ic_transport_type_economy" />
 
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/transportType_Img"
-        app:layout_constraintTop_toBottomOf="@+id/transportType_Img"
-        app:srcCompat="@drawable/ic_passenger_without_padding" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transportType_Img"
+            android:layout_marginTop="@dimen/view_transfer_details_transport_type_item_capacity_margin_top">
 
-    <TextView
-        android:id="@+id/transportType_сountPassengers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/colorTextBlack"
-        android:textSize="@dimen/activity_transfer_details_text_size_11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        tools:text="X 3" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="@dimen/view_transfer_details_transport_type_item_img_passenger_width"
+                android:layout_height="@dimen/view_transfer_details_transport_type_item_img_passenger_height"
+                app:srcCompat="@drawable/ic_passenger_without_padding" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="@dimen/view_transfer_details_transport_type_item_img_baggage_width"
-        android:layout_height="@dimen/view_transfer_details_transport_type_item_img_baggage_height"
-        app:layout_constraintBottom_toBottomOf="@+id/transportType_сountBaggage"
-        app:layout_constraintEnd_toStartOf="@+id/transportType_сountBaggage"
-        app:layout_constraintTop_toTopOf="@+id/transportType_сountBaggage"
-        app:srcCompat="@drawable/ic_baggage" />
+            <TextView
+                android:id="@+id/transportType_сountPassengers"
+                style="@style/sf_font_pro_text_regular_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_transport_capacity_small_text_margin_start"
+                android:textSize="@dimen/activity_transfer_details_text_size_11sp"
+                tools:text="X 3" />
 
-    <TextView
-        android:id="@+id/transportType_сountBaggage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="@dimen/view_transfer_details_transport_type_item_img_baggage_width"
+                android:layout_height="@dimen/view_transfer_details_transport_type_item_img_baggage_height"
+                android:layout_marginStart="@dimen/view_transport_capacity_small_img_baggage_margin_start"
+                app:srcCompat="@drawable/ic_baggage" />
 
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/colorTextBlack"
-        android:textSize="@dimen/activity_transfer_details_text_size_11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/transportType_сountPassengers"
-        app:layout_constraintEnd_toEndOf="@+id/transportType_Img"
-        app:layout_constraintTop_toTopOf="@+id/transportType_сountPassengers"
-        tools:text="X 3" />
+            <TextView
+                android:id="@+id/transportType_сountBaggage"
+                style="@style/sf_font_pro_text_regular_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_transport_capacity_small_text_margin_start"
+                android:textSize="@dimen/activity_transfer_details_text_size_11sp"
+                tools:text="X 3" />
 
-</android.support.constraint.ConstraintLayout>
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>
+
+
 
