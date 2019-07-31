@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
@@ -12,13 +13,12 @@ import org.koin.core.inject
 
 @InjectViewState
 class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
+    private val orderInteractor: OrderInteractor by inject()
     private val paymentInteractor: PaymentInteractor by inject()
 
     fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) {
         utils.launchSuspend {
-            if (!sessionInteractor.isInitialized) {
-                fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
-            }
+            checkInitialization()
             if (!accountManager.isLoggedIn)
                 router.newChainFromMain(Screens.LoginToPaymentOffer(transferId, offerId))
             else {
@@ -61,9 +61,7 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
 
     fun openTransfer(transferId: Long) {
         utils.launchSuspend {
-            if (!sessionInteractor.isInitialized) {
-                fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
-            }
+            checkInitialization()
             if (!accountManager.isLoggedIn)
                 router.createStartChain(Screens.LoginToShowDetails(transferId))
             else {
@@ -85,11 +83,39 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
 
     fun rateTransfer(transferId: Long, rate: Int) {
         utils.launchSuspend {
-            if (!sessionInteractor.isInitialized) {
-                fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
-            }
+            checkInitialization()
             if (!accountManager.isLoggedIn) router.replaceScreen(Screens.LoginToRateTransfer(transferId, rate))
             else router.newRootScreen(Screens.MainPassengerToRateTransfer(transferId, rate))
+        }
+    }
+
+    fun createOrder(fromPlaceId: String?, toPlaceId: String?, promo: String?) {
+        utils.launchSuspend {
+            checkInitialization()
+            with(orderInteractor) {
+                fromPlaceId?.let {
+                    fetchResult(SHOW_ERROR) {
+                        updatePoint(false, it)
+                    }
+                }
+                toPlaceId?.let {
+                    fetchResult(SHOW_ERROR) {
+                        updatePoint(true, it)
+                    }
+                }
+                promo?.let { promoCode = it }
+                if (isCanCreateOrder()) {
+                    router.createStartChain(Screens.CreateOrder)
+                } else {
+                    router.newRootScreen(Screens.MainPassenger())
+                }
+            }
+        }
+    }
+
+    suspend fun checkInitialization() {
+        if (!sessionInteractor.isInitialized) {
+            fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
         }
     }
 

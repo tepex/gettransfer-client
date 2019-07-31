@@ -48,6 +48,11 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
         const val EQUAL = "="
         const val QUESTION = "?"
         const val RATE = "rate_val"
+
+        const val NEW_TRANSFER = "/transfers/new"
+        const val FROM_PLACE_ID = "from_place_id"
+        const val TO_PLACE_ID = "to_place_id"
+        const val PROMO_CODE = "promo_code"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,6 +101,13 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
                 }
                 path.contains(VOUCHER) -> {
                     checkPermissionForWrite()
+                }
+                path.contains(NEW_TRANSFER) -> {
+                    presenter.createOrder(
+                        appLinkData.getQueryParameter(FROM_PLACE_ID),
+                        appLinkData.getQueryParameter(TO_PLACE_ID),
+                        appLinkData.getQueryParameter(PROMO_CODE)
+                    )
                 }
                 else -> showWebView(url)
             }
