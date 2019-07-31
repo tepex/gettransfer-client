@@ -566,4 +566,15 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         hideKeyboard()
         replaceFragment(SelectCurrencyFragment(), R.id.secondary_bottom_sheet)
     }
+
+    companion object {
+        const val FIELD_START  = true
+        const val FIELD_RETURN = false
+
+        const val SHOW = true
+        const val HIDE = false
+
+        const val SIGN_NAME_FIELD_MAX_LENGTH = 20
+        const val DELAY = 100L
+    }
 }
