@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.toolbar.view.*
 
 import org.jetbrains.anko.toast
 
+@Suppress("TooManyFunctions")
 class ChatActivity : BaseActivity(), ChatView {
     @InjectPresenter
     internal lateinit var presenter: ChatPresenter
@@ -66,8 +67,8 @@ class ChatActivity : BaseActivity(), ChatView {
     }
 
     override fun setToolbar(transfer: TransferModel, offer: OfferModel?, isShowChevron: Boolean) {
+        offer?.let { initToolbar(it.driver?.name ?: it.carrier.profile?.name, it.phoneToCall) }
         with(transfer) {
-            initToolbar(offer?.driver?.name ?: nameSign ?: offer?.carrier?.profile?.name, offer?.phoneToCall)
             if (id != ChatPresenter.NO_ID) {
                 initTransferInfoLayout(from, dateTime, id, isShowChevron)
             }
@@ -85,13 +86,14 @@ class ChatActivity : BaseActivity(), ChatView {
     }
 
     private fun initToolbar(userName: String?, userPhone: String?) {
-        (toolbar as Toolbar).apply {
-            layoutChatTitle.isVisible = true
-            chatTitleButtonBack.setOnClickListener { presenter.onBackCommandClick() }
-            userName?.let { textDriverName.text = getString(R.string.LNG_CHAT_WITH).plus(" ").plus(it) }
+        val tb = toolbar
+        if (tb is Toolbar) {
+            tb.layoutChatTitle.isVisible = true
+            tb.chatTitleButtonBack.setOnClickListener { presenter.onBackCommandClick() }
+            userName?.let { tb.textDriverName.text = getString(R.string.LNG_CHAT_WITH).plus(" ").plus(it) }
             userPhone?.let { phone ->
-                titleBtnCall.isVisible = true
-                titleBtnCall.setOnClickListener { presenter.callPhone(phone) }
+                tb.titleBtnCall.isVisible = true
+                tb.titleBtnCall.setOnClickListener { presenter.callPhone(phone) }
             }
         }
     }
@@ -121,11 +123,17 @@ class ChatActivity : BaseActivity(), ChatView {
             if (adapter == null) {
                 adapter = ChatAdapter(chat, messageReadListener, copyMessageListener)
             } else {
-                (adapter as ChatAdapter).changeModel(chat)
-                rvMessages.adapter?.notifyDataSetChanged()
+                val chatAdapter = adapter
+                if (chatAdapter is ChatAdapter) {
+                    chatAdapter.changeModel(chat)
+                    chatAdapter?.notifyDataSetChanged()
+                }
             }
         }
-        if (oldMessagesSize ?: 0 < chat.messages.size /*&& chat.messages.lastOrNull()!!.accountId != chat.currentAccountId*/) scrollToEnd()
+        /* && chat.messages.lastOrNull()!!.accountId != chat.currentAccountId */
+        if (oldMessagesSize ?: 0 < chat.messages.size) {
+            scrollToEnd()
+        }
     }
 
     private fun copyMessage(text: String) {
@@ -134,10 +142,10 @@ class ChatActivity : BaseActivity(), ChatView {
     }
 
     override fun scrollToEnd() {
-        runOnUiThread { rvMessages.adapter?.let { rvMessages.scrollToPosition(it.itemCount - 1)  } }
+        runOnUiThread { rvMessages.adapter?.let { rvMessages.scrollToPosition(it.itemCount - 1) } }
     }
 
     override fun notifyData() {
-        runOnUiThread { rvMessages.adapter?.apply { notifyDataSetChanged() } }
+        runOnUiThread { rvMessages.adapter?.notifyDataSetChanged() }
     }
 }
