@@ -95,7 +95,7 @@ class GTApplication : MultiDexApplication() {
 
             override fun onInstallConversionFailure(p0: String?) {}
         }
-        AppsFlyerLib.getInstance().init(getString(R.string.af_dev_key), conversionListener, applicationContext)
+        AppsFlyerLib.getInstance().init(getString(R.string.appsflyer_api_key), conversionListener, applicationContext)
         AppsFlyerLib.getInstance().enableUninstallTracking(getString(R.string.sender_id))
         AppsFlyerLib.getInstance().startTracking(this)
     }
