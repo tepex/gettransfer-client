@@ -16,8 +16,8 @@
 
         <CheckBox
             android:id="@+id/cbTransferType"
-            android:layout_width="@dimen/cbTransferType_width"
-            android:layout_height="@dimen/cbTransferType_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/cbTransferType_margin_start"
             android:layout_marginTop="@dimen/cbTransferType_margin_top"
             android:button="@drawable/cb_transfer_type_selector"
