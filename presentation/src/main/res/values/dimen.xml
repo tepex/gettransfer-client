@@ -9,17 +9,20 @@
 	<dimen name="search_form_margin_top">126dp</dimen>
 	<dimen name="search_form_margin_X">16dp</dimen>
 
+	<!-- Main buttons -->
 	<dimen name="activity_main_buttons_size">48dp</dimen>
-	<dimen name="activity_main_buttons_margin_top">14dp</dimen>
-	<dimen name="activity_main_btn_center_margin_bottom">5dp</dimen>
-	<dimen name="activity_main_buttons_margin_start_end">8dp</dimen>
-	<dimen name="activity_main_gradient_layout_height">48dp</dimen>
-	<dimen name="activity_main_events_count_margin_bottom">34dp</dimen>
+	<dimen name="activity_main_buttons_margin_top">10dp</dimen>
+	<dimen name="activity_main_buttons_margin_top_without_button_shadow">14dp</dimen>
+	<dimen name="activity_main_buttons_horizontal_margin">4dp</dimen>
+	<dimen name="activity_main_buttons_horizontal_margin_without_button_shadow">8dp</dimen>
+	<dimen name="activity_main_buttons_padding_for_shadow">4dp</dimen>
+	<dimen name="activity_main_events_count_margin_bottom">38dp</dimen>
+	<dimen name="activity_main_events_count_margin_bottom_without_button_shadow">34dp</dimen>
 	<dimen name="activity_main_events_count_padding_start_end">4dp</dimen>
 
 	<dimen name="margin_for_area_behind_rounded_corners">-8dp</dimen>
-
 	<dimen name="transfer_start_end_sign_marker_text_size">14sp</dimen>
+	<dimen name="activity_main_gradient_layout_height">48dp</dimen>
 	
 	<!--MainPassenger Activity, Fragments-->
 	<dimen name="switchers_vertical_margin">16dp</dimen>
