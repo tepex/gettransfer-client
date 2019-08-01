@@ -136,6 +136,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SupportPresenter.kt",
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/TransferDetailsPresenter.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AboutActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AppsFlyerHandleDeepLinkActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
@@ -160,6 +161,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RateField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RatingFieldView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SingleClickButton.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsCarrierInfoField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/VehiclePhotosView.kt",
