@@ -32,8 +32,10 @@
 
 -keep interface com.google.android.gms.maps.** { *; }
 -keep class com.google.android.gms.maps.** { *; }
+-keep class com.google.android.gms.** { *; }
 
 # The Maps Android API uses serialization.
+-keepnames class * implements java.io.Serializable
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
     static final java.io.ObjectStreamField[] serialPersistentFields;
