@@ -12,7 +12,7 @@ ext {
     moxy_version               = "1.5.5"
     cicerone_version           = "4.0.2"
     circle_indicator_version   = "1.2.2"
-    hockey_version             = "5.1.1"
+    hockey_version             = "5.2.0"
     firebase_core_version      = "16.0.6"
     firebase_iid_version       = "17.0.4"
     firebase_messaging_version = "17.3.4"

@@ -44,6 +44,7 @@
     <string name="reset_onboarding">Reset onboarding</string>
     <string name="reset_rate">Reset play market rate</string>
     <string name="clear_access_token">Clear access token</string>
+    <string name="force_crash">Force crash</string>
 
     <!--Technical strings-->
     <string name="searchTransitionName">SEARCH_FORM</string>

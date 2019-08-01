@@ -5,4 +5,6 @@
     <string name="carrier_mode">https://stgtr.org/en/carrier</string>
 
     <string name="file_provider_authority">com.kg.gettransfer.fileprovider</string>
+
+    <string name="hockeyAppId">1f061f58b7bd42c387ecd8681d30df48</string>
 </resources>

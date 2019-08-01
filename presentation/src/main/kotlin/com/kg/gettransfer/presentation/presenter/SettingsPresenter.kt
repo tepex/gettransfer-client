@@ -7,11 +7,15 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
 
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.DayOfWeekModel
+import com.kg.gettransfer.presentation.model.EndpointModel
+import com.kg.gettransfer.presentation.model.LocaleModel
+import com.kg.gettransfer.presentation.model.map
+
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
 
 import com.kg.gettransfer.presentation.view.CarrierTripsMainView
-
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
@@ -21,6 +25,7 @@ import java.util.Locale
 
 import org.koin.core.get
 
+@Suppress("TooManyFunctions")
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener {
 
@@ -50,11 +55,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     }
 
     private fun initDebugMenu() {
-        if (BuildConfig.FLAVOR == "dev") {
+        if (BuildConfig.FLAVOR == "dev" || systemInteractor.isDebugMenuShowed) {
             showDebugMenu()
-        } else if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
-            if (systemInteractor.isDebugMenuShowed)
-                showDebugMenu()
         }
     }
 
@@ -133,7 +135,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
             utils.asyncAwait { sessionInteractor.coldStart() }
             viewState.blockInterface(false)
             restart = true
-            router.exit() //Without restarting app
+            router.exit() // Without restarting app
         }
     }
 
@@ -191,7 +193,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
             val screen = when (systemInteractor.lastMode) {
                 Screens.CARRIER_MODE   -> Screens.CarrierMode
                 Screens.PASSENGER_MODE -> Screens.MainPassenger()
-                else                   -> throw IllegalArgumentException("Wrong last mode in onBackCommandClick in ${this.javaClass.name}")
+                else                   ->
+                    throw IllegalArgumentException("Wrong last mode in onBackCommandClick in ${this.javaClass.name}")
             }
             router.backTo(screen)
         } else super.onBackCommandClick()
@@ -206,6 +209,10 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     }
 
     override fun restartApp() { viewState.restartApp() }
+
+    fun onForceCrashClick() {
+        error("This is force crash")
+    }
 
     companion object {
         const val CLOSE_FRAGMENT  = 0
