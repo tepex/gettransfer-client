@@ -135,9 +135,11 @@
 }
 
 -keepnames @com.google.android.gms.common.annotation.KeepName class *
--keepclassmembernames clfEnclosingMethodass * {
-    @com.google.android.gms.common.annotation.KeepName *;
+-keep @interface com.google.android.gms.common.annotation.KeepName
+-keepclassmembernames class * {
+  @com.google.android.gms.common.annotation.KeepName *;
 }
+
 
 -keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
     public static final *** NULL;
