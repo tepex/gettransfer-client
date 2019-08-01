@@ -164,13 +164,8 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     fun isHourly() = orderInteractor.hourlyDuration != null
 
-    fun navigateToFindAddress(from: String, to: String, isClickTo: Boolean = false, returnBack: Boolean = false) {
-        router.navigateTo(Screens.FindAddress(
-                from,
-                to,
-                isClickTo,
-                returnBack)
-        )
+    fun navigateToFindAddress(from: String, to: String, isClickTo: Boolean = false, returnToMain: Boolean = false) {
+        router.navigateTo(Screens.FindAddress(from, to, isClickTo, returnToMain))
     }
 
     fun onNextClick(block: (Boolean) -> Unit) {

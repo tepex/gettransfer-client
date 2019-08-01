@@ -91,14 +91,15 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
             search_panel.setSearchFromClickListener {
                 presenter.navigateToFindAddress(
                         searchFrom.text,
-                        searchTo.text)
+                        searchTo.text,
+                        returnToMain = true)
             }
             search_panel.setSearchToClickListener {
                 presenter.navigateToFindAddress(
                         searchFrom.text,
                         searchTo.text,
-                        true,
-                        true)
+                        isClickTo = true,
+                        returnToMain = true)
             }
             search_panel.setHourlyClickListener {  presenter.showHourlyDurationDialog() }
             search_panel.setIvSelectFieldToClickListener{ presenter.switchUsedField() }

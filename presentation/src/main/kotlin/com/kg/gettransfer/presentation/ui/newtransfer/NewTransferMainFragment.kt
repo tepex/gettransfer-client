@@ -94,9 +94,9 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
 
         // Address panel
         request_search_panel.setSearchFromClickListener {
-            presenter.navigateToFindAddress(searchFrom.text, searchTo.text, true)}
+            presenter.navigateToFindAddress(searchFrom.text, searchTo.text)}
         request_search_panel.setSearchToClickListener {
-            presenter.navigateToFindAddress(searchFrom.text, searchTo.text, true, true) }
+            presenter.navigateToFindAddress(searchFrom.text, searchTo.text, true) }
         request_search_panel.setHourlyClickListener { presenter.showHourlyDurationDialog() }
         request_search_panel.setIvSelectFieldFromClickListener {  switchToMap() }
 

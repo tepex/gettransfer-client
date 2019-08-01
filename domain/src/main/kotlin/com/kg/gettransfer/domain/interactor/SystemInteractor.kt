@@ -18,10 +18,6 @@ class SystemInteractor(private val systemRepository: SystemRepository) {
         get() = systemRepository.lastMode
         set(value) { systemRepository.lastMode = value }
 
-    var lastMainScreenMode: String
-        get() = systemRepository.lastMainScreenMode
-        set(value) { systemRepository.lastMainScreenMode = value }
-
     var lastCarrierTripsTypeView: String
         get() = systemRepository.lastCarrierTripsTypeView
         set(value) { systemRepository.lastCarrierTripsTypeView = value }
