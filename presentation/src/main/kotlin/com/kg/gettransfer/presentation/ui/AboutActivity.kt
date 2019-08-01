@@ -63,6 +63,7 @@ class AboutActivity : BaseActivity(), AboutView {
         }
         btnNext.setOnClickListener {
             if (viewpager.currentItem == viewpager.childCount - 1) {
+                btnNext.isEnabled = false
                 presenter.closeAboutActivity()
                 presenter.logExitStep(0)
             } else viewpager.currentItem = viewpager.currentItem + 1

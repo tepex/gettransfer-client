@@ -44,7 +44,7 @@
 		android:layout_gravity="center"
 		android:visibility="gone">
 
-		<ImageView
+		<com.kg.gettransfer.presentation.ui.custom.SingleClickButton
 			android:id="@+id/chatTitleButtonBack"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
