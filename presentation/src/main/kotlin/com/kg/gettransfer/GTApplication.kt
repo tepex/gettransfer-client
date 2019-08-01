@@ -22,6 +22,7 @@ import com.kg.gettransfer.remote.remoteModule
 import com.kg.gettransfer.remote.socketModule
 
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
+import com.kg.gettransfer.utilities.CustomCrashManagerListener
 
 import com.squareup.leakcanary.LeakCanary
 
@@ -31,6 +32,7 @@ import com.yandex.metrica.push.YandexMetricaPush
 
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
+import net.hockeyapp.android.CrashManager
 
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -46,6 +48,8 @@ class GTApplication : MultiDexApplication() {
         if (BuildConfig.DEBUG) {
 //           Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
+        } else {
+            CrashManager.register(this, getString(R.string.hockeyAppId), CustomCrashManagerListener())
         }
         if (BuildConfig.FLAVOR == "dev") {
 //            Timber.plant(FileLoggingTree(applicationContext))
