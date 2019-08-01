@@ -50,7 +50,6 @@ class GTApplication : MultiDexApplication() {
         if (BuildConfig.FLAVOR == "dev") {
 //            Timber.plant(FileLoggingTree(applicationContext))
             System.setProperty("kotlinx.coroutines.debug", "on")
-//            DELETE CrashManager.register(this)
         }
         // Start Koin
         startKoin {
