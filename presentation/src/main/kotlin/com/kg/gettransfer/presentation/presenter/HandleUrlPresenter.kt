@@ -113,7 +113,7 @@ class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
         }
     }
 
-    suspend fun checkInitialization() {
+    private suspend fun checkInitialization() {
         if (!sessionInteractor.isInitialized) {
             fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
         }

@@ -6,7 +6,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.webkit.*
+import android.webkit.WebViewClient
+import android.webkit.WebView
+import android.webkit.WebResourceRequest
+import android.webkit.URLUtil
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
@@ -15,6 +18,21 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.CHOOSE_OFFER_ID
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.EQUAL
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.FROM_PLACE_ID
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.NEW_TRANSFER
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.OPEN_CHAT
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.PASSENGER_CABINET
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.PASSENGER_RATE
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.PROMO_CODE
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.QUESTION
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.RATE
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.RC_WRITE_FILE
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.SLASH
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.TO_PLACE_ID
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.TRANSFERS
+import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.VOUCHER
 import com.kg.gettransfer.utilities.GTDownloadManager.Companion.VOUCHERS_FOLDER
 import kotlinx.android.synthetic.main.activity_handle_url.*
 import org.jetbrains.anko.longToast
@@ -34,26 +52,6 @@ class HandleUrlActivity : BaseActivity(), HandleUrlView, EasyPermissions.Permiss
     fun createHandleUrlPresenter() = HandleUrlPresenter()
 
     private lateinit var url: String
-
-    companion object {
-        const val RC_WRITE_FILE = 111
-        const val PASSENGER_CABINET = "/passenger/cabinet"
-        const val PASSENGER_RATE = "/passenger/rate"
-        const val CARRIER_CABINET = "/carrier/cabinet"
-        const val VOUCHER = "/transfers/voucher"
-        const val CHOOSE_OFFER_ID = "choose_offer_id"
-        const val OPEN_CHAT = "open_chat"
-        const val TRANSFERS = "transfers"
-        const val SLASH = "/"
-        const val EQUAL = "="
-        const val QUESTION = "?"
-        const val RATE = "rate_val"
-
-        const val NEW_TRANSFER = "/transfers/new"
-        const val FROM_PLACE_ID = "from_place_id"
-        const val TO_PLACE_ID = "to_place_id"
-        const val PROMO_CODE = "promo_code"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
