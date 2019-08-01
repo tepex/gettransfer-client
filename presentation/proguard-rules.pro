@@ -30,7 +30,21 @@
 -keep class com.google.android.ims { *; }
 -keep class com.google.android.ims.** { *; }
 
-#-keep interface com.google.android.gms.maps.** { *; }
+-keep interface com.google.android.gms.maps.** { *; }
+-keep class com.google.android.gms.maps.** { *; }
+
+# The Maps Android API uses serialization.
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
+-optimizations !code/simplification/variable
+-optimizations !method/removal/parameter
 
 -dontwarn okio.DeflaterSink
 -dontwarn okio.Okio
