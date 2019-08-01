@@ -1,20 +1,25 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.support.annotation.CallSuper
+
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
+
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.FROM_PLACE_ID
 import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.PROMO_CODE
 import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.TO_PLACE_ID
+
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
-import org.slf4j.Logger
 
+import timber.log.Timber
 
 class AppsFlyerHandleDeepLinkActivity : BaseActivity(), HandleUrlView {
 
@@ -26,8 +31,7 @@ class AppsFlyerHandleDeepLinkActivity : BaseActivity(), HandleUrlView {
     @ProvidePresenter
     fun createHandleUrlPresenter() = HandleUrlPresenter()
 
-    private val log: Logger by inject { parametersOf("GTR-presenter") }
-
+    @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_handle_url)
@@ -37,20 +41,19 @@ class AppsFlyerHandleDeepLinkActivity : BaseActivity(), HandleUrlView {
             /* Returns the attribution data. Note - the same conversion data is returned every time per install */
             override fun onInstallConversionDataLoaded(conversionData: Map<String, String>) {
                 for (attrName in conversionData.keys) {
-                    log.debug(AppsFlyerLib.LOG_TAG, "attribute: " + attrName + " = " + conversionData[attrName])
+                    Timber.d("attribute: $attrName = ${conversionData[attrName]}")
                 }
             }
 
             override fun onInstallConversionFailure(errorMessage: String) {
-                log.debug(AppsFlyerLib.LOG_TAG, "error onInstallConversionFailure : $errorMessage")
+                Timber.d("error onInstallConversionFailure : $errorMessage")
             }
 
             /* Called only when a Deep Link is opened */
             override fun onAppOpenAttribution(conversionData: Map<String, String>) {
-                log.debug("Attribution Data:")
+                Timber.d("Attribution Data:")
                 for (attrName in conversionData.keys) {
-                    log.debug(AppsFlyerLib.LOG_TAG, "attribute: " + attrName + " = " +
-                            conversionData[attrName])
+                    Timber.d("attribute: $attrName = ${conversionData[attrName]}")
                 }
 
                 presenter.createOrder(
@@ -61,7 +64,7 @@ class AppsFlyerHandleDeepLinkActivity : BaseActivity(), HandleUrlView {
             }
 
             override fun onAttributionFailure(errorMessage: String) {
-                log.debug(AppsFlyerLib.LOG_TAG, "error onAttributionFailure : $errorMessage")
+                Timber.d("error onAttributionFailure : $errorMessage")
             }
         })
     }

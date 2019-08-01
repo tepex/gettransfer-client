@@ -44,13 +44,13 @@ class GTApplication : MultiDexApplication() {
         super.onCreate()
         // Display some logs
         if (BuildConfig.DEBUG) {
- //           Timber.plant(Timber.DebugTree())
+//           Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
         }
         if (BuildConfig.FLAVOR == "dev") {
- //           Timber.plant(FileLoggingTree(applicationContext))
+//            Timber.plant(FileLoggingTree(applicationContext))
             System.setProperty("kotlinx.coroutines.debug", "on")
-            //DELETE CrashManager.register(this)
+//            DELETE CrashManager.register(this)
         }
         // Start Koin
         startKoin {
@@ -70,7 +70,7 @@ class GTApplication : MultiDexApplication() {
             ))
         }
 
-        //setUpLeakCanary()
+        // setUpLeakCanary()
         setupFcm()
         setupAppMetrica()
         setupSentry()

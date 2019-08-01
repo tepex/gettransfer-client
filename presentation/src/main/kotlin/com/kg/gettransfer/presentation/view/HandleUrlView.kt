@@ -4,8 +4,8 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface HandleUrlView: BaseView{
-    companion object{
+interface HandleUrlView : BaseView {
+    companion object {
         const val RC_WRITE_FILE = 111
         const val PASSENGER_CABINET = "/passenger/cabinet"
         const val PASSENGER_RATE = "/passenger/rate"
