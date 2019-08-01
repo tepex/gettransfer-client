@@ -48,8 +48,7 @@
 -optimizations !code/simplification/variable
 -optimizations !method/removal/parameter
 
--dontwarn okio.DeflaterSink
--dontwarn okio.Okio
+-dontwarn okio.**
 -dontwarn retrofit2.Platform$Java8
 
 -dontwarn com.google.appengine.api.urlfetch.*
@@ -133,4 +132,17 @@
 
 -keepclassmembers,allowobfuscation class * {
   @com.google.gson.annotations.SerializedName <fields>;
+}
+
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames clfEnclosingMethodass * {
+    @com.google.android.gms.common.annotation.KeepName *;
+}
+
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
 }
