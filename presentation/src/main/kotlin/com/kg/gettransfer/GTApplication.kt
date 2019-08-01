@@ -44,13 +44,13 @@ class GTApplication : MultiDexApplication() {
         super.onCreate()
         // Display some logs
         if (BuildConfig.DEBUG) {
- //           Timber.plant(Timber.DebugTree())
+//           Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
         }
         if (BuildConfig.FLAVOR == "dev") {
- //           Timber.plant(FileLoggingTree(applicationContext))
+//            Timber.plant(FileLoggingTree(applicationContext))
             System.setProperty("kotlinx.coroutines.debug", "on")
-            //DELETE CrashManager.register(this)
+//            DELETE CrashManager.register(this)
         }
         // Start Koin
         startKoin {
@@ -70,7 +70,7 @@ class GTApplication : MultiDexApplication() {
             ))
         }
 
-        //setUpLeakCanary()
+        // setUpLeakCanary()
         setupFcm()
         setupAppMetrica()
         setupSentry()
@@ -95,7 +95,7 @@ class GTApplication : MultiDexApplication() {
 
             override fun onInstallConversionFailure(p0: String?) {}
         }
-        AppsFlyerLib.getInstance().init(getString(R.string.af_dev_key), conversionListener, applicationContext)
+        AppsFlyerLib.getInstance().init(getString(R.string.appsflyer_api_key), conversionListener, applicationContext)
         AppsFlyerLib.getInstance().enableUninstallTracking(getString(R.string.sender_id))
         AppsFlyerLib.getInstance().startTracking(this)
     }
