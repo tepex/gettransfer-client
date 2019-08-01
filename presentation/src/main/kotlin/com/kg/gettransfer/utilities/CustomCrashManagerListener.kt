@@ -2,7 +2,6 @@ package com.kg.gettransfer.utilities
 
 import net.hockeyapp.android.CrashManagerListener
 
-
 class CustomCrashManagerListener : CrashManagerListener() {
-    override fun shouldAutoUploadCrashes(): Boolean = true
+    override fun shouldAutoUploadCrashes() = true
 }
