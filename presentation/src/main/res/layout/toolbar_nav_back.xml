@@ -14,12 +14,11 @@
 		android:minHeight="?android:attr/actionBarSize"
 		tools:ignore="Overdraw">
 
-		<ImageView
+		<com.kg.gettransfer.presentation.ui.custom.SingleClickButton
 			android:id="@+id/ivBack"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			app:srcCompat="@drawable/ic_back"
-			android:clickable="true"
 			style="@style/BorderlessBackground" />
 
 		<TextView
