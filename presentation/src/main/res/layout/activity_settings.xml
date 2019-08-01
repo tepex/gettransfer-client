@@ -138,6 +138,12 @@
                     android:layout_height="wrap_content"
                     app:settingsTitlePicker="@string/clear_access_token" />
 
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                    android:id="@+id/forceCrash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:settingsTitlePicker="@string/force_crash" />
+
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

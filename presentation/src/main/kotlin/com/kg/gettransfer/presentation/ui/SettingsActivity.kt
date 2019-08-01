@@ -134,6 +134,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
         settingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
         settingsResetRate.setOnClickListener { presenter.onResetRateClicked() }
         settingsClearAccessToken.setOnClickListener { presenter.onClearAccessTokenClicked() }
+        forceCrash.setOnClickListener { presenter.onForceCrashClick() }
     }
 
     override fun hideDebugMenu() {

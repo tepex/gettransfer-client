@@ -68,7 +68,6 @@ import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import net.hockeyapp.android.CrashManager
 
 import org.koin.android.ext.android.inject
 
@@ -235,7 +234,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(baseNavigator)
-        CrashManager.register(this)
     }
 
     @CallSuper
