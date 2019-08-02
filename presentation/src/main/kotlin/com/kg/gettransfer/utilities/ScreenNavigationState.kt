@@ -14,8 +14,10 @@ sealed class ScreenNavigationState {
 
 class NewTransferState : ScreenNavigationState() {
 
-    val isSwitchToMain = currentState == SWITCH_TO_MAIN
-    val isChoosePointOnMap = currentState == CHOOSE_POINT_ON_MAP
+    val isSwitchToMain: Boolean
+        get() = currentState == SWITCH_TO_MAIN
+    val isChoosePointOnMap: Boolean
+        get() = currentState == CHOOSE_POINT_ON_MAP
 
     fun switchToMain() {
         currentState = SWITCH_TO_MAIN

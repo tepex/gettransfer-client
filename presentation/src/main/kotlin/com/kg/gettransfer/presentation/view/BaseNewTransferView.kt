@@ -18,5 +18,5 @@ interface BaseNewTransferView : MvpView {
     fun setHourlyDuration(duration: Int?)
     fun updateTripView(isHourly: Boolean)
     fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit)
-    fun showHourlyDurationDialog(durationIndex: Int?)
+    fun showHourlyDurationDialog(durationValue: Int?)
 }

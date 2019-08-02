@@ -1,7 +1,9 @@
 package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
+import android.animation.Animator
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 
@@ -38,7 +40,6 @@ import com.kg.gettransfer.presentation.view.NewTransferMapView
 import kotlinx.android.synthetic.main.fragment_new_transfer_map.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 import pub.devrel.easypermissions.EasyPermissions
@@ -78,59 +79,64 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         markerTranslationY = mMarker.translationY
         initMapView(savedInstanceState)
 
-        utils.launch {
-            if (!isPermissionRequested) {
-                isPermissionRequested = true
-                checkPermission()
-            }
+        isFirst = savedInstanceState == null
+
 //        viewNetworkNotAvailable = textNetworkNotAvailable
 
-            isFirst = savedInstanceState == null
-
-            switch_mode_.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
-            search_panel.setSearchFromClickListener {
-                presenter.navigateToFindAddress(
-                        searchFrom.text,
-                        searchTo.text,
-                        returnToMain = true)
-            }
-            search_panel.setSearchToClickListener {
-                presenter.navigateToFindAddress(
-                        searchFrom.text,
-                        searchTo.text,
-                        isClickTo = true,
-                        returnToMain = true)
-            }
-            search_panel.setHourlyClickListener {  presenter.showHourlyDurationDialog() }
-            search_panel.setIvSelectFieldToClickListener{ presenter.switchUsedField() }
-            btnNext.setThrottledClickListener { performNextClick() }
-            btnBack.setOnClickListener {
-                switchToMain()
-            }
-            btnMyLocation.setOnClickListener {
-                checkPermission()
-                presenter.updateCurrentLocation()
-            }
-
-            enableBtnNext()
-
-            // back return to main
-            view.isFocusableInTouchMode = true
-            view.requestFocus()
-            view.setOnKeyListener(View.OnKeyListener { view, keyCode, keyEvent ->
-                if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_DOWN) {
-                    switchToMain()
-                    return@OnKeyListener true
-                }
-                return@OnKeyListener false
-            })
+        switch_mode_.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
+        search_panel.setSearchFromClickListener {
+            presenter.navigateToFindAddress(
+                    searchFrom.text,
+                    searchTo.text,
+                    returnToMain = true)
         }
-    }
+        search_panel.setSearchToClickListener {
+            presenter.navigateToFindAddress(
+                    searchFrom.text,
+                    searchTo.text,
+                    isClickTo = true,
+                    returnToMain = true)
+        }
+        search_panel.setHourlyClickListener {  presenter.showHourlyDurationDialog() }
+        search_panel.setIvSelectFieldToClickListener{ presenter.switchUsedField() }
+        btnNext.setThrottledClickListener { performNextClick() }
+        btnBack.setOnClickListener {
+            switchToMain()
+        }
+        btnMyLocation.setOnClickListener {
+            checkPermission()
+            presenter.updateCurrentLocation()
+        }
 
+        enableBtnNext()
+
+        // back return to main
+        view.isFocusableInTouchMode = true
+        view.requestFocus()
+        view.setOnKeyListener(View.OnKeyListener { _, keyCode, keyEvent ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_DOWN) {
+                switchToMain()
+                return@OnKeyListener true
+            }
+            return@OnKeyListener false
+        })
+    }
 
     override fun setUserVisibleHint(visible: Boolean) {
         super.setUserVisibleHint(visible)
         presenter.updateView(visible && isResumed)
+    }
+
+    /**
+     * Request permission after fragment started
+     */
+    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
+        return AnimationUtils.onCreateAnimation(requireContext(), enter) {
+            if (!isPermissionRequested) {
+                isPermissionRequested = true
+                checkPermission()
+            }
+        }
     }
 
     @CallSuper
@@ -142,7 +148,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
     }
 
-    override fun onAttach(activity: Activity?) {
+    override fun onAttach(activity: Context?) {
         super.onAttach(activity)
         try {
             listener = parentFragment as NewTransferSwitchListener
@@ -162,9 +168,9 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         }
     }
 
-    override fun showHourlyDurationDialog(durationIndex: Int?) {
+    override fun showHourlyDurationDialog(durationValue: Int?) {
         HourlyDurationDialogFragment
-                .newInstance(durationIndex, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
+                .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
                     override fun onDone(durationValue: Int) {
                         presenter.updateDuration(durationValue)
                     }

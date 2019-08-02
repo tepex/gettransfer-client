@@ -1,8 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.animation.Animator
-import android.animation.AnimatorInflater
-import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.os.Bundle
 
@@ -76,21 +74,14 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
         rvPopularCurrencies.addItemDecoration(itemDecorator)
     }
 
-    // TODO move to base animation fragment
+    /**
+     * Update UI after finished start fragment
+     */
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
-        val animatorId: Int = if (enter) android.R.animator.fade_in else android.R.animator.fade_out
-        val anim = AnimatorInflater.loadAnimator(activity, animatorId)
-        anim.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
-                super.onAnimationEnd(animation)
-                if (enter) {
-                    adapterAll.notifyDataSetChanged()
-                    adapterPopular.notifyDataSetChanged()
-                }
-            }
-        })
-
-        return anim
+        return AnimationUtils.onCreateAnimation(requireContext(), enter) {
+            adapterAll.notifyDataSetChanged()
+            adapterPopular.notifyDataSetChanged()
+        }
     }
 
     override fun setCurrencies(all: List<CurrencyModel>, selected: CurrencyModel) {

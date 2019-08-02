@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v4.content.ContextCompat
@@ -74,7 +75,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         if (visible && isResumed) refreshUi()
     }
 
-    override fun onAttach(activity: Activity?) {
+    override fun onAttach(activity: Context?) {
         super.onAttach(activity)
         try {
             listener = parentFragment as NewTransferSwitchListener
@@ -125,9 +126,9 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         request_search_panel.searchTo.text = getString(R.string.LNG_LOADING)
     }
 
-    override fun showHourlyDurationDialog(hourlyDuration: Int?) {
+    override fun showHourlyDurationDialog(durationValue: Int?) {
         HourlyDurationDialogFragment
-                .newInstance(hourlyDuration, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
+                .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
                     override fun onDone(durationValue: Int) {
                         presenter.updateDuration(durationValue)
                     }

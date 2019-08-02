@@ -9,7 +9,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.view.NewTransferMapView
-import com.kg.gettransfer.presentation.view.Screens
 
 import org.koin.core.KoinComponent
 
@@ -25,15 +24,6 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
     var isMarkerAnimating = true
 
     private var idleAndMoveCamera = true
-
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        systemInteractor.lastMode = Screens.PASSENGER_MODE
-        systemInteractor.selectedField = FIELD_FROM
-
-        // Создать листенер для обновления текущей локации
-        // https://developer.android.com/training/location/receive-location-updates
-    }
 
     override fun updateView(isVisibleView: Boolean) {
         resetState()
@@ -105,7 +95,6 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
             if (lastPoint == null) return
 
             lastAddressPoint = lastPoint!!
-            //val latLonPair: Pair<Point, Point> = getLatLonPair(latLngBounds)
 
             utils.launchSuspend {
                 utils.asyncAwait {
