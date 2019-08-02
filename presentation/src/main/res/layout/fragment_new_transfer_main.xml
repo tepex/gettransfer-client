@@ -15,7 +15,7 @@
             android:layout_width="@dimen/activity_main_buttons_size"
             android:layout_height="@dimen/activity_main_buttons_size"
             android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
-            android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
+            android:layout_marginStart="@dimen/activity_main_buttons_horizontal_margin_without_button_shadow"
             app:srcCompat="@drawable/ic_menu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         app:switcher_title="@string/LNG_MAP"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
+        android:layout_marginEnd="@dimen/activity_main_buttons_horizontal_margin_without_button_shadow"
         android:layout_marginTop="@dimen/activity_main_buttons_margin_top"/>
 
     <com.kg.gettransfer.presentation.ui.custom.SwitcherView
@@ -55,7 +55,7 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/switcher_map_"
         android:layout_marginTop="@dimen/switchers_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
+        android:layout_marginEnd="@dimen/activity_main_buttons_horizontal_margin_without_button_shadow"
         app:switcher_title="@string/LNG_PER_HOUR"/>
 
     <com.kg.gettransfer.presentation.ui.custom.SearchFormMainView
