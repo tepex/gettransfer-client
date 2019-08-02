@@ -60,10 +60,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var isMapInitialized = false
 
     private var isTimeSetByUser = false
-        set(value) {
-            field = value
-            if (value) viewState.enableReturnTimeChoose()
-        }
 
     fun init() {
         initMapAndPrices()
@@ -121,7 +117,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                                     dateTime
                             )
                     )}.model.prices
-            setTransportTypePrices(prices ?: emptyMap())
+            setTransportTypePrices(prices)
             viewState.blockInterface(false)
         }
     }
@@ -203,10 +199,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setRoute() {
-        routeModel?.let {
-            polyline = Utils.getPolyline(it)
-            track = polyline!!.track
-            viewState.setRoute(polyline!!, it, false)
+        utils.launchSuspend {
+            routeModel?.let {
+                utils.compute {
+                    polyline = Utils.getPolyline(it)
+                    track = polyline!!.track
+                }
+                viewState.setRoute(polyline!!, it, false)
+            }
         }
     }
 
@@ -269,22 +269,29 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    private fun setTransportTypePrices(
+    private suspend fun setTransportTypePrices(
         prices: Map<TransportType.ID, TransportTypePrice>,
         selectTransport: Boolean = false
     ) {
-        val pr = prices.mapValues { it.value.map() }
-        val newTransportTypes = systemInteractor.transportTypes.map { it.map(pr) }
-        transportTypes?.let {
-            newTransportTypes.forEach { type ->
-                type.checked = it
-                    .find { old -> old.id == type.id }
-                    ?.checked
-                    ?: false
+        utils.compute {
+            val pr = prices.mapValues { it.value.map() }
+            val newTransportTypes = systemInteractor.transportTypes.map { it.map(pr) }
+            transportTypes?.let {
+                newTransportTypes.forEach { type ->
+                    type.checked = it
+                            .find { old -> old.id == type.id }
+                            ?.checked
+                            ?: false
+                }
             }
+            transportTypes = newTransportTypes
         }
-        transportTypes = newTransportTypes
-        if (selectTransport) selectTransport()
+        if (selectTransport)
+            if (orderInteractor.selectedTransports != null) {
+                setSelectedTransportTypes()
+            } else {
+                setFavoriteTransportTypes()
+            }
         viewState.setTransportTypes(transportTypes!!)
     }
 
@@ -422,7 +429,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             if (result.error == null) {
                 val logResult = utils.asyncAwait { accountManager.putAccount(connectSocket = true) }
                 if (logResult.error == null) {
-                    handleSuccess()
+                    utils.compute {  handleSuccess() }
                     router.replaceScreen(Screens.Offers(result.model.id))
                 } else if (logResult.error!!.isNotLoggedIn() || logResult.error!!.isAccountExistError()) {
                     onAccountExists(result.model.id)
@@ -499,14 +506,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun onCenterRouteClick() {
         track?.let { viewState.centerRoute(it) }
         analytics.logSingleEvent(Analytics.SHOW_ROUTE_CLICKED)
-    }
-
-    private fun selectTransport() {
-        if (orderInteractor.selectedTransports != null) {
-            setSelectedTransportTypes()
-        } else {
-            setFavoriteTransportTypes()
-        }
     }
 
     private fun setFavoriteTransportTypes() =

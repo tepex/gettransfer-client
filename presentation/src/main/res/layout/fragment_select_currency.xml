@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/margin4"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="@dimen/fragment_currencies_padding_start_end"
     android:paddingStart="@dimen/fragment_currencies_padding_start_end"

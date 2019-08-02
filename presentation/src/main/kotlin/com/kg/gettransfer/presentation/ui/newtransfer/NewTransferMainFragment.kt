@@ -64,7 +64,6 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         super.onViewCreated(view, savedInstanceState)
 
         initClickListeners()
-        initDateTimeFields()
 
         enableBtnNext()
     }
@@ -150,8 +149,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         }
     }
 
-
-    private fun initDateTimeFields() =
+    override fun initDateTimeFields() =
             with(dateDelegate) {
                 if (startOrderedTime == null) {
                     order_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)

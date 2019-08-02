@@ -24,6 +24,7 @@ import com.kg.gettransfer.presentation.view.SelectCurrencyView
 import kotlinx.android.synthetic.main.fragment_select_currency.*
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v4.content.ContextCompat
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import timber.log.Timber
 
 
@@ -78,7 +79,7 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
      * Update UI after finished start fragment
      */
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
-        return AnimationUtils.onCreateAnimation(requireContext(), enter) {
+        return FragmentUtils.onCreateAnimation(requireContext(), enter) {
             adapterAll.notifyDataSetChanged()
             adapterPopular.notifyDataSetChanged()
         }

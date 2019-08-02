@@ -72,25 +72,25 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/expended_sheet_order_height">
 
-        <include
+        <com.kg.gettransfer.presentation.ui.custom.BottomSheetCreateOrderNewView
             android:id="@+id/sheetOrder"
-            layout="@layout/bottom_sheet_create_order_new"/>
+            app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+            android:layout_marginTop="@dimen/margin8"
+            app:behavior_hideable="false"
+            app:behavior_peekHeight="@dimen/create_order_behaviour_peek_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/secondary_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/expended_sheet_order_height"
+        app:behavior_hideable="true"
+        app:behavior_skipCollapsed="true"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
         android:layout_gravity="bottom">
-
-        <FrameLayout
-            android:id="@+id/secondary_bottom_sheet"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            app:behavior_hideable="true"
-            app:behavior_skipCollapsed="true"
-            app:layout_behavior="android.support.design.widget.BottomSheetBehavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 

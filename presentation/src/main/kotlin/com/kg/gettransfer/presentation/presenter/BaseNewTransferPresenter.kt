@@ -53,7 +53,7 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
         this.isVisible = isVisibleView
     }
 
-    fun fillViewFromState() {
+    open fun fillViewFromState() {
         if (!orderInteractor.isAddressesValid())
             changeUsedField(NewTransferMainPresenter.FIELD_FROM)
         else

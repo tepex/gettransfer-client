@@ -113,8 +113,6 @@
 
             <RelativeLayout
                 android:id="@+id/rl_returnWayTime"
-                android:layout_marginEnd="@dimen/margin16"
-                android:layout_marginStart="@dimen/margin16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

@@ -38,7 +38,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 
 import android.widget.PopupWindow
 
@@ -146,7 +145,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected val onTouchListener = View.OnTouchListener { view, event ->
         if (event.action == MotionEvent.ACTION_MOVE) {
-            hideKeyboardWithoutClearFocus(this, view)
+            view.hideKeyboard()
+            return@OnTouchListener false
         } else {
             return@OnTouchListener false
         }
@@ -310,12 +310,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         return true
     }
 
-    fun hideKeyboardWithoutClearFocus(context: Context, view: View): Boolean {
-        val imm = context.getSystemService(INPUT_METHOD_SERVICE)
-        if (imm is InputMethodManager) imm.hideSoftInputFromWindow(view.windowToken, 0)
-        return false
-    }
-
     // здесь лучше ничего не трогать
     private fun countDifference() = rootView?.let { rv ->
         val height = rootViewHeight ?: rv.rootView.height
@@ -470,6 +464,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         return if (value is Boolean) value else false
     }
 
+    @Deprecated(message = "we are going to replace with FragmentUtils.replaceFragment")
     protected fun replaceFragment(fragment: Fragment, @IdRes id: Int, tag: String? = null) =
         supportFragmentManager
             .beginTransaction()

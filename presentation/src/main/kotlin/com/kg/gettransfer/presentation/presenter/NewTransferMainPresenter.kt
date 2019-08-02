@@ -54,6 +54,11 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         }
     }
 
+    override fun fillViewFromState() {
+        super.fillViewFromState()
+        viewState.initDateTimeFields()
+    }
+
     override fun detachView(view: NewTransferMainView?) {
         super.detachView(view)
         countEventsInteractor.removeCounterListener(this)

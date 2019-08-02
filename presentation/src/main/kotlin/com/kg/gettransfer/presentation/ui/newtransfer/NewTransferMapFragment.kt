@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
 import android.animation.Animator
-import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -34,6 +33,7 @@ import com.kg.gettransfer.presentation.ui.*
 import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
 
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 
 import com.kg.gettransfer.presentation.view.NewTransferMapView
 
@@ -131,7 +131,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
      * Request permission after fragment started
      */
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
-        return AnimationUtils.onCreateAnimation(requireContext(), enter) {
+        return FragmentUtils.onCreateAnimation(requireContext(), enter) {
             if (!isPermissionRequested) {
                 isPermissionRequested = true
                 checkPermission()

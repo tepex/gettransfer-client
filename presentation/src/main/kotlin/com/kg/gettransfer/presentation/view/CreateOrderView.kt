@@ -19,8 +19,6 @@ import com.kg.gettransfer.utilities.Analytics
 interface CreateOrderView : BaseView, RouteView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setTripType(withReturnWay: Boolean)
-//    TODO not used fun setFairPrice(price: String?, time: String?)
-    //fun setCurrencies(currencies: List<CurrencyModel>)
     fun setUser(user: UserModel, isLoggedIn: Boolean)
     fun setEditableFields(offeredPrice: Double?, flightNumber: String?, flightNumberReturn: String?, promo: String)
     fun setPassengers(count: Int)
@@ -28,7 +26,6 @@ interface CreateOrderView : BaseView, RouteView {
     fun setCurrency(currency: String, hideCurrencies: Boolean)
     fun setDateTimeTransfer(dateTimeString: String, startField: Boolean)
     fun setHintForDateTimeTransfer(withReturnWay: Boolean)
-    fun enableReturnTimeChoose()
     fun setPromoResult(discountInfo: String?)
     fun resetPromoView()
     fun showEmptyFieldError(@StringRes stringId: Int)

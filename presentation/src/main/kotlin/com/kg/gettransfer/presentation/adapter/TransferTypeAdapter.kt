@@ -4,8 +4,6 @@ import android.content.Context
 
 import android.support.v7.widget.RecyclerView
 
-import android.util.TypedValue
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,11 +21,17 @@ import kotlinx.android.synthetic.main.view_transfer_type.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*
 
 class TransferTypeAdapter(
-    private var list: List<TransportTypeModel>,
     private val listener: ChangeListener
 ) : RecyclerView.Adapter<TransferTypeAdapter.ViewHolder>() {
 
+    var list: ArrayList<TransportTypeModel> = arrayListOf()
+
     override fun getItemCount() = list.size
+
+    fun update(list: List<TransportTypeModel>){
+        this.list.clear()
+        this.list.addAll(list)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_type, parent, false))
