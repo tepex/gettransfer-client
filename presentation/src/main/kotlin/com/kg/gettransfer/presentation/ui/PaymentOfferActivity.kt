@@ -54,6 +54,7 @@ import com.kg.gettransfer.presentation.model.getNameRes
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
+import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.view.CreateOrderView
 
 import com.kg.gettransfer.presentation.view.PaymentOfferView
@@ -302,9 +303,9 @@ class PaymentOfferActivity : BaseActivity(),
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = transportTypeId.getImageRes())
         OfferItemBindDelegate.bindRating(layoutRating, Ratings.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(
-            Either.Multi(languages_container_tiny),
+            Either.Single(languages_container_tiny),
             listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
-            rowNumber = 6
+            layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW
         )
     }
 
@@ -329,7 +330,10 @@ class PaymentOfferActivity : BaseActivity(),
             tvClass.text = getString(transportType.nameId)
         }
         with(offer.carrier) {
-            OfferItemBindDelegate.bindLanguages(Either.Multi(languages_container_tiny), languages, 6)
+            OfferItemBindDelegate.bindLanguages(
+                Either.Single(languages_container_tiny),
+                languages,
+                layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW)
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
     }

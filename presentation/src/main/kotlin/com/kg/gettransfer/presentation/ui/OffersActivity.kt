@@ -30,6 +30,8 @@ import com.kg.gettransfer.extensions.toHalfEvenRoundedFloat
 import com.kg.gettransfer.domain.model.Money
 
 import com.kg.gettransfer.presentation.adapter.OffersAdapter
+import com.kg.gettransfer.presentation.delegate.Either
+import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.OfferItemModel
@@ -46,6 +48,7 @@ import com.kg.gettransfer.presentation.presenter.OffersPresenter
 
 import com.kg.gettransfer.presentation.ui.custom.RatingFieldView
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
+import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 
 import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
@@ -221,7 +224,11 @@ class OffersActivity : BaseActivity(), OffersView {
         when (offer) {
             is OfferModel -> {
                 setVehicleNameAndColor(vehicle = offer.vehicle)
-                Utils.initCarrierLanguages(languages_container_bs, offer.carrier.languages)
+                OfferItemBindDelegate.bindLanguages(
+                    Either.Single(languages_container_bs),
+                    offer.carrier.languages,
+                    layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_DETAILS
+                )
                 setCapacity(offer.vehicle.transportType)
                 with(offer_conditions_bs.vehicle_conveniences) {
                     imgFreeWater.isVisible = offer.refreshments
@@ -240,7 +247,11 @@ class OffersActivity : BaseActivity(), OffersView {
             }
             is BookNowOfferModel -> {
                 setVehicleNameAndColor(nameById = getString(offer.transportType.id.getModelsRes()))
-                Utils.initCarrierLanguages(languages_container_bs, listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
+                OfferItemBindDelegate.bindLanguages(
+                    Either.Single(languages_container_bs),
+                    listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
+                    layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_DETAILS
+                )
                 setCapacity(offer.transportType)
                 offer_conditions_bs.vehicle_conveniences.isVisible = false
                 setWithoutDiscount(offer.withoutDiscount)

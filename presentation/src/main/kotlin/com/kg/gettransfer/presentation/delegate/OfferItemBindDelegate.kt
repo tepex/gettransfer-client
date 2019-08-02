@@ -120,7 +120,8 @@ object OfferItemBindDelegate {
 
         with(offer.carrier) {
             bindRating(view_rating_tiny, ratings, approved)
-            bindLanguages(Either.Multi(languages_container_tiny), languages)
+            bindLanguages(Either.Single(languages_container_tiny), languages,
+                layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_ITEM)
         }
 
         with(offer.price) {
@@ -141,9 +142,9 @@ object OfferItemBindDelegate {
             Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = id.getImageRes())
         }
         bindRating(view_rating_tiny, Ratings.BOOK_NOW_RATING, true)
-        bindLanguages(Either.Multi(languages_container_tiny), listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT))
-        offer.withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
-        tv_price_final.text = offer.base.preferred ?: offer.base.def
+        bindLanguages(Either.Single(languages_container_tiny), listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
+            layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_ITEM)
+
     }
 
     private fun setStrikePriceText(textView: TextView, price: String) = with(textView) {
@@ -180,19 +181,12 @@ object OfferItemBindDelegate {
     internal fun bindLanguages(
         container: Either,
         languages: List<LocaleModel>,
-        rowNumber: Int = LanguageDrawer.ITEM_COLUMNS
+        colNumber: Int = LanguageDrawer.DEFAULT_ITEM_COLUMNS,
+        layoutParamsRes: LanguageDrawer.LanguageLayoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_ITEM
     ) {
         when (container) {
-            is Either.Single -> LanguageDrawer.drawSingleLine(container.layout, languages)
-            is Either.Multi  -> LanguageDrawer.drawMultipleLine(container.layout, languages, rowNumber)
-        }
-    }
-
-    private fun bindPrice(viewWithPrice: View, base: Money, withoutDiscount: Money? = null) = with(viewWithPrice) {
-        tv_current_price.text = base.preferred ?: base.def
-        withoutDiscount?.let { price ->
-            tv_old_price.strikeText = price.preferred ?: price.def
-            tv_old_price.isVisible = true
+            is Either.Single -> LanguageDrawer.drawSingleLine(container.layout, languages, layoutParamsRes)
+            is Either.Multi  -> LanguageDrawer.drawMultipleLine(container.layout, languages, colNumber, layoutParamsRes)
         }
     }
 }

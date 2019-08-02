@@ -13,12 +13,12 @@ object ScrollGalleryInflater {
             ImageView(context),
             index,
             LayoutHelper.createLinearParams(
+                size.first,
+                size.second,
                 Utils.dpToPxInt(context, if (index == 0) firstItemMarginStart else MARGIN_START),
                 MARGIN_TOP,
                 MARGIN_END,
-                MARGIN_BOTTOM,
-                width = size.first,
-                height = size.second
+                MARGIN_BOTTOM
             )
         )
     }
