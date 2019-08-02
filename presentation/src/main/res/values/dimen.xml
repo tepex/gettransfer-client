@@ -733,7 +733,7 @@
 	<dimen name="offer_tiny_languages_margin_bottom">8dp</dimen>
 	<dimen name="offer_tiny_co2_margin_bottom">6dp</dimen>
 	<dimen name="offer_tiny_car_class_margin_top">8dp</dimen>
-	<dimen name="offer_tiny_capacity_margin_start">8p</dimen>
+	<dimen name="offer_tiny_capacity_margin_start">8dp</dimen>
 
 	<dimen name="payment_dialog_corner_radius">16dp</dimen>
 	<dimen name="payment_ivGtrBonus_layout_marginTop">16dp</dimen>
