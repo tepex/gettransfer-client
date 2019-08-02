@@ -23,8 +23,6 @@ class SelectCurrencyPresenter : MvpPresenter<SelectCurrencyView>(), CoroutineSco
     private val job = Job()
     override val coroutineContext: CoroutineContext = job + Dispatchers.IO
 
-    private var currencyChangedListener: CurrencyChangedListener? = null
-
     override fun attachView(view: SelectCurrencyView?) {
         super.attachView(view)
         // This launch uses the coroutineContext defined
@@ -42,24 +40,13 @@ class SelectCurrencyPresenter : MvpPresenter<SelectCurrencyView>(), CoroutineSco
         }
     }
 
-    fun addCurrencyChangedListener(currencyChangedListener: CurrencyChangedListener) {
-        this.currencyChangedListener = currencyChangedListener
-    }
-
-    fun removeCurrencyChangedListener() {
-        currencyChangedListener = null
-    }
-
     fun changeCurrency(selected: CurrencyModel) {
         sessionInteractor.currency = selected.delegate
-        // TODO BasePresenter.saveGeneralSettings()
-        currencyChangedListener?.currencyChanged(selected)
+        viewState.sendEvent(selected)
     }
 
     override fun onDestroy() {
         job.cancel()
         super.onDestroy()
     }
-
-
 }

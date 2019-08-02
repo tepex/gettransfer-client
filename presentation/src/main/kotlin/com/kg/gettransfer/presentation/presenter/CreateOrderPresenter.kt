@@ -37,7 +37,7 @@ import com.kg.gettransfer.utilities.NewTransferState
 import org.koin.core.inject
 
 @InjectViewState
-class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedListener {
+class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val orderInteractor: OrderInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
     private val dateDelegate: DateTimeDelegate by inject()
@@ -309,9 +309,19 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>(), CurrencyChangedLi
         initPrices(false)
     }
 
-    override fun currencyChanged(currency: CurrencyModel) {
+    fun currencyChanged(currency: CurrencyModel) {
         setCurrency(currency, true)
+        saveChangedSettings()
         getNewPrices()
+    }
+
+    private fun saveChangedSettings() {
+        utils.launchSuspend {
+            viewState.blockInterface(true)
+            val result = utils.asyncAwait { accountManager.saveSettings() }
+            result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
+            viewState.blockInterface(true)
+        }
     }
 
     private fun setCurrency(currency: CurrencyModel, hideCurrencies: Boolean = false) {

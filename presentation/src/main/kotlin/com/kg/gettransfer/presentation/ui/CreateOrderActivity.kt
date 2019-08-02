@@ -35,11 +35,9 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
-import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransportTypeModel
-import com.kg.gettransfer.presentation.model.UserModel
+import com.kg.gettransfer.presentation.model.*
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
+import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.presentation.view.CreateOrderView
@@ -60,7 +58,8 @@ import org.koin.android.ext.android.inject
 class CreateOrderActivity : BaseGoogleMapActivity(),
     CreateOrderView,
     DateTimeScreen,
-    CommentDialogFragment.OnCommentListener {
+    CommentDialogFragment.OnCommentListener,
+        CurrencyChangedListener {
 
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
@@ -216,6 +215,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
     protected override fun initMap() {
         super.initMap()
         presenter.mapInitialized()
+    }
+
+    override fun currencyChanged(currency: CurrencyModel) {
+        presenter.currencyChanged(currency)
     }
 
     private fun showDatePickerDialog(field: Boolean) {

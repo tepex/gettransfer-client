@@ -3,12 +3,12 @@ package com.kg.gettransfer.presentation.ui
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.animation.AnimatorListenerAdapter
+import android.app.Activity
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.RecyclerView
 
 import android.view.View
 
@@ -26,9 +26,9 @@ import com.kg.gettransfer.presentation.view.SelectCurrencyView
 import kotlinx.android.synthetic.main.fragment_select_currency.*
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v4.content.ContextCompat
+import timber.log.Timber
 
 
-@Suppress("TooManyFunctions")
 class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
     private lateinit var adapterPopular: CurrenciesListAdapter
@@ -41,23 +41,28 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
     @ProvidePresenter
     fun createSelectCurrencyPresenter() = SelectCurrencyPresenter()
 
+    private var listener: CurrencyChangedListener? = null
+
+    override fun onAttach(activity: Activity?) {
+        super.onAttach(activity)
+        try {
+            listener = activity as CurrencyChangedListener
+        } catch (e: ClassCastException) {
+            Timber.e("%s must implement CurrencyChangedListener", activity.toString())
+        }
+    }
+
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
-        val parentActivity = activity
-        if (parentActivity is BaseActivity) {
-            val parentPresenter = parentActivity.getPresenter()
-            if (parentPresenter is CurrencyChangedListener) presenter.addCurrencyChangedListener(parentPresenter)
-        }
 
         val itemDecorator = DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
         ContextCompat.getDrawable(requireContext(), R.drawable.sh_divider_light_gray)?.let { itemDecorator.setDrawable(it) }
 
         adapterAll = CurrenciesListAdapter { currency ->
             presenter.changeCurrency(currency)
-            changeSelectedCurrency(currency)
         }
         rvAllCurrencies.adapter = adapterAll
         rvAllCurrencies.itemAnimator = DefaultItemAnimator()
@@ -65,19 +70,10 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
         adapterPopular = CurrenciesListAdapter { currency ->
             presenter.changeCurrency(currency)
-            changeSelectedCurrency(currency)
         }
         rvPopularCurrencies.adapter = adapterPopular
         rvPopularCurrencies.itemAnimator = DefaultItemAnimator()
         rvPopularCurrencies.addItemDecoration(itemDecorator)
-    }
-
-    @CallSuper
-    override fun onDestroyView() {
-        presenter.removeCurrencyChangedListener()
-        rvAllCurrencies.adapter = null
-        rvPopularCurrencies.adapter = null
-        super.onDestroyView()
     }
 
     // TODO move to base animation fragment
@@ -107,16 +103,16 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
         adapterPopular.update(popular)
     }
 
-    private fun changeSelectedCurrency(newSelectedCurrency: CurrencyModel) {
-        setNewSelectedCurrency(rvAllCurrencies, newSelectedCurrency)
-        setNewSelectedCurrency(rvPopularCurrencies, newSelectedCurrency)
+    override fun sendEvent(currency: CurrencyModel) {
+        listener?.currencyChanged(currency)
     }
 
-    private fun setNewSelectedCurrency(recyclerView: RecyclerView, newSelectedCurrency: CurrencyModel) {
-        val adapter = recyclerView.adapter
-        if (adapter is CurrenciesListAdapter) {
-            adapter.setNewSelectedCurrency(newSelectedCurrency)
-            adapter.notifyDataSetChanged()
-        }
+    @CallSuper
+    override fun onDestroyView() {
+        listener = null
+        rvAllCurrencies.adapter = null
+        rvPopularCurrencies.adapter = null
+        super.onDestroyView()
     }
+
 }

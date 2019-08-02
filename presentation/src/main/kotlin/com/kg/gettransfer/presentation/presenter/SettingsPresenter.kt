@@ -103,7 +103,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         val localeModel = locales.get(selected)
         sessionInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name, localeModel.locale)
-        saveGeneralSettings(true)
+        saveGeneralSettings()
         analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LANGUAGE_PARAM, localeModel.name)
 
         Locale.setDefault(sessionInteractor.locale)
@@ -112,6 +112,17 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
 
         return sessionInteractor.locale
     }
+
+    private fun saveGeneralSettings() =
+        utils.launchSuspend() {
+            viewState.blockInterface(true)
+            val result = utils.asyncAwait { accountManager.saveSettings() }
+            result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
+            if (result.error == null) {
+                viewState.restartApp()
+            }
+            viewState.blockInterface(false)
+        }
 
     fun changeFirstDayOfWeek(selected: Int) {
         with(daysOfWeek[selected]) {
@@ -160,6 +171,13 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         saveAccount()
     }
 
+    private fun saveAccount() = utils.launchSuspend {
+        viewState.blockInterface(true)
+        val result = utils.asyncAwait { accountManager.putAccount(isTempAccount = false) }
+        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
+        viewState.blockInterface(false)
+    }
+
     fun onResetOnboardingClicked() { systemInteractor.isOnboardingShowed = false }
 
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
@@ -206,12 +224,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false
-    }
-
-    override fun restartApp() { viewState.restartApp() }
-
-    fun onForceCrashClick() {
-        error("This is force crash")
     }
 
     companion object {

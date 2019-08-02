@@ -103,4 +103,17 @@ class AccountManager : KoinComponent {
         }
         return result
     }
+
+    suspend fun putNoAccount(): Result<Account> {
+        return sessionInteractor.putAccount()
+    }
+
+    /**
+     * Save general settings
+     */
+    suspend fun saveSettings(): Result<Account>  {
+        return if (hasAccount)
+            putAccount(isTempAccount = false)
+        else putNoAccount()
+    }
 }
