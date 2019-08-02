@@ -1,18 +1,18 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/lang_icon_width"
-    android:height="@dimen/lang_icon_height"
-    android:viewportWidth="49"
+    android:width="48dp"
+    android:height="32dp"
+    android:viewportWidth="48"
     android:viewportHeight="32">
   <path
-      android:pathData="M49.035,10.72H-0.188V0.837c0,-0.468 0.38,-0.847 0.848,-0.847h47.527c0.468,0 0.848,0.38 0.848,0.847v9.883z"
-      android:fillColor="#464655"
-      android:fillType="nonZero"/>
+      android:pathData="M8,0L40,0A8,8 0,0 1,48 8L48,24A8,8 0,0 1,40 32L8,32A8,8 0,0 1,0 24L0,8A8,8 0,0 1,8 0z"
+      android:fillColor="#FF3B30"
+      android:fillType="evenOdd"/>
   <path
-      android:pathData="M48.187,32.272H0.66a0.848,0.848 0,0 1,-0.848 -0.847v-9.882h49.223v9.882c0,0.468 -0.38,0.847 -0.848,0.847z"
-      android:fillColor="#FFE15A"
-      android:fillType="nonZero"/>
+      android:pathData="M8,0h32a8,8 0,0 1,8 8v3H0V8a8,8 0,0 1,8 -8z"
+      android:fillColor="#000"
+      android:fillType="evenOdd"/>
   <path
-      android:pathData="M-0.188,10.72h49.224v10.729H-0.188z"
-      android:fillColor="#FF4B55"
-      android:fillType="nonZero"/>
+      android:pathData="M8,32h32a8,8 0,0 0,8 -8v-3H0v3a8,8 0,0 0,8 8z"
+      android:fillColor="#FEE506"
+      android:fillType="evenOdd"/>
 </vector>
