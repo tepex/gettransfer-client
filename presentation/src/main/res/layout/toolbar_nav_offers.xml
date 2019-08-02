@@ -19,7 +19,8 @@
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_back" />
+            app:srcCompat="@drawable/ic_back"
+            style="@style/BorderlessBackground"/>
 
 
         <TextView
@@ -58,7 +59,7 @@
                 android:id="@+id/btn_request_info"
                 android:layout_width="@dimen/activity_offers_toolbar_btn_info_size"
                 android:layout_height="@dimen/activity_offers_toolbar_btn_info_size"
-                android:layout_margin="@dimen/activity_offers_toolbar_btn_info_margin"
+                android:layout_gravity="center"
                 app:srcCompat="@drawable/ic_info" />
         </FrameLayout>
 

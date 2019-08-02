@@ -403,8 +403,7 @@
 
 	
 	<!--activity_offers-->
-	<dimen name="activity_offers_toolbar_btn_info_size">24dp</dimen>
-	<dimen name="activity_offers_toolbar_btn_info_margin">12dp</dimen>
+	<dimen name="activity_offers_toolbar_btn_info_size">30dp</dimen>
 	<dimen name="activity_offers_toolbar_btn_info_layout_size">48dp</dimen>
 	<dimen name="activity_offers_excellent_price_text_size">13sp</dimen>
 	<dimen name="activity_offers_excellent_price_min_text_size">5sp</dimen>
