@@ -403,10 +403,16 @@
 
 	
 	<!--activity_offers-->
+	<dimen name="activity_offers_toolbar_btn_info_size">24dp</dimen>
+	<dimen name="activity_offers_toolbar_btn_info_margin">12dp</dimen>
+	<dimen name="activity_offers_toolbar_btn_info_layout_size">48dp</dimen>
 	<dimen name="activity_offers_excellent_price_text_size">13sp</dimen>
 	<dimen name="activity_offers_excellent_price_min_text_size">5sp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_height">55dp</dimen>
 	<dimen name="activity_offers_drivers_connecting_text_height">56dp</dimen>
+	<dimen name="activity_offers_drivers_count_progress_bar_size">24dp</dimen>
+	<dimen name="activity_offers_drivers_count_progress_bar_margin_start">16dp</dimen>
+	<dimen name="activity_offers_drivers_count_text_paddings">50dp</dimen>
 	<dimen name="activity_offers_iv_lock_width">22dp</dimen>
 	<dimen name="activity_offers_iv_lock_height">22dp</dimen>
 	<dimen name="activity_offers_iv_lock_margin_start">17dp</dimen>
@@ -414,29 +420,35 @@
 	<dimen name="offers_tv_excellent_price_margin_end">12dp</dimen>
 	<dimen name="activity_offers_sorted_layout_height">40dp</dimen>
 	<dimen name="activity_offers_sorted_layout_padding_top">8dp</dimen>
-	<dimen name="activity_offers_sorted_layout_padding_bottom">5dp</dimen>
+	<dimen name="activity_offers_sorted_layout_padding_bottom">2dp</dimen>
 	<dimen name="activity_offers_sorted_layout_padding_start_end">8dp</dimen>
 	<dimen name="activity_offers_sorted_layout_center_element_margin_side">8dp</dimen>
 	<dimen name="activity_offers_sorted_layout_texts_size">14sp</dimen>
-	<dimen name="activity_offers_sorted_layout_text_margin_start">16dp</dimen>
+	<dimen name="activity_offers_sorted_layout_text_height">32dp</dimen>
+	<dimen name="activity_offers_sorted_layout_text_margin_start">8dp</dimen>
+	<dimen name="activity_offers_sorted_layout_text_vertical_paddings">16dp</dimen>
 	<dimen name="activity_offers_sorted_layout_triangle_margin_start">9dp</dimen>
 	<dimen name="activity_offers_sorted_layout_triangle_margin_end">16dp</dimen>
+	<dimen name="activity_offers_sort_order_btn_size">32dp</dimen>
+	<dimen name="activity_offers_sort_order_btn_margin_start">8dp</dimen>
+	<dimen name="activity_offers_recycler_horizontal_paddings">4dp</dimen>
 
 	<!--view_offer-->
-	<dimen name="card_view_margin_top_bottom">4dp</dimen>
+	<dimen name="card_view_margin_top_bottom">6dp</dimen>
 	<dimen name="card_view_margin_start_end">4dp</dimen>
-    <dimen name="card_view_padding_top">8dp</dimen>
+    <dimen name="card_view_padding_top">12dp</dimen>
 	<dimen name="card_view_padding_end">8dp</dimen>
-    <dimen name="view_offer_car_model_margin_start_end">8dp</dimen>
-    <dimen name="view_offer_price_no_discount_margin_end">8dp</dimen>
-    <dimen name="view_offer_car_img_width">72dp</dimen>
-    <dimen name="view_offer_car_img_height">40dp</dimen>
-    <dimen name="view_offer_car_img_margin_top">2dp</dimen>
+    <dimen name="view_offer_car_model_margin_start_end">12dp</dimen>
+    <dimen name="view_offer_car_img_width">112dp</dimen>
+    <dimen name="view_offer_car_img_height">80dp</dimen>
+    <dimen name="view_offer_car_img_margin_top">4dp</dimen>
     <dimen name="view_offer_car_img_margin_start">-3dp</dimen>
     <dimen name="view_offer_btn_book_width">122dp</dimen>
     <dimen name="view_offer_btn_book_height">32dp</dimen>
     <dimen name="view_offer_btn_book_margin_top">6dp</dimen>
     <dimen name="view_offer_btn_book_margin_bottom">8dp</dimen>
+	<dimen name="view_offer_btn_book_margin_start">16dp</dimen>
+	<dimen name="view_offer_btn_book_margin_end">8dp</dimen>
     <dimen name="view_offer_car_info_margin_start">8dp</dimen>
     <dimen name="view_offer_languages_container_margin_start">8dp</dimen>
     <dimen name="view_offer_languages_container_margin_end">7dp</dimen>
@@ -447,11 +459,12 @@
     <dimen name="view_offer_language_icon_horizontal_margins">3dp</dimen>
 	<dimen name="view_offer_language_image_corner">3dp</dimen>
 	<dimen name="view_offer_photo_corner">8dp</dimen>
-	<dimen name="view_offer_img_car_color_size">8dp</dimen>
-	<dimen name="view_offer_img_car_color_margin_start">2dp</dimen>
+	<dimen name="view_offer_img_car_color_size">16dp</dimen>
+	<dimen name="view_offer_img_car_color_margins">4dp</dimen>
 	<dimen name="view_offer_text_size_9sp">10sp</dimen>
     <dimen name="view_offer_text_size_10sp">10sp</dimen>
     <dimen name="view_offer_text_size_12sp">12sp</dimen>
+	<dimen name="view_offer_text_size_14sp">14sp</dimen>
     <dimen name="view_offer_text_size_15sp">15sp</dimen>
 
     <dimen name="view_offer_bs_btn_book_width">128dp</dimen>
@@ -483,8 +496,6 @@
 	<dimen name="toolbar_buttons_margin_end">12dp</dimen>
 	<dimen name="toolbar_chat_title_margin_end">16dp</dimen>
     <dimen name="toolbar_chat_driver_name_margin_start_end">16dp</dimen>
-
-	<dimen name="btn_offer_sort_height">24dp</dimen>
 
 	<!--bottom_sheet_offer_details-->
 	<dimen name="bottom_sheet_offer_details_top_view_width">100dp</dimen>
@@ -525,8 +536,6 @@
 	<!-- activity_requests -->
 	<dimen name="activity_requests_text_size_14sp">14sp</dimen>
 	<dimen name="activity_requests_text_size_12sp">12sp</dimen>
-	<dimen name="activity_requests_text_network_availability_margin_start_end">8sp</dimen>
-	<dimen name="activity_requests_text_network_availability_margin_top_bottom">12sp</dimen>
 
     <!-- activity_chat -->
     <dimen name="activity_chat_message_text_size">17sp</dimen>
@@ -716,6 +725,16 @@
 	<dimen name="payment_offer_tiny_language_vertical_margins">0dp</dimen>
 	<dimen name="payment_offer_tiny_language_horizontal_margins">2dp</dimen>
 	<dimen name="payment_offer_tiny_capacity_margin_end">12dp</dimen>
+	<dimen name="offer_tiny_discount_price_text_size">12sp</dimen>
+	<dimen name="offer_tiny_final_price_text_size">18sp</dimen>
+	<dimen name="offer_tiny_co2_text_size">14sp</dimen>
+	<dimen name="offer_tiny_rating_margin_bottom">6dp</dimen>
+	<dimen name="offer_tiny_languages_min_height">12dp</dimen>
+	<dimen name="offer_tiny_languages_margin_bottom">8dp</dimen>
+	<dimen name="offer_tiny_co2_margin_bottom">6dp</dimen>
+	<dimen name="offer_tiny_car_class_margin_top">8dp</dimen>
+	<dimen name="offer_tiny_capacity_margin_start">8p</dimen>
+
 	<dimen name="payment_dialog_corner_radius">16dp</dimen>
 	<dimen name="payment_ivGtrBonus_layout_marginTop">16dp</dimen>
 	<dimen name="payment_ll_auth_container_layout_paddingTop">8dp</dimen>
@@ -819,5 +838,10 @@
 	<dimen name="splash_ivInfo_margin_bottom">32dp</dimen>
 
 	<dimen name="bottom_sheet_transfer_details_table_layout_transport_types_margin_top_bottom">6dp</dimen>
+
+	<!--Network not available text-->
+	<dimen name="network_not_available_text_size">12sp</dimen>
+	<dimen name="network_not_available_text_vertical_margin">8sp</dimen>
+	<dimen name="network_not_available_text_horizontal_margin">12sp</dimen>
 
 </resources>

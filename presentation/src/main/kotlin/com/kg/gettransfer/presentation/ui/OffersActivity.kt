@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Animatable
 import android.os.Bundle
@@ -12,16 +13,12 @@ import android.support.v7.widget.Toolbar
 import android.view.MotionEvent
 import android.view.View
 
-import android.widget.ImageView
-import android.widget.RelativeLayout
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 
-import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.strikeText
@@ -57,7 +54,7 @@ import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.activity_offers.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_offers.*
 import kotlinx.android.synthetic.main.card_empty_offers.*
-import kotlinx.android.synthetic.main.toolbar_nav.view.*
+import kotlinx.android.synthetic.main.toolbar_nav_offers.view.*
 import kotlinx.android.synthetic.main.vehicle_items.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 import kotlinx.android.synthetic.main.view_offer_conditions.view.*
@@ -89,15 +86,9 @@ class OffersActivity : BaseActivity(), OffersView {
         initToolBar()
         initAdapter()
         initBottomSheet()
-        initClickListeners()
+        initSelectingSortTypeLayout()
         viewNetworkNotAvailable = textNetworkNotAvailable
         intent.getStringExtra(OffersView.EXTRA_ORIGIN)?.let { presenter.isViewRoot = true }
-    }
-
-    private fun initClickListeners() {
-        sortYear.setOnClickListener { presenter.changeSortType(Sort.YEAR) }
-        sortRating.setOnClickListener { presenter.changeSortType(Sort.RATING) }
-        sortPrice.setOnClickListener { presenter.changeSortType(Sort.PRICE) }
     }
 
     private fun initToolBar() =
@@ -105,7 +96,7 @@ class OffersActivity : BaseActivity(), OffersView {
             @Suppress("UnsafeCast")
             setSupportActionBar(this as Toolbar)
             btn_back.setOnClickListener { navigateBackWithTransition() }
-            btn_forward.setThrottledClickListener { presenter.onRequestInfoClicked() }
+            btn_request_info.setThrottledClickListener { presenter.onRequestInfoClicked() }
             tv_title.isSelected = true
         }
 
@@ -137,7 +128,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun setTransfer(transferModel: TransferModel) {
-        toolbar.tv_title.text = transferModel.from.also { from ->
+        toolbar.tv_title.text = transferModel.from.let { from ->
             transferModel.to?.let { "$from - $it" } ?: transferModel.duration?.let { duration ->
                 "$from - ${HourlyValuesHelper.getValue(duration, this)}"
             } ?: from
@@ -145,7 +136,7 @@ class OffersActivity : BaseActivity(), OffersView {
         toolbar.tv_subtitle.text = SystemUtils.formatDateTime(transferModel.dateTime)
         fl_drivers_count_text.apply {
             tv_drivers_count.text =
-                if (transferModel.relevantCarriersCount ?: 0 > MAX_CARRIERS_COUNT) {
+                if (transferModel.relevantCarriersCount ?: 0 > MIN_CARRIERS_COUNT) {
                     getString(R.string.LNG_RIDE_CONNECT_CARRIERS, transferModel.relevantCarriersCount)
                 } else {
                     getString(R.string.LNG_RIDE_CONNECT_CARRIERS_NONUM)
@@ -191,29 +182,27 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
-    override fun setSortState(sortCategory: Sort, sortHigherToLower: Boolean) {
-        cleanSortState()
-        when (sortCategory) {
-            Sort.YEAR   -> selectSort(sortYear, triangleYear, sortHigherToLower)
-            Sort.RATING -> selectSort(sortRating, triangleRating, sortHigherToLower)
-            Sort.PRICE  -> selectSort(sortPrice, trianglePrice, sortHigherToLower)
-        }
+    private fun initSelectingSortTypeLayout() {
+        val sortTypes = listOf(
+            R.string.LNG_FILTER_YEAR to Sort.YEAR,
+            R.string.LNG_FILTER_RATING to Sort.RATING,
+            R.string.LNG_FILTER_PRICE to Sort.PRICE
+        )
+        val sortTypesNames: List<CharSequence> = sortTypes.map { getString(it.first) }
+        Utils.setOfferFilterDialogListener(this, tv_year_sort_title, sortTypesNames) {
+            presenter.changeSortType(sortTypes[it].second) }
+        sortOrder.setOnClickListener { presenter.changeSortOrder() }
     }
 
-    private fun cleanSortState() {
-        sortYear.isSelected = false
-        sortRating.isSelected = false
-        sortPrice.isSelected = false
-
-        triangleYear.isInvisible = true
-        triangleRating.isInvisible = true
-        trianglePrice.isInvisible = true
-    }
-
-    private fun selectSort(layout: RelativeLayout, triangleImage: ImageView, higherToLower: Boolean) {
-        layout.isSelected = true
-        triangleImage.isVisible = true
-        if (!higherToLower) triangleImage.rotation = SEMI_ROUND else triangleImage.rotation = 0f
+    @SuppressLint("SetTextI18n")
+    override fun setSortType(sortType: Sort, sortHigherToLower: Boolean) {
+        val sortName = getString(when (sortType) {
+            Sort.YEAR -> R.string.LNG_FILTER_YEAR
+            Sort.RATING -> R.string.LNG_FILTER_RATING
+            Sort.PRICE -> R.string.LNG_FILTER_PRICE
+        })
+        tv_year_sort_title.text = "${getString(R.string.LNG_FILTER)}: $sortName"
+        sortOrder.rotation = if (!sortHigherToLower) SEMI_ROUND else 0f
     }
 
     override fun showAlertCancelRequest() {
@@ -364,7 +353,7 @@ class OffersActivity : BaseActivity(), OffersView {
 
     companion object {
         const val PHOTO_CORNER = 7f
-        const val MAX_CARRIERS_COUNT = 4
+        const val MIN_CARRIERS_COUNT = 4
         const val SEMI_ROUND = 180f
     }
 }

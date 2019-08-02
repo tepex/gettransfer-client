@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.delegate
 
+import android.annotation.SuppressLint
 import android.view.View
 
 import android.widget.LinearLayout
@@ -57,8 +58,6 @@ object OfferItemBindDelegate {
                 }
             }
 
-            tv_car_class_tiny.text = context.getString(transportType.nameId)
-
             photos.firstOrNull().also { photo ->
                 Utils.bindMainOfferPhoto(
                     img_car_photo_tiny,
@@ -76,44 +75,37 @@ object OfferItemBindDelegate {
         }
 
         with(offer.price) {
-            withoutDiscount?.let { setStrikePriceText(tv_price_no_discount, it.preferred ?: it.def) }
+            setStrikePriceText(tv_price_no_discount, withoutDiscount?.preferred ?: withoutDiscount?.def)
             tv_price_final.text = base.preferred ?: base.def
         }
     }
 
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) = with(view) {
-        tv_car_model_tiny.text = context.getString(offer.transportType.id.getModelsRes())
-        tv_car_model_tiny.maxLines = 2
-
-        tv_car_year_tiny.isVisible = false
-        iv_car_color_tiny.isVisible = false
-
         with(offer.transportType) {
+            tv_car_model_tiny.text = context.getString(id.getModelsRes())
             tv_car_class_tiny.text = context.getString(nameId)
+            bindCapacity(view_capacity, this)
             Utils.bindMainOfferPhoto(img_car_photo_tiny, view, resource = id.getImageRes())
         }
+        iv_car_color_tiny.isVisible = false
         bindRating(view_rating_tiny, Ratings.BOOK_NOW_RATING, true)
         bindLanguages(Either.Single(languages_container_tiny), listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
             layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_ITEM)
 
+        offer.withoutDiscount.let { setStrikePriceText(tv_price_no_discount, it?.preferred ?: it?.def) }
+        offer.base.let { tv_price_final.text = it.preferred ?: it.def }
     }
 
-    private fun setStrikePriceText(textView: TextView, price: String) = with(textView) {
-        strikeText = context.getString(R.string.text_in_parentheses, price)
-        isVisible = true
+    private fun setStrikePriceText(textView: TextView, price: String?) = with(textView) {
+        price?.let { strikeText = context.getString(R.string.text_in_parentheses, it) }
+        isVisible = price != null
     }
 
     /* Common layouts */
+    @SuppressLint("SetTextI18n")
     private fun bindCapacity(capacityView: View, transportTypeModel: TransportTypeModel) = with(capacityView) {
         transportType_сountPassengers.text = "x${transportTypeModel.paxMax}"
         transportType_сountBaggage.text    = "x${transportTypeModel.luggageMax}"
-    }
-
-    private fun bindConveniences(conveniencesView: View, offer: OfferModel) = with(conveniencesView) {
-        imgFreeWiFi.isVisible  = offer.wifi
-        imgCharge.isVisible    = offer.charger
-        imgFreeWater.isVisible = offer.refreshments
-        /* imgGreen.isVisible = offer.green */
     }
 
     internal fun bindRating(rateView: View, rating: Ratings, approved: Boolean = false) = with(rateView) {

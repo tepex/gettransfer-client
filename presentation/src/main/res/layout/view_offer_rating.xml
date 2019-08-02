@@ -14,23 +14,26 @@
         android:fontFamily="@font/roboto_bold"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/view_offer_rating_text_size"
-        android:visibility="gone"
-        tools:text="4,3" />
+        android:visibility="invisible"
+        tools:text="4,3"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/imgStar"
         android:layout_width="@dimen/view_offer_rating_img_size"
         android:layout_height="@dimen/view_offer_rating_img_size"
         android:layout_marginStart="@dimen/view_offer_rating_margins"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_star_filled" />
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_star_filled"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/imgApproved"
         android:layout_width="@dimen/view_offer_rating_img_size"
         android:layout_height="@dimen/view_offer_rating_img_size"
         android:layout_marginStart="@dimen/view_offer_rating_margins"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_like_button" />
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_like_button"
+        tools:visibility="visible" />
 
 </LinearLayout>

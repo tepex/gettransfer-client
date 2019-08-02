@@ -170,6 +170,13 @@ object Utils : KoinComponent {
             listener: (Int) -> Unit
     ) { setModelsDialogListener(context, view, R.string.LNG_WEEK_FIRST_DAY, items, listener) }
 
+    fun setOfferFilterDialogListener(
+            context: Context,
+            view: View,
+            items: List<CharSequence>,
+            listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, R.string.LNG_FILTER, items, listener) }
+
     fun setCalendarModesDialogListener(
             context: Context,
             view: View,
