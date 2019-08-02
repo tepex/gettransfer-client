@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -48,7 +47,7 @@ class RequestsActivity: BaseActivity(), RequestsView {
 
         requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
 
-        viewNetworkNotAvailable = textNetworkNotAvailable
+        viewNetworkNotAvailable = layoutTextNetworkNotAvailable
 
         val fragmentRequestsActive = RequestsFragment.newInstance(TRANSFER_ACTIVE)
         requestsVPAdapter?.addFragment(fragmentRequestsActive, getString(R.string.LNG_RIDES_ACTIVE))

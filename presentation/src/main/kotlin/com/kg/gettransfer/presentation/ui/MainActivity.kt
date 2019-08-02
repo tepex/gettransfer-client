@@ -137,7 +137,7 @@ class MainActivity : BaseGoogleMapActivity(),
         baseBtnCenter = btnMyLocation
         markerTranslationY = mMarker.translationY
         initMapView(savedInstanceState)
-        viewNetworkNotAvailable = textNetworkNotAvailable
+        viewNetworkNotAvailable = layoutTextNetworkNotAvailable
         hourlySheet = BottomSheetBehavior.from(hourly_sheet)
 
         ivSelectFieldTo.setOnClickListener { presenter.switchUsedField() }
@@ -263,7 +263,7 @@ class MainActivity : BaseGoogleMapActivity(),
         val duration = if (rl_hourly.isVisible) tvCurrent_hours.text.toString() else null
         requestView?.let { requestView ->
             with(requestView) {
-                setView(searchFrom.text, addressTo, duration, !(viewNetworkNotAvailable?.isVisible ?: false))
+                setView(searchFrom.text, addressTo, duration, !(viewNetworkNotAvailable?.isShowing() ?: false))
                 setBadge(tvEventsCount.text.toString())
                 showBadge(tvEventsCount.isVisible)
             }

@@ -40,28 +40,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
                     android:id="@+id/layoutTextNetworkNotAvailable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorBackNetworkNotAvailable">
-
-                    <TextView
-                        android:id="@+id/textNetworkNotAvailable"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/network_not_available_text_horizontal_margin"
-                        android:layout_marginTop="@dimen/network_not_available_text_vertical_margin"
-                        android:layout_marginEnd="@dimen/network_not_available_text_horizontal_margin"
-                        android:layout_marginBottom="@dimen/network_not_available_text_vertical_margin"
-                        android:fontFamily="@font/sf_pro_text_regular"
-                        android:gravity="center"
-                        android:text="@string/LNG_OFFLINE_MESSAGE_CACHE"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/network_not_available_text_size"
-                        android:visibility="gone" />
-
-                </LinearLayout>
+                    app:text_no_internet="@string/LNG_OFFLINE_MESSAGE"/>
 
                 <FrameLayout
                     android:id="@+id/fl_drivers_count_text"

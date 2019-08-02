@@ -39,29 +39,12 @@
                     tools:ignore="Overdraw" />
             </android.support.design.widget.AppBarLayout>
 
-            <LinearLayout
+            <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
                 android:id="@+id/layoutTextNetworkNotAvailable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/appbar"
-                android:background="@color/colorBtnRed">
-
-                <TextView
-                    android:id="@+id/textNetworkNotAvailable"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/sf_pro_text_regular"
-                    android:gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:text="@string/LNG_OFFLINE_MESSAGE_CACHE"
-                    android:visibility="gone"/>
-
-            </LinearLayout>
+                app:text_no_internet="@string/LNG_OFFLINE_MESSAGE_CACHE"/>
 
             <FrameLayout
                 android:id="@+id/fragmentsFrameLayout"

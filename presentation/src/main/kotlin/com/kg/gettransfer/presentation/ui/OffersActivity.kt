@@ -56,6 +56,7 @@ import kotlinx.android.synthetic.main.bottom_sheet_offers.*
 import kotlinx.android.synthetic.main.card_empty_offers.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.view.*
 import kotlinx.android.synthetic.main.vehicle_items.view.*
+import kotlinx.android.synthetic.main.view_network_not_available.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 import kotlinx.android.synthetic.main.view_offer_conditions.view.*
 import kotlinx.android.synthetic.main.view_offer_rating_details.*
@@ -87,7 +88,7 @@ class OffersActivity : BaseActivity(), OffersView {
         initAdapter()
         initBottomSheet()
         initSelectingSortTypeLayout()
-        viewNetworkNotAvailable = textNetworkNotAvailable
+        viewNetworkNotAvailable = layoutTextNetworkNotAvailable
         intent.getStringExtra(OffersView.EXTRA_ORIGIN)?.let { presenter.isViewRoot = true }
     }
 
@@ -159,10 +160,10 @@ class OffersActivity : BaseActivity(), OffersView {
         if (offers.isNotEmpty()) {
             noOffers.isVisible = false
             fl_drivers_count_text.isVisible = false
-            cl_fixPrice.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
+            cl_fixPrice.isVisible = viewNetworkNotAvailable?.isShowing()?.not() ?: true
         } else {
             setAnimation()
-            fl_drivers_count_text.isVisible = viewNetworkNotAvailable?.isVisible?.not() ?: true
+            fl_drivers_count_text.isVisible = viewNetworkNotAvailable?.isShowing()?.not() ?: true
         }
     }
 
@@ -341,7 +342,7 @@ class OffersActivity : BaseActivity(), OffersView {
         if (available) {
             presenter.checkNewOffers()
         }
-        offer_bottom_bs.btn_book.isEnabled = !textNetworkNotAvailable.isVisible
+        offer_bottom_bs.btn_book.isEnabled = viewNetworkNotAvailable?.isShowing()?.not() ?: true
         if (available) {
             presenter.updateBanners()
         } else {

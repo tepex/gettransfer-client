@@ -52,11 +52,11 @@ import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.presenter.BasePresenter
+import com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 
@@ -93,7 +93,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected var baseNavigator = SupportAppNavigator(this, Screens.NOT_USED)
 
-    protected var viewNetworkNotAvailable: View? = null
+    protected var viewNetworkNotAvailable: NetworkNotAvailableView? = null
 
     private var displayCutout: DisplayCutout? = null
     private var cutoutOffset: Int = 0
@@ -175,7 +175,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         if (cm is ConnectivityManager) {
             available = cm.activeNetworkInfo?.isConnected ?: false
             if (available) getPresenter().networkConnected()
-            viewNetworkNotAvailable?.let { it.isGone = available }
+            viewNetworkNotAvailable?.changeViewVisibility(!available)
         }
         return available
     }
