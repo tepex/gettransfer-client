@@ -180,7 +180,6 @@ class CarrierTripsMainActivity : BaseActivity(),
         @Suppress("UnsafeCast")
         (navFooterVersion as TextView).text =
             String.format(getString(R.string.nav_footer_version), versionName, versionCode)
-        // navFooterReadMore.text = Html.fromHtml(Utils.convertMarkdownToHtml(getString(R.string.LNG_READMORE)))
 
         with(readMoreListener) {
             navFooterStamp.setOnClickListener(this)

@@ -3,7 +3,7 @@
     <string name="geoapikey" translatable="false">AIzaSyAZXhfW8DCix33iyFU3An8ovidJjwpHFFg</string>
     <string name="appmetrica_api_key" translatable="false">92343e03-0fb3-4acd-96c4-37e6559cca84</string>
     <string name="facebook_app_id" translatable="false">1936584423312748</string>
-    <string name="sentryDsn" translatable="false">https://329856e2274a4c7d9f8039241ee5ac6f@sentry.key-g.com/12</string>
+    <string name="sentryDsn" translatable="false">https://d864104b10b94181a03cef30a4b0033d:25bcc05cc8df449296b266f195fcd665@sentry.gtrint.org/14</string>
     <string name="appsflyer_api_key" translatable="false">hJyRc3M35GUMZELe3hzds4</string>
     <string name="sender_id" translatable="false">200820403845</string>
 </resources>
