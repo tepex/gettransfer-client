@@ -175,7 +175,7 @@ hockeyapp {
 
 sentry {
     autoProguardConfig true
-    autoUpload true
+    autoUpload false
 }
 
 dependencies {
