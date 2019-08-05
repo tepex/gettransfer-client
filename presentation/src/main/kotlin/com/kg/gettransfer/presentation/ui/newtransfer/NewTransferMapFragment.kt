@@ -24,6 +24,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.common.NewTransferSwitchListener
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
+import com.kg.gettransfer.extensions.isGone
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
@@ -39,6 +40,7 @@ import com.kg.gettransfer.presentation.view.NewTransferMapView
 
 import kotlinx.android.synthetic.main.fragment_new_transfer_map.*
 import kotlinx.android.synthetic.main.search_form_main.*
+import kotlinx.android.synthetic.main.view_network_not_available.*
 import kotlinx.android.synthetic.main.view_switcher.*
 import org.koin.android.ext.android.inject
 
@@ -301,14 +303,10 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         }
     }
 
-    /*
-    @CallSuper
-    override fun setNetworkAvailability(context: Context) =
-            super.setNetworkAvailability(context).also { available ->
-                requestView?.onNetworkWarning(!available)
-                if (available) presenter.checkingFillAddressFields()
-            }*/
-
+    override fun onNetworkWarning(available: Boolean) {
+        textNetworkNotAvailable?.isGone = available
+        if (available) presenter.fillAddressFieldsCheckIsEmpty()
+    }
 
     companion object {
         @JvmField

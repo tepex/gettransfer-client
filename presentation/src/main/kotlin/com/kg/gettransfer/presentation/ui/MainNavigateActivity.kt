@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -24,7 +25,6 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.common.NavigationMenuListener
 
-import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.model.ProfileModel
@@ -33,6 +33,7 @@ import com.kg.gettransfer.presentation.ui.custom.LockableSwipeDrawerLayout
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
+import com.kg.gettransfer.presentation.view.BaseNetworkWarning
 import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
@@ -227,6 +228,13 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     override fun setEventCount(isVisible: Boolean, count: Int) {
         navRequests.menu_item_counter.isVisible = isVisible && count > 0
         navRequests.menu_item_counter.text = count.toString()
+    }
+
+    override fun setNetworkAvailability(context: Context): Boolean {
+        val available = super.setNetworkAvailability(context)
+        if (newTransferFragment is BaseNetworkWarning)
+            (newTransferFragment as BaseNetworkWarning).onNetworkWarning(available)
+        return available
     }
 
     @CallSuper

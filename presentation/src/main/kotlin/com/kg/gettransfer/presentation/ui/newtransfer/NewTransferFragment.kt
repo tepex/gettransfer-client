@@ -10,13 +10,14 @@ import android.view.ViewGroup
 import com.kg.gettransfer.R
 import com.kg.gettransfer.common.NavigationMenuListener
 import com.kg.gettransfer.common.NewTransferSwitchListener
+import com.kg.gettransfer.presentation.view.BaseNetworkWarning
 
 import org.koin.core.KoinComponent
 import timber.log.Timber
 
 
 @Suppress("TooManyFunctions")
-class NewTransferFragment : Fragment(), KoinComponent, NewTransferSwitchListener {
+class NewTransferFragment : Fragment(), KoinComponent, BaseNetworkWarning, NewTransferSwitchListener {
 
     private val newTransferFragment by lazy { NewTransferMapFragment() }
 
@@ -73,12 +74,11 @@ class NewTransferFragment : Fragment(), KoinComponent, NewTransferSwitchListener
         }
     }
 
-
-    /*
-    override fun onNetworkWarning(disconnected: Boolean) {
-        tv_internet_warning.isVisible = disconnected
+    override fun onNetworkWarning(available: Boolean) {
+        childFragmentManager.fragments.filter { it is BaseNetworkWarning }.let {
+            it.forEach { fragment -> (fragment as BaseNetworkWarning).onNetworkWarning(available) }
+        }
     }
-*/
 
     companion object {
         const val MAP_FRG_TAG = "map"

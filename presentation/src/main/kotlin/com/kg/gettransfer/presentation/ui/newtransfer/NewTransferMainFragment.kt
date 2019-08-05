@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.annotation.CallSuper
@@ -34,6 +33,7 @@ import kotlinx.android.synthetic.main.create_order_field.view.*
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.field_divider
 import kotlinx.android.synthetic.main.search_form_main.*
+import kotlinx.android.synthetic.main.view_network_not_available.*
 import kotlinx.android.synthetic.main.view_switcher.*
 
 import org.koin.core.KoinComponent
@@ -219,8 +219,8 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         tvEventsCountFragment.text = count.toString()
     }
 
-    override fun onNetworkWarning(disconnected: Boolean) {
-        tv_internet_warning.isVisible = disconnected
+    override fun onNetworkWarning(available: Boolean) {
+        textNetworkNotAvailable?.isGone = available
     }
 
     override fun setAddressFrom(address: String) {

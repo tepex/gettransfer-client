@@ -130,25 +130,10 @@
 
         android:textColor="@color/colorWhite" />
 
-    <TextView
-        android:id="@+id/tv_internet_warning"
+    <include layout="@layout/view_network_not_available"
+        android:layout_marginTop="@dimen/internet_warning_horizontal_text_margin_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_returnTime"
-        android:layout_marginTop="@dimen/internet_warning_horizontal_text_margin_top"
-        android:paddingTop="@dimen/internet_warning_vertical_text_padding"
-        android:paddingBottom="@dimen/internet_warning_vertical_text_padding"
-        android:paddingStart="@dimen/internet_warning_horizontal_text_padding"
-        android:paddingEnd="@dimen/internet_warning_horizontal_text_padding"
-        android:textSize="@dimen/internet_warning_horizontal_text_size"
-        android:textColor="@color/colorWhite"
-        android:gravity="center"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:text="@string/LNG_OFFLINE_MESSAGE"
-        android:background="@color/color_error"
-        tools:visibility="visible"/>
-
+        android:layout_below="@id/rl_returnTime" />
 
 </RelativeLayout>

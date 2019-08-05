@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLng
 
 @Suppress("TooManyFunctions")
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface BaseNewTransferView : MvpView {
+interface BaseNewTransferView : MvpView, BaseNetworkWarning {
     fun blockFromField()
     fun blockToField()
     fun setAddressFrom(address: String)
