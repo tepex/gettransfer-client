@@ -13,7 +13,12 @@ object LanguageDrawer {
 
     internal const val DEFAULT_ITEM_COLUMNS = 3
 
-    enum class LanguageLayoutParamsRes(val width: Int, val height: Int, val verticalMargins: Int, val horizontalMargins: Int) {
+    enum class LanguageLayoutParamsRes(
+        val width: Int,
+        val height: Int,
+        val verticalMargins: Int,
+        val horizontalMargins: Int
+    ) {
         OFFER_ITEM(
             R.dimen.view_offer_language_icon_width,
             R.dimen.view_offer_language_icon_height,
@@ -44,15 +49,20 @@ object LanguageDrawer {
         container.removeAllViews()
         val lp = getLayoutParamsWithMargin(container.context.resources, lpRes)
 
-        languages.forEach {
+        languages.forEach { lang ->
             container.addView(ImageView(container.context).apply {
-                setImageResource(Utils.getLanguageImage(it.delegate.toLanguageTag()))
+                setImageResource(Utils.getLanguageImage(lang.delegate.toLanguageTag()))
                 layoutParams = lp
             })
         }
     }
 
-    fun drawMultipleLine(container: LinearLayout, languages: List<LocaleModel>, colNumber: Int, lpRes: LanguageLayoutParamsRes) {
+    fun drawMultipleLine(
+        container: LinearLayout,
+        languages: List<LocaleModel>,
+        colNumber: Int,
+        lpRes: LanguageLayoutParamsRes
+    ) {
         container.removeAllViews()
         val lp = getLayoutParamsWithMargin(container.context.resources, lpRes)
 
@@ -70,12 +80,11 @@ object LanguageDrawer {
         }
     }
 
-    private fun getLayoutParamsWithMargin(resources: Resources, lpRes: LanguageLayoutParamsRes): LinearLayout.LayoutParams {
-        return LayoutHelper.createLinearParams(
+    private fun getLayoutParamsWithMargin(resources: Resources, lpRes: LanguageLayoutParamsRes) =
+        LayoutHelper.createLinearParams(
             resources.getDimensionPixelSize(lpRes.width),
             resources.getDimensionPixelSize(lpRes.height),
             resources.getDimensionPixelSize(lpRes.verticalMargins),
             resources.getDimensionPixelSize(lpRes.horizontalMargins)
         )
-    }
 }

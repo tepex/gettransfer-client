@@ -224,7 +224,7 @@ class MainRequestFragment :
     }
 
     private fun changeNetworkNotAvailableVisibility(isShow: Boolean) {
-        (fragmentLayoutTextNetworkNotAvailable as NetworkNotAvailableView).changeViewVisibility(isShow)
+        fragmentLayoutTextNetworkNotAvailable.changeViewVisibility(isShow)
     }
 
     override fun blockSelectedField(field: String) {

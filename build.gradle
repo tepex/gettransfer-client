@@ -121,6 +121,8 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/GTApplication.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/OffersAdapter.kt",
+
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/OfferItemBindDelegate.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/VehicleMapper.kt",
@@ -151,8 +153,10 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainRequestFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/OffersActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentOfferActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ProfileSettingsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RatingLastTripFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RequestsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCurrencyFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpCarrierFragment.kt",
@@ -161,6 +165,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/NetworkNotAvailableView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RateField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RatingFieldView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SingleClickButton.kt",
@@ -170,6 +175,8 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/RatingDetailDialogFragment.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LanguageDrawer.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LayoutHelper.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/ScrollGalleryInflater.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/CarrierTripDetailsView.kt",
