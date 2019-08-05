@@ -84,6 +84,11 @@
         <item name="android:fontFamily">@font/sf_pro_text_regular</item>
     </style>
 
+    <style name="sf_font_pro_text_semibold_black">
+        <item name="android:textColor">@color/color_gtr_black</item>
+        <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
+    </style>
+
     <style name="sf_pro_text_semibold_white">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:fontFamily">@font/sf_pro_text_semibold</item>

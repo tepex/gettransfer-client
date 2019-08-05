@@ -15,31 +15,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/layoutTextNetworkNotAvailable"/>
 
-    <LinearLayout
+    <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
         android:id="@+id/layoutTextNetworkNotAvailable"
         android:layout_width="@dimen/margin0"
         android:layout_height="wrap_content"
-        android:background="@color/colorBtnRed"
         app:layout_constraintBottom_toTopOf="@+id/tabs"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <TextView
-            android:id="@+id/textNetworkNotAvailable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_requests_text_network_availability_margin_start_end"
-            android:layout_marginTop="@dimen/activity_requests_text_network_availability_margin_top_bottom"
-            android:layout_marginEnd="@dimen/activity_requests_text_network_availability_margin_start_end"
-            android:layout_marginBottom="@dimen/activity_requests_text_network_availability_margin_top_bottom"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:gravity="center"
-            android:text="@string/LNG_OFFLINE_MESSAGE"
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/activity_requests_text_size_12sp" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:text_no_internet="@string/LNG_OFFLINE_MESSAGE"/>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"

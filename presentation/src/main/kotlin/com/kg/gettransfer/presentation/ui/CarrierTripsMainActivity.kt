@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.os.IBinder
 
 import android.support.annotation.CallSuper
-import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -93,7 +92,7 @@ class CarrierTripsMainActivity : BaseActivity(),
             window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
         }
 
-        viewNetworkNotAvailable = textNetworkNotAvailable
+        viewNetworkNotAvailable = layoutTextNetworkNotAvailable
 
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_TRIPS, false, true)
         drawer = drawerLayout as DrawerLayout

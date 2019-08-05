@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
@@ -22,7 +21,7 @@ import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import kotlinx.android.synthetic.main.activity_requests.*
 
-class RequestsActivity: BaseActivity(), RequestsView {
+class RequestsActivity : BaseActivity(), RequestsView {
 
     @InjectPresenter
     internal lateinit var presenter: RequestsPresenter
@@ -40,15 +39,16 @@ class RequestsActivity: BaseActivity(), RequestsView {
 
         setContentView(R.layout.activity_requests)
 
-        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_RIDES)
-
-        supportActionBar?.apply {
-            setHomeAsUpIndicator(R.drawable.ic_home_back_24dp)
+        val tb = toolbar
+        if (tb is Toolbar) {
+            setToolbar(tb, R.string.LNG_MENU_TITLE_RIDES)
         }
+
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_home_back_24dp)
 
         requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
 
-        viewNetworkNotAvailable = textNetworkNotAvailable
+        viewNetworkNotAvailable = layoutTextNetworkNotAvailable
 
         val fragmentRequestsActive = RequestsFragment.newInstance(TRANSFER_ACTIVE)
         requestsVPAdapter?.addFragment(fragmentRequestsActive, getString(R.string.LNG_RIDES_ACTIVE))
@@ -60,30 +60,35 @@ class RequestsActivity: BaseActivity(), RequestsView {
         setListenersForLog()
     }
 
-    private class RequestsViewPagerAdapter(manager: FragmentManager): FragmentPagerAdapter(manager) {
+    private fun setListenersForLog() {
+        vpRequests.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+
+            override fun onPageScrollStateChanged(p0: Int) {}
+
+            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
+
+            override fun onPageSelected(p0: Int) {
+                when (p0) {
+                    TRANSFER_ACTIVE  -> sendEventLog(getString(R.string.LNG_RIDES_ACTIVE))
+                    TRANSFER_ARCHIVE -> sendEventLog(getString(R.string.LNG_RIDES_COMPLETED))
+                }
+            }
+        })
+    }
+
+    private class RequestsViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
         val fragments = mutableListOf<RequestsFragment>()
         val titles = mutableListOf<String>()
 
         override fun getItem(position: Int) = fragments[position]
+
         override fun getCount() = fragments.size
+
         override fun getPageTitle(position: Int) = titles[position]
 
         fun addFragment(fragment: RequestsFragment, title: String) {
             fragments.add(fragment)
             titles.add(title)
         }
-    }
-
-    private fun setListenersForLog() {
-        vpRequests.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(p0: Int) {}
-            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
-            override fun onPageSelected(p0: Int) {
-                when(p0) {
-                    TRANSFER_ACTIVE -> sendEventLog(getString(R.string.LNG_RIDES_ACTIVE))
-                    TRANSFER_ARCHIVE ->  { sendEventLog(getString(R.string.LNG_RIDES_COMPLETED)) }
-                }
-            }
-        })
     }
 }

@@ -54,9 +54,10 @@ import com.kg.gettransfer.presentation.model.getNameRes
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
+import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.view.CreateOrderView
-
 import com.kg.gettransfer.presentation.view.PaymentOfferView
+
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
 
 import io.sentry.Sentry
@@ -78,19 +79,12 @@ import org.jetbrains.anko.toast
 
 import timber.log.Timber
 
+@Suppress("TooManyFunctions")
 class PaymentOfferActivity : BaseActivity(),
     PaymentOfferView,
     PaymentMethodNonceCreatedListener,
     BraintreeErrorListener,
     BraintreeCancelListener {
-
-    companion object {
-        const val PAYMENT_REQUEST_CODE = 100
-        const val PAYPAL_PACKAGE_NAME = "com.paypal.android.p2pmobile"
-
-        const val INVALID_EMAIL = 1
-        const val INVALID_PHONE = 2
-    }
 
     private var errorField: View? = null
 
@@ -107,7 +101,8 @@ class PaymentOfferActivity : BaseActivity(),
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //presenter.params = JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
+        // presenter.params =
+        // JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
         setContentView(R.layout.activity_payment_offer)
         initListeners()
@@ -115,11 +110,12 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     private fun initToolbar() {
-        with(toolbar) {
-            setSupportActionBar(this as Toolbar)
-            tvTitle.text = getString(R.string.LNG_PAYMENT_SETTINGS)
-            btnBack.setOnClickListener { presenter.onBackCommandClick() }
-            tvSubTitle.isSelected = true
+        val tb = toolbar
+        if (tb is Toolbar) {
+            setSupportActionBar(tb)
+            tb.tvTitle.text = getString(R.string.LNG_PAYMENT_SETTINGS)
+            tb.btnBack.setOnClickListener { presenter.onBackCommandClick() }
+            tb.tvSubTitle.isSelected = true
         }
     }
 
@@ -141,40 +137,41 @@ class PaymentOfferActivity : BaseActivity(),
             rbBalance.setOnClickListener(this)
             layoutBalance.setOnClickListener(this)
         }
-        addKeyBoardDismissListener {
+        addKeyBoardDismissListener { state ->
             Handler().postDelayed({
-                if (it) sv_root.fling(2000)         //need to show "Payment" button
-            }, 150)
+                if (state) {
+                    sv_root.fling(VELOCITY_Y)         // need to show "Payment" button
+                }
+            }, DELAY)
         }
     }
 
     private fun initEmailTextChangeListeners() {
-        emailLayout.fieldText.onTextChanged {
-            presenter.setEmail(it)
+        emailLayout.fieldText.onTextChanged { text ->
+            presenter.setEmail(text)
             clearHighLightErrorField(emailLayout)
         }
     }
 
     private fun initPhoneTextChangeListeners() {
         with(phoneLayout.fieldText) {
-            onTextChanged {
+            onTextChanged { text ->
                 clearHighLightErrorField(phoneLayout)
-                if (it.isEmpty() && isFocused) {
+                if (text.isEmpty() && isFocused) {
                     setText("+")
                     setSelection(1)
                 }
-                presenter.setPhone("+".plus(it.replace(Regex("\\D"), "")))
+                presenter.setPhone("+".plus(text.replace(Regex("\\D"), "")))
             }
             addTextChangedListener(PhoneNumberFormatter())
             setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) setPhoneCode()
-                else {
+                if (hasFocus) {
+                    setPhoneCode()
+                } else {
                     val phone = text?.trim()
-                    phone?.let {
-                        if (phone.length == 1) {
-                            text?.clear()
-                            presenter.setPhone("")
-                        }
+                    if (phone != null && phone.length == 1) {
+                        text?.clear()
+                        presenter.setPhone("")
                     }
                 }
             }
@@ -184,18 +181,18 @@ class PaymentOfferActivity : BaseActivity(),
     private fun setPhoneCode() {
         with(phoneLayout.fieldText) {
             val phone = text?.trim()
-            phone?.let {
-                if (phone.isEmpty()) {
-                    val phoneCode = Utils.getPhoneCodeByCountryIso(context)
-                    setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
-                }
+            if (phone != null && phone.isEmpty()) {
+                val phoneCode = Utils.getPhoneCodeByCountryIso(context)
+                setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
             }
             fieldTouched(this)
         }
     }
 
     private fun fieldTouched(viewForFocus: EditText) {
-        if (!isKeyBoardOpened) showKeyboard()
+        if (!isKeyBoardOpened) {
+            showKeyboard()
+        }
         viewForFocus.apply {
             requestFocus()
             post { setSelection(text.length) }
@@ -204,11 +201,11 @@ class PaymentOfferActivity : BaseActivity(),
 
     override fun highLightError(error: CreateOrderView.FieldError?) {
         when (error) {
-            CreateOrderView.FieldError.PHONE_FIELD -> highLightErrorField(phoneLayout)
-            CreateOrderView.FieldError.EMAIL_FIELD -> highLightErrorField(emailLayout)
+            CreateOrderView.FieldError.PHONE_FIELD   -> highLightErrorField(phoneLayout)
+            CreateOrderView.FieldError.EMAIL_FIELD   -> highLightErrorField(emailLayout)
             CreateOrderView.FieldError.INVALID_PHONE -> highLightErrorField(phoneLayout)
             CreateOrderView.FieldError.INVALID_EMAIL -> highLightErrorField(emailLayout)
-            else -> return
+            else                                     -> return
         }
     }
 
@@ -242,10 +239,12 @@ class PaymentOfferActivity : BaseActivity(),
         presenter.changePayment(payment)
     }
 
+    @Suppress("NestedBlockDepth")
     override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>) {
         if (paymentPercentages.isNotEmpty()) {
-            if (paymentPercentages.size == 1) hidePaymentPercentage()
-            else {
+            if (paymentPercentages.size == 1) {
+                hidePaymentPercentage()
+            } else {
                 paymentPercentages.forEach { percentage ->
                     when (percentage) {
                         OfferModel.FULL_PRICE -> {
@@ -284,9 +283,12 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     private fun setPriceInfo(default: String?, preferredPrice: String?) {
-        tvPriceInfo.text = if (preferredPrice != null)
+        tvPriceInfo.text =
+        if (preferredPrice != null) {
             getString(R.string.LNG_RIDE_PAY_CHARGE, default, preferredPrice)
-        else getString(R.string.LNG_RIDE_PAY_CHARGE2, default)
+        } else {
+            getString(R.string.LNG_RIDE_PAY_CHARGE2, default)
+        }
     }
 
     private fun setCarInfo(offer: OfferItemModel?) {
@@ -302,9 +304,9 @@ class PaymentOfferActivity : BaseActivity(),
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = transportTypeId.getImageRes())
         OfferItemBindDelegate.bindRating(layoutRating, Ratings.BOOK_NOW_RATING, true)
         OfferItemBindDelegate.bindLanguages(
-            Either.Multi(languages_container_tiny),
+            Either.Single(languages_container_tiny),
             listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
-            rowNumber = 6
+            layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW
         )
     }
 
@@ -312,24 +314,26 @@ class PaymentOfferActivity : BaseActivity(),
         with(offer.vehicle) {
             tvModel.text = name
             if (photos.isEmpty()) {
-                color?.let {
+                color?.let { col ->
                     ivCarColor.isVisible = true
-                    ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this@PaymentOfferActivity, it))
+                    ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this@PaymentOfferActivity, col))
                 }
             }
-            photos.firstOrNull()
-                .also {
-                    Utils.bindMainOfferPhoto(
-                        ivCarPhoto,
-                        content,
-                        path = it,
-                        resource = transportType.id.getEmptyImageRes()
-                    )
-                }
+            photos.firstOrNull().also { photo ->
+                Utils.bindMainOfferPhoto(
+                    ivCarPhoto,
+                    content,
+                    path = photo,
+                    resource = transportType.id.getEmptyImageRes()
+                )
+            }
             tvClass.text = getString(transportType.nameId)
         }
         with(offer.carrier) {
-            OfferItemBindDelegate.bindLanguages(Either.Multi(languages_container_tiny), languages, 6)
+            OfferItemBindDelegate.bindLanguages(
+                Either.Single(languages_container_tiny),
+                languages,
+                layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW)
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
     }
@@ -408,14 +412,15 @@ class PaymentOfferActivity : BaseActivity(),
         if (requestCode == PAYMENT_REQUEST_CODE) {
             when (resultCode) {
                 Activity.RESULT_OK -> {
-                    val result: DropInResult = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)!!
-                    val nonce = result.paymentMethodNonce?.nonce
-                    presenter.confirmPayment(nonce!!)
+                    val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
+                    result?.paymentMethodNonce?.nonce?.let { presenter.confirmPayment(it) }
                 }
                 RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.PAYPAL)
                 else -> {
-                    val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR) as Exception
-                    Timber.e(error)
+                    val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR)
+                    if (error is Exception) {
+                        Timber.e(error)
+                    }
                 }
             }
         }
@@ -462,14 +467,11 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun setToolbarTitle(transferModel: TransferModel) {
-        toolbar.tvSubTitle.text = transferModel.from
-            .let { from ->
-                transferModel.to?.let {
-                    from.plus(" - ").plus(it)
-                } ?: transferModel.duration?.let {
-                    from.plus(" - ").plus(HourlyValuesHelper.getValue(it, this))
-                } ?: from
-            }
+        toolbar.tvSubTitle.text = transferModel.from.let { from ->
+            transferModel.to?.let { from.plus(" - ").plus(it) } ?: transferModel.duration?.let { duration ->
+                from.plus(" - ").plus(HourlyValuesHelper.getValue(duration, this))
+            } ?: from
+        }
         toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
     }
 
@@ -501,7 +503,7 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun setError(e: ApiException) {
-        Timber.e("code: ${e.code}", e)
+        Timber.e(e, "code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         val errorText = when {
@@ -521,5 +523,16 @@ class PaymentOfferActivity : BaseActivity(),
             }
             show()
         }
+    }
+
+    companion object {
+        const val PAYMENT_REQUEST_CODE = 100
+        const val PAYPAL_PACKAGE_NAME = "com.paypal.android.p2pmobile"
+
+        const val INVALID_EMAIL = 1
+        const val INVALID_PHONE = 2
+
+        const val DELAY = 150L
+        const val VELOCITY_Y = 2000
     }
 }

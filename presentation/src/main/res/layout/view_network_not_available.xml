@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBtnRed"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/textNetworkNotAvailable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/network_not_available_text_horizontal_margin"
+        android:layout_marginTop="@dimen/network_not_available_text_vertical_margin"
+        android:layout_marginEnd="@dimen/network_not_available_text_horizontal_margin"
+        android:layout_marginBottom="@dimen/network_not_available_text_vertical_margin"
+        android:textSize="@dimen/network_not_available_text_size"
+        android:textColor="@color/colorWhite"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="center"
+        tools:text="@string/LNG_OFFLINE_MESSAGE"
+        android:visibility="gone"/>
+
+</LinearLayout>

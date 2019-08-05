@@ -170,6 +170,13 @@ object Utils : KoinComponent {
             listener: (Int) -> Unit
     ) { setModelsDialogListener(context, view, R.string.LNG_WEEK_FIRST_DAY, items, listener) }
 
+    fun setOfferFilterDialogListener(
+            context: Context,
+            view: View,
+            items: List<CharSequence>,
+            listener: (Int) -> Unit
+    ) { setModelsDialogListener(context, view, R.string.LNG_FILTER, items, listener) }
+
     fun setCalendarModesDialogListener(
             context: Context,
             view: View,
@@ -445,26 +452,6 @@ object Utils : KoinComponent {
         }
         */
     fun isValidBitmap(bitmap: Bitmap) = bitmap.width <= MAX_BITMAP_SIZE && bitmap.height <= MAX_BITMAP_SIZE
-
-    fun initCarrierLanguages(layoutCarrierLanguages: ViewGroup, languages: List<LocaleModel>) {
-        val context = layoutCarrierLanguages.context
-        layoutCarrierLanguages.removeAllViews()
-        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        lp.setMargins(8, 0, 8, 0)
-        for (item in languages) {
-            layoutCarrierLanguages.addView(ImageView(context).apply {
-                background = resources.getDrawable(R.drawable.back_rounded_stroke_light_grey, null)
-                setPadding(1,1,1,1)
-                layoutParams = lp
-            })
-            Glide.with(context)
-                    .load(getLanguageImage(item.delegate.toLanguageTag()))
-                    .apply(RequestOptions()
-                            .transform(RoundedCorners(layoutCarrierLanguages.context.resources.getDimensionPixelSize(R.dimen.view_offer_language_image_corner)))
-                            .override(Utils.dpToPxInt(context, 24F), Utils.dpToPxInt(context, 16F)))
-                    .into(layoutCarrierLanguages.getChildAt(layoutCarrierLanguages.childCount - 1) as ImageView)
-        }
-    }
 
     fun setDrawables(textView: TextView,
                      @DrawableRes start: Int,

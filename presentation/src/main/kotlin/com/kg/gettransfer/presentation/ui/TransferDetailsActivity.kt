@@ -34,11 +34,15 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.isNonZero
 
+import com.kg.gettransfer.presentation.delegate.Either
+import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
+
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
@@ -47,6 +51,7 @@ import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
+import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import java.util.Date
@@ -548,9 +553,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                     presenter.makeFieldOperation(TransferDetailsPresenter.FIELD_EMAIL, operations[it].second, email) }
             }
 
-            Utils.initCarrierLanguages(
-                layoutAboutDriver.view_driver_languages.layoutCarrierLanguages,
-                offer.carrier.languages
+            OfferItemBindDelegate.bindLanguages(
+                Either.Single(layoutAboutDriver.view_driver_languages.layoutCarrierLanguages),
+                listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
+                layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.TRANSFER_DETAILS
             )
         }
     }

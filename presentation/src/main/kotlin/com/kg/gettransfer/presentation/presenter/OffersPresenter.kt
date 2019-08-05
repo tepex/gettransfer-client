@@ -7,7 +7,6 @@ import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.OfferItem
-import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
@@ -45,6 +44,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
     override fun attachView(view: OffersView) {
         super.attachView(view)
         log.debug("OffersPresenter.attachView")
+        viewState.setSortType(sortCategory, sortHigherToLower)
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             val result = fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
@@ -181,34 +181,25 @@ class OffersPresenter : BasePresenter<OffersView>() {
     }
 
     fun changeSortType(sortType: Sort) {
-        if (sortCategory == sortType) {
-            sortHigherToLower = !sortHigherToLower
-        } else {
-            sortCategory = sortType
-            sortHigherToLower = when (sortType) {
-                Sort.YEAR   -> true
-                Sort.RATING -> true
-                Sort.PRICE  -> false
-            }
+        sortCategory = sortType
+        sortHigherToLower = when (sortType) {
+            Sort.YEAR   -> true
+            Sort.RATING -> true
+            Sort.PRICE  -> false
         }
-        processOffers()
+        processOffers(false)
     }
 
-    private fun processOffers() {
+    fun changeSortOrder() {
+        sortHigherToLower = !sortHigherToLower
+        reverseOffersList()
+        setOffers()
+    }
+
+    private fun processOffers(checkEventsCount: Boolean = true) {
         sortOffers()
-        with(countEventsInteractor) {
-            val countNewOffers = (mapCountNewOffers[transferId] ?: 0) - (mapCountViewedOffers[transferId] ?: 0)
-            if (countNewOffers > 0) {
-                increaseViewedOffersCounter(transferId, countNewOffers)
-            }
-        }
-        viewState.setOffers(offers.map { offer ->
-            when (offer) {
-                is Offer        -> offerMapper.toView(offer)
-                is BookNowOffer -> offer.map()
-            }
-        })
-        viewState.setSortState(sortCategory, sortHigherToLower)
+        if (checkEventsCount) checkEventsCount()
+        setOffers()
     }
 
     private fun sortOffers() {
@@ -217,11 +208,39 @@ class OffersPresenter : BasePresenter<OffersView>() {
             Sort.RATING -> getByRating()
             Sort.PRICE  -> getByPrice()
         }
-        offers.sortedWith(comparator)
-        if (sortHigherToLower) {
-            offers = offers.reversed()
-        }
+        offers = offers.sortedWith(comparator)
+        checkSortingOrder()
+
         analytics.logEvent(Analytics.EVENT_OFFERS, Analytics.PARAM_KEY_FILTER, sortType.name.toLowerCase())
+    }
+
+    private fun checkSortingOrder() {
+        if (sortHigherToLower) {
+            reverseOffersList()
+        }
+    }
+
+    private fun reverseOffersList() {
+        offers = offers.reversed()
+    }
+
+    private fun checkEventsCount() {
+        with(countEventsInteractor) {
+            val countNewOffers = (mapCountNewOffers[transferId] ?: 0) - (mapCountViewedOffers[transferId] ?: 0)
+            if (countNewOffers > 0) {
+                increaseViewedOffersCounter(transferId, countNewOffers)
+            }
+        }
+    }
+
+    private fun setOffers() {
+        viewState.setOffers(offers.map { offer ->
+            when (offer) {
+                is Offer        -> offerMapper.toView(offer)
+                is BookNowOffer -> offer.map()
+            }
+        })
+        viewState.setSortType(sortCategory, sortHigherToLower)
     }
 
     private fun getByYear(): Pair<SortType, Comparator<OfferItem>> {

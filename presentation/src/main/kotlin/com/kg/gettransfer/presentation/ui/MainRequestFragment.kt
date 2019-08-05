@@ -20,6 +20,7 @@ import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.RETURN_DATE
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
 import com.kg.gettransfer.presentation.presenter.MainPresenter
+import com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.MainRequestView
@@ -182,7 +183,7 @@ class MainRequestFragment :
             switcher_hourly.switch_mode_.isChecked = true
             request_search_panel.tvCurrent_hours.text = duration
         }
-        tv_internet_warning.isVisible = !networkAvailable
+        changeNetworkNotAvailableVisibility(!networkAvailable)
         enableBtnNext()
     }
 
@@ -219,7 +220,11 @@ class MainRequestFragment :
     }
 
     override fun onNetworkWarning(disconnected: Boolean) {
-        tv_internet_warning.isVisible = disconnected
+        changeNetworkNotAvailableVisibility(disconnected)
+    }
+
+    private fun changeNetworkNotAvailableVisibility(isShow: Boolean) {
+        fragmentLayoutTextNetworkNotAvailable.changeViewVisibility(isShow)
     }
 
     override fun blockSelectedField(field: String) {

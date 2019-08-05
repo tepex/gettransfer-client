@@ -19,7 +19,8 @@
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_back" />
+            app:srcCompat="@drawable/ic_back"
+            style="@style/BorderlessBackground"/>
 
 
         <TextView
@@ -28,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_toStartOf="@+id/btn_forward"
+            android:layout_toStartOf="@+id/layout_btn_request_info"
             android:layout_toEndOf="@+id/btn_back"
             android:ellipsize="marquee"
             android:focusable="true"
@@ -48,13 +49,19 @@
             android:fontFamily="@font/sf_pro_text_regular"
             android:textColor="@color/color_gtr_grey" />
 
-        <ImageView
-            android:id="@+id/btn_forward"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:rotation="180"
-            app:srcCompat="@drawable/ic_back" />
+        <FrameLayout
+            android:id="@+id/layout_btn_request_info"
+            android:layout_width="@dimen/activity_offers_toolbar_btn_info_layout_size"
+            android:layout_height="@dimen/activity_offers_toolbar_btn_info_layout_size"
+            android:layout_alignParentEnd="true">
+
+            <ImageView
+                android:id="@+id/btn_request_info"
+                android:layout_width="@dimen/activity_offers_toolbar_btn_info_size"
+                android:layout_height="@dimen/activity_offers_toolbar_btn_info_size"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_info" />
+        </FrameLayout>
 
     </RelativeLayout>
 
