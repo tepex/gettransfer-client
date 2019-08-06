@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.EndpointModel
@@ -25,7 +26,7 @@ interface SettingsView : BaseView {
 
     fun initGeneralSettingsLayout()
     //fun initLoggedInUserSettings(profile: ProfileModel)
-    fun initProfileField()
+    fun initProfileField(isLoggedIn: Boolean, profile: Profile)
     fun initCarrierLayout()
     fun showDebugMenu()
     fun hideDebugMenu()

@@ -46,8 +46,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         super.attachView(view)
         if (restart) initConfigs()
         initGeneralSettings()
+        viewState.initProfileField(accountManager.isLoggedIn, accountManager.remoteProfile)
         if (accountManager.isLoggedIn) {
-            viewState.initProfileField()
             viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
         }
 
@@ -198,7 +198,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     }
 
     fun onProfileFieldClicked() {
-        router.navigateTo(Screens.ProfileSettings())
+        if (accountManager.isLoggedIn) router.navigateTo(Screens.ProfileSettings())
+        else router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, null))
     }
 
     override fun onBackCommandClick() {

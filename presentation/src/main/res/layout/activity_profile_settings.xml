@@ -50,7 +50,7 @@
             app:settingsEditableFieldChevron="false"
             android:inputType="phone"/>
 
-        <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+        <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
             android:id="@+id/passwordField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

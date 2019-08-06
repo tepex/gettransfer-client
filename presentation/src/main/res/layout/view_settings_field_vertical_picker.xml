@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/settings_field_height"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorWhite">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/field_chevron"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="@dimen/settings_field_title_margin_start"
+        android:layout_marginEnd="@dimen/settings_field_text_margin_end">
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/sf_font_pro_text_semibold_black"
+            android:textSize="@dimen/settings_field_text_size"
+            android:lines="1"
+            android:ellipsize="end"
+            tools:text="Валерий Маскович"/>
+
+        <TextView
+            android:id="@+id/subtitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/settings_field_text_size"
+            style="@style/sf_font_pro_text_regular_black"
+            android:lines="1"
+            android:ellipsize="end"
+            tools:text="passpass@mail.com"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/field_chevron"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_chevron_right"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/settings_field_layout_btns_margin_end"/>
+
+</android.support.constraint.ConstraintLayout>
