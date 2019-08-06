@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,23 +14,17 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.common.NewTransferSwitchListener
-import com.kg.gettransfer.extensions.isGone
-import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
-import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.RETURN_DATE
-import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
 import com.kg.gettransfer.presentation.presenter.NewTransferMainPresenter
+import com.kg.gettransfer.presentation.ui.ReadMoreFragment
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
-import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.NewTransferMainView
 
-import kotlinx.android.synthetic.main.create_order_field.view.*
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
-import kotlinx.android.synthetic.main.fragment_new_transfer_main.field_divider
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
 
@@ -43,12 +36,14 @@ import timber.log.Timber
 
 @Suppress("TooManyFunctions")
 class NewTransferMainFragment : MvpAppCompatFragment(),
-    KoinComponent, NewTransferMainView, DateTimeScreen {
+    KoinComponent, NewTransferMainView {
 
     @InjectPresenter
     internal lateinit var presenter: NewTransferMainPresenter
 
     var listener: NewTransferSwitchListener? = null
+
+    private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
     @ProvidePresenter
     fun createMainRequestPresenter() = NewTransferMainPresenter()
@@ -70,7 +65,6 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
     override fun setUserVisibleHint(visible: Boolean) {
         super.setUserVisibleHint(visible)
         presenter.updateView(visible && isResumed)
-        if (visible && isResumed) refreshUi()
     }
 
     override fun onAttach(activity: Context?) {
@@ -87,9 +81,6 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         switcher_hourly.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
             presenter.tripModeSwitched(isChecked)
         }
-        switcher_map_.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) switchToMap()
-        }
 
         // Address panel
         request_search_panel.setSearchFromClickListener {
@@ -99,17 +90,10 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         request_search_panel.setHourlyClickListener { presenter.showHourlyDurationDialog() }
         request_search_panel.setIvSelectFieldFromClickListener {  switchToMap() }
 
-        // Time
-        order_time_view.setOnClickListener  { openPicker(START_DATE) }
-
         // Buttons
-        btnShowDrawerFragment.setOnClickListener { listener?.openMenu() }
-        fl_DeleteReturnDate.setOnClickListener   { clearReturnDate() }
-        btnNextFragment.setOnClickListener       { onNextClick() }
-    }
-
-    fun refreshUi() {
-        switcher_map_.switch_mode_.isChecked = false
+        btnNextFragment.setOnClickListener { onNextClick() }
+        bestPriceLogo.setOnClickListener(readMoreListener)
+        layoutBestPriceText.setOnClickListener(readMoreListener)
     }
 
     override fun switchToMap() {
@@ -126,46 +110,27 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
 
     override fun showHourlyDurationDialog(durationValue: Int?) {
         HourlyDurationDialogFragment
-                .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
-                    override fun onDone(durationValue: Int) {
-                        presenter.updateDuration(durationValue)
-                    }
-                })
-                .show(fragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
+            .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
+                override fun onDone(durationValue: Int) {
+                    presenter.updateDuration(durationValue)
+                }
+            })
+            .show(fragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
     }
 
     private fun onNextClick() {
         if (dateDelegate.validateWith {
-                    Utils.getAlertDialogBuilder(requireActivity())
-                            .setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
-                            .setMessage(getString(CreateOrderView.FieldError.RETURN_TIME.stringId))
-                            .setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
-                            .show()
-                }) {
+            Utils.getAlertDialogBuilder(requireActivity())
+                .setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
+                .setMessage(getString(CreateOrderView.FieldError.RETURN_TIME.stringId))
+                .setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
+                .show()
+        }) {
             presenter.onNextClick { process ->
                 btnNextFragment?.isEnabled = false
             }
         }
     }
-
-    override fun initDateTimeFields() =
-            with(dateDelegate) {
-                if (startOrderedTime == null) {
-                    order_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)
-                } else {
-                    order_time_view.hint_title.text = startOrderedTime
-                    return_time_view.setOnClickListener { openPicker(RETURN_DATE) }
-                }
-                if (returnOrderedTime == null) {
-                    return_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE_RETURN)
-                } else {
-                    return_time_view.hint_title.text = returnOrderedTime
-                    setReturnTimeIcon(true)
-                }
-                setReturnTimeIcon(returnOrderedTime != null)
-            }
-
-    private fun openPicker(field: Boolean) = dateDelegate.chooseOrderTime(requireContext(), field, this)
 
     override fun setHourlyDuration(duration: Int?) {
         if (duration != null) {
@@ -178,8 +143,6 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
 
     override fun updateTripView(isHourly: Boolean) {
         request_search_panel.hourlyMode(isHourly)
-        rl_returnTime.isGone    = isHourly
-        field_divider.isGone    = isHourly
         enableBtnNext()
     }
 
@@ -187,35 +150,6 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         btnNextFragment.isEnabled =
                 !request_search_panel.isEmptySearchFrom() &&
             (!request_search_panel.isEmptySearchTo() || switcher_hourly.switch_mode_.isChecked)
-    }
-
-    private fun setReturnTimeIcon(hasDate: Boolean = true) {
-        val image = if (hasDate) R.drawable.ic_calendar_return else R.drawable.ic_return_time
-        return_time_view.img_icon.setImageDrawable(ContextCompat.getDrawable(requireContext(), image))
-        fl_DeleteReturnDate.isVisible = hasDate
-        return_time_view.img_arrow.isVisible = !hasDate
-    }
-
-    private fun clearReturnDate() {
-        dateDelegate.returnDate = null
-        return_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)
-        setReturnTimeIcon(false)
-    }
-
-    override fun setFieldDate(date: String, field: Boolean) {
-        val dateField = if (field == START_DATE) order_time_view else return_time_view
-        dateField.hint_title.text = date
-        if (field == RETURN_DATE) {
-            setReturnTimeIcon(date.isNotEmpty())
-        } else {
-            return_time_view.setOnClickListener { openPicker(RETURN_DATE) }
-        }
-        enableBtnNext()
-    }
-
-    override fun setEventCount(isVisible: Boolean, count: Int) {
-        tvEventsCountFragment.isVisible = isVisible && count > 0
-        tvEventsCountFragment.text = count.toString()
     }
 
     override fun onNetworkWarning(available: Boolean) {
@@ -242,6 +176,10 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
 
     override fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit) {
         block(EasyPermissions.hasPermissions(requireContext(), *PERMISSIONS))
+    }
+
+    override fun showReadMoreDialog() {
+        ReadMoreFragment().show(fragmentManager, getString(R.string.tag_read_more))
     }
 
     @CallSuper
