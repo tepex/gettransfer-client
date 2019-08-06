@@ -31,7 +31,6 @@ import java.util.Locale
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import kotlinx.android.synthetic.main.view_communication_button.*
 import kotlinx.android.synthetic.main.view_settings_field_horizontal_picker.view.field_text
 import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
 import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
@@ -58,10 +57,6 @@ class SettingsActivity : BaseActivity(), SettingsView {
         setContentView(R.layout.activity_settings)
         @Suppress("UnsafeCast")
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
-        Utils.dpToPxInt(this, COMPOUND_DRAWABLE_PADDING).also { px ->
-            settingsBtnLogout.btnName.setPadding(0, px, 0, 0)
-            settingsBtnSupport.btnName.setPadding(0, px, 0, 0)
-        }
     }
 
     @SuppressLint("CommitTransaction")
@@ -106,16 +101,17 @@ class SettingsActivity : BaseActivity(), SettingsView {
     override fun initGeneralSettingsLayout() {
         Timber.d("current locale: ${Locale.getDefault()}")
         settingsCurrency.setOnClickListener { presenter.onCurrencyClicked() }
-        settingsBtnLogout.setOnClickListener { presenter.onLogout() }
-        settingsBtnSupport.setOnClickListener { presenter.sendEmail(null, null) }
     }
 
     override fun initProfileField(isLoggedIn: Boolean, profile: Profile) {
         with(settingsProfile) {
             if (isLoggedIn) {
-                titleText.text = profile.fullName ?: "Your profile"
+                titleText.text = profile.fullName ?: getString(R.string.LNG_PROFILE)
                 subtitleText.isVisible = !profile.email.isNullOrEmpty() || !profile.phone.isNullOrEmpty()
                 subtitleText.text = profile.email ?: profile.phone ?: ""
+            } else {
+                titleText.text = getString(R.string.LNG_LOGIN_LOGIN_TITLE)
+                subtitleText.isVisible = false
             }
             setOnClickListener {
                 presenter.onProfileFieldClicked()
@@ -166,19 +162,21 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
-    override fun setEmailNotifications(enabled: Boolean) {
-        settingsEmailNotif.isVisible = true
-        with(settingsEmailNotif) {
-            isVisible = true
-            setOnClickListener { view ->
-                with(view.switch_button) {
-                    isChecked = !isChecked
-                    presenter.onEmailNotificationSwitched(isChecked)
+    override fun setEmailNotifications(isLoggedIn: Boolean, enabled: Boolean) {
+        settingsEmailNotif.isVisible = isLoggedIn
+        if (isLoggedIn) {
+            with(settingsEmailNotif) {
+                isVisible = true
+                setOnClickListener { view ->
+                    with(view.switch_button) {
+                        isChecked = !isChecked
+                        presenter.onEmailNotificationSwitched(isChecked)
+                    }
                 }
-            }
-            switch_button.apply {
-                isChecked = enabled
-                setOnCheckedChangeListener { _, isChecked -> presenter.onEmailNotificationSwitched(isChecked) }
+                switch_button.apply {
+                    isChecked = enabled
+                    setOnCheckedChangeListener { _, isChecked -> presenter.onEmailNotificationSwitched(isChecked) }
+                }
             }
         }
     }
@@ -239,10 +237,6 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     override fun setCalendarMode(calendarModeKey: String) {
         settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey)
-    }
-
-    override fun setLogoutButtonEnabled(enabled: Boolean) {
-        layoutSettingsBtnLogout.isVisible = enabled
     }
 
     override fun restartApp() {

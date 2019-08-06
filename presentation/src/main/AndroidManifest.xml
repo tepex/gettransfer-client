@@ -92,7 +92,6 @@
         <activity
             android:name=".presentation.ui.ProfileSettingsActivity"
             android:resizeableActivity="false"
-            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.SettingsChangePasswordActivity"

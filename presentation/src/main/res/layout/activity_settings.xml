@@ -147,45 +147,6 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/activity_settings_layout_btns_margin_bottom"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/layoutSettingsBtnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
-                android:id="@+id/settingsBtnLogout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:btn_name="@string/LNG_UNLOGIN"
-                app:btn_img="@drawable/ic_logout"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
-                android:id="@+id/settingsBtnSupport"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:btn_name="@string/LNG_CUSTOMER_SUPPORT"
-                app:btn_img="@drawable/ic_support"/>
-        </LinearLayout>
-    </LinearLayout>
-
     <FrameLayout
         android:id="@+id/currenciesFragment"
         android:layout_width="match_parent"
