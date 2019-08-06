@@ -47,6 +47,7 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
             }
         }
         passwordField.setOnClickListener { presenter.onChangePasswordClicked() }
+        btnLogout.setOnClickListener { presenter.onLogout() }
         btnSave.setOnClickListener { presenter.onSaveBtnClicked() }
     }
 
