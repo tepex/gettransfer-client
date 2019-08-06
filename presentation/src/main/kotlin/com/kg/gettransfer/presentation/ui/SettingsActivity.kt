@@ -23,6 +23,7 @@ import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
+import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
@@ -210,12 +211,22 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     override fun setLocale(locale: String, code: String) {
         settingsLanguage.field_text.text = locale
+        val langIconParams = LanguageDrawer.LanguageLayoutParamsRes.SETTINGS
         with(settingsLanguage.field_text) {
             text = locale
-            setCompoundDrawablesWithIntrinsicBounds(
+            setCompoundDrawables(
                 null,
                 null,
-                ContextCompat.getDrawable(this@SettingsActivity, Utils.getLanguageImage(code)),
+                    ContextCompat.getDrawable(
+                        this@SettingsActivity,
+                        Utils.getLanguageImage(code)
+                    )?.apply {
+                        setBounds(
+                            0,
+                            0,
+                            resources.getDimensionPixelSize(langIconParams.width),
+                            resources.getDimensionPixelSize(langIconParams.height))
+                    },
                 null
             )
             compoundDrawablePadding = Utils.dpToPxInt(this@SettingsActivity, COMPOUND_DRAWABLE_PADDING)
