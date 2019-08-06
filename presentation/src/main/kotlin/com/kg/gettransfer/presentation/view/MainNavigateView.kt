@@ -12,7 +12,6 @@ interface MainNavigateView : BaseView {
     fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean)
     fun setBalance(balance: String?)
     fun setEventCount(isVisible: Boolean, count: Int)
-    fun showReadMoreDialog()
     fun showDetailedReview()
     fun askRateInPlayMarket()
     fun thanksForRate()

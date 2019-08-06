@@ -60,7 +60,7 @@
     <string name="LNG_MENU_SUBTITLE_TRIPS">Upcoming transfers</string>
     <string name="LNG_CUSTOMER_SUBTITLE_SUPPORT">Contact us</string>
     <string name="LNG_READMORE"><u>Read more</u></string>
-    <string name="LNG_BESTPRICES">Best prices for transfers\nbetween airports and cities\nworldwide</string>
+    <string name="LNG_BESTPRICES">Best prices for transfers between airports and cities worldwide</string>
     <string name="LNG_LANGUAGE">Application language</string>
     <string name="LNG_CURRENCY">Currency</string>
     <string name="LNG_UNLOGIN">Sign out</string>
