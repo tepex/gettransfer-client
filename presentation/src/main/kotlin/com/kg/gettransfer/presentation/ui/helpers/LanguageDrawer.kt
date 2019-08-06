@@ -42,6 +42,12 @@ object LanguageDrawer {
             R.dimen.view_transfer_details_language_height,
             R.dimen.view_transfer_details_language_vertical_margins,
             R.dimen.view_transfer_details_language_horizontal_margins
+        ),
+        SETTINGS(
+            R.dimen.activity_settings_language_icon_width,
+            R.dimen.activity_settings_language_icon_height,
+            R.dimen.activity_settings_language_icon_margins,
+            R.dimen.activity_settings_language_icon_margins
         )
     }
 

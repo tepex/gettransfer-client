@@ -629,6 +629,9 @@
 	<dimen name="activity_settings_layout_debug_margin_top">32dp</dimen>
 	<dimen name="activity_settings_layout_btns_margin_bottom">24dp</dimen>
 	<dimen name="activity_settings_padding_bottom">150dp</dimen>
+	<dimen name="activity_settings_language_icon_width">24dp</dimen>
+	<dimen name="activity_settings_language_icon_height">16dp</dimen>
+	<dimen name="activity_settings_language_icon_margins">0dp</dimen>
 
 	<dimen name="lang_icon_height">16dp</dimen>
 	<dimen name="lang_icon_width">24dp</dimen>
