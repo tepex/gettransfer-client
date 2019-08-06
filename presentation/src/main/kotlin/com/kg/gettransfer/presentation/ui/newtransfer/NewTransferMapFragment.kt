@@ -83,8 +83,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
         isFirst = savedInstanceState == null
 
-//        viewNetworkNotAvailable = textNetworkNotAvailable
-
         switch_mode_.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
         search_panel.setSearchFromClickListener {
             presenter.navigateToFindAddress(
@@ -304,7 +302,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     }
 
     override fun onNetworkWarning(available: Boolean) {
-        textNetworkNotAvailable?.isGone = available
+        layoutTextNetworkNotAvailable.changeViewVisibility(!available)
         if (available) presenter.fillAddressFieldsCheckIsEmpty()
     }
 

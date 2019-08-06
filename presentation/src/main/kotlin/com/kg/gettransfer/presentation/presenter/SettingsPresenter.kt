@@ -226,6 +226,10 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         restart = false
     }
 
+    fun onForceCrashClick() {
+        error("This is force crash")
+    }
+
     companion object {
         const val CLOSE_FRAGMENT  = 0
         const val CURRENCIES_VIEW = 1

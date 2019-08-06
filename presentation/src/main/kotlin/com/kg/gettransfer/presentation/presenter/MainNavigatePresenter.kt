@@ -1,10 +1,8 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.v4.view.GravityCompat
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
-import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
 import com.kg.gettransfer.domain.model.Offer
@@ -27,18 +25,16 @@ import org.koin.core.inject
 
 @InjectViewState
 class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventListener {
-    private val reviewInteractor: ReviewInteractor by inject()
-
-    private val orderInteractor: OrderInteractor by inject()
     private val profileMapper: ProfileMapper by inject()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         if (accountManager.isLoggedIn) {
             registerPushToken()
-            checkReview()
+
             utils.launchSuspend {
-                utils.asyncAwait { transferInteractor.getAllTransfers() }
+                fetchResultOnly { transferInteractor.getAllTransfers() }
+                        .isSuccess()?.let { checkReview(it) }
                 viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
             }
         }
@@ -143,26 +139,20 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         router.navigateTo(Screens.Support)
     }
 
-    private fun checkReview() =
-            with(reviewInteractor) {
-                if (!isReviewSuggested) checkLastTrip()
-                else if (shouldAskRateInMarket)
-                    utils.launchSuspend {
-                        delay(ONE_SEC_DELAY)
-                        viewState.askRateInPlayMarket()
-                    }
-            }
-
-    private fun checkLastTrip() {
-        utils.launchSuspend {
-            fetchResultOnly { transferInteractor.getAllTransfers() }
-                    .isSuccess()
-                    ?.let {
-                        getLastTransfer(it.filterRateable())
-                                ?.let { lastTransfer ->
-                                    checkToShowReview(lastTransfer) }
-                    }
+    private suspend fun checkReview(transfers: List<Transfer>) =
+        with(reviewInteractor) {
+            if (!isReviewSuggested) checkLastTrip(transfers)
+            else if (shouldAskRateInMarket)
+                utils.launchSuspend {
+                    delay(ONE_SEC_DELAY)
+                    viewState.askRateInPlayMarket()
+                }
         }
+
+    private suspend fun checkLastTrip(transfers: List<Transfer>) {
+        getLastTransfer(transfers.filterRateable())
+            ?.let { lastTransfer ->
+                checkToShowReview(lastTransfer) }
     }
 
     private fun getLastTransfer(transfers: List<Transfer>) =
@@ -217,7 +207,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         reviewInteractor.setOfferReview(offer)
         reviewInteractor.setRates(rate.toFloat())
         if (rate == ReviewInteractor.MAX_RATE) {
-            reviewInteractor.sendRates()
+            utils.asyncAwait { reviewInteractor.sendRates() }
             viewState.thanksForRate()
         } else {
             viewState.showDetailedReview()

@@ -14,7 +14,7 @@
             android:id="@+id/btnShowDrawerFragment"
             android:layout_width="@dimen/activity_main_buttons_size"
             android:layout_height="@dimen/activity_main_buttons_size"
-            android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
+            android:layout_marginTop="@dimen/activity_main_buttons_margin_top_without_button_shadow"
             android:layout_marginStart="@dimen/activity_main_buttons_horizontal_margin_without_button_shadow"
             app:srcCompat="@drawable/ic_menu"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +33,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/btnShowDrawerFragment"
             app:layout_constraintBottom_toBottomOf="@+id/btnShowDrawerFragment"
-            android:layout_marginBottom="@dimen/activity_main_events_count_margin_bottom"
+            android:layout_marginBottom="@dimen/activity_main_events_count_margin_bottom_without_button_shadow"
             android:paddingStart="@dimen/activity_main_events_count_padding_start_end"
             android:paddingEnd="@dimen/activity_main_events_count_padding_start_end"/>
     </android.support.constraint.ConstraintLayout>
@@ -46,7 +46,7 @@
         app:switcher_title="@string/LNG_MAP"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/activity_main_buttons_horizontal_margin_without_button_shadow"
-        android:layout_marginTop="@dimen/activity_main_buttons_margin_top"/>
+        android:layout_marginTop="@dimen/activity_main_buttons_margin_top_without_button_shadow"/>
 
     <com.kg.gettransfer.presentation.ui.custom.SwitcherView
         android:id="@+id/switcher_hourly"
@@ -55,7 +55,7 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/switcher_map_"
         android:layout_marginTop="@dimen/switchers_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_main_buttons_horizontal_margin_without_button_shadow"
+        android:layout_marginEnd="@dimen/activity_main_buttons_horizontal_margin"
         app:switcher_title="@string/LNG_PER_HOUR"/>
 
     <com.kg.gettransfer.presentation.ui.custom.SearchFormMainView
@@ -84,8 +84,6 @@
             android:id="@+id/return_time_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-
             app:order_title="@string/LNG_RIDE_DATE_RETURN"
             app:icon="@drawable/ic_return_time"/>
 
@@ -130,10 +128,12 @@
 
         android:textColor="@color/colorWhite" />
 
-    <include layout="@layout/view_network_not_available"
-        android:layout_marginTop="@dimen/internet_warning_horizontal_text_margin_top"
+    <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
+        android:id="@+id/layoutTextNetworkNotAvailable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_returnTime" />
+        android:layout_below="@id/rl_returnTime"
+        android:layout_marginTop="@dimen/internet_warning_horizontal_text_margin_top"
+        app:text_no_internet="@string/LNG_OFFLINE_MESSAGE"/>
 
 </RelativeLayout>

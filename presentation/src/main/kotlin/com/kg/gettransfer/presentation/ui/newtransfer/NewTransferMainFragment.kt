@@ -33,7 +33,6 @@ import kotlinx.android.synthetic.main.create_order_field.view.*
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.field_divider
 import kotlinx.android.synthetic.main.search_form_main.*
-import kotlinx.android.synthetic.main.view_network_not_available.*
 import kotlinx.android.synthetic.main.view_switcher.*
 
 import org.koin.core.KoinComponent
@@ -220,7 +219,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
     }
 
     override fun onNetworkWarning(available: Boolean) {
-        textNetworkNotAvailable?.isGone = available
+        layoutTextNetworkNotAvailable.changeViewVisibility(!available)
     }
 
     override fun setAddressFrom(address: String) {

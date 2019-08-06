@@ -71,10 +71,16 @@
         android:layout_gravity="top"
         android:background="@drawable/back_status_bar_gradient" />
 
-    <include layout="@layout/view_network_not_available" />
+    <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
+        android:id="@+id/layoutTextNetworkNotAvailable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:text_no_internet="@string/LNG_OFFLINE_MESSAGE"/>
 
     <ImageView
         android:id="@+id/btnBack"
+        android:layout_below="@+id/layoutTextNetworkNotAvailable"
         android:layout_width="@dimen/activity_main_buttons_size"
         android:layout_height="@dimen/activity_main_buttons_size"
         android:layout_marginStart="@dimen/activity_main_buttons_horizontal_margin_without_button_shadow"
