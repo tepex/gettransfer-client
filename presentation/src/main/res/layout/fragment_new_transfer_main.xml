@@ -73,7 +73,7 @@
         android:layout_marginStart="@dimen/main_without_map_promo_text_horizontal_margins"
         android:layout_marginEnd="@dimen/main_without_map_promo_text_horizontal_margins"
         android:gravity="center"
-        android:text="Трансферы везде по лучшей цене "
+        android:text="@string/LNG_MAIN_SCREEN_POINT_TO_POINT_TRANSFER_TITLE"
         android:textSize="@dimen/main_without_map_promo_text_size"
         app:layout_constraintBottom_toTopOf="@+id/switcher_hourly"
         app:layout_constraintEnd_toEndOf="parent"
