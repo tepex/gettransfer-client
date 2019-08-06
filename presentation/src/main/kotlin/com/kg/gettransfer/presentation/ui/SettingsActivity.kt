@@ -16,13 +16,13 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
-import com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
@@ -31,8 +31,9 @@ import java.util.Locale
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_communication_button.*
-import kotlinx.android.synthetic.main.view_settings_field_picker.view.*
+import kotlinx.android.synthetic.main.view_settings_field_horizontal_picker.view.field_text
 import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
+import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
 
 import timber.log.Timber
 
@@ -108,9 +109,17 @@ class SettingsActivity : BaseActivity(), SettingsView {
         settingsBtnSupport.setOnClickListener { presenter.sendEmail(null, null) }
     }
 
-    override fun initProfileField() {
-        settingsProfile.isVisible = true
-        settingsProfile.setOnClickListener { presenter.onProfileFieldClicked() }
+    override fun initProfileField(isLoggedIn: Boolean, profile: Profile) {
+        with(settingsProfile) {
+            if (isLoggedIn) {
+                titleText.text = profile.fullName ?: "Your profile"
+                subtitleText.isVisible = !profile.email.isNullOrEmpty() || !profile.phone.isNullOrEmpty()
+                subtitleText.text = profile.email ?: profile.phone ?: ""
+            }
+            setOnClickListener {
+                presenter.onProfileFieldClicked()
+            }
+        }
     }
 
     override fun initCarrierLayout() {
