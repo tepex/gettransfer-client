@@ -61,8 +61,6 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     @ProvidePresenter
     fun createMainPresenter() = MainNavigatePresenter()
 
-    private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
-
     private val itemsNavigationViewListener = View.OnClickListener { view ->
         with(presenter) {
             when (view.id) {
@@ -135,10 +133,6 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         navNewTransfer.isVisible = true
         navRequests.isVisible = true
 
-        with(readMoreListener) {
-            navFooterStamp.setOnClickListener(this)
-            navFooterReadMore.setOnClickListener(this)
-        }
         with(itemsNavigationViewListener) {
             navNewTransfer.setOnClickListener(this)
             navHeaderShare.setOnClickListener(this)
@@ -186,11 +180,6 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     override fun setBalance(balance: String?) {
         navHeaderBalance.text = getString(R.string.LNG_PAYMENT_BALANCE, balance)
         groupBalance.isVisible = true
-    }
-
-    override fun showReadMoreDialog() {
-        drawer.closeDrawer(GravityCompat.START)
-        ReadMoreFragment().show(supportFragmentManager, getString(R.string.tag_read_more))
     }
 
     override fun showRateForLastTrip(transferId: Long, vehicle: String, color: String) {

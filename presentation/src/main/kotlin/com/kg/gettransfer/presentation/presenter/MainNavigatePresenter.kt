@@ -89,11 +89,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.ABOUT_CLICKED)
     }
 
-    fun readMoreClick() {
-        viewState.showReadMoreDialog()
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.BEST_PRICE_CLICKED)
-    }
-
     fun onSettingsClick() {
         router.navigateTo(Screens.Settings)
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SETTINGS_CLICKED)

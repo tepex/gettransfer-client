@@ -11,16 +11,14 @@ import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.view.NewTransferMainView
 
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.core.KoinComponent
 
 import org.koin.core.inject
 
 @InjectViewState
-class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>(), KoinComponent, CounterEventListener {
-    private val accountManager: AccountManager by inject()
-    private val transferInteractor: TransferInteractor by inject()
-    private val countEventsInteractor: CountEventsInteractor by inject()
+class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>(), KoinComponent {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -30,15 +28,14 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
 
         geoInteractor.initGeocoder()
         geoInteractor.initGoogleApiClient()
-        if (accountManager.isLoggedIn) {
-            utils.launchSuspend {
-                utils.asyncAwait { transferInteractor.getAllTransfers() }
-                viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
-            }
-        }
 
         // Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
+    }
+
+    fun readMoreClick() {
+        viewState.showReadMoreDialog()
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.BEST_PRICE_CLICKED)
     }
 
     override fun updateView(isVisibleView: Boolean) {
@@ -47,25 +44,8 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         if (nState.isChoosePointOnMap) {//returned from search activity
             viewState.switchToMap()
         } else {
-            countEventsInteractor.addCounterListener(this)
-            updateCounter()
-
             fillViewFromState()
         }
-    }
-
-    override fun fillViewFromState() {
-        super.fillViewFromState()
-        viewState.initDateTimeFields()
-    }
-
-    override fun detachView(view: NewTransferMainView?) {
-        super.detachView(view)
-        countEventsInteractor.removeCounterListener(this)
-    }
-
-    override fun updateCounter() {
-        utils.launchSuspend { viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount) }
     }
 
     override fun changeUsedField(field: String) {
