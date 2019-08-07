@@ -176,7 +176,7 @@ class CarrierTripsMainActivity : BaseActivity(),
         val versionCode = BuildConfig.VERSION_CODE
         @Suppress("UnsafeCast")
         (navFooterVersion as TextView).text =
-            String.format(getString(R.string.nav_footer_version), versionName, versionCode)
+            String.format(getString(R.string.app_version), versionName, versionCode)
 
         with(itemsNavigationViewListener) {
             navHeaderShare.setOnClickListener(this)

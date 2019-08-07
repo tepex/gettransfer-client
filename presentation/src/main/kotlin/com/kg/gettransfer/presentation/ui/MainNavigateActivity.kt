@@ -129,7 +129,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         val versionCode = BuildConfig.VERSION_CODE
         @Suppress("UnsafeCast")
         (navFooterVersion as TextView).text =
-                String.format(getString(R.string.nav_footer_version), versionName, versionCode)
+                String.format(getString(R.string.app_version), versionName, versionCode)
         navNewTransfer.isVisible = true
         navRequests.isVisible = true
 

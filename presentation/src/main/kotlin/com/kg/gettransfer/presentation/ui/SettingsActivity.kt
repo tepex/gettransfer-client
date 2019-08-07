@@ -10,10 +10,9 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 
-import android.view.MotionEvent
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Profile
@@ -44,9 +43,6 @@ class SettingsActivity : BaseActivity(), SettingsView, CurrencyChangedListener {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
-
-    private var count = 0
-    private var startMillis = 0L
 
     @ProvidePresenter
     fun createSettingsPresenter() = SettingsPresenter()
@@ -103,6 +99,12 @@ class SettingsActivity : BaseActivity(), SettingsView, CurrencyChangedListener {
     override fun initGeneralSettingsLayout() {
         Timber.d("current locale: ${Locale.getDefault()}")
         settingsCurrency.setOnClickListener { presenter.onCurrencyClicked() }
+
+        val versionName = BuildConfig.VERSION_NAME
+        val versionCode = BuildConfig.VERSION_CODE
+        versionApp.text = String.format(getString(R.string.app_version), versionName, versionCode)
+        shareBtn.setOnClickListener { presenter.onShareClick() }
+        layoutAboutApp.setOnClickListener { presenter.onAboutAppClicked() }
     }
 
     override fun initProfileField(isLoggedIn: Boolean, profile: Profile) {
@@ -276,32 +278,7 @@ class SettingsActivity : BaseActivity(), SettingsView, CurrencyChangedListener {
         else -> throw UnsupportedOperationException()
     }
 
-    @CallSuper
-    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-        if (event?.action == MotionEvent.ACTION_UP) {
-            val time = System.currentTimeMillis()
-
-            // if it is the first time, or if it has been more than 3 seconds since the first tap
-            // (so it is like a new try), we reset everything
-            if (startMillis == 0L || time - startMillis > TIME_FOR_DEBUG) {
-                startMillis = time
-                count = 1
-            } else {
-                // it is not the first, and it has been  less than 3 seconds since the first
-                count++
-            }
-
-            if (count == COUNTS_FOR_DEBUG) {
-                count = 0
-                presenter.switchDebugSettings()
-            }
-        }
-        return super.dispatchTouchEvent(event)
-    }
-
     companion object {
-        private const val COUNTS_FOR_DEBUG = 7
-        private const val TIME_FOR_DEBUG = 3000L
         private const val COMPOUND_DRAWABLE_PADDING = 8f
     }
 }

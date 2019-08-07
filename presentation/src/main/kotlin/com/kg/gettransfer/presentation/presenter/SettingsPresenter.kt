@@ -32,6 +32,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private var localeWasChanged = false
     private var restart = true
 
+    private var count = 0
+    private var startMillis = 0L
+
     val isBackGroundAccepted get() =
         carrierTripInteractor.bgCoordinatesPermission != CarrierTripsMainView.BG_COORDINATES_REJECTED
 
@@ -131,6 +134,25 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
     }
 
+    fun onAboutAppClicked() {
+        val time = System.currentTimeMillis()
+
+        // if it is the first time, or if it has been more than 3 seconds since the first tap
+        // (so it is like a new try), we reset everything
+        if (startMillis == 0L || time - startMillis > TIME_FOR_DEBUG) {
+            startMillis = time
+            count = 1
+        } else {
+            // it is not the first, and it has been  less than 3 seconds since the first
+            count++
+        }
+
+        if (count == COUNTS_FOR_DEBUG) {
+            count = 0
+            switchDebugSettings()
+        }
+    }
+
     fun switchDebugSettings() {
         if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
             if (systemInteractor.isDebugMenuShowed) {
@@ -192,6 +214,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         } else super.onBackCommandClick()
     }
 
+    fun onShareClick() {
+        log.debug("Share action")
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
+        router.navigateTo(Screens.Share())
+    }
+
     private fun initConfigs() {
         endpoints = systemInteractor.endpoints.map { it.map() }
         locales = systemInteractor.locales.map { it.map() }
@@ -209,5 +237,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     companion object {
         const val CLOSE_FRAGMENT  = 0
         const val CURRENCIES_VIEW = 1
+
+        private const val COUNTS_FOR_DEBUG = 7
+        private const val TIME_FOR_DEBUG = 3000L
     }
 }
