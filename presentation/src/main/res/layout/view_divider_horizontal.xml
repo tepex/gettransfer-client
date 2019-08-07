@@ -3,7 +3,5 @@
       android:layout_width="match_parent"
       android:layout_marginStart="16dp"
       android:layout_marginEnd="16dp"
-      android:background="@color/color_transfer_details_horizontal_divider_new"
-      android:layout_height="1dp">
-
-</View>
+      android:background="@drawable/sh_divider_light_gray"
+      android:layout_height="1dp"/>

@@ -56,7 +56,6 @@ import kotlinx.android.synthetic.main.bottom_sheet_offers.*
 import kotlinx.android.synthetic.main.card_empty_offers.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.view.*
 import kotlinx.android.synthetic.main.vehicle_items.view.*
-import kotlinx.android.synthetic.main.view_network_not_available.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 import kotlinx.android.synthetic.main.view_offer_conditions.view.*
 import kotlinx.android.synthetic.main.view_offer_rating_details.*

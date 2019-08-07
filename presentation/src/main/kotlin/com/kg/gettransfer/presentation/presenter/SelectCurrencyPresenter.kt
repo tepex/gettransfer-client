@@ -1,44 +1,52 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
+import com.kg.gettransfer.domain.interactor.SessionInteractor
 
 import com.kg.gettransfer.domain.model.Currency
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
+import kotlinx.coroutines.*
 
 import org.koin.core.KoinComponent
-import org.koin.core.get
 import org.koin.core.inject
-import org.koin.core.parameter.parametersOf
+import kotlin.coroutines.CoroutineContext
 
 @InjectViewState
-class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinComponent {
+class SelectCurrencyPresenter : MvpPresenter<SelectCurrencyView>(), CoroutineScope, KoinComponent {
 
-    private val currencies = systemInteractor.currencies.map { it.map() }
-    private val popularCurrencies = currencies.filter { Currency.POPULAR.contains(it.code) }
-    private var currencyChangedListener: CurrencyChangedListener? = null
+    private val sessionInteractor: SessionInteractor by inject()
 
-    fun init() {
-        viewState.setCurrencies(
-            currencies.filter { !Currency.POPULAR.contains(it.code) },
-            popularCurrencies,
-            sessionInteractor.currency.map()
-        )
-    }
+    private val job = Job()
+    override val coroutineContext: CoroutineContext = job + Dispatchers.IO
 
-    fun addCurrencyChangedListener(currencyChangedListener: CurrencyChangedListener) {
-        this.currencyChangedListener = currencyChangedListener
-    }
-
-    fun removeCurrencyChangedListener() {
-        currencyChangedListener = null
+    override fun attachView(view: SelectCurrencyView?) {
+        super.attachView(view)
+        // This launch uses the coroutineContext defined
+        // by the coroutine presenter.
+        launch {
+            val selectedCurrency = sessionInteractor.currency.map()
+            val currencies = sessionInteractor.systemInteractor.currencies.map { it.map() }
+            withContext(Dispatchers.Main) {
+                viewState.setCurrencies(currencies, selectedCurrency)
+            }
+            val popularCurrencies = currencies.filter { Currency.POPULAR.contains(it.code) }
+            withContext(Dispatchers.Main) {
+                viewState.setPopularCurrencies(popularCurrencies, selectedCurrency)
+            }
+        }
     }
 
     fun changeCurrency(selected: CurrencyModel) {
         sessionInteractor.currency = selected.delegate
-        saveGeneralSettings()
-        currencyChangedListener?.currencyChanged(selected)
+        viewState.sendEvent(selected)
+    }
+
+    override fun onDestroy() {
+        job.cancel()
+        super.onDestroy()
     }
 }

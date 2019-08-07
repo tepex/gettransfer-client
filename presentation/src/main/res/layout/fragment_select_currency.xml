@@ -2,7 +2,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:layout_marginTop="@dimen/margin4"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/fragment_currencies_padding_start_end"
+    android:paddingStart="@dimen/fragment_currencies_padding_start_end"
+    android:paddingEnd="@dimen/fragment_currencies_padding_start_end"
+    android:background="@drawable/back_top_rounded">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -11,8 +16,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/fragment_currencies_padding_start_end"
-            android:paddingEnd="@dimen/fragment_currencies_padding_start_end"
             android:paddingBottom="@dimen/fragment_currencies_padding_bottom"
             android:orientation="vertical">
 
@@ -28,6 +31,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvPopularCurrencies"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -43,6 +47,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvAllCurrencies"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

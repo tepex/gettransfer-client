@@ -14,7 +14,7 @@ import java.util.Locale
 
 class SessionInteractor(
     private val sessionRepository: SessionRepository,
-    private val systemInteractor: SystemInteractor,
+    val systemInteractor: SystemInteractor,
     private val geoRepository: GeoRepository
 ) {
 

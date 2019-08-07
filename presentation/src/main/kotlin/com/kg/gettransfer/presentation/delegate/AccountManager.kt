@@ -22,7 +22,7 @@ class AccountManager : KoinComponent {
 
     val remoteUser: User
         get() = remoteAccount.user
-        
+
     val remoteProfile: Profile
         get() = remoteUser.profile
 
@@ -102,5 +102,18 @@ class AccountManager : KoinComponent {
             if (isTempAccount) initTempUser(result.model.user.copy())
         }
         return result
+    }
+
+    suspend fun putNoAccount(): Result<Account> {
+        return sessionInteractor.putAccount()
+    }
+
+    /**
+     * Save general settings
+     */
+    suspend fun saveSettings(): Result<Account>  {
+        return if (hasAccount)
+            putAccount(isTempAccount = false)
+        else putNoAccount()
     }
 }

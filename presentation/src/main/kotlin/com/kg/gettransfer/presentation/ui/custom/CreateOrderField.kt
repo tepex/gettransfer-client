@@ -2,19 +2,19 @@ package com.kg.gettransfer.presentation.ui.custom
 
 import com.kg.gettransfer.R
 import android.content.Context
+import android.support.design.widget.TextInputLayout
 import android.support.v4.content.ContextCompat
 import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
 import com.kg.gettransfer.presentation.ui.Utils
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_create_order_field.*
 
 class CreateOrderField @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-        LinearLayout(context, attrs, defStyleAttr), LayoutContainer {
+        TextInputLayout(context, attrs, defStyleAttr), LayoutContainer {
     override val containerView: View =
             LayoutInflater.from(context)
                     .inflate(R.layout.view_create_order_field, this, true)

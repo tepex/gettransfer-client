@@ -6,6 +6,7 @@
 
     <ImageView
         android:id="@+id/menu_item_image"
+        android:tint="@color/color_gtr_orange"
         android:layout_width="@dimen/nav_icons_size"
         android:layout_height="@dimen/nav_icons_size"
         app:layout_constraintTop_toTopOf="parent"

@@ -149,7 +149,7 @@ val androidModule = module {
     single { GTNotificationManager(androidApplication().applicationContext) }
     single { DateTimeDelegate() }
     single { PassengersDelegate() }
-    single { MainState() }
+    single { NewTransferState() }
     single { AccountManager() }
     single { GTDownloadManager(androidApplication().applicationContext) }
 }

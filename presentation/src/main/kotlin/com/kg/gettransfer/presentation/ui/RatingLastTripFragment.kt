@@ -125,9 +125,9 @@ class RatingLastTripFragment : BaseBottomSheetDialogFragment(), RatingLastTripVi
     }
 
     override fun thanksForRate() {
-        val act = activity
-        if (act is MainActivity) {
-            act.thanksForRate()
+        val parent = activity
+        if (parent is MainNavigateActivity) {
+            parent.thanksForRate()
         }
     }
 

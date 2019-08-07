@@ -130,8 +130,8 @@
     <string name="LNG_RIDE_PAYMENT_OFFER">By pressing \"\PAY\"\ you accept <a href="#">terms of the Agreement</a></string>
     <string name="LNG_RIDE_OFFERT_TITLE">License agreement</string>
     <string name="LNG_RIDE_OFFERT_ERROR">You should accept terms of use</string>
-    <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %s (ETA ~%s)</string>
-    <string name="LNG_RIDE_FAIR_PRICE_FORMAT_HOURLY">Average rate on route %s</string>
+<!--    <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %s (ETA ~%s)</string>-->
+<!--    <string name="LNG_RIDE_FAIR_PRICE_FORMAT_HOURLY">Average rate on route %s</string>-->
     <string name="LNG_DATE_IN_HOURS">In</string>
     <string name="LNG_RIDE_FROM">from:</string>
     <string name="LNG_RIDE_YOU_HAPPY_TRANSFER">Are you satisfied with the ride?</string>

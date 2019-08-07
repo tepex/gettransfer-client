@@ -1,11 +1,15 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.animation.Animator
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.DividerItemDecoration
 
 import android.view.View
 
@@ -13,20 +17,22 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.DatabaseException
 
 import com.kg.gettransfer.presentation.adapter.CurrenciesListAdapter
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 import com.kg.gettransfer.presentation.presenter.SelectCurrencyPresenter
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 
 import kotlinx.android.synthetic.main.fragment_select_currency.*
 
-@Suppress("TooManyFunctions")
+import timber.log.Timber
+
 class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
+    private lateinit var adapterPopular: CurrenciesListAdapter
+    private lateinit var adapterAll: CurrenciesListAdapter
     override val layout = R.layout.fragment_select_currency
 
     @InjectPresenter
@@ -35,58 +41,68 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
     @ProvidePresenter
     fun createSelectCurrencyPresenter() = SelectCurrencyPresenter()
 
+    private var listener: CurrencyChangedListener? = null
+
+    @CallSuper
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is CurrencyChangedListener) {
+            listener = context
+        }
+    }
+
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        rvAllCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rvPopularCurrencies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
-        val parentActivity = activity
-        if (parentActivity is BaseActivity) {
-            val parentPresenter = parentActivity.getPresenter()
-            if (parentPresenter is CurrencyChangedListener) presenter.addCurrencyChangedListener(parentPresenter)
+
+        @Suppress("UnsafeCallOnNullableType")
+        val itemDecorator = DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
+        ContextCompat.getDrawable(requireContext(), R.drawable.sh_divider_light_gray)?.let { drawable ->
+            itemDecorator.setDrawable(drawable)
         }
 
-        presenter.init()
+        adapterAll = CurrenciesListAdapter(presenter::changeCurrency)
+        rvAllCurrencies.adapter = adapterAll
+        rvAllCurrencies.itemAnimator = DefaultItemAnimator()
+        rvAllCurrencies.addItemDecoration(itemDecorator)
+
+        adapterPopular = CurrenciesListAdapter(presenter::changeCurrency)
+        rvPopularCurrencies.adapter = adapterPopular
+        rvPopularCurrencies.itemAnimator = DefaultItemAnimator()
+        rvPopularCurrencies.addItemDecoration(itemDecorator)
+    }
+
+    /**
+     * Update UI after finished start fragment
+     */
+    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
+        return FragmentUtils.onCreateAnimation(requireContext(), enter) {
+            adapterAll.notifyDataSetChanged()
+            adapterPopular.notifyDataSetChanged()
+        }
+    }
+
+    override fun setCurrencies(all: List<CurrencyModel>, selected: CurrencyModel) {
+        adapterAll.setNewSelectedCurrency(selected)
+        adapterAll.update(all)
+    }
+
+    override fun setPopularCurrencies(popular: List<CurrencyModel>, selected: CurrencyModel) {
+        adapterPopular.setNewSelectedCurrency(selected)
+        adapterPopular.update(popular)
+    }
+
+    override fun sendEvent(currency: CurrencyModel) {
+        listener?.currencyChanged(currency)
     }
 
     @CallSuper
     override fun onDestroyView() {
-        presenter.removeCurrencyChangedListener()
+        listener = null
         rvAllCurrencies.adapter = null
         rvPopularCurrencies.adapter = null
         super.onDestroyView()
     }
-
-    override fun setCurrencies(all: List<CurrencyModel>, popular: List<CurrencyModel>, selected: CurrencyModel) {
-        setRecyclerViewAdapter(rvAllCurrencies, all, selected)
-        setRecyclerViewAdapter(rvPopularCurrencies, popular, selected)
-    }
-
-    private fun setRecyclerViewAdapter(recyclerView: RecyclerView, list: List<CurrencyModel>, selected: CurrencyModel) {
-        recyclerView.adapter = CurrenciesListAdapter(list, selected) { currency ->
-            presenter.changeCurrency(currency)
-            changeSelectedCurrency(currency)
-        }
-    }
-
-    private fun changeSelectedCurrency(newSelectedCurrency: CurrencyModel) {
-        setNewSelectedCurrency(rvAllCurrencies, newSelectedCurrency)
-        setNewSelectedCurrency(rvPopularCurrencies, newSelectedCurrency)
-    }
-
-    private fun setNewSelectedCurrency(recyclerView: RecyclerView, newSelectedCurrency: CurrencyModel) {
-        val adapter = recyclerView.adapter
-        if (adapter is CurrenciesListAdapter) {
-            adapter.setNewSelectedCurrency(newSelectedCurrency)
-            adapter.notifyDataSetChanged()
-        }
-    }
-
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
-    override fun setError(e: ApiException) {}
-    override fun setError(e: DatabaseException) {}
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
-    override fun setTransferNotFoundError(transferId: Long) {}
 }
