@@ -29,6 +29,6 @@ interface SettingsView : BaseView {
     fun showDebugMenu()
     fun hideDebugMenu()
 
-    fun showFragment(showingView: Int)
+    fun showCurrencyChooser()
     fun restartApp()
 }

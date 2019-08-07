@@ -7,9 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.content.FileProvider
 
-import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
@@ -18,12 +16,9 @@ import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RAT
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
 import kotlinx.serialization.json.JSON
 
-import java.io.File
-
 import org.jetbrains.anko.toast
 
 import ru.terrakok.cicerone.android.support.SupportAppScreen
-import java.lang.IllegalArgumentException
 
 object Screens {
     @JvmField val NOT_USED = -1
@@ -85,10 +80,6 @@ object Screens {
 
     object DriverModeNotSupport : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, DriverModeNotSupportedActivity()::class.java)
-    }
-
-    object Settings : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SettingsActivity::class.java)
     }
 
     object Requests : SupportAppScreen() {

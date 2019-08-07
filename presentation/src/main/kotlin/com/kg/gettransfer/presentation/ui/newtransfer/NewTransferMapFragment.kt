@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
 import android.animation.Animator
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 
@@ -21,10 +20,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.common.NewTransferSwitchListener
 
 import com.kg.gettransfer.domain.interactor.SystemInteractor
-import com.kg.gettransfer.extensions.isGone
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
@@ -40,12 +37,10 @@ import com.kg.gettransfer.presentation.view.NewTransferMapView
 
 import kotlinx.android.synthetic.main.fragment_new_transfer_map.*
 import kotlinx.android.synthetic.main.search_form_main.*
-import kotlinx.android.synthetic.main.view_network_not_available.*
 import kotlinx.android.synthetic.main.view_switcher.*
 import org.koin.android.ext.android.inject
 
 import pub.devrel.easypermissions.EasyPermissions
-import timber.log.Timber
 
 @Suppress("TooManyFunctions")
 class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
@@ -53,8 +48,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     @InjectPresenter
     internal lateinit var presenter: NewTransferMapPresenter
     internal val systemInteractor: SystemInteractor by inject()
-
-    var listener: NewTransferSwitchListener? = null
 
     private var isFirst = true
     private var isPermissionRequested = false
@@ -101,7 +94,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         search_panel.setIvSelectFieldToClickListener{ presenter.switchUsedField() }
         btnNext.setThrottledClickListener { performNextClick() }
         btnBack.setOnClickListener {
-            switchToMain()
+//            findNavController().navigateUp()
         }
         btnMyLocation.setOnClickListener {
             checkPermission()
@@ -109,17 +102,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         }
 
         enableBtnNext()
-
-        // back return to main
-        view.isFocusableInTouchMode = true
-        view.requestFocus()
-        view.setOnKeyListener(View.OnKeyListener { _, keyCode, keyEvent ->
-            if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_DOWN) {
-                switchToMain()
-                return@OnKeyListener true
-            }
-            return@OnKeyListener false
-        })
     }
 
     override fun setUserVisibleHint(visible: Boolean) {
@@ -146,20 +128,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
             gm.cameraPosition?.let { presenter.onCameraMove(it.target, true) }
         }
         gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
-    }
-
-    override fun onAttach(activity: Context?) {
-        super.onAttach(activity)
-        try {
-            listener = parentFragment as NewTransferSwitchListener
-        } catch (e: ClassCastException) {
-            Timber.e("%s must implement NavigationMenuListener", activity.toString())
-        }
-    }
-
-    override fun switchToMain() {
-        listener?.switchToMain()
-        presenter.resetState()
     }
 
     fun performNextClick() {

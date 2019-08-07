@@ -5,14 +5,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <FrameLayout
+    <!--<FrameLayout
         android:id="@+id/nav_host_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+-->
+
+    <fragment
+        android:id="@+id/container"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        app:defaultNavHost="true" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav"
+        app:itemBackground="@drawable/bg_nav_item_selector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/bottom_nav"/>

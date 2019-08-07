@@ -1,22 +1,19 @@
 package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
-import android.content.Context
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.common.NewTransferSwitchListener
-
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.presenter.NewTransferMainPresenter
+import com.kg.gettransfer.presentation.ui.BaseFragment
 import com.kg.gettransfer.presentation.ui.ReadMoreFragment
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
@@ -28,20 +25,15 @@ import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
 
-import org.koin.core.KoinComponent
 import org.koin.core.inject
 import pub.devrel.easypermissions.EasyPermissions
-import timber.log.Timber
 
 
 @Suppress("TooManyFunctions")
-class NewTransferMainFragment : MvpAppCompatFragment(),
-    KoinComponent, NewTransferMainView {
+class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
     @InjectPresenter
     internal lateinit var presenter: NewTransferMainPresenter
-
-    var listener: NewTransferSwitchListener? = null
 
     private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
@@ -67,15 +59,6 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         presenter.updateView(visible && isResumed)
     }
 
-    override fun onAttach(activity: Context?) {
-        super.onAttach(activity)
-        try {
-            listener = parentFragment as NewTransferSwitchListener
-        } catch (e: ClassCastException) {
-            Timber.e("%s must implement NavigationMenuListener", activity.toString())
-        }
-    }
-
     private fun initClickListeners() {
         // Switchers
         switcher_hourly.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
@@ -97,7 +80,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
     }
 
     override fun switchToMap() {
-        listener?.switchToMap()
+        findNavController().navigate(R.id.go_to_map)
     }
 
     override fun blockFromField() {

@@ -1,16 +1,14 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.annotation.SuppressLint
 import android.content.Intent
-
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
-import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.Toolbar
+import android.view.LayoutInflater
 
-import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -29,16 +27,22 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import java.util.Locale
 
-import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_settings_field_horizontal_picker.view.field_text
 import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
 import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
+import org.koin.core.KoinComponent
 
 import timber.log.Timber
+import android.view.MotionEvent
+import com.kg.gettransfer.utilities.LocaleManager
+import org.koin.android.ext.android.inject
 
 @Suppress("TooManyFunctions")
-class SettingsActivity : BaseActivity(), SettingsView {
+class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
+
+    private val localeManager: LocaleManager by inject()
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
@@ -49,53 +53,28 @@ class SettingsActivity : BaseActivity(), SettingsView {
     @ProvidePresenter
     fun createSettingsPresenter() = SettingsPresenter()
 
-    override fun getPresenter(): SettingsPresenter = presenter
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val view = inflater.inflate(R.layout.fragment_settings, container, false)
+        //TODO set to click on app version
+        view.setOnTouchListener { _, event ->
+            dispatchTouchEvent(event)
+            return@setOnTouchListener true
+        }
+        return view
+    }
 
     @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-        @Suppress("UnsafeCast")
-        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setTitleText()
     }
 
-    @SuppressLint("CommitTransaction")
-    override fun showFragment(showingView: Int) {
-        with(supportFragmentManager.beginTransaction()) {
-            val show = showingView != SettingsPresenter.CLOSE_FRAGMENT
-            setAnimation(show, this)
-            if (show) {
-                presenter.showingFragment = showingView
-                when (showingView) {
-                    SettingsPresenter.CURRENCIES_VIEW -> add(R.id.currenciesFragment, SelectCurrencyFragment())
-                    // SettingsPresenter.PASSWORD_VIEW   -> add(R.id.currenciesFragment, ChangePasswordFragment())
-                    else -> throw UnsupportedOperationException()
-                }
-                /*add(R.id.currenciesFragment, when(showingView){
-                    SettingsPresenter.CURRENCIES_VIEW -> SelectCurrencyFragment()
-                    SettingsPresenter.PASSWORD_VIEW   -> ChangePasswordFragment()
-                    else -> throw UnsupportedOperationException()
-                })*/
-            } else {
-                presenter.showingFragment = null
-                supportFragmentManager.fragments.firstOrNull()?.let { remove(it) }
-            }
-        }?.commitAllowingStateLoss()
-        setTitleText(showingView)
+    override fun showCurrencyChooser() {
+        findNavController().navigate(R.id.go_to_select_currency)
     }
 
-    @SuppressLint("PrivateResource")
-    private fun setAnimation(opens: Boolean, transaction: FragmentTransaction) = transaction.apply {
-        val anim = if (opens) R.anim.enter_from_right else R.anim.exit_to_right
-        setCustomAnimations(anim, anim)
-    }
-
-    private fun setTitleText(showingView: Int) {
-        toolbar.toolbar_title.text = getString(when (showingView) {
-            // SettingsPresenter.PASSWORD_VIEW   -> R.string.LNG_LOGIN_PASSWORD_SECTION
-            SettingsPresenter.CURRENCIES_VIEW -> R.string.LNG_CURRENCIES_CHOOSE
-            else -> R.string.LNG_MENU_TITLE_SETTINGS
-        })
+    private fun setTitleText() {
+        toolbar.toolbar_title.text = getString(R.string.LNG_MENU_TITLE_SETTINGS)
     }
 
     override fun initGeneralSettingsLayout() {
@@ -185,7 +164,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
         val calendarModes = calendarModesKeys.map { getCalendarModeName(it) to it }
         val calendarModesNames = calendarModes.map { it.first }
         Utils.setCalendarModesDialogListener(
-            this,
+            requireContext(),
             settingsCalendarMode,
             calendarModesNames,
             R.string.LNG_CALENDAR_MODE
@@ -193,17 +172,17 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun setLocales(locales: List<LocaleModel>) =
-        Utils.setLocalesDialogListener(this, settingsLanguage, locales) { selected ->
-            localeManager.updateResources(this, presenter.changeLocale(selected))
+        Utils.setLocalesDialogListener(requireContext(), settingsLanguage, locales) { selected ->
+            localeManager.updateResources(requireContext(), presenter.changeLocale(selected))
         }
 
     override fun setDaysOfWeek(daysOfWeek: List<CharSequence>) =
-        Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { selected ->
+        Utils.setFirstDayOfWeekDialogListener(requireContext(), settingsFirstDayOfWeek, daysOfWeek) { selected ->
             presenter.changeFirstDayOfWeek(selected)
         }
 
     override fun setEndpoints(endpoints: List<EndpointModel>) =
-        Utils.setEndpointsDialogListener(this, settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
+        Utils.setEndpointsDialogListener(requireContext(), settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
 
     override fun setCurrency(currency: String) { settingsCurrency.field_text.text = currency }
 
@@ -216,7 +195,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 null,
                 null,
                     ContextCompat.getDrawable(
-                        this@SettingsActivity,
+                        requireContext(),
                         Utils.getLanguageImage(code)
                     )?.apply {
                         setBounds(
@@ -227,7 +206,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
                     },
                 null
             )
-            compoundDrawablePadding = Utils.dpToPxInt(this@SettingsActivity, COMPOUND_DRAWABLE_PADDING)
+            compoundDrawablePadding = Utils.dpToPxInt(requireContext(), COMPOUND_DRAWABLE_PADDING)
         }
     }
 
@@ -240,15 +219,13 @@ class SettingsActivity : BaseActivity(), SettingsView {
     }
 
     override fun restartApp() {
-        packageManager.getLaunchIntentForPackage(packageName)?.let { intent ->
+        requireActivity().packageManager.getLaunchIntentForPackage(requireActivity().packageName)?.let { intent ->
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
         }
-        finish()
+        requireActivity().finish()
         Runtime.getRuntime().exit(0)
     }
-
-    override fun onBackPressed() { presenter.onBackCommandClick() }
 
     private fun getCalendarModeName(calendarModeKey: String) = when (calendarModeKey) {
         Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR -> getString(R.string.LNG_CALENDAR)
@@ -256,8 +233,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
         else -> throw UnsupportedOperationException()
     }
 
-    @CallSuper
-    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+    private fun dispatchTouchEvent(event: MotionEvent?) {
         if (event?.action == MotionEvent.ACTION_UP) {
             val time = System.currentTimeMillis()
 
@@ -276,7 +252,6 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 presenter.switchDebugSettings()
             }
         }
-        return super.dispatchTouchEvent(event)
     }
 
     companion object {

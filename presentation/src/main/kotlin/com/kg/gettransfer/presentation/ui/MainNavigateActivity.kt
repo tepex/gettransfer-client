@@ -121,13 +121,13 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
                     .show(supportFragmentManager, ThanksForRateFragment.TAG)
 
     override fun setEventCount(isVisible: Boolean, count: Int) {
+        //Setup badge for trips tab
         val bottomNavigationMenuView = bottom_nav.getChildAt(0) as BottomNavigationMenuView
-        val v = bottomNavigationMenuView.getChildAt(0)
+        //Index of trips tab = 1 in bottom navigation
+        val v = bottomNavigationMenuView.getChildAt(1)
         val itemView = v as BottomNavigationItemView
-
         val badge = LayoutInflater.from(this)
                 .inflate(R.layout.notification_badge_view, itemView, true)
-
         badge.notifications_badge.text = count.toString()
         badge.notifications_badge.isVisible = isVisible && count > 0
     }
@@ -151,13 +151,14 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
      * Called on first creation and when restoring state.
      */
     private fun setupBottomNavigationBar() {
-        val navGraphIds = listOf(R.navigation.new_order, R.navigation.trips, R.navigation.help, R.navigation.settings)
+        //Setup controller
+        val navGraphIds = listOf(R.navigation.order, R.navigation.trips, R.navigation.help, R.navigation.settings)
 
         // Setup the bottom navigation view with a list of navigation graphs
         val controller = bottom_nav.setupWithNavController(
                 navGraphIds = navGraphIds,
                 fragmentManager = supportFragmentManager,
-                containerId = R.id.nav_host_container,
+                containerId = R.id.container,
                 intent = intent
         )
         currentNavController = controller

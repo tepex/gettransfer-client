@@ -19,7 +19,6 @@ import com.kg.gettransfer.presentation.view.BaseNewTransferView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.NewTransferState
 import kotlinx.coroutines.Job
 import org.koin.core.KoinComponent
 import org.koin.core.get
@@ -36,7 +35,6 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     protected val geoInteractor: GeoInteractor by inject()
     protected val orderInteractor: OrderInteractor by inject()
     protected val systemInteractor: SystemInteractor by inject()
-    protected val nState: NewTransferState by inject()  //to keep info about navigation
 
     protected val pointMapper: PointMapper by inject()
 

@@ -37,8 +37,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     val isBackGroundAccepted get() =
         carrierTripInteractor.bgCoordinatesPermission != CarrierTripsMainView.BG_COORDINATES_REJECTED
 
-    internal var showingFragment: Int? = null
-
     override fun attachView(view: SettingsView) {
         super.attachView(view)
         if (restart) initConfigs()
@@ -88,7 +86,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
 
     override fun currencyChanged(currency: CurrencyModel) {
         viewState.setCurrency(currency.name)
-        viewState.showFragment(CLOSE_FRAGMENT)
         analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, currency.code)
     }
 
@@ -174,8 +171,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
 
     fun onCurrencyClicked() {
         if (!accountManager.remoteAccount.isBusinessAccount) {
-            showingFragment = CURRENCIES_VIEW
-            viewState.showFragment(CURRENCIES_VIEW)
+            viewState.showCurrencyChooser()
         }
     }
 
@@ -189,10 +185,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     }
 
     override fun onBackCommandClick() {
-        if (showingFragment != null) {
-            viewState.showFragment(CLOSE_FRAGMENT)
-            return
-        }
         if (localeWasChanged) {
             localeWasChanged = false
             val screen = when (systemInteractor.lastMode) {
@@ -215,10 +207,5 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
 
     fun onForceCrashClick() {
         error("This is force crash")
-    }
-
-    companion object {
-        const val CLOSE_FRAGMENT  = 0
-        const val CURRENCIES_VIEW = 1
     }
 }

@@ -86,10 +86,6 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.ui.SettingsActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".presentation.ui.ProfileSettingsActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />

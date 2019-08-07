@@ -4,20 +4,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings"
-    app:startDestination="@+id/newTransfer">
+    app:startDestination="@+id/showSettings">
 
     <fragment
-        android:id="@+id/newTransfer"
-        android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment"
-        android:label="new_transfer"
-        tools:layout="@layout/fragment_new_transfer_main">
+        android:id="@+id/showSettings"
+        android:name="com.kg.gettransfer.presentation.ui.SettingsFragment"
+        android:label="settings"
+        tools:layout="@layout/fragment_settings">
         <action
-            android:id="@+id/go_to_map"
-            app:destination="@id/newTransferMap"/>
+            android:id="@+id/go_to_select_currency"
+            app:destination="@id/selectCurrency"/>
     </fragment>
-    <fragment
-        android:id="@+id/newTransferMap"
-        android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment"
-        android:label="new_transfer_map"
-        tools:layout="@layout/fragment_new_transfer_map"/>
+
+    <fragment android:id="@+id/selectCurrency"
+        android:label="currency"
+        app:popUpTo="@id/showSettings"
+        android:name="com.kg.gettransfer.presentation.ui.SelectCurrencyFragment"
+        tools:layout="@layout/fragment_select_currency"/>
 </navigation>

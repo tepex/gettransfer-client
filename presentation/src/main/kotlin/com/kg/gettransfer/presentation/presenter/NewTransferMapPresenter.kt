@@ -26,18 +26,9 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
     private var idleAndMoveCamera = true
 
     override fun updateView(isVisibleView: Boolean) {
-        resetState()
         if (!isVisibleView) return
 
-        if (nState.isSwitchToMain) {//returned from create order
-            viewState.switchToMain()
-            return
-        }
         fillViewFromState()
-    }
-
-    fun resetState() {
-        nState.reset()
     }
 
     override fun changeUsedField(field: String) {

@@ -4,13 +4,16 @@
 
     <TextView
         android:id="@+id/notifications.badge"
+        android:layout_gravity="right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/nav_counter_margin_start"
+        android:layout_margin="@dimen/nav_counter_margin_start"
         android:background="@drawable/bg_circle_red"
         android:gravity="center"
         android:paddingStart="@dimen/activity_main_events_count_padding_start_end"
         android:paddingEnd="@dimen/activity_main_events_count_padding_start_end"
         android:textColor="@android:color/white"
-        tools:text="5" />
+        android:visibility="gone"
+        tools:text="5"
+        tools:visibility="visible"/>
 </merge>

@@ -65,7 +65,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     }
 
     fun onSettingsClick() {
-        router.navigateTo(Screens.Settings)
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SETTINGS_CLICKED)
     }
 
@@ -77,32 +76,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     fun onLoginClick() {
         login(Screens.PASSENGER_MODE, "")
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.LOGIN_CLICKED)
-    }
-
-    fun onBecomeACarrierClick() {
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.DRIVER_CLICKED)
-        if (systemInteractor.isDriverModeBlock) {
-            router.navigateTo(Screens.DriverModeNotSupport)
-        } else {
-            if (accountManager.isLoggedIn) {
-                if (accountManager.remoteAccount.isDriver) {
-                    router.newRootScreen(Screens.CarrierMode)
-                } else {
-                    if (systemInteractor.isDriverAppNotify) {
-                        router.navigateTo(Screens.DriverModeNotSupport)
-                    } else {
-                        router.navigateTo(Screens.CarrierRegister)
-                    }
-                }
-
-            } else {
-                if (systemInteractor.isDriverAppNotify) {
-                    router.navigateTo(Screens.DriverModeNotSupport)
-                } else {
-                    login(Screens.CARRIER_MODE, "")
-                }
-            }
-        }
     }
 
     fun onSupportClick() {

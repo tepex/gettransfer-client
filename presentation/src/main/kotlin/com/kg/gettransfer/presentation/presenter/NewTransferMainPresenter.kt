@@ -2,11 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.eventListeners.CounterEventListener
-import com.kg.gettransfer.domain.interactor.*
-
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.presentation.delegate.AccountManager
 
 import com.kg.gettransfer.presentation.view.NewTransferMainView
 
@@ -14,8 +10,6 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.core.KoinComponent
-
-import org.koin.core.inject
 
 @InjectViewState
 class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>(), KoinComponent {
@@ -41,11 +35,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     override fun updateView(isVisibleView: Boolean) {
         if (!isVisibleView) return
 
-        if (nState.isChoosePointOnMap) {//returned from search activity
-            viewState.switchToMap()
-        } else {
-            fillViewFromState()
-        }
+        fillViewFromState()
     }
 
     override fun changeUsedField(field: String) {
