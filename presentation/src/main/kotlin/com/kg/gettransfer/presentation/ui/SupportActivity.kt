@@ -16,6 +16,7 @@ import com.kg.gettransfer.presentation.view.SupportView
 
 import kotlinx.android.synthetic.main.activity_support.*
 import kotlinx.android.synthetic.main.layout_phones.*
+import kotlinx.android.synthetic.main.layout_social_network.*
 import kotlinx.android.synthetic.main.layout_write_us.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
@@ -36,7 +37,11 @@ class SupportActivity : BaseActivity(), SupportView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_support)
         setupToolbar()
+        initClickListeners()
+    }
 
+    private fun initClickListeners() {
+        aboutUs.setOnClickListener { presenter.onAboutUsClick() }
         fabFacebook.setOnClickListener { facebookClick() }
         fabViber.setOnClickListener { viberClick() }
         fabTelegram.setOnClickListener { telegramClick() }

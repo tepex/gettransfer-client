@@ -398,4 +398,9 @@
 
     <string name="LNG_MAIN_SCREEN_POINT_TO_POINT_TRANSFER_TITLE">Transfers everywhere at the best price</string>
     <string name="LNG_MAIN_SCREEN_HOURLY_TRANSFER_TITLE">Hourly trips are cheaper than in a taxi</string>
+
+    <string name="LNG_FACEBOOK">Facebook</string>
+    <string name="LNG_WHATSAPP">Whatsapp</string>
+    <string name="LNG_VIBER">Viber</string>
+    <string name="LNG_TELEGRAM">Telegram</string>
 </resources>
