@@ -89,7 +89,8 @@
                     android:id="@+id/settingsFirstDayOfWeek"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitlePicker="@string/LNG_WEEK_FIRST_DAY" />
+                    app:settingsTitlePicker="@string/LNG_WEEK_FIRST_DAY"
+                    app:settingsPickerDivider="false"/>
 
             </LinearLayout>
 

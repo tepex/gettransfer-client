@@ -20,11 +20,9 @@ import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.utilities.Analytics
 
-import java.util.Locale
-
 @Suppress("TooManyFunctions")
 @InjectViewState
-class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener {
+class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private lateinit var locales: List<LocaleModel>
     private lateinit var endpoints: List<EndpointModel>
@@ -43,16 +41,9 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         super.attachView(view)
         if (restart) initConfigs()
         initGeneralSettings()
-        viewState.initProfileField(accountManager.isLoggedIn, accountManager.remoteProfile)
-        viewState.setEmailNotifications(accountManager.isLoggedIn, sessionInteractor.isEmailNotificationEnabled)
-
-        initDebugMenu()
-    }
-
-    private fun initDebugMenu() {
-        if (BuildConfig.FLAVOR == "dev" || systemInteractor.isDebugMenuShowed) {
-            showDebugMenu()
-        }
+        initProfileSettings()
+        initDriverSettings()
+        if (BuildConfig.FLAVOR == "dev" || systemInteractor.isDebugMenuShowed) initDebugMenu()
     }
 
     private fun initGeneralSettings() {
@@ -68,55 +59,69 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
     }
 
-    fun switchDebugSettings() {
-        if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
-            if (systemInteractor.isDebugMenuShowed) {
-                systemInteractor.isDebugMenuShowed = false
-                viewState.hideDebugMenu()
-            } else {
-                systemInteractor.isDebugMenuShowed = true
-                showDebugMenu()
-            }
+    private fun initProfileSettings() {
+        viewState.initProfileField(accountManager.isLoggedIn, accountManager.remoteProfile)
+        if (accountManager.isLoggedIn) {
+            viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
+        } else {
+            viewState.hideEmailNotifications()
         }
     }
 
-    private fun showDebugMenu() {
+    private fun initDriverSettings() {
+        if (accountManager.isLoggedIn && systemInteractor.lastMode == Screens.CARRIER_MODE) {
+            viewState.initDriverLayout(isBackGroundAccepted)
+            viewState.setCalendarModes(calendarModes)
+            viewState.setDaysOfWeek(daysOfWeek)
+            viewState.setCalendarMode(systemInteractor.lastCarrierTripsTypeView)
+            viewState.setFirstDayOfWeek(daysOfWeek[systemInteractor.firstDayOfWeek - 1].name)
+        } else {
+            viewState.hideDriverLayout()
+        }
+    }
+
+    private fun initDebugMenu() {
         viewState.setEndpoints(endpoints)
         viewState.setEndpoint(systemInteractor.endpoint.map())
         viewState.showDebugMenu()
     }
 
-    override fun currencyChanged(currency: CurrencyModel) {
+    fun currencyChanged(currency: CurrencyModel) {
+        saveGeneralSettings()
         viewState.setCurrency(currency.name)
         viewState.showFragment(CLOSE_FRAGMENT)
         analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, currency.code)
     }
 
-    fun changeLocale(selected: Int): Locale {
+    fun changeLocale(selected: Int) {
         localeWasChanged = true
-        val localeModel = locales.get(selected)
+        val localeModel = locales[selected]
         sessionInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name, localeModel.locale)
-        saveGeneralSettings()
+        saveGeneralSettings(true)
+        viewState.updateResources(sessionInteractor.locale)
         analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LANGUAGE_PARAM, localeModel.name)
-
-        Locale.setDefault(sessionInteractor.locale)
-        initConfigs()
-        viewState.setCalendarModes(calendarModes)
-
-        return sessionInteractor.locale
     }
 
-    private fun saveGeneralSettings() =
-        utils.launchSuspend() {
-            viewState.blockInterface(true)
-            val result = utils.asyncAwait { accountManager.saveSettings() }
-            result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
-            if (result.error == null) {
-                viewState.restartApp()
-            }
-            viewState.blockInterface(false)
-        }
+    fun onDistanceUnitSwitched(isChecked: Boolean) {
+        sessionInteractor.distanceUnit = when (isChecked) {
+            true  -> DistanceUnit.MI
+            false -> DistanceUnit.KM
+        }.apply { analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.UNITS_PARAM, name) }
+        saveGeneralSettings()
+    }
+
+    fun onEmailNotificationSwitched(isChecked: Boolean) {
+        sessionInteractor.isEmailNotificationEnabled = isChecked
+        saveGeneralSettings()
+    }
+
+    fun onDriverCoordinatesSwitched(checked: Boolean) = carrierTripInteractor.permissionChanged(checked)
+
+    fun changeCalendarMode(selected: String) {
+        systemInteractor.lastCarrierTripsTypeView = selected
+        viewState.setCalendarMode(selected)
+    }
 
     fun changeFirstDayOfWeek(selected: Int) {
         with(daysOfWeek[selected]) {
@@ -125,9 +130,16 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         }
     }
 
-    fun changeCalendarMode(selected: String) {
-        systemInteractor.lastCarrierTripsTypeView = selected
-        viewState.setCalendarMode(selected)
+    fun switchDebugSettings() {
+        if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
+            if (systemInteractor.isDebugMenuShowed) {
+                systemInteractor.isDebugMenuShowed = false
+                viewState.hideDebugMenu()
+            } else {
+                systemInteractor.isDebugMenuShowed = true
+                initDebugMenu()
+            }
+        }
     }
 
     fun changeEndpoint(selected: Int) {
@@ -144,43 +156,17 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         }
     }
 
-    fun onDistanceUnitSwitched(isChecked: Boolean) {
-        sessionInteractor.distanceUnit = when (isChecked) {
-            true  -> DistanceUnit.MI
-            false -> DistanceUnit.KM
-        }.apply { analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.UNITS_PARAM, name) }
-        saveGeneralSettings()
-    }
-
-    fun onEmailNotificationSwitched(isChecked: Boolean) {
-        sessionInteractor.isEmailNotificationEnabled = isChecked
-        saveAccount()
-    }
-
-    private fun saveAccount() = utils.launchSuspend {
-        viewState.blockInterface(true)
-        val result = utils.asyncAwait { accountManager.putAccount(isTempAccount = false) }
-        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
-        viewState.blockInterface(false)
-    }
-
     fun onResetOnboardingClicked() { systemInteractor.isOnboardingShowed = false }
 
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
 
     fun onClearAccessTokenClicked() { systemInteractor.accessToken = "" }
 
-    fun onDriverCoordinatesSwitched(checked: Boolean) = carrierTripInteractor.permissionChanged(checked)
-
     fun onCurrencyClicked() {
         if (!accountManager.remoteAccount.isBusinessAccount) {
             showingFragment = CURRENCIES_VIEW
             viewState.showFragment(CURRENCIES_VIEW)
         }
-    }
-
-    fun onPasswordClicked() {
-        router.navigateTo(Screens.ChangePassword())
     }
 
     fun onProfileFieldClicked() {
@@ -212,6 +198,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false
     }
+
+    override fun restartApp() { viewState.restartApp() }
 
     fun onForceCrashClick() {
         error("This is force crash")

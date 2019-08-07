@@ -6,13 +6,22 @@ import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
+import java.util.Locale
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface SettingsView : BaseView {
+    fun initGeneralSettingsLayout()
+    fun initProfileField(isLoggedIn: Boolean, profile: Profile)
+    fun setEmailNotifications(enabled: Boolean)
+    fun hideEmailNotifications()
+    fun initDriverLayout(isBackGroundCoordinatesAccepted: Boolean)
+    fun hideDriverLayout()
+    fun showDebugMenu()
+    fun hideDebugMenu()
+
     fun setLocales(locales: List<LocaleModel>)
+    fun updateResources(locale: Locale)
     fun setEndpoints(endpoints: List<EndpointModel>)
-    fun setDistanceUnit(inMiles: Boolean)
-    fun setEmailNotifications(isLoggedIn: Boolean, enabled: Boolean)
     fun setCalendarModes(calendarModesKeys: List<String>)
     fun setDaysOfWeek(daysOfWeek: List<CharSequence>)
 
@@ -21,13 +30,7 @@ interface SettingsView : BaseView {
     fun setCalendarMode(calendarModeKey: String)
     fun setFirstDayOfWeek(dayOfWeek: String)
     fun setEndpoint(endpoint: EndpointModel)
-
-    fun initGeneralSettingsLayout()
-    //fun initLoggedInUserSettings(profile: ProfileModel)
-    fun initProfileField(isLoggedIn: Boolean, profile: Profile)
-    fun initCarrierLayout()
-    fun showDebugMenu()
-    fun hideDebugMenu()
+    fun setDistanceUnit(inMiles: Boolean)
 
     fun showFragment(showingView: Int)
     fun restartApp()

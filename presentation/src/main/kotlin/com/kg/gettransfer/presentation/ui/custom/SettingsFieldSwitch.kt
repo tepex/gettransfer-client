@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isVisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_settings_field_switch.*
 
@@ -19,7 +20,12 @@ class SettingsFieldSwitch @JvmOverloads constructor(
         if(attrs != null) {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.SettingsFieldSwitch)
             field_title.text = ta.getString(R.styleable.SettingsFieldSwitch_settingsTitleSwitch)
+            field_divider.isVisible = ta.getBoolean(R.styleable.SettingsFieldSwitch_settingsDividerSwitch, true)
             ta.recycle()
         }
+    }
+
+    fun hideDivider() {
+        field_divider.isVisible = false
     }
 }

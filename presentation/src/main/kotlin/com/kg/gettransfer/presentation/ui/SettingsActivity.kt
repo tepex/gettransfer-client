@@ -19,8 +19,10 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
+import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
@@ -38,7 +40,7 @@ import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
 import timber.log.Timber
 
 @Suppress("TooManyFunctions")
-class SettingsActivity : BaseActivity(), SettingsView {
+class SettingsActivity : BaseActivity(), SettingsView, CurrencyChangedListener {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
@@ -119,7 +121,27 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
-    override fun initCarrierLayout() {
+    override fun setEmailNotifications(enabled: Boolean) {
+        with(settingsEmailNotif) {
+            isVisible = true
+            setOnClickListener { view ->
+                with(view.switch_button) {
+                    isChecked = !isChecked
+                    presenter.onEmailNotificationSwitched(isChecked)
+                }
+            }
+            switch_button.apply {
+                isChecked = enabled
+                setOnCheckedChangeListener { _, isChecked -> presenter.onEmailNotificationSwitched(isChecked) }
+            }
+        }
+    }
+
+    override fun hideEmailNotifications() {
+        settingsEmailNotif.isVisible = false
+    }
+
+    override fun initDriverLayout(isBackGroundCoordinatesAccepted: Boolean) {
         layoutCarrierSettings.isVisible = true
         with(settingsCoordinatesInBackground) {
             setOnClickListener { view ->
@@ -129,10 +151,14 @@ class SettingsActivity : BaseActivity(), SettingsView {
                 }
             }
             switch_button.apply {
-                isChecked = presenter.isBackGroundAccepted
+                isChecked = isBackGroundCoordinatesAccepted
                 setOnCheckedChangeListener { _, isChecked -> presenter.onDriverCoordinatesSwitched(isChecked) }
             }
         }
+    }
+
+    override fun hideDriverLayout() {
+        layoutCarrierSettings.isVisible = false
     }
 
     override fun showDebugMenu() {
@@ -147,63 +173,33 @@ class SettingsActivity : BaseActivity(), SettingsView {
         layoutDebugSettings.isVisible = false
     }
 
-    override fun setDistanceUnit(inMiles: Boolean) {
-        with(settingsDistanceUnit) {
-            setOnClickListener { view ->
-                with(view.switch_button) {
-                    isChecked = !isChecked
-                    presenter.onDistanceUnitSwitched(isChecked)
-                }
-            }
-            switch_button.apply {
-                isChecked = inMiles
-                setOnCheckedChangeListener { _, isChecked -> presenter.onDistanceUnitSwitched(isChecked) }
-            }
+    override fun setLocales(locales: List<LocaleModel>) =
+        Utils.setLocalesDialogListener(this, settingsLanguage, locales) { selected ->
+            presenter.changeLocale(selected)
         }
+
+    override fun updateResources(locale: Locale) {
+        localeManager.updateResources(this, locale)
     }
 
-    override fun setEmailNotifications(isLoggedIn: Boolean, enabled: Boolean) {
-        settingsEmailNotif.isVisible = isLoggedIn
-        if (isLoggedIn) {
-            with(settingsEmailNotif) {
-                isVisible = true
-                setOnClickListener { view ->
-                    with(view.switch_button) {
-                        isChecked = !isChecked
-                        presenter.onEmailNotificationSwitched(isChecked)
-                    }
-                }
-                switch_button.apply {
-                    isChecked = enabled
-                    setOnCheckedChangeListener { _, isChecked -> presenter.onEmailNotificationSwitched(isChecked) }
-                }
-            }
-        }
-    }
+    override fun setEndpoints(endpoints: List<EndpointModel>) =
+            Utils.setEndpointsDialogListener(this, settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
 
     override fun setCalendarModes(calendarModesKeys: List<String>) {
         val calendarModes = calendarModesKeys.map { getCalendarModeName(it) to it }
         val calendarModesNames = calendarModes.map { it.first }
         Utils.setCalendarModesDialogListener(
-            this,
-            settingsCalendarMode,
-            calendarModesNames,
-            R.string.LNG_CALENDAR_MODE
+                this,
+                settingsCalendarMode,
+                calendarModesNames,
+                R.string.LNG_CALENDAR_MODE
         ) { presenter.changeCalendarMode(calendarModes[it].second) }
     }
 
-    override fun setLocales(locales: List<LocaleModel>) =
-        Utils.setLocalesDialogListener(this, settingsLanguage, locales) { selected ->
-            localeManager.updateResources(this, presenter.changeLocale(selected))
-        }
-
     override fun setDaysOfWeek(daysOfWeek: List<CharSequence>) =
-        Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { selected ->
-            presenter.changeFirstDayOfWeek(selected)
-        }
-
-    override fun setEndpoints(endpoints: List<EndpointModel>) =
-        Utils.setEndpointsDialogListener(this, settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
+            Utils.setFirstDayOfWeekDialogListener(this, settingsFirstDayOfWeek, daysOfWeek) { selected ->
+                presenter.changeFirstDayOfWeek(selected)
+            }
 
     override fun setCurrency(currency: String) { settingsCurrency.field_text.text = currency }
 
@@ -231,12 +227,31 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
+    override fun setCalendarMode(calendarModeKey: String) {
+        settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey)
+    }
+
     override fun setFirstDayOfWeek(dayOfWeek: String) { settingsFirstDayOfWeek.field_text.text = dayOfWeek }
 
     override fun setEndpoint(endpoint: EndpointModel)  { settingsEndpoint.field_text.text = endpoint.name }
 
-    override fun setCalendarMode(calendarModeKey: String) {
-        settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey)
+    override fun setDistanceUnit(inMiles: Boolean) {
+        with(settingsDistanceUnit) {
+            setOnClickListener { view ->
+                with(view.switch_button) {
+                    isChecked = !isChecked
+                    presenter.onDistanceUnitSwitched(isChecked)
+                }
+            }
+            switch_button.apply {
+                isChecked = inMiles
+                setOnCheckedChangeListener { _, isChecked -> presenter.onDistanceUnitSwitched(isChecked) }
+            }
+        }
+    }
+
+    override fun currencyChanged(currency: CurrencyModel) {
+        presenter.currencyChanged(currency)
     }
 
     override fun restartApp() {
