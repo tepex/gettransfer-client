@@ -24,6 +24,7 @@ import kotlinx.coroutines.delay
 import org.koin.core.inject
 
 @InjectViewState
+@Suppress("TooManyFunctions")
 class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventListener {
     private val profileMapper: ProfileMapper by inject()
 
@@ -33,8 +34,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
             registerPushToken()
 
             utils.launchSuspend {
-                fetchResultOnly { transferInteractor.getAllTransfers() }
-                        .isSuccess()?.let { checkReview(it) }
+                fetchResultOnly { transferInteractor.getAllTransfers() }.isSuccess()?.let { checkReview(it) }
                 viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
             }
         }
@@ -109,6 +109,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.LOGIN_CLICKED)
     }
 
+    @Suppress("ComplexMethod", "NestedBlockDepth")
     fun onBecomeACarrierClick() {
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.DRIVER_CLICKED)
         if (systemInteractor.isDriverModeBlock) {
@@ -124,7 +125,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
                         router.navigateTo(Screens.CarrierRegister)
                     }
                 }
-
             } else {
                 if (systemInteractor.isDriverAppNotify) {
                     router.navigateTo(Screens.DriverModeNotSupport)
@@ -141,49 +141,41 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
 
     private suspend fun checkReview(transfers: List<Transfer>) =
         with(reviewInteractor) {
-            if (!isReviewSuggested) checkLastTrip(transfers)
-            else if (shouldAskRateInMarket)
+            if (!isReviewSuggested) {
+                checkLastTrip(transfers)
+            } else if (shouldAskRateInMarket) {
                 utils.launchSuspend {
                     delay(ONE_SEC_DELAY)
                     viewState.askRateInPlayMarket()
                 }
+            }
         }
 
     private suspend fun checkLastTrip(transfers: List<Transfer>) {
-        getLastTransfer(transfers.filterRateable())
-            ?.let { lastTransfer ->
-                checkToShowReview(lastTransfer) }
+        getLastTransfer(transfers.filterRateable())?.let { checkToShowReview(it) }
     }
 
     private fun getLastTransfer(transfers: List<Transfer>) =
-            transfers.filter { it.status.checkOffers }
-                    .sortedByDescending { it.dateToLocal }
-                    .firstOrNull()
+        transfers.filter { it.status.checkOffers }.sortedByDescending { it.dateToLocal }.firstOrNull()
 
     private suspend fun checkToShowReview(transfer: Transfer) =
-        fetchResultOnly { offerInteractor.getOffers(transfer.id) }
-            .isSuccess()
-            ?.firstOrNull()
-            ?.let { offer ->
-                if (transfer.offersUpdatedAt != null) fetchDataOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
-                if (offer.isRateAvailable() && offer.isNeededRateOffer()) {
-                    reviewInteractor.setOfferReview(offer)
-                    viewState.showRateForLastTrip(
-                        transfer.id,
-                        offer.vehicle.name,
-                        offer.vehicle.color ?: ""
-                    )
-                    logTransferReviewRequested()
-                }
+        fetchResultOnly { offerInteractor.getOffers(transfer.id) }.isSuccess()?.firstOrNull()?.let { offer ->
+            if (transfer.offersUpdatedAt != null) fetchDataOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
+            if (offer.isRateAvailable() && offer.isNeededRateOffer()) {
+                reviewInteractor.setOfferReview(offer)
+                viewState.showRateForLastTrip(transfer.id, offer.vehicle.name, offer.vehicle.color ?: "")
+                logTransferReviewRequested()
             }
+        }
 
     fun rateTransfer(transferId: Long, rate: Int) {
         utils.launchSuspend {
             if (!checkTransferForRate(transferId)) return@launchSuspend
             val offersResult = utils.asyncAwait { offerInteractor.getOffers(transferId) }
             if (offersResult.error == null && offersResult.model.size == 1) {
-                offersResult.model.first().let {
-                    if (it.isRateAvailable() && it.isNeededRateOffer()) rateOffer(it, rate)
+                val offer = offersResult.model.first()
+                if (offer.isRateAvailable() && offer.isNeededRateOffer()) {
+                    rateOffer(offer, rate)
                 }
             }
         }
@@ -192,9 +184,13 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     private suspend fun checkTransferForRate(transferId: Long): Boolean {
         val transferResult = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
         return if (transferResult.error != null) {
-            val err = transferResult.error!!
-            if (err.isNotFound()) viewState.setTransferNotFoundError(transferId)
-            else viewState.setError(err)
+            transferResult.error?.let { err ->
+                if (err.isNotFound()) {
+                    viewState.setTransferNotFoundError(transferId)
+                } else {
+                    viewState.setError(err)
+                }
+            }
             false
         } else {
             val transfer = transferResult.model
@@ -214,8 +210,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         }
     }
 
-    private fun logTransferReviewRequested() =
-            analytics.logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
+    private fun logTransferReviewRequested() = analytics.logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
 
     fun onShareClick() {
         log.debug("Share action")

@@ -20,13 +20,16 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.NewTransferState
+
 import kotlinx.coroutines.Job
+
 import org.koin.core.KoinComponent
 import org.koin.core.get
-
 import org.koin.core.inject
+
 import ru.terrakok.cicerone.Router
 
+@Suppress("TooManyFunctions")
 open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>(), KoinComponent {
     protected val compositeDisposable = Job()
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
@@ -36,7 +39,7 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     protected val geoInteractor: GeoInteractor by inject()
     protected val orderInteractor: OrderInteractor by inject()
     protected val systemInteractor: SystemInteractor by inject()
-    protected val nState: NewTransferState by inject()  //to keep info about navigation
+    protected val nState: NewTransferState by inject()  // to keep info about navigation
 
     protected val pointMapper: PointMapper by inject()
 
@@ -54,12 +57,15 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     open fun fillViewFromState() {
-        if (!orderInteractor.isAddressesValid())
+        if (!orderInteractor.isAddressesValid()) {
             changeUsedField(NewTransferMainPresenter.FIELD_FROM)
-        else
+        } else {
             changeUsedField(systemInteractor.selectedField)
+        }
 
-        if (fillAddressFieldsCheckIsEmpty()) updateCurrentLocation()
+        if (fillAddressFieldsCheckIsEmpty()) {
+            updateCurrentLocation()
+        }
 
         viewState.setHourlyDuration(orderInteractor.hourlyDuration)
         viewState.updateTripView(isHourly())
@@ -99,22 +105,20 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
         viewState.defineAddressRetrieving { withGps ->
             utils.launchSuspend {
                 if (geoInteractor.isGpsEnabled && withGps) {
-                    utils.asyncAwait { geoInteractor.getCurrentLocation() }
-                            .isSuccess()
-                            ?.let {
-                                lastCurrentLocation = pointMapper.toLatLng(it)
+                    utils.asyncAwait { geoInteractor.getCurrentLocation() }.isSuccess()?.let { loc ->
+                        lastCurrentLocation = pointMapper.toLatLng(loc)
 
-                                utils.asyncAwait { geoInteractor.getAddressByLocation(it) }
-                                        .isSuccess()
-                                        ?.let { address ->
-                                            if (address.cityPoint.point != null) setPointAddress(address)
-                                        }
+                        utils.asyncAwait { geoInteractor.getAddressByLocation(loc) }.isSuccess()?.let { address ->
+                            if (address.cityPoint.point != null) {
+                                setPointAddress(address)
                             }
+                        }
+                    }
                 } else {
-                    utils.asyncAwait { geoInteractor.getMyLocationByIp() }.let {
-                        logIpapiRequest()
-                        if (it.error == null && it.model.latitude != 0.0 && it.model.longitude != 0.0)
-                            setLocation(it.model)
+                    val result = utils.asyncAwait { geoInteractor.getMyLocationByIp() }
+                    logIpapiRequest()
+                    if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
+                        setLocation(result.model)
                     }
                 }
             }
@@ -177,13 +181,12 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
         if (point2 == null || point1 == null) return false
-        val criteria = 0.000_001
 
         var latDiff = point1.latitude - point1.latitude
         if (latDiff < 0) latDiff *= -1
         var lngDiff = point2.longitude - point2.longitude
         if (lngDiff < 0) lngDiff *= -1
-        return latDiff < criteria && lngDiff < criteria
+        return latDiff < DELTA_MAX && lngDiff < DELTA_MAX
     }
 
     private fun logIpapiRequest() = analytics.logSingleEvent(Analytics.EVENT_IPAPI_REQUEST)
@@ -203,5 +206,6 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
         const val EMPTY_ADDRESS = ""
 
         const val MIN_HOURLY = 2
+        const val DELTA_MAX = 0.000_001
     }
 }

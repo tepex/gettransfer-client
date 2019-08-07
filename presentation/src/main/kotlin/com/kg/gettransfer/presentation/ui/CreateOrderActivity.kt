@@ -25,7 +25,11 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.UserModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 import com.kg.gettransfer.presentation.ui.custom.BottomSheetCreateOrderNewView
@@ -44,11 +48,12 @@ import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
 import org.koin.android.ext.android.inject
 
 @Suppress("TooManyFunctions")
-class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
-        DateTimeScreen,
-        BottomSheetCreateOrderNewView.OnCreateOrderListener,
-        CommentDialogFragment.OnCommentListener,
-        CurrencyChangedListener {
+class CreateOrderActivity : BaseGoogleMapActivity(),
+    CreateOrderView,
+    DateTimeScreen,
+    BottomSheetCreateOrderNewView.OnCreateOrderListener,
+    CommentDialogFragment.OnCommentListener,
+    CurrencyChangedListener {
 
     @InjectPresenter
     internal lateinit var presenter: CreateOrderPresenter
@@ -82,6 +87,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
         initMapView(savedInstanceState)
     }
 
+    @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
@@ -92,6 +98,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
         initBottomSheets()
     }
 
+    @CallSuper
     override fun onPostResume() {
         super.onPostResume()
         presenter.init()
@@ -126,22 +133,23 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
         bsSecondarySheet.setBottomSheetCallback(bsCallback)
     }
 
+    @CallSuper
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action != MotionEvent.ACTION_DOWN) {
             return super.dispatchTouchEvent(event)
         }
         val ret = when {
             bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED && hideBottomSheet(
-                    bsSecondarySheet,
-                    secondary_bottom_sheet,
-                    BottomSheetBehavior.STATE_HIDDEN,
-                    event
+                bsSecondarySheet,
+                secondary_bottom_sheet,
+                BottomSheetBehavior.STATE_HIDDEN,
+                event
             ) -> true
             bsOrder.state == BottomSheetBehavior.STATE_EXPANDED && hideBottomSheet(
-                    bsOrder,
-                    sheetOrder,
-                    BottomSheetBehavior.STATE_COLLAPSED,
-                    event
+                bsOrder,
+                sheetOrder,
+                BottomSheetBehavior.STATE_COLLAPSED,
+                event
             ) -> true
             else -> false
         }
@@ -166,7 +174,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
             } else {
                 // Suppress button flashing
                 Handler().postDelayed({ btnGetOffers.isVisible = closed }, DELAY)
-//TODO NOT USED                if (promo_field.field_input.isFocused) {
+// TODO NOT USED                if (promo_field.field_input.isFocused) {
 //                    presenter.checkPromoCode()
 //                }
             }
@@ -178,7 +186,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
         super.initMap()
         presenter.mapInitialized()
     }
-    //---------------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------------
     override fun checkPromoCode() {
         presenter.checkPromoCode()
     }
@@ -264,7 +273,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
         presenter.onGetTransferClick()
     }
 
-    //------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------
     override fun currencyChanged(currency: CurrencyModel) {
         presenter.currencyChanged(currency)
     }
@@ -306,14 +315,15 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
         btnCenterRoute.isVisible = false
     }
 
+    @Suppress("EmptyFunctionBlock")
     override fun setMapBottomPadding() {}
 
     override fun setPinHourlyTransfer(
-            placeName: String,
-            info: String,
-            point: LatLng,
-            cameraUpdate: CameraUpdate,
-            isDateChanged: Boolean
+        placeName: String,
+        info: String,
+        point: LatLng,
+        cameraUpdate: CameraUpdate,
+        isDateChanged: Boolean
     ) {
         if (isDateChanged) {
             clearMarkersAndPolylines()
@@ -348,7 +358,12 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
         sheetOrder.resetPromoView()
     }
 
-    override fun setEditableFields(offeredPrice: Double?, flightNumber: String?, flightNumberReturn: String?, promo: String) {
+    override fun setEditableFields(
+        offeredPrice: Double?,
+        flightNumber: String?,
+        flightNumberReturn: String?,
+        promo: String
+    ) {
         sheetOrder.price = offeredPrice
         sheetOrder.flightNumber = flightNumber
         sheetOrder.flightNumberReturn = flightNumberReturn
@@ -381,17 +396,16 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
     }
 */
 
-
     override fun showNotLoggedAlert(withOfferId: Long) =
-            Utils.showScreenRedirectingAlert(this, getString(R.string.LNG_LOGIN_LOGIN_TO_CONTINUE)) {
-                presenter.redirectToLogin(withOfferId)
-            }
-
+        Utils.showScreenRedirectingAlert(this, getString(R.string.LNG_LOGIN_LOGIN_TO_CONTINUE)) {
+            presenter.redirectToLogin(withOfferId)
+        }
 
     override fun setTripType(withReturnWay: Boolean) {
         sheetOrder.withReturnWay = withReturnWay
     }
 
+    @Suppress("EmptyFunctionBlock")
     override fun setHintForDateTimeTransfer(withReturnWay: Boolean) {
 //      TODO   transfer_date_time_field.input_layout.hint = context.getString(R.string.LNG_RIDE_DATE)
     }
@@ -402,8 +416,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(), CreateOrderView,
     }
 
     override fun showCommentDialog(comment: String, hintsToComments: List<String>?) =
-            CommentDialogFragment.newInstance(comment, hintsToComments?.toTypedArray())
-                    .show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
+        CommentDialogFragment.newInstance(comment, hintsToComments?.toTypedArray())
+            .show(supportFragmentManager, CommentDialogFragment.COMMENT_DIALOG_TAG)
 
     override fun showCurrencies() {
         hideKeyboard()

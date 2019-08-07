@@ -121,6 +121,9 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/GTApplication.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/common/NavigationMenuListener.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/common/NewTransferSwitchListener.kt",
+
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/OffersAdapter.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/OfferItemBindDelegate.kt",
@@ -129,8 +132,10 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/VehicleModel.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BaseNewTransferPresenter.kt",
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CarrierTripDetailsPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/HandleUrlPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/MainNavigatePresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/OffersPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentOfferPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",
