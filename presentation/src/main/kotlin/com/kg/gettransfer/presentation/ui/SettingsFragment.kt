@@ -12,13 +12,16 @@ import android.view.ViewGroup
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.kg.gettransfer.BuildConfig
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
+import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
@@ -31,37 +34,26 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_settings_field_horizontal_picker.view.field_text
 import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
-import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
 import org.koin.core.KoinComponent
 
 import timber.log.Timber
-import android.view.MotionEvent
 import com.kg.gettransfer.utilities.LocaleManager
+import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
 import org.koin.android.ext.android.inject
 
 @Suppress("TooManyFunctions")
-class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
+class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyChangedListener {
 
     private val localeManager: LocaleManager by inject()
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
 
-    private var count = 0
-    private var startMillis = 0L
-
     @ProvidePresenter
     fun createSettingsPresenter() = SettingsPresenter()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.fragment_settings, container, false)
-        //TODO set to click on app version
-        view.setOnTouchListener { _, event ->
-            dispatchTouchEvent(event)
-            return@setOnTouchListener true
-        }
-        return view
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):View =
+            inflater.inflate(R.layout.fragment_settings, container, false)
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,6 +72,12 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
     override fun initGeneralSettingsLayout() {
         Timber.d("current locale: ${Locale.getDefault()}")
         settingsCurrency.setOnClickListener { presenter.onCurrencyClicked() }
+
+        val versionName = BuildConfig.VERSION_NAME
+        val versionCode = BuildConfig.VERSION_CODE
+        versionApp.text = String.format(getString(R.string.app_version), versionName, versionCode)
+        shareBtn.setOnClickListener { presenter.onShareClick() }
+        layoutAboutApp.setOnClickListener { presenter.onAboutAppClicked() }
     }
 
     override fun initProfileField(isLoggedIn: Boolean, profile: Profile) {
@@ -98,7 +96,27 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
         }
     }
 
-    override fun initCarrierLayout() {
+    override fun setEmailNotifications(enabled: Boolean) {
+        with(settingsEmailNotif) {
+            isVisible = true
+            setOnClickListener { view ->
+                with(view.switch_button) {
+                    isChecked = !isChecked
+                    presenter.onEmailNotificationSwitched(isChecked)
+                }
+            }
+            switch_button.apply {
+                isChecked = enabled
+                setOnCheckedChangeListener { _, isChecked -> presenter.onEmailNotificationSwitched(isChecked) }
+            }
+        }
+    }
+
+    override fun hideEmailNotifications() {
+        settingsEmailNotif.isVisible = false
+    }
+
+    override fun initDriverLayout(isBackGroundCoordinatesAccepted: Boolean) {
         layoutCarrierSettings.isVisible = true
         with(settingsCoordinatesInBackground) {
             setOnClickListener { view ->
@@ -108,10 +126,14 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
                 }
             }
             switch_button.apply {
-                isChecked = presenter.isBackGroundAccepted
+                isChecked = isBackGroundCoordinatesAccepted
                 setOnCheckedChangeListener { _, isChecked -> presenter.onDriverCoordinatesSwitched(isChecked) }
             }
         }
+    }
+
+    override fun hideDriverLayout() {
+        layoutCarrierSettings.isVisible = false
     }
 
     override fun showDebugMenu() {
@@ -126,63 +148,33 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
         layoutDebugSettings.isVisible = false
     }
 
-    override fun setDistanceUnit(inMiles: Boolean) {
-        with(settingsDistanceUnit) {
-            setOnClickListener { view ->
-                with(view.switch_button) {
-                    isChecked = !isChecked
-                    presenter.onDistanceUnitSwitched(isChecked)
-                }
-            }
-            switch_button.apply {
-                isChecked = inMiles
-                setOnCheckedChangeListener { _, isChecked -> presenter.onDistanceUnitSwitched(isChecked) }
-            }
+    override fun setLocales(locales: List<LocaleModel>) =
+        Utils.setLocalesDialogListener(requireContext(), settingsLanguage, locales) { selected ->
+            presenter.changeLocale(selected)
         }
+
+    override fun updateResources(locale: Locale) {
+        localeManager.updateResources(requireContext(), locale)
     }
 
-    override fun setEmailNotifications(isLoggedIn: Boolean, enabled: Boolean) {
-        settingsEmailNotif.isVisible = isLoggedIn
-        if (isLoggedIn) {
-            with(settingsEmailNotif) {
-                isVisible = true
-                setOnClickListener { view ->
-                    with(view.switch_button) {
-                        isChecked = !isChecked
-                        presenter.onEmailNotificationSwitched(isChecked)
-                    }
-                }
-                switch_button.apply {
-                    isChecked = enabled
-                    setOnCheckedChangeListener { _, isChecked -> presenter.onEmailNotificationSwitched(isChecked) }
-                }
-            }
-        }
-    }
+    override fun setEndpoints(endpoints: List<EndpointModel>) =
+            Utils.setEndpointsDialogListener(requireContext(), settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
 
     override fun setCalendarModes(calendarModesKeys: List<String>) {
         val calendarModes = calendarModesKeys.map { getCalendarModeName(it) to it }
         val calendarModesNames = calendarModes.map { it.first }
         Utils.setCalendarModesDialogListener(
-            requireContext(),
-            settingsCalendarMode,
-            calendarModesNames,
-            R.string.LNG_CALENDAR_MODE
+                requireContext(),
+                settingsCalendarMode,
+                calendarModesNames,
+                R.string.LNG_CALENDAR_MODE
         ) { presenter.changeCalendarMode(calendarModes[it].second) }
     }
 
-    override fun setLocales(locales: List<LocaleModel>) =
-        Utils.setLocalesDialogListener(requireContext(), settingsLanguage, locales) { selected ->
-            localeManager.updateResources(requireContext(), presenter.changeLocale(selected))
-        }
-
     override fun setDaysOfWeek(daysOfWeek: List<CharSequence>) =
-        Utils.setFirstDayOfWeekDialogListener(requireContext(), settingsFirstDayOfWeek, daysOfWeek) { selected ->
-            presenter.changeFirstDayOfWeek(selected)
-        }
-
-    override fun setEndpoints(endpoints: List<EndpointModel>) =
-        Utils.setEndpointsDialogListener(requireContext(), settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
+            Utils.setFirstDayOfWeekDialogListener(requireContext(), settingsFirstDayOfWeek, daysOfWeek) { selected ->
+                presenter.changeFirstDayOfWeek(selected)
+            }
 
     override fun setCurrency(currency: String) { settingsCurrency.field_text.text = currency }
 
@@ -210,12 +202,36 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
         }
     }
 
+    override fun setCalendarMode(calendarModeKey: String) {
+        settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey)
+    }
+
     override fun setFirstDayOfWeek(dayOfWeek: String) { settingsFirstDayOfWeek.field_text.text = dayOfWeek }
 
     override fun setEndpoint(endpoint: EndpointModel)  { settingsEndpoint.field_text.text = endpoint.name }
 
-    override fun setCalendarMode(calendarModeKey: String) {
-        settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey)
+    override fun setDistanceUnit(inMiles: Boolean) {
+        with(settingsDistanceUnit) {
+            setOnClickListener { view ->
+                with(view.switch_button) {
+                    isChecked = !isChecked
+                    presenter.onDistanceUnitSwitched(isChecked)
+                }
+            }
+            switch_button.apply {
+                isChecked = inMiles
+                setOnCheckedChangeListener { _, isChecked -> presenter.onDistanceUnitSwitched(isChecked) }
+            }
+        }
+    }
+
+    override fun currencyChanged(currency: CurrencyModel) {
+        presenter.currencyChanged(currency)
+    }
+
+    override fun hideSomeDividers() {
+        if (!settingsEmailNotif.isVisible) settingsDistanceUnit.hideDivider()
+        if (!layoutCarrierSettings.isVisible) settingsEmailNotif.hideDivider()
     }
 
     override fun restartApp() {
@@ -233,30 +249,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
         else -> throw UnsupportedOperationException()
     }
 
-    private fun dispatchTouchEvent(event: MotionEvent?) {
-        if (event?.action == MotionEvent.ACTION_UP) {
-            val time = System.currentTimeMillis()
-
-            // if it is the first time, or if it has been more than 3 seconds since the first tap
-            // (so it is like a new try), we reset everything
-            if (startMillis == 0L || time - startMillis > TIME_FOR_DEBUG) {
-                startMillis = time
-                count = 1
-            } else {
-                // it is not the first, and it has been  less than 3 seconds since the first
-                count++
-            }
-
-            if (count == COUNTS_FOR_DEBUG) {
-                count = 0
-                presenter.switchDebugSettings()
-            }
-        }
-    }
-
     companion object {
-        private const val COUNTS_FOR_DEBUG = 7
-        private const val TIME_FOR_DEBUG = 3000L
         private const val COMPOUND_DRAWABLE_PADDING = 8f
     }
 }

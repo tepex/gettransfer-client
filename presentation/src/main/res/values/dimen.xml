@@ -623,6 +623,7 @@
 	<dimen name="settings_field_layout_btns_margin_end">16dp</dimen>
 	<dimen name="settings_field_text_margin_start">12dp</dimen>
 	<dimen name="settings_field_text_margin_end">16dp</dimen>
+	<dimen name="settings_field_divider_horizontal_margins">16dp</dimen>
 	<dimen name="activity_settings_debug_title_text_size">15sp</dimen>
 	<dimen name="activity_settings_debug_title_margin_start">16dp</dimen>
 	<dimen name="activity_settings_debug_title_margin_bottom">8dp</dimen>
@@ -632,6 +633,11 @@
 	<dimen name="activity_settings_language_icon_width">24dp</dimen>
 	<dimen name="activity_settings_language_icon_height">16dp</dimen>
 	<dimen name="activity_settings_language_icon_margins">0dp</dimen>
+	<dimen name="activity_settings_about_app_horizontal_padding">16dp</dimen>
+	<dimen name="activity_settings_about_app_vertical_padding">12dp</dimen>
+	<dimen name="activity_settings_about_app_margin_top">32dp</dimen>
+	<dimen name="activity_settings_about_title_text_size">12sp</dimen>
+	<dimen name="activity_settings_share_btn_size">24dp</dimen>
 
 	<dimen name="lang_icon_height">16dp</dimen>
 	<dimen name="lang_icon_width">24dp</dimen>
@@ -853,5 +859,40 @@
 	<dimen name="main_without_map_btn_next_margin_bottom">34dp</dimen>
 	<dimen name="main_without_map_addresses_panel_margin_bottom">24dp</dimen>
 	<dimen name="main_without_map_switch_hourly_margins">16dp</dimen>
+
+	<!--Customer support-->
+	<dimen name="activity_customer_support_titles_text_size">17sp</dimen>
+	<dimen name="activity_customer_support_content_text_size">16sp</dimen>
+
+	<dimen name="activity_customer_support_social_network_text_size">12sp</dimen>
+	<dimen name="activity_customer_support_social_network_texts_margin_top">8dp</dimen>
+	<dimen name="activity_customer_support_social_networks_horizontal_padding">16dp</dimen>
+	<dimen name="activity_customer_support_social_networks_margins">24dp</dimen>
+
+	<dimen name="activity_customer_support_our_lang_top_line_horizontal_padding">64dp</dimen>
+	<dimen name="activity_customer_support_our_lang_bottom_line_horizontal_padding">20dp</dimen>
+	<dimen name="activity_customer_support_our_lang_lines_padding">20dp</dimen>
+	<dimen name="activity_customer_support_our_lang_margins">8dp</dimen>
+
+	<dimen name="activity_customer_support_contacts_horizontal_padding">16dp</dimen>
+	<dimen name="activity_customer_support_contacts_icon_vertical_margin">20dp</dimen>
+	<dimen name="activity_customer_support_contacts_country_text_margin_start">16dp</dimen>
+	<dimen name="activity_customer_support_contacts_country_text_margin_end">8dp</dimen>
+
+	<dimen name="activity_customer_support_write_us_icon_margin_top">8dp</dimen>
+	<dimen name="activity_customer_support_write_us_icon_margin_bottom">16dp</dimen>
+	<dimen name="activity_customer_support_write_us_icon_margin_start">16dp</dimen>
+	<dimen name="activity_customer_support_write_us_text_margin_end">34dp</dimen>
+
+	<dimen name="activity_customer_support_titles_margin_start">16dp</dimen>
+	<dimen name="activity_customer_support_we_speak_title_margin_top">22dp</dimen>
+	<dimen name="activity_customer_support_layout_our_lang_margin_top">20dp</dimen>
+	<dimen name="activity_customer_support_message_us_title_margin_top">28dp</dimen>
+	<dimen name="activity_customer_support_layout_social_networks_margin_top">28dp</dimen>
+	<dimen name="activity_customer_support_write_us_title_margin_top">30dp</dimen>
+	<dimen name="activity_customer_support_layout_write_us_margin_top">4dp</dimen>
+	<dimen name="activity_customer_support_call_us_title_margin_top">28dp</dimen>
+	<dimen name="activity_customer_support_layout_phones_margin_top">8dp</dimen>
+	<dimen name="activity_customer_support_padding_bottom">50dp</dimen>
 
 </resources>

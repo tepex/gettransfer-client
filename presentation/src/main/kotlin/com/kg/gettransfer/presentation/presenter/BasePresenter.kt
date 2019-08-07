@@ -119,6 +119,29 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         countEventsInteractor.clearCountEvents()
     }
 
+    fun saveGeneralSettings(withRestartApp: Boolean = false) {
+        if (accountManager.hasAccount) saveAccount(withRestartApp) else saveNoAccount(withRestartApp)
+    }
+
+    fun saveAccount(withRestartApp: Boolean = false) = utils.launchSuspend {
+        viewState.blockInterface(true)
+        val result = utils.asyncAwait { accountManager.putAccount(isTempAccount = false) }
+        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
+        if (result.error == null && withRestartApp) {
+            restartApp()
+        }
+        viewState.blockInterface(false)
+    }
+
+    fun saveNoAccount(withRestartApp: Boolean) = utils.launchSuspend {
+        val result = utils.asyncAwait { sessionInteractor.putNoAccount() }
+        if (result.error == null && withRestartApp) {
+            restartApp()
+        }
+    }
+
+    open fun restartApp() {}
+
     /*fun checkNewMessagesCached() {
         if(!sendingMessagesNow) {
             sendingMessagesNow = true

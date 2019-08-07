@@ -1,12 +1,14 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.animation.Animator
-import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 
 import android.support.annotation.CallSuper
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.DividerItemDecoration
 
 import android.view.View
 
@@ -20,13 +22,11 @@ import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 import com.kg.gettransfer.presentation.presenter.SelectCurrencyPresenter
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 
 import kotlinx.android.synthetic.main.fragment_select_currency.*
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v4.content.ContextCompat
-import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
-import timber.log.Timber
 
+import timber.log.Timber
 
 class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
@@ -42,12 +42,11 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
     private var listener: CurrencyChangedListener? = null
 
-    override fun onAttach(activity: Activity?) {
-        super.onAttach(activity)
-        try {
-            listener = activity as CurrencyChangedListener
-        } catch (e: ClassCastException) {
-            Timber.e("%s must implement CurrencyChangedListener", activity.toString())
+    @CallSuper
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is CurrencyChangedListener) {
+            listener = context
         }
     }
 
@@ -57,19 +56,18 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
         setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
 
+        @Suppress("UnsafeCallOnNullableType")
         val itemDecorator = DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(requireContext(), R.drawable.sh_divider_light_gray)?.let { itemDecorator.setDrawable(it) }
-
-        adapterAll = CurrenciesListAdapter { currency ->
-            presenter.changeCurrency(currency)
+        ContextCompat.getDrawable(requireContext(), R.drawable.sh_divider_light_gray)?.let { drawable ->
+            itemDecorator.setDrawable(drawable)
         }
+
+        adapterAll = CurrenciesListAdapter(presenter::changeCurrency)
         rvAllCurrencies.adapter = adapterAll
         rvAllCurrencies.itemAnimator = DefaultItemAnimator()
         rvAllCurrencies.addItemDecoration(itemDecorator)
 
-        adapterPopular = CurrenciesListAdapter { currency ->
-            presenter.changeCurrency(currency)
-        }
+        adapterPopular = CurrenciesListAdapter(presenter::changeCurrency)
         rvPopularCurrencies.adapter = adapterPopular
         rvPopularCurrencies.itemAnimator = DefaultItemAnimator()
         rvPopularCurrencies.addItemDecoration(itemDecorator)
@@ -106,5 +104,4 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
         rvPopularCurrencies.adapter = null
         super.onDestroyView()
     }
-
 }

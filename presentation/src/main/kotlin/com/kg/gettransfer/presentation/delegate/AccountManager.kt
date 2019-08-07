@@ -22,7 +22,7 @@ class AccountManager : KoinComponent {
 
     val remoteUser: User
         get() = remoteAccount.user
-        
+
     val remoteProfile: Profile
         get() = remoteUser.profile
 

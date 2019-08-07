@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ivUk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_customer_support_our_lang_top_line_horizontal_padding"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_margins"
+        app:layout_constraintEnd_toStartOf="@+id/ivFrance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_uk" />
+
+    <ImageView
+        android:id="@+id/ivFrance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_margins"
+        app:layout_constraintBottom_toBottomOf="@+id/ivUk"
+        app:layout_constraintEnd_toStartOf="@+id/ivSpain"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivUk"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_france" />
+
+    <ImageView
+        android:id="@+id/ivSpain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_margins"
+        app:layout_constraintBottom_toBottomOf="@+id/ivFrance"
+        app:layout_constraintEnd_toStartOf="@+id/ivItaly"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivFrance"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_spain" />
+
+    <ImageView
+        android:id="@+id/ivItaly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_margins"
+        app:layout_constraintBottom_toBottomOf="@+id/ivSpain"
+        app:layout_constraintEnd_toStartOf="@+id/ivRussia"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivSpain"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_italy" />
+
+    <ImageView
+        android:id="@+id/ivRussia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_margins"
+        app:layout_constraintBottom_toBottomOf="@+id/ivItaly"
+        app:layout_constraintEnd_toStartOf="@+id/ivPortugal"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivItaly"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_russia" />
+
+    <ImageView
+        android:id="@+id/ivPortugal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_top_line_horizontal_padding"
+        app:layout_constraintBottom_toBottomOf="@+id/ivRussia"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivRussia"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_portugal" />
+
+    <ImageView
+        android:id="@+id/ivGermany"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_customer_support_our_lang_bottom_line_horizontal_padding"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_margins"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPoland"
+        app:layout_constraintEnd_toStartOf="@+id/ivPoland"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/ivUk"
+        app:layout_constraintTop_toTopOf="@+id/ivPoland"
+        app:srcCompat="@drawable/ic_germany" />
+
+    <ImageView
+        android:id="@+id/ivPoland"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_margins"
+        app:layout_constraintBottom_toBottomOf="@+id/ivSouthKorea"
+        app:layout_constraintEnd_toStartOf="@+id/ivSouthKorea"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivGermany"
+        app:layout_constraintTop_toTopOf="@+id/ivSouthKorea"
+        app:srcCompat="@drawable/ic_poland" />
+
+    <ImageView
+        android:id="@+id/ivSouthKorea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_margins"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_japan"
+        app:layout_constraintEnd_toStartOf="@+id/iv_japan"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivPoland"
+        app:layout_constraintTop_toTopOf="@+id/iv_japan"
+        app:srcCompat="@drawable/ic_south_korea" />
+
+    <ImageView
+        android:id="@+id/iv_japan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_margins"
+        app:layout_constraintBottom_toBottomOf="@+id/ic_china"
+        app:layout_constraintEnd_toStartOf="@+id/ic_china"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivSouthKorea"
+        app:layout_constraintTop_toTopOf="@+id/ic_china"
+        app:srcCompat="@drawable/ic_japan" />
+
+    <ImageView
+        android:id="@+id/ic_china"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_customer_support_our_lang_lines_padding"
+        android:layout_marginEnd="@dimen/activity_customer_support_our_lang_bottom_line_horizontal_padding"
+        app:layout_constraintEnd_toEndOf="@+id/ivPortugal"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/iv_japan"
+        app:layout_constraintTop_toBottomOf="@+id/ivPortugal"
+        app:srcCompat="@drawable/ic_china" />
+
+</android.support.constraint.ConstraintLayout>

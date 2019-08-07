@@ -89,9 +89,55 @@
                     android:id="@+id/settingsFirstDayOfWeek"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitlePicker="@string/LNG_WEEK_FIRST_DAY" />
+                    app:settingsTitlePicker="@string/LNG_WEEK_FIRST_DAY"
+                    app:settingsPickerDivider="false"/>
 
             </LinearLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutAboutApp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/settings_field_height"
+                android:background="@color/colorWhite"
+                android:layout_marginTop="@dimen/activity_settings_about_app_margin_top"
+                android:paddingStart="@dimen/activity_settings_about_app_horizontal_padding"
+                android:paddingEnd="@dimen/activity_settings_about_app_horizontal_padding"
+                android:paddingTop="@dimen/activity_settings_about_app_vertical_padding"
+                android:paddingBottom="@dimen/activity_settings_about_app_vertical_padding">
+
+                <TextView
+                    android:id="@+id/titleAboutApp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/versionApp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/sf_font_pro_text_regular_grey"
+                    android:textSize="@dimen/activity_settings_about_title_text_size"
+                    android:text="@string/LNG_ABOUT_APPLICATION"/>
+
+                <TextView
+                    android:id="@+id/versionApp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titleAboutApp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    style="@style/sf_font_pro_text_regular_black"
+                    android:textSize="@dimen/settings_field_text_size"
+                    tools:text="Version 2.7.0 (585)"/>
+
+                <ImageView
+                    android:id="@+id/shareBtn"
+                    android:layout_width="@dimen/activity_settings_share_btn_size"
+                    android:layout_height="@dimen/activity_settings_share_btn_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:focusable="false"
+                    app:srcCompat="@drawable/ic_menu_share"/>
+
+            </android.support.constraint.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/layoutDebugSettings"
@@ -141,7 +187,8 @@
                     android:id="@+id/forceCrash"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:settingsTitlePicker="@string/force_crash" />
+                    app:settingsTitlePicker="@string/force_crash"
+                    app:settingsPickerDivider="false"/>
 
             </LinearLayout>
         </LinearLayout>

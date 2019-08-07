@@ -35,7 +35,7 @@
     <string name="navigation_drawer_close" translatable="false">Close</string>
 
     <!--Strings for all types of builds-->
-    <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
+    <string name="app_version">Version %1$s (%2$s)</string>
 
     <!--Strings only for debug build-->
     <string name="share">Share</string>
