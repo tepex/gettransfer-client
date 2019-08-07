@@ -94,10 +94,6 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-    override fun showReadMoreDialog() {
-        ReadMoreFragment().show(supportFragmentManager, getString(R.string.tag_read_more))
-    }
-
     override fun showRateForLastTrip(transferId: Long, vehicle: String, color: String) {
         supportFragmentManager.fragments.firstOrNull { fragment ->
             fragment.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG

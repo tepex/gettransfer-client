@@ -4,25 +4,16 @@
 	<!-- Main buttons -->
 	<dimen name="activity_main_buttons_size">48dp</dimen>
 	<dimen name="activity_main_buttons_margin_top">10dp</dimen>
-	<dimen name="activity_main_buttons_margin_top_without_button_shadow">14dp</dimen>
+	<dimen name="activity_main_buttons_margin_start">8dp</dimen>
+	<dimen name="activity_main_buttons_margin_bottom">8dp</dimen>
 	<dimen name="activity_main_buttons_horizontal_margin">4dp</dimen>
-	<dimen name="activity_main_buttons_horizontal_margin_without_button_shadow">8dp</dimen>
 	<dimen name="activity_main_buttons_padding_for_shadow">4dp</dimen>
 	<dimen name="activity_main_events_count_margin_bottom">38dp</dimen>
-	<dimen name="activity_main_events_count_margin_bottom_without_button_shadow">34dp</dimen>
 	<dimen name="activity_main_events_count_padding_start_end">4dp</dimen>
 
 	<dimen name="margin_for_area_behind_rounded_corners">-16dp</dimen>
 	<dimen name="transfer_start_end_sign_marker_text_size">14sp</dimen>
 	<dimen name="activity_main_gradient_layout_height">48dp</dimen>
-
-	<!--MainPassenger Activity, Fragments-->
-	<dimen name="switchers_vertical_margin">16dp</dimen>
-
-	<dimen name="internet_warning_horizontal_text_padding">12dp</dimen>
-	<dimen name="internet_warning_vertical_text_padding">8dp</dimen>
-	<dimen name="internet_warning_horizontal_text_size">12sp</dimen>
-	<dimen name="internet_warning_horizontal_text_margin_top">32dp</dimen>
 
 	<!--Hourly picker and switcher-->
 	<dimen name="hourly_bottom_sheet_height">250dp</dimen>
@@ -39,27 +30,27 @@
 
 	<!-- Navigation view menu -->
 	<dimen name="nav_menu_padding_top">24dp</dimen>
-	<dimen name="nav_header_logo_width">102dp</dimen>
-	<dimen name="nav_header_logo_height">86dp</dimen>
+	<dimen name="nav_header_logo_width">104dp</dimen>
+	<dimen name="nav_header_logo_height">56dp</dimen>
 	<dimen name="nav_header_share_size">24dp</dimen>
 	<dimen name="nav_header_logo_start">16dp</dimen>
+	<dimen name="nav_header_logo_top">34dp</dimen>
 	<dimen name="nav_header_logo_padding_top">8dp</dimen>
 	<dimen name="nav_header_share_bottom">14dp</dimen>
 	<dimen name="nav_header_share_end">16dp</dimen>
 	<dimen name="nav_header_mode_text_size">12sp</dimen>
 	<dimen name="nav_header_padding_bottom">9dp</dimen>
 
-	<dimen name="nav_footer_title_text_size">12sp</dimen>
-	<dimen name="nav_footer_title_horizontal_margin">16dp</dimen>
+	<dimen name="nav_footer_text_size">12sp</dimen>
+	<dimen name="nav_footer_horizontal_margin">12dp</dimen>
 	<dimen name="nav_item_title_size">17sp</dimen>
 	<dimen name="nav_item_subtitle_size">14sp</dimen>
 
 	<dimen name="nav_footer_version_size">10sp</dimen>
 
-	<dimen name="best_price_logo_image_size">80dp</dimen>
-	<dimen name="best_price_logo_margin_start">16dp</dimen>
-	<dimen name="best_price_logo_margin_bottom">8dp</dimen>
-	<dimen name="best_price_logo_margin_top">16dp</dimen>
+	<dimen name="best_price_logo_image_size">64dp</dimen>
+	<dimen name="best_price_logo_margin_start">24dp</dimen>
+	<dimen name="best_price_logo_margin_top">8dp</dimen>
 
 	<dimen name="nav_icons_size">20dp</dimen>
 	<dimen name="nav_icons_margin_start_end">16dp</dimen>
@@ -625,7 +616,7 @@
 	<dimen name="margin80">80dp</dimen>
 
 	<!--new settings-->
-	<dimen name="settings_field_text_size">17sp</dimen>
+	<dimen name="settings_field_text_size">16sp</dimen>
 	<dimen name="settings_field_height">64dp</dimen>
 	<dimen name="settings_field_title_margin_start">16dp</dimen>
 	<dimen name="settings_field_title_margin_end">12dp</dimen>
@@ -637,7 +628,10 @@
 	<dimen name="activity_settings_debug_title_margin_bottom">8dp</dimen>
 	<dimen name="activity_settings_layout_debug_margin_top">32dp</dimen>
 	<dimen name="activity_settings_layout_btns_margin_bottom">24dp</dimen>
-	<dimen name="activity_settings_padding_bottom">150dp</dimen>
+	<dimen name="activity_settings_padding_bottom">32dp</dimen>
+	<dimen name="activity_settings_language_icon_width">24dp</dimen>
+	<dimen name="activity_settings_language_icon_height">16dp</dimen>
+	<dimen name="activity_settings_language_icon_margins">0dp</dimen>
 
 	<dimen name="lang_icon_height">16dp</dimen>
 	<dimen name="lang_icon_width">24dp</dimen>
@@ -757,8 +751,10 @@
 	<dimen name="comment_hint_height">40dp</dimen>
 
 	<!--Profile settings-->
-	<dimen name="profile_settings_btn_save_vertical_margin">20dp</dimen>
-	<dimen name="profile_settings_btn_save_margin_bottom">16dp</dimen>
+	<dimen name="profile_settings_btns_vertical_margin">20dp</dimen>
+	<dimen name="profile_settings_btn_save_margin_bottom">32dp</dimen>
+	<dimen name="profile_settings_btn_logout_margin_top">24dp</dimen>
+	<dimen name="profile_settings_btns_text_size">14sp</dimen>
 
 	<!--Change email settings-->
 	<dimen name="change_email_sent_code_text_size">12sp</dimen>
@@ -842,5 +838,20 @@
 	<dimen name="network_not_available_text_size">12sp</dimen>
 	<dimen name="network_not_available_text_vertical_margin">8sp</dimen>
 	<dimen name="network_not_available_text_horizontal_margin">12sp</dimen>
+
+	<!--Main screen without map-->
+	<dimen name="main_without_map_logo_size">64dp</dimen>
+	<dimen name="main_without_map_logo_margin_start">24dp</dimen>
+	<dimen name="main_without_map_logo_margin_top">8dp</dimen>
+	<dimen name="main_without_map_best_price_text_size">12sp</dimen>
+	<dimen name="main_without_map_best_price_text_horizontal_margin">12dp</dimen>
+	<dimen name="main_without_map_read_more_text_margin_top">6dp</dimen>
+	<dimen name="main_without_map_promo_text_size">17sp</dimen>
+	<dimen name="main_without_map_promo_text_horizontal_margins">30dp</dimen>
+	<dimen name="main_without_map_btn_next_height">48dp</dimen>
+	<dimen name="main_without_map_btn_next_horizontal_margin">16dp</dimen>
+	<dimen name="main_without_map_btn_next_margin_bottom">34dp</dimen>
+	<dimen name="main_without_map_addresses_panel_margin_bottom">24dp</dimen>
+	<dimen name="main_without_map_switch_hourly_margins">16dp</dimen>
 
 </resources>

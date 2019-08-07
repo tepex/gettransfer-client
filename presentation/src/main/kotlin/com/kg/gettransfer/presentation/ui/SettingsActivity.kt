@@ -16,13 +16,14 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
-import com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
@@ -30,9 +31,9 @@ import java.util.Locale
 
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import kotlinx.android.synthetic.main.view_communication_button.*
-import kotlinx.android.synthetic.main.view_settings_field_picker.view.*
+import kotlinx.android.synthetic.main.view_settings_field_horizontal_picker.view.field_text
 import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
+import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
 
 import timber.log.Timber
 
@@ -56,10 +57,6 @@ class SettingsActivity : BaseActivity(), SettingsView {
         setContentView(R.layout.activity_settings)
         @Suppress("UnsafeCast")
         setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
-        Utils.dpToPxInt(this, COMPOUND_DRAWABLE_PADDING).also { px ->
-            settingsBtnLogout.btnName.setPadding(0, px, 0, 0)
-            settingsBtnSupport.btnName.setPadding(0, px, 0, 0)
-        }
     }
 
     @SuppressLint("CommitTransaction")
@@ -104,13 +101,22 @@ class SettingsActivity : BaseActivity(), SettingsView {
     override fun initGeneralSettingsLayout() {
         Timber.d("current locale: ${Locale.getDefault()}")
         settingsCurrency.setOnClickListener { presenter.onCurrencyClicked() }
-        settingsBtnLogout.setOnClickListener { presenter.onLogout() }
-        settingsBtnSupport.setOnClickListener { presenter.sendEmail(null, null) }
     }
 
-    override fun initProfileField() {
-        settingsProfile.isVisible = true
-        settingsProfile.setOnClickListener { presenter.onProfileFieldClicked() }
+    override fun initProfileField(isLoggedIn: Boolean, profile: Profile) {
+        with(settingsProfile) {
+            if (isLoggedIn) {
+                titleText.text = profile.fullName ?: getString(R.string.LNG_PROFILE)
+                subtitleText.isVisible = !profile.email.isNullOrEmpty() || !profile.phone.isNullOrEmpty()
+                subtitleText.text = profile.email ?: profile.phone ?: ""
+            } else {
+                titleText.text = getString(R.string.LNG_LOGIN_LOGIN_TITLE)
+                subtitleText.isVisible = false
+            }
+            setOnClickListener {
+                presenter.onProfileFieldClicked()
+            }
+        }
     }
 
     override fun initCarrierLayout() {
@@ -156,19 +162,21 @@ class SettingsActivity : BaseActivity(), SettingsView {
         }
     }
 
-    override fun setEmailNotifications(enabled: Boolean) {
-        settingsEmailNotif.isVisible = true
-        with(settingsEmailNotif) {
-            isVisible = true
-            setOnClickListener { view ->
-                with(view.switch_button) {
-                    isChecked = !isChecked
-                    presenter.onEmailNotificationSwitched(isChecked)
+    override fun setEmailNotifications(isLoggedIn: Boolean, enabled: Boolean) {
+        settingsEmailNotif.isVisible = isLoggedIn
+        if (isLoggedIn) {
+            with(settingsEmailNotif) {
+                isVisible = true
+                setOnClickListener { view ->
+                    with(view.switch_button) {
+                        isChecked = !isChecked
+                        presenter.onEmailNotificationSwitched(isChecked)
+                    }
                 }
-            }
-            switch_button.apply {
-                isChecked = enabled
-                setOnCheckedChangeListener { _, isChecked -> presenter.onEmailNotificationSwitched(isChecked) }
+                switch_button.apply {
+                    isChecked = enabled
+                    setOnCheckedChangeListener { _, isChecked -> presenter.onEmailNotificationSwitched(isChecked) }
+                }
             }
         }
     }
@@ -201,12 +209,22 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     override fun setLocale(locale: String, code: String) {
         settingsLanguage.field_text.text = locale
+        val langIconParams = LanguageDrawer.LanguageLayoutParamsRes.SETTINGS
         with(settingsLanguage.field_text) {
             text = locale
-            setCompoundDrawablesWithIntrinsicBounds(
+            setCompoundDrawables(
                 null,
                 null,
-                ContextCompat.getDrawable(this@SettingsActivity, Utils.getLanguageImage(code)),
+                    ContextCompat.getDrawable(
+                        this@SettingsActivity,
+                        Utils.getLanguageImage(code)
+                    )?.apply {
+                        setBounds(
+                            0,
+                            0,
+                            resources.getDimensionPixelSize(langIconParams.width),
+                            resources.getDimensionPixelSize(langIconParams.height))
+                    },
                 null
             )
             compoundDrawablePadding = Utils.dpToPxInt(this@SettingsActivity, COMPOUND_DRAWABLE_PADDING)
@@ -219,10 +237,6 @@ class SettingsActivity : BaseActivity(), SettingsView {
 
     override fun setCalendarMode(calendarModeKey: String) {
         settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey)
-    }
-
-    override fun setLogoutButtonEnabled(enabled: Boolean) {
-        layoutSettingsBtnLogout.isVisible = enabled
     }
 
     override fun restartApp() {

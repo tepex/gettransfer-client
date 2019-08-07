@@ -4,7 +4,6 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.BuildConfig
 
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -22,8 +21,6 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import com.kg.gettransfer.utilities.Analytics
 
 import java.util.Locale
-
-import org.koin.core.get
 
 @Suppress("TooManyFunctions")
 @InjectViewState
@@ -46,10 +43,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         super.attachView(view)
         if (restart) initConfigs()
         initGeneralSettings()
-        if (accountManager.isLoggedIn) {
-            viewState.initProfileField()
-            viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
-        }
+        viewState.initProfileField(accountManager.isLoggedIn, accountManager.remoteProfile)
+        viewState.setEmailNotifications(accountManager.isLoggedIn, sessionInteractor.isEmailNotificationEnabled)
 
         initDebugMenu()
     }
@@ -71,7 +66,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         viewState.setLocale(localeModel?.name ?: "", locale.language)
 
         viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
-        viewState.setLogoutButtonEnabled(accountManager.hasAccount)
     }
 
     fun switchDebugSettings() {
@@ -150,14 +144,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
         }
     }
 
-    fun onLogout() {
-        utils.launchSuspend {
-            clearAllCachedData()
-            router.exit()
-        }
-        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
-    }
-
     fun onDistanceUnitSwitched(isChecked: Boolean) {
         sessionInteractor.distanceUnit = when (isChecked) {
             true  -> DistanceUnit.MI
@@ -198,7 +184,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
     }
 
     fun onProfileFieldClicked() {
-        router.navigateTo(Screens.ProfileSettings())
+        if (accountManager.isLoggedIn) router.navigateTo(Screens.ProfileSettings())
+        else router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, null))
     }
 
     override fun onBackCommandClick() {

@@ -34,21 +34,20 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/activity_settings_padding_bottom">
 
-            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldVerticalPicker
                 android:id="@+id/settingsProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:settingsTitlePicker="@string/LNG_PROFILE"
-                app:settingsPickerBlackText="true"
-                android:visibility="gone"/>
+                app:settingsTitlePicker="@string/LNG_LOGIN_LOGIN_TITLE"/>
 
-            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                 android:id="@+id/settingsCurrency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 app:settingsTitlePicker="@string/LNG_CURRENCY"/>
 
-            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                 android:id="@+id/settingsLanguage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -80,13 +79,13 @@
                     android:layout_height="wrap_content"
                     app:settingsTitleSwitch="@string/LNG_SEND_COORDINATES_IN_BACKGROUND"/>
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                     android:id="@+id/settingsCalendarMode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:settingsTitlePicker="@string/LNG_CALENDAR_MODE" />
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                     android:id="@+id/settingsFirstDayOfWeek"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -114,31 +113,31 @@
                     android:textAllCaps="true"
                     android:text="@string/debug"/>
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                     android:id="@+id/settingsEndpoint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:settingsTitlePicker="@string/endpoint" />
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                     android:id="@+id/settingsResetOnboarding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:settingsTitlePicker="@string/reset_onboarding" />
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                     android:id="@+id/settingsResetRate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:settingsTitlePicker="@string/reset_rate" />
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                     android:id="@+id/settingsClearAccessToken"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:settingsTitlePicker="@string/clear_access_token" />
 
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                     android:id="@+id/forceCrash"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -147,45 +146,6 @@
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/activity_settings_layout_btns_margin_bottom"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/layoutSettingsBtnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
-                android:id="@+id/settingsBtnLogout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:btn_name="@string/LNG_UNLOGIN"
-                app:btn_img="@drawable/ic_logout"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center">
-
-            <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
-                android:id="@+id/settingsBtnSupport"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:btn_name="@string/LNG_CUSTOMER_SUPPORT"
-                app:btn_img="@drawable/ic_support"/>
-        </LinearLayout>
-    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/currenciesFragment"

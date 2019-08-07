@@ -9,7 +9,6 @@ import com.kg.gettransfer.presentation.model.ProfileModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface MainNavigateView : BaseView {
     fun setEventCount(isVisible: Boolean, count: Int)
-    fun showReadMoreDialog()
     fun showDetailedReview()
     fun askRateInPlayMarket()
     fun thanksForRate()

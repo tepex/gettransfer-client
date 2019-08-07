@@ -59,8 +59,6 @@ class CarrierTripsMainActivity : BaseActivity(),
     @ProvidePresenter
     fun createCarrierTripsMainPresenter() = CarrierTripsMainPresenter()
 
-    private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
-
     private val itemsNavigationViewListener = View.OnClickListener { view ->
         with(presenter) {
             when (view.id) {
@@ -180,11 +178,6 @@ class CarrierTripsMainActivity : BaseActivity(),
         (navFooterVersion as TextView).text =
             String.format(getString(R.string.nav_footer_version), versionName, versionCode)
 
-        with(readMoreListener) {
-            navFooterStamp.setOnClickListener(this)
-            navFooterReadMore.setOnClickListener(this)
-        }
-
         with(itemsNavigationViewListener) {
             navHeaderShare.setOnClickListener(this)
             navCarrierTrips.setOnClickListener(this)
@@ -210,10 +203,6 @@ class CarrierTripsMainActivity : BaseActivity(),
         navPassengerMode.isVisible = true
         navCarrierTransfers.isVisible = true
         navNewTransfer.isVisible = false
-
-        navFooterStamp.isVisible = false
-        navMessage.isVisible = false
-        navFooterReadMore.isVisible = false
     }
 
     override fun showReadMoreDialog() {
