@@ -254,6 +254,11 @@ class SettingsActivity : BaseActivity(), SettingsView, CurrencyChangedListener {
         presenter.currencyChanged(currency)
     }
 
+    override fun hideSomeDividers() {
+        if (!settingsEmailNotif.isVisible) settingsDistanceUnit.hideDivider()
+        if (!layoutCarrierSettings.isVisible) settingsEmailNotif.hideDivider()
+    }
+
     override fun restartApp() {
         packageManager.getLaunchIntentForPackage(packageName)?.let { intent ->
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

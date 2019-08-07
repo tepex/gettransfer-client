@@ -623,6 +623,7 @@
 	<dimen name="settings_field_layout_btns_margin_end">16dp</dimen>
 	<dimen name="settings_field_text_margin_start">12dp</dimen>
 	<dimen name="settings_field_text_margin_end">16dp</dimen>
+	<dimen name="settings_field_divider_horizontal_margins">16dp</dimen>
 	<dimen name="activity_settings_debug_title_text_size">15sp</dimen>
 	<dimen name="activity_settings_debug_title_margin_start">16dp</dimen>
 	<dimen name="activity_settings_debug_title_margin_bottom">8dp</dimen>

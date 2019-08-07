@@ -44,6 +44,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         initProfileSettings()
         initDriverSettings()
         if (BuildConfig.FLAVOR == "dev" || systemInteractor.isDebugMenuShowed) initDebugMenu()
+        viewState.hideSomeDividers()
     }
 
     private fun initGeneralSettings() {

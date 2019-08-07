@@ -101,7 +101,6 @@
 
     <declare-styleable name="SettingsFieldSwitch">
         <attr name="settingsTitleSwitch" format="string"/>
-        <attr name="settingsDividerSwitch" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="SwitcherView">

@@ -34,4 +34,6 @@ interface SettingsView : BaseView {
 
     fun showFragment(showingView: Int)
     fun restartApp()
+
+    fun hideSomeDividers()
 }
