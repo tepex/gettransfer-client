@@ -395,4 +395,9 @@
     <string name="LNG_COLOR_ORANGE">orange</string>
     <string name="LNG_COLOR_BEIGE">beige</string>
     <string name="LNG_COLOR_GOLD">gold</string>
+
+    <string name="LNG_MENU_ORDER">Order</string>
+    <string name="LNG_MENU_TRIPS">Trips</string>
+    <string name="LNG_MENU_HELP">Help</string>
+    <string name="LNG_MENU_SETTINGS">Settings</string>
 </resources>

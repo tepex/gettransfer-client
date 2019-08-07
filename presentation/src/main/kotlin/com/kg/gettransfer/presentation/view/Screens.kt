@@ -29,7 +29,6 @@ object Screens {
     @JvmField val NOT_USED = -1
 
     @JvmField val MAIN = "main"
-    @JvmField val MAIN_MENU = "show_menu"
     @JvmField val OFFERS = "offers"
     @JvmField val DETAILS = "details"
 
@@ -58,12 +57,9 @@ object Screens {
     private var canSendEmail: Boolean? = null
 
     data class MainPassenger(
-        val showDrawer: Boolean = false
+        val showDrawer: Boolean = false  //TODO remove
     ) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java)
-            .apply {
-                putExtra(MAIN_MENU, showDrawer)
-            }
     }
 
     data class MainPassengerToRateTransfer(

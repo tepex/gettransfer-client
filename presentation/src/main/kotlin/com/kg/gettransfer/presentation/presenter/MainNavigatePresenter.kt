@@ -9,8 +9,6 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
 
-import com.kg.gettransfer.presentation.mapper.ProfileMapper
-
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.MainNavigateView
@@ -21,11 +19,8 @@ import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.coroutines.delay
 
-import org.koin.core.inject
-
 @InjectViewState
 class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventListener {
-    private val profileMapper: ProfileMapper by inject()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -48,22 +43,11 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         countEventsInteractor.addCounterListener(this)
         viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
         log.debug("MainPresenter.is user logged in: ${accountManager.isLoggedIn}")
-        checkAccount()
     }
 
     override fun detachView(view: MainNavigateView?) {
         super.detachView(view)
         countEventsInteractor.removeCounterListener(this)
-    }
-
-    private fun checkAccount() {
-        with(accountManager) {
-            viewState.setProfile(profileMapper.toView(remoteProfile), isLoggedIn, hasAccount)
-            if (remoteAccount.isBusinessAccount) {
-                val balance = remoteAccount.partner?.availableMoney?.default
-                viewState.setBalance(balance)
-            }
-        }
     }
 
     override fun updateCounter() {
@@ -73,15 +57,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     override fun onNewOffer(offer: Offer): OfferModel {
         utils.launchSuspend { viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount) }
         return super.onNewOffer(offer)
-    }
-
-    override fun systemInitialized() {
-        super.systemInitialized()
-        checkAccount()
-    }
-
-    fun onNewTransferClick() {
-        viewState.openMenu()
     }
 
     fun onAboutClick() {

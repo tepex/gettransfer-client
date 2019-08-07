@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings"
+    app:startDestination="@+id/newTransfer">
+
+    <fragment
+        android:id="@+id/newTransfer"
+        android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment"
+        android:label="new_transfer"
+        tools:layout="@layout/fragment_new_transfer_main">
+        <action
+            android:id="@+id/go_to_map"
+            app:destination="@id/newTransferMap"/>
+    </fragment>
+    <fragment
+        android:id="@+id/newTransferMap"
+        android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment"
+        android:label="new_transfer_map"
+        tools:layout="@layout/fragment_new_transfer_map"/>
+</navigation>

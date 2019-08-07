@@ -1,84 +1,53 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 
 import android.support.annotation.CallSuper
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
 
-import android.transition.Fade
-import android.view.Gravity
-
-import android.view.View
 import android.view.WindowManager
 
-import android.widget.TextView
+import androidx.navigation.NavController
+import androidx.navigation.fragment.FragmentNavigator
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
-import com.kg.gettransfer.BuildConfig
-import com.kg.gettransfer.R
-import com.kg.gettransfer.common.NavigationMenuListener
-
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setupWithNavController
 
-import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.presenter.MainNavigatePresenter
-import com.kg.gettransfer.presentation.ui.custom.LockableSwipeDrawerLayout
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
-import com.kg.gettransfer.presentation.view.BaseNetworkWarning
 import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
-import com.kg.gettransfer.presentation.view.Screens
-
 import kotlinx.android.synthetic.main.activity_main_navigate.*
-import kotlinx.android.synthetic.main.navigation_view_menu_item.view.*
-import kotlinx.android.synthetic.main.view_navigation.*
 
 import pub.devrel.easypermissions.EasyPermissions
-
-import timber.log.Timber
+import android.view.LayoutInflater
+import android.support.design.internal.BottomNavigationItemView
+import android.support.design.internal.BottomNavigationMenuView
+import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment
+import kotlinx.android.synthetic.main.notification_badge_view.view.*
 
 
 @Suppress("TooManyFunctions")
 class MainNavigateActivity : BaseActivity(), MainNavigateView,
-        NavigationMenuListener,
         StoreDialogFragment.OnStoreListener {
 
     @InjectPresenter
     internal lateinit var presenter: MainNavigatePresenter
 
-    lateinit var drawer: LockableSwipeDrawerLayout
+    private var currentNavController: LiveData<NavController>? = null
 
     @ProvidePresenter
     fun createMainPresenter() = MainNavigatePresenter()
-
-    private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
-
-    private val itemsNavigationViewListener = View.OnClickListener { view ->
-        with(presenter) {
-            when (view.id) {
-                R.id.navNewTransfer -> onNewTransferClick()
-                R.id.navLogin -> onLoginClick()
-                R.id.navAbout -> onAboutClick()
-                R.id.navSettings -> onSettingsClick()
-                R.id.navSupport -> onSupportClick()
-                R.id.navRequests -> onRequestsClick()
-                R.id.navBecomeACarrier -> onBecomeACarrierClick()
-                R.id.navHeaderShare -> onShareClick()
-                else -> Timber.d("No route")
-            }
-            drawer.closeDrawer(GravityCompat.START)
-        }
-    }
 
     override fun getPresenter(): MainNavigatePresenter = presenter
 
@@ -93,22 +62,19 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
 
-        @Suppress("UnsafeCast")
-        drawer = drawerLayout as LockableSwipeDrawerLayout
-        drawer.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
-            @CallSuper
-            override fun onDrawerStateChanged(newState: Int) {
-                super.onDrawerStateChanged(newState)
-                if (newState == DrawerLayout.STATE_SETTLING) hideKeyboard()
-            }
-        })
-
-        initNavigation()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.exitTransition = Fade().apply { duration = FADE_DURATION }
-        }
         getIntents()
+
+        if (savedInstanceState == null) {
+            setupBottomNavigationBar()
+        } // Else, need to wait for onRestoreInstanceState
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // Now that BottomNavigationBar has restored its instance state
+        // and its selectedItemId, we can proceed with setting up the
+        // BottomNavigationBar with Navigation
+        setupBottomNavigationBar()
     }
 
     /**
@@ -119,49 +85,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             val transferId = getLongExtra(EXTRA_RATE_TRANSFER_ID, 0L)
             val rate = getIntExtra(EXTRA_RATE_VALUE, 0)
             if (transferId != 0L) presenter.rateTransfer(transferId, rate)
-
-            if (getBooleanExtra(Screens.MAIN_MENU, false)) {
-                Handler().postDelayed({ openMenu() }, MAGIC_DELAY)
-            }
         }
-    }
-
-    private fun initNavigation() {
-        val versionName = BuildConfig.VERSION_NAME
-        val versionCode = BuildConfig.VERSION_CODE
-        @Suppress("UnsafeCast")
-        (navFooterVersion as TextView).text =
-                String.format(getString(R.string.nav_footer_version), versionName, versionCode)
-        navNewTransfer.isVisible = true
-        navRequests.isVisible = true
-
-        with(readMoreListener) {
-            navFooterStamp.setOnClickListener(this)
-            navFooterReadMore.setOnClickListener(this)
-        }
-        with(itemsNavigationViewListener) {
-            navNewTransfer.setOnClickListener(this)
-            navHeaderShare.setOnClickListener(this)
-            navLogin.setOnClickListener(this)
-            navRequests.setOnClickListener(this)
-            navSettings.setOnClickListener(this)
-            navSupport.setOnClickListener(this)
-            navAbout.setOnClickListener(this)
-            navBecomeACarrier.setOnClickListener(this)
-            navPassengerMode.setOnClickListener(this)
-        }
-    }
-
-    override fun openMenu() {
-        drawer.openDrawer(Gravity.START, true)
-    }
-
-    override fun enablingNavigation() {
-        drawer.isSwipeOpenEnabled = true
-    }
-
-    override fun disablingNavigation() {
-        drawer.isSwipeOpenEnabled = false
     }
 
     @CallSuper
@@ -170,26 +94,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-    override fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean) {
-        with(profile) {
-            navHeaderName.isVisible = isLoggedIn && !name.isNullOrEmpty()
-            navHeaderEmail.isVisible = isLoggedIn && !email.isNullOrEmpty()
-            navLogin.isVisible = !isLoggedIn && hasAccount || !hasAccount
-            layoutAccountInfo.isVisible = navHeaderName.isVisible || navHeaderEmail.isVisible
-            if (isLoggedIn) {
-                name?.let  { navHeaderName.text = it }
-                email?.let { navHeaderEmail.text = it }
-            }
-        }
-    }
-
-    override fun setBalance(balance: String?) {
-        navHeaderBalance.text = getString(R.string.LNG_PAYMENT_BALANCE, balance)
-        groupBalance.isVisible = true
-    }
-
     override fun showReadMoreDialog() {
-        drawer.closeDrawer(GravityCompat.START)
         ReadMoreFragment().show(supportFragmentManager, getString(R.string.tag_read_more))
     }
 
@@ -220,14 +125,21 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
                     .show(supportFragmentManager, ThanksForRateFragment.TAG)
 
     override fun setEventCount(isVisible: Boolean, count: Int) {
-        navRequests.menu_item_counter.isVisible = isVisible && count > 0
-        navRequests.menu_item_counter.text = count.toString()
+        val bottomNavigationMenuView = bottom_nav.getChildAt(0) as BottomNavigationMenuView
+        val v = bottomNavigationMenuView.getChildAt(0)
+        val itemView = v as BottomNavigationItemView
+
+        val badge = LayoutInflater.from(this)
+                .inflate(R.layout.notification_badge_view, itemView, true)
+
+        badge.notifications_badge.text = count.toString()
+        badge.notifications_badge.isVisible = isVisible && count > 0
     }
 
     override fun setNetworkAvailability(context: Context): Boolean {
         val available = super.setNetworkAvailability(context)
-        if (newTransferFragment is BaseNetworkWarning)
-            (newTransferFragment as BaseNetworkWarning).onNetworkWarning(available)
+//        if (newTransferFragment is BaseNetworkWarning)
+//            (newTransferFragment as BaseNetworkWarning).onNetworkWarning(available)
         return available
     }
 
@@ -235,14 +147,39 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     override fun onBackPressed() = onBackClick()
 
     private fun onBackClick() {
-        when {
-            drawer.isDrawerOpen(GravityCompat.START) -> drawer.closeDrawer(GravityCompat.START)
-            else -> presenter.onBackCommandClick()
+        presenter.onBackCommandClick()
+    }
+
+
+    /**
+     * Called on first creation and when restoring state.
+     */
+    private fun setupBottomNavigationBar() {
+        val navGraphIds = listOf(R.navigation.new_order, R.navigation.trips, R.navigation.help, R.navigation.settings)
+
+        // Setup the bottom navigation view with a list of navigation graphs
+        val controller = bottom_nav.setupWithNavController(
+                navGraphIds = navGraphIds,
+                fragmentManager = supportFragmentManager,
+                containerId = R.id.nav_host_container,
+                intent = intent
+        )
+        currentNavController = controller
+        currentNavController?.value?.addOnDestinationChangedListener { _, destination, _ ->
+            when ((destination as FragmentNavigator.Destination).className) {
+                //visible bottom menu
+                NewTransferMainFragment::class.java.name -> {
+                    bottom_nav.isVisible = true
+                }
+                //not visible bottom menu
+                else -> {
+                    bottom_nav.isVisible = false
+                }
+            }
         }
     }
 
-    companion object {
-        const val FADE_DURATION = 500L
-        const val MAGIC_DELAY = 500L
+    override fun onSupportNavigateUp(): Boolean {
+        return currentNavController?.value?.navigateUp() ?: false
     }
 }
