@@ -1,7 +1,7 @@
 @file:Suppress("TooManyFunctions")
 package com.kg.gettransfer.cache
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 
 import com.kg.gettransfer.cache.model.CurrencyCachedList
 import com.kg.gettransfer.cache.model.LocaleCachedList

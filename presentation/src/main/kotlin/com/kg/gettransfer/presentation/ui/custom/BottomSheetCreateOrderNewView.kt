@@ -1,10 +1,7 @@
 package com.kg.gettransfer.presentation.ui.custom
 
 import android.content.Context
-import android.support.annotation.ColorRes
-import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
 import android.text.InputFilter
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -12,6 +9,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.annotation.ColorRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.isVisible

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -15,7 +15,7 @@
         tools:hint="450"
         android:theme="@style/editTextHintCreateOrder">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/field_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,4 +28,4 @@
             android:imeOptions="actionNext"
             android:singleLine="true"
             style="@style/sf_font"/>
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>

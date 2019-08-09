@@ -22,7 +22,7 @@
         android:textColor="@color/color_gtr_green"
         android:textSize="14sp" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/scrollHints"
@@ -44,7 +44,7 @@
             android:textColor="@color/colorTextBlack"
             android:textColorHint="@color/color_gtr_grey"
             android:textSize="@dimen/create_transfer_additionals_top_text_size" />
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <HorizontalScrollView
         android:id="@+id/scrollHints"
@@ -57,7 +57,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp">
 
-        <android.support.design.chip.ChipGroup
+        <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

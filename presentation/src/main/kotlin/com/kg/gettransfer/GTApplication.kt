@@ -2,11 +2,11 @@ package com.kg.gettransfer
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.arch.lifecycle.ProcessLifecycleOwner
 import android.os.Build
 
-import android.support.annotation.CallSuper
-import android.support.multidex.MultiDexApplication
+import androidx.annotation.CallSuper
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.multidex.MultiDexApplication
 
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib

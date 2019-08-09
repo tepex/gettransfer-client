@@ -5,14 +5,12 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 
-import android.support.annotation.CallSuper
-import android.support.annotation.IntDef
+import androidx.annotation.CallSuper
 
-import android.support.design.widget.CoordinatorLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 
-import android.support.v4.view.NestedScrollingChild
-import android.support.v4.view.ViewCompat
-import android.support.v4.widget.ViewDragHelper
+import androidx.core.view.NestedScrollingChild
+import androidx.core.view.ViewCompat
 
 import android.util.AttributeSet
 
@@ -20,6 +18,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
+import androidx.annotation.IntDef
+import androidx.customview.widget.ViewDragHelper
 
 import com.kg.gettransfer.R
 

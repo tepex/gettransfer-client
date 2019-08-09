@@ -5,11 +5,11 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.chip.Chip
-import android.support.design.widget.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.*
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.android.material.chip.Chip
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.presenter.CommentPresenter
@@ -46,7 +46,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
                 }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         onCommentLister = (activity as? OnCommentListener)
     }
@@ -62,7 +62,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         showKeyboard()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         hideKeyboard()
         sendCommentToTargetFragment(comment)

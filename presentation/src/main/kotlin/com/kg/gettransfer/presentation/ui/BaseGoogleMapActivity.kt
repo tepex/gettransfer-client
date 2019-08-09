@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import android.widget.ImageView
 
 import com.google.android.gms.maps.CameraUpdate

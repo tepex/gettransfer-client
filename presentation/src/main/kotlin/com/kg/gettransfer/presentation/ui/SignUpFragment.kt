@@ -1,8 +1,8 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v4.app.Fragment
+import androidx.annotation.CallSuper
+import androidx.fragment.app.Fragment
 
 import android.view.LayoutInflater
 import android.view.View
@@ -92,7 +92,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                 text = this@SignUpFragment.getString(R.string.LNG_ERROR_EMAIL_PHONE, phoneExample)
                 onDismissCallBack = { hideLoading() }
             }
-            .show(fragmentManager)
+            .show(requireFragmentManager())
     }
 
     override fun showRegisterSuccessDialog() {
@@ -108,7 +108,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                     hideLoading()
                 }
             }
-            .show(fragmentManager)
+            .show(requireFragmentManager())
     }
 
     private fun initTextChangeListeners() {
@@ -216,7 +216,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                 title = textError
                 onDismissCallBack = { hideLoading() }
             }
-            .show(fragmentManager)
+            .show(requireFragmentManager())
     }
 
     // TODO remove BaseView or add code.

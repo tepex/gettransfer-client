@@ -2,12 +2,12 @@ package com.kg.gettransfer.presentation.ui.custom
 
 import com.kg.gettransfer.R
 import android.content.Context
-import android.support.design.widget.TextInputLayout
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import com.google.android.material.textfield.TextInputLayout
 import com.kg.gettransfer.presentation.ui.Utils
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_create_order_field.*

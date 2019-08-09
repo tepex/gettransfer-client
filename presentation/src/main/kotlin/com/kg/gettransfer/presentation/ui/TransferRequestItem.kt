@@ -1,10 +1,10 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 
-import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 
 import android.util.AttributeSet
 import android.view.LayoutInflater

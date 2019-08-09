@@ -1,6 +1,8 @@
-package android.support.v4.app 
+package androidx.core.app
 
 import android.app.Activity
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentHostCallback
 
 import java.lang.reflect.Field 
 
@@ -49,6 +51,7 @@ object MemoryLeakUtils {
     } 
     */
     fun updateLoaderManagerHostController(activity: FragmentActivity) {
+/*
         if(activity.mFragments == null) return
         try {
             val mHostField = activity.mFragments::class.java.getDeclaredField("mHost")
@@ -60,5 +63,6 @@ object MemoryLeakUtils {
             //mHost.getLoaderManager("(root)", false, true)
         }
         catch(e: Exception) { e.printStackTrace() }
+*/
     }
 }
