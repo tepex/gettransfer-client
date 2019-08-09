@@ -74,6 +74,15 @@ android {
         }
     }
 
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+            testLogging {
+                events "STARTED", "PASSED", "FAILED", "SKIPPED"
+            }
+        }
+    }
+
     buildTypes {
         release {
             shrinkResources true
@@ -252,11 +261,6 @@ dependencies {
     implementation "io.michaelrocks:libphonenumber-android:$libphonenumber_version"
     implementation "com.google.android:flexbox:$flexbox_layout_version"
 
-    testImplementation libs.junit
-    testImplementation libs.hamcrest
-    testImplementation libs.mockito
-    testImplementation "org.koin:koin-test:$koin_version"
-
     // LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
@@ -292,6 +296,13 @@ dependencies {
 
     // Play services
     implementation "com.google.android.gms:play-services-base:$play_services"
+
+    testImplementation libs.coroutines_test
+    testImplementation libs.koin_test
+    testImplementation libs.kotlintest
+    testImplementation libs.kotlintest_koin
+    testImplementation libs.mockk
+    testImplementation libs.slf4j_simple
 }
 
 def getBuildNumber() {

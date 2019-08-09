@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import com.kg.gettransfer.R
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
@@ -9,9 +8,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
+import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.isVisible
@@ -21,7 +23,9 @@ import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.presenter.CarrierTripsCalendarPresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.CarrierTripsCalendarFragmentView
+
 import kotlinx.android.synthetic.main.activity_carrier_trips_calendar_fragment.*
+
 import timber.log.Timber
 
 class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalendarFragmentView {
@@ -39,7 +43,7 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewPager.adapter = CarrierTripsCalendarMonthPagerAdapter(childFragmentManager)
+        viewPager.adapter = CarrierTripsCalendarMonthPagerAdapter(childFragmentManager, presenter.firstDayOfWeek)
         viewPager.setCurrentItem(1, false)
         setPageChangeListener()
         rvCarrierTrips.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -50,7 +54,9 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
         setPageChangeListener(calendarItems)
     }
 
-    private fun setPageChangeListener(calendarItems: Map<String, List<CarrierTripBaseModel>>? = null) {
+    private fun setPageChangeListener(
+        calendarItems: Map<String, List<CarrierTripBaseModel>>? = null
+    ) {
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
             override fun onPageSelected(position: Int) {
@@ -67,7 +73,9 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
         })
     }
 
-    private fun setDataInCalendarFragments(calendarItems: Map<String, List<CarrierTripBaseModel>>? = null) {
+    private fun setDataInCalendarFragments(
+        calendarItems: Map<String, List<CarrierTripBaseModel>>? = null
+    ) {
         for (i in 0 until CarrierTripsCalendarMonthPagerAdapter.MONTHS_COUNT) {
             val fragment = (viewPager.adapter as CarrierTripsCalendarMonthPagerAdapter).instantiateItem(
                 viewPager,

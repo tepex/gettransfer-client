@@ -14,7 +14,6 @@ import java.util.Locale
 
 class SessionInteractor(
     private val sessionRepository: SessionRepository,
-    val systemInteractor: SystemInteractor,
     private val geoRepository: GeoRepository
 ) {
 
@@ -35,7 +34,8 @@ class SessionInteractor(
         }
 
     var currency: Currency
-        get() = if (systemInteractor.currencies.contains(account.currency)) account.currency else Currency.DEFAULT
+//        get() = if (systemInteractor.currencies.contains(account.currency)) account.currency else Currency.DEFAULT
+        get() = account.currency
         set(value) {
             account.currency = value
         }

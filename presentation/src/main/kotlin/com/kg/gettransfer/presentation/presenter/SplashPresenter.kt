@@ -3,93 +3,75 @@ package com.kg.gettransfer.presentation.presenter
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
-import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.CoroutineContexts
-
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.domain.interactor.SessionInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
-import com.kg.gettransfer.presentation.ui.helpers.BuildsConfigsHelper
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SplashView
 
-import com.kg.gettransfer.sys.domain.GetBuildsConfigsInteractor
+import com.kg.gettransfer.core.presentation.WorkerManager
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
+import com.kg.gettransfer.sys.domain.IsNeedUpdateAppInteractor
+import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
 
-import kotlinx.coroutines.Job
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 
 import ru.terrakok.cicerone.Router
 
 @InjectViewState
 class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
 
-    private val compositeDisposable = Job()
-    private val coroutineContexts: CoroutineContexts by inject()
-    private val utils = AsyncUtils(coroutineContexts, compositeDisposable)
-    private val reviewInteractor: ReviewInteractor by inject()
     private val sessionInteractor: SessionInteractor by inject()
-    private val systemInteractor: SystemInteractor by inject()
     private val router: Router by inject()
 
-    private val getBuildsConfigs: GetBuildsConfigsInteractor by inject()
-
+    private val worker: WorkerManager by inject { parametersOf("SplashPresenter") }
+    private val configsManager: ConfigsManager by inject()
+    private val isNeedUpdateApp: IsNeedUpdateAppInteractor by inject()
+    private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
 
     fun onLaunchContinue() {
         /* Check PUSH notification */
         viewState.checkLaunchType()
-        reviewInteractor.shouldAskRateInMarket = shouldAskForRateApp()
-        onAppLaunched()
-    }
+        worker.main.launch {
+             val result = configsManager.coldStart(worker.backgroundScope)
+             // check result for network error
 
-    private fun onAppLaunched() {
-        utils.launchSuspend {
-            utils.asyncAwait { sessionInteractor.coldStart() }
-
-            if (checkNeededUpdateApp()) viewState.onNeedAppUpdateInfo() else startApp()
+             val needUpdateApp = withContext(worker.bg) {
+                isNeedUpdateApp(IsNeedUpdateAppInteractor.FIELD_UPDATE_REQUIRED, BuildConfig.VERSION_CODE)
+            }
+            if (needUpdateApp) viewState.onNeedAppUpdateInfo() else startApp()
         }
     }
 
-    private fun checkNeededUpdateApp(): Boolean {
-        val buildsConfigs = BuildsConfigsHelper.getConfigsForCurrentBuildByField(
-            BuildsConfigsHelper.SETTINGS_FIELD_UPDATE_REQUIRED,
-            getBuildsConfigs()
-        )
-        return if (buildsConfigs != null) buildsConfigs.updateRequired else false
-    }
-
-    fun startApp() {
-        viewState.dispatchAppState(sessionInteractor.locale)
-        openStartScreen()
-    }
-
-    /* TODO: Magic values here! */
-    private fun shouldAskForRateApp() = when (systemInteractor.appEntersForMarketRate) {
-        3    -> true
-        9    -> true
-        18   -> true
-        else -> false
-    }
-
-    private fun openStartScreen() {
-        if (!systemInteractor.isOnboardingShowed) {
-            router.replaceScreen(Screens.About(systemInteractor.isOnboardingShowed))
-            systemInteractor.isOnboardingShowed = true
+    fun startApp() = worker.main.launch {
+            viewState.dispatchAppState(sessionInteractor.locale)
+            val isOnboardingShowed = getPreferences().getModel().isOnboardingShowed
+            if (!isOnboardingShowed) {
+                router.replaceScreen(Screens.About(true))
+                withContext(worker.bg) { setOnboardingShowed(true) }
+            } else {
+                when (getPreferences().getModel().lastMode) {
+                    Screens.CARRIER_MODE -> router.replaceScreen(Screens.CarrierMode)
+                    else                 ->
+                        router.newRootScreen(Screens.MainPassenger(!isOnboardingShowed))
+                }
+            }
         }
-        else when (systemInteractor.lastMode) {
-            Screens.CARRIER_MODE -> router.replaceScreen(Screens.CarrierMode)
-            else -> { router.newRootScreen(Screens.MainPassenger(!systemInteractor.isOnboardingShowed)) }
-        }
-    }
 
     fun enterByPush() {
         router.newRootChain(Screens.MainPassenger(), Screens.Requests)
     }
 
-    override fun detachView(view: SplashView?) {
-        super.detachView(view)
-        compositeDisposable.cancel()
+    override fun onDestroy() {
+        worker.cancel()
+        super.onDestroy()
     }
 }

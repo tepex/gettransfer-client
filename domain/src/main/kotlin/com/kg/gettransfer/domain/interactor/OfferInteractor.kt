@@ -12,12 +12,6 @@ class OfferInteractor(private val repository: OfferRepository) {
     var lastTransferId = -1L
     var eventReceiver: OfferEventListener? = null
 
-    var offerViewExpanded: Boolean
-    get() = repository.offerViewExpanded
-    set(value) {
-        repository.offerViewExpanded = value
-    }
-
     suspend fun getOffers(transferId: Long, fromCache: Boolean = false): Result<List<Offer>> {
         val result = if (fromCache) repository.getOffersCached(transferId) else repository.getOffers(transferId)
         offers = result.model

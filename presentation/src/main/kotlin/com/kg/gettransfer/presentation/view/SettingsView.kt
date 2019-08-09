@@ -4,8 +4,9 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 import com.kg.gettransfer.presentation.model.ProfileModel
-import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
+
+import com.kg.gettransfer.sys.presentation.EndpointModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface SettingsView : BaseView {
@@ -24,9 +25,9 @@ interface SettingsView : BaseView {
     fun setLogoutButtonEnabled(enabled: Boolean)
 
     fun initGeneralSettingsLayout()
-    //fun initLoggedInUserSettings(profile: ProfileModel)
+    // fun initLoggedInUserSettings(profile: ProfileModel)
     fun initProfileField()
-    fun initCarrierLayout()
+    // fun initCarrierLayout()
     fun showDebugMenu()
     fun hideDebugMenu()
 

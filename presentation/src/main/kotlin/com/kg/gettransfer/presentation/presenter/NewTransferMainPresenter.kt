@@ -6,33 +6,41 @@ import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.interactor.*
 
 import com.kg.gettransfer.domain.model.GTAddress
+
 import com.kg.gettransfer.presentation.delegate.AccountManager
-
 import com.kg.gettransfer.presentation.view.NewTransferMainView
-
 import com.kg.gettransfer.presentation.view.Screens
 
-import org.koin.core.KoinComponent
+import com.kg.gettransfer.sys.domain.SetLastModeInteractor
+import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
+
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.core.inject
 
 @InjectViewState
-class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>(), KoinComponent, CounterEventListener {
+class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>(), CounterEventListener {
+
     private val accountManager: AccountManager by inject()
     private val transferInteractor: TransferInteractor by inject()
     private val countEventsInteractor: CountEventsInteractor by inject()
+    private val setLastMode: SetLastModeInteractor by inject()
+    private val setSelectedField: SetSelectedFieldInteractor by inject()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        systemInteractor.lastMode = Screens.PASSENGER_MODE
-        systemInteractor.selectedField = FIELD_FROM
-
         geoInteractor.initGeocoder()
         geoInteractor.initGoogleApiClient()
-        if (accountManager.isLoggedIn) {
-            utils.launchSuspend {
-                utils.asyncAwait { transferInteractor.getAllTransfers() }
+
+        worker.main.launch {
+            withContext(worker.bg) {
+                setLastMode(Screens.PASSENGER_MODE)
+                setSelectedField(FIELD_FROM)
+            }
+            if (accountManager.isLoggedIn) {
+                withContext(worker.bg) { transferInteractor.getAllTransfers() }
                 viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
             }
         }
@@ -60,19 +68,21 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     }
 
     override fun detachView(view: NewTransferMainView?) {
-        super.detachView(view)
         countEventsInteractor.removeCounterListener(this)
+        super.detachView(view)
     }
 
     override fun updateCounter() {
-        utils.launchSuspend { viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount) }
+        viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
     }
 
     override fun changeUsedField(field: String) {
         super.changeUsedField(field)
-        when (systemInteractor.selectedField) {
-            FIELD_FROM -> viewState.selectFieldFrom()
-            FIELD_TO -> viewState.setFieldTo()
+        worker.main.launch {
+            when (getPreferences().getModel().selectedField) {
+                FIELD_FROM -> viewState.selectFieldFrom()
+                FIELD_TO   -> viewState.setFieldTo()
+            }
         }
     }
 
@@ -88,6 +98,6 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
 
     companion object {
         const val FIELD_FROM = "field_from"
-        const val FIELD_TO = "field_to"
+        const val FIELD_TO   = "field_to"
     }
 }

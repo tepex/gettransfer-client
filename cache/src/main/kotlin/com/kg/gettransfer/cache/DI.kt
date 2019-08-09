@@ -5,7 +5,6 @@ import androidx.room.Room
 import com.kg.gettransfer.data.OfferCache
 import com.kg.gettransfer.data.RouteCache
 import com.kg.gettransfer.data.SessionCache
-import com.kg.gettransfer.data.SystemCache
 import com.kg.gettransfer.data.TransferCache
 import com.kg.gettransfer.data.CarrierTripCache
 import com.kg.gettransfer.data.ChatCache
@@ -18,7 +17,6 @@ val cacheModule = module {
         Room.databaseBuilder(get(), CacheDatabase::class.java, "cache.db").fallbackToDestructiveMigration().build()
     }
     single<SessionCache> { SessionCacheImpl() }
-    single<SystemCache> { SystemCacheImpl() }
     single<TransferCache> { TransferCacheImpl() }
     single<OfferCache> { OfferCacheImpl() }
     single<RouteCache> { RouteCacheImpl() }

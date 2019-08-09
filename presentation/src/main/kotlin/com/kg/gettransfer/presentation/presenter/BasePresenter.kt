@@ -4,6 +4,8 @@ import com.arellomobile.mvp.MvpPresenter
 
 import com.google.firebase.iid.FirebaseInstanceId
 
+import com.kg.gettransfer.core.presentation.WorkerManager
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -17,15 +19,19 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
+
 import com.kg.gettransfer.presentation.view.BaseView
-import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_REJECTED
 import com.kg.gettransfer.presentation.view.Screens
+
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
 import com.kg.gettransfer.utilities.GTNotificationManager
 
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
@@ -45,7 +51,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
-    protected val systemInteractor: SystemInteractor by inject()
     protected val offerMapper: OfferMapper by inject()
     protected val notificationManager: GTNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
@@ -60,6 +65,9 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val sessionInteractor: SessionInteractor by inject()
     protected val accountManager: AccountManager by inject()
     protected val downloadManager: GTDownloadManager by inject()
+
+    private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
+    protected val getPreferences: GetPreferencesInteractor by inject()
 
     //private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
@@ -77,6 +85,9 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         if (sessionInteractor.isInitialized) return
         utils.launchSuspend {
             fetchData { sessionInteractor.coldStart() }?.let { systemInitialized() }
+        }
+        worker.main.launch {
+            offerMapper.url = getPreferences().getModel().endpoint!!.url
         }
     }
 
@@ -134,6 +145,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     override fun onDestroy() {
         compositeDisposable.cancel()
+        worker.cancel()
         super.onDestroy()
     }
 
@@ -237,13 +249,12 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
     }
 
-    fun onAppStateChanged(isForeGround: Boolean) {
+    fun onAppStateChanged(isForeGround: Boolean) = worker.main.launch {
         with(socketInteractor) {
             if (isForeGround && accountManager.hasAccount) {
-                openSocketConnection()
-            } else if (systemInteractor.lastMode != Screens.CARRIER_MODE ||
-                carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_REJECTED
-            ) {
+                withContext(worker.bg) { openSocketConnection() }
+            } else if (getPreferences().getModel().lastMode != Screens.CARRIER_MODE ||
+                getPreferences().getModel().isBackgroundCoordinatesRejected()) {
                 closeSocketConnection()
             }
         }
@@ -339,7 +350,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
     companion object {
-
         //when you want to handle error in child presenter
         const val SHOW_ERROR = true
         const val DEFAULT_ERROR = false

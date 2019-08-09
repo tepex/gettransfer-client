@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.model
 
+import com.kg.gettransfer.domain.model.Vehicle
+
 data class VehicleModel(
     val id: Long,
     val name: String,
@@ -10,3 +12,15 @@ data class VehicleModel(
     val transportType: TransportTypeModel,
     val photos: List<String>
 )
+
+fun Vehicle.map(url: String) =
+    VehicleModel(
+        id,
+        name,
+        model,
+        registrationNumber,
+        year,
+        color,
+        transportType.map(),
+        photos.map { if (it.startsWith(url)) it else "$url$it" }
+    )

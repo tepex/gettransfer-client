@@ -33,13 +33,6 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
     private val carrierTripMapper: CarrierTripMapper by inject()
     private val routeMapper: RouteMapper by inject()
 
-    companion object {
-        const val FIELD_EMAIL = "field_email"
-        const val FIELD_PHONE = "field_phone"
-        const val OPERATION_COPY = "operation_copy"
-        const val OPERATION_OPEN = "operation_open"
-    }
-
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
@@ -51,11 +44,10 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
     override fun onFirstViewAttach() {
         utils.launchSuspend {
             viewState.blockInterface(true)
-            fetchData { carrierTripInteractor.getCarrierTrip(tripId) }
-                    ?.let { tripInfo ->
-                        setTrip(tripInfo)
-                        setTripType(tripInfo.base)
-                    }
+            fetchData { carrierTripInteractor.getCarrierTrip(tripId) }?.let { tripInfo ->
+                setTrip(tripInfo)
+                setTripType(tripInfo.base)
+            }
             viewState.blockInterface(false)
         }
     }
@@ -85,13 +77,13 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
 
     private fun setRouteTransfer(baseTrip: CarrierTripBase, route: RouteInfo) {
         routeModel = routeMapper.getView(
-                route.distance,
-                route.polyLines,
-                baseTrip.from.name,
-                baseTrip.to!!.name,
-                baseTrip.from.point!!,
-                baseTrip.to!!.point!!,
-                SystemUtils.formatDateTime(tripModel.base.dateLocal)
+            route.distance,
+            route.polyLines,
+            baseTrip.from.name,
+            baseTrip.to!!.name,
+            baseTrip.from.point!!,
+            baseTrip.to!!.point!!,
+            SystemUtils.formatDateTime(tripModel.base.dateLocal)
         )
         routeModel?.let {
             polyline = Utils.getPolyline(it)
@@ -105,10 +97,10 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
         val point = LatLng(baseTripInfo.from.point!!.latitude, baseTripInfo.from.point!!.longitude)
         track = Utils.getCameraUpdateForPin(point)
         viewState.setPinHourlyTransfer(
-                tripModel.base.from,
-                SystemUtils.formatDateTime(tripModel.base.dateLocal),
-                point,
-                track!!
+            tripModel.base.from,
+            SystemUtils.formatDateTime(tripModel.base.dateLocal),
+            point,
+            track!!
         )
     }
 
@@ -126,7 +118,14 @@ class CarrierTripDetailsPresenter : BasePresenter<CarrierTripDetailsView>() {
         }
     }
 
-    fun onChatClick(){
+    fun onChatClick() {
         router.navigateTo(Screens.Chat(transferId, tripId))
+    }
+
+    companion object {
+        const val FIELD_EMAIL = "field_email"
+        const val FIELD_PHONE = "field_phone"
+        const val OPERATION_COPY = "operation_copy"
+        const val OPERATION_OPEN = "operation_open"
     }
 }

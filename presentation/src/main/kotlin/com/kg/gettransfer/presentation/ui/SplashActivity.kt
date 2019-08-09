@@ -70,8 +70,13 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
 
     override fun onNeedAppUpdateInfo() {
         updateAppDialogIsShowed = true
-        Utils.showAlertUpdateApp(this) {
-            if (it) redirectToUpdateApp() else presenter.startApp()
+
+        AlertDialog.Builder(this).apply {
+            setTitle(R.string.LNG_NEW_VERSION_UPDATE)
+            setPositiveButton(R.string.LNG_UPDATE)  { _, _ -> redirectToUpdateApp() }
+            setNegativeButton(R.string.LNG_CANCEL)  { _, _ -> presenter.startApp() }
+            setOnCancelListener { presenter.startApp() }
+            show()
         }
     }
 
@@ -79,21 +84,20 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
     protected override fun onResume() {
         super.onResume()
         navigatorHolder.setNavigator(navigator)
-        if (updateAppDialogIsShowed) presenter.startApp()
+        if (updateAppDialogIsShowed) {
+            presenter.startApp()
+        }
     }
 
     @CallSuper
-    override fun onPause() {
-        super.onPause()
+    protected override fun onPause() {
         navigatorHolder.removeNavigator()
+        super.onPause()
     }
 
     private fun redirectToUpdateApp() {
         val url = getString(R.string.market_link) + getString(R.string.app_market_package)
-        startActivity(
-                Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse(url)
-                })
+        startActivity(Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) })
     }
 
     override fun dispatchAppState(locale: Locale) {
@@ -103,9 +107,11 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
     }
 
     private fun checkIsTaskRoot(): Boolean {
-        return if(!isTaskRoot && intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intent.action != Intent.ACTION_MAIN) {
+        return if (!isTaskRoot && intent.hasCategory(Intent.CATEGORY_LAUNCHER) && intent.action != Intent.ACTION_MAIN) {
             finish()
             true
-        } else false
+        } else {
+            false
+        }
     }
 }

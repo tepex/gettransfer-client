@@ -1,19 +1,15 @@
-@file:Suppress("TooManyFunctions")
 package com.kg.gettransfer.cache
 
 import androidx.room.TypeConverter
 
-import com.kg.gettransfer.cache.model.CurrencyCachedList
-import com.kg.gettransfer.cache.model.LocaleCachedList
-import com.kg.gettransfer.cache.model.StringList
-import com.kg.gettransfer.cache.model.TransportTypesCachedList
-import com.kg.gettransfer.cache.model.IntList
 import com.kg.gettransfer.cache.model.BookNowOfferCachedMap
 import com.kg.gettransfer.cache.model.ChatAccountsCachedMap
-import com.kg.gettransfer.cache.model.ContactEmailsCachedList
+import com.kg.gettransfer.cache.model.IntList
+import com.kg.gettransfer.cache.model.StringList
 
 import kotlinx.serialization.json.JSON
 
+@Suppress("TooManyFunctions")
 object RoomConverters {
     @TypeConverter
     @JvmStatic
@@ -43,36 +39,6 @@ object RoomConverters {
 
     @TypeConverter
     @JvmStatic
-    fun fromTransportTypesCachedList(list: TransportTypesCachedList?): String? =
-        list?.let { JSON.stringify(TransportTypesCachedList.serializer(), it) }
-
-    @TypeConverter
-    @JvmStatic
-    fun toTransportTypesCachedList(s: String?): TransportTypesCachedList? =
-        s?.let { JSON.parse(TransportTypesCachedList.serializer(), it) }
-
-    @TypeConverter
-    @JvmStatic
-    fun fromLocaleCachedList(list: LocaleCachedList?): String? =
-        list?.let { JSON.stringify(LocaleCachedList.serializer(), it) }
-
-    @TypeConverter
-    @JvmStatic
-    fun toLocaleCachedList(s: String?): LocaleCachedList? =
-        s?.let { JSON.parse(LocaleCachedList.serializer(), it) }
-
-    @TypeConverter
-    @JvmStatic
-    fun fromCurrencyCachedList(list: CurrencyCachedList?): String? =
-        list?.let { JSON.stringify(CurrencyCachedList.serializer(), it) }
-
-    @TypeConverter
-    @JvmStatic
-    fun toCurrencyCachedList(s: String?): CurrencyCachedList? =
-        s?.let { JSON.parse(CurrencyCachedList.serializer(), it) }
-
-    @TypeConverter
-    @JvmStatic
     fun fromChatAccountCachedMap(map: ChatAccountsCachedMap?): String? =
         map?.let { JSON.stringify(ChatAccountsCachedMap.serializer(), it) }
 
@@ -80,14 +46,4 @@ object RoomConverters {
     @JvmStatic
     fun toChatAccountCachedMap(s: String?): ChatAccountsCachedMap? =
         s?.let { JSON.parse(ChatAccountsCachedMap.serializer(), it) }
-
-    @TypeConverter
-    @JvmStatic
-    fun fromContactEmailsCachedList(list: ContactEmailsCachedList?): String? =
-        list?.let { JSON.stringify(ContactEmailsCachedList.serializer(), it) }
-
-    @TypeConverter
-    @JvmStatic
-    fun toContactEmailsCachedList(s: String?): ContactEmailsCachedList? =
-        s?.let { JSON.parse(ContactEmailsCachedList.serializer(), it) }
 }

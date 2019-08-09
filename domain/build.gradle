@@ -5,9 +5,9 @@ dependencies {
     implementation libs.kotlin
     implementation libs.coroutines
 
-    testImplementation libs.junit
-    testImplementation libs.hamcrest
-    testImplementation libs.mockito
+    testImplementation libs.mockk
+    testImplementation libs.kotlintest
+    testImplementation libs.slf4j_simple
 }
 
 compileKotlin {
@@ -20,5 +20,12 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "STARTED", "PASSED", "FAILED", "SKIPPED"
     }
 }

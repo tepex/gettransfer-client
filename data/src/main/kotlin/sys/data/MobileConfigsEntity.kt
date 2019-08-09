@@ -41,7 +41,7 @@ fun BuildsConfigsEntity.map() = BuildsConfigs(updateRequired)
 
 fun MobileConfigsEntity.map() =
     MobileConfigs(
-        /*
+        /* Not used now
         pushShowDelay,*/
         Minute(orderMinimumMinutes),
         termsUrl,

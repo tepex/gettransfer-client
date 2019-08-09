@@ -39,7 +39,7 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
             paymentInteractor.selectedOffer?.let { so ->
                 transfer = st
                 when (so) {
-                    is Offer -> offer = so
+                    is Offer        -> offer = so
                     is BookNowOffer -> bookNowOffer = so
                 }
             }

@@ -48,7 +48,6 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.isVisible
@@ -78,7 +77,6 @@ import timber.log.Timber
 @Suppress("TooManyFunctions")
 abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
-    internal val systemInteractor: SystemInteractor by inject()
     internal val sessionInteractor: SessionInteractor by inject()
 
     protected val navigatorHolder: NavigatorHolder by inject()
@@ -98,6 +96,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     private var cutoutOffset: Int = 0
 
     protected lateinit var tintBackgroundShadow: View
+
     protected val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_COLLAPSED || newState == BottomSheetBehavior.STATE_HIDDEN) {
@@ -417,15 +416,12 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         return if (statusBarResource > 0) resources.getDimensionPixelSize(statusBarResource) else 0
     }
 
-    protected fun redirectToPlayMarket() {
-        systemInteractor.appEntersForMarketRate = ReviewInteractor.APP_RATED_IN_MARKET
-        Utils.goToGooglePlay(this, getString(R.string.app_market_package), PLAY_MARKET_RATE)
-    }
-
     @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PLAY_MARKET_RATE) thanksForRate()
+        if (requestCode == PLAY_MARKET_RATE) {
+            thanksForRate()
+        }
     }
 
     open fun thanksForRate() {}
@@ -466,10 +462,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     @Deprecated(message = "we are going to replace with FragmentUtils.replaceFragment")
     protected fun replaceFragment(fragment: Fragment, @IdRes id: Int, tag: String? = null) =
-        supportFragmentManager
-            .beginTransaction()
-            .replace(id, fragment, tag)
-            .commitAllowingStateLoss()
+        supportFragmentManager.beginTransaction().replace(id, fragment, tag).commitAllowingStateLoss()
 
     companion object {
         const val TOOLBAR_NO_TITLE = 0

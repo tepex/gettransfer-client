@@ -71,4 +71,6 @@ dependencies {
     implementation libs.room
     implementation libs.room_ktx
     kapt libs.kapt_room
+
+    implementation libs.timber
 }

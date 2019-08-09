@@ -1,6 +1,6 @@
 package com.kg.gettransfer.data.socket
 
-import com.kg.gettransfer.data.model.EndpointEntity
+import com.kg.gettransfer.sys.data.EndpointEntity
 
 interface SystemEventEmitter {
 
