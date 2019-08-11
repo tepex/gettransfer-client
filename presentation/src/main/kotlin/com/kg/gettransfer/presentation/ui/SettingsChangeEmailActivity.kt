@@ -2,9 +2,9 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.annotation.CallSuper
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.Toolbar
+import androidx.annotation.CallSuper
+import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.Toolbar
 import android.text.InputFilter
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter

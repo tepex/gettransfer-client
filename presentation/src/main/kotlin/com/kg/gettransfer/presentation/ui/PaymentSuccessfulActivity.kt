@@ -1,9 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.NonNull
-import android.support.design.widget.BottomSheetBehavior
+import androidx.annotation.CallSuper
+import androidx.annotation.NonNull
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter

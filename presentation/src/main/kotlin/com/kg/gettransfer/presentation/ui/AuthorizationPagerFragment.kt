@@ -1,12 +1,11 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.content.res.ResourcesCompat
+import androidx.annotation.CallSuper
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.core.content.res.ResourcesCompat
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.arellomobile.mvp.MvpAppCompatFragment
+import com.google.android.material.tabs.TabLayout
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens

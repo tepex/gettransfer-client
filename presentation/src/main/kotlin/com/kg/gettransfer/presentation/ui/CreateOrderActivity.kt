@@ -6,9 +6,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-import android.support.design.widget.BottomSheetBehavior
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import android.view.MotionEvent
 import android.view.View

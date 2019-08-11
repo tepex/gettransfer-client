@@ -6,7 +6,7 @@
     android:background="@color/colorBackgroundGray"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:focusable="true">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -36,7 +36,7 @@
             android:layout_marginBottom="@dimen/activity_main_events_count_margin_bottom_without_button_shadow"
             android:paddingStart="@dimen/activity_main_events_count_padding_start_end"
             android:paddingEnd="@dimen/activity_main_events_count_padding_start_end"/>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <com.kg.gettransfer.presentation.ui.custom.SwitcherView

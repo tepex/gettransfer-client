@@ -2,10 +2,10 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
 
-import android.support.constraint.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 
 import android.text.Editable
 import android.text.TextWatcher

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/view_transfer_details_transport_type_item_layout_padding">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_transfer_details_transport_type_item"
@@ -83,7 +83,7 @@
 
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
 

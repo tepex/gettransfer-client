@@ -3,12 +3,12 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Build
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.Toolbar
 
 import android.transition.Fade
 import android.transition.Slide

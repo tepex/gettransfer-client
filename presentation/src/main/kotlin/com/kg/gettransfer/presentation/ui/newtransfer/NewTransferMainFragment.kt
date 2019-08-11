@@ -3,8 +3,8 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 import android.Manifest
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v4.content.ContextCompat
+import androidx.annotation.CallSuper
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,7 +73,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         if (visible && isResumed) refreshUi()
     }
 
-    override fun onAttach(activity: Context?) {
+    override fun onAttach(activity: Context) {
         super.onAttach(activity)
         try {
             listener = parentFragment as NewTransferSwitchListener
@@ -131,7 +131,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
                         presenter.updateDuration(durationValue)
                     }
                 })
-                .show(fragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
+                .show(requireFragmentManager(), HourlyDurationDialogFragment.DIALOG_TAG)
     }
 
     private fun onNextClick() {

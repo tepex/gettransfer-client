@@ -1,9 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -132,7 +132,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                 text = errStringRes
                 onDismissCallBack = { hideLoading() }
             }
-            .show(fragmentManager)
+            .show(requireFragmentManager())
     }
 
     companion object {
@@ -165,7 +165,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                     title = this@LogInFragment.getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
                     onDismissCallBack = { hideLoading() }
                 }
-                .show(fragmentManager)
+                .show(requireFragmentManager())
             ApiException.NOT_FOUND -> BottomSheetDialog
                 .newInstance()
                 .apply {
@@ -181,14 +181,14 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                     onDismissCallBack = { hideLoading() }
                     isShowCloseButton = true
                 }
-                .show(fragmentManager)
+                .show(requireFragmentManager())
             else -> BottomSheetDialog
                 .newInstance()
                 .apply {
                     title = e.message ?: "Error"
                     onDismissCallBack = { hideLoading() }
                 }
-                .show(fragmentManager)
+                .show(requireFragmentManager())
         }
     }
 

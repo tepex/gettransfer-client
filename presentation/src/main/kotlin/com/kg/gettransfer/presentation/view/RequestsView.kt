@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.view
 
-import android.support.annotation.IntDef
+import androidx.annotation.IntDef
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE

@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/fragment_log_in_field_height">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/fieldLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:theme="@style/editTextLogin">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/fieldText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
             android:ems="10"
             android:paddingTop="@dimen/login_etPassword_padding_top"
             android:paddingBottom="@dimen/login_etPassword_padding_bottom"/>
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <View
         android:id="@+id/divider"

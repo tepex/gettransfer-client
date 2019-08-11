@@ -6,8 +6,8 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
-import android.support.v4.content.ContextCompat
+import androidx.annotation.CallSuper
+import androidx.core.content.ContextCompat
 
 import android.view.*
 
@@ -148,7 +148,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
     }
 
-    override fun onAttach(activity: Context?) {
+    override fun onAttach(activity: Context) {
         super.onAttach(activity)
         try {
             listener = parentFragment as NewTransferSwitchListener

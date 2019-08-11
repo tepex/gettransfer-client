@@ -17,7 +17,7 @@ class HourlyDurationDialogFragment() : BaseBottomSheetDialogFragment() {
     override fun initUi(savedInstanceState: Bundle?) {
         super.initUi(savedInstanceState)
 
-        dialog.setOnKeyListener { dialog, keyCode, event ->
+        dialog?.setOnKeyListener { dialog, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 listener?.onDone(selectedDuration())
                 dialog?.dismiss()

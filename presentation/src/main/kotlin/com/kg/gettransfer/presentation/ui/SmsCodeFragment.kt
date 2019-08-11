@@ -1,10 +1,10 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -149,7 +149,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
                             presenter.back()
                         }
                     }
-                    .show(fragmentManager)
+                    .show(requireFragmentManager())
             }
         }
     }
