@@ -16,7 +16,7 @@ class StoreDialogFragment : BaseBottomSheetDialogFragment() {
     override val layout: Int = R.layout.dialog_fragment_store
     private var onStoreListener: OnStoreListener? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         onStoreListener = activity as OnStoreListener
     }

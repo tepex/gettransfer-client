@@ -1,6 +1,6 @@
 package com.kg.gettransfer.sys.cache
 
-import android.arch.persistence.room.ColumnInfo
+import androidx.room.ColumnInfo
 
 import com.kg.gettransfer.sys.data.ContactEmailEntity
 

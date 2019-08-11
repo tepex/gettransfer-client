@@ -1,9 +1,9 @@
 package com.kg.gettransfer.sys.cache
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Embedded
+import androidx.room.PrimaryKey
 
 import com.kg.gettransfer.sys.data.PreferencesEntity
 

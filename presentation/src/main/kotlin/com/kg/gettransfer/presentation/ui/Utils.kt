@@ -13,13 +13,6 @@ import android.net.Uri
 
 import android.os.Build
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.fragment.app.FragmentActivity
-
-import androidx.core.content.ContextCompat
-
 import android.telephony.TelephonyManager
 
 import android.text.Html
@@ -37,7 +30,13 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.Transformation

@@ -4,7 +4,6 @@ import android.os.Bundle
 
 import androidx.annotation.CallSuper
 
-
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate

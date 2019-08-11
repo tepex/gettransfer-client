@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 
-import com.kg.gettransfer.data.model.ConfigsEntity
+import com.kg.gettransfer.sys.data.ConfigsEntity
 
 @Dao
 interface ConfigsDao {

@@ -1,9 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
-import android.view.ViewGroup
 import android.os.Bundle
-import androidx.core.widget.TextViewCompat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +10,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 
+import androidx.annotation.CallSuper
+import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarGridAdapter
 import com.kg.gettransfer.presentation.adapter.ClickOnDateHandler
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel

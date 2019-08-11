@@ -4,10 +4,7 @@ import com.kg.gettransfer.core.data.ResultData
 
 import com.kg.gettransfer.core.domain.Result
 
-import com.kg.gettransfer.data.model.EndpointEntity
-
-import com.kg.gettransfer.domain.model.Endpoint
-
+import com.kg.gettransfer.sys.domain.Endpoint
 import com.kg.gettransfer.sys.domain.Preferences
 import com.kg.gettransfer.sys.domain.PreferencesRepository
 
