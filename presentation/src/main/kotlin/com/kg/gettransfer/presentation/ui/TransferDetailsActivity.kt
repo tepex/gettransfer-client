@@ -715,7 +715,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         presenter.ratingChangeCancelled()
     }
 
-    override fun onClickGoToStore() = redirectToPlayMarket()
+    override fun onClickGoToStore() {
+        presenter.redirectToPlayMarket()
+    }
+
+    override fun goToGooglePlay() {
+        Utils.goToGooglePlay(this, getString(R.string.app_market_package), BaseActivity.PLAY_MARKET_RATE)
+    }
 
     private fun clearMarker() {
         mCarMarker?.remove()

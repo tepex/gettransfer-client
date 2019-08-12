@@ -10,7 +10,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 @Suppress("TooManyFunctions")
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface TransferDetailsView : BaseView, RouteView {
+interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun setTransfer(transfer: TransferModel)
     fun setOffer(offer: OfferModel, childSeats: Int)
     fun showAlertCancelRequest()

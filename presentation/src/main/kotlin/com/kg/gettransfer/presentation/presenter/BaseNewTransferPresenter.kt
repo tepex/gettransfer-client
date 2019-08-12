@@ -3,42 +3,48 @@ package com.kg.gettransfer.presentation.presenter
 import com.arellomobile.mvp.MvpPresenter
 
 import com.google.android.gms.maps.model.LatLng
+
+import com.kg.gettransfer.core.presentation.WorkerManager
+
 import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.CoroutineContexts
 
 import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
-import com.kg.gettransfer.presentation.view.BaseNewTransferView
 
+import com.kg.gettransfer.presentation.view.BaseNewTransferView
 import com.kg.gettransfer.presentation.view.Screens
+
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
+import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.NewTransferState
 
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.core.KoinComponent
-import org.koin.core.get
 import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 
 import ru.terrakok.cicerone.Router
 
 @Suppress("TooManyFunctions")
 open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>(), KoinComponent {
-    protected val compositeDisposable = Job()
-    protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
 
+    protected val worker: WorkerManager by inject { parametersOf("BaseNewTransferPresenter") }
+    protected val getPreferences: GetPreferencesInteractor by inject()
+    private val setSelectedField: SetSelectedFieldInteractor by inject()
+
     protected val geoInteractor: GeoInteractor by inject()
     protected val orderInteractor: OrderInteractor by inject()
-    protected val systemInteractor: SystemInteractor by inject()
     protected val nState: NewTransferState by inject()  // to keep info about navigation
 
     protected val pointMapper: PointMapper by inject()
@@ -57,10 +63,12 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     open fun fillViewFromState() {
-        if (!orderInteractor.isAddressesValid()) {
-            changeUsedField(NewTransferMainPresenter.FIELD_FROM)
-        } else {
-            changeUsedField(systemInteractor.selectedField)
+        worker.main.launch {
+            if (!orderInteractor.isAddressesValid()) {
+                changeUsedField(NewTransferMainPresenter.FIELD_FROM)
+            } else {
+                changeUsedField(getPreferences().getModel().selectedField)
+            }
         }
 
         if (fillAddressFieldsCheckIsEmpty()) {
@@ -72,14 +80,18 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     fun switchUsedField() {
-        when (systemInteractor.selectedField) {
-            FIELD_FROM -> changeUsedField(FIELD_TO)
-            FIELD_TO -> changeUsedField(FIELD_FROM)
+        worker.main.launch {
+            when (getPreferences().getModel().selectedField) {
+                FIELD_FROM -> changeUsedField(FIELD_TO)
+                FIELD_TO   -> changeUsedField(FIELD_FROM)
+            }
         }
     }
 
     open fun changeUsedField(field: String) {
-        systemInteractor.selectedField = field
+        worker.main.launch {
+            withContext(worker.bg) { setSelectedField(field) }
+        }
     }
 
     /**
@@ -89,9 +101,7 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     fun fillAddressFieldsCheckIsEmpty(): Boolean {
         with(orderInteractor) {
             viewState.setAddressTo(to?.address ?: EMPTY_ADDRESS)
-            return from.also {
-                viewState.setAddressFrom(it?.address ?: EMPTY_ADDRESS)
-            } == null
+            return from.also { viewState.setAddressFrom(it?.address ?: EMPTY_ADDRESS) } == null
         }
     }
 
@@ -101,39 +111,48 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     private fun updateCurrentLocationAsync() {
-        blockSelectedField(systemInteractor.selectedField)
+        worker.main.launch {
+            blockSelectedField(getPreferences().getModel().selectedField)
+        }
         viewState.defineAddressRetrieving { withGps ->
-            utils.launchSuspend {
-                if (geoInteractor.isGpsEnabled && withGps) {
-                    utils.asyncAwait { geoInteractor.getCurrentLocation() }.isSuccess()?.let { loc ->
-                        lastCurrentLocation = pointMapper.toLatLng(loc)
-
-                        utils.asyncAwait { geoInteractor.getAddressByLocation(loc) }.isSuccess()?.let { address ->
-                            if (address.cityPoint.point != null) {
-                                setPointAddress(address)
+            worker.main.launch {
+                withContext<Unit>(worker.bg) {
+                    if (geoInteractor.isGpsEnabled && withGps) {
+                        geoInteractor.getCurrentLocation().isSuccess()?.let { loc ->
+                            lastCurrentLocation = pointMapper.toLatLng(loc)
+                            geoInteractor.getAddressByLocation(loc).isSuccess()?.let { address ->
+                                if (address.cityPoint.point != null) {
+                                    withContext<Unit>(worker.main.coroutineContext) { setPointAddress(address) }
+                                }
                             }
                         }
-                    }
-                } else {
-                    val result = utils.asyncAwait { geoInteractor.getMyLocationByIp() }
-                    logIpapiRequest()
-                    if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
-                        setLocation(result.model)
+                    } else {
+                        val result = geoInteractor.getMyLocationByIp()
+                        logIpapiRequest()
+                        if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
+                            withContext<Unit>(worker.main.coroutineContext) { setLocation(result.model) }
+                        }
                     }
                 }
             }
         }
     }
 
-    private suspend fun setLocation(point: Point) {
-        val result = utils.asyncAwait { orderInteractor.getAddressByLocation(true, point) }
-        if (result.error == null && result.model.cityPoint.point != null) setPointAddress(result.model)
+    private suspend fun setLocation(point: Point) = worker.main.launch {
+        val result = withContext(worker.bg) {
+            orderInteractor.getAddressByLocation(true, point)
+        }
+        if (result.error == null && result.model.cityPoint.point != null) {
+            setPointAddress(result.model)
+        }
     }
 
     open fun setPointAddress(currentAddress: GTAddress) {
-        when (systemInteractor.selectedField) {
-            FIELD_FROM -> orderInteractor.from = currentAddress
-            FIELD_TO -> orderInteractor.to = currentAddress
+        worker.main.launch {
+            when (getPreferences().getModel().selectedField) {
+                FIELD_FROM -> orderInteractor.from = currentAddress
+                FIELD_TO   -> orderInteractor.to   = currentAddress
+            }
         }
     }
 
@@ -142,21 +161,27 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     fun blockSelectedField(field: String) {
         when (field) {
             FIELD_FROM -> viewState.blockFromField()
-            FIELD_TO -> viewState.blockToField()
+            FIELD_TO   -> viewState.blockToField()
         }
     }
 
     fun setAddressInSelectedField(address: String) {
-        when (systemInteractor.selectedField) {
-            FIELD_FROM -> viewState.setAddressFrom(address)
-            FIELD_TO -> viewState.setAddressTo(address)
+        worker.main.launch {
+            when (getPreferences().getModel().selectedField) {
+                FIELD_FROM -> viewState.setAddressFrom(address)
+                FIELD_TO   -> viewState.setAddressTo(address)
+            }
         }
     }
 
     fun tripModeSwitched(hourly: Boolean) {
         updateDuration(if (hourly) orderInteractor.hourlyDuration ?: MIN_HOURLY else null)
         viewState.updateTripView(hourly)
-        if (systemInteractor.selectedField == FIELD_TO) changeUsedField(FIELD_FROM)
+        worker.main.launch {
+            if (getPreferences().getModel().selectedField == FIELD_TO) {
+                changeUsedField(FIELD_FROM)
+            }
+        }
     }
 
     fun updateDuration(hours: Int?) {
@@ -196,7 +221,7 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     override fun onDestroy() {
-        compositeDisposable.cancel()
+        worker.cancel()
         super.onDestroy()
     }
 

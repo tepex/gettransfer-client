@@ -4,7 +4,6 @@ import android.os.Bundle
 
 import androidx.annotation.CallSuper
 
-
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
@@ -35,11 +34,6 @@ class AboutActivity : BaseActivity(), AboutView {
 
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-    }
-
-    companion object {
-        private const val COUNT_PAGE = 2
-        private const val DEFAULT_PAGE = 1
     }
 
     @CallSuper
@@ -99,6 +93,11 @@ class AboutActivity : BaseActivity(), AboutView {
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
     override fun setError(e: ApiException) {}
     override fun setError(e: DatabaseException) {}
+
+    companion object {
+        private const val COUNT_PAGE = 2
+        private const val DEFAULT_PAGE = 1
+    }
 
     inner class AboutAdapter : PagerAdapter() {
         private val pages = arrayOf<AboutItem>(item_0, item_1)

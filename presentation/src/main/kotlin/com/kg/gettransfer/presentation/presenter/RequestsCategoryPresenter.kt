@@ -7,11 +7,15 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.model.map
 
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
+
+import org.koin.core.inject
 
 @InjectViewState
 class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
@@ -22,6 +26,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
 
     private var transfers: List<Transfer>? = null
     private var eventsCount: Map<Long, Int>? = null
+    private val configsManager: ConfigsManager by inject()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -55,7 +60,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     private suspend fun prepareDataAsync() {
         transfers?.let { trs ->
             if (trs.isNotEmpty()) {
-                val transportTypes = systemInteractor.transportTypes.map { it.map() }
+                val transportTypes = configsManager.configs.transportTypes.map { it.map() }
                 utils.compute { transfers?.map { it.map(transportTypes) } }?.also { viewList ->
                     viewState.updateTransfers(viewList)
                     updateEventsCount()

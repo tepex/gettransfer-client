@@ -47,8 +47,15 @@ dependencies {
     // Socket.IO
     implementation "io.socket:socket.io-client:$socket_io_version"
 
-    testImplementation libs.junit
-    testImplementation libs.hamcrest
-    testImplementation libs.mockito
-    testImplementation "org.koin:koin-test:$koin_version"
+    testImplementation libs.koin_test
+    testImplementation libs.kotlintest
+    testImplementation libs.mockk
+    testImplementation libs.slf4j_simple
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "STARTED", "PASSED", "FAILED", "SKIPPED"
+    }
 }

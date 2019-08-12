@@ -21,6 +21,10 @@ import com.kg.gettransfer.di.*
 import com.kg.gettransfer.remote.remoteModule
 import com.kg.gettransfer.remote.socketModule
 
+import com.kg.gettransfer.sys.cache.systemCache
+import com.kg.gettransfer.sys.data.systemData
+import com.kg.gettransfer.sys.remote.systemRemote
+
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
 import com.kg.gettransfer.utilities.CustomCrashManagerListener
 
@@ -67,6 +71,14 @@ class GTApplication : MultiDexApplication() {
                 dataModule,
                 encryptModule,
                 domainModule,
+
+                endpoints,
+                systemCache,
+                systemRemote,
+                systemData,
+                systemDomain,
+                systemPresentation,
+
                 mappersModule,
                 androidModule,
                 socketModule
@@ -80,10 +92,7 @@ class GTApplication : MultiDexApplication() {
         setupAppsFlyer()
         setupPushSdk()
 
-        ProcessLifecycleOwner
-                .get()
-                .lifecycle
-                .addObserver(AppLifeCycleObserver(applicationContext))
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifeCycleObserver(applicationContext))
     }
 
     private fun setupPushSdk() = YandexMetricaPush.init(applicationContext)

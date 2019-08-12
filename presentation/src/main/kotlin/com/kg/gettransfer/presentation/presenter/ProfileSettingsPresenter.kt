@@ -1,15 +1,18 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.ProfileSettingsView
 import com.kg.gettransfer.presentation.view.Screens
+
 import org.koin.core.inject
 
 @InjectViewState
 class ProfileSettingsPresenter : BasePresenter<ProfileSettingsView>() {
+
     private val profileMapper: ProfileMapper by inject()
 
     private var phoneChanged = false
@@ -37,10 +40,10 @@ class ProfileSettingsPresenter : BasePresenter<ProfileSettingsView>() {
     }
 
     private fun setEnabledBtnSave() {
-        with (accountManager){
+        with (accountManager) {
             viewState.setEnabledBtnSave(
-                    remoteProfile.fullName != tempProfile.fullName
-                            || remoteProfile.phone != tempProfile.phone)
+                remoteProfile.fullName != tempProfile.fullName || remoteProfile.phone != tempProfile.phone
+            )
         }
     }
 
@@ -71,7 +74,7 @@ class ProfileSettingsPresenter : BasePresenter<ProfileSettingsView>() {
                 result.error?.let {
                     when {
                         it.isAccountExistError() -> viewState.setError(false, R.string.LNG_PHONE_TAKEN_ERROR)
-                        else -> viewState.setError(result.error!!)
+                        else                     -> viewState.setError(result.error!!)
                     }
                 }
             }

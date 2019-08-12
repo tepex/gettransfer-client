@@ -7,7 +7,7 @@ import com.kg.gettransfer.presentation.model.ProfileModel
 
 @Suppress("TooManyFunctions")
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface MainNavigateView : BaseView {
+interface MainNavigateView : BaseView, GooglePlayView {
     fun openMenu()
     fun setProfile(profile: ProfileModel, isLoggedIn: Boolean, hasAccount: Boolean)
     fun setBalance(balance: String?)

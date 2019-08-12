@@ -1,8 +1,8 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 
@@ -12,13 +12,6 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 
 import android.os.Build
-
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.fragment.app.FragmentActivity
-
-import androidx.core.content.ContextCompat
 
 import android.telephony.TelephonyManager
 
@@ -37,7 +30,13 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.Transformation
@@ -120,16 +119,6 @@ object Utils : KoinComponent {
             setTitle(R.string.LNG_CANCEL_CONFIRM)
             setPositiveButton(R.string.LNG_YES) { _, _ -> listener(true) }
             setNegativeButton(R.string.LNG_NO)  { _, _ -> listener(false) }
-            show()
-        }
-    }
-
-    fun showAlertUpdateApp(context: Context, listener: (Boolean) -> Unit) {
-        getAlertDialogBuilder(context).apply {
-            setTitle(R.string.LNG_NEW_VERSION_UPDATE)
-            setPositiveButton(R.string.LNG_UPDATE) { _, _ -> listener(true) }
-            setNegativeButton(R.string.LNG_CANCEL)  { _, _ -> listener(false) }
-            setOnCancelListener { listener(false) }
             show()
         }
     }
@@ -218,50 +207,45 @@ object Utils : KoinComponent {
         }
     }
 
-    fun showBackGroundPermissionDialog(context: Context, clickResult: (result: Boolean) -> Unit){
+    fun showBackGroundPermissionDialog(context: Context, clickResult: (result: Boolean) -> Unit) {
         getAlertDialogBuilder(context).apply {
             setMessage(R.string.LNG_SEND_COORDINATES_IN_BACKGROUND_MESSAGE)
             setTitle(R.string.LNG_SEND_COORDINATES_IN_BACKGROUND)
-            setNegativeButton(R.string.LNG_NO) { _, _ -> clickResult(false)}
-            setPositiveButton(R.string.LNG_YES) { _, _ -> clickResult(true)}
+            setNegativeButton(R.string.LNG_NO) { _, _ -> clickResult(false) }
+            setPositiveButton(R.string.LNG_YES) { _, _ -> clickResult(true) }
             show()
-        }
-    }
-
-    /**
-     * Go to google play with return result
-     */
-    fun goToGooglePlay(context: FragmentActivity, packageName: String) {
-        try {
-            context.startActivity(
-                    createGooglePlayIntent(Uri.parse(context.getString(R.string.market_link) + packageName)))
-        } catch (anfe: ActivityNotFoundException) {
-            context.startActivity(
-                    createGooglePlayIntent(Uri.parse(context.getString(R.string.market_site_link) + packageName))
-            )
         }
     }
 
     /**
      * Go to google play without result
      */
-    fun goToGooglePlay(context: FragmentActivity, packageName: String, requestCode: Int) {
+    fun goToGooglePlay(context: FragmentActivity, packageName: String) {
+        val marketLink = Uri.parse(context.getString(R.string.market_link) + packageName)
+        val siteMarketLink = Uri.parse(context.getString(R.string.market_site_link) + packageName)
         try {
-            context.startActivityForResult(
-                    createGooglePlayIntent(Uri.parse(context.getString(R.string.market_link) + packageName)),
-                    requestCode)
+            context.startActivity(createGooglePlayIntent(marketLink))
         } catch (anfe: ActivityNotFoundException) {
-            context.startActivityForResult(
-                    createGooglePlayIntent(Uri.parse(context.getString(R.string.market_site_link) + packageName)),
-                    requestCode)
+            context.startActivity(createGooglePlayIntent(siteMarketLink))
         }
     }
 
-    private fun createGooglePlayIntent(uri: Uri) : Intent {
-        return Intent(Intent.ACTION_VIEW).apply {
-            data = uri
-            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+    /**
+     * Go to google play with return result
+     */
+    fun goToGooglePlay(context: FragmentActivity, packageName: String, requestCode: Int) {
+        val marketLink = Uri.parse(context.getString(R.string.market_link) + packageName)
+        val siteMarketLink = Uri.parse(context.getString(R.string.market_site_link) + packageName)
+        try {
+            context.startActivityForResult(createGooglePlayIntent(marketLink), requestCode)
+        } catch (anfe: ActivityNotFoundException) {
+            context.startActivityForResult(createGooglePlayIntent(siteMarketLink), requestCode)
         }
+    }
+
+    private fun createGooglePlayIntent(uri: Uri) = Intent(Intent.ACTION_VIEW).apply {
+        data = uri
+        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
     }
 
     fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()

@@ -1,9 +1,10 @@
 package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Configs
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
+
+import com.kg.gettransfer.sys.domain.Configs
 
 import java.util.Locale
 

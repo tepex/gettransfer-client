@@ -37,9 +37,10 @@ import kotlinx.android.synthetic.main.view_switcher.*
 
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import pub.devrel.easypermissions.EasyPermissions
-import timber.log.Timber
 
+import pub.devrel.easypermissions.EasyPermissions
+
+import timber.log.Timber
 
 @Suppress("TooManyFunctions")
 class NewTransferMainFragment : MvpAppCompatFragment(),

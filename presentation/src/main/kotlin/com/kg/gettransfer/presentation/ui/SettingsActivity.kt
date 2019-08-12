@@ -18,13 +18,14 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
+
+import com.kg.gettransfer.sys.presentation.EndpointModel
 
 import java.util.Locale
 
@@ -113,6 +114,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
         settingsProfile.setOnClickListener { presenter.onProfileFieldClicked() }
     }
 
+    /*
     override fun initCarrierLayout() {
         layoutCarrierSettings.isVisible = true
         with(settingsCoordinatesInBackground) {
@@ -128,6 +130,7 @@ class SettingsActivity : BaseActivity(), SettingsView {
             }
         }
     }
+    */
 
     override fun showDebugMenu() {
         layoutDebugSettings.isVisible = true
