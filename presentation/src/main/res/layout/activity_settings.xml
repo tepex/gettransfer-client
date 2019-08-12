@@ -94,7 +94,7 @@
 
             </LinearLayout>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutAboutApp"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/settings_field_height"
@@ -137,7 +137,7 @@
                     android:focusable="false"
                     app:srcCompat="@drawable/ic_menu_share"/>
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/layoutDebugSettings"

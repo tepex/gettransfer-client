@@ -185,7 +185,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
     }
 
     override fun showReadMoreDialog() {
-        ReadMoreFragment().show(fragmentManager, getString(R.string.tag_read_more))
+        ReadMoreFragment().show(requireFragmentManager(), getString(R.string.tag_read_more))
     }
 
     @CallSuper
