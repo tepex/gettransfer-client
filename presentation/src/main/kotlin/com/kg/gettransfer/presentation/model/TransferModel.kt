@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.model
 import androidx.annotation.StringRes
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.Offer
 
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Status
@@ -71,7 +72,8 @@ data class TransferModel(
 /* ================================================== */
     val statusCategory: String,
     val timeToTransfer: Int,
-    var showOfferInfo: Boolean
+    var showOfferInfo: Boolean,
+    val matchedOffer: Offer? = null
 ) {
     fun isBookNow() = paidPercentage != 0 && bookNow != null
 

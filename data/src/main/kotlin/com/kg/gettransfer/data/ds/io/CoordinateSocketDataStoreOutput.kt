@@ -6,7 +6,7 @@ import org.koin.core.KoinComponent
 
 class CoordinateSocketDataStoreOutput(private val emitter: CoordinateEventEmitter) : KoinComponent {
 
-    fun initLocationReceiving(transferId: Long) = emitter.initLocationReceiving(transferId)
+    fun initLocationReceiving() = emitter.initLocationReceiving()
 
     fun sendOwnLocation(coordinate: CoordinateEntity) = emitter.sendOwnLocation(coordinate)
 }

@@ -199,7 +199,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
-            setDisplayHomeAsUpEnabled(true)
+            if (hasBackAction) setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
         if (titleId != TOOLBAR_NO_TITLE) {

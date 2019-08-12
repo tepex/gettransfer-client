@@ -16,8 +16,10 @@ class CoordinateSocketImpl : CoordinateSocketEmitter, KoinComponent {
     private val eventReceiver: CoordinateDataStoreReceiver by inject()
     private val socketManager: SocketManager = get()
 
-    override fun initLocationReceiving(transferId: Long) =
-        socketManager.emitAck(INIT_LOCATION_EVENTS, arrayOf(transferId))
+    override fun initLocationReceiving() {
+        socketManager.emitEvent(INIT_LOCATION_EVENTS, null)
+        //socketManager.emitAck(INIT_LOCATION_EVENTS, arrayOf(transferId))
+    }
 
     override fun sendOwnLocation(coordinate: CoordinateEntity) {
         val json = JSON.nonstrict.stringify(OwnCoordinate.serializer(), OwnCoordinate(coordinate.lat, coordinate.lon))

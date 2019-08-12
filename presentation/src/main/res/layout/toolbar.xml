@@ -7,6 +7,7 @@
 	android:layout_height="wrap_content"
 	android:fitsSystemWindows="true"
 	android:minHeight="?android:attr/actionBarSize"
+	android:background="@color/colorWhite"
 	tools:ignore="Overdraw" >
 
 	<LinearLayout

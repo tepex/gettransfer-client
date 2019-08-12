@@ -9,6 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:overScrollMode="never"
+        android:paddingTop="@dimen/view_transfer_info_vertical_margin"
+        android:paddingBottom="@dimen/view_transfer_info_vertical_margin"
         tools:visibility="gone" />
 
     <ImageView
