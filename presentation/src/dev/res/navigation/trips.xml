@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/trips"
-    app:startDestination="@+id/newTransferMap">
+    android:id="@+id/nav_trips"
+    app:startDestination="@+id/showTrips">
 
     <fragment
-        android:id="@+id/newTransferMap"
-        android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment"
+        android:id="@+id/showTrips"
+        android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment"
         android:label="new_transfer_map"
-        tools:layout="@layout/fragment_new_transfer_map"/>
+        tools:layout="@layout/fragment_new_transfer_main"/>
 </navigation>

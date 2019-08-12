@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.core.content.FileProvider
 
 import com.kg.gettransfer.BuildConfig
 
@@ -403,9 +402,5 @@ object Screens {
                 putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
                 putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
             }
-    }
-
-    object Support : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SupportActivity::class.java)
     }
 }

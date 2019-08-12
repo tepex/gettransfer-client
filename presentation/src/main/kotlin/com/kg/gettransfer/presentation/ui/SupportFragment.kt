@@ -4,8 +4,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CallSuper
-import androidx.appcompat.widget.Toolbar
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -14,15 +16,15 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.SupportPresenter
 import com.kg.gettransfer.presentation.view.SupportView
 
-import kotlinx.android.synthetic.main.activity_support.*
+import kotlinx.android.synthetic.main.fragment_support.*
 import kotlinx.android.synthetic.main.layout_phones.*
 import kotlinx.android.synthetic.main.layout_social_network.*
 import kotlinx.android.synthetic.main.layout_write_us.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
+import kotlinx.android.synthetic.main.toolbar_nav_back.toolbar
+import kotlinx.android.synthetic.main.toolbar_nav_back.view.toolbar_title
 import kotlinx.android.synthetic.main.view_contacts.view.*
 
-class SupportActivity : BaseActivity(), SupportView {
+class SupportFragment : BaseFragment(), SupportView {
 
     @InjectPresenter
     internal lateinit var presenter: SupportPresenter
@@ -30,14 +32,18 @@ class SupportActivity : BaseActivity(), SupportView {
     @ProvidePresenter
     fun createSettingsPresenter() = SupportPresenter()
 
-    override fun getPresenter(): SupportPresenter = presenter
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_support, container, false)
 
     @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_support)
-        setupToolbar()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setTitleText()
         initClickListeners()
+    }
+
+    private fun setTitleText() {
+        toolbar.toolbar_title.text = getString(R.string.LNG_CUSTOMER_SUPPORT)
     }
 
     private fun initClickListeners() {
@@ -58,7 +64,7 @@ class SupportActivity : BaseActivity(), SupportView {
 
     private fun viberClick() {
         val intent = try {
-            packageManager.getPackageInfo(VIBER_PACKAGE, 0)
+            requireActivity().packageManager.getPackageInfo(VIBER_PACKAGE, 0)
             Intent(Intent.ACTION_VIEW, Uri.parse(VIBER_URI)).setPackage(VIBER_PACKAGE)
         } catch (e: PackageManager.NameNotFoundException) {
             Intent(Intent.ACTION_VIEW, Uri.parse(VIBER_URL))
@@ -67,14 +73,6 @@ class SupportActivity : BaseActivity(), SupportView {
     }
 
     private fun telegramClick() = startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TELEGRAM_URL)))
-
-    private fun setupToolbar() {
-        @Suppress("UnsafeCast")
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
-        toolbar.toolbar_title.text = getString(R.string.LNG_CUSTOMER_SUPPORT)
-    }
 
     override fun showEmail(email: String) {
         tvEmail.text = email

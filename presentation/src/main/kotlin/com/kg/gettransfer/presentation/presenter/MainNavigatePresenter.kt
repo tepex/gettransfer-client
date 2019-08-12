@@ -78,10 +78,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.LOGIN_CLICKED)
     }
 
-    fun onSupportClick() {
-        router.navigateTo(Screens.Support)
-    }
-
     private suspend fun checkReview(transfers: List<Transfer>) =
         with(reviewInteractor) {
             if (!isReviewSuggested) {

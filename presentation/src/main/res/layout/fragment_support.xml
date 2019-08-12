@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            tools:context=".presentation.ui.SupportActivity">
+            tools:context=".presentation.ui.SupportFragment">
 
             <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                 android:id="@+id/aboutUs"

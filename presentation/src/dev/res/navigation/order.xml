@@ -3,20 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/order"
-    app:startDestination="@+id/newTransfer">
+    android:id="@+id/nav_order"
+    app:startDestination="@+id/showNewOrder">
 
     <fragment
-        android:id="@+id/newTransfer"
+        android:id="@+id/showNewOrder"
         android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment"
         android:label="new_transfer"
         tools:layout="@layout/fragment_new_transfer_main">
         <action
             android:id="@+id/go_to_map"
-            app:destination="@id/newTransferMap"/>
+            app:destination="@id/showMap"/>
     </fragment>
     <fragment
-        android:id="@+id/newTransferMap"
+        android:id="@+id/showMap"
         android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment"
         android:label="new_transfer_map"
         tools:layout="@layout/fragment_new_transfer_map"/>

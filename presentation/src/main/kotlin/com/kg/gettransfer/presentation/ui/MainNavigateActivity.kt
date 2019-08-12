@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigator
 
@@ -35,7 +36,6 @@ import kotlinx.android.synthetic.main.activity_main_navigate.*
 import kotlinx.android.synthetic.main.notification_badge_view.view.*
 
 import pub.devrel.easypermissions.EasyPermissions
-
 
 @Suppress("TooManyFunctions")
 class MainNavigateActivity : BaseActivity(), MainNavigateView,
@@ -139,13 +139,20 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         return available
     }
 
-    @CallSuper
-    override fun onBackPressed() = onBackClick()
-
-    private fun onBackClick() {
-        presenter.onBackCommandClick()
+    val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+        when ((destination as FragmentNavigator.Destination).className) {
+            //visible bottom menu
+            NewTransferMainFragment::class.java.name,
+            SettingsFragment::class.java.name,
+            SupportFragment::class.java.name -> {
+                bottom_nav.isVisible = true
+            }
+            //not visible bottom menu
+            else -> {
+                bottom_nav.isVisible = false
+            }
+        }
     }
-
 
     /**
      * Called on first creation and when restoring state.
@@ -158,22 +165,14 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         val controller = bottom_nav.setupWithNavController(
                 navGraphIds = navGraphIds,
                 fragmentManager = supportFragmentManager,
-                containerId = R.id.container,
+                containerId = R.id.nav_host_container,
                 intent = intent
         )
         currentNavController = controller
-        currentNavController?.value?.addOnDestinationChangedListener { _, destination, _ ->
-            when ((destination as FragmentNavigator.Destination).className) {
-                //visible bottom menu
-                NewTransferMainFragment::class.java.name -> {
-                    bottom_nav.isVisible = true
-                }
-                //not visible bottom menu
-                else -> {
-                    bottom_nav.isVisible = false
-                }
-            }
-        }
+        currentNavController?.observe(this, Observer {
+            it.removeOnDestinationChangedListener(listener)
+            it.addOnDestinationChangedListener(listener)
+        })
     }
 
     override fun onSupportNavigateUp(): Boolean {
