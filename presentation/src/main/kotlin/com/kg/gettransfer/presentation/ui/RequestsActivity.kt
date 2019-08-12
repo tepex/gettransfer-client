@@ -39,10 +39,7 @@ class RequestsActivity : BaseActivity(), RequestsView {
 
         setContentView(R.layout.activity_requests)
 
-        val tb = toolbar
-        if (tb is Toolbar) {
-            setToolbar(tb, R.string.LNG_MENU_TITLE_RIDES)
-        }
+        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_RIDES, hasBackAction = false)
 
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_home_back_24dp)
 

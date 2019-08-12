@@ -33,7 +33,6 @@ import org.koin.core.inject
 import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
 
-
 @Suppress("TooManyFunctions")
 class NewTransferMainFragment : MvpAppCompatFragment(),
     KoinComponent, NewTransferMainView {
@@ -197,6 +196,6 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
 
     companion object {
         @JvmField val PERMISSIONS =
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 }

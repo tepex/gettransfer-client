@@ -54,7 +54,7 @@ class SettingsActivity : BaseActivity(), SettingsView, CurrencyChangedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         @Suppress("UnsafeCast")
-        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS)
+        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_SETTINGS, hasBackAction = false)
     }
 
     @SuppressLint("CommitTransaction")
@@ -117,7 +117,7 @@ class SettingsActivity : BaseActivity(), SettingsView, CurrencyChangedListener {
                 titleText.text = getString(R.string.LNG_LOGIN_LOGIN_TITLE)
                 subtitleText.isVisible = false
             }
-            setOnClickListener {
+            this.setOnClickListener {
                 presenter.onProfileFieldClicked()
             }
         }

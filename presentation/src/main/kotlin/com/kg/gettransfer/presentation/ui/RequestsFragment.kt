@@ -21,6 +21,9 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.presentation.adapter.BtnCallClickListener
+import com.kg.gettransfer.presentation.adapter.BtnChatClickListener
+import com.kg.gettransfer.presentation.adapter.ItemClickListener
 
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -34,7 +37,6 @@ import kotlinx.android.synthetic.main.fragment_requests.*
 
 import timber.log.Timber
 import kotlinx.android.synthetic.main.view_shimmer_loader.view.*
-
 
 /**
  * @TODO: Выделить BaseFragment
@@ -64,22 +66,22 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val layoutRes = setFragmentTransferListType()
+        setTitleFragmentEmptyRequestsList()
         rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        rvRequests.adapter = RequestsRVAdapter(layoutRes) { presenter.openTransferDetails(it.id, it.status, it.paidPercentage, it.pendingPaymentId) }
+        rvRequests.adapter = RequestsRVAdapter(presenter.transferType, onItemClickListener, onCallClickListener, onChatClickListener)
         initClickListeners()
     }
 
-    private fun setFragmentTransferListType(): Int {
+    private val onItemClickListener: ItemClickListener = { presenter.openTransferDetails(it.id, it.status, it.paidPercentage, it.pendingPaymentId) }
+
+    private val onCallClickListener: BtnCallClickListener = { presenter.callPhone(it) }
+
+    private val onChatClickListener: BtnChatClickListener = { presenter.onChatClick(it) }
+
+    private fun setTitleFragmentEmptyRequestsList() {
         noTransfersText.text = when(presenter.transferType) {
             RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> getString(R.string.LNG_TRIPS_EMPTY_ACTIVE)
             RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> getString(R.string.LNG_TRIPS_EMPTY_COMPLETED)
-            else -> throw UnsupportedOperationException()
-        }
-
-        return when(presenter.transferType) {
-            RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> R.layout.view_transfer_request_info_enabled
-            RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> R.layout.view_transfer_request_info_disabled
             else -> throw UnsupportedOperationException()
         }
     }
@@ -93,6 +95,10 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     override fun updateTransfers(transfers: List<TransferModel>) {
         switchBackGroundData(false)
         rvAdapter.updateTransfers(transfers)
+    }
+
+    override fun updateCardWithDriverCoordinates(transferId: Long) {
+        rvAdapter.updateDriverCoordinates(transferId)
     }
 
     override fun updateEvents(eventsCount: Map<Long, Int>) {

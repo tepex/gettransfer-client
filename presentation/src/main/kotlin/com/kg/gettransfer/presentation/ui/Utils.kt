@@ -55,6 +55,7 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
@@ -417,6 +418,27 @@ object Utils : KoinComponent {
         }
         shape = GradientDrawable.OVAL
         cornerRadius = 5.0f
+    }
+
+    fun setCarColorInTextView(context: Context, textView: TextView, color: String) {
+        @ColorRes
+        val colorId = getCarColorTextRes(color)
+        @StringRes
+        val colorNameId = when (colorId) {
+            R.string.LNG_COLOR_BEIGE,
+            R.string.LNG_COLOR_GOLD,
+            R.string.LNG_COLOR_SILVER,
+            R.string.LNG_COLOR_WHITE,
+            R.string.LNG_COLOR_YELLOW -> R.color.colorTextBlack
+            else -> R.color.colorWhite
+        }
+
+        with(textView) {
+            text = context.getString(colorId)
+            setTextColor(ContextCompat.getColor(context, colorNameId))
+            background = getCarColorTextBackFormRes(context, color)
+            isVisible = true
+        }
     }
 
     fun getPhoneCodeByCountryIso(context: Context): Int {
