@@ -191,12 +191,12 @@ fun TransferEntity.allowOfferInfo(date: Date): Boolean =
 
         val calendar = Calendar.getInstance()
         calendar.time = date
-        calendar.add(Calendar.MINUTE, time ?: duration?.times(SEC_PER_MINUTE) ?: 0)
+        calendar.add(Calendar.MINUTE, time ?: duration?.times(MINUTES_PER_HOUR) ?: 0)
         calendar.add(Calendar.MINUTE, MINUTES_TO_SHOWING_OFFER_INFO)
         calendar.time.after(Calendar.getInstance().time)
     } else {
         status == Transfer.Status.PERFORMED.name.toLowerCase()
     }
 
-const val SEC_PER_MINUTE = 60
-const val MINUTES_TO_SHOWING_OFFER_INFO = 24 * SEC_PER_MINUTE
+const val MINUTES_PER_HOUR = 60
+const val MINUTES_TO_SHOWING_OFFER_INFO = 24 * MINUTES_PER_HOUR

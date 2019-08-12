@@ -91,7 +91,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyCh
                 titleText.text = getString(R.string.LNG_LOGIN_LOGIN_TITLE)
                 subtitleText.isVisible = false
             }
-            setOnClickListener {
+            this.setOnClickListener {
                 presenter.onProfileFieldClicked()
             }
         }

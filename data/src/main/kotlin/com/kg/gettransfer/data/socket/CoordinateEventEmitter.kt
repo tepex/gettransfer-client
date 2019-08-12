@@ -4,7 +4,7 @@ import com.kg.gettransfer.data.model.CoordinateEntity
 
 interface CoordinateEventEmitter {
 
-    fun initLocationReceiving(transferId: Long)
+    fun initLocationReceiving()
 
     fun sendOwnLocation(coordinate: CoordinateEntity)
 }

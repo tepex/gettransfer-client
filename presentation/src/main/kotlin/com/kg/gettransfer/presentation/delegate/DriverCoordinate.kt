@@ -5,17 +5,28 @@ import android.os.Handler
 import android.os.SystemClock
 import android.view.animation.LinearInterpolator
 import com.google.android.gms.maps.model.LatLng
-import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.AsyncUtils
+import com.kg.gettransfer.domain.CoroutineContexts
+import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.model.Coordinate
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import org.koin.core.KoinComponent
+import org.koin.core.get
 import org.koin.core.inject
-import java.util.ArrayList
 import kotlin.properties.Delegates
 
-class DriverCoordinate(private val handler: Handler,
-                       private val coordinateRequester: CoordinateRequester,    // need interface to use in different classes
-                       private val callDrawing: (bearing: Float, coordinate: LatLng, show: Boolean) -> Unit) : KoinComponent {
+class DriverCoordinate(
+        private val handler: Handler,
+        private val callDrawing: ((bearing: Float, coordinate: LatLng, show: Boolean) -> Unit)? = null
+) : KoinComponent {
+    private val compositeDisposable = Job()
+    private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
+
+    private val coordinateInteractor: CoordinateInteractor by inject()
+
     var showMoving: Boolean = false
+    var requestCoordinates = true
 
     init { requestCoordinates() }
 
@@ -34,7 +45,15 @@ class DriverCoordinate(private val handler: Handler,
         }
     }
 
-    private fun requestCoordinates() = coordinateRequester.request()
+    private fun requestCoordinates() {
+        if (requestCoordinates) {
+            utils.launchSuspend {
+                coordinateInteractor.initCoordinatesReceiving()
+                delay(REQUEST_PERIOD)
+                requestCoordinates()
+            }
+        }
+    }
 
     private fun compute(oldLocation: Coordinate, newLocation: Coordinate, time: Long, runnable: Runnable) {
         val bearing = get(oldLocation).bearingTo(get(newLocation))
@@ -44,7 +63,7 @@ class DriverCoordinate(private val handler: Handler,
         val lon = t * newLocation.lon + (1 - t) * oldLocation.lon
         val lat = t * newLocation.lat + (1 - t) * oldLocation.lat
 
-        callDrawing(bearing, LatLng(lat, lon), showMoving)
+        callDrawing?.let { it(bearing, LatLng(lat, lon), showMoving) }
         if (t < 1.0) handler.postDelayed(runnable, FRAME_DELAY)
     }
 

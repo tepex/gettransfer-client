@@ -8,7 +8,6 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
-import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
@@ -30,7 +29,6 @@ import com.kg.gettransfer.extensions.finishChainAndBackTo
 
 import com.kg.gettransfer.prefs.PreferencesImpl
 
-import com.kg.gettransfer.presentation.delegate.CoordinateRequester
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 
 import com.kg.gettransfer.presentation.mapper.CityPointMapper
@@ -51,7 +49,7 @@ import com.kg.gettransfer.utilities.Analytics
 import org.koin.core.inject
 
 @InjectViewState
-class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener, SocketEventListener {
+class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener {
     private val orderInteractor: OrderInteractor by inject()
     private val coordinateInteractor: CoordinateInteractor by inject()
 
@@ -94,7 +92,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 }
             viewState.blockInterface(false)
         }
-        socketInteractor.addSocketListener(this)
     }
 
     private fun setTransferFields(transfer: Transfer) {
@@ -140,14 +137,15 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     override fun detachView(view: TransferDetailsView?) {
         super.detachView(view)
+        driverCoordinate?.requestCoordinates = false
         driverCoordinate = null  // assign null to avoid drawing marker in detached screen
         isCameraUpdatedForCoordinates = false
-        socketInteractor.removeSocketListener(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         reviewInteractor.releaseReviewData()
+        coordinateInteractor.removeCoordinateListener(this)
     }
 
     fun onCenterRouteClick() {
@@ -267,15 +265,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     fun logTransferReviewRequested() = analytics.logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
 
-    private val coordinateRequester = object : CoordinateRequester {
-        override fun request() = coordinateInteractor.initCoordinatesReceiving(transferId)
-    }
-
     fun initCoordinates() {
-        driverCoordinate = DriverCoordinate(Handler(), coordinateRequester) { bearing, coordinates, show ->
+        driverCoordinate = DriverCoordinate(Handler()) { bearing, coordinates, show ->
             viewState.moveCarMarker(bearing, coordinates, show)
         }
-        coordinateInteractor.coordinateEventListener = this
+        coordinateInteractor.addCoordinateListener(this)
     }
 
     /*
@@ -322,12 +316,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         viewState.showCommonRating(available && neededRate)
         viewState.showYourRateMark(!neededRate, offer?.ratings?.average ?: 0.0)
     }
-
-    override fun onSocketConnected() {
-        coordinateRequester.request()
-    }
-
-    override fun onSocketDisconnected() {}
 
     fun onDownloadVoucherClick() = downloadManager.downloadVoucher(transferId)
 

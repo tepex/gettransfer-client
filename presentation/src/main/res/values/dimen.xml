@@ -193,23 +193,34 @@
 	<dimen name="transfer_types_cost_title">12sp</dimen>
 
 	<!-- view_transfer_info -->
-	<dimen name="view_transfer_info_big_text_size">17sp</dimen>
+	<dimen name="view_transfer_info_horizontal_margin">8dp</dimen>
+	<dimen name="view_transfer_info_vertical_margin">4dp</dimen>
+	<dimen name="view_transfer_info_corner_radius">8dp</dimen>
+	<dimen name="view_transfer_info_big_text_size">16sp</dimen>
+	<dimen name="view_transfer_info_hourly_text_size">14sp</dimen>
 	<dimen name="view_transfer_info_small_text_size">12sp</dimen>
 	<dimen name="view_transfer_info_request_number_text_size">12sp</dimen>
-	<dimen name="view_transfer_info_request_number_margin_top">10dp</dimen>
-	<dimen name="view_transfer_info_request_number_margin_start">16dp</dimen>
+	<dimen name="view_transfer_info_request_number_margin_top">12dp</dimen>
+	<dimen name="view_transfer_info_request_number_horizontal_margin">16dp</dimen>
 	<dimen name="view_transfer_info_from_margin_start">48dp</dimen>
 	<dimen name="view_transfer_info_from_margin_top">9dp</dimen>
 	<dimen name="view_transfer_info_to_margin_top">7dp</dimen>
 	<dimen name="view_transfer_info_markers_size">23dp</dimen>
-	<dimen name="view_transfer_info_markers_hourly_size">24dp</dimen>
-	<dimen name="view_transfer_info_markers_margin_start">18dp</dimen>
-	<dimen name="view_transfer_info_markers_margin_top">7dp</dimen>
+	<dimen name="view_transfer_info_markers_hourly_size">28dp</dimen>
+	<dimen name="view_transfer_info_top_marker_margin_start">18dp</dimen>
+	<dimen name="view_transfer_info_top_marker_margin_top">6dp</dimen>
+	<dimen name="view_transfer_info_bottom_markers_margin_start">15dp</dimen>
+	<dimen name="view_transfer_info_bottom_point_marker_margin_start">3dp</dimen>
+	<dimen name="view_transfer_info_bottom_marker_margin_bottom">3dp</dimen>
+	<dimen name="view_transfer_info_markers_line_vertical_margin">2dp</dimen>
 	<dimen name="view_transfer_info_chevron_margin_end">16dp</dimen>
 	<dimen name="view_transfer_info_divider_height">0.5dp</dimen>
-	<dimen name="view_transfer_info_divider_margin_top">10dp</dimen>
-	<dimen name="view_transfer_info_btn_cancel_request_margin_end">11dp</dimen>
-	<dimen name="view_transfer_info_btn_cancel_request_padding_top_bottom">5dp</dimen>
+	<dimen name="view_transfer_info_padding_bottom">4dp</dimen>
+	<dimen name="view_transfer_info_car_color_text_size">12sp</dimen>
+	<dimen name="view_transfer_info_car_color_horizontal_padding">12dp</dimen>
+	<dimen name="view_transfer_info_car_color_padding_top">2dp</dimen>
+	<dimen name="view_transfer_info_car_color_padding_bottom">3.5dp</dimen>
+	<dimen name="view_transfer_info_car_color_elevation">2dp</dimen>
 
 	<dimen name="transfer_main_info_container_vertical_padding">10dp</dimen>
 	<dimen name="no_transfers_image_width">161dp</dimen>

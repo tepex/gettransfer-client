@@ -29,7 +29,6 @@ import kotlinx.android.synthetic.main.view_switcher.*
 import org.koin.core.inject
 import pub.devrel.easypermissions.EasyPermissions
 
-
 @Suppress("TooManyFunctions")
 class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
@@ -181,6 +180,6 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
     companion object {
         @JvmField val PERMISSIONS =
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 }

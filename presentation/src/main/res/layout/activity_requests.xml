@@ -29,6 +29,7 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin44"
+        app:tabBackground="@color/colorWhite"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/color_gtr_orange"
         app:tabMode="fixed"
