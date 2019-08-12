@@ -1,12 +1,13 @@
 package com.kg.gettransfer.data
 
 import com.kg.gettransfer.domain.ApiException
+import kotlinx.io.IOException
 
 class RemoteException(
     val code: Int,
     val details: String,
     val type: String? = null
-) : RuntimeException(details) {
+) : IOException(details) {
 
     fun isInvalidToken() = code == INVALID_TOKEN
     fun isNotLoggedIn()  = code == NOT_LOGGED_IN
