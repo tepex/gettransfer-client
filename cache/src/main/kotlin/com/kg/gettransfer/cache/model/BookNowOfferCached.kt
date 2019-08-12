@@ -1,7 +1,7 @@
 package com.kg.gettransfer.cache.model
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Embedded
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import com.kg.gettransfer.data.model.BookNowOfferEntity
 import kotlinx.serialization.Serializable
 

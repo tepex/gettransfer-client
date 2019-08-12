@@ -5,10 +5,11 @@ import android.animation.Animator
 import android.os.Build
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
-import android.support.v4.content.ContextCompat
+import androidx.annotation.CallSuper
+import androidx.core.content.ContextCompat
 
 import android.view.*
+import androidx.navigation.fragment.findNavController
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -94,7 +95,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         search_panel.setIvSelectFieldToClickListener{ presenter.switchUsedField() }
         btnNext.setThrottledClickListener { performNextClick() }
         btnBack.setOnClickListener {
-//            findNavController().navigateUp()
+            findNavController().navigateUp()
         }
         btnMyLocation.setOnClickListener {
             checkPermission()

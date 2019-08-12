@@ -4,13 +4,13 @@ import android.animation.Animator
 import android.content.Context
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
-import android.support.design.widget.BottomSheetBehavior
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.DividerItemDecoration
+import androidx.annotation.CallSuper
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import androidx.core.content.ContextCompat
 
 import android.view.View
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -43,7 +43,7 @@ class SelectCurrencyFragment : BaseBottomSheetFragment(), SelectCurrencyView {
     private var listener: CurrencyChangedListener? = null
 
     @CallSuper
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is CurrencyChangedListener) {
             listener = context

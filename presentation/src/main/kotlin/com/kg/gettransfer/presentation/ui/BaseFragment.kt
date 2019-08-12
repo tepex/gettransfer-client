@@ -1,9 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
+import androidx.annotation.StringRes
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
 
@@ -84,14 +81,4 @@ abstract class BaseFragment : MvpAppCompatFragment(), KoinComponent, BaseView {
                 }
                 .show(childFragmentManager)
     }
-
-    /**
-     * Find a [NavController] given a [Fragment]
-     *
-     * Calling this on a Fragment that is not a [NavHostFragment] or within a [NavHostFragment]
-     * will result in an [IllegalStateException]
-     */
-    fun Fragment.findNavController(): NavController =
-            NavHostFragment.findNavController(this)
-
 }

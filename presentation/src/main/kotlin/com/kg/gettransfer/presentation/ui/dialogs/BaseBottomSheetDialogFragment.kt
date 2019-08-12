@@ -2,14 +2,14 @@ package com.kg.gettransfer.presentation.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.CoordinatorLayout
-import android.support.v4.app.DialogFragment
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kg.gettransfer.R
 import android.util.DisplayMetrics
+import androidx.fragment.app.DialogFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
@@ -28,9 +28,9 @@ abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
         return inflater.inflate(layout, container, false)
     }
 
-    override fun setupDialog(dialog: Dialog?, style: Int) {
+    override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
-        dialog?.run {
+        dialog.run {
             setOnShowListener {
                 (view?.parent as? View)?.let {
                     val displayMetrics = DisplayMetrics()

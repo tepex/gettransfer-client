@@ -1,10 +1,10 @@
 package com.kg.gettransfer.presentation.adapter
 
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 
 import com.kg.gettransfer.presentation.ui.FragmentImageForViewPager
-
+//TODO not used
 class VehiclePhotosVPAdapter(
     fm: FragmentManager,
     private val urls: List<String>

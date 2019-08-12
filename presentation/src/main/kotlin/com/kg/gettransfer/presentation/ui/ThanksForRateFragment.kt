@@ -50,7 +50,7 @@ class ThanksForRateFragment : BaseBottomSheetDialogFragment(), ThanksForRateView
     private fun showComment() {
         val commentDialog = CommentDialogFragment.newInstance()
         commentDialog.setTargetFragment(this@ThanksForRateFragment, COMMENT_REQUEST_CODE)
-        commentDialog.show(fragmentManager, COMMENT_DIALOG_TAG)
+        commentDialog.show(requireFragmentManager(), COMMENT_DIALOG_TAG)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -67,11 +67,11 @@ class ThanksForRateFragment : BaseBottomSheetDialogFragment(), ThanksForRateView
         dismiss()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         presenter.sendThanks()
         super.onDismiss(dialog)
     }
 
     override fun askRateInPlayMarket() =
-        StoreDialogFragment.newInstance().show(fragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
+        StoreDialogFragment.newInstance().show(requireFragmentManager(), StoreDialogFragment.STORE_DIALOG_TAG)
 }

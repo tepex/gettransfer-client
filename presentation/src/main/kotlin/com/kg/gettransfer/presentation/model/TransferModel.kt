@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.model
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 
 import com.kg.gettransfer.R
 

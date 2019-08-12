@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
 
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 
 import android.webkit.WebViewClient
 

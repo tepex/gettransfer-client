@@ -5,10 +5,10 @@ import android.content.Context
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
-import android.support.design.widget.BottomSheetBehavior
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
+import androidx.annotation.CallSuper
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.Toolbar
 
 import android.view.MotionEvent
 import android.view.View

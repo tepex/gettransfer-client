@@ -1,12 +1,12 @@
 package com.kg.gettransfer.utilities
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
-import android.support.v4.content.LocalBroadcastManager
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.koin.core.KoinComponent
 
 class AppLifeCycleObserver(context: Context): LifecycleObserver, KoinComponent {

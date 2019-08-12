@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -135,7 +135,7 @@ class RatingLastTripFragment : BaseBottomSheetDialogFragment(), RatingLastTripVi
         if (fragmentManager?.fragments?.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG } == null) {
             RatingDetailDialogFragment
                 .newInstance()
-                .show(fragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+                .show(requireFragmentManager(), RatingDetailDialogFragment.RATE_DIALOG_TAG)
         }
     }
 

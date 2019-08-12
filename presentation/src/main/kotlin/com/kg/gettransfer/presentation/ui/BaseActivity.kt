@@ -17,17 +17,15 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Handler
 
-import android.support.annotation.CallSuper
-import android.support.annotation.ColorRes
-import android.support.annotation.IdRes
-import android.support.annotation.StringRes
-import android.support.design.widget.BottomSheetBehavior
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.Toolbar
+import androidx.annotation.CallSuper
+import androidx.annotation.ColorRes
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatDelegate
 
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -40,6 +38,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 
 import android.widget.PopupWindow
+import androidx.appcompat.widget.Toolbar
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 

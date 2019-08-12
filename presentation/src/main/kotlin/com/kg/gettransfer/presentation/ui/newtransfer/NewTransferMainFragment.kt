@@ -2,10 +2,11 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
 import android.os.Bundle
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -98,7 +99,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
                     presenter.updateDuration(durationValue)
                 }
             })
-            .show(fragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
+            .show(requireFragmentManager(), HourlyDurationDialogFragment.DIALOG_TAG)
     }
 
     private fun onNextClick() {
@@ -168,7 +169,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     }
 
     override fun showReadMoreDialog() {
-        ReadMoreFragment().show(fragmentManager, getString(R.string.tag_read_more))
+        ReadMoreFragment().show(requireFragmentManager(), getString(R.string.tag_read_more))
     }
 
     @CallSuper

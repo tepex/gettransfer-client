@@ -1,13 +1,13 @@
 package com.kg.gettransfer.extensions
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.content.Intent
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.FragmentManager
 import android.util.SparseArray
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kg.gettransfer.R
 import org.jetbrains.anko.collections.forEach
 

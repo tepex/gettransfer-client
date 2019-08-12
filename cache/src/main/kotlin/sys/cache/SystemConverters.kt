@@ -1,6 +1,6 @@
 package com.kg.gettransfer.sys.cache
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 
 import kotlinx.serialization.json.JSON
 

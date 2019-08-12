@@ -1,20 +1,24 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
+import android.view.LayoutInflater
 
 import android.view.WindowManager
 
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigator
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.kg.gettransfer.R
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setupWithNavController
@@ -23,18 +27,14 @@ import com.kg.gettransfer.presentation.presenter.MainNavigatePresenter
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
+import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment
 import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
 import kotlinx.android.synthetic.main.activity_main_navigate.*
+import kotlinx.android.synthetic.main.notification_badge_view.view.*
 
 import pub.devrel.easypermissions.EasyPermissions
-import android.view.LayoutInflater
-import android.support.design.internal.BottomNavigationItemView
-import android.support.design.internal.BottomNavigationMenuView
-import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment
-import kotlinx.android.synthetic.main.notification_badge_view.view.*
 
 
 @Suppress("TooManyFunctions")

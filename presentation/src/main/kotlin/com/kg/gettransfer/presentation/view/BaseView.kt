@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.view
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 
 import com.arellomobile.mvp.MvpView
 

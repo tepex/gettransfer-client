@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import com.kg.gettransfer.R
 import android.content.Context
-import android.support.constraint.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.kg.gettransfer.extensions.isVisible

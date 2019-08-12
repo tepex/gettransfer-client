@@ -2,12 +2,12 @@ package com.kg.gettransfer.presentation.ui.behavior
 
 import android.app.Activity
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 
 open class BaseBehavior<V : ViewGroup>(private val mContext: Context, attrs: AttributeSet) : CoordinatorLayout.Behavior<V>(mContext, attrs) {
     val screenHeight: Int

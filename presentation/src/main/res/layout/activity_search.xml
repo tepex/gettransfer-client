@@ -40,7 +40,7 @@
                     style="@style/list_title"
                     android:text="@string/LNG_SEARCH_RECENT_PLACES" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_addressList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -58,7 +58,7 @@
                     style="@style/list_title"
                     android:text="@string/LNG_SEARCH_POPULAR_PLACES" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_popularList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

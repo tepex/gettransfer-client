@@ -12,7 +12,7 @@ class AboutDriverAppDialogFragment : BaseBottomSheetDialogFragment() {
 	override val layout: Int = R.layout.dialog_fragment_about_driver_app
 	private var onAboutDriverAppListener: OnAboutDriverAppListener? = null
 
-	override fun onAttach(context: Context?) {
+	override fun onAttach(context: Context) {
 		super.onAttach(context)
 		onAboutDriverAppListener = activity as OnAboutDriverAppListener
 	}

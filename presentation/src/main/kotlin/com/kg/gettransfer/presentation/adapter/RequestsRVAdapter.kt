@@ -1,9 +1,10 @@
 package com.kg.gettransfer.presentation.adapter
 
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
@@ -13,8 +14,8 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_request_info_enabled.*
 
 class RequestsRVAdapter(
-    @LayoutRes private val layout: Int,
-    private val listener: ItemClickListener
+        @LayoutRes private val layout: Int,
+        private val listener: ItemClickListener
 ) : RecyclerView.Adapter<RequestsRVAdapter.ViewHolder>() {
 
     private val transfers = mutableListOf<TransferModel>()

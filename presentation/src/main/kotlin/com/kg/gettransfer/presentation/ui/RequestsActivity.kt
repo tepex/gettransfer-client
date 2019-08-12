@@ -2,13 +2,13 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
