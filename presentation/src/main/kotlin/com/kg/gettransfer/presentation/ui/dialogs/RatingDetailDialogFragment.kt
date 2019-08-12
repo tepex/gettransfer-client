@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import android.widget.RatingBar
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -64,7 +64,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     fun providePresenter() = RatingDetailPresenter()
 
     @CallSuper
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         ratingListener = activity as? OnRatingChangeListener
     }
@@ -140,7 +140,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     override fun showCommentDialog(comment: String) {
         val commentDialog = CommentDialogFragment.newInstance(comment)
         commentDialog.setTargetFragment(this@RatingDetailDialogFragment, COMMENT_REQUEST_CODE)
-        commentDialog.show(fragmentManager, COMMENT_DIALOG_TAG)
+        commentDialog.show(requireFragmentManager(), COMMENT_DIALOG_TAG)
     }
 
     @CallSuper
@@ -179,7 +179,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     }
 
     @CallSuper
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         if (isExitWithResult) {
             ratingListener?.onRatingChangeCancelled()

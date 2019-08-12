@@ -79,9 +79,8 @@ class DateTimeDelegate : KoinComponent {
         )
 
     private fun getCurrentDateForField(startsField: Boolean): Calendar {
-        if (startsField) {
-            currentData = getCurrentDatePlusMinimumHours()
-        } else {
+        currentData = getCurrentDatePlusMinimumHours()
+        if (!startsField) {
             currentData.time = Date(startDate.time + DATE_OFFSET)
         }
         return currentData

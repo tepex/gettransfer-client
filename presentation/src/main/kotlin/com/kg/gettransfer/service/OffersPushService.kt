@@ -1,6 +1,6 @@
 package com.kg.gettransfer.service
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage

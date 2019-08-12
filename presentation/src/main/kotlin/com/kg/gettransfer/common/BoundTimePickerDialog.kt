@@ -4,11 +4,11 @@ import android.app.TimePickerDialog
 
 import android.content.Context
 
-import android.support.annotation.CallSuper
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 
 import android.widget.NumberPicker
 import android.widget.TimePicker
+import androidx.annotation.CallSuper
 
 import com.kg.gettransfer.R
 

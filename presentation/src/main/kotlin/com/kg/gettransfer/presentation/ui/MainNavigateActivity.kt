@@ -6,9 +6,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 
-import android.support.annotation.CallSuper
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
+import androidx.annotation.CallSuper
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 
 import android.transition.Fade
 import android.view.Gravity

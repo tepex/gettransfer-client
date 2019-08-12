@@ -3,12 +3,12 @@ package com.kg.gettransfer.presentation.ui
 import com.kg.gettransfer.R
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-import android.support.design.widget.TabLayout
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
+import com.google.android.material.tabs.TabLayout
 
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.*
 
 import com.arellomobile.mvp.MvpAppCompatFragment

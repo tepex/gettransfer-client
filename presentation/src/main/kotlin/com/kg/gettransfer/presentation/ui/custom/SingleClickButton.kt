@@ -2,11 +2,12 @@ package com.kg.gettransfer.presentation.ui.custom
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageButton
 
 class SingleClickButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet
-) : android.support.v7.widget.AppCompatImageButton(context, attrs) {
+) : AppCompatImageButton(context, attrs) {
 
     override fun setOnClickListener(l: OnClickListener?) {
         super.setOnClickListener { view ->

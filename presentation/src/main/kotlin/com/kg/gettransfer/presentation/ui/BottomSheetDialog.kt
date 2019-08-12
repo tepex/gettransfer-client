@@ -2,8 +2,8 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v4.app.FragmentManager
+import androidx.annotation.CallSuper
+import androidx.fragment.app.FragmentManager
 import android.view.View
 
 import com.kg.gettransfer.R
@@ -83,12 +83,12 @@ class BottomSheetDialog : BaseBottomSheetDialogFragment() {
     }
 
     @CallSuper
-    fun show(manager: FragmentManager?) {
+    fun show(manager: FragmentManager) {
         super.show(manager, TAG)
     }
 
     @CallSuper
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         onDismissCallBack?.invoke()
     }

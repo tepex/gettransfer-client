@@ -4,9 +4,9 @@ import com.kg.gettransfer.R
 
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
+import androidx.annotation.CallSuper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.Toolbar
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter

@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.adapter
 
 import com.kg.gettransfer.R
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.kg.gettransfer.presentation.presenter.CarrierTripsCalendarPresenter
 import android.view.LayoutInflater

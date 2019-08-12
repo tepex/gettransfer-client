@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.adapter
 
-import android.support.v4.widget.TextViewCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.widget.TextViewCompat
+import androidx.recyclerview.widget.RecyclerView
 
 import android.view.LayoutInflater
 import android.view.View

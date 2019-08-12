@@ -2,10 +2,10 @@ package com.kg.gettransfer.presentation.ui
 
 import com.kg.gettransfer.R
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-import android.support.v4.view.ViewPager
-import android.support.v7.widget.LinearLayoutManager
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
+import androidx.viewpager.widget.ViewPager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

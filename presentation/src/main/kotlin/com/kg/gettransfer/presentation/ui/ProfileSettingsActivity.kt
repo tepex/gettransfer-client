@@ -1,8 +1,8 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v7.widget.Toolbar
+import androidx.annotation.CallSuper
+import androidx.appcompat.widget.Toolbar
 import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter

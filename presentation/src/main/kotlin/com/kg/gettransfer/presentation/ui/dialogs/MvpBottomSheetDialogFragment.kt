@@ -2,8 +2,8 @@ package com.kg.gettransfer.presentation.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialog
 import com.arellomobile.mvp.MvpAppCompatDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.lang.RuntimeException
 
 

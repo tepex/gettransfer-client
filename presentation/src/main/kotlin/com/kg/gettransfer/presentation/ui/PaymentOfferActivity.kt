@@ -7,9 +7,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-import android.support.v7.widget.Toolbar
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
+import androidx.appcompat.widget.Toolbar
 
 import android.view.View
 import android.widget.EditText

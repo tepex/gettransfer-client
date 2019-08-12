@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +26,7 @@ class NewTransferFragment : Fragment(), KoinComponent, BaseNetworkWarning, NewTr
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_new_transfer, container, false)
 
-    override fun onAttach(activity: Activity?) {
+    override fun onAttach(activity: Activity) {
         super.onAttach(activity)
         try {
             listener = activity as NavigationMenuListener

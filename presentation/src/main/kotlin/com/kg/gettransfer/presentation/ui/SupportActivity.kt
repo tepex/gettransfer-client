@@ -4,8 +4,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v7.widget.Toolbar
+import androidx.annotation.CallSuper
+import androidx.appcompat.widget.Toolbar
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter

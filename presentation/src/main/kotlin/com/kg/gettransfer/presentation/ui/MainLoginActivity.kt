@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter

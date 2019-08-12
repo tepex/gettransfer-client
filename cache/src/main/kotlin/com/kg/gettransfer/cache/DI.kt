@@ -1,6 +1,6 @@
 package com.kg.gettransfer.cache
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 
 import com.kg.gettransfer.data.OfferCache
 import com.kg.gettransfer.data.RouteCache
