@@ -21,17 +21,23 @@ class SearchFormMainView @JvmOverloads constructor(
 ) : ConstraintLayout(context, attributeSet, defStyle), LayoutContainer {
     override val containerView: View = LayoutInflater.from(context).inflate(R.layout.search_form_main, this, true)
 
-    var ivSelectFieldToIsGone: Boolean = false
+    private var ivSelectFieldToIsGone: Boolean = false
 
     init {
         if (attributeSet != null)
             context.obtainStyledAttributes(attributeSet, R.styleable.SearchFormMainView)
-                    .apply {
-                        ivSelectFieldToIsGone = getBoolean(R.styleable.SearchFormMainView_ivSelectFieldToGone, ivSelectFieldToIsGone)
-                        ivSelectFieldTo.isGone = ivSelectFieldToIsGone
-                        ivSelectFieldFrom.isGone = getBoolean(R.styleable.SearchFormMainView_ivSelectFieldFromGone, false)
-                        recycle()
-                    }
+                .apply {
+                    ivSelectFieldToIsGone = getBoolean(R.styleable.SearchFormMainView_ivSelectFieldToGone, ivSelectFieldToIsGone)
+                    ivSelectFieldTo.isGone = ivSelectFieldToIsGone
+                    ivSelectFieldFrom.isGone = getBoolean(R.styleable.SearchFormMainView_ivSelectFieldFromGone, false)
+                    search.setBackgroundResource(
+                        when (getBoolean(R.styleable.SearchFormMainView_roundedTopCorners, false)) {
+                            true  -> R.drawable.back_top_rounded
+                            false -> R.color.colorWhite
+                        }
+                    )
+                    recycle()
+                }
     }
 
     fun setSearchFromClickListener(clickListener: ((View) -> Unit)?) {
@@ -121,8 +127,5 @@ class SearchFormMainView @JvmOverloads constructor(
     companion object {
         const val ALPHA_FULL = 1f
         const val ALPHA_DISABLED = 0.3f
-
-        const val FIELD_FROM = "field_from"
-        const val FIELD_TO = "field_to"
     }
 }
