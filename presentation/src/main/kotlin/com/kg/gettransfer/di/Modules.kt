@@ -175,6 +175,7 @@ val systemDomain = module {
     single { SetLastModeInteractor(get()) }
     single { SetOnboardingShowedInteractor(get()) }
     single { SetSelectedFieldInteractor(get()) }
+    single { SetBackgroundCoordinatesInteractor(get()) }
 }
 
 val systemPresentation = module {

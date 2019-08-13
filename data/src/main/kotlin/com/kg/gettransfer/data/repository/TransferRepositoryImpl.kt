@@ -17,10 +17,7 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
 
 import com.kg.gettransfer.domain.repository.TransferRepository
-
-import com.kg.gettransfer.sys.data.ConfigsEntity
-import com.kg.gettransfer.sys.data.ConfigsRepositoryImpl
-import com.kg.gettransfer.sys.domain.Configs
+import com.kg.gettransfer.sys.domain.ConfigsRepository
 
 import java.io.InputStream
 import java.text.DateFormat
@@ -35,7 +32,7 @@ class TransferRepositoryImpl(
 ) : BaseRepository(), TransferRepository {
 
     private val preferencesCache = get<PreferencesCache>()
-    private val configsRepository: ConfigsRepositoryImpl by inject()
+    private val configsRepository: ConfigsRepository by inject()
 
     private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
     private val dateFormatTZ = get<ThreadLocal<DateFormat>>(named("iso_date_TZ"))
