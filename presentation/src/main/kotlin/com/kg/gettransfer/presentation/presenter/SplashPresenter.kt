@@ -52,19 +52,19 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     }
 
     fun startApp() = worker.main.launch {
-            viewState.dispatchAppState(sessionInteractor.locale)
-            val isOnboardingShowed = getPreferences().getModel().isOnboardingShowed
-            if (!isOnboardingShowed) {
-                router.replaceScreen(Screens.About(true))
-                withContext(worker.bg) { setOnboardingShowed(true) }
-            } else {
-                when (getPreferences().getModel().lastMode) {
-                    Screens.CARRIER_MODE -> router.replaceScreen(Screens.CarrierMode)
-                    else                 ->
-                        router.newRootScreen(Screens.MainPassenger(!isOnboardingShowed))
-                }
+        viewState.dispatchAppState(sessionInteractor.locale)
+        val isOnboardingShowed = getPreferences().getModel().isOnboardingShowed
+        if (!isOnboardingShowed) {
+            router.replaceScreen(Screens.About(false))
+            withContext(worker.bg) { setOnboardingShowed(true) }
+        } else {
+            when (getPreferences().getModel().lastMode) {
+                Screens.CARRIER_MODE -> router.replaceScreen(Screens.CarrierMode)
+                else                 ->
+                    router.newRootScreen(Screens.MainPassenger(!isOnboardingShowed))
             }
         }
+    }
 
     fun enterByPush() {
         router.newRootChain(Screens.MainPassenger(), Screens.Requests)

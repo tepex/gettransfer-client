@@ -12,9 +12,9 @@ class SessionCacheImpl : SessionCache, KoinComponent {
 
     private val db: CacheDatabase by inject()
 
-    override fun getAccount() = db.accountCachedDao().selectAll().firstOrNull()?.map()
+    override suspend fun getAccount() = db.accountCachedDao().selectAll().firstOrNull()?.map()
 
-    override fun setAccount(account: AccountEntity): AccountEntity {
+    override suspend fun setAccount(account: AccountEntity): AccountEntity {
         db.accountCachedDao().update(account.map())
         return account
     }

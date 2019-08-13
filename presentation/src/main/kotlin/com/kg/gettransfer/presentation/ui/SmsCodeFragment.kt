@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -73,22 +72,6 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
             it.hideKeyboard()
             presenter.onLoginClick()
         }
-    }
-
-    @CallSuper
-    override fun onDetach() {
-        /* dirty hack https://stackoverflow.com/a/15656428 */
-        try {
-            val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
-            childFragmentManager.isAccessible = true
-            childFragmentManager.set(this, null)
-
-        } catch (e: NoSuchFieldException) {
-            throw RuntimeException(e)
-        } catch (e: IllegalAccessException) {
-            throw RuntimeException(e)
-        }
-        super.onDetach()
     }
 
     override fun setBtnDoneIsEnabled(isEnabled: Boolean) {

@@ -178,7 +178,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
             accountManager.logout()
         }
         configsManager.coldStart(worker.backgroundScope)
-        sessionInteractor.coldStart()
+        fetchResult { sessionInteractor.coldStart() }
         viewState.blockInterface(false)
         restart = true
         router.exit() // Without restarting app

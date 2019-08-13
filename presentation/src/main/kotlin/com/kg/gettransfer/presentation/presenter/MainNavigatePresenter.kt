@@ -97,7 +97,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     }
 
     fun onAboutClick() = worker.main.launch {
-        router.navigateTo(Screens.About(getPreferences().getModel().isOnboardingShowed))
+        router.navigateTo(Screens.About(true))
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.ABOUT_CLICKED)
     }
 

@@ -10,6 +10,6 @@ class SetEndpointInteractor(
      */
     suspend operator fun invoke(endpoint: Endpoint) {
         repository.getResult().getModel().copy(endpoint = endpoint).also { repository.put(it) }
-        endpointRepository.put(endpoint.url)
+        endpointRepository.put(endpoint)
     }
 }

@@ -11,7 +11,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 
 import android.transition.Fade
-import android.view.Gravity
 
 import android.view.View
 import android.view.WindowManager
@@ -153,7 +152,7 @@ class MainNavigateActivity : BaseActivity(),
     }
 
     override fun openMenu() {
-        drawer.openDrawer(Gravity.START, true)
+        drawer.openDrawer(GravityCompat.START, true)
     }
 
     override fun enablingNavigation() {

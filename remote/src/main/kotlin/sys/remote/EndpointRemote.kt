@@ -1,6 +1,7 @@
 package com.kg.gettransfer.sys.remote
 
-import com.kg.gettransfer.core.data.ResultData
+import com.kg.gettransfer.remote.ApiCore
+import com.kg.gettransfer.sys.data.EndpointEntity
 
 import com.kg.gettransfer.sys.data.EndpointRemoteDataSource
 
@@ -10,9 +11,11 @@ import org.koin.core.inject
 class EndpointRemote : EndpointRemoteDataSource, KoinComponent {
 
     private val apiWrapper: SystemApiWrapper by inject()
+    private val apiCore: ApiCore by inject()
 
-    override suspend fun put(data: String) {
-        apiWrapper.changeEndpoint(data)
+    override suspend fun put(data: EndpointEntity) {
+        apiWrapper.changeEndpoint(data.url)
+        apiCore.changeEndpoint(data)
     }
 
     override suspend fun clear() {
