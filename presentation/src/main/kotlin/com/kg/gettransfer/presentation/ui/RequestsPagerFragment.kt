@@ -1,6 +1,10 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 
 import androidx.annotation.CallSuper
 
@@ -19,9 +23,12 @@ import com.kg.gettransfer.presentation.presenter.RequestsPresenter
 import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
-import kotlinx.android.synthetic.main.activity_requests.*
+import kotlinx.android.synthetic.main.fragment_requests_pager.*
+import kotlinx.android.synthetic.main.fragment_requests_pager.toolbar
+import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 
-class RequestsActivity : BaseActivity(), RequestsView {
+class RequestsPagerFragment : BaseFragment(), RequestsView {
 
     @InjectPresenter
     internal lateinit var presenter: RequestsPresenter
@@ -29,23 +36,21 @@ class RequestsActivity : BaseActivity(), RequestsView {
     @ProvidePresenter
     fun createRequestsPresenter() = RequestsPresenter()
 
-    override fun getPresenter(): RequestsPresenter = presenter
+//    override fun getPresenter(): RequestsPresenter = presenter
     private fun sendEventLog(param: String) = presenter.logEvent(param)
     private var requestsVPAdapter: RequestsViewPagerAdapter?  = null
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_requests_pager, container, false)
+
     @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setTitleText()
 
-        setContentView(R.layout.activity_requests)
+        requestsVPAdapter = RequestsViewPagerAdapter(requireFragmentManager())
 
-        setToolbar(toolbar as Toolbar, R.string.LNG_MENU_TITLE_RIDES, hasBackAction = false)
-
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_home_back_24dp)
-
-        requestsVPAdapter = RequestsViewPagerAdapter(supportFragmentManager)
-
-        viewNetworkNotAvailable = layoutTextNetworkNotAvailable
+//TODO        viewNetworkNotAvailable = layoutTextNetworkNotAvailable
 
         val fragmentRequestsActive = RequestsFragment.newInstance(TRANSFER_ACTIVE)
         requestsVPAdapter?.addFragment(fragmentRequestsActive, getString(R.string.LNG_RIDES_ACTIVE))
@@ -55,6 +60,10 @@ class RequestsActivity : BaseActivity(), RequestsView {
         vpRequests.adapter = requestsVPAdapter
         tabs.setupWithViewPager(vpRequests)
         setListenersForLog()
+    }
+
+    private fun setTitleText() {
+        toolbar.toolbar_title.text = getString(R.string.LNG_MENU_TITLE_RIDES)
     }
 
     private fun setListenersForLog() {
@@ -73,7 +82,8 @@ class RequestsActivity : BaseActivity(), RequestsView {
         })
     }
 
-    private class RequestsViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
+    @SuppressLint("WrongConstant")
+    private class RequestsViewPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         val fragments = mutableListOf<RequestsFragment>()
         val titles = mutableListOf<String>()
 

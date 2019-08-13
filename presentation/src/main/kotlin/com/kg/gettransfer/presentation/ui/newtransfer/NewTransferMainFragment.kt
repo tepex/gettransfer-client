@@ -79,10 +79,6 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         layoutBestPriceText.setOnClickListener(readMoreListener)
     }
 
-    override fun switchToMap() {
-        findNavController().navigate(R.id.go_to_map)
-    }
-
     override fun blockFromField() {
         request_search_panel.searchFrom.text = getString(R.string.LNG_LOADING)
     }
@@ -176,6 +172,18 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
         presenter.updateCurrentLocation()
+    }
+
+    override fun switchToMap() {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToMap())
+    }
+
+    override fun goToSearchAddress(addressFrom: String, addressTo: String, isClickTo: Boolean, isCameFromMap: Boolean) {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToSearchAddress(addressFrom, addressTo, isClickTo, isCameFromMap))
+    }
+
+    override fun goToCreateOrder() {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToCreateOrder())
     }
 
     companion object {

@@ -72,11 +72,6 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.ui.SearchActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentStatusBar" />
-        <activity
             android:name=".presentation.ui.CreateOrderActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
@@ -112,7 +107,7 @@
             -->
         </activity>
         <activity
-            android:name=".presentation.ui.RequestsActivity"
+            android:name=".presentation.ui.RequestsPagerActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity

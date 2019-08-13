@@ -534,7 +534,7 @@
 
 	<dimen name="btn_next_main_margin_16dp">16dp</dimen>
 
-	<!-- activity_requests -->
+	<!-- fragment_requests_pager -->
 	<dimen name="activity_requests_text_size_14sp">14sp</dimen>
 	<dimen name="activity_requests_text_size_12sp">12sp</dimen>
 

@@ -143,6 +143,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         when ((destination as FragmentNavigator.Destination).className) {
             //visible bottom menu
             NewTransferMainFragment::class.java.name,
+            RequestsPagerFragment::class.java.name,
             SettingsFragment::class.java.name,
             SupportFragment::class.java.name -> {
                 bottom_nav.isVisible = true

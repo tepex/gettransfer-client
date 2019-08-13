@@ -87,13 +87,13 @@ fun BottomNavigationView.setupWithNavController(
                     // Commit a transaction that cleans the back stack and adds the first fragment
                     // to it, creating the fixed started destination.
                     fragmentManager.beginTransaction()
-                        .attach(selectedFragment)
+                        .show(selectedFragment)
                         .setPrimaryNavigationFragment(selectedFragment)
                         .apply {
                             // Detach all other Fragments
                             graphIdToTagMap.forEach { _, fragmentTagIter ->
                                 if (fragmentTagIter != newlySelectedItemTag) {
-                                    detach(fragmentManager.findFragmentByTag(firstFragmentTag)!!)
+                                    hide(fragmentManager.findFragmentByTag(firstFragmentTag)!!)
                                 }
                             }
                         }
@@ -184,7 +184,7 @@ private fun detachNavHostFragment(
     navHostFragment: NavHostFragment
 ) {
     fragmentManager.beginTransaction()
-        .detach(navHostFragment)
+        .hide(navHostFragment)
         .commitNow()
 }
 
@@ -194,7 +194,7 @@ private fun attachNavHostFragment(
     isPrimaryNavFragment: Boolean
 ) {
     fragmentManager.beginTransaction()
-        .attach(navHostFragment)
+        .show(navHostFragment)
         .apply {
             if (isPrimaryNavFragment) {
                 setPrimaryNavigationFragment(navHostFragment)

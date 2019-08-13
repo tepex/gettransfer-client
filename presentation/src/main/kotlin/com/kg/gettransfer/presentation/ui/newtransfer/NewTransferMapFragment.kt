@@ -82,14 +82,14 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
             presenter.navigateToFindAddress(
                     searchFrom.text,
                     searchTo.text,
-                    returnToMain = true)
+                    isCameFromMap = true)
         }
         search_panel.setSearchToClickListener {
             presenter.navigateToFindAddress(
                     searchFrom.text,
                     searchTo.text,
                     isClickTo = true,
-                    returnToMain = true)
+                    isCameFromMap = true)
         }
         search_panel.setHourlyClickListener {  presenter.showHourlyDurationDialog() }
         search_panel.setIvSelectFieldToClickListener{ presenter.switchUsedField() }
@@ -273,6 +273,14 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     override fun onNetworkWarning(available: Boolean) {
         layoutTextNetworkNotAvailable.changeViewVisibility(!available)
         if (available) presenter.fillAddressFieldsCheckIsEmpty()
+    }
+
+    override fun goToSearchAddress(addressFrom: String, addressTo: String, isClickTo: Boolean, isCameFromMap: Boolean) {
+        findNavController().navigate(NewTransferMapFragmentDirections.goToSearchAddress(addressFrom, addressTo, isClickTo, isCameFromMap))
+    }
+
+    override fun goToCreateOrder() {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToCreateOrder())
     }
 
     companion object {

@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/showTrips"
-        android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment"
+        android:name="com.kg.gettransfer.presentation.ui.RequestsPagerFragment"
         android:label="new_transfer_map"
-        tools:layout="@layout/fragment_new_transfer_main"/>
+        tools:layout="@layout/fragment_requests_pager"/>
 </navigation>

@@ -20,8 +20,7 @@ import kotlinx.android.synthetic.main.fragment_support.*
 import kotlinx.android.synthetic.main.layout_phones.*
 import kotlinx.android.synthetic.main.layout_social_network.*
 import kotlinx.android.synthetic.main.layout_write_us.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.toolbar
-import kotlinx.android.synthetic.main.toolbar_nav_back.view.toolbar_title
+import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_contacts.view.*
 
 class SupportFragment : BaseFragment(), SupportView {

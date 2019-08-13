@@ -24,7 +24,6 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.extensions.*
-import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
 import com.kg.gettransfer.presentation.view.SearchAddressView
@@ -44,7 +43,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
     @InjectPresenter
     lateinit var presenter: SearchAddressPresenter
-    private lateinit var parent: SearchActivity
+    private lateinit var parent: SearchFragment
 
     override val containerView: View
     /** From/To address flag */
@@ -82,7 +81,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     @ProvidePresenter
     fun createSearchAddressPresenter() = SearchAddressPresenter()
 
-    fun initWidget(parent: SearchActivity, isTo: Boolean) {
+    fun initWidget(parent: SearchFragment, isTo: Boolean) {
         this.parent = parent
         this.isTo = isTo
         addressField.setOnFocusChangeListener { _, hasFocus ->

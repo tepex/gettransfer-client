@@ -19,6 +19,9 @@ interface SearchView : BaseView {
     fun setFocus(isToField: Boolean)
     fun changeFocusToDestField()
     fun onAddressError(@StringRes message: Int, address: GTAddress, fieldTo: Boolean)
+    fun goToMap()
+    fun goToBack()
+    fun goToCreateOrder()
 
     companion object {
         val EXTRA_ADDRESS_FROM = "${SearchView::class.java.name}.address_from"

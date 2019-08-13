@@ -83,7 +83,7 @@ object Screens {
     }
 
     object Requests : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, RequestsActivity::class.java)
+        override fun getActivityIntent(context: Context?) = Intent(context, RequestsPagerActivity::class.java)
     }
 
     object LicenceAgree : SupportAppScreen() {
@@ -235,6 +235,7 @@ object Screens {
         }
     }
 
+/*
     data class FindAddress(
         val from: String,
         val to: String,
@@ -242,13 +243,14 @@ object Screens {
         val returnMain: Boolean = false
     ) :
         SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SearchActivity::class.java).apply {
+        override fun getActivityIntent(context: Context?) = Intent(context, SearchFragment::class.java).apply {
             putExtra(SearchView.EXTRA_ADDRESS_FROM, from)
             putExtra(SearchView.EXTRA_ADDRESS_TO, to)
             putExtra(RETURN_MAIN, returnMain)
             isClickTo?.let { putExtra(SearchView.EXTRA_IS_CLICK_TO, it) }
         }
     }
+*/
 
     data class Offers(val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, OffersActivity::class.java).apply {

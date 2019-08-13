@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.os.Build
 import android.os.Bundle
 
 import androidx.annotation.CallSuper
@@ -8,12 +7,13 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.appcompat.widget.Toolbar
-
-import android.transition.Fade
-import android.transition.Slide
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -33,49 +33,41 @@ import com.kg.gettransfer.presentation.view.SearchView
 
 import kotlinx.android.synthetic.main.a_b_orange_view.*
 import kotlinx.android.synthetic.main.a_b_orange_view.view.*
-import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.search_address.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
+import org.koin.core.inject
+import ru.terrakok.cicerone.Router
 
-class SearchActivity : BaseActivity(), SearchView {
+class SearchFragment : BaseFragment(), SearchView {
 
     @InjectPresenter
     internal lateinit var presenter: SearchPresenter
 
-    private lateinit var current: SearchAddress
+    protected val router: Router by inject()
 
     private lateinit var predefinedPopularPlaces: List<PopularPlace>
 
     @ProvidePresenter
     fun createSearchPresenter() = SearchPresenter()
 
-    companion object {
-        @JvmField val FADE_DURATION  = 500L
-        @JvmField val SLIDE_DURATION = 500L
-
-        //@JvmField val LATLON_BOUNDS = "latlon_map_bounds"
-    }
-
-    override fun getPresenter(): SearchPresenter = presenter
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_search, container, false)
 
     @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setupAnimation()
-        setContentView(R.layout.activity_search)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupToolbar()
 
         scrollViewResults.setOnTouchListener(onTouchListener)
         rv_addressList.setOnTouchListener(onTouchListener)
         rv_popularList.setOnTouchListener(onTouchListener)
 
-        rv_addressList.layoutManager = LinearLayoutManager(this)
-        rv_popularList.layoutManager = LinearLayoutManager(this)
-
-        getIntents()
+        rv_addressList.layoutManager = LinearLayoutManager(requireContext())
+        rv_popularList.layoutManager = LinearLayoutManager(requireContext())
 
         initSearchFields()
         predefinedPopularPlaces = initPredefinedPopularPlaces()
@@ -85,8 +77,13 @@ class SearchActivity : BaseActivity(), SearchView {
         pointOnMap.setOnClickListener { presenter.selectFinishPointOnMap() }
     }
 
-    private fun getIntents() {
-        presenter.backwards = intent.getBooleanExtra(Screens.RETURN_MAIN, false)
+    private val onTouchListener = View.OnTouchListener { view, event ->
+        if (event.action == MotionEvent.ACTION_MOVE) {
+            view.hideKeyboard()
+            return@OnTouchListener false
+        } else {
+            return@OnTouchListener false
+        }
     }
 
     private fun initSearchFields() {
@@ -98,41 +95,31 @@ class SearchActivity : BaseActivity(), SearchView {
         changeFocusForSearch()
     }
 
-    private fun setupAnimation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.enterTransition  = Fade().apply { duration = FADE_DURATION }
-            window.returnTransition = Slide().apply { duration = SLIDE_DURATION }
-        }
-    }
-
     private fun changeFocusForSearch() {
-        if(!intent.hasExtra(SearchView.EXTRA_IS_CLICK_TO)) return
-
-        if(intent.getBooleanExtra(SearchView.EXTRA_IS_CLICK_TO, false)) searchTo.changeFocus()
-        else searchFrom.changeFocus()
+        if(SearchFragmentArgs.fromBundle(requireArguments()).isClickTo)
+            searchTo.changeFocus()
+        else
+            searchFrom.changeFocus()
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.ivBack.setThrottledClickListener { presenter.onBackCommandClick() }
+        toolbar.ivBack.setThrottledClickListener { goToBack() }
         toolbar.toolbar_title.text = getString(R.string.LNG_SEARCH)
     }
 
     fun onSearchFieldEmpty(isTo: Boolean) {
         presenter.onSearchFieldEmpty()
         if(isTo) searchForm.icons_container.tv_b_point.background =
-                ContextCompat.getDrawable(this, R.drawable.back_orange_empty)
-                        .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack)) }
+                ContextCompat.getDrawable(requireContext(), R.drawable.back_orange_empty)
+                        .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextBlack)) }
         else     searchForm.icons_container.tv_a_point.background =
-                ContextCompat.getDrawable(this, R.drawable.back_orange_empty)
-                        .also { icons_container.tv_a_point.setTextColor(ContextCompat.getColor(this, R.color.colorTextBlack)) }
+                ContextCompat.getDrawable(requireContext(), R.drawable.back_orange_empty)
+                        .also { icons_container.tv_a_point.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextBlack)) }
     }
 
-    override fun onBackPressed() {
-        searchTo.clearFocusOnExit()
-        searchFrom.clearFocusOnExit()
-        presenter.onBackCommandClick()
+    fun onClearFocus() {
+        searchTo.hideKeyboard()
+        searchFrom.hideKeyboard()
     }
 
     private fun initPredefinedPopularPlaces() = listOf(
@@ -183,11 +170,11 @@ class SearchActivity : BaseActivity(), SearchView {
 
     override fun updateIcon(isTo: Boolean) {
         if (isTo) searchForm.icons_container.tv_b_point.background =
-                ContextCompat.getDrawable(this, R.drawable.back_circle_marker_orange_filled)
-                .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(this, R.color.colorWhite)) }
+                ContextCompat.getDrawable(requireContext(), R.drawable.back_circle_marker_orange_filled)
+                .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite)) }
         else searchForm.icons_container.tv_a_point.background =
-                ContextCompat.getDrawable(this, R.drawable.back_circle_marker_orange_filled)
-                        .also { icons_container.tv_a_point.setTextColor(ContextCompat.getColor(this, R.color.colorWhite)) }
+                ContextCompat.getDrawable(requireContext(), R.drawable.back_circle_marker_orange_filled)
+                        .also { icons_container.tv_a_point.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite)) }
     }
 
     override fun setFocus(isToField: Boolean) {
@@ -196,11 +183,32 @@ class SearchActivity : BaseActivity(), SearchView {
 
     override fun onAddressError(message: Int, address: GTAddress, fieldTo: Boolean) {
         (rv_addressList.adapter as AddressAdapter).removeItem(address)
-        Toast.makeText(this, message, Toast.LENGTH_LONG)
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG)
                 .show()
     }
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        Utils.showError(this, false, getString(errId))
+        Utils.showError(requireContext(), false, getString(errId))
+    }
+
+    override fun goToMap() {
+        hideKeyboard()
+        if (SearchFragmentArgs.fromBundle(requireArguments()).isCameFromMap)
+            goToBack()
+        else
+            findNavController().navigate(SearchFragmentDirections.goToMap())
+    }
+
+    override fun goToBack() {
+        hideKeyboard()
+        findNavController().popBackStack()
+    }
+
+    override fun goToCreateOrder() {
+        hideKeyboard()
+        if (!SearchFragmentArgs.fromBundle(requireArguments()).isCameFromMap)
+            findNavController().navigate(SearchFragmentDirections.goToCreateOrder())
+        else
+            goToBack()
     }
 }

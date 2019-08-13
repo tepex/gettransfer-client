@@ -1,10 +1,13 @@
 package com.kg.gettransfer.extensions
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.kg.gettransfer.common.DebouncingOnClickListener
 
 inline var View.isVisible: Boolean
@@ -24,6 +27,19 @@ inline var View.isGone: Boolean
     set(value) {
         visibility = if (value) View.GONE else View.VISIBLE
     }
+
+fun Fragment.hideKeyboard() {
+    requireActivity().hideKeyboard(requireView())
+}
+
+fun AppCompatActivity.hideKeyboard() {
+    hideKeyboard(if (currentFocus == null) View(this) else currentFocus)
+}
+
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}
 
 fun View.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE)

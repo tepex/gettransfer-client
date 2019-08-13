@@ -19,4 +19,6 @@ interface BaseNewTransferView : MvpView, BaseNetworkWarning {
     fun updateTripView(isHourly: Boolean)
     fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit)
     fun showHourlyDurationDialog(durationValue: Int?)
+    fun goToSearchAddress(addressFrom: String, addressTo: String, isClickTo: Boolean, isCameFromMap: Boolean)
+    fun goToCreateOrder()
 }

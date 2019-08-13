@@ -12,21 +12,17 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 
 import com.kg.gettransfer.presentation.model.PopularPlace
 
-import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SearchView
 
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.NewTransferState
 
 import org.koin.core.inject
 
 @InjectViewState
 class SearchPresenter : BasePresenter<SearchView>() {
     private val orderInteractor: OrderInteractor by inject()
-    private val nState: NewTransferState by inject()
 
     internal var isTo = false
-    var backwards: Boolean = false
 
     @CallSuper
     override fun attachView(view: SearchView) {
@@ -125,24 +121,17 @@ class SearchPresenter : BasePresenter<SearchView>() {
 
     private fun createRouteForOrder() {
         fillHistory()
-        if (backwards) router.exit()
-        else router.replaceScreen(Screens.CreateOrder)
+        viewState.goToCreateOrder()
         analytics.logSingleEvent(Analytics.REQUEST_FORM)
     }
 
     fun selectFinishPointOnMap() {
-        analytics.logSingleEvent(Analytics.POINT_ON_MAP_CLICKED)
         systemInteractor.selectedField = if (isTo) FIELD_TO else FIELD_FROM
-        nState.choosePointOnMap()
-        router.exit()
+        viewState.goToMap()
+        analytics.logSingleEvent(Analytics.POINT_ON_MAP_CLICKED)
     }
 
     fun isHourly() = orderInteractor.hourlyDuration != null
-
-    @CallSuper
-    override fun onBackCommandClick() {
-        super.onBackCommandClick()
-    }
 
     fun inverseWay() {
         analytics.logSingleEvent(Analytics.SWAP_CLICKED)

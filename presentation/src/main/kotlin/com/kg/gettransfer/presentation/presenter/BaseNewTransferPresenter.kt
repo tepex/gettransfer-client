@@ -166,14 +166,15 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     fun isHourly() = orderInteractor.hourlyDuration != null
 
-    fun navigateToFindAddress(from: String, to: String, isClickTo: Boolean = false, returnToMain: Boolean = false) {
-        router.navigateTo(Screens.FindAddress(from, to, isClickTo, returnToMain))
+    fun navigateToFindAddress(addressFrom: String, addressTo: String, isClickTo: Boolean = false, isCameFromMap: Boolean = false) {
+        viewState.goToSearchAddress(addressFrom, addressTo, isClickTo, isCameFromMap)
     }
 
     fun onNextClick(block: (Boolean) -> Unit) {
         if (orderInteractor.isCanCreateOrder()) {
             block(true)
-            router.navigateTo(Screens.CreateOrder)
+//            router.navigateTo(Screens.CreateOrder)
+            viewState.goToCreateOrder()
         }
     }
 

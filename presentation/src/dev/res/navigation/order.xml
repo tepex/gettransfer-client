@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_order"
@@ -9,15 +8,99 @@
     <fragment
         android:id="@+id/showNewOrder"
         android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment"
-        android:label="new_transfer"
         tools:layout="@layout/fragment_new_transfer_main">
         <action
             android:id="@+id/go_to_map"
-            app:destination="@id/showMap"/>
+            app:destination="@id/showMap"
+            app:enterAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out"/>
+        <action
+            android:id="@+id/go_to_search_address"
+            app:destination="@id/showSearchAddress"
+            app:enterAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out"/>
+        <action
+            android:id="@+id/go_to_create_order"
+            app:destination="@id/showCreateOrder"
+            app:enterAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out"/>
+
     </fragment>
+
     <fragment
         android:id="@+id/showMap"
         android:name="com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment"
         android:label="new_transfer_map"
-        tools:layout="@layout/fragment_new_transfer_map"/>
+        tools:layout="@layout/fragment_new_transfer_map">
+        <action
+            android:id="@+id/go_to_search_address"
+            app:destination="@id/showSearchAddress"
+            app:enterAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out"/>
+
+        <action
+            android:id="@+id/go_to_create_order"
+            app:destination="@id/showCreateOrder"
+            app:popUpTo="@id/showMap"
+            app:popUpToInclusive="true"
+            app:enterAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/showSearchAddress"
+        android:name="com.kg.gettransfer.presentation.ui.SearchFragment"
+        android:label="search_address"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/go_to_map"
+            app:destination="@id/showMap"
+            app:popUpTo="@id/showSearchAddress"
+            app:popUpToInclusive="true"
+            app:enterAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out"/>
+
+        <action
+            android:id="@+id/go_to_create_order"
+            app:destination="@id/showCreateOrder"
+            app:popUpTo="@id/showSearchAddress"
+            app:popUpToInclusive="true"
+            app:enterAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out"/>
+
+        <argument
+            android:name="addressFrom"
+            app:argType="string" />
+        <argument
+            android:name="addressTo"
+            app:argType="string" />
+        <argument
+            android:name="isClickTo"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="isCameFromMap"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
+
+    <activity
+        android:id="@+id/showCreateOrder"
+        android:name="com.kg.gettransfer.presentation.ui.CreateOrderActivity"
+        tools:layout="@layout/activity_create_order"/>
 </navigation>

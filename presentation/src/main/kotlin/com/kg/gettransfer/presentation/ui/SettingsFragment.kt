@@ -63,7 +63,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyCh
     }
 
     override fun showCurrencyChooser() {
-        findNavController().navigate(R.id.go_to_select_currency)
+        findNavController().navigate(SettingsFragmentDirections.goToSelectCurrency())
     }
 
     private fun setTitleText() {
