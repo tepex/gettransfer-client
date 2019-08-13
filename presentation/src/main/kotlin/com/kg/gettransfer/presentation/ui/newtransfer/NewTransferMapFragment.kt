@@ -23,8 +23,6 @@ import com.google.android.gms.maps.model.Marker
 import com.kg.gettransfer.R
 import com.kg.gettransfer.common.NewTransferSwitchListener
 
-import com.kg.gettransfer.extensions.isGone
-
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
@@ -39,10 +37,7 @@ import com.kg.gettransfer.presentation.view.NewTransferMapView
 
 import kotlinx.android.synthetic.main.fragment_new_transfer_map.*
 import kotlinx.android.synthetic.main.search_form_main.*
-import kotlinx.android.synthetic.main.view_network_not_available.*
 import kotlinx.android.synthetic.main.view_switcher.*
-
-import org.koin.android.ext.android.inject
 
 import pub.devrel.easypermissions.EasyPermissions
 

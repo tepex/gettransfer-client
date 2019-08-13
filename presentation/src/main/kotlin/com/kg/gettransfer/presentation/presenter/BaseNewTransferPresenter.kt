@@ -6,8 +6,6 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 
-import com.kg.gettransfer.domain.AsyncUtils
-
 import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 
