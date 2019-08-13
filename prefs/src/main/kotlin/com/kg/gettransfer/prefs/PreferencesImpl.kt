@@ -22,12 +22,26 @@ class PreferencesImpl(
     private val configsPrefs  = context.getSharedPreferences("configs", Context.MODE_PRIVATE)
     private val accountPrefs  = context.getSharedPreferences(AccountEntity.ENTITY_NAME, Context.MODE_PRIVATE)
     private val driverPrefs   = context.getSharedPreferences(CarrierEntity.ENTITY_NAME, Context.MODE_PRIVATE)
+    private var _accessToken = INVALID_TOKEN
     private var _userEmail: String? = null
     private var _userPhone: String? = null
     private var _userPassword = INVALID_PASSWORD
     private var counterUpdated = false
 
     inline fun <reified T> genericType() = object : TypeToken<T>() {}.type
+
+    override var accessToken: String
+        get() {
+            if (_accessToken == INVALID_TOKEN) {
+                _accessToken = configsPrefs.getString(ACCESS_TOKEN, INVALID_TOKEN) ?: INVALID_TOKEN
+            }
+            return _accessToken
+        }
+        set(value) {
+            _accessToken = value
+            configsPrefs.edit().putString(ACCESS_TOKEN, value).apply()
+            listeners.forEach { it.accessTokenChanged(value) }
+        }
 
     override var userEmail: String?
         get() {
@@ -111,10 +125,12 @@ class PreferencesImpl(
     }
 
     override fun logout() {
+        _accessToken  = INVALID_TOKEN
         _userEmail    = INVALID_EMAIL
         _userPhone    = INVALID_PHONE
         _userPassword = INVALID_PASSWORD
         with(configsPrefs.edit()) {
+            remove(ACCESS_TOKEN)
             remove(USER_EMAIL)
             remove(USER_PHONE)
             remove(USER_PASSWORD)

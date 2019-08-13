@@ -44,8 +44,6 @@ class ApiCore : KoinComponent {
     internal lateinit var api: Api
     lateinit var apiUrl: String
 
-    private var accessToken = ""
-
     private lateinit var apiKey: String
     private val gson = GsonBuilder()
         .setLenient()
@@ -69,7 +67,7 @@ class ApiCore : KoinComponent {
 
             val builder = request.newBuilder().url(url)
             if (url.encodedPath() != Api.API_ACCESS_TOKEN && url.host() != IP_API_HOST_NAME) {
-                builder.addHeader(Api.HEADER_TOKEN, accessToken)
+                builder.addHeader(Api.HEADER_TOKEN, preferences.accessToken)
             }
             try {
                 chain.proceed(builder.build())
@@ -150,7 +148,7 @@ class ApiCore : KoinComponent {
     private suspend fun updateAccessToken() {
         val response: ResponseModel<TokenModel> = api.accessToken().await()
         @Suppress("UnsafeCallOnNullableType")
-        accessToken = response.data!!.token
+        preferences.accessToken = response.data!!.token
         val email = preferences.userEmail
         val phone = preferences.userPhone
         val password = preferences.userPassword
