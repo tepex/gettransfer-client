@@ -14,6 +14,8 @@ import com.kg.gettransfer.presentation.model.TransferModel
 
 import com.kg.gettransfer.presentation.model.map
 
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
@@ -34,6 +36,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     private var transfers: List<Transfer>? = null
     private var eventsCount: Map<Long, Int>? = null
     private var driverCoordinate: DriverCoordinate? = null
+    private val configsManager: ConfigsManager by inject()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -75,7 +78,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     private suspend fun prepareDataAsync() {
         transfers?.let { trs ->
             if (trs.isNotEmpty()) {
-                val transportTypes = systemInteractor.transportTypes.map { it.map() }
+                val transportTypes = configsManager.configs.transportTypes.map { it.map() }
                 utils.compute {
                     transfers?.map {
                         it.map(transportTypes)

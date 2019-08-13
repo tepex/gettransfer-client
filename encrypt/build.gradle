@@ -67,8 +67,4 @@ dependencies {
     implementation project(":prefs")
 
     implementation libs.timber
-
-    testImplementation libs.junit
-    testImplementation libs.hamcrest
-    testImplementation libs.mockito
 }

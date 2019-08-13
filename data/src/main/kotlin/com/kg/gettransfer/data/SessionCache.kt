@@ -6,9 +6,9 @@ import org.koin.core.KoinComponent
 
 interface SessionCache : KoinComponent {
 
-    fun getAccount(): AccountEntity?
+    suspend fun getAccount(): AccountEntity?
 
-    fun setAccount(account: AccountEntity): AccountEntity
+    suspend fun setAccount(account: AccountEntity): AccountEntity
 
     suspend fun clearAccount()
 }

@@ -15,7 +15,6 @@ import com.kg.gettransfer.presentation.view.BaseNetworkWarning
 import org.koin.core.KoinComponent
 import timber.log.Timber
 
-
 @Suppress("TooManyFunctions")
 class NewTransferFragment : Fragment(), KoinComponent, BaseNetworkWarning, NewTransferSwitchListener {
 

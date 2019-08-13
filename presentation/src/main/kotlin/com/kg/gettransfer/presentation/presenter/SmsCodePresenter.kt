@@ -21,19 +21,18 @@ import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SmsCodeView
 
-import com.kg.gettransfer.sys.domain.GetSmsResendDelayInteractor
+import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.serialization.json.JSON
 
-import org.koin.core.inject
+import org.koin.core.get
 
 @InjectViewState
 class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
 
-    private val getSmsResendDelay: GetSmsResendDelayInteractor by inject()
-    private val smsResendDelay = getSmsResendDelay().millis
+    private val smsResendDelay = get<ConfigsManager>().mobile.smsResendDelay.millis
 
     var isPhone = false
     var pinCode = ""

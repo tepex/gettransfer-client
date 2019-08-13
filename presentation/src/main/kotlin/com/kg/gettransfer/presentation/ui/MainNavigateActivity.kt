@@ -11,7 +11,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 
 import android.transition.Fade
-import android.view.Gravity
 
 import android.view.View
 import android.view.WindowManager
@@ -47,11 +46,11 @@ import pub.devrel.easypermissions.EasyPermissions
 
 import timber.log.Timber
 
-
 @Suppress("TooManyFunctions")
-class MainNavigateActivity : BaseActivity(), MainNavigateView,
-        NavigationMenuListener,
-        StoreDialogFragment.OnStoreListener {
+class MainNavigateActivity : BaseActivity(),
+    MainNavigateView,
+    NavigationMenuListener,
+    StoreDialogFragment.OnStoreListener {
 
     @InjectPresenter
     internal lateinit var presenter: MainNavigatePresenter
@@ -147,7 +146,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     }
 
     override fun openMenu() {
-        drawer.openDrawer(Gravity.START, true)
+        drawer.openDrawer(GravityCompat.START, true)
     }
 
     override fun enablingNavigation() {
@@ -199,24 +198,30 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     }
 
     override fun askRateInPlayMarket() =
-            StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
+        StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
 
-    override fun onClickGoToStore() = redirectToPlayMarket()
+    override fun onClickGoToStore() {
+        presenter.redirectToPlayMarket()
+    }
+
+    override fun goToGooglePlay() {
+        Utils.goToGooglePlay(this, getString(R.string.app_market_package), BaseActivity.PLAY_MARKET_RATE)
+    }
 
     override fun thanksForRate() =
-            ThanksForRateFragment
-                    .newInstance()
-                    .show(supportFragmentManager, ThanksForRateFragment.TAG)
+        ThanksForRateFragment.newInstance().show(supportFragmentManager, ThanksForRateFragment.TAG)
 
     override fun setEventCount(isVisible: Boolean, count: Int) {
         navRequests.menu_item_counter.isVisible = isVisible && count > 0
         navRequests.menu_item_counter.text = count.toString()
     }
 
+    @CallSuper
     override fun setNetworkAvailability(context: Context): Boolean {
         val available = super.setNetworkAvailability(context)
-        if (newTransferFragment is BaseNetworkWarning)
+        if (newTransferFragment is BaseNetworkWarning) {
             (newTransferFragment as BaseNetworkWarning).onNetworkWarning(available)
+        }
         return available
     }
 

@@ -9,6 +9,7 @@ import com.kg.gettransfer.presentation.view.SignUpCarrierView
  * @author П. Густокашин (Diwixis)
  */
 class SignUpCarrierPresenter : BasePresenter<SignUpCarrierView>() {
+
     fun registration() {
         router.navigateTo(Screens.CarrierMode)
     }

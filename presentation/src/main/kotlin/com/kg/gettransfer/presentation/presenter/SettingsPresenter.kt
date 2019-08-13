@@ -4,11 +4,15 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.BuildConfig
 
+import com.kg.gettransfer.core.presentation.WorkerManager
+
+import com.kg.gettransfer.di.ENDPOINTS
+
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DayOfWeekModel
-import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.map
 
@@ -18,11 +22,35 @@ import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
+import com.kg.gettransfer.sys.domain.Configs
+import com.kg.gettransfer.sys.domain.Endpoint
+import com.kg.gettransfer.sys.domain.SetAccessTokenInteractor
+import com.kg.gettransfer.sys.domain.SetBackgroundCoordinatesInteractor
+import com.kg.gettransfer.sys.domain.SetDebugMenuShowedInteractor
+import com.kg.gettransfer.sys.domain.SetEndpointInteractor
+import com.kg.gettransfer.sys.domain.SetFirstDayOfWeekInteractor
+import com.kg.gettransfer.sys.domain.SetLastCarrierTripsTypeViewInteractor
+import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
+
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+import com.kg.gettransfer.sys.presentation.EndpointModel
+import com.kg.gettransfer.sys.presentation.map
+
 import com.kg.gettransfer.utilities.Analytics
+
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+import org.koin.core.get
+import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 @Suppress("TooManyFunctions")
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
+
+    private val endpoints: List<EndpointModel> = get<List<Endpoint>>(named(ENDPOINTS)).map { it.map() }
 
     private lateinit var locales: List<LocaleModel>
     private lateinit var endpoints: List<EndpointModel>
@@ -35,6 +63,17 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private var count = 0
     private var startMillis = 0L
 
+    private val worker: WorkerManager by inject { parametersOf("SettingsPresenter") }
+    private val configsManager: ConfigsManager by inject()
+
+    private val setDebugMenuShowed: SetDebugMenuShowedInteractor by inject()
+    private val setFirstDayOfWeek: SetFirstDayOfWeekInteractor by inject()
+    private val setLastCarrierTripsTypeView: SetLastCarrierTripsTypeViewInteractor by inject()
+    private val setEndpoint: SetEndpointInteractor by inject()
+    private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
+    private val setAccessToken: SetAccessTokenInteractor by inject()
+    private val setBackgroundCoordinates: SetBackgroundCoordinatesInteractor by inject()
+
     val isBackGroundAccepted get() =
         carrierTripInteractor.bgCoordinatesPermission != CarrierTripsMainView.BG_COORDINATES_REJECTED
 
@@ -46,7 +85,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         initGeneralSettings()
         initProfileSettings()
         initDriverSettings()
-        if (BuildConfig.FLAVOR == "dev" || systemInteractor.isDebugMenuShowed) initDebugMenu()
+        initDebugMenu()
         viewState.hideSomeDividers()
     }
 
@@ -84,10 +123,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
     }
 
-    private fun initDebugMenu() {
-        viewState.setEndpoints(endpoints)
-        viewState.setEndpoint(systemInteractor.endpoint.map())
-        viewState.showDebugMenu()
+    private fun initDebugMenu() = worker.main.launch {
+        if (BuildConfig.FLAVOR == "dev" || getPreferences().getModel().isDebugMenuShowed) {
+            viewState.setEndpoints(endpoints)
+            viewState.setEndpoint(getPreferences().getModel().endpoint!!.map())
+            viewState.showDebugMenu()
+        }
     }
 
     fun currencyChanged(currency: CurrencyModel) {
@@ -120,16 +161,18 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         saveGeneralSettings()
     }
 
-    fun onDriverCoordinatesSwitched(checked: Boolean) = carrierTripInteractor.permissionChanged(checked)
+    fun onDriverCoordinatesSwitched(checked: Boolean) = worker.main.launch {
+        withContext(worker.bg) { setBackgroundCoordinates(checked) }
+    }
 
-    fun changeCalendarMode(selected: String) {
-        systemInteractor.lastCarrierTripsTypeView = selected
+    fun changeCalendarMode(selected: String) = worker.main.launch {
+        withContext(worker.bg) { setLastCarrierTripsTypeView(selected) }
         viewState.setCalendarMode(selected)
     }
 
-    fun changeFirstDayOfWeek(selected: Int) {
+    fun changeFirstDayOfWeek(selected: Int) = worker.main.launch {
         with(daysOfWeek[selected]) {
-            systemInteractor.firstDayOfWeek = delegate.day
+            withContext(worker.bg) { setFirstDayOfWeek(delegate.day) }
             viewState.setFirstDayOfWeek(name)
         }
     }
@@ -155,35 +198,44 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun switchDebugSettings() {
         if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
-            if (systemInteractor.isDebugMenuShowed) {
-                systemInteractor.isDebugMenuShowed = false
-                viewState.hideDebugMenu()
-            } else {
-                systemInteractor.isDebugMenuShowed = true
-                initDebugMenu()
+            worker.main.launch {
+                if (getPreferences().getModel().isDebugMenuShowed) {
+                    withContext(worker.bg) { setDebugMenuShowed(false) }
+                    viewState.hideDebugMenu()
+                } else {
+                    withContext(worker.bg) { setDebugMenuShowed(true) }
+                    showDebugMenu()
+                }
             }
         }
     }
 
-    fun changeEndpoint(selected: Int) {
+    fun changeEndpoint(selected: Int) = worker.main.launch {
         val endpoint = endpoints[selected]
         viewState.setEndpoint(endpoint)
-        systemInteractor.endpoint = endpoint.delegate
-        utils.launchSuspend {
-            viewState.blockInterface(true)
-            utils.asyncAwait { accountManager.logout() }
-            utils.asyncAwait { sessionInteractor.coldStart() }
-            viewState.blockInterface(false)
-            restart = true
-            router.exit() // Without restarting app
+        viewState.blockInterface(true)
+        withContext(worker.bg) {
+            setEndpoint(endpoint.delegate)
+            accountManager.logout()
+        }
+        configsManager.coldStart(worker.backgroundScope)
+        fetchResult { sessionInteractor.coldStart() }
+        viewState.blockInterface(false)
+        restart = true
+        router.exit() // Without restarting app
+    }
+
+    fun onResetOnboardingClicked() {
+        worker.main.launch {
+            withContext(worker.bg) { setOnboardingShowed(false) }
         }
     }
 
-    fun onResetOnboardingClicked() { systemInteractor.isOnboardingShowed = false }
-
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
 
-    fun onClearAccessTokenClicked() { systemInteractor.accessToken = "" }
+    fun onClearAccessTokenClicked() = worker.main.launch {
+        withContext(worker.bg) { setAccessToken("") }
+    }
 
     fun onCurrencyClicked() {
         if (!accountManager.remoteAccount.isBusinessAccount) {
@@ -204,14 +256,19 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
         if (localeWasChanged) {
             localeWasChanged = false
-            val screen = when (systemInteractor.lastMode) {
-                Screens.CARRIER_MODE   -> Screens.CarrierMode
-                Screens.PASSENGER_MODE -> Screens.MainPassenger()
-                else                   ->
-                    throw IllegalArgumentException("Wrong last mode in onBackCommandClick in ${this.javaClass.name}")
+
+            worker.main.launch {
+                val screen = when (getPreferences().getModel().lastMode) {
+                    Screens.CARRIER_MODE   -> Screens.CarrierMode
+                    Screens.PASSENGER_MODE -> Screens.MainPassenger()
+                    else                   ->
+                        throw IllegalArgumentException("Wrong last mode in onBackCommandClick in ${this.javaClass.name}")
+                }
+                router.backTo(screen)
             }
-            router.backTo(screen)
-        } else super.onBackCommandClick()
+        } else {
+            super.onBackCommandClick()
+        }
     }
 
     fun onShareClick() {
@@ -221,8 +278,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     private fun initConfigs() {
-        endpoints = systemInteractor.endpoints.map { it.map() }
-        locales = systemInteractor.locales.map { it.map() }
+        locales = configsManager.configs.availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
+            .map { it.map() }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false
@@ -232,6 +289,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun onForceCrashClick() {
         error("This is force crash")
+    }
+
+    override fun onDestroy() {
+        worker.cancel()
+        super.onDestroy()
     }
 
     companion object {

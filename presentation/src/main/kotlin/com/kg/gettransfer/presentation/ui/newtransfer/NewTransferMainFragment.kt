@@ -30,7 +30,9 @@ import kotlinx.android.synthetic.main.view_switcher.*
 
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+
 import pub.devrel.easypermissions.EasyPermissions
+
 import timber.log.Timber
 
 @Suppress("TooManyFunctions")
@@ -144,7 +146,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         request_search_panel.hourlyMode(isHourly)
         promoText.text = getString(
             when (isHourly) {
-                true -> R.string.LNG_MAIN_SCREEN_HOURLY_TRANSFER_TITLE
+                true  -> R.string.LNG_MAIN_SCREEN_HOURLY_TRANSFER_TITLE
                 false -> R.string.LNG_MAIN_SCREEN_POINT_TO_POINT_TRANSFER_TITLE
             }
         )

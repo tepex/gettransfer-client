@@ -10,11 +10,11 @@ import com.kg.gettransfer.data.RemoteException
 
 import com.kg.gettransfer.domain.repository.SessionRepository
 
-import com.kg.gettransfer.remote.model.EndpointModel
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.TokenModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
-import com.kg.gettransfer.remote.model.ContactEmailsWrapperModel
+
+import com.kg.gettransfer.sys.data.EndpointEntity
 
 import java.io.IOException
 
@@ -23,10 +23,11 @@ import kotlinx.coroutines.Deferred
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 
-import org.koin.core.parameter.parametersOf
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
+
 import org.slf4j.Logger
 
 import retrofit2.HttpException
@@ -36,8 +37,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Suppress("TooGenericExceptionCaught")
 class ApiCore : KoinComponent {
 
+    val log: Logger by inject { parametersOf("GTR-remote") }
     private val preferences = get<PreferencesCache>()
-    private val log: Logger by inject { parametersOf("GTR-remote") }
     private val sessionRepository: SessionRepository by inject()
 
     internal lateinit var api: Api
@@ -45,10 +46,10 @@ class ApiCore : KoinComponent {
 
     private lateinit var apiKey: String
     private val gson = GsonBuilder()
-            .setLenient()
-            .registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer())
-            .registerTypeAdapter(ContactEmailsWrapperModel::class.java, ContactEmailsDeserializer())
-            .create()
+        .setLenient()
+        .registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer())
+//        .registerTypeAdapter(ContactEmailsWrapperModel::class.java, ContactEmailsDeserializer())
+        .create()
 
     private var okHttpClient = OkHttpClient.Builder().apply {
         addInterceptor(PrivateHttpLoggingInterceptor())
@@ -85,7 +86,7 @@ class ApiCore : KoinComponent {
         addCallAdapterFactory(CoroutineCallAdapterFactory())
     }.build().create(Api::class.java)
 
-    fun changeEndpoint(endpoint: EndpointModel) {
+    fun changeEndpoint(endpoint: EndpointEntity) {
         apiKey = endpoint.key
         apiUrl = endpoint.url
         api = Retrofit.Builder().apply {
@@ -154,7 +155,7 @@ class ApiCore : KoinComponent {
         if (email != null || phone != null) api.login(email, phone, password).await()
     }
 
-    private fun remoteException(e: Exception): RemoteException = when (e) {
+    internal fun remoteException(e: Exception): RemoteException = when (e) {
         is HttpException -> {
             val errorBody = e.response().errorBody()?.string()
             val msg = try {

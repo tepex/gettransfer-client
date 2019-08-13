@@ -555,7 +555,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
             OfferItemBindDelegate.bindLanguages(
                 Either.Single(layoutAboutDriver.view_driver_languages.layoutCarrierLanguages),
-                listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
+                carrier.languages,
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.TRANSFER_DETAILS
             )
         }
@@ -696,7 +696,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         presenter.ratingChangeCancelled()
     }
 
-    override fun onClickGoToStore() = redirectToPlayMarket()
+    override fun onClickGoToStore() {
+        presenter.redirectToPlayMarket()
+    }
+
+    override fun goToGooglePlay() {
+        Utils.goToGooglePlay(this, getString(R.string.app_market_package), BaseActivity.PLAY_MARKET_RATE)
+    }
 
     private fun clearMarker() {
         mCarMarker?.remove()

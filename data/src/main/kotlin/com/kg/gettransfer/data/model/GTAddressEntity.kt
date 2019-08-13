@@ -15,7 +15,17 @@ data class GTAddressEntity(
     val placeTypes: List<String>,
     @Optional
     val variants: Pair<String?, String?>? = null
-)
+) {
+
+    companion object {
+        const val LAT         = "lat"
+        const val LON         = "lon"
+        const val ADDRESS     = "address"
+        const val PLACE_TYPES = "place_types"
+        const val VARIANT1    = "variant1"
+        const val VARIANT2    = "variant2"
+    }
+}
 
 fun GTAddress.map() =
     GTAddressEntity(

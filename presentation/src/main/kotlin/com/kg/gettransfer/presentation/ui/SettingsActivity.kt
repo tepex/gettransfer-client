@@ -19,7 +19,6 @@ import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.EndpointModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 
@@ -27,6 +26,8 @@ import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
+
+import com.kg.gettransfer.sys.presentation.EndpointModel
 
 import java.util.Locale
 

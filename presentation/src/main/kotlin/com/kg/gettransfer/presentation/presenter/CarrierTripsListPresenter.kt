@@ -18,6 +18,7 @@ import org.koin.core.inject
 
 @InjectViewState
 class CarrierTripsListPresenter : BasePresenter<CarrierTripsListFragmentView>() {
+
     private val carrierTripsListItemsMapper: CarrierTripsListItemsMapper by inject()
 
     private var tripsRVItems: List<CarrierTripsRVItemModel>? = null
@@ -28,12 +29,15 @@ class CarrierTripsListPresenter : BasePresenter<CarrierTripsListFragmentView>() 
         utils.launchSuspend {
             viewState.blockInterface(true)
 
-            fetchData { carrierTripInteractor.getCarrierTrips() }
-                    ?.let {
-                        val carrierTripsRVItemsList = carrierTripsListItemsMapper.toRecyclerView(it)
-                        tripsRVItems = carrierTripsRVItemsList.itemsList
-                        viewState.setTrips(tripsRVItems!!, carrierTripsRVItemsList.startTodayPosition, carrierTripsRVItemsList.endTodayPosition)
-                    }
+            fetchData { carrierTripInteractor.getCarrierTrips() }?.let {
+                val carrierTripsRVItemsList = carrierTripsListItemsMapper.toRecyclerView(it)
+                tripsRVItems = carrierTripsRVItemsList.itemsList
+                viewState.setTrips(
+                    tripsRVItems!!,
+                    carrierTripsRVItemsList.startTodayPosition,
+                    carrierTripsRVItemsList.endTodayPosition
+                )
+            }
 
             viewState.blockInterface(false)
         }

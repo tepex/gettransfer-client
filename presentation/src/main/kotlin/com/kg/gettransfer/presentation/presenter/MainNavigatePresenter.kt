@@ -2,6 +2,8 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
+import com.kg.gettransfer.core.presentation.WorkerManager
+
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
@@ -17,16 +19,26 @@ import com.kg.gettransfer.presentation.view.MainNavigateView
 
 import com.kg.gettransfer.presentation.view.Screens
 
+import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+
 import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 
 @InjectViewState
 @Suppress("TooManyFunctions")
 class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventListener {
+
     private val profileMapper: ProfileMapper by inject()
+    private val configsManager: ConfigsManager by inject()
+    private val worker: WorkerManager by inject { parametersOf("MainNavigatePresenter") }
+    private val setAppEnters: SetAppEntersInteractor by inject()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -84,8 +96,8 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         viewState.openMenu()
     }
 
-    fun onAboutClick() {
-        router.navigateTo(Screens.About(systemInteractor.isOnboardingShowed))
+    fun onAboutClick() = worker.main.launch {
+        router.navigateTo(Screens.About(true))
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.ABOUT_CLICKED)
     }
 
@@ -104,29 +116,17 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.LOGIN_CLICKED)
     }
 
-    @Suppress("ComplexMethod", "NestedBlockDepth")
     fun onBecomeACarrierClick() {
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.DRIVER_CLICKED)
-        if (systemInteractor.isDriverModeBlock) {
-            router.navigateTo(Screens.DriverModeNotSupport)
-        } else {
-            if (accountManager.isLoggedIn) {
-                if (accountManager.remoteAccount.isDriver) {
-                    router.newRootScreen(Screens.CarrierMode)
-                } else {
-                    if (systemInteractor.isDriverAppNotify) {
-                        router.navigateTo(Screens.DriverModeNotSupport)
-                    } else {
-                        router.navigateTo(Screens.CarrierRegister)
-                    }
-                }
-            } else {
-                if (systemInteractor.isDriverAppNotify) {
-                    router.navigateTo(Screens.DriverModeNotSupport)
-                } else {
-                    login(Screens.CARRIER_MODE, "")
-                }
+        when {
+            configsManager.mobile.isDriverModeBlock -> router.navigateTo(Screens.DriverModeNotSupport)
+            accountManager.isLoggedIn               -> when {
+                accountManager.remoteAccount.isDriver   -> router.newRootScreen(Screens.CarrierMode)
+                configsManager.mobile.isDriverAppNotify -> router.navigateTo(Screens.DriverModeNotSupport)
+                else                                    -> router.navigateTo(Screens.CarrierRegister)
             }
+            configsManager.mobile.isDriverAppNotify -> router.navigateTo(Screens.DriverModeNotSupport)
+            else                                    -> login(Screens.CARRIER_MODE, "")
         }
     }
 
@@ -189,7 +189,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
             false
         } else {
             val transfer = transferResult.model
-            val transferModel = transfer.map(systemInteractor.transportTypes.map { it.map() })
+            val transferModel = transfer.map(configsManager.configs.transportTypes.map { it.map() })
             transferModel.status.checkOffers
         }
     }
@@ -211,6 +211,16 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         log.debug("Share action")
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
         router.navigateTo(Screens.Share())
+    }
+
+    fun redirectToPlayMarket() = worker.main.launch {
+        withContext(worker.bg) { setAppEnters(ReviewInteractor.APP_RATED_IN_MARKET) }
+        viewState.goToGooglePlay()
+    }
+
+    override fun onDestroy() {
+        worker.cancel()
+        super.onDestroy()
     }
 
     companion object {
