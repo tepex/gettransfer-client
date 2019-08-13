@@ -75,7 +75,7 @@ class CarrierTripsMainPresenter: BasePresenter<CarrierTripsMainView>(), KoinComp
     fun onCarrierTripsClick()   { /*router.navigateTo(Screens.CARRIER_TRIPS)*/ }
 
     fun onAboutClick() = worker.main.launch {
-        router.navigateTo(Screens.About(getPreferences().getModel().isOnboardingShowed))
+        router.navigateTo(Screens.About(true))
     }
 
     fun readMoreClick()         = viewState.showReadMoreDialog()
