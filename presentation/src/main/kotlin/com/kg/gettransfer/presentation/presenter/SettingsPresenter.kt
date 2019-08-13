@@ -8,7 +8,6 @@ import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.di.ENDPOINTS
 
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -18,7 +17,6 @@ import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
 
-import com.kg.gettransfer.presentation.view.CarrierTripsMainView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
@@ -53,7 +51,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val endpoints: List<EndpointModel> = get<List<Endpoint>>(named(ENDPOINTS)).map { it.map() }
 
     private lateinit var locales: List<LocaleModel>
-    private lateinit var endpoints: List<EndpointModel>
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
 
@@ -73,9 +70,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
     private val setAccessToken: SetAccessTokenInteractor by inject()
     private val setBackgroundCoordinates: SetBackgroundCoordinatesInteractor by inject()
-
-    val isBackGroundAccepted get() =
-        carrierTripInteractor.bgCoordinatesPermission != CarrierTripsMainView.BG_COORDINATES_REJECTED
 
     internal var showingFragment: Int? = null
 
@@ -111,13 +105,13 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
     }
 
-    private fun initDriverSettings() {
-        if (accountManager.isLoggedIn && systemInteractor.lastMode == Screens.CARRIER_MODE) {
-            viewState.initDriverLayout(isBackGroundAccepted)
+    private fun initDriverSettings() = worker.main.launch {
+        if (accountManager.isLoggedIn && getPreferences().getModel().lastMode == Screens.CARRIER_MODE) {
+            viewState.initDriverLayout(getPreferences().getModel().isBackgroundCoordinatesAccepted())
             viewState.setCalendarModes(calendarModes)
             viewState.setDaysOfWeek(daysOfWeek)
-            viewState.setCalendarMode(systemInteractor.lastCarrierTripsTypeView)
-            viewState.setFirstDayOfWeek(daysOfWeek[systemInteractor.firstDayOfWeek - 1].name)
+            viewState.setCalendarMode(getPreferences().getModel().lastCarrierTripsTypeView)
+            viewState.setFirstDayOfWeek(daysOfWeek[getPreferences().getModel().firstDayOfWeek - 1].name)
         } else {
             viewState.hideDriverLayout()
         }
@@ -125,10 +119,14 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private fun initDebugMenu() = worker.main.launch {
         if (BuildConfig.FLAVOR == "dev" || getPreferences().getModel().isDebugMenuShowed) {
-            viewState.setEndpoints(endpoints)
-            viewState.setEndpoint(getPreferences().getModel().endpoint!!.map())
-            viewState.showDebugMenu()
+            showDebugMenu()
         }
+    }
+
+    private fun showDebugMenu() = worker.main.launch {
+        viewState.setEndpoints(endpoints)
+        viewState.setEndpoint(getPreferences().getModel().endpoint!!.map())
+        viewState.showDebugMenu()
     }
 
     fun currencyChanged(currency: CurrencyModel) {

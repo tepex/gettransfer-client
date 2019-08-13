@@ -154,9 +154,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        worker.cancel()
         reviewInteractor.releaseReviewData()
         coordinateInteractor.removeCoordinateListener(this)
+        super.onDestroy()
     }
 
     fun onCenterRouteClick() {
@@ -339,12 +340,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun redirectToPlayMarket() = worker.main.launch {
         withContext(worker.bg) { setAppEnters(ReviewInteractor.APP_RATED_IN_MARKET) }
         viewState.goToGooglePlay()
-    }
-
-    override fun onDestroy() {
-        worker.cancel()
-        reviewInteractor.releaseReviewData()
-        super.onDestroy()
     }
 
     companion object {
