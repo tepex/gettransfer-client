@@ -555,7 +555,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
             OfferItemBindDelegate.bindLanguages(
                 Either.Single(layoutAboutDriver.view_driver_languages.layoutCarrierLanguages),
-                listOf(LocaleModel.BOOK_NOW_LOCALE_DEFAULT),
+                carrier.languages,
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.TRANSFER_DETAILS
             )
         }
