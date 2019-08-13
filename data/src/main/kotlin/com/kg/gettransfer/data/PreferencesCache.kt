@@ -4,6 +4,7 @@ import com.kg.gettransfer.data.model.GTAddressEntity
 import com.kg.gettransfer.sys.data.EndpointEntity
 
 interface PreferencesCache {
+    var accessToken: String
     var userEmail: String?
     var userPhone: String?
     var userPassword: String
