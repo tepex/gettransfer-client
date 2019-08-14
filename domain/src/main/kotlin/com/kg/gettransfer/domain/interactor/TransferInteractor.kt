@@ -27,4 +27,6 @@ class TransferInteractor(private val repository: TransferRepository) {
     }
 
     suspend fun downloadVoucher(transferId: Long) = repository.downloadVoucher(transferId)
+
+    suspend fun sendAnalytics(transferId: Long, role: String) = repository.sendAnalytics(transferId, role)
 }

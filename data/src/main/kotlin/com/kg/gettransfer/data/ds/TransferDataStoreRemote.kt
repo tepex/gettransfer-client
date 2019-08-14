@@ -22,4 +22,6 @@ open class TransferDataStoreRemote : TransferDataStore {
     override fun clearTransfersCache() { throw UnsupportedOperationException() }
 
     override suspend fun downloadVoucher(transferId: Long) = remote.downloadVoucher(transferId)
+
+    override suspend fun sendAnalytics(transferId: Long, role: String) = remote.sendAnalytics(transferId, role)
 }

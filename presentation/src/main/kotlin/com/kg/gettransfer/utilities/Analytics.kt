@@ -11,9 +11,11 @@ import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 
@@ -27,10 +29,12 @@ import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
 
 import io.sentry.Sentry
+import kotlinx.coroutines.Job
 
 import java.util.Currency
 
 import org.koin.core.KoinComponent
+import org.koin.core.get
 import org.koin.core.inject
 
 import kotlin.math.roundToLong
@@ -45,6 +49,10 @@ class Analytics(
     private val paymentInteractor: PaymentInteractor by inject()
     private val sessionInteractor: SessionInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
+
+    private val compositeDisposable = Job()
+    private val utils = AsyncUtils(get(), compositeDisposable)
 
     /**
      * log single value for event
@@ -116,6 +124,8 @@ class Analytics(
         private lateinit var currency: Currency
         private lateinit var currencyCode: String
         private var price: Double = -1.0
+        private var campaign: String? = null
+        private var rubPrice: Double? = Double.NaN
 
         private var offer: Offer? = null
         private var bookNowOffer: BookNowOffer? = null
@@ -123,11 +133,18 @@ class Analytics(
 
         fun sendAnalytics() {
             getTransferAndOffer()
-            prepareData()
-            sendToFirebase()
-            sendToFacebook()
-            sendToYandex()
-            sendToAppsFlyer()
+            transfer?.let {
+                if (it.rubPrice != null && !it.analyticsSent) {
+                    prepareData()
+                    sendToFirebase()
+                    sendToFacebook()
+                    sendToYandex()
+                    sendToAppsFlyer()
+                    utils.launchSuspend {
+                        transferInteractor.sendAnalytics(it.id, "")
+                    }
+                }
+            }
         }
 
         private fun prepareData() {
@@ -159,6 +176,8 @@ class Analytics(
                 PaymentRequestModel.PAYPAL -> PAYPAL
                 else -> BALANCE
             }
+            campaign = transfer?.campaign
+            rubPrice = transfer?.rubPrice
         }
 
         private fun getTransferAndOffer() = paymentInteractor.selectedTransfer?.let { st ->
@@ -194,6 +213,8 @@ class Analytics(
             map[TRIP_TYPE] = requestType
             map[CURRENCY] = currencyCode
             map[VALUE] = price
+            map[CAMPAIGN] = campaign
+            rubPrice?.let { map[RUB_PRICE] = it }
             logEventToYandex(EVENT_ECOMMERCE_PURCHASE, map)
 
             sendRevenue()
@@ -230,6 +251,8 @@ class Analytics(
             bundle.putString(TRIP_TYPE, requestType)
             bundle.putString(CURRENCY, currencyCode)
             bundle.putDouble(VALUE, price)
+            bundle.putString(CAMPAIGN, campaign)
+            rubPrice?.let { bundle.putDouble(RUB_PRICE, it) }
             logEventToFirebase(EVENT_ECOMMERCE_PURCHASE, bundle)
         }
     }
@@ -519,5 +542,8 @@ class Analytics(
 
         const val MESSAGE_IN  = "message_in"
         const val MESSAGE_OUT = "message_out"
+
+        const val CAMPAIGN = "campaign"
+        const val RUB_PRICE = "rub_price"
     }
 }
