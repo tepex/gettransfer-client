@@ -53,25 +53,22 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     internal var transferId = 0L
     internal var tripId = 0L
 
-    private lateinit var userRole: String
-
-    override fun onFirstViewAttach() {
-        worker.main.launch {
-            val lastMode = withContext(worker.bg) { getPreferences().getModel().lastMode }
-            userRole = when (lastMode) {
-                Screens.PASSENGER_MODE -> ROLE_PASSENGER
-                Screens.CARRIER_MODE   -> ROLE_CARRIER
-                else                   -> throw UnsupportedOperationException()
-            }
-        }
-    }
+    private var userRole: String? = null
 
     override fun attachView(view: ChatView) {
         super.attachView(view)
         socketInteractor.addSocketListener(this)
         worker.main.launch {
+            if (userRole == null) {
+                val lastMode = withContext(worker.bg) { getPreferences().getModel().lastMode }
+                userRole = when (lastMode) {
+                    Screens.PASSENGER_MODE -> ROLE_PASSENGER
+                    Screens.CARRIER_MODE   -> ROLE_CARRIER
+                    else                   -> throw UnsupportedOperationException()
+                }
+            }
             val transferCachedResult = withContext(worker.bg) {
-                transferInteractor.getTransfer(transferId, false, userRole)
+                transferInteractor.getTransfer(transferId, false, userRole!!) // userRole will be deleted soon
             }
             val chatCachedResult = withContext(worker.bg) { chatInteractor.getChat(transferId, true) }
 
