@@ -3,18 +3,10 @@ package com.kg.gettransfer.domain.interactor
 import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.domain.repository.SocketRepository
 
-import com.kg.gettransfer.sys.domain.Endpoint
-import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
-
 class SocketInteractor(
-    private val socketRepository: SocketRepository,
-    private val getPreferences: GetPreferencesInteractor
+    private val socketRepository: SocketRepository
 ) {
-    suspend fun openSocketConnection() =
-        socketRepository.connectSocket(
-            getPreferences().getModel().endpoint!!,
-            getPreferences().getModel().accessToken
-        )
+    suspend fun openSocketConnection() { socketRepository.connectSocket() }
 
     fun closeSocketConnection() = socketRepository.disconnectSocket()
 

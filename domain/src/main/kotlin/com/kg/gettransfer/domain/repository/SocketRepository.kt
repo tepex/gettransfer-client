@@ -1,7 +1,6 @@
 package com.kg.gettransfer.domain.repository
 
 import com.kg.gettransfer.domain.eventListeners.SocketEventListener
-import com.kg.gettransfer.sys.domain.Endpoint
 
 interface SocketRepository {
     /*
@@ -9,9 +8,9 @@ interface SocketRepository {
     val endpoint: Endpoint
     */
 
-    fun connectSocket(endpoint: Endpoint, accessToken: String)
+    fun connectSocket()
     fun disconnectSocket()
-    fun connectionChanged(endpoint: Endpoint, accessToken: String)
+    fun connectionChanged()
 
     fun addSocketListener(listener: SocketEventListener)
     fun removeSocketListener(listener: SocketEventListener)
