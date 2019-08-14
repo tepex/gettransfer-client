@@ -15,8 +15,6 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.MainNavigateView
 
-import com.kg.gettransfer.presentation.view.Screens
-
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 
@@ -71,25 +69,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     override fun onNewOffer(offer: Offer): OfferModel {
         utils.launchSuspend { viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount) }
         return super.onNewOffer(offer)
-    }
-
-    fun onAboutClick() = worker.main.launch {
-        router.navigateTo(Screens.About(true))
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.ABOUT_CLICKED)
-    }
-
-    fun onSettingsClick() {
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SETTINGS_CLICKED)
-    }
-
-    fun onRequestsClick() {
-        router.navigateTo(Screens.Requests)
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.TRANSFER_CLICKED)
-    }
-
-    fun onLoginClick() {
-        login(Screens.PASSENGER_MODE, "")
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.LOGIN_CLICKED)
     }
 
     private suspend fun checkReview(transfers: List<Transfer>) =
@@ -164,12 +143,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     }
 
     private fun logTransferReviewRequested() = analytics.logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
-
-    fun onShareClick() {
-        log.debug("Share action")
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
-        router.navigateTo(Screens.Share())
-    }
 
     fun redirectToPlayMarket() = worker.main.launch {
         withContext(worker.bg) { setAppEnters(ReviewInteractor.APP_RATED_IN_MARKET) }
