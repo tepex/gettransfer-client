@@ -19,10 +19,9 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 
-import java.io.InputStream
-
 import kotlinx.android.synthetic.main.activity_payment_successful.*
 import kotlinx.android.synthetic.main.dialog_payment_successful.*
+import kotlinx.android.synthetic.main.view_communication_button.view.*
 
 import org.jetbrains.anko.longToast
 
@@ -66,7 +65,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
 
         if (presenter.offerId == 0L) {
             tvBookNowSuccess.isVisible = true
-            tvSupport.text = getString(R.string.LNG_OFFERS_SUPPORT)
+            btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT)
             groupVoucher.isInvisible = true
         }
         ivClose.setOnClickListener { finish() }
@@ -117,8 +116,12 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
 
     override fun initCallButton() {
         btnCall.isVisible = true
-        tvCall.isVisible = true
         btnCall.setOnClickListener { presenter.onCallClick() }
+    }
+
+    override fun initChatButton() {
+        btnChat.isVisible = true
+        btnChat.setOnClickListener { presenter.onChatClick() }
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
