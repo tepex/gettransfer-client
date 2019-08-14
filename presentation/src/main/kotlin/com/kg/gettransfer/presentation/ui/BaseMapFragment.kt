@@ -8,35 +8,32 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.helpers.MapHelper
+import com.kg.gettransfer.utilities.CoroutineObserver
 import kotlinx.android.synthetic.main.view_car_pin.view.*
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.get
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-
 
 abstract class BaseMapFragment : MvpAppCompatFragment() {
 
     private lateinit var googleMapJob: Job
+    private val coroutine by lazy { CoroutineObserver() }
+
     private lateinit var googleMap: GoogleMap
     protected lateinit var baseMapView: SupportMapFragment
     protected lateinit var baseBtnCenter: ImageView
     protected var isMapMovingByUser = false
 
-    private val compositeDisposable by lazy { Job() }
-    public val utils by lazy {  AsyncUtils(get<CoroutineContexts>(), compositeDisposable) }
-
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycle.addObserver(coroutine)
     }
 
     protected open fun initMap() {}
@@ -44,7 +41,7 @@ abstract class BaseMapFragment : MvpAppCompatFragment() {
     protected fun initMapView(savedInstanceState: Bundle?) {
         val baseMapViewBundle = savedInstanceState?.getBundle(MAP_VIEW_BUNDLE_KEY)
         baseMapView.onCreate(baseMapViewBundle)
-        googleMapJob = utils.launch {
+        googleMapJob = coroutine.launch {
             googleMap = suspendCoroutine { cont -> baseMapView.getMapAsync { gm ->
                 initMap()
                 cont.resume(gm)
@@ -74,7 +71,7 @@ abstract class BaseMapFragment : MvpAppCompatFragment() {
 
     protected fun processGoogleMap(ignore: Boolean, block: (GoogleMap) -> Unit) {
         if (!googleMapJob.isCompleted && ignore) return
-        utils.launch {
+        coroutine.launch {
             if (!googleMapJob.isCompleted) googleMapJob.join()
             block(googleMap)
         }
@@ -170,9 +167,7 @@ abstract class BaseMapFragment : MvpAppCompatFragment() {
     @CallSuper
     override fun onDestroyView() {
         baseMapView.onDestroy()
-        compositeDisposable.cancel()
         googleMapJob.cancel()
-
         super.onDestroyView()
     }
 

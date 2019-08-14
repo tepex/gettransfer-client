@@ -12,23 +12,23 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 
-import androidx.appcompat.widget.Toolbar
-
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.presentation.presenter.RequestsPresenter
+import com.kg.gettransfer.presentation.view.BaseNetworkWarning
 import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
+import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 import kotlinx.android.synthetic.main.fragment_requests_pager.*
+import kotlinx.android.synthetic.main.fragment_requests_pager.layoutTextNetworkNotAvailable
 import kotlinx.android.synthetic.main.fragment_requests_pager.toolbar
-import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
-class RequestsPagerFragment : BaseFragment(), RequestsView {
+class RequestsPagerFragment : BaseFragment(), RequestsView, BaseNetworkWarning {
 
     @InjectPresenter
     internal lateinit var presenter: RequestsPresenter
@@ -36,9 +36,14 @@ class RequestsPagerFragment : BaseFragment(), RequestsView {
     @ProvidePresenter
     fun createRequestsPresenter() = RequestsPresenter()
 
-//    override fun getPresenter(): RequestsPresenter = presenter
     private fun sendEventLog(param: String) = presenter.logEvent(param)
     private var requestsVPAdapter: RequestsViewPagerAdapter?  = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Added network change listener
+        lifecycle.addObserver(NetworkLifeCycleObserver(this, this))
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.fragment_requests_pager, container, false)
@@ -49,8 +54,6 @@ class RequestsPagerFragment : BaseFragment(), RequestsView {
         setTitleText()
 
         requestsVPAdapter = RequestsViewPagerAdapter(requireFragmentManager())
-
-//TODO        viewNetworkNotAvailable = layoutTextNetworkNotAvailable
 
         val fragmentRequestsActive = RequestsFragment.newInstance(TRANSFER_ACTIVE)
         requestsVPAdapter?.addFragment(fragmentRequestsActive, getString(R.string.LNG_RIDES_ACTIVE))
@@ -80,6 +83,10 @@ class RequestsPagerFragment : BaseFragment(), RequestsView {
                 }
             }
         })
+    }
+
+    override fun onNetworkWarning(available: Boolean) {
+        layoutTextNetworkNotAvailable.changeViewVisibility(!available)
     }
 
     @SuppressLint("WrongConstant")

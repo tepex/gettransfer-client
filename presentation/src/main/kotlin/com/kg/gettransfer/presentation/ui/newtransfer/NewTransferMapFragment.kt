@@ -33,6 +33,7 @@ import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 
 import com.kg.gettransfer.presentation.view.NewTransferMapView
+import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 
 import kotlinx.android.synthetic.main.fragment_new_transfer_map.*
 import kotlinx.android.synthetic.main.search_form_main.*
@@ -54,6 +55,12 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
     @ProvidePresenter
     fun createNewTransferPresenter() = NewTransferMapPresenter()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Added network change listener
+        lifecycle.addObserver(NetworkLifeCycleObserver(this, this))
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_new_transfer_map, container, false)

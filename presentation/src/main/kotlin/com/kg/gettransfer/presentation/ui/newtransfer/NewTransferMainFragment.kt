@@ -21,6 +21,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.NewTransferMainView
+import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
@@ -41,6 +42,12 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     fun createMainRequestPresenter() = NewTransferMainPresenter()
 
     private val dateDelegate: DateTimeDelegate by inject()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Added network change listener
+        lifecycle.addObserver(NetworkLifeCycleObserver(this, this))
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_new_transfer_main, container, false)
