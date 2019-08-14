@@ -8,6 +8,8 @@ import com.kg.gettransfer.data.model.UserEntity
 
 data class AccountModelWrapper(@SerializedName(AccountEntity.ENTITY_NAME) @Expose val account: AccountModel)
 
+// переделать в делегата
+// https://medium.com/@nwillc/kotlin-data-class-inheritance-by-delegation-2ad3fe6f9bd7
 class AccountModel(
     fullName: String?,
     email: String?,

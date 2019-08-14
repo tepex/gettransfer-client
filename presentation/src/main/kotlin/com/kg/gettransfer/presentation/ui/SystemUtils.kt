@@ -4,18 +4,17 @@ import android.content.Context
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.SessionInteractor
-import com.kg.gettransfer.domain.interactor.SystemInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import java.text.SimpleDateFormat
-
 import java.util.Date
 
-import org.koin.core.get
 import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
 
 internal object SystemUtils : KoinComponent {
-    private val systemInteractor = get<SystemInteractor>()
+
     private val sessionInteractor = get<SessionInteractor>()
 
     private const val MESSAGE_DATE_TIME_PATTERN = "MMM dd, yyyy HH:mm"
@@ -32,10 +31,13 @@ internal object SystemUtils : KoinComponent {
     private const val FULL_DATE_SECONDS = "yyyy-MM-dd HH:mm:ss"
     private const val SLASH = "/"
 
-    fun formatDistance(context: Context, _distance: Int?, withDistanceText: Boolean): String {
-        if (_distance == null) return ""
-        return if (withDistanceText) context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $_distance ").plus(sessionInteractor.distanceUnit.name)
-        else _distance.toString().plus(" ${sessionInteractor.distanceUnit.name}")
+    fun formatDistance(context: Context, distance: Int?, withDistanceText: Boolean): String {
+        if (distance == null) return ""
+        return if (withDistanceText) {
+            context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $distance ").plus(sessionInteractor.distanceUnit.name)
+        } else {
+            distance.toString().plus(" ${sessionInteractor.distanceUnit.name}")
+        }
     }
 
     fun formatMessageDateTimePattern(date: Date) = getFormattedDate(MESSAGE_DATE_TIME_PATTERN, date)
@@ -51,10 +53,8 @@ internal object SystemUtils : KoinComponent {
     fun formatMonthYear(date: Date) = getFormattedDate(MONTH_YEAR_PATTERN, date)
     fun formatSeconds(date: Date) = getFormattedDate(FULL_DATE_SECONDS, date)
 
-    private fun getFormattedDate(pattern: String, date: Date) = SimpleDateFormat(pattern, sessionInteractor.locale).format(date)
+    private fun getFormattedDate(pattern: String, date: Date) =
+        SimpleDateFormat(pattern, sessionInteractor.locale).format(date)
 
-    fun getUrlWithLocale() =
-            systemInteractor.endpoint.url
-                    .plus(SLASH)
-                    .plus(sessionInteractor.locale.language)
+    fun getUrlWithLocale(url: String) = url.plus(SLASH).plus(sessionInteractor.locale.language)
 }

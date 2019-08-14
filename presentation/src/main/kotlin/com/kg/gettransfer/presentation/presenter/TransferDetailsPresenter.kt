@@ -7,6 +7,8 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
+import com.kg.gettransfer.core.presentation.WorkerManager
+
 import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
 
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
@@ -27,8 +29,6 @@ import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
 
 import com.kg.gettransfer.extensions.finishChainAndBackTo
 
-import com.kg.gettransfer.prefs.PreferencesImpl
-
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 
 import com.kg.gettransfer.presentation.mapper.CityPointMapper
@@ -44,14 +44,25 @@ import com.kg.gettransfer.presentation.ui.icons.transport.CarIconResourceProvide
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
+import com.kg.gettransfer.sys.domain.Preferences
+import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+
 import com.kg.gettransfer.utilities.Analytics
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 
 @InjectViewState
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener {
     private val orderInteractor: OrderInteractor by inject()
     private val coordinateInteractor: CoordinateInteractor by inject()
+    private val worker: WorkerManager by inject { parametersOf("TransferDetailsPresenter") }
+    private val configsManager: ConfigsManager by inject()
+    private val setAppEnters: SetAppEntersInteractor by inject()
 
     private val routeMapper: RouteMapper by inject()
     private val cityPointMapper: CityPointMapper by inject()
@@ -100,7 +111,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         transfer.to?.let { toPoint = cityPointMapper.toView(it) }
         hourlyDuration = transfer.duration
 
-        transferModel = transfer.map(systemInteractor.transportTypes.map { it.map() })
+        transferModel = transfer.map(configsManager.configs.transportTypes.map { it.map() })
     }
 
     private suspend fun setOffer(transferId: Long) =
@@ -143,9 +154,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        worker.cancel()
         reviewInteractor.releaseReviewData()
         coordinateInteractor.removeCoordinateListener(this)
+        super.onDestroy()
     }
 
     fun onCenterRouteClick() {
@@ -251,11 +263,17 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         if (isNeedCheckStoreRate) {
             reviewInteractor.setRates(rating)
             if (rating.toInt() == ReviewInteractor.MAX_RATE) {
-                utils.launchSuspend { utils.asyncAwait { reviewInteractor.sendRates() } }
-                analytics.logEvent(Analytics.EVENT_REVIEW_AVERAGE, Analytics.REVIEW, ReviewInteractor.MAX_RATE.toFloat())
-                if (systemInteractor.appEntersForMarketRate != PreferencesImpl.IMMUTABLE) {
-                    viewState.askRateInPlayMarket()
-                    analytics.logSingleEvent(Analytics.EVENT_APP_REVIEW_REQUESTED)
+                worker.main.launch {
+                    withContext(worker.bg) { reviewInteractor.sendRates() }
+                    analytics.logEvent(
+                        Analytics.EVENT_REVIEW_AVERAGE,
+                        Analytics.REVIEW,
+                        ReviewInteractor.MAX_RATE.toFloat()
+                    )
+                    if (getPreferences().getModel().appEnters != Preferences.IMMUTABLE) {
+                        viewState.askRateInPlayMarket()
+                        analytics.logSingleEvent(Analytics.EVENT_APP_REVIEW_REQUESTED)
+                    }
                 }
                 return
             }
@@ -318,6 +336,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun onDownloadVoucherClick() = downloadManager.downloadVoucher(transferId)
+
+    fun redirectToPlayMarket() = worker.main.launch {
+        withContext(worker.bg) { setAppEnters(ReviewInteractor.APP_RATED_IN_MARKET) }
+        viewState.goToGooglePlay()
+    }
 
     companion object {
         const val FIELD_EMAIL = "field_email"

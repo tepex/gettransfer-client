@@ -111,9 +111,15 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     }
 
     override fun askRateInPlayMarket() =
-            StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
+        StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
 
-    override fun onClickGoToStore() = redirectToPlayMarket()
+    override fun onClickGoToStore() {
+        presenter.redirectToPlayMarket()
+    }
+
+    override fun goToGooglePlay() {
+        Utils.goToGooglePlay(this, getString(R.string.app_market_package), BaseActivity.PLAY_MARKET_RATE)
+    }
 
     override fun thanksForRate() =
             ThanksForRateFragment
@@ -132,10 +138,11 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         badge.notifications_badge.isVisible = isVisible && count > 0
     }
 
+    @CallSuper
     override fun setNetworkAvailability(context: Context): Boolean {
         val available = super.setNetworkAvailability(context)
-//        if (newTransferFragment is BaseNetworkWarning)
-//            (newTransferFragment as BaseNetworkWarning).onNetworkWarning(available)
+//TODO        if (newTransferFragment is BaseNetworkWarning)
+//TODO            (newTransferFragment as BaseNetworkWarning).onNetworkWarning(available)
         return available
     }
 

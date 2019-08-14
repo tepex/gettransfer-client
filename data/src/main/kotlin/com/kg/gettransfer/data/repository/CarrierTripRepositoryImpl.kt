@@ -1,7 +1,6 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.CarrierTripDataStore
-import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.ds.CarrierTripDataStoreCache
 import com.kg.gettransfer.data.ds.CarrierTripDataStoreRemote
 import com.kg.gettransfer.data.ds.DataStoreFactory
@@ -9,26 +8,22 @@ import com.kg.gettransfer.data.model.CarrierTripBaseEntity
 import com.kg.gettransfer.data.model.CarrierTripEntity
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
+
 import com.kg.gettransfer.domain.model.CarrierTrip
 import com.kg.gettransfer.domain.model.CarrierTripBase
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.CarrierTripRepository
-import org.koin.core.get
-import org.koin.core.qualifier.named
+
 import java.text.DateFormat
 
+import org.koin.core.get
+import org.koin.core.qualifier.named
+
 class CarrierTripRepositoryImpl(
-    private val factory: DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>,
-    private val preferencesCache: PreferencesCache
+    private val factory: DataStoreFactory<CarrierTripDataStore, CarrierTripDataStoreCache, CarrierTripDataStoreRemote>
 ) : BaseRepository(), CarrierTripRepository {
 
     private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
-
-    override var backGroundCoordinates: Int
-        get() = preferencesCache.driverCoordinatesInBackGround
-        set(value) {
-            preferencesCache.driverCoordinatesInBackGround = value
-        }
 
     override suspend fun getCarrierTrips(): Result<List<CarrierTripBase>> {
         val result: ResultEntity<List<CarrierTripBaseEntity>?> = retrieveEntity { fromRemote ->

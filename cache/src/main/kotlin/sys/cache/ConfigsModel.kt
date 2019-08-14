@@ -1,0 +1,44 @@
+package com.kg.gettransfer.sys.cache
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+import com.kg.gettransfer.cache.model.CurrencyCachedList
+import com.kg.gettransfer.cache.model.LocaleCachedList
+import com.kg.gettransfer.cache.model.StringList
+import com.kg.gettransfer.cache.model.TransportTypesCachedList
+import com.kg.gettransfer.cache.model.map
+
+import com.kg.gettransfer.sys.data.ConfigsEntity
+
+@Entity(tableName = ConfigsEntity.ENTITY_NAME)
+data class ConfigsModel(
+    @ColumnInfo(name = ConfigsEntity.TRANSPORT_TYPES) val transportTypes: TransportTypesCachedList,
+    @ColumnInfo(name = ConfigsEntity.AVAILABLE_LOCALES) val availableLocales: LocaleCachedList,
+    @ColumnInfo(name = ConfigsEntity.PAYMENT_COMMISSION) val paymentCommission: Float,
+    @ColumnInfo(name = ConfigsEntity.SUPPORTED_CURRENCIES) val supportedCurrencies: CurrencyCachedList,
+    @ColumnInfo(name = ConfigsEntity.SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: StringList,
+    @ColumnInfo(name = ConfigsEntity.CONTACT_EMAILS) val contactEmails: ContactEmailModelList,
+    @PrimaryKey(autoGenerate = true) val id: Long = 15
+)
+
+fun ConfigsModel.map() =
+    ConfigsEntity(
+        transportTypes.list.map { it.map() },
+        availableLocales.list.map { it.map() },
+        paymentCommission,
+        supportedCurrencies.list.map { it.map() },
+        supportedDistanceUnits.list,
+        contactEmails.list.map { it.map() }
+    )
+
+fun ConfigsEntity.map() =
+    ConfigsModel(
+        TransportTypesCachedList(transportTypes.map { it.map() }),
+        LocaleCachedList(availableLocales.map { it.map() }),
+        paymentCommission,
+        CurrencyCachedList(supportedCurrencies.map { it.map() }),
+        StringList(supportedDistanceUnits),
+        ContactEmailModelList(contactEmails.map { it.map() })
+    )

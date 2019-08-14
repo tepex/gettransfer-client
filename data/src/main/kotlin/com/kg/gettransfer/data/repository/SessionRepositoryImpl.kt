@@ -9,11 +9,11 @@ import com.kg.gettransfer.data.ds.SessionDataStoreCache
 import com.kg.gettransfer.data.ds.SessionDataStoreRemote
 
 import com.kg.gettransfer.data.model.AccountEntity
-import com.kg.gettransfer.data.model.ConfigsEntity
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.ApiException
+
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
@@ -22,7 +22,9 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.domain.repository.SessionRepository
-import com.kg.gettransfer.domain.repository.SystemRepository
+
+import com.kg.gettransfer.sys.domain.Configs
+import com.kg.gettransfer.sys.domain.ConfigsRepository
 
 import java.util.Locale
 
@@ -33,7 +35,7 @@ class SessionRepositoryImpl(
 ) : BaseRepository(), SessionRepository {
 
     private val preferencesCache: PreferencesCache by inject()
-    private val systemRepository: SystemRepository by inject()
+    private val configsRepository: ConfigsRepository by inject()
 
     override var isInitialized = false
         private set
@@ -63,10 +65,13 @@ class SessionRepositoryImpl(
 
     @Suppress("ComplexMethod", "ReturnCount")
     override suspend fun coldStart(): Result<Account> {
+        /*
         val r = systemRepository.coldStart()
         if (r.error != null) return Result(account, r.error)
+        */
 
-        account = factory.retrieveCacheDataStore().getAccount()?.map(systemRepository.configs) ?: Account.EMPTY
+        val configs = configsRepository.getResult().getModel()
+        account = factory.retrieveCacheDataStore().getAccount()?.map(configs) ?: Account.EMPTY
 
         var error: ApiException? = null
         val result: ResultEntity<AccountEntity?> = retrieveEntity { fromRemote ->
@@ -74,7 +79,7 @@ class SessionRepositoryImpl(
         }
         result.entity?.let { entity ->
             if (result.error == null) factory.retrieveCacheDataStore().setAccount(entity)
-            account = entity.map(systemRepository.configs)
+            account = entity.map(configs)
         }
         result.error?.let { error = it.map() }
         isInitialized = true
@@ -99,7 +104,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
-                account = entity.map(systemRepository.configs)
+                account = entity.map(configsRepository.getResult().getModel())
             }
             if (pass != null && repeatedPass != null) this.userPassword = pass
         }
@@ -123,7 +128,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
-                account = entity.map(systemRepository.configs)
+                account = entity.map(configsRepository.getResult().getModel())
             }
             if (!withSmsCode) {
                 this.userEmail = email
@@ -143,7 +148,7 @@ class SessionRepositoryImpl(
         if (result.error == null) {
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
-                account = entity.map(systemRepository.configs)
+                account = entity.map(configsRepository.getResult().getModel())
             }
         }
         return Result(account, result.error?.map())

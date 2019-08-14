@@ -124,7 +124,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         request_search_panel.hourlyMode(isHourly)
         promoText.text = getString(
             when (isHourly) {
-                true -> R.string.LNG_MAIN_SCREEN_HOURLY_TRANSFER_TITLE
+                true  -> R.string.LNG_MAIN_SCREEN_HOURLY_TRANSFER_TITLE
                 false -> R.string.LNG_MAIN_SCREEN_POINT_TO_POINT_TRANSFER_TITLE
             }
         )

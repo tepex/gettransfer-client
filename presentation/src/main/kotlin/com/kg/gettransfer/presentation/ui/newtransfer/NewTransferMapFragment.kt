@@ -22,8 +22,6 @@ import com.google.android.gms.maps.model.Marker
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.interactor.SystemInteractor
-
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
@@ -39,7 +37,6 @@ import com.kg.gettransfer.presentation.view.NewTransferMapView
 import kotlinx.android.synthetic.main.fragment_new_transfer_map.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
-import org.koin.android.ext.android.inject
 
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -48,7 +45,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
     @InjectPresenter
     internal lateinit var presenter: NewTransferMapPresenter
-    internal val systemInteractor: SystemInteractor by inject()
 
     private var isFirst = true
     private var isPermissionRequested = false
@@ -63,11 +59,13 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         return inflater.inflate(R.layout.fragment_new_transfer_map, container, false)
     }
 
+    @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) search_panel.elevation =
-                resources.getDimension(R.dimen.search_elevation)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            search_panel.elevation = resources.getDimension(R.dimen.search_elevation)
+        }
 
         baseMapView = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
@@ -82,14 +80,16 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
             presenter.navigateToFindAddress(
                     searchFrom.text,
                     searchTo.text,
-                    isCameFromMap = true)
+                    isCameFromMap = true
+            )
         }
         search_panel.setSearchToClickListener {
             presenter.navigateToFindAddress(
                     searchFrom.text,
                     searchTo.text,
                     isClickTo = true,
-                    isCameFromMap = true)
+                    isCameFromMap = true
+            )
         }
         search_panel.setHourlyClickListener {  presenter.showHourlyDurationDialog() }
         search_panel.setIvSelectFieldToClickListener{ presenter.switchUsedField() }
@@ -105,6 +105,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         enableBtnNext()
     }
 
+    @CallSuper
     override fun setUserVisibleHint(visible: Boolean) {
         super.setUserVisibleHint(visible)
         presenter.updateView(visible && isResumed)
@@ -241,8 +242,8 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     }
 
     private fun enableBtnNext() {
-        btnNext.isEnabled = !search_panel.isEmptySearchFrom() &&
-                (!search_panel.isEmptySearchTo() || presenter.isHourly())
+        btnNext.isEnabled =
+            !search_panel.isEmptySearchFrom() && (!search_panel.isEmptySearchTo() || presenter.isHourly())
     }
 
     override fun selectFieldFrom() {
@@ -272,7 +273,9 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
     override fun onNetworkWarning(available: Boolean) {
         layoutTextNetworkNotAvailable.changeViewVisibility(!available)
-        if (available) presenter.fillAddressFieldsCheckIsEmpty()
+        if (available) {
+            presenter.fillAddressFieldsCheckIsEmpty()
+        }
     }
 
     override fun goToSearchAddress(addressFrom: String, addressTo: String, isClickTo: Boolean, isCameFromMap: Boolean) {

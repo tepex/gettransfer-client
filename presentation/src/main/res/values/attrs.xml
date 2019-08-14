@@ -114,6 +114,7 @@
     <declare-styleable name="SearchFormMainView">
         <attr name="ivSelectFieldToGone" format="boolean"/>
         <attr name="ivSelectFieldFromGone" format="boolean"/>
+        <attr name="roundedTopCorners" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="OrderFieldView">

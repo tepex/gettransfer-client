@@ -18,9 +18,8 @@ buildscript {
         jsr250_version        = "1.0"
         timber_version        = "4.7.1"
         slf4j_version         = "1.7.25"
-        junit_version         = "4.12"
-        hamcrest_version      = "2.0.0.0"
-        mockito_version       = "2.23.4"
+        kotlintest_version      = "3.4.0"
+        mockk_version           = "1.9.3"
         gson_version          = "2.8.5"
         room_version          = "2.2.0-alpha02"
         dexcount_version      = "0.8.4"
@@ -34,19 +33,22 @@ buildscript {
             serialization : ("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"),
             koin_core     : ("org.koin:koin-core:$koin_version"),
             koin_core_ext : ("org.koin:koin-core-ext:$koin_version"),
+            koin_test       : ("org.koin:koin-test:$koin_version"),
             koin_android  : ("org.koin:koin-androidx-ext:$koin_version"),
             psLocation    : ("com.google.android.gms:play-services-location:$gms_version"),
             psPlaces      : ("com.google.android.gms:play-services-places:$gms_version"),
             gson          : ("com.google.code.gson:gson:$gson_version"),
             timber        : ("com.jakewharton.timber:timber:$timber_version"),
             slf4j         : ("org.slf4j:slf4j-api:$slf4j_version"),
+            slf4j_simple    : ("org.slf4j:slf4j-simple:$slf4j_version"),
             jsr250        : ("javax.annotation:jsr250-api:$jsr250_version"),
             room          : ("androidx.room:room-runtime:$room_version"),
             room_ktx      : ("androidx.room:room-ktx:$room_version"),
             kapt_room     : ("androidx.room:room-compiler:$room_version"),
-            junit         : ("junit:junit:$junit_version"),
-            hamcrest      : ("org.hamcrest:java-hamcrest:$hamcrest_version"),
-            mockito       : ("org.mockito:mockito-core:$mockito_version")
+            mockk           : ("io.mockk:mockk:$mockk_version"),
+            kotlintest      : ("io.kotlintest:kotlintest-runner-junit5:$kotlintest_version"),
+            kotlintest_koin : ("io.kotlintest:kotlintest-extensions-koin:$kotlintest_version"),
+            coroutines_test : ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
         ]
     }
 
@@ -71,6 +73,7 @@ plugins {
     id 'com.gladed.androidgitversion'  version '0.4.5'
     /* code analysis tool  */
     id 'io.gitlab.arturbosch.detekt' version '1.0.0-RC15'
+    id "io.kotlintest" version "1.1.1"
 }
 
 allprojects {

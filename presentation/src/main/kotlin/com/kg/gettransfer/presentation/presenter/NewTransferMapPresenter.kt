@@ -10,10 +10,11 @@ import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.view.NewTransferMapView
 
-import org.koin.core.KoinComponent
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @InjectViewState
-class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), KoinComponent {
+class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
 
     private lateinit var lastAddressPoint: LatLng
     private var lastPoint: LatLng? = null
@@ -36,18 +37,20 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
 
         val pointSelectedField: Point? = when (field) {
             FIELD_FROM -> orderInteractor.from?.cityPoint?.point
-            FIELD_TO -> orderInteractor.to?.cityPoint?.point
-            else -> null
+            FIELD_TO   -> orderInteractor.to?.cityPoint?.point
+            else       -> null
         }
-        var latLngPointSelectedField: LatLng? = null
-        if (pointSelectedField != null) latLngPointSelectedField = LatLng(pointSelectedField.latitude, pointSelectedField.longitude)
-        when (systemInteractor.selectedField) {
-            FIELD_FROM -> viewState.selectFieldFrom()
-            FIELD_TO -> viewState.setFieldTo()
+
+        var latLngPointSelectedField: LatLng? = pointSelectedField?.let { LatLng(it.latitude, it.longitude) }
+        worker.main.launch {
+            when (getPreferences().getModel().selectedField) {
+                FIELD_FROM -> viewState.selectFieldFrom()
+                FIELD_TO   -> viewState.setFieldTo()
+            }
         }
-        if (latLngPointSelectedField != null) {
+        latLngPointSelectedField?.let { point ->
             idleAndMoveCamera = false
-            viewState.setMapPoint(latLngPointSelectedField, false, showBtnMyLocation(latLngPointSelectedField))
+            viewState.setMapPoint(point, false, showBtnMyLocation(point))
         }
     }
 
@@ -72,7 +75,9 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
             }
             this.lastPoint = lastPoint
             viewState.moveCenterMarker(lastPoint)
-            blockSelectedField(systemInteractor.selectedField)
+            worker.main.launch {
+                blockSelectedField(getPreferences().getModel().selectedField)
+            }
         }
     }
 
@@ -83,20 +88,22 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
                 viewState.setMarkerElevation(false)
                 markerStateLifted = false
             }
-            if (lastPoint == null) return
+            if (lastPoint == null) {
+                return
+            }
 
             lastAddressPoint = lastPoint!!
 
-            utils.launchSuspend {
-                utils.asyncAwait {
-                    orderInteractor.getAddressByLocation(systemInteractor.selectedField == FIELD_FROM,
-                            pointMapper.fromLatLng(lastPoint!!))
+            worker.main.launch {
+                withContext(worker.bg) {
+                    orderInteractor.getAddressByLocation(
+                        getPreferences().getModel().selectedField == FIELD_FROM,
+                        pointMapper.fromLatLng(lastPoint!!)
+                    )
+                }.isSuccess()?.let { addr ->
+                    currentLocation = addr.cityPoint.name
+                    setAddressInSelectedField(currentLocation)
                 }
-                        .isSuccess()
-                        ?.let {
-                            currentLocation = it.cityPoint.name
-                            setAddressInSelectedField(currentLocation)
-                        }
             }
         } else {
             idleAndMoveCamera = true
@@ -109,7 +116,9 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>(), 
     }
 
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
-        if (point2 == null || point1 == null) return false
+        if (point2 == null || point1 == null) {
+            return false
+        }
         val criteria = 0.000_001
 
         var latDiff = point1.latitude - point1.latitude

@@ -30,7 +30,16 @@ dependencies {
     implementation libs.koin_core_ext
     implementation libs.slf4j
 
-    testImplementation libs.junit
-    testImplementation libs.hamcrest
-    testImplementation libs.mockito
+    testImplementation libs.koin_test
+    testImplementation libs.kotlintest
+    testImplementation libs.kotlintest_koin
+    testImplementation libs.mockk
+    testImplementation libs.slf4j_simple
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "STARTED", "PASSED", "FAILED", "SKIPPED"
+    }
 }

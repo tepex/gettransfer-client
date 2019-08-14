@@ -1,53 +1,53 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
-import com.kg.gettransfer.R
-import android.view.ViewGroup
 import android.os.Bundle
-import androidx.core.widget.TextViewCompat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+
 import android.widget.LinearLayout
 import android.widget.TextView
+
+import androidx.annotation.CallSuper
+import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
-import com.kg.gettransfer.domain.interactor.SystemInteractor
+
+import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.adapter.CarrierTripsCalendarGridAdapter
 import com.kg.gettransfer.presentation.adapter.ClickOnDateHandler
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
+
 import io.sentry.Sentry
-import kotlinx.android.synthetic.main.carrier_trips_calendar_month_fragment.*
-import org.koin.android.ext.android.inject
+
 import java.util.Calendar
 import java.util.Date
 
+import kotlinx.android.synthetic.main.carrier_trips_calendar_month_fragment.*
+
+import org.koin.android.ext.android.inject
+
 class CarrierTripsCalendarMonthFragment : Fragment() {
 
-    companion object {
-        const val EXTRA_MONTH_INDEX = "monthIndex"
-        const val MAX_CALENDAR_COLUMN = 42
-
-        fun newInstance(monthIndex: Int) = CarrierTripsCalendarMonthFragment().apply {
-            arguments = Bundle().apply { putInt(EXTRA_MONTH_INDEX, monthIndex) }
-        }
-    }
-
     private var monthIndex: Int = 0
-
-    private var mAdapterCarrierTripsCalendar: CarrierTripsCalendarGridAdapter? = null
+    private var firstDayOfWeek: Int = 1
     private val cal = Calendar.getInstance()
-    private val systemInteractor: SystemInteractor by inject()
+    private lateinit var adapterCarrierTripsCalendar: CarrierTripsCalendarGridAdapter
 
+    @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         monthIndex = arguments!!.getInt(EXTRA_MONTH_INDEX)
+        firstDayOfWeek = arguments!!.getInt(EXTRA_FIRST_DAY_OF_WEEK)
         cal.add(Calendar.MONTH, monthIndex - 1)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         inflater.inflate(R.layout.carrier_trips_calendar_month_fragment, container, false)
 
+    @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpCalendarAdapter(
@@ -94,16 +94,28 @@ class CarrierTripsCalendarMonthFragment : Fragment() {
 
         val monthYear = SystemUtils.formatMonthYear(cal.time)
         monthAndYear?.text = monthYear.substring(0, 1).toUpperCase().plus(monthYear.substring(1))
-        mAdapterCarrierTripsCalendar =
+        adapterCarrierTripsCalendar =
             CarrierTripsCalendarGridAdapter(context, dayValueInCells, selectedDate, cal, calendarItems, listener)
-        gridViewCalendar?.adapter = mAdapterCarrierTripsCalendar
+        gridViewCalendar?.adapter = adapterCarrierTripsCalendar
     }
 
     private fun getOffset() =
-        (GTDayOfWeek.getWeekDays().find { it.day == systemInteractor.firstDayOfWeek }
-            ?: GTDayOfWeek.getWeekDays().first()).offset
+        (GTDayOfWeek.getWeekDays().find { it.day == firstDayOfWeek } ?: GTDayOfWeek.getWeekDays().first()).offset
 
     fun selectDate(selectedDate: String) {
-        mAdapterCarrierTripsCalendar?.selectDate(selectedDate)
+        adapterCarrierTripsCalendar.selectDate(selectedDate)
+    }
+
+    companion object {
+        const val EXTRA_MONTH_INDEX = "monthIndex"
+        const val EXTRA_FIRST_DAY_OF_WEEK = "firstDayOfWeek"
+        const val MAX_CALENDAR_COLUMN = 42
+
+        fun newInstance(monthIndex: Int, firstDayOfWeek: Int) = CarrierTripsCalendarMonthFragment().apply {
+            arguments = Bundle().apply {
+                putInt(EXTRA_MONTH_INDEX, monthIndex)
+                putInt(EXTRA_FIRST_DAY_OF_WEEK, firstDayOfWeek)
+            }
+        }
     }
 }

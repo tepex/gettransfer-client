@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
-import androidx.fragment.app.Fragment
 
 import android.view.LayoutInflater
 import android.view.View
@@ -65,23 +64,6 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             showLoading()
             presenter.showLicenceAgreement()
         }
-    }
-
-    @CallSuper
-    override fun onDetach() {
-        /* dirty hack https://stackoverflow.com/a/15656428 */
-        try {
-            val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
-            childFragmentManager.isAccessible = true
-            childFragmentManager.set(this, null)
-        } catch (e: NoSuchFieldException) {
-            @Suppress("TooGenericExceptionThrown")
-            throw RuntimeException(e)
-        } catch (e: IllegalAccessException) {
-            @Suppress("TooGenericExceptionThrown")
-            throw RuntimeException(e)
-        }
-        super.onDetach()
     }
 
     override fun showValidationErrorDialog(phoneExample: String) {

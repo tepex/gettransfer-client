@@ -15,7 +15,6 @@ interface Api {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
 
         const val API_ACCESS_TOKEN = "/api/access_token"
-        const val API_CONFIGS = "/api/configs"
         const val API_ACCOUNT = "/api/account"
         const val API_LOGIN = "/api/login"
         const val API_VERIFICATION_CODE = "/api/account/request_verification_code"
@@ -45,9 +44,6 @@ interface Api {
 
     @GET(API_ACCESS_TOKEN)
     fun accessToken(): Deferred<ResponseModel<TokenModel>>
-
-    @GET(API_CONFIGS)
-    fun getConfigs(): Deferred<ResponseModel<ConfigsModel>>
 
     @GET(API_ACCOUNT)
     fun getAccount(): Deferred<ResponseModel<AccountModelWrapper>>

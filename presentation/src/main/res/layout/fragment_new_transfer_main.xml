@@ -97,6 +97,7 @@
         android:layout_marginBottom="@dimen/main_without_map_addresses_panel_margin_bottom"
         app:isInverseInvisible="true"
         app:ivSelectFieldToGone="true"
+        app:roundedTopCorners="false"
         app:layout_constraintBottom_toTopOf="@+id/btnNextFragment" />
 
     <Button

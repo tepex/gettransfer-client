@@ -3,9 +3,11 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.TransferDataStore
+
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.TransferDataStoreCache
 import com.kg.gettransfer.data.ds.TransferDataStoreRemote
+
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.map
@@ -13,14 +15,16 @@ import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
-import com.kg.gettransfer.domain.repository.SystemRepository
+
 import com.kg.gettransfer.domain.repository.TransferRepository
+import com.kg.gettransfer.sys.domain.ConfigsRepository
 
 import java.io.InputStream
 import java.text.DateFormat
 import java.util.Calendar
 
 import org.koin.core.get
+import org.koin.core.inject
 import org.koin.core.qualifier.named
 
 class TransferRepositoryImpl(
@@ -28,7 +32,7 @@ class TransferRepositoryImpl(
 ) : BaseRepository(), TransferRepository {
 
     private val preferencesCache = get<PreferencesCache>()
-    private val transportTypes = get<SystemRepository>().configs.transportTypes
+    private val configsRepository: ConfigsRepository by inject()
 
     private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
     private val dateFormatTZ = get<ThreadLocal<DateFormat>>(named("iso_date_TZ"))
@@ -43,7 +47,11 @@ class TransferRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
-            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.entity?.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ) ?: Transfer.EMPTY,
             result.error?.map()
         )
     }
@@ -54,7 +62,11 @@ class TransferRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
-            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.entity?.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ) ?: Transfer.EMPTY,
             result.error?.map()
         )
     }
@@ -84,7 +96,11 @@ class TransferRepositoryImpl(
         }
 
         return Result(
-            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.entity?.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ) ?: Transfer.EMPTY,
             result.error?.map(),
             result.error != null && result.entity != null
         )
@@ -95,20 +111,28 @@ class TransferRepositoryImpl(
             factory.retrieveCacheDataStore().getTransfer(id, role)
         }
         return Result(
-            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.entity?.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ) ?: Transfer.EMPTY,
             null,
             result.entity != null,
             result.cacheError?.map()
         )
     }
 
-    private fun mapTransfersList(transfersList: List<TransferEntity>): List<Transfer> {
+    private suspend fun mapTransfersList(transfersList: List<TransferEntity>): List<Transfer> {
         val mapCountNewMessages = preferencesCache.mapCountNewMessages.toMutableMap()
         val mapCountNewOffers = preferencesCache.mapCountNewOffers.toMutableMap()
 
         var eventsCount = 0
         val mappedTransfers = transfersList.map { entity ->
-            entity.map(transportTypes, dateFormat.get(), dateFormatTZ.get()).apply {
+            entity.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ).apply {
                 if (!entity.isBookNow()) {
                     eventsCount += checkNewMessagesAndOffersCount(this, mapCountNewMessages, mapCountNewOffers)
                 }

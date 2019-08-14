@@ -6,11 +6,15 @@ import okhttp3.Protocol
 import okhttp3.Response
 import okhttp3.internal.http.HttpHeaders.contentLength
 import okhttp3.internal.http.StatusLine.HTTP_CONTINUE
+
 import okio.Buffer
+
 import org.koin.core.parameter.parametersOf
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+
 import org.slf4j.Logger
+
 import java.io.EOFException
 import java.net.HttpURLConnection.HTTP_NOT_MODIFIED
 import java.net.HttpURLConnection.HTTP_NO_CONTENT

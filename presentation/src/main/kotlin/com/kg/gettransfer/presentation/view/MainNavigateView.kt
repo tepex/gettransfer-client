@@ -7,7 +7,7 @@ import com.kg.gettransfer.presentation.model.ProfileModel
 
 @Suppress("TooManyFunctions")
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface MainNavigateView : BaseView {
+interface MainNavigateView : BaseView, GooglePlayView {
     fun setEventCount(isVisible: Boolean, count: Int)
     fun showDetailedReview()
     fun askRateInPlayMarket()

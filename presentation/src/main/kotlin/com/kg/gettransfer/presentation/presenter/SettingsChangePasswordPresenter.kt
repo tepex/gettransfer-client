@@ -1,18 +1,19 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.view.SettingsChangePasswordView
 
 @InjectViewState
 class SettingsChangePasswordPresenter : BasePresenter<SettingsChangePasswordView>() {
+
     private var newPassword: String? = null
     private var repeatedNewPassword: String? = null
 
     fun setPassword(password: String, isRepeatedPassword: Boolean) {
         val pass = if (password.isEmpty()) null else password
-        if (isRepeatedPassword) this.repeatedNewPassword = pass
-        else this.newPassword = pass
+        if (isRepeatedPassword) this.repeatedNewPassword = pass else this.newPassword = pass
         viewState.enableBtnSave(fieldsIsNotEmpty())
     }
 
