@@ -1,12 +1,10 @@
 package com.kg.gettransfer.data.socket
 
-import com.kg.gettransfer.sys.data.EndpointEntity
-
 interface SystemEventEmitter {
 
-    fun changeConnection(endpoint: EndpointEntity, token: String)
+    fun changeConnection()
 
-    fun connectSocket(endpoint: EndpointEntity, token: String)
+    fun connectSocket()
 
     fun disconnectSocket()
 }
