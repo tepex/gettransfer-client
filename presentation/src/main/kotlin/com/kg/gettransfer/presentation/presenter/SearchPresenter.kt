@@ -201,5 +201,6 @@ class SearchPresenter : BasePresenter<SearchView>() {
 
         const val FIELD_FROM = "field_from"
         const val FIELD_TO = "field_to"
+        const val EMPTY_ADDRESS = ""
     }
 }

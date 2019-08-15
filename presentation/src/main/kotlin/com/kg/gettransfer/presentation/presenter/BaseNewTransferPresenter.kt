@@ -13,9 +13,11 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.EMPTY_ADDRESS
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
 
 import com.kg.gettransfer.presentation.view.BaseNewTransferView
-import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
@@ -58,12 +60,16 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
         this.isVisible = isVisibleView
     }
 
-    open fun fillViewFromState() {
+    open fun fillViewFromState(selectField: String? = null) {
         worker.main.launch {
-            if (!orderInteractor.isAddressesValid()) {
-                changeUsedField(NewTransferMainPresenter.FIELD_FROM)
+            if (selectField != null) {
+                changeUsedField(selectField)
             } else {
-                changeUsedField(getPreferences().getModel().selectedField)
+                if (!orderInteractor.isAddressesValid()) {
+                    changeUsedField(FIELD_FROM)
+                } else {
+                    changeUsedField(getPreferences().getModel().selectedField)
+                }
             }
         }
 
@@ -87,6 +93,10 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     open fun changeUsedField(field: String) {
         worker.main.launch {
             withContext(worker.bg) { setSelectedField(field) }
+        }
+        when (field) {
+            FIELD_FROM -> viewState.selectFieldFrom()
+            FIELD_TO   -> viewState.setFieldTo()
         }
     }
 
@@ -224,10 +234,6 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     companion object {
-        const val FIELD_FROM = "field_from"
-        const val FIELD_TO = "field_to"
-        const val EMPTY_ADDRESS = ""
-
         const val MIN_HOURLY = 2
         const val DELTA_MAX = 0.000_001
     }

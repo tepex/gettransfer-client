@@ -310,6 +310,21 @@
                     app:btn_img="@drawable/ic_chat_yellow"
                     app:btn_name="@string/LNG_PAYMENT_CHAT" />
 
+                <TextView
+                    android:id="@+id/tvEventsChatCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_circle_red"
+                    android:textColor="@android:color/white"
+                    android:paddingStart="@dimen/margin4"
+                    android:paddingEnd="@dimen/margin4"
+                    app:layout_constraintTop_toTopOf="@+id/btnChat"
+                    app:layout_constraintEnd_toEndOf="@+id/btnChat"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    tools:text="10"
+                    android:gravity="center"/>
+
                 <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
                     android:id="@+id/btnCall"
                     android:layout_width="wrap_content"

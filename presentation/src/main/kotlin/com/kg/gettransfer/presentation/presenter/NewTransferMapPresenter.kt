@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.LatLngBounds
 
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
 
 import com.kg.gettransfer.presentation.view.NewTransferMapView
 
@@ -41,13 +43,8 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
             else       -> null
         }
 
-        var latLngPointSelectedField: LatLng? = pointSelectedField?.let { LatLng(it.latitude, it.longitude) }
-        worker.main.launch {
-            when (getPreferences().getModel().selectedField) {
-                FIELD_FROM -> viewState.selectFieldFrom()
-                FIELD_TO   -> viewState.setFieldTo()
-            }
-        }
+        val latLngPointSelectedField: LatLng? = pointSelectedField?.let { LatLng(it.latitude, it.longitude) }
+
         latLngPointSelectedField?.let { point ->
             idleAndMoveCamera = false
             viewState.setMapPoint(point, false, showBtnMyLocation(point))
@@ -126,10 +123,5 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         var lngDiff = point2.longitude - point2.longitude
         if (lngDiff < 0) lngDiff *= -1
         return latDiff < criteria && lngDiff < criteria
-    }
-
-    companion object {
-        const val FIELD_FROM = "field_from"
-        const val FIELD_TO = "field_to"
     }
 }
