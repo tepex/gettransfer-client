@@ -4,7 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.domain.model.GTAddress
 
-import com.kg.gettransfer.presentation.delegate.AccountManager
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
 import com.kg.gettransfer.presentation.view.NewTransferMainView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
@@ -47,17 +47,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     override fun updateView(isVisibleView: Boolean) {
         if (!isVisibleView) return
 
-        fillViewFromState()
-    }
-
-    override fun changeUsedField(field: String) {
-        super.changeUsedField(field)
-        worker.main.launch {
-            when (getPreferences().getModel().selectedField) {
-                FIELD_FROM -> viewState.selectFieldFrom()
-                FIELD_TO   -> viewState.setFieldTo()
-            }
-        }
+        fillViewFromState(FIELD_FROM)
     }
 
     override fun setPointAddress(currentAddress: GTAddress) {
@@ -68,10 +58,5 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     override fun destroyView(view: NewTransferMainView) {
         geoInteractor.disconnectGoogleApiClient()
         super.destroyView(view)
-    }
-
-    companion object {
-        const val FIELD_FROM = "field_from"
-        const val FIELD_TO   = "field_to"
     }
 }
