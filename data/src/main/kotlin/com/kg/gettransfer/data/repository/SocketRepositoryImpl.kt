@@ -8,8 +8,6 @@ import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.domain.repository.SocketRepository
 
 import com.kg.gettransfer.sys.data.EndpointEntity
-import com.kg.gettransfer.sys.data.map
-import com.kg.gettransfer.sys.domain.Endpoint
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
@@ -41,10 +39,10 @@ class SocketRepositoryImpl(
     override fun addSocketListener(listener: SocketEventListener)    { socketListeners.add(listener) }
     override fun removeSocketListener(listener: SocketEventListener) { socketListeners.remove(listener) }
 
-    override fun connectSocket(endpoint: Endpoint, accessToken: String) =
-        socketDataStore.connectSocket(endpoint.map(), accessToken)
-    override fun connectionChanged(endpoint: Endpoint, accessToken: String) =
-        socketDataStore.changeConnection(endpoint.map(), accessToken)
+    override fun connectSocket() =
+        socketDataStore.connectSocket()
+    override fun connectionChanged() =
+        socketDataStore.changeConnection()
     override fun disconnectSocket() = socketDataStore.disconnectSocket()
 
     fun notifyAboutConnection()    = socketListeners.forEach { it.onSocketConnected() }

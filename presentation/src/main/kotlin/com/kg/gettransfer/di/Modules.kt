@@ -113,7 +113,7 @@ val domainModule = module {
     single { CountEventsInteractor(get()) }
     single { GeoInteractor(get(), get()) }
     single { PushTokenInteractor(get()) }
-    single { SocketInteractor(get(), get()) }
+    single { SocketInteractor(get()) }
     single { SessionInteractor(get(), get()) }
 }
 

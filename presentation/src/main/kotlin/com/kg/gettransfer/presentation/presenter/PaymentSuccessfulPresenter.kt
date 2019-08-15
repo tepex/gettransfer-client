@@ -9,8 +9,6 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.extensions.newChainFromMain
-
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.model.map
 
@@ -81,7 +79,10 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             }
             utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
             phoneToCall = offerInteractor.getOffer(offerId)?.phoneToCall
-            if (phoneToCall != null) viewState.initCallButton()
+            if (offerId != 0L) {
+                viewState.initChatButton()
+                if (phoneToCall != null) viewState.initCallButton()
+            }
             viewState.blockInterface(false)
         }
     }
@@ -96,8 +97,12 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         phoneToCall?.let { callPhone(it) }
     }
 
+    fun onChatClick() {
+        router.replaceScreen(Screens.Chat(transferId))
+    }
+
     fun onDetailsClick() {
-        router.newChainFromMain(Screens.Details(transferId))
+        router.replaceScreen(Screens.Details(transferId))
     }
 
     fun onDownloadVoucherClick() = downloadManager.downloadVoucher(transferId)
