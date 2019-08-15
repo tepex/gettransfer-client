@@ -103,7 +103,9 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     fun updateCurrentLocation() {
         updateCurrentLocationAsync()
-        analytics.logSingleEvent(Analytics.MY_PLACE_CLICKED)
+        worker.main.launch {
+            withContext(worker.bg) { logIpapiRequest() }
+        }
     }
 
     private fun updateCurrentLocationAsync() {

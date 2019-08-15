@@ -3,12 +3,20 @@ package com.kg.gettransfer.extensions
 import android.app.Activity
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
 import com.kg.gettransfer.common.DebouncingOnClickListener
+
+fun View.visibleAnimation(value: Boolean, vg: ViewGroup) {
+    TransitionManager.beginDelayedTransition(vg, Fade().setDuration(150).addTarget(this))
+    visibility = if (value) View.VISIBLE else View.GONE
+}
 
 inline var View.isVisible: Boolean
     get() = visibility == View.VISIBLE

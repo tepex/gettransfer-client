@@ -28,7 +28,6 @@ import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
-import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SearchView
 
 import kotlinx.android.synthetic.main.a_b_orange_view.*
@@ -39,15 +38,11 @@ import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
-import org.koin.core.inject
-import ru.terrakok.cicerone.Router
 
 class SearchFragment : BaseFragment(), SearchView {
 
     @InjectPresenter
     internal lateinit var presenter: SearchPresenter
-
-    protected val router: Router by inject()
 
     private lateinit var predefinedPopularPlaces: List<PopularPlace>
 
@@ -115,11 +110,6 @@ class SearchFragment : BaseFragment(), SearchView {
         else     searchForm.icons_container.tv_a_point.background =
                 ContextCompat.getDrawable(requireContext(), R.drawable.back_orange_empty)
                         .also { icons_container.tv_a_point.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextBlack)) }
-    }
-
-    fun onClearFocus() {
-        searchTo.hideKeyboard()
-        searchFrom.hideKeyboard()
     }
 
     private fun initPredefinedPopularPlaces() = listOf(
@@ -201,7 +191,7 @@ class SearchFragment : BaseFragment(), SearchView {
 
     override fun goToBack() {
         hideKeyboard()
-        findNavController().popBackStack()
+        findNavController().navigateUp()
     }
 
     override fun goToCreateOrder() {

@@ -5,8 +5,6 @@ import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 
-import androidx.recyclerview.widget.LinearLayoutManager
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +35,8 @@ import kotlinx.android.synthetic.main.fragment_requests.*
 
 import timber.log.Timber
 import kotlinx.android.synthetic.main.view_shimmer_loader.view.*
+import android.os.Handler
+
 
 /**
  * @TODO: Выделить BaseFragment
@@ -67,7 +67,6 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         super.onViewCreated(view, savedInstanceState)
 
         setTitleFragmentEmptyRequestsList()
-        rvRequests.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         rvRequests.adapter = RequestsRVAdapter(presenter.transferType, onItemClickListener, onCallClickListener, onChatClickListener)
         initClickListeners()
     }
@@ -87,12 +86,18 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     private fun initClickListeners() {
+        swipe_container.setOnRefreshListener {
+            presenter.getTransfers()
+        }
+
         btn_forward_main.setOnClickListener {
             presenter.onGetBookClicked()
         }
     }
 
     override fun updateTransfers(transfers: List<TransferModel>) {
+        swipe_container.isRefreshing = false
+
         switchBackGroundData(false)
         rvAdapter.updateTransfers(transfers)
     }
@@ -106,6 +111,8 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     override fun onEmptyList() {
+        swipe_container.isRefreshing = false
+
         switchBackGroundData(true)
     }
 

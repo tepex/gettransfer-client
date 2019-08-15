@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -21,7 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.visibleAnimation
 import com.kg.gettransfer.extensions.setupWithNavController
 
 import com.kg.gettransfer.presentation.presenter.MainNavigatePresenter
@@ -127,23 +126,13 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
                     .show(supportFragmentManager, ThanksForRateFragment.TAG)
 
     override fun setEventCount(isVisible: Boolean, count: Int) {
-        //Setup badge for trips tab
-        val bottomNavigationMenuView = bottom_nav.getChildAt(0) as BottomNavigationMenuView
-        //Index of trips tab = 1 in bottom navigation
-        val v = bottomNavigationMenuView.getChildAt(1)
-        val itemView = v as BottomNavigationItemView
-        val badge = LayoutInflater.from(this)
-                .inflate(R.layout.notification_badge_view, itemView, true)
-        badge.notifications_badge.text = count.toString()
-        badge.notifications_badge.isVisible = isVisible && count > 0
-    }
-
-    @CallSuper
-    override fun setNetworkAvailability(context: Context): Boolean {
-        val available = super.setNetworkAvailability(context)
-//TODO        if (newTransferFragment is BaseNetworkWarning)
-//TODO            (newTransferFragment as BaseNetworkWarning).onNetworkWarning(available)
-        return available
+        val item = bottom_nav.menu.getItem(1)
+        if (isVisible && count > 0) {
+            val badgeDrawable = bottom_nav.getOrCreateBadge(item.itemId)
+            badgeDrawable.number = count
+        } else {
+            bottom_nav.removeBadge(item.itemId)
+        }
     }
 
     val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
@@ -153,11 +142,11 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             RequestsPagerFragment::class.java.name,
             SettingsFragment::class.java.name,
             SupportFragment::class.java.name -> {
-                bottom_nav.isVisible = true
+                bottom_nav.visibleAnimation(true, parent_container)
             }
             //not visible bottom menu
             else -> {
-                bottom_nav.isVisible = false
+                bottom_nav.visibleAnimation(false, parent_container)
             }
         }
     }
