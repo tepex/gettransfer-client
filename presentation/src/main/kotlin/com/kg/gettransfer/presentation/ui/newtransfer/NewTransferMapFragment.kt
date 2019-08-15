@@ -216,7 +216,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
                 }
                 .setDuration(MAGIC_DURATION)
         if (up) {
-            animator.translationYBy(Utils.convertDpToPixels(requireContext(), MARKER_ELEVATION))
+            animator.translationYBy(Utils.convertDpToPixels(requireContext(), -MARKER_ELEVATION))
         } else {
             animator.translationY(markerTranslationY)
         }
