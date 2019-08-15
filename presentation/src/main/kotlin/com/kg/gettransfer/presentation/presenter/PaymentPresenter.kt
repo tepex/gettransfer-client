@@ -105,7 +105,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
             showSuccessPayment = true
             viewState.blockInterface(false)
             transfer?.let { router.newChainFromMain(Screens.PaymentSuccess(it.id, offer?.id)) }
-            analytics.EcommercePurchase(paymentType).sendAnalytics()
+            analytics.EcommercePurchase().sendAnalytics()
         }
     }
 }

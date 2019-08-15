@@ -12,15 +12,10 @@ import com.facebook.appevents.AppEventsLogger
 
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
-import com.kg.gettransfer.domain.interactor.SessionInteractor
-import com.kg.gettransfer.domain.interactor.TransferInteractor
-import com.kg.gettransfer.domain.model.BookNowOffer
-import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.interactor.*
+import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.presentation.delegate.AccountManager
 
-import com.kg.gettransfer.domain.model.ReviewRate
-import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.yandex.metrica.Revenue
@@ -50,6 +45,8 @@ class Analytics(
     private val sessionInteractor: SessionInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
     private val transferInteractor: TransferInteractor by inject()
+    private val offerInteractor: OfferInteractor by inject()
+    private val accountManager: AccountManager by inject()
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get(), compositeDisposable)
@@ -114,7 +111,7 @@ class Analytics(
         }
     }
 
-    inner class EcommercePurchase(private var paymentType: String) {
+    inner class EcommercePurchase {
 
         private lateinit var transactionId: String
         private var promocode: String? = null
@@ -130,21 +127,62 @@ class Analytics(
         private var offer: Offer? = null
         private var bookNowOffer: BookNowOffer? = null
         private var transfer: Transfer? = null
+        private var offers: List<OfferItem> = emptyList()
 
+        /**
+         * Send analytics for single transfer
+         */
         fun sendAnalytics() {
             getTransferAndOffer()
-            transfer?.let {
-                if (it.rubPrice != null && !it.analyticsSent) {
+            transfer?.let { sendAnalytics(it) }
+        }
+
+        /**
+         * Send analytics for single transfer
+         */
+        private fun sendAnalytics(transfer: Transfer) {
+                if (transfer.rubPrice != null && !transfer.analyticsSent) {
                     prepareData()
                     sendToFirebase()
                     sendToFacebook()
                     sendToYandex()
                     sendToAppsFlyer()
                     utils.launchSuspend {
-                        transferInteractor.sendAnalytics(it.id, "")
+                        val role = if (accountManager.remoteAccount.isBusinessAccount) Transfer.Role.PARTNER
+                        else Transfer.Role.PASSENGER
+                        utils.asyncAwait {
+                            transferInteractor.sendAnalytics(transfer.id, role.name.toLowerCase())
+                        }
                     }
                 }
+        }
+
+        /**
+         * Send analytics for list of transfers
+         */
+        fun sendAnalytics(transfers: List<Transfer>) {
+            transfers.forEach {
+                utils.launchSuspend {
+                    transfer = it
+                    getOffer(it)
+                    sendAnalytics(it)
+                }
             }
+        }
+
+        private suspend fun getOffer(it: Transfer) {
+            utils.asyncAwait { offerInteractor.getOffers(it.id) }
+                .also { result ->
+                    if (!result.isError()) {
+                        offers = mutableListOf<OfferItem>().apply {
+                            addAll(result.model)
+                            addAll(it.bookNowOffers)
+                        }
+                        offers.firstOrNull()?.let { offer ->
+                            getOfferType(offer)
+                        }
+                    }
+                }
         }
 
         private fun prepareData() {
@@ -170,12 +208,6 @@ class Analytics(
                          """.trimMargin()
                 )
             }
-
-            paymentType = when (paymentType) {
-                PaymentRequestModel.PLATRON -> CARD
-                PaymentRequestModel.PAYPAL -> PAYPAL
-                else -> BALANCE
-            }
             campaign = transfer?.campaign
             rubPrice = transfer?.rubPrice
         }
@@ -183,10 +215,14 @@ class Analytics(
         private fun getTransferAndOffer() = paymentInteractor.selectedTransfer?.let { st ->
             paymentInteractor.selectedOffer?.let { so ->
                 transfer = st
-                when (so) {
-                    is Offer -> offer = so
-                    is BookNowOffer -> bookNowOffer = so
-                }
+                getOfferType(so)
+            }
+        }
+
+        private fun getOfferType(offerItem: OfferItem) {
+            when (offerItem) {
+                is Offer -> offer = offerItem
+                is BookNowOffer -> bookNowOffer = offerItem
             }
         }
 
@@ -195,7 +231,6 @@ class Analytics(
             map[TRANSACTION_ID] = transactionId
             map[PROMOCODE] = promocode
             hours?.let { map[HOURS] = it }
-            map[PAYMENT_TYPE] = paymentType
             map[OFFER_TYPE] = offerType
             map[TRIP_TYPE] = requestType
             map[AFInAppEventParameterName.CURRENCY] = currencyCode
@@ -208,7 +243,6 @@ class Analytics(
             map[TRANSACTION_ID] = transactionId
             map[PROMOCODE] = promocode
             hours?.let { map[HOURS] = it }
-            map[PAYMENT_TYPE] = paymentType
             map[OFFER_TYPE] = offerType
             map[TRIP_TYPE] = requestType
             map[CURRENCY] = currencyCode
@@ -235,7 +269,6 @@ class Analytics(
             bundle.putString(TRANSACTION_ID, transactionId)
             bundle.putString(PROMOCODE, promocode)
             hours?.let { bundle.putInt(HOURS, it) }
-            bundle.putString(PAYMENT_TYPE, paymentType)
             bundle.putString(OFFER_TYPE, offerType)
             bundle.putString(TRIP_TYPE, requestType)
             facebook.logPurchase(price.toBigDecimal(), currency, bundle)
@@ -246,7 +279,6 @@ class Analytics(
             bundle.putString(TRANSACTION_ID, transactionId)
             bundle.putString(PROMOCODE, promocode)
             hours?.let { bundle.putInt(HOURS, it) }
-            bundle.putString(PAYMENT_TYPE, paymentType)
             bundle.putString(OFFER_TYPE, offerType)
             bundle.putString(TRIP_TYPE, requestType)
             bundle.putString(CURRENCY, currencyCode)

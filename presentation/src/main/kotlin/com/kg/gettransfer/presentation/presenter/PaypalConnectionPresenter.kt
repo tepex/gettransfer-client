@@ -67,6 +67,6 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
 
     private fun showSuccessfulPayment() {
         router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
-        analytics.EcommercePurchase(PaymentRequestModel.PAYPAL).sendAnalytics()
+        analytics.EcommercePurchase().sendAnalytics()
     }
 }
