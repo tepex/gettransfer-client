@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:elevation="@dimen/margin8"
     android:layout_marginTop="@dimen/margin8"
+    android:paddingBottom="16dp"
     android:background="@drawable/back_top_rounded"
     app:behavior_hideable="false"
     app:behavior_peekHeight="@dimen/create_order_behaviour_peek_height"
@@ -278,7 +279,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:background="@drawable/btn_bg_rounded">
 
         <ImageView
