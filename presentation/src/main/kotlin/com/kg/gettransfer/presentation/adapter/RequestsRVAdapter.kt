@@ -59,7 +59,6 @@ class RequestsRVAdapter(
                     firstInit = false
                 }
                 setInfo(item, requestType)
-                showEvents(item, eventsCount)
                 showOfferInfo(
                     item.matchedOffer,
                     haveDriverCoordinates,
@@ -67,6 +66,7 @@ class RequestsRVAdapter(
                     View.OnClickListener { onChatClick(item.id) },
                     View.OnClickListener { onItemClick(item) }
                 )
+                showEvents(item, item.matchedOffer != null, eventsCount)
             }
             setThrottledClickListener { onItemClick(item) }
         }

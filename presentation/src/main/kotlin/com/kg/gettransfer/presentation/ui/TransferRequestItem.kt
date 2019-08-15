@@ -134,15 +134,23 @@ class TransferRequestItem @JvmOverloads constructor(
         }
     }
 
-    fun showEvents(item: TransferModel, eventsCount: Int) {
+    fun showEvents(item: TransferModel, offerInfoShowed: Boolean, eventsCount: Int) {
         if (eventsCount == 0 ||
             (!item.showOfferInfo && item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE) ||
             item.isBookNow()
         ) {
             tvEventsCount.isVisible = false
+            tvEventsChatCount.isVisible = false
         } else {
-            tvEventsCount.isVisible = true
-            tvEventsCount.text = eventsCount.toString()
+            val count = eventsCount.toString()
+            if (offerInfoShowed) {
+                tvEventsCount.isVisible = false
+                tvEventsChatCount.isVisible = true
+                tvEventsChatCount.text = count
+            } else {
+                tvEventsCount.isVisible = true
+                tvEventsCount.text = count
+            }
         }
     }
 
