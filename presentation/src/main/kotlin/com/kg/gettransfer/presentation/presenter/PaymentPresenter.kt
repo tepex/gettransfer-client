@@ -85,6 +85,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
         transfer?.let { tr ->
             fetchResult { transferInteractor.getTransfer(tr.id) }.isSuccess()?.let { transfer ->
                 this.transfer = transfer
+                paymentInteractor.selectedTransfer = transfer
                 return transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
             }
         }

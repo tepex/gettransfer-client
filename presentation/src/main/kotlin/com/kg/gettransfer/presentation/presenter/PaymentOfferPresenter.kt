@@ -155,8 +155,22 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         } else {
             router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))
             analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_SUCCESS)
+            if (isOfferPaid()) {
+                analytics.EcommercePurchase().sendAnalytics()
+            }
         }
         viewState.blockInterface(false)
+    }
+
+    private suspend fun isOfferPaid(): Boolean {
+        transfer?.let { tr ->
+            fetchResult { transferInteractor.getTransfer(tr.id) }.isSuccess()?.let { transfer ->
+                this.transfer = transfer
+                paymentInteractor.selectedTransfer = transfer
+                return transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
+            }
+        }
+        return false
     }
 
     private suspend fun payByCard(paymentModel: PaymentRequestModel) {

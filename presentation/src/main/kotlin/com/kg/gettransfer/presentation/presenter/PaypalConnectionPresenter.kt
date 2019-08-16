@@ -67,6 +67,21 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
 
     private fun showSuccessfulPayment() {
         router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
-        analytics.EcommercePurchase().sendAnalytics()
+        utils.launchSuspend {
+            if (isOfferPaid()) {
+                analytics.EcommercePurchase().sendAnalytics()
+            }
+        }
+    }
+
+    private suspend fun isOfferPaid(): Boolean {
+        transfer?.let { tr ->
+            fetchResult { transferInteractor.getTransfer(tr.id) }.isSuccess()?.let { transfer ->
+                this.transfer = transfer
+                paymentInteractor.selectedTransfer = transfer
+                return transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
+            }
+        }
+        return false
     }
 }

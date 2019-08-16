@@ -49,7 +49,7 @@ class GTApplication : MultiDexApplication() {
         super.onCreate()
         // Display some logs
         if (BuildConfig.DEBUG) {
-//           Timber.plant(Timber.DebugTree())
+           Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
 //            setUpLeakCanary(false)
         } else {

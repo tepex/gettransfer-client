@@ -226,7 +226,7 @@ interface Api {
         @Path("id") transferId: Long
     ): Deferred<ResponseBody>
 
-    @POST("$API_TRANSFERS{id}/analytics_sent")
+    @POST("$API_TRANSFERS/{id}/analytics_sent")
     fun sendAnalytics(
         @Path("id") transferId: Long,
         @Body role: RoleModel
