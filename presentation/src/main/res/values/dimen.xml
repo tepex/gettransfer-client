@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<!-- Bottom navigation view -->
+	<dimen name="navigation_container_margin_bottom">53dp</dimen>
+	<dimen name="navigation_tab_margin_top">17dp</dimen>
+	<dimen name="navigation_tab_icon_size">38dp</dimen>
+	<dimen name="navigation_badge_margin_start">10dp</dimen>
+<!--	<dimen name="design_bottom_navigation_item_max_width">200dp</dimen>-->
+<!--	<dimen name="design_bottom_navigation_item_min_width">56dp</dimen>-->
+
 	<!-- Main buttons -->
 	<dimen name="activity_main_buttons_size">48dp</dimen>
 	<dimen name="activity_main_buttons_margin_top">10dp</dimen>

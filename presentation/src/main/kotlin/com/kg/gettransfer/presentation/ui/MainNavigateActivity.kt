@@ -142,10 +142,12 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             RequestsPagerFragment::class.java.name,
             SettingsFragment::class.java.name,
             SupportFragment::class.java.name -> {
+                bottom_nav_shadow.visibleAnimation(true, parent_container)
                 bottom_nav.visibleAnimation(true, parent_container)
             }
             //not visible bottom menu
             else -> {
+                bottom_nav_shadow.visibleAnimation(false, parent_container)
                 bottom_nav.visibleAnimation(false, parent_container)
             }
         }
