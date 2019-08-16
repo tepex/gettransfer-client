@@ -69,7 +69,6 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
             router.exit()
         } else {
             if (result.model.isSuccess) isPaymentWasSuccessful() else showFailedPayment()
-            analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, result.model.status.name)
         }
     }
 
@@ -98,6 +97,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
             viewState.blockInterface(false)
             router.exit()
             transfer?.let { router.navigateTo(Screens.PaymentError(it.id)) }
+            analytics.PaymentStatus(paymentType).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         }
     }
 
@@ -106,6 +106,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
             showSuccessPayment = true
             viewState.blockInterface(false)
             transfer?.let { router.newChainFromMain(Screens.PaymentSuccess(it.id, offer?.id)) }
+            analytics.PaymentStatus(paymentType).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
             analytics.EcommercePurchase().sendAnalytics()
         }
     }

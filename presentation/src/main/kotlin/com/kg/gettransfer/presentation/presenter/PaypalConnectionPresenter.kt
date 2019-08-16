@@ -56,11 +56,11 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
             showFailedPayment()
         } ?: if (result.model.isSuccess) showSuccessfulPayment() else showFailedPayment()
         viewState.blockInterface(false)
-        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, result.model.status.name)
         viewState.stopAnimation()
     }
 
     private fun showFailedPayment() {
+        analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         router.exit()
         router.navigateTo(Screens.PaymentError(transferId))
     }
@@ -69,6 +69,7 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
         router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
         utils.launchSuspend {
             if (isOfferPaid()) {
+                analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
                 analytics.EcommercePurchase().sendAnalytics()
             }
         }

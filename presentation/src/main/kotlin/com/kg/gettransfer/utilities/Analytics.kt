@@ -115,7 +115,9 @@ class Analytics(
         }
     }
 
-    inner class EcommercePurchase {
+    open inner class EcommercePurchase {
+
+        protected var event: String = EVENT_ECOMMERCE_PURCHASE
 
         private lateinit var transactionId: String
         private var promocode: String? = null
@@ -133,6 +135,7 @@ class Analytics(
         private var transportType: List<String>? = null
         private var passengersCount: Int? = null
         private var beginInHours: Int? = null // time to transfer
+        protected var paymentType: String? = null
 
         private var offer: Offer? = null
         private var bookNowOffer: BookNowOffer? = null
@@ -152,20 +155,20 @@ class Analytics(
          * Send analytics for single transfer
          */
         private fun sendAnalytics(transfer: Transfer) {
-                if (transfer.rubPrice != null && !transfer.analyticsSent) {
-                    prepareData()
-                    sendToFirebase()
-                    sendToFacebook()
-                    sendToYandex()
-                    sendToAppsFlyer()
-                    utils.launchSuspend {
-                        val role = if (accountManager.remoteAccount.isBusinessAccount) Transfer.Role.PARTNER
-                        else Transfer.Role.PASSENGER
-                        utils.asyncAwait {
-                            transferInteractor.sendAnalytics(transfer.id, role.name.toLowerCase())
-                        }
+            if (transfer.rubPrice != null && !transfer.analyticsSent) {
+                prepareData()
+                sendToFirebase()
+                sendToFacebook()
+                sendToYandex()
+                sendToAppsFlyer()
+                utils.launchSuspend {
+                    val role = if (accountManager.remoteAccount.isBusinessAccount) Transfer.Role.PARTNER
+                    else Transfer.Role.PASSENGER
+                    utils.asyncAwait {
+                        transferInteractor.sendAnalytics(transfer.id, role.name.toLowerCase())
                     }
                 }
+            }
         }
 
         /**
@@ -197,7 +200,7 @@ class Analytics(
                 }
         }
 
-        private fun prepareData() {
+        protected fun prepareData() {
             transactionId = transfer?.id.toString()
             promocode = transfer?.promoCode
             duration = orderInteractor.duration
@@ -230,7 +233,7 @@ class Analytics(
             transportType = transfer?.transportTypeIds?.map { it.toString() }
         }
 
-        private fun getTransferAndOffer() = paymentInteractor.selectedTransfer?.let { st ->
+        protected fun getTransferAndOffer() = paymentInteractor.selectedTransfer?.let { st ->
             paymentInteractor.selectedOffer?.let { so ->
                 transfer = st
                 transferModel = st.map(configsManager.configs.transportTypes.map { it.map() })
@@ -257,7 +260,7 @@ class Analytics(
             logEventToAppsFlyer(AFInAppEventType.PURCHASE, map)
         }
 
-        private fun sendToYandex() {
+        protected fun sendToYandex() {
             val map = mutableMapOf<String, Any?>()
             map[TRANSACTION_ID] = transactionId
             map[PROMOCODE] = promocode
@@ -274,7 +277,8 @@ class Analytics(
             map[NUMBER_OF_PASSENGERS] = passengersCount
             map[TRAVEL_CLASS] = transportType
             map[BEGIN_IN_HOURS] = beginInHours
-            logEventToYandex(EVENT_ECOMMERCE_PURCHASE, map)
+            paymentType?.let { map[PAYMENT_TYPE] = it }
+            logEventToYandex(event, map)
 
             sendRevenue()
         }
@@ -305,7 +309,7 @@ class Analytics(
             facebook.logPurchase(price.toBigDecimal(), currency, bundle)
         }
 
-        private fun sendToFirebase() {
+        protected fun sendToFirebase() {
             val bundle = Bundle()
             bundle.putString(TRANSACTION_ID, transactionId)
             bundle.putString(PROMOCODE, promocode)
@@ -322,7 +326,28 @@ class Analytics(
             passengersCount?.let { bundle.putInt(NUMBER_OF_PASSENGERS, it) }
             bundle.putStringArray(TRAVEL_CLASS, transportType?.toTypedArray())
             beginInHours?.let { bundle.putInt(BEGIN_IN_HOURS, it) }
-            logEventToFirebase(EVENT_ECOMMERCE_PURCHASE, bundle)
+            paymentType?.let { bundle.putString(PAYMENT_TYPE, paymentType) }
+            logEventToFirebase(event, bundle)
+        }
+    }
+
+    /**
+     * This class is child class of EcommercePurchase because it has almost the same parameters
+     * for analytics
+     */
+    inner class PaymentStatus(private var mPaymentType: String) : EcommercePurchase() {
+
+        fun sendAnalytics(event: String) {
+            super.event = event
+            super.paymentType = when (mPaymentType) {
+                PaymentRequestModel.PLATRON -> CARD
+                PaymentRequestModel.PAYPAL -> PAYPAL
+                else -> BALANCE
+            }
+            getTransferAndOffer()
+            prepareData()
+            sendToFirebase()
+            sendToYandex()
         }
     }
 
@@ -477,7 +502,8 @@ class Analytics(
         const val EVENT_TRANSFER = "create_transfer"
         const val EVENT_ADD_TO_CART = "add_to_cart"
         const val EVENT_SELECT_OFFER = "select_offer"
-        const val EVENT_MAKE_PAYMENT = "make_payment"
+        const val EVENT_PAYMENT_DONE = "payment_done"
+        const val EVENT_PAYMENT_FAILED = "payment_failed"
         const val EVENT_MENU = "menu"
         const val EVENT_MAIN = "main"
         const val EVENT_SETTINGS = "settings"

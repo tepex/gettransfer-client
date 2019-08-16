@@ -151,10 +151,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         if (err != null) {
             log.error("get by balance payment error", err)
             router.navigateTo(Screens.PaymentError(paymentRequest.transferId))
-            analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
+            analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         } else {
             router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))
-            analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_SUCCESS)
+            analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
             if (isOfferPaid()) {
                 analytics.EcommercePurchase().sendAnalytics()
             }
