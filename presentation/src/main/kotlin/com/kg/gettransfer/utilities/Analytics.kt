@@ -17,6 +17,9 @@ import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.delegate.AccountManager
 
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.map
+import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.yandex.metrica.Revenue
 import com.yandex.metrica.YandexMetrica
@@ -47,6 +50,7 @@ class Analytics(
     private val transferInteractor: TransferInteractor by inject()
     private val offerInteractor: OfferInteractor by inject()
     private val accountManager: AccountManager by inject()
+    private val configsManager: ConfigsManager by inject()
 
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get(), compositeDisposable)
@@ -115,7 +119,7 @@ class Analytics(
 
         private lateinit var transactionId: String
         private var promocode: String? = null
-        private var hours: Int? = null
+        private var duration: Int? = null
         private lateinit var offerType: String
         private lateinit var requestType: String
         private lateinit var currency: Currency
@@ -123,10 +127,17 @@ class Analytics(
         private var price: Double = -1.0
         private var campaign: String? = null
         private var rubPrice: Double? = Double.NaN
+        private var offerId: String? = null
+        private var origin: String? = null
+        private var destination: String? = null
+        private var transportType: List<String>? = null
+        private var passengersCount: Int? = null
+        private var beginInHours: Int? = null // time to transfer
 
         private var offer: Offer? = null
         private var bookNowOffer: BookNowOffer? = null
         private var transfer: Transfer? = null
+        private var transferModel: TransferModel? = null
         private var offers: List<OfferItem> = emptyList()
 
         /**
@@ -164,6 +175,7 @@ class Analytics(
             transfers.forEach {
                 utils.launchSuspend {
                     transfer = it
+                    transferModel = it.map(configsManager.configs.transportTypes.map { it.map() })
                     getOffer(it)
                     sendAnalytics(it)
                 }
@@ -188,7 +200,7 @@ class Analytics(
         private fun prepareData() {
             transactionId = transfer?.id.toString()
             promocode = transfer?.promoCode
-            hours = orderInteractor.duration
+            duration = orderInteractor.duration
             offerType = if (offer != null) REGULAR else NOW
             requestType = when {
                 transfer?.duration != null -> TRIP_HOURLY
@@ -210,11 +222,18 @@ class Analytics(
             }
             campaign = transfer?.campaign
             rubPrice = transfer?.rubPrice
+            offerId = offer?.id.toString()
+            origin = orderInteractor.from?.variants?.first
+            destination = orderInteractor.to?.variants?.first
+            passengersCount = transfer?.pax
+            beginInHours = transferModel?.timeToTransfer?.div(60)
+            transportType = transfer?.transportTypeIds?.map { it.toString() }
         }
 
         private fun getTransferAndOffer() = paymentInteractor.selectedTransfer?.let { st ->
             paymentInteractor.selectedOffer?.let { so ->
                 transfer = st
+                transferModel = st.map(configsManager.configs.transportTypes.map { it.map() })
                 getOfferType(so)
             }
         }
@@ -230,7 +249,7 @@ class Analytics(
             val map = mutableMapOf<String, Any?>()
             map[TRANSACTION_ID] = transactionId
             map[PROMOCODE] = promocode
-            hours?.let { map[HOURS] = it }
+            duration?.let { map[DURATION] = it }
             map[OFFER_TYPE] = offerType
             map[TRIP_TYPE] = requestType
             map[AFInAppEventParameterName.CURRENCY] = currencyCode
@@ -242,13 +261,19 @@ class Analytics(
             val map = mutableMapOf<String, Any?>()
             map[TRANSACTION_ID] = transactionId
             map[PROMOCODE] = promocode
-            hours?.let { map[HOURS] = it }
+            duration?.let { map[DURATION] = it }
             map[OFFER_TYPE] = offerType
             map[TRIP_TYPE] = requestType
             map[CURRENCY] = currencyCode
             map[VALUE] = price
             map[CAMPAIGN] = campaign
             rubPrice?.let { map[RUB_PRICE] = it }
+            map[OFFER_ID] = offerId
+            map[ORIGIN] = origin
+            map[DESTINATION] = destination
+            map[NUMBER_OF_PASSENGERS] = passengersCount
+            map[TRAVEL_CLASS] = transportType
+            map[BEGIN_IN_HOURS] = beginInHours
             logEventToYandex(EVENT_ECOMMERCE_PURCHASE, map)
 
             sendRevenue()
@@ -268,9 +293,15 @@ class Analytics(
             val bundle = Bundle()
             bundle.putString(TRANSACTION_ID, transactionId)
             bundle.putString(PROMOCODE, promocode)
-            hours?.let { bundle.putInt(HOURS, it) }
+            duration?.let { bundle.putInt(DURATION, it) }
             bundle.putString(OFFER_TYPE, offerType)
             bundle.putString(TRIP_TYPE, requestType)
+            bundle.putString(OFFER_ID, offerId)
+            bundle.putString(ORIGIN, origin)
+            bundle.putString(DESTINATION, destination)
+            passengersCount?.let { bundle.putInt(NUMBER_OF_PASSENGERS, it) }
+            bundle.putStringArray(TRAVEL_CLASS, transportType?.toTypedArray())
+            beginInHours?.let { bundle.putInt(BEGIN_IN_HOURS, it) }
             facebook.logPurchase(price.toBigDecimal(), currency, bundle)
         }
 
@@ -278,13 +309,19 @@ class Analytics(
             val bundle = Bundle()
             bundle.putString(TRANSACTION_ID, transactionId)
             bundle.putString(PROMOCODE, promocode)
-            hours?.let { bundle.putInt(HOURS, it) }
+            duration?.let { bundle.putInt(DURATION, it) }
             bundle.putString(OFFER_TYPE, offerType)
             bundle.putString(TRIP_TYPE, requestType)
             bundle.putString(CURRENCY, currencyCode)
             bundle.putDouble(VALUE, price)
             bundle.putString(CAMPAIGN, campaign)
             rubPrice?.let { bundle.putDouble(RUB_PRICE, it) }
+            bundle.putString(OFFER_ID, offerId)
+            bundle.putString(ORIGIN, origin)
+            bundle.putString(DESTINATION, destination)
+            passengersCount?.let { bundle.putInt(NUMBER_OF_PASSENGERS, it) }
+            bundle.putStringArray(TRAVEL_CLASS, transportType?.toTypedArray())
+            beginInHours?.let { bundle.putInt(BEGIN_IN_HOURS, it) }
             logEventToFirebase(EVENT_ECOMMERCE_PURCHASE, bundle)
         }
     }
@@ -366,9 +403,6 @@ class Analytics(
 
     @Suppress("LongParameterList")
     fun logEventAddToCart(
-        numberOfPassengers: Int,
-        origin: String?,
-        destination: String?,
         travelClass: String?,
         hours: Int?,
         tripType: String,
@@ -380,9 +414,9 @@ class Analytics(
         val map = mutableMapOf<String, Any?>()
         val afMap = mutableMapOf<String, Any?>()
 
-        map[NUMBER_OF_PASSENGERS] = numberOfPassengers
-        map[ORIGIN] = origin
-        map[DESTINATION] = destination
+        map[NUMBER_OF_PASSENGERS] = orderInteractor.passengers
+        map[ORIGIN] = orderInteractor.from?.variants?.first
+        map[DESTINATION] = orderInteractor.to?.variants?.first
         map[TRAVEL_CLASS] = travelClass
         map[HOURS] = hours
         map[TRIP_TYPE] = tripType
@@ -517,6 +551,8 @@ class Analytics(
         const val TRANSACTION_ID = "transaction_id"
         const val BEGIN_IN_HOURS = "begin_in_hours"
         const val PROMOCODE = "promocode"
+        const val DURATION = "duration"
+        const val OFFER_ID = "offer_id"
 
         const val TRIP_HOURLY = "hourly"
         const val TRIP_DESTINATION = "destination"

@@ -601,9 +601,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val currency = if (selectedCurrency != INVALID_CURRENCY_INDEX) currencies[selectedCurrency].name else null
 
         analytics.logEventAddToCart(
-            orderInteractor.passengers,
-            orderInteractor.from?.variants?.first,
-            orderInteractor.to?.variants?.first,
             transportTypes?.filter { it.checked }?.joinToString(),
             duration?.let { it },
             tripType,
