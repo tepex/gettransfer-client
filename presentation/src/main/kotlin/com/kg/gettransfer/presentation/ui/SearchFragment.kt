@@ -1,12 +1,11 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.os.Handler
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -30,12 +29,8 @@ import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.view.SearchView
 
-import kotlinx.android.synthetic.main.a_b_orange_view.*
-import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.search_address.*
 import kotlinx.android.synthetic.main.search_form.*
-import kotlinx.android.synthetic.main.search_form.view.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 
@@ -61,14 +56,13 @@ class SearchFragment : BaseFragment(), SearchView {
         rv_addressList.setOnTouchListener(onTouchListener)
         rv_popularList.setOnTouchListener(onTouchListener)
 
-        rv_addressList.layoutManager = LinearLayoutManager(requireContext())
-        rv_popularList.layoutManager = LinearLayoutManager(requireContext())
-
         initSearchFields()
         predefinedPopularPlaces = initPredefinedPopularPlaces()
 
-        if (presenter.isHourly()) fl_inverse.isVisible = false
-        else ivInverseWay.setOnClickListener { presenter.inverseWay() }
+        if (!presenter.isHourly()) {
+            ivInverseWay.isVisible = true
+            ivInverseWay.setOnClickListener { presenter.inverseWay() }
+        }
         pointOnMap.setOnClickListener { presenter.selectFinishPointOnMap() }
     }
 
@@ -82,11 +76,9 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     private fun initSearchFields() {
-        searchFrom.initWidget(this, false)
-        searchFrom.sub_title.text = getString(R.string.LNG_FIELD_SOURCE_PICKUP)
+        searchForm.initFromWidget(this, getString(R.string.LNG_FIELD_SOURCE_PICKUP))
+        searchForm.initToWidget(this, getString(R.string.LNG_FIELD_DESTINATION))
 
-        searchTo.initWidget(this, true)
-        searchTo.sub_title.text = getString(R.string.LNG_FIELD_DESTINATION)
         changeFocusForSearch()
     }
 
@@ -98,18 +90,18 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     private fun setupToolbar() {
-        toolbar.ivBack.setThrottledClickListener { goToBack() }
+        toolbar.ivBack.setThrottledClickListener {
+            hideKeyboard()
+            Handler().postDelayed( {goToBack()}, 500)
+        }
         toolbar.toolbar_title.text = getString(R.string.LNG_SEARCH)
+
     }
 
-    fun onSearchFieldEmpty(isTo: Boolean) {
+
+    fun onSearchFieldEmpty(isToField: Boolean) {
         presenter.onSearchFieldEmpty()
-        if(isTo) searchForm.icons_container.tv_b_point.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.back_orange_empty)
-                        .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextBlack)) }
-        else     searchForm.icons_container.tv_a_point.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.back_orange_empty)
-                        .also { icons_container.tv_a_point.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorTextBlack)) }
+        searchForm.markFieldEmpty(isToField)
     }
 
     private fun initPredefinedPopularPlaces() = listOf(
@@ -120,56 +112,41 @@ class SearchFragment : BaseFragment(), SearchView {
     /* SearchView */
     override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) {
         searchFrom.initText(address, sendRequest, isEditing)
-        if (address.isNotEmpty()) updateIcon(false)
+        if (address.isNotEmpty()) markFieldFilled(false)
     }
 
     override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean) {
         searchTo.initText(address, sendRequest, isEditing)
-        if (address.isNotEmpty()) updateIcon(true)
+        if (address.isNotEmpty()) markFieldFilled(true)
     }
 
     override fun changeFocusToDestField() = searchTo.changeFocus()
 
-    override fun hideAddressTo() {
-        searchTo.isGone  = true
-        link_line.isGone = true
-        tv_b_point.isGone   = true
-        separator.isGone = true
-    }
+    override fun hideAddressTo() = searchForm.hideToField()
 
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
-        ll_popular.isVisible    = false
-        address_title.isVisible = false
+        popular_title.isVisible  = false
+        rv_popularList.isVisible = false
+        address_title.isVisible  = false
         rv_addressList.adapter?.let {
             (it as AddressAdapter).isLastAddresses = false
             it.updateList(list)
         }
     }
 
-    override fun onFindPopularPlace(isTo: Boolean, place: String) {
-        val searchField = if (isTo) searchTo else searchFrom
-        searchField.initText(place, true, true)
-    }
+    override fun onFindPopularPlace(isToField: Boolean, place: String) = searchForm.findPopularPlace(isToField, place)
 
     override fun setSuggestedAddresses(addressesList: List<GTAddress>) {
-        ll_popular.isVisible = true
+        popular_title.isVisible  = true
+        rv_popularList.isVisible = true
         rv_popularList.adapter = PopularAddressAdapter(predefinedPopularPlaces) { presenter.onPopularSelected(it) }
         rv_addressList.adapter = AddressAdapter(addressesList) { presenter.onAddressSelected(it) }.apply { isLastAddresses = true }
         address_title.isVisible = addressesList.isNotEmpty()
     }
 
-    override fun updateIcon(isTo: Boolean) {
-        if (isTo) searchForm.icons_container.tv_b_point.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.back_circle_marker_orange_filled)
-                .also { icons_container.tv_b_point.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite)) }
-        else searchForm.icons_container.tv_a_point.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.back_circle_marker_orange_filled)
-                        .also { icons_container.tv_a_point.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite)) }
-    }
+    override fun markFieldFilled(isToField: Boolean) = searchForm.markFiledFilled(isToField)
 
-    override fun setFocus(isToField: Boolean) {
-        if (isToField) searchTo.changeFocus() else searchFrom.changeFocus()
-    }
+    override fun setFocus(isToField: Boolean) = searchForm.changeFocus(isToField)
 
     override fun onAddressError(message: Int, address: GTAddress, fieldTo: Boolean) {
         (rv_addressList.adapter as AddressAdapter).removeItem(address)
@@ -190,7 +167,7 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     override fun goToBack() {
-        hideKeyboard()
+//        hideKeyboard()
         findNavController().navigateUp()
     }
 

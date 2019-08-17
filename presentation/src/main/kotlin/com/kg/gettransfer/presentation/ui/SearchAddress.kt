@@ -108,7 +108,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     fun initText(text: String, sendRequest: Boolean, cursorOnEnd: Boolean) {
         blockRequest = true
         this.text = if (text.isNotEmpty()) "$text " else ""
-        if (cursorOnEnd) addressField.setSelection(addressField.text.length)
+        if (cursorOnEnd) addressField.setSelection(addressField.text?.length?:0)
         blockRequest = false
         if (sendRequest) presenter.requestAddressListByPrediction(text.trim())
     }
@@ -192,7 +192,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
     fun changeFocus() {
         addressField.requestFocus()
-        addressField.setSelection(addressField.text.length)
+        addressField.setSelection(addressField.text?.length?:0)
     }
 
     override fun setTransferNotFoundError(transferId: Long) {}

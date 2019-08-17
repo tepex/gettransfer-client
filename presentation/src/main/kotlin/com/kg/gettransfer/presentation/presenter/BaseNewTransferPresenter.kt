@@ -31,11 +31,8 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
-import ru.terrakok.cicerone.Router
-
 @Suppress("TooManyFunctions")
 open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>(), KoinComponent {
-    protected val router: Router by inject()
     protected val analytics: Analytics by inject()
 
     protected val worker: WorkerManager by inject { parametersOf("BaseNewTransferPresenter") }
@@ -49,15 +46,12 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     protected var lastCurrentLocation: LatLng? = null
 
-    protected var isVisible: Boolean = true
-
     override fun attachView(view: BV) {
         super.attachView(view)
-        updateView(isVisible)
+        updateView()
     }
 
-    open fun updateView(isVisibleView: Boolean) {
-        this.isVisible = isVisibleView
+    open fun updateView() {
     }
 
     open fun fillViewFromState(selectField: String? = null) {

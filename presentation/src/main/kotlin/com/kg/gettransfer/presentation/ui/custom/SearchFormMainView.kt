@@ -30,7 +30,7 @@ class SearchFormMainView @JvmOverloads constructor(
                     ivSelectFieldToIsGone = getBoolean(R.styleable.SearchFormMainView_ivSelectFieldToGone, ivSelectFieldToIsGone)
                     ivSelectFieldTo.isGone = ivSelectFieldToIsGone
                     ivSelectFieldFrom.isGone = getBoolean(R.styleable.SearchFormMainView_ivSelectFieldFromGone, false)
-                    search.setBackgroundResource(
+                    setBackgroundResource(
                         when (getBoolean(R.styleable.SearchFormMainView_roundedTopCorners, false)) {
                             true  -> R.drawable.back_top_rounded
                             false -> R.color.colorWhite
@@ -96,15 +96,15 @@ class SearchFormMainView @JvmOverloads constructor(
     fun setSearchFrom(value: String) {
         if (value != searchFrom.text) {
             searchFrom.text = value
-            setPointsView(tv_a_point, value.isNotEmpty())
         }
+        setPointsView(tv_a_point, value.isNotEmpty())
     }
 
     fun setSearchTo(value: String) {
         if (value != searchTo.text) {
             searchTo.text = value
-            setPointsView(tv_b_point, value.isNotEmpty())
         }
+        setPointsView(tv_b_point, value.isNotEmpty())
     }
 
     fun selectSearchFrom() {

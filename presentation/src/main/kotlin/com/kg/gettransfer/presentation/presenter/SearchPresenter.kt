@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
 
@@ -13,6 +14,7 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.presentation.model.PopularPlace
 
 import com.kg.gettransfer.presentation.view.SearchView
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -21,17 +23,20 @@ import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.KoinComponent
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 @InjectViewState
-class SearchPresenter : BasePresenter<SearchView>() {
+class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
 
     private val worker: WorkerManager by inject { parametersOf("SearchPresenter") }
     private val orderInteractor: OrderInteractor by inject()
     private val setSelectedField: SetSelectedFieldInteractor by inject()
     private val setAddressHistory: SetAddressHistoryInteractor by inject()
+    protected val getPreferences: GetPreferencesInteractor by inject()
+    protected val analytics: Analytics by inject()
 
     internal var isTo = false
 
@@ -58,11 +63,11 @@ class SearchPresenter : BasePresenter<SearchView>() {
     }
 
     fun onAddressSelected(selected: GTAddress) {
-        utils.launchSuspend {
+        worker.main.launch{
             val oldAddress = if (isTo) orderInteractor.to else orderInteractor.from //for detecting double click
             var updatedGTAddress: GTAddress? = null //address with point
             selected.cityPoint.placeId?.let { placeId ->
-                fetchResult { orderInteractor.updatePoint(isTo, placeId) }.isSuccess()?.let { updatedGTAddress = it }
+                withContext(worker.bg) { orderInteractor.updatePoint(isTo, placeId) }.isSuccess()?.let { updatedGTAddress = it }
             }
             val newAddress = updatedGTAddress ?: selected
             analytics.logSingleEvent(Analytics.LAST_PLACE_CLICKED)
@@ -87,11 +92,11 @@ class SearchPresenter : BasePresenter<SearchView>() {
             }
 
             if (placeType != ROUTE_TYPE || isDoubleClickOnRoute) {
-                viewState.updateIcon(isTo)
+                viewState.markFieldFilled(isTo)
                 if (newAddress.cityPoint.point != null) {
                     pointReady(checkZeroPoint(newAddress), isDoubleClickOnRoute, true)
                 } else if (selected.cityPoint.placeId != null) {
-                    fetchResult { orderInteractor.updatePoint(isTo, selected.cityPoint.placeId!!) }
+                    withContext(worker.bg) { orderInteractor.updatePoint(isTo, selected.cityPoint.placeId!!) }
                         .isSuccess()?.let { pointReady(checkZeroPoint(it), isDoubleClickOnRoute, true) }
                 }
             } else {
@@ -146,10 +151,10 @@ class SearchPresenter : BasePresenter<SearchView>() {
         worker.main.launch {
             withContext(worker.bg) {
                 setSelectedField(if (isTo) FIELD_TO else FIELD_FROM)
+                analytics.logSingleEvent(Analytics.POINT_ON_MAP_CLICKED)
             }
         }
         viewState.goToMap()
-        analytics.logSingleEvent(Analytics.POINT_ON_MAP_CLICKED)
     }
 
     fun isHourly() = orderInteractor.hourlyDuration != null

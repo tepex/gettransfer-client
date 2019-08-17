@@ -13,8 +13,8 @@ import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import com.kg.gettransfer.common.DebouncingOnClickListener
 
-fun View.visibleAnimation(value: Boolean, vg: ViewGroup) {
-    TransitionManager.beginDelayedTransition(vg, Fade().setDuration(150).addTarget(this))
+fun View.visibleAnimation(value: Boolean, vg: ViewGroup, duration: Long = 200) {
+    TransitionManager.beginDelayedTransition(vg, Fade().setDuration(duration).addTarget(this))
     visibility = if (value) View.VISIBLE else View.GONE
 }
 

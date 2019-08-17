@@ -45,72 +45,17 @@
 		app:hint="@string/LNG_FIELD_DESTINATION_WHERE"
 		android:layout_below="@+id/separator" />
 
-	<!--<View-->
-		<!--android:id="@+id/bottom_separator"-->
-		<!--android:layout_width="match_parent"-->
-		<!--android:layout_height="@dimen/search_divider_height"-->
-		<!--android:background="@color/colorDividerGray"-->
-		<!--android:layout_below="@+id/searchTo" />-->
-
-	<RelativeLayout
-			android:id="@+id/rl_hourly"
-			android:visibility="gone"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/search_marginStart"
-			android:layout_below="@+id/separator">
-
-		<TextView
-				android:id="@+id/hourly_title"
-				android:layout_width="wrap_content"
-				android:layout_height="@dimen/search_sub_title_height"
-				android:layout_marginTop="@dimen/search_sub_title_marginTop"
-				android:fontFamily="@font/sf_pro_text_regular"
-				android:textSize="@dimen/search_sub_title_textSize"
-				android:text="@string/LNG_FIELD_PER_HOUSE"/>
-
-		<TextView
-				android:id="@+id/tvCurrent_hours"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@+id/hourly_title"
-				android:paddingBottom="@dimen/search_main_paddingBottom"
-
-				android:fontFamily="@font/sf_pro_text_semibold"
-				android:textColor="@color/colorTextBlack"
-				android:textSize="@dimen/search_main_textSize"
-
-				tools:text="2 hours"/>
-
-		<ImageView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_alignParentEnd="true"
-				android:layout_centerVertical="true"
-				android:layout_marginEnd="@dimen/hourly_arrow_margin_end"
-				android:rotation="90"
-				android:src="@drawable/ic_arrow_down"/>
-
-
-	</RelativeLayout>
-
-	<FrameLayout
-			android:id="@+id/fl_inverse"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+	<androidx.appcompat.widget.AppCompatImageView
+		android:visibility="gone"
 		android:layout_alignParentEnd="true"
 		android:layout_centerVertical="true"
-		android:layout_marginEnd="@dimen/inverse_btn_margin_end">
-
-		<ImageView
-				android:id="@+id/ivInverseWay"
-				android:layout_width="@dimen/image_inverse_size"
-				android:layout_height="@dimen/image_inverse_size"
-				app:srcCompat="@drawable/ic_inverse"
-				style="@style/BorderlessBackground"
-				android:clickable="true" android:focusable="true"/>
-	</FrameLayout>
-
-
+		android:id="@+id/ivInverseWay"
+		style="@style/BorderlessBackground"
+		android:layout_width="@dimen/image_inverse_size"
+		android:layout_height="@dimen/image_inverse_size"
+		android:layout_marginEnd="@dimen/inverse_btn_margin_end"
+		android:clickable="true"
+		android:focusable="true"
+		app:srcCompat="@drawable/ic_inverse" />
 
 </RelativeLayout>

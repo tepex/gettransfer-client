@@ -28,9 +28,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
 
     private var idleAndMoveCamera = true
 
-    override fun updateView(isVisibleView: Boolean) {
-        if (!isVisibleView) return
-
+    override fun updateView() {
         fillViewFromState()
     }
 

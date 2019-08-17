@@ -11,10 +11,10 @@ import androidx.navigation.fragment.findNavController
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.presenter.NewTransferMainPresenter
-import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
 import com.kg.gettransfer.presentation.ui.BaseFragment
 import com.kg.gettransfer.presentation.ui.ReadMoreFragment
 import com.kg.gettransfer.presentation.ui.Utils
@@ -56,15 +56,10 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+/*TODO*/        request_search_panel.tmp?.isVisible = true
         initClickListeners()
 
         enableBtnNext()
-    }
-
-    override fun setUserVisibleHint(visible: Boolean) {
-        super.setUserVisibleHint(visible)
-        presenter.updateView(visible && isResumed)
     }
 
     private fun initClickListeners() {

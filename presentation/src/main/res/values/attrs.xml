@@ -107,10 +107,6 @@
         <attr name="switcher_title" format="string"/>
     </declare-styleable>
 
-    <declare-styleable name="SearchFormView">
-        <attr name="isInverseInvisible" format="boolean"/>
-    </declare-styleable>
-
     <declare-styleable name="SearchFormMainView">
         <attr name="ivSelectFieldToGone" format="boolean"/>
         <attr name="ivSelectFieldFromGone" format="boolean"/>

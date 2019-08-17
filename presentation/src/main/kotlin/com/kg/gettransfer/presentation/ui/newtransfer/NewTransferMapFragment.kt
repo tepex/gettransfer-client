@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
 import android.animation.Animator
-import android.os.Build
 import android.os.Bundle
 
 import androidx.annotation.CallSuper
@@ -70,10 +69,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            search_panel.elevation = resources.getDimension(R.dimen.search_elevation)
-        }
-
         baseMapView = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
         baseBtnCenter = btnMyLocation
@@ -110,12 +105,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         }
 
         enableBtnNext()
-    }
-
-    @CallSuper
-    override fun setUserVisibleHint(visible: Boolean) {
-        super.setUserVisibleHint(visible)
-        presenter.updateView(visible && isResumed)
     }
 
     /**

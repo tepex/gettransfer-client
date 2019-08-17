@@ -44,9 +44,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.BEST_PRICE_CLICKED)
     }
 
-    override fun updateView(isVisibleView: Boolean) {
-        if (!isVisibleView) return
-
+    override fun updateView() {
         fillViewFromState(FIELD_FROM)
     }
 

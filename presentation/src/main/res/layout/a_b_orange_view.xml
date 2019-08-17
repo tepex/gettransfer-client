@@ -2,17 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical" android:layout_width="56dp"
               android:gravity="center_horizontal"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content">
     <TextView
             android:id="@+id/tv_a_point"
             android:layout_width="@dimen/a_b_point_iconSize"
             android:layout_height="@dimen/a_b_point_iconSize"
             android:text="A"
-            style="@style/black_semiBold"
-            android:textColor="@color/colorWhite"
-            android:gravity="center"
-            android:background="@drawable/back_circle_marker_orange_filled"/>
-    <ImageView
+            android:gravity="center"/>
+    <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/link_line"
             android:layout_marginTop="@dimen/link_line_margin"
             android:layout_marginBottom="@dimen/link_line_margin"
@@ -24,17 +21,11 @@
             android:layout_width="@dimen/a_b_point_iconSize"
             android:layout_height="@dimen/a_b_point_iconSize"
             android:gravity="center"
-            style="@style/black_semiBold"
-            android:text="B"
-            android:background="@drawable/back_orange_empty"/>
-    <ImageView
+            android:text="B"/>
+    <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/hourly_point"
             android:visibility="gone"
             android:layout_width="@dimen/a_b_point_iconSize"
             android:layout_height="@dimen/a_b_point_iconSize"
             android:src="@drawable/ic_hourly_driver"/>
-
-
-
-
 </LinearLayout>

@@ -3,20 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.ui.SearchFragment">
 
     <include
         android:id="@+id/toolbarLayout"
         layout="@layout/toolbar_nav_back" />
 
-    <include
+    <com.kg.gettransfer.presentation.ui.custom.SearchFormView
         android:id="@+id/searchForm"
-        layout="@layout/search_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbarLayout" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollViewResults"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,49 +26,37 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/white"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/ll_addresses"
+            <TextView
+                android:id="@+id/address_title"
+                style="@style/list_title"
+                android:text="@string/LNG_SEARCH_RECENT_PLACES"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_addressList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="vertical">
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <TextView
-                    android:id="@+id/address_title"
-                    style="@style/list_title"
-                    android:text="@string/LNG_SEARCH_RECENT_PLACES" />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/popular_title"
+                style="@style/list_title"
+                android:text="@string/LNG_SEARCH_POPULAR_PLACES" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_addressList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_popular"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_popularList"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/popular_title"
-                    style="@style/list_title"
-                    android:text="@string/LNG_SEARCH_POPULAR_PLACES" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_popularList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="@dimen/minHeight_toDraw_AllPopularPlaces" />
-            </LinearLayout>
+                android:minHeight="@dimen/minHeight_toDraw_AllPopularPlaces"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </LinearLayout>
-        
-    </ScrollView>
-
+    </androidx.core.widget.NestedScrollView>
 
     <include
         android:id="@+id/pointOnMap"

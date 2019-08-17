@@ -4,7 +4,6 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:paddingBottom="0dp"
 	tools:context=".presentation.ui.SearchAddressReadOnly">
 
 	<TextView
@@ -29,11 +28,9 @@
 		android:layout_marginEnd="@dimen/search_form_address_margin"
 		android:background="@null"
 		android:letterSpacing="-0.02"
-		android:fontFamily="@font/sf_pro_text_semibold"
+		android:theme="@style/sf_font_semi_bold_17_sp"
 		android:lineSpacingExtra="5sp"
 		android:singleLine="true"
-		android:textColor="@color/colorTextBlack"
-		android:textSize="@dimen/search_main_textSize"
 		android:textColorHint="@color/black_a10"
 		android:ellipsize="end"
 		android:paddingBottom="@dimen/search_main_paddingBottom"
