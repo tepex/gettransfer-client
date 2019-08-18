@@ -23,6 +23,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
+import com.kg.gettransfer.extensions.visibleFade
 
 import com.kg.gettransfer.presentation.presenter.NewTransferMapPresenter
 import com.kg.gettransfer.presentation.ui.*
@@ -112,6 +113,10 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
      */
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
         return FragmentUtils.onCreateAnimation(requireContext(), enter) {
+
+            search_panel.visibleFade(true, search_panel)
+            presenter.updateView()
+
             if (!isPermissionRequested) {
                 isPermissionRequested = true
                 checkPermission()
@@ -126,6 +131,9 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
             gm.cameraPosition?.let { presenter.onCameraMove(it.target, true) }
         }
         gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
+    }
+
+    override fun initMap() {
     }
 
     fun performNextClick() {

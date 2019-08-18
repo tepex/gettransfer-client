@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.animation.Animator
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -13,7 +14,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.visibleSlide
 import com.kg.gettransfer.presentation.presenter.SupportPresenter
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.SupportView
 
 import kotlinx.android.synthetic.main.fragment_support.*
@@ -51,12 +54,22 @@ class SupportFragment : BaseFragment(), SupportView {
         fabViber.setOnClickListener { viberClick() }
         fabTelegram.setOnClickListener { telegramClick() }
         fabEmail.setOnClickListener { presenter.sendEmail(null, null) }
-        cyPhone.setOnClickListener { presenter.callPhone(cyPhone.tvPhone.text.toString()) }
-        gbPhone.setOnClickListener { presenter.callPhone(gbPhone.tvPhone.text.toString()) }
-        hkPhone.setOnClickListener { presenter.callPhone(hkPhone.tvPhone.text.toString()) }
-        ruPhone.setOnClickListener { presenter.callPhone(ruPhone.tvPhone.text.toString()) }
-        swPhone.setOnClickListener { presenter.callPhone(swPhone.tvPhone.text.toString()) }
-        usPhone1.setOnClickListener { presenter.callPhone(usPhone1.tvPhone.text.toString()) }
+    }
+
+    /**
+     * Add views to layout after fragment started
+     */
+    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
+        return FragmentUtils.onCreateAnimation(requireContext(), enter) {
+            ourLanguages.visibleSlide(true)
+            phones.visibleSlide(true)
+            cyPhone.setOnClickListener { presenter.callPhone(cyPhone.tvPhone.text.toString()) }
+            gbPhone.setOnClickListener { presenter.callPhone(gbPhone.tvPhone.text.toString()) }
+            hkPhone.setOnClickListener { presenter.callPhone(hkPhone.tvPhone.text.toString()) }
+            ruPhone.setOnClickListener { presenter.callPhone(ruPhone.tvPhone.text.toString()) }
+            swPhone.setOnClickListener { presenter.callPhone(swPhone.tvPhone.text.toString()) }
+            usPhone1.setOnClickListener { presenter.callPhone(usPhone1.tvPhone.text.toString()) }
+        }
     }
 
     private fun facebookClick() = startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL)))

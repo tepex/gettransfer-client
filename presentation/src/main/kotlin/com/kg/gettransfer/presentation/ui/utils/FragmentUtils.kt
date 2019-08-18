@@ -19,7 +19,7 @@ object FragmentUtils {
                     .commitAllowingStateLoss()
 
     fun onCreateAnimation(context: Context, enter: Boolean, executeAfterAnimEnd: () -> Unit): Animator {
-        val animatorId: Int = if (enter) R.animator.fade_in else R.animator.fade_out
+        val animatorId: Int = if (enter) R.animator.transition_b2t else R.animator.transition_t2b
         val anim = AnimatorInflater.loadAnimator(context, animatorId)
         anim.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {

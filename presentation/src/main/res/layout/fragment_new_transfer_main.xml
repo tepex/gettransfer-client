@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contentMain"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,7 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:text_no_internet="@string/LNG_OFFLINE_MESSAGE" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/bestPriceLogo"
         android:layout_width="@dimen/main_without_map_logo_size"
         android:layout_height="@dimen/main_without_map_logo_size"
@@ -55,7 +56,7 @@
 
     </LinearLayout>
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/gtrLogo"
         android:layout_width="@dimen/nav_header_logo_width"
         android:layout_height="@dimen/nav_header_logo_height"
@@ -86,19 +87,36 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/main_without_map_switch_hourly_margins"
         android:layout_marginBottom="@dimen/main_without_map_switch_hourly_margins"
-        app:layout_constraintBottom_toTopOf="@+id/request_search_panel"
+        app:layout_constraintBottom_toTopOf="@+id/search_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:switcher_title="@string/LNG_PER_HOUR" />
 
-    <com.kg.gettransfer.presentation.ui.custom.SearchFormMainView
-        android:id="@+id/request_search_panel"
+    <FrameLayout
+        android:id="@+id/search_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="115dp"
         android:layout_marginBottom="@dimen/main_without_map_addresses_panel_margin_bottom"
-        app:ivSelectFieldToGone="true"
-        app:roundedTopCorners="false"
-        app:layout_constraintBottom_toTopOf="@+id/btnNextFragment" />
+        android:background="@color/colorWhite"
+        app:layout_constraintBottom_toTopOf="@+id/btnNextFragment">
 
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_loader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shimmer_auto_start="true"
+            app:shimmer_duration="2400">
+
+            <include layout="@layout/view_shimmer_item" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <com.kg.gettransfer.presentation.ui.custom.SearchFormMainView
+            android:visibility="gone"
+            android:id="@+id/request_search_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ivSelectFieldToGone="true"
+            app:roundedTopCorners="false" />
+    </FrameLayout>
     <Button
         android:id="@+id/btnNextFragment"
         style="?android:attr/borderlessButtonStyle"

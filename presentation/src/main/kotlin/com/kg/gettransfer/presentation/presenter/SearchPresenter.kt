@@ -40,8 +40,7 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
 
     internal var isTo = false
 
-    override fun attachView(view: SearchView) {
-        super.attachView(view)
+    fun init() {
         viewState.setAddressFrom(orderInteractor.from?.cityPoint?.name ?: "", true, !isTo)
         if (orderInteractor.hourlyDuration == null) {
             viewState.setAddressTo(orderInteractor.to?.cityPoint?.name ?: "", true, isTo)

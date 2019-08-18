@@ -297,6 +297,8 @@ dependencies {
     // Play services
     implementation "com.google.android.gms:play-services-base:$play_services"
 
+    api ('androidx.transition:transition:1.2.0-beta01')
+
     testImplementation libs.coroutines_test
     testImplementation libs.koin_test
     testImplementation libs.kotlintest

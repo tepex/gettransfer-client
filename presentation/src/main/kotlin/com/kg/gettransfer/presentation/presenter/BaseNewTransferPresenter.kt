@@ -46,11 +46,6 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     protected var lastCurrentLocation: LatLng? = null
 
-    override fun attachView(view: BV) {
-        super.attachView(view)
-        updateView()
-    }
-
     open fun updateView() {
     }
 

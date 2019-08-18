@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
+import android.animation.Animator
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import android.view.LayoutInflater
@@ -11,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.visibleFade
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.presenter.NewTransferMainPresenter
@@ -20,6 +21,7 @@ import com.kg.gettransfer.presentation.ui.ReadMoreFragment
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.NewTransferMainView
 import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
@@ -56,7 +58,6 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-/*TODO*/        request_search_panel.tmp?.isVisible = true
         initClickListeners()
 
         enableBtnNext()
@@ -80,6 +81,17 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         btnNextFragment.setOnClickListener { onNextClick() }
         bestPriceLogo.setOnClickListener(readMoreListener)
         layoutBestPriceText.setOnClickListener(readMoreListener)
+    }
+
+    /**
+     * Request update layout after fragment started
+     */
+    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
+        return FragmentUtils.onCreateAnimation(requireContext(), enter) {
+
+            request_search_panel.visibleFade(true, request_search_panel)
+            presenter.updateView()
+        }
     }
 
     override fun blockFromField() {

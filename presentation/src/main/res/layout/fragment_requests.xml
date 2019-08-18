@@ -56,18 +56,17 @@
 
         <Button
             android:id="@+id/btn_forward_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/btn_bg_rounded"
-            android:fontFamily="@font/sf_pro_text_semibold"
             android:text="@string/LNG_MENU_SUBTITLE_NEW"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp"
-
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_without_map_btn_next_height"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/main_without_map_btn_next_horizontal_margin"
+            android:layout_marginEnd="@dimen/main_without_map_btn_next_horizontal_margin"
+            android:layout_marginBottom="@dimen/main_without_map_btn_next_margin_bottom"
+            android:background="@drawable/btn_bg_rounded"
             android:visibility="gone" />
 
     </RelativeLayout>

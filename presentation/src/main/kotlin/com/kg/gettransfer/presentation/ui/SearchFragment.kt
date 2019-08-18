@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.animation.Animator
 import android.os.Bundle
 import android.os.Handler
 
@@ -27,6 +28,7 @@ import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.SearchView
 
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -52,18 +54,30 @@ class SearchFragment : BaseFragment(), SearchView {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
 
-        scrollViewResults.setOnTouchListener(onTouchListener)
-        rv_addressList.setOnTouchListener(onTouchListener)
-        rv_popularList.setOnTouchListener(onTouchListener)
-
-        initSearchFields()
         predefinedPopularPlaces = initPredefinedPopularPlaces()
 
-        if (!presenter.isHourly()) {
-            ivInverseWay.isVisible = true
-            ivInverseWay.setOnClickListener { presenter.inverseWay() }
-        }
         pointOnMap.setOnClickListener { presenter.selectFinishPointOnMap() }
+    }
+
+    /**
+     * Init view after fragment started
+     */
+    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
+        return FragmentUtils.onCreateAnimation(requireContext(), enter) {
+
+            searchForm.visibleFade(true, content)
+
+            scrollViewResults.setOnTouchListener(onTouchListener)
+            rv_addressList.setOnTouchListener(onTouchListener)
+            rv_popularList.setOnTouchListener(onTouchListener)
+
+            initSearchFields()
+            if (!presenter.isHourly()) {
+                ivInverseWay.isVisible = true
+                ivInverseWay.setOnClickListener { presenter.inverseWay() }
+            }
+            presenter.init()
+        }
     }
 
     private val onTouchListener = View.OnTouchListener { view, event ->

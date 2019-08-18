@@ -5,7 +5,6 @@ import android.os.Build
 import android.os.Bundle
 
 import androidx.annotation.CallSuper
-import android.view.LayoutInflater
 
 import android.view.WindowManager
 
@@ -16,11 +15,9 @@ import androidx.navigation.fragment.FragmentNavigator
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.extensions.visibleAnimation
+import com.kg.gettransfer.extensions.visibleSlide
 import com.kg.gettransfer.extensions.setupWithNavController
 
 import com.kg.gettransfer.presentation.presenter.MainNavigatePresenter
@@ -32,7 +29,6 @@ import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
 import kotlinx.android.synthetic.main.activity_main_navigate.*
-import kotlinx.android.synthetic.main.notification_badge_view.view.*
 
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -142,13 +138,13 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             RequestsPagerFragment::class.java.name,
             SettingsFragment::class.java.name,
             SupportFragment::class.java.name -> {
-                bottom_nav_shadow.visibleAnimation(true, parent_container, 150)
-                bottom_nav.visibleAnimation(true, parent_container)
+                bottom_nav_shadow.visibleSlide(true, parent_container)
+                bottom_nav.visibleSlide(true, parent_container)
             }
             //not visible bottom menu
             else -> {
-                bottom_nav.visibleAnimation(false, parent_container, 150)
-                bottom_nav_shadow.visibleAnimation(false, parent_container)
+                bottom_nav.visibleSlide(false, parent_container)
+                bottom_nav_shadow.visibleSlide(false, parent_container)
             }
         }
     }
