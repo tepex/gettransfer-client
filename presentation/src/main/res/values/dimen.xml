@@ -721,7 +721,7 @@
 	<dimen name="payment_offer_tiny_language_height">9dp</dimen>
 	<dimen name="payment_offer_tiny_language_vertical_margins">0dp</dimen>
 	<dimen name="payment_offer_tiny_language_horizontal_margins">2dp</dimen>
-	<dimen name="payment_offer_tiny_capacity_margin_end">12dp</dimen>
+	<dimen name="payment_offer_tiny_capacity_margin_end">25dp</dimen>
 	<dimen name="offer_tiny_discount_price_text_size">12sp</dimen>
 	<dimen name="offer_tiny_final_price_text_size">18sp</dimen>
 	<dimen name="offer_tiny_co2_text_size">14sp</dimen>
