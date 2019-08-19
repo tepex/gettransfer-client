@@ -50,7 +50,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private val endpoints: List<EndpointModel> = get<List<Endpoint>>(named(ENDPOINTS)).map { it.map() }
 
-    private lateinit var locales: List<LocaleModel>
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
 
@@ -84,14 +83,17 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private fun initGeneralSettings() {
         viewState.initGeneralSettingsLayout()
 
-        viewState.setCurrency(sessionInteractor.currency.map().name)
-
-        viewState.setLocales(locales)
-        val locale = sessionInteractor.locale
-        val localeModel = locales.find { it.delegate.language == locale.language }
-        viewState.setLocale(localeModel?.name ?: "", locale.language)
-
-        viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
+        worker.main.launch {
+            viewState.setCurrency(sessionInteractor.currency.map().name)
+            val locale = sessionInteractor.locale
+            val localeModel   = withContext(worker.bg) {
+                configsManager.configs.availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
+                        .map { it.map() }
+                        .find { it.delegate.language == locale.language }
+            }
+            viewState.setLocale(localeModel?.name ?: "", locale.language)
+            viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
+        }
     }
 
     private fun initProfileSettings() {
@@ -133,9 +135,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, currency.code)
     }
 
-    fun changeLocale(selected: Int) {
+    fun changeLocale(localeModel: LocaleModel) {
         localeWasChanged = true
-        val localeModel = locales[selected]
         sessionInteractor.locale = localeModel.delegate
         viewState.setLocale(localeModel.name, localeModel.locale)
         saveGeneralSettings(true)
@@ -238,6 +239,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
     }
 
+    fun onLanguageClicked() {
+        viewState.showLanguageChooser()
+    }
+
     fun onProfileFieldClicked() {
         if (accountManager.isLoggedIn) router.navigateTo(Screens.ProfileSettings())
         else router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, null))
@@ -268,8 +273,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     private fun initConfigs() {
-        locales = configsManager.configs.availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
-            .map { it.map() }
         calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false

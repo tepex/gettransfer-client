@@ -22,6 +22,7 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
+import com.kg.gettransfer.presentation.presenter.LanguageChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
@@ -44,7 +45,8 @@ import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
 import org.koin.android.ext.android.inject
 
 @Suppress("TooManyFunctions")
-class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyChangedListener {
+class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
+        CurrencyChangedListener, LanguageChangedListener {
 
     private val localeManager: LocaleManager by inject()
 
@@ -63,16 +65,13 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyCh
         setTitleText()
     }
 
-    override fun showCurrencyChooser() {
-        findNavController().navigate(SettingsFragmentDirections.goToSelectCurrency())
-    }
-
     private fun setTitleText() {
         toolbar.toolbar_title.text = getString(R.string.LNG_MENU_TITLE_SETTINGS)
     }
 
     override fun initGeneralSettingsLayout() {
         Timber.d("current locale: ${Locale.getDefault()}")
+        settingsLanguage.setOnClickListener { presenter.onLanguageClicked() }
         settingsCurrency.setOnClickListener { presenter.onCurrencyClicked() }
 
         val versionName = BuildConfig.VERSION_NAME
@@ -150,11 +149,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyCh
         layoutDebugSettings.isVisible = false
     }
 
-    override fun setLocales(locales: List<LocaleModel>) =
-        Utils.setLocalesDialogListener(requireContext(), settingsLanguage, locales) { selected ->
-            presenter.changeLocale(selected)
-        }
-
     override fun updateResources(locale: Locale) {
         localeManager.updateResources(requireContext(), locale)
     }
@@ -231,9 +225,21 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyCh
         presenter.currencyChanged(currency)
     }
 
+    override fun languageChanged(language: LocaleModel) {
+        presenter.changeLocale(language)
+    }
+
     override fun hideSomeDividers() {
         if (!settingsEmailNotif.isVisible) settingsDistanceUnit.hideDivider()
         if (!layoutCarrierSettings.isVisible) settingsEmailNotif.hideDivider()
+    }
+
+    override fun showCurrencyChooser() {
+        findNavController().navigate(SettingsFragmentDirections.goToSelectCurrency())
+    }
+
+    override fun showLanguageChooser() {
+        findNavController().navigate(SettingsFragmentDirections.goToSelectLanguage())
     }
 
     override fun restartApp() {

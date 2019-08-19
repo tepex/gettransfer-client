@@ -9,7 +9,6 @@
     <fragment
         android:id="@+id/showSettings"
         android:name="com.kg.gettransfer.presentation.ui.SettingsFragment"
-        android:label="settings"
         tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/go_to_select_currency"
@@ -18,12 +17,23 @@
             app:popEnterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             app:popExitAnim="@android:anim/fade_out"/>
+        <action
+            android:id="@+id/go_to_select_language"
+            app:destination="@id/selectLanguage"
+            app:enterAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     </fragment>
 
     <fragment android:id="@+id/selectCurrency"
-        android:label="currency"
         app:popUpTo="@id/showSettings"
         android:name="com.kg.gettransfer.presentation.ui.SelectCurrencyFragment"
         tools:layout="@layout/fragment_select_currency"/>
+
+    <fragment android:id="@+id/selectLanguage"
+        app:popUpTo="@id/showSettings"
+        android:name="com.kg.gettransfer.presentation.ui.SelectLanguageFragment"
+        tools:layout="@layout/fragment_select_language"/>
 </navigation>

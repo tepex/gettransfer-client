@@ -21,7 +21,6 @@ interface SettingsView : BaseView {
     fun showDebugMenu()
     fun hideDebugMenu()
 
-    fun setLocales(locales: List<LocaleModel>)
     fun updateResources(locale: Locale)
     fun setEndpoints(endpoints: List<EndpointModel>)
     fun setCalendarModes(calendarModesKeys: List<String>)
@@ -35,6 +34,7 @@ interface SettingsView : BaseView {
     fun setDistanceUnit(inMiles: Boolean)
 
     fun showCurrencyChooser()
+    fun showLanguageChooser()
     fun restartApp()
 
     fun hideSomeDividers()
