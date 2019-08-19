@@ -189,7 +189,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/navRequests"
-                    app:menu_icon_img="@drawable/nav_driver_trips"
+                    app:menu_icon_img="@drawable/ic_start_time"
                     app:menu_subtitle_text="@string/LNG_MENU_SUBTITLE_TRIPS"
                     app:menu_title_text="@string/LNG_MENU_TITLE_TRIPS"
                     tools:visibility="visible" />
