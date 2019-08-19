@@ -114,7 +114,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
         return FragmentUtils.onCreateAnimation(requireContext(), enter) {
 
-            search_panel.visibleFade(true, search_panel)
+            search_panel.visibleFade(true)
             presenter.updateView()
 
             if (!isPermissionRequested) {

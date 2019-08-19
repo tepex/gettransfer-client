@@ -105,8 +105,7 @@
             android:layout_height="wrap_content"
             app:shimmer_auto_start="true"
             app:shimmer_duration="2400">
-
-            <include layout="@layout/view_shimmer_item" />
+            <include layout="@layout/view_shimmer_search_item" />
         </com.facebook.shimmer.ShimmerFrameLayout>
 
         <com.kg.gettransfer.presentation.ui.custom.SearchFormMainView

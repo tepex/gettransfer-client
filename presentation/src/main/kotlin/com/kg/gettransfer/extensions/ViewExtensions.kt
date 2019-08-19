@@ -2,51 +2,13 @@ package com.kg.gettransfer.extensions
 
 import android.app.Activity
 import android.content.Context
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.transition.*
-import com.kg.gettransfer.R
 import com.kg.gettransfer.common.DebouncingOnClickListener
-
-fun View.visibleSlide(value: Boolean, vg: ViewGroup, duration: Long = 300, startDelay: Long = 0) {
-    val transition = Slide(if (value) Gravity.TOP else Gravity.BOTTOM)
-            .addTarget(this)
-            .setDuration(duration)
-            .setInterpolator(FastOutSlowInInterpolator())
-            .setStartDelay(startDelay)
-    TransitionManager.beginDelayedTransition(vg, transition)
-    visibility = if (value) View.VISIBLE else View.GONE
-}
-
-fun View.visibleFade(value: Boolean, vg: ViewGroup, duration: Long = 200, startDelay: Long = 100) {
-    val transition = Fade()
-            .addTarget(this)
-            .setDuration(duration)
-            .setInterpolator(FastOutSlowInInterpolator())
-            .setStartDelay(startDelay)
-    TransitionManager.beginDelayedTransition(vg, transition)
-    visibility = if (value) View.VISIBLE else View.GONE
-}
-
-fun View.visibleSlide(value: Boolean) {
-        if (value) {
-        if (isVisible) return
-        visibility = View.VISIBLE
-        startAnimation(AnimationUtils.loadAnimation(context, R.anim.transition_b2t))
-    } else {
-        if (!isVisible) return
-        startAnimation(AnimationUtils.loadAnimation(context, R.anim.transition_t2b))
-        visibility = View.GONE
-    }
-}
 
 inline var View.isVisible: Boolean
     get() = visibility == View.VISIBLE

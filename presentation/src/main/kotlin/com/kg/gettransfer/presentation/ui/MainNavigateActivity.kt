@@ -17,7 +17,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.extensions.visibleSlide
+import com.kg.gettransfer.extensions.visibleSlideFade
 import com.kg.gettransfer.extensions.setupWithNavController
 
 import com.kg.gettransfer.presentation.presenter.MainNavigatePresenter
@@ -138,13 +138,13 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             RequestsPagerFragment::class.java.name,
             SettingsFragment::class.java.name,
             SupportFragment::class.java.name -> {
-                bottom_nav_shadow.visibleSlide(true, parent_container)
-                bottom_nav.visibleSlide(true, parent_container)
+                bottom_nav_shadow.visibleSlideFade(true)
+                bottom_nav.visibleSlideFade(true)
             }
             //not visible bottom menu
             else -> {
-                bottom_nav.visibleSlide(false, parent_container)
-                bottom_nav_shadow.visibleSlide(false, parent_container)
+                bottom_nav.visibleSlideFade(false)
+                bottom_nav_shadow.visibleSlideFade(false)
             }
         }
     }

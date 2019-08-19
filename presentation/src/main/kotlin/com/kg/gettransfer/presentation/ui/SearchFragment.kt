@@ -65,7 +65,7 @@ class SearchFragment : BaseFragment(), SearchView {
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
         return FragmentUtils.onCreateAnimation(requireContext(), enter) {
 
-            searchForm.visibleFade(true, content)
+            searchForm.visibleFade(true)
 
             scrollViewResults.setOnTouchListener(onTouchListener)
             rv_addressList.setOnTouchListener(onTouchListener)
