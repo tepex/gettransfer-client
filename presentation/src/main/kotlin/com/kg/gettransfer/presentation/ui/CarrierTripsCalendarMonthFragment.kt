@@ -26,6 +26,7 @@ import java.util.Calendar
 import java.util.Date
 
 import kotlinx.android.synthetic.main.carrier_trips_calendar_month_fragment.*
+import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
 
@@ -104,6 +105,11 @@ class CarrierTripsCalendarMonthFragment : Fragment() {
 
     fun selectDate(selectedDate: String) {
         adapterCarrierTripsCalendar.selectDate(selectedDate)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppWatcher.objectWatcher.watch(this)
     }
 
     companion object {

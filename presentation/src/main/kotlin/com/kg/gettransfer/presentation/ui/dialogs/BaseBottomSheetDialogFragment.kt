@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
+import leakcanary.AppWatcher
 
 abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
 
@@ -74,5 +75,10 @@ abstract class BaseBottomSheetDialogFragment : MvpBottomSheetDialogFragment() {
             clearFocus()
         }
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppWatcher.objectWatcher.watch(this)
     }
 }

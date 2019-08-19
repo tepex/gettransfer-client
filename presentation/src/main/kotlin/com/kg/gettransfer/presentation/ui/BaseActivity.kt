@@ -66,6 +66,7 @@ import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
+import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
 
@@ -463,6 +464,11 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     @Deprecated(message = "we are going to replace with FragmentUtils.replaceFragment")
     protected fun replaceFragment(fragment: Fragment, @IdRes id: Int, tag: String? = null) =
         supportFragmentManager.beginTransaction().replace(id, fragment, tag).commitAllowingStateLoss()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppWatcher.objectWatcher.watch(this)
+    }
 
     companion object {
         const val TOOLBAR_NO_TITLE = 0

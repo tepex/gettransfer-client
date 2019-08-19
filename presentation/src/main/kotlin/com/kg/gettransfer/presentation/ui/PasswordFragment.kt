@@ -9,6 +9,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import kotlinx.android.synthetic.main.fragment_password.*
+import leakcanary.AppWatcher
 
 class PasswordFragment : MvpAppCompatFragment() {
 
@@ -68,5 +69,10 @@ class PasswordFragment : MvpAppCompatFragment() {
             hasFocus && !passwordVisible -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_off)
             else -> ivPasswordToggle.setImageResource(R.drawable.ic_eye_off_inactive)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppWatcher.objectWatcher.watch(this)
     }
 }

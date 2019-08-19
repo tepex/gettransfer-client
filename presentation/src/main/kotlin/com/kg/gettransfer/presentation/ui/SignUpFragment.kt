@@ -28,6 +28,7 @@ import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
+import leakcanary.AppWatcher
 
 import timber.log.Timber
 
@@ -64,6 +65,11 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             showLoading()
             presenter.showLicenceAgreement()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppWatcher.objectWatcher.watch(this)
     }
 
     override fun showValidationErrorDialog(phoneExample: String) {

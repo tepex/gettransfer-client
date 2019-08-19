@@ -22,6 +22,7 @@ import com.kg.gettransfer.presentation.view.SplashView
 
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
 import com.kg.gettransfer.utilities.LocaleManager
+import leakcanary.AppWatcher
 
 import java.util.Locale
 
@@ -114,5 +115,10 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
         } else {
             false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppWatcher.objectWatcher.watch(this)
     }
 }

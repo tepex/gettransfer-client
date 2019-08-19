@@ -11,6 +11,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.common.NavigationMenuListener
 import com.kg.gettransfer.common.NewTransferSwitchListener
 import com.kg.gettransfer.presentation.view.BaseNetworkWarning
+import leakcanary.AppWatcher
 
 import org.koin.core.KoinComponent
 import timber.log.Timber
@@ -77,6 +78,11 @@ class NewTransferFragment : Fragment(), KoinComponent, BaseNetworkWarning, NewTr
         childFragmentManager.fragments.filter { it is BaseNetworkWarning }.let {
             it.forEach { fragment -> (fragment as BaseNetworkWarning).onNetworkWarning(available) }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppWatcher.objectWatcher.watch(this)
     }
 
     companion object {
