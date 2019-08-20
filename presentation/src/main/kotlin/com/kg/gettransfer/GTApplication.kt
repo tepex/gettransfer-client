@@ -52,7 +52,7 @@ class GTApplication : MultiDexApplication() {
         if (BuildConfig.DEBUG) {
 //           Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
-//            setUpLeakCanary(false)
+            setUpLeakCanary(false)
         } else {
             setUpLeakCanary(false)
             CrashManager.register(this, getString(R.string.hockeyAppId), CustomCrashManagerListener())
@@ -119,8 +119,6 @@ class GTApplication : MultiDexApplication() {
 
     private fun setUpLeakCanary(enable: Boolean) {
         AppWatcher.config = AppWatcher.config.copy(enable)
-        LeakCanary.config.copy(enable)
-        LeakCanary.showLeakDisplayActivityLauncherIcon(enable)
     }
 
     private fun setupAppMetrica() {
