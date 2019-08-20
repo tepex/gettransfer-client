@@ -54,7 +54,6 @@ class GTApplication : MultiDexApplication() {
             System.setProperty("kotlinx.coroutines.debug", "on")
             setUpLeakCanary(false)
         } else {
-            setUpLeakCanary(false)
             CrashManager.register(this, getString(R.string.hockeyAppId), CustomCrashManagerListener())
         }
         if (BuildConfig.FLAVOR == "dev") {
