@@ -28,6 +28,7 @@ class CommunicationButton @JvmOverloads constructor(
             val drawableResId = ta.getResourceId(R.styleable.CommunicationButton_btn_img, View.NO_ID)
             btnImg.setImageDrawable(ContextCompat.getDrawable(context, drawableResId))
             btnImg.backgroundTintList = ta.getColorStateList(R.styleable.CommunicationButton_btn_color)
+                ?: ContextCompat.getColorStateList(context, R.color.colorWhite)
             ta.recycle()
         }
     }
