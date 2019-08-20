@@ -19,7 +19,7 @@ import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.MainLoginView
 
 import com.kg.gettransfer.utilities.LocaleManager
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinComponent
@@ -67,7 +67,7 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     companion object {

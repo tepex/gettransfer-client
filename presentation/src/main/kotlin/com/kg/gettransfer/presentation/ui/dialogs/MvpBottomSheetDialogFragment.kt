@@ -4,7 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import com.arellomobile.mvp.MvpAppCompatDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 import java.lang.RuntimeException
 
 
@@ -18,6 +18,6 @@ open class MvpBottomSheetDialogFragment : MvpAppCompatDialogFragment() {
 
 	override fun onDestroy() {
 		super.onDestroy()
-		AppWatcher.objectWatcher.watch(this)
+//		AppWatcher.objectWatcher.watch(this)
 	}
 }

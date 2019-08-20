@@ -34,7 +34,7 @@ import kotlinx.android.synthetic.main.fragment_requests.*
 
 import timber.log.Timber
 import kotlinx.android.synthetic.main.view_shimmer_loader.view.*
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 
 /**
@@ -93,7 +93,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     override fun updateTransfers(transfers: List<TransferModel>) {

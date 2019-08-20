@@ -25,7 +25,7 @@ import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.CarrierTripsCalendarFragmentView
 
 import kotlinx.android.synthetic.main.activity_carrier_trips_calendar_fragment.*
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 import timber.log.Timber
 
@@ -94,7 +94,7 @@ class CarrierTripsCalendarFragment : MvpAppCompatFragment(), CarrierTripsCalenda
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     override fun setItemsInRVDailyTrips(items: List<CarrierTripBaseModel>) {

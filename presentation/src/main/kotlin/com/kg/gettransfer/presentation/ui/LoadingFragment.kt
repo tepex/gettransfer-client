@@ -16,7 +16,7 @@ import android.view.animation.RotateAnimation
 import com.kg.gettransfer.R
 
 import kotlinx.android.synthetic.main.fragment_loading_view.*
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 class LoadingFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -46,6 +46,6 @@ class LoadingFragment: Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 }

@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.activity_web_page.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 import kotlinx.coroutines.launch
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -125,6 +125,6 @@ class WebPageActivity : MvpAppCompatActivity(), WebPageView {
     override fun onDestroy() {
         worker.cancel()
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 }

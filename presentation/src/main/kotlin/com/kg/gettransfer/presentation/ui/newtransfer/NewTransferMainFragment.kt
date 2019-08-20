@@ -34,7 +34,7 @@ import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.field_divider
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -206,7 +206,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     override fun setFieldDate(date: String, field: Boolean) {

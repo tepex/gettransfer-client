@@ -23,7 +23,7 @@ import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.serialization.json.JSON
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 import timber.log.Timber
 
 class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
@@ -77,7 +77,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     override fun setBtnDoneIsEnabled(isEnabled: Boolean) {

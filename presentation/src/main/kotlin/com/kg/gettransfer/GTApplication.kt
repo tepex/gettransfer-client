@@ -34,7 +34,7 @@ import com.yandex.metrica.push.YandexMetricaPush
 
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 import net.hockeyapp.android.CrashManager
 
 import org.koin.android.ext.koin.androidContext
@@ -51,7 +51,7 @@ class GTApplication : MultiDexApplication() {
         if (BuildConfig.DEBUG) {
 //           Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
-            setUpLeakCanary(false)
+//            setUpLeakCanary(false)
         } else {
             CrashManager.register(this, getString(R.string.hockeyAppId), CustomCrashManagerListener())
         }
@@ -115,9 +115,9 @@ class GTApplication : MultiDexApplication() {
         Sentry.init(getString(R.string.sentryDsn), AndroidSentryClientFactory(applicationContext))
     }
 
-    private fun setUpLeakCanary(enable: Boolean) {
-        AppWatcher.config = AppWatcher.config.copy(enable)
-    }
+//    private fun setUpLeakCanary(enable: Boolean) {
+//        AppWatcher.config = AppWatcher.config.copy(enable)
+//    }
 
     private fun setupAppMetrica() {
         val config = YandexMetricaConfig

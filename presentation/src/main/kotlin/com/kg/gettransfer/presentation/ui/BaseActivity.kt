@@ -467,7 +467,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     companion object {

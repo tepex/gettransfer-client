@@ -10,7 +10,7 @@ import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.model.Coordinate
 
 import kotlinx.coroutines.*
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
@@ -34,7 +34,7 @@ class CoordinateService : Service(), KoinComponent {
     override fun onDestroy() {
         super.onDestroy()
         serviceAlive = false
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     private fun coordinateProcess() {

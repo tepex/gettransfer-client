@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 abstract class BaseBottomSheetFragment : MvpAppCompatFragment() {
     abstract val layout: Int
@@ -32,6 +32,6 @@ abstract class BaseBottomSheetFragment : MvpAppCompatFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 }

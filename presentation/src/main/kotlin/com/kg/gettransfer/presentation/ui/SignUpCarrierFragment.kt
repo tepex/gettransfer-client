@@ -19,7 +19,7 @@ import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.presentation.presenter.SignUpCarrierPresenter
 import com.kg.gettransfer.presentation.view.SignUpCarrierView
 import kotlinx.android.synthetic.main.fragment_carrier_sign_up.*
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 /**
  * Fragment for carrier registration.
@@ -48,7 +48,7 @@ class SignUpCarrierFragment : MvpAppCompatFragment(), SignUpCarrierView {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     companion object {

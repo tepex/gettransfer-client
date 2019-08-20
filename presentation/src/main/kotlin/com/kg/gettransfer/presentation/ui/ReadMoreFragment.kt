@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.kg.gettransfer.R
 
 import kotlinx.android.synthetic.main.dialog_read_more.btnClose
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 class ReadMoreFragment : DialogFragment() {
 
@@ -26,6 +26,6 @@ class ReadMoreFragment : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 }

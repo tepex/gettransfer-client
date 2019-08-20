@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.fragment_log_in.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 import kotlinx.android.synthetic.main.view_input_password.*
 import kotlinx.serialization.json.JSON
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 import timber.log.Timber
 
@@ -120,7 +120,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     companion object {

@@ -9,7 +9,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import kotlinx.android.synthetic.main.fragment_password.*
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 class PasswordFragment : MvpAppCompatFragment() {
 
@@ -73,6 +73,6 @@ class PasswordFragment : MvpAppCompatFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        AppWatcher.objectWatcher.watch(this)
+//        AppWatcher.objectWatcher.watch(this)
     }
 }
