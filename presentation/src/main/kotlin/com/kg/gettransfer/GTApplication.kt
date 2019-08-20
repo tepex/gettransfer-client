@@ -52,7 +52,7 @@ class GTApplication : MultiDexApplication() {
         if (BuildConfig.DEBUG) {
 //           Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
-            setUpLeakCanary(true)
+//            setUpLeakCanary(false)
         } else {
             setUpLeakCanary(false)
             CrashManager.register(this, getString(R.string.hockeyAppId), CustomCrashManagerListener())

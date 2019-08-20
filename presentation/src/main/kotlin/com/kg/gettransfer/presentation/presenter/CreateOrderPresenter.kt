@@ -336,7 +336,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             viewState.blockInterface(true)
             val result = utils.asyncAwait { accountManager.saveSettings() }
             result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
-            viewState.blockInterface(true)
+            viewState.blockInterface(false)
         }
     }
 

@@ -390,9 +390,9 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String) {
+        blockInterface(false)
         when {
             payPalInstalled() -> {
-                blockInterface(false)
                 startActivityForResult(dropInRequest.getIntent(this), PAYMENT_REQUEST_CODE)
             }
             browserInstalled() -> {
@@ -400,7 +400,6 @@ class PaymentOfferActivity : BaseActivity(),
                 PayPal.requestOneTimePayment(braintreeFragment, dropInRequest.payPalRequest)
             }
             else -> {
-                blockInterface(false)
                 longToast(getString(R.string.LNG_PAYMENT_INSTALL_PAYPAL))
             }
         }
