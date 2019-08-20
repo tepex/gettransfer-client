@@ -35,7 +35,6 @@ import com.yandex.metrica.push.YandexMetricaPush
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 import leakcanary.AppWatcher
-import leakcanary.LeakCanary
 import net.hockeyapp.android.CrashManager
 
 import org.koin.android.ext.koin.androidContext
