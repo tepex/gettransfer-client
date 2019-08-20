@@ -1,61 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-				android:id="@+id/search"
-				android:transitionName="@string/searchTransitionName"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:descendantFocusability="beforeDescendants"
-				android:focusableInTouchMode="true"
-				android:layout_gravity="center_horizontal|top"
-				android:background="@android:color/white">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal|top"
+    android:background="@android:color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:paddingStart="0dp"
+    android:paddingEnd="@dimen/search_fragment_padding_end"
+    android:transitionName="@string/searchTransitionName">
 
     <include
         android:id="@+id/icons_container"
         layout="@layout/a_b_orange_view"
         android:layout_width="@dimen/search_marginStart"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="@dimen/address_item_icons_margin_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-	<com.kg.gettransfer.presentation.ui.SearchAddress
-		android:id="@+id/searchFrom"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/search_marginStart"
-		android:paddingEnd="@dimen/search_form_clear_padding_end"
-		android:paddingStart="0dp"
-		app:hint="@string/LNG_FIELD_SOURCE_WHERE" />
+    <com.kg.gettransfer.presentation.ui.SearchAddress
+        android:id="@+id/searchFrom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:hint="@string/LNG_FIELD_SOURCE_WHERE"
+        app:layout_constraintEnd_toStartOf="@+id/fl_inverse"
+        app:layout_constraintStart_toEndOf="@+id/icons_container"
+        app:layout_constraintTop_toTopOf="parent" />
 
-	<View
-		android:id="@+id/separator"
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/search_divider_height"
-		android:layout_marginStart="@dimen/divider_marginStart"
-		android:background="@color/colorDividerGray"
-		android:layout_below="@+id/searchFrom" />
+    <View
+        android:id="@+id/fieldsSeparator"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/search_divider_height"
+        android:background="@color/colorDividerGray"
+        app:layout_constraintEnd_toEndOf="@+id/searchFrom"
+        app:layout_constraintStart_toStartOf="@+id/searchFrom"
+        app:layout_constraintTop_toBottomOf="@+id/searchFrom" />
 
-	<com.kg.gettransfer.presentation.ui.SearchAddress
-		android:id="@+id/searchTo"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/search_marginStart"
-		android:paddingStart="0dp"
-		android:paddingEnd="@dimen/search_form_clear_padding_end"
-		app:hint="@string/LNG_FIELD_DESTINATION_WHERE"
-		android:layout_below="@+id/separator" />
+    <com.kg.gettransfer.presentation.ui.SearchAddress
+        android:id="@+id/searchTo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:hint="@string/LNG_FIELD_DESTINATION_WHERE"
+        app:layout_constraintEnd_toEndOf="@+id/searchFrom"
+        app:layout_constraintStart_toStartOf="@+id/searchFrom"
+        app:layout_constraintTop_toBottomOf="@+id/fieldsSeparator" />
 
-	<androidx.appcompat.widget.AppCompatImageView
-		android:visibility="gone"
-		android:layout_alignParentEnd="true"
-		android:layout_centerVertical="true"
-		android:id="@+id/ivInverseWay"
-		style="@style/BorderlessBackground"
-		android:layout_width="@dimen/image_inverse_size"
-		android:layout_height="@dimen/image_inverse_size"
-		android:layout_marginEnd="@dimen/inverse_btn_margin_end"
-		android:clickable="true"
-		android:focusable="true"
-		app:srcCompat="@drawable/ic_inverse" />
+    <RelativeLayout
+        android:id="@+id/rl_hourly"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/searchFrom"
+        app:layout_constraintStart_toStartOf="@+id/searchFrom"
+        app:layout_constraintTop_toBottomOf="@+id/fieldsSeparator">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/hourly_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/search_sub_title_height"
+            android:layout_marginTop="@dimen/search_sub_title_marginTop"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="@string/LNG_FIELD_PER_HOUSE"
+            android:textSize="@dimen/search_sub_title_textSize" />
+
+        <TextView
+            android:id="@+id/tvCurrent_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hourly_title"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:paddingBottom="@dimen/search_main_paddingBottom"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/search_main_textSize"
+            tools:text="2 hours" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/hourly_arrow_margin_end"
+            android:rotation="90"
+            android:src="@drawable/ic_arrow_down" />
+
+
+    </RelativeLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fieldsSeparator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fieldsSeparator"
+        android:id="@+id/ivInverseWay"
+        style="@style/BorderlessBackground"
+        android:layout_width="@dimen/image_inverse_size"
+        android:layout_height="@dimen/image_inverse_size"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@drawable/ic_inverse" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

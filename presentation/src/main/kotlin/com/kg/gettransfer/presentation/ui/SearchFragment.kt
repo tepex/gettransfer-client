@@ -21,7 +21,11 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.isGone
+import com.kg.gettransfer.extensions.isInvisible
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
@@ -29,6 +33,8 @@ import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
+import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
+import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.SearchView
 
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -137,6 +143,37 @@ class SearchFragment : BaseFragment(), SearchView {
     override fun changeFocusToDestField() = searchTo.changeFocus()
 
     override fun hideAddressTo() = searchForm.hideToField()
+
+    override fun changeViewToHourlyDuration(durationValue: Int?) {
+        hideAddressTo()
+        showHourlyDurationField()
+        setHourlyDuration(durationValue)
+    }
+
+    private fun showHourlyDurationField() {
+        rl_hourly.isVisible = true
+        link_line.isInvisible = true
+        tv_b_point.isVisible = false
+        hourly_point.isVisible = true
+        fieldsSeparator.isVisible = true
+        rl_hourly.setOnClickListener { presenter.showHourlyDurationDialog() }
+    }
+
+    override fun showHourlyDurationDialog(durationValue: Int?) {
+        HourlyDurationDialogFragment
+                .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
+                    override fun onDone(durationValue: Int) {
+                        presenter.updateDuration(durationValue)
+                    }
+                })
+                .show(requireFragmentManager(), HourlyDurationDialogFragment.DIALOG_TAG)
+    }
+
+    override fun setHourlyDuration(duration: Int?) {
+        duration?.let {
+            tvCurrent_hours.text = HourlyValuesHelper.getValue(duration, requireContext())
+        }
+    }
 
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
         popular_title.isVisible  = false

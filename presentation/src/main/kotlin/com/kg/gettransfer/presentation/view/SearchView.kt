@@ -12,7 +12,9 @@ interface SearchView : BaseView {
     fun onFindPopularPlace(isToField: Boolean, place: String)
     fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean)
     fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean)
-    fun hideAddressTo()
+    fun showHourlyDurationDialog(durationValue: Int?)
+    fun changeViewToHourlyDuration(durationValue: Int?)
+    fun setHourlyDuration(duration: Int?)
     fun setSuggestedAddresses(addressesList: List<GTAddress>)
     fun markFieldFilled(isToField: Boolean)
     fun setFocus(isToField: Boolean)
@@ -21,10 +23,4 @@ interface SearchView : BaseView {
     fun goToMap()
     fun goToBack()
     fun goToCreateOrder()
-
-    companion object {
-        val EXTRA_ADDRESS_FROM = "${SearchView::class.java.name}.address_from"
-        val EXTRA_ADDRESS_TO   = "${SearchView::class.java.name}.address_to"
-        val EXTRA_IS_CLICK_TO  = "${SearchView::class.java.name}.to_click"
-    }
 }

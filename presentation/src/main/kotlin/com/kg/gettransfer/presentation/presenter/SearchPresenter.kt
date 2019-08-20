@@ -45,7 +45,7 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
         if (orderInteractor.hourlyDuration == null) {
             viewState.setAddressTo(orderInteractor.to?.cityPoint?.name ?: "", true, isTo)
         } else {
-            viewState.hideAddressTo()
+            viewState.changeViewToHourlyDuration(orderInteractor.hourlyDuration)
         }
         onSearchFieldEmpty()
     }
@@ -107,6 +107,17 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
                     viewState.setAddressFrom(newAddress.variants?.first ?: newAddress.cityPoint.name, sendRequest, true)
                 }
             }
+        }
+    }
+
+    fun showHourlyDurationDialog() {
+        viewState.showHourlyDurationDialog(orderInteractor.hourlyDuration)
+    }
+
+    fun updateDuration(hours: Int?) {
+        orderInteractor.apply {
+            hourlyDuration = hours
+            viewState.setHourlyDuration(hourlyDuration)
         }
     }
 
@@ -194,8 +205,6 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
 
     companion object {
         const val ROUTE_NAME = "route"
-
-        const val ADDRESS_PREDICTION_SIZE = 3
 
         const val ROUTE_TYPE          = 1020
         const val STREET_ADDRESS_TYPE = 1021
