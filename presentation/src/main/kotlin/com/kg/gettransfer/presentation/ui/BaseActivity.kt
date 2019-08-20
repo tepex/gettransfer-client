@@ -66,7 +66,7 @@ import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-import leakcanary.AppWatcher
+//import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
 
