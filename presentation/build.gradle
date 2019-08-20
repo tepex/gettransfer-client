@@ -263,6 +263,7 @@ dependencies {
 
     // LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
+    implementation "com.squareup.leakcanary:leakcanary-object-watcher-android:$leakcanary_version"
 
     //Anko
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
