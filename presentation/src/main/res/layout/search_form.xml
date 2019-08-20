@@ -27,7 +27,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:hint="@string/LNG_FIELD_SOURCE_WHERE"
-        app:layout_constraintEnd_toStartOf="@+id/fl_inverse"
+        app:layout_constraintEnd_toStartOf="@+id/ivInverseWay"
         app:layout_constraintStart_toEndOf="@+id/icons_container"
         app:layout_constraintTop_toTopOf="parent" />
 

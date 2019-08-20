@@ -22,8 +22,7 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.extensions.isGone
-import com.kg.gettransfer.extensions.isInvisible
+import com.kg.gettransfer.extensions.visibleFade
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
@@ -142,31 +141,20 @@ class SearchFragment : BaseFragment(), SearchView {
 
     override fun changeFocusToDestField() = searchTo.changeFocus()
 
-    override fun hideAddressTo() = searchForm.hideToField()
-
     override fun changeViewToHourlyDuration(durationValue: Int?) {
-        hideAddressTo()
-        showHourlyDurationField()
+        searchForm.changeViewToHourlyDuration()
         setHourlyDuration(durationValue)
-    }
-
-    private fun showHourlyDurationField() {
-        rl_hourly.isVisible = true
-        link_line.isInvisible = true
-        tv_b_point.isVisible = false
-        hourly_point.isVisible = true
-        fieldsSeparator.isVisible = true
         rl_hourly.setOnClickListener { presenter.showHourlyDurationDialog() }
     }
 
     override fun showHourlyDurationDialog(durationValue: Int?) {
         HourlyDurationDialogFragment
-                .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
-                    override fun onDone(durationValue: Int) {
-                        presenter.updateDuration(durationValue)
-                    }
-                })
-                .show(requireFragmentManager(), HourlyDurationDialogFragment.DIALOG_TAG)
+            .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
+                override fun onDone(durationValue: Int) {
+                    presenter.updateDuration(durationValue)
+                }
+            })
+            .show(requireFragmentManager(), HourlyDurationDialogFragment.DIALOG_TAG)
     }
 
     override fun setHourlyDuration(duration: Int?) {
