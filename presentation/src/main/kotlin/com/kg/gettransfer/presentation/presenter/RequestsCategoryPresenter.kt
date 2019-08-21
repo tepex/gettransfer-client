@@ -8,7 +8,6 @@ import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.model.Coordinate
-import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -27,7 +26,8 @@ import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 @InjectViewState
 class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
@@ -72,7 +72,8 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
             }.sortedByDescending { it.dateToLocal }
             if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
                 coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
-                driverCoordinate = DriverCoordinate(Handler())
+                if (driverCoordinate == null) driverCoordinate = DriverCoordinate(Handler())
+                driverCoordinate!!.transfersIds = transfers!!.map { it.id }
             }
             viewState.updateCardWithDriverCoordinates(6442L)
             prepareDataAsync()

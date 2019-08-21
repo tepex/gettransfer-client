@@ -16,9 +16,8 @@ class CoordinateSocketImpl : CoordinateSocketEmitter, KoinComponent {
     private val eventReceiver: CoordinateDataStoreReceiver by inject()
     private val socketManager: SocketManager = get()
 
-    override fun initLocationReceiving() {
-        socketManager.emitEvent(INIT_LOCATION_EVENTS, null)
-        //socketManager.emitAck(INIT_LOCATION_EVENTS, arrayOf(transferId))
+    override fun initLocationReceiving(transferId: Long) {
+        socketManager.emitEvent(INIT_LOCATION_EVENTS, transferId)
     }
 
     override fun sendOwnLocation(coordinate: CoordinateEntity) {

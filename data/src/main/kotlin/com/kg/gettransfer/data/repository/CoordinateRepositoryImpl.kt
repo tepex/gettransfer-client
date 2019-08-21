@@ -22,7 +22,7 @@ class CoordinateRepositoryImpl(
         socketDataStore.sendOwnLocation(coordinate.map())
     }
 
-    override fun initCoordinateReceiving() = socketDataStore.initLocationReceiving()
+    override fun initCoordinateReceiving(transferId: Long) = socketDataStore.initLocationReceiving(transferId)
 
     override fun addCoordinateListener(listener: CoordinateEventListener) {
         coordinateListeners.add(listener)

@@ -284,9 +284,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun logTransferReviewRequested() = analytics.logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
 
     fun initCoordinates() {
-        driverCoordinate = DriverCoordinate(Handler()) { bearing, coordinates, show ->
+        if (driverCoordinate == null) driverCoordinate = DriverCoordinate(Handler()) { bearing, coordinates, show ->
             viewState.moveCarMarker(bearing, coordinates, show)
         }
+        driverCoordinate!!.transfersIds = listOf(transferId)
         coordinateInteractor.addCoordinateListener(this)
     }
 

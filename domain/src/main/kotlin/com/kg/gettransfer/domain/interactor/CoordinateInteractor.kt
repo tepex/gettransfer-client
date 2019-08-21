@@ -5,7 +5,7 @@ import com.kg.gettransfer.domain.model.Coordinate
 import com.kg.gettransfer.domain.repository.CoordinateRepository
 
 class CoordinateInteractor(private val repository: CoordinateRepository) {
-    fun initCoordinatesReceiving() = repository.initCoordinateReceiving()
+    fun initCoordinatesReceiving(transferId: Long) = repository.initCoordinateReceiving(transferId)
     fun sendOwnCoordinates(coordinate: Coordinate) = repository.sendOwnCoordinate(coordinate)
 
     fun addCoordinateListener(listener: CoordinateEventListener)    { repository.addCoordinateListener(listener) }

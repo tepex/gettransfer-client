@@ -239,7 +239,7 @@ class SocketManager : KoinComponent {
         }
     }
 
-    fun emitEvent(eventName: String, arg: Any?, sendAfterReconnected: Boolean = false): Boolean {
+    fun emitEvent(eventName: String, arg: Any, sendAfterReconnected: Boolean = false): Boolean {
         return when {
             socket == null -> {
                 log.error("event $eventName was not emit: $SOCKET_TAG is null")

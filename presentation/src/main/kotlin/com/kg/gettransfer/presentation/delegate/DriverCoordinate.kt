@@ -17,8 +17,8 @@ import org.koin.core.inject
 import kotlin.properties.Delegates
 
 class DriverCoordinate(
-        private val handler: Handler,
-        private val callDrawing: ((bearing: Float, coordinate: LatLng, show: Boolean) -> Unit)? = null
+    private val handler: Handler,
+    private val callDrawing: ((bearing: Float, coordinate: LatLng, show: Boolean) -> Unit)? = null
 ) : KoinComponent {
     private val compositeDisposable = Job()
     private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
@@ -27,6 +27,8 @@ class DriverCoordinate(
 
     var showMoving: Boolean = false
     var requestCoordinates = true
+
+    var transfersIds: List<Long>? = null
 
     init { requestCoordinates() }
 
@@ -41,14 +43,15 @@ class DriverCoordinate(
                     override fun run() { compute(old, new, startTime, this) }
                 }.run()
             }
-            postDelayed({ requestCoordinates() }, REQUEST_PERIOD)
         }
     }
 
     private fun requestCoordinates() {
         if (requestCoordinates) {
             utils.launchSuspend {
-                coordinateInteractor.initCoordinatesReceiving()
+                transfersIds?.forEach {
+                    coordinateInteractor.initCoordinatesReceiving(it)
+                }
                 delay(REQUEST_PERIOD)
                 requestCoordinates()
             }

@@ -5,7 +5,7 @@ import com.kg.gettransfer.domain.model.Coordinate
 
 interface CoordinateRepository {
     fun sendOwnCoordinate(coordinate: Coordinate)
-    fun initCoordinateReceiving()
+    fun initCoordinateReceiving(transferId: Long)
 
     fun addCoordinateListener(listener: CoordinateEventListener)
     fun removeSocketListener(listener: CoordinateEventListener)
