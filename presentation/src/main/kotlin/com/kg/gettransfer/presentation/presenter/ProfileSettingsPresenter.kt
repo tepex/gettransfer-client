@@ -8,6 +8,8 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.ProfileSettingsView
 import com.kg.gettransfer.presentation.view.Screens
 
+import com.kg.gettransfer.utilities.Analytics
+
 import org.koin.core.inject
 
 @InjectViewState
@@ -53,6 +55,14 @@ class ProfileSettingsPresenter : BasePresenter<ProfileSettingsView>() {
 
     fun onChangePasswordClicked() {
         router.navigateTo(Screens.ChangePassword())
+    }
+
+    fun onLogout() {
+        utils.launchSuspend {
+            clearAllCachedData()
+            router.exit()
+        }
+        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
     }
 
     fun onSaveBtnClicked() {

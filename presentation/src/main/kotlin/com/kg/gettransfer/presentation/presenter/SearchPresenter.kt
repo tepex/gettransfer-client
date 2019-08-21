@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.R
 
@@ -12,40 +13,39 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 
 import com.kg.gettransfer.presentation.model.PopularPlace
 
-import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SearchView
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.NewTransferState
 
 import com.kg.gettransfer.sys.domain.SetAddressHistoryInteractor
 import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.KoinComponent
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 @InjectViewState
-class SearchPresenter : BasePresenter<SearchView>() {
+class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
 
     private val worker: WorkerManager by inject { parametersOf("SearchPresenter") }
     private val orderInteractor: OrderInteractor by inject()
-    private val nState: NewTransferState by inject()
     private val setSelectedField: SetSelectedFieldInteractor by inject()
     private val setAddressHistory: SetAddressHistoryInteractor by inject()
+    protected val getPreferences: GetPreferencesInteractor by inject()
+    protected val analytics: Analytics by inject()
 
     internal var isTo = false
-    var backwards: Boolean = false
 
-    override fun attachView(view: SearchView) {
-        super.attachView(view)
+    fun init() {
         viewState.setAddressFrom(orderInteractor.from?.cityPoint?.name ?: "", true, !isTo)
         if (orderInteractor.hourlyDuration == null) {
             viewState.setAddressTo(orderInteractor.to?.cityPoint?.name ?: "", true, isTo)
         } else {
-            viewState.hideAddressTo()
+            viewState.changeViewToHourlyDuration(orderInteractor.hourlyDuration)
         }
         onSearchFieldEmpty()
     }
@@ -62,11 +62,11 @@ class SearchPresenter : BasePresenter<SearchView>() {
     }
 
     fun onAddressSelected(selected: GTAddress) {
-        utils.launchSuspend {
+        worker.main.launch{
             val oldAddress = if (isTo) orderInteractor.to else orderInteractor.from //for detecting double click
             var updatedGTAddress: GTAddress? = null //address with point
             selected.cityPoint.placeId?.let { placeId ->
-                fetchResult { orderInteractor.updatePoint(isTo, placeId) }.isSuccess()?.let { updatedGTAddress = it }
+                withContext(worker.bg) { orderInteractor.updatePoint(isTo, placeId) }.isSuccess()?.let { updatedGTAddress = it }
             }
             val newAddress = updatedGTAddress ?: selected
             analytics.logSingleEvent(Analytics.LAST_PLACE_CLICKED)
@@ -91,11 +91,11 @@ class SearchPresenter : BasePresenter<SearchView>() {
             }
 
             if (placeType != ROUTE_TYPE || isDoubleClickOnRoute) {
-                viewState.updateIcon(isTo)
+                viewState.markFieldFilled(isTo)
                 if (newAddress.cityPoint.point != null) {
                     pointReady(checkZeroPoint(newAddress), isDoubleClickOnRoute, true)
                 } else if (selected.cityPoint.placeId != null) {
-                    fetchResult { orderInteractor.updatePoint(isTo, selected.cityPoint.placeId!!) }
+                    withContext(worker.bg) { orderInteractor.updatePoint(isTo, selected.cityPoint.placeId!!) }
                         .isSuccess()?.let { pointReady(checkZeroPoint(it), isDoubleClickOnRoute, true) }
                 }
             } else {
@@ -107,6 +107,17 @@ class SearchPresenter : BasePresenter<SearchView>() {
                     viewState.setAddressFrom(newAddress.variants?.first ?: newAddress.cityPoint.name, sendRequest, true)
                 }
             }
+        }
+    }
+
+    fun showHourlyDurationDialog() {
+        viewState.showHourlyDurationDialog(orderInteractor.hourlyDuration)
+    }
+
+    fun updateDuration(hours: Int?) {
+        orderInteractor.apply {
+            hourlyDuration = hours
+            viewState.setHourlyDuration(hourlyDuration)
         }
     }
 
@@ -142,7 +153,7 @@ class SearchPresenter : BasePresenter<SearchView>() {
 
     private fun createRouteForOrder() {
         fillHistory()
-        if (backwards) router.exit() else router.replaceScreen(Screens.CreateOrder)
+        viewState.goToCreateOrder()
         analytics.logSingleEvent(Analytics.REQUEST_FORM)
     }
 
@@ -150,18 +161,13 @@ class SearchPresenter : BasePresenter<SearchView>() {
         worker.main.launch {
             withContext(worker.bg) {
                 setSelectedField(if (isTo) FIELD_TO else FIELD_FROM)
+                analytics.logSingleEvent(Analytics.POINT_ON_MAP_CLICKED)
             }
         }
-        analytics.logSingleEvent(Analytics.POINT_ON_MAP_CLICKED)
-        nState.choosePointOnMap()
-        router.exit()
+        viewState.goToMap()
     }
 
     fun isHourly() = orderInteractor.hourlyDuration != null
-
-    override fun onBackCommandClick() {
-        super.onBackCommandClick()
-    }
 
     fun inverseWay() {
         analytics.logSingleEvent(Analytics.SWAP_CLICKED)
@@ -200,8 +206,6 @@ class SearchPresenter : BasePresenter<SearchView>() {
     companion object {
         const val ROUTE_NAME = "route"
 
-        const val ADDRESS_PREDICTION_SIZE = 3
-
         const val ROUTE_TYPE          = 1020
         const val STREET_ADDRESS_TYPE = 1021
         const val SUITABLE_TYPE       = 0
@@ -210,5 +214,6 @@ class SearchPresenter : BasePresenter<SearchView>() {
 
         const val FIELD_FROM = "field_from"
         const val FIELD_TO = "field_to"
+        const val EMPTY_ADDRESS = ""
     }
 }

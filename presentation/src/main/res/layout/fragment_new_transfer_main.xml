@@ -1,139 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contentMain"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" xmlns:tools="http://schemas.android.com/tools"
-    android:clickable="true"
-    android:background="@color/colorBackgroundGray"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:focusable="true">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/btnShowDrawerFragment"
-            android:layout_width="@dimen/activity_main_buttons_size"
-            android:layout_height="@dimen/activity_main_buttons_size"
-            android:layout_marginTop="@dimen/activity_main_buttons_margin_top_without_button_shadow"
-            android:layout_marginStart="@dimen/activity_main_buttons_horizontal_margin_without_button_shadow"
-            app:srcCompat="@drawable/ic_menu"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:clickable="true"
-            android:focusable="true"/>
-
-        <TextView
-            android:id="@+id/tvEventsCountFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            tools:text="15"
-            android:background="@drawable/bg_circle_red"
-            android:gravity="center"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@+id/btnShowDrawerFragment"
-            app:layout_constraintBottom_toBottomOf="@+id/btnShowDrawerFragment"
-            android:layout_marginBottom="@dimen/activity_main_events_count_margin_bottom_without_button_shadow"
-            android:paddingStart="@dimen/activity_main_events_count_padding_start_end"
-            android:paddingEnd="@dimen/activity_main_events_count_padding_start_end"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <com.kg.gettransfer.presentation.ui.custom.SwitcherView
-        android:id="@+id/switcher_map_"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:switcher_title="@string/LNG_MAP"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/activity_main_buttons_horizontal_margin_without_button_shadow"
-        android:layout_marginTop="@dimen/activity_main_buttons_margin_top_without_button_shadow"/>
-
-    <com.kg.gettransfer.presentation.ui.custom.SwitcherView
-        android:id="@+id/switcher_hourly"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/switcher_map_"
-        android:layout_marginTop="@dimen/switchers_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_main_buttons_horizontal_margin"
-        app:switcher_title="@string/LNG_PER_HOUR"/>
-
-    <com.kg.gettransfer.presentation.ui.custom.SearchFormMainView
-        android:id="@+id/request_search_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/switcher_hourly"
-        android:layout_marginTop="@dimen/switchers_vertical_margin"
-        app:ivSelectFieldToGone="true" />
-
-    <com.kg.gettransfer.presentation.ui.custom.OrderFieldView
-        android:id="@+id/order_time_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/request_search_panel"
-        android:layout_marginTop="@dimen/switchers_vertical_margin"
-        app:order_title="@string/LNG_RIDE_DATE"
-        app:icon="@drawable/ic_start_time"/>
-
-    <RelativeLayout
-        android:id="@+id/rl_returnTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/order_time_view">
-        <com.kg.gettransfer.presentation.ui.custom.OrderFieldView
-            android:id="@+id/return_time_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:order_title="@string/LNG_RIDE_DATE_RETURN"
-            app:icon="@drawable/ic_return_time"/>
-
-
-        <ImageView
-            android:id="@+id/fl_DeleteReturnDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:layout_marginEnd="16dp"
-            app:srcCompat="@drawable/ic_close_x"
-            android:visibility="gone"/>
-    </RelativeLayout>
-
-
-    <View
-        android:id="@+id/field_divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/create_transfer_divider_height"
-
-        android:layout_below="@+id/order_time_view"
-        android:layout_marginStart="@dimen/divider_margin_start"
-        android:layout_marginEnd="@dimen/divider_margin_end"
-        android:background="@color/colorDividerGray"
-
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <Button
-        android:id="@+id/btnNextFragment"
-        android:layout_width="@dimen/general_button_width"
-        android:layout_height="@dimen/general_button_height"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/btn_next_main_margin_16dp"
-        android:background="@drawable/btn_bg_rounded"
-        android:enabled="false"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        style="?android:attr/borderlessButtonStyle"
-        android:text="@string/LNG_NEXT"
-
-        android:textColor="@color/colorWhite" />
+    android:layout_height="match_parent"
+    android:background="@color/colorBackgroundGray">
 
     <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
         android:id="@+id/layoutTextNetworkNotAvailable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_returnTime"
-        android:layout_marginTop="@dimen/internet_warning_horizontal_text_margin_top"
-        app:text_no_internet="@string/LNG_OFFLINE_MESSAGE"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:text_no_internet="@string/LNG_OFFLINE_MESSAGE" />
 
-</RelativeLayout>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/bestPriceLogo"
+        android:layout_width="@dimen/main_without_map_logo_size"
+        android:layout_height="@dimen/main_without_map_logo_size"
+        android:layout_marginStart="@dimen/main_without_map_logo_margin_start"
+        android:layout_marginTop="@dimen/main_without_map_logo_margin_top"
+        android:background="@null"
+        android:scaleType="centerInside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutTextNetworkNotAvailable"
+        app:srcCompat="@drawable/ic_best_price_logo" />
+
+    <LinearLayout
+        android:id="@+id/layoutBestPriceText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/main_without_map_best_price_text_horizontal_margin"
+        android:layout_marginEnd="@dimen/main_without_map_best_price_text_horizontal_margin"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/bestPriceLogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bestPriceLogo"
+        app:layout_constraintTop_toTopOf="@+id/bestPriceLogo">
+
+        <TextView
+            style="@style/sf_font_pro_text_regular_black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="@string/LNG_BESTPRICES"
+            android:textSize="@dimen/main_without_map_best_price_text_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/main_without_map_read_more_text_margin_top"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="@string/LNG_READMORE"
+            android:textColor="@color/color_gtr_grey"
+            android:textSize="@dimen/main_without_map_best_price_text_size" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/gtrLogo"
+        android:layout_width="@dimen/nav_header_logo_width"
+        android:layout_height="@dimen/nav_header_logo_height"
+        app:layout_constraintBottom_toTopOf="@+id/promoText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bestPriceLogo"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/promoText"
+        style="@style/sf_font_pro_text_semibold_black"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/main_without_map_promo_text_horizontal_margins"
+        android:layout_marginEnd="@dimen/main_without_map_promo_text_horizontal_margins"
+        android:gravity="center"
+        android:text="@string/LNG_MAIN_SCREEN_POINT_TO_POINT_TRANSFER_TITLE"
+        android:textSize="@dimen/main_without_map_promo_text_size"
+        app:layout_constraintBottom_toTopOf="@+id/switcher_hourly"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gtrLogo" />
+
+    <com.kg.gettransfer.presentation.ui.custom.SwitcherView
+        android:id="@+id/switcher_hourly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/main_without_map_switch_hourly_margins"
+        android:layout_marginBottom="@dimen/main_without_map_switch_hourly_margins"
+        app:layout_constraintBottom_toTopOf="@+id/search_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:switcher_title="@string/LNG_PER_HOUR" />
+
+    <FrameLayout
+        android:id="@+id/search_content"
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        android:layout_marginBottom="@dimen/main_without_map_addresses_panel_margin_bottom"
+        android:background="@color/colorWhite"
+        app:layout_constraintBottom_toTopOf="@+id/btnNextFragment">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_loader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shimmer_auto_start="true"
+            app:shimmer_duration="2400">
+            <include layout="@layout/view_shimmer_search_item" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <com.kg.gettransfer.presentation.ui.custom.SearchFormMainView
+            android:visibility="gone"
+            android:id="@+id/request_search_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ivSelectFieldToGone="true"
+            app:roundedTopCorners="false" />
+    </FrameLayout>
+    <Button
+        android:id="@+id/btnNextFragment"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_without_map_btn_next_height"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/main_without_map_btn_next_horizontal_margin"
+        android:layout_marginEnd="@dimen/main_without_map_btn_next_horizontal_margin"
+        android:layout_marginBottom="@dimen/main_without_map_btn_next_margin_bottom"
+        android:background="@drawable/btn_bg_rounded"
+        android:enabled="false"
+        android:text="@string/LNG_NEXT"
+        android:textColor="@color/colorWhite"
+
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

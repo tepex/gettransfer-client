@@ -11,7 +11,7 @@ sealed class ScreenNavigationState {
         const val NO_STATE = 0
     }
 }
-
+//TODO remove
 class NewTransferState : ScreenNavigationState() {
 
     val isSwitchToMain: Boolean

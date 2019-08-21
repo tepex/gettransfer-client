@@ -222,6 +222,14 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="requestCard" parent="Base.CardView">
+        <item name="android:layout_marginTop">@dimen/view_transfer_info_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/view_transfer_info_vertical_margin</item>
+        <item name="android:layout_marginStart">@dimen/view_transfer_info_horizontal_margin</item>
+        <item name="android:layout_marginEnd">@dimen/view_transfer_info_horizontal_margin</item>
+        <item name="cardCornerRadius">@dimen/view_transfer_info_corner_radius</item>
+    </style>
+
     <style name="offerCard" parent="Base.CardView">
         <item name="android:layout_marginTop">@dimen/card_view_margin_top_bottom</item>
         <item name="android:layout_marginBottom">@dimen/card_view_margin_top_bottom</item>

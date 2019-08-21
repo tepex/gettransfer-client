@@ -72,11 +72,6 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.ui.SearchActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentStatusBar" />
-        <activity
             android:name=".presentation.ui.CreateOrderActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
@@ -86,13 +81,8 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.ui.SettingsActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".presentation.ui.ProfileSettingsActivity"
             android:resizeableActivity="false"
-            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.SettingsChangePasswordActivity"
@@ -117,7 +107,7 @@
             -->
         </activity>
         <activity
-            android:name=".presentation.ui.RequestsActivity"
+            android:name=".presentation.ui.RequestsPagerActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
@@ -211,9 +201,6 @@
         </activity>
         <activity
             android:name=".presentation.ui.PaypalConnectionActivity"
-            android:resizeableActivity="false" />
-        <activity
-            android:name=".presentation.ui.SupportActivity"
             android:resizeableActivity="false" />
 
         <provider

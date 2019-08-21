@@ -78,12 +78,19 @@
         <attr name="phone" format="string"/>
     </declare-styleable>
 
-
-    <declare-styleable name="SettingsFieldPicker">
-        <attr name="settingsTitlePicker" format="string"/>
-        <attr name="settingsPickerDivider" format="boolean"/>
-        <attr name="settingsPickerBlackText" format="boolean"/>
+    <declare-styleable name="SettingsFieldHorizontalPicker">
+        <attr name="settingsTitlePicker"/>
+        <attr name="settingsPickerDivider"/>
+        <attr name="settingsPickerBlackText"/>
     </declare-styleable>
+
+    <declare-styleable name="SettingsFieldVerticalPicker">
+        <attr name="settingsTitlePicker"/>
+    </declare-styleable>
+
+    <attr name="settingsTitlePicker" format="string"/>
+    <attr name="settingsPickerDivider" format="boolean"/>
+    <attr name="settingsPickerBlackText" format="boolean"/>
 
     <declare-styleable name="SettingsEditableField">
         <attr name="settingsEditableFieldHint" format="string"/>
@@ -100,13 +107,10 @@
         <attr name="switcher_title" format="string"/>
     </declare-styleable>
 
-    <declare-styleable name="SearchFormView">
-        <attr name="isInverseInvisible" format="boolean"/>
-    </declare-styleable>
-
     <declare-styleable name="SearchFormMainView">
         <attr name="ivSelectFieldToGone" format="boolean"/>
         <attr name="ivSelectFieldFromGone" format="boolean"/>
+        <attr name="roundedTopCorners" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="OrderFieldView">

@@ -1,61 +1,57 @@
 package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
-import android.content.Context
+import android.animation.Animator
 import android.os.Bundle
 import androidx.annotation.CallSuper
-import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 
-import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-
-import com.kg.gettransfer.common.NewTransferSwitchListener
-import com.kg.gettransfer.extensions.isGone
-import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.visibleFade
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
-import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.RETURN_DATE
-import com.kg.gettransfer.presentation.delegate.DateTimeDelegate.Companion.START_DATE
 import com.kg.gettransfer.presentation.presenter.NewTransferMainPresenter
+import com.kg.gettransfer.presentation.ui.BaseFragment
+import com.kg.gettransfer.presentation.ui.ReadMoreFragment
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
-import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.NewTransferMainView
+import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 
-import kotlinx.android.synthetic.main.create_order_field.view.*
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
-import kotlinx.android.synthetic.main.fragment_new_transfer_main.field_divider
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
 //import leakcanary.AppWatcher
 
-import org.koin.core.KoinComponent
 import org.koin.core.inject
-
 import pub.devrel.easypermissions.EasyPermissions
 
-import timber.log.Timber
-
 @Suppress("TooManyFunctions")
-class NewTransferMainFragment : MvpAppCompatFragment(),
-    KoinComponent, NewTransferMainView, DateTimeScreen {
+class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
     @InjectPresenter
     internal lateinit var presenter: NewTransferMainPresenter
 
-    var listener: NewTransferSwitchListener? = null
+    private val readMoreListener = View.OnClickListener { presenter.readMoreClick() }
 
     @ProvidePresenter
     fun createMainRequestPresenter() = NewTransferMainPresenter()
 
     private val dateDelegate: DateTimeDelegate by inject()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Added network change listener
+        lifecycle.addObserver(NetworkLifeCycleObserver(this, this))
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_new_transfer_main, container, false)
@@ -63,34 +59,15 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initClickListeners()
 
         enableBtnNext()
-    }
-
-    override fun setUserVisibleHint(visible: Boolean) {
-        super.setUserVisibleHint(visible)
-        presenter.updateView(visible && isResumed)
-        if (visible && isResumed) refreshUi()
-    }
-
-    override fun onAttach(activity: Context) {
-        super.onAttach(activity)
-        try {
-            listener = parentFragment as NewTransferSwitchListener
-        } catch (e: ClassCastException) {
-            Timber.e("%s must implement NavigationMenuListener", activity.toString())
-        }
     }
 
     private fun initClickListeners() {
         // Switchers
         switcher_hourly.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
             presenter.tripModeSwitched(isChecked)
-        }
-        switcher_map_.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) switchToMap()
         }
 
         // Address panel
@@ -101,21 +78,21 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         request_search_panel.setHourlyClickListener { presenter.showHourlyDurationDialog() }
         request_search_panel.setIvSelectFieldFromClickListener {  switchToMap() }
 
-        // Time
-        order_time_view.setOnClickListener  { openPicker(START_DATE) }
-
         // Buttons
-        btnShowDrawerFragment.setOnClickListener { listener?.openMenu() }
-        fl_DeleteReturnDate.setOnClickListener   { clearReturnDate() }
-        btnNextFragment.setOnClickListener       { onNextClick() }
+        btnNextFragment.setOnClickListener { onNextClick() }
+        bestPriceLogo.setOnClickListener(readMoreListener)
+        layoutBestPriceText.setOnClickListener(readMoreListener)
     }
 
-    fun refreshUi() {
-        switcher_map_.switch_mode_.isChecked = false
-    }
+    /**
+     * Request update layout after fragment started
+     */
+    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
+        return FragmentUtils.onCreateAnimation(requireContext(), enter) {
 
-    override fun switchToMap() {
-        listener?.switchToMap()
+            request_search_panel.visibleFade(true)
+            presenter.updateView()
+        }
     }
 
     override fun blockFromField() {
@@ -128,46 +105,27 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
 
     override fun showHourlyDurationDialog(durationValue: Int?) {
         HourlyDurationDialogFragment
-                .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
-                    override fun onDone(durationValue: Int) {
-                        presenter.updateDuration(durationValue)
-                    }
-                })
-                .show(requireFragmentManager(), HourlyDurationDialogFragment.DIALOG_TAG)
+            .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
+                override fun onDone(durationValue: Int) {
+                    presenter.updateDuration(durationValue)
+                }
+            })
+            .show(requireFragmentManager(), HourlyDurationDialogFragment.DIALOG_TAG)
     }
 
     private fun onNextClick() {
         if (dateDelegate.validateWith {
-                    Utils.getAlertDialogBuilder(requireActivity())
-                            .setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
-                            .setMessage(getString(CreateOrderView.FieldError.RETURN_TIME.stringId))
-                            .setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
-                            .show()
-                }) {
+            Utils.getAlertDialogBuilder(requireActivity())
+                .setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
+                .setMessage(getString(CreateOrderView.FieldError.RETURN_TIME.stringId))
+                .setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
+                .show()
+        }) {
             presenter.onNextClick { process ->
                 btnNextFragment?.isEnabled = false
             }
         }
     }
-
-    override fun initDateTimeFields() =
-            with(dateDelegate) {
-                if (startOrderedTime == null) {
-                    order_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)
-                } else {
-                    order_time_view.hint_title.text = startOrderedTime
-                    return_time_view.setOnClickListener { openPicker(RETURN_DATE) }
-                }
-                if (returnOrderedTime == null) {
-                    return_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE_RETURN)
-                } else {
-                    return_time_view.hint_title.text = returnOrderedTime
-                    setReturnTimeIcon(true)
-                }
-                setReturnTimeIcon(returnOrderedTime != null)
-            }
-
-    private fun openPicker(field: Boolean) = dateDelegate.chooseOrderTime(requireContext(), field, this)
 
     override fun setHourlyDuration(duration: Int?) {
         if (duration != null) {
@@ -180,8 +138,12 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
 
     override fun updateTripView(isHourly: Boolean) {
         request_search_panel.hourlyMode(isHourly)
-        rl_returnTime.isGone    = isHourly
-        field_divider.isGone    = isHourly
+        promoText.text = getString(
+            when (isHourly) {
+                true  -> R.string.LNG_MAIN_SCREEN_HOURLY_TRANSFER_TITLE
+                false -> R.string.LNG_MAIN_SCREEN_POINT_TO_POINT_TRANSFER_TITLE
+            }
+        )
         enableBtnNext()
     }
 
@@ -189,40 +151,6 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         btnNextFragment.isEnabled =
                 !request_search_panel.isEmptySearchFrom() &&
             (!request_search_panel.isEmptySearchTo() || switcher_hourly.switch_mode_.isChecked)
-    }
-
-    private fun setReturnTimeIcon(hasDate: Boolean = true) {
-        val image = if (hasDate) R.drawable.ic_return_calendar else R.drawable.ic_return_time
-        return_time_view.img_icon.setImageDrawable(ContextCompat.getDrawable(requireContext(), image))
-        fl_DeleteReturnDate.isVisible = hasDate
-        return_time_view.img_arrow.isVisible = !hasDate
-    }
-
-    private fun clearReturnDate() {
-        dateDelegate.returnDate = null
-        return_time_view.hint_title.text = getText(R.string.LNG_RIDE_DATE)
-        setReturnTimeIcon(false)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        AppWatcher.objectWatcher.watch(this)
-    }
-
-    override fun setFieldDate(date: String, field: Boolean) {
-        val dateField = if (field == START_DATE) order_time_view else return_time_view
-        dateField.hint_title.text = date
-        if (field == RETURN_DATE) {
-            setReturnTimeIcon(date.isNotEmpty())
-        } else {
-            return_time_view.setOnClickListener { openPicker(RETURN_DATE) }
-        }
-        enableBtnNext()
-    }
-
-    override fun setEventCount(isVisible: Boolean, count: Int) {
-        tvEventsCountFragment.isVisible = isVisible && count > 0
-        tvEventsCountFragment.text = count.toString()
     }
 
     override fun onNetworkWarning(available: Boolean) {
@@ -251,6 +179,10 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         block(EasyPermissions.hasPermissions(requireContext(), *PERMISSIONS))
     }
 
+    override fun showReadMoreDialog() {
+        ReadMoreFragment().show(requireFragmentManager(), getString(R.string.tag_read_more))
+    }
+
     @CallSuper
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -258,8 +190,25 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
         presenter.updateCurrentLocation()
     }
 
+    override fun switchToMap() {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToMap())
+    }
+
+    override fun goToSearchAddress(addressFrom: String, addressTo: String, isClickTo: Boolean, isCameFromMap: Boolean) {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToSearchAddress(addressFrom, addressTo, isClickTo, isCameFromMap))
+    }
+
+    override fun goToCreateOrder() {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToCreateOrder())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
+    }
+
     companion object {
         @JvmField val PERMISSIONS =
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 }

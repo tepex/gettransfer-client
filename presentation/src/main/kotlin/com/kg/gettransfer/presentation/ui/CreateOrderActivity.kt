@@ -421,7 +421,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
 
     override fun showCurrencies() {
         hideKeyboard()
-        FragmentUtils.replaceFragment(supportFragmentManager, SelectCurrencyFragment(), R.id.secondary_bottom_sheet)
+        FragmentUtils.replaceFragment(supportFragmentManager, SelectCurrencyBottomFragment(), R.id.secondary_bottom_sheet)
     }
 
     companion object {

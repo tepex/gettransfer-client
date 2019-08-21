@@ -11,5 +11,4 @@ interface NewTransferMapView : BaseNewTransferView {
     fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean)
     fun moveCenterMarker(point: LatLng)
     fun setMarkerElevation(up: Boolean)
-    fun switchToMain()
 }

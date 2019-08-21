@@ -111,7 +111,7 @@
         <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
             android:id="@+id/btnCall"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:visibility="gone"
             app:btn_img="@drawable/ic_call"
@@ -120,7 +120,7 @@
         <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
             android:id="@+id/btnChat"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:visibility="gone"
             app:btn_img="@drawable/ic_chat_yellow"

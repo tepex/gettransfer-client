@@ -50,6 +50,7 @@
     <string name="LNG_MENU_SUBTITLE_SETTINGS">Language and payment settings</string>
     <string name="LNG_MENU_TITLE_ABOUT">About us</string>
     <string name="LNG_MENU_SUBTITLE_ABOUT">Our features</string>
+    <string name="LNG_ABOUT_APPLICATION">About application</string>
     <string name="LNG_MENU_TITLE_DRIVE">Driver mode</string>
     <string name="LNG_MENU_SUBTITLE_DRIVE">Switch to driver mode</string>
     <string name="LNG_MENU_TITLE_PASSENGER">Passenger mode</string>
@@ -60,7 +61,7 @@
     <string name="LNG_MENU_SUBTITLE_TRIPS">Upcoming transfers</string>
     <string name="LNG_CUSTOMER_SUBTITLE_SUPPORT">Contact us</string>
     <string name="LNG_READMORE"><u>Read more</u></string>
-    <string name="LNG_BESTPRICES">Best prices for transfers\nbetween airports and cities\nworldwide</string>
+    <string name="LNG_BESTPRICES">Best prices for transfers between airports and cities worldwide</string>
     <string name="LNG_LANGUAGE">Application language</string>
     <string name="LNG_CURRENCY">Currency</string>
     <string name="LNG_UNLOGIN">Sign out</string>
@@ -395,4 +396,19 @@
     <string name="LNG_COLOR_ORANGE">orange</string>
     <string name="LNG_COLOR_BEIGE">beige</string>
     <string name="LNG_COLOR_GOLD">gold</string>
+
+    <string name="LNG_MAIN_SCREEN_POINT_TO_POINT_TRANSFER_TITLE">Transfers everywhere at the best price</string>
+    <string name="LNG_MAIN_SCREEN_HOURLY_TRANSFER_TITLE">Hourly trips are cheaper than in a taxi</string>
+
+    <string name="LNG_MENU_ORDER">Order</string>
+    <string name="LNG_MENU_TRIPS">Trips</string>
+    <string name="LNG_MENU_HELP">Help</string>
+    <string name="LNG_MENU_SETTINGS">Settings</string>
+
+    <string name="LNG_FACEBOOK">Facebook</string>
+    <string name="LNG_WHATSAPP">Whatsapp</string>
+    <string name="LNG_VIBER">Viber</string>
+    <string name="LNG_TELEGRAM">Telegram</string>
+
+    <string name="LNG_DRIVER_ON_MAP">Show driver on map</string>
 </resources>

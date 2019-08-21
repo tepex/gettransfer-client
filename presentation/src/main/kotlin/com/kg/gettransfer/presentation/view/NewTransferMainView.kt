@@ -1,7 +1,10 @@
 package com.kg.gettransfer.presentation.view
 
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+
+@StateStrategyType(OneExecutionStateStrategy::class)
 interface NewTransferMainView : BaseNewTransferView {
-    fun initDateTimeFields()
-    fun setEventCount(isVisible: Boolean, count: Int)
     fun switchToMap()
+    fun showReadMoreDialog()
 }

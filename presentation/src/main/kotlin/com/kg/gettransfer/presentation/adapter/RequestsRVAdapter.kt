@@ -1,58 +1,74 @@
 package com.kg.gettransfer.presentation.adapter
 
 import androidx.recyclerview.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
-
-import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.model.TransferModel
-import com.kg.gettransfer.presentation.ui.TransferRequestItem
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.view_transfer_request_info_enabled.*
+import kotlinx.android.synthetic.main.view_transfer_request_item.view.*
 
 class RequestsRVAdapter(
-        @LayoutRes private val layout: Int,
-        private val listener: ItemClickListener
+    private val requestType: Int,
+    private val onItemClick: ItemClickListener,
+    private val onCallClick: BtnCallClickListener,
+    private val onChatClick: BtnChatClickListener
 ) : RecyclerView.Adapter<RequestsRVAdapter.ViewHolder>() {
 
     private val transfers = mutableListOf<TransferModel>()
     private var eventsCount = mapOf<Long, Int>()
+    private var transfersWithDriverCoordinates = mutableSetOf<Long>()
 
     override fun getItemCount() = transfers.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        RequestsRVAdapter.ViewHolder(
-            TransferRequestItem(parent.context, layout).containerView
-        )
+        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_request_item, parent, false))
 
-    override fun onBindViewHolder(holder: RequestsRVAdapter.ViewHolder, pos: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
         val transfer = transfers[pos]
-        holder.bind(transfer, eventsCount[transfer.id] ?: 0, listener)
+        holder.bind(
+            transfer,
+            requestType,
+            eventsCount[transfer.id] ?: 0,
+            transfersWithDriverCoordinates.contains(transfer.id),
+            onItemClick,
+            onCallClick,
+            onChatClick
+        )
     }
 
     class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bind(item: TransferModel, eventsCount: Int, listener: ItemClickListener) = with(containerView) {
-            (this as TransferRequestItem).setInfo(item)
-            showEvents(item, eventsCount)
-            setThrottledClickListener { listener(item) }
-        }
+        private var firstInit = true
 
-        private fun showEvents(item: TransferModel, eventsCount: Int) {
-            if (eventsCount == 0 ||
-                (!item.showOfferInfo && item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE) ||
-                item.isBookNow()
-            ) {
-                tvEventsCount.isVisible = false
-            } else {
-                tvEventsCount.isVisible = true
-                tvEventsCount.text = eventsCount.toString()
+        fun bind(item: TransferModel,
+                 requestType: Int,
+                 eventsCount: Int,
+                 haveDriverCoordinates: Boolean,
+                 onItemClick: ItemClickListener,
+                 onCallClick: BtnCallClickListener,
+                 onChatClick: BtnChatClickListener
+        ) = with(containerView) {
+            with(requestInfo) {
+                if (firstInit) {
+                    setStyle(requestType)
+                    firstInit = false
+                }
+                setInfo(item, requestType)
+                showOfferInfo(
+                    item.matchedOffer,
+                    haveDriverCoordinates,
+                    onCallClick,
+                    View.OnClickListener { onChatClick(item.id) },
+                    View.OnClickListener { onItemClick(item) }
+                )
+                showEvents(item, item.matchedOffer != null, eventsCount)
             }
+            setThrottledClickListener { onItemClick(item) }
         }
     }
 
@@ -69,6 +85,15 @@ class RequestsRVAdapter(
         this.eventsCount = eventsCount
         notifyDataSetChanged()
     }
+
+    fun updateDriverCoordinates(transferId: Long) {
+        if (!transfersWithDriverCoordinates.contains(transferId)) {
+            transfersWithDriverCoordinates.add(transferId)
+            notifyDataSetChanged()
+        }
+    }
 }
 
 typealias ItemClickListener = (TransferModel) -> Unit
+typealias BtnCallClickListener = (String) -> Unit
+typealias BtnChatClickListener = (Long) -> Unit

@@ -24,7 +24,6 @@ object Screens {
     @JvmField val NOT_USED = -1
 
     @JvmField val MAIN = "main"
-    @JvmField val MAIN_MENU = "show_menu"
     @JvmField val OFFERS = "offers"
     @JvmField val DETAILS = "details"
 
@@ -53,12 +52,9 @@ object Screens {
     private var canSendEmail: Boolean? = null
 
     data class MainPassenger(
-        val showDrawer: Boolean = false
+        val showDrawer: Boolean = false  //TODO remove
     ) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java)
-            .apply {
-                putExtra(MAIN_MENU, showDrawer)
-            }
     }
 
     data class MainPassengerToRateTransfer(
@@ -86,12 +82,8 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, DriverModeNotSupportedActivity()::class.java)
     }
 
-    object Settings : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SettingsActivity::class.java)
-    }
-
     object Requests : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, RequestsActivity::class.java)
+        override fun getActivityIntent(context: Context?) = Intent(context, RequestsPagerActivity::class.java)
     }
 
     object LicenceAgree : SupportAppScreen() {
@@ -243,6 +235,7 @@ object Screens {
         }
     }
 
+/*
     data class FindAddress(
         val from: String,
         val to: String,
@@ -250,13 +243,14 @@ object Screens {
         val returnMain: Boolean = false
     ) :
         SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SearchActivity::class.java).apply {
+        override fun getActivityIntent(context: Context?) = Intent(context, SearchFragment::class.java).apply {
             putExtra(SearchView.EXTRA_ADDRESS_FROM, from)
             putExtra(SearchView.EXTRA_ADDRESS_TO, to)
             putExtra(RETURN_MAIN, returnMain)
             isClickTo?.let { putExtra(SearchView.EXTRA_IS_CLICK_TO, it) }
         }
     }
+*/
 
     data class Offers(val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, OffersActivity::class.java).apply {
@@ -410,9 +404,5 @@ object Screens {
                 putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
                 putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
             }
-    }
-
-    object Support : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SupportActivity::class.java)
     }
 }

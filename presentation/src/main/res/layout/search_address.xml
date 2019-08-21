@@ -4,7 +4,6 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:paddingBottom="0dp"
 	tools:context=".presentation.ui.SearchAddress">
 
 	<TextView
@@ -19,7 +18,8 @@
 		android:paddingStart="@dimen/search_form_title_padding_start"
 		android:fontFamily="@font/sf_pro_text_regular"
 		android:layout_height="@dimen/search_sub_title_height"
-		android:textSize="@dimen/search_sub_title_textSize"/>
+		android:textSize="@dimen/search_sub_title_textSize"
+		tools:text="@string/LNG_FIELD_SOURCE_PICKUP"/>
 
 	<EditText
 		android:id="@+id/addressField"
@@ -36,28 +36,26 @@
 		android:textColorHint="@color/black_a10"
 		android:ellipsize="end"
 		android:paddingBottom="@dimen/search_main_paddingBottom"
-
-		app:layout_constraintEnd_toStartOf="@+id/fl_clearBtn"
+		app:layout_constraintEnd_toStartOf="@id/fl_clearBtn"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/sub_title" />
+		app:layout_constraintTop_toBottomOf="@id/sub_title"
+		tools:text="Address location"/>
 
 	<FrameLayout
 		android:id="@+id/fl_clearBtn"
 		android:layout_width="@dimen/clear_fl_width"
 		android:layout_height="@dimen/clear_fl_height"
-		android:visibility="invisible"
+		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent">
 
-		<ImageButton
+		<androidx.appcompat.widget.AppCompatImageButton
 			android:id="@+id/im_clearBtn"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="bottom"
 			android:layout_marginBottom="@dimen/search_main_clear_paddingBottom"
-			android:background="@android:drawable/presence_offline"
-
-			/>
+			android:background="@android:drawable/presence_offline" />
 	</FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

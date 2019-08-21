@@ -28,6 +28,7 @@ import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 
 import com.kg.gettransfer.presentation.mapper.*
+import com.kg.gettransfer.receiver.NetworkChangeCallback
 import com.kg.gettransfer.utilities.*
 
 import com.kg.gettransfer.sys.presentation.ConfigsManager
@@ -151,6 +152,7 @@ val androidModule = module {
     single { NewTransferState() }
     single { AccountManager() }
     single { GTDownloadManager(androidApplication().applicationContext) }
+    single { NetworkChangeCallback(androidApplication().applicationContext) }
 }
 
 val testModule = module {

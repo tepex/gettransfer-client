@@ -10,9 +10,9 @@
         android:id="@+id/fabEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="@dimen/activity_customer_support_write_us_icon_margin_start"
+        android:layout_marginTop="@dimen/activity_customer_support_write_us_icon_margin_top"
+        android:layout_marginBottom="@dimen/activity_customer_support_write_us_icon_margin_bottom"
         app:backgroundTint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,11 +32,12 @@
         android:id="@+id/tvEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="27dp"
+        android:layout_marginEnd="@dimen/activity_customer_support_write_us_text_margin_end"
         tools:text="@string/email_support"
         app:layout_constraintBottom_toBottomOf="@+id/fabEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/fabEmail"
-        style="@style/sf_font"/>
+        style="@style/sf_font_pro_text_regular_black"
+        android:textSize="@dimen/activity_customer_support_content_text_size"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

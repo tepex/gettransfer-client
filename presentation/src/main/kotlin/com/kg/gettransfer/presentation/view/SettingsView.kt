@@ -2,18 +2,27 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.kg.gettransfer.domain.model.Profile
 
-import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.sys.presentation.EndpointModel
 
+import java.util.Locale
+
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface SettingsView : BaseView {
-    fun setLocales(locales: List<LocaleModel>)
-    fun setEndpoints(endpoints: List<EndpointModel>)
-    fun setDistanceUnit(inMiles: Boolean)
+    fun initGeneralSettingsLayout()
+    fun initProfileField(isLoggedIn: Boolean, profile: Profile)
     fun setEmailNotifications(enabled: Boolean)
+    fun hideEmailNotifications()
+    fun initDriverLayout(isBackGroundCoordinatesAccepted: Boolean)
+    fun hideDriverLayout()
+    fun showDebugMenu()
+    fun hideDebugMenu()
+
+    fun updateResources(locale: Locale)
+    fun setEndpoints(endpoints: List<EndpointModel>)
     fun setCalendarModes(calendarModesKeys: List<String>)
     fun setDaysOfWeek(daysOfWeek: List<CharSequence>)
 
@@ -22,15 +31,11 @@ interface SettingsView : BaseView {
     fun setCalendarMode(calendarModeKey: String)
     fun setFirstDayOfWeek(dayOfWeek: String)
     fun setEndpoint(endpoint: EndpointModel)
-    fun setLogoutButtonEnabled(enabled: Boolean)
+    fun setDistanceUnit(inMiles: Boolean)
 
-    fun initGeneralSettingsLayout()
-    // fun initLoggedInUserSettings(profile: ProfileModel)
-    fun initProfileField()
-    // fun initCarrierLayout()
-    fun showDebugMenu()
-    fun hideDebugMenu()
-
-    fun showFragment(showingView: Int)
+    fun showCurrencyChooser()
+    fun showLanguageChooser()
     fun restartApp()
+
+    fun hideSomeDividers()
 }

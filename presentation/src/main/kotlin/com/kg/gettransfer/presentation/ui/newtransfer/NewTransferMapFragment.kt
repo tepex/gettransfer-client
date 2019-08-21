@@ -2,14 +2,13 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
 import android.animation.Animator
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
 
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
 
 import android.view.*
+import androidx.navigation.fragment.findNavController
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -21,10 +20,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.common.NewTransferSwitchListener
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
+import com.kg.gettransfer.extensions.visibleFade
 
 import com.kg.gettransfer.presentation.presenter.NewTransferMapPresenter
 import com.kg.gettransfer.presentation.ui.*
@@ -34,6 +33,7 @@ import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 
 import com.kg.gettransfer.presentation.view.NewTransferMapView
+import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 
 import kotlinx.android.synthetic.main.fragment_new_transfer_map.*
 import kotlinx.android.synthetic.main.search_form_main.*
@@ -42,15 +42,11 @@ import kotlinx.android.synthetic.main.view_switcher.*
 
 import pub.devrel.easypermissions.EasyPermissions
 
-import timber.log.Timber
-
 @Suppress("TooManyFunctions")
 class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
     @InjectPresenter
     internal lateinit var presenter: NewTransferMapPresenter
-
-    var listener: NewTransferSwitchListener? = null
 
     private var isFirst = true
     private var isPermissionRequested = false
@@ -61,6 +57,12 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     @ProvidePresenter
     fun createNewTransferPresenter() = NewTransferMapPresenter()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Added network change listener
+        lifecycle.addObserver(NetworkLifeCycleObserver(this, this))
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_new_transfer_map, container, false)
     }
@@ -68,10 +70,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            search_panel.elevation = resources.getDimension(R.dimen.search_elevation)
-        }
 
         baseMapView = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
@@ -84,24 +82,24 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         switch_mode_.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
         search_panel.setSearchFromClickListener {
             presenter.navigateToFindAddress(
-                searchFrom.text,
-                searchTo.text,
-                returnToMain = true
+                    searchFrom.text,
+                    searchTo.text,
+                    isCameFromMap = true
             )
         }
         search_panel.setSearchToClickListener {
             presenter.navigateToFindAddress(
-                searchFrom.text,
-                searchTo.text,
-                isClickTo = true,
-                returnToMain = true
+                    searchFrom.text,
+                    searchTo.text,
+                    isClickTo = true,
+                    isCameFromMap = true
             )
         }
         search_panel.setHourlyClickListener {  presenter.showHourlyDurationDialog() }
         search_panel.setIvSelectFieldToClickListener{ presenter.switchUsedField() }
         btnNext.setThrottledClickListener { performNextClick() }
         btnBack.setOnClickListener {
-            switchToMain()
+            findNavController().navigateUp()
         }
         btnMyLocation.setOnClickListener {
             checkPermission()
@@ -109,23 +107,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         }
 
         enableBtnNext()
-
-        // back return to main
-        view.isFocusableInTouchMode = true
-        view.requestFocus()
-        view.setOnKeyListener(View.OnKeyListener { _, keyCode, keyEvent ->
-            if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_DOWN) {
-                switchToMain()
-                return@OnKeyListener true
-            }
-            return@OnKeyListener false
-        })
-    }
-
-    @CallSuper
-    override fun setUserVisibleHint(visible: Boolean) {
-        super.setUserVisibleHint(visible)
-        presenter.updateView(visible && isResumed)
     }
 
     /**
@@ -133,6 +114,10 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
      */
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
         return FragmentUtils.onCreateAnimation(requireContext(), enter) {
+
+            search_panel.visibleFade(true)
+            presenter.updateView()
+
             if (!isPermissionRequested) {
                 isPermissionRequested = true
                 checkPermission()
@@ -149,19 +134,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
     }
 
-    @CallSuper
-    override fun onAttach(activity: Context) {
-        super.onAttach(activity)
-        try {
-            listener = parentFragment as NewTransferSwitchListener
-        } catch (e: ClassCastException) {
-            Timber.e("%s must implement NavigationMenuListener", activity.toString())
-        }
-    }
-
-    override fun switchToMain() {
-        listener?.switchToMain()
-        presenter.resetState()
+    override fun initMap() {
     }
 
     fun performNextClick() {
@@ -241,7 +214,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
                 }
                 .setDuration(MAGIC_DURATION)
         if (up) {
-            animator.translationYBy(Utils.convertDpToPixels(requireContext(), MARKER_ELEVATION))
+            animator.translationYBy(Utils.convertDpToPixels(requireContext(), -MARKER_ELEVATION))
         } else {
             animator.translationY(markerTranslationY)
         }
@@ -308,6 +281,14 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         if (available) {
             presenter.fillAddressFieldsCheckIsEmpty()
         }
+    }
+
+    override fun goToSearchAddress(addressFrom: String, addressTo: String, isClickTo: Boolean, isCameFromMap: Boolean) {
+        findNavController().navigate(NewTransferMapFragmentDirections.goToSearchAddress(addressFrom, addressTo, isClickTo, isCameFromMap))
+    }
+
+    override fun goToCreateOrder() {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToCreateOrder())
     }
 
     override fun onDestroy() {

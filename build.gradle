@@ -25,6 +25,7 @@ buildscript {
         dexcount_version      = "0.8.4"
         detekt_version        = "1.0.0-RC15"
         sentry_version        = "1.7.23"
+        nav_version           = "2.2.0-alpha01"
 
         libs = [
             kotlin        : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
@@ -59,6 +60,7 @@ buildscript {
         classpath "com.google.gms:google-services:$gs_version"
         classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$dexcount_version"
         classpath "io.sentry:sentry-android-gradle-plugin:$sentry_version"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
     }
 }
 
@@ -124,9 +126,6 @@ detekt {
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/ChatAdapter.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/GTApplication.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/common/NavigationMenuListener.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/common/NewTransferSwitchListener.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/OffersAdapter.kt",
 

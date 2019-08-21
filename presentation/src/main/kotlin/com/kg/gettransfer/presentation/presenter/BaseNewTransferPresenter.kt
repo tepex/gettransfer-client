@@ -13,15 +13,16 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.EMPTY_ADDRESS
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
 
 import com.kg.gettransfer.presentation.view.BaseNewTransferView
-import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
 
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.NewTransferState
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,11 +31,8 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
-import ru.terrakok.cicerone.Router
-
 @Suppress("TooManyFunctions")
 open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>(), KoinComponent {
-    protected val router: Router by inject()
     protected val analytics: Analytics by inject()
 
     protected val worker: WorkerManager by inject { parametersOf("BaseNewTransferPresenter") }
@@ -43,29 +41,24 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     protected val geoInteractor: GeoInteractor by inject()
     protected val orderInteractor: OrderInteractor by inject()
-    protected val nState: NewTransferState by inject()  // to keep info about navigation
 
     protected val pointMapper: PointMapper by inject()
 
     protected var lastCurrentLocation: LatLng? = null
 
-    protected var isVisible: Boolean = true
-
-    override fun attachView(view: BV) {
-        super.attachView(view)
-        updateView(isVisible)
+    open fun updateView() {
     }
 
-    open fun updateView(isVisibleView: Boolean) {
-        this.isVisible = isVisibleView
-    }
-
-    open fun fillViewFromState() {
+    open fun fillViewFromState(selectField: String? = null) {
         worker.main.launch {
-            if (!orderInteractor.isAddressesValid()) {
-                changeUsedField(NewTransferMainPresenter.FIELD_FROM)
+            if (selectField != null) {
+                changeUsedField(selectField)
             } else {
-                changeUsedField(getPreferences().getModel().selectedField)
+                if (!orderInteractor.isAddressesValid()) {
+                    changeUsedField(FIELD_FROM)
+                } else {
+                    changeUsedField(getPreferences().getModel().selectedField)
+                }
             }
         }
 
@@ -90,6 +83,10 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
         worker.main.launch {
             withContext(worker.bg) { setSelectedField(field) }
         }
+        when (field) {
+            FIELD_FROM -> viewState.selectFieldFrom()
+            FIELD_TO   -> viewState.setFieldTo()
+        }
     }
 
     /**
@@ -105,7 +102,9 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     fun updateCurrentLocation() {
         updateCurrentLocationAsync()
-        analytics.logSingleEvent(Analytics.MY_PLACE_CLICKED)
+        worker.main.launch {
+            withContext(worker.bg) { logIpapiRequest() }
+        }
     }
 
     private fun updateCurrentLocationAsync() {
@@ -191,14 +190,14 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     fun isHourly() = orderInteractor.hourlyDuration != null
 
-    fun navigateToFindAddress(from: String, to: String, isClickTo: Boolean = false, returnToMain: Boolean = false) {
-        router.navigateTo(Screens.FindAddress(from, to, isClickTo, returnToMain))
+    fun navigateToFindAddress(addressFrom: String, addressTo: String, isClickTo: Boolean = false, isCameFromMap: Boolean = false) {
+        viewState.goToSearchAddress(addressFrom, addressTo, isClickTo, isCameFromMap)
     }
 
     fun onNextClick(block: (Boolean) -> Unit) {
         if (orderInteractor.isCanCreateOrder()) {
             block(true)
-            router.navigateTo(Screens.CreateOrder)
+            viewState.goToCreateOrder()
         }
     }
 
@@ -224,10 +223,6 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     }
 
     companion object {
-        const val FIELD_FROM = "field_from"
-        const val FIELD_TO = "field_to"
-        const val EMPTY_ADDRESS = ""
-
         const val MIN_HOURLY = 2
         const val DELTA_MAX = 0.000_001
     }

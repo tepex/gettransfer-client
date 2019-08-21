@@ -11,13 +11,9 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
 
-import com.kg.gettransfer.presentation.mapper.ProfileMapper
-
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.MainNavigateView
-
-import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 import com.kg.gettransfer.sys.presentation.ConfigsManager
@@ -35,7 +31,6 @@ import org.koin.core.parameter.parametersOf
 @Suppress("TooManyFunctions")
 class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventListener {
 
-    private val profileMapper: ProfileMapper by inject()
     private val configsManager: ConfigsManager by inject()
     private val worker: WorkerManager by inject { parametersOf("MainNavigatePresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
@@ -60,22 +55,11 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         countEventsInteractor.addCounterListener(this)
         viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
         log.debug("MainPresenter.is user logged in: ${accountManager.isLoggedIn}")
-        checkAccount()
     }
 
     override fun detachView(view: MainNavigateView?) {
         super.detachView(view)
         countEventsInteractor.removeCounterListener(this)
-    }
-
-    private fun checkAccount() {
-        with(accountManager) {
-            viewState.setProfile(profileMapper.toView(remoteProfile), isLoggedIn, hasAccount)
-            if (remoteAccount.isBusinessAccount) {
-                val balance = remoteAccount.partner?.availableMoney?.default
-                viewState.setBalance(balance)
-            }
-        }
     }
 
     override fun updateCounter() {
@@ -85,58 +69,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     override fun onNewOffer(offer: Offer): OfferModel {
         utils.launchSuspend { viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount) }
         return super.onNewOffer(offer)
-    }
-
-    override fun systemInitialized() {
-        super.systemInitialized()
-        checkAccount()
-    }
-
-    fun onNewTransferClick() {
-        viewState.openMenu()
-    }
-
-    fun onAboutClick() = worker.main.launch {
-        router.navigateTo(Screens.About(true))
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.ABOUT_CLICKED)
-    }
-
-    fun readMoreClick() {
-        viewState.showReadMoreDialog()
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.BEST_PRICE_CLICKED)
-    }
-
-    fun onSettingsClick() {
-        router.navigateTo(Screens.Settings)
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SETTINGS_CLICKED)
-    }
-
-    fun onRequestsClick() {
-        router.navigateTo(Screens.Requests)
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.TRANSFER_CLICKED)
-    }
-
-    fun onLoginClick() {
-        login(Screens.PASSENGER_MODE, "")
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.LOGIN_CLICKED)
-    }
-
-    fun onBecomeACarrierClick() {
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.DRIVER_CLICKED)
-        when {
-            configsManager.mobile.isDriverModeBlock -> router.navigateTo(Screens.DriverModeNotSupport)
-            accountManager.isLoggedIn               -> when {
-                accountManager.remoteAccount.isDriver   -> router.newRootScreen(Screens.CarrierMode)
-                configsManager.mobile.isDriverAppNotify -> router.navigateTo(Screens.DriverModeNotSupport)
-                else                                    -> router.navigateTo(Screens.CarrierRegister)
-            }
-            configsManager.mobile.isDriverAppNotify -> router.navigateTo(Screens.DriverModeNotSupport)
-            else                                    -> login(Screens.CARRIER_MODE, "")
-        }
-    }
-
-    fun onSupportClick() {
-        router.navigateTo(Screens.Support)
     }
 
     private suspend fun checkReview(transfers: List<Transfer>) =
@@ -211,12 +143,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     }
 
     private fun logTransferReviewRequested() = analytics.logSingleEvent(Analytics.EVENT_TRANSFER_REVIEW_REQUESTED)
-
-    fun onShareClick() {
-        log.debug("Share action")
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
-        router.navigateTo(Screens.Share())
-    }
 
     fun redirectToPlayMarket() = worker.main.launch {
         withContext(worker.bg) { setAppEnters(ReviewInteractor.APP_RATED_IN_MARKET) }

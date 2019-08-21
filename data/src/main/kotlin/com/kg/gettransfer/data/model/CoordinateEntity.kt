@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CoordinateEntity(
-    @Optional var transferId: Long?,
+    @Optional var transferId: Long? = null,
     @SerialName(LATITUDE) val lat: String,
     @SerialName(LONGITUDE) val lon: String
 ) {

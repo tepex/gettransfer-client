@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        style="@style/requestCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/view_transfer_info_padding_bottom">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/back_clicked_layouts">
+
+                <TextView
+                    android:id="@+id/tvTransferRequestNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/view_transfer_info_request_number_horizontal_margin"
+                    android:layout_marginEnd="@dimen/view_transfer_info_request_number_horizontal_margin"
+                    android:layout_marginTop="@dimen/view_transfer_info_request_number_margin_top"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/colorTransferRequestText"
+                    android:textSize="@dimen/view_transfer_info_request_number_text_size"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="Transfer request #4242"/>
+
+                <TextView
+                    android:id="@+id/tvTransferRequestStatus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@+id/tvTransferRequestNumber"
+                    app:layout_constraintEnd_toEndOf="@+id/tvTransferRequestNumber"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTransferRequestNumber"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textSize="@dimen/view_transfer_info_request_number_text_size"
+                    android:textColor="@color/colorTransferRequestText"
+                    tools:text="Transfer will start in 3d 2h 42m"/>
+
+                <TextView
+                    android:id="@+id/tvFrom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/view_transfer_info_from_margin_start"
+                    android:layout_marginTop="@dimen/view_transfer_info_from_margin_top"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/sf_pro_text_semibold"
+                    android:lines="1"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/view_transfer_info_big_text_size"
+                    app:layout_constraintEnd_toStartOf="@+id/tvEventsCount"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTransferRequestStatus"
+                    tools:text="Луговой проезд, 10"/>
+
+                <TextView
+                    android:id="@+id/tvOrderDateTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/color_gtr_green"
+                    android:textSize="@dimen/view_transfer_info_small_text_size"
+                    app:layout_constraintEnd_toEndOf="@+id/tvFrom"
+                    app:layout_constraintStart_toStartOf="@+id/tvFrom"
+                    app:layout_constraintTop_toBottomOf="@+id/tvFrom"
+                    tools:text="18 апреля 2019, 10:00 "/>
+
+                <TextView
+                    android:id="@+id/tvTo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/view_transfer_info_to_margin_top"
+                    android:layout_marginStart="8dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/sf_pro_text_semibold"
+                    android:lines="1"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/view_transfer_info_big_text_size"
+                    app:layout_constraintEnd_toEndOf="@+id/tvFrom"
+                    app:layout_constraintStart_toEndOf="@+id/fl_bottom_point_view"
+                    app:layout_constraintTop_toBottomOf="@+id/tvOrderDateTime"
+                    tools:text="Воздвиженка, 15, Москва"/>
+
+                <TextView
+                    android:id="@+id/tvDistance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:textColor="@color/color_gtr_green"
+                    android:textSize="@dimen/view_transfer_info_small_text_size"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="14dp"
+                    app:layout_constraintEnd_toEndOf="@+id/tvFrom"
+                    app:layout_constraintStart_toEndOf="@+id/fl_bottom_point_view"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:text="13,2 км"/>
+
+                <TextView
+                    android:id="@+id/tvMarkerFrom"
+                    android:layout_width="@dimen/view_transfer_info_markers_size"
+                    android:layout_height="@dimen/view_transfer_info_markers_size"
+                    android:layout_marginStart="@dimen/view_transfer_info_top_marker_margin_start"
+                    android:layout_marginTop="@dimen/view_transfer_info_top_marker_margin_top"
+                    android:background="@drawable/back_circle_marker_filled_orange"
+                    android:gravity="center"
+                    android:text="@string/transfer_start_sign"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/transfer_start_end_sign_marker_text_size"
+                    android:fontFamily="@font/sf_pro_text_semibold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvFrom" />
+
+                <ImageView
+                    android:id="@+id/ivMarkersLine"
+                    android:layout_width="3dp"
+                    android:layout_height="0dp"
+                    android:layerType="software"
+                    app:layout_constraintBottom_toTopOf="@+id/fl_bottom_point_view"
+                    app:layout_constraintEnd_toEndOf="@+id/tvMarkerFrom"
+                    app:layout_constraintStart_toStartOf="@+id/tvMarkerFrom"
+                    app:layout_constraintTop_toBottomOf="@+id/tvMarkerFrom"
+                    android:layout_marginTop="@dimen/view_transfer_info_markers_line_vertical_margin"
+                    android:layout_marginBottom="@dimen/view_transfer_info_markers_line_vertical_margin"
+                    app:srcCompat="@drawable/ic_markers_line_orange_18dp" />
+
+                <ImageView
+                    android:id="@+id/ivReturnIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_roundtrip_arrows"
+                    app:layout_constraintBottom_toTopOf="@+id/fl_bottom_point_view"
+                    app:layout_constraintEnd_toEndOf="@+id/tvMarkerFrom"
+                    app:layout_constraintStart_toStartOf="@+id/tvMarkerFrom"
+                    app:layout_constraintTop_toBottomOf="@+id/tvMarkerFrom"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:id="@+id/fl_bottom_point_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/view_transfer_info_bottom_markers_margin_start"
+                    android:layout_marginBottom="@dimen/view_transfer_info_bottom_marker_margin_bottom"
+                    android:gravity="center"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvDistance">
+
+                    <TextView
+                        android:id="@+id/tvMarkerTo"
+                        android:layout_width="@dimen/view_transfer_info_markers_size"
+                        android:layout_height="@dimen/view_transfer_info_markers_size"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginStart="@dimen/view_transfer_info_bottom_point_marker_margin_start"
+                        android:background="@drawable/back_circle_marker_filled_orange"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:text="@string/transfer_end_sign"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/transfer_start_end_sign_marker_text_size"
+                        android:fontFamily="@font/sf_pro_text_semibold"/>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_hourly_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tv_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/view_transfer_info_markers_hourly_size"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="-16dp"
+                            android:layout_toEndOf="@+id/ivHourlyPoint"
+                            android:background="@drawable/back_hours_info_orange"
+                            android:fontFamily="@font/sf_pro_text_semibold"
+                            android:gravity="center"
+                            android:paddingStart="22dp"
+                            android:paddingEnd="12dp"
+                            android:paddingBottom="1dp"
+                            tools:text="8 hours"
+                            android:textSize="@dimen/view_transfer_info_hourly_text_size"
+                            android:textColor="@android:color/white" />
+
+                        <ImageView
+                            android:id="@+id/ivHourlyPoint"
+                            android:layout_width="@dimen/view_transfer_info_markers_hourly_size"
+                            android:layout_height="@dimen/view_transfer_info_markers_hourly_size"
+                            android:gravity="center"
+                            app:srcCompat="@drawable/ic_hourly_orange_24dp" />
+
+                    </RelativeLayout>
+
+                </FrameLayout>
+
+
+                <ImageView
+                    android:id="@+id/chevron"
+                    android:layout_width="@dimen/margin24"
+                    android:layout_height="@dimen/margin24"
+                    android:layout_marginEnd="@dimen/view_transfer_info_chevron_margin_end"
+                    app:srcCompat="@drawable/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvEventsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_circle_red"
+                    android:textColor="@android:color/white"
+                    android:paddingStart="@dimen/margin4"
+                    android:paddingEnd="@dimen/margin4"
+                    app:layout_constraintBottom_toBottomOf="@+id/chevron"
+                    app:layout_constraintEnd_toStartOf="@+id/chevron"
+                    app:layout_constraintTop_toTopOf="@+id/chevron"
+                    tools:text="10"
+                    android:gravity="center"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/offerInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible">
+                
+                <LinearLayout
+                    android:id="@+id/layoutCarInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:clipToPadding="false"
+                    android:gravity="center"
+                    android:paddingBottom="3dp">
+
+                    <TextView
+                        android:id="@+id/titleOfferInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/sf_font_pro_text_semibold_black"
+                        android:textSize="16sp"
+                        android:text="Вас будет ждать:" />
+
+                    <TextView
+                        android:id="@+id/carColor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:elevation="@dimen/view_transfer_info_car_color_elevation"
+                        android:fontFamily="@font/sf_pro_text_semibold"
+                        android:paddingStart="@dimen/view_transfer_info_car_color_horizontal_padding"
+                        android:paddingTop="@dimen/view_transfer_info_car_color_padding_top"
+                        android:paddingEnd="@dimen/view_transfer_info_car_color_horizontal_padding"
+                        android:paddingBottom="@dimen/view_transfer_info_car_color_padding_bottom"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/view_transfer_info_car_color_text_size"
+                        android:visibility="gone"
+                        tools:text="@string/LNG_COLOR_BLUE"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/carNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        style="@style/sf_font_pro_text_semibold_black"
+                        android:textSize="16sp"
+                        tools:text="MC123TO99"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/carName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutCarInfo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    style="@style/sf_font_pro_text_semibold_black"
+                    android:textSize="16sp"
+                    tools:text="Audi A7"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/carName"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
+
+                    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+                        android:id="@+id/btnChat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:btn_img="@drawable/ic_chat_yellow"
+                        app:btn_name="@string/LNG_PAYMENT_CHAT" />
+
+                    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+                        android:id="@+id/btnCall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:btn_img="@drawable/ic_call"
+                        app:btn_name="@string/LNG_PAYMENT_CALL"
+                        android:visibility="gone" />
+
+                    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+                        android:id="@+id/btnDriverCoordinates"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:btn_img="@drawable/ic_car"
+                        app:btn_name="@string/LNG_DRIVER_ON_MAP"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
