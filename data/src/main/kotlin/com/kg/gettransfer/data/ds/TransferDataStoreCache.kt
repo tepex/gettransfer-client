@@ -37,4 +37,8 @@ open class TransferDataStoreCache : TransferDataStore {
     override suspend fun downloadVoucher(transferId: Long): InputStream {
         throw UnsupportedOperationException()
     }
+
+    override suspend fun sendAnalytics(transferId: Long, role: String) {
+        throw UnsupportedOperationException()
+    }
 }

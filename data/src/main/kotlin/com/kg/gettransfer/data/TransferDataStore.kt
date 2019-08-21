@@ -22,4 +22,6 @@ interface TransferDataStore : KoinComponent {
     fun clearTransfersCache()
 
     suspend fun downloadVoucher(transferId: Long): InputStream
+
+    suspend fun sendAnalytics(transferId: Long, role: String)
 }

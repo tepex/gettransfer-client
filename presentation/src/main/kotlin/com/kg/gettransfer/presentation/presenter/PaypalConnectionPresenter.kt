@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
@@ -15,12 +14,9 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.core.inject
 
 @InjectViewState
 class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
-
-    private val paymentInteractor: PaymentInteractor by inject()
 
     internal var paymentId = 0L
     internal var nonce = ""
@@ -56,17 +52,27 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
             showFailedPayment()
         } ?: if (result.model.isSuccess) showSuccessfulPayment() else showFailedPayment()
         viewState.blockInterface(false)
-        analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, result.model.status.name)
         viewState.stopAnimation()
     }
 
     private fun showFailedPayment() {
+        analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         router.exit()
         router.navigateTo(Screens.PaymentError(transferId))
     }
 
     private fun showSuccessfulPayment() {
         router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
-        analytics.EcommercePurchase(PaymentRequestModel.PAYPAL).sendAnalytics()
+        utils.launchSuspend {
+            transfer?.let {
+                val offerPaid = transferInteractor.isOfferPaid(it.id)
+                if (offerPaid.first) {
+                    transfer = offerPaid.second
+                    paymentInteractor.selectedTransfer = transfer
+                    analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
+                    analytics.EcommercePurchase().sendAnalytics()
+                }
+            }
+        }
     }
 }

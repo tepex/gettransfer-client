@@ -85,6 +85,10 @@ data class Transfer(
         OUTDATED(false);
     }
 
+    enum class Role {
+        PASSENGER, PARTNER, CARRIER, MANAGER
+    }
+
     fun isCompletedTransfer() = status == Status.NOT_COMPLETED || status == Status.COMPLETED
 
     companion object {

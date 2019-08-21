@@ -20,4 +20,6 @@ interface TransferRemote : KoinComponent {
     suspend fun getTransfersActive(): List<TransferEntity>
 
     suspend fun downloadVoucher(transferId: Long): InputStream
+
+    suspend fun sendAnalytics(transferId: Long, role: String)
 }

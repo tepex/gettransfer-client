@@ -2,7 +2,6 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.remote.model.*
-import com.kg.gettransfer.sys.remote.SystemApi
 
 import kotlinx.coroutines.Deferred
 
@@ -226,4 +225,10 @@ interface Api {
     fun downloadVoucher(
         @Path("id") transferId: Long
     ): Deferred<ResponseBody>
+
+    @POST("$API_TRANSFERS/{id}/analytics_sent")
+    fun sendAnalytics(
+        @Path("id") transferId: Long,
+        @Body role: RoleModel
+    ): Deferred<ResponseModel<String>>
 }

@@ -14,8 +14,6 @@ import org.koin.core.inject
 
 open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
 
-    private val paymentInteractor: PaymentInteractor by inject()
-
     internal lateinit var params: LogInView.Params
 
     fun openNextScreen() {

@@ -17,7 +17,6 @@ import org.koin.core.inject
 class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
 
     private val orderInteractor: OrderInteractor by inject()
-    private val paymentInteractor: PaymentInteractor by inject()
 
     @Suppress("ComplexMethod")
     fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) = utils.launchSuspend {

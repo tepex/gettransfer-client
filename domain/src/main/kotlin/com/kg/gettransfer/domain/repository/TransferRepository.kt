@@ -16,4 +16,5 @@ interface TransferRepository {
     suspend fun setOffersUpdateDate(id: Long): Result<Unit>
     fun clearTransfersCache()
     suspend fun downloadVoucher(transferId: Long): Result<InputStream?>
+    suspend fun sendAnalytics(transferId: Long, role: String): Result<Unit>
 }

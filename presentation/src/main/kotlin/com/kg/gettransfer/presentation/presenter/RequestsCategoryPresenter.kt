@@ -103,6 +103,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
                         viewState.blockInterface(false)
                         updateEventsCount()
                     }
+                    sendAnalytics()
                 } else {
                     viewState.blockInterface(false)
                     viewState.onEmptyList()
@@ -128,6 +129,14 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
             add(Calendar.MINUTE, duration)
         }.time
         return dateNow.after(dateStart) && dateNow.before(dateEnd)
+    }
+
+    private fun sendAnalytics() {
+        when (transferType) {
+            TRANSFER_ACTIVE -> {
+                transfers?.let { analytics.EcommercePurchase().sendAnalytics(it) }
+            }
+        }
     }
 
     private fun updateEventsCount() {
