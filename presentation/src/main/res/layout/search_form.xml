@@ -89,7 +89,7 @@
 				android:layout_centerVertical="true"
 				android:layout_marginEnd="@dimen/hourly_arrow_margin_end"
 				android:rotation="90"
-				android:src="@drawable/ic_arrow_down"/>
+				android:src="@drawable/ic_arrow_right"/>
 
 
 	</RelativeLayout>

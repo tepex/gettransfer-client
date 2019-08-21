@@ -191,7 +191,7 @@ class NewTransferMainFragment : MvpAppCompatFragment(),
     }
 
     private fun setReturnTimeIcon(hasDate: Boolean = true) {
-        val image = if (hasDate) R.drawable.ic_calendar_return else R.drawable.ic_return_time
+        val image = if (hasDate) R.drawable.ic_return_calendar else R.drawable.ic_return_time
         return_time_view.img_icon.setImageDrawable(ContextCompat.getDrawable(requireContext(), image))
         fl_DeleteReturnDate.isVisible = hasDate
         return_time_view.img_arrow.isVisible = !hasDate
