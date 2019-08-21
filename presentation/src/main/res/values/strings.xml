@@ -409,4 +409,6 @@
     <string name="LNG_WHATSAPP">Whatsapp</string>
     <string name="LNG_VIBER">Viber</string>
     <string name="LNG_TELEGRAM">Telegram</string>
+
+    <string name="LNG_DRIVER_ON_MAP">Show driver on map</string>
 </resources>

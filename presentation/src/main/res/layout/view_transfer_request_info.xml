@@ -329,7 +329,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:btn_img="@drawable/ic_car"
-                        app:btn_name="Show driver on map"
+                        app:btn_name="@string/LNG_DRIVER_ON_MAP"
                         android:visibility="gone" />
 
                 </LinearLayout>
