@@ -16,9 +16,6 @@ import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.FROM_PLACE_I
 import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.PROMO_CODE
 import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.TO_PLACE_ID
 
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
-
 import timber.log.Timber
 
 class AppsFlyerHandleDeepLinkActivity : BaseActivity(), HandleUrlView {

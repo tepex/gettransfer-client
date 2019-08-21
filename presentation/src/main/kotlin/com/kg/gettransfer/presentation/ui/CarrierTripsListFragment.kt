@@ -29,6 +29,7 @@ import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.CarrierTripsListFragmentView
 
 import kotlinx.android.synthetic.main.activity_carrier_trips_list_fragment.*
+//import leakcanary.AppWatcher
 
 import timber.log.Timber
 
@@ -97,6 +98,11 @@ class CarrierTripsListFragment : MvpAppCompatFragment(), CarrierTripsListFragmen
                 }
             }
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) =

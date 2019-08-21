@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.kg.gettransfer.R
 
 import kotlinx.android.synthetic.main.fragment_image.*
+//import leakcanary.AppWatcher
 
 class FragmentImageForViewPager: Fragment() {
     companion object {
@@ -36,5 +37,10 @@ class FragmentImageForViewPager: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Glide.with(activity!!).load(imageUrl).into(imageForViewPager)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 }

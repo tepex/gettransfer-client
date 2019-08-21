@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.view_car_pin.view.*
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+//import leakcanary.AppWatcher
 import org.koin.android.ext.android.get
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -174,6 +175,11 @@ abstract class BaseMapFragment : MvpAppCompatFragment() {
         googleMapJob.cancel()
 
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     companion object {

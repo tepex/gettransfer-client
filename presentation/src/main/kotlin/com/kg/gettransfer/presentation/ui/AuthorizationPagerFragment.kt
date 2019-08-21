@@ -19,6 +19,7 @@ import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.fragment_pager_authorization.*
 import kotlinx.serialization.json.JSON
+//import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinComponent
@@ -131,5 +132,10 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         private fun createSignUpFragment(): Fragment {
             return SignUpFragment.newInstance()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 }
