@@ -8,7 +8,6 @@ import com.braintreepayments.api.models.PayPalRequest
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
@@ -42,7 +41,6 @@ import org.koin.core.inject
 @Suppress("TooManyFunctions")
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
-    private val paymentInteractor: PaymentInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
@@ -151,10 +149,18 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         if (err != null) {
             log.error("get by balance payment error", err)
             router.navigateTo(Screens.PaymentError(paymentRequest.transferId))
-            analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
+            analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         } else {
             router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))
-            analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_SUCCESS)
+            analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
+            transfer?.let {
+                val offerPaid = transferInteractor.isOfferPaid(it.id)
+                if (offerPaid.first) {
+                    transfer = offerPaid.second
+                    paymentInteractor.selectedTransfer = transfer
+                    analytics.EcommercePurchase().sendAnalytics()
+                }
+            }
         }
         viewState.blockInterface(false)
     }

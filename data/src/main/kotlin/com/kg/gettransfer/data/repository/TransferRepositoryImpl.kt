@@ -259,4 +259,9 @@ class TransferRepositoryImpl(
         }
         return Result(result.entity)
     }
+
+    override suspend fun sendAnalytics(transferId: Long, role: String): Result<Unit> {
+        factory.retrieveRemoteDataStore().sendAnalytics(transferId, role)
+        return Result(Unit)
+    }
 }

@@ -65,8 +65,17 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
                     viewState.updateTransfers(viewList)
                     updateEventsCount()
                 }
+                sendAnalytics()
             } else {
                 viewState.onEmptyList()
+            }
+        }
+    }
+
+    private fun sendAnalytics() {
+        when (transferType) {
+            TRANSFER_ACTIVE -> {
+                transfers?.let { analytics.EcommercePurchase().sendAnalytics(it) }
             }
         }
     }
