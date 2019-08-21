@@ -77,15 +77,6 @@
 
             </LinearLayout>
 
-            <include
-                android:id="@+id/driver_abilities_bs"
-                layout="@layout/view_offer_driver_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
-                android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
-                android:visibility="gone" />
-
             <com.kg.gettransfer.presentation.ui.custom.VehiclePhotosView
                 android:id="@+id/vehiclePhotosView"
                 android:layout_width="match_parent"
