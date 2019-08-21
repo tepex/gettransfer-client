@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.fragment_requests.*
 import timber.log.Timber
 import kotlinx.android.synthetic.main.view_shimmer_loader.view.*
 import android.os.Handler
+//import leakcanary.AppWatcher
 
 
 /**
@@ -93,6 +94,11 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         btn_forward_main.setOnClickListener {
             presenter.onGetBookClicked()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     override fun updateTransfers(transfers: List<TransferModel>) {

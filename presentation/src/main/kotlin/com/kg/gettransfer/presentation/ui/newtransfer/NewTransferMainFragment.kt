@@ -29,6 +29,7 @@ import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
+//import leakcanary.AppWatcher
 
 import org.koin.core.inject
 import pub.devrel.easypermissions.EasyPermissions
@@ -199,6 +200,11 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
     override fun goToCreateOrder() {
         findNavController().navigate(NewTransferMainFragmentDirections.goToCreateOrder())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     companion object {

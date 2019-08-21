@@ -24,7 +24,7 @@ ext {
     libphonenumber_version     = "8.9.14"
     appmetrica_version         = "3.6.4"
     facebook_version           = "4.38.1"
-    leakcanary_version         = "1.6.2"
+    leakcanary_version         = "2.0-beta-2"
     anko_version               = "0.10.8"
     flexbox_layout_version     = "1.0.0"
     pageindicator_version      = "1.0.2"
@@ -262,9 +262,8 @@ dependencies {
     implementation "com.google.android:flexbox:$flexbox_layout_version"
 
     // LeakCanary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
-    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakcanary_version"
+//    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
+//    implementation "com.squareup.leakcanary:leakcanary-object-watcher-android:$leakcanary_version"
 
     //Anko
     implementation "org.jetbrains.anko:anko-commons:$anko_version"

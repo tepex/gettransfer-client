@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal">
 
     <ImageView
@@ -11,6 +12,7 @@
         android:layout_height="@dimen/vehicle_items_height"
         android:layout_marginEnd="@dimen/vehicle_items_margin_end"
         android:visibility="gone"
+        tools:visibility="visible"
         app:srcCompat="@drawable/ic_free_water" />
 
     <ImageView
@@ -19,6 +21,7 @@
         android:layout_height="@dimen/vehicle_items_height"
         android:layout_marginEnd="@dimen/vehicle_items_margin_end"
         android:visibility="gone"
+        tools:visibility="visible"
         app:srcCompat="@drawable/ic_wifi" />
 
     <ImageView
@@ -27,6 +30,7 @@
         android:layout_height="@dimen/vehicle_items_height"
         android:layout_marginEnd="@dimen/vehicle_items_margin_end"
         android:visibility="gone"
+        tools:visibility="visible"
         app:srcCompat="@drawable/ic_charge" />
 
     <ImageView
@@ -34,6 +38,7 @@
         android:layout_width="@dimen/vehicle_items_green_width"
         android:layout_height="@dimen/vehicle_items_height"
         android:visibility="gone"
-        app:srcCompat="@drawable/ic_green" />
+        tools:visibility="visible"
+        app:srcCompat="@drawable/ic_leaf" />
 
 </LinearLayout>

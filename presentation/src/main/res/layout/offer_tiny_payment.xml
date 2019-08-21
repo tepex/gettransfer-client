@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/payment_offer_tiny_languages_margin_top"
             android:layout_marginStart="@dimen/payment_offer_tiny_languages_margin_start"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/tvClass"
             app:layout_constraintStart_toEndOf="@+id/tvClass"
             app:layout_constraintTop_toTopOf="@+id/tvClass" />
@@ -99,10 +99,12 @@
             layout="@layout/view_transport_capacity_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/layoutRating"
+            android:layout_marginEnd="@dimen/payment_offer_tiny_capacity_margin_end"
             app:layout_constraintBottom_toBottomOf="@+id/layoutRating"
-            android:layout_marginEnd="@dimen/payment_offer_tiny_capacity_margin_end"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/layoutRating"
+            app:layout_constraintTop_toTopOf="@+id/layoutRating" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

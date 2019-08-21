@@ -101,8 +101,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
     private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
 
-    private var fragment: Fragment? = null
-
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
 
@@ -172,10 +170,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         setupBottomSheetHeight()
-    }
-
-    override fun onAttachFragment(fragment: Fragment) {
-        this.fragment = fragment
     }
 
     private fun setupBottomSheetHeight() {

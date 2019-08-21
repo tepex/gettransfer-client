@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 
 import android.view.MotionEvent
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -145,7 +146,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun initAdapter() {
-        rvOffers.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        rvOffers.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         swipe_rv_offers_container.setOnRefreshListener { presenter.checkNewOffers(true) }
     }
 
