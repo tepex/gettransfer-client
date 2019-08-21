@@ -20,15 +20,11 @@ import com.kg.gettransfer.presentation.adapter.ClickOnDateHandler
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
 
-import io.sentry.Sentry
-
 import java.util.Calendar
 import java.util.Date
 
 import kotlinx.android.synthetic.main.carrier_trips_calendar_month_fragment.*
 //import leakcanary.AppWatcher
-
-import org.koin.android.ext.android.inject
 
 class CarrierTripsCalendarMonthFragment : Fragment() {
 

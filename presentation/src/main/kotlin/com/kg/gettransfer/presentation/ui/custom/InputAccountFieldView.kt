@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui.custom
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View

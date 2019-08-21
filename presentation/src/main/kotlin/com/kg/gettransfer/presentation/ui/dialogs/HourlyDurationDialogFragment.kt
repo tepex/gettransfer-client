@@ -8,8 +8,7 @@ import kotlinx.android.synthetic.main.view_hourly_picker.*
 import org.koin.android.ext.android.inject
 import android.view.KeyEvent
 
-
-class HourlyDurationDialogFragment() : BaseBottomSheetDialogFragment() {
+class HourlyDurationDialogFragment : BaseBottomSheetDialogFragment() {
 
     protected val analytics: Analytics by inject()
     override val layout: Int = R.layout.dialog_fragment_hourly_duration

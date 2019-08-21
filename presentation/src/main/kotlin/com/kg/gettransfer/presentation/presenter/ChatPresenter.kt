@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import androidx.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.core.presentation.WorkerManager
@@ -19,7 +17,6 @@ import com.kg.gettransfer.presentation.model.ChatModel
 import com.kg.gettransfer.presentation.model.MessageModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
-import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.ChatView

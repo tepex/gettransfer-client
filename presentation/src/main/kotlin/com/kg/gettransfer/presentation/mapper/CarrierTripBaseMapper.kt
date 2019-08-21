@@ -4,8 +4,6 @@ import com.kg.gettransfer.domain.model.CarrierTripBase
 
 import com.kg.gettransfer.presentation.model.CarrierTripBaseModel
 
-import com.kg.gettransfer.presentation.ui.SystemUtils
-
 import java.util.Calendar
 
 import org.koin.core.get

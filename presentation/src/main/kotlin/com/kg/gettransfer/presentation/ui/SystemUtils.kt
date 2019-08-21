@@ -4,14 +4,12 @@ import android.content.Context
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.SessionInteractor
-import com.kg.gettransfer.domain.model.DistanceUnit
 
 import java.text.SimpleDateFormat
 import java.util.Date
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
-import org.koin.core.inject
 
 internal object SystemUtils : KoinComponent {
 

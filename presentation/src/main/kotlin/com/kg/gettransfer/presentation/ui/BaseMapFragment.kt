@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.view_maps_pin.view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 //import leakcanary.AppWatcher
-import org.koin.android.ext.android.get
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 

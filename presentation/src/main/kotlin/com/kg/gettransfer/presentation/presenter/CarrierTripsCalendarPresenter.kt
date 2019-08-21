@@ -4,7 +4,6 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 
-import com.kg.gettransfer.domain.interactor.CarrierTripInteractor
 import com.kg.gettransfer.domain.model.CarrierTripBase
 
 import com.kg.gettransfer.presentation.mapper.CarrierTripsCalendarItemsMapper
@@ -16,7 +15,6 @@ import com.kg.gettransfer.presentation.view.Screens
 import java.util.Calendar
 
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf

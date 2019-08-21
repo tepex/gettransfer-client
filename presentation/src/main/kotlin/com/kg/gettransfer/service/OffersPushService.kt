@@ -1,18 +1,12 @@
 package com.kg.gettransfer.service
 
-import androidx.annotation.CallSuper
-
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 import com.yandex.metrica.push.firebase.MetricaMessagingService
 
-import kotlinx.coroutines.Job
-
 import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.inject
 
 import timber.log.Timber
 

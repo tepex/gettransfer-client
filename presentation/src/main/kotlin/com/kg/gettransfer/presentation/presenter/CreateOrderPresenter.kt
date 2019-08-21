@@ -12,14 +12,23 @@ import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.PromoInteractor
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.RouteInfoHourlyRequest
+import com.kg.gettransfer.domain.model.RouteInfoRequest
+import com.kg.gettransfer.domain.model.TransferNew
+import com.kg.gettransfer.domain.model.DestDuration
+import com.kg.gettransfer.domain.model.DestPoint
+import com.kg.gettransfer.domain.model.Trip
+import com.kg.gettransfer.domain.model.RouteInfo
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.TransportTypePrice
 
 import com.kg.gettransfer.extensions.isNonZero
 import com.kg.gettransfer.extensions.simpleFormat
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
-import com.kg.gettransfer.presentation.mapper.*
+import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.mapper.UserMapper
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.PolylineModel

@@ -14,7 +14,6 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-
 @InjectViewState
 class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
 

@@ -6,7 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import android.view.*
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.material.chip.Chip

@@ -5,12 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 
 import androidx.annotation.CallSuper
-import androidx.annotation.ColorRes
 import androidx.annotation.NonNull
-import androidx.annotation.StringRes
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 import androidx.appcompat.widget.Toolbar
 
@@ -42,7 +39,6 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
-import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior

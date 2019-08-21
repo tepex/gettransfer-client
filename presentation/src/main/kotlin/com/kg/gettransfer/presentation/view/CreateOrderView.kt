@@ -5,11 +5,8 @@ import androidx.annotation.StringRes
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
-import com.google.android.gms.maps.CameraUpdate
-
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
 

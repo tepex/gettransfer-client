@@ -7,9 +7,7 @@ import com.kg.gettransfer.di.ENDPOINTS
 import com.kg.gettransfer.sys.domain.*
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 
 import org.koin.core.KoinComponent

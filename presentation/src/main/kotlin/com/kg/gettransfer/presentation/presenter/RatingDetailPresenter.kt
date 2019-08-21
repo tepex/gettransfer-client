@@ -2,12 +2,9 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.presentation.view.RatingDetailView
 import com.kg.gettransfer.utilities.Analytics
-
-import org.koin.core.inject
 
 @InjectViewState
 class RatingDetailPresenter : BasePresenter<RatingDetailView>() {

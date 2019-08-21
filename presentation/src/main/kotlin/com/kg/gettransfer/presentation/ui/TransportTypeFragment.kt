@@ -2,9 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*

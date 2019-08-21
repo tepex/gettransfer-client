@@ -3,7 +3,11 @@ package com.kg.gettransfer.presentation.delegate
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SocketInteractor
 
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.User
+import com.kg.gettransfer.domain.model.RegistrationAccount
+import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
