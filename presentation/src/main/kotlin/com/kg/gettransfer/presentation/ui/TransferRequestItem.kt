@@ -19,6 +19,7 @@ import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.RequestsView
 
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.view_communication_button.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
 
 import java.util.Calendar
@@ -140,13 +141,13 @@ class TransferRequestItem @JvmOverloads constructor(
             item.isBookNow()
         ) {
             tvEventsCount.isVisible = false
-            tvEventsChatCount.isVisible = false
+            btnChat.tvEventsCounter.isVisible = false
         } else {
             val count = eventsCount.toString()
             if (offerInfoShowed) {
                 tvEventsCount.isVisible = false
-                tvEventsChatCount.isVisible = true
-                tvEventsChatCount.text = count
+                btnChat.tvEventsCounter.isVisible = true
+                btnChat.tvEventsCounter.text = count
             } else {
                 tvEventsCount.isVisible = true
                 tvEventsCount.text = count

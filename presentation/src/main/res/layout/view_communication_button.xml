@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
-    android:orientation="vertical"
-    android:layout_weight="1"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -36,5 +35,20 @@
         android:textColor="@color/colorTextBlack"
         android:fontFamily="@font/sf_pro_text_regular"
         android:text="@string/LNG_PAYMENT_CHAT"/>
+
+    <TextView
+        android:id="@+id/tvEventsCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_circle_red"
+        android:textColor="@android:color/white"
+        android:paddingStart="@dimen/margin4"
+        android:paddingEnd="@dimen/margin4"
+        app:layout_constraintTop_toTopOf="@+id/btnImg"
+        app:layout_constraintEnd_toEndOf="@+id/btnImg"
+        tools:text="10"
+        android:gravity="center"
+        android:elevation="6dp"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
