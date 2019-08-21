@@ -14,7 +14,6 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
-
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface PaymentOfferView : BaseView {
 

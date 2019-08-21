@@ -18,7 +18,6 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-
 import org.koin.core.inject
 
 @InjectViewState

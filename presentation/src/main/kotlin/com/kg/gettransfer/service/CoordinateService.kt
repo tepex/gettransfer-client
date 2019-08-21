@@ -9,7 +9,8 @@ import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.model.Coordinate
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 //import leakcanary.AppWatcher
 
 import org.koin.core.KoinComponent

@@ -7,7 +7,6 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
 

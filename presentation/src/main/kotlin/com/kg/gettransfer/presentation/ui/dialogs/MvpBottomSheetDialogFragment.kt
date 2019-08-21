@@ -7,7 +7,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 //import leakcanary.AppWatcher
 import java.lang.RuntimeException
 
-
 open class MvpBottomSheetDialogFragment : MvpAppCompatDialogFragment() {
 
 	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

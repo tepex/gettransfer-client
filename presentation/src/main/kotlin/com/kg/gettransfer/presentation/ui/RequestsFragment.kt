@@ -35,9 +35,7 @@ import kotlinx.android.synthetic.main.fragment_requests.*
 
 import timber.log.Timber
 import kotlinx.android.synthetic.main.view_shimmer_loader.view.*
-import android.os.Handler
 //import leakcanary.AppWatcher
-
 
 /**
  * @TODO: Выделить BaseFragment

@@ -14,7 +14,6 @@ import io.sentry.event.BreadcrumbBuilder
 import org.koin.core.KoinComponent
 import timber.log.Timber
 
-
 abstract class BaseFragment : MvpAppCompatFragment(), KoinComponent, BaseView {
 
     private val loadingFragment by lazy { LoadingFragment() }

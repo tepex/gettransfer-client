@@ -15,7 +15,6 @@ import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import org.koin.core.KoinComponent
-import org.koin.core.get
 import org.koin.core.inject
 
 import java.util.Calendar

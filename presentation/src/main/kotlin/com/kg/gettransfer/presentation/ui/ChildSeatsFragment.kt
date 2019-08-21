@@ -3,9 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.core.content.ContextCompat
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.delegate.ChildSeatsView
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate

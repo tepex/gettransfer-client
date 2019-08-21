@@ -7,7 +7,6 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 
 import com.kg.gettransfer.R
 
-
 class RequestsPagerActivity : MvpAppCompatActivity() {
 
     @CallSuper

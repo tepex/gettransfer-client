@@ -4,8 +4,6 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.kg.gettransfer.domain.model.Profile
 
-import com.kg.gettransfer.presentation.model.LocaleModel
-
 import com.kg.gettransfer.sys.presentation.EndpointModel
 
 import java.util.Locale

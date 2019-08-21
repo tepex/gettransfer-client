@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui.custom
 
 import android.content.Context
-import android.graphics.Canvas
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater

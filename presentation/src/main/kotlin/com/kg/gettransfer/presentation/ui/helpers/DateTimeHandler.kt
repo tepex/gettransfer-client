@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.ui.helpers
 
-import java.util.*
+import java.util.Date
 
 interface DateTimeHandler {
     fun onDateChosen(date: Date)

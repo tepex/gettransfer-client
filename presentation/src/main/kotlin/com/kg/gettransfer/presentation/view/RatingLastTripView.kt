@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.view
 
-import com.arellomobile.mvp.viewstate.strategy.*
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransferModel

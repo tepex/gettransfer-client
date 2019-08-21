@@ -35,7 +35,12 @@ import com.kg.gettransfer.presentation.mapper.CityPointMapper
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 
-import com.kg.gettransfer.presentation.model.*
+import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.PolylineModel
+import com.kg.gettransfer.presentation.model.CityPointModel
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
