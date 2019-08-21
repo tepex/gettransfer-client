@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
@@ -15,12 +14,9 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.core.inject
 
 @InjectViewState
 class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
-
-    private val paymentInteractor: PaymentInteractor by inject()
 
     internal var paymentId = 0L
     internal var nonce = ""
@@ -68,21 +64,15 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
     private fun showSuccessfulPayment() {
         router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
         utils.launchSuspend {
-            if (isOfferPaid()) {
-                analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
-                analytics.EcommercePurchase().sendAnalytics()
+            transfer?.let {
+                val offerPaid = transferInteractor.isOfferPaid(it.id)
+                if (offerPaid.first) {
+                    transfer = offerPaid.second
+                    paymentInteractor.selectedTransfer = transfer
+                    analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
+                    analytics.EcommercePurchase().sendAnalytics()
+                }
             }
         }
-    }
-
-    private suspend fun isOfferPaid(): Boolean {
-        transfer?.let { tr ->
-            fetchResult { transferInteractor.getTransfer(tr.id) }.isSuccess()?.let { transfer ->
-                this.transfer = transfer
-                paymentInteractor.selectedTransfer = transfer
-                return transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
-            }
-        }
-        return false
     }
 }

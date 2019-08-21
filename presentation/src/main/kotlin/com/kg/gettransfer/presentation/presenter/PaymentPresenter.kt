@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.presenter
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.eventListeners.PaymentStatusEventListener
 
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.BookNowOffer
 
 import com.kg.gettransfer.domain.model.Offer
@@ -19,14 +18,12 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import io.sentry.Sentry
 
 import org.koin.core.inject
 
 @InjectViewState
 class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListener {
 
-    private val paymentInteractor: PaymentInteractor by inject()
     private val mapper: PaymentStatusRequestMapper by inject()
 
     private var offer: Offer? = null
@@ -77,18 +74,14 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
     }
 
     private suspend fun isPaymentWasSuccessful() {
-        if (isOfferPaid()) showSuccessfulPayment()
-    }
-
-    private suspend fun isOfferPaid(): Boolean {
-        transfer?.let { tr ->
-            fetchResult { transferInteractor.getTransfer(tr.id) }.isSuccess()?.let { transfer ->
-                this.transfer = transfer
+        transfer?.let {
+            val offerPaid = transferInteractor.isOfferPaid(it.id)
+            if (offerPaid.first) {
+                transfer = offerPaid.second
                 paymentInteractor.selectedTransfer = transfer
-                return transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
+                showSuccessfulPayment()
             }
         }
-        return false
     }
 
     private fun showFailedPayment() {

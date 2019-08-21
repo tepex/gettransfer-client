@@ -59,6 +59,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val chatInteractor: ChatInteractor by inject()
     protected val countEventsInteractor: CountEventsInteractor by inject()
     protected val reviewInteractor: ReviewInteractor by inject()
+    protected val paymentInteractor: PaymentInteractor by inject()
 
     private val pushTokenInteractor: PushTokenInteractor by inject()
     protected val socketInteractor: SocketInteractor by inject()

@@ -34,7 +34,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
             offerInteractor.lastTransferId = value
         }
 
-    private val paymentInteractor: PaymentInteractor by inject()
     private val configsManager: ConfigsManager by inject()
 
     private var transfer: Transfer? = null

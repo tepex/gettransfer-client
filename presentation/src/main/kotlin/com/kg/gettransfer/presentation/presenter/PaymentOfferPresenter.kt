@@ -8,7 +8,6 @@ import com.braintreepayments.api.models.PayPalRequest
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
@@ -42,7 +41,6 @@ import org.koin.core.inject
 @Suppress("TooManyFunctions")
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
-    private val paymentInteractor: PaymentInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
@@ -155,22 +153,16 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         } else {
             router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))
             analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
-            if (isOfferPaid()) {
-                analytics.EcommercePurchase().sendAnalytics()
+            transfer?.let {
+                val offerPaid = transferInteractor.isOfferPaid(it.id)
+                if (offerPaid.first) {
+                    transfer = offerPaid.second
+                    paymentInteractor.selectedTransfer = transfer
+                    analytics.EcommercePurchase().sendAnalytics()
+                }
             }
         }
         viewState.blockInterface(false)
-    }
-
-    private suspend fun isOfferPaid(): Boolean {
-        transfer?.let { tr ->
-            fetchResult { transferInteractor.getTransfer(tr.id) }.isSuccess()?.let { transfer ->
-                this.transfer = transfer
-                paymentInteractor.selectedTransfer = transfer
-                return transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
-            }
-        }
-        return false
     }
 
     private suspend fun payByCard(paymentModel: PaymentRequestModel) {
