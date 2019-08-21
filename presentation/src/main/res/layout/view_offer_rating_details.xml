@@ -1,56 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutTopSelection"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/ivLikeDriver"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin8"
         android:paddingTop="@dimen/offer_rating_padding"
         android:paddingBottom="@dimen/offer_rating_padding"
-        android:visibility="gone">
+        app:layout_constraintBottom_toBottomOf="@+id/tvTopSelection"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvTopSelection"
+        app:srcCompat="@drawable/ic_like_button" />
 
-        <TextView
-            android:id="@+id/tvTopSelection"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/sf_font_pro_display_regular_black"
-            android:text="@string/LNG_TOP_RATED"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/tvTopSelection"
+        style="@style/sf_font_pro_display_regular_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/LNG_TOP_RATED"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/ivLikeDriver"
-            android:layout_width="@dimen/offer_rating_iv_like_size"
-            android:layout_height="@dimen/offer_rating_iv_like_size"
-            app:layout_constraintBottom_toBottomOf="@id/tvTopSelection"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_like_button"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupTopSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="ivLikeDriver,tvTopSelection"
+        tools:visibility="visible" />
 
     <com.kg.gettransfer.presentation.ui.custom.RatingFieldView
         android:id="@+id/ratingDriver"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/ratingPunctuality"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivLikeDriver"
         app:rating_title="@string/LNG_DRIVER" />
 
     <com.kg.gettransfer.presentation.ui.custom.RatingFieldView
         android:id="@+id/ratingPunctuality"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/ratingVehicle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingDriver"
         app:rating_title="@string/LNG_PUNCTUALITY" />
 
     <com.kg.gettransfer.presentation.ui.custom.RatingFieldView
         android:id="@+id/ratingVehicle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingPunctuality"
         app:rating_title="@string/LNG_VEHICLE" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

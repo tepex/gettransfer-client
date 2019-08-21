@@ -475,13 +475,14 @@
     <dimen name="view_offer_text_size_15sp">15sp</dimen>
 
     <dimen name="view_offer_bs_btn_book_width">128dp</dimen>
-    <dimen name="view_offer_bs_btn_book_height">32dp</dimen>
+    <dimen name="view_offer_bs_btn_book_height">40dp</dimen>
     <dimen name="view_offer_bs_btn_book_margin_top">16dp</dimen>
     <dimen name="view_offer_bs_btn_book_margin_bottom">16dp</dimen>
 
     <dimen name="view_offer_rating_text_size">12sp</dimen>
     <dimen name="view_offer_rating_img_size">12dp</dimen>
     <dimen name="view_offer_rating_margins">4dp</dimen>
+    <dimen name="view_offer_btn_book_radius">30dp</dimen>
 
 
 

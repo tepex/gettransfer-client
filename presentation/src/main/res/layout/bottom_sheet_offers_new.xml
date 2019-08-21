@@ -48,6 +48,16 @@
                 app:srcCompat="@drawable/ic_circle_car_color_indicator"
                 tools:visibility="visible" />
 
+            <LinearLayout
+                android:id="@+id/languages_container_bs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/bottom_sheet_offer_details_languages_container_margin_start"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/tvLanguages"
+                app:layout_constraintStart_toEndOf="@+id/tvLanguages"
+                app:layout_constraintTop_toTopOf="@+id/tvLanguages" />
+
             <TextView
                 android:id="@+id/tv_car_model_bs"
                 style="@style/black_semiBold"
@@ -63,6 +73,28 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Ma best Mercedes" />
+
+            <TextView
+                android:id="@+id/tvLanguages"
+                style="@style/sf_font_pro_display_regular_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin16"
+                android:text="@string/LNG_LANGUAGES"
+                android:textSize="@dimen/bottom_sheet_offer_details_text_size_15sp"
+                app:layout_constraintStart_toStartOf="@id/divider"
+                app:layout_constraintTop_toBottomOf="@id/divider" />
+
+            <com.kg.gettransfer.presentation.ui.custom.VehiclePhotosView
+                android:id="@+id/vehiclePhotosView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_capacity"
+                app:multiple_photos_height="@dimen/bottom_sheet_offer_details_multiple_photos_height"
+                app:multiple_photos_width="@dimen/bottom_sheet_offer_details_multiple_photos_width"
+                app:single_photo_height="@dimen/bottom_sheet_offer_details_single_photo_height" />
 
             <include
                 android:id="@+id/vehicle_conveniences"
@@ -87,18 +119,8 @@
                 app:layout_constraintStart_toStartOf="@+id/vehicle_conveniences"
                 app:layout_constraintTop_toBottomOf="@+id/vehicle_conveniences" />
 
-            <com.kg.gettransfer.presentation.ui.custom.VehiclePhotosView
-                android:id="@+id/vehiclePhotosView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_capacity"
-                app:multiple_photos_height="@dimen/bottom_sheet_offer_details_multiple_photos_height"
-                app:multiple_photos_width="@dimen/bottom_sheet_offer_details_multiple_photos_width"
-                app:single_photo_height="@dimen/bottom_sheet_offer_details_single_photo_height" />
-
             <include
+                android:id="@+id/divider"
                 layout="@layout/view_divider_horizontal"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -109,8 +131,53 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/vehiclePhotosView" />
 
+            <include
+                android:id="@+id/divider2"
+                layout="@layout/view_divider_horizontal"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_margin_16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvLanguages" />
 
+            <include
+                android:id="@+id/view_offer_rating_bs"
+                layout="@layout/view_offer_rating_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_margin_16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+            <include
+                android:id="@+id/offer_ratingDivider_bs"
+                layout="@layout/view_divider_horizontal"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_margin_16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_offer_rating_bs" />
+
+            <include
+                android:id="@+id/offer_bottom_bs"
+                layout="@layout/view_offer_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/offer_ratingDivider_bs" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
