@@ -103,7 +103,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     override fun updateCardWithDriverCoordinates(transferId: Long) {
-        rvAdapter.updateDriverCoordinates(transferId)
+        activity?.runOnUiThread { rvAdapter.updateDriverCoordinates(transferId) }
     }
 
     override fun updateEvents(eventsCount: Map<Long, Int>) {
