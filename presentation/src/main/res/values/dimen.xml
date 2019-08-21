@@ -660,7 +660,7 @@
 	<dimen name="lang_icon_width">24dp</dimen>
 
 	<!--vehicle_items-->
-	<dimen name="vehicle_items_margin_end">6dp</dimen>
+	<dimen name="vehicle_items_margin_start">6dp</dimen>
 	<dimen name="vehicle_items_height">14dp</dimen>
 	<dimen name="vehicle_items_water_width">14dp</dimen>
 	<dimen name="vehicle_items_wifi_width">23dp</dimen>
