@@ -52,17 +52,15 @@ import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
 
 import kotlinx.android.synthetic.main.activity_offers.*
-import kotlinx.android.synthetic.main.activity_offers.view.*
-import kotlinx.android.synthetic.main.bottom_sheet_offers_new.*
+import kotlinx.android.synthetic.main.bottom_sheet_offers.*
+import kotlinx.android.synthetic.main.bottom_sheet_offers.view.*
 import kotlinx.android.synthetic.main.card_empty_offers.*
+import kotlinx.android.synthetic.main.drivers_count.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.view.*
 import kotlinx.android.synthetic.main.vehicle_items.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
-import kotlinx.android.synthetic.main.view_offer_conditions.view.*
 import kotlinx.android.synthetic.main.view_offer_rating_details.*
 import kotlinx.android.synthetic.main.view_offer_rating_field.*
-import kotlinx.android.synthetic.main.view_transport_capacity.*
-import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.transportType_сountBaggage
 import kotlinx.android.synthetic.main.view_transport_capacity.view.transportType_сountPassengers
 
@@ -161,10 +159,12 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun setupPriceOrDriversInfo(offers: List<OfferItemModel>) {
         if (offers.isNotEmpty()) {
+            groupFilter.isVisible = true
             noOffers.isVisible = false
             fl_drivers_count_text.isVisible = false
             cl_fixPrice.isVisible = viewNetworkNotAvailable?.isShowing()?.not() ?: true
         } else {
+            groupFilter.isVisible = false
             setAnimation()
             fl_drivers_count_text.isVisible = viewNetworkNotAvailable?.isShowing()?.not() ?: true
         }
@@ -274,8 +274,10 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun setCapacity(transport: TransportTypeModel) {
-        transportType_сountPassengers.text = "x".plus(transport.paxMax)
-        transportType_сountBaggage.text = "x".plus(transport.luggageMax)
+        with(sheetOfferDetails.view_capacity) {
+            transportType_сountPassengers.text = "x".plus(transport.paxMax)
+            transportType_сountBaggage.text = "x".plus(transport.luggageMax)
+        }
     }
 
     private fun setVehicleNameAndColor(nameById: String? = null, vehicle: VehicleModel? = null) {

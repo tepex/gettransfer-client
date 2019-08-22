@@ -2,9 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@null" />
             <corners android:radius="32dp" />
-            <stroke android:width="1dp" android:color="@color/color_gtr_grey"/>
+            <stroke android:width="1dp" android:color="@color/color_car_gray"/>
         </shape>
     </item>
 </selector>

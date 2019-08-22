@@ -439,6 +439,7 @@
 	<dimen name="activity_offers_sort_order_btn_size">32dp</dimen>
 	<dimen name="activity_offers_sort_order_btn_margin_start">8dp</dimen>
 	<dimen name="activity_offers_recycler_horizontal_paddings">4dp</dimen>
+	<dimen name="progress_drivers_size">17dp</dimen>
 
 	<!--view_offer-->
 	<dimen name="card_view_margin_top_bottom">6dp</dimen>
@@ -451,7 +452,7 @@
     <dimen name="view_offer_car_img_margin_top">4dp</dimen>
     <dimen name="view_offer_car_img_margin_start">-3dp</dimen>
     <dimen name="view_offer_btn_book_width">122dp</dimen>
-    <dimen name="view_offer_btn_book_height">32dp</dimen>
+    <dimen name="view_offer_btn_book_height">45dp</dimen>
     <dimen name="view_offer_btn_book_margin_top">6dp</dimen>
     <dimen name="view_offer_btn_book_margin_bottom">8dp</dimen>
 	<dimen name="view_offer_btn_book_margin_start">16dp</dimen>
@@ -475,7 +476,7 @@
     <dimen name="view_offer_text_size_15sp">15sp</dimen>
 
     <dimen name="view_offer_bs_btn_book_width">128dp</dimen>
-    <dimen name="view_offer_bs_btn_book_height">40dp</dimen>
+    <dimen name="view_offer_bs_btn_book_height">45dp</dimen>
     <dimen name="view_offer_bs_btn_book_margin_top">16dp</dimen>
     <dimen name="view_offer_bs_btn_book_margin_bottom">16dp</dimen>
 

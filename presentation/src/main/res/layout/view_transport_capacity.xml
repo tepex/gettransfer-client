@@ -18,19 +18,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_passenger_without_padding" />
 
-    <ImageView
-        android:id="@+id/ivLuggage"
-        android:layout_width="@dimen/view_transport_capacity_img_baggage_width"
-        android:layout_height="@dimen/view_transport_capacity_img_baggage_height"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="3dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/transportType_сountBaggage"
-        app:layout_constraintStart_toEndOf="@+id/transportType_сountPassengers"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baggage_small" />
-
     <TextView
         android:id="@+id/transportType_сountPassengers"
         android:layout_width="wrap_content"
@@ -43,6 +30,19 @@
         app:layout_constraintStart_toEndOf="@+id/ivPassengers"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="x3" />
+
+    <ImageView
+        android:id="@+id/ivLuggage"
+        android:layout_width="@dimen/view_transport_capacity_img_baggage_width"
+        android:layout_height="@dimen/view_transport_capacity_img_baggage_height"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/transportType_сountBaggage"
+        app:layout_constraintStart_toEndOf="@+id/transportType_сountPassengers"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baggage_small" />
 
     <TextView
         android:id="@+id/transportType_сountBaggage"
