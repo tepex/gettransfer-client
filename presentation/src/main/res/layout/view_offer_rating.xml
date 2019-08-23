@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -15,6 +15,9 @@
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/view_offer_rating_text_size"
         android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="4,3"
         tools:visibility="visible" />
 
@@ -24,6 +27,9 @@
         android:layout_height="@dimen/view_offer_rating_img_size"
         android:layout_marginStart="@dimen/view_offer_rating_margins"
         android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_drivers_rate"
+        app:layout_constraintStart_toEndOf="@+id/tv_drivers_rate"
+        app:layout_constraintTop_toTopOf="@+id/tv_drivers_rate"
         app:srcCompat="@drawable/ic_star_filled"
         tools:visibility="visible" />
 
@@ -34,6 +40,9 @@
         android:layout_marginStart="@dimen/view_offer_rating_margins"
         android:visibility="invisible"
         app:srcCompat="@drawable/ic_like_button"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/imgStar"
+        app:layout_constraintTop_toTopOf="@+id/imgStar"
+        app:layout_constraintBottom_toBottomOf="@+id/imgStar"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

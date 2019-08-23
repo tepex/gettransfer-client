@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -17,32 +17,42 @@
             android:id="@+id/ivClock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/anim_arrows"
+            android:layout_gravity="center"
             android:layout_marginTop="@dimen/clock_margin_top"
-            android:layout_gravity="center"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/anim_arrows" />
 
         <TextView
+            android:id="@+id/tvWait"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/text_top_margin_top"
-            tools:text="Please, wait"
             android:layout_gravity="center"
             android:text="@string/LNG_PLEASE_WAIT"
-            style="@style/sf_font_semi_bold_15_sp"/>
+            style="@style/sf_font_semi_bold_15_sp"
+            app:layout_constraintTop_toBottomOf="@+id/ivClock"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
+            style="@style/sf_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/text_bottom_margin_top"
-            android:layout_marginBottom="@dimen/text_bottom_margin_bottom"
-            android:layout_marginStart="@dimen/text_bottom_margin_left"
-            android:layout_marginEnd="@dimen/text_bottom_margin_right"
-            android:textSize="14sp"
-            tools:text="Скоро предложения от перевозчиков будут здесь"
             android:layout_gravity="center"
+            android:layout_marginStart="@dimen/text_bottom_margin_left"
+            android:layout_marginTop="@dimen/text_bottom_margin_top"
+            android:layout_marginEnd="@dimen/text_bottom_margin_right"
+            android:layout_marginBottom="@dimen/text_bottom_margin_bottom"
             android:gravity="center"
             android:text="@string/LNG_PLEASE_WAIT_OFFERS"
-            style="@style/sf_font"/>
-    </LinearLayout>
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvWait"
+            tools:text="Скоро предложения от перевозчиков будут здесь" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

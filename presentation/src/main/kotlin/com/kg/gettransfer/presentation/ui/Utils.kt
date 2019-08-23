@@ -477,7 +477,13 @@ object Utils : KoinComponent {
         path: String? = null,
         @DrawableRes resource: Int = 0
     ) = Glide
-        .with(parent).let { if (path != null) it.load(path) else it.load(resource) }
+        .with(parent).let {
+            if (path != null) it.load(path)
+            else {
+                view.setBackgroundResource(R.drawable.bg_rounded_bn_photo)
+                it.load(resource)
+            }
+        }
         .apply(
             RequestOptions()
                 .error(resource)
