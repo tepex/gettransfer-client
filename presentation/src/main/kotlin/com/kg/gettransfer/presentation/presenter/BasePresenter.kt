@@ -136,7 +136,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
             viewState.blockInterface(true)
             val result = utils.asyncAwait { accountManager.saveSettings() }
             result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
-            result.isSuccess()?.let { if (restartApp) restartApp() }
+            if (restartApp) restartApp()
             viewState.blockInterface(false)
         }
     }

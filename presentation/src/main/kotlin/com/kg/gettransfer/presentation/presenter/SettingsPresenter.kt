@@ -12,7 +12,6 @@ import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.DayOfWeekModel
-import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
@@ -53,7 +52,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private lateinit var calendarModes: List<String>
     private lateinit var daysOfWeek: List<DayOfWeekModel>
 
-    private var localeWasChanged = false
     private var restart = true
 
     private var count = 0

@@ -37,15 +37,11 @@ import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
 import org.koin.core.KoinComponent
 
 import timber.log.Timber
-import com.kg.gettransfer.utilities.LocaleManager
 import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
-import org.koin.android.ext.android.inject
 
 @Suppress("TooManyFunctions")
 class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         CurrencyChangedListener {
-
-    private val localeManager: LocaleManager by inject()
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
