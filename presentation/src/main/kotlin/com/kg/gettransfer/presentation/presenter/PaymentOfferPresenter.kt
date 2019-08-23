@@ -154,9 +154,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))
             analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
             transfer?.let {
-                val offerPaid = transferInteractor.isOfferPaid(it.id)
-                if (offerPaid.first) {
-                    transfer = offerPaid.second
+                val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(it.id) }
+                if (offerPaid.model.first) {
+                    transfer = offerPaid.model.second
                     paymentInteractor.selectedTransfer = transfer
                     analytics.EcommercePurchase().sendAnalytics()
                 }
