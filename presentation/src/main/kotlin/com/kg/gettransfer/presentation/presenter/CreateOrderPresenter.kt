@@ -336,17 +336,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun currencyChanged(currency: CurrencyModel) {
         setCurrency(currency, true)
-        saveChangedSettings()
+        saveGeneralSettings()
         getNewPrices()
-    }
-
-    private fun saveChangedSettings() {
-        utils.launchSuspend {
-            viewState.blockInterface(true)
-            val result = utils.asyncAwait { accountManager.saveSettings() }
-            result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
-            viewState.blockInterface(false)
-        }
     }
 
     private fun setCurrency(currency: CurrencyModel, hideCurrencies: Boolean = false) {

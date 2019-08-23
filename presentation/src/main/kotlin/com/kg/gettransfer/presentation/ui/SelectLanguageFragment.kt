@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.animation.Animator
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 
 import androidx.annotation.CallSuper
@@ -18,19 +18,25 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.adapter.LanguagesListAdapter
 import com.kg.gettransfer.presentation.model.LocaleModel
-import com.kg.gettransfer.presentation.presenter.LanguageChangedListener
 import com.kg.gettransfer.presentation.presenter.SelectLanguagePresenter
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.SelectLanguageView
+import com.kg.gettransfer.utilities.LocaleManager
 import kotlinx.android.synthetic.main.fragment_select_language.*
 import kotlinx.android.synthetic.main.layout_select_language.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
+import org.koin.android.ext.android.inject
+import java.util.*
 
 open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageView {
+
+    private val localeManager: LocaleManager by inject()
 
     private lateinit var adapterAll: LanguagesListAdapter
     override val layout = R.layout.fragment_select_language
@@ -41,18 +47,8 @@ open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageVie
     @ProvidePresenter
     fun createSelectLanguagePresenter() = SelectLanguagePresenter()
 
-    private var listener: LanguageChangedListener? = null
-
     init {
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-    }
-
-    @CallSuper
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is LanguageChangedListener) {
-            listener = context
-        }
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
     @CallSuper
@@ -93,15 +89,31 @@ open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageVie
         adapterAll.update(all)
     }
 
-    override fun sendEvent(language: LocaleModel) {
-        listener?.languageChanged(language)
-        // Hide fragment after changed value
-        findNavController().navigateUp()
+    override fun updateResources(locale: Locale) {
+        localeManager.updateResources(requireContext(), locale)
     }
+
+    override fun restartApp() {
+        requireActivity().packageManager.getLaunchIntentForPackage(requireActivity().packageName)?.let { intent ->
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+        }
+        requireActivity().finish()
+        Runtime.getRuntime().exit(0)
+    }
+
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
+
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
+
+    override fun setError(e: ApiException) {}
+
+    override fun setError(e: DatabaseException) {}
+
+    override fun setTransferNotFoundError(transferId: Long) {}
 
     @CallSuper
     override fun onDestroyView() {
-        listener = null
         rvAllLanguages.adapter = null
         super.onDestroyView()
     }

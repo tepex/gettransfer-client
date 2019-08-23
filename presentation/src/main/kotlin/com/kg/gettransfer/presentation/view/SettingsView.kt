@@ -19,7 +19,6 @@ interface SettingsView : BaseView {
     fun showDebugMenu()
     fun hideDebugMenu()
 
-    fun updateResources(locale: Locale)
     fun setEndpoints(endpoints: List<EndpointModel>)
     fun setCalendarModes(calendarModesKeys: List<String>)
     fun setDaysOfWeek(daysOfWeek: List<CharSequence>)
@@ -33,7 +32,6 @@ interface SettingsView : BaseView {
 
     fun showCurrencyChooser()
     fun showLanguageChooser()
-    fun restartApp()
 
     fun hideSomeDividers()
 }

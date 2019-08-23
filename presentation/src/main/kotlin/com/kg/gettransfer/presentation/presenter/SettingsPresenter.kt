@@ -135,15 +135,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, currency.code)
     }
 
-    fun changeLocale(localeModel: LocaleModel) {
-        localeWasChanged = true
-        sessionInteractor.locale = localeModel.delegate
-        viewState.setLocale(localeModel.name, localeModel.locale)
-        saveGeneralSettings(true)
-        viewState.updateResources(sessionInteractor.locale)
-        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LANGUAGE_PARAM, localeModel.name)
-    }
-
     fun onDistanceUnitSwitched(isChecked: Boolean) {
         sessionInteractor.distanceUnit = when (isChecked) {
             true  -> DistanceUnit.MI
@@ -192,7 +183,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
     }
 
-    fun switchDebugSettings() {
+    private fun switchDebugSettings() {
         if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
             worker.main.launch {
                 if (getPreferences().getModel().isDebugMenuShowed) {
@@ -248,24 +239,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         else router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, null))
     }
 
-    override fun onBackCommandClick() {
-        if (localeWasChanged) {
-            localeWasChanged = false
-
-            worker.main.launch {
-                val screen = when (getPreferences().getModel().lastMode) {
-                    Screens.CARRIER_MODE   -> Screens.CarrierMode
-                    Screens.PASSENGER_MODE -> Screens.MainPassenger()
-                    else                   ->
-                        throw IllegalArgumentException("Wrong last mode in onBackCommandClick in ${this.javaClass.name}")
-                }
-                router.backTo(screen)
-            }
-        } else {
-            super.onBackCommandClick()
-        }
-    }
-
     fun onShareClick() {
         log.debug("Share action")
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
@@ -277,8 +250,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false
     }
-
-    override fun restartApp() { viewState.restartApp() }
 
     fun onForceCrashClick() {
         error("This is force crash")
