@@ -64,9 +64,9 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
         router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
         utils.launchSuspend {
             transfer?.let {
-                val offerPaid = transferInteractor.isOfferPaid(it.id)
-                if (offerPaid.first) {
-                    transfer = offerPaid.second
+                val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(it.id) }
+                if (offerPaid.model.first) {
+                    transfer = offerPaid.model.second
                     paymentInteractor.selectedTransfer = transfer
                     analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
                     analytics.EcommercePurchase().sendAnalytics()

@@ -30,11 +30,11 @@ class TransferInteractor(private val repository: TransferRepository) {
 
     suspend fun sendAnalytics(transferId: Long, role: String) = repository.sendAnalytics(transferId, role)
 
-    suspend fun isOfferPaid(transferId: Long): Pair<Boolean, Transfer?> {
+    suspend fun isOfferPaid(transferId: Long): Result<Pair<Boolean, Transfer?>> {
         getTransfer(transferId).isSuccess()?.let { transfer ->
             val isOfferPaid = transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
-            return Pair(isOfferPaid, transfer)
+            return Result(Pair(isOfferPaid, transfer))
         }
-        return Pair(false, null)
+        return Result(Pair(false, null))
     }
 }

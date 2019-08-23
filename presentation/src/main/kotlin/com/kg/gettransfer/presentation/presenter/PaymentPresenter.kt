@@ -74,9 +74,9 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
 
     private suspend fun isPaymentWasSuccessful() {
         transfer?.let {
-            val offerPaid = transferInteractor.isOfferPaid(it.id)
-            if (offerPaid.first) {
-                transfer = offerPaid.second
+            val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(it.id) }
+            if (offerPaid.model.first) {
+                transfer = offerPaid.model.second
                 paymentInteractor.selectedTransfer = transfer
                 showSuccessfulPayment()
             }
