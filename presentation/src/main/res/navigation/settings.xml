@@ -13,18 +13,17 @@
         <action
             android:id="@+id/go_to_select_currency"
             app:destination="@id/selectCurrency"
-            app:enterAnim="@android:anim/fade_in"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popExitAnim="@android:anim/fade_out"/>
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/go_to_select_language"
             app:destination="@id/selectLanguage"
-            app:enterAnim="@android:anim/fade_in"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popExitAnim="@android:anim/fade_out"/>
-
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
     </fragment>
 
     <fragment android:id="@+id/selectCurrency"

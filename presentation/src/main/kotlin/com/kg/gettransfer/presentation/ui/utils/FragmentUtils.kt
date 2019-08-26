@@ -14,7 +14,7 @@ object FragmentUtils {
     fun replaceFragment(fm: FragmentManager, fragment: Fragment, @IdRes id: Int, tag: String? = null) =
             fm
                     .beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                    .setCustomAnimations(R.anim.transition_b2t, R.anim.transition_t2b)
                     .replace(id, fragment, tag)
                     .commitAllowingStateLoss()
 

@@ -14,6 +14,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.visibleFade
 import com.kg.gettransfer.extensions.visibleSlide
 import com.kg.gettransfer.presentation.presenter.SupportPresenter
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
@@ -61,8 +62,8 @@ class SupportFragment : BaseFragment(), SupportView {
      */
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
         return FragmentUtils.onCreateAnimation(requireContext(), enter) {
-            ourLanguages.visibleSlide(true)
-            phones.visibleSlide(true)
+            ourLanguages.visibleFade(true)
+            phones.visibleFade(true)
             cyPhone.setOnClickListener { presenter.callPhone(cyPhone.tvPhone.text.toString()) }
             gbPhone.setOnClickListener { presenter.callPhone(gbPhone.tvPhone.text.toString()) }
             hkPhone.setOnClickListener { presenter.callPhone(hkPhone.tvPhone.text.toString()) }
