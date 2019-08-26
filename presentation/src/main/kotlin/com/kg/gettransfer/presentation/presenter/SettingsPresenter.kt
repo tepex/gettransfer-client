@@ -7,6 +7,7 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.di.ENDPOINTS
+import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 
 import com.kg.gettransfer.domain.model.DistanceUnit
 
@@ -45,7 +46,7 @@ import org.koin.core.qualifier.named
 
 @Suppress("TooManyFunctions")
 @InjectViewState
-class SettingsPresenter : BasePresenter<SettingsView>() {
+class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener {
 
     private val endpoints: List<EndpointModel> = get<List<Endpoint>>(named(ENDPOINTS)).map { it.map() }
 
@@ -70,12 +71,26 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     override fun attachView(view: SettingsView) {
         super.attachView(view)
+        sessionInteractor.addAccountChangedListener(this)
         if (restart) initConfigs()
+        initDebugMenu()
+        initSettings()
+    }
+
+    private fun initSettings() {
         initGeneralSettings()
         initProfileSettings()
         initDriverSettings()
-        initDebugMenu()
         viewState.hideSomeDividers()
+    }
+
+    override fun detachView(view: SettingsView?) {
+        super.detachView(view)
+        sessionInteractor.removeAccountChangedListener(this)
+    }
+
+    override fun accountChanged() {
+        initSettings()
     }
 
     private fun initGeneralSettings() {
