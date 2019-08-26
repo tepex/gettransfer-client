@@ -89,10 +89,6 @@ open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageVie
         adapterAll.update(all)
     }
 
-    override fun updateResources(locale: Locale) {
-        localeManager.updateResources(requireContext(), locale)
-    }
-
     override fun restartApp() {
         requireActivity().packageManager.getLaunchIntentForPackage(requireActivity().packageName)?.let { intent ->
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

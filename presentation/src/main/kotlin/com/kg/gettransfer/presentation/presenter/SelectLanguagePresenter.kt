@@ -35,7 +35,6 @@ class SelectLanguagePresenter : BasePresenter<SelectLanguageView>(), KoinCompone
 
     fun changeLanguage(selected: LocaleModel) {
         sessionInteractor.locale = selected.delegate
-        viewState.updateResources(sessionInteractor.locale)
         analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LANGUAGE_PARAM, selected.name)
         saveGeneralSettings(true)
     }

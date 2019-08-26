@@ -337,12 +337,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     // protected fun openScreen(screen: String) { router.navigateTo(screen) }
 
     @CallSuper
-    override fun attachBaseContext(newBase: Context?) {
-        if (newBase != null) {
-            super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
-        } else {
-            super.attachBaseContext(null)
-        }
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
     }
 
     private fun showLoading() {

@@ -9,6 +9,5 @@ import java.util.Locale
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface SelectLanguageView : BaseView {
     fun setLanguages(all: List<LocaleModel>, selected: LocaleModel)
-    fun updateResources(locale: Locale)
     fun restartApp()
 }
