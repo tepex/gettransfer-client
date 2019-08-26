@@ -216,7 +216,9 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
 
     override fun hideSomeDividers() {
         if (!settingsEmailNotif.isVisible) settingsDistanceUnit.hideDivider()
+        else settingsDistanceUnit.showDivider()
         if (!layoutCarrierSettings.isVisible) settingsEmailNotif.hideDivider()
+        else settingsEmailNotif.showDivider()
     }
 
     override fun showCurrencyChooser() {
