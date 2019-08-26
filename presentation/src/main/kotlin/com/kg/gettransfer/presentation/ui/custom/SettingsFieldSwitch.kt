@@ -26,4 +26,8 @@ class SettingsFieldSwitch @JvmOverloads constructor(
     fun hideDivider() {
         field_divider.isVisible = false
     }
+
+    fun showDivider() {
+        field_divider.isVisible = true
+    }
 }

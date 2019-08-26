@@ -1,5 +1,6 @@
 package com.kg.gettransfer.domain.repository
 
+import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
@@ -24,4 +25,7 @@ interface SessionRepository {
 
     suspend fun getCodeForChangeEmail(email: String): Result<Boolean>
     suspend fun changeEmail(email: String, code: String): Result<Boolean>
+
+    fun addAccountChangedListener(listener: AccountChangedListener)
+    fun removeAccountChangedListener(listener: AccountChangedListener)
 }

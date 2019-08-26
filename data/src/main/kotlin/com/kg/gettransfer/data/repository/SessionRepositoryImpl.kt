@@ -13,20 +13,16 @@ import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 
 import com.kg.gettransfer.domain.model.Account
-import com.kg.gettransfer.domain.model.Currency
-import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.domain.repository.SessionRepository
 
-import com.kg.gettransfer.sys.domain.Configs
 import com.kg.gettransfer.sys.domain.ConfigsRepository
-
-import java.util.Locale
 
 import org.koin.core.inject
 
@@ -37,11 +33,16 @@ class SessionRepositoryImpl(
     private val preferencesCache: PreferencesCache by inject()
     private val configsRepository: ConfigsRepository by inject()
 
+    private val accountChangedListeners = mutableSetOf<AccountChangedListener>()
+
     override var isInitialized = false
         private set
 
     override var account = Account.EMPTY
-        private set
+        private set(value) {
+            field = value
+            notifyUpdateAccount()
+        }
 
     override var tempUser = User.EMPTY.copy()
 
@@ -186,5 +187,17 @@ class SessionRepositoryImpl(
             this.userEmail = email
         }
         return Result(result.entity != null && result.entity, result.error?.map())
+    }
+
+    override fun addAccountChangedListener(listener: AccountChangedListener) {
+        accountChangedListeners.add(listener)
+    }
+
+    override fun removeAccountChangedListener(listener: AccountChangedListener) {
+        accountChangedListeners.remove(listener)
+    }
+
+    private fun notifyUpdateAccount() {
+        accountChangedListeners.forEach { it.accountChanged() }
     }
 }

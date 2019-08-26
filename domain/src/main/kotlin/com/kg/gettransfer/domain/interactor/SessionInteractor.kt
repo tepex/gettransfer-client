@@ -1,10 +1,10 @@
 package com.kg.gettransfer.domain.interactor
 
+import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.RegistrationAccount
-import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.User
 
 import com.kg.gettransfer.domain.repository.GeoRepository
@@ -71,4 +71,12 @@ class SessionInteractor(
 
     suspend fun getCodeForChangeEmail(email: String) = sessionRepository.getCodeForChangeEmail(email)
     suspend fun changeEmail(email: String, code: String) = sessionRepository.changeEmail(email, code)
+
+    fun addAccountChangedListener(listener: AccountChangedListener) {
+        sessionRepository.addAccountChangedListener(listener)
+    }
+
+    fun removeAccountChangedListener(listener: AccountChangedListener) {
+        sessionRepository.removeAccountChangedListener(listener)
+    }
 }
