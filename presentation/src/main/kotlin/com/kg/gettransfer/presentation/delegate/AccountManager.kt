@@ -108,8 +108,8 @@ class AccountManager : KoinComponent {
         return result
     }
 
-    suspend fun putNoAccount(): Result<Account> {
-        return sessionInteractor.putAccount()
+    private suspend fun putNoAccount(): Result<Account> {
+        return sessionInteractor.putNoAccount()
     }
 
     /**

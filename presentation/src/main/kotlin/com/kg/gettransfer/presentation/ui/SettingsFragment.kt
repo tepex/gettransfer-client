@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 
@@ -20,9 +19,7 @@ import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
-import com.kg.gettransfer.presentation.presenter.LanguageChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
@@ -40,15 +37,11 @@ import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
 import org.koin.core.KoinComponent
 
 import timber.log.Timber
-import com.kg.gettransfer.utilities.LocaleManager
 import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
-import org.koin.android.ext.android.inject
 
 @Suppress("TooManyFunctions")
 class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
-        CurrencyChangedListener, LanguageChangedListener {
-
-    private val localeManager: LocaleManager by inject()
+        CurrencyChangedListener {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
@@ -149,10 +142,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         layoutDebugSettings.isVisible = false
     }
 
-    override fun updateResources(locale: Locale) {
-        localeManager.updateResources(requireContext(), locale)
-    }
-
     override fun setEndpoints(endpoints: List<EndpointModel>) =
             Utils.setEndpointsDialogListener(requireContext(), settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
 
@@ -225,10 +214,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         presenter.currencyChanged(currency)
     }
 
-    override fun languageChanged(language: LocaleModel) {
-        presenter.changeLocale(language)
-    }
-
     override fun hideSomeDividers() {
         if (!settingsEmailNotif.isVisible) settingsDistanceUnit.hideDivider()
         if (!layoutCarrierSettings.isVisible) settingsEmailNotif.hideDivider()
@@ -240,15 +225,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
 
     override fun showLanguageChooser() {
         findNavController().navigate(SettingsFragmentDirections.goToSelectLanguage())
-    }
-
-    override fun restartApp() {
-        requireActivity().packageManager.getLaunchIntentForPackage(requireActivity().packageName)?.let { intent ->
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-        }
-        requireActivity().finish()
-        Runtime.getRuntime().exit(0)
     }
 
     private fun getCalendarModeName(calendarModeKey: String) = when (calendarModeKey) {
