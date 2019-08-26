@@ -12,24 +12,24 @@
         <action
             android:id="@+id/go_to_map"
             app:destination="@id/showMap"
-            app:enterAnim="@android:anim/fade_in"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popExitAnim="@android:anim/fade_out"/>
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/go_to_search_address"
             app:destination="@id/showSearchAddress"
-            app:enterAnim="@android:anim/fade_in"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popExitAnim="@android:anim/fade_out"/>
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/go_to_create_order"
             app:destination="@id/showCreateOrder"
-            app:enterAnim="@android:anim/fade_in"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popExitAnim="@android:anim/fade_out"/>
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
 
     </fragment>
 
@@ -41,20 +41,19 @@
         <action
             android:id="@+id/go_to_search_address"
             app:destination="@id/showSearchAddress"
-            app:enterAnim="@android:anim/fade_in"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popExitAnim="@android:anim/fade_out"/>
-
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/go_to_create_order"
             app:destination="@id/showCreateOrder"
             app:popUpTo="@id/showMap"
             app:popUpToInclusive="true"
-            app:enterAnim="@android:anim/fade_in"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popExitAnim="@android:anim/fade_out"/>
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
 
     </fragment>
 
@@ -68,20 +67,19 @@
             app:destination="@id/showMap"
             app:popUpTo="@id/showSearchAddress"
             app:popUpToInclusive="true"
-            app:enterAnim="@android:anim/fade_in"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popExitAnim="@android:anim/fade_out"/>
-
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/go_to_create_order"
             app:destination="@id/showCreateOrder"
             app:popUpTo="@id/showSearchAddress"
             app:popUpToInclusive="true"
-            app:enterAnim="@android:anim/fade_in"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popExitAnim="@android:anim/fade_out"/>
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
 
         <argument
             android:name="addressFrom"
