@@ -26,21 +26,21 @@ import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.visibleFade
 
 import com.kg.gettransfer.presentation.presenter.NewTransferMapPresenter
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
 import com.kg.gettransfer.presentation.ui.*
-import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
 
-import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 
 import com.kg.gettransfer.presentation.view.NewTransferMapView
 import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 
 import kotlinx.android.synthetic.main.fragment_new_transfer_map.*
-import kotlinx.android.synthetic.main.search_form_main.*
-import kotlinx.android.synthetic.main.view_switcher.*
+import kotlinx.android.synthetic.main.search_form_map.*
 //import leakcanary.AppWatcher
 
 import pub.devrel.easypermissions.EasyPermissions
+import java.lang.UnsupportedOperationException
 
 @Suppress("TooManyFunctions")
 class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
@@ -79,34 +79,19 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
         isFirst = savedInstanceState == null
 
-        switch_mode_.setOnCheckedChangeListener { _, isChecked -> presenter.tripModeSwitched(isChecked) }
-        search_panel.setSearchFromClickListener {
-            presenter.navigateToFindAddress(
-                    searchFrom.text,
-                    searchTo.text,
-                    isCameFromMap = true
-            )
+        search_panel.setSearchClickListener {
+            presenter.navigateToFindAddress()
         }
-        search_panel.setSearchToClickListener {
-            presenter.navigateToFindAddress(
-                    searchFrom.text,
-                    searchTo.text,
-                    isClickTo = true,
-                    isCameFromMap = true
-            )
-        }
-        search_panel.setHourlyClickListener {  presenter.showHourlyDurationDialog() }
-        search_panel.setIvSelectFieldToClickListener{ presenter.switchUsedField() }
         btnNext.setThrottledClickListener { performNextClick() }
         btnBack.setOnClickListener {
             findNavController().navigateUp()
         }
         btnMyLocation.setOnClickListener {
             checkPermission()
-            presenter.updateCurrentLocation()
+            presenter.updateLocation()
         }
 
-        enableBtnNext()
+        presenter.checkBtnNextState()
     }
 
     /**
@@ -143,16 +128,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         }
     }
 
-    override fun showHourlyDurationDialog(durationValue: Int?) {
-        HourlyDurationDialogFragment
-                .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
-                    override fun onDone(durationValue: Int) {
-                        presenter.updateDuration(durationValue)
-                    }
-                })
-                .show(childFragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
-    }
-
     @CallSuper
     override fun enablePinAnimation() {
         presenter.enablePinAnimation()
@@ -161,9 +136,9 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     private fun checkPermission() {
         if (!EasyPermissions.hasPermissions(requireContext(), *PERMISSIONS)) {
             EasyPermissions.requestPermissions(
-                    this,
-                    getString(R.string.LNG_LOCATION_ACCESS),
-                    PERMISSION_REQUEST, *PERMISSIONS
+                this,
+                getString(R.string.LNG_LOCATION_ACCESS),
+                PERMISSION_REQUEST, *PERMISSIONS
             )
         }
     }
@@ -176,7 +151,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-        presenter.updateCurrentLocation()
+        presenter.updateLocation()
     }
 
     override fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean) {
@@ -209,7 +184,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
                 .withEndAction {
                     presenter.isMarkerAnimating = false
                     if (!up) markerShadow.setImageDrawable(
-                            ContextCompat.getDrawable(requireContext(), R.drawable.default_position_shadow)
+                        ContextCompat.getDrawable(requireContext(), R.drawable.default_position_shadow)
                     )
                 }
                 .setDuration(MAGIC_DURATION)
@@ -228,63 +203,36 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         centerMarker?.position = point
     }
 
-    override fun blockFromField() {
-        search_panel.searchFrom.text = getString(R.string.LNG_LOADING)
+    override fun blockAddressField() {
+        search_panel.searchField.text = getString(R.string.LNG_LOADING)
     }
 
-    override fun blockToField() {
-        search_panel.searchTo.text = getString(R.string.LNG_LOADING)
+    override fun setAddress(address: String) {
+        search_panel.setSearchFieldText(address)
+        presenter.checkBtnNextState()
     }
 
-    override fun setAddressFrom(address: String) {
-        search_panel.setSearchFrom(address)
-        enableBtnNext()
+    override fun setBtnNextState(enable: Boolean) {
+        btnNext.isEnabled = enable
     }
 
-    override fun setAddressTo(address: String) {
-        search_panel.setSearchTo(address)
-        enableBtnNext()
-    }
-
-    private fun enableBtnNext() {
-        btnNext.isEnabled =
-            !search_panel.isEmptySearchFrom() && (!search_panel.isEmptySearchTo() || presenter.isHourly())
-    }
-
-    override fun selectFieldFrom() {
-        mMarker.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.point_orange))
-        search_panel.selectSearchFrom()
-    }
-
-    override fun setFieldTo() {
-        mMarker.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_map_label_b))
-        search_panel.selectSearchTo()
-    }
-
-    override fun updateTripView(isHourly: Boolean) {
-        search_panel.hourlyMode(isHourly)
-
-        enableBtnNext()
-    }
-
-    override fun setHourlyDuration(duration: Int?) {
-        if (duration != null){
-            switch_mode_.isChecked = true
-            search_panel.setCurrentHoursText(HourlyValuesHelper.getValue(duration, requireContext()))
-        } else {
-            switch_mode_.isChecked = false
-        }
+    override fun initUIForSelectedField(field: String) {
+        mMarker.setImageDrawable(ContextCompat.getDrawable(requireContext(),
+            when (field) {
+                FIELD_FROM -> R.drawable.point_orange
+                FIELD_TO   -> R.drawable.ic_map_label_b
+                else       -> throw UnsupportedOperationException()
+            }
+        ))
+        search_panel.setFieldMode(field == FIELD_TO)
     }
 
     override fun onNetworkWarning(available: Boolean) {
         layoutTextNetworkNotAvailable.changeViewVisibility(!available)
-        if (available) {
-            presenter.fillAddressFieldsCheckIsEmpty()
-        }
     }
 
-    override fun goToSearchAddress(addressFrom: String, addressTo: String, isClickTo: Boolean, isCameFromMap: Boolean) {
-        findNavController().navigate(NewTransferMapFragmentDirections.goToSearchAddress(addressFrom, addressTo, isClickTo, isCameFromMap))
+    override fun goToSearchAddress(isClickTo: Boolean, isCameFromMap: Boolean) {
+        findNavController().navigate(NewTransferMapFragmentDirections.goToSearchAddress(isClickTo, isCameFromMap))
     }
 
     override fun goToCreateOrder() {

@@ -60,11 +60,13 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initClickListeners()
+
+        presenter.checkBtnNextState()
     }
 
     override fun onResume() {
         super.onResume()
-        enableBtnNext()
+        presenter.checkBtnNextState()
     }
 
     private fun initClickListeners() {
@@ -75,9 +77,9 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
         // Address panel
         request_search_panel.setSearchFromClickListener {
-            presenter.navigateToFindAddress(searchFrom.text, searchTo.text)}
+            presenter.navigateToFindAddress()}
         request_search_panel.setSearchToClickListener {
-            presenter.navigateToFindAddress(searchFrom.text, searchTo.text, true) }
+            presenter.navigateToFindAddress(true) }
         request_search_panel.setHourlyClickListener { presenter.showHourlyDurationDialog() }
         request_search_panel.setIvSelectFieldFromClickListener {  switchToMap() }
 
@@ -147,13 +149,11 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
                 false -> R.string.LNG_MAIN_SCREEN_POINT_TO_POINT_TRANSFER_TITLE
             }
         )
-        enableBtnNext()
+        presenter.checkBtnNextState()
     }
 
-    private fun enableBtnNext() {
-        btnNextFragment.isEnabled =
-                !request_search_panel.isEmptySearchFrom() &&
-            (!request_search_panel.isEmptySearchTo() || switcher_hourly.switch_mode_.isChecked)
+    override fun setBtnNextState(enable: Boolean) {
+        btnNextFragment.isEnabled = enable
     }
 
     override fun onNetworkWarning(available: Boolean) {
@@ -162,12 +162,12 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
     override fun setAddressFrom(address: String) {
         request_search_panel.setSearchFrom(address)
-        enableBtnNext()
+        presenter.checkBtnNextState()
     }
 
     override fun setAddressTo(address: String) {
         request_search_panel.setSearchTo(address)
-        enableBtnNext()
+        presenter.checkBtnNextState()
     }
 
     override fun selectFieldFrom() {
@@ -190,15 +190,15 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-        presenter.updateCurrentLocation()
+        presenter.updateCurrentLocation(true)
     }
 
     override fun switchToMap() {
         findNavController().navigate(NewTransferMainFragmentDirections.goToMap())
     }
 
-    override fun goToSearchAddress(addressFrom: String, addressTo: String, isClickTo: Boolean, isCameFromMap: Boolean) {
-        findNavController().navigate(NewTransferMainFragmentDirections.goToSearchAddress(addressFrom, addressTo, isClickTo, isCameFromMap))
+    override fun goToSearchAddress(isClickTo: Boolean, isCameFromMap: Boolean) {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToSearchAddress(isClickTo, isCameFromMap))
     }
 
     override fun goToCreateOrder() {

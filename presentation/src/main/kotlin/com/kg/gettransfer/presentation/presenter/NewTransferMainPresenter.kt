@@ -5,6 +5,8 @@ import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.EMPTY_ADDRESS
 import com.kg.gettransfer.presentation.view.NewTransferMainView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
@@ -39,18 +41,102 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         // https://developer.android.com/training/location/receive-location-updates
     }
 
-    fun readMoreClick() {
-        viewState.showReadMoreDialog()
-        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.BEST_PRICE_CLICKED)
-    }
-
     override fun updateView() {
         fillViewFromState(FIELD_FROM)
+    }
+
+    private fun fillViewFromState(selectField: String? = null) {
+        worker.main.launch {
+            if (selectField != null) {
+                changeUsedField(selectField)
+            } else {
+                if (!orderInteractor.isAddressesValid()) {
+                    changeUsedField(FIELD_FROM)
+                } else {
+                    changeUsedField(getPreferences().getModel().selectedField)
+                }
+            }
+        }
+
+        if (fillAddressFieldsCheckIsEmpty()) {
+            updateCurrentLocation(true)
+        }
+
+        viewState.setHourlyDuration(orderInteractor.hourlyDuration)
+        viewState.updateTripView(isHourly())
+    }
+
+    private fun changeUsedField(field: String) {
+        worker.main.launch {
+            withContext(worker.bg) { setSelectedField(field) }
+        }
+        when (field) {
+            FIELD_FROM -> viewState.selectFieldFrom()
+            FIELD_TO   -> viewState.setFieldTo()
+        }
+    }
+
+    override fun fillAddressFieldsCheckIsEmpty(): Boolean {
+        with(orderInteractor) {
+            viewState.setAddressTo(to?.address ?: EMPTY_ADDRESS)
+            return from.also { viewState.setAddressFrom(it?.address ?: EMPTY_ADDRESS) } == null
+        }
+    }
+
+    override fun updateCurrentLocationAsync(isFromField: Boolean) {
+        worker.main.launch {
+            blockSelectedField(getPreferences().getModel().selectedField)
+        }
+        super.updateCurrentLocationAsync(isFromField)
+    }
+
+    private fun blockSelectedField(field: String) {
+        when (field) {
+            FIELD_FROM -> viewState.blockFromField()
+            FIELD_TO   -> viewState.blockToField()
+        }
     }
 
     override fun setPointAddress(currentAddress: GTAddress) {
         super.setPointAddress(currentAddress)
         setAddressInSelectedField(currentAddress.cityPoint.name)
+    }
+
+    private fun setAddressInSelectedField(address: String) {
+        worker.main.launch {
+            when (getPreferences().getModel().selectedField) {
+                FIELD_FROM -> viewState.setAddressFrom(address)
+                FIELD_TO   -> viewState.setAddressTo(address)
+            }
+        }
+    }
+
+    fun tripModeSwitched(hourly: Boolean) {
+        updateDuration(if (hourly) orderInteractor.hourlyDuration ?: MIN_HOURLY else null)
+        viewState.updateTripView(hourly)
+        worker.main.launch {
+            if (getPreferences().getModel().selectedField == FIELD_TO) {
+                changeUsedField(FIELD_FROM)
+            }
+        }
+    }
+
+    fun updateDuration(hours: Int?) {
+        orderInteractor.apply {
+            hourlyDuration = hours
+            viewState.setHourlyDuration(hourlyDuration)
+        }
+    }
+
+    private fun isHourly() = orderInteractor.hourlyDuration != null
+
+    fun showHourlyDurationDialog() {
+        viewState.showHourlyDurationDialog(orderInteractor.hourlyDuration)
+    }
+
+    fun readMoreClick() {
+        viewState.showReadMoreDialog()
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.BEST_PRICE_CLICKED)
     }
 
     override fun destroyView(view: NewTransferMainView) {

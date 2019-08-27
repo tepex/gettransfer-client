@@ -5,6 +5,16 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface NewTransferMainView : BaseNewTransferView {
+    fun blockFromField()
+    fun blockToField()
+    fun setAddressFrom(address: String)
+    fun setAddressTo(address: String)
+    fun selectFieldFrom()
+    fun setFieldTo()
+    fun setHourlyDuration(duration: Int?)
+    fun updateTripView(isHourly: Boolean)
+    fun showHourlyDurationDialog(durationValue: Int?)
+
     fun switchToMap()
     fun showReadMoreDialog()
 }

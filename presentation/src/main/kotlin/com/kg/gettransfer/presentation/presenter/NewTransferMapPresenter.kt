@@ -9,6 +9,7 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
+import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.EMPTY_ADDRESS
 
 import com.kg.gettransfer.presentation.view.NewTransferMapView
 
@@ -28,16 +29,24 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
 
     private var idleAndMoveCamera = true
 
-    /**
-     * start init
-     */
+    private lateinit var selectedField: String
+
     override fun updateView() {
         fillViewFromState()
     }
 
-    override fun changeUsedField(field: String) {
-        super.changeUsedField(field)
+    private fun fillViewFromState() {
+        worker.main.launch {
+            selectedField = getPreferences().getModel().selectedField
+            viewState.initUIForSelectedField(selectedField)
+            initAddressFieldAndMarker(selectedField)
+            if (fillAddressFieldsCheckIsEmpty()) {
+                updateCurrentLocation(isFromFieldSelected())
+            }
+        }
+    }
 
+    private fun initAddressFieldAndMarker(field: String) {
         val pointSelectedField: Point? = when (field) {
             FIELD_FROM -> orderInteractor.from?.cityPoint?.point
             FIELD_TO   -> orderInteractor.to?.cityPoint?.point
@@ -52,15 +61,26 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         }
     }
 
+    override fun fillAddressFieldsCheckIsEmpty(): Boolean {
+        with(orderInteractor) {
+            val address = (if (selectedField == FIELD_FROM) from else to)?.address
+            viewState.setAddress(address ?: EMPTY_ADDRESS)
+            return address == null
+        }
+    }
+
+    override fun updateCurrentLocationAsync(isFromField: Boolean) {
+        viewState.blockAddressField()
+        super.updateCurrentLocationAsync(isFromField)
+    }
+
     override fun setPointAddress(currentAddress: GTAddress) {
         super.setPointAddress(currentAddress)
 
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
         onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
         viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation(lastAddressPoint))
-        setAddressInSelectedField(currentAddress.cityPoint.name)
-
-        lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
+        viewState.setAddress(currentAddress.cityPoint.name)
     }
 
     private fun showBtnMyLocation(point: LatLng) = lastCurrentLocation == null || point != lastCurrentLocation
@@ -74,7 +94,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
             this.lastPoint = lastPoint
             viewState.moveCenterMarker(lastPoint)
             worker.main.launch {
-                blockSelectedField(getPreferences().getModel().selectedField)
+                viewState.blockAddressField()
             }
         }
     }
@@ -100,7 +120,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
                     )
                 }.isSuccess()?.let { addr ->
                     currentLocation = addr.cityPoint.name
-                    setAddressInSelectedField(currentLocation)
+                    viewState.setAddress(currentLocation)
                 }
             }
         } else {
@@ -109,9 +129,19 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         }
     }
 
+    fun navigateToFindAddress() {
+        viewState.goToSearchAddress(selectedField == FIELD_TO, true)
+    }
+
     fun enablePinAnimation() {
         isMarkerAnimating = false
     }
+
+    fun updateLocation() {
+        updateCurrentLocation(isFromFieldSelected())
+    }
+
+    private fun isFromFieldSelected() = selectedField == FIELD_FROM
 
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
         if (point2 == null || point1 == null) {

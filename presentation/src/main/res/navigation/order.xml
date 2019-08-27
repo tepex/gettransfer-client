@@ -82,12 +82,6 @@
             app:popExitAnim="@anim/fade_out"/>
 
         <argument
-            android:name="addressFrom"
-            app:argType="string" />
-        <argument
-            android:name="addressTo"
-            app:argType="string" />
-        <argument
             android:name="isClickTo"
             android:defaultValue="false"
             app:argType="boolean" />
