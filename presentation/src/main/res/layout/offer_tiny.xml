@@ -8,10 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="0dp"
-        android:paddingTop="@dimen/card_view_padding_top"
-        android:paddingEnd="@dimen/card_view_padding_end">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_car_model_tiny"
@@ -20,23 +17,27 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="@dimen/view_offer_car_model_margin_start_end"
+            android:layout_marginTop="@dimen/view_offer_car_model_margin_start"
+            android:layout_marginStart="@dimen/view_offer_car_model_margin_start"
+            android:layout_marginEnd="@dimen/view_offer_car_model_margin_end"
             android:lines="1"
             android:textSize="@dimen/view_offer_text_size_14sp"
             app:autoSizeMinTextSize="@dimen/payment_car_name_min_size"
             app:autoSizeMaxTextSize="@dimen/payment_car_name_max_size"
             style="@style/black_semiBold"
-            tools:text="BMW X3 Series 2019"/>
+            tools:text="BMW X3 Series 2019 black edition ATM 4WD "/>
 
         <TextView
             android:id="@+id/tv_car_class_tiny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/tv_car_model_tiny"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_car_model_tiny"
+            android:layout_marginBottom="@dimen/view_offer_car_img_margin_top"
+            android:layout_marginStart="@dimen/view_offer_car_model_margin_start"
             android:layout_marginTop="@dimen/offer_tiny_car_class_margin_top"
             style="@style/black_regular"
-            android:textSize="@dimen/view_offer_text_size_12sp"
+            android:textSize="@dimen/view_offer_text_size_14sp"
             tools:text="Business"/>
 
         <include
@@ -49,18 +50,34 @@
             app:layout_constraintStart_toEndOf="@+id/tv_car_class_tiny"
             android:layout_marginStart="@dimen/offer_tiny_capacity_margin_start"/>
 
-        <ImageView
-            android:id="@+id/img_car_photo_tiny"
-            android:layout_width="@dimen/view_offer_car_img_width"
-            android:layout_height="@dimen/view_offer_car_img_height"
-            android:layout_marginTop="@dimen/view_offer_car_img_margin_top"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_transport_type_comfort"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_car_class_tiny"
-            app:layout_constraintVertical_bias="1.0" />
+        <TextView
+            android:id="@+id/tv_price_no_discount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:textSize="@dimen/offer_tiny_discount_price_text_size"
+            android:textColor="@color/color_gtr_red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_car_class_tiny"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_car_class_tiny"
+            android:layout_marginEnd="@dimen/view_offer_car_model_margin_end"
+            tools:text="5420420.00₽"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+
+    <ImageView
+        android:id="@+id/img_car_photo_tiny"
+        android:layout_width="@dimen/view_offer_car_img_width"
+        android:layout_height="@dimen/view_offer_car_img_height"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_transport_type_comfort"
+        android:background="@drawable/bg_rounded_bn_photo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_car_class_tiny"
+        app:layout_constraintVertical_bias="1.0" />
 
         <ImageView
             android:id="@+id/iv_car_color_tiny"
@@ -77,9 +94,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@+id/btn_book_tiny"
-            app:layout_constraintBottom_toTopOf="@+id/languages_container_tiny"
-            android:layout_marginBottom="@dimen/offer_tiny_rating_margin_bottom"/>
+            app:layout_constraintStart_toEndOf="@+id/img_car_photo_tiny"
+            app:layout_constraintTop_toTopOf="@+id/img_car_photo_tiny"
+            android:layout_marginStart="@dimen/view_offer_car_model_margin_start"
+            android:layout_marginBottom="@dimen/offer_tiny_rating_margin_bottom"
+            tools:visibility="visible"/>
 
         <LinearLayout
             android:id="@+id/languages_container_tiny"
@@ -87,22 +106,10 @@
             android:layout_height="wrap_content"
             android:minHeight="@dimen/offer_tiny_languages_min_height"
             android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="@+id/btn_book_tiny"
-            app:layout_constraintBottom_toTopOf="@+id/btn_book_tiny"
-            android:layout_marginBottom="@dimen/offer_tiny_languages_margin_bottom"/>
-
-        <TextView
-            android:id="@+id/tv_price_no_discount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="@dimen/offer_tiny_discount_price_text_size"
-            android:textColor="@color/color_gtr_red"
-            app:layout_constraintEnd_toEndOf="@+id/btn_book_tiny"
-            app:layout_constraintBottom_toTopOf="@+id/tv_price_final"
-            tools:text="5420420.00₽"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            app:layout_constraintStart_toEndOf="@id/img_car_photo_tiny"
+            app:layout_constraintTop_toTopOf="@+id/co2_count"
+            android:layout_marginStart="@dimen/view_offer_languages_container_margin_start"
+            app:layout_constraintBottom_toBottomOf="@+id/co2_count"/>
 
         <TextView
             android:id="@+id/tv_price_final"
@@ -111,8 +118,9 @@
             style="@style/sf_font_pro_text_semibold_black"
             android:textSize="@dimen/offer_tiny_final_price_text_size"
             tools:text="420420.00₽"
-            app:layout_constraintEnd_toEndOf="@+id/btn_book_tiny"
-            app:layout_constraintBottom_toTopOf="@+id/co2_count"/>
+            android:layout_marginEnd="@dimen/view_offer_car_model_margin_end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_price_no_discount"/>
 
         <TextView
             android:id="@+id/co2_count"
@@ -121,31 +129,34 @@
             android:fontFamily="@font/sf_pro_text_semibold"
             android:textSize="@dimen/offer_tiny_co2_text_size"
             android:textColor="@color/color_gtr_green"
-            app:layout_constraintEnd_toEndOf="@+id/btn_book_tiny"
-            app:layout_constraintBottom_toTopOf="@+id/btn_book_tiny"
-            android:layout_marginBottom="@dimen/offer_tiny_co2_margin_bottom"
+            android:layout_marginEnd="@dimen/view_offer_car_model_margin_end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_price_final"
             tools:text="+101.98"
+            android:layout_marginBottom="@dimen/offer_tiny_rating_margin_bottom"
             android:visibility="invisible"
             tools:visibility="visible"/>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btn_book_tiny"
             android:layout_width="0dp"
             android:layout_height="@dimen/view_offer_btn_book_height"
-            android:layout_marginBottom="@dimen/view_offer_btn_book_margin_bottom"
-            android:layout_marginStart="@dimen/view_offer_btn_book_margin_start"
+            android:layout_marginTop="@dimen/offer_tiny_rating_margin_bottom"
+
+            android:layout_marginBottom="@dimen/offer_tiny_rating_margin_bottom"
+            android:layout_marginStart="@dimen/view_offer_btn_book_margin_end"
             android:layout_marginEnd="@dimen/view_offer_btn_book_margin_end"
-            android:fontFamily="@font/sf_pro_text_semibold"
+            style="?android:attr/borderlessButtonStyle"
+            android:background="@drawable/btn_bg_rounded"
+            android:textColor="@color/colorWhite"
             android:text="@string/LNG_BOOK"
             android:textAllCaps="true"
-            android:textColor="@color/colorWhite"
             android:textSize="@dimen/view_offer_btn_book_text_size"
             android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/co2_count"
             app:layout_constraintStart_toEndOf="@+id/img_car_photo_tiny"
             app:layout_constraintEnd_toEndOf="parent"
-            app:backgroundTint="@color/color_gtr_green"
-            app:cornerRadius="@dimen/view_offer_btn_book_radius"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

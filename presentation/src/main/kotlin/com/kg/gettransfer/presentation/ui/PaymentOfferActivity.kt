@@ -277,8 +277,8 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun setCapacity(transport: TransportTypeModel) {
         with(view_capacity) {
-            transportType_сountPassengers.text = "x".plus(transport.paxMax)
-            transportType_сountBaggage.text = "x".plus(transport.luggageMax)
+            transportType_сountPassengers.text = "x ${transport.paxMax}"
+            transportType_сountBaggage.text = "x ${transport.luggageMax}"
         }
     }
 
