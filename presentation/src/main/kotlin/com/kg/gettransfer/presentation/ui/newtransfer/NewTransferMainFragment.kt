@@ -60,7 +60,10 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initClickListeners()
+    }
 
+    override fun onResume() {
+        super.onResume()
         enableBtnNext()
     }
 
