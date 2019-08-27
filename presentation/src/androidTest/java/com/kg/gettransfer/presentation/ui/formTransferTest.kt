@@ -30,12 +30,16 @@ class formTransferTest{
 //        onView(withId(R.id.settingsProfile))
 //                .check(matches(isDisplayed()))
 //fieldText
-    onView(Matchers.allOf(ViewMatchers.withId(R.id.settingsProfile))).perform(ViewActions.click())
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.settingsProfile))).perform(ViewActions.click())
         Thread.sleep(7000)
 //        onView(allOf(withText(R.string.LNG_LOGIN_EMAIL_SECTION))).perform(typeText("r.abdullina@gettransfer.com"))
 //        onView(allOf(withId(R.id.fieldText))).perform(typeText("r.abdullina@gettransfer.com"))
-        onView(allOf(withId(R.id.fieldText), isDisplayed())).perform(click())
-        onView(allOf(withId(R.id.fieldText))).perform(typeText("r.abdullina@gettransfer.com"))
+
+//        onView(allOf(withId(R.id.fieldText), isDisplayed())).perform(click())
+//        onView(allOf(withId(R.id.loginTitleText)),isDescendantOfA(withId(R.id.linear_layout))).perform(typeText("r.abdullina@gettransfer.com"))
+
+        onView(allOf(withId(R.id.etPassword))).perform(typeText("PassRR11"))
+
         Thread.sleep(7000)
     }
 }
