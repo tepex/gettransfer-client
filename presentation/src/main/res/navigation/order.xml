@@ -41,6 +41,7 @@
         <action
             android:id="@+id/go_to_search_address"
             app:destination="@id/showSearchAddress"
+            app:popUpTo="@id/showNewOrder"
             app:enterAnim="@anim/transition_b2t"
             app:popEnterAnim="@anim/fade_in"
             app:exitAnim="@anim/transition_t2b"
@@ -48,8 +49,7 @@
         <action
             android:id="@+id/go_to_create_order"
             app:destination="@id/showCreateOrder"
-            app:popUpTo="@id/showMap"
-            app:popUpToInclusive="true"
+            app:popUpTo="@id/showNewOrder"
             app:enterAnim="@anim/transition_b2t"
             app:popEnterAnim="@anim/fade_in"
             app:exitAnim="@anim/transition_t2b"
@@ -65,8 +65,7 @@
         <action
             android:id="@+id/go_to_map"
             app:destination="@id/showMap"
-            app:popUpTo="@id/showSearchAddress"
-            app:popUpToInclusive="true"
+            app:popUpTo="@id/showNewOrder"
             app:enterAnim="@anim/transition_b2t"
             app:popEnterAnim="@anim/fade_in"
             app:exitAnim="@anim/transition_t2b"
@@ -74,8 +73,7 @@
         <action
             android:id="@+id/go_to_create_order"
             app:destination="@id/showCreateOrder"
-            app:popUpTo="@id/showSearchAddress"
-            app:popUpToInclusive="true"
+            app:popUpTo="@id/showNewOrder"
             app:enterAnim="@anim/transition_b2t"
             app:popEnterAnim="@anim/fade_in"
             app:exitAnim="@anim/transition_t2b"

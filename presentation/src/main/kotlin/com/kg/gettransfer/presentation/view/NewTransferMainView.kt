@@ -14,6 +14,7 @@ interface NewTransferMainView : BaseNewTransferView {
     fun setHourlyDuration(duration: Int?)
     fun updateTripView(isHourly: Boolean)
     fun showHourlyDurationDialog(durationValue: Int?)
+    fun setBtnNextState(enable: Boolean)
 
     fun switchToMap()
     fun showReadMoreDialog()

@@ -117,16 +117,7 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
         viewState.goToSearchAddress(isClickTo, isCameFromMap)
     }
 
-    fun checkBtnNextState() {
-        viewState.setBtnNextState(orderInteractor.isCanCreateOrder())
-    }
-
-    fun onNextClick(block: (Boolean) -> Unit) {
-        if (orderInteractor.isCanCreateOrder()) {
-            block(true)
-            viewState.goToCreateOrder()
-        }
-    }
+    abstract fun onNextClick()
 
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
         if (point2 == null || point1 == null) return false

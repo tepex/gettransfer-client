@@ -84,7 +84,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         request_search_panel.setIvSelectFieldFromClickListener {  switchToMap() }
 
         // Buttons
-        btnNextFragment.setOnClickListener { onNextClick() }
+        btnNextFragment.setOnClickListener { presenter.onNextClick() }
         bestPriceLogo.setOnClickListener(readMoreListener)
         layoutBestPriceText.setOnClickListener(readMoreListener)
     }
@@ -118,7 +118,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
             .show(requireFragmentManager(), HourlyDurationDialogFragment.DIALOG_TAG)
     }
 
-    private fun onNextClick() {
+    /*private fun onNextClick() {
         if (dateDelegate.validateWith {
             Utils.getAlertDialogBuilder(requireActivity())
                 .setTitle(getString(R.string.LNG_RIDE_CANT_CREATE))
@@ -126,11 +126,9 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
                 .setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
                 .show()
         }) {
-            presenter.onNextClick { process ->
-                btnNextFragment?.isEnabled = false
-            }
+            presenter.onNextClick()
         }
-    }
+    }*/
 
     override fun setHourlyDuration(duration: Int?) {
         if (duration != null) {

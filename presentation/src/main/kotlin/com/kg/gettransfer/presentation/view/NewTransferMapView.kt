@@ -15,4 +15,6 @@ interface NewTransferMapView : BaseNewTransferView {
     fun initUIForSelectedField(field: String)
     fun setAddress(address: String)
     fun blockAddressField()
+
+    fun navigateBack()
 }

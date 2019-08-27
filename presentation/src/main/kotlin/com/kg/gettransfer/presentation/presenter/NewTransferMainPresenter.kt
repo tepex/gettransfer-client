@@ -128,6 +128,16 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         }
     }
 
+    fun checkBtnNextState() {
+        viewState.setBtnNextState(orderInteractor.isCanCreateOrder())
+    }
+
+    override fun onNextClick() {
+        if (orderInteractor.isCanCreateOrder()) {
+            viewState.goToCreateOrder()
+        }
+    }
+
     private fun isHourly() = orderInteractor.hourlyDuration != null
 
     fun showHourlyDurationDialog() {

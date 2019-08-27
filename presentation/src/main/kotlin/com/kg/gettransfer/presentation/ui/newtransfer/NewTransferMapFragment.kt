@@ -82,16 +82,12 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         search_panel.setSearchClickListener {
             presenter.navigateToFindAddress()
         }
-        btnNext.setThrottledClickListener { performNextClick() }
-        btnBack.setOnClickListener {
-            findNavController().navigateUp()
-        }
+        btnNext.setThrottledClickListener { presenter.onNextClick() }
+        btnBack.setOnClickListener { navigateBack() }
         btnMyLocation.setOnClickListener {
             checkPermission()
             presenter.updateLocation()
         }
-
-        presenter.checkBtnNextState()
     }
 
     /**
@@ -119,14 +115,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         gm.setOnCameraIdleListener { presenter.onCameraIdle(gm.projection.visibleRegion.latLngBounds) }
     }
 
-    override fun initMap() {
-    }
-
-    fun performNextClick() {
-        presenter.onNextClick { process ->
-            btnNext?.isEnabled = false
-        }
-    }
+    override fun initMap() {}
 
     @CallSuper
     override fun enablePinAnimation() {
@@ -209,11 +198,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
     override fun setAddress(address: String) {
         search_panel.setSearchFieldText(address)
-        presenter.checkBtnNextState()
-    }
-
-    override fun setBtnNextState(enable: Boolean) {
-        btnNext.isEnabled = enable
     }
 
     override fun initUIForSelectedField(field: String) {
@@ -237,6 +221,10 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
     override fun goToCreateOrder() {
         findNavController().navigate(NewTransferMainFragmentDirections.goToCreateOrder())
+    }
+
+    override fun navigateBack() {
+        findNavController().navigateUp()
     }
 
     override fun onDestroy() {

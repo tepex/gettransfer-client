@@ -133,6 +133,14 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         viewState.goToSearchAddress(selectedField == FIELD_TO, true)
     }
 
+    override fun onNextClick() {
+        if (orderInteractor.isCanCreateOrder()) {
+            viewState.goToCreateOrder()
+        } else {
+            viewState.navigateBack()
+        }
+    }
+
     fun enablePinAnimation() {
         isMarkerAnimating = false
     }

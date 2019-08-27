@@ -73,7 +73,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/btn_next_main_margin_16dp"
         android:background="@drawable/btn_bg_rounded"
-        android:enabled="false"
+        android:enabled="true"
         android:text="@string/LNG_NEXT"
         android:textColor="@color/colorWhite" />
 
