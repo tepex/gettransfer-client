@@ -8,13 +8,12 @@ import java.util.Locale
 class LocaleManager {
 
     fun updateResources(context: Context, locale: Locale): ContextWrapper {
-        val appContext = context.applicationContext
         Locale.setDefault(locale)
 
-        val resources = appContext.resources
+        val resources = context.resources
         val config = Configuration(resources.configuration)
 
         config.setLocale(locale)
-        return ContextWrapper(appContext.createConfigurationContext(config))
+        return ContextWrapper(context.createConfigurationContext(config))
     }
 }

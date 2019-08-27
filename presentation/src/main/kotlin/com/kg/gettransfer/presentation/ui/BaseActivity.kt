@@ -46,8 +46,8 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
+import com.kg.gettransfer.domain.model.Account
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.isVisible
@@ -74,6 +74,7 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
+import java.util.*
 
 @Suppress("TooManyFunctions")
 abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
@@ -338,7 +339,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     @CallSuper
     override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
+        val account = sessionInteractor.account
+        val locale = if (account == Account.EMPTY) Locale(sessionInteractor.appLanguage)
+        else sessionInteractor.locale
+        super.attachBaseContext(localeManager.updateResources(newBase, locale))
     }
 
     private fun showLoading() {

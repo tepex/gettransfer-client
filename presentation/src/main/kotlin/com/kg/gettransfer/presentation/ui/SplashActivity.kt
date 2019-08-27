@@ -103,7 +103,6 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
     }
 
     override fun dispatchAppState(locale: Locale) {
-        localeManager.updateResources(this, locale)
         val intent = Intent(AppLifeCycleObserver.APP_STATE).apply { putExtra(AppLifeCycleObserver.STATUS, true) }
         Handler().postDelayed({ LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent) }, 1000)
     }

@@ -10,6 +10,7 @@ import com.kg.gettransfer.data.model.*
 
 import kotlinx.serialization.list
 import kotlinx.serialization.json.JSON
+import java.util.*
 
 @Suppress("WildcardImport")
 class PreferencesImpl(
@@ -113,6 +114,12 @@ class PreferencesImpl(
             configsPrefs.edit().putInt(EVENTS_COUNT, value).apply()
         }
 
+    override var appLanguage: String
+        get() = configsPrefs.getString(APP_LANGUAGE, Locale.getDefault().language)
+        set(value) {
+            configsPrefs.edit().putString(APP_LANGUAGE, value).apply()
+        }
+
     /* === Functions === */
 
     private fun getMap(key: String): Map<Long, Int> {
@@ -167,6 +174,7 @@ class PreferencesImpl(
         const val APP_ENTERS_COUNT    = "enters_count"
         const val FAVORITE_TRANSPORT  = "favorite_transport"
         const val DEBUG_MENU          = "debug_menu"
+        const val APP_LANGUAGE        = "app_language"
 
         const val MAP_NEW_OFFERS      = "map_new_offers"
         const val MAP_NEW_MESSAGES    = "map_new_messages"

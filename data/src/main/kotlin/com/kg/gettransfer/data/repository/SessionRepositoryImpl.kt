@@ -40,6 +40,7 @@ class SessionRepositoryImpl(
 
     override var account = Account.EMPTY
         private set(value) {
+            appLanguage = value.locale.language
             field = value
             notifyUpdateAccount()
         }
@@ -62,6 +63,12 @@ class SessionRepositoryImpl(
         get() = preferencesCache.userPassword
         set(value) {
             preferencesCache.userPassword = value
+        }
+
+    override var appLanguage: String
+        get() = preferencesCache.appLanguage
+        set(value) {
+            preferencesCache.appLanguage = value
         }
 
     @Suppress("ComplexMethod", "ReturnCount")

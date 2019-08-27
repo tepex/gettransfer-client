@@ -52,6 +52,9 @@ class SessionInteractor(
             account.isEmailNotificationsEnabled = value
         }
 
+    val appLanguage: String
+        get() = sessionRepository.appLanguage
+
     suspend fun coldStart() = sessionRepository.coldStart()
 
     suspend fun logout() = sessionRepository.logout()
