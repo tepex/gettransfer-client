@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.animation.Animator
-import android.content.Intent
 import android.os.Bundle
 
 import androidx.annotation.CallSuper
@@ -27,16 +26,11 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.SelectLanguagePresenter
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.SelectLanguageView
-import com.kg.gettransfer.utilities.LocaleManager
 import kotlinx.android.synthetic.main.fragment_select_language.*
 import kotlinx.android.synthetic.main.layout_select_language.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
-import org.koin.android.ext.android.inject
-import java.util.*
 
 open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageView {
-
-    private val localeManager: LocaleManager by inject()
 
     private lateinit var adapterAll: LanguagesListAdapter
     override val layout = R.layout.fragment_select_language
@@ -71,8 +65,8 @@ open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageVie
     }
 
     private fun setupToolbar() {
-        toolbar.ivBack.setThrottledClickListener { findNavController().navigateUp() }
-        toolbar.toolbar_title.text = getString(R.string.LNG_LANGUAGES)
+        toolBar.toolbar.ivBack.setThrottledClickListener { findNavController().navigateUp() }
+        toolBar.toolbar.toolbar_title.text = getString(R.string.LNG_LANGUAGES)
     }
 
     /**
@@ -89,14 +83,7 @@ open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageVie
         adapterAll.update(all)
     }
 
-    override fun restartApp() {
-        requireActivity().packageManager.getLaunchIntentForPackage(requireActivity().packageName)?.let { intent ->
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-        }
-        requireActivity().finish()
-        Runtime.getRuntime().exit(0)
-    }
+    override fun recreateActivity() = requireActivity().recreate()
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
 
