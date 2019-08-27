@@ -13,7 +13,6 @@ import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
-import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.EMPTY_ADDRESS
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
 
@@ -115,19 +114,25 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
             worker.main.launch {
                 withContext<Unit>(worker.bg) {
                     if (geoInteractor.isGpsEnabled && withGps) {
-                        geoInteractor.getCurrentLocation().isSuccess()?.let { loc ->
-                            lastCurrentLocation = pointMapper.toLatLng(loc)
-                            geoInteractor.getAddressByLocation(loc).isSuccess()?.let { address ->
-                                if (address.cityPoint.point != null) {
-                                    withContext<Unit>(worker.main.coroutineContext) { setPointAddress(address) }
-                                }
+                        val currentLocation = geoInteractor.getCurrentLocation().isSuccess()
+                        if (currentLocation != null) {
+                            lastCurrentLocation = pointMapper.toLatLng(currentLocation)
+                            val address = geoInteractor.getAddressByLocation(currentLocation).isSuccess()
+                            if (address?.cityPoint?.point != null) {
+                                withContext<Unit>(worker.main.coroutineContext) { setPointAddress(address) }
+                            } else {
+                                setAddressInSelectedField(EMPTY_ADDRESS)
                             }
+                        } else {
+                            setAddressInSelectedField(EMPTY_ADDRESS)
                         }
                     } else {
                         val result = geoInteractor.getMyLocationByIp()
                         logIpapiRequest()
                         if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
                             withContext<Unit>(worker.main.coroutineContext) { setLocation(result.model) }
+                        } else {
+                            setAddressInSelectedField(EMPTY_ADDRESS)
                         }
                     }
                 }
@@ -141,6 +146,8 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
         }
         if (result.error == null && result.model.cityPoint.point != null) {
             setPointAddress(result.model)
+        } else {
+            setAddressInSelectedField(EMPTY_ADDRESS)
         }
     }
 
@@ -225,5 +232,6 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     companion object {
         const val MIN_HOURLY = 2
         const val DELTA_MAX = 0.000_001
+        const val EMPTY_ADDRESS = ""
     }
 }
