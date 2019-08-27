@@ -81,7 +81,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
         initGeneralSettings()
         initProfileSettings()
         initDriverSettings()
-        viewState.hideSomeDividers()
+        worker.main.launch { viewState.hideSomeDividers() }
     }
 
     override fun detachView(view: SettingsView?) {
@@ -93,10 +93,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
         initSettings()
     }
 
-    private fun initGeneralSettings() {
-        viewState.initGeneralSettingsLayout()
-
-        worker.main.launch {
+    private fun initGeneralSettings() = worker.main.launch {
+            viewState.initGeneralSettingsLayout()
             viewState.setCurrency(sessionInteractor.currency.map().name)
             val locale = sessionInteractor.locale
             val localeModel   = withContext(worker.bg) {
@@ -107,9 +105,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
             viewState.setLocale(localeModel?.name ?: "", locale.language)
             viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
         }
-    }
 
-    private fun initProfileSettings() {
+    private fun initProfileSettings() = worker.main.launch {
         viewState.initProfileField(accountManager.isLoggedIn, accountManager.remoteProfile)
         if (accountManager.isLoggedIn) {
             viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
