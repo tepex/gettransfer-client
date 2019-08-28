@@ -294,9 +294,9 @@
 	<dimen name="view_transport_capacity_text_margin_start">4dp</dimen>
 	<dimen name="view_transport_capacity_text_size">13sp</dimen>
 
-	<dimen name="view_transport_capacity_small_img_passenger_width">7dp</dimen>
-	<dimen name="view_transport_capacity_small_img_passenger_height">9dp</dimen>
-	<dimen name="view_transport_capacity_small_img_baggage_width">10dp</dimen>
+	<dimen name="view_transport_capacity_small_img_passenger_width">9dp</dimen>
+	<dimen name="view_transport_capacity_small_img_passenger_height">10dp</dimen>
+	<dimen name="view_transport_capacity_small_img_baggage_width">11dp</dimen>
 	<dimen name="view_transport_capacity_small_img_baggage_height">9dp</dimen>
 	<dimen name="view_transport_capacity_small_img_baggage_margin_start">4dp</dimen>
 	<dimen name="view_transport_capacity_small_text_margin_start">2dp</dimen>
@@ -413,15 +413,19 @@
 	<!--activity_offers-->
 	<dimen name="activity_offers_toolbar_btn_info_size">30dp</dimen>
 	<dimen name="activity_offers_toolbar_btn_info_layout_size">48dp</dimen>
-	<dimen name="activity_offers_excellent_price_text_size">13sp</dimen>
-	<dimen name="activity_offers_excellent_price_min_text_size">5sp</dimen>
+	<dimen name="activity_offers_excellent_price_text_size">12sp</dimen>
+	<dimen name="activity_offers_excellent_price_min_text_size">10sp</dimen>
 	<dimen name="activity_offers_excellent_price_layout_height">55dp</dimen>
 	<dimen name="activity_offers_drivers_connecting_text_height">56dp</dimen>
 	<dimen name="activity_offers_drivers_count_progress_bar_size">24dp</dimen>
 	<dimen name="activity_offers_drivers_count_progress_bar_margin_start">16dp</dimen>
 	<dimen name="activity_offers_drivers_count_text_paddings">50dp</dimen>
-	<dimen name="activity_offers_iv_lock_width">22dp</dimen>
-	<dimen name="activity_offers_iv_lock_height">22dp</dimen>
+	<dimen name="activity_offers_iv_lock_width">24dp</dimen>
+	<dimen name="activity_offers_iv_lock_height">24dp</dimen>
+	<dimen name="activity_offers_fix_price_margin">20dp</dimen>
+	<dimen name="activity_offers_fix_price_margin_bottom">10dp</dimen>
+	<dimen name="activity_offers_fix_price_margin_start">20dp</dimen>
+	<dimen name="activity_offers_fix_price_margin_end">28dp</dimen>
 	<dimen name="activity_offers_iv_lock_margin_start">17dp</dimen>
 	<dimen name="activity_offers_iv_lock_margin_end">12dp</dimen>
 	<dimen name="offers_tv_excellent_price_margin_end">12dp</dimen>
@@ -446,13 +450,14 @@
 	<dimen name="card_view_margin_start_end">4dp</dimen>
     <dimen name="card_view_padding_top">12dp</dimen>
 	<dimen name="card_view_padding_end">8dp</dimen>
-    <dimen name="view_offer_car_model_margin_start_end">12dp</dimen>
+    <dimen name="view_offer_car_model_margin_start">12dp</dimen>
+    <dimen name="view_offer_car_model_margin_end">10dp</dimen>
     <dimen name="view_offer_car_img_width">112dp</dimen>
     <dimen name="view_offer_car_img_height">80dp</dimen>
     <dimen name="view_offer_car_img_margin_top">4dp</dimen>
     <dimen name="view_offer_car_img_margin_start">-3dp</dimen>
     <dimen name="view_offer_btn_book_width">122dp</dimen>
-    <dimen name="view_offer_btn_book_height">45dp</dimen>
+    <dimen name="view_offer_btn_book_height">32dp</dimen>
     <dimen name="view_offer_btn_book_margin_top">6dp</dimen>
     <dimen name="view_offer_btn_book_margin_bottom">8dp</dimen>
 	<dimen name="view_offer_btn_book_margin_start">16dp</dimen>
@@ -489,7 +494,7 @@
 
 
 	<dimen name="card_view_corners">8dp</dimen>
-	<dimen name="book_now_photo_corner_radius">5dp</dimen>
+	<dimen name="book_now_photo_corner_radius">8dp</dimen>
 
 	<dimen name="general_button_width">300dp</dimen>
 	<dimen name="general_button_height">44dp</dimen>
@@ -750,7 +755,7 @@
 	<dimen name="offer_tiny_languages_min_height">12dp</dimen>
 	<dimen name="offer_tiny_languages_margin_bottom">8dp</dimen>
 	<dimen name="offer_tiny_co2_margin_bottom">6dp</dimen>
-	<dimen name="offer_tiny_car_class_margin_top">8dp</dimen>
+	<dimen name="offer_tiny_car_class_margin_top">7dp</dimen>
 	<dimen name="offer_tiny_capacity_margin_start">8dp</dimen>
 
 	<dimen name="payment_dialog_corner_radius">16dp</dimen>

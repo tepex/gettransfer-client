@@ -104,8 +104,8 @@ object OfferItemBindDelegate {
     /* Common layouts */
     @SuppressLint("SetTextI18n")
     private fun bindCapacity(capacityView: View, transportTypeModel: TransportTypeModel) = with(capacityView) {
-        transportType_сountPassengers.text = "x${transportTypeModel.paxMax}"
-        transportType_сountBaggage.text    = "x${transportTypeModel.luggageMax}"
+        transportType_сountPassengers.text = "x ${transportTypeModel.paxMax}"
+        transportType_сountBaggage.text    = "x ${transportTypeModel.luggageMax}"
     }
 
     internal fun bindRating(rateView: View, rating: Ratings, approved: Boolean = false) = with(rateView) {

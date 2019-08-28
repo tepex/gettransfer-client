@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/colorBackgroundGray"/>
-    <corners android:radius="@dimen/book_now_photo_corner_radius"/>
+    <corners android:bottomLeftRadius="@dimen/book_now_photo_corner_radius"
+        android:bottomRightRadius="0dp"
+        android:topLeftRadius="0dp"
+        android:topRightRadius="@dimen/book_now_photo_corner_radius"/>
 </shape>

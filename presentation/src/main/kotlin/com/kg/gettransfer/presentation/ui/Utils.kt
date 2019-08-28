@@ -5,8 +5,8 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.graphics.*
 
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
@@ -24,11 +24,9 @@ import android.util.DisplayMetrics
 import android.util.Patterns
 
 import android.view.View
-import android.view.ViewGroup
 
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 
 import androidx.annotation.ColorRes
@@ -42,7 +40,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.FitCenter
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 
 import com.google.android.gms.maps.CameraUpdate
@@ -58,9 +55,9 @@ import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
-import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.ui.utils.TopRightRoundedCornerTransform
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
@@ -73,6 +70,7 @@ import org.koin.core.inject
 import org.koin.core.KoinComponent
 
 import timber.log.Timber
+import android.graphics.PorterDuffXfermode as PorterDuffXfermode1
 
 object Utils : KoinComponent {
     //private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
@@ -491,7 +489,7 @@ object Utils : KoinComponent {
                 .transform(
                     *arrayOf<Transformation<Bitmap>>(
                         path?.let { CenterCrop() } ?: FitCenter(),
-                        RoundedCorners(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))
+                        TopRightRoundedCornerTransform(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))
                     )
                 )
         )
@@ -512,4 +510,64 @@ fun EditText.afterTextChanged(cb: (String) -> Unit) {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
+}
+
+fun Bitmap.roundedSquareBitmap(dimensionPixelSize: Int, tl: Boolean, tr: Boolean, br: Boolean, bl: Boolean): Bitmap {
+    val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+
+    val paint = Paint()
+    val rect = Rect(0, 0, width + dimensionPixelSize, height + dimensionPixelSize)
+
+    paint.isAntiAlias = true
+    canvas.drawARGB(0, 0, 0, 0)
+    paint.color = Color.WHITE
+
+    canvas.drawPath(Path().roundedRect(0f, 0f, width.toFloat(), height.toFloat(),
+            dimensionPixelSize.toFloat(), dimensionPixelSize.toFloat(), tl, tr, br, bl), paint)
+    paint.xfermode = PorterDuffXfermode1(PorterDuff.Mode.SRC_IN)
+    canvas.drawBitmap(this, rect, rect, paint)
+    return output
+}
+
+fun Path.roundedRect(left: Float, top: Float, right: Float, bottom: Float, rx: Float, ry: Float,
+                     tl: Boolean, tr: Boolean, br: Boolean, bl: Boolean): Path {
+    val width = right - left
+    val height = bottom - top
+    val widthMinusCorners = (width - (2 * rx))
+    val heightMinusCorners = (height - (2 * ry))
+
+    moveTo(right, top + ry)
+    if (tr)
+        rQuadTo(0f, -ry, -rx, -ry)//top-right corner
+    else {
+        rLineTo(0f, -ry)
+        rLineTo(-rx, 0f)
+    }
+    rLineTo(-widthMinusCorners, 0f)
+    if (tl)
+        rQuadTo(-rx, 0f, -rx, ry) //top-left corner
+    else {
+        rLineTo(-rx, 0f)
+        rLineTo(0f, ry)
+    }
+    rLineTo(0f, heightMinusCorners)
+
+    if (bl)
+        rQuadTo(0f, ry, rx, ry)//bottom-left corner
+    else {
+        rLineTo(0f, ry)
+        rLineTo(rx, 0f)
+    }
+
+    rLineTo(widthMinusCorners, 0f)
+    if (br)
+        rQuadTo(rx, 0f, rx, -ry) //bottom-right corner
+    else {
+        rLineTo(rx, 0f)
+        rLineTo(0f, -ry)
+    }
+    rLineTo(0f, -heightMinusCorners)
+    close()//Given close, last lineto can be removed.
+    return this
 }
