@@ -84,8 +84,9 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
      */
     private fun checkLanguage() {
         if (accountManager.isLoggedIn) {
-            if (sessionInteractor.locale.language != sessionInteractor.appLanguage) {
-                sessionInteractor.appLanguage = sessionInteractor.locale.language
+            val language = sessionInteractor.locale.language
+            if (language != sessionInteractor.appLanguage) {
+                sessionInteractor.appLanguage = language
                 viewState.recreate()
             }
         }
