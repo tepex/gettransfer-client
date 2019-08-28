@@ -34,4 +34,5 @@ interface SettingsView : BaseView {
     fun showLanguageChooser()
 
     fun hideSomeDividers()
+    fun recreate()
 }

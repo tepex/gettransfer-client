@@ -1,8 +1,5 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.data.model.GTAddressEntity
-import com.kg.gettransfer.sys.data.EndpointEntity
-
 interface PreferencesCache {
     var accessToken: String
     var userEmail: String?
@@ -12,6 +9,7 @@ interface PreferencesCache {
     var mapCountNewMessages: Map<Long, Int>
     var mapCountViewedOffers: Map<Long, Int>
     var eventsCount: Int
+    var appLanguage: String
 
     fun logout()
     fun addListener(listener: PreferencesListener)

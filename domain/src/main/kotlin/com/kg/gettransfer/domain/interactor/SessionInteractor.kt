@@ -30,6 +30,7 @@ class SessionInteractor(
         get() = account.locale
         set(value) {
             account.locale = value
+            sessionRepository.appLanguage = value.language
             geoRepository.initGeocoder(value)
         }
 
@@ -50,6 +51,12 @@ class SessionInteractor(
         get() = account.isEmailNotificationsEnabled
         set(value) {
             account.isEmailNotificationsEnabled = value
+        }
+
+    var appLanguage: String
+        get() = sessionRepository.appLanguage
+        set(value) {
+            sessionRepository.appLanguage = value
         }
 
     suspend fun coldStart() = sessionRepository.coldStart()

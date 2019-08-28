@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
-
 import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.view.BaseView
@@ -10,7 +8,6 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.core.inject
 
 open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
 

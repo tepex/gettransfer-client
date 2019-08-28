@@ -62,6 +62,10 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         toolbar.toolbar_title.text = getString(R.string.LNG_MENU_TITLE_SETTINGS)
     }
 
+    override fun recreate() {
+        requireActivity().recreate()
+    }
+
     override fun initGeneralSettingsLayout() {
         Timber.d("current locale: ${Locale.getDefault()}")
         settingsLanguage.setOnClickListener { presenter.onLanguageClicked() }

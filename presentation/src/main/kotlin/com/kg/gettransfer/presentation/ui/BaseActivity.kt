@@ -46,8 +46,8 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
+import com.kg.gettransfer.domain.model.Account
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.isVisible
@@ -74,6 +74,7 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
+import java.util.*
 
 @Suppress("TooManyFunctions")
 abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
@@ -337,12 +338,16 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     // protected fun openScreen(screen: String) { router.navigateTo(screen) }
 
     @CallSuper
-    override fun attachBaseContext(newBase: Context?) {
-        if (newBase != null) {
-            super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
-        } else {
-            super.attachBaseContext(null)
-        }
+    override fun attachBaseContext(newBase: Context) {
+        val account = sessionInteractor.account
+
+        // if account is empty  we need to use locale from preferences
+        // because locale from Account.EMPTY is equals Locale.getDefault()
+        // and then it'll be always show wrong locale
+        val locale = if (account == Account.EMPTY) Locale(sessionInteractor.appLanguage)
+        else sessionInteractor.locale
+
+        super.attachBaseContext(localeManager.updateResources(newBase, locale))
     }
 
     private fun showLoading() {
