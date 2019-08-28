@@ -6,6 +6,8 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.extensions.hideKeyboard
+import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.view.BaseView
 import io.sentry.Sentry
@@ -36,6 +38,18 @@ abstract class BaseFragment : MvpAppCompatFragment(), KoinComponent, BaseView {
         }
     }
 
+    protected fun showKeyboard() {
+        requireActivity().currentFocus?.showKeyboard()
+    }
+
+    protected fun hideKeyboard(): Boolean {
+        requireActivity().currentFocus?.let { focus ->
+            focus.hideKeyboard()
+            focus.clearFocus()
+        }
+        return true
+    }
+
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if (block) {
             if (useSpinner) showLoading()
@@ -56,9 +70,9 @@ abstract class BaseFragment : MvpAppCompatFragment(), KoinComponent, BaseView {
         Sentry.capture(e)
         if (e.code != ApiException.NETWORK_ERROR) {
             Utils.showError(
-                    requireContext(),
-                    false,
-                    getString(R.string.LNG_ERROR) + ": " + e.message
+                requireContext(),
+                false,
+                getString(R.string.LNG_ERROR) + ": " + e.message
             )
         }
     }
@@ -70,14 +84,14 @@ abstract class BaseFragment : MvpAppCompatFragment(), KoinComponent, BaseView {
 
     override fun setTransferNotFoundError(transferId: Long) {
         BottomSheetDialog
-                .newInstance()
-                .apply {
-                    imageId = R.drawable.transfer_error
-                    title = getString(R.string.LNG_ERROR)
-                    text = getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString())
-                    isShowCloseButton = true
-                    isShowOkButton = false
-                }
-                .show(childFragmentManager)
+            .newInstance()
+            .apply {
+                imageId = R.drawable.transfer_error
+                title = getString(R.string.LNG_ERROR)
+                text = getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString())
+                isShowCloseButton = true
+                isShowOkButton = false
+            }
+            .show(childFragmentManager)
     }
 }

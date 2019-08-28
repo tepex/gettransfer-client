@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.ui.SearchFragment"
-    android:background="@color/toolbar_bg">
+    android:background="@color/colorWhite">
 
     <include
         android:id="@+id/toolbarLayout"
-        layout="@layout/toolbar_nav_back" />
+        layout="@layout/toolbar_search" />
 
     <com.kg.gettransfer.presentation.ui.custom.SearchFormView
         android:id="@+id/searchForm"
@@ -31,8 +31,8 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollViewResults"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/pointOnMap"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rv_popularList"
         android:layout_below="@+id/separator">
 
         <LinearLayout
@@ -41,40 +41,27 @@
             android:background="@android:color/white"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/address_title"
-                style="@style/list_title"
-                android:text="@string/LNG_SEARCH_RECENT_PLACES"
-                android:visibility="gone" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_addressList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/popular_title"
-                style="@style/list_title"
-                android:text="@string/LNG_SEARCH_POPULAR_PLACES" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_popularList"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/minHeight_toDraw_AllPopularPlaces"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/search_fragment_rv_padding"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <include
-        android:id="@+id/pointOnMap"
-        layout="@layout/point_on_map"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_popularList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/search_fragment_rv_padding"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal" />
 
 </RelativeLayout>

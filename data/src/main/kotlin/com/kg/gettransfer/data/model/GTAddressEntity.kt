@@ -40,5 +40,5 @@ fun GTAddressEntity.map() =
         if (lat == null || lon == null) CityPoint.EMPTY else CityPoint(address, Point(lat, lon), null),
         placeTypes,
         address,
-        null
+        variants
     )

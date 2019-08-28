@@ -17,8 +17,6 @@ class AddressAdapter(
     private val selectListener: (GTAddress) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var isLastAddresses = true
-
     init {
         selected = RecyclerView.NO_POSITION
     }
@@ -29,7 +27,7 @@ class AddressAdapter(
         AddressViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.address_list_item, parent, false))
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
-        (holder as AddressViewHolder).bindViews(list[pos], isLastAddresses) {
+        (holder as AddressViewHolder).bindViews(list[pos]) {
             notifyDataSetChanged()
             selectListener(it)
         }
@@ -39,12 +37,14 @@ class AddressAdapter(
         RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bindViews(address: GTAddress, isLastAddress: Boolean, listener: ClickHandler) = with(containerView) {
+        fun bindViews(address: GTAddress, listener: ClickHandler) = with(containerView) {
             addressItem.text = address.address
-            addressSecondaryItem.text = address.variants?.second
-            setSelected(selected == adapterPosition)
+            with(addressSecondaryItem) {
+                isVisible = !address.variants?.second.isNullOrEmpty()
+                addressSecondaryItem.text = address.variants?.second
+            }
+            isSelected = selected == adapterPosition
 
-            icon_for_last_place.isVisible = isLastAddress
             setOnClickListener {
                 selected = adapterPosition
                 listener(address)
@@ -62,7 +62,6 @@ class AddressAdapter(
             list.minusElement(item)
             notifyItemRemoved(it)
         }
-
     }
 
     companion object {

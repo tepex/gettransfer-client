@@ -79,7 +79,7 @@
 	<dimen name="search_sub_title_marginTop">8dp</dimen>
 	<dimen name="search_main_textSize">17sp</dimen>
 	<dimen name="search_main_paddingBottom">8dp</dimen>
-	<dimen name="search_main_clear_paddingBottom">@dimen/search_main_paddingBottom</dimen>
+	<dimen name="search_main_clear_padding">5dp</dimen>
 
 	<dimen name="pin_clickable_width">44dp</dimen>
 	<dimen name="pin_clickable_height">44dp</dimen>
@@ -174,18 +174,21 @@
 
 	<!-- Search address -->
 	<dimen name="search_fragment_padding_end">16dp</dimen>
-	<dimen name="address_item_size">16sp</dimen>
-	<dimen name="address_secondary_item_size">12sp</dimen>
-	<dimen name="address_item_padding_top">8dp</dimen>
-	<dimen name="address_item_padding_start">12dp</dimen>
+	<dimen name="address_item_text_size">12sp</dimen>
+	<dimen name="address_item_padding">3dp</dimen>
+	<dimen name="address_item_horizontal_margin">8dp</dimen>
+	<dimen name="popular_place_item_margin_start">8dp</dimen>
+	<dimen name="popular_place_title_margin_end">16dp</dimen>
+	<dimen name="popular_place_icon_size">24dp</dimen>
+	<dimen name="popular_place_padding">8dp</dimen>
+	<dimen name="popular_place_margin">4dp</dimen>
+	<dimen name="popular_place_elevation">2dp</dimen>
 	<dimen name="address_item_icons_margin_top">30dp</dimen>
 	<dimen name="address_item_icon_margin_default">8dp</dimen>
-	<dimen name="address_item_icon_margin_height_width">30dp</dimen>
 	<dimen name="title_text_size">12sp</dimen>
-	<dimen name="minHeight_toDraw_AllPopularPlaces">138dp</dimen>
 	<dimen name="search_marginStart">56dp</dimen>
-	<dimen name="hourly_arrow_margin_end">11dp</dimen>
 	<dimen name="search_fragment_separator_horizontal_margin">16dp</dimen>
+	<dimen name="search_fragment_rv_padding">4dp</dimen>
 
 
 	<!-- Settings -->
