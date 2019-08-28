@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import androidx.constraintlayout.widget.ConstraintSet.VISIBLE
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
@@ -25,6 +26,7 @@ import org.hamcrest.TypeSafeMatcher
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
+import androidx.test.espresso.contrib.PickerActions
 
 @RunWith(AndroidJUnit4::class)
 class formTransferTest{
@@ -42,22 +44,7 @@ class formTransferTest{
         onView(Matchers.allOf(ViewMatchers.withId(R.id.nav_settings))).perform(ViewActions.click())
         onView(Matchers.allOf(ViewMatchers.withId(R.id.settingsProfile))).perform(ViewActions.click())
 
-        val appCompatEditText2 = onView(
-                allOf(withId(R.id.fieldText),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.fieldLayout),
-                                        0),
-                                0),
-                        isDisplayed()))
-        appCompatEditText2.perform(ViewActions.replaceText("mygtracc1@gmail.com"), ViewActions.closeSoftKeyboard())
-
-        onView(allOf(withId(R.id.etPassword))).perform(typeText("PassRR11"))
-        onView(Matchers.allOf(ViewMatchers.withId(R.id.btnLogin))).perform(ViewActions.click())
-
-        Thread.sleep(7000)
-
-        onView(Matchers.allOf(ViewMatchers.withId(R.id.nav_order))).perform(ViewActions.click())
+        profileOnboardingAnyway()
 
         Thread.sleep(7000)
         val appCompatEditText = onView(
@@ -113,8 +100,39 @@ class formTransferTest{
         linearLayout2.perform(click())
 
         Thread.sleep(7000)
+        onView(withId(R.id.rvTransferType)).perform(ViewActions.click())
+        onView(withId(R.id.rvTransferType)).perform(ViewActions.swipeUp())
+        Thread.sleep(500)
+        onView(withId(R.id.transfer_date_time_field)).perform(ViewActions.click())
+    onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
+        .perform(PickerActions.setDate(2019, 9,28))
 
 
+        val appCompatButton = onView(
+                allOf(withId(android.R.id.button1), withText("OK"),
+                        childAtPosition(
+                                allOf(withClassName(Matchers.`is`("com.android.internal.widget.ButtonBarLayout")),
+                                        childAtPosition(
+                                                withClassName(Matchers.`is`("android.widget.LinearLayout")),
+                                                3)),
+                                3),
+                        isDisplayed()))
+        appCompatButton.perform(click())
+
+        val appCompatButton2 = onView(
+                allOf(withId(android.R.id.button1), withText("OK"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(Matchers.`is`("android.widget.LinearLayout")),
+                                        0),
+                                2),
+                        isDisplayed()))
+        appCompatButton2.perform(click())
+        onView(withId(R.id.rvTransferType)).perform(ViewActions.swipeUp())
+
+        onView(withId(R.id.switchAgreement)).perform(ViewActions.click())
+        onView(withId(R.id.btnGetOffers)).perform(ViewActions.click())
+//img_plus_seat
     }
     fun ViewInteraction.isDisplayed(): Boolean {
         try {
@@ -136,7 +154,33 @@ class formTransferTest{
 
         }
     }
+    fun profileOnboardingAnyway () {
+        if(onView(withId(R.id.btnLogout)).isDisplayed()) {
+            //view is displayed logic
 
+            onView(Matchers.allOf(withContentDescription("Navigate up"))).perform(ViewActions.click())
+//            onView(Matchers.allOf(ViewMatchers.withId(R.id.btnNext))).perform(ViewActions.click())
+            onView(Matchers.allOf(ViewMatchers.withId(R.id.nav_order))).perform(ViewActions.click())
+
+        } else {
+            val appCompatEditText2 = onView(
+                    allOf(withId(R.id.fieldText),
+                            childAtPosition(
+                                    childAtPosition(
+                                            withId(R.id.fieldLayout),
+                                            0),
+                                    0),
+                            isDisplayed()))
+            appCompatEditText2.perform(ViewActions.replaceText("mygtracc1@gmail.com"), ViewActions.closeSoftKeyboard())
+
+            onView(allOf(withId(R.id.etPassword))).perform(typeText("PassRR11"))
+            onView(Matchers.allOf(ViewMatchers.withId(R.id.btnLogin))).perform(ViewActions.click())
+
+            Thread.sleep(7000)
+
+            onView(Matchers.allOf(ViewMatchers.withId(R.id.nav_order))).perform(ViewActions.click())
+        }
+    }
 
     private fun childAtPosition(
             parentMatcher: Matcher<View>, position: Int): Matcher<View> {
