@@ -9,7 +9,7 @@
 	tools:context=".presentation.ui.AboutActivity"
 	android:background="@color/colorWhite">
 
-	<ImageView
+	<com.kg.gettransfer.presentation.ui.custom.SingleClickButton
 		android:id="@+id/btnClose"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -17,6 +17,7 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		android:layout_marginTop="@dimen/about_activity_close_button_margin"
 		android:layout_marginEnd="@dimen/about_activity_close_button_margin"
+		style="@style/BorderlessBackground"
 		app:srcCompat="@drawable/ic_close_x"/>
 
 	<androidx.viewpager.widget.ViewPager
