@@ -75,6 +75,20 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
         if (restart) initConfigs()
         initDebugMenu()
         initSettings()
+        checkLanguage()
+    }
+
+    /**
+     * check language after login and if it difference then recreate activity
+     * to change language for fragments
+     */
+    private fun checkLanguage() {
+        if (accountManager.isLoggedIn) {
+            if (sessionInteractor.locale.language != sessionInteractor.appLanguage) {
+                sessionInteractor.appLanguage = sessionInteractor.locale.language
+                viewState.recreate()
+            }
+        }
     }
 
     private fun initSettings() {
