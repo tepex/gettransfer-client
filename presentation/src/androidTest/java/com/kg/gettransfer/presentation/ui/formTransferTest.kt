@@ -7,6 +7,8 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
@@ -35,6 +37,8 @@ class formTransferTest{
 
         Thread.sleep(7000)
 
+        passOnboardingAnyway()
+
         onView(Matchers.allOf(ViewMatchers.withId(R.id.nav_settings))).perform(ViewActions.click())
         onView(Matchers.allOf(ViewMatchers.withId(R.id.settingsProfile))).perform(ViewActions.click())
 
@@ -52,7 +56,88 @@ class formTransferTest{
         onView(Matchers.allOf(ViewMatchers.withId(R.id.btnLogin))).perform(ViewActions.click())
 
         Thread.sleep(7000)
+
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.nav_order))).perform(ViewActions.click())
+
+        Thread.sleep(7000)
+        val appCompatEditText = onView(
+                allOf(withId(R.id.addressField),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.searchFrom),
+                                        0),
+                                1),
+                        isDisplayed()))
+        appCompatEditText.perform(click())
+        Thread.sleep(7000)
+        val appCompatEditText3 = onView(
+                allOf(withId(R.id.addressField),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.searchFrom),
+                                        0),
+                                1),
+                        isDisplayed()))
+        appCompatEditText3.perform(click()).perform(ViewActions.replaceText("Moscow"), ViewActions.closeSoftKeyboard())
+        Thread.sleep(7000)
+        val linearLayout = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.rv_addressList),
+                                childAtPosition(
+                                        withClassName(Matchers.`is`("android.widget.LinearLayout")),
+                                        1)),
+                        0),
+                        isDisplayed()))
+        linearLayout.perform(click())
+
+        val appCompatEditText4 = onView(
+                allOf(withId(R.id.addressField),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.searchTo),
+                                        0),
+                                1),
+                        isDisplayed()))
+        appCompatEditText4
+                .perform(click())
+                .perform(ViewActions.replaceText("Saint Petersburg"))
+        Thread.sleep(7000)
+        val linearLayout2 = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.rv_addressList),
+                                childAtPosition(
+                                        withClassName(Matchers.`is`("android.widget.LinearLayout")),
+                                        1)),
+                        0),
+                        isDisplayed()))
+        linearLayout2.perform(click())
+
+        Thread.sleep(7000)
+
+
     }
+    fun ViewInteraction.isDisplayed(): Boolean {
+        try {
+            check(matches(ViewMatchers.isDisplayed()))
+            return true
+        } catch (e: NoMatchingViewException) {
+            return false
+        }
+    }
+
+    fun passOnboardingAnyway () {
+        if(onView(withId(R.id.btnNext)).isDisplayed()) {
+            //view is displayed logic
+
+            onView(Matchers.allOf(ViewMatchers.withId(R.id.btnNext))).perform(ViewActions.click())
+            onView(Matchers.allOf(ViewMatchers.withId(R.id.btnNext))).perform(ViewActions.click())
+
+        } else {
+
+        }
+    }
+
+
     private fun childAtPosition(
             parentMatcher: Matcher<View>, position: Int): Matcher<View> {
 
@@ -69,4 +154,5 @@ class formTransferTest{
             }
         }
     }
+
 }
