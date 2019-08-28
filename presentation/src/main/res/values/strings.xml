@@ -411,4 +411,6 @@
     <string name="LNG_TELEGRAM">Telegram</string>
 
     <string name="LNG_DRIVER_ON_MAP">Show driver on map</string>
+
+    <string name="LNG_SELECT_POINT_MAP">Point on map</string>
 </resources>

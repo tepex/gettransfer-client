@@ -147,15 +147,16 @@
     </style>
 
     <!-- Search address -->
-    <style name="address_item" parent="sf_font">
-        <item name="android:textSize">@dimen/address_item_size</item>
-        <item name="android:paddingTop">@dimen/address_item_padding_top</item>
-        <item name="android:paddingStart">@dimen/address_item_padding_start</item>
+    <style name="address_item" parent="sf_font_pro_text_semibold_black">
+        <item name="android:textSize">@dimen/address_item_text_size</item>
+        <item name="android:layout_marginTop">@dimen/address_item_padding</item>
     </style>
-    <style name="address_secondary_item" parent="sf_font">
-        <item name="android:textColor">@color/address_item_subtitle</item>
-        <item name="android:textSize">@dimen/address_secondary_item_size</item>
-        <item name="android:paddingStart">@dimen/address_item_padding_start</item>
+    <style name="address_secondary_item" parent="sf_font_pro_text_regular_grey">
+        <item name="android:textSize">@dimen/address_item_text_size</item>
+    </style>
+    <style name="popular_place_item" parent="sf_font_pro_text_regular_grey">
+        <item name="android:textSize">@dimen/address_item_text_size</item>
+        <item name="android:layout_marginStart">@dimen/popular_place_item_margin_start</item>
     </style>
     <style name="list_title" parent="sf_font">
         <item name="android:layout_marginStart">@dimen/left_margin_title</item>

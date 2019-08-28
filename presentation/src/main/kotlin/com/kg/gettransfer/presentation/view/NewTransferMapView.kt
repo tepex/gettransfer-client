@@ -11,4 +11,10 @@ interface NewTransferMapView : BaseNewTransferView {
     fun setMapPoint(point: LatLng, withAnimation: Boolean, showBtnMyLocation: Boolean)
     fun moveCenterMarker(point: LatLng)
     fun setMarkerElevation(up: Boolean)
+
+    fun initUIForSelectedField(field: String)
+    fun setAddress(address: String)
+    fun blockAddressField()
+
+    fun navigateBack()
 }

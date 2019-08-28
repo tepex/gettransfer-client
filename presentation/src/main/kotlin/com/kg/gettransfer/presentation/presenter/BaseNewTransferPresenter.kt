@@ -31,7 +31,7 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 @Suppress("TooManyFunctions")
-open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>(), KoinComponent {
+abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>(), KoinComponent {
     protected val analytics: Analytics by inject()
 
     protected val worker: WorkerManager by inject { parametersOf("BaseNewTransferPresenter") }
@@ -45,71 +45,22 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     protected var lastCurrentLocation: LatLng? = null
 
-    open fun updateView() {
-    }
-
-    open fun fillViewFromState(selectField: String? = null) {
-        worker.main.launch {
-            if (selectField != null) {
-                changeUsedField(selectField)
-            } else {
-                if (!orderInteractor.isAddressesValid()) {
-                    changeUsedField(FIELD_FROM)
-                } else {
-                    changeUsedField(getPreferences().getModel().selectedField)
-                }
-            }
-        }
-
-        if (fillAddressFieldsCheckIsEmpty()) {
-            updateCurrentLocation()
-        }
-
-        viewState.setHourlyDuration(orderInteractor.hourlyDuration)
-        viewState.updateTripView(isHourly())
-    }
-
-    fun switchUsedField() {
-        worker.main.launch {
-            when (getPreferences().getModel().selectedField) {
-                FIELD_FROM -> changeUsedField(FIELD_TO)
-                FIELD_TO   -> changeUsedField(FIELD_FROM)
-            }
-        }
-    }
-
-    open fun changeUsedField(field: String) {
-        worker.main.launch {
-            withContext(worker.bg) { setSelectedField(field) }
-        }
-        when (field) {
-            FIELD_FROM -> viewState.selectFieldFrom()
-            FIELD_TO   -> viewState.setFieldTo()
-        }
-    }
+    abstract fun updateView()
 
     /**
      * Fill address fields
      * @return true - from address is empty
      */
-    fun fillAddressFieldsCheckIsEmpty(): Boolean {
-        with(orderInteractor) {
-            viewState.setAddressTo(to?.address ?: EMPTY_ADDRESS)
-            return from.also { viewState.setAddressFrom(it?.address ?: EMPTY_ADDRESS) } == null
-        }
-    }
+    abstract fun fillAddressFieldsCheckIsEmpty(): Boolean
 
-    fun updateCurrentLocation() {
-        updateCurrentLocationAsync()
+    fun updateCurrentLocation(isFromField: Boolean) {
+        updateCurrentLocationAsync(isFromField)
         worker.main.launch {
             withContext(worker.bg) { logIpapiRequest() }
         }
     }
 
-    private fun updateCurrentLocationAsync() {
-        worker.main.launch {
-            blockSelectedField(getPreferences().getModel().selectedField)
-        }
+    open fun updateCurrentLocationAsync(isFromField: Boolean) {
         viewState.defineAddressRetrieving { withGps ->
             worker.main.launch {
                 withContext<Unit>(worker.bg) {
@@ -121,18 +72,18 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
                             if (address?.cityPoint?.point != null) {
                                 withContext<Unit>(worker.main.coroutineContext) { setPointAddress(address) }
                             } else {
-                                setAddressInSelectedField(EMPTY_ADDRESS)
+                                setEmptyAddress()
                             }
                         } else {
-                            setAddressInSelectedField(EMPTY_ADDRESS)
+                            setEmptyAddress()
                         }
                     } else {
                         val result = geoInteractor.getMyLocationByIp()
                         logIpapiRequest()
                         if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
-                            withContext<Unit>(worker.main.coroutineContext) { setLocation(result.model) }
+                            withContext<Unit>(worker.main.coroutineContext) { setLocation(isFromField, result.model) }
                         } else {
-                            setAddressInSelectedField(EMPTY_ADDRESS)
+                            setEmptyAddress()
                         }
                     }
                 }
@@ -140,14 +91,14 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
         }
     }
 
-    private suspend fun setLocation(point: Point) = worker.main.launch {
+    private suspend fun setLocation(isFromField: Boolean, point: Point) = worker.main.launch {
         val result = withContext(worker.bg) {
-            orderInteractor.getAddressByLocation(true, point)
+            orderInteractor.getAddressByLocation(isFromField, point)
         }
         if (result.error == null && result.model.cityPoint.point != null) {
             setPointAddress(result.model)
         } else {
-            setAddressInSelectedField(EMPTY_ADDRESS)
+            setEmptyAddress()
         }
     }
 
@@ -160,53 +111,15 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
         }
     }
 
+    abstract fun setEmptyAddress()
+
     private fun showBtnMyLocation(point: LatLng) = lastCurrentLocation == null || point != lastCurrentLocation
 
-    fun blockSelectedField(field: String) {
-        when (field) {
-            FIELD_FROM -> viewState.blockFromField()
-            FIELD_TO   -> viewState.blockToField()
-        }
+    fun navigateToFindAddress(isClickTo: Boolean = false, isCameFromMap: Boolean = false) {
+        viewState.goToSearchAddress(isClickTo, isCameFromMap)
     }
 
-    fun setAddressInSelectedField(address: String) {
-        worker.main.launch {
-            when (getPreferences().getModel().selectedField) {
-                FIELD_FROM -> viewState.setAddressFrom(address)
-                FIELD_TO   -> viewState.setAddressTo(address)
-            }
-        }
-    }
-
-    fun tripModeSwitched(hourly: Boolean) {
-        updateDuration(if (hourly) orderInteractor.hourlyDuration ?: MIN_HOURLY else null)
-        viewState.updateTripView(hourly)
-        worker.main.launch {
-            if (getPreferences().getModel().selectedField == FIELD_TO) {
-                changeUsedField(FIELD_FROM)
-            }
-        }
-    }
-
-    fun updateDuration(hours: Int?) {
-        orderInteractor.apply {
-            hourlyDuration = hours
-            viewState.setHourlyDuration(hourlyDuration)
-        }
-    }
-
-    fun isHourly() = orderInteractor.hourlyDuration != null
-
-    fun navigateToFindAddress(addressFrom: String, addressTo: String, isClickTo: Boolean = false, isCameFromMap: Boolean = false) {
-        viewState.goToSearchAddress(addressFrom, addressTo, isClickTo, isCameFromMap)
-    }
-
-    fun onNextClick(block: (Boolean) -> Unit) {
-        if (orderInteractor.isCanCreateOrder()) {
-            block(true)
-            viewState.goToCreateOrder()
-        }
-    }
+    abstract fun onNextClick()
 
     private fun comparePointsWithRounding(point1: LatLng?, point2: LatLng?): Boolean {
         if (point2 == null || point1 == null) return false
@@ -220,10 +133,6 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
 
     private fun logIpapiRequest() = analytics.logSingleEvent(Analytics.EVENT_IPAPI_REQUEST)
 
-    fun showHourlyDurationDialog() {
-        viewState.showHourlyDurationDialog(orderInteractor.hourlyDuration)
-    }
-
     override fun onDestroy() {
         worker.cancel()
         super.onDestroy()
@@ -232,6 +141,5 @@ open class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter<BV>
     companion object {
         const val MIN_HOURLY = 2
         const val DELTA_MAX = 0.000_001
-        const val EMPTY_ADDRESS = ""
     }
 }

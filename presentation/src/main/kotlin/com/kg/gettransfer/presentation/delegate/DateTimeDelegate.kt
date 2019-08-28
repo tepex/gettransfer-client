@@ -44,9 +44,11 @@ class DateTimeDelegate : KoinComponent {
     val returnOrderedTime
         get() = orderInteractor.orderReturnTime?.simpleFormat()
 
-    fun validateWith(errorAction: (Boolean) -> Unit) = compareDates().also { if (!it) errorAction(it) }
+    /*fun validateWith(errorAction: (Boolean) -> Unit) = compareDates().also { if (!it) errorAction(it) }
 
-    fun validate() = validateWith { }
+    fun validate() = validateWith { }*/
+
+    fun validate() = compareDates()
 
     // check exactly what is in domain
     private fun compareDates() =

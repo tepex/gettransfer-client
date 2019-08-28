@@ -8,13 +8,11 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isGone
-import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.ui.SearchFragment
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 import kotlinx.android.synthetic.main.a_b_orange_view.view.hourly_point
-import kotlinx.android.synthetic.main.a_b_orange_view.view.link_line
 import kotlinx.android.synthetic.main.a_b_orange_view.view.tv_b_point
 import kotlinx.android.synthetic.main.search_address.*
 import kotlinx.android.synthetic.main.search_form.*
@@ -60,8 +58,7 @@ class SearchFormView @JvmOverloads constructor(
     }
 
     fun changeViewToHourlyDuration() {
-        searchTo.isGone  = true
-        link_line.isInvisible = true
+        searchTo.isGone = true
         tv_b_point.isVisible = false
         hourly_point.isVisible = true
         rl_hourly.isVisible = true

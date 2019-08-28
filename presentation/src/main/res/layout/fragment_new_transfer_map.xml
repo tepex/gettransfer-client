@@ -39,8 +39,8 @@
     <FrameLayout
         android:id="@+id/search_content"
         android:layout_width="match_parent"
-        android:layout_height="115dp"
-        android:layout_above="@+id/div"
+        android:layout_height="84dp"
+        android:layout_above="@+id/btnNext"
         android:background="@drawable/back_top_rounded">
 
         <com.facebook.shimmer.ShimmerFrameLayout
@@ -49,26 +49,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:shimmer_auto_start="true"
-            app:shimmer_duration="2400">
-            <include layout="@layout/view_shimmer_search_item" />
+            app:shimmer_duration="2400"
+            android:layout_gravity="center_vertical">
+            <include layout="@layout/view_shimmer_map_screen_search_item" />
         </com.facebook.shimmer.ShimmerFrameLayout>
 
-        <com.kg.gettransfer.presentation.ui.custom.SearchFormMainView
-            android:visibility="gone"
+        <com.kg.gettransfer.presentation.ui.custom.SearchFormMapView
             android:id="@+id/search_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:ivSelectFieldFromGone="true"
-            app:roundedTopCorners="true" />
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"/>
     </FrameLayout>
-
-    <View
-        android:id="@+id/div"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_above="@+id/btnNext"
-        android:layout_height="@dimen/create_transfer_divider_height"
-        android:background="@color/colorDividerGray"/>
 
     <Button
         android:id="@+id/btnNext"
@@ -79,12 +71,11 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/btn_next_main_margin_16dp"
+        android:layout_marginBottom="@dimen/btn_next_main_margin_16dp"
         android:background="@drawable/btn_bg_rounded"
-        android:enabled="false"
+        android:enabled="true"
         android:text="@string/LNG_NEXT"
         android:textColor="@color/colorWhite" />
-
 
     <View
         android:id="@+id/viewGradient"
@@ -126,16 +117,6 @@
         android:elevation="2dp"
         android:focusable="true"
         app:srcCompat="@drawable/ic_my_location" />
-
-    <com.kg.gettransfer.presentation.ui.custom.SwitcherView
-        android:id="@+id/switch_panel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/search_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="10dp"
-        app:switcher_title="@string/LNG_PER_HOUR" />
 
 </RelativeLayout>
 

@@ -75,7 +75,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
             addressField.requestFocus()
             parent.onSearchFieldEmpty(isTo)
         }
-        fl_clearBtn.setOnClickListener(clearListener)
         im_clearBtn.setOnClickListener(clearListener)
     }
 
@@ -87,7 +86,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         this.isTo = isTo
         addressField.setOnFocusChangeListener { _, hasFocus ->
             this.hasFocus = hasFocus
-            if (!hasFocus) fl_clearBtn.isVisible = false
+            if (!hasFocus) im_clearBtn.isVisible = false
             else {
                 setClearButtonVisibility()
                 parent.presenter.isTo = isTo
@@ -187,8 +186,8 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun setClearButtonVisibility() {
-        if (text.isBlank()) fl_clearBtn.isInvisible = true
-        else if (hasFocus)  fl_clearBtn.isInvisible = false
+        if (text.isBlank()) im_clearBtn.isInvisible = true
+        else if (hasFocus)  im_clearBtn.isInvisible = false
     }
 
     fun changeFocus() {

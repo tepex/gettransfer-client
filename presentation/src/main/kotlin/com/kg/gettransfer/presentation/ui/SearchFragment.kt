@@ -38,8 +38,7 @@ import com.kg.gettransfer.presentation.view.SearchView
 
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.search_form.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
+import kotlinx.android.synthetic.main.toolbar_search.view.*
 
 class SearchFragment : BaseFragment(), SearchView {
 
@@ -52,7 +51,7 @@ class SearchFragment : BaseFragment(), SearchView {
     fun createSearchPresenter() = SearchPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_search, container, false)
+        inflater.inflate(R.layout.fragment_search, container, false)
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,8 +59,6 @@ class SearchFragment : BaseFragment(), SearchView {
         setupToolbar()
 
         predefinedPopularPlaces = initPredefinedPopularPlaces()
-
-        pointOnMap.setOnClickListener { presenter.selectFinishPointOnMap() }
     }
 
     /**
@@ -74,7 +71,6 @@ class SearchFragment : BaseFragment(), SearchView {
 
             scrollViewResults.setOnTouchListener(onTouchListener)
             rv_addressList.setOnTouchListener(onTouchListener)
-            rv_popularList.setOnTouchListener(onTouchListener)
 
             initSearchFields()
             if (!presenter.isHourly()) {
@@ -82,6 +78,7 @@ class SearchFragment : BaseFragment(), SearchView {
                 ivInverseWay.setOnClickListener { presenter.inverseWay() }
             }
             presenter.init()
+            showKeyboard()
         }
     }
 
@@ -109,12 +106,10 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     private fun setupToolbar() {
-        toolbar.ivBack.setThrottledClickListener {
+        toolbarLayout.ivBack.setThrottledClickListener {
             hideKeyboard()
             Handler().postDelayed( {goToBack()}, 500)
         }
-        toolbar.toolbar_title.text = getString(R.string.LNG_SEARCH)
-
     }
 
 
@@ -124,6 +119,7 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     private fun initPredefinedPopularPlaces() = listOf(
+        PopularPlace(getString(R.string.LNG_SELECT_POINT_MAP), R.drawable.btn_pin_location),
         PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_AIRPORT), R.drawable.popular_place_airport),
         PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_STATION), R.drawable.popular_place_railway),
         PopularPlace(getString(R.string.LNG_SEARCH_POPULAR_HOTEL), R.drawable.popular_place_hotel))
@@ -164,23 +160,19 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
-        popular_title.isVisible  = false
-        rv_popularList.isVisible = false
-        address_title.isVisible  = false
         rv_addressList.adapter?.let {
-            (it as AddressAdapter).isLastAddresses = false
-            it.updateList(list)
+            (it as AddressAdapter).updateList(list)
         }
     }
 
     override fun onFindPopularPlace(isToField: Boolean, place: String) = searchForm.findPopularPlace(isToField, place)
 
     override fun setSuggestedAddresses(addressesList: List<GTAddress>) {
-        popular_title.isVisible  = true
-        rv_popularList.isVisible = true
-        rv_popularList.adapter = PopularAddressAdapter(predefinedPopularPlaces) { presenter.onPopularSelected(it) }
-        rv_addressList.adapter = AddressAdapter(addressesList) { presenter.onAddressSelected(it) }.apply { isLastAddresses = true }
-        address_title.isVisible = addressesList.isNotEmpty()
+        rv_popularList.adapter = PopularAddressAdapter(predefinedPopularPlaces) {
+            if (it == predefinedPopularPlaces[0]) presenter.selectFinishPointOnMap()
+            else presenter.onPopularSelected(it)
+        }
+        rv_addressList.adapter = AddressAdapter(addressesList) { presenter.onAddressSelected(it) }
     }
 
     override fun markFieldFilled(isToField: Boolean) = searchForm.markFiledFilled(isToField)
@@ -189,8 +181,7 @@ class SearchFragment : BaseFragment(), SearchView {
 
     override fun onAddressError(message: Int, address: GTAddress, fieldTo: Boolean) {
         (rv_addressList.adapter as AddressAdapter).removeItem(address)
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG)
-                .show()
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
