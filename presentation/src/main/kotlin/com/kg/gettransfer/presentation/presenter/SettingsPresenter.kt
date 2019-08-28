@@ -90,7 +90,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     }
 
     override fun accountChanged() {
-        initSettings()
+        worker.main.launch { initSettings() }
     }
 
     private fun initGeneralSettings() = worker.main.launch {
