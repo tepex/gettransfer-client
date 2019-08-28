@@ -30,6 +30,7 @@ class SessionInteractor(
         get() = account.locale
         set(value) {
             account.locale = value
+            sessionRepository.appLanguage = value.language
             geoRepository.initGeocoder(value)
         }
 

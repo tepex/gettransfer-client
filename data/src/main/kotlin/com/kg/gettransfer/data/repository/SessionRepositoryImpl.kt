@@ -40,7 +40,6 @@ class SessionRepositoryImpl(
 
     override var account = Account.EMPTY
         private set(value) {
-            appLanguage = value.locale.language
             field = value
             notifyUpdateAccount()
         }
