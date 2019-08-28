@@ -83,6 +83,10 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         viewState.setAddress(currentAddress.cityPoint.name)
     }
 
+    override fun setEmptyAddress() {
+        viewState.setAddress(EMPTY_ADDRESS)
+    }
+
     private fun showBtnMyLocation(point: LatLng) = lastCurrentLocation == null || point != lastCurrentLocation
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {

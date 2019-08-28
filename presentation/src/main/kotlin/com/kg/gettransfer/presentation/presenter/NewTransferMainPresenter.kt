@@ -102,11 +102,17 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         setAddressInSelectedField(currentAddress.cityPoint.name)
     }
 
-    private fun setAddressInSelectedField(address: String) {
+    override fun setEmptyAddress() {
+        setAddressInSelectedField(null)
+    }
+
+    private fun setAddressInSelectedField(address: String?) {
         worker.main.launch {
-            when (getPreferences().getModel().selectedField) {
-                FIELD_FROM -> viewState.setAddressFrom(address)
-                FIELD_TO   -> viewState.setAddressTo(address)
+            with (address ?: EMPTY_ADDRESS) {
+                when (getPreferences().getModel().selectedField) {
+                    FIELD_FROM -> viewState.setAddressFrom(this)
+                    FIELD_TO   -> viewState.setAddressTo(this)
+                }
             }
         }
     }
