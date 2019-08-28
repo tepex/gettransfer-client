@@ -64,6 +64,7 @@ android {
                 keyPassword keystoreProperties['KEY_PASSWORD']
                 storeFile file(keystoreProperties['STORE_FILE'])
                 storePassword keystoreProperties['STORE_PASSWORD']
+
             }
         }
     }
@@ -304,6 +305,14 @@ dependencies {
     testImplementation libs.kotlintest_koin
     testImplementation libs.mockk
     testImplementation libs.slf4j_simple
+
+    //dependencies for espresso
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    //dependencies for ui tests
+    androidTestImplementation 'androidx.test:rules:1.1.1'
+    androidTestImplementation 'androidx.test.ext:truth:1.1.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
 }
 
 def getBuildNumber() {
