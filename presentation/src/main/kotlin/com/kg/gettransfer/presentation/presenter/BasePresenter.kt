@@ -84,10 +84,8 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     override fun onFirstViewAttach() {
         if (sessionInteractor.isInitialized) return
-        utils.launchSuspend {
-            fetchData { sessionInteractor.coldStart() }?.let { systemInitialized() }
-        }
         worker.main.launch {
+            withContext(worker.bg) { sessionInteractor.coldStart() }?.let { systemInitialized() }
             offerMapper.url = getPreferences().getModel().endpoint!!.url
         }
     }
@@ -153,35 +151,25 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     //open fun doingSomethingAfterSendingNewMessagesCached() {}
 
-    override fun onDestroy() {
-        compositeDisposable.cancel()
-        worker.cancel()
-        super.onDestroy()
-    }
-
     protected open fun systemInitialized() {}
 
-    fun networkConnected() {
-        utils.launchSuspend {
-            utils.asyncAwait { reviewInteractor.checkNotSendedReviews() }
-        }
+    fun networkConnected() = worker.main.launch {
+        withContext(worker.bg) { reviewInteractor.checkNotSendedReviews() }
     }
 
     internal fun sendEmail(emailCarrier: String?, transferId: Long?) {
-        utils.launchSuspend {
+        worker.main.launch {
             var transferID: Long? = null
             if (transferId == null) {
-                fetchData { transferInteractor.getAllTransfers() }
-                    ?.let { if (it.isNotEmpty()) transferID = it.first().id }
-            } else transferID = transferId
-
-            router.navigateTo(
-                Screens.SendEmail(
-                    emailCarrier,
-                    transferID,
-                    accountManager.remoteProfile.email
-                )
-            )
+                withContext(worker.bg) { transferInteractor.getAllTransfers() }.model?.let { list ->
+                    if (list.isNotEmpty()) {
+                        transferID = list.first().id
+                    }
+                }
+            } else {
+                transferID = transferId
+            }
+            router.navigateTo(Screens.SendEmail(emailCarrier, transferID, accountManager.remoteProfile.email))
         }
     }
 
@@ -190,15 +178,17 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     }
 
     protected fun registerPushToken() {
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
-            if (it.isSuccessful) {
-                it.result?.token?.let {
-                    log.debug("[FCM token]: $it")
-                    utils.launchSuspend {
-                        fetchResult { pushTokenInteractor.registerPushToken(it) }
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.result?.token?.let { token ->
+                    worker.main.launch {
+                        log.debug("[FCM token]: $token")
+                        withContext(worker.bg) { pushTokenInteractor.registerPushToken(token) }
                     }
                 }
-            } else log.warn("getInstanceId failed", it.exception)
+            } else {
+                log.warn("getInstanceId failed", task.exception)
+            }
         }
     }
 
@@ -211,22 +201,24 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 //                    .also { onNewOffer(it) }
 
     open suspend fun onNewOffer(offer: Offer): OfferModel {
-        utils.asyncAwait { offerInteractor.newOffer(offer) }
+        withContext(worker.bg) { offerInteractor.newOffer(offer) }
         return offerMapper.toView(offer).also { notificationManager.showOfferNotification(it) }
     }
 
     override fun onNewOfferEvent(offer: Offer) {
-        utils.launchSuspend {
-            if (isTransferPaid(offer.transferId)) return@launchSuspend
-            onNewOffer(offer.also { updateOfferEventsCounter(it) })
+        worker.main.launch {
+            if (!isTransferPaid(offer.transferId)) {
+                onNewOffer(offer.also { updateOfferEventsCounter(it) })
+            }
         }
     }
 
     private suspend fun isTransferPaid(transferId: Long) =
-        fetchDataOnly { transferInteractor.getTransfer(transferId) }?.let { it.paidPercentage > 0 } ?: false
+        withContext(worker.bg) { transferInteractor.getTransfer(transferId) }
+            .model?.let { it.paidPercentage > 0 } ?: false
 
     private suspend fun updateOfferEventsCounter(offer: Offer) {
-        fetchDataOnly { offerInteractor.getOffers(offer.transferId, true) }?.let { offersCached ->
+        withContext(worker.bg) { offerInteractor.getOffers(offer.transferId, true) }.model?.let { offersCached ->
             if (offersCached.find { offerCached -> offerCached.id == offer.id } != null) {
                 countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
                     countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
@@ -242,23 +234,24 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     }
 
     override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
-        if (!chatBadgeEvent.clearBadge) {
-            utils.launchSuspend {
-                fetchDataOnly { transferInteractor.getTransfer(chatBadgeEvent.transferId) }?.let { transfer ->
-                    increaseEventsMessagesCounter(chatBadgeEvent.transferId, transfer.unreadMessagesCount)
-                    notificationManager.showNewMessageNotification(
-                        chatBadgeEvent.transferId,
-                        transfer.unreadMessagesCount,
-                        true
-                    )
-                }
-            }
-        } else {
-            with(countEventsInteractor) {
-                mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
-                    this[chatBadgeEvent.transferId]?.let {
-                        eventsCount -= it
-                        remove(chatBadgeEvent.transferId)
+        worker.main.launch {
+            if (!chatBadgeEvent.clearBadge) {
+                withContext(worker.bg) { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
+                    .model?.let { transfer ->
+                        increaseEventsMessagesCounter(chatBadgeEvent.transferId, transfer.unreadMessagesCount)
+                        notificationManager.showNewMessageNotification(
+                            chatBadgeEvent.transferId,
+                            transfer.unreadMessagesCount,
+                            true
+                        )
+                    }
+            } else {
+                with(countEventsInteractor) {
+                    mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
+                        this[chatBadgeEvent.transferId]?.let {
+                            eventsCount -= it
+                            remove(chatBadgeEvent.transferId)
+                        }
                     }
                 }
             }
@@ -364,6 +357,12 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     protected suspend fun <D> fetchDataOnly(block: suspend () -> Result<D>) =
         fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
+
+    override fun onDestroy() {
+        compositeDisposable.cancel()
+        worker.cancel()
+        super.onDestroy()
+    }
 
     companion object {
         //when you want to handle error in child presenter
