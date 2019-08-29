@@ -210,29 +210,35 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 //                            .map { photo -> systemInteractor.endpoint.url.plus(photo) } }
 //                    .also { onNewOffer(it) }
 
-    open fun onNewOffer(offer: Offer): OfferModel {
-        utils.launchSuspend { utils.asyncAwait { offerInteractor.newOffer(offer) } }
+    open suspend fun onNewOffer(offer: Offer): OfferModel {
+        utils.asyncAwait { offerInteractor.newOffer(offer) }
         return offerMapper.toView(offer).also { notificationManager.showOfferNotification(it) }
     }
 
     override fun onNewOfferEvent(offer: Offer) {
-        onNewOffer(offer.also {
-            utils.launchSuspend {
-                fetchDataOnly { offerInteractor.getOffers(offer.transferId, true) }?.let { offersCached ->
-                    if (offersCached.find { offerCached -> offerCached.id == offer.id } != null) {
-                        countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
-                            countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
-                                if (countNewOffers == countViewedOffers && countViewedOffers > 0) {
-                                    decreaseViewedOffersCounter(offer.transferId)
-                                }
-                            }
+        utils.launchSuspend {
+            if (isTransferPaid(offer.transferId)) return@launchSuspend
+            onNewOffer(offer.also { updateOfferEventsCounter(it) })
+        }
+    }
+
+    private suspend fun isTransferPaid(transferId: Long) =
+        fetchDataOnly { transferInteractor.getTransfer(transferId) }?.let { it.paidPercentage > 0 } ?: false
+
+    private suspend fun updateOfferEventsCounter(offer: Offer) {
+        fetchDataOnly { offerInteractor.getOffers(offer.transferId, true) }?.let { offersCached ->
+            if (offersCached.find { offerCached -> offerCached.id == offer.id } != null) {
+                countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
+                    countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
+                        if (countNewOffers == countViewedOffers && countViewedOffers > 0) {
+                            decreaseViewedOffersCounter(offer.transferId)
                         }
-                    } else {
-                        increaseEventsOffersCounter(it.transferId)
                     }
                 }
+            } else {
+                increaseEventsOffersCounter(offer.transferId)
             }
-        })
+        }
     }
 
     override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
