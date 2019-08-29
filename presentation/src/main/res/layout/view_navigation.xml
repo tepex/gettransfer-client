@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/nav_header_logo_start"
                     android:paddingBottom="@dimen/nav_header_padding_bottom"
-                    android:text="@string/LNG_PAYMENT_BALANCE"
+                    android:text="@string/LNG_PAYMENT_AVAILABLE"
                     android:textColor="@color/colorWhite"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

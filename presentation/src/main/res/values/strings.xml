@@ -372,7 +372,7 @@
     <string name="LNG_VOUCHER">Voucher</string>
     <string name="LNG_NO_SEATS_REQUIRED">No child seats required</string>
 
-    <string name="LNG_PAYMENT_BALANCE">Balance: %s</string>
+    <string name="LNG_PAYMENT_AVAILABLE">Available: %s</string>
     <string name="LNG_PAYMENT_FROM_BALANCE">From balance (%s)</string>
 
     <string name="LNG_ABOUT_DRIVER_APP">Use new app for drivers</string>

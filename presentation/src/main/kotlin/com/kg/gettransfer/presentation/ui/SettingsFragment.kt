@@ -66,6 +66,11 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         requireActivity().recreate()
     }
 
+    override fun setBalance(balance: String?) {
+        settingsProfile.tvBalance.isVisible = true
+        settingsProfile.tvBalance.text = getString(R.string.LNG_PAYMENT_AVAILABLE, balance)
+    }
+
     override fun initGeneralSettingsLayout() {
         Timber.d("current locale: ${Locale.getDefault()}")
         settingsLanguage.setOnClickListener { presenter.onLanguageClicked() }
