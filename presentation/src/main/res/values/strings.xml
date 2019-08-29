@@ -413,4 +413,5 @@
     <string name="LNG_DRIVER_ON_MAP">Show driver on map</string>
 
     <string name="LNG_SELECT_POINT_MAP">Point on map</string>
+    <string name="LNG_RESTART_APP">Language was changed to switch language on map you need to restart app</string>
 </resources>

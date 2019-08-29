@@ -66,9 +66,11 @@ class SessionRepositoryImpl(
 
     override var appLanguage: String
         get() = preferencesCache.appLanguage
-        set(value) {
-            preferencesCache.appLanguage = value
-        }
+        set(value) { preferencesCache.appLanguage = value }
+
+    override var isAppLanguageChanged: Boolean
+        get() = preferencesCache.isAppLanguageChanged
+        set(value) { preferencesCache.isAppLanguageChanged = value }
 
     @Suppress("ComplexMethod", "ReturnCount")
     override suspend fun coldStart(): Result<Account> {

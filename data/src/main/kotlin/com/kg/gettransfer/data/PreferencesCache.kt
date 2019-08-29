@@ -10,6 +10,7 @@ interface PreferencesCache {
     var mapCountViewedOffers: Map<Long, Int>
     var eventsCount: Int
     var appLanguage: String
+    var isAppLanguageChanged: Boolean
 
     fun logout()
     fun addListener(listener: PreferencesListener)

@@ -15,6 +15,7 @@ interface SessionRepository {
     var userPhone: String?
     var userPassword: String
     var appLanguage: String
+    var isAppLanguageChanged: Boolean
 
     suspend fun coldStart(): Result<Account>
     suspend fun putAccount(newAccount: Account, pass: String? = null, repeatedPass: String? = null): Result<Account>

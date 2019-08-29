@@ -116,11 +116,11 @@ class PreferencesImpl(
 
     override var appLanguage: String
         get() = configsPrefs.getString(APP_LANGUAGE, Locale.getDefault().language)
-        set(value) {
-            configsPrefs.edit().putString(APP_LANGUAGE, value).apply()
-        }
+        set(value) { configsPrefs.edit().putString(APP_LANGUAGE, value).apply() }
 
-    /* === Functions === */
+    override var isAppLanguageChanged: Boolean
+        get() = configsPrefs.getBoolean(APP_LANGUAGE_CHANGED, false)
+        set(value) { configsPrefs.edit().putBoolean(APP_LANGUAGE_CHANGED, value).apply() }
 
     private fun getMap(key: String): Map<Long, Int> {
         val json = configsPrefs.getString(key, null)
@@ -175,6 +175,7 @@ class PreferencesImpl(
         const val FAVORITE_TRANSPORT  = "favorite_transport"
         const val DEBUG_MENU          = "debug_menu"
         const val APP_LANGUAGE        = "app_language"
+        const val APP_LANGUAGE_CHANGED = "app_language_changed"
 
         const val MAP_NEW_OFFERS      = "map_new_offers"
         const val MAP_NEW_MESSAGES    = "map_new_messages"

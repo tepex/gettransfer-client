@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 
 import android.Manifest
 import android.animation.Animator
+import android.content.Intent
 import android.os.Bundle
 
 import androidx.annotation.CallSuper
@@ -225,6 +226,27 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
     override fun navigateBack() {
         findNavController().navigateUp()
+    }
+
+    override fun showRestartDialog() {
+        Utils.getAlertDialogBuilder(requireActivity()).apply {
+            setMessage(R.string.LNG_RESTART_APP)
+            setPositiveButton(R.string.LNG_YES) { dialog, _ ->
+                presenter.onOkClickResetDialog()
+                dialog.dismiss()
+            }
+            setNegativeButton(R.string.LNG_NO) { dialog, _ -> dialog.dismiss() }
+            show()
+        }
+    }
+
+    override fun restartApp() {
+        requireActivity().packageManager.getLaunchIntentForPackage(requireActivity().packageName)?.let { intent ->
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+        }
+        requireActivity().finish()
+        Runtime.getRuntime().exit(0)
     }
 
     override fun onDestroy() {

@@ -17,4 +17,6 @@ interface NewTransferMapView : BaseNewTransferView {
     fun blockAddressField()
 
     fun navigateBack()
+    fun showRestartDialog()
+    fun restartApp()
 }
