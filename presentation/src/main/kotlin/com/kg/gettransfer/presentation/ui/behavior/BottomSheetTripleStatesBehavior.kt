@@ -23,10 +23,9 @@ import androidx.customview.widget.ViewDragHelper
 
 import com.kg.gettransfer.R
 
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
-
 import java.lang.ref.WeakReference
+
+import kotlin.annotation.Retention
 
 class BottomSheetTripleStatesBehavior<V : View>
 /**
@@ -279,9 +278,8 @@ class BottomSheetTripleStatesBehavior<V : View>
     /** @hide
      */
     @IntDef(STATE_EXPANDED, STATE_COLLAPSED, STATE_DRAGGING, STATE_ANCHOR_POINT, STATE_SETTLING, STATE_HIDDEN)
-    @Retention(RetentionPolicy.SOURCE)
+    @Retention(AnnotationRetention.SOURCE)
     annotation class State
-
 
     init {
         var a = context.obtainStyledAttributes(attrs,
@@ -447,7 +445,7 @@ class BottomSheetTripleStatesBehavior<V : View>
     }
 
     override fun onStartNestedScroll(
-        coordinatorLayout: CoordinatorLayout, 
+        coordinatorLayout: CoordinatorLayout,
         child: V,
         directTargetChild: View,
         target: View,
@@ -459,9 +457,9 @@ class BottomSheetTripleStatesBehavior<V : View>
     }
 
     private inner class ScrollVelocityTracker {
-        
+
         private var mPreviousScrollTime: Long = 0
-        
+
         var scrollVelocity = 0f
             private set
 
@@ -483,16 +481,16 @@ class BottomSheetTripleStatesBehavior<V : View>
     }
 
     override fun onNestedPreScroll(
-        coordinatorLayout: CoordinatorLayout, 
-        child: V, 
+        coordinatorLayout: CoordinatorLayout,
+        child: V,
         target: View,
         dx: Int, dy: Int,
         consumed: IntArray,
         @ViewCompat.NestedScrollType type: Int
     ) {
-    
+
         val scrollingChild = mNestedScrollingChildRef!!.get()
-        
+
         if (target !== scrollingChild) {
             return
         }
@@ -504,8 +502,8 @@ class BottomSheetTripleStatesBehavior<V : View>
 
         // Force stop at the anchor - do not go from collapsed to expanded in one scroll
         if (
-            mLastStableState == STATE_COLLAPSED && 
-            newTop < anchorPoint || 
+            mLastStableState == STATE_COLLAPSED &&
+            newTop < anchorPoint ||
             mLastStableState == STATE_EXPANDED &&
             newTop > anchorPoint
         ) {
@@ -547,7 +545,7 @@ class BottomSheetTripleStatesBehavior<V : View>
     }
 
     override fun onStopNestedScroll(
-        coordinatorLayout: CoordinatorLayout, 
+        coordinatorLayout: CoordinatorLayout,
         child: V,
         target: View,
         @ViewCompat.NestedScrollType type: Int
@@ -632,10 +630,10 @@ class BottomSheetTripleStatesBehavior<V : View>
 
     @CallSuper
     override fun onNestedPreFling(
-        coordinatorLayout: CoordinatorLayout, 
-        child: V, 
+        coordinatorLayout: CoordinatorLayout,
+        child: V,
         target: View,
-        velocityX: Float, 
+        velocityX: Float,
         velocityY: Float
     ): Boolean {
         val parent = super.onNestedPreFling(coordinatorLayout, child, target, velocityX, velocityY)

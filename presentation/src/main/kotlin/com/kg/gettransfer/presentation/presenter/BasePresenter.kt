@@ -85,8 +85,11 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     override fun onFirstViewAttach() {
         if (sessionInteractor.isInitialized) return
         worker.main.launch {
-            withContext(worker.bg) { sessionInteractor.coldStart() }?.let { systemInitialized() }
-            offerMapper.url = getPreferences().getModel().endpoint!!.url
+            val result = withContext(worker.bg) { sessionInteractor.coldStart() }
+            if (result.error == null) {
+                systemInitialized()
+                offerMapper.url = getPreferences().getModel().endpoint!!.url
+            }
         }
     }
 
@@ -161,10 +164,9 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         worker.main.launch {
             var transferID: Long? = null
             if (transferId == null) {
-                withContext(worker.bg) { transferInteractor.getAllTransfers() }.model?.let { list ->
-                    if (list.isNotEmpty()) {
-                        transferID = list.first().id
-                    }
+                val result = withContext(worker.bg) { transferInteractor.getAllTransfers() }
+                if (result.error == null && result.model.isNotEmpty()) {
+                    transferID = result.model.first().id
                 }
             } else {
                 transferID = transferId
@@ -213,13 +215,19 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
     }
 
-    private suspend fun isTransferPaid(transferId: Long) =
-        withContext(worker.bg) { transferInteractor.getTransfer(transferId) }
-            .model?.let { it.paidPercentage > 0 } ?: false
+    private suspend fun isTransferPaid(transferId: Long): Boolean {
+        val result = withContext(worker.bg) { transferInteractor.getTransfer(transferId) }
+        return if (result.error == null) {
+            result.model.paidPercentage > 0
+        } else {
+            false
+        }
+    }
 
     private suspend fun updateOfferEventsCounter(offer: Offer) {
-        withContext(worker.bg) { offerInteractor.getOffers(offer.transferId, true) }.model?.let { offersCached ->
-            if (offersCached.find { offerCached -> offerCached.id == offer.id } != null) {
+        val result = withContext(worker.bg) { offerInteractor.getOffers(offer.transferId, true) }
+        if (result.error == null) {
+            if (result.model.find { offerCached -> offerCached.id == offer.id } != null) {
                 countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
                     countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
                         if (countNewOffers == countViewedOffers && countViewedOffers > 0) {
@@ -236,15 +244,15 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
         worker.main.launch {
             if (!chatBadgeEvent.clearBadge) {
-                withContext(worker.bg) { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
-                    .model?.let { transfer ->
-                        increaseEventsMessagesCounter(chatBadgeEvent.transferId, transfer.unreadMessagesCount)
-                        notificationManager.showNewMessageNotification(
-                            chatBadgeEvent.transferId,
-                            transfer.unreadMessagesCount,
-                            true
-                        )
-                    }
+                val result = withContext(worker.bg) { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
+                if (result.error == null) {
+                    increaseEventsMessagesCounter(chatBadgeEvent.transferId, result.model.unreadMessagesCount)
+                    notificationManager.showNewMessageNotification(
+                        chatBadgeEvent.transferId,
+                        result.model.unreadMessagesCount,
+                        true
+                    )
+                }
             } else {
                 with(countEventsInteractor) {
                     mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
