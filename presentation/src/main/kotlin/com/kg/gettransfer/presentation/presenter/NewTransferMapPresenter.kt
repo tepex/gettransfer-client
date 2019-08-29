@@ -31,6 +31,13 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
 
     private lateinit var selectedField: String
 
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        if (sessionInteractor.isAppLanguageChanged) {
+           viewState.showRestartDialog()
+        }
+    }
+
     override fun updateView() {
         fillViewFromState()
     }
@@ -166,5 +173,10 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         var lngDiff = point2.longitude - point2.longitude
         if (lngDiff < 0) lngDiff *= -1
         return latDiff < criteria && lngDiff < criteria
+    }
+
+    fun onOkClickResetDialog() {
+        sessionInteractor.isAppLanguageChanged = false
+        viewState.restartApp()
     }
 }

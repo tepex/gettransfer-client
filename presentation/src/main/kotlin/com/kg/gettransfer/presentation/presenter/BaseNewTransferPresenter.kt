@@ -8,6 +8,7 @@ import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.domain.interactor.SessionInteractor
 
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
@@ -40,6 +41,7 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
 
     protected val geoInteractor: GeoInteractor by inject()
     protected val orderInteractor: OrderInteractor by inject()
+    protected val sessionInteractor: SessionInteractor by inject()
 
     protected val pointMapper: PointMapper by inject()
 

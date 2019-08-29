@@ -83,7 +83,10 @@ open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageVie
         adapterAll.update(all)
     }
 
-    override fun recreateActivity() = requireActivity().recreate()
+    override fun recreateActivity() {
+        findNavController().navigateUp()
+        requireActivity().recreate()
+    }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
 
