@@ -126,7 +126,7 @@ class ChatActivity : BaseActivity(), ChatView {
                 val chatAdapter = adapter
                 if (chatAdapter is ChatAdapter) {
                     chatAdapter.changeModel(chat)
-                    chatAdapter?.notifyDataSetChanged()
+                    chatAdapter.notifyDataSetChanged()
                 }
             }
         }

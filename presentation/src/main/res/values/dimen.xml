@@ -922,4 +922,6 @@
 	<dimen name="activity_customer_support_layout_phones_margin_top">8dp</dimen>
 	<dimen name="activity_customer_support_padding_bottom">50dp</dimen>
 
+	<dimen name="ic_loading_size">32dp</dimen>
+
 </resources>
