@@ -17,7 +17,7 @@ class CommunicationButtonsLayoutAboveBottomSheetBehavior<V : ViewGroup>(private 
                 dependency.top >= behavior.anchorPoint -> dependency.top
                 else -> behavior.anchorPoint
             }
-            child.bottom = child.bottom + mContext.resources.getDimension(R.dimen.activity_carrier_trip_details_top_buttons_margin_bottom).toInt()
+            child.bottom = child.bottom + mContext.resources.getDimension(R.dimen.activity_transfer_details_top_buttons_margin_bottom).toInt()
             child.top = child.bottom - (child as FrameLayout).measuredHeight
             return true
         }
