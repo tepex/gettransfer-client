@@ -124,9 +124,19 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     private fun initProfileSettings() = worker.main.launch {
         viewState.initProfileField(accountManager.isLoggedIn, accountManager.remoteProfile)
         if (accountManager.isLoggedIn) {
+            setBalance()
             viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
         } else {
             viewState.hideEmailNotifications()
+        }
+    }
+
+    private fun setBalance() {
+        with (accountManager) {
+            if (remoteAccount.isBusinessAccount) {
+                val balance = remoteAccount.partner?.availableMoney?.default
+                viewState.setBalance(balance)
+            }
         }
     }
 
