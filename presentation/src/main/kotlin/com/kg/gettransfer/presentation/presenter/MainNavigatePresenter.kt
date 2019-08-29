@@ -66,8 +66,8 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         utils.launchSuspend { viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount) }
     }
 
-    override fun onNewOffer(offer: Offer): OfferModel {
-        utils.launchSuspend { viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount) }
+    override suspend fun onNewOffer(offer: Offer): OfferModel {
+        viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
         return super.onNewOffer(offer)
     }
 

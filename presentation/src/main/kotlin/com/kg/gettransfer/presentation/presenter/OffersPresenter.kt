@@ -113,7 +113,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
         processOffers()
     }
 
-    override fun onNewOffer(offer: Offer): OfferModel {
+    override suspend fun onNewOffer(offer: Offer): OfferModel {
         val offerModel = super.onNewOffer(offer)
         if (transferId != offer.transferId) {
             return offerModel
@@ -121,7 +121,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
         if (!checkDuplicated(offer)) {
             offers = offers.toMutableList().apply { add(offer) }
         }
-        utils.launchSuspend { processOffers() }
+        processOffers()
         return offerModel
     }
 
