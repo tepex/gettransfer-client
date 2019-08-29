@@ -34,7 +34,7 @@ class LoadingFragment: Fragment() {
             Animation.RELATIVE_TO_SELF,
             0.5f)
 
-        anim.duration = 800
+        anim.duration = 1500
         anim.repeatCount = Animation.INFINITE
         spinner.startAnimation(anim)
     }
