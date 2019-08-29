@@ -14,21 +14,24 @@
         android:indeterminate="true"
         android:indeterminateDrawable="@drawable/progress_rotate"
         android:indeterminateDuration="1200"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_drivers_count"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tv_drivers_count"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_drivers_count" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_drivers_count"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin32"
+        android:layout_marginStart="@dimen/margin8"
+        android:layout_marginEnd="@dimen/margin8"
         android:fontFamily="@font/sf_pro_text_semibold"
-        android:gravity="center"
         android:textColor="@color/colorWhite"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/progressBar"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Соединяем с 33 ближайшими перевозчиками" />
 </androidx.constraintlayout.widget.ConstraintLayout>
