@@ -272,9 +272,6 @@
     <string name="LNG_ERROR_PASSENGERS">Number of passenger must be greater than zero</string>
     <string name="LNG_TRANSFER_IN_PROGRESS">Transfer in progress</string>
     <string name="LNG_EMAIL_SUBJECT">Need help</string>
-    <string name="LNG_TRIPS_TODAY">Today</string>
-    <string name="LNG_TRIPS_ALL">All</string>
-    <string name="LNG_TRIPS_COMPLETED">Completed</string>
     <string name="LNG_SCROLL_TO_SEE">Scroll to see other days</string>
     <string name="LNG_IN_PROGRESS">in progress</string>
     <string name="LNG_WILL_START_IN">will start in</string>
@@ -287,7 +284,6 @@
     <string name="LNG_RIDES_COMPLETED">Past</string>
     <string name="LNG_TRIPS_EMPTY_ACTIVE">you have no upcoming transfers</string>
     <string name="LNG_TRIPS_EMPTY_COMPLETED">you have no past transfers</string>
-    <string name="LNG_CALENDAR">Calendar</string>
     <string name="LNG_LIST">List</string>
     <string name="LNG_NEW_CHAT_MESSAGE">Write the message</string>
     <string name="LNG_NEW_PASSENGER_CHAT_TITLE">Passenger message</string>
@@ -295,14 +291,10 @@
     <string name="LNG_UNREAD_MESSAGES_COUNT">%s unread messages</string>
     <string name="LNG_RIDE_CLIENT_NAME">Name</string>
     <string name="LNG_DETAILS_REPEAT_ROUTE">Repeat transfer</string>
-    <string name="LNG_SEND_COORDINATES_IN_BACKGROUND">Send coordinates in background</string>
-    <string name="LNG_SEND_COORDINATES_IN_BACKGROUND_MESSAGE">Does you allow?</string>
     <string name="LNG_CHAT_WITH">Chat with</string>
     <string name="LNG_MESSAGE_COPIED">Message copied</string>
     <string name="LNG_DISTANCE_IN_MILES">Distance in miles</string>
     <string name="LNG_EMAIL_NOTIFICATIONS">Email notifications</string>
-    <string name="LNG_CALENDAR_MODE">Calendar mode</string>
-    <string name="LNG_WEEK_FIRST_DAY">First week day</string>
     <string name="LNG_RIDE_PAYMENT_RIDE_COST">Ride cost</string>
     <string name="LNG_RIDE_PAYMENT_PAID_DETAILS">Paid %s%%</string>
     <string name="LNG_CURRENCIES_CHOOSE">Choose a currency</string>

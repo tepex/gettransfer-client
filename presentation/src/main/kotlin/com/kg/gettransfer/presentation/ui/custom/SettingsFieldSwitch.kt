@@ -19,6 +19,7 @@ class SettingsFieldSwitch @JvmOverloads constructor(
         if(attrs != null) {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.SettingsFieldSwitch)
             field_title.text = ta.getString(R.styleable.SettingsFieldSwitch_settingsTitleSwitch)
+            field_divider.isVisible = ta.getBoolean(R.styleable.SettingsFieldSwitch_settingsShowDivider, true)
             ta.recycle()
         }
     }

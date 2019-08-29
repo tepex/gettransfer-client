@@ -32,11 +32,6 @@
         <attr name="img_about_item" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="IconWithNumberIndicator" parent="EditableField">
-        <attr name="icon_with_number_indicator" format="reference" />
-        <attr name="is_showing_number" format="boolean" />
-    </declare-styleable>
-
     <declare-styleable name="RateField">
         <attr name="rate_title" format="string"/>
         <attr name="rate_sub_title" format="string" />
@@ -49,11 +44,6 @@
         <attr name="time_title" format="string"/>
         <attr name="price" format="string"/>
         <attr name="price_title" format="string"/>
-    </declare-styleable>
-
-    <declare-styleable name="SeatsView">
-        <attr name="passenger_seats" format="string"/>
-        <attr name="child_seats" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="CommunicationButton">
@@ -101,6 +91,7 @@
 
     <declare-styleable name="SettingsFieldSwitch">
         <attr name="settingsTitleSwitch" format="string"/>
+        <attr name="settingsShowDivider" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="SwitcherView">
@@ -113,11 +104,6 @@
         <attr name="roundedTopCorners" format="boolean"/>
     </declare-styleable>
 
-    <declare-styleable name="OrderFieldView">
-        <attr name="order_title" format="string"/>
-        <attr name="icon" format="reference"/>
-    </declare-styleable>
-
     <declare-styleable name="RatingFieldView">
         <attr name="rating_title" format="string"/>
     </declare-styleable>
@@ -125,12 +111,6 @@
     <declare-styleable name="ChildCounterView">
         <attr name="counter_title" format="string"/>
         <attr name="counter_description" format="string"/>
-    </declare-styleable>
-
-    <declare-styleable name="NavigationViewMenuItem">
-        <attr name="menu_icon_img" format="reference" />
-        <attr name="menu_title_text" format="string"/>
-        <attr name="menu_subtitle_text" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="InputPasswordView">

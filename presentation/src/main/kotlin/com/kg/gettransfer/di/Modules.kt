@@ -32,7 +32,6 @@ import com.kg.gettransfer.receiver.NetworkChangeCallback
 import com.kg.gettransfer.utilities.*
 
 import com.kg.gettransfer.sys.presentation.ConfigsManager
-import com.kg.gettransfer.sys.data.EndpointEntity
 import com.kg.gettransfer.sys.domain.*
 
 import com.kg.gettransfer.utilities.Analytics
@@ -104,7 +103,6 @@ val domainModule = module {
     single { OfferInteractor(get()) }
     single { PaymentInteractor(get()) }
     single { OrderInteractor(get(), get(), get()) }
-    single { CarrierTripInteractor(get()) }
     single { TransferInteractor(get()) }
     single { PromoInteractor(get()) }
     single { ReviewInteractor(get()) }
@@ -119,19 +117,13 @@ val domainModule = module {
 
 val mappersModule = module {
     single { CarrierMapper() }
-    single { CarrierTripBaseMapper() }
-    single { CarrierTripMapper() }
-    single { CarrierTripsListItemsMapper() }
-    single { CarrierTripsCalendarItemsMapper() }
     single { OfferMapper() }
-    single { PassengerAccountMapper() }
     single { PaymentRequestMapper() }
     single { PaymentStatusRequestMapper() }
     single { PointMapper() }
     single { ProfileMapper() }
     single { RouteMapper() }
     single { UserMapper() }
-    single { VehicleInfoMapper() }
     single { MessageMapper() }
     single { ChatAccountMapper() }
     single { ChatMapper() }
@@ -171,13 +163,9 @@ val systemDomain = module {
     single { SetDebugMenuShowedInteractor(get()) }
     single { SetEndpointInteractor(get(), get()) }
     single { SetFavoriteTransportsInteractor(get()) }
-    single { SetFirstDayOfWeekInteractor(get()) }
     single { SetFirstLaunchInteractor(get()) }
-    single { SetLastCarrierTripsTypeViewInteractor(get()) }
-    single { SetLastModeInteractor(get()) }
     single { SetOnboardingShowedInteractor(get()) }
     single { SetSelectedFieldInteractor(get()) }
-    single { SetBackgroundCoordinatesInteractor(get()) }
 }
 
 val systemPresentation = module {

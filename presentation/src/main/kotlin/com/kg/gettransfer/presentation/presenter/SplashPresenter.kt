@@ -58,11 +58,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
             router.replaceScreen(Screens.About(false))
             withContext(worker.bg) { setOnboardingShowed(true) }
         } else {
-            when (getPreferences().getModel().lastMode) {
-                Screens.CARRIER_MODE -> router.replaceScreen(Screens.CarrierMode)
-                else                 ->
-                    router.newRootScreen(Screens.MainPassenger(!isOnboardingShowed))
-            }
+            router.newRootScreen(Screens.MainPassenger(!isOnboardingShowed))
         }
     }
 

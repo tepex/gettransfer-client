@@ -1,10 +1,8 @@
 package com.kg.gettransfer.sys.data
 
-import com.kg.gettransfer.core.data.CacheStrategy
 import com.kg.gettransfer.core.data.SimpleCacheStrategy
 
 import com.kg.gettransfer.core.domain.Hour
-import com.kg.gettransfer.core.domain.Minute
 import com.kg.gettransfer.core.domain.Second
 
 import com.kg.gettransfer.domain.model.Currency
@@ -15,7 +13,6 @@ import com.kg.gettransfer.sys.domain.*
 
 import java.util.Locale
 
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val systemData = module {
@@ -59,20 +56,15 @@ val systemData = module {
 
     single {
         Preferences(
-            accessToken                   = "invalid token",
-            endpoint                      = null,
-            lastMode                      = "",
-            lastMainScreenMode            = "",
-            lastCarrierTripsTypeView      = "",
-            firstDayOfWeek                = 1,
-            isFirstLaunch                 = true,
-            isOnboardingShowed            = false,
-            selectedField                 = "",
-            addressHistory                = emptyList(),
-            favoriteTransports            = emptySet(),
-            appEnters                     = 0,
-            isDebugMenuShowed             = false,
-            backgroundCoordinatesAccepted = null
+            accessToken        = "invalid token",
+            endpoint           = null,
+            isFirstLaunch      = true,
+            isOnboardingShowed = false,
+            selectedField      = "",
+            addressHistory     = emptyList(),
+            favoriteTransports = emptySet(),
+            appEnters          = 0,
+            isDebugMenuShowed  = false
         )
     }
 

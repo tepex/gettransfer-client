@@ -9,7 +9,6 @@ import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.domain.model.Chat
 import com.kg.gettransfer.domain.model.Message
 
-import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
 import com.kg.gettransfer.presentation.mapper.ChatMapper
 import com.kg.gettransfer.presentation.mapper.MessageMapper
 
@@ -20,7 +19,6 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.ChatView
-import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 
@@ -39,7 +37,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
     private val chatMapper: ChatMapper by inject()
     private val messageMapper: MessageMapper by inject()
-    private val carrierTripMapper: CarrierTripMapper by inject()
     private val worker: WorkerManager by inject { parametersOf("ChatPresenter") }
     private val configsManager: ConfigsManager by inject()
 
@@ -48,24 +45,13 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     private var offerModel: OfferModel? = null
 
     internal var transferId = 0L
-    internal var tripId = 0L
-
-    private var userRole: String? = null
 
     override fun attachView(view: ChatView) {
         super.attachView(view)
         socketInteractor.addSocketListener(this)
         worker.main.launch {
-            if (userRole == null) {
-                val lastMode = withContext(worker.bg) { getPreferences().getModel().lastMode }
-                userRole = when (lastMode) {
-                    Screens.PASSENGER_MODE -> ROLE_PASSENGER
-                    Screens.CARRIER_MODE   -> ROLE_CARRIER
-                    else                   -> throw UnsupportedOperationException()
-                }
-            }
             val transferCachedResult = withContext(worker.bg) {
-                transferInteractor.getTransfer(transferId, false, userRole!!) // userRole will be deleted soon
+                transferInteractor.getTransfer(transferId, false)
             }
             val chatCachedResult = withContext(worker.bg) { chatInteractor.getChat(transferId, true) }
 
@@ -75,24 +61,12 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
             getChatFromRemote()
 
-            if (tripId != NO_ID) {
-                val carrierTripCachedModel = withContext(worker.bg) {
-                    carrierTripInteractor.getCarrierTrip(tripId)
-                }.model
-                val carrierTripModel = carrierTripMapper.toView(carrierTripCachedModel)
-                if (carrierTripModel.base.id != NO_ID) {
-                    viewState.setToolbar(carrierTripModel)
-                } else {
-                    transferModel?.let { viewState.setToolbar(it, null, false) }
-                }
-            } else {
-                offerModel = withContext(worker.bg) {
-                    offerInteractor.getOffers(transferId, true).model.firstOrNull()?.let { offerMapper.toView(it) }
-                }
+            offerModel = withContext(worker.bg) {
+                offerInteractor.getOffers(transferId, true).model.firstOrNull()?.let { offerMapper.toView(it) }
+            }
 
-                transferModel?.let {
-                    viewState.setToolbar(it, offerModel, tripId == NO_ID && userRole == ROLE_PASSENGER)
-                }
+            transferModel?.let {
+                viewState.setToolbar(it, offerModel)
             }
         }
         onJoinRoom()
@@ -176,9 +150,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     }
 
     companion object {
-        const val ROLE_CARRIER   = "carrier"
-        const val ROLE_PASSENGER = "passenger"
-
         const val NO_ID = 0L
     }
 }

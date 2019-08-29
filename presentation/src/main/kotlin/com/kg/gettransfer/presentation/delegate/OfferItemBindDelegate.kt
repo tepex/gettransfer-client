@@ -27,7 +27,6 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 
 import kotlinx.android.synthetic.main.offer_tiny.view.*
-import kotlinx.android.synthetic.main.view_offer_conditions.view.view_capacity
 import kotlinx.android.synthetic.main.view_offer_rating.view.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 

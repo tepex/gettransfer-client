@@ -22,7 +22,6 @@ interface Api {
         const val API_ACCOUNT_LOGIN = "/api/account/login"
         const val API_ACCOUNT_REGISTER = "/api/account"
         const val API_ROUTE_INFO = "/api/route_info"
-        const val API_CARRIER_TRIPS = "/api/trips"
         const val API_TRANSFERS = "/api/transfers"
         const val API_CREATE_NEW_PAYMENT = "/api/payments"
         const val API_PROMO = "/api/promo_codes/search"
@@ -99,14 +98,6 @@ interface Api {
         @Query("date_to") dateTime: String?
     ): Deferred<ResponseModel<RouteInfoModel>>
 
-    @GET(API_CARRIER_TRIPS)
-    fun getCarrierTrips(): Deferred<ResponseModel<CarrierTripsBaseModel>>
-
-    @GET("$API_CARRIER_TRIPS/{id}")
-    fun getCarrierTrip(
-        @Path("id") id: Long
-    ): Deferred<ResponseModel<CarrierTripModelWrapper>>
-
     @GET("$API_TRANSFERS/{id}/offers")
     fun getOffers(
         @Path("id") id: Long
@@ -128,8 +119,7 @@ interface Api {
 
     @GET("$API_TRANSFERS/{id}")
     fun getTransfer(
-        @Path("id") id: Long,
-        @Query("role") role: String
+        @Path("id") id: Long
     ): Deferred<ResponseModel<TransferWrapperModel>>
 
     @POST("$API_TRANSFERS/{id}/cancel")

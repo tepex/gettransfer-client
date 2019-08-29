@@ -12,10 +12,7 @@ import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 import com.kg.gettransfer.domain.model.DistanceUnit
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.model.DayOfWeekModel
 import com.kg.gettransfer.presentation.model.map
-
-import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
@@ -23,11 +20,8 @@ import com.kg.gettransfer.presentation.view.SettingsView
 import com.kg.gettransfer.sys.domain.Configs
 import com.kg.gettransfer.sys.domain.Endpoint
 import com.kg.gettransfer.sys.domain.SetAccessTokenInteractor
-import com.kg.gettransfer.sys.domain.SetBackgroundCoordinatesInteractor
 import com.kg.gettransfer.sys.domain.SetDebugMenuShowedInteractor
 import com.kg.gettransfer.sys.domain.SetEndpointInteractor
-import com.kg.gettransfer.sys.domain.SetFirstDayOfWeekInteractor
-import com.kg.gettransfer.sys.domain.SetLastCarrierTripsTypeViewInteractor
 import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
 
 import com.kg.gettransfer.sys.presentation.ConfigsManager
@@ -50,9 +44,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
 
     private val endpoints: List<EndpointModel> = get<List<Endpoint>>(named(ENDPOINTS)).map { it.map() }
 
-    private lateinit var calendarModes: List<String>
-    private lateinit var daysOfWeek: List<DayOfWeekModel>
-
     private var restart = true
 
     private var count = 0
@@ -62,12 +53,9 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     private val configsManager: ConfigsManager by inject()
 
     private val setDebugMenuShowed: SetDebugMenuShowedInteractor by inject()
-    private val setFirstDayOfWeek: SetFirstDayOfWeekInteractor by inject()
-    private val setLastCarrierTripsTypeView: SetLastCarrierTripsTypeViewInteractor by inject()
     private val setEndpoint: SetEndpointInteractor by inject()
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
     private val setAccessToken: SetAccessTokenInteractor by inject()
-    private val setBackgroundCoordinates: SetBackgroundCoordinatesInteractor by inject()
 
     override fun attachView(view: SettingsView) {
         super.attachView(view)
@@ -95,7 +83,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     private fun initSettings() {
         initGeneralSettings()
         initProfileSettings()
-        initDriverSettings()
         worker.main.launch { viewState.hideSomeDividers() }
     }
 
@@ -140,18 +127,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
         }
     }
 
-    private fun initDriverSettings() = worker.main.launch {
-        if (accountManager.isLoggedIn && getPreferences().getModel().lastMode == Screens.CARRIER_MODE) {
-            viewState.initDriverLayout(getPreferences().getModel().isBackgroundCoordinatesAccepted())
-            viewState.setCalendarModes(calendarModes)
-            viewState.setDaysOfWeek(daysOfWeek)
-            viewState.setCalendarMode(getPreferences().getModel().lastCarrierTripsTypeView)
-            viewState.setFirstDayOfWeek(daysOfWeek[getPreferences().getModel().firstDayOfWeek - 1].name)
-        } else {
-            viewState.hideDriverLayout()
-        }
-    }
-
     private fun initDebugMenu() = worker.main.launch {
         if (BuildConfig.FLAVOR == "dev" || getPreferences().getModel().isDebugMenuShowed) {
             showDebugMenu()
@@ -181,22 +156,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     fun onEmailNotificationSwitched(isChecked: Boolean) {
         sessionInteractor.isEmailNotificationEnabled = isChecked
         saveGeneralSettings()
-    }
-
-    fun onDriverCoordinatesSwitched(checked: Boolean) = worker.main.launch {
-        withContext(worker.bg) { setBackgroundCoordinates(checked) }
-    }
-
-    fun changeCalendarMode(selected: String) = worker.main.launch {
-        withContext(worker.bg) { setLastCarrierTripsTypeView(selected) }
-        viewState.setCalendarMode(selected)
-    }
-
-    fun changeFirstDayOfWeek(selected: Int) = worker.main.launch {
-        with(daysOfWeek[selected]) {
-            withContext(worker.bg) { setFirstDayOfWeek(delegate.day) }
-            viewState.setFirstDayOfWeek(name)
-        }
     }
 
     fun onAboutAppClicked() {
@@ -281,8 +240,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     }
 
     private fun initConfigs() {
-        calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
-        daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false
     }
 

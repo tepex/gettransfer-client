@@ -115,15 +115,6 @@
             android:name=".presentation.ui.TransferDetailsActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.ui.CarrierTripsMainActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.ui.CarrierTripDetailsActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait" />
-
         <activity android:name=".presentation.ui.MainLoginActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
@@ -234,12 +225,6 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-        <service android:name=".service.CoordinateService">
-            <intent-filter>
-                <action android:name="com.kg.gettransfer.service.CoordinateService" />
-            </intent-filter>
-        </service>
 
         <receiver android:name=".receiver.SilentPushReceiver">
             <intent-filter>

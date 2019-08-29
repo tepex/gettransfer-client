@@ -6,7 +6,6 @@ import com.kg.gettransfer.data.OfferCache
 import com.kg.gettransfer.data.RouteCache
 import com.kg.gettransfer.data.SessionCache
 import com.kg.gettransfer.data.TransferCache
-import com.kg.gettransfer.data.CarrierTripCache
 import com.kg.gettransfer.data.ChatCache
 import com.kg.gettransfer.data.ReviewCache
 
@@ -20,7 +19,6 @@ val cacheModule = module {
     single<TransferCache> { TransferCacheImpl() }
     single<OfferCache> { OfferCacheImpl() }
     single<RouteCache> { RouteCacheImpl() }
-    single<CarrierTripCache> { CarrierTripCacheImpl() }
     single<ChatCache> { ChatCacheImpl() }
     single<ReviewCache> { ReviewCacheImpl() }
 }

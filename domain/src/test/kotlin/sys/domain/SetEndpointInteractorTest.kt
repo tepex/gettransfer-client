@@ -56,10 +56,6 @@ class ConfigsManagerTest : StringSpec() {
             Preferences(
                 accessToken = "access token",
                 endpoint = "key3",
-                lastMode = "last mode",
-                lastMainScreenMode = "last main screen mode",
-                lastCarrierTripsTypeView = "last carrier trips type view",
-                firstDayOfWeek = 1,
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
                 selectedField = "selected field",

@@ -151,27 +151,12 @@ object Utils : KoinComponent {
         listener: (Int) -> Unit
     ) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
 
-    fun setFirstDayOfWeekDialogListener(
-            context: Context,
-            view: View,
-            items: List<CharSequence>,
-            listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_WEEK_FIRST_DAY, items, listener) }
-
     fun setOfferFilterDialogListener(
             context: Context,
             view: View,
             items: List<CharSequence>,
             listener: (Int) -> Unit
     ) { setModelsDialogListener(context, view, R.string.LNG_FILTER, items, listener) }
-
-    fun setCalendarModesDialogListener(
-            context: Context,
-            view: View,
-            items: List<CharSequence>,
-            @StringRes titleId: Int,
-            listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, titleId, items, listener) }
 
     fun setEndpointsDialogListener(
         context: Context,
@@ -203,16 +188,6 @@ object Utils : KoinComponent {
                 setNegativeButton(R.string.LNG_CANCEL, null)
                 show()
             }
-        }
-    }
-
-    fun showBackGroundPermissionDialog(context: Context, clickResult: (result: Boolean) -> Unit) {
-        getAlertDialogBuilder(context).apply {
-            setMessage(R.string.LNG_SEND_COORDINATES_IN_BACKGROUND_MESSAGE)
-            setTitle(R.string.LNG_SEND_COORDINATES_IN_BACKGROUND)
-            setNegativeButton(R.string.LNG_NO) { _, _ -> clickResult(false) }
-            setPositiveButton(R.string.LNG_YES) { _, _ -> clickResult(true) }
-            show()
         }
     }
 

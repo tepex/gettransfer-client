@@ -1,6 +1,5 @@
 package com.kg.gettransfer.remote
 
-import com.kg.gettransfer.data.CarrierTripRemote
 import com.kg.gettransfer.data.ChatRemote
 import com.kg.gettransfer.data.GeoRemote
 import com.kg.gettransfer.data.OfferRemote
@@ -32,7 +31,6 @@ val remoteModule = module {
     single<RouteRemote> { RouteRemoteImpl() }
     single<SessionRemote> { SessionRemoteImpl() }
 
-    single<CarrierTripRemote> { CarrierTripRemoteImpl() }
     single<TransferRemote> { TransferRemoteImpl() }
     single<OfferRemote> { OfferRemoteImpl() }
     single<PaymentRemote> { PaymentRemoteImpl() }

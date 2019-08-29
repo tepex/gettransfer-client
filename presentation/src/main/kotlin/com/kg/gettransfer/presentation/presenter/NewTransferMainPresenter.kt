@@ -8,10 +8,8 @@ import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.EMPTY_ADDRESS
 import com.kg.gettransfer.presentation.view.NewTransferMainView
-import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 
-import com.kg.gettransfer.sys.domain.SetLastModeInteractor
 import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
 
 import kotlinx.coroutines.launch
@@ -21,7 +19,6 @@ import org.koin.core.inject
 @InjectViewState
 class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>() {
 
-    private val setLastMode: SetLastModeInteractor by inject()
     private val setSelectedField: SetSelectedFieldInteractor by inject()
 
     override fun onFirstViewAttach() {
@@ -32,7 +29,6 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
 
         worker.main.launch {
             withContext(worker.bg) {
-                setLastMode(Screens.PASSENGER_MODE)
                 setSelectedField(FIELD_FROM)
             }
         }

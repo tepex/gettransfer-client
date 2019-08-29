@@ -21,7 +21,6 @@ import com.kg.gettransfer.sys.domain.PreferencesRepository
 
 import io.kotlintest.Spec
 import io.kotlintest.TestCase
-import io.kotlintest.TestCaseConfig
 import io.kotlintest.TestResult
 import io.kotlintest.shouldBe
 
@@ -34,17 +33,12 @@ import io.kotlintest.specs.StringSpec
 
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.SpyK
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
@@ -244,10 +238,6 @@ class ConfigsManagerTest : StringSpec(), KoinTest {
             Preferences(
                 accessToken = "access token",
                 endpoint = Endpoint("test3", "key3", "url3", false, true),
-                lastMode = "last mode",
-                lastMainScreenMode = "last main screen mode",
-                lastCarrierTripsTypeView = "last carrier trips type view",
-                firstDayOfWeek = 1,
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
                 selectedField = "selected field",

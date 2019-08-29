@@ -10,8 +10,8 @@ class TransferInteractor(private val repository: TransferRepository) {
 
     suspend fun createTransfer(transferNew: TransferNew) = repository.createTransfer(transferNew)
 
-    suspend fun getTransfer(id: Long, fromCache: Boolean = false, role: String = "passenger") =
-        if (fromCache) repository.getTransferCached(id, role) else repository.getTransfer(id, role)
+    suspend fun getTransfer(id: Long, fromCache: Boolean = false) =
+        if (fromCache) repository.getTransferCached(id) else repository.getTransfer(id)
 
     suspend fun cancelTransfer(id: Long, reason: String) = repository.cancelTransfer(id, reason)
 

@@ -43,7 +43,7 @@ import com.kg.gettransfer.utilities.Analytics.Companion.DATE_TIME_CHANGED
 import com.kg.gettransfer.utilities.Analytics.Companion.OFFER_PRICE_FOCUSED
 
 import kotlinx.android.synthetic.main.activity_create_order.*
-import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
+import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 
 import org.koin.android.ext.android.inject
 
