@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.constraintlayout.widget.ConstraintSet.VISIBLE
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
@@ -11,8 +12,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -27,6 +27,10 @@ import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.test.espresso.contrib.PickerActions
+import com.kg.gettransfer.presentation.ui.helpers.DateTimePickerHelper
+//import android.R
+
+
 
 @RunWith(AndroidJUnit4::class)
 class formTransferTest{
@@ -35,27 +39,24 @@ class formTransferTest{
 
         Thread.sleep(7000)
 
+        //Launch app
         ActivityScenario.launch(SplashActivity::class.java)
 
         Thread.sleep(7000)
 
+        //Assertion onboarging exist
         passOnboardingAnyway()
 
         onView(Matchers.allOf(ViewMatchers.withId(R.id.nav_settings))).perform(ViewActions.click())
         onView(Matchers.allOf(ViewMatchers.withId(R.id.settingsProfile))).perform(ViewActions.click())
 
+        //Assertion user exist
         profileOnboardingAnyway()
 
         Thread.sleep(7000)
-        val appCompatEditText = onView(
-                allOf(withId(R.id.addressField),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.searchFrom),
-                                        0),
-                                1),
-                        isDisplayed()))
-        appCompatEditText.perform(click())
+
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.sub_title),withText("Pickup location"),isDisplayed())).perform(ViewActions.click())
+
         Thread.sleep(7000)
         val appCompatEditText3 = onView(
                 allOf(withId(R.id.addressField),
@@ -66,6 +67,7 @@ class formTransferTest{
                                 1),
                         isDisplayed()))
         appCompatEditText3.perform(click()).perform(ViewActions.replaceText("Moscow"), ViewActions.closeSoftKeyboard())
+
         Thread.sleep(7000)
         val linearLayout = onView(
                 allOf(childAtPosition(
@@ -100,13 +102,14 @@ class formTransferTest{
         linearLayout2.perform(click())
 
         Thread.sleep(7000)
-        onView(withId(R.id.rvTransferType)).perform(ViewActions.click())
         onView(withId(R.id.rvTransferType)).perform(ViewActions.swipeUp())
         Thread.sleep(500)
+
+//Select date
         onView(withId(R.id.transfer_date_time_field)).perform(ViewActions.click())
     onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
-        .perform(PickerActions.setDate(2019, 9,28))
-
+        .perform(PickerActions.setDate(2019, 9,15))
+        Thread.sleep(7000)
 
         val appCompatButton = onView(
                 allOf(withId(android.R.id.button1), withText("OK"),
@@ -118,7 +121,12 @@ class formTransferTest{
                                 3),
                         isDisplayed()))
         appCompatButton.perform(click())
-
+        Thread.sleep(7000)
+// The end code select date
+// Select time
+        onView(withClassName(Matchers.equalTo(TimePicker::class.java.name)))
+                .perform(PickerActions.setTime(15,15))
+        Thread.sleep(5000)
         val appCompatButton2 = onView(
                 allOf(withId(android.R.id.button1), withText("OK"),
                         childAtPosition(
@@ -128,11 +136,36 @@ class formTransferTest{
                                 2),
                         isDisplayed()))
         appCompatButton2.perform(click())
-        onView(withId(R.id.rvTransferType)).perform(ViewActions.swipeUp())
+        Thread.sleep(2000)
+// The end code select time
 
-        onView(withId(R.id.switchAgreement)).perform(ViewActions.click())
+        onView(withId(R.id.img_plus_seat)).perform(ViewActions.click())
+        Thread.sleep(2000)
+
         onView(withId(R.id.btnGetOffers)).perform(ViewActions.click())
-//img_plus_seat
+
+        //Assertion dialog-window exist
+        carOnboardingAnyway ()
+        switchOnboardingAnyway()
+        Thread.sleep(7000)
+
+
+
+    }
+    fun withIndex(matcher: Matcher<View>, index: Int): Matcher<View> {
+        return object : TypeSafeMatcher<View>() {
+            internal var currentIndex = 0
+
+            override fun describeTo(description: Description) {
+                description.appendText("with index: ")
+                description.appendValue(index)
+                matcher.describeTo(description)
+            }
+
+            public override fun matchesSafely(view: View): Boolean {
+                return matcher.matches(view) && currentIndex++ == index
+            }
+        }
     }
     fun ViewInteraction.isDisplayed(): Boolean {
         try {
@@ -159,7 +192,6 @@ class formTransferTest{
             //view is displayed logic
 
             onView(Matchers.allOf(withContentDescription("Navigate up"))).perform(ViewActions.click())
-//            onView(Matchers.allOf(ViewMatchers.withId(R.id.btnNext))).perform(ViewActions.click())
             onView(Matchers.allOf(ViewMatchers.withId(R.id.nav_order))).perform(ViewActions.click())
 
         } else {
@@ -179,6 +211,35 @@ class formTransferTest{
             Thread.sleep(7000)
 
             onView(Matchers.allOf(ViewMatchers.withId(R.id.nav_order))).perform(ViewActions.click())
+        }
+    }
+
+    fun carOnboardingAnyway () {
+        if(onView(withText("Please select transport type")).isDisplayed()) {
+            onView(Matchers.allOf(ViewMatchers.withId(android.R.id.button1), withText("OK"))).perform(ViewActions.click())
+            Thread.sleep(7000)
+            //Select car
+            onView(withId(R.id.rvTransferType)).perform (ViewActions.click())
+            Thread.sleep(7000)
+            //Click btn
+            onView(withId(R.id.btnGetOffers)).perform (ViewActions.click())
+            Thread.sleep(7000)
+
+        }  else {
+
+        }}
+       fun switchOnboardingAnyway() {
+           if (onView(withText("You should accept terms of use")).isDisplayed()) {
+            onView(Matchers.allOf(ViewMatchers.withId(android.R.id.button1), withText("OK"))).perform(ViewActions.click())
+            Thread.sleep(7000)
+            onView(withId(R.id.scrollContent)).perform(ViewActions.swipeUp())
+            Thread.sleep(2000)
+            //Activate switcher
+            onView(withId(R.id.switchAgreement)).perform(ViewActions.click())
+            Thread.sleep(7000)
+            onView(withId(R.id.btnGetOffers)).perform(ViewActions.click())
+        } else {
+
         }
     }
 
