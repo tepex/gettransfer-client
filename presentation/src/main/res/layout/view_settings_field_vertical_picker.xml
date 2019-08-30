@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="@dimen/settings_field_height"
     android:paddingTop="@dimen/margin8"
     android:paddingBottom="@dimen/margin8"
     android:background="@color/colorWhite"
@@ -23,17 +24,32 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/titleText"
+        style="@style/sf_font_pro_text_semibold_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textSize="@dimen/settings_field_text_size"
+        app:layout_constraintBottom_toTopOf="@+id/subtitleText"
+        app:layout_constraintEnd_toEndOf="@+id/subtitleText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        tools:text="Валерий Маскович" />
+
+    <TextView
         android:id="@+id/subtitleText"
         style="@style/sf_font_pro_text_regular_black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:ellipsize="end"
         android:lines="1"
         android:textSize="@dimen/settings_field_text_size"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tvBalance"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/titleText"
         app:layout_constraintTop_toBottomOf="@+id/titleText"
         tools:text="passpass@mail.com"
         tools:visibility="visible" />
@@ -54,20 +70,5 @@
         app:layout_constraintTop_toBottomOf="@+id/subtitleText"
         tools:text="Available: 100500 ₽"
         tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/titleText"
-        style="@style/sf_font_pro_text_semibold_black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:lines="1"
-        android:textSize="@dimen/settings_field_text_size"
-        app:layout_constraintBottom_toTopOf="@+id/subtitleText"
-        app:layout_constraintEnd_toEndOf="@+id/subtitleText"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/subtitleText"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Валерий Маскович" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
