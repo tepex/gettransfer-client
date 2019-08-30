@@ -16,6 +16,7 @@ import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.MainNavigateView
 
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
+import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
@@ -34,10 +35,17 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     private val configsManager: ConfigsManager by inject()
     private val worker: WorkerManager by inject { parametersOf("MainNavigatePresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
+    private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         if (accountManager.isLoggedIn) {
+            worker.main.launch {
+                if (accountManager.remoteAccount.isDriver && !getPreferences().getModel().isNewDriverAppDialogShowed) {
+                    viewState.showNewDriverAppDialog()
+                    withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(true) }
+                }
+            }
             registerPushToken()
 
             utils.launchSuspend {

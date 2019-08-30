@@ -166,6 +166,7 @@ val systemDomain = module {
     single { SetFirstLaunchInteractor(get()) }
     single { SetOnboardingShowedInteractor(get()) }
     single { SetSelectedFieldInteractor(get()) }
+    single { SetNewDriverAppDialogShowedInteractor(get()) }
 }
 
 val systemPresentation = module {

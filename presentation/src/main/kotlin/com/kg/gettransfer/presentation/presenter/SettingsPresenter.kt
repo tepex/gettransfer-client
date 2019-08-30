@@ -23,6 +23,7 @@ import com.kg.gettransfer.sys.domain.SetAccessTokenInteractor
 import com.kg.gettransfer.sys.domain.SetDebugMenuShowedInteractor
 import com.kg.gettransfer.sys.domain.SetEndpointInteractor
 import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
+import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
 
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 import com.kg.gettransfer.sys.presentation.EndpointModel
@@ -56,6 +57,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     private val setEndpoint: SetEndpointInteractor by inject()
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
     private val setAccessToken: SetAccessTokenInteractor by inject()
+    private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
 
     override fun attachView(view: SettingsView) {
         super.attachView(view)
@@ -216,6 +218,10 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
 
     fun onClearAccessTokenClicked() = worker.main.launch {
         withContext(worker.bg) { setAccessToken("") }
+    }
+
+    fun onResetNewDriverAppDialogClicked() = worker.main.launch {
+        withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(false) }
     }
 
     fun onCurrencyClicked() {

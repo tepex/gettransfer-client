@@ -15,6 +15,7 @@ data class PreferencesModel(
     @Embedded(prefix = PreferencesEntity.ENDPOINT) val endpoint: EndpointModel?,
     @ColumnInfo(name = PreferencesEntity.IS_FIRST_LAUNCH) val isFirstLaunch: Int,
     @ColumnInfo(name = PreferencesEntity.IS_ONBOARDING_SHOWED) val isOnboardingShowed: Int,
+    @ColumnInfo(name = PreferencesEntity.IS_NEW_DRIVER_APP_SHOWER) val isNewDriverAppDialogShowed: Int,
     @ColumnInfo(name = PreferencesEntity.SELECTED_FIELD) val selectedField: String,
     @ColumnInfo(name = PreferencesEntity.ADDRESS_HISTORY) val addressHistory: AddressHistoryList,
     @ColumnInfo(name = PreferencesEntity.FAVORITE_TRANSPORTS) val favoriteTransports: FavoriteTransportsList,
@@ -31,13 +32,14 @@ fun PreferencesModel.map() =
     PreferencesEntity(
         accessToken = accessToken,
         endpoint = endpoint?.map(),
-        isFirstLaunch = if (isFirstLaunch == 1) true else false,
-        isOnboardingShowed = if (isOnboardingShowed == 1) true else false,
+        isFirstLaunch = isFirstLaunch == 1,
+        isOnboardingShowed = isOnboardingShowed == 1,
+        isNewDriverAppDialogShowed = isNewDriverAppDialogShowed == 1,
         selectedField = selectedField,
         addressHistory = addressHistory.list.map { it.map() },
         favoriteTransports = favoriteTransports.list.toSet(),
         appEnters = appEnters,
-        isDebugMenuShowed = if (isDebugMenuShowed == 1) true else false
+        isDebugMenuShowed = isDebugMenuShowed == 1
     )
 
 fun PreferencesEntity.map() =
@@ -46,6 +48,7 @@ fun PreferencesEntity.map() =
         endpoint = endpoint?.map(),
         isFirstLaunch = if (isFirstLaunch) 1 else 0,
         isOnboardingShowed = if (isOnboardingShowed) 1 else 0,
+        isNewDriverAppDialogShowed = if (isNewDriverAppDialogShowed) 1 else 0,
         selectedField = selectedField,
         addressHistory = AddressHistoryList(addressHistory.map { it.map() } ),
         favoriteTransports = FavoriteTransportsList(favoriteTransports.toList()),

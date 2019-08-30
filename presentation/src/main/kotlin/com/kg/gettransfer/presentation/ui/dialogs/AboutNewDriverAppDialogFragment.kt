@@ -7,8 +7,8 @@ import com.kg.gettransfer.utilities.Analytics
 import kotlinx.android.synthetic.main.dialog_fragment_about_driver_app.*
 import org.koin.android.ext.android.inject
 
-class AboutDriverAppDialogFragment : BaseBottomSheetDialogFragment() {
-	protected val analytics: Analytics by inject()
+class AboutNewDriverAppDialogFragment : BaseBottomSheetDialogFragment() {
+	private val analytics: Analytics by inject()
 	override val layout: Int = R.layout.dialog_fragment_about_driver_app
 	private var onAboutDriverAppListener: OnAboutDriverAppListener? = null
 
@@ -32,7 +32,7 @@ class AboutDriverAppDialogFragment : BaseBottomSheetDialogFragment() {
 	companion object {
 		const val DIALOG_TAG = "about_driver_app_dialog_tag"
 
-		fun newInstance() = AboutDriverAppDialogFragment()
+		fun newInstance() = AboutNewDriverAppDialogFragment()
 	}
 
 	interface OnAboutDriverAppListener {

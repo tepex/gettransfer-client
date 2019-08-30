@@ -240,6 +240,7 @@ class ConfigsManagerTest : StringSpec(), KoinTest {
                 endpoint = Endpoint("test3", "key3", "url3", false, true),
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
+                isNewDriverAppDialogShowed = false,
                 selectedField = "selected field",
                 addressHistory = emptyList(),
                 appEnters = 2,

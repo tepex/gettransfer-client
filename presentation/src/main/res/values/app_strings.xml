@@ -38,6 +38,7 @@
     <string name="reset_onboarding">Reset onboarding</string>
     <string name="reset_rate">Reset play market rate</string>
     <string name="clear_access_token">Clear access token</string>
+    <string name="reset_new_driver_app_dialog">Reset new driver app dialog</string>
     <string name="force_crash">Force crash</string>
 
     <!--Technical strings-->

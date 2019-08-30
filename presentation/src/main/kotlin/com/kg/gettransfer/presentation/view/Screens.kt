@@ -58,10 +58,6 @@ object Screens {
             }
     }
 
-    object DriverModeNotSupport : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, DriverModeNotSupportedActivity()::class.java)
-    }
-
     object Requests : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, RequestsPagerActivity::class.java)
     }
