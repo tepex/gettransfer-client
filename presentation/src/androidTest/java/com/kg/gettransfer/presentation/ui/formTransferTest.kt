@@ -28,6 +28,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.test.espresso.contrib.PickerActions
 import com.kg.gettransfer.presentation.ui.helpers.DateTimePickerHelper
+import kotlinx.android.synthetic.main.search_address.view.*
+
 //import android.R
 
 
@@ -58,6 +60,7 @@ class formTransferTest{
         onView(Matchers.allOf(ViewMatchers.withId(R.id.sub_title),withText("Pickup location"),isDisplayed())).perform(ViewActions.click())
 
         Thread.sleep(7000)
+
         val appCompatEditText3 = onView(
                 allOf(withId(R.id.addressField),
                         childAtPosition(
@@ -149,7 +152,16 @@ class formTransferTest{
         switchOnboardingAnyway()
         Thread.sleep(7000)
 
-
+        val cardOne = onView(withIndex(withId(R.id.tv_car_model_tiny),0))
+        val cardTwo = onView(withIndex(withId(R.id.tv_car_model_tiny),1))
+        val cardThree = onView(withIndex(withId(R.id.tv_car_model_tiny),2))
+        Thread.sleep(500)
+        cardOne.perform(click());
+        Thread.sleep(7000)
+        onView(withId(R.id.btn_book)).perform(ViewActions.click())
+        Thread.sleep(7000)
+        onView(withId(R.id.btnBack)).perform(ViewActions.click())
+        Thread.sleep(7000)
 
     }
     fun withIndex(matcher: Matcher<View>, index: Int): Matcher<View> {
