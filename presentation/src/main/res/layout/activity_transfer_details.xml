@@ -82,7 +82,7 @@
             layout="@layout/view_communication_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_carrier_trip_details_top_buttons_margin_bottom" />
+            android:layout_marginBottom="@dimen/activity_transfer_details_top_buttons_margin_bottom" />
 
     </FrameLayout>
 

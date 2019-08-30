@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GetTransfer (dev)</string>
-    <string name="registration_carrier_url">https://stgtr.org/carrier/new</string>
-    <string name="carrier_mode">https://stgtr.org/en/carrier</string>
 
     <string name="file_provider_authority">com.kg.gettransfer.fileprovider</string>
 

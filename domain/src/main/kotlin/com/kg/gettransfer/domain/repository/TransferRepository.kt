@@ -7,8 +7,8 @@ import java.io.InputStream
 
 interface TransferRepository {
     suspend fun getAllTransfers(): Result<List<Transfer>>
-    suspend fun getTransfer(id: Long, role: String): Result<Transfer>
-    suspend fun getTransferCached(id: Long, role: String): Result<Transfer>
+    suspend fun getTransfer(id: Long): Result<Transfer>
+    suspend fun getTransferCached(id: Long): Result<Transfer>
     suspend fun getTransfersArchive(): Result<List<Transfer>>
     suspend fun getTransfersActive(): Result<List<Transfer>>
     suspend fun createTransfer(transferNew: TransferNew): Result<Transfer>

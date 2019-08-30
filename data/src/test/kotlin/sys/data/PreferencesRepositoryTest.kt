@@ -4,7 +4,6 @@ import com.kg.gettransfer.core.data.ResultData
 
 import com.kg.gettransfer.core.domain.Result
 
-import com.kg.gettransfer.sys.domain.Endpoint
 import com.kg.gettransfer.sys.domain.Preferences
 import com.kg.gettransfer.sys.domain.PreferencesRepository
 
@@ -14,7 +13,6 @@ import io.kotlintest.TestCaseOrder
 import io.kotlintest.TestResult
 import io.kotlintest.shouldBe
 import io.kotlintest.extensions.TopLevelTest
-import io.kotlintest.koin.KoinListener
 import io.kotlintest.specs.StringSpec
 
 import io.mockk.*
@@ -126,15 +124,11 @@ class PreferencesRepositoryTest : StringSpec(), KoinTest {
             Preferences(
                 accessToken = "access token",
                 endpoint = "endpoint",
-                lastMode = "last mode",
-                lastMainScreenMode = "last main screen mode",
-                lastCarrierTripsTypeView = "last carrier trips type view",
-                firstDayOfWeek = 1,
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
                 selectedField = "selected field",
                 addressHistory = emptyList(),
-                appEntersForMarketRate = 2,
+                appEnters = 2,
                 isDebugMenuShowed = false,
                 favoriteTransports = emptySet()
             )
@@ -142,15 +136,11 @@ class PreferencesRepositoryTest : StringSpec(), KoinTest {
             PreferencesEntity(
                 accessToken = "access token",
                 endpoint = "endpoint",
-                lastMode = "last mode",
-                lastMainScreenMode = "last main screen mode",
-                lastCarrierTripsTypeView = "last carrier trips type view",
-                firstDayOfWeek = 1,
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
                 selectedField = "selected field",
                 addressHistory = emptyList(),
-                appEntersForMarketRate = 2,
+                appEnters = 2,
                 isDebugMenuShowed = false,
                 favoriteTransports = emptySet()
             )

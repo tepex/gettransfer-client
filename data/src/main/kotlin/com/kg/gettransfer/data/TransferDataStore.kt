@@ -11,7 +11,7 @@ interface TransferDataStore : KoinComponent {
 
     suspend fun cancelTransfer(id: Long, reason: String): TransferEntity
 
-    suspend fun getTransfer(id: Long, role: String): TransferEntity?
+    suspend fun getTransfer(id: Long): TransferEntity?
 
     suspend fun getAllTransfers(): List<TransferEntity>
 

@@ -55,7 +55,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val notificationManager: GTNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()
-    protected val carrierTripInteractor: CarrierTripInteractor by inject()
     protected val chatInteractor: ChatInteractor by inject()
     protected val countEventsInteractor: CountEventsInteractor by inject()
     protected val reviewInteractor: ReviewInteractor by inject()
@@ -126,7 +125,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
         utils.asyncAwait { transferInteractor.clearTransfersCache() }
         utils.asyncAwait { offerInteractor.clearOffersCache() }
-        utils.asyncAwait { carrierTripInteractor.clearCarrierTripsCache() }
         utils.asyncAwait { reviewInteractor.clearReviewCache() }
 
         countEventsInteractor.clearCountEvents()
@@ -268,11 +266,12 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     fun onAppStateChanged(isForeGround: Boolean) = worker.main.launch {
         with(socketInteractor) {
-            if (isForeGround && accountManager.hasAccount) {
-                withContext(worker.bg) { openSocketConnection() }
-            } else if (getPreferences().getModel().lastMode != Screens.CARRIER_MODE ||
-                getPreferences().getModel().isBackgroundCoordinatesRejected()) {
-                closeSocketConnection()
+            withContext(worker.bg) {
+                if (isForeGround && accountManager.hasAccount) {
+                    openSocketConnection()
+                } else {
+                    closeSocketConnection()
+                }
             }
         }
     }

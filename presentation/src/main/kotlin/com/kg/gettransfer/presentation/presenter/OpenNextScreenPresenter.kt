@@ -17,7 +17,6 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
         if (params.nextScreen.isEmpty()) return
         when (params.nextScreen) {
             Screens.CLOSE_AFTER_LOGIN -> router.exit()
-            Screens.CARRIER_MODE -> checkCarrierMode()
             Screens.PASSENGER_MODE -> {
                 router.exit()
                 analytics.logProfile(Analytics.PASSENGER_TYPE)
@@ -43,19 +42,6 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
             Screens.RATE_TRANSFER -> {
                 router.newRootScreen(Screens.MainPassengerToRateTransfer(params.transferId, params.rate))
             }
-        }
-    }
-
-    private fun checkCarrierMode() {
-        if (accountManager.remoteAccount.isDriver) {
-            if (accountManager.remoteAccount.isManager) {
-                analytics.logProfile(Analytics.CARRIER_TYPE)
-            } else {
-                analytics.logProfile(Analytics.DRIVER_TYPE)
-            }
-            router.newRootScreen(Screens.CarrierMode)
-        } else {
-            router.replaceScreen(Screens.CarrierRegister)
         }
     }
 }

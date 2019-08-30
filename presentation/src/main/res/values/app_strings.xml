@@ -26,13 +26,7 @@
     <string name="new_offer_notification_channel_name" translatable="true">New Offer</string>
 
     <!-- Logs -->
-    <string name="logs_file_name">Logs.txt</string>
-    <string name="share_extra_subject">GTR Logs</string>
     <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
-
-    <!-- Drawer -->
-    <string name="navigation_drawer_open" translatable="false">Open</string>
-    <string name="navigation_drawer_close" translatable="false">Close</string>
 
     <!--Strings for all types of builds-->
     <string name="app_version">Version %1$s (%2$s)</string>
@@ -55,10 +49,8 @@
     <!-- UI Strings -->
     <string name="transfer_start_sign">A</string>
     <string name="transfer_end_sign">B</string>ё
-    <string name="X_SIGN">x</string>
     <string name="passenger_number_default">0</string>
     <string name="rub">₽</string>
-    <string name="search_nothing"></string>
 
     <string name="count_persons_and_baggage"> x%1$d</string>
     <string name="text_in_parentheses">%1$s</string>

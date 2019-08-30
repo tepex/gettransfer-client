@@ -16,7 +16,6 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.adapter.ChatAdapter
 import com.kg.gettransfer.presentation.adapter.CopyMessageListener
 import com.kg.gettransfer.presentation.adapter.MessageReadListener
-import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.ChatModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -47,7 +46,6 @@ class ChatActivity : BaseActivity(), ChatView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.transferId = intent.getLongExtra(ChatView.EXTRA_TRANSFER_ID, 0)
-        presenter.tripId = intent.getLongExtra(ChatView.EXTRA_TRIP_ID, 0)
 
         setContentView(R.layout.activity_chat)
 
@@ -66,21 +64,11 @@ class ChatActivity : BaseActivity(), ChatView {
         presenter.onLeaveRoom()
     }
 
-    override fun setToolbar(transfer: TransferModel, offer: OfferModel?, isShowChevron: Boolean) {
+    override fun setToolbar(transfer: TransferModel, offer: OfferModel?) {
         offer?.let { initToolbar(it.driver?.name ?: it.carrier.profile?.name, it.phoneToCall) }
         with(transfer) {
             if (id != ChatPresenter.NO_ID) {
-                initTransferInfoLayout(from, dateTime, id, isShowChevron)
-            }
-        }
-    }
-
-    override fun setToolbar(carrierTrip: CarrierTripModel) {
-        val userProfile = carrierTrip.passenger?.profile
-        initToolbar(userProfile?.name, userProfile?.phone)
-        with(carrierTrip.base) {
-            if (id != ChatPresenter.NO_ID) {
-                initTransferInfoLayout(from, dateLocal, transferId, true)
+                initTransferInfoLayout(from, dateTime, id)
             }
         }
     }
@@ -101,8 +89,7 @@ class ChatActivity : BaseActivity(), ChatView {
     private fun initTransferInfoLayout(
         from: String,
         date: Date,
-        transferId: Long,
-        @Suppress("UNUSED_PARAMETER") isShowChevron: Boolean
+        transferId: Long
     ) {
         // imgChevron.isVisible = isShowChevron
         layoutTransferInfo.apply {

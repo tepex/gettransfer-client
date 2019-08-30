@@ -10,24 +10,13 @@
     <color name="colorRed">#FF3B30</color>
     <color name="primaryDriver">#ff6900</color>
 
-    <color name="nav_item_subtitle">#9b9b9b</color>
-
     <color name="toolbar_bg">#FBFBFB</color>
-
-    <color name="address_item_subtitle">#9b9b9b</color>
-    <color name="search_list_title">#9b9b9b</color>
-    <color name="rating_bg">#59181818</color>
-
-    <color name="colorSeparatorLightSolid">#e8e8e8</color>
-
-    <!--<color name="colorIconGray">#9e9e9e</color>-->
 
     <color name="colorTextBlack">#f0000000</color>
     <color name="colorTextLightGray">#8E8E93</color>
 
     <color name="colorTextBlackBold">#e0000000</color>
 
-    <color name="colorBack">#efeff4</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorWhitePressed">#d2d2d2</color>
 
@@ -44,13 +33,10 @@
 
     <!--view_trip_info-->
     <color name="colorTransferRequestText">#9b9b9b</color>
-    <color name="colorRedText">#d0021b</color>
 
     <!--offers_card-->
     <color name="colorBackgroundGray">#f6f6f6</color>
-    <color name="colorSortOffersStroke">#cacace</color>
 
-    <color name="bg_point_on_map">#f7f7f7</color>
     <color name="black_50">#80000000</color>
     <color name="black_a30">#4d000000</color>
     <color name="black_a10">#1a000000</color>
@@ -58,7 +44,6 @@
     <color name="colorDivider">#bcbbc1</color>
     <color name="colorDividerLight">@color/color_gtr_light_grey</color>
 
-    <color name="colorBackNetworkNotAvailable">#ff3b30</color>
     <color name="separator_color">#d8d8d8</color>
 
     <color name="transparent_white">#00ffffff</color>
@@ -69,16 +54,11 @@
     <color name="color_transfer_details_vertical_divider">#d8d8d8</color>
     <color name="color_transfer_details_horizontal_divider">@color/colorDivider</color> <!--TODO remove and replace all gray dividers to sh_divider_gray.xml-->
     <color name="color_transfer_details_horizontal_divider_new">@color/colorDividerLight</color> <!--TODO remove and replace all gray dividers to sh_divider_light_gray.xml-->
-    <color name="color_transfer_details_text_green">#98b71b</color>
     <color name="color_transfer_details_text_gray">#B2B2B2</color>
     <color name="color_transfer_details_text_red">#ff3b30</color>
 
     <!--Driver mode -->
-    <color name="color_driver_mode_text_gray">#B2B2B2</color>
-    <color name="color_driver_mode_text_green">#98b71b</color>
     <color name="color_driver_mode_divider">#19000000</color>
-    <color name="color_driver_mode_address_divider">#30979797</color>
-    <color name="color_carrier_trips_activity_background">#f6f6f6</color>
 
     <color name="rate_comment_border">#979797</color>
     
@@ -86,9 +66,7 @@
     <color name="color_gtr_grey">#7F7F7F</color>
     <color name="color_gtr_light_grey">#E5E5E5</color>
     <color name="color_gtr_super_light_grey">#F6F6F6</color>
-    <color name="color_gtr_yellow">#FEDB06</color>
     <color name="color_gtr_green">#31B700</color>
-    <color name="color_gtr_blue">#2CAEE9</color>
     <color name="color_gtr_orange">#FF6900</color>
     <color name="color_gtr_red">#FF3B30</color>
 

@@ -96,19 +96,14 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
             else -> throw UnsupportedOperationException()
         }
 
-        override fun getItem(position: Int): Fragment = when (position) {
-            0 -> {
-                getFragment(position) { createLoginFragment() }
-            }
-            1 -> {
-                if (nextScreen == Screens.CARRIER_MODE) {
-                    SignUpCarrierFragment.newInstance()
-                } else {
-                    getFragment(position) { createSignUpFragment() }
+        override fun getItem(position: Int): Fragment =
+            getFragment(position) {
+                when (position) {
+                    0 -> createLoginFragment()
+                    1 -> createSignUpFragment()
+                    else -> throw UnsupportedOperationException()
                 }
             }
-            else -> throw UnsupportedOperationException()
-        }
 
         //TODO for translate emailOrPhone to otherFragment
         private fun getFragment(position: Int, createFragment: (() -> Fragment)): Fragment {

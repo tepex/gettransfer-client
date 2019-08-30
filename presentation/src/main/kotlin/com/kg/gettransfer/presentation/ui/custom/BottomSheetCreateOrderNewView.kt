@@ -25,7 +25,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.onTextChanged
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.bottom_sheet_create_order_new.*
+import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.*
 
@@ -34,7 +34,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         attributeSet: AttributeSet? = null,
         defStyle: Int = 0
 ) : ConstraintLayout(context, attributeSet, defStyle), LayoutContainer {
-    override val containerView: View = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_create_order_new, this, true)
+    override val containerView: View = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_create_order, this, true)
 
     private lateinit var adapter: TransferTypeAdapter
 

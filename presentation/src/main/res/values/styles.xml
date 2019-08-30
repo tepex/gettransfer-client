@@ -106,35 +106,6 @@
         <item name="android:fontFamily">@font/sf_pro_display_bold</item>
     </style>
 
-
-    <style name="nav_item">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-    </style>
-    <style name="nav_item_title" parent="sf_font">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/nav_item_title_size</item>
-        <item name="android:textColor">@color/colorTextBlack</item>
-        <item name="fontFamily">@font/sf_pro_text_semibold</item>
-    </style>
-    <style name="nav_item_subtitle" parent="sf_font">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/nav_item_subtitle_size</item>
-        <item name="android:textColor">@color/nav_item_subtitle</item>
-        <item name="fontFamily">@font/sf_pro_text_regular</item>
-    </style>
-    <style name="nav_footer_version" parent="sf_font">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/nav_footer_version_size</item>
-        <item name="android:textColor">@color/nav_item_subtitle</item>
-    </style>
-
-
     <style name="read_more_title" parent="sf_font_bold">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -158,15 +129,6 @@
         <item name="android:textSize">@dimen/address_item_text_size</item>
         <item name="android:layout_marginStart">@dimen/popular_place_item_margin_start</item>
     </style>
-    <style name="list_title" parent="sf_font">
-        <item name="android:layout_marginStart">@dimen/left_margin_title</item>
-        <item name="android:textSize">@dimen/title_text_size</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="android:textColor">@color/search_list_title</item>
-    </style>
 
     <style name="SwitchCompatStyle" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/color_gtr_green</item>
@@ -177,7 +139,7 @@
     </style>
 
     <style name="TabLayoutTextStyle">
-        <item name="android:textSize">@dimen/views_carrier_trips_activity_tab_layout_text_size</item>
+        <item name="android:textSize">@dimen/activity_requests_tab_layout_text_size</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:fontFamily">@font/sf_pro_text_regular</item>
         <item name="android:textAllCaps">false</item>
@@ -237,27 +199,6 @@
         <item name="android:layout_marginStart">@dimen/card_view_margin_start_end</item>
         <item name="android:layout_marginEnd">@dimen/card_view_margin_start_end</item>
         <item name="cardCornerRadius">@dimen/card_view_corners</item>
-    </style>
-
-    <!--<style name="etField" parent="Base.V7.Widget.AppCompat.EditText">-->
-    <!--<item name="android:background">@android:color/transparent</item>-->
-
-    <!--<item name="android:paddingBottom">15dp</item>-->
-    <!--<item name="android:paddingLeft">8dp</item>-->
-    <!--<item name="android:paddingRight">8dp</item>-->
-    <!--<item name="android:paddingTop">18dp</item>-->
-
-    <!--<item name="android:textSize">14sp</item>-->
-    <!--</style>-->
-
-    <style name="calendar_item_days_of_week">
-        <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
-        <item name="android:textColor">@color/color_driver_mode_text_gray</item>
-    </style>
-
-    <style name="sf_font_grey" parent="sf_font">
-        <item name="android:textColor">@color/color_gtr_grey</item>
     </style>
     
     <style name="editTextHintCreateOrder" parent="ThemeOverlay.AppCompat.Light">

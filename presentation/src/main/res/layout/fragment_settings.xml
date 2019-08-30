@@ -64,35 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:settingsTitleSwitch="@string/LNG_EMAIL_NOTIFICATIONS"
+                app:settingsShowDivider="false"
                 android:visibility="gone"/>
-
-            <LinearLayout
-                android:id="@+id/layoutCarrierSettings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldSwitch
-                    android:id="@+id/settingsCoordinatesInBackground"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:settingsTitleSwitch="@string/LNG_SEND_COORDINATES_IN_BACKGROUND"/>
-
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
-                    android:id="@+id/settingsCalendarMode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:settingsTitlePicker="@string/LNG_CALENDAR_MODE" />
-
-                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
-                    android:id="@+id/settingsFirstDayOfWeek"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:settingsTitlePicker="@string/LNG_WEEK_FIRST_DAY"
-                    app:settingsPickerDivider="false"/>
-
-            </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutAboutApp"

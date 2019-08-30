@@ -23,25 +23,15 @@ import ru.terrakok.cicerone.android.support.SupportAppScreen
 object Screens {
     @JvmField val NOT_USED = -1
 
-    @JvmField val MAIN = "main"
     @JvmField val OFFERS = "offers"
     @JvmField val DETAILS = "details"
 
-    @JvmField val CARRIER_MODE = "carrier_mode"
     @JvmField val PASSENGER_MODE = "passenger_mode"
 
-    @JvmField val REG_CARRIER = "registration_carrier"
     @JvmField val CLOSE_AFTER_LOGIN = "close_after_login"
-
-    @JvmField val MAIN_WITH_MAP = "main_with_map"
-    @JvmField val MAIN_WITHOUT_MAP = "main_without_map"
-
-    @JvmField val CARRIER_TRIPS_TYPE_VIEW_CALENDAR = "carrier_trips_type_calendar"
-    @JvmField val CARRIER_TRIPS_TYPE_VIEW_LIST = "carrier_trips_type_list"
 
     @JvmField val PAYMENT_OFFER = "payment_offer"
     @JvmField val RATE_TRANSFER = "rate_transfer"
-    const val RETURN_MAIN = "return"
 
     private const val EMAIL_DATA = "mailto:"
     private const val DIAL_SCHEME = "tel"
@@ -68,16 +58,6 @@ object Screens {
             }
     }
 
-    object CarrierMode : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, CarrierTripsMainActivity()::class.java)
-    }
-
-    object CarrierRegister : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
-            putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
-        }
-    }
-
     object DriverModeNotSupport : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, DriverModeNotSupportedActivity()::class.java)
     }
@@ -95,12 +75,6 @@ object Screens {
     object RestorePassword : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
             putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_RESTORE_PASS)
-        }
-    }
-
-    object CarrierTransfers : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
-            putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_TRANSFERS)
         }
     }
 
@@ -264,19 +238,10 @@ object Screens {
         }
     }
 
-    data class Chat(val transferId: Long, val tripId: Long? = null) : SupportAppScreen() {
+    data class Chat(val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, ChatActivity::class.java).apply {
             putExtra(ChatView.EXTRA_TRANSFER_ID, transferId)
-            tripId?.let { putExtra(ChatView.EXTRA_TRIP_ID, it) }
         }
-    }
-
-    data class TripDetails(val tripId: Long, val transferId: Long) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) =
-            Intent(context, CarrierTripDetailsActivity::class.java).apply {
-                putExtra(CarrierTripDetailsView.EXTRA_TRIP_ID, tripId)
-                putExtra(CarrierTripDetailsView.EXTRA_TRANSFER_ID, transferId)
-            }
     }
 
     data class Payment(

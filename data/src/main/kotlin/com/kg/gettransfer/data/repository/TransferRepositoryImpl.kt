@@ -73,7 +73,7 @@ class TransferRepositoryImpl(
 
     override suspend fun setOffersUpdateDate(id: Long): Result<Unit> {
         val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
-            factory.retrieveCacheDataStore().getTransfer(id, "")
+            factory.retrieveCacheDataStore().getTransfer(id)
         }
         result.entity?.let { entity ->
             if (entity.offersUpdatedAt != null) {
@@ -84,13 +84,13 @@ class TransferRepositoryImpl(
         return Result(Unit)
     }
 
-    override suspend fun getTransfer(id: Long, role: String): Result<Transfer> {
+    override suspend fun getTransfer(id: Long): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).getTransfer(id, role)
+            factory.retrieveDataStore(fromRemote).getTransfer(id)
         }
         if (result.error == null) {
             result.entity?.apply {
-                setLastOffersUpdate(this, role)
+                setLastOffersUpdate(this)
                 factory.retrieveCacheDataStore().addTransfer(this)
             }
         }
@@ -106,9 +106,9 @@ class TransferRepositoryImpl(
         )
     }
 
-    override suspend fun getTransferCached(id: Long, role: String): Result<Transfer> {
+    override suspend fun getTransferCached(id: Long): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
-            factory.retrieveCacheDataStore().getTransfer(id, role)
+            factory.retrieveCacheDataStore().getTransfer(id)
         }
         return Result(
             result.entity?.map(
@@ -246,9 +246,9 @@ class TransferRepositoryImpl(
         }
     }
 
-    private suspend fun setLastOffersUpdate(remoteTransfer: TransferEntity, role: String) {
+    private suspend fun setLastOffersUpdate(remoteTransfer: TransferEntity) {
         val resultCached: ResultEntity<TransferEntity?> = retrieveCacheEntity {
-            factory.retrieveCacheDataStore().getTransfer(remoteTransfer.id, role)
+            factory.retrieveCacheDataStore().getTransfer(remoteTransfer.id)
         }
         resultCached.entity?.let { remoteTransfer.lastOffersUpdatedAt = it.lastOffersUpdatedAt }
     }

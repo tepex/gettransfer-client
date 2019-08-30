@@ -23,7 +23,6 @@ import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
-import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.sys.presentation.EndpointModel
@@ -50,7 +49,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
     fun createSettingsPresenter() = SettingsPresenter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):View =
-            inflater.inflate(R.layout.fragment_settings, container, false)
+        inflater.inflate(R.layout.fragment_settings, container, false)
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -119,26 +118,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         settingsEmailNotif.isVisible = false
     }
 
-    override fun initDriverLayout(isBackGroundCoordinatesAccepted: Boolean) {
-        layoutCarrierSettings.isVisible = true
-        with(settingsCoordinatesInBackground) {
-            setOnClickListener { view ->
-                with(view.switch_button) {
-                    isChecked = !isChecked
-                    presenter.onDriverCoordinatesSwitched(isChecked)
-                }
-            }
-            switch_button.apply {
-                isChecked = isBackGroundCoordinatesAccepted
-                setOnCheckedChangeListener { _, isChecked -> presenter.onDriverCoordinatesSwitched(isChecked) }
-            }
-        }
-    }
-
-    override fun hideDriverLayout() {
-        layoutCarrierSettings.isVisible = false
-    }
-
     override fun showDebugMenu() {
         layoutDebugSettings.isVisible = true
         settingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
@@ -152,23 +131,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
     }
 
     override fun setEndpoints(endpoints: List<EndpointModel>) =
-            Utils.setEndpointsDialogListener(requireContext(), settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
-
-    override fun setCalendarModes(calendarModesKeys: List<String>) {
-        val calendarModes = calendarModesKeys.map { getCalendarModeName(it) to it }
-        val calendarModesNames = calendarModes.map { it.first }
-        Utils.setCalendarModesDialogListener(
-                requireContext(),
-                settingsCalendarMode,
-                calendarModesNames,
-                R.string.LNG_CALENDAR_MODE
-        ) { presenter.changeCalendarMode(calendarModes[it].second) }
-    }
-
-    override fun setDaysOfWeek(daysOfWeek: List<CharSequence>) =
-            Utils.setFirstDayOfWeekDialogListener(requireContext(), settingsFirstDayOfWeek, daysOfWeek) { selected ->
-                presenter.changeFirstDayOfWeek(selected)
-            }
+        Utils.setEndpointsDialogListener(requireContext(), settingsEndpoint, endpoints) { presenter.changeEndpoint(it) }
 
     override fun setCurrency(currency: String) { settingsCurrency.field_text.text = currency }
 
@@ -196,12 +159,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         }
     }
 
-    override fun setCalendarMode(calendarModeKey: String) {
-        settingsCalendarMode.field_text.text = getCalendarModeName(calendarModeKey)
-    }
-
-    override fun setFirstDayOfWeek(dayOfWeek: String) { settingsFirstDayOfWeek.field_text.text = dayOfWeek }
-
     override fun setEndpoint(endpoint: EndpointModel)  { settingsEndpoint.field_text.text = endpoint.name }
 
     override fun setDistanceUnit(inMiles: Boolean) {
@@ -226,8 +183,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
     override fun hideSomeDividers() {
         if (!settingsEmailNotif.isVisible) settingsDistanceUnit.hideDivider()
         else settingsDistanceUnit.showDivider()
-        if (!layoutCarrierSettings.isVisible) settingsEmailNotif.hideDivider()
-        else settingsEmailNotif.showDivider()
     }
 
     override fun showCurrencyChooser() {
@@ -236,12 +191,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
 
     override fun showLanguageChooser() {
         findNavController().navigate(SettingsFragmentDirections.goToSelectLanguage())
-    }
-
-    private fun getCalendarModeName(calendarModeKey: String) = when (calendarModeKey) {
-        Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR -> getString(R.string.LNG_CALENDAR)
-        Screens.CARRIER_TRIPS_TYPE_VIEW_LIST -> getString(R.string.LNG_LIST)
-        else -> throw UnsupportedOperationException()
     }
 
     companion object {

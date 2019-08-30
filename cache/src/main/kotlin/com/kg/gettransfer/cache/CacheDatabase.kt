@@ -5,7 +5,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 import com.kg.gettransfer.cache.dao.AccountCachedDao
-import com.kg.gettransfer.cache.dao.CarrierTripCacheDao
 import com.kg.gettransfer.cache.dao.ChatCachedDao
 import com.kg.gettransfer.cache.dao.OfferCachedDao
 import com.kg.gettransfer.cache.dao.RouteCacheDao
@@ -13,8 +12,6 @@ import com.kg.gettransfer.cache.dao.TransferCachedDao
 import com.kg.gettransfer.cache.dao.ReviewCacheDao
 
 import com.kg.gettransfer.cache.model.AccountCached
-import com.kg.gettransfer.cache.model.CarrierTripBaseCached
-import com.kg.gettransfer.cache.model.CarrierTripMoreCached
 import com.kg.gettransfer.cache.model.ChatCached
 import com.kg.gettransfer.cache.model.MessageCached
 import com.kg.gettransfer.cache.model.NewMessageCached
@@ -40,13 +37,11 @@ import com.kg.gettransfer.sys.cache.SystemConverters
     TransferCached::class,
     OfferCached::class,
     RouteInfoCached::class,
-    CarrierTripBaseCached::class,
-    CarrierTripMoreCached::class,
     ChatCached::class,
     MessageCached::class,
     NewMessageCached::class,
     OfferRateCached::class,
-    OfferFeedbackCached::class], version = 25, exportSchema = false)
+    OfferFeedbackCached::class], version = 26, exportSchema = false)
 @TypeConverters(RoomConverters::class, SystemConverters::class)
 abstract class CacheDatabase : RoomDatabase() {
 
@@ -63,8 +58,6 @@ abstract class CacheDatabase : RoomDatabase() {
     abstract fun offersCacheDao(): OfferCachedDao
 
     abstract fun routeCacheDao(): RouteCacheDao
-
-    abstract fun carrierTripCachedDao(): CarrierTripCacheDao
 
     abstract fun chatCacheDao(): ChatCachedDao
 
