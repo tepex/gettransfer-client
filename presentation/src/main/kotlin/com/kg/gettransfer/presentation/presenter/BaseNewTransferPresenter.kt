@@ -74,10 +74,10 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
                             if (address?.cityPoint?.point != null) {
                                 withContext<Unit>(worker.main.coroutineContext) { setPointAddress(address) }
                             } else {
-                                setEmptyAddress()
+                                withContext<Unit>(worker.main.coroutineContext) { setEmptyAddress() }
                             }
                         } else {
-                            setEmptyAddress()
+                            withContext<Unit>(worker.main.coroutineContext) { setEmptyAddress() }
                         }
                     } else {
                         val result = geoInteractor.getMyLocationByIp()
@@ -85,7 +85,7 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
                         if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
                             withContext<Unit>(worker.main.coroutineContext) { setLocation(isFromField, result.model) }
                         } else {
-                            setEmptyAddress()
+                            withContext<Unit>(worker.main.coroutineContext) { setEmptyAddress() }
                         }
                     }
                 }
