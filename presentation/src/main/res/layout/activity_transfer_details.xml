@@ -86,10 +86,15 @@
 
     </FrameLayout>
 
-    <include
+    <FrameLayout
         android:id="@+id/sheetTransferDetails"
-        layout="@layout/bottom_sheet_transfer_details"
-        android:visibility="visible" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        style="?attr/bottomSheetStyle">
+
+        <include layout="@layout/bottom_sheet_transfer_details" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -41,7 +41,6 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
-import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
 import com.kg.gettransfer.presentation.ui.behavior.MapCollapseBehavior
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
@@ -93,7 +92,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
 
-    private lateinit var bsTransferDetails: BottomSheetTripleStatesBehavior<View>
+    private lateinit var bsTransferDetails: BottomSheetBehavior<View>
     private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
     private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
 
@@ -197,11 +196,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun initBottomSheets() {
-        bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
+        bsTransferDetails = BottomSheetBehavior.from(sheetTransferDetails)
         bsSecondarySheet = BottomSheetBehavior.from(secondary_bottom_sheet)
 
         bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
-        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+        bsTransferDetails.state = BottomSheetBehavior.STATE_COLLAPSED
+        bsTransferDetails.saveFlags = BottomSheetBehavior.SAVE_ALL
 
         tintBackgroundShadow = tintBackground
         bsSecondarySheet.setBottomSheetCallback(bsCallback)

@@ -8,10 +8,8 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    app:anchorPoint="@dimen/bottom_sheet_transfer_details_bs_anchor_point"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="@dimen/bottom_sheet_transfer_details_bs_peek_height"
-    app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior">
+    app:behavior_peekHeight="@dimen/bottom_sheet_carrier_trip_details_bs_peek_height">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -19,7 +17,7 @@
         android:background="@drawable/back_top_rounded"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/bottom_sheet_transfer_details_free_space_height">
+        android:paddingBottom="@dimen/bottom_sheet_carrier_trip_details_free_space_height">
 
         <View
             android:id="@+id/divider"

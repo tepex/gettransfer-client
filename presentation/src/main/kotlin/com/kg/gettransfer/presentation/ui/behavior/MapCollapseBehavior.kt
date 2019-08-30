@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class MapCollapseBehavior<V : ViewGroup>(private val mContext: Context, attrs: AttributeSet): BaseBehavior<V>(mContext, attrs) {
+class MapCollapseBehavior<V : ViewGroup>(mContext: Context, attrs: AttributeSet): BaseBehavior<V>(mContext, attrs) {
 
     private var dependencyTopPos = -1
     private var bounds: LatLngBounds? = null
@@ -20,10 +21,10 @@ class MapCollapseBehavior<V : ViewGroup>(private val mContext: Context, attrs: A
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
         if (isBottomSheet(dependency)) {
-            val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetTripleStatesBehavior
+            val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetBehavior
 
             if (behavior.peekHeight > 0 && dependency.top != dependencyTopPos) {
-                val anchorPoint = behavior.anchorPoint
+                val anchorPoint = behavior.halfExpandedRatio.toInt()
                 dependencyTopPos = dependency.top
                 (child as MapView).getMapAsync{ map ->
                     map.setPadding(0, 0, 0, when {
