@@ -372,6 +372,7 @@
     <string name="LNG_ABOUT_DRIVER_APP_NOT_SUPPORT">Unfortunately, the driver mode in your version of the application is no longer supported. Try a separate application for drivers. Now it will be more convenient to find applications and plan trips.</string>
     <string name="LNG_ABOUT_DRIVE_APP_ANDROID_CONTINUE">Open in Google Play</string>
     <string name="LNG_ABOUT_DRIVE_APP_NOT_NOW">Thanks, not now!</string>
+    <string name="LNG_ABOUT_DRIVE_APP_CONTINUE_PAX">Continue as passenger</string>
     
     <string name="LNG_ERROR_RATE_LIMIT">Too many requests</string>
 

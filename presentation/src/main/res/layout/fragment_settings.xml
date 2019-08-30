@@ -157,6 +157,12 @@
                     app:settingsTitlePicker="@string/clear_access_token" />
 
                 <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
+                    android:id="@+id/settingsResetNewDriverAppDialog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:settingsTitlePicker="@string/reset_new_driver_app_dialog" />
+
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                     android:id="@+id/forceCrash"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

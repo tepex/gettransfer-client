@@ -58,6 +58,7 @@ class ConfigsManagerTest : StringSpec() {
                 endpoint = "key3",
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
+                isNewDriverAppDialogShowed = false,
                 selectedField = "selected field",
                 addressHistory = emptyList(),
                 favoriteTransports = emptySet(),

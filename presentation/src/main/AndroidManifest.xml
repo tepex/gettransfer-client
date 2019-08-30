@@ -141,10 +141,6 @@
             android:name=".presentation.ui.ChatActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.ui.DriverModeNotSupportedActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".presentation.ui.HandleUrlActivity"

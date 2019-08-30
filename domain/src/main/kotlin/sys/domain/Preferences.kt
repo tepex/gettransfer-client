@@ -8,6 +8,7 @@ data class Preferences(
     val endpoint: Endpoint?,
     val isFirstLaunch: Boolean,
     val isOnboardingShowed: Boolean,
+    val isNewDriverAppDialogShowed: Boolean,
     val selectedField: String,
     val addressHistory: List<GTAddress>,
     val favoriteTransports: Set<TransportType.ID>,

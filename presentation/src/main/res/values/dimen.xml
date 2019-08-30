@@ -442,18 +442,13 @@
 	<dimen name="activity_transfer_details_top_buttons_margin_bottom">8dp</dimen>
 
 	<dimen name="margin4">4dp</dimen>
-	<dimen name="margin40">40dp</dimen>
 	<dimen name="margin44">44dp</dimen>
-	<dimen name="margin48">48dp</dimen>
 	<dimen name="margin16">16dp</dimen>
 	<dimen name="margin20">20dp</dimen>
 	<dimen name="margin24">24dp</dimen>
-	<dimen name="margin32">32dp</dimen>
 	<dimen name="margin0">0dp</dimen>
 	<dimen name="margin8">8dp</dimen>
 	<dimen name="margin104">104dp</dimen>
-	<dimen name="margin64">64dp</dimen>
-	<dimen name="margin80">80dp</dimen>
 
 	<!--new settings-->
 	<dimen name="settings_field_text_size">16sp</dimen>
@@ -725,5 +720,15 @@
 	<dimen name="activity_customer_support_padding_bottom">50dp</dimen>
 
 	<dimen name="ic_loading_size">32dp</dimen>
+
+	<!-- Dialog about new driver app -->
+	<dimen name="driver_app_dialog_icon_margin_top">4dp</dimen>
+	<dimen name="driver_app_dialog_elements_horizontal_margin">30dp</dimen>
+	<dimen name="driver_app_dialog_title_margin_top">32dp</dimen>
+	<dimen name="driver_app_dialog_info_margin_top">32dp</dimen>
+	<dimen name="driver_app_dialog_continue_btn_margin_top">56dp</dimen>
+	<dimen name="driver_app_dialog_continue_btn_text_size">14sp</dimen>
+	<dimen name="driver_app_dialog_cancel_btn_vertical_margin">24dp</dimen>
+	<dimen name="driver_app_dialog_close_btn_margin_top_end">16dp</dimen>
 
 </resources>

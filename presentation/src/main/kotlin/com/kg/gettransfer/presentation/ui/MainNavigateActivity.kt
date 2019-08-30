@@ -21,6 +21,7 @@ import com.kg.gettransfer.extensions.visibleSlideFade
 import com.kg.gettransfer.extensions.setupWithNavController
 
 import com.kg.gettransfer.presentation.presenter.MainNavigatePresenter
+import com.kg.gettransfer.presentation.ui.dialogs.AboutNewDriverAppDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
@@ -34,7 +35,7 @@ import pub.devrel.easypermissions.EasyPermissions
 
 @Suppress("TooManyFunctions")
 class MainNavigateActivity : BaseActivity(), MainNavigateView,
-        StoreDialogFragment.OnStoreListener {
+        StoreDialogFragment.OnStoreListener, AboutNewDriverAppDialogFragment.OnAboutDriverAppListener {
 
     @InjectPresenter
     internal lateinit var presenter: MainNavigatePresenter
@@ -103,6 +104,14 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         } ?: RatingDetailDialogFragment
                 .newInstance()
                 .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+    }
+
+    override fun showNewDriverAppDialog() =
+        AboutNewDriverAppDialogFragment.newInstance()
+            .show(supportFragmentManager, AboutNewDriverAppDialogFragment.DIALOG_TAG)
+
+    override fun onClickGoToDriverApp() {
+        Utils.goToGooglePlay(this, getString(R.string.driver_app_market_package))
     }
 
     override fun askRateInPlayMarket() =

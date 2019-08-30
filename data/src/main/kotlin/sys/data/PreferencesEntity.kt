@@ -10,6 +10,7 @@ data class PreferencesEntity(
     val endpoint: EndpointEntity?,
     val isFirstLaunch: Boolean,
     val isOnboardingShowed: Boolean,
+    val isNewDriverAppDialogShowed: Boolean,
     val selectedField: String,
     val addressHistory: List<GTAddressEntity>,
     val favoriteTransports: Set<String>,
@@ -18,16 +19,17 @@ data class PreferencesEntity(
 ) {
 
     companion object {
-        const val ENTITY_NAME           = "preferences"
-        const val ACCESS_TOKEN          = "access_token"
-        const val ENDPOINT              = "endpoint"
-        const val IS_FIRST_LAUNCH       = "is_first_launch"
-        const val IS_ONBOARDING_SHOWED  = "is_onboarding_showed"
-        const val SELECTED_FIELD        = "selected_field"
-        const val ADDRESS_HISTORY       = "address_history"
-        const val APP_ENTERS            = "app_enters"
-        const val IS_DEBUG_MENU_SHOWED  = "is_debug_menu_showed"
-        const val FAVORITE_TRANSPORTS   = "favorite_transports"
+        const val ENTITY_NAME              = "preferences"
+        const val ACCESS_TOKEN             = "access_token"
+        const val ENDPOINT                 = "endpoint"
+        const val IS_FIRST_LAUNCH          = "is_first_launch"
+        const val IS_ONBOARDING_SHOWED     = "is_onboarding_showed"
+        const val IS_NEW_DRIVER_APP_SHOWER = "is_new_driver_app_showed"
+        const val SELECTED_FIELD           = "selected_field"
+        const val ADDRESS_HISTORY          = "address_history"
+        const val APP_ENTERS               = "app_enters"
+        const val IS_DEBUG_MENU_SHOWED     = "is_debug_menu_showed"
+        const val FAVORITE_TRANSPORTS      = "favorite_transports"
     }
 }
 
@@ -37,6 +39,7 @@ fun PreferencesEntity.map() =
         endpoint?.map(),
         isFirstLaunch,
         isOnboardingShowed,
+        isNewDriverAppDialogShowed,
         selectedField,
         addressHistory.map { it.map() },
         favoriteTransports.map { it.map() }.toSet(),
@@ -50,6 +53,7 @@ fun Preferences.map() =
         endpoint?.map(),
         isFirstLaunch,
         isOnboardingShowed,
+        isNewDriverAppDialogShowed,
         selectedField,
         addressHistory.map { it.map() },
         favoriteTransports.map { it.map() }.toSet(),

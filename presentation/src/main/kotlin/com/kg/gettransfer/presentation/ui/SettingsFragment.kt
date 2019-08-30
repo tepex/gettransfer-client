@@ -123,6 +123,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         settingsResetOnboarding.setOnClickListener { presenter.onResetOnboardingClicked() }
         settingsResetRate.setOnClickListener { presenter.onResetRateClicked() }
         settingsClearAccessToken.setOnClickListener { presenter.onClearAccessTokenClicked() }
+        settingsResetNewDriverAppDialog.setOnClickListener { presenter.onResetNewDriverAppDialogClicked() }
         forceCrash.setOnClickListener { presenter.onForceCrashClick() }
     }
 

@@ -11,6 +11,7 @@ interface MainNavigateView : BaseView, GooglePlayView {
     fun askRateInPlayMarket()
     fun thanksForRate()
     fun showRateForLastTrip(transferId: Long, vehicle: String, color: String)
+    fun showNewDriverAppDialog()
 
     companion object {
         val EXTRA_RATE_TRANSFER_ID = "${NewTransferMapView::class.java.name}.rate_transfer_id"
