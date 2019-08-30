@@ -82,15 +82,21 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected fun login(nextScreen: String, email: String?) = router.navigateTo(Screens.MainLogin(nextScreen, email))
 
     override fun onFirstViewAttach() {
-        if (sessionInteractor.isInitialized) return
+        if (sessionInteractor.isInitialized) {
+            appInitialized()
+            return
+        }
         worker.main.launch {
             val result = withContext(worker.bg) { sessionInteractor.coldStart() }
             if (result.error == null) {
                 systemInitialized()
                 offerMapper.url = getPreferences().getModel().endpoint!!.url
             }
+            appInitialized()
         }
     }
+
+    open fun appInitialized() {}
 
     override fun attachView(view: BV) {
         super.attachView(view)
