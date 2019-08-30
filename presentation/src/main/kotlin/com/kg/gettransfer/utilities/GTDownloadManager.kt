@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import androidx.core.app.NotificationCompat
@@ -20,6 +21,8 @@ import org.koin.core.inject
 import timber.log.Timber
 import java.io.File
 import java.io.InputStream
+import android.app.Notification
+import android.content.pm.PackageManager
 
 class GTDownloadManager(val context: Context): KoinComponent {
 
@@ -44,8 +47,7 @@ class GTDownloadManager(val context: Context): KoinComponent {
                 if (result.isSuccess() != null) {
                     saveVoucher(result.model, transferId)
                 } else {
-                    builder.setAutoCancel(true)
-                    builder.setOngoing(false)
+                    showDownloadError(transferId)
                 }
             }
         }
@@ -72,11 +74,12 @@ class GTDownloadManager(val context: Context): KoinComponent {
         builder = NotificationCompat.Builder(context, CHANEL_ID).apply {
             setContentTitle(context.getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER))
             setContentText(context.getString(R.string.LNG_DOWNLOADING))
-            setSmallIcon(R.drawable.ic_download)
+            setSmallIcon(android.R.drawable.stat_sys_download)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            setDefaults(Notification.DEFAULT_VIBRATE)
             setAutoCancel(false)
             setOngoing(true)
-            priority = NotificationCompat.PRIORITY_LOW
+            priority = NotificationCompat.PRIORITY_HIGH
         }
     }
 
@@ -90,19 +93,54 @@ class GTDownloadManager(val context: Context): KoinComponent {
             content.use { input ->
                 voucher.outputStream().use {
                     input.copyTo(it)
-
                     showCompletedNotification(voucher, fileName, transferId)
                 }
             }
         }
     }
 
+    /**
+     * Download complete with success
+     */
     private fun showCompletedNotification(voucher: File, fileName: String, transferId: Long) {
         val pendingIntent = createPendingIntent(voucher)
         builder.apply {
             setContentIntent(pendingIntent)
             setContentTitle(fileName)
             setContentText(context.getString(R.string.LNG_DOWNLOAD_COMPLETED))
+            setSmallIcon(R.drawable.ic_download)
+            setProgress(0, 0, false)
+            setAutoCancel( canDisplayPdf(context) )
+            setOngoing(false)
+            addAction(R.drawable.ic_menu_share, context.getString(R.string.share), createShareAction(voucher))
+        }
+        notificationManager.notify(transferId.toInt(), builder.build())
+    }
+
+    /**
+     * Create action for share button
+     */
+    private fun createShareAction(voucher: File) :PendingIntent {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.addCategory(Intent.CATEGORY_DEFAULT)
+        val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority), voucher)
+        else Uri.fromFile(voucher)
+        intent.putExtra(Intent.EXTRA_STREAM, data)
+        intent.type = VOUCHER_MIME_TYPE
+        intent.putExtra(Intent.EXTRA_TITLE, context.getString(R.string.share))
+        // Grant read permission on the file to other apps without declared permission.
+        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+    }
+
+    /**
+     * Download complete with error
+     */
+    private fun showDownloadError(transferId: Long) {
+        builder.apply {
+            setContentText(context.getString(R.string.LNG_ERROR))
+            setSmallIcon(R.drawable.ic_download)
             setProgress(0, 0, false)
             setAutoCancel(true)
             setOngoing(false)
@@ -110,15 +148,20 @@ class GTDownloadManager(val context: Context): KoinComponent {
         notificationManager.notify(transferId.toInt(), builder.build())
     }
 
+    /**
+     * Create pending intent for view pdf file
+     */
     private fun createPendingIntent(voucher: File): PendingIntent {
-        val data = FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority), voucher)
+        val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority), voucher)
+        else Uri.fromFile(voucher)
         val target = Intent(Intent.ACTION_VIEW).apply {
             flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_NO_HISTORY
             setDataAndType(data, VOUCHER_MIME_TYPE)
         }
-
         return PendingIntent.getActivity(context, 0, target, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
@@ -132,6 +175,20 @@ class GTDownloadManager(val context: Context): KoinComponent {
             Timber.e("Directory not created")
         }
         return file
+    }
+
+    /**
+     * Check if the supplied context can render PDF files via some installed application that reacts to a intent
+     * with the pdf mime type and viewing action.
+     *
+     * @param context
+     * @return
+     */
+    private fun canDisplayPdf(context: Context): Boolean {
+        val packageManager = context.packageManager
+        val testIntent = Intent(Intent.ACTION_VIEW)
+        testIntent.type = VOUCHER_MIME_TYPE
+        return packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size > 0
     }
 
     companion object {
