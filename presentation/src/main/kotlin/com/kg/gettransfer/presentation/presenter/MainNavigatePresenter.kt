@@ -39,6 +39,11 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        // Создать листенер для обновления текущей локации
+        // https://developer.android.com/training/location/receive-location-updates
+    }
+
+    override fun appInitialized() {
         if (accountManager.isLoggedIn) {
             worker.main.launch {
                 if (accountManager.remoteAccount.isDriver && !getPreferences().getModel().isNewDriverAppDialogShowed) {
@@ -53,9 +58,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
                 viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
             }
         }
-
-        // Создать листенер для обновления текущей локации
-        // https://developer.android.com/training/location/receive-location-updates
     }
 
     override fun attachView(view: MainNavigateView) {
