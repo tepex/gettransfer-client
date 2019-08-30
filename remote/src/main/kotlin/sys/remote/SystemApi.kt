@@ -2,16 +2,14 @@ package com.kg.gettransfer.sys.remote
 
 import com.kg.gettransfer.remote.model.ResponseModel
 
-import kotlinx.coroutines.Deferred
-
 import retrofit2.http.GET
 
 interface SystemApi {
     @GET(API_CONFIGS)
-    fun getConfigs(): Deferred<ResponseModel<ConfigsModel>>
+    suspend fun getConfigs(): ResponseModel<ConfigsModel>
 
     @GET(MOBILE_CONFIGS)
-    fun getMobileConfigs(): Deferred<MobileConfigsModel>
+    suspend fun getMobileConfigs(): MobileConfigsModel
 
     companion object {
         const val API_CONFIGS = "/api/configs"

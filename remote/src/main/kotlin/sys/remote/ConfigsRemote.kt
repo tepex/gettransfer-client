@@ -17,7 +17,7 @@ class ConfigsRemote : ConfigsRemoteDataSource, KoinComponent {
     private val apiWrapper: SystemApiWrapper by inject()
 
     override suspend fun getResult(): ResultData<ConfigsEntity> =
-        runCatching<ResponseModel<ConfigsModel>> { apiWrapper.api.getConfigs().await() }.fold(
+        runCatching<ResponseModel<ConfigsModel>> { apiWrapper.api.getConfigs() }.fold(
             { responseModel ->
                 if (responseModel.data != null) {
                     /* ConfigsModel => ResultData<ConfigsEntity> */

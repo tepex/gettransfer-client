@@ -2,8 +2,6 @@ package com.kg.gettransfer.sys.remote
 
 import com.google.gson.GsonBuilder
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-
 import com.kg.gettransfer.remote.PrivateHttpLoggingInterceptor
 import com.kg.gettransfer.remote.TransportTypesDeserializer
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
@@ -35,9 +33,8 @@ class SystemApiWrapper : KoinComponent {
     fun changeEndpoint(endpoint: String) {
         api = Retrofit.Builder().apply {
             baseUrl(endpoint)
-            client(okHttpClient)
+            callFactory { okHttpClient.newCall(it) }
             addConverterFactory(GsonConverterFactory.create(gson))
-            addCallAdapterFactory(CoroutineCallAdapterFactory())
         }.build().create(SystemApi::class.java)
     }
 }
