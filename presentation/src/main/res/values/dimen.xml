@@ -5,7 +5,13 @@
 	<dimen name="navigation_container_margin_bottom">53dp</dimen>
 	<dimen name="navigation_tab_margin_top">17dp</dimen>
 	<dimen name="navigation_tab_icon_size">38dp</dimen>
-	<dimen name="navigation_badge_margin_start">10dp</dimen>
+	<dimen name="notification_badge_horizontal_padding">5dp</dimen>
+	<dimen name="notification_badge_padding_bottom">1dp</dimen>
+	<dimen name="notification_margin_start">20dp</dimen>
+	<dimen name="notification_badge_margin_top">8dp</dimen>
+	<dimen name="notification_icon_margin_top">14dp</dimen>
+	<dimen name="notification_icon_size">8dp</dimen>
+	<dimen name="notification_badge_text_size">13sp</dimen>
 
 	<!-- Main buttons -->
 	<dimen name="activity_main_buttons_size">48dp</dimen>
