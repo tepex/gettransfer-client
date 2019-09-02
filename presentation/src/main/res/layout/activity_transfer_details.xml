@@ -91,7 +91,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        style="?attr/bottomSheetStyle">
+        style="?attr/bottomSheetStyle"
+        app:behavior_hideable="false"
+        app:behavior_fitToContents="false"
+        app:behavior_halfExpandedRatio="0.5"
+        app:behavior_expandedOffset="0"
+        app:behavior_peekHeight="@dimen/bottom_sheet_carrier_trip_details_bs_peek_height">
 
         <include layout="@layout/bottom_sheet_transfer_details" />
     </FrameLayout>
@@ -112,22 +117,4 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/expended_sheet_order_height"
-        android:layout_gravity="bottom">
-
-        <FrameLayout
-            android:id="@+id/secondary_bottom_sheet"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            app:behavior_hideable="true"
-            app:behavior_skipCollapsed="true"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

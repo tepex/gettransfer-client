@@ -93,7 +93,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     internal lateinit var presenter: TransferDetailsPresenter
 
     private lateinit var bsTransferDetails: BottomSheetBehavior<View>
-    private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
     private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
 
     @ProvidePresenter
@@ -197,14 +196,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private fun initBottomSheets() {
         bsTransferDetails = BottomSheetBehavior.from(sheetTransferDetails)
-        bsSecondarySheet = BottomSheetBehavior.from(secondary_bottom_sheet)
 
-        bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
         bsTransferDetails.state = BottomSheetBehavior.STATE_COLLAPSED
         bsTransferDetails.saveFlags = BottomSheetBehavior.SAVE_ALL
 
         tintBackgroundShadow = tintBackground
-        bsSecondarySheet.setBottomSheetCallback(bsCallback)
     }
 
     private fun setClickListeners() {
