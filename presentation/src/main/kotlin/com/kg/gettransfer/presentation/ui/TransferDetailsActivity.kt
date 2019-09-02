@@ -180,27 +180,26 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         super.onStop()
     }
 
-    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                tintBackgroundShadow.isVisible = false
-                hideKeyboard()
-            }
-        }
-
-        override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
-            tintBackgroundShadow.isVisible = true
-            tintBackgroundShadow.alpha = slideOffset
-        }
-    }
-
     private fun initBottomSheets() {
+        // it false first in order to BottomSheetBehavior.STATE_HALF_EXPANDED  won't be skipped
+        scrollContent.isNestedScrollingEnabled = false
+
         bsTransferDetails = BottomSheetBehavior.from(sheetTransferDetails)
 
         bsTransferDetails.state = BottomSheetBehavior.STATE_COLLAPSED
         bsTransferDetails.saveFlags = BottomSheetBehavior.SAVE_ALL
 
         tintBackgroundShadow = tintBackground
+
+        val bsc = object: BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING)
+                    scrollContent.isNestedScrollingEnabled = true
+            }
+        }
+        bsTransferDetails.setBottomSheetCallback(bsc)
     }
 
     private fun setClickListeners() {

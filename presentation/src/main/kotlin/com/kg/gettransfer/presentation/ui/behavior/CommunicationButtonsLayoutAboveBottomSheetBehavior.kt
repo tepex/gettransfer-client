@@ -11,6 +11,10 @@ import com.kg.gettransfer.R
 
 class CommunicationButtonsLayoutAboveBottomSheetBehavior<V : ViewGroup>(private val mContext: Context, attrs: AttributeSet) : BaseBehavior<V>(mContext, attrs) {
 
+    override fun layoutDependsOn(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
+        return isBottomSheet(dependency)
+    }
+
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
         if (isBottomSheet(dependency)) {
             val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetBehavior
@@ -20,7 +24,6 @@ class CommunicationButtonsLayoutAboveBottomSheetBehavior<V : ViewGroup>(private 
             }
             child.bottom = child.bottom + mContext.resources.getDimension(R.dimen.activity_transfer_details_top_buttons_margin_bottom).toInt()
             child.top = child.bottom - (child as FrameLayout).measuredHeight
-            return true
         }
         return false
     }

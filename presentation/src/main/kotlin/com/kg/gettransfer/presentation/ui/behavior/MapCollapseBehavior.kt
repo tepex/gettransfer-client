@@ -19,6 +19,10 @@ class MapCollapseBehavior<V : ViewGroup>(mContext: Context, attrs: AttributeSet)
         this.bounds = bounds
     }
 
+    override fun layoutDependsOn(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
+        return isBottomSheet(dependency)
+    }
+
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
         if (isBottomSheet(dependency)) {
             val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetBehavior
@@ -35,7 +39,6 @@ class MapCollapseBehavior<V : ViewGroup>(mContext: Context, attrs: AttributeSet)
                         map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0))
                     }
                 }
-                return true
             }
         }
         return false
