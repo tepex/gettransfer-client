@@ -93,6 +93,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         updateChildSeatsInfo()
         checkOrderDateTime()
+        viewState.setHourlyDuration(orderInteractor.hourlyDuration)
     }
 
     private fun checkOrderDateTime() = with(orderInteractor) {
@@ -116,6 +117,17 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             } else {
                 getRouteAndPricesForPointToPointTransfer()
             }
+        }
+    }
+
+    fun showHourlyDurationDialog() {
+        viewState.showHourlyDurationDialog(orderInteractor.hourlyDuration)
+    }
+
+    fun updateDuration(durationValue: Int){
+        orderInteractor.apply {
+            hourlyDuration = durationValue
+            viewState.setHourlyDuration(hourlyDuration)
         }
     }
 

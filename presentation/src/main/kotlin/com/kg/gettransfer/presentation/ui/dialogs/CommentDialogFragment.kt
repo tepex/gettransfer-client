@@ -10,6 +10,7 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.presenter.CommentPresenter
@@ -122,11 +123,15 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         val hints = arguments?.getStringArray(EXTRA_HINTS)
         if (!hints.isNullOrEmpty()) {
             for (hint in hints) {
+
                 val chip = Chip(chipGroup.context)
+                val drawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.Chip_Choice)
+                chip.setChipDrawable(drawable)
                 chip.text = hint
                 chip.isClickable = true
                 chip.isCheckable = true
                 chip.isCheckedIconVisible = false
+                chip.setTextAppearance(R.style.ChipTextAppearance)
                 chip.setChipMinHeightResource(R.dimen.comment_hint_height)
                 chip.setOnClickListener { hintClick(chip.text.toString(), it) }
                 chipGroup.addView(chip)

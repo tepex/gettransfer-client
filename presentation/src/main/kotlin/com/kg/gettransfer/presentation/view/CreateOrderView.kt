@@ -22,6 +22,8 @@ interface CreateOrderView : BaseView, RouteView {
     fun setChildSeats(setOf: Set<ChildSeatItem>, total: Int)
     fun setCurrency(currency: String, hideCurrencies: Boolean)
     fun setDateTimeTransfer(dateTimeString: String, startField: Boolean)
+    fun showHourlyDurationDialog(durationValue: Int?)
+    fun setHourlyDuration(durationValue: Int?)
     fun setHintForDateTimeTransfer(withReturnWay: Boolean)
     fun setPromoResult(discountInfo: String?)
     fun resetPromoView()

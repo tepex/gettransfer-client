@@ -237,4 +237,16 @@
         <item name="android:progressDrawable">@drawable/custom_rating_bar</item>
         <item name="android:minHeight">16dp</item>
     </style>
+
+    <style name="ChipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/color_gtr_grey</item>
+    </style>
+
+    <style name="Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textColor">@color/color_gtr_grey</item>
+        <item name="chipBackgroundColor">@color/color_gtr_light_grey</item>
+        <item name="rippleColor">@color/color_gtr_light_grey</item>
+
+    </style>
 </resources>

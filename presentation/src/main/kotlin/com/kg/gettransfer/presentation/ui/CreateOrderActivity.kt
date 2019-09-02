@@ -34,6 +34,7 @@ import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 import com.kg.gettransfer.presentation.ui.custom.BottomSheetCreateOrderNewView
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment
+import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.CreateOrderView
@@ -220,6 +221,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         presenter.setPromo(value)
     }
 
+    override fun onHourlyDurationClick() {
+       presenter.showHourlyDurationDialog()
+    }
+
     override fun onTransferDateTimeClick() {
         showDatePickerDialog(FIELD_START)
         presenter.logTransferSettingsEvent(DATE_TIME_CHANGED)
@@ -274,6 +279,17 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
     }
 
     // ------------------------------------------------------------------------------
+
+    override fun showHourlyDurationDialog(durationValue: Int?) {
+        HourlyDurationDialogFragment
+                .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
+                    override fun onDone(durationValue: Int) {
+                        presenter.updateDuration(durationValue)
+                    }
+                })
+                .show(supportFragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
+    }
+
     override fun currencyChanged(currency: CurrencyModel) {
         presenter.currencyChanged(currency)
     }
@@ -368,6 +384,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         sheetOrder.flightNumber = flightNumber
         sheetOrder.flightNumberReturn = flightNumberReturn
         sheetOrder.promoCode = promo
+    }
+
+    override fun setHourlyDuration(durationValue: Int?) {
+        sheetOrder.setHourlyDuration(durationValue)
     }
 
     override fun setDateTimeTransfer(dateTimeString: String, startField: Boolean) {
