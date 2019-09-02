@@ -107,11 +107,10 @@ class SearchFragment : BaseFragment(), SearchView {
 
     private fun setupToolbar() {
         toolbarLayout.ivBack.setThrottledClickListener {
-            hideKeyboard()
-            Handler().postDelayed( {goToBack()}, 500)
+            view?.hideKeyboard()
+            Handler().postDelayed( {goToBack()}, 400)
         }
     }
-
 
     fun onSearchFieldEmpty(isToField: Boolean) {
         presenter.onSearchFieldEmpty()
@@ -189,23 +188,26 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     override fun goToMap() {
-        hideKeyboard()
-        if (SearchFragmentArgs.fromBundle(requireArguments()).isCameFromMap)
-            goToBack()
-        else
-            findNavController().navigate(SearchFragmentDirections.goToMap())
+        view?.hideKeyboard()
+        Handler().postDelayed({
+            if (SearchFragmentArgs.fromBundle(requireArguments()).isCameFromMap)
+                goToBack()
+            else
+                findNavController().navigate(SearchFragmentDirections.goToMap())
+        }, 400)
     }
 
     override fun goToBack() {
-//        hideKeyboard()
         findNavController().navigateUp()
     }
 
     override fun goToCreateOrder() {
-        hideKeyboard()
+        view?.hideKeyboard()
+        Handler().postDelayed({
         if (!SearchFragmentArgs.fromBundle(requireArguments()).isCameFromMap)
             findNavController().navigate(SearchFragmentDirections.goToCreateOrder())
         else
             goToBack()
+        }, 400)
     }
 }

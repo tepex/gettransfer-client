@@ -56,31 +56,36 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/layoutBestPriceText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/switcher_hourly"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/gtrLogo"
         android:layout_width="@dimen/nav_header_logo_width"
         android:layout_height="@dimen/nav_header_logo_height"
-        app:layout_constraintBottom_toTopOf="@+id/promoText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bestPriceLogo"
         app:srcCompat="@drawable/logo" />
 
     <TextView
         android:id="@+id/promoText"
         style="@style/sf_font_pro_text_semibold_black"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/main_without_map_promo_text_horizontal_margins"
         android:layout_marginStart="@dimen/main_without_map_promo_text_horizontal_margins"
         android:layout_marginEnd="@dimen/main_without_map_promo_text_horizontal_margins"
         android:gravity="center_horizontal"
         android:text="@string/LNG_MAIN_SCREEN_POINT_TO_POINT_TRANSFER_TITLE"
         android:textSize="@dimen/main_without_map_promo_text_size"
-        android:lines="2"
-        app:layout_constraintBottom_toTopOf="@+id/switcher_hourly"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gtrLogo" />
+        android:maxLines="2"/>
+
+    </LinearLayout>
 
     <com.kg.gettransfer.presentation.ui.custom.SwitcherView
         android:id="@+id/switcher_hourly"
