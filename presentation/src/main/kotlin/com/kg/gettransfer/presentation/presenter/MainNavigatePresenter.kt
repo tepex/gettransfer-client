@@ -37,6 +37,8 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
 
+    private var isLoggedIn = false
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         // Создать листенер для обновления текущей локации
@@ -52,24 +54,32 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
                 }
             }
             registerPushToken()
-
-            utils.launchSuspend {
-                fetchResultOnly { transferInteractor.getAllTransfers() }.isSuccess()?.let { checkReview(it) }
-                viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
-            }
+            checkTransfers()
         }
     }
 
     override fun attachView(view: MainNavigateView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
-        viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
+        if (accountManager.isLoggedIn && !isLoggedIn) {
+            checkTransfers()
+        } else {
+            viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
+        }
+        isLoggedIn = accountManager.isLoggedIn
         log.debug("MainPresenter.is user logged in: ${accountManager.isLoggedIn}")
     }
 
     override fun detachView(view: MainNavigateView?) {
         super.detachView(view)
         countEventsInteractor.removeCounterListener(this)
+    }
+
+    private fun checkTransfers() {
+        utils.launchSuspend {
+            fetchResultOnly { transferInteractor.getAllTransfers() }.isSuccess()?.let { checkReview(it) }
+            viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
+        }
     }
 
     override fun updateCounter() {

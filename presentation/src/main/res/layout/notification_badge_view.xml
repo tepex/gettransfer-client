@@ -2,15 +2,32 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <TextView
-        android:id="@+id/notifications.badge"
-        android:layout_gravity="end"
+        android:id="@+id/notifications_badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/navigation_badge_margin_start"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="@dimen/notification_margin_start"
+        android:layout_marginTop="@dimen/notification_badge_margin_top"
+        android:paddingStart="@dimen/notification_badge_horizontal_padding"
+        android:paddingEnd="@dimen/notification_badge_horizontal_padding"
+        android:paddingBottom="@dimen/notification_badge_padding_bottom"
         android:background="@drawable/bg_circle_red"
         android:gravity="center"
-        android:textColor="@android:color/white"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textColor="@color/colorWhite"
         android:visibility="gone"
+        android:textSize="@dimen/notification_badge_text_size"
         tools:text="5"
+        tools:visibility="visible"/>
+    <ImageView
+        android:id="@+id/notifications_icon"
+        android:layout_width="@dimen/notification_icon_size"
+        android:layout_height="@dimen/notification_icon_size"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="@dimen/notification_margin_start"
+        android:layout_marginTop="@dimen/notification_icon_margin_top"
+        android:background="@drawable/bg_circle_red"
+        android:gravity="center"
+        android:visibility="gone"
         tools:visibility="visible"/>
 </merge>

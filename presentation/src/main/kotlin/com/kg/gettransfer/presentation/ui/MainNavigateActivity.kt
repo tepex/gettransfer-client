@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 
 import androidx.annotation.CallSuper
 
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.FragmentNavigator
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.extensions.visibleSlideFade
 import com.kg.gettransfer.extensions.setupWithNavController
@@ -30,6 +32,8 @@ import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
 import kotlinx.android.synthetic.main.activity_main_navigate.*
+import kotlinx.android.synthetic.main.notification_badge_view.view.*
+import org.jetbrains.anko.find
 
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -131,13 +135,37 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
                     .show(supportFragmentManager, ThanksForRateFragment.TAG)
 
     override fun setEventCount(isVisible: Boolean, count: Int) {
-        val item = bottom_nav.menu.getItem(1)
-        if (isVisible && count > 0) {
-            val badgeDrawable = bottom_nav.getOrCreateBadge(item.itemId)
-            badgeDrawable.number = count
-        } else {
-            bottom_nav.removeBadge(item.itemId)
+        with (getNavTripsItem()) {
+            notifications_badge.text = count.toString()
+            setEventsCounterStyle(isVisible && count > 0, isNavTripsSelected(), this)
         }
+    }
+
+    private fun setEventsCounterStyle(isShow: Boolean, isNavTripsSelected: Boolean, view: View) {
+        if (isShow) {
+            if (isNavTripsSelected) {
+                setNotificationItemsVisibility(view, showIcon = true, showBadge = false)
+            } else {
+                setNotificationItemsVisibility(view, showIcon = false, showBadge = true)
+            }
+        } else {
+            setNotificationItemsVisibility(view, showIcon = false, showBadge = false)
+        }
+    }
+
+    private fun setNotificationItemsVisibility(view: View, showIcon: Boolean, showBadge: Boolean) {
+        with (view) {
+            notifications_badge.isVisible = showBadge
+            notifications_icon.isVisible = showIcon
+        }
+    }
+
+    private fun getNavTripsItem() = bottom_nav.find<View>(R.id.nav_trips)
+
+    private fun isNavTripsSelected() = bottom_nav.menu.getItem(1).isChecked
+
+    private fun isNotificationShowed() = with(getNavTripsItem()) {
+        notifications_badge.isVisible || notifications_icon.isVisible
     }
 
     val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
@@ -156,6 +184,8 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
                 bottom_nav_shadow.visibleSlideFade(false)
             }
         }
+        setEventsCounterStyle(isNotificationShowed(),
+            (destination).className == RequestsPagerFragment::class.java.name, getNavTripsItem())
     }
 
     /**

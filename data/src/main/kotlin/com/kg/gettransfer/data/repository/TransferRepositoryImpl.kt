@@ -39,6 +39,8 @@ class TransferRepositoryImpl(
     private val serverDateFormat = get<ThreadLocal<DateFormat>>(named("server_date"))
     private val serverTimeFormat = get<ThreadLocal<DateFormat>>(named("server_time"))
 
+    private var tempEventsCount: Int? = null
+
     override suspend fun createTransfer(transferNew: TransferNew): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveRemoteEntity {
             factory.retrieveRemoteDataStore().createTransfer(
@@ -122,29 +124,42 @@ class TransferRepositoryImpl(
         )
     }
 
-    private suspend fun mapTransfersList(transfersList: List<TransferEntity>): List<Transfer> {
+    private suspend fun checkTransfersEvents(transfersList: List<TransferEntity>, isAllTransfersList: Boolean): List<Transfer> {
         val mapCountNewMessages = preferencesCache.mapCountNewMessages.toMutableMap()
         val mapCountNewOffers = preferencesCache.mapCountNewOffers.toMutableMap()
 
         var eventsCount = 0
         val mappedTransfers = transfersList.map { entity ->
-            entity.map(
-                configsRepository.getResult().getModel().transportTypes,
-                dateFormat.get(),
-                dateFormatTZ.get()
-            ).apply {
+            mapTransfer(entity).apply {
                 if (!entity.isBookNow()) {
                     eventsCount += checkNewMessagesAndOffersCount(this, mapCountNewMessages, mapCountNewOffers)
                 }
             }
         }
-        preferencesCache.eventsCount = eventsCount
+
+        if (isAllTransfersList) {
+            preferencesCache.eventsCount = eventsCount
+        } else {
+            if (tempEventsCount != null) {
+                preferencesCache.eventsCount = eventsCount + tempEventsCount!!
+                tempEventsCount = null
+            } else {
+                tempEventsCount = eventsCount
+            }
+        }
 
         preferencesCache.mapCountNewMessages = mapCountNewMessages
         preferencesCache.mapCountNewOffers = mapCountNewOffers
 
         return mappedTransfers
     }
+
+    private suspend fun mapTransfer(transfer: TransferEntity) =
+        transfer.map(
+            configsRepository.getResult().getModel().transportTypes,
+            dateFormat.get(),
+            dateFormatTZ.get()
+        )
 
     private fun checkNewMessagesAndOffersCount(
         transfer: Transfer,
@@ -188,7 +203,7 @@ class TransferRepositoryImpl(
             }
         }
         return Result(
-            result.entity?.let { mapTransfersList(it) } ?: emptyList(),
+            result.entity?.let { checkTransfersEvents(it, true) } ?: emptyList(),
             result.error?.map(),
             result.error != null && result.entity != null
         )
@@ -205,7 +220,7 @@ class TransferRepositoryImpl(
             }
         }
         return Result(
-            result.entity?.let { mapTransfersList(it) } ?: emptyList(),
+            result.entity?.let { checkTransfersEvents(it, false) } ?: emptyList(),
             result.error?.map(),
             result.error != null && result.entity != null
         )
@@ -222,7 +237,7 @@ class TransferRepositoryImpl(
             }
         }
         return Result(
-            result.entity?.let { mapTransfersList(it) } ?: emptyList(),
+            result.entity?.let { checkTransfersEvents(it, false) } ?: emptyList(),
             result.error?.map(),
             result.error != null && result.entity != null
         )
