@@ -66,7 +66,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
     override fun onResume() {
         super.onResume()
-        presenter.checkBtnNextState()
+        presenter.updateView()
     }
 
     private fun initClickListeners() {
