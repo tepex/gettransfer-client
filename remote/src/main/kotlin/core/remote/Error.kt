@@ -13,14 +13,18 @@ fun processError(gson: Gson, exception: Throwable): ResultData<Nothing> =
     if (exception !is HttpException) {
         ResultData.NetworkError(exception)
     } else {
-        val body = exception.response().errorBody()?.string()
+        val body = exception.response()?.errorBody()?.string() ?: error("Exception response is null")
         val msg = exception.message ?: ""
         try {
             val errorModel = gson.fromJson(body, ResponseModel::class.java).error
             if (errorModel != null) {
-                ResultData.ApiError(exception.code(), errorModel.details?.toString() ?: msg, errorModel.type)
+                ResultData.ApiError(
+                    exception.code(),
+                    errorModel.details?.toString() ?: msg,
+                    errorModel.type
+                )
             } else {
-                throw IllegalStateException("Expecting error field in server response [body]:\n$body")
+                error("Expecting error field in server response [body]:\n$body")
             }
         } catch (js: JsonSyntaxException) {
             /* Some times server can return error as a simple HTML stuff */

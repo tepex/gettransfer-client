@@ -3,8 +3,6 @@ package com.kg.gettransfer.remote
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.RemoteException
 
@@ -17,8 +15,6 @@ import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
 import com.kg.gettransfer.sys.data.EndpointEntity
 
 import java.io.IOException
-
-import kotlinx.coroutines.Deferred
 
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
@@ -81,9 +77,8 @@ class ApiCore : KoinComponent {
 
     internal var ipApi = Retrofit.Builder().apply {
         baseUrl(IP_API_SCHEME + IP_API_HOST_NAME)
-        client(okHttpClient)
+        callFactory { okHttpClient.newCall(it) }
         addConverterFactory(GsonConverterFactory.create())
-        addCallAdapterFactory(CoroutineCallAdapterFactory())
     }.build().create(Api::class.java)
 
     fun changeEndpoint(endpoint: EndpointEntity) {
@@ -91,10 +86,8 @@ class ApiCore : KoinComponent {
         apiUrl = endpoint.url
         api = Retrofit.Builder().apply {
             baseUrl(apiUrl)
-            client(okHttpClient)
+            callFactory { okHttpClient.newCall(it) }
             addConverterFactory(GsonConverterFactory.create(gson))
-            // https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter
-            addCallAdapterFactory(CoroutineCallAdapterFactory())
         }.build().create(Api::class.java)
     }
 
@@ -103,9 +96,9 @@ class ApiCore : KoinComponent {
      * 2. If response code is 401 (token expired) — try to call [apiCall] second time.
      */
     @Suppress("ThrowsCount")
-    internal suspend fun <R> tryTwice(apiCall: () -> Deferred<R>): R =
+    internal suspend fun <R> tryTwice(apiCall: suspend () -> R): R =
         try {
-            apiCall().await()
+            apiCall()
         } catch (e: Exception) {
             if (e is RemoteException) throw e /* second invocation */
             val ae = remoteException(e)
@@ -118,14 +111,14 @@ class ApiCore : KoinComponent {
                 updateAccessToken()
             } catch (e1: Exception) { throw remoteException(e1) }
             try {
-                apiCall().await()
+                apiCall()
             } catch (e2: Exception) { throw remoteException(e2) }
         }
 
     @Suppress("ThrowsCount")
-    internal suspend fun <R> tryTwice(id: Long, apiCall: (Long) -> Deferred<R>): R =
+    internal suspend fun <R> tryTwice(id: Long, apiCall: suspend (Long) -> R): R =
         try {
-            apiCall(id).await()
+            apiCall(id)
         } catch (e: Exception) {
             if (e is RemoteException) throw e /* second invocation */
             val ae = remoteException(e)
@@ -135,33 +128,33 @@ class ApiCore : KoinComponent {
                 updateAccessToken()
             } catch (e1: Exception) { throw remoteException(e1) }
             try {
-                apiCall(id).await()
+                apiCall(id)
             } catch (e2: Exception) { throw remoteException(e2) }
         }
 
     /*
-    private suspend fun <T, R> tryTwice(vararg param: T, apiCall: (T) -> Deferred<R>): R {
-        return apiCall(param).await()
+    private suspend fun <T, R> tryTwice(vararg param: T, apiCall: (T) -> R): R {
+        return apiCall(param)
     }
     */
 
     private suspend fun updateAccessToken() {
-        val response: ResponseModel<TokenModel> = api.accessToken().await()
+        val response: ResponseModel<TokenModel> = api.accessToken()
         @Suppress("UnsafeCallOnNullableType")
         preferences.accessToken = response.data!!.token
         val email = preferences.userEmail
         val phone = preferences.userPhone
         val password = preferences.userPassword
-        if (email != null || phone != null) api.login(email, phone, password).await()
+        if (email != null || phone != null) api.login(email, phone, password)
     }
 
     internal fun remoteException(e: Exception): RemoteException = when (e) {
         is HttpException -> {
-            val errorBody = e.response().errorBody()?.string()
+            val errorBody = e.response()?.errorBody()?.string() ?: error("Exception response is null")
             val msg = try {
                 gson.fromJson(errorBody, ResponseModel::class.java).error?.details?.toString()
             } catch (je: JsonSyntaxException) {
-                val matchResult = errorBody?.let { ERROR_PATTERN.find(it)?.groupValues }
+                val matchResult = ERROR_PATTERN.find(errorBody)?.groupValues
                 log.warn("${e.message} matchResult: $matchResult", je)
                 matchResult?.getOrNull(1)
             }
