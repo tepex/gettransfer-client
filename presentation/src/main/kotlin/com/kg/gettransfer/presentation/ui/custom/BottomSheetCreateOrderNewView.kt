@@ -22,10 +22,12 @@ import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.ui.CreateOrderActivity
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.onTextChanged
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
+import kotlinx.android.synthetic.main.layout_hourly_duration.view.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.*
 
@@ -121,6 +123,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         flight_numberReturn_field.field_input.onTextChanged    { listener?.onFlightNumberReturnChanged(it.trim()) }
         promo_field.field_input.onTextChanged                  { listener?.onPromoCodeChanged(it) }
 
+        hourly_duration.setOnClickListener                      { listener?.onHourlyDurationClick() }
         transfer_date_time_field.setOnClickListener             { listener?.onTransferDateTimeClick() }
         transfer_date_time_field.field_input.setOnClickListener { listener?.onTransferDateTimeClick() }
 
@@ -198,6 +201,15 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         with(viewForFocus) {
             requestFocus()
             post { setSelection(text.length) }
+        }
+    }
+
+    fun setHourlyDuration(durationValue: Int?) {
+        durationValue?.let {
+            if (it > 0) {
+                hourly_duration.isVisible = true
+                hourly_duration.tvCurrent_hours.text = HourlyValuesHelper.getValue(durationValue, context)
+            }
         }
     }
 
@@ -322,6 +334,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         fun onFlightNumberReturnChanged(value: String)
         fun onPromoCodeChanged(value: String)
 
+        fun onHourlyDurationClick()
         fun onTransferDateTimeClick()
         fun onTransferReturnDateTimeClick()
         fun onDeleteReturnDateTimeClick()

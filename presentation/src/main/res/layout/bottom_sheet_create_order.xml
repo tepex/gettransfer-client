@@ -47,12 +47,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <include layout="@layout/layout_hourly_duration"
+                android:id="@+id/hourly_duration"/>
+
                 <LinearLayout
                     android:id="@+id/cl_offer_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center">
+
+
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/fl_currency"
@@ -134,15 +139,17 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="@dimen/margin16"
                     app:srcCompat="@drawable/ic_close_x"
                     android:visibility="gone"/>
 
                 <include
                     layout="@layout/view_divider_horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/divider_height"
-                    android:layout_alignParentBottom="true" />
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="@dimen/margin16"
+                    android:layout_marginEnd="@dimen/margin16"/>
             </RelativeLayout>
 
             <RelativeLayout
