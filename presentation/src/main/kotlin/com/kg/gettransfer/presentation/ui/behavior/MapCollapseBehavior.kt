@@ -4,11 +4,11 @@ import android.content.Context
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.kg.gettransfer.R
 
 class MapCollapseBehavior(mContext: Context, attrs: AttributeSet): BaseBehavior(mContext, attrs) {
 
@@ -24,6 +24,9 @@ class MapCollapseBehavior(mContext: Context, attrs: AttributeSet): BaseBehavior(
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
+        // anchorId needs to set programmatically(not in xml) otherwise onDependentViewChanged will called all the time
+        (child.layoutParams as CoordinatorLayout.LayoutParams).anchorId = R.id.sheetTransferDetails
+
         val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetBehavior
 
         if (behavior.peekHeight > 0 && dependency.top != dependencyTopPos) {
@@ -39,6 +42,6 @@ class MapCollapseBehavior(mContext: Context, attrs: AttributeSet): BaseBehavior(
                 }
             }
         }
-        return false
+        return true
     }
 }
