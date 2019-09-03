@@ -23,7 +23,7 @@ class CommunicationButtonsLayoutAboveBottomSheetBehavior(private val mContext: C
             dependency.top >= behavior.halfExpandedRatio.toInt() -> dependency.top
             else -> behavior.halfExpandedRatio.toInt()
         }
-        child.bottom = child.bottom + mContext.resources.getDimension(R.dimen.activity_carrier_trip_details_top_buttons_margin_bottom).toInt()
+        child.bottom = child.bottom + mContext.resources.getDimension(R.dimen.activity_transfer_details_top_buttons_margin_bottom).toInt()
         child.top = child.bottom - (child as FrameLayout).measuredHeight
         return true
     }

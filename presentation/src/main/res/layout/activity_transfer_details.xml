@@ -86,7 +86,7 @@
         app:behavior_hideable="false"
         app:behavior_fitToContents="false"
         app:behavior_halfExpandedRatio="0.5"
-        app:behavior_peekHeight="@dimen/bottom_sheet_carrier_trip_details_bs_peek_height">
+        app:behavior_peekHeight="@dimen/bottom_sheet_transfer_details_bs_peek_height">
 
         <include layout="@layout/bottom_sheet_transfer_details" />
     </FrameLayout>

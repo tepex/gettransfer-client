@@ -15,7 +15,7 @@
         android:background="@drawable/back_top_rounded"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/bottom_sheet_carrier_trip_details_free_space_height">
+        android:paddingBottom="@dimen/bottom_sheet_transfer_details_free_space_height">
 
         <View
             android:id="@+id/divider"
