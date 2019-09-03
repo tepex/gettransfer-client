@@ -93,7 +93,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     internal lateinit var presenter: TransferDetailsPresenter
 
     private lateinit var bsTransferDetails: BottomSheetBehavior<View>
-    private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
+    private lateinit var mapCollapseBehavior: MapCollapseBehavior
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
@@ -181,25 +181,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun initBottomSheets() {
-        // it false first in order to BottomSheetBehavior.STATE_HALF_EXPANDED  won't be skipped
-        scrollContent.isNestedScrollingEnabled = false
-
         bsTransferDetails = BottomSheetBehavior.from(sheetTransferDetails)
 
         bsTransferDetails.state = BottomSheetBehavior.STATE_COLLAPSED
         bsTransferDetails.saveFlags = BottomSheetBehavior.SAVE_ALL
-
-        tintBackgroundShadow = tintBackground
-
-        val bsc = object: BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (newState == BottomSheetBehavior.STATE_DRAGGING)
-                    scrollContent.isNestedScrollingEnabled = true
-            }
-        }
-        bsTransferDetails.setBottomSheetCallback(bsc)
     }
 
     private fun setClickListeners() {
