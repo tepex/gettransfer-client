@@ -156,6 +156,9 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
+        androidTest{
+            java.srcDir file("src/androidTest/kotlin")
+        }
     }
 
     compileOptions {

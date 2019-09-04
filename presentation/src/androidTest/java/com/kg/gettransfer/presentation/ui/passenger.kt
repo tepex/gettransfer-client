@@ -21,7 +21,7 @@ import com.kg.gettransfer.presentation.ui.ScreenElements.*
 
 @RunWith(AndroidJUnit4::class)
 class passenger {
-
+    val satisfactionBox = SatisfactionBox()
     val onboarding = Onboarding()
     val navBar = NavBar()
     val settingsScr = SettingsScreen()
@@ -35,12 +35,12 @@ class passenger {
     @Test
     fun passengerCreateTrasfer (){
 
-
+        Thread.sleep(10000)
         //Launch app
         ActivityScenario.launch(SplashActivity::class.java)
 
-        Thread.sleep(7000)
-
+        Thread.sleep(10000)
+        checkform()
         //Assertion onboarging exist
         passOnboardingAnyway()
 
@@ -222,5 +222,15 @@ class passenger {
         } else {
 
         }
+
+    }
+    fun checkform() {
+        if( satisfactionBox.satisfaction.isDisplayed()){
+            satisfactionBox.closebtn.perform(click())
+        }
+        else{
+
+        }
+
     }
 }

@@ -54,6 +54,11 @@ class DialogWindow{
     val msgnotransport = onView(withText("Please select transport type"))
     val msgnoterms = onView(withText("You should accept terms of use"))
 }
+class SatisfactionBox {
+    val satisfaction = onView(withId(R.id.design_bottom_sheet))
+    val closebtn =  onView(withId(R.id.ivClose))
+}
+
 class Calendar {
     val okButton = onView(withId(android.R.id.button1))
     val transferdate = onView(withId(R.id.transfer_date_time_field))
