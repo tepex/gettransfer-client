@@ -105,17 +105,7 @@
         android:background="@color/colorWhite"
         app:layout_constraintBottom_toTopOf="@+id/btnNextFragment">
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmer_loader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:shimmer_auto_start="true"
-            app:shimmer_duration="2400">
-            <include layout="@layout/view_shimmer_main_screen_search_item" />
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
         <com.kg.gettransfer.presentation.ui.custom.SearchFormMainView
-            android:visibility="gone"
             android:id="@+id/request_search_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

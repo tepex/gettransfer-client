@@ -43,23 +43,11 @@
         android:layout_above="@+id/btnNext"
         android:background="@drawable/back_top_rounded">
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:layout_marginTop="@dimen/margin8"
-            android:id="@+id/shimmer_loader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:shimmer_auto_start="true"
-            app:shimmer_duration="2400"
-            android:layout_gravity="center_vertical">
-            <include layout="@layout/view_shimmer_map_screen_search_item" />
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
         <com.kg.gettransfer.presentation.ui.custom.SearchFormMapView
             android:id="@+id/search_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:visibility="gone"/>
+            android:layout_gravity="center_vertical"/>
     </FrameLayout>
 
     <Button
