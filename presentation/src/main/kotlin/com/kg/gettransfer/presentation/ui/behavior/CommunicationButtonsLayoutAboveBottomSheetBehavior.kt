@@ -4,23 +4,27 @@ import android.content.Context
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kg.gettransfer.R
 
-class CommunicationButtonsLayoutAboveBottomSheetBehavior<V : ViewGroup>(private val mContext: Context, attrs: AttributeSet) : BaseBehavior<V>(mContext, attrs) {
+class CommunicationButtonsLayoutAboveBottomSheetBehavior(private val mContext: Context, attrs: AttributeSet) : BaseBehavior(mContext, attrs) {
 
-    override fun onDependentViewChanged(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
-        if (isBottomSheet(dependency)) {
-            val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetTripleStatesBehavior
-            child.bottom = when {
-                dependency.top >= behavior.anchorPoint -> dependency.top
-                else -> behavior.anchorPoint
-            }
-            child.bottom = child.bottom + mContext.resources.getDimension(R.dimen.activity_transfer_details_top_buttons_margin_bottom).toInt()
-            child.top = child.bottom - (child as FrameLayout).measuredHeight
-            return true
+    override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
+        return isBottomSheet(dependency)
+    }
+
+    override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
+        // anchorId needs to set programmatically(not in xml) otherwise onDependentViewChanged will called all the time
+        (child.layoutParams as CoordinatorLayout.LayoutParams).anchorId = R.id.sheetTransferDetails
+
+        val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetBehavior
+        child.bottom = when {
+            dependency.top >= behavior.halfExpandedRatio.toInt() -> dependency.top
+            else -> behavior.halfExpandedRatio.toInt()
         }
-        return false
+        child.bottom = child.bottom + mContext.resources.getDimension(R.dimen.activity_transfer_details_top_buttons_margin_bottom).toInt()
+        child.top = child.bottom - (child as FrameLayout).measuredHeight
+        return true
     }
 }

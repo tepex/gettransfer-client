@@ -41,7 +41,6 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
-import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
 import com.kg.gettransfer.presentation.ui.behavior.MapCollapseBehavior
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
@@ -93,9 +92,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
 
-    private lateinit var bsTransferDetails: BottomSheetTripleStatesBehavior<View>
-    private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
-    private lateinit var mapCollapseBehavior: MapCollapseBehavior<*>
+    private lateinit var bsTransferDetails: BottomSheetBehavior<View>
+    private lateinit var mapCollapseBehavior: MapCollapseBehavior
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
@@ -182,29 +180,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         super.onStop()
     }
 
-    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                tintBackgroundShadow.isVisible = false
-                hideKeyboard()
-            }
-        }
-
-        override fun onSlide(@NonNull bottomSheet: View, slideOffset: Float) {
-            tintBackgroundShadow.isVisible = true
-            tintBackgroundShadow.alpha = slideOffset
-        }
-    }
-
     private fun initBottomSheets() {
-        bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
-        bsSecondarySheet = BottomSheetBehavior.from(secondary_bottom_sheet)
+        bsTransferDetails = BottomSheetBehavior.from(sheetTransferDetails)
 
-        bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
-        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
-
-        tintBackgroundShadow = tintBackground
-        bsSecondarySheet.setBottomSheetCallback(bsCallback)
+        bsTransferDetails.state = BottomSheetBehavior.STATE_COLLAPSED
+        bsTransferDetails.saveFlags = BottomSheetBehavior.SAVE_ALL
     }
 
     private fun setClickListeners() {

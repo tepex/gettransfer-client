@@ -2,16 +2,12 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollContent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/back_top_rounded"
-    android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    app:anchorPoint="@dimen/bottom_sheet_transfer_details_bs_anchor_point"
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="@dimen/bottom_sheet_transfer_details_bs_peek_height"
-    app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior">
+    android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
