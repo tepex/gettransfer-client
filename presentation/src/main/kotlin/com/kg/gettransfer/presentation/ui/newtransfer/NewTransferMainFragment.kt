@@ -94,8 +94,6 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
      */
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
         return FragmentUtils.onCreateAnimation(requireContext(), enter) {
-
-            request_search_panel.visibleFade(true)
             presenter.updateView()
         }
     }
