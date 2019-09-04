@@ -67,7 +67,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
 
     override fun setBalance(balance: String?) {
         settingsProfile.tvBalance.isVisible = true
-        settingsProfile.tvBalance.text = getString(R.string.LNG_PAYMENT_AVAILABLE, balance)
+        settingsProfile.tvBalance.text = getString(R.string.LNG_PAYMENT_AVAILABLE_S, balance)
     }
 
     override fun initGeneralSettingsLayout() {
