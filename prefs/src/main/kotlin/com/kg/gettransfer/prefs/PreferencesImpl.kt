@@ -120,7 +120,14 @@ class PreferencesImpl(
 
     override var isAppLanguageChanged: Boolean
         get() = configsPrefs.getBoolean(APP_LANGUAGE_CHANGED, false)
-        set(value) { configsPrefs.edit().putBoolean(APP_LANGUAGE_CHANGED, value).apply() }
+        set(value) {
+            with(configsPrefs.edit()) {
+                // need to use commit() instead apply() in order to save value after restarting app.
+                // otherwise value won't be updated
+                // see this problem here https://gettransfercom.atlassian.net/browse/GAA-1799
+                putBoolean(APP_LANGUAGE_CHANGED, value).commit()
+            }
+        }
 
     private fun getMap(key: String): Map<Long, Int> {
         val json = configsPrefs.getString(key, null)
