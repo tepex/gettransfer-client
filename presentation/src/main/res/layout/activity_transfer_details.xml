@@ -16,8 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
         android:layout_marginStart="@dimen/activity_main_buttons_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
         android:layout_marginEnd="@dimen/activity_main_buttons_horizontal_margin">
 
         <ImageView
@@ -29,9 +29,9 @@
             android:clickable="true"
             android:elevation="2dp"
             android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:srcCompat="@drawable/ic_circle_back" />
 
         <ImageView
@@ -43,9 +43,9 @@
             android:clickable="true"
             android:elevation="2dp"
             android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:srcCompat="@drawable/ic_change_route" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -81,12 +81,10 @@
         android:id="@+id/sheetTransferDetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        style="?attr/bottomSheetStyle"
+        app:anchorPoint="@dimen/bottom_sheet_transfer_details_bs_anchor_point"
         app:behavior_hideable="false"
-        app:behavior_fitToContents="false"
-        app:behavior_halfExpandedRatio="0.5"
-        app:behavior_peekHeight="@dimen/bottom_sheet_transfer_details_bs_peek_height">
+        app:behavior_peekHeight="@dimen/bottom_sheet_transfer_details_bs_peek_height"
+        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior">
 
         <include layout="@layout/bottom_sheet_transfer_details" />
     </FrameLayout>
@@ -95,8 +93,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
-        android:orientation="vertical"
         android:elevation="8dp"
+        android:orientation="vertical"
         app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomCommunicationButtonsLayoutBehavior">
 
         <include

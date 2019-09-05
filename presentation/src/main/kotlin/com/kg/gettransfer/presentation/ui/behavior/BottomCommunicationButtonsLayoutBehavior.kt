@@ -19,7 +19,7 @@ class BottomCommunicationButtonsLayoutBehavior(mContext: Context, attrs: Attribu
 
         val childHeight = (child as LinearLayout).measuredHeight
         child.bottom = when {
-            dependency.top <= actionBarHeight + childHeight -> dependency.bottom + dependency.top + actionBarHeight
+            dependency.top <= actionBarHeight + childHeight -> dependency.bottom + dependency.top - actionBarHeight
             else -> screenHeight + childHeight
         }
         child.top = child.bottom - childHeight
