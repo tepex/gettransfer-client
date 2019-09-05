@@ -17,7 +17,7 @@ class TitleBarBehavior(mContext: Context, attrs: AttributeSet) : BaseBehavior(mC
         (child.layoutParams as CoordinatorLayout.LayoutParams).anchorId = R.id.sheetTransferDetails
 
         child.bottom = when {
-            dependency.top <= actionBarHeight -> actionBarHeight - dependency.top
+            dependency.top <= actionBarHeight * 2 -> (actionBarHeight * 2) - dependency.top
             else -> 0
         }
         child.top = child.bottom - actionBarHeight

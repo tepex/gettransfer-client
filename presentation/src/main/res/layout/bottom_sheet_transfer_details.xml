@@ -99,7 +99,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutAboutTransport"
             app:title_transfer_details="@string/LNG_RIDE_RETURN_TRANSFER"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
         <include
             android:id="@+id/layoutAboutDriver"
@@ -115,12 +115,12 @@
             android:id="@+id/tv_bookNow_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
-            android:paddingBottom="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
             android:fontFamily="@font/sf_pro_text_regular"
             android:gravity="center"
             android:paddingStart="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
+            android:paddingTop="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
             android:paddingEnd="@dimen/bottom_sheet_transfer_details_book_now_padding_start_end"
+            android:paddingBottom="@dimen/bottom_sheet_transfer_details_book_now_margin_top"
             android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"
             android:textColor="@color/color_gtr_green"
             android:textSize="17sp"

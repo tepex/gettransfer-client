@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 
 import androidx.annotation.CallSuper
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.appcompat.widget.Toolbar
@@ -40,6 +39,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
+import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
 import com.kg.gettransfer.presentation.ui.behavior.MapCollapseBehavior
 import com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
@@ -91,7 +91,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
 
-    private lateinit var bsTransferDetails: BottomSheetBehavior<View>
+    private lateinit var bsTransferDetails: BottomSheetTripleStatesBehavior<View>
     private lateinit var mapCollapseBehavior: MapCollapseBehavior
 
     @ProvidePresenter
@@ -180,10 +180,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun initBottomSheets() {
-        bsTransferDetails = BottomSheetBehavior.from(sheetTransferDetails)
+        bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
 
-        bsTransferDetails.state = BottomSheetBehavior.STATE_COLLAPSED
-        bsTransferDetails.saveFlags = BottomSheetBehavior.SAVE_ALL
+        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
 
     private fun setClickListeners() {

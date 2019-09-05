@@ -7,7 +7,6 @@ import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 open class BaseBehavior (mContext: Context, attrs: AttributeSet) : CoordinatorLayout.Behavior<View>(mContext, attrs) {
     val screenHeight: Int
@@ -29,7 +28,7 @@ open class BaseBehavior (mContext: Context, attrs: AttributeSet) : CoordinatorLa
     protected fun isBottomSheet(view: View): Boolean {
         val lp = view.layoutParams
         return if (lp is CoordinatorLayout.LayoutParams) {
-            lp.behavior is BottomSheetBehavior<*>
+            lp.behavior is BottomSheetTripleStatesBehavior<*>
         } else false
     }
 }
