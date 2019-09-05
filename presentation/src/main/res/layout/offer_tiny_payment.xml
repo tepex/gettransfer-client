@@ -94,6 +94,32 @@
             app:layout_constraintStart_toStartOf="@+id/tvClass"
             app:layout_constraintTop_toBottomOf="@+id/tvClass" />
 
+
+        <ImageView
+            android:id="@+id/imgWithNameSign"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/vehicle_items_margin_start"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/layoutRating"
+            app:layout_constraintTop_toTopOf="@+id/layoutRating"
+            app:layout_constraintBottom_toBottomOf="@id/layoutRating"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:srcCompat="@drawable/ic_with_name_sign" />
+
+        <ImageView
+            android:id="@+id/imgMissingNameSign"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/vehicle_items_margin_start"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/imgWithNameSign"
+            app:layout_constraintTop_toTopOf="@+id/layoutRating"
+            app:layout_constraintBottom_toBottomOf="@id/layoutRating"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:srcCompat="@drawable/ic_missing_name_sign" />
+
+
         <include
             android:id="@+id/view_capacity"
             layout="@layout/view_transport_capacity_small"
@@ -103,7 +129,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/layoutRating"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/layoutRating"
+            app:layout_constraintStart_toEndOf="@+id/imgMissingNameSign"
             app:layout_constraintTop_toTopOf="@+id/layoutRating" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

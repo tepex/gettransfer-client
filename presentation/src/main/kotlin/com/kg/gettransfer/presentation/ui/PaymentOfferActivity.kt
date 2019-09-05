@@ -336,6 +336,14 @@ class PaymentOfferActivity : BaseActivity(),
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW)
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
+        offer.nameSignPresent?.let { nameSignPresent ->
+            offer.withNameSign?.let { withNameSign ->
+                imgWithNameSign.isVisible = nameSignPresent && withNameSign
+                imgMissingNameSign.isVisible = nameSignPresent && !withNameSign
+                tvMissingNameSign.isVisible = nameSignPresent && !withNameSign
+            }
+        }
+
     }
 
     private fun hidePaymentPercentage() {

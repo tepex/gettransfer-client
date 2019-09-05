@@ -21,6 +21,8 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
             type.status,
             type.currency,
             type.wifi,
+            type.nameSignPresent,
+            type.withNameSign,
             type.refreshments,
             type.charger,
             SystemUtils.formatDateTime(type.createdAt),

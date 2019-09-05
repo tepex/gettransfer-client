@@ -163,6 +163,8 @@
     <string name="LNG_SEAT_BOOSTER_FULL">Booster seat</string>
     <string name="LNG_SEAT_BOOSTER_SHORT">Booster</string>
     <string name="LNG_SEAT_BOOSTER_WEIGHT">22–36 kg, 6–12 years</string>
+    <string name="LNG_MISSING_NAME_SIGN">Please note the driver will not be able to meet you with a sign</string>
+
     <string name="LNG_TOP_RATED">Top selection</string>
     <string name="LNG_TRANSPORT_ECONOMY">Economy</string>
     <string name="LNG_TRANSPORT_COMFORT">Comfort</string>

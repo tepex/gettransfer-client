@@ -20,6 +20,8 @@ data class OfferModel(
     val status: String,
     val currency: String,
     val wifi: Boolean,
+    val nameSignPresent: Boolean? = null,
+    val withNameSign: Boolean? = null,
     val refreshments: Boolean,
     val charger: Boolean,
     val createdAt: String,
