@@ -365,7 +365,7 @@
     <string name="LNG_NO_SEATS_REQUIRED">No child seats required</string>
 
     <string name="LNG_PAYMENT_AVAILABLE_S">Available: %s</string>
-    <string name="LNG_PAYMENT_FROM_BALANCE">From balance (%s)</string>
+    <string name="LNG_PAYMENT_FROM_BALANCE_AVAILABLE">From balance (available: %s)</string>
 
     <string name="LNG_ABOUT_DRIVER_APP">Use new app for drivers</string>
     <string name="LNG_ABOUT_DRIVER_APP_INFO">Try a individual application for drivers. Now it will be more convenient to find applications and plan trips.</string>

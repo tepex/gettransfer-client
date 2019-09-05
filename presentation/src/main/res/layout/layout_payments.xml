@@ -169,7 +169,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="@dimen/margin16"
-            android:text="@string/LNG_PAYMENT_FROM_BALANCE"
+            android:text="@string/LNG_PAYMENT_FROM_BALANCE_AVAILABLE"
             style="@style/sf_font_semi_bold_17_sp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

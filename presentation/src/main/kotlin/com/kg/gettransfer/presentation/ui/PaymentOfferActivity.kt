@@ -489,7 +489,7 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun setBalance(balance: String?) {
         layoutBalance.isGone = balance.isNullOrEmpty()
-        tvBalance.text = getString(R.string.LNG_PAYMENT_FROM_BALANCE, balance)
+        tvBalance.text = getString(R.string.LNG_PAYMENT_FROM_BALANCE_AVAILABLE, balance)
     }
 
     override fun showBadCredentialsInfo(field: Int) {
