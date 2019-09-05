@@ -19,11 +19,11 @@ class CommunicationButtonsLayoutAboveBottomSheetBehavior(private val mContext: C
         (child.layoutParams as CoordinatorLayout.LayoutParams).anchorId = R.id.sheetTransferDetails
 
         val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetBehavior
+        val anchorPoint = (behavior.halfExpandedRatio * screenHeight).toInt()
         child.bottom = when {
-            dependency.top >= behavior.halfExpandedRatio.toInt() -> dependency.top
-            else -> behavior.halfExpandedRatio.toInt()
+            dependency.top >= anchorPoint -> dependency.top
+            else -> anchorPoint
         }
-        child.bottom = child.bottom + mContext.resources.getDimension(R.dimen.activity_transfer_details_top_buttons_margin_bottom).toInt()
         child.top = child.bottom - (child as FrameLayout).measuredHeight
         return true
     }

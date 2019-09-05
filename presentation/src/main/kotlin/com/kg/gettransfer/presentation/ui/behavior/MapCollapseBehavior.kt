@@ -30,7 +30,7 @@ class MapCollapseBehavior(mContext: Context, attrs: AttributeSet): BaseBehavior(
         val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetBehavior
 
         if (behavior.peekHeight > 0 && dependency.top != dependencyTopPos) {
-            val anchorPoint = behavior.halfExpandedRatio.toInt()
+            val anchorPoint = (behavior.halfExpandedRatio * screenHeight).toInt()
             dependencyTopPos = dependency.top
             (child as MapView).getMapAsync { map ->
                 map.setPadding(0, 0, 0, when {
