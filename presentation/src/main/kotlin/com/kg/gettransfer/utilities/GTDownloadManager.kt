@@ -21,7 +21,6 @@ import org.koin.core.inject
 import timber.log.Timber
 import java.io.File
 import java.io.InputStream
-import android.app.Notification
 import android.content.pm.PackageManager
 
 class GTDownloadManager(val context: Context): KoinComponent {
@@ -59,9 +58,10 @@ class GTDownloadManager(val context: Context): KoinComponent {
             val descriptionText =
                     context.getString(R.string.LNG_DOWNLOADING)
                     .plus(" " + context.getString(R.string.LNG_VOUCHER))
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANEL_ID, name, importance).apply {
                 description = descriptionText
+                lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
             }
 
             val notificationManager: NotificationManager =
@@ -76,10 +76,11 @@ class GTDownloadManager(val context: Context): KoinComponent {
             setContentText(context.getString(R.string.LNG_DOWNLOADING))
             setSmallIcon(android.R.drawable.stat_sys_download)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            setDefaults(Notification.DEFAULT_VIBRATE)
+            setDefaults(NotificationCompat.DEFAULT_ALL)
+            setVibrate(longArrayOf(0))
             setAutoCancel(false)
             setOngoing(true)
-            priority = NotificationCompat.PRIORITY_HIGH
+            priority = NotificationManagerCompat.IMPORTANCE_HIGH
         }
     }
 
