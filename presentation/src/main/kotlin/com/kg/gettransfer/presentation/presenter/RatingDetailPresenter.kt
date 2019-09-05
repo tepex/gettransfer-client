@@ -29,7 +29,6 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
         get() = reviewInteractor.comment
         set(value) { reviewInteractor.comment = value }
 
-
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         initRatingFields()
@@ -65,9 +64,9 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
     }
 
     fun ratingChanged() {
-        listOfNotNull(vehicleRating, driverRating, communicationRating).let {
-            if (it.isNotEmpty()) {
-                viewState.setRatingCommon(it.sum() / it.size)
+        listOfNotNull(vehicleRating, driverRating, communicationRating).let { list ->
+            if (list.isNotEmpty()) {
+                viewState.setRatingCommon(list.sum() / list.size)
             }
         }
     }
@@ -94,11 +93,10 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 
     private fun logDetailRate(list: List<ReviewRate>, comment: String) {
         val values = mutableListOf<Pair<String, Any>>()
-        list.forEach {
-            val key = analytics.reviewDetailKey(it.rateType.name)
-            values.add(Pair(key, it.rateValue))
+        list.forEach { reviewRate ->
+            values.add(analytics.reviewDetailKey(reviewRate.rateType.name) to reviewRate.rateValue)
         }
-        values.add(Pair(Analytics.REVIEW_COMMENT, comment))
+        values.add(Analytics.REVIEW_COMMENT to comment)
         analytics.logEvent(Analytics.EVENT_TRANSFER_REVIEW_DETAILED, values)
     }
 }

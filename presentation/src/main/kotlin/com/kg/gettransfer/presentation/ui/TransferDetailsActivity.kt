@@ -4,21 +4,20 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 
-import androidx.annotation.CallSuper
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
-import androidx.appcompat.widget.Toolbar
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+
+import androidx.annotation.CallSuper
+import androidx.appcompat.widget.Toolbar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
-
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 
@@ -542,7 +541,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 imgFreeWiFi.isVisible   = offerModel.wifi
                 imgCharge.isVisible     = offerModel.charger
 
-                offerModel.vehicle.color?.let { Utils.setCarColorInTextView(this@TransferDetailsActivity, carColor, it) }
+                offerModel.vehicle.color?.let { color ->
+                    Utils.setCarColorInTextView(this@TransferDetailsActivity, carColor, color)
+                }
             }
         }
         vehiclePhotosView.setPhotos(offerModel.vehicle.transportType.imageId, offerModel.vehicle.photos)

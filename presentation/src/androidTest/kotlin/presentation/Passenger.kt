@@ -3,10 +3,10 @@ package com.kg.gettransfer.presentation
 import android.widget.DatePicker
 import android.widget.TimePicker
 
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewInteraction
+
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -14,14 +14,21 @@ import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 
-import org.hamcrest.Matchers
-import org.junit.Test
+import androidx.test.rule.ActivityTestRule
 
 import com.kg.gettransfer.presentation.screenelements.*
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
+import org.junit.Rule
+import org.junit.Test
+
+import org.hamcrest.Matchers
+
 @Suppress("MagicNumber")
 class Passenger {
+    @get:Rule
+    var activityRule: ActivityTestRule<SplashActivity> = ActivityTestRule(SplashActivity::class.java)
+
     val satisfactionBox = SatisfactionBox()
     val onboarding = Onboarding()
     val navBar = NavBar()
@@ -36,7 +43,6 @@ class Passenger {
 
     @Test
     fun passengerCreateTrasfer() {
-        ActivityScenario.launch(SplashActivity::class.java)
         // Assertion onboarging exist
         passOnboardingAnyway()
         Thread.sleep(27000)

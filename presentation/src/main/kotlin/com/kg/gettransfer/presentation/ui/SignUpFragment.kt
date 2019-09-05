@@ -1,11 +1,12 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import androidx.annotation.CallSuper
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
+import androidx.annotation.CallSuper
 
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -14,8 +15,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
-import com.kg.gettransfer.extensions.hideKeyboard
 
+import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.presenter.SignUpPresenter
@@ -28,7 +29,6 @@ import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
-//import leakcanary.AppWatcher
 
 import timber.log.Timber
 

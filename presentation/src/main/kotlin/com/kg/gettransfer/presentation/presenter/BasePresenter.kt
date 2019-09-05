@@ -43,6 +43,7 @@ import org.slf4j.Logger
 
 import ru.terrakok.cicerone.Router
 
+@Suppress("TooManyFunctions")
 open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     OfferEventListener,
     ChatBadgeEventListener,
@@ -71,7 +72,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
     protected val getPreferences: GetPreferencesInteractor by inject()
 
-    //private var sendingMessagesNow = false
+    // private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
 
     protected val log: Logger by inject { parametersOf("GTR-presenter") }
@@ -90,7 +91,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
         worker.main.launch {
             val result = withContext(worker.bg) { sessionInteractor.coldStart() }
-            initEndpoint(getPreferences().getModel().endpoint!!)
+            getPreferences().getModel().endpoint?.let { initEndpoint(it) }
             if (result.error == null) {
                 systemInitialized()
             }
@@ -160,7 +161,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
     }*/
 
-    //open fun doingSomethingAfterSendingNewMessagesCached() {}
+    // open fun doingSomethingAfterSendingNewMessagesCached() {}
 
     protected open fun systemInitialized() {}
 
@@ -221,6 +222,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
     }
 
+    @Suppress("NestedBlockDepth")
     private suspend fun updateOfferEventsCounter(offer: Offer) {
         val result = withContext(worker.bg) { offerInteractor.getOffers(offer.transferId, true) }
         if (result.error == null) {
@@ -253,8 +255,8 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
             } else {
                 with(countEventsInteractor) {
                     mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
-                        this[chatBadgeEvent.transferId]?.let {
-                            eventsCount -= it
+                        this[chatBadgeEvent.transferId]?.let { count ->
+                            eventsCount -= count
                             remove(chatBadgeEvent.transferId)
                         }
                     }
@@ -325,19 +327,20 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
      - DEFAULT_ERROR: if want to call only viewState.setError()
      - CHECK_CACHE: when want to show error also after check data in cache
      */
+    @Suppress("ComplexMethod")
     protected suspend fun <M> fetchResult(
         processError: Boolean = DEFAULT_ERROR,
         withCacheCheck: Boolean = CHECK_CACHE,
         checkLoginError: Boolean = true,
         block: suspend () -> Result<M>
-    ) = utils.asyncAwait { block() }.also {
-        it.error?.let { e -> if (checkLoginError) checkResultError(e) else true }
+    ) = utils.asyncAwait { block() }.also { result ->
+        result.error?.let { e -> if (checkLoginError) checkResultError(e) else true }
             ?.let { handle ->
                 if (!handle) return@also
-                if (withCacheCheck) !it.fromCache else true
+                if (withCacheCheck) !result.fromCache else true
             }?.let { resultCheck ->
-                if (!processError && resultCheck) it.error?.let { e -> viewState.setError(e) }
-                log.error("BasePresenter.fetchResult", it.error)
+                if (!processError && resultCheck) result.error?.let { e -> viewState.setError(e) }
+                log.error("BasePresenter.fetchResult", result.error)
             }
     }
 
@@ -371,10 +374,10 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     }
 
     companion object {
-        //when you want to handle error in child presenter
+        // when you want to handle error in child presenter
         const val SHOW_ERROR = true
         const val DEFAULT_ERROR = false
-        //the same as SHOW_ERROR, but when you will not show error even in child presenter
+        // the same as SHOW_ERROR, but when you will not show error even in child presenter
         const val WITHOUT_ERROR = true
         const val CHECK_CACHE = true
         const val NO_CACHE_CHECK = false

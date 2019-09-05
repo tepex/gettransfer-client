@@ -282,21 +282,21 @@ object Utils : KoinComponent {
         return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track, isVerticalRoute)
     }
 
-    fun getCameraUpdate(list: List<LatLng>): CameraUpdate  =
-        LatLngBounds.Builder()
-                .also { b -> list.forEach { b.include(it) } }
-                .build()
-                .let { CameraUpdateFactory.newLatLngBounds(it, 150) }
+    fun getCameraUpdate(list: List<LatLng>) = LatLngBounds.Builder()
+        .also { b -> list.forEach { b.include(it) } }
+        .build()
+        .run { CameraUpdateFactory.newLatLngBounds(this, 150) }
 
-    fun getCameraUpdateForPin(point: LatLng) = CameraUpdateFactory.newLatLngZoom(point, BaseGoogleMapActivity.MAP_MIN_ZOOM)
-
-
+    fun getCameraUpdateForPin(point: LatLng) =
+        CameraUpdateFactory.newLatLngZoom(point, BaseGoogleMapActivity.MAP_MIN_ZOOM)
 
     fun getDateTimeTransferDetails(locale: Locale, dateToLocal: Date, withYear: Boolean): Pair<String, String> {
-        val dateString = if (withYear) SimpleDateFormat(DATE_PATTERN, locale).format(dateToLocal)
-                         else SimpleDateFormat(DATE_WITHOUT_YEAR_PATTERN, locale).format(dateToLocal)
-        val timeString = SimpleDateFormat(TIME_PATTERN, locale).format(dateToLocal)
-        return Pair(dateString, timeString)
+        val dateString = if (withYear) {
+            SimpleDateFormat(DATE_PATTERN, locale).format(dateToLocal)
+        } else {
+            SimpleDateFormat(DATE_WITHOUT_YEAR_PATTERN, locale).format(dateToLocal)
+        }
+        return dateString to SimpleDateFormat(TIME_PATTERN, locale).format(dateToLocal)
     }
 
     fun convertDuration(min: Int): Triple<Int, Int, Int> {
@@ -308,8 +308,11 @@ object Utils : KoinComponent {
 
     fun formatDuration(context: Context, duration: Int): String {
         val days = duration / 24
-        return if (days > 0) "$days ".plus(context.getString(R.string.LNG_DAYS))
-        else "$duration ".plus(context.getString(R.string.LNG_HOURS))
+        return if (days > 0) {
+            "$days ".plus(context.getString(R.string.LNG_DAYS))
+        } else {
+            "$duration ".plus(context.getString(R.string.LNG_HOURS))
+        }
     }
 
     fun durationToString(context: Context, duration: Triple<Int, Int, Int>) = buildString {
@@ -326,8 +329,11 @@ object Utils : KoinComponent {
     }
 
     fun getSpannedStringFromHtmlString(htmlString: String): Spanned {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
-        else Html.fromHtml(htmlString)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            Html.fromHtml(htmlString)
+        }
     }
 
     @DrawableRes
