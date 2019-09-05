@@ -1,4 +1,4 @@
-package com.kg.gettransfer
+package com.kg.gettransfer.presentation
 
 //import android.support.test.InstrumentationRegistry
 //import android.support.test.runner.AndroidJUnit4

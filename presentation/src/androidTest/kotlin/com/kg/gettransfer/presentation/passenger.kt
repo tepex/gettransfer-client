@@ -1,4 +1,4 @@
-package com.kg.gettransfer.presentation.ui
+package com.kg.gettransfer.presentation
 
 import android.widget.DatePicker
 import android.widget.TimePicker
@@ -12,12 +12,12 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.kg.gettransfer.R
 import org.hamcrest.Matchers
 import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.test.espresso.contrib.PickerActions
-import com.kg.gettransfer.presentation.ui.ScreenElements.*
+import com.kg.gettransfer.presentation.screenelements.*
+import com.kg.gettransfer.presentation.ui.SplashActivity
 
 @RunWith(AndroidJUnit4::class)
 class passenger {
@@ -35,14 +35,16 @@ class passenger {
     @Test
     fun passengerCreateTrasfer (){
 
-        Thread.sleep(10000)
         //Launch app
         ActivityScenario.launch(SplashActivity::class.java)
 
-        Thread.sleep(10000)
-        checkform()
+
         //Assertion onboarging exist
         passOnboardingAnyway()
+
+        Thread.sleep(27000)
+
+        checkform()
 
         navBar.settingsItem.perform(ViewActions.click())
         settingsScr.profileCell.perform(click())
@@ -155,8 +157,11 @@ class passenger {
 
     fun loginAnyway () {
         if(profile.logout.isDisplayed()) {
+
+
             //Go to settings screen
             profile.btnback.perform(ViewActions.click())
+
             //Go to  order's create
             navBar.orderItem.perform(ViewActions.click())
 

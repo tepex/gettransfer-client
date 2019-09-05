@@ -1,4 +1,4 @@
-package com.kg.gettransfer.presentation.ui.ScreenElements
+package com.kg.gettransfer.presentation.screenelements
 
 import android.view.View
 import androidx.test.espresso.Espresso.onView
@@ -32,7 +32,7 @@ class Profile{
     val login =  onView(Matchers.allOf(ViewMatchers.withId(R.id.btnLogin)))
     val email = onView(allOf(withId(R.id.fieldText), isDescendantOfA(withId(R.id.fieldLayout)), isDisplayed()))
     val pwd = onView(allOf(withId(R.id.etPassword)))
-    val btnback = onView(Matchers.allOf(withContentDescription("Navigate up")))
+    val btnback = onView(Matchers.allOf(withContentDescription("Navigate up"), isDisplayed()))
 }
 class SearchForm {
 
@@ -64,9 +64,9 @@ class Calendar {
     val transferdate = onView(withId(R.id.transfer_date_time_field))
 }
 class  OffersScreen {
-    val topoffer = onView(withIndex(withId(R.id.tv_car_model_tiny),0))
-    val secondoffer = onView(withIndex(withId(R.id.tv_car_model_tiny),1))
-    val thirdoffer = onView(withIndex(withId(R.id.tv_car_model_tiny),2))
+    val topoffer = onView(withIndex(withId(R.id.tv_car_model_tiny), 0))
+    val secondoffer = onView(withIndex(withId(R.id.tv_car_model_tiny), 1))
+    val thirdoffer = onView(withIndex(withId(R.id.tv_car_model_tiny), 2))
     val btnbook = onView(withId(R.id.btn_book))
     val btnback = onView(withId(R.id.btnBack))
 }
