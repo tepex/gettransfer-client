@@ -10,4 +10,5 @@ data class ReviewRateCached(
 )
 
 fun ReviewRateCached.map() = ReviewRateEntity(rateType, value)
+
 fun ReviewRateEntity.map() = ReviewRateCached(rateType, value)

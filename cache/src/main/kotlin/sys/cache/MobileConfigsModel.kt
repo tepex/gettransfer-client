@@ -13,8 +13,8 @@ data class MobileConfigsModel(
     @ColumnInfo(name = MobileConfigsEntity.ORDER_MINIMUM_MINUTES) val orderMinimumMinutes: Int,
     @ColumnInfo(name = MobileConfigsEntity.LICENSE_URL) val termsUrl: String,
     @ColumnInfo(name = MobileConfigsEntity.SMS_RESEND_DELAY_SEC) val smsResendDelaySec: Int?,
-    @ColumnInfo(name = MobileConfigsEntity.DRIVER_APP_NOTIFY) val driverAppNotify: Int,
-    @ColumnInfo(name = MobileConfigsEntity.DRIVER_MODE_BLOCK) val driverModeBlock: Int,
+    @ColumnInfo(name = MobileConfigsEntity.DRIVER_APP_NOTIFY) val isDriverAppNotify: Boolean,
+    @ColumnInfo(name = MobileConfigsEntity.DRIVER_MODE_BLOCK) val isDriverModeBlock: Boolean,
     @ColumnInfo(name = MobileConfigsEntity.BUILDS_CONFIGS) val buildsConfigs: BuildsConfigsModelMap?
 )
 
@@ -24,8 +24,8 @@ fun MobileConfigsModel.map() =
         orderMinimumMinutes,
         termsUrl,
         smsResendDelaySec,
-        if (driverAppNotify == 1) true else false,
-        if (driverModeBlock == 1) true else false,
+        isDriverAppNotify,
+        isDriverModeBlock,
         buildsConfigs?.map?.mapValues { it.value.map() }
     )
 
@@ -36,7 +36,7 @@ fun MobileConfigsEntity.map() =
         orderMinimumMinutes,
         termsUrl,
         smsResendDelaySec,
-        if (isDriverAppNotify) 1 else 0,
-        if (isDriverModeBlock) 1 else 0,
+        isDriverAppNotify,
+        isDriverModeBlock,
         buildsConfigs?.let { configs -> BuildsConfigsModelMap(configs.mapValues { it.value.map() }) }
     )

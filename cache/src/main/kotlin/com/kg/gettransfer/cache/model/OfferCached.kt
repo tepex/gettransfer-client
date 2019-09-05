@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+
 import com.kg.gettransfer.data.model.OfferEntity
 
 @Entity(tableName = OfferEntity.ENTITY_NAME)
@@ -13,6 +14,8 @@ data class OfferCached(
     @ColumnInfo(name = OfferEntity.STATUS)             val status: String,
     @ColumnInfo(name = OfferEntity.CURRENCY)           val currency: String,
     @ColumnInfo(name = OfferEntity.WIFI)               val wifi: Boolean,
+    @ColumnInfo(name = OfferEntity.NAME_SIGN_PRESENT)  val isNameSignPresent: Boolean,
+    @ColumnInfo(name = OfferEntity.WITH_NAME_SIGN)     val isWithNameSign: Boolean,
     @ColumnInfo(name = OfferEntity.REFRESHMENTS)       val refreshments: Boolean,
     @ColumnInfo(name = OfferEntity.CHARGER)            val charger: Boolean,
     @ColumnInfo(name = OfferEntity.CREATED_AT)         val createdAt: String,
@@ -32,6 +35,8 @@ fun OfferCached.map() =
         status,
         currency,
         wifi,
+        isNameSignPresent,
+        isWithNameSign,
         refreshments,
         charger,
         createdAt,
@@ -51,6 +56,8 @@ fun OfferEntity.map() =
         status,
         currency,
         wifi,
+        isNameSignPresent,
+        isWithNameSign,
         refreshments,
         charger,
         createdAt,

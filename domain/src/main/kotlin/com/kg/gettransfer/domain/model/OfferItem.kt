@@ -10,6 +10,8 @@ data class Offer(
     val status: String,
     val currency: String,
     val wifi: Boolean,
+    val isNameSignPresent: Boolean,
+    val isWithNameSign: Boolean,
     val refreshments: Boolean,
     val charger: Boolean,
     val createdAt: Date,
@@ -28,11 +30,13 @@ data class Offer(
         else                           -> null
     }
 
-    fun isRateAvailable() = ratings != null   // call this first
+    // call this first
+    fun isRateAvailable() = ratings != null
 
-    fun isNeededRateOffer() =                 // call after check
-            ratings?.run {
-                neededRateField(vehicle) || neededRateField(driver) || neededRateField(communication) } ?: false
+    // call after check
+    fun isNeededRateOffer() = ratings?.run {
+        neededRateField(vehicle) || neededRateField(driver) || neededRateField(communication)
+    } ?: false
 
     private fun neededRateField(fieldRating: Double?) = fieldRating == Ratings.NO_RATING
 }

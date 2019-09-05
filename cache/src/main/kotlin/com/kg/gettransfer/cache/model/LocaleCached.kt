@@ -1,7 +1,9 @@
 package com.kg.gettransfer.cache.model
 
 import androidx.room.ColumnInfo
+
 import com.kg.gettransfer.data.model.LocaleEntity
+
 import kotlinx.serialization.Serializable
 
 @Serializable
