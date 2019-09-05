@@ -13,4 +13,5 @@ data class OfferFeedbackCached(
 )
 
 fun OfferFeedbackEntity.map() = OfferFeedbackCached(offerId, comment)
+
 fun OfferFeedbackCached.map() = OfferFeedbackEntity(offerId, comment)

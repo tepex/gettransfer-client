@@ -6,13 +6,12 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
+import android.widget.EditText
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
-
-import android.view.View
-import android.widget.EditText
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -336,14 +335,13 @@ class PaymentOfferActivity : BaseActivity(),
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW)
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
-        offer.nameSignPresent?.let { nameSignPresent ->
-            offer.withNameSign?.let { withNameSign ->
-                imgWithNameSign.isVisible = nameSignPresent && withNameSign
-                imgMissingNameSign.isVisible = nameSignPresent && !withNameSign
-                tvMissingNameSign.isVisible = nameSignPresent && !withNameSign
+        offer.isNameSignPresent?.let { isNameSignPresent ->
+            offer.isWithNameSign?.let { isWithNameSign ->
+                imgWithNameSign.isVisible = isNameSignPresent && isWithNameSign
+                imgMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
+                tvMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
             }
         }
-
     }
 
     private fun hidePaymentPercentage() {

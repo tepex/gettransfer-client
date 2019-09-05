@@ -15,4 +15,5 @@ data class OfferRateCached(
 )
 
 fun OfferRateCached.map() = OfferRateEntity(id, offerId, reviewRate.map())
+
 fun OfferRateEntity.map() = OfferRateCached(0L, offerId, reviewRate.map())

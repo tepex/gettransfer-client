@@ -2,6 +2,7 @@ package com.kg.gettransfer.cache.model
 
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
+
 import com.kg.gettransfer.data.model.TransportTypeEntity
 import com.kg.gettransfer.data.model.VehicleEntity
 

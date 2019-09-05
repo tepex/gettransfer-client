@@ -224,19 +224,19 @@ class OffersActivity : BaseActivity(), OffersView {
                 )
                 setCapacity(offer.vehicle.transportType)
                 with(vehicle_conveniences) {
-                    var nameSignSection = false
-                    offer.nameSignPresent?.let { nameSignPresent ->
-                        offer.withNameSign?.let { withNameSign->
-                            imgWithNameSign.isVisible = nameSignPresent && withNameSign
-                            tvMissingNameSign.isVisible = nameSignPresent && !withNameSign
-                            imgMissingNameSign.isVisible = nameSignPresent && !withNameSign
-                            nameSignSection = nameSignPresent
+                    var isNameSignSection = false
+                    offer.isNameSignPresent?.let { isNameSignPresent ->
+                        offer.isWithNameSign?.let { isWithNameSign->
+                            imgWithNameSign.isVisible = isNameSignPresent && isWithNameSign
+                            tvMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
+                            imgMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
+                            isNameSignSection = isNameSignPresent
                         }
                     }
                     imgFreeWater.isVisible = offer.refreshments
                     imgFreeWiFi.isVisible = offer.wifi
                     imgCharge.isVisible = offer.charger
-                    isVisible = offer.refreshments || offer.wifi || offer.charger || nameSignSection
+                    isVisible = offer.refreshments || offer.wifi || offer.charger || isNameSignSection
                 }
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)

@@ -2,6 +2,7 @@ package com.kg.gettransfer.cache.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
+
 import com.kg.gettransfer.data.model.PriceEntity
 
 data class PriceCached(
