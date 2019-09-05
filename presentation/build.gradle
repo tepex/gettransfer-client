@@ -1,10 +1,10 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlinx-serialization'
-apply plugin: 'de.felixschulze.gradle.hockeyapp'
-apply plugin: 'io.sentry.android.gradle' // for Proguard's mapping file
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-android-extensions"
+apply plugin: "kotlin-kapt"
+apply plugin: "kotlinx-serialization"
+apply plugin: "de.felixschulze.gradle.hockeyapp"
+apply plugin: "io.sentry.android.gradle" // for Proguard"s mapping file
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
 ext {
@@ -39,10 +39,10 @@ ext {
     fb_shimmer_version         = "0.4.0"
     appmetrica_push            = "1.4.1"
     play_services              = "16.1.0"
+    androidx_transition        = "1.2.0-beta01"
 }
 
 android {
-
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
     defaultConfig {
@@ -154,11 +154,9 @@ android {
     }
 
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-        test.java.srcDirs += 'src/test/kotlin'
-        androidTest{
-            java.srcDir file("src/androidTest/kotlin")
-        }
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+        androidTest.java.srcDirs += "src/androidTest/kotlin"
     }
 
     compileOptions {
@@ -301,7 +299,7 @@ dependencies {
     // Play services
     implementation "com.google.android.gms:play-services-base:$play_services"
 
-    api ('androidx.transition:transition:1.2.0-beta01')
+    implementation("androidx.transition:transition:$androidx_transition")
 
     testImplementation libs.coroutines_test
     testImplementation libs.koin_test
@@ -310,22 +308,21 @@ dependencies {
     testImplementation libs.mockk
     testImplementation libs.slf4j_simple
 
-
     //dependencies for espresso
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation "androidx.test:runner:1.1.1"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.1.1"
     //dependencies for ui tests
 
-    androidTestImplementation 'androidx.test:rules:1.1.1'
-    androidTestImplementation 'androidx.test.ext:truth:1.1.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation "androidx.test:rules:1.1.1"
+    androidTestImplementation "androidx.test.ext:truth:1.1.0"
+    androidTestImplementation "androidx.test.ext:junit:1.1.0"
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
-        exclude group: 'com.android.support', module: 'appcompat'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude group: 'com.android.support', module: 'support-v7'
-        exclude group: 'com.android.support', module: 'design'
-        exclude module: 'support-annotations'
-        exclude module: 'recyclerview-v7'
+        exclude group: "com.android.support", module: "appcompat"
+        exclude group: "com.android.support", module: "support-v4"
+        exclude group: "com.android.support", module: "support-v7"
+        exclude group: "com.android.support", module: "design"
+        exclude module: "support-annotations"
+        exclude module: "recyclerview-v7"
     }
 }
 
