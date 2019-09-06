@@ -10,7 +10,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.model.RouteInfoHourlyRequest
 import com.kg.gettransfer.domain.model.RouteInfoRequest
@@ -58,7 +57,6 @@ import org.koin.core.parameter.parametersOf
 class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private val worker: WorkerManager by inject { parametersOf("CreateOrderPresenter") }
-    private val orderInteractor: OrderInteractor by inject()
     private val promoInteractor: PromoInteractor by inject()
     private val dateDelegate: DateTimeDelegate by inject()
     private val childSeatsDelegate: PassengersDelegate by inject()
@@ -85,15 +83,23 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun init() {
         initMapAndPrices()
         setCurrency(sessionInteractor.currency.map())
+        with(accountManager) {
+            if (isLoggedIn && remoteAccount.isBusinessAccount) {
+                remoteAccount.partner?.defaultPromoCode?.let {
+                    orderInteractor.promoCode = it
+                    viewState.disablePromoCodeField()
+                }
+            }
+            viewState.setUser(userMapper.toView(tempUser), isLoggedIn)
+        }
         with(orderInteractor) {
-            viewState.setUser(userMapper.toView(accountManager.tempUser), accountManager.isLoggedIn)
             viewState.setPassengers(passengers)
             viewState.setEditableFields(offeredPrice, flightNumber, flightNumberReturn, promoCode)
             if (promoCode.isNotEmpty()) checkPromoCode()
+            viewState.setHourlyDuration(hourlyDuration)
         }
         updateChildSeatsInfo()
         checkOrderDateTime()
-        viewState.setHourlyDuration(orderInteractor.hourlyDuration)
     }
 
     private fun checkOrderDateTime() = with(orderInteractor) {

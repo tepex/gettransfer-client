@@ -4,8 +4,6 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.model.LatLng
 
-import com.kg.gettransfer.domain.interactor.OrderInteractor
-
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
 
@@ -24,8 +22,6 @@ import org.koin.core.inject
 
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
-
-    private val orderInteractor: OrderInteractor by inject()
     private val configsManager: ConfigsManager by inject()
 
     private val routeMapper: RouteMapper by inject()

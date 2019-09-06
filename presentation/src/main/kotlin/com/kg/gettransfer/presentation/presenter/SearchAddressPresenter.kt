@@ -4,18 +4,12 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.model.LatLngBounds
 
-import com.kg.gettransfer.domain.interactor.OrderInteractor
-
 import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
 
-import org.koin.core.inject
-
 @InjectViewState
 class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
-
-    private val orderInteractor: OrderInteractor by inject()
 
     /* Cache. @TODO */
     private var lastRequest: String? = null

@@ -6,7 +6,6 @@ import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 
-import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
 import com.kg.gettransfer.domain.model.RouteInfoRequest
@@ -34,7 +33,6 @@ import org.koin.core.parameter.parametersOf
 
 @InjectViewState
 class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
-    private val orderInteractor: OrderInteractor by inject()
     private val routeMapper: RouteMapper by inject()
     private val configsManager: ConfigsManager by inject()
     private val worker: WorkerManager by inject { parametersOf("RatingLastTripPresenter") }

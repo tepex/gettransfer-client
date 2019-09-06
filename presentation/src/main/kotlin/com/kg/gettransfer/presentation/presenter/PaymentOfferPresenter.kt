@@ -7,7 +7,6 @@ import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.models.PayPalRequest
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.interactor.OrderInteractor
 
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
@@ -40,8 +39,6 @@ import org.koin.core.inject
 @InjectViewState
 @Suppress("TooManyFunctions")
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
-
-    private val orderInteractor: OrderInteractor by inject()
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
     private val profileMapper: ProfileMapper by inject()
