@@ -19,8 +19,9 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 
-import com.kg.gettransfer.extensions.visibleSlideFade
+import com.kg.gettransfer.extensions.visibleSlide
 import com.kg.gettransfer.extensions.setupWithNavController
+import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 
 import com.kg.gettransfer.presentation.presenter.MainNavigatePresenter
 import com.kg.gettransfer.presentation.ui.dialogs.AboutNewDriverAppDialogFragment
@@ -39,7 +40,7 @@ import pub.devrel.easypermissions.EasyPermissions
 
 @Suppress("TooManyFunctions")
 class MainNavigateActivity : BaseActivity(), MainNavigateView,
-        StoreDialogFragment.OnStoreListener, AboutNewDriverAppDialogFragment.OnAboutDriverAppListener {
+        StoreDialogFragment.OnStoreListener, GoToPlayMarketListener {
 
     @InjectPresenter
     internal lateinit var presenter: MainNavigatePresenter
@@ -175,17 +176,20 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             RequestsPagerFragment::class.java.name,
             SettingsFragment::class.java.name,
             SupportFragment::class.java.name -> {
-                bottom_nav_shadow.visibleSlideFade(true)
-                bottom_nav.visibleSlideFade(true)
+                bottomNavSliding(true)
             }
             //not visible bottom menu
             else -> {
-                bottom_nav.visibleSlideFade(false)
-                bottom_nav_shadow.visibleSlideFade(false)
+                bottomNavSliding(false)
             }
         }
         setEventsCounterStyle(isNotificationShowed(),
             (destination).className == RequestsPagerFragment::class.java.name, getNavTripsItem())
+    }
+
+    private fun bottomNavSliding(show: Boolean) {
+        bottom_nav.visibleSlide(show)
+        bottom_nav_shadow.visibleSlide(show)
     }
 
     /**

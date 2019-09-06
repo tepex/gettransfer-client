@@ -33,4 +33,9 @@ class SupportPresenter : BasePresenter<SupportView>() {
         router.navigateTo(Screens.About(getPreferences().getModel().isOnboardingShowed))
         analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.ABOUT_CLICKED)
     }
+
+    fun onBecomeCarrierClick() {
+        analytics.logEvent(Analytics.EVENT_BECOME_CARRIER, Analytics.OPEN_SCREEN, null)
+        viewState.openBecomeCarrier()
+    }
 }
