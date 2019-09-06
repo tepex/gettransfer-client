@@ -189,6 +189,10 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         promo_field.input_layout.hint = text
     }
 
+    fun disablePromoView() {
+        promo_field.field_input.isEnabled = false
+    }
+
     fun resetPromoView() {
         promo_field.input_layout.hint = context.getString(R.string.LNG_RIDE_PROMOCODE_PLACEHOLDER)
         promo_field.field_input.setTextColor(ContextCompat.getColor(context, R.color.colorTextLightGray))

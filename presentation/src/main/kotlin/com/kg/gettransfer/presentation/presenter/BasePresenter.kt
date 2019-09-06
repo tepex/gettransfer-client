@@ -59,6 +59,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val countEventsInteractor: CountEventsInteractor by inject()
     protected val reviewInteractor: ReviewInteractor by inject()
     protected val paymentInteractor: PaymentInteractor by inject()
+    protected val orderInteractor: OrderInteractor by inject()
 
     private val pushTokenInteractor: PushTokenInteractor by inject()
     protected val socketInteractor: SocketInteractor by inject()
@@ -126,6 +127,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     }
 
     protected suspend fun clearAllCachedData() {
+        if (accountManager.remoteAccount.partner?.defaultPromoCode != null) orderInteractor.promoCode = ""
         utils.asyncAwait { pushTokenInteractor.unregisterPushToken() }
         utils.asyncAwait { accountManager.logout() }
 

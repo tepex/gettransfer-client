@@ -25,6 +25,7 @@ interface CreateOrderView : BaseView, RouteView {
     fun showHourlyDurationDialog(durationValue: Int?)
     fun setHourlyDuration(durationValue: Int?)
     fun setHintForDateTimeTransfer(withReturnWay: Boolean)
+    fun disablePromoCodeField()
     fun setPromoResult(discountInfo: String?)
     fun resetPromoView()
     fun showEmptyFieldError(@StringRes stringId: Int)

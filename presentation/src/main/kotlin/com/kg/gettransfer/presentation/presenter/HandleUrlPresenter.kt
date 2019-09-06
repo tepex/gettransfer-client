@@ -2,8 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.createStartChain
@@ -11,12 +9,8 @@ import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.presentation.view.Screens
 
-import org.koin.core.inject
-
 @InjectViewState
 class HandleUrlPresenter : BasePresenter<HandleUrlView>() {
-
-    private val orderInteractor: OrderInteractor by inject()
 
     @Suppress("ComplexMethod")
     fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) = utils.launchSuspend {

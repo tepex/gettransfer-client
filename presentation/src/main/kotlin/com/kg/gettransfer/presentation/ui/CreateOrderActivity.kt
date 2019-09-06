@@ -366,6 +366,10 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         sheetOrder.setChildSeats(setOf, total)
     }
 
+    override fun disablePromoCodeField() {
+        sheetOrder.disablePromoView()
+    }
+
     override fun setPromoResult(discountInfo: String?) {
         sheetOrder.setPromoResult(discountInfo)
     }
