@@ -28,4 +28,5 @@ interface SettingsView : BaseView {
     fun hideSomeDividers()
     fun recreate()
     fun setBalance(balance: String?)
+    fun hideBalance()
 }

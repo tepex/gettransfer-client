@@ -116,6 +116,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
             setBalance()
             viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
         } else {
+            viewState.hideBalance()
             viewState.hideEmailNotifications()
         }
     }
