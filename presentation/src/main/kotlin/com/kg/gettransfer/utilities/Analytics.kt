@@ -520,6 +520,11 @@ class Analytics(
         const val EVENT_APP_REVIEW_REQUESTED = "app_review_requested"
         const val EVENT_IPAPI_REQUEST = "ipapi_request"
 
+        const val EVENT_BECOME_CARRIER = "become_carrier"
+        const val EVENT_NEW_CARRIER_APP_DIALOG = "new_carrier_app_dialog"
+        const val OPEN_SCREEN = "open_screen"
+        const val GO_TO_MARKET = "go_to_market"
+
         const val STATUS = "status"
         const val PARAM_KEY_NAME = "name"
 

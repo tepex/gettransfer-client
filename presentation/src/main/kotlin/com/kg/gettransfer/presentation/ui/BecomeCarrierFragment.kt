@@ -10,13 +10,14 @@ import com.arellomobile.mvp.MvpAppCompatFragment
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
+import com.kg.gettransfer.utilities.Analytics
 import kotlinx.android.synthetic.main.dialog_fragment_about_driver_app.btn_continue
 import kotlinx.android.synthetic.main.fragment_become_carrier.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
+import org.koin.android.ext.android.inject
 
-//TODO: Maybe needed analytics
 class BecomeCarrierFragment: MvpAppCompatFragment() {
-
+    private val analytics: Analytics by inject()
     private var onAboutDriverAppListener: GoToPlayMarketListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -26,6 +27,7 @@ class BecomeCarrierFragment: MvpAppCompatFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         btn_continue.setOnClickListener {
+            analytics.logEvent(Analytics.EVENT_BECOME_CARRIER, Analytics.GO_TO_MARKET, null)
             onAboutDriverAppListener?.onClickGoToDriverApp()
             findNavController().navigateUp()
         }

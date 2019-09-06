@@ -35,7 +35,7 @@ class SupportPresenter : BasePresenter<SupportView>() {
     }
 
     fun onBecomeCarrierClick() {
-        //TODO: Maybe needed analytics
+        analytics.logEvent(Analytics.EVENT_BECOME_CARRIER, Analytics.OPEN_SCREEN, null)
         viewState.openBecomeCarrier()
     }
 }

@@ -49,6 +49,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         if (accountManager.isLoggedIn) {
             worker.main.launch {
                 if (accountManager.remoteAccount.isDriver && !getPreferences().getModel().isNewDriverAppDialogShowed) {
+                    analytics.logEvent(Analytics.EVENT_NEW_CARRIER_APP_DIALOG, Analytics.OPEN_SCREEN, null)
                     viewState.showNewDriverAppDialog()
                     withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(true) }
                 }

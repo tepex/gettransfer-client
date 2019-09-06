@@ -8,7 +8,6 @@ import com.kg.gettransfer.utilities.Analytics
 import kotlinx.android.synthetic.main.dialog_fragment_about_driver_app.*
 import org.koin.android.ext.android.inject
 
-//TODO: Maybe needed analytics
 class AboutNewDriverAppDialogFragment : BaseBottomSheetDialogFragment() {
 	private val analytics: Analytics by inject()
 	override val layout: Int = R.layout.dialog_fragment_about_driver_app
@@ -23,6 +22,7 @@ class AboutNewDriverAppDialogFragment : BaseBottomSheetDialogFragment() {
 		super.initUx(savedInstanceState)
 		iv_close.setOnClickListener { dismiss() }
 		btn_continue.setOnClickListener {
+			analytics.logEvent(Analytics.EVENT_NEW_CARRIER_APP_DIALOG, Analytics.GO_TO_MARKET, null)
 			onAboutDriverAppListener?.onClickGoToDriverApp()
 			dismiss()
 		}
