@@ -21,6 +21,7 @@ import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.extensions.visibleSlideFade
 import com.kg.gettransfer.extensions.setupWithNavController
+import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 
 import com.kg.gettransfer.presentation.presenter.MainNavigatePresenter
 import com.kg.gettransfer.presentation.ui.dialogs.AboutNewDriverAppDialogFragment
@@ -39,7 +40,7 @@ import pub.devrel.easypermissions.EasyPermissions
 
 @Suppress("TooManyFunctions")
 class MainNavigateActivity : BaseActivity(), MainNavigateView,
-        StoreDialogFragment.OnStoreListener, AboutNewDriverAppDialogFragment.OnAboutDriverAppListener {
+        StoreDialogFragment.OnStoreListener, GoToPlayMarketListener {
 
     @InjectPresenter
     internal lateinit var presenter: MainNavigatePresenter

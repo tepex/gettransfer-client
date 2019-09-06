@@ -3,18 +3,20 @@ package com.kg.gettransfer.presentation.ui.dialogs
 import android.content.Context
 import android.os.Bundle
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 import com.kg.gettransfer.utilities.Analytics
 import kotlinx.android.synthetic.main.dialog_fragment_about_driver_app.*
 import org.koin.android.ext.android.inject
 
+//TODO: Maybe needed analytics
 class AboutNewDriverAppDialogFragment : BaseBottomSheetDialogFragment() {
 	private val analytics: Analytics by inject()
 	override val layout: Int = R.layout.dialog_fragment_about_driver_app
-	private var onAboutDriverAppListener: OnAboutDriverAppListener? = null
+	private var onAboutDriverAppListener: GoToPlayMarketListener? = null
 
 	override fun onAttach(context: Context) {
 		super.onAttach(context)
-		onAboutDriverAppListener = activity as OnAboutDriverAppListener
+		onAboutDriverAppListener = activity as GoToPlayMarketListener
 	}
 
 	override fun initUx(savedInstanceState: Bundle?) {
@@ -33,9 +35,5 @@ class AboutNewDriverAppDialogFragment : BaseBottomSheetDialogFragment() {
 		const val DIALOG_TAG = "about_driver_app_dialog_tag"
 
 		fun newInstance() = AboutNewDriverAppDialogFragment()
-	}
-
-	interface OnAboutDriverAppListener {
-		fun onClickGoToDriverApp()
 	}
 }

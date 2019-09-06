@@ -9,14 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.navigation.fragment.findNavController
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.visibleFade
-import com.kg.gettransfer.extensions.visibleSlide
 import com.kg.gettransfer.presentation.presenter.SupportPresenter
+import com.kg.gettransfer.presentation.ui.custom.ContactsView
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.SupportView
 
@@ -51,6 +52,7 @@ class SupportFragment : BaseFragment(), SupportView {
 
     private fun initClickListeners() {
         aboutUs.setOnClickListener { presenter.onAboutUsClick() }
+        becomeCarrier.setOnClickListener { presenter.onBecomeCarrierClick() }
         fabFacebook.setOnClickListener { facebookClick() }
         fabViber.setOnClickListener { viberClick() }
         fabTelegram.setOnClickListener { telegramClick() }
@@ -64,14 +66,16 @@ class SupportFragment : BaseFragment(), SupportView {
         return FragmentUtils.onCreateAnimation(requireContext(), enter) {
             ourLanguages.visibleFade(true)
             phones.visibleFade(true)
-            cyPhone.setOnClickListener { presenter.callPhone(cyPhone.tvPhone.text.toString()) }
-            gbPhone.setOnClickListener { presenter.callPhone(gbPhone.tvPhone.text.toString()) }
-            hkPhone.setOnClickListener { presenter.callPhone(hkPhone.tvPhone.text.toString()) }
-            ruPhone.setOnClickListener { presenter.callPhone(ruPhone.tvPhone.text.toString()) }
-            swPhone.setOnClickListener { presenter.callPhone(swPhone.tvPhone.text.toString()) }
-            usPhone1.setOnClickListener { presenter.callPhone(usPhone1.tvPhone.text.toString()) }
+            cyPhone.setOnClickListener { callPhone(cyPhone) }
+            gbPhone.setOnClickListener { callPhone(gbPhone) }
+            hkPhone.setOnClickListener { callPhone(hkPhone) }
+            ruPhone.setOnClickListener { callPhone(ruPhone) }
+            swPhone.setOnClickListener { callPhone(swPhone) }
+            usPhone1.setOnClickListener { callPhone(usPhone1) }
         }
     }
+
+    private fun callPhone(tv: ContactsView) = presenter.callPhone(tv.tvPhone.text.toString())
 
     private fun facebookClick() = startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(FACEBOOK_URL)))
 
@@ -89,6 +93,10 @@ class SupportFragment : BaseFragment(), SupportView {
 
     override fun showEmail(email: String) {
         tvEmail.text = email
+    }
+
+    override fun openBecomeCarrier() {
+        findNavController().navigate(SupportFragmentDirections.goToBecomeCarrier())
     }
 
     companion object {

@@ -10,5 +10,16 @@
         android:id="@+id/showHelp"
         android:name="com.kg.gettransfer.presentation.ui.SupportFragment"
         android:label="support"
-        tools:layout="@layout/fragment_support"/>
+        tools:layout="@layout/fragment_support">
+
+        <action
+            android:id="@+id/go_to_become_carrier"
+            app:destination="@id/showBecomeCarrier"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/showBecomeCarrier"
+        android:name="com.kg.gettransfer.presentation.ui.BecomeCarrierFragment"
+        android:label="becomeCarrier"
+        tools:layout="@layout/fragment_become_carrier"/>
 </navigation>
