@@ -10,7 +10,7 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 ext {
     support_version            = "28.0.0"
     multidex_version           = "2.0.1"
-    constraint_layout_version  = "2.0.0-alpha2"
+    constraint_layout_version  = "2.0.0-beta1" // don't update version until content_payment_successful.xml preview will be work fine
     moxy_version               = "1.7.0"
     cicerone_version           = "5.0.0"
     circle_indicator_version   = "1.2.2"
@@ -209,7 +209,7 @@ dependencies {
     implementation "androidx.fragment:fragment:1.2.0-alpha02"
     implementation "androidx.fragment:fragment-ktx:1.2.0-alpha02"
 
-    implementation "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
     implementation "androidx.multidex:multidex:$multidex_version"
     implementation "androidx.lifecycle:lifecycle-runtime:2.0.0"
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"

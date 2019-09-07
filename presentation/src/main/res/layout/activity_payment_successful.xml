@@ -11,7 +11,7 @@
         android:background="@color/black_50" />
 
     <include
-        android:id="@+id/sheetSuccessPayment"
-        layout="@layout/dialog_payment_successful" />
+        android:id="@+id/contentSuccessPayment"
+        layout="@layout/content_payment_successful" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

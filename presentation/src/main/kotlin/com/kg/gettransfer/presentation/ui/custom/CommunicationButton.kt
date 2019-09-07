@@ -5,7 +5,7 @@ import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 
 import com.kg.gettransfer.R
 
@@ -15,14 +15,15 @@ import kotlinx.android.synthetic.main.view_communication_button.view.*
 class CommunicationButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr), LayoutContainer {
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes), LayoutContainer {
 
     override val containerView: View =
         LayoutInflater.from(context).inflate(R.layout.view_communication_button, this, true)
 
     init {
-        if (attrs != null) {
+        attrs?.let {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.CommunicationButton)
             btnName.text = ta.getString(R.styleable.CommunicationButton_btn_name)
             val drawableResId = ta.getResourceId(R.styleable.CommunicationButton_btn_img, View.NO_ID)

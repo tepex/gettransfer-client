@@ -2,9 +2,6 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
-import androidx.annotation.NonNull
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import android.view.View
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 
@@ -20,7 +17,7 @@ import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 
 import kotlinx.android.synthetic.main.activity_payment_successful.*
-import kotlinx.android.synthetic.main.dialog_payment_successful.*
+import kotlinx.android.synthetic.main.content_payment_successful.*
 import kotlinx.android.synthetic.main.view_communication_button.view.*
 
 import org.jetbrains.anko.longToast
@@ -35,8 +32,6 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
     @InjectPresenter
     internal lateinit var presenter: PaymentSuccessfulPresenter
 
-    private lateinit var bsPayment: BottomSheetBehavior<View>
-
     override fun getPresenter(): PaymentSuccessfulPresenter = presenter
 
     @CallSuper
@@ -50,11 +45,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
     }
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
-        bsPayment = BottomSheetBehavior.from(sheetSuccessPayment)
-        bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
-        bsPayment.setBottomSheetCallback(bsCallback)
 
-        sheetSuccessPayment.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, 8f)
+        contentSuccessPayment.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, 8f)
 
         baseMapView = mapViewRoute
         initMapView(savedInstanceState)
@@ -83,16 +75,6 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
                 RC_WRITE_FILE, *perms
             )
-        }
-    }
-
-    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onSlide(p0: View, p1: Float) {}
-
-        override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
-            }
         }
     }
 

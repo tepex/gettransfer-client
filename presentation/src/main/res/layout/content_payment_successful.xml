@@ -4,16 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/payment_top_rounded"
-    app:behavior_hideable="true"
-    app:behavior_skipCollapsed="true"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    tools:context=".presentation.ui.PaymentSuccessfulActivity">
+    android:paddingTop="16dp"
+    android:background="@drawable/payment_top_rounded">
 
     <ScrollView
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/btnSupport"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -23,9 +20,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:paddingBottom="25dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/ivClose"
@@ -98,6 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/sf_pro_text_semibold"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
@@ -172,39 +168,39 @@
         android:id="@+id/btnCall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:visibility="gone"
         app:btn_img="@drawable/ic_call"
         app:btn_name="@string/LNG_PAYMENT_CALL"
-        app:layout_constraintBottom_toBottomOf="@+id/btnChat"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnChat"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/content"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="1.0"
         tools:visibility="visible" />
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
         android:id="@+id/btnChat"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:visibility="gone"
         app:btn_img="@drawable/ic_chat_yellow"
         app:btn_name="@string/LNG_PAYMENT_CHAT"
-        app:layout_constraintBottom_toBottomOf="@+id/btnCall"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnSupport"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnCall"
         app:layout_constraintTop_toBottomOf="@+id/content"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="1.0"
         tools:visibility="visible" />
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
         android:id="@+id/btnSupport"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:visibility="visible"
         app:btn_img="@drawable/ic_support"
         app:btn_name="@string/LNG_CUSTOMER_SUPPORT"
