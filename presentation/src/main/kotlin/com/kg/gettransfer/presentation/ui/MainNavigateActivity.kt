@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 
 import androidx.annotation.CallSuper
@@ -19,7 +20,6 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 
-import com.kg.gettransfer.extensions.visibleSlide
 import com.kg.gettransfer.extensions.setupWithNavController
 import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 
@@ -176,7 +176,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             RequestsPagerFragment::class.java.name,
             SettingsFragment::class.java.name,
             SupportFragment::class.java.name -> {
-                bottomNavSliding(true)
+                Handler().postDelayed({bottomNavSliding(true)}, 100)
             }
             //not visible bottom menu
             else -> {
@@ -188,8 +188,8 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     }
 
     private fun bottomNavSliding(show: Boolean) {
-        bottom_nav.visibleSlide(show)
-        bottom_nav_shadow.visibleSlide(show)
+        bottom_nav.isVisible = show
+        bottom_nav_shadow.isVisible = show
     }
 
     /**
