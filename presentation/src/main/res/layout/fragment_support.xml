@@ -61,7 +61,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/becomeCarrier" />
 
             <include
-                android:visibility="gone"
                 android:id="@+id/ourLanguages"
                 layout="@layout/layout_our_languages"
                 android:layout_width="match_parent"
@@ -125,7 +124,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/include" />
 
             <include
-                android:visibility="gone"
                 android:id="@+id/phones"
                 layout="@layout/layout_phones"
                 android:layout_width="match_parent"
