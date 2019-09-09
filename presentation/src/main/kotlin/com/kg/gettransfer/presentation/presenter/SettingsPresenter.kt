@@ -199,7 +199,10 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
         viewState.setEndpoint(endpoint)
         viewState.blockInterface(true)
         withContext(worker.bg) {
-            setEndpoint(endpoint.delegate)
+            endpoint.delegate.let {
+                initEndpoint(it)
+                setEndpoint(it)
+            }
             accountManager.logout()
         }
         configsManager.coldStart(worker.backgroundScope)
