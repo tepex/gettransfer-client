@@ -228,9 +228,9 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
     }
 
     val showReturnFlight: (show: Boolean) -> Unit = { show ->
-        flight_numberReturn_field.isVisible = show
+        flight_numberReturn_field.isVisible   = show
         flight_numberReturn_divider.isVisible = show
-        fl_DeleteReturnDate.isVisible       = show
+        fl_DeleteReturnDate.isVisible         = show
         if (!show) {
             transfer_return_date_field.field_input.text?.clear()
             flight_numberReturn_field.field_input.text?.clear()
