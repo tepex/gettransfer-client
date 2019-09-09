@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    android:background="@drawable/payment_top_rounded">
+
+    <ScrollView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnSupport"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ivClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="?android:attr/selectableItemBackground"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDetails"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvDetails"
+                app:srcCompat="@drawable/ic_close_x" />
+
+            <TextView
+                android:id="@+id/tvDetails"
+                style="@style/sf_pro_text_regular_green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/LNG_PAYMENT_DETAILS"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvPaidSuccessfully"
+                style="@style/sf_font_semi_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:text="@string/LNG_TRANSFER_PAID_SUCCESSFULLY"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDetails" />
+
+            <TextView
+                android:id="@+id/tvBookingNumber"
+                style="@style/sf_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvPaidSuccessfully"
+                tools:text="Booking number 100500" />
+
+            <TextView
+                android:id="@+id/tvWillStart"
+                style="@style/sf_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                android:text="@string/LNG_TRANSFER_WILL_START"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mapViewRoute" />
+
+            <TextView
+                android:id="@+id/tvRemainTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/sf_pro_text_semibold"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/tvWillStart"
+                app:layout_constraintStart_toStartOf="@+id/tvWillStart"
+                app:layout_constraintTop_toBottomOf="@+id/tvWillStart"
+                tools:text="2D:14H:38M" />
+
+            <TextView
+                android:id="@+id/tvBookNowSuccess"
+                style="@style/sf_pro_text_regular_green"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="33dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="33dp"
+                android:layout_marginBottom="24dp"
+                android:gravity="center"
+                android:text="@string/LNG_BOOK_NOW_PAYMENT_SUCCEESS"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@+id/mapViewRoute"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber" />
+
+            <TextView
+                android:id="@+id/tvDownloadVoucher"
+                style="@style/sf_font_pro_text_regular_grey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/LNG_DOWNLOAD_BOOKING_VOUCHER"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/btnDownloadVoucher"
+                app:layout_constraintStart_toStartOf="@+id/btnDownloadVoucher"
+                app:layout_constraintTop_toBottomOf="@+id/btnDownloadVoucher" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/groupVoucher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="tvDownloadVoucher,btnDownloadVoucher" />
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapViewRoute"
+                android:layout_width="0dp"
+                android:layout_height="169dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDownloadVoucher" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnDownloadVoucher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@android:color/white"
+                app:backgroundTint="@color/colorPrimaryDark"
+                app:fabSize="normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber"
+                app:srcCompat="@drawable/ic_download" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+        android:id="@+id/btnCall"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:btn_img="@drawable/ic_call"
+        app:btn_name="@string/LNG_PAYMENT_CALL"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnChat"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/content"
+        app:layout_constraintVertical_bias="1.0"
+        tools:visibility="visible" />
+
+    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+        android:id="@+id/btnChat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:btn_img="@drawable/ic_chat_yellow"
+        app:btn_name="@string/LNG_PAYMENT_CHAT"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSupport"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCall"
+        app:layout_constraintTop_toBottomOf="@+id/content"
+        app:layout_constraintVertical_bias="1.0"
+        tools:visibility="visible" />
+
+    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+        android:id="@+id/btnSupport"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:visibility="visible"
+        app:btn_img="@drawable/ic_support"
+        app:btn_name="@string/LNG_CUSTOMER_SUPPORT"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnChat"
+        app:layout_constraintTop_toBottomOf="@+id/content"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
