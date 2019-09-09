@@ -45,7 +45,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         // https://developer.android.com/training/location/receive-location-updates
     }
 
-    override fun appInitialized() {
+    override fun systemInitialized() {
         if (accountManager.isLoggedIn) {
             worker.main.launch {
                 if (accountManager.remoteAccount.isDriver && !getPreferences().getModel().isNewDriverAppDialogShowed) {

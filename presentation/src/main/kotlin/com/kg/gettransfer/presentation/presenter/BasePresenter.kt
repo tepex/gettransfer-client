@@ -22,6 +22,7 @@ import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.sys.domain.Endpoint
 
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
@@ -84,20 +85,21 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     override fun onFirstViewAttach() {
         if (sessionInteractor.isInitialized) {
-            appInitialized()
+            systemInitialized()
             return
         }
         worker.main.launch {
             val result = withContext(worker.bg) { sessionInteractor.coldStart() }
+            initEndpoint(getPreferences().getModel().endpoint!!)
             if (result.error == null) {
                 systemInitialized()
-                offerMapper.url = getPreferences().getModel().endpoint!!.url
             }
-            appInitialized()
         }
     }
 
-    open fun appInitialized() {}
+    protected fun initEndpoint(endpoint: Endpoint) {
+        offerMapper.url = endpoint.url
+    }
 
     override fun attachView(view: BV) {
         super.attachView(view)
