@@ -215,7 +215,10 @@
                 app:hint="@string/LNG_RIDE_RETURN_FLIGHT_PLACEHOLDER"
                 app:icon_img="@drawable/ic_return_flight" />
 
-            <include android:id="@+id/flight_numberReturn_divider" layout="@layout/view_divider_horizontal"/>
+            <include
+                android:id="@+id/flight_numberReturn_divider"
+                layout="@layout/view_divider_horizontal"
+                android:visibility="gone" />
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/promo_field"
