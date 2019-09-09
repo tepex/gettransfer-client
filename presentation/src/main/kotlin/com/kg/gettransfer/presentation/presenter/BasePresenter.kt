@@ -215,18 +215,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     override fun onNewOfferEvent(offer: Offer) {
         worker.main.launch {
-            if (!isTransferPaid(offer.transferId)) {
-                onNewOffer(offer.also { updateOfferEventsCounter(it) })
-            }
-        }
-    }
-
-    private suspend fun isTransferPaid(transferId: Long): Boolean {
-        val result = withContext(worker.bg) { transferInteractor.getTransfer(transferId) }
-        return if (result.error == null) {
-            result.model.paidPercentage > 0
-        } else {
-            false
+            onNewOffer(offer.also { updateOfferEventsCounter(it) })
         }
     }
 
