@@ -353,7 +353,11 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun setCommission(paymentCommission: String, dateRefund: String) {
-        tvCommission.text = getString(R.string.LNG_PAYMENT_COMISSION3, paymentCommission)
+        getString(R.string.LNG_PAYMENT_COMISSION3, paymentCommission).let {
+            tvCommission.text = it
+            cardsCommission.text = it
+            paypalCommission.text = it
+        }
         tvRefundDate.text = getString(R.string.LNG_PAYMENT_REFUND, dateRefund)
     }
 
@@ -494,7 +498,12 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     private fun setBalance(balance: String?) {
-        layoutBalance.isGone = balance.isNullOrEmpty()
+        balance.isNullOrEmpty().let {
+            layoutBalance.isVisible = !it
+            tvCommission.isVisible = it
+            cardsCommission.isVisible = !it
+            paypalCommission.isVisible = !it
+        }
         tvBalance.text = getString(R.string.LNG_PAYMENT_FROM_BALANCE_AVAILABLE, balance)
     }
 
