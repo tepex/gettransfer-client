@@ -81,11 +81,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             }
         }
 
-        transfer?.paymentPercentages?.let { percentages ->
-            offer?.let { offer ->
-                when (offer) {
-                    is BookNowOffer -> viewState.setBookNowOffer(offer.map())
-                    is Offer        -> viewState.setOffer(offerMapper.toView(offer), percentages)
+        transfer?.let { transfer ->
+            transfer.paymentPercentages?.let { percentages ->
+                offer?.let { offer ->
+                    val nameSignPresent = !transfer.nameSign.isNullOrEmpty()
+                    when (offer) {
+                        is BookNowOffer -> viewState.setBookNowOffer(offer.map(), nameSignPresent)
+                        is Offer        -> viewState.setOffer(offerMapper.toView(offer), percentages, nameSignPresent)
+                    }
                 }
             }
         }

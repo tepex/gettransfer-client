@@ -17,8 +17,8 @@ import com.kg.gettransfer.presentation.model.TransferModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface PaymentOfferView : BaseView {
 
-    fun setOffer(offer: OfferModel, paymentPercentages: List<Int>)
-    fun setBookNowOffer(bookNowOffer: BookNowOfferModel)
+    fun setOffer(offer: OfferModel, paymentPercentages: List<Int>, isNameSignPresent: Boolean)
+    fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean)
     fun showOfferError()
     fun setCommission(paymentCommission: String, dateRefund: String)
     fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String)

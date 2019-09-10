@@ -141,9 +141,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
     }
 
     fun onSelectOfferClicked(offerItem: OfferItemModel, isShowingOfferDetails: Boolean) {
-        transfer?.let {
+        transfer?.let { transfer ->
             if (isShowingOfferDetails) {
-                viewState.showBottomSheetOfferDetails(offerItem)
+                viewState.showBottomSheetOfferDetails(offerItem, !transfer.nameSign.isNullOrEmpty())
                 analytics.logSingleEvent(Analytics.OFFER_DETAILS)
             } else {
                 analytics.logSingleEvent(Analytics.OFFER_BOOK)

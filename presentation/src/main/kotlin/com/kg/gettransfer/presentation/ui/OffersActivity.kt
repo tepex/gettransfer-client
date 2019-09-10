@@ -213,7 +213,7 @@ class OffersActivity : BaseActivity(), OffersView {
         sortOrder.rotation = if (!sortHigherToLower) SEMI_ROUND else 0f
     }
 
-    override fun showBottomSheetOfferDetails(offer: OfferItemModel) {
+    override fun showBottomSheetOfferDetails(offer: OfferItemModel, isNameSignPresent: Boolean) {
         when (offer) {
             is OfferModel -> {
                 setVehicleNameAndColor(vehicle = offer.vehicle)
@@ -224,10 +224,9 @@ class OffersActivity : BaseActivity(), OffersView {
                 )
                 setCapacity(offer.vehicle.transportType)
                 with(vehicle_conveniences) {
-                    val isNameSignSection = offer.isNameSignPresent
-                    imgWithNameSign.isVisible = offer.isNameSignPresent && offer.isWithNameSign
-                    tvMissingNameSign.isVisible = offer.isNameSignPresent && !offer.isWithNameSign
-                    imgMissingNameSign.isVisible = offer.isNameSignPresent && !offer.isWithNameSign
+                    imgWithNameSign.isVisible = isNameSignPresent && offer.isWithNameSign
+                    tvMissingNameSign.isVisible = isNameSignPresent && !offer.isWithNameSign
+                    imgMissingNameSign.isVisible = isNameSignPresent && !offer.isWithNameSign
 
                     imgFreeWater.isVisible = offer.refreshments
                     imgFreeWiFi.isVisible = offer.wifi
@@ -235,7 +234,7 @@ class OffersActivity : BaseActivity(), OffersView {
                     ivWheelchair.isVisible = offer.wheelchair
                     ivArmor.isVisible = offer.armored
                     isVisible = offer.refreshments || offer.wifi || offer.charger ||
-                        isNameSignSection || offer.wheelchair || offer.armored
+                        isNameSignPresent || offer.wheelchair || offer.armored
                 }
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)

@@ -14,7 +14,7 @@
         android:maxLines="2"
         android:paddingBottom="@dimen/bottom_sheet_offer_details_vehicle_icons_margin_top"
         android:text="@string/LNG_MISSING_NAME_SIGN"
-        android:textColor="@color/color_transfer_details_text_red"
+        android:textColor="@color/color_gtr_orange"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

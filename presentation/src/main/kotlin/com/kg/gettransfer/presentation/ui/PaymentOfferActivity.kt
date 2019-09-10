@@ -239,7 +239,7 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     @Suppress("NestedBlockDepth")
-    override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>) {
+    override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>, isNameSignPresent: Boolean) {
         if (paymentPercentages.isNotEmpty()) {
             if (paymentPercentages.size == 1) {
                 hidePaymentPercentage()
@@ -262,14 +262,14 @@ class PaymentOfferActivity : BaseActivity(),
             }
             selectPaymentPercentage(selectedPercentage)
         }
-        setCarInfo(offer)
+        setCarInfo(offer, isNameSignPresent)
         setPriceInfo(offer.price.base.def, offer.price.base.preferred)
         setCapacity(offer.vehicle.transportType)
     }
 
-    override fun setBookNowOffer(bookNowOffer: BookNowOfferModel) {
+    override fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean) {
         hidePaymentPercentage()
-        setCarInfo(bookNowOffer)
+        setCarInfo(bookNowOffer, isNameSignPresent)
         setPriceInfo(bookNowOffer.base.def, bookNowOffer.base.preferred)
         setCapacity(bookNowOffer.transportType)
     }
@@ -290,9 +290,9 @@ class PaymentOfferActivity : BaseActivity(),
         }
     }
 
-    private fun setCarInfo(offer: OfferItemModel?) {
+    private fun setCarInfo(offer: OfferItemModel?, isNameSignPresent: Boolean) {
         when (offer) {
-            is OfferModel -> showCarInfoOffer(offer)
+            is OfferModel -> showCarInfoOffer(offer, isNameSignPresent)
             is BookNowOfferModel -> showCarInfoBookNow(offer.transportType.id)
         }
     }
@@ -309,7 +309,7 @@ class PaymentOfferActivity : BaseActivity(),
         )
     }
 
-    private fun showCarInfoOffer(offer: OfferModel) {
+    private fun showCarInfoOffer(offer: OfferModel, isNameSignPresent: Boolean) {
         with(offer.vehicle) {
             tvModel.text = name
             if (photos.isEmpty()) {
@@ -335,11 +335,10 @@ class PaymentOfferActivity : BaseActivity(),
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW)
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
-        showNameplate(offer)
+        showNameplate(offer, isNameSignPresent)
     }
 
-    private fun showNameplate(offer: OfferModel) {
-        val isNameSignPresent = offer.isNameSignPresent
+    private fun showNameplate(offer: OfferModel, isNameSignPresent: Boolean) {
         val isWithNameSign = offer.isWithNameSign
 
         imgWithNameSign.isVisible = isNameSignPresent && isWithNameSign
