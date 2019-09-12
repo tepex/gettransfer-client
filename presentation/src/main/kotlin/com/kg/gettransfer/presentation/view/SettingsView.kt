@@ -29,4 +29,6 @@ interface SettingsView : BaseView {
     fun recreate()
     fun setBalance(balance: String?)
     fun hideBalance()
+    fun setCreditLimit(limit: String?)
+    fun hideCreditLimit()
 }
