@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 
@@ -74,9 +75,10 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         settingsProfile.tvBalance.isVisible = false
     }
 
+    @SuppressLint("SetTextI18n")
     override fun setCreditLimit(limit: String?) {
         settingsProfile.tvCreditLimit.isVisible = true
-        settingsProfile.tvCreditLimit.text = getString(R.string.LNG_PAYMENT_CREDIT_LIMIT, limit)
+        settingsProfile.tvCreditLimit.text = "${getString(R.string.LNG_PAYMENT_LIMIT, limit)} $limit"
     }
 
     override fun hideCreditLimit() {
