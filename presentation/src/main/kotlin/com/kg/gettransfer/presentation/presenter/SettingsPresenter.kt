@@ -113,21 +113,33 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     private fun initProfileSettings() = worker.main.launch {
         viewState.initProfileField(accountManager.isLoggedIn, accountManager.remoteProfile)
         if (accountManager.isLoggedIn) {
-            setBalance()
+            setBalanceAndCreditLimit()
             viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
         } else {
-            viewState.hideBalance()
+            hideBalanceAndCreditLimit()
             viewState.hideEmailNotifications()
         }
     }
 
-    private fun setBalance() {
-        with (accountManager) {
-            if (remoteAccount.isBusinessAccount) {
-                val balance = remoteAccount.partner?.availableMoney?.default
-                viewState.setBalance(balance)
+    private fun setBalanceAndCreditLimit() {
+        with (accountManager.remoteAccount) {
+            if (isBusinessAccount) {
+                val balance = partner?.availableMoney?.default
+                if (!balance.isNullOrEmpty()) viewState.setBalance(balance)
+                else viewState.hideBalance()
+
+                val creditLimit = partner?.creditLimit?.default
+                if (!creditLimit.isNullOrEmpty()) viewState.setCreditLimit(balance)
+                else viewState.hideCreditLimit()
+            } else {
+                hideBalanceAndCreditLimit()
             }
         }
+    }
+
+    private fun hideBalanceAndCreditLimit() {
+        viewState.hideBalance()
+        viewState.hideCreditLimit()
     }
 
     private fun initDebugMenu() = worker.main.launch {

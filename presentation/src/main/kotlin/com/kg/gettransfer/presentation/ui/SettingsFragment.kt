@@ -74,6 +74,15 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         settingsProfile.tvBalance.isVisible = false
     }
 
+    override fun setCreditLimit(limit: String?) {
+        settingsProfile.tvCreditLimit.isVisible = true
+        settingsProfile.tvCreditLimit.text = getString(R.string.LNG_PAYMENT_CREDIT_LIMIT, limit)
+    }
+
+    override fun hideCreditLimit() {
+        settingsProfile.tvCreditLimit.isVisible = false
+    }
+
     override fun initGeneralSettingsLayout() {
         Timber.d("current locale: ${Locale.getDefault()}")
         settingsLanguage.setOnClickListener { presenter.onLanguageClicked() }
