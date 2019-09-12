@@ -9,7 +9,7 @@ buildscript {
         kotlin_version        = "1.3.41"
         coroutines_version    = "1.3.0-RC"
         serialization_version = "0.9.1"
-        //gradle_version        = "3.4.0-alpha07"
+        // gradle_version        = "3.4.0-alpha07"
         gradle_version        = '3.4.0'
         koin_version          = "2.0.1"
         gms_version           = "16.0.0"
@@ -18,8 +18,8 @@ buildscript {
         jsr250_version        = "1.0"
         timber_version        = "4.7.1"
         slf4j_version         = "1.7.25"
-        kotlintest_version      = "3.4.0"
-        mockk_version           = "1.9.3"
+        kotlintest_version    = "3.4.0"
+        mockk_version         = "1.9.3"
         gson_version          = "2.8.5"
         room_version          = "2.2.0-alpha02"
         dexcount_version      = "0.8.4"
@@ -27,28 +27,46 @@ buildscript {
         sentry_version        = "1.7.23"
         nav_version           = "2.2.0-alpha01"
 
+        core_testing_version      = "2.1.0"
+        androidx_test_version     = "1.3.0-alpha02"
+        androidx_test_ext_version = "1.1.0"
+        espresso_version          = "3.3.0-alpha02"
+        espresso_contrib_version  = "2.2.2"
+        jupiter_version           = "5.5.2"
+
         libs = [
-            kotlin        : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
-            coroutines    : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
-            serialization : ("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"),
-            koin_core     : ("org.koin:koin-core:$koin_version"),
-            koin_core_ext : ("org.koin:koin-core-ext:$koin_version"),
+            kotlin          : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
+            coroutines      : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
+            serialization   : ("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"),
+            koin_core       : ("org.koin:koin-core:$koin_version"),
+            koin_core_ext   : ("org.koin:koin-core-ext:$koin_version"),
             koin_test       : ("org.koin:koin-test:$koin_version"),
-            koin_android  : ("org.koin:koin-androidx-ext:$koin_version"),
-            psLocation    : ("com.google.android.gms:play-services-location:$gms_version"),
-            psPlaces      : ("com.google.android.gms:play-services-places:$gms_version"),
-            gson          : ("com.google.code.gson:gson:$gson_version"),
-            timber        : ("com.jakewharton.timber:timber:$timber_version"),
-            slf4j         : ("org.slf4j:slf4j-api:$slf4j_version"),
+            koin_android    : ("org.koin:koin-androidx-ext:$koin_version"),
+            psLocation      : ("com.google.android.gms:play-services-location:$gms_version"),
+            psPlaces        : ("com.google.android.gms:play-services-places:$gms_version"),
+            gson            : ("com.google.code.gson:gson:$gson_version"),
+            timber          : ("com.jakewharton.timber:timber:$timber_version"),
+            slf4j           : ("org.slf4j:slf4j-api:$slf4j_version"),
             slf4j_simple    : ("org.slf4j:slf4j-simple:$slf4j_version"),
-            jsr250        : ("javax.annotation:jsr250-api:$jsr250_version"),
-            room          : ("androidx.room:room-runtime:$room_version"),
-            room_ktx      : ("androidx.room:room-ktx:$room_version"),
-            kapt_room     : ("androidx.room:room-compiler:$room_version"),
+            jsr250          : ("javax.annotation:jsr250-api:$jsr250_version"),
+            room            : ("androidx.room:room-runtime:$room_version"),
+            room_ktx        : ("androidx.room:room-ktx:$room_version"),
+            kapt_room       : ("androidx.room:room-compiler:$room_version"),
             mockk           : ("io.mockk:mockk:$mockk_version"),
             kotlintest      : ("io.kotlintest:kotlintest-runner-junit5:$kotlintest_version"),
             kotlintest_koin : ("io.kotlintest:kotlintest-extensions-koin:$kotlintest_version"),
-            coroutines_test : ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
+            coroutines_test : ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"),
+
+            core_testing            : ("androidx.arch.core:core-testing:$core_testing_version"),
+            androidx_test_runner    : ("androidx.test:runner:$androidx_test_version"),
+            androidx_test_rules     : ("androidx.test:rules:$androidx_test_version"),
+            androidx_text_ext_truth : ("androidx.test.ext:truth:$androidx_test_ext_version"),
+            androidx_text_ext_junit : ("androidx.test.ext:junit:$androidx_test_ext_version"),
+            espresso_core           : ("androidx.test.espresso:espresso-core:$espresso_version"),
+            espresso_web            : ("androidx.test.espresso:espresso-web:$espresso_version"),
+            espresso_contrib        : ("com.android.support.test.espresso:espresso-contrib:$espresso_contrib_version")
+//            jupiter_api             : ("org.junit.jupiter:junit-jupiter-api:$jupiter_version"),
+//            jupiter_engine          : ("org.junit.jupiter:junit-jupiter-engine:$jupiter_version")
         ]
     }
 
@@ -103,15 +121,15 @@ detekt {
     toolVersion = "1.0.0-RC15"
     filters = ".*build.*,.*/resources/.*,.*/tmp/.*"
     input = files(
-        "cache/src",
-        "data/src",
-        "domain/src",
-        "encrypt/src",
-        "geo/src",
-        "logging/src",
-        "prefs/src",
-//        "presentation/src",
-        "remote/src",
+//        "cache/src",
+//        "data/src",
+//        "domain/src",
+//        "encrypt/src",
+//        "geo/src",
+//        "logging/src",
+//        "prefs/src",
+        "presentation/src/androidTest"
+//        "remote/src",
 
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BasePresenter.kt",
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/MainPresenter.kt",
@@ -125,77 +143,77 @@ detekt {
 
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/ChatAdapter.kt",
 
-        "presentation/src/main/kotlin/com/kg/gettransfer/GTApplication.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/OffersAdapter.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/OfferItemBindDelegate.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/VehicleMapper.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/VehicleModel.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BaseNewTransferPresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/GTApplication.kt",
+//
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/OffersAdapter.kt",
+//
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/OfferItemBindDelegate.kt",
+//
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/VehicleMapper.kt",
+//
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/VehicleModel.kt",
+//
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BaseNewTransferPresenter.kt",
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CarrierTripDetailsPresenter.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/HandleUrlPresenter.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/MainNavigatePresenter.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/OffersPresenter.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentOfferPresenter.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaypalConnectionPresenter.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectCurrencyPresenter.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SettingsPresenter.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SupportPresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/HandleUrlPresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/MainNavigatePresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/OffersPresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentOfferPresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaypalConnectionPresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectCurrencyPresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SettingsPresenter.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SupportPresenter.kt",
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/TransferDetailsPresenter.kt",
 
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AboutActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AppsFlyerHandleDeepLinkActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripsMainActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AboutActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AppsFlyerHandleDeepLinkActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripsMainActivity.kt",
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripDetailsActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ChatActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CreateOrderActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ChatActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CreateOrderActivity.kt",
 //        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/HandleUrlActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainRequestFragment.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/OffersActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentOfferActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ProfileSettingsActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RatingLastTripFragment.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RequestsActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCurrencyFragment.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpCarrierFragment.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpFragment.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SupportActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/NetworkNotAvailableView.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RateField.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RatingFieldView.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SingleClickButton.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsField.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsCarrierInfoField.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/VehiclePhotosView.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/RatingDetailDialogFragment.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LanguageDrawer.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LayoutHelper.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/ScrollGalleryInflater.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/CarrierTripDetailsView.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/HandleUrlView.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/MainView.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/OffersView.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SupportView.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/TransferDetailsView.kt",
-
-        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt"
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainRequestFragment.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/OffersActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentOfferActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ProfileSettingsActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RatingLastTripFragment.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RequestsActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCurrencyFragment.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpCarrierFragment.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpFragment.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SupportActivity.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
+//
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/NetworkNotAvailableView.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RateField.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RatingFieldView.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SingleClickButton.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsField.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsCarrierInfoField.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/VehiclePhotosView.kt",
+//
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/RatingDetailDialogFragment.kt",
+//
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LanguageDrawer.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LayoutHelper.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/ScrollGalleryInflater.kt",
+//
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/CarrierTripDetailsView.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/HandleUrlView.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/MainView.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/OffersView.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SupportView.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/TransferDetailsView.kt",
+//
+//        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
+//        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt"
 
     )
     config = files("detekt-config.yml")

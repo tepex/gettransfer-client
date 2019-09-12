@@ -1,3 +1,7 @@
+plugins {
+    id "io.qameta.allure" version "2.5" // Latest Plugin Version
+}
+
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
@@ -39,7 +43,7 @@ ext {
     fb_shimmer_version         = "0.4.0"
     appmetrica_push            = "1.4.1"
     play_services              = "16.1.0"
-    androidx_transition        = "1.2.0-beta01"
+    androidx_transition        = "1.2.0-rc01"
 }
 
 android {
@@ -49,6 +53,7 @@ android {
         minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
         targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
         testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -290,7 +295,7 @@ dependencies {
     //PinEditText
     implementation "com.chaos.view:pinview:$pinview_version"
 
-    //Shimmer loading effect
+    // Shimmer loading effect
     implementation "com.facebook.shimmer:shimmer:$fb_shimmer_version"
 
     // AppMetrica Push
@@ -299,7 +304,7 @@ dependencies {
     // Play services
     implementation "com.google.android.gms:play-services-base:$play_services"
 
-    implementation("androidx.transition:transition:$androidx_transition")
+    api("androidx.transition:transition:$androidx_transition")
 
     testImplementation libs.coroutines_test
     testImplementation libs.koin_test
@@ -307,22 +312,37 @@ dependencies {
     testImplementation libs.kotlintest_koin
     testImplementation libs.mockk
     testImplementation libs.slf4j_simple
+    testImplementation libs.core_testing
 
-    //dependencies for espresso
-    androidTestImplementation "androidx.test:runner:1.1.1"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.1.1"
+    // Allure
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
+
+    androidTestImplementation libs.androidx_test_runner
+    androidTestImplementation libs.androidx_test_rules
     //dependencies for ui tests
-
-    androidTestImplementation "androidx.test:rules:1.1.1"
-    androidTestImplementation "androidx.test.ext:truth:1.1.0"
-    androidTestImplementation "androidx.test.ext:junit:1.1.0"
-    androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
+    androidTestImplementation libs.androidx_text_ext_truth
+    androidTestImplementation libs.androidx_text_ext_junit
+    //dependencies for espresso
+    androidTestImplementation libs.espresso_core
+    // for web
+    androidTestImplementation libs.espresso_web
+    androidTestImplementation("com.android.support.test.espresso:espresso-contrib:2.2.2") {
         exclude group: "com.android.support", module: "appcompat"
-        exclude group: "com.android.support", module: "support-v4"
-        exclude group: "com.android.support", module: "support-v7"
-        exclude group: "com.android.support", module: "design"
         exclude module: "support-annotations"
+        exclude module: "support-v4"
+        exclude module: "support-v13"
         exclude module: "recyclerview-v7"
+        exclude module: "appcompat-v7"
+    }
+}
+
+allure {
+    autoconfigure = true
+    version = '2.7.0'  // Latest Allure Version
+
+    useJUnit5 {
+        version = '2.7.0' // Latest Allure Version
     }
 }
 

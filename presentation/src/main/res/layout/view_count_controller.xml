@@ -21,11 +21,10 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/sf_pro_text_semibold"
         android:gravity="center"
+        android:text="@string/passenger_number_default"
         android:textColor="@color/colorTextBlack"
         android:textSize="@dimen/number_size"
-        android:text="@string/passenger_number_default"
         app:layout_constraintBottom_toBottomOf="@+id/img_minus_seat"
-        app:layout_constraintEnd_toStartOf="@+id/img_plus_seat"
         app:layout_constraintStart_toEndOf="@+id/img_minus_seat"
         app:layout_constraintTop_toTopOf="@+id/img_minus_seat"
         tools:text="0" />
