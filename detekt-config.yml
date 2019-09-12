@@ -521,4 +521,9 @@ style:
     active: true
   WildcardImport:
     active: true
-    excludeImports: "kotlinx.android.synthetic.*,kotlinx.coroutines.*,com.google.android.gms.maps.model.*,com.kg.gettransfer.di.*"
+    excludeImports: "kotlinx.android.synthetic.*,kotlinx.coroutines.*,
+    com.google.android.gms.maps.model.*,com.kg.gettransfer.di.*,
+    androidx.test.espresso.action.ViewActions.*,
+    androidx.test.espresso.matcher.ViewMatchers.*,org.hamcrest.Matchers.*,
+    com.kg.gettransfer.presentation.screenelements.*,androidx.test.espresso.web.webdriver.Locator.*,
+    androidx.test.espresso.web.webdriver.DriverAtoms.*"

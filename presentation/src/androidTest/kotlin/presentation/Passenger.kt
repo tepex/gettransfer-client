@@ -13,16 +13,14 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.runners.AndroidJUnit4
 
 import org.hamcrest.Matchers
 import org.junit.Test
-import org.junit.runner.RunWith
 
 import com.kg.gettransfer.presentation.screenelements.*
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
-// @RunWith(AndroidJUnit4::class)
+@Suppress("MagicNumber")
 class Passenger {
     val satisfactionBox = SatisfactionBox()
     val onboarding = Onboarding()
@@ -38,7 +36,6 @@ class Passenger {
 
     @Test
     fun passengerCreateTrasfer() {
-        // Launch app
         ActivityScenario.launch(SplashActivity::class.java)
         // Assertion onboarging exist
         passOnboardingAnyway()
@@ -71,39 +68,39 @@ class Passenger {
         ordersDetails.content.perform(ViewActions.swipeUp())
         Thread.sleep(700)
         // Select date
-        calendar.transferdate.perform(ViewActions.click())
+        calendar.transferDate.perform(ViewActions.click())
         onView(withClassName(Matchers.equalTo(DatePicker::class.java.name))).perform(PickerActions.setDate(2019, 9, 15))
         Thread.sleep(700)
-        calendar.okButton.perform(click())
+        calendar.btnOk.perform(click())
         // The end code select date
         Thread.sleep(700)
         // Select time
         onView(withClassName(Matchers.equalTo(TimePicker::class.java.name))).perform(PickerActions.setTime(15, 15))
         Thread.sleep(700)
 
-        calendar.okButton.perform(click())
+        calendar.btnOk.perform(click())
         // The end code select time
         Thread.sleep(700)
 
-        ordersDetails.pluspassenger.perform(ViewActions.click())
+        ordersDetails.plusPassenger.perform(ViewActions.click())
         Thread.sleep(700)
 
-        ordersDetails.btngetoffers.perform(ViewActions.click())
+        ordersDetails.btnGetOffers.perform(ViewActions.click())
 
         // Assertion dialog-window exist
-        carTypeEnableAnyway ()
+        carTypeEnableAnyway()
         Thread.sleep(700)
         // Assertion dialog-window exist
         switchEnableAnyway()
         Thread.sleep(700)
 
-        offersScreen.topoffer.perform(click())
+        offersScreen.topOffer.perform(click())
         Thread.sleep(700)
 
-        offersScreen.btnbook.perform(ViewActions.click())
+        offersScreen.btnBook.perform(ViewActions.click())
         Thread.sleep(700)
 
-        offersScreen.btnback.perform(ViewActions.click())
+        offersScreen.btnBack.perform(ViewActions.click())
         Thread.sleep(700)
     }
 
@@ -115,19 +112,18 @@ class Passenger {
     }
 
     fun passOnboardingAnyway() {
-        if (onboarding.btnnext.isDisplayed()) {
+        if (onboarding.btnNext.isDisplayed()) {
             // Go next onboarding
-            onboarding.btnnext.perform(ViewActions.click())
+            onboarding.btnNext.perform(ViewActions.click())
             // Click next and go to order's screen
-            onboarding.btnnext.perform(ViewActions.click())
-        } else {
+            onboarding.btnNext.perform(ViewActions.click())
         }
     }
 
     fun loginAnyway() {
         if (profile.logout.isDisplayed()) {
             // Go to settings screen
-            profile.btnback.perform(ViewActions.click())
+            profile.btnBack.perform(ViewActions.click())
             // Go to  order's create
             navBar.orderItem.perform(ViewActions.click())
         } else {
@@ -145,41 +141,34 @@ class Passenger {
     }
 
     fun carTypeEnableAnyway() {
-        if (dialogWindow.msgnotransport.isDisplayed()) {
-            dialogWindow.okbtn.perform(ViewActions.click())
+        if (dialogWindow.msgNoTransport.isDisplayed()) {
+            dialogWindow.btnOk.perform(ViewActions.click())
             Thread.sleep(700)
             // Select car
-            ordersDetails.transporttype.perform(ViewActions.click())
+            ordersDetails.transportType.perform(ViewActions.click())
             Thread.sleep(700)
             // Click btn
-            ordersDetails.btngetoffers.perform(ViewActions.click())
+            ordersDetails.btnGetOffers.perform(ViewActions.click())
             Thread.sleep(700)
-        }  else {
-
         }
     }
 
     fun switchEnableAnyway() {
-        if (dialogWindow.msgnoterms.isDisplayed()) {
-            dialogWindow.okbtn.perform(ViewActions.click())
+        if (dialogWindow.msgNoTerms.isDisplayed()) {
+            dialogWindow.btnOk.perform(ViewActions.click())
             Thread.sleep(700)
-            ordersDetails.bottomcontent.perform(ViewActions.swipeUp())
+            ordersDetails.bottomContent.perform(ViewActions.swipeUp())
             Thread.sleep(700)
             // Activate switcher
-            ordersDetails.termsofuse.perform(ViewActions.click())
+            ordersDetails.termsOfUse.perform(ViewActions.click())
             Thread.sleep(700)
-            ordersDetails.btngetoffers.perform (ViewActions.click())
-        } else {
-
+            ordersDetails.btnGetOffers.perform(ViewActions.click())
         }
     }
 
     fun checkform() {
         if (satisfactionBox.satisfaction.isDisplayed()) {
-            satisfactionBox.closebtn.perform(click())
-        }
-        else {
-
+            satisfactionBox.btnClose.perform(click())
         }
     }
 }
