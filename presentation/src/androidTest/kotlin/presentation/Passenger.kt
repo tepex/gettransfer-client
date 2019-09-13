@@ -8,15 +8,27 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewInteraction
 
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withClassName
 
 import androidx.test.rule.ActivityTestRule
 
-import com.kg.gettransfer.presentation.screenelements.*
+import com.kg.gettransfer.presentation.screenelements.SatisfactionBox
+import com.kg.gettransfer.presentation.screenelements.Onboarding
+import com.kg.gettransfer.presentation.screenelements.NavBar
+import com.kg.gettransfer.presentation.screenelements.SettingsScreen
+import com.kg.gettransfer.presentation.screenelements.OrderScreen
+import com.kg.gettransfer.presentation.screenelements.SearchForm
+import com.kg.gettransfer.presentation.screenelements.Calendar
+import com.kg.gettransfer.presentation.screenelements.OrdersDetails
+import com.kg.gettransfer.presentation.screenelements.OffersScreen
+import com.kg.gettransfer.presentation.screenelements.Profile
+import com.kg.gettransfer.presentation.screenelements.DialogWindow
+
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
 import org.junit.Rule

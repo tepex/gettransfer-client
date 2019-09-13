@@ -8,7 +8,6 @@ import androidx.test.runner.screenshot.BasicScreenCaptureProcessor
 import androidx.test.runner.screenshot.ScreenCaptureProcessor
 import androidx.test.runner.screenshot.Screenshot
 
-import java.io.File
 import java.io.IOException
 
 import org.junit.rules.TestWatcher
