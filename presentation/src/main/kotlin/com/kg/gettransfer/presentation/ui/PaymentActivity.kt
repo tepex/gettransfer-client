@@ -1,11 +1,14 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.TargetApi
+import android.graphics.Bitmap
 
 import android.net.Uri
 
 import android.os.Build
 import android.os.Bundle
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
 import android.webkit.*
 
 import androidx.appcompat.widget.Toolbar
@@ -17,6 +20,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
 
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
@@ -24,6 +28,7 @@ import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
+import kotlinx.android.synthetic.main.activity_payment.spinner
 import org.jetbrains.anko.toast
 import timber.log.Timber
 
@@ -79,10 +84,40 @@ class PaymentActivity: BaseActivity(), PaymentView {
                     }
                 }
             }
+
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                showSpinner()
+                super.onPageStarted(view, url, favicon)
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                hideSpinner()
+                super.onPageFinished(view, url)
+            }
         }
         safeBrowsingIsInitialized = false
         checkSafeBrowsing()
         webView.loadUrl(intent.getStringExtra(PaymentView.EXTRA_URL))
+    }
+
+    private fun hideSpinner() {
+        spinner.clearAnimation()
+        spinner.isVisible = false
+    }
+
+    private fun showSpinner() {
+        val anim = RotateAnimation(
+            0f,
+            360f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f)
+
+        anim.duration = 1500
+        anim.repeatCount = Animation.INFINITE
+        spinner.isVisible = true
+        spinner.startAnimation(anim)
     }
 
     private fun checkSafeBrowsing() {
