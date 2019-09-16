@@ -15,8 +15,8 @@ import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers
-
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
+
 import androidx.test.rule.ActivityTestRule
 
 import com.kg.gettransfer.presentation.screenelements.Calendar
@@ -33,10 +33,10 @@ import com.kg.gettransfer.presentation.screenelements.SettingsScreen
 
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
-import org.junit.Test
-
 import org.hamcrest.Matchers
+
 import org.junit.Rule
+import org.junit.Test
 
 @Suppress("MagicNumber")
 class Passenger {
@@ -91,18 +91,15 @@ class Passenger {
         Thread.sleep(700)
         // Select date
         calendar.transferDate.perform(ViewActions.click())
-        onView(ViewMatchers.withClassName(Matchers.equalTo(DatePicker::class.java.name))).perform(PickerActions.setDate(
-            2019,
-            10,
-            15))
+        onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
+            .perform(PickerActions.setDate(2019, 10, 15))
         Thread.sleep(700)
         calendar.btnOk.perform(ViewActions.click())
         // The end code select date
         Thread.sleep(700)
         // Select time
-        onView(ViewMatchers.withClassName(Matchers.equalTo(TimePicker::class.java.name))).perform(PickerActions.setTime(
-            15,
-            15))
+        onView(ViewMatchers.withClassName(Matchers.equalTo(TimePicker::class.java.name)))
+            .perform(PickerActions.setTime(15, 15))
         Thread.sleep(700)
 
         calendar.btnOk.perform(ViewActions.click())
@@ -130,6 +127,7 @@ class Passenger {
         offersScreen.btnBack.perform(ViewActions.click())
         Thread.sleep(700)
     }
+
     @Test
     fun passengerLoginWithPhone() {
         Thread.sleep(8000)
@@ -160,6 +158,7 @@ class Passenger {
             waitElementClick(navBar.orderItem, 700)
         }
     }
+
     fun ViewInteraction.isDisplayed() = try {
         check(matches(ViewMatchers.isDisplayed()))
         true
@@ -227,11 +226,12 @@ class Passenger {
             satisfactionBox.btnClose.perform(ViewActions.click())
         }
     }
+
     fun waitElementClick(whatToClick: ViewInteraction, wait: Long) {
         Thread.sleep(wait)
-
         whatToClick.perform(ViewActions.click())
     }
+
     fun waitElementReplaceTextPwd(whatToReplaceTextPwd: ViewInteraction, wait: Long, typetxt: String) {
         Thread.sleep(wait)
         whatToReplaceTextPwd.perform(typeText(typetxt))
