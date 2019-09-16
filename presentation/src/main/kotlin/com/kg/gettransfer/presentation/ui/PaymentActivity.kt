@@ -6,12 +6,12 @@ import android.net.Uri
 
 import android.os.Build
 import android.os.Bundle
+import android.webkit.*
 
 import androidx.appcompat.widget.Toolbar
 
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import androidx.webkit.WebViewCompat
+import androidx.webkit.WebViewFeature
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -24,6 +24,8 @@ import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
+import org.jetbrains.anko.toast
+import timber.log.Timber
 
 class PaymentActivity: BaseActivity(), PaymentView {
     companion object {
@@ -34,6 +36,8 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentPresenter
+
+    private var safeBrowsingIsInitialized: Boolean = false
 
     override fun getPresenter(): PaymentPresenter = presenter
 
@@ -64,9 +68,32 @@ class PaymentActivity: BaseActivity(), PaymentView {
                 handleUri(Uri.parse(url))
                 return false
             }
-        }
 
+            override fun onSafeBrowsingHit(view: WebView?, request: WebResourceRequest?, threatType: Int, callback: SafeBrowsingResponse?) {
+                // The "true" argument indicates that your app reports incidents like
+                // this one to Safe Browsing.
+                if (WebViewFeature.isFeatureSupported(WebViewFeature.SAFE_BROWSING_RESPONSE_BACK_TO_SAFETY)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                        callback?.backToSafety(true)
+                        toast("Unsafe web page blocked.")
+                    }
+                }
+            }
+        }
+        safeBrowsingIsInitialized = false
+        checkSafeBrowsing()
         webView.loadUrl(intent.getStringExtra(PaymentView.EXTRA_URL))
+    }
+
+    private fun checkSafeBrowsing() {
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.START_SAFE_BROWSING)) {
+            WebViewCompat.startSafeBrowsing(this, { success ->
+                safeBrowsingIsInitialized = true
+                if (!success) {
+                    Timber.e("Unable to initialize Safe Browsing!")
+                }
+            })
+        }
     }
 
     private fun handleUri(uri: Uri?) {
