@@ -67,7 +67,6 @@ class SearchFragment : BaseFragment(), SearchView {
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
         return FragmentUtils.onCreateAnimation(requireContext(), enter) {
 
-            scrollViewResults.setOnTouchListener(onTouchListener)
             rv_addressList.setOnTouchListener(onTouchListener)
 
             initSearchFields()
