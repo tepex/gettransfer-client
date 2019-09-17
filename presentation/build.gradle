@@ -44,6 +44,7 @@ ext {
     appmetrica_push            = "1.4.1"
     play_services              = "16.1.0"
     androidx_transition        = "1.2.0-rc01"
+    webkit_version             = "1.0.0"
 }
 
 android {
@@ -303,6 +304,9 @@ dependencies {
 
     // Play services
     implementation "com.google.android.gms:play-services-base:$play_services"
+
+    // Webkit
+    implementation "androidx.webkit:webkit:$webkit_version"
 
     api("androidx.transition:transition:$androidx_transition")
 
