@@ -17,9 +17,9 @@ data class OfferEntity(
     @SerialName(CURRENCY)           val currency: String,
     @SerialName(WIFI)               val wifi: Boolean,
     @Optional
-    @SerialName(NAME_SIGN_PRESENT)  val isNameSignPresent: Boolean = false,
+    @SerialName(NAME_SIGN_PRESENT)  val isNameSignPresent: Boolean? = null,
     @Optional
-    @SerialName(WITH_NAME_SIGN)     val isWithNameSign: Boolean = false,
+    @SerialName(WITH_NAME_SIGN)     val isWithNameSign: Boolean? = null,
     @SerialName(REFRESHMENTS)       val refreshments: Boolean,
     @SerialName(CHARGER)            val charger: Boolean,
     @SerialName(CREATED_AT)         val createdAt: String,
@@ -63,8 +63,8 @@ fun OfferEntity.map(dateFormat: DateFormat) =
         status,
         currency,
         wifi,
-        isNameSignPresent,
-        isWithNameSign,
+        isNameSignPresent ?: false,
+        isWithNameSign ?: false,
         refreshments,
         charger,
         dateFormat.parse(createdAt),
