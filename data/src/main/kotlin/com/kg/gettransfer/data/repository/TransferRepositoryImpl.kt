@@ -124,7 +124,11 @@ class TransferRepositoryImpl(
         )
     }
 
-    private suspend fun checkTransfersEvents(transfersList: List<TransferEntity>, isAllTransfersList: Boolean): List<Transfer> {
+    private suspend fun checkTransfersEvents(
+        transfersList: List<TransferEntity>,
+        isAllTransfersList: Boolean
+    ): List<Transfer> {
+
         val mapCountNewMessages = preferencesCache.mapCountNewMessages.toMutableMap()
         val mapCountNewOffers = preferencesCache.mapCountNewOffers.toMutableMap()
 
@@ -141,7 +145,7 @@ class TransferRepositoryImpl(
             preferencesCache.eventsCount = eventsCount
         } else {
             if (tempEventsCount != null) {
-                preferencesCache.eventsCount = eventsCount + tempEventsCount!!
+                tempEventsCount?.let { preferencesCache.eventsCount = eventsCount + it }
                 tempEventsCount = null
             } else {
                 tempEventsCount = eventsCount

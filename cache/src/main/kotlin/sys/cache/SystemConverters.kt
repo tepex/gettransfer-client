@@ -8,6 +8,7 @@ import com.kg.gettransfer.cache.model.TransportTypesCachedList
 
 import kotlinx.serialization.json.JSON
 
+@Suppress("TooManyFunctions")
 object SystemConverters {
     @TypeConverter
     @JvmStatic

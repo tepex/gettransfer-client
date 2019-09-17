@@ -8,9 +8,10 @@ import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
 import com.kg.gettransfer.data.model.*
 
+import java.util.Locale
+
 import kotlinx.serialization.list
 import kotlinx.serialization.json.JSON
-import java.util.*
 
 @Suppress("WildcardImport")
 class PreferencesImpl(
@@ -88,7 +89,6 @@ class PreferencesImpl(
             _userPassword = value
             configsPrefs.edit().putString(USER_PASSWORD, encryptPass.encryptDecrypt(value)).apply()
         }
-
 
     override var mapCountNewOffers: Map<Long, Int>
         get() = getMap(MAP_NEW_OFFERS)

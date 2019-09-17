@@ -65,6 +65,7 @@ class LocationImpl(private val context: Context) :
             }
     }
 
+    @Suppress("ComplexMethod")
     override fun getAddressByLocation(point: LocationEntity): String {
         val list = try {
             geocoder.getFromLocation(point.latitude, point.longitude, 1)
@@ -79,7 +80,7 @@ class LocationImpl(private val context: Context) :
         val country = list.firstOrNull()?.countryName
 
         return buildString {
-            if (street == null && !list.isEmpty() && list.firstOrNull()?.getAddressLine(0)!!.isNotEmpty()) {
+            if (street == null && !list.isEmpty() && !list.firstOrNull()?.getAddressLine(0).isNullOrEmpty()) {
                 append(list.firstOrNull()?.getAddressLine(0))
             } else {
                 if (!street.isNullOrEmpty() && street != "Unnamed Road") append(street).append(", ")

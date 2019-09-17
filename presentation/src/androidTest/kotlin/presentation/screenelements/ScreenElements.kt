@@ -1,7 +1,7 @@
-package presentation.screenelements
+package com.kg.gettransfer.presentation.screenelements
 
 import android.view.View
-import androidx.test.espresso.Espresso
+
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
@@ -146,8 +146,7 @@ fun ViewInteraction.waitElementClick(wait: Long) {
     perform(ViewActions.click())
 }
 
-fun waitElementClick(whatToClick: ViewInteraction, wait: Long ) {
+fun waitElementClick(whatToClick: ViewInteraction, wait: Long) {
     Thread.sleep(wait)
-
-    whatToClick.perform(ViewActions.click())
+    perform(ViewActions.click())
 }

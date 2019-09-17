@@ -6,6 +6,7 @@ import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.User
 
+@Suppress("TooManyFunctions")
 interface SessionRepository {
 
     val isInitialized: Boolean

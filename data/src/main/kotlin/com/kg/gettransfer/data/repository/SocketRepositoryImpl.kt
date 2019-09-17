@@ -31,6 +31,7 @@ class SocketRepositoryImpl(
 */
     private val socketListeners = mutableSetOf<SocketEventListener>()
 
+    @Suppress("EmptyFunctionBlock")
     override fun accessTokenChanged(accessToken: String) {
         // connectionChanged()
     }

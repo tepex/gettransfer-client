@@ -6,13 +6,14 @@ import com.kg.gettransfer.data.TransferDataStore
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
 
-import org.koin.core.inject
 import java.io.InputStream
+
+import org.koin.core.inject
 
 /**
  * Implementation of the [TransferDataStore] interface to provide a means of communicating with the local data source.
  */
-@Suppress("UNUSED_PARAMETER")
+@Suppress("UNUSED_PARAMETER", "TooManyFunctions")
 open class TransferDataStoreCache : TransferDataStore {
     private val cache: TransferCache by inject()
 

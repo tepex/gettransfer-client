@@ -9,7 +9,7 @@ import io.kotlintest.specs.StringSpec
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 
-class ConfigsManagerTest : StringSpec() {
+class SetEndpointInteractorTest : StringSpec() {
 
     @MockK
     lateinit var preferencesRepository: PreferencesRepository

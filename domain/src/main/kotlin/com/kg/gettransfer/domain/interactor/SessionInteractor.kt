@@ -12,6 +12,7 @@ import com.kg.gettransfer.domain.repository.SessionRepository
 
 import java.util.Locale
 
+@Suppress("TooManyFunctions")
 class SessionInteractor(
     private val sessionRepository: SessionRepository,
     private val geoRepository: GeoRepository

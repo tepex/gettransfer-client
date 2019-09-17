@@ -5,38 +5,38 @@ import android.content.Context
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 
-import androidx.annotation.CallSuper
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.appcompat.widget.Toolbar
-
 import android.view.MotionEvent
 import android.view.View
+
+import androidx.annotation.CallSuper
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.model.Money
 
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.strikeText
 import com.kg.gettransfer.extensions.toHalfEvenRoundedFloat
 
-import com.kg.gettransfer.domain.model.Money
-
 import com.kg.gettransfer.presentation.adapter.OffersAdapter
 import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 
-import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.BookNowOfferModel
+import com.kg.gettransfer.presentation.model.CarrierModel
+import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.BookNowOfferModel
-import com.kg.gettransfer.presentation.model.LocaleModel
-import com.kg.gettransfer.presentation.model.CarrierModel
+import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.VehicleModel
 import com.kg.gettransfer.presentation.model.getImageRes

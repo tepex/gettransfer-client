@@ -1,7 +1,7 @@
 package com.kg.gettransfer.sys.domain
 
 class SetNewDriverAppDialogShowedInteractor(
-        private val repository: PreferencesRepository
+    private val repository: PreferencesRepository
 ) {
 
     suspend operator fun invoke(value: Boolean) {

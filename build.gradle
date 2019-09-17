@@ -110,7 +110,6 @@ allprojects {
             testLogging.events = ["failed", "passed", "skipped"]
             testLogging.showStandardStreams = true
         }
-
     }
 }
 
@@ -122,8 +121,6 @@ detekt {
     toolVersion = "1.0.0-RC15"
     filters = ".*build.*,.*/resources/.*,.*/tmp/.*"
     input = files(
-<<<<<<< HEAD
-/*
         "cache/src",
         "data/src",
         "domain/src",
@@ -131,9 +128,9 @@ detekt {
         "geo/src",
         "logging/src",
         "prefs/src",
-        "presentation/src",
+//        "presentation/src",
         "remote/src",
-*/
+
         "presentation/src/androidTest",
         "presentation/src/main/kotlin/com/kg/gettransfer/GTApplication.kt",
 
@@ -208,112 +205,8 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/OffersView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SupportView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/TransferDetailsView.kt",
-=======
 
-//        "cache/src",
-//        "data/src",
-//        "domain/src",
-//        "encrypt/src",
-//        "geo/src",
-//        "logging/src",
-//        "prefs/src",
-
-//       "presentation/src",
-//        "remote/src",
-            "presentation/src/androidTest/kotlin/presentation/Distance.kt"
-
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BasePresenter.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/MainPresenter.kt",
-// presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/RatingDetailPresenter.kt
-// presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/RatingLastTripPresenter.kt
-// presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SettingsPresenter.kt
-// presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/ThanksForRatePresenter.kt
-// presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/TransferDetailsPresenter.kt
-
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CreateOrderPresenter.kt",
-
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/ChatAdapter.kt",
-
-//        "presentation/src/main/kotlin/com/kg/gettransfer/GTApplication.kt",
-//
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/OffersAdapter.kt",
-//
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/OfferItemBindDelegate.kt",
-//
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/VehicleMapper.kt",
-//
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/VehicleModel.kt",
-//
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BaseNewTransferPresenter.kt",
-
-////        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CarrierTripDetailsPresenter.kt",
-
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/HandleUrlPresenter.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/MainNavigatePresenter.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/OffersPresenter.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentOfferPresenter.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaypalConnectionPresenter.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectCurrencyPresenter.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SettingsPresenter.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SupportPresenter.kt",
-
-////        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/TransferDetailsPresenter.kt",
-//
-
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AboutActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AppsFlyerHandleDeepLinkActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripsMainActivity.kt",
-
-////        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripDetailsActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ChatActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CreateOrderActivity.kt",
-////        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/HandleUrlActivity.kt",
-
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainRequestFragment.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/OffersActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentOfferActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ProfileSettingsActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RatingLastTripFragment.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RequestsActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCurrencyFragment.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpCarrierFragment.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpFragment.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SupportActivity.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
-//
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/NetworkNotAvailableView.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RateField.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RatingFieldView.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SingleClickButton.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsField.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsCarrierInfoField.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/VehiclePhotosView.kt",
-//
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/RatingDetailDialogFragment.kt",
-//
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LanguageDrawer.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LayoutHelper.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/ScrollGalleryInflater.kt",
-//
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/CarrierTripDetailsView.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/HandleUrlView.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/MainView.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/OffersView.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SupportView.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/TransferDetailsView.kt",
-//
-//        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
-//        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt"
->>>>>>> GAA-1798: create ui-test for check distance
-
-//        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt"
     )
     config = files("detekt-config.yml")
