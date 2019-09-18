@@ -15,11 +15,14 @@ import com.kg.gettransfer.androidAutoTest.BaseFun.isDisplayed
 import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
+import java.util.concurrent.TimeUnit
+
 import org.hamcrest.Matchers.allOf
+
 import org.junit.Rule
 import org.junit.Test
+
 import presentation.androidAutoTest.WaiteObject.waitId
-import java.util.concurrent.TimeUnit
 
 @Suppress("MagicNumber")
 class TestItemsSuite {
@@ -34,8 +37,8 @@ class TestItemsSuite {
     @Rule
     @JvmField
     var grantPermissionRule = GrantPermissionRule.grant(
-            "android.permission.ACCESS_FINE_LOCATION",
-            "android.permission.ACCESS_COARSE_LOCATION"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
     )
 
     @Test
@@ -88,15 +91,15 @@ class TestItemsSuite {
         onView(isRoot()).perform(waitId(R.id.rv_popularList, TimeUnit.SECONDS.toMillis(15)))
         onView(allOf(withId(R.id.rv_popularList))).isDisplayed()
         onView(withId(R.id.rv_popularList))
-                .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(1, click()))
+            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(1, click()))
         onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
 
         onView(withId(R.id.rv_popularList))
-                .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(2, click()))
+            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(2, click()))
         onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
 
         onView(withId(R.id.rv_popularList))
-                .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(3, click()))
+            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(3, click()))
         onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
     }
 }

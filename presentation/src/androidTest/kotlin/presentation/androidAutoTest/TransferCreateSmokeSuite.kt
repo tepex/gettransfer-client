@@ -13,12 +13,14 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.androidAutoTest.BaseFun.isDisplayed
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
+import java.util.concurrent.TimeUnit
+
 import org.hamcrest.Matchers.allOf
+
 import org.junit.Rule
 import org.junit.Test
 
 import presentation.androidAutoTest.WaiteObject.waitId
-import java.util.concurrent.TimeUnit
 
 @Suppress("MagicNumber")
 class TransferCreateSmokeSuite {

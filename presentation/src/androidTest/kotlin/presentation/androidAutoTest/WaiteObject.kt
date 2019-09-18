@@ -5,50 +5,45 @@ import android.view.View
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.util.HumanReadables
-import androidx.test.espresso.util.TreeIterables
 
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
 
-import org.hamcrest.Matcher
+import androidx.test.espresso.util.HumanReadables
+import androidx.test.espresso.util.TreeIterables
+
 import java.util.concurrent.TimeoutException
 
-@Suppress("MagicNumber")
 internal object WaiteObject {
 
-    fun waitId(viewId: Int, millis: Long): ViewAction {
-        return object : ViewAction {
-            override fun getConstraints(): Matcher<View> {
-                return isRoot()
-            }
+    fun waitId(viewId: Int, millis: Long) = object : ViewAction {
 
-            override fun getDescription(): String {
-                return "wait for a specific view with id <$viewId> during $millis millis."
-            }
+        override fun getConstraints() = isRoot()
 
-            override fun perform(uiController: UiController, view: View) {
-                uiController.loopMainThreadUntilIdle()
-                val startTime = System.currentTimeMillis()
-                val endTime = startTime + millis
-                val viewMatcher = withId(viewId)
+        override fun getDescription() = "wait for a specific view with id <$viewId> during $millis millis."
 
-                do {
-                    for (child in TreeIterables.breadthFirstViewTraversal(view)) {
-                        if (viewMatcher.matches(child)) {
-                            return
-                        }
+        override fun perform(uiController: UiController, view: View) {
+            uiController.loopMainThreadUntilIdle()
+            val startTime = System.currentTimeMillis()
+            val endTime = startTime + millis
+            val viewMatcher = withId(viewId)
+
+            while (System.currentTimeMillis() < endTime) {
+                TreeIterables.breadthFirstViewTraversal(view).forEach { child ->
+                    if (viewMatcher.matches(child)) {
+                        return
                     }
+                }
 
-                    uiController.loopMainThreadForAtLeast(50)
-                } while (System.currentTimeMillis() < endTime)
-
-                throw PerformException.Builder()
-                        .withActionDescription(this.description)
-                        .withViewDescription(HumanReadables.describe(view))
-                        .withCause(TimeoutException())
-                        .build()
+                @Suppress("MagicNumber")
+                uiController.loopMainThreadForAtLeast(50)
             }
+
+            throw PerformException.Builder()
+                .withActionDescription(this.description)
+                .withViewDescription(HumanReadables.describe(view))
+                .withCause(TimeoutException())
+                .build()
         }
     }
 }

@@ -2,31 +2,33 @@ package com.kg.gettransfer.androidAutoTest
 
 import android.widget.DatePicker
 
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.swipeUp
+import androidx.test.espresso.assertion.ViewAssertions
 
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
-import androidx.test.espresso.matcher.ViewMatchers.isRoot
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
-
 import androidx.test.espresso.contrib.PickerActions
+
 import com.kg.gettransfer.R
 
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
+
 import presentation.androidAutoTest.WaiteObject.waitId
+
 import java.util.concurrent.TimeUnit
 
 @Suppress("MagicNumber")

@@ -1,10 +1,12 @@
 package com.kg.gettransfer.androidAutoTest
 
 import androidx.test.espresso.web.sugar.Web
+
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.clearElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.DriverAtoms.webKeys
+
 import androidx.test.espresso.web.webdriver.Locator.NAME
 import androidx.test.espresso.web.webdriver.Locator.XPATH
 
