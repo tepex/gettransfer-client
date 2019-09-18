@@ -65,7 +65,8 @@
                 android:layout_height="wrap_content"
                 app:settingsTitleSwitch="@string/LNG_EMAIL_NOTIFICATIONS"
                 app:settingsShowDivider="false"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutAboutApp"
