@@ -146,23 +146,20 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
+        val titleError = getTitleError(e)
         when (e.code) {
             ApiException.NO_USER -> BottomSheetDialog
                 .newInstance()
                 .apply {
-                    title = this@LogInFragment.getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
+                    title = titleError
                     onDismissCallBack = { hideLoading() }
                 }
                 .show(requireFragmentManager())
+
             ApiException.NOT_FOUND -> BottomSheetDialog
                 .newInstance()
                 .apply {
-                    title = this@LogInFragment.getString(
-                        R.string.LNG_ACCOUNT_NOTFOUND,
-                        /* TODO вот тут возможно придется просить поле из презентера.
-                           Или всегда в метод передавать лишний параметр. */
-                        presenter.params.emailOrPhone
-                    )
+                    title = titleError
                     text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
                     buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
                     onClickOkButton = { changePage?.invoke(presenter.params.emailOrPhone, presenter.isPhone()) }
@@ -170,13 +167,28 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                     isShowCloseButton = true
                 }
                 .show(requireFragmentManager())
+
             else -> BottomSheetDialog
                 .newInstance()
                 .apply {
-                    title = e.message ?: "Error"
+                    title = titleError
                     onDismissCallBack = { hideLoading() }
                 }
                 .show(requireFragmentManager())
+        }
+    }
+
+    private fun getTitleError(e: ApiException): String {
+        return when (e.code) {
+            ApiException.NO_USER -> getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
+            ApiException.NOT_FOUND -> getString(
+                R.string.LNG_ACCOUNT_NOTFOUND,
+                /* TODO вот тут возможно придется просить поле из презентера.
+                           Или всегда в метод передавать лишний параметр. */
+                presenter.params.emailOrPhone
+            )
+            ApiException.NETWORK_ERROR -> getString(R.string.LNG_NETWORK_ERROR)
+            else -> e.message ?: "Error"
         }
     }
 
