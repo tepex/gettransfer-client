@@ -6,32 +6,35 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 
-import androidx.annotation.CallSuper
-import androidx.annotation.StringRes
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
+
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
+
 import com.kg.gettransfer.presentation.presenter.CreateOrderPresenter
 import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
+
 import com.kg.gettransfer.presentation.ui.custom.BottomSheetCreateOrderNewView
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
@@ -222,7 +225,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
     }
 
     override fun onHourlyDurationClick() {
-       presenter.showHourlyDurationDialog()
+        presenter.showHourlyDurationDialog()
     }
 
     override fun onTransferDateTimeClick() {
@@ -431,7 +434,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
 
     @Suppress("EmptyFunctionBlock")
     override fun setHintForDateTimeTransfer(withReturnWay: Boolean) {
-//      TODO   transfer_date_time_field.input_layout.hint = context.getString(R.string.LNG_RIDE_DATE)
+//      TODO transfer_date_time_field.input_layout.hint = context.getString(R.string.LNG_RIDE_DATE)
     }
 
     override fun onSetComment(comment: String) {
@@ -445,7 +448,11 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
 
     override fun showCurrencies() {
         hideKeyboard()
-        FragmentUtils.replaceFragment(supportFragmentManager, SelectCurrencyBottomFragment(), R.id.secondary_bottom_sheet)
+        FragmentUtils.replaceFragment(
+            supportFragmentManager,
+            SelectCurrencyBottomFragment(),
+            R.id.secondary_bottom_sheet
+        )
     }
 
     companion object {

@@ -353,10 +353,10 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun setCommission(paymentCommission: String, dateRefund: String) {
-        getString(R.string.LNG_PAYMENT_COMISSION3, paymentCommission).let {
-            tvCommission.text = it
-            cardsCommission.text = it
-            paypalCommission.text = it
+        getString(R.string.LNG_PAYMENT_COMISSION3, paymentCommission).run {
+            tvCommission.text = this
+            cardsCommission.text = this
+            paypalCommission.text = this
         }
         tvRefundDate.text = getString(R.string.LNG_PAYMENT_REFUND, dateRefund)
     }
@@ -402,16 +402,12 @@ class PaymentOfferActivity : BaseActivity(),
     override fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String) {
         blockInterface(false)
         when {
-            payPalInstalled() -> {
-                startActivityForResult(dropInRequest.getIntent(this), PAYMENT_REQUEST_CODE)
-            }
+            payPalInstalled()  -> startActivityForResult(dropInRequest.getIntent(this), PAYMENT_REQUEST_CODE)
             browserInstalled() -> {
                 val braintreeFragment = BraintreeFragment.newInstance(this, presenter.braintreeToken)
                 PayPal.requestOneTimePayment(braintreeFragment, dropInRequest.payPalRequest)
             }
-            else -> {
-                longToast(getString(R.string.LNG_PAYMENT_INSTALL_PAYPAL))
-            }
+            else               -> longToast(getString(R.string.LNG_PAYMENT_INSTALL_PAYPAL))
         }
     }
 
@@ -424,8 +420,8 @@ class PaymentOfferActivity : BaseActivity(),
                     val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
                     result?.paymentMethodNonce?.nonce?.let { presenter.confirmPayment(it) }
                 }
-                RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.PAYPAL)
-                else -> {
+                RESULT_CANCELED    -> presenter.changePayment(PaymentRequestModel.PAYPAL)
+                else               -> {
                     val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR)
                     if (error is Exception) {
                         Timber.e(error)
@@ -435,24 +431,21 @@ class PaymentOfferActivity : BaseActivity(),
         }
     }
 
-    private fun payPalInstalled(): Boolean {
-        return try {
-            packageManager.getPackageInfo(PAYPAL_PACKAGE_NAME, PackageManager.GET_ACTIVITIES)
-            true
-        } catch (e: PackageManager.NameNotFoundException) {
-            false
-        }
+    private fun payPalInstalled() = try {
+        packageManager.getPackageInfo(PAYPAL_PACKAGE_NAME, PackageManager.GET_ACTIVITIES)
+        true
+    } catch (e: PackageManager.NameNotFoundException) {
+        false
     }
 
-    private fun browserInstalled(): Boolean {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://"))
-        val resolveInfo = packageManager.resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY)
-        return resolveInfo != null
-    }
+    private fun browserInstalled() =
+        packageManager.resolveActivity(
+            Intent(Intent.ACTION_VIEW, Uri.parse("http://")),
+            PackageManager.MATCH_DEFAULT_ONLY
+        ) != null
 
     override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce?) {
-        val nonce = paymentMethodNonce?.nonce ?: ""
-        presenter.confirmPayment(nonce)
+        presenter.confirmPayment(paymentMethodNonce?.nonce ?: "")
         blockInterface(true, true)
     }
 
@@ -498,11 +491,11 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     private fun setBalance(balance: String?) {
-        balance.isNullOrEmpty().let {
-            layoutBalance.isVisible = !it
-            tvCommission.isVisible = it
-            cardsCommission.isVisible = !it
-            paypalCommission.isVisible = !it
+        balance.isNullOrEmpty().run {
+            layoutBalance.isVisible = !this
+            tvCommission.isVisible = this
+            cardsCommission.isVisible = !this
+            paypalCommission.isVisible = !this
         }
         tvBalance.text = getString(R.string.LNG_PAYMENT_FROM_BALANCE_AVAILABLE, balance)
     }
@@ -511,7 +504,7 @@ class PaymentOfferActivity : BaseActivity(),
         val errStringRes = when (field) {
             INVALID_EMAIL -> R.string.LNG_ERROR_EMAIL
             INVALID_PHONE -> R.string.LNG_ERROR_PHONE
-            else -> R.string.LNG_BAD_CREDENTIALS_ERROR
+            else          -> R.string.LNG_BAD_CREDENTIALS_ERROR
         }
         Utils.showError(this, false, getString(errStringRes))
     }
@@ -521,9 +514,9 @@ class PaymentOfferActivity : BaseActivity(),
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         val errorText = when {
-            e.isBigPriceError() -> getString(R.string.LNG_BIG_PRICE_ERROR)
+            e.isBigPriceError()                  -> getString(R.string.LNG_BIG_PRICE_ERROR)
             e.code != ApiException.NETWORK_ERROR -> getString(R.string.LNG_ERROR) + ": " + e.message
-            else -> null
+            else                                 -> null
         }
         errorText?.let { Utils.showError(this, false, it) }
     }

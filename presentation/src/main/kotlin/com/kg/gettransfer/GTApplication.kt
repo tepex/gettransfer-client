@@ -34,7 +34,7 @@ import com.yandex.metrica.push.YandexMetricaPush
 
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
-//import leakcanary.AppWatcher
+// import leakcanary.AppWatcher
 import net.hockeyapp.android.CrashManager
 
 import org.koin.android.ext.koin.androidContext
@@ -49,7 +49,7 @@ class GTApplication : MultiDexApplication() {
         super.onCreate()
         // Display some logs
         if (BuildConfig.DEBUG) {
-           Timber.plant(Timber.DebugTree())
+            Timber.plant(Timber.DebugTree())
             System.setProperty("kotlinx.coroutines.debug", "on")
 //            setUpLeakCanary(false)
         } else {
@@ -112,7 +112,9 @@ class GTApplication : MultiDexApplication() {
     }
 
     private fun setupSentry() {
-        Sentry.init(getString(R.string.sentryDsn), AndroidSentryClientFactory(applicationContext))
+        if (!BuildConfig.DEBUG) {
+            Sentry.init(getString(R.string.sentryDsn), AndroidSentryClientFactory(applicationContext))
+        }
     }
 
 //    private fun setUpLeakCanary(enable: Boolean) {

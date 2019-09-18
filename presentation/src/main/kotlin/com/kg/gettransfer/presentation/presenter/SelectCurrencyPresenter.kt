@@ -2,17 +2,16 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+
 import com.kg.gettransfer.core.presentation.WorkerManager
-
 import com.kg.gettransfer.domain.interactor.SessionInteractor
-
 import com.kg.gettransfer.domain.model.Currency
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
-
 import com.kg.gettransfer.sys.presentation.ConfigsManager
+
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -44,10 +43,8 @@ class SelectCurrencyPresenter : MvpPresenter<SelectCurrencyView>(), KoinComponen
         viewState.sendEvent(selected)
     }
 
-
     override fun onDestroy() {
         worker.cancel()
         super.onDestroy()
     }
-
 }

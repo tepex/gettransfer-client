@@ -17,16 +17,6 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Handler
 
-import androidx.annotation.CallSuper
-import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
-import androidx.annotation.StringRes
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatDelegate
-
 import android.util.DisplayMetrics
 import android.util.TypedValue
 
@@ -38,10 +28,23 @@ import android.view.ViewGroup
 import android.view.WindowManager
 
 import android.widget.PopupWindow
+
+import androidx.annotation.CallSuper
+import androidx.annotation.ColorRes
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 import com.arellomobile.mvp.MvpAppCompatActivity
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -64,9 +67,10 @@ import com.kg.gettransfer.utilities.LocaleManager
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
+import java.util.Locale
+
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
-//import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
 
@@ -74,7 +78,6 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
-import java.util.*
 
 @Suppress("TooManyFunctions")
 abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
@@ -344,8 +347,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         // if account is empty  we need to use locale from preferences
         // because locale from Account.EMPTY is equals Locale.getDefault()
         // and then it'll be always show wrong locale
-        val locale = if (account == Account.EMPTY) Locale(sessionInteractor.appLanguage)
-        else sessionInteractor.locale
+        val locale = if (account == Account.EMPTY) Locale(sessionInteractor.appLanguage) else sessionInteractor.locale
 
         super.attachBaseContext(localeManager.updateResources(newBase, locale))
     }

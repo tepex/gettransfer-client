@@ -32,7 +32,7 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 @InjectViewState
-class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
+class RatingLastTripPresenter : BasePresenter<RatingLastTripView>() {
     private val routeMapper: RouteMapper by inject()
     private val configsManager: ConfigsManager by inject()
     private val worker: WorkerManager by inject { parametersOf("RatingLastTripPresenter") }
@@ -53,11 +53,13 @@ class RatingLastTripPresenter: BasePresenter<RatingLastTripView>() {
 
     private suspend fun setupReview(transfer: Transfer) {
         val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
-        viewState.setupReviewForLastTrip(
-            transfer.map(transportTypes),
-            LatLng(transfer.from.point!!.latitude, transfer.from.point!!.longitude),
-            routeModel
-        )
+        transfer.from.point?.let { point ->
+            viewState.setupReviewForLastTrip(
+                transfer.map(transportTypes),
+                LatLng(point.latitude, point.longitude),
+                routeModel
+            )
+        }
     }
 
     private suspend fun createRouteModel(transfer: Transfer): RouteModel? {

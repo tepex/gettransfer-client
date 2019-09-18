@@ -14,7 +14,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 @InjectViewState
-class ThanksForRatePresenter: MvpPresenter<ThanksForRateView>(), KoinComponent {
+class ThanksForRatePresenter : MvpPresenter<ThanksForRateView>(), KoinComponent {
 
     private val compositeDisposable = Job()
     private val coroutineContexts: CoroutineContexts by inject()

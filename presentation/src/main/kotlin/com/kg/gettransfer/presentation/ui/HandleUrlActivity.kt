@@ -49,6 +49,7 @@ import pub.devrel.easypermissions.EasyPermissions
 
 import java.io.File
 
+@Suppress("TooManyFunctions")
 class HandleUrlActivity : BaseActivity(),
     HandleUrlView,
     EasyPermissions.PermissionCallbacks,
@@ -69,7 +70,7 @@ class HandleUrlActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_handle_url)
         if (intent?.action == Intent.ACTION_VIEW) {
-            handleIntent(intent.data)
+            intent.data?.let { handleIntent(it) }
         }
     }
 
@@ -77,7 +78,7 @@ class HandleUrlActivity : BaseActivity(),
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent?.action == Intent.ACTION_VIEW) {
-            handleIntent(intent.data)
+            intent.data?.let { handleIntent(it) }
         }
     }
 
@@ -106,11 +107,12 @@ class HandleUrlActivity : BaseActivity(),
     }
 
     /** TODO: refactor to regular expressions */
-    private fun handleIntent(appLinkData: Uri?) {
+    @Suppress("ComplexMethod", "NestedBlockDepth", "UnsafeCallOnNullableType", "ReturnCount")
+    private fun handleIntent(appLinkData: Uri) {
         url = appLinkData.toString()
-        val path = appLinkData?.path
+        val path = appLinkData.path
         when {
-            path.equals(PASSENGER_CABINET) -> appLinkData?.fragment?.let { fragment ->
+            path.equals(PASSENGER_CABINET) -> appLinkData.fragment?.let { fragment ->
                 if (fragment.startsWith(TRANSFERS)) {
                     if (fragment.contains(CHOOSE_OFFER_ID)) {
                         val transferId =
@@ -201,7 +203,7 @@ class HandleUrlActivity : BaseActivity(),
         splashLayout.isVisible = false
         webView.settings.javaScriptEnabled = true
         webView.setUserAgent()
-        webView.webViewClient = object: WebViewClient() {
+        webView.webViewClient = object : WebViewClient() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                 view?.loadUrl(request?.url.toString())
@@ -211,7 +213,8 @@ class HandleUrlActivity : BaseActivity(),
             // for pre-lollipop
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 view?.loadUrl(url)
-                return true;            }
+                return true
+            }
         }
         webView.loadUrl(url)
     }

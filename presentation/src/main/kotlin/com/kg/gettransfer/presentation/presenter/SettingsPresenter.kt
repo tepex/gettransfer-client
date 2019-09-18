@@ -98,17 +98,17 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     }
 
     private fun initGeneralSettings() = worker.main.launch {
-            viewState.initGeneralSettingsLayout()
-            viewState.setCurrency(sessionInteractor.currency.map().name)
-            val locale = sessionInteractor.locale
-            val localeModel   = withContext(worker.bg) {
-                configsManager.configs.availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
-                        .map { it.map() }
-                        .find { it.delegate.language == locale.language }
-            }
-            viewState.setLocale(localeModel?.name ?: "", locale.language)
-            viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
+        viewState.initGeneralSettingsLayout()
+        viewState.setCurrency(sessionInteractor.currency.map().name)
+        val locale = sessionInteractor.locale
+        val localeModel   = withContext(worker.bg) {
+            configsManager.configs.availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
+                .map { it.map() }
+                .find { it.delegate.language == locale.language }
         }
+        viewState.setLocale(localeModel?.name ?: "", locale.language)
+        viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
+    }
 
     private fun initProfileSettings() = worker.main.launch {
         viewState.initProfileField(accountManager.isLoggedIn, accountManager.remoteProfile)
@@ -122,15 +122,13 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     }
 
     private fun setBalanceAndCreditLimit() {
-        with (accountManager.remoteAccount) {
+        with(accountManager.remoteAccount) {
             if (isBusinessAccount) {
                 val balance = partner?.availableMoney?.default
-                if (!balance.isNullOrEmpty()) viewState.setBalance(balance)
-                else viewState.hideBalance()
+                if (!balance.isNullOrEmpty()) viewState.setBalance(balance) else viewState.hideBalance()
 
                 val creditLimit = partner?.creditLimit?.default
-                if (!creditLimit.isNullOrEmpty()) viewState.setCreditLimit(balance)
-                else viewState.hideCreditLimit()
+                if (!creditLimit.isNullOrEmpty()) viewState.setCreditLimit(balance) else viewState.hideCreditLimit()
             } else {
                 hideBalanceAndCreditLimit()
             }
@@ -150,7 +148,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
 
     private fun showDebugMenu() = worker.main.launch {
         viewState.setEndpoints(endpoints)
-        viewState.setEndpoint(getPreferences().getModel().endpoint!!.map())
+        getPreferences().getModel().endpoint?.let { viewState.setEndpoint(it.map()) }
         viewState.showDebugMenu()
     }
 
@@ -211,9 +209,9 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
         viewState.setEndpoint(endpoint)
         viewState.blockInterface(true)
         withContext(worker.bg) {
-            endpoint.delegate.let {
-                initEndpoint(it)
-                setEndpoint(it)
+            endpoint.delegate.run {
+                initEndpoint(this)
+                setEndpoint(this)
             }
             accountManager.logout()
         }
@@ -251,8 +249,11 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     }
 
     fun onProfileFieldClicked() {
-        if (accountManager.isLoggedIn) router.navigateTo(Screens.ProfileSettings())
-        else router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, null))
+        if (accountManager.isLoggedIn) {
+            router.navigateTo(Screens.ProfileSettings())
+        } else {
+            router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, null))
+        }
     }
 
     fun onShareClick() {

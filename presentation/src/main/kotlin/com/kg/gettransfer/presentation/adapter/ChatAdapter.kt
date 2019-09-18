@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.adapter
 
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,9 +37,12 @@ class ChatAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
         val message = chatItems.messages[pos]
         when (chatItems.getMessageType(pos)) {
-            Type.CURRENT_ACCOUNT_MESSAGE     -> (holder as ViewHolderMyMessage).bind(message, copyMessageListener)
-            Type.NOT_CURRENT_ACCOUNT_MESSAGE ->
-                (holder as ViewHolderNotMyMessage).bind(message, messageReadListener, copyMessageListener)
+            Type.CURRENT_ACCOUNT_MESSAGE     -> if (holder is ViewHolderMyMessage) {
+                holder.bind(message, copyMessageListener)
+            }
+            Type.NOT_CURRENT_ACCOUNT_MESSAGE -> if (holder is ViewHolderNotMyMessage) {
+                holder.bind(message, messageReadListener, copyMessageListener)
+            }
         }
     }
 
@@ -51,11 +55,12 @@ class ChatAdapter(
             ViewHolderNotMyMessage(
                 LayoutInflater.from(parent.context).inflate(R.layout.chat_item_not_my_message, parent, false)
             )
-        else -> throw IllegalArgumentException()
+        else                                     -> error("")
     }
 
-    class ViewHolderMyMessage(override val containerView: View): RecyclerView.ViewHolder(containerView),
-        LayoutContainer {
+    class ViewHolderMyMessage(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(message: MessageModel, copyMessageListener: CopyMessageListener) = with(containerView) {
             myMessageText.text = message.text
@@ -80,8 +85,9 @@ class ChatAdapter(
         }
     }
 
-    class ViewHolderNotMyMessage(override val containerView: View): RecyclerView.ViewHolder(containerView),
-        LayoutContainer {
+    class ViewHolderNotMyMessage(
+        override val containerView: View
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(
             message: MessageModel,
