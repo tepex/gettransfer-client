@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal|top"
-    android:background="@android:color/white"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:paddingStart="0dp"

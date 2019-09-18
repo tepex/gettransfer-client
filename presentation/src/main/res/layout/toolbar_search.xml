@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
     android:minHeight="?android:attr/actionBarSize"
     tools:ignore="Overdraw">
