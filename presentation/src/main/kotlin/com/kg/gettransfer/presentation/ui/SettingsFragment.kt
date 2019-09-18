@@ -33,7 +33,7 @@ import java.util.Locale
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_settings_field_horizontal_picker.view.field_text
-import kotlinx.android.synthetic.main.view_settings_field_switch.view.*
+import kotlinx.android.synthetic.main.view_settings_field_switch.view.switch_button
 import org.koin.core.KoinComponent
 
 import timber.log.Timber
@@ -89,6 +89,14 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         Timber.d("current locale: ${Locale.getDefault()}")
         settingsLanguage.setOnClickListener { presenter.onLanguageClicked() }
         settingsCurrency.setOnClickListener { presenter.onCurrencyClicked() }
+        with(settingsDistanceUnit) {
+            setOnClickListener { view ->
+                with(view.switch_button) {
+                    isChecked = !isChecked
+                    presenter.onDistanceUnitSwitched(isChecked)
+                }
+            }
+        }
 
         val versionName = BuildConfig.VERSION_NAME
         val versionCode = BuildConfig.VERSION_CODE
@@ -122,10 +130,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
                     presenter.onEmailNotificationSwitched(isChecked)
                 }
             }
-            switch_button.apply {
-                isChecked = enabled
-                setOnCheckedChangeListener { _, isChecked -> presenter.onEmailNotificationSwitched(isChecked) }
-            }
+            switch_button.isChecked = enabled
         }
     }
 
@@ -178,18 +183,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
     override fun setEndpoint(endpoint: EndpointModel)  { settingsEndpoint.field_text.text = endpoint.name }
 
     override fun setDistanceUnit(inMiles: Boolean) {
-        with(settingsDistanceUnit) {
-            setOnClickListener { view ->
-                with(view.switch_button) {
-                    isChecked = !isChecked
-                    presenter.onDistanceUnitSwitched(isChecked)
-                }
-            }
-            switch_button.apply {
-                isChecked = inMiles
-                setOnCheckedChangeListener { _, isChecked -> presenter.onDistanceUnitSwitched(isChecked) }
-            }
-        }
+        settingsDistanceUnit.switch_button.isChecked = inMiles
     }
 
     override fun currencyChanged(currency: CurrencyModel) {
