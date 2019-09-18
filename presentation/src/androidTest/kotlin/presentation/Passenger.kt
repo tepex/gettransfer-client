@@ -88,7 +88,7 @@ class Passenger {
         Thread.sleep(700)
         // Select date
         calendar.transferDate.perform(ViewActions.click())
-        onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
+        onView(ViewMatchers.withClassName(Matchers.equalTo(DatePicker::class.java.name)))
             .perform(PickerActions.setDate(2019, 10, 15))
         Thread.sleep(700)
         calendar.btnOk.perform(ViewActions.click())
@@ -183,7 +183,7 @@ class Passenger {
             profile.email.perform(ViewActions.replaceText("mygtracc1@gmail.com"), ViewActions.closeSoftKeyboard())
             Thread.sleep(700)
             // Input password
-            profile.pwd.perform(typeText("PassRR11"))
+            profile.pwd.perform(ViewActions.typeText("PassRR11"))
             // Sign in
             profile.login.perform(ViewActions.click())
             Thread.sleep(700)
@@ -231,6 +231,6 @@ class Passenger {
 
     fun waitElementReplaceTextPwd(whatToReplaceTextPwd: ViewInteraction, wait: Long, typetxt: String) {
         Thread.sleep(wait)
-        whatToReplaceTextPwd.perform(typeText(typetxt))
+        whatToReplaceTextPwd.perform(ViewActions.typeText(typetxt))
     }
 }
