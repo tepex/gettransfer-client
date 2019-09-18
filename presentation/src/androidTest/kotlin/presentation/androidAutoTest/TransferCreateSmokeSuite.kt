@@ -1,8 +1,10 @@
 package com.kg.gettransfer.androidAutoTest
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.swipeUp
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -11,15 +13,21 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.androidAutoTest.BaseFun.isDisplayed
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
-import org.hamcrest.Matchers.*
+import java.util.concurrent.TimeUnit
+
+import org.hamcrest.Matchers.allOf
+
 import org.junit.Rule
 import org.junit.Test
+
+import presentation.androidAutoTest.WaitObject.waitId
 
 @Suppress("MagicNumber")
 class TransferCreateSmokeSuite {
 
-    @get:Rule
-    var activityRule: ActivityTestRule<SplashActivity> = ActivityTestRule(SplashActivity::class.java)
+    @Rule
+    @JvmField
+    var activityTestRule = ActivityTestRule(SplashActivity::class.java)
 
     @get:Rule
     val screenshotTestRule = ScreenshotTestRule()
@@ -61,7 +69,7 @@ class TransferCreateSmokeSuite {
         baseFun.passOnboardingAnyway()
         baseFun.goPassLogin()
         searchScreen.addressGo.perform(click())
-        Thread.sleep(1_000)
+        onView(isRoot()).perform(waitId(R.id.search, TimeUnit.SECONDS.toMillis(15)))
 
         baseFun.goCreateTransferForPay()
         onView(withId(R.id.layoutBalance)).perform(click())
@@ -79,7 +87,7 @@ class TransferCreateSmokeSuite {
         baseFun.passOnboardingAnyway()
         baseFun.goPassLogin()
         searchScreen.addressGo.perform(click())
-        Thread.sleep(1_000)
+        onView(isRoot()).perform(waitId(R.id.search, TimeUnit.SECONDS.toMillis(15)))
 
         baseFun.goCreateTransferForPay()
         onView(withId(R.id.layoutCard)).perform(click())
@@ -98,8 +106,6 @@ class TransferCreateSmokeSuite {
         Thread.sleep(1_000)
 
         baseFun.passOnboardingAnyway()
-        Thread.sleep(500)
-
         baseFun.goPassLogin()
         onView(withId(R.id.nav_trips)).perform(click())
         Thread.sleep(1_000)
