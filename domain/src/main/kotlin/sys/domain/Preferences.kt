@@ -20,4 +20,3 @@ data class Preferences(
         const val IMMUTABLE = -1   // user did rate app
     }
 }
-

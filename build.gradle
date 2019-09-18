@@ -121,7 +121,6 @@ detekt {
     toolVersion = "1.0.0-RC15"
     filters = ".*build.*,.*/resources/.*,.*/tmp/.*"
     input = files(
-/*
         "cache/src",
         "data/src",
         "domain/src",
@@ -129,9 +128,9 @@ detekt {
         "geo/src",
         "logging/src",
         "prefs/src",
-        "presentation/src",
+//        "presentation/src",
         "remote/src",
-*/
+
         "presentation/src/androidTest",
         "presentation/src/main/kotlin/com/kg/gettransfer/GTApplication.kt",
 
@@ -207,7 +206,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SupportView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/TransferDetailsView.kt",
 
-//        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt"
     )
     config = files("detekt-config.yml")

@@ -527,10 +527,16 @@ style:
         androidx.test.espresso.web.webdriver.DriverAtoms.*,
         androidx.test.espresso.web.webdriver.Locator.*,
         com.google.android.gms.maps.model.*,
+        com.kg.gettransfer.data.model.*,
         com.kg.gettransfer.di.*,
         com.kg.gettransfer.domain.interactor.*,
+        com.kg.gettransfer.domain.model.*,
         com.kg.gettransfer.presentation.screenelements.*,
+        com.kg.gettransfer.remote.model.*,
+        com.kg.gettransfer.sys.domain.*,
+        io.mockk.*,
         kotlinx.android.synthetic.*,
         kotlinx.coroutines.*,
         org.hamcrest.*,
-        org.hamcrest.Matchers.*"
+        org.hamcrest.Matchers.*,
+        retrofit2.http.*"

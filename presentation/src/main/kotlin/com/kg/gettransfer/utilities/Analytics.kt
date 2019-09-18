@@ -11,6 +11,7 @@ import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 
 import com.google.firebase.analytics.FirebaseAnalytics
+
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.model.*
@@ -27,15 +28,15 @@ import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
 
 import io.sentry.Sentry
-import kotlinx.coroutines.Job
 
 import java.util.Currency
+
+import kotlin.math.roundToLong
+import kotlinx.coroutines.Job
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import org.koin.core.inject
-
-import kotlin.math.roundToLong
 
 @Suppress("TooManyFunctions")
 class Analytics(
@@ -162,8 +163,11 @@ class Analytics(
                 sendToYandex()
                 sendToAppsFlyer()
                 utils.launchSuspend {
-                    val role = if (accountManager.remoteAccount.isBusinessAccount) Transfer.Role.PARTNER
-                    else Transfer.Role.PASSENGER
+                    val role = if (accountManager.remoteAccount.isBusinessAccount) {
+                        Transfer.Role.PARTNER
+                    } else {
+                        Transfer.Role.PASSENGER
+                    }
                     utils.asyncAwait {
                         transferInteractor.sendAnalytics(transfer.id, role.name.toLowerCase())
                     }
@@ -175,29 +179,26 @@ class Analytics(
          * Send analytics for list of transfers
          */
         fun sendAnalytics(transfers: List<Transfer>) {
-            transfers.forEach {
+            transfers.forEach { tr ->
                 utils.launchSuspend {
-                    transfer = it
-                    transferModel = it.map(configsManager.configs.transportTypes.map { it.map() })
-                    getOffer(it)
-                    sendAnalytics(it)
+                    transfer = tr
+                    transferModel = tr.map(configsManager.configs.transportTypes.map { it.map() })
+                    getOffer(tr)
+                    sendAnalytics(tr)
                 }
             }
         }
 
-        private suspend fun getOffer(it: Transfer) {
-            utils.asyncAwait { offerInteractor.getOffers(it.id) }
-                .also { result ->
-                    if (!result.isError()) {
-                        offers = mutableListOf<OfferItem>().apply {
-                            addAll(result.model)
-                            addAll(it.bookNowOffers)
-                        }
-                        offers.firstOrNull()?.let { offer ->
-                            getOfferType(offer)
-                        }
+        private suspend fun getOffer(tr: Transfer) {
+            utils.asyncAwait { offerInteractor.getOffers(tr.id) }.also { result ->
+                if (!result.isError()) {
+                    offers = mutableListOf<OfferItem>().apply {
+                        addAll(result.model)
+                        addAll(tr.bookNowOffers)
                     }
+                    offers.firstOrNull()?.let { getOfferType(it) }
                 }
+            }
         }
 
         protected fun prepareData() {
@@ -206,9 +207,9 @@ class Analytics(
             duration = orderInteractor.duration
             offerType = if (offer != null) REGULAR else NOW
             requestType = when {
-                transfer?.duration != null -> TRIP_HOURLY
+                transfer?.duration != null        -> TRIP_HOURLY
                 transfer?.dateReturnLocal != null -> TRIP_ROUND
-                else -> TRIP_DESTINATION
+                else                              -> TRIP_DESTINATION
             }
             currencyCode = sessionInteractor.currency.code
             currency = Currency.getInstance(currencyCode)
@@ -229,7 +230,7 @@ class Analytics(
             origin = orderInteractor.from?.variants?.first
             destination = orderInteractor.to?.variants?.first
             passengersCount = transfer?.pax
-            beginInHours = transferModel?.timeToTransfer?.div(60)
+            beginInHours = transferModel?.timeToTransfer?.div(MIN_PER_HOUR)
             transportType = transfer?.transportTypeIds?.map { it.toString() }
         }
 
@@ -243,7 +244,7 @@ class Analytics(
 
         private fun getOfferType(offerItem: OfferItem) {
             when (offerItem) {
-                is Offer -> offer = offerItem
+                is Offer        -> offer = offerItem
                 is BookNowOffer -> bookNowOffer = offerItem
             }
         }
@@ -287,9 +288,9 @@ class Analytics(
             @Suppress("MagicNumber")
             val priceMicros = price.roundToLong() * 1_000_000L // priceMicros = price × 10^6
             val revenue = Revenue.newBuilderWithMicros(priceMicros, currency)
-                    .withProductID(requestType)
-                    .withQuantity(1)
-                    .build()
+                .withProductID(requestType)
+                .withQuantity(1)
+                .build()
             YandexMetrica.reportRevenue(revenue)
         }
 
@@ -341,8 +342,8 @@ class Analytics(
             super.event = event
             super.paymentType = when (mPaymentType) {
                 PaymentRequestModel.PLATRON -> CARD
-                PaymentRequestModel.PAYPAL -> PAYPAL
-                else -> BALANCE
+                PaymentRequestModel.PAYPAL  -> PAYPAL
+                else                        -> BALANCE
             }
             getTransferAndOffer()
             prepareData()
@@ -365,8 +366,8 @@ class Analytics(
         fun sendAnalytics() {
             paymentType = when (paymentType) {
                 PaymentRequestModel.PLATRON -> CARD
-                PaymentRequestModel.PAYPAL -> PAYPAL
-                else -> BALANCE
+                PaymentRequestModel.PAYPAL  -> PAYPAL
+                else                        -> BALANCE
             }
             sendToFirebase()
             sendToFacebook()
@@ -644,5 +645,7 @@ class Analytics(
 
         const val CAMPAIGN = "campaign"
         const val RUB_PRICE = "rub_price"
+
+        const val MIN_PER_HOUR = 60
     }
 }

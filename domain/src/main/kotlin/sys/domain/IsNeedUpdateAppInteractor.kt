@@ -4,7 +4,8 @@ class IsNeedUpdateAppInteractor(
     private val getMobileConfigs: GetMobileConfigsInteractor
 ) {
 
-    /* Какая-то черная магия! Нужно отрефакторить.*/
+    /* TODO Какая-то черная магия! Нужно отрефакторить.*/
+    @Suppress("ComplexMethod", "NestedBlockDepth")
     suspend operator fun invoke(field: String, appVersion: Int): Boolean {
         val buildsConfigs = getMobileConfigs().getModel().buildsConfigs
         var configsForCurrentBuild: BuildsConfigs? = null
@@ -34,6 +35,7 @@ class IsNeedUpdateAppInteractor(
                         FIELD_UPDATE_REQUIRED -> entry.value.updateRequired != null
                         else                  -> throw UnsupportedOperationException()
                     }
+                    @Suppress("UnsafeCallOnNullableType")
                     if ((configForVersion == null || configForVersion!! < version) && searchedFieldIsNotNull) {
                         configForVersion = version
                         configsForCurrentBuild = entry.value

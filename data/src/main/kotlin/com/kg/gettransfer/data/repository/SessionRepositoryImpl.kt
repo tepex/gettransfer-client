@@ -26,6 +26,7 @@ import com.kg.gettransfer.sys.domain.ConfigsRepository
 
 import org.koin.core.inject
 
+@Suppress("TooManyFunctions")
 class SessionRepositoryImpl(
     private val factory: DataStoreFactory<SessionDataStore, SessionDataStoreCache, SessionDataStoreRemote>
 ) : BaseRepository(), SessionRepository {

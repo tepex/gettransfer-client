@@ -6,6 +6,7 @@ import com.kg.gettransfer.domain.model.TransferNew
 
 import com.kg.gettransfer.domain.repository.TransferRepository
 
+@Suppress("TooManyFunctions")
 class TransferInteractor(private val repository: TransferRepository) {
 
     suspend fun createTransfer(transferNew: TransferNew) = repository.createTransfer(transferNew)
@@ -33,8 +34,8 @@ class TransferInteractor(private val repository: TransferRepository) {
     suspend fun isOfferPaid(transferId: Long): Result<Pair<Boolean, Transfer?>> {
         getTransfer(transferId).isSuccess()?.let { transfer ->
             val isOfferPaid = transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
-            return Result(Pair(isOfferPaid, transfer))
+            return Result(isOfferPaid to transfer)
         }
-        return Result(Pair(false, null))
+        return Result(false to null)
     }
 }
