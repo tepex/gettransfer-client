@@ -10,14 +10,9 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewInteraction
 
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withClassName
-
-import androidx.test.rule.ActivityTestRule
 
 import com.kg.gettransfer.presentation.screenelements.Calendar
 import com.kg.gettransfer.presentation.screenelements.DialogWindow
