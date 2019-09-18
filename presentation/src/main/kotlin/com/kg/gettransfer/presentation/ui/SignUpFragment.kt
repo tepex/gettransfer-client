@@ -196,6 +196,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
 
         when (e.code) {
             ApiException.TOO_MANY_REQUESTS -> textError = getString(R.string.LNG_ERROR_RATE_LIMIT)
+            ApiException.NETWORK_ERROR -> textError = getString(R.string.LNG_NETWORK_ERROR)
         }
 
         BottomSheetDialog
