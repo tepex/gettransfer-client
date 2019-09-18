@@ -66,7 +66,7 @@
                     android:maxLines="1"
                     android:paddingStart="@dimen/activity_offers_sorted_layout_text_vertical_paddings"
                     android:paddingEnd="@dimen/activity_offers_sorted_layout_text_vertical_paddings"
-                    android:text="@string/LNG_FILTER"
+                    android:text="@string/LNG_SORT"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cl_fixPrice" />
 

@@ -205,7 +205,7 @@ class OffersActivity : BaseActivity(), OffersView {
             Sort.RATING -> R.string.LNG_FILTER_RATING
             Sort.PRICE -> R.string.LNG_FILTER_PRICE
         })
-        tv_year_sort_title.text = "${getString(R.string.LNG_FILTER)}: $sortName"
+        tv_year_sort_title.text = "${getString(R.string.LNG_SORT)}: $sortName"
         sortOrder.rotation = if (!sortHigherToLower) SEMI_ROUND else 0f
     }
 

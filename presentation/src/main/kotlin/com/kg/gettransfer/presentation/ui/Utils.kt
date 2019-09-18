@@ -156,7 +156,7 @@ object Utils : KoinComponent {
             view: View,
             items: List<CharSequence>,
             listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_FILTER, items, listener) }
+    ) { setModelsDialogListener(context, view, R.string.LNG_SORT, items, listener) }
 
     fun setEndpointsDialogListener(
         context: Context,

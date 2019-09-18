@@ -213,7 +213,7 @@
     <string name="LNG_CANCEL_REQUEST"><u>Cancel request</u></string>
     <string name="LNG_OFFERS_PROMO_MESSAGE"><b>Зафиксируйте лучшие цены для вашей поездки</b>
         Расценки могут вырасти, забронируйте сейчас для гарантии лучшей цены</string>
-    <string name="LNG_FILTER">Filter</string>
+    <string name="LNG_SORT">Sort</string>
     <string name="LNG_FILTER_YEAR">Year made</string>
     <string name="LNG_FILTER_RATING">Rating</string>
     <string name="LNG_FILTER_PRICE">Price</string>
