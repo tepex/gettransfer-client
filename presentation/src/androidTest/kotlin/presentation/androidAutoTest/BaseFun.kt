@@ -27,7 +27,7 @@ import com.kg.gettransfer.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
 
-import presentation.androidAutoTest.WaiteObject.waitId
+import presentation.androidAutoTest.WaitObject.waitId
 
 import java.util.concurrent.TimeUnit
 

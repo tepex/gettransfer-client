@@ -14,7 +14,7 @@ import androidx.test.espresso.util.TreeIterables
 
 import java.util.concurrent.TimeoutException
 
-internal object WaiteObject {
+internal object WaitObject {
 
     fun waitId(viewId: Int, millis: Long) = object : ViewAction {
 

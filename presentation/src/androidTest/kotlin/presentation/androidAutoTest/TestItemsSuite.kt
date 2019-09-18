@@ -22,7 +22,7 @@ import org.hamcrest.Matchers.allOf
 import org.junit.Rule
 import org.junit.Test
 
-import presentation.androidAutoTest.WaiteObject.waitId
+import presentation.androidAutoTest.WaitObject.waitId
 
 @Suppress("MagicNumber")
 class TestItemsSuite {
