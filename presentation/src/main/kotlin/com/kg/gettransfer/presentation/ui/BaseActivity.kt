@@ -338,18 +338,9 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         }
     }
 
-    // protected fun openScreen(screen: String) { router.navigateTo(screen) }
-
     @CallSuper
     override fun attachBaseContext(newBase: Context) {
-        val account = sessionInteractor.account
-
-        // if account is empty  we need to use locale from preferences
-        // because locale from Account.EMPTY is equals Locale.getDefault()
-        // and then it'll be always show wrong locale
-        val locale = if (account == Account.EMPTY) Locale(sessionInteractor.appLanguage) else sessionInteractor.locale
-
-        super.attachBaseContext(localeManager.updateResources(newBase, locale))
+        super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
     }
 
     private fun showLoading() {

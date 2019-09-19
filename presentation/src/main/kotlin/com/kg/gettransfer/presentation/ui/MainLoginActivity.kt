@@ -43,9 +43,8 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
     private var navigator: Navigator = SupportAppNavigator(this, supportFragmentManager, R.id.container)
 
     @CallSuper
-    override fun attachBaseContext(newBase: Context?) {
-        if (newBase != null) super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
-        else super.attachBaseContext(null)
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(localeManager.updateResources(newBase, sessionInteractor.locale))
     }
 
     @CallSuper
