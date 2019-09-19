@@ -329,6 +329,11 @@ dependencies {
     androidTestImplementation libs.androidx_text_ext_junit
     //dependencies for espresso
     androidTestImplementation libs.espresso_core
+
+    //dependencies for Kakao
+    androidTestImplementation 'com.agoda.kakao:kakao:2.1.0'
+    //dependencies for Kasspresso
+    implementation 'com.kaspersky.android-components:kaspresso:1.0.0'
     // for web
     androidTestImplementation libs.espresso_web
     androidTestImplementation("com.android.support.test.espresso:espresso-contrib:2.2.2") {
@@ -339,6 +344,21 @@ dependencies {
         exclude module: "recyclerview-v7"
         exclude module: "appcompat-v7"
     }
+
+
+//    api fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+//    api "com.kaspersky.android-components:adbserver-device:1.0.0"
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+
+//    testImplementation "junit:junit:$versions.junit"
+//
+//    implementation "androidx.test:runner:$versions.runner"
+//
+//    implementation "androidx.test.espresso:espresso-core:3.2.0"
+//    implementation "androidx.test.espresso:espresso-contrib:3.2.0"
+//    implementation "androidx.test.espresso:espresso-intents:3.2.0"
+  implementation "androidx.test.uiautomator:uiautomator:2.2.0"
+//    implementation "com.google.code.gson:gson:2.8.5"5
 }
 
 allure {
