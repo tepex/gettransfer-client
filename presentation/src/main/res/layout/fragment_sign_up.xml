@@ -1,69 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:paddingStart="@dimen/fragment_sign_up_vertical_padding"
-    android:paddingEnd="@dimen/fragment_sign_up_vertical_padding">
+    android:layout_height="match_parent">
 
-    <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
-        android:id="@+id/nameLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:account_field_view_icon="@drawable/wrapped_ic_account_wrapper"
-        app:account_field_view_hint="@string/LNG_RIDE_NAME"/>
+        android:background="@color/colorWhite"
+        android:paddingStart="@dimen/fragment_sign_up_vertical_padding"
+        android:paddingEnd="@dimen/fragment_sign_up_vertical_padding"
+        android:paddingBottom="@dimen/fragment_sign_up_vertical_padding">
 
-    <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
-        android:id="@+id/phoneLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/nameLayout"
-        app:account_field_view_icon="@drawable/ic_phone"
-        app:account_field_view_hint="@string/LNG_RIDE_PHONE"
-        android:inputType="phone"/>
+        <Button
+            android:id="@+id/btnSignUp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/general_button_height"
+            android:layout_marginTop="@dimen/fragment_sign_up_btn_login_margin_top"
+            android:background="@drawable/btn_bg_rounded"
+            android:enabled="false"
+            android:text="@string/LNG_SIGNUP"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/licenseAgreementTv" />
 
-    <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
-        android:id="@+id/emailLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/phoneLayout"
-        app:account_field_view_icon="@drawable/ic_email"
-        app:account_field_view_hint="@string/LNG_LOGIN_EMAIL"
-        android:inputType="textEmailAddress"/>
+        <TextView
+            android:id="@+id/licenseAgreementTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_sign_up_agreement_margin_top"
+            android:text="@string/LNG_RIDE_OFFERT"
+            app:layout_constraintEnd_toStartOf="@+id/switchAgreementTb"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailLayout" />
 
-    <TextView
-        android:id="@+id/licenseAgreementTv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/fragment_sign_up_agreement_margin_top"
-        android:text="@string/LNG_RIDE_OFFERT"
-        app:layout_constraintTop_toBottomOf="@+id/emailLayout"
-        app:layout_constraintEnd_toStartOf="@+id/switchAgreementTb"
-        app:layout_constraintStart_toStartOf="parent"/>
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchAgreementTb"
+            android:layout_width="@dimen/fragment_sign_up_switch_width"
+            android:layout_height="@dimen/fragment_sign_up_switch_height"
+            android:theme="@style/SwitchCompatStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/licenseAgreementTv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/licenseAgreementTv" />
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switchAgreementTb"
-        android:layout_width="@dimen/fragment_sign_up_switch_width"
-        android:layout_height="@dimen/fragment_sign_up_switch_height"
-        android:theme="@style/SwitchCompatStyle"
-        app:layout_constraintBottom_toBottomOf="@+id/licenseAgreementTv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/licenseAgreementTv" />
+        <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
+            android:id="@+id/nameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:account_field_view_hint="@string/LNG_RIDE_NAME"
+            app:account_field_view_icon="@drawable/wrapped_ic_account_wrapper"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnSignUp"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/general_button_height"
-        android:layout_marginTop="@dimen/fragment_sign_up_btn_login_margin_top"
-        android:background="@drawable/btn_bg_rounded"
-        android:enabled="false"
-        android:text="@string/LNG_SIGNUP"
-        android:textColor="@color/colorWhite"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/licenseAgreementTv" />
+        <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
+            android:id="@+id/phoneLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            app:account_field_view_hint="@string/LNG_RIDE_PHONE"
+            app:account_field_view_icon="@drawable/ic_phone"
+            app:layout_constraintTop_toBottomOf="@+id/nameLayout" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
+            android:id="@+id/emailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            app:account_field_view_hint="@string/LNG_LOGIN_EMAIL"
+            app:account_field_view_icon="@drawable/ic_email"
+            app:layout_constraintTop_toBottomOf="@+id/phoneLayout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

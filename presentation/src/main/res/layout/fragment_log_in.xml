@@ -1,66 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:paddingTop="@dimen/fragment_log_in_padding_top"
-    android:paddingStart="@dimen/fragment_log_in_vertical_padding"
-    android:paddingEnd="@dimen/fragment_log_in_vertical_padding">
+    android:layout_height="match_parent">
 
-    <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
-        android:id="@+id/emailLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:account_field_view_icon="@drawable/wrapped_ic_account_wrapper"
-        app:account_field_view_hint="@string/LNG_LOGIN_EMAIL_SECTION" />
+        android:background="@color/colorWhite"
+        android:paddingStart="@dimen/fragment_log_in_vertical_padding"
+        android:paddingTop="@dimen/fragment_log_in_padding_top"
+        android:paddingEnd="@dimen/fragment_log_in_vertical_padding"
+        android:paddingBottom="@dimen/fragment_sign_up_vertical_padding">
 
-    <com.kg.gettransfer.presentation.ui.custom.InputPasswordView
-        android:id="@+id/passwordLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:password_view_hint="@string/LNG_LOGIN_PASSWORD"
-        app:layout_constraintTop_toBottomOf="@+id/emailLayout"/>
+        <Button
+            android:id="@+id/btnLogin"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/general_button_height"
+            android:layout_marginTop="@dimen/login_btnLogin_margin_top"
+            android:background="@drawable/btn_bg_rounded"
+            android:enabled="false"
+            android:text="@string/LNG_LOGIN_WITH_PASSWORD"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
 
-    <Button
-        android:id="@+id/btnLogin"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/general_button_height"
-        android:layout_marginTop="@dimen/login_btnLogin_margin_top"
-        android:background="@drawable/btn_bg_rounded"
-        android:enabled="false"
-        android:text="@string/LNG_LOGIN_WITH_PASSWORD"
-        android:textColor="@color/colorWhite"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
+        <Button
+            android:id="@+id/btnRequestCode"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/general_button_height"
+            android:layout_marginTop="@dimen/fragment_log_in_btn_with_code_margin_top"
+            android:background="@drawable/btn_bg_rounded"
+            android:text="@string/LNG_LOGIN_CODE"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_variant" />
 
-    <TextView
-        android:id="@+id/tv_variant"
-        style="@style/black_regular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/fragment_log_in_variant_text_margin_top"
-        android:text="@string/LNG_OR"
-        android:textSize="@dimen/fragment_log_in_variant_text_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+        <TextView
+            android:id="@+id/tv_variant"
+            style="@style/black_regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_log_in_variant_text_margin_top"
+            android:text="@string/LNG_OR"
+            android:textSize="@dimen/fragment_log_in_variant_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
 
-    <Button
-        android:id="@+id/btnRequestCode"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/general_button_height"
-        android:layout_marginTop="@dimen/fragment_log_in_btn_with_code_margin_top"
-        android:background="@drawable/btn_bg_rounded"
-        android:text="@string/LNG_LOGIN_CODE"
-        android:textColor="@color/colorWhite"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_variant" />
+        <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
+            android:id="@+id/emailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:account_field_view_hint="@string/LNG_LOGIN_EMAIL_SECTION"
+            app:account_field_view_icon="@drawable/wrapped_ic_account_wrapper"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.kg.gettransfer.presentation.ui.custom.InputPasswordView
+            android:id="@+id/passwordLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:layout_constraintTop_toBottomOf="@+id/emailLayout"
+            app:password_view_hint="@string/LNG_LOGIN_PASSWORD" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
