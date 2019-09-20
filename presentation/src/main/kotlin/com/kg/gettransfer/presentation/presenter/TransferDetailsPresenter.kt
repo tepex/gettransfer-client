@@ -211,7 +211,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     @Suppress("UnsafeCallOnNullableType")
     private fun setRouteTransfer(transfer: Transfer, route: RouteInfo) {
         routeModel = routeMapper.getView(
-            route.distance,
+            transfer.distance,
             route.polyLines,
             transfer.from.name,
             transfer.to!!.name,

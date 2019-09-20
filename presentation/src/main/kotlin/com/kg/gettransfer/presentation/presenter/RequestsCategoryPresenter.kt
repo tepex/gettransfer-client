@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import android.os.Handler
 import com.arellomobile.mvp.InjectViewState
 import com.kg.gettransfer.core.presentation.WorkerManager
+import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
 
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
@@ -31,7 +32,8 @@ import java.util.Date
 
 @InjectViewState
 class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
-    BasePresenter<RequestsFragmentView>(), KoinComponent, CounterEventListener, CoordinateEventListener {
+    BasePresenter<RequestsFragmentView>(), KoinComponent, CounterEventListener, CoordinateEventListener,
+        AccountChangedListener {
 
     private val worker: WorkerManager by inject { parametersOf("RequestsCategoryPresenter") }
     private val coordinateInteractor: CoordinateInteractor by inject()
@@ -51,6 +53,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
+        sessionInteractor.addAccountChangedListener(this)
         getTransfers()
     }
 
@@ -61,6 +64,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
         coordinateInteractor.removeCoordinateListener(this)
         driverCoordinate?.requestCoordinates = false
         driverCoordinate = null
+        sessionInteractor.removeAccountChangedListener(this)
     }
 
     fun getTransfers() {
@@ -186,6 +190,10 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
 
     fun onGetBookClicked() {
         router.exit()
+    }
+
+    override fun accountChanged() {
+        getTransfers()
     }
 
     companion object {
