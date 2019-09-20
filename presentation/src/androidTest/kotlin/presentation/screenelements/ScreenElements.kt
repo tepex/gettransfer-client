@@ -145,8 +145,3 @@ fun ViewInteraction.waitElementClick(wait: Long) {
     Thread.sleep(wait)
     perform(ViewActions.click())
 }
-
-fun waitElementClick(whatToClick: ViewInteraction, wait: Long) {
-    Thread.sleep(wait)
-    perform(ViewActions.click())
-}
