@@ -103,7 +103,7 @@ class Passenger {
         // The end code select time
         Thread.sleep(700)
 
-        ordersDetails.pluspassenger.perform(ViewActions.click())
+        ordersDetails.plusPassenger.perform(ViewActions.click())
         Thread.sleep(700)
 
         ordersDetails.btnGetOffers.perform(ViewActions.click())
