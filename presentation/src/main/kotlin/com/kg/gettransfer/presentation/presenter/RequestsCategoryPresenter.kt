@@ -1,39 +1,49 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Handler
+
 import com.arellomobile.mvp.InjectViewState
+
 import com.kg.gettransfer.core.presentation.WorkerManager
+
 import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
-
 import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.model.Coordinate
 import com.kg.gettransfer.domain.model.Transfer
+
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.presentation.model.TransferModel
-
 import com.kg.gettransfer.presentation.model.map
-
-import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
+
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
+
 import java.util.Calendar
 import java.util.Date
 
 @InjectViewState
-class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
-    BasePresenter<RequestsFragmentView>(), KoinComponent, CounterEventListener, CoordinateEventListener,
-        AccountChangedListener {
+@Suppress("TooManyFunctions")
+class RequestsCategoryPresenter(
+    @RequestsView.TransferTypeAnnotation tt: Int
+) : BasePresenter<RequestsFragmentView>(),
+    KoinComponent,
+    CounterEventListener,
+    CoordinateEventListener,
+    AccountChangedListener {
 
     private val worker: WorkerManager by inject { parametersOf("RequestsCategoryPresenter") }
     private val coordinateInteractor: CoordinateInteractor by inject()
@@ -70,15 +80,20 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     fun getTransfers() {
         worker.main.launch {
             transfers = when (transferType) {
-                TRANSFER_ACTIVE -> withContext(worker.bg) { transferInteractor.getTransfersActive()  }.model
+                TRANSFER_ACTIVE  -> withContext(worker.bg) { transferInteractor.getTransfersActive()  }.model
                 TRANSFER_ARCHIVE -> withContext(worker.bg) { transferInteractor.getTransfersArchive() }.model
-                else -> throw IllegalArgumentException("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
+                else             -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
             }.sortedByDescending { it.dateToLocal }
             if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
                 coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
-                if (driverCoordinate == null) driverCoordinate = DriverCoordinate(Handler())
-                driverCoordinate!!.transfersIds = transfers!!.map { it.id }
+                if (driverCoordinate == null) {
+                    driverCoordinate = DriverCoordinate(Handler())
+                } else {
+                    @Suppress("UnsafeCallOnNullableType")
+                    driverCoordinate!!.transfersIds = transfers!!.map { it.id }
+                }
             }
+            /* TODO remove this magic */
             viewState.updateCardWithDriverCoordinates(6442L)
             prepareDataAsync()
         }
@@ -90,17 +105,15 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
                 if (trs.isNotEmpty()) {
                     withContext(worker.bg) {
                         val transportTypes = configsManager.configs.transportTypes.map { it.map() }
-                        transfers?.map {
-                            it.map(transportTypes)
-                        }?.map {
-                            if (it.status == Transfer.Status.PERFORMED && isShowOfferInfo(it)) {
-                                val offer = offerInteractor.getOffers(it.id).model.let { list ->
-                                    if (list.size == 1) {
-                                        list.first()
-                                    } else null
+                        transfers?.map { it.map(transportTypes) }?.map { transferModel ->
+                            if (transferModel.status == Transfer.Status.PERFORMED && isShowOfferInfo(transferModel)) {
+                                val offer = offerInteractor.getOffers(transferModel.id).model.let { list ->
+                                    if (list.size == 1) list.first() else null
                                 }
-                                it.copy(matchedOffer = offer)
-                            } else it
+                                transferModel.copy(matchedOffer = offer)
+                            } else {
+                                transferModel
+                            }
                         }
                     }?.also { viewList ->
                         viewState.updateTransfers(viewList)
@@ -137,9 +150,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
 
     private fun sendAnalytics() {
         when (transferType) {
-            TRANSFER_ACTIVE -> {
-                transfers?.let { analytics.EcommercePurchase().sendAnalytics(it) }
-            }
+            TRANSFER_ACTIVE -> transfers?.let { analytics.EcommercePurchase().sendAnalytics(it) }
         }
     }
 
@@ -149,7 +160,7 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
                 with(countEventsInteractor) {
                     getEventsCount(mapCountNewOffers.plus(mapCountNewMessages), mapCountViewedOffers)
                 }
-            }.let { viewState.updateEvents(it) }
+            }.run { viewState.updateEvents(this) }
         }
     }
 
@@ -159,9 +170,11 @@ class RequestsCategoryPresenter(@RequestsView.TransferTypeAnnotation tt: Int) :
     ): Map<Long, Int> {
         val eventsMap = mutableMapOf<Long, Int>()
         transfers?.forEach { transfer ->
-            mapCountNewEvents[transfer.id]?.let {
-                val eventsCount = it - (mapCountViewedOffers[transfer.id] ?: 0)
-                if (eventsCount > 0) eventsMap[transfer.id] = eventsCount
+            mapCountNewEvents[transfer.id]?.let { count ->
+                val eventsCount = count - (mapCountViewedOffers[transfer.id] ?: 0)
+                if (eventsCount > 0) {
+                    eventsMap[transfer.id] = eventsCount
+                }
             }
         }
         return eventsMap
