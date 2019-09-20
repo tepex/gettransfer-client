@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 import android.os.Bundle
+
 import androidx.annotation.CallSuper
 
 import com.arellomobile.mvp.MvpAppCompatActivity
@@ -14,12 +15,11 @@ import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 
 import com.kg.gettransfer.presentation.presenter.MainLoginPresenter
-import com.kg.gettransfer.presentation.view.LogInView
 
+import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.MainLoginView
 
 import com.kg.gettransfer.utilities.LocaleManager
-//import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinComponent
@@ -64,34 +64,39 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
         presenter.onBack()
     }
 
+    @CallSuper
     override fun onDestroy() {
         super.onDestroy()
 //        AppWatcher.objectWatcher.watch(this)
+    }
+
+    @Suppress("EmptyFunctionBlock")
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
+        // TODO remove BaseView or add code.
+    }
+
+    @Suppress("EmptyFunctionBlock")
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
+        // TODO remove BaseView or add code.
+    }
+
+    @Suppress("EmptyFunctionBlock")
+    override fun setError(e: ApiException) {
+        // TODO remove BaseView or add code.
+    }
+
+    @Suppress("EmptyFunctionBlock")
+    override fun setError(e: DatabaseException) {
+        // TODO remove BaseView or add code.
+    }
+
+    override fun setTransferNotFoundError(transferId: Long) {
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     companion object {
         const val INVALID_EMAIL = 1
         const val INVALID_PHONE = 2
         const val INVALID_PASSWORD = 3
-    }
-
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        //TODO remove BaseView or add code.
-    }
-
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
-        //TODO remove BaseView or add code.
-    }
-
-    override fun setError(e: ApiException) {
-        //TODO remove BaseView or add code.
-    }
-
-    override fun setError(e: DatabaseException) {
-        //TODO remove BaseView or add code.
-    }
-
-    override fun setTransferNotFoundError(transferId: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
