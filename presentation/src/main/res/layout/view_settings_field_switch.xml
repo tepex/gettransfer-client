@@ -29,7 +29,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/field_divider"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="@dimen/settings_field_layout_btns_margin_end"/>
+        android:layout_marginEnd="@dimen/settings_field_layout_btns_margin_end"
+        android:clickable="false"/>
 
     <include
         android:id="@+id/field_divider"
