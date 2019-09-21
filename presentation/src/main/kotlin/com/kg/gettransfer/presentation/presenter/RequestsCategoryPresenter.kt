@@ -93,8 +93,6 @@ class RequestsCategoryPresenter(
                     driverCoordinate!!.transfersIds = transfers!!.map { it.id }
                 }
             }
-            /* TODO remove this magic */
-            viewState.updateCardWithDriverCoordinates(6442L)
             prepareDataAsync()
         }
     }
