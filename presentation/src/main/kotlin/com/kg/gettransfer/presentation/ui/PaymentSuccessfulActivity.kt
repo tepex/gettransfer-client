@@ -58,11 +58,11 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
         if (presenter.offerId == 0L) {
             tvBookNowSuccess.isVisible = true
             btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT)
-            groupVoucher.isInvisible = true
+            tvDownloadVoucher.isInvisible = true
         }
         ivClose.setOnClickListener { finish() }
         btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
-        btnDownloadVoucher.setOnClickListener { checkPermissionForWrite() }
+        tvDownloadVoucher.setOnClickListener { checkPermissionForWrite() }
     }
 
     private fun checkPermissionForWrite() {

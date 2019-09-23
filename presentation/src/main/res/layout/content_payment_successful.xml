@@ -122,45 +122,32 @@
 
             <TextView
                 android:id="@+id/tvDownloadVoucher"
-                style="@style/sf_font_pro_text_regular_grey"
+                style="@style/sf_font_pro_text_regular_black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin24"
                 android:text="@string/LNG_DOWNLOAD_BOOKING_VOUCHER"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@+id/btnDownloadVoucher"
-                app:layout_constraintStart_toStartOf="@+id/btnDownloadVoucher"
-                app:layout_constraintTop_toBottomOf="@+id/btnDownloadVoucher" />
+                android:textSize="16sp"
+                android:drawableEnd="@drawable/ic_download_green"
+                android:gravity="center"
+                android:drawablePadding="@dimen/margin16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber"
+                android:background="?android:attr/selectableItemBackground"/>
 
-            <androidx.constraintlayout.widget.Group
-                android:id="@+id/groupVoucher"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="tvDownloadVoucher,btnDownloadVoucher" />
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapViewRoute"
                 android:layout_width="0dp"
                 android:layout_height="169dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="32dp"
+                android:layout_marginStart="@dimen/margin32"
+                android:layout_marginTop="@dimen/margin32"
+                android:layout_marginEnd="@dimen/margin32"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvDownloadVoucher" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/btnDownloadVoucher"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:backgroundTint="@android:color/white"
-                app:backgroundTint="@color/colorPrimaryDark"
-                app:fabSize="normal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber"
-                app:srcCompat="@drawable/ic_download" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
