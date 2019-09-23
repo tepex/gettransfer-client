@@ -457,6 +457,7 @@
 	<dimen name="margin16">16dp</dimen>
 	<dimen name="margin20">20dp</dimen>
 	<dimen name="margin24">24dp</dimen>
+	<dimen name="margin32">32dp</dimen>
 	<dimen name="margin0">0dp</dimen>
 	<dimen name="margin8">8dp</dimen>
 	<dimen name="margin104">104dp</dimen>
