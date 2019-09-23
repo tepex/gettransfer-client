@@ -114,8 +114,6 @@ class OrderInteractor(
                 (fromPoint.longitude - toPoint.longitude).absoluteValue > MIN_LON_DIFF
             }
         } ?: false
-    // 0.002 lat
-    // 0.003 lon
 
     fun isCanCreateOrder() =
         from?.cityPoint != null && (to?.cityPoint != null && isDistanceFine() || hourlyDuration != null)
