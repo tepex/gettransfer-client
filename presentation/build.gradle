@@ -171,6 +171,11 @@ android {
     }
 }
 
+configurations {
+    cleanedAnnotations
+    compile.exclude group: "org.jetbrains" , module: "annotations"
+}
+
 androidExtensions {
     experimental = true
 }
@@ -310,9 +315,11 @@ dependencies {
 
     api("androidx.transition:transition:$androidx_transition")
 
-    //implementation "androidx.test.uiautomator:uiautomator:2.2.0"
-    //dependencies for Kasspresso
-    implementation libs.kaspresso
+    implementation libs.uiautomator
+    // dependencies for Kasspresso
+    implementation(libs.kaspresso) {
+        transitive = false
+    }
 
     testImplementation libs.coroutines_test
     testImplementation libs.koin_test
@@ -338,7 +345,7 @@ dependencies {
     androidTestImplementation libs.kakao
     // for web
     androidTestImplementation libs.espresso_web
-    androidTestImplementation("com.android.support.test.espresso:espresso-contrib:2.2.2") {
+    androidTestImplementation(libs.espresso_contrib) {
         exclude group: "com.android.support", module: "appcompat"
         exclude module: "support-annotations"
         exclude module: "support-v4"

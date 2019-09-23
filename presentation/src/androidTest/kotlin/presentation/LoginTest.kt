@@ -28,43 +28,26 @@ class LoginTest : TestCase() {
         before {
         }.after {
         }.run {
-
             step("Pass Onboarding") {
-            Screen.idle(5_500L)
-        Onboarding {
-            btnNext {
-                flakySafely {  click()
+                Screen.idle(5_500L)
+                Onboarding {
+                    btnNext { flakySafely { click() } }
+                    btnNext { flakySafely { click() } }
+                }
             }
-            }
-            btnNext {
-                flakySafely {  click()
-            }
-        }
-        }
-        }
-            step("Click settings menu ") {
-        NavBar {
-            settings {
-                click()
-            }
-            }
+            step("Click settings menu") {
+                NavBar {
+                    settings { click() }
+                }
             }
             SettingsScreen {
-                profileCell {
-                    click()
-                }
+                profileCell { click() }
             }
             Profile {
-                email {
-                    typeText("mygtracc1@gmail.com")
-                }
-                pwd {
-                    typeText("PassRR11")
-                }
-                loginBtn {
-                    click()
-                }
+                email { typeText("mygtracc1@gmail.com") }
+                pwd { typeText("PassRR11") }
+                loginBtn { click() }
             }
         }
     }
-    }
+}
