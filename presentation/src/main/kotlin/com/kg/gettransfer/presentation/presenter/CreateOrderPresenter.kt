@@ -429,7 +429,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         @Suppress("UnsafeCallOnNullableType")
         val transferNew = toPoint?.let { dest ->
-            orderInteractor.from?.let { it.cityPoint }?.let { from ->
+            orderInteractor.from?.cityPoint?.let { from ->
                 transportTypes?.filter { it.checked }?.map { it.id }?.let { transportTypes ->
                     TransferNew(
                             from,
