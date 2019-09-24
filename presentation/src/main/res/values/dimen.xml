@@ -95,7 +95,9 @@
 	<dimen name="child_seats_counter_title_text_size">16sp</dimen>
 
 	<dimen name="create_order_behaviour_peek_height">250dp</dimen>
-	<dimen name="get_offers_btn_height">300dp</dimen>
+	<dimen name="get_offers_btn_weight">300dp</dimen>
+	<dimen name="get_offers_btn_height">56dp</dimen>
+	<dimen name="get_offers_btn_radius">22dp</dimen>
 	<dimen name="card_transfer_type_corner_radius_default">5dp</dimen>
 	<dimen name="card_transfer_type_elevation_default">2dp</dimen>
 	<dimen name="card_transfer_type_elevation">5dp</dimen>
