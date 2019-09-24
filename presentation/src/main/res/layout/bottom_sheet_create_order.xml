@@ -281,31 +281,23 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <LinearLayout
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGetOffers"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="@dimen/get_offers_btn_height"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/get_offers_btn_weight"
+        android:layout_height="@dimen/get_offers_btn_height"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/btn_bg_rounded">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:srcCompat="@drawable/ic_check_circle" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:text="@string/LNG_RIDE_CREATE"
-            android:textAllCaps="true"
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/create_transfer_additionals_top_text_size" />
-    </LinearLayout>
+        android:layout_marginTop="@dimen/margin16"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/LNG_RIDE_CREATE"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:textAllCaps="true"
+        app:backgroundTint="@color/color_gtr_green"
+        app:cornerRadius="@dimen/get_offers_btn_radius"
+        app:icon="@drawable/ic_check_circle"
+        app:iconTint="@null"
+        app:iconGravity="textStart">
+    </com.google.android.material.button.MaterialButton>
 </RelativeLayout>
