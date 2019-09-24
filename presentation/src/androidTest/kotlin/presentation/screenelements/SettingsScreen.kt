@@ -1,5 +1,6 @@
 package presentation.screenelements
 
+import com.agoda.kakao.check.KCheckBox
 import com.agoda.kakao.common.views.KView
 import com.agoda.kakao.screen.Screen
 
@@ -12,4 +13,9 @@ object SettingsScreen : Screen<SettingsScreen>() {
     val DistanceUnit = KView { withId(R.id.settingsDistanceUnit) }
     val Profile = KView { withId(R.id.settingsProfile) }
     val AboutApp = KView { withId(R.id.layoutAboutApp) }
+    val distanceSwitcher = KCheckBox {
+        withId(R.id.switch_button)
+        isDescendantOfA { withId(R.id.settingsDistanceUnit) }
+        isDisplayed()
+    }
 }

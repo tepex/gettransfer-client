@@ -3,6 +3,7 @@ package presentation.screenelements
 import com.agoda.kakao.common.views.KSwipeView
 import com.agoda.kakao.common.views.KView
 import com.agoda.kakao.screen.Screen
+
 import com.kg.gettransfer.R
 
 object Trips : Screen<Trips>() {
