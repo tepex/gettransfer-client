@@ -199,6 +199,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             orderInteractor.to = null
         }
         orderInteractor.hourlyDuration = hourlyDuration
+        orderInteractor.selectedTransports = transferModel.transportTypes.map { it.id }.toSet()
+
         if (orderInteractor.isCanCreateOrder()) {
             router.navigateTo(Screens.CreateOrder)
         }
