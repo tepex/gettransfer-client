@@ -33,6 +33,8 @@ fun TransportType.map(prices: Map<ID, TransportTypePriceModel>? = null) =
         id.getDescriptionRes()
     )
 
+fun TransportTypeModel.map() = TransportType(id, paxMax, luggageMax)
+
 @StringRes
 fun ID.getNameRes(): Int {
     val nameId = (if (this == ID.LIMOUSINE) ID.VIP else this).name
