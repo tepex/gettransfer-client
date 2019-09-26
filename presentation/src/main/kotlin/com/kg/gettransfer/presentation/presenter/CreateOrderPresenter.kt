@@ -16,8 +16,6 @@ import com.kg.gettransfer.domain.model.Dest
 import com.kg.gettransfer.domain.model.RouteInfoHourlyRequest
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.TransferNew
-import com.kg.gettransfer.domain.model.DestDuration
-import com.kg.gettransfer.domain.model.DestPoint
 import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.TransportType
@@ -268,7 +266,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val to = orderInteractor.to?.cityPoint
         val dateTime = orderInteractor.orderStartTime
         if (from?.point == null || to?.point == null) {
-//            Timber.w("NPE! from: $from, to: $to")
             viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
             return
         }
@@ -433,79 +430,67 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun onGetTransferClick() {
         if (!checkFieldsForRequest()) return
 
-        /*
-        val selectedTransportTypes = transportTypes!!.filter { it.checked }.map { it.id }
-        var pax = orderInteractor.passengers + childSeatsDelegate.getTotalSeats()
-        if (pax == 0) {
-            pax = if (selectedTransportTypes.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 } ) {
-                DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT
-            } else {
-                DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT
-            }
-        }
-        */
-        @Suppress("UnsafeCallOnNullableType")
-        val toPoint: Dest<CityPoint, Int> = if (orderInteractor.hourlyDuration != null) {
-            DestDuration(orderInteractor.hourlyDuration!!)
-        } else {
-            DestPoint(orderInteractor.to!!.cityPoint)
-        }
+        val toPoint: Dest<CityPoint, Int>? = orderInteractor.hourlyDuration?.let { Dest.Duration(it) }
+                ?: orderInteractor.to?.let { Dest.Point(it.cityPoint) }
 
         @Suppress("UnsafeCallOnNullableType")
-        val transferNew = TransferNew(
-            orderInteractor.from!!.cityPoint,
-            toPoint,
-            Trip(dateDelegate.startDate, orderInteractor.flightNumber),
-            dateDelegate.returnDate?.let { Trip(it, orderInteractor.flightNumberReturn) },
-            transportTypes!!.filter { it.checked }.map { it.id },
-            orderInteractor.passengers + childSeatsDelegate.getTotalSeats(),
-            childSeatsDelegate.infantSeats.isNonZero(),
-            childSeatsDelegate.convertibleSeats.isNonZero(),
-            childSeatsDelegate.boosterSeats.isNonZero(),
-            orderInteractor.offeredPrice?.times(CENTS)?.toInt(),
-            orderInteractor.comment,
-            orderInteractor.nameSign,
-            accountManager.tempUser,
-            orderInteractor.promoCode,
-            false
-        )
+        val transferNew = toPoint?.let { dest ->
+            orderInteractor.from?.cityPoint?.let { from ->
+                transportTypes?.filter { it.checked }?.map { it.id }?.let { transportTypes ->
+                    TransferNew(
+                            from,
+                            dest,
+                            Trip(dateDelegate.startDate, orderInteractor.flightNumber),
+                            dateDelegate.returnDate?.let { Trip(it, orderInteractor.flightNumberReturn) },
+                            transportTypes,
+                            orderInteractor.passengers + childSeatsDelegate.getTotalSeats(),
+                            childSeatsDelegate.infantSeats.isNonZero(),
+                            childSeatsDelegate.convertibleSeats.isNonZero(),
+                            childSeatsDelegate.boosterSeats.isNonZero(),
+                            orderInteractor.offeredPrice?.times(CENTS)?.toInt(),
+                            orderInteractor.comment,
+                            orderInteractor.nameSign,
+                            accountManager.tempUser,
+                            orderInteractor.promoCode,
+                            false)
+                }
+            }
+        }
 //        Timber.d("new transfer: $transferNew")
 
-        utils.launchSuspend {
-            viewState.blockInterface(true, true)
-            val result = utils.asyncAwait { transferInteractor.createTransfer(transferNew) }
-            if (result.error == null) {
-                val logResult = utils.asyncAwait { accountManager.putAccount(connectSocket = true) }
-                logResult.error?.let { error ->
-                    if (error.isNotLoggedIn() || error.isAccountExistError()) {
-                        onAccountExists(result.model.id)
+        transferNew?.let {
+            utils.launchSuspend {
+                viewState.blockInterface(true, true)
+                val result = utils.asyncAwait { transferInteractor.createTransfer(transferNew) }
+                if (result.error == null) {
+                    val logResult = utils.asyncAwait { accountManager.putAccount(connectSocket = true) }
+                    logResult.error?.let { error ->
+                        if (error.isNotLoggedIn() || error.isAccountExistError()) {
+                            onAccountExists(result.model.id)
+                        }
+                    } ?: run {
+                        utils.compute { handleSuccess() }
+                        router.replaceScreen(Screens.Offers(result.model.id))
                     }
-                } ?: run {
-                    utils.compute { handleSuccess() }
-                    router.replaceScreen(Screens.Offers(result.model.id))
-                }
-            } else {
-                logCreateTransfer(Analytics.SERVER_ERROR)
-                result.error?.let { error ->
-                    when {
-                        error.isPhoneTaken() -> router.newRootScreen(
-                            Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, accountManager.tempProfile.phone)
-                        )
-                        error.isEarlyDateError() -> viewState.setError(false, R.string.LNG_DATE_EARLY_ERROR)
-                        error.code == ApiException.NETWORK_ERROR -> viewState.setError(
-                            false,
-                            R.string.LNG_NETWORK_ERROR
-                        )
-                        else -> viewState.setError(error)
+                } else {
+                    logCreateTransfer(Analytics.SERVER_ERROR)
+                    result.error?.let { error ->
+                        when {
+                            error.isPhoneTaken() -> router.newRootScreen(
+                                Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, accountManager.tempProfile.phone)
+                            )
+                            error.isEarlyDateError() -> viewState.setError(false, R.string.LNG_DATE_EARLY_ERROR)
+                            error.code == ApiException.NETWORK_ERROR -> viewState.setError(
+                                false,
+                                R.string.LNG_NETWORK_ERROR
+                            )
+                            else -> viewState.setError(error)
+                        }
                     }
                 }
+                viewState.blockInterface(false)
             }
-
-            // 403 - есть акк, но не выполнен вход
-            // 500 - нет акка
-
-            viewState.blockInterface(false)
-        }
+        } ?: viewState.setError(false, R.string.LNG_RIDE_CANT_CREATE)
     }
 
     private fun onAccountExists(transferId: Long) {

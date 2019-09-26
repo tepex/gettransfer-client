@@ -12,17 +12,15 @@ import androidx.navigation.fragment.findNavController
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.visibleFade
+import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.presenter.NewTransferMainPresenter
 import com.kg.gettransfer.presentation.ui.BaseFragment
 import com.kg.gettransfer.presentation.ui.ReadMoreFragment
-import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
-import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.NewTransferMainView
 import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 
@@ -84,7 +82,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         request_search_panel.setIvSelectFieldFromClickListener {  switchToMap() }
 
         // Buttons
-        btnNextFragment.setOnClickListener { presenter.onNextClick() }
+        btnNextFragment.setThrottledClickListener(1500L) { presenter.onNextClick() }
         bestPriceLogo.setOnClickListener(readMoreListener)
         layoutBestPriceText.setOnClickListener(readMoreListener)
     }
@@ -129,12 +127,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     }*/
 
     override fun setHourlyDuration(duration: Int?) {
-        if (duration != null) {
-            switcher_hourly.switch_mode_.isChecked = true
-            request_search_panel.setCurrentHoursText( HourlyValuesHelper.getValue(duration, requireContext()))
-        } else {
-            switcher_hourly.switch_mode_.isChecked = false
-        }
+        duration?.let { request_search_panel.setCurrentHoursText(HourlyValuesHelper.getValue(duration, requireContext())) }
     }
 
     override fun updateTripView(isHourly: Boolean) {

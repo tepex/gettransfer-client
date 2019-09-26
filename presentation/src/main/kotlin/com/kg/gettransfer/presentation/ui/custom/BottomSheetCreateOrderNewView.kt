@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.showKeyboard
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
@@ -154,7 +155,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
             listener?.onAgreementChecked(isChecked)
         }
 
-        btnGetOffers.setOnClickListener {
+        btnGetOffers.setThrottledClickListener {
             clearHighLightErrorField(errorFieldView)
             listener?.onGetOffersClick()
         }
