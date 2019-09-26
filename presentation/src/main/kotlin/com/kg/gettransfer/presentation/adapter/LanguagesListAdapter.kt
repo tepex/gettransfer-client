@@ -16,25 +16,15 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_language_item.view.*
 
 class LanguagesListAdapter(
-        private val listener: SelectLanguageListener
+        private val listener: SelectLanguageListener,
+        private var languages: List<LocaleModel>,
+        private var selectedLanguage: LocaleModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private var languages: ArrayList<LocaleModel> = arrayListOf()
-    private var selectedLanguage: LocaleModel? = null
 
     override fun getItemCount() = languages.size
 
-    fun update(languages: List<LocaleModel>) {
-        this.languages.clear()
-        this.languages.addAll(languages)
-    }
-
-    fun setNewSelectedLanguage(newSelectedLanguage: LocaleModel) {
-        selectedLanguage = newSelectedLanguage
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) =
-            (holder as ViewHolderLanguage).bind(languages[pos], languages[pos].locale == selectedLanguage?.locale, listener)
+            (holder as ViewHolderLanguage).bind(languages[pos], languages[pos].locale == selectedLanguage.locale, listener)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
             ViewHolderLanguage(LayoutInflater.from(parent.context).inflate(R.layout.view_language_item, parent, false))

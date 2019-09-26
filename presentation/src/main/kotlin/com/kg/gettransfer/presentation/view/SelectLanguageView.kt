@@ -9,4 +9,5 @@ import com.kg.gettransfer.presentation.model.LocaleModel
 interface SelectLanguageView : BaseView {
     fun setLanguages(all: List<LocaleModel>, selected: LocaleModel)
     fun recreateActivity()
+    fun showLanguageFragment()
 }
