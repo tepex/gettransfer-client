@@ -497,7 +497,7 @@
 	<dimen name="offer_rating_number_margin_end">8dp</dimen>
 
 	<!--currencies-->
-	<dimen name="currency_item_min_height">64sp</dimen>
+	<dimen name="currency_item_height">64dp</dimen>
 	<dimen name="currency_item_symbol_text_size">25sp</dimen>
 	<dimen name="currency_item_name_text_size">17sp</dimen>
 	<dimen name="currency_item_symbol_margin_end">8dp</dimen>

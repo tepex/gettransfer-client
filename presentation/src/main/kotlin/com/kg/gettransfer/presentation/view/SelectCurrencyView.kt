@@ -11,4 +11,5 @@ interface SelectCurrencyView : MvpView {
     fun setCurrencies(all: List<CurrencyModel>, selected: CurrencyModel)
     fun setPopularCurrencies(popular: List<CurrencyModel>, selected: CurrencyModel)
     fun sendEvent(currency: CurrencyModel)
+    fun showCurrencyFragment()
 }
