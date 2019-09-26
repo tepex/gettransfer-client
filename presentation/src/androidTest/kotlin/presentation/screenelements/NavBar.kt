@@ -10,4 +10,6 @@ object NavBar : Screen<NavBar>() {
     val settings  = KView { withId(R.id.nav_settings) }
     val order     = KView { withId(R.id.nav_order) }
     val tripsItem = KView { withId(R.id.nav_order) }
+    val trips = KView { withId(R.id.nav_trips) }
+    val help = KView { withId(R.id.nav_help) }
 }
