@@ -1,22 +1,26 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.View
+
+import androidx.annotation.CallSuper
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+
 import kotlinx.android.synthetic.main.bottom_sheet_type_transport.*
 
-class TransportTypeFragment: BaseBottomSheetFragment() {
+class TransportTypeFragment : BaseBottomSheetFragment() {
+
     override val layout = R.layout.bottom_sheet_type_transport
 
     var transportTypeModel: TransportTypeModel? = null
 
-
+    @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
-        btnOk.setOnClickListener { setBottomSheetState(view, BottomSheetBehavior.STATE_HIDDEN) }
+        showBottomSheet()
+        btnOk.setOnClickListener { hideBottomSheet() }
 
         transportTypeModel?.apply {
             tvTypeTransfer.setText(nameId)
@@ -29,5 +33,4 @@ class TransportTypeFragment: BaseBottomSheetFragment() {
     }
 
     companion object { fun getInstance() = TransportTypeFragment() }
-
 }

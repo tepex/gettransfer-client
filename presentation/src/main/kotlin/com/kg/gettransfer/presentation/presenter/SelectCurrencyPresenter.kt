@@ -35,6 +35,8 @@ class SelectCurrencyPresenter : MvpPresenter<SelectCurrencyView>(), KoinComponen
 
             val popularCurrencies = withContext(worker.bg) { currencies.filter { Currency.POPULAR.contains(it.code) } }
             viewState.setPopularCurrencies(popularCurrencies, selectedCurrency)
+
+            viewState.showBottomSheet()
         }
     }
 
