@@ -24,6 +24,7 @@ import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
+import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragmentDirections
 import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.sys.presentation.EndpointModel
@@ -201,6 +202,10 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
 
     override fun showLanguageChooser() {
         findNavController().navigate(SettingsFragmentDirections.goToSelectLanguage())
+    }
+
+    override fun showMainItem() {
+
     }
 
     companion object {

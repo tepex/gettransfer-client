@@ -41,9 +41,7 @@ object Screens {
 
     private var canSendEmail: Boolean? = null
 
-    data class MainPassenger(
-        val showDrawer: Boolean = false  //TODO remove
-    ) : SupportAppScreen() {
+    class MainPassenger : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java)
     }
 

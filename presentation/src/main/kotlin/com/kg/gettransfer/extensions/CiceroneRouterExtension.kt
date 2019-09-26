@@ -19,5 +19,5 @@ fun Router.finishChainAndBackTo(screen: Screen) {
 //use if need to delete current chain, go back to main and create new chain
 fun Router.newChainFromMain(vararg args: Screen) {
     finishChain()
-    newRootChain(Screens.MainPassenger(false), *args)
+    newRootChain(Screens.MainPassenger(), *args)
 }

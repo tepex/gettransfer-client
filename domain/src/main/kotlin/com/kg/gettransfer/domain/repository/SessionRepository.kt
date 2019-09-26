@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain.repository
 
 import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
+import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
@@ -31,4 +32,8 @@ interface SessionRepository {
 
     fun addAccountChangedListener(listener: AccountChangedListener)
     fun removeAccountChangedListener(listener: AccountChangedListener)
+
+    fun addCreateTransferListener(listener: CreateTransferListener)
+    fun removeCreateTransferListener(listener: CreateTransferListener)
+    fun notifyCreateTransfer()
 }

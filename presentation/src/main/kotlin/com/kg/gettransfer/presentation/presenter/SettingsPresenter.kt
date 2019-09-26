@@ -8,6 +8,7 @@ import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.di.ENDPOINTS
 import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
+import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 
 import com.kg.gettransfer.domain.model.DistanceUnit
 
@@ -41,7 +42,7 @@ import org.koin.core.qualifier.named
 
 @Suppress("TooManyFunctions")
 @InjectViewState
-class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener {
+class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener, CreateTransferListener {
 
     private val endpoints: List<EndpointModel> = get<List<Endpoint>>(named(ENDPOINTS)).map { it.map() }
 
@@ -58,6 +59,11 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
     private val setAccessToken: SetAccessTokenInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        sessionInteractor.addCreateTransferListener(this)
+    }
 
     override fun attachView(view: SettingsView) {
         super.attachView(view)
@@ -95,6 +101,10 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
 
     override fun accountChanged() {
         worker.main.launch { initSettings() }
+    }
+
+    override fun onCreateTransferClick() {
+        viewState.showMainItem()
     }
 
     private fun initGeneralSettings() = worker.main.launch {
@@ -272,6 +282,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
 
     override fun onDestroy() {
         worker.cancel()
+        sessionInteractor.removeCreateTransferListener(this)
         super.onDestroy()
     }
 

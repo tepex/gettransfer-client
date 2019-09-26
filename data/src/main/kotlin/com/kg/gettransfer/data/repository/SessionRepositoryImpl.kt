@@ -14,6 +14,7 @@ import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
+import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.RegistrationAccount
@@ -35,6 +36,7 @@ class SessionRepositoryImpl(
     private val configsRepository: ConfigsRepository by inject()
 
     private val accountChangedListeners = mutableSetOf<AccountChangedListener>()
+    private val createTransferListeners = mutableSetOf<CreateTransferListener>()
 
     override var isInitialized = false
         private set
@@ -208,5 +210,17 @@ class SessionRepositoryImpl(
 
     private fun notifyUpdateAccount() {
         accountChangedListeners.forEach { it.accountChanged() }
+    }
+
+    override fun addCreateTransferListener(listener: CreateTransferListener) {
+        createTransferListeners.add(listener)
+    }
+
+    override fun removeCreateTransferListener(listener: CreateTransferListener) {
+        createTransferListeners.remove(listener)
+    }
+
+    override fun notifyCreateTransfer() {
+        createTransferListeners.forEach { it.onCreateTransferClick() }
     }
 }

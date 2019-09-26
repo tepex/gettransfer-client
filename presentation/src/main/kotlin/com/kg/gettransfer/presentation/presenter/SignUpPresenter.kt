@@ -76,4 +76,8 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
             viewState.updateTextEmail(emailOrPhone)
         }
     }
+
+    fun onCreateTransferClick() {
+        sessionInteractor.notifyCreateTransfer()
+    }
 }

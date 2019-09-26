@@ -95,6 +95,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                     presenter.onBackCommandClick()
                     hideLoading()
                 }
+                onClickOkButton = { presenter.onCreateTransferClick() }
             }
             .show(requireFragmentManager())
     }
