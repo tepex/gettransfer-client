@@ -336,7 +336,6 @@ class PaymentOfferActivity : BaseActivity(),
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
         showNameplate(offer)
-
     }
 
     private fun showNameplate(offer: OfferModel) {
