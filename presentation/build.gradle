@@ -171,6 +171,11 @@ android {
     }
 }
 
+configurations {
+    cleanedAnnotations
+    compile.exclude group: "org.jetbrains" , module: "annotations"
+}
+
 androidExtensions {
     experimental = true
 }
@@ -310,6 +315,12 @@ dependencies {
 
     api("androidx.transition:transition:$androidx_transition")
 
+    implementation libs.uiautomator
+    // dependencies for Kasspresso
+    implementation(libs.kaspresso) {
+        transitive = false
+    }
+
     testImplementation libs.coroutines_test
     testImplementation libs.koin_test
     testImplementation libs.kotlintest
@@ -319,8 +330,8 @@ dependencies {
     testImplementation libs.core_testing
 
     // Allure
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
+    testImplementation libs.jupiter_api
+    testRuntimeOnly libs.jupiter_engine
 
     androidTestImplementation libs.androidx_test_runner
     androidTestImplementation libs.androidx_test_rules
@@ -329,9 +340,12 @@ dependencies {
     androidTestImplementation libs.androidx_text_ext_junit
     //dependencies for espresso
     androidTestImplementation libs.espresso_core
+
+    //dependencies for Kakao
+    androidTestImplementation libs.kakao
     // for web
     androidTestImplementation libs.espresso_web
-    androidTestImplementation("com.android.support.test.espresso:espresso-contrib:2.2.2") {
+    androidTestImplementation(libs.espresso_contrib) {
         exclude group: "com.android.support", module: "appcompat"
         exclude module: "support-annotations"
         exclude module: "support-v4"
@@ -339,6 +353,7 @@ dependencies {
         exclude module: "recyclerview-v7"
         exclude module: "appcompat-v7"
     }
+
 }
 
 allure {

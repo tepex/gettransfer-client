@@ -3,35 +3,36 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 import android.Manifest
 import android.animation.Animator
 import android.os.Bundle
-import androidx.annotation.CallSuper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
+import androidx.annotation.CallSuper
 import androidx.navigation.fragment.findNavController
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.visibleFade
+import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.presenter.NewTransferMainPresenter
 import com.kg.gettransfer.presentation.ui.BaseFragment
 import com.kg.gettransfer.presentation.ui.ReadMoreFragment
-import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
-import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.NewTransferMainView
+
 import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
-//import leakcanary.AppWatcher
 
 import org.koin.core.inject
+
 import pub.devrel.easypermissions.EasyPermissions
 
 @Suppress("TooManyFunctions")
@@ -76,15 +77,13 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         }
 
         // Address panel
-        request_search_panel.setSearchFromClickListener {
-            presenter.navigateToFindAddress()}
-        request_search_panel.setSearchToClickListener {
-            presenter.navigateToFindAddress(true) }
-        request_search_panel.setHourlyClickListener { presenter.showHourlyDurationDialog() }
+        request_search_panel.setSearchFromClickListener { presenter.navigateToFindAddress() }
+        request_search_panel.setSearchToClickListener   { presenter.navigateToFindAddress(true) }
+        request_search_panel.setHourlyClickListener     { presenter.showHourlyDurationDialog() }
         request_search_panel.setIvSelectFieldFromClickListener {  switchToMap() }
 
         // Buttons
-        btnNextFragment.setOnClickListener { presenter.onNextClick() }
+        btnNextFragment.setThrottledClickListener(TROTTLE) { presenter.onNextClick() }
         bestPriceLogo.setOnClickListener(readMoreListener)
         layoutBestPriceText.setOnClickListener(readMoreListener)
     }
@@ -129,11 +128,8 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     }*/
 
     override fun setHourlyDuration(duration: Int?) {
-        if (duration != null) {
-            switcher_hourly.switch_mode_.isChecked = true
-            request_search_panel.setCurrentHoursText( HourlyValuesHelper.getValue(duration, requireContext()))
-        } else {
-            switcher_hourly.switch_mode_.isChecked = false
+        duration?.let { dur ->
+            request_search_panel.setCurrentHoursText(HourlyValuesHelper.getValue(dur, requireContext()))
         }
     }
 
@@ -209,5 +205,6 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     companion object {
         @JvmField val PERMISSIONS =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        const val TROTTLE = 1500L
     }
 }

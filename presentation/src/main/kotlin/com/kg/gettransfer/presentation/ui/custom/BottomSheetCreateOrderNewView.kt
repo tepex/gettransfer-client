@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui.custom
 
 import android.content.Context
-import androidx.core.content.ContextCompat
 import android.text.InputFilter
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -9,13 +8,18 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+
 import androidx.annotation.ColorRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.showKeyboard
+
 import com.kg.gettransfer.presentation.adapter.TransferTypeAdapter
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.model.TransportTypeModel
@@ -25,18 +29,22 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.onTextChanged
 import com.kg.gettransfer.presentation.view.CreateOrderView
+
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.layout_hourly_duration.view.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.*
 
+@Suppress("TooManyFunctions")
 class BottomSheetCreateOrderNewView @JvmOverloads constructor(
-        context: Context,
-        attributeSet: AttributeSet? = null,
-        defStyle: Int = 0
+    context: Context,
+    attributeSet: AttributeSet? = null,
+    defStyle: Int = 0
 ) : ConstraintLayout(context, attributeSet, defStyle), LayoutContainer {
-    override val containerView: View = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_create_order, this, true)
+
+    override val containerView: View =
+        LayoutInflater.from(context).inflate(R.layout.bottom_sheet_create_order, this, true)
 
     private lateinit var adapter: TransferTypeAdapter
 
@@ -73,7 +81,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         }
 
     var currency: String
-        get() =         tv_currency.text.toString().trim()
+        get() = tv_currency.text.toString().trim()
         set(value) {
             tv_currency.text = value
         }
@@ -92,7 +100,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
 
     var isAcceptedAgreement: Boolean
         get() = switchAgreement.isChecked
-        set (value) {
+        set(value) {
             switchAgreement.isChecked = value
         }
 
@@ -101,7 +109,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
     private var hasErrorFields = false
     private var errorFieldView: View? = null
 
-    protected val onTouchListener = View.OnTouchListener { view, event ->
+    private val onTouchListener = View.OnTouchListener { view, event ->
         if (event.action == MotionEvent.ACTION_MOVE) {
             view.hideKeyboard()
             return@OnTouchListener false
@@ -116,7 +124,9 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         initFieldsViews()
 
         price_field_input.field_input.onTextChanged            { listener?.onPriceChanged(it.toDoubleOrNull()) }
-        price_field_input.field_input.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) { listener?.onPriceFocused()} }
+        price_field_input.field_input.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) { listener?.onPriceFocused() }
+        }
         fl_currency.setOnClickListener                         { listener?.onCurrencyClick() }
         sign_name_field.field_input.onTextChanged              { listener?.onNameChanged(it.trim()) }
         flight_number_field.field_input.onTextChanged          { listener?.onFlightNumberChanged(it.trim()) }
@@ -139,13 +149,13 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
             listener?.onPassengersCountInc()
         }
         passengers_count.img_minus_seat.setOnClickListener { listener?.onPassengersCountDec() }
-        children_seat_field.setOnClickListener { listener?.onChildrenSeatClick() }
+        children_seat_field.setOnClickListener             { listener?.onChildrenSeatClick() }
         children_seat_field.field_input.setOnClickListener { listener?.onChildrenSeatClick() }
-        comment_field.field_input.setOnClickListener { listener?.onCommentClick( comment )}
+        comment_field.field_input.setOnClickListener       { listener?.onCommentClick(comment) }
         field_input.setOnFocusChangeListener { _, hasFocus -> if (!hasFocus) listener?.checkPromoCode() }
 
-        cl_offer_price.setOnClickListener { fieldTouched(price_field_input.field_input)  }
-        sign_name_field.setOnClickListener { fieldTouched(sign_name_field.field_input) }
+        cl_offer_price.setOnClickListener      { fieldTouched(price_field_input.field_input)  }
+        sign_name_field.setOnClickListener     { fieldTouched(sign_name_field.field_input) }
         flight_number_field.setOnClickListener { fieldTouched(flight_number_field.field_input) }
 
         tvAgreement1.setOnClickListener { listener?.onAgreementClick() }
@@ -154,17 +164,17 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
             listener?.onAgreementChecked(isChecked)
         }
 
-        btnGetOffers.setOnClickListener {
+        btnGetOffers.setThrottledClickListener {
             clearHighLightErrorField(errorFieldView)
             listener?.onGetOffersClick()
         }
-
     }
 
     private fun initFieldsViews() {
         price_field_input.field_input.compoundDrawablePadding = 0
         passengers_count.person_count.text = context.getString(R.string.passenger_number_default)
-        sign_name_field.field_input.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(CreateOrderActivity.SIGN_NAME_FIELD_MAX_LENGTH))
+        sign_name_field.field_input.filters =
+            arrayOf<InputFilter>(InputFilter.LengthFilter(CreateOrderActivity.SIGN_NAME_FIELD_MAX_LENGTH))
         field_input.filters = arrayOf(InputFilter.AllCaps())
 
         rvTransferType.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -199,7 +209,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
     }
 
     private fun fieldTouched(viewForFocus: EditText) {
-//TODO()        if (!isKeyBoardOpened) {
+// TODO()        if (!isKeyBoardOpened) {
             showKeyboard()
 //        }
         with(viewForFocus) {
@@ -209,11 +219,9 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
     }
 
     fun setHourlyDuration(durationValue: Int?) {
-        durationValue?.let {
-            if (it > 0) {
-                hourly_duration.isVisible = true
-                hourly_duration.tvCurrent_hours.text = HourlyValuesHelper.getValue(durationValue, context)
-            }
+        if (durationValue != null && durationValue > 0) {
+            hourly_duration.isVisible = true
+            hourly_duration.tvCurrent_hours.text = HourlyValuesHelper.getValue(durationValue, context)
         }
     }
 
@@ -246,18 +254,18 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
             Utils.setDrawables(transfer_return_date_field.field_input, R.drawable.ic_calendar, 0, 0, 0)
         } else {
             Utils.setDrawables(
-                    transfer_return_date_field.field_input,
-                    R.drawable.ic_plus,
-                    0,
-                    R.drawable.ic_arrow_right,
-                    0
+                transfer_return_date_field.field_input,
+                R.drawable.ic_plus,
+                0,
+                R.drawable.ic_arrow_right,
+                0
             )
         }
     }
 
     private fun checkMinusButton(count: Int, view: ImageView) {
         val imgRes =
-                if (count == CreateOrderPresenter.MIN_PASSENGERS) R.drawable.ic_minus_disabled else R.drawable.ic_minus
+            if (count == CreateOrderPresenter.MIN_PASSENGERS) R.drawable.ic_minus_disabled else R.drawable.ic_minus
         view.setImageDrawable(ContextCompat.getDrawable(context, imgRes))
     }
 
@@ -328,6 +336,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
 
     private fun clearHighLightErrorField(view: View?) = view?.setBackgroundResource(0)
 
+    @Suppress("TooManyFunctions")
     interface OnCreateOrderListener {
         fun checkPromoCode()
         fun onCurrencyClick()
@@ -352,5 +361,4 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
 
         fun onGetOffersClick()
     }
-
 }
