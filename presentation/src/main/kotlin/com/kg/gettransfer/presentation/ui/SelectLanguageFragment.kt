@@ -1,16 +1,16 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.view.View
 
 import androidx.annotation.CallSuper
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-
-import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.findNavController
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -21,10 +21,12 @@ import com.kg.gettransfer.presentation.adapter.LanguagesListAdapter
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.SelectLanguagePresenter
 import com.kg.gettransfer.presentation.view.SelectLanguageView
+
 import kotlinx.android.synthetic.main.fragment_select_language.*
 import kotlinx.android.synthetic.main.layout_select_language.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 
+@Suppress("TooManyFunctions")
 open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageView {
 
     override val layout = R.layout.fragment_select_language

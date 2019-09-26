@@ -16,15 +16,18 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_currency_item.view.*
 
 class CurrenciesListAdapter(
-        private val listener: SelectCurrencyListener,
-        private val currencies: List<CurrencyModel>,
-        private val selectedCurrency: CurrencyModel
+    private val listener: SelectCurrencyListener,
+    private val currencies: List<CurrencyModel>,
+    private val selectedCurrency: CurrencyModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount() = currencies.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) =
-        (holder as ViewHolderCurrency).bind(currencies[pos], currencies[pos].code == selectedCurrency.code, listener)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
+        if (holder is ViewHolderCurrency) {
+            holder.bind(currencies[pos], currencies[pos].code == selectedCurrency.code, listener)
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolderCurrency(LayoutInflater.from(parent.context).inflate(R.layout.view_currency_item, parent, false))
