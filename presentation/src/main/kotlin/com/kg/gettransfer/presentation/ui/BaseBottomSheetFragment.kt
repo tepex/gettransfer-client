@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
+import com.kg.gettransfer.presentation.view.BaseBottomSheetView
+
 //import leakcanary.AppWatcher
 
-abstract class BaseBottomSheetFragment : MvpAppCompatFragment() {
+abstract class BaseBottomSheetFragment : MvpAppCompatFragment(), BaseBottomSheetView {
     abstract val layout: Int
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -28,6 +30,14 @@ abstract class BaseBottomSheetFragment : MvpAppCompatFragment() {
                     behaviour.state = state
             }
         }
+    }
+
+    override fun showBottomSheet() {
+        view?.let { setBottomSheetState(it, BottomSheetBehavior.STATE_EXPANDED) }
+    }
+
+    override fun hideBottomSheet() {
+        view?.let { setBottomSheetState(it, BottomSheetBehavior.STATE_HIDDEN) }
     }
 
     override fun onDestroy() {

@@ -6,8 +6,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.kg.gettransfer.presentation.model.LocaleModel
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface SelectLanguageView : BaseView {
+interface SelectLanguageView : BaseView, BaseBottomSheetView {
     fun setLanguages(all: List<LocaleModel>, selected: LocaleModel)
     fun recreateActivity()
-    fun showLanguageFragment()
 }

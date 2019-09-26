@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.core.content.ContextCompat
 import android.view.View
 import com.kg.gettransfer.R
@@ -29,7 +28,7 @@ class ChildSeatsFragment: BaseBottomSheetFragment(), ChildSeatsView, KoinCompone
         initClickListeners()
         initCounters()
 
-        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
+        showBottomSheet()
     }
 
     private fun initCounters() {
@@ -43,9 +42,7 @@ class ChildSeatsFragment: BaseBottomSheetFragment(), ChildSeatsView, KoinCompone
         view_convertible_seat.view_counter_btns.img_plus_seat.setOnClickListener  { performPlus(CONVERTIBLE) }
         view_booster_seat.view_counter_btns.img_minus_seat.setOnClickListener     { performMinus(BOOSTER) }
         view_booster_seat.view_counter_btns.img_plus_seat.setOnClickListener      { performPlus(BOOSTER) }
-        btnOkChildSeats.setOnClickListener                                        {
-            setBottomSheetState( this@ChildSeatsFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)   //force unwrap because fragment already has view with clicked button
-        }
+        btnOkChildSeats.setOnClickListener                                        { hideBottomSheet() }
     }
 
     private fun performPlus(type: Int) =

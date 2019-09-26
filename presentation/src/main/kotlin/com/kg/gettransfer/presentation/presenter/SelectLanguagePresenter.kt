@@ -30,7 +30,7 @@ class SelectLanguagePresenter : BasePresenter<SelectLanguageView>(), KoinCompone
             }
             val selectedLanguage = sessionInteractor.locale.map()
             viewState.setLanguages(locales, selectedLanguage)
-            viewState.showLanguageFragment()
+            viewState.showBottomSheet()
         }
     }
 

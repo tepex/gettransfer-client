@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Context
 
 import androidx.annotation.CallSuper
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -48,10 +47,6 @@ open class SelectCurrencyBottomFragment : BaseBottomSheetFragment(), SelectCurre
 
     override fun sendEvent(currency: CurrencyModel) {
         listener?.currencyChanged(currency)
-    }
-
-    override fun showCurrencyFragment() {
-        view?.let { setBottomSheetState(it, BottomSheetBehavior.STATE_EXPANDED) }
     }
 
     @CallSuper

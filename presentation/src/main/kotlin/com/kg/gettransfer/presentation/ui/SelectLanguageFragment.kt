@@ -59,10 +59,6 @@ open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageVie
         requireActivity().recreate()
     }
 
-    override fun showLanguageFragment() {
-        view?.let { setBottomSheetState(it, BottomSheetBehavior.STATE_EXPANDED) }
-    }
-
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
 
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
