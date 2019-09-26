@@ -335,13 +335,17 @@ class PaymentOfferActivity : BaseActivity(),
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW)
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
-        offer.isNameSignPresent?.let { isNameSignPresent ->
-            offer.isWithNameSign?.let { isWithNameSign ->
-                imgWithNameSign.isVisible = isNameSignPresent && isWithNameSign
-                imgMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
-                tvMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
-            }
-        }
+        showNameplate(offer)
+
+    }
+
+    private fun showNameplate(offer: OfferModel) {
+        val isNameSignPresent = offer.isNameSignPresent
+        val isWithNameSign = offer.isWithNameSign
+
+        imgWithNameSign.isVisible = isNameSignPresent && isWithNameSign
+        imgMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
+        tvMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
     }
 
     private fun hidePaymentPercentage() {
