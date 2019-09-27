@@ -11,10 +11,10 @@ import com.kg.gettransfer.presentation.ui.SplashActivity
 
 import org.junit.Rule
 import org.junit.Test
+
 import presentation.screenelements.*
 import presentation.screenelements.MainScreen
 
-@Suppress("MagicNumber")
 class NewSmokeSuite : TestCase() {
 
     @Rule
@@ -27,8 +27,8 @@ class NewSmokeSuite : TestCase() {
     @Rule
     @JvmField
     var grantPermissionRule = GrantPermissionRule.grant(
-            "android.permission.ACCESS_FINE_LOCATION",
-            "android.permission.ACCESS_COARSE_LOCATION"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
     )
 
     @Test
@@ -37,7 +37,7 @@ class NewSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Onboarding {
                     compose {
                         or(btnClose) { click() }
@@ -57,7 +57,7 @@ class NewSmokeSuite : TestCase() {
                 TransferDetails {
                     typeCar { click() }
                     typeCars { swipeUp() }
-                    Screen.idle(500L)
+                    Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
@@ -74,13 +74,14 @@ class NewSmokeSuite : TestCase() {
         }
     }
 
+    @Suppress("LongMethod")
     @Test
     fun payBalance() {
         before {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Onboarding {
                     compose {
                         or(btnClose) { click() }
@@ -105,16 +106,16 @@ class NewSmokeSuite : TestCase() {
             step("Locations") {
                 Locations {
                     searchTo { typeText("Saint-Petersburg") }
-                    Screen.idle(500L)
-                    spdAddress { flakySafely(timeoutMs = 800) { click() } }
+                    Screen.idle(DELAY_SMALL)
+                    spdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                 }
             }
             step("CreateTransfer") {
                 TransferDetails {
-                    Screen.idle(800L)
+                    Screen.idle(DELAY_MEDIUM)
                     typeCar { click() }
                     typeCars { swipeUp() }
-                    Screen.idle(500L)
+                    Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
@@ -124,7 +125,7 @@ class NewSmokeSuite : TestCase() {
             step("BookNow") {
                 BookNow {
                     rvOffers { click() }
-                    Screen.idle(500L)
+                    Screen.idle(DELAY_SMALL)
                     btn_book { click() }
                     background { swipeUp() }
                     Balance { click() }
@@ -143,13 +144,14 @@ class NewSmokeSuite : TestCase() {
         }
     }
 
+    @Suppress("LongMethod")
     @Test
     fun payCard() {
         before {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Onboarding {
                     compose {
                         or(btnClose) { click() }
@@ -174,16 +176,16 @@ class NewSmokeSuite : TestCase() {
             step("Locations") {
                 Locations {
                     searchTo { typeText("Saint-Petersburg") }
-                    Screen.idle(500L)
-                    spdAddress { flakySafely(timeoutMs = 800) { click() } }
+                    Screen.idle(DELAY_SMALL)
+                    spdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                 }
             }
             step("CreateTransfer") {
                 TransferDetails {
-                    Screen.idle(800L)
+                    Screen.idle()
                     typeCar { click() }
                     typeCars { swipeUp() }
-                    Screen.idle(500L)
+                    Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
@@ -193,7 +195,7 @@ class NewSmokeSuite : TestCase() {
             step("BookNow") {
                 BookNow {
                     rvOffers { click() }
-                    Screen.idle(500L)
+                    Screen.idle(DELAY_SMALL)
                     btn_book { click() }
                     background { swipeUp() }
                     Card { click() }
@@ -205,7 +207,7 @@ class NewSmokeSuite : TestCase() {
                 payFun.goPayCard()
             }
             step("PayCheck") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Payment {
                     BookingNumber { isVisible() }
                     mapRoute { isVisible() }
@@ -223,7 +225,7 @@ class NewSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Onboarding {
                     compose {
                         or(btnClose) { click() }
@@ -247,12 +249,12 @@ class NewSmokeSuite : TestCase() {
             }
             step("OpenTrips") {
                 Trips {
-                    Screen.idle(1_000L)
-                    Requests { flakySafely(timeoutMs = 800) { click() } }
+                    Screen.idle(DELAY_BIG)
+                    Requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                     transferDetails { swipeUp() }
-                    Screen.idle(500L)
+                    Screen.idle(DELAY_SMALL)
                     bookNowInfo { swipeUp() }
-                    Screen.idle(500L)
+                    Screen.idle(DELAY_SMALL)
                 }
             }
             step("CheckTrips") {
@@ -270,7 +272,7 @@ class NewSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Onboarding {
                     compose {
                         or(btnClose) { click() }
@@ -292,11 +294,11 @@ class NewSmokeSuite : TestCase() {
                     Languages { isVisible() }
                     socialNetwork { isVisible() }
                     ourLanguages { swipeUp() }
-                    Screen.idle(500L)
+                    Screen.idle(DELAY_SMALL)
                     WriteUs { isVisible() }
                     include { isVisible() }
                     Network { swipeUp() }
-                    Screen.idle(500L)
+                    Screen.idle(DELAY_SMALL)
                     Email { isVisible() }
                     CallUs { isVisible() }
                 }
@@ -310,7 +312,7 @@ class NewSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Onboarding {
                     compose {
                         or(btnClose) { click() }
@@ -341,7 +343,7 @@ class NewSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Onboarding {
                     compose {
                         or(btnClose) { click() }
@@ -365,11 +367,11 @@ class NewSmokeSuite : TestCase() {
             }
             step("OpenPastTrips") {
                 Trips {
-                    Screen.idle(1_000L)
-                    swRequests { flakySafely(timeoutMs = 800) { swipeLeft() } }
-                    Requests { flakySafely(timeoutMs = 800) { click() } }
-                    TransferTime { flakySafely(timeoutMs = 800) { swipeUp() } }
-                    transfer { flakySafely(timeoutMs = 800) { swipeUp() } }
+                    Screen.idle(DELAY_BIG)
+                    swRequests { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeLeft() } }
+                    Requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
+                    TransferTime { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
+                    transfer { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
                     flexboxTransportTypes { isVisible() }
                     topCommunicationButtons { isVisible() }
                 }
@@ -383,7 +385,7 @@ class NewSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Onboarding {
                     compose {
                         or(btnClose) { click() }
@@ -422,7 +424,7 @@ class NewSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Onboarding {
                     compose {
                         or(btnClose) { click() }
@@ -447,7 +449,7 @@ class NewSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(1_000L)
+                Screen.idle(DELAY_BIG)
                 Onboarding {
                     compose {
                         or(btnClose) { click() }
@@ -471,5 +473,11 @@ class NewSmokeSuite : TestCase() {
                 }
             }
         }
+    }
+
+    companion object {
+        const val DELAY_SMALL = 500L
+        const val DELAY_MEDIUM = 800L
+        const val DELAY_BIG = 1000L
     }
 }
