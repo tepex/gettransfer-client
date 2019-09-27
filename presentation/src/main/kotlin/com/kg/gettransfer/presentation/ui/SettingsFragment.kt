@@ -24,10 +24,10 @@ import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
-import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragmentDirections
 import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.sys.presentation.EndpointModel
+import kotlinx.android.synthetic.main.activity_main_navigate.*
 
 import java.util.Locale
 
@@ -204,8 +204,8 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
         findNavController().navigate(SettingsFragmentDirections.goToSelectLanguage())
     }
 
-    override fun showMainItem() {
-
+    override fun showOrderItem() {
+        (activity as MainNavigateActivity).bottom_nav.selectedItemId = R.id.nav_order
     }
 
     companion object {

@@ -31,5 +31,5 @@ interface SettingsView : BaseView {
     fun hideBalance()
     fun setCreditLimit(limit: String?)
     fun hideCreditLimit()
-    fun showMainItem()
+    fun showOrderItem()
 }

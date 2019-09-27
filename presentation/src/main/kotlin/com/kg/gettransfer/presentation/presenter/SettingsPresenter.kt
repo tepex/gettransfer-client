@@ -104,7 +104,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     }
 
     override fun onCreateTransferClick() {
-        viewState.showMainItem()
+        viewState.showOrderItem()
     }
 
     private fun initGeneralSettings() = worker.main.launch {
