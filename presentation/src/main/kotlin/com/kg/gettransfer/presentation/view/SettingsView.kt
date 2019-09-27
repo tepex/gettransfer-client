@@ -2,10 +2,11 @@ package com.kg.gettransfer.presentation.view
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.kg.gettransfer.domain.model.Profile
 
+import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.sys.presentation.EndpointModel
 
+@Suppress("TooManyFunctions")
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface SettingsView : BaseView {
     fun initGeneralSettingsLayout()
@@ -31,4 +32,5 @@ interface SettingsView : BaseView {
     fun hideBalance()
     fun setCreditLimit(limit: String?)
     fun hideCreditLimit()
+    fun showOrderItem()
 }

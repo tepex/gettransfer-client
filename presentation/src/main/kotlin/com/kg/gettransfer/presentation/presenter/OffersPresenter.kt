@@ -161,7 +161,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     override fun onBackCommandClick() {
         if (isViewRoot) {
-            router.newRootScreen(Screens.MainPassenger(true)).also { isViewRoot = false }
+            router.newRootScreen(Screens.MainPassenger()).also { isViewRoot = false }
         } else {
             super.onBackCommandClick()
         }

@@ -27,6 +27,7 @@ import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.view.SettingsView
 
 import com.kg.gettransfer.sys.presentation.EndpointModel
+import kotlinx.android.synthetic.main.activity_main_navigate.*
 
 import java.util.Locale
 
@@ -201,6 +202,10 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
 
     override fun showLanguageChooser() {
         findNavController().navigate(SettingsFragmentDirections.goToSelectLanguage())
+    }
+
+    override fun showOrderItem() {
+        (activity as MainNavigateActivity).bottom_nav.selectedItemId = R.id.nav_order
     }
 
     companion object {

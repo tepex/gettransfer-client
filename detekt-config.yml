@@ -532,6 +532,7 @@ style:
         com.kg.gettransfer.domain.interactor.*,
         com.kg.gettransfer.domain.model.*,
         com.kg.gettransfer.presentation.screenelements.*,
+        com.kg.gettransfer.presentation.ui.*,
         com.kg.gettransfer.remote.model.*,
         com.kg.gettransfer.sys.domain.*,
         io.mockk.*,
