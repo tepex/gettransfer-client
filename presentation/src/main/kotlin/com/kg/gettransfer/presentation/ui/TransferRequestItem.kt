@@ -108,7 +108,7 @@ class TransferRequestItem @JvmOverloads constructor(
         tvFrom.text = item.from
         if (item.to != null) {
             tvTo.text = item.to
-            tvDistance.text = SystemUtils.formatDistance(context, item.distance, true)
+            tvDistance.text = SystemUtils.formatDistance(context, item.distance, false)
             changeViewForHourlyTransfer(false)
             item.dateTimeReturn?.let {
                 ivReturnIcon.isVisible = true
