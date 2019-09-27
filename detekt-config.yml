@@ -539,4 +539,5 @@ style:
         kotlinx.coroutines.*,
         org.hamcrest.*,
         org.hamcrest.Matchers.*,
-        retrofit2.http.*"
+        retrofit2.http.*,
+        presentation.screenelements.*"
