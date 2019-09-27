@@ -41,10 +41,10 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
         /* Check PUSH notification */
         viewState.checkLaunchType()
         worker.main.launch {
-             val result = configsManager.coldStart(worker.backgroundScope)
-             // check result for network error
+            val result = configsManager.coldStart(worker.backgroundScope)
+            // check result for network error
 
-             val needUpdateApp = withContext(worker.bg) {
+            val needUpdateApp = withContext(worker.bg) {
                 isNeedUpdateApp(IsNeedUpdateAppInteractor.FIELD_UPDATE_REQUIRED, BuildConfig.VERSION_CODE)
             }
             if (needUpdateApp) viewState.onNeedAppUpdateInfo() else startApp()
