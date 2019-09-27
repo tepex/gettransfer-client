@@ -25,7 +25,7 @@ internal object SystemUtils : KoinComponent {
         return if (withDistanceText) {
             context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $distance ").plus(sessionInteractor.distanceUnit.name)
         } else {
-            distance.toString().plus(" ${sessionInteractor.distanceUnit.name}")
+            distance.toString().plus("${sessionInteractor.distanceUnit.name}")
         }
     }
 

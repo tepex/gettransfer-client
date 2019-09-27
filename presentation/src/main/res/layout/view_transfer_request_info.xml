@@ -99,17 +99,16 @@
                     android:id="@+id/tvDistance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/sf_pro_text_regular"
                     android:textColor="@color/color_gtr_green"
                     android:textSize="@dimen/view_transfer_info_small_text_size"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginBottom="14dp"
-                    app:layout_constraintEnd_toEndOf="@+id/tvFrom"
-                    app:layout_constraintStart_toEndOf="@+id/fl_bottom_point_view"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTo"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    tools:text="13,2 км"/>
+                    app:layout_constraintEnd_toEndOf="@+id/tvFrom"
+                    app:layout_constraintStart_toStartOf="@+id/tvTo"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTo"
+                    tools:text="13,2 км" />
 
                 <TextView
                     android:id="@+id/tvMarkerFrom"
