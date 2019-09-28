@@ -29,7 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/view"
         android:layout_marginTop="8dp"
-        android:background="@color/colorWhite"
         android:clipToPadding="false"
         android:orientation="horizontal"
         android:paddingBottom="4dp" />
