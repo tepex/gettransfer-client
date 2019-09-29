@@ -12,7 +12,7 @@ import org.koin.core.get
 
 class GeoRemoteImpl : GeoRemote {
 
-    private val core           = get<ApiCore>()
+    private val core = get<ApiCore>()
 
     override suspend fun getMyLocationByIp(): LocationEntity {
         val response: LocationModel = core.tryTwice { core.ipApi.getMyLocation() }

@@ -170,7 +170,7 @@ class ApiCore : KoinComponent {
 
     companion object {
         private const val IP_API_SCHEME = "https://"
-        private const val IP_API_HOST_NAME = "ipapi.co"
+        private const val IP_API_HOST_NAME = "ifconfig.co"
 
         private val ERROR_PATTERN = Regex("^<h1>(.+)</h1>$")
 
