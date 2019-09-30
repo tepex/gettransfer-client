@@ -138,7 +138,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
                 if (!balance.isNullOrEmpty()) viewState.setBalance(balance) else viewState.hideBalance()
 
                 val creditLimit = partner?.creditLimit?.default
-                if (!creditLimit.isNullOrEmpty()) viewState.setCreditLimit(balance) else viewState.hideCreditLimit()
+                if (!creditLimit.isNullOrEmpty()) viewState.setCreditLimit(creditLimit) else viewState.hideCreditLimit()
             } else {
                 hideBalanceAndCreditLimit()
             }
