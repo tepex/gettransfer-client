@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             app:chipSpacing="8dp"
-            app:singleLine="true" />
+            app:singleLine="true"
+            style="@style/Chip.Choice"/>
     </HorizontalScrollView>
 </RelativeLayout>

@@ -7,10 +7,10 @@ import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipDrawable
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.presenter.CommentPresenter
@@ -49,7 +49,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onCommentLister = (activity as? OnCommentListener)
+        onCommentLister = activity as? OnCommentListener
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,15 +81,16 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
             comment = etComment.text.toString().trim()
             onCommentLister?.onSetComment(comment)
             sendCommentToTargetFragment(comment)
-            setBottomSheetState(this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
+            view?.let { setBottomSheetState(it, BottomSheetBehavior.STATE_HIDDEN) }
             hideKeyboard()
         }
-        etComment.afterTextChanged {
-            comment = it.trim()
+        etComment.afterTextChanged { text ->
+            comment = text.trim()
             checkHints()
         }
     }
 
+    @Suppress("UnsafeCast")
     private fun checkHints() {
         for (i in 0 until chipGroup.childCount) {
             val chip = chipGroup.getChildAt(i) as Chip
@@ -125,12 +126,11 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
             for (hint in hints) {
 
                 val chip = Chip(chipGroup.context)
-                val drawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.Chip_Choice)
-                chip.setChipDrawable(drawable)
+                chip.chipBackgroundColor = ContextCompat.getColorStateList(requireContext(), R.color.bg_chip_color)
+                chip.rippleColor = ContextCompat.getColorStateList(requireContext(), R.color.bg_ripple_chip_color)
                 chip.text = hint
                 chip.isClickable = true
                 chip.isCheckable = true
-                chip.isCheckedIconVisible = false
                 chip.setTextAppearance(R.style.ChipTextAppearance)
                 chip.setChipMinHeightResource(R.dimen.comment_hint_height)
                 chip.setOnClickListener { hintClick(chip.text.toString(), it) }
