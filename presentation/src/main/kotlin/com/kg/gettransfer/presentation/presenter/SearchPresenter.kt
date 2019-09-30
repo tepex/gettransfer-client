@@ -40,17 +40,17 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
 
     internal var isTo = false
 
-    fun init() {
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
         viewState.setAddressFrom(orderInteractor.from?.cityPoint?.name ?: "", true, !isTo)
         if (orderInteractor.hourlyDuration == null) {
             viewState.setAddressTo(orderInteractor.to?.cityPoint?.name ?: "", true, isTo)
         } else {
             viewState.changeViewToHourlyDuration(orderInteractor.hourlyDuration)
         }
-        onSearchFieldEmpty()
     }
 
-    fun onSearchFieldEmpty() {
+    fun initSuggestedAddresses() {
         worker.main.launch {
             viewState.setSuggestedAddresses(getPreferences().getModel().addressHistory)
         }
