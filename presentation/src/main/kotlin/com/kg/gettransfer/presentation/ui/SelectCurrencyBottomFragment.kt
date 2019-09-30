@@ -3,19 +3,21 @@ package com.kg.gettransfer.presentation.ui
 import android.animation.Animator
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 
 import androidx.annotation.CallSuper
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.core.content.ContextCompat
-
-import android.view.View
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 
 import com.kg.gettransfer.presentation.adapter.CurrenciesListAdapter
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -26,6 +28,7 @@ import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 
 import kotlinx.android.synthetic.main.layout_select_currency.*
 
+@Suppress("TooManyFunctions")
 open class SelectCurrencyBottomFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
     private lateinit var adapterPopular: CurrenciesListAdapter
@@ -74,12 +77,11 @@ open class SelectCurrencyBottomFragment : BaseBottomSheetFragment(), SelectCurre
     /**
      * Update UI after finished start fragment
      */
-    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
-        return FragmentUtils.onCreateAnimation(requireContext(), enter) {
+    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int) =
+        FragmentUtils.onCreateAnimation(requireContext(), enter) {
             adapterAll.notifyDataSetChanged()
             adapterPopular.notifyDataSetChanged()
         }
-    }
 
     override fun setCurrencies(all: List<CurrencyModel>, selected: CurrencyModel) {
         adapterAll.setNewSelectedCurrency(selected)
@@ -91,9 +93,19 @@ open class SelectCurrencyBottomFragment : BaseBottomSheetFragment(), SelectCurre
         adapterPopular.update(popular)
     }
 
-    override fun sendEvent(currency: CurrencyModel) {
+    override fun currencyChanged(currency: CurrencyModel) {
         listener?.currencyChanged(currency)
     }
+
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
+
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
+
+    override fun setError(e: ApiException) {}
+
+    override fun setError(e: DatabaseException) {}
+
+    override fun setTransferNotFoundError(transferId: Long) {}
 
     @CallSuper
     override fun onDestroyView() {
