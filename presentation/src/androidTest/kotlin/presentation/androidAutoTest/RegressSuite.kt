@@ -15,7 +15,7 @@ import org.junit.Test
 import presentation.screenelements.*
 import presentation.screenelements.MainScreen
 
-class NewRegressSuite : TestCase() {
+class RegressSuite : TestCase() {
 
     @Rule
     @JvmField
