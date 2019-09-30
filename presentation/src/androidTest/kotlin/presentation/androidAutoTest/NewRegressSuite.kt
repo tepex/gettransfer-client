@@ -65,7 +65,7 @@ class NewRegressSuite : TestCase() {
                 }
             }
             step("OpenRequestInfo") {
-                BookNow{
+                BookNow {
                     request_info { click() }
                 }
             }
@@ -124,13 +124,62 @@ class NewRegressSuite : TestCase() {
             step("CreateTransfer") {
                 TransferDetails {
                     Screen.idle()
-                    typeCar { click() } //Выпилить
+                    typeCar { click() }                       // Выпилить после фикса
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
                     baseFun.goSwitchAgreement()
+                }
+            }
+        }
+    }
+
+    @Test
+    fun testChat() {
+        before {
+        }.after {
+        }.run {
+            step("GoStart") {
+                Screen.idle(DELAY_BIG)
+                Onboarding {
+                    compose {
+                        or(btnClose) { click() }
+                        or(gtrLogo) { click() }
+                    }
+                    val baseFun = BaseFun
+                    baseFun.goTransferLater()
+                }
+            }
+            step("GoSettings") {
+                NavBar {
+                    settings { click() }
+                }
+            }
+            step("GoLogin") {
+                val baseFun = BaseFun
+                baseFun.goPassLogin()
+            }
+            step("GoTrips") {
+                NavBar {
+                    trips { click() }
+                }
+            }
+            step("OpenTransfer") {
+                Trips {
+                    RequestNumber { click() }
+                }
+            }
+            step("OpenChat") {
+                Trips {
+                    Chat { click() }
+                }
+            }
+            step("SendMessage") {
+                Chat {
+                    message { typeText("Test-Test") }
+                    Send { click() }
                 }
             }
         }

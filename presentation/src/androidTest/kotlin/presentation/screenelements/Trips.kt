@@ -29,4 +29,14 @@ object Trips : Screen<Trips>() {
         withText("Repeat\ntransfer")
         isDisplayed()
     }
+    val RequestNumber = KView {
+        withId(R.id.tvTransferRequestNumber)
+        withText("Transfer request #8789")
+        isDisplayed()
+    }
+    val Chat = KView {
+        withId(R.id.btnName)
+        withText("Chat")
+        isDisplayed()
+    }
 }

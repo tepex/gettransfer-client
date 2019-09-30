@@ -87,13 +87,6 @@ object BaseFun {
         }
     }
 
-    fun unLoginGo() {
-        onView(withId(R.id.ivClose)).perform(click())
-        onView(withId(R.id.nav_settings)).perform(click())
-        onView(withId(R.id.titleText)).perform(click())
-        onView(withId(R.id.btnLogout)).perform(click())
-    }
-
     fun chooseData() {
         onView(withId(R.id.transfer_date_time_field)).perform(click())
         onView(withClassName(equalTo(DatePicker::class.java.name))).perform(PickerActions.setDate(2020, 10, 9))
