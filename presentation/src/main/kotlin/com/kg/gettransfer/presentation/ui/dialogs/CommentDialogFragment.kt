@@ -128,6 +128,8 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
                 chip.chipBackgroundColor = ContextCompat.getColorStateList(requireContext(), R.color.bg_chip_color)
                 chip.rippleColor = ContextCompat.getColorStateList(requireContext(), R.color.bg_ripple_chip_color)
                 chip.text = hint
+                chip.isClickable = true
+                chip.isCheckable = true
                 chip.setTextAppearance(R.style.ChipTextAppearance)
                 chip.setChipMinHeightResource(R.dimen.comment_hint_height)
                 chip.setOnClickListener { hintClick(chip.text.toString(), it) }

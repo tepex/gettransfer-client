@@ -148,7 +148,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val prices = utils.asyncAwait {
+            val routeInfo = utils.asyncAwait {
                 @Suppress("UnsafeCallOnNullableType")
                 orderInteractor.getRouteInfoHourlyTransfer(
                     RouteInfoHourlyRequest(
@@ -158,7 +158,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                         dateTime
                     )
                 )
-            }.model.prices
+            }.model
+            val prices = routeInfo.prices
+            hintsToComments = routeInfo.hintsToComments
             setTransportTypePrices(prices)
             viewState.blockInterface(false)
         }
