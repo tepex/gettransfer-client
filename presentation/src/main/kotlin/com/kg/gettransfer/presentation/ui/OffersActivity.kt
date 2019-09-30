@@ -79,6 +79,8 @@ class OffersActivity : BaseActivity(), OffersView {
 
     override fun getPresenter(): OffersPresenter = presenter
 
+    private lateinit var offersAdapter: OffersAdapter
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,6 +151,8 @@ class OffersActivity : BaseActivity(), OffersView {
     private fun initAdapter() {
         rvOffers.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         swipe_rv_offers_container.setOnRefreshListener { presenter.checkNewOffers(true) }
+        offersAdapter = OffersAdapter(presenter::onSelectOfferClicked)
+        rvOffers.adapter = offersAdapter
     }
 
     override fun setOffers(offers: List<OfferItemModel>) {
@@ -171,7 +175,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun setupAdapter(offers: List<OfferItemModel>) {
-        rvOffers.adapter = OffersAdapter(offers.toMutableList(), presenter::onSelectOfferClicked)
+        offersAdapter.update(offers)
     }
 
     override fun setBannersVisible(hasOffers: Boolean) {
