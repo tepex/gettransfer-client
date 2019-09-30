@@ -3,6 +3,8 @@ package presentation.screenelements
 import com.agoda.kakao.common.views.KSwipeView
 import com.agoda.kakao.common.views.KView
 import com.agoda.kakao.screen.Screen
+import com.agoda.kakao.text.KButton
+import com.agoda.kakao.text.KTextView
 import com.kg.gettransfer.R
 
 object Trips : Screen<Trips>() {
@@ -17,4 +19,14 @@ object Trips : Screen<Trips>() {
     val transfer = KSwipeView { withId(R.id.transfer_details_main) }
     val flexboxTransportTypes  = KView { withId(R.id.flexboxTransportTypes) }
     val topCommunicationButtons  = KView { withId(R.id.topCommunicationButtons) }
+    val Cancel = KButton {
+        withId(R.id.btnName)
+        withText("Cancel\nrequest")
+        isDisplayed()
+    }
+    val Repeat = KButton {
+        withId(R.id.btnName)
+        withText("Repeat\ntransfer")
+        isDisplayed()
+    }
 }
