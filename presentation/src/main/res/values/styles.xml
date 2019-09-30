@@ -247,9 +247,8 @@
     </style>
 
     <style name="Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="android:textColor">@color/color_gtr_grey</item>
-        <item name="chipBackgroundColor">@color/color_gtr_light_grey</item>
-        <item name="rippleColor">@color/color_gtr_light_grey</item>
-
+        <item name="android:clickable">true</item>
+        <item name="android:checkable">true</item>
+        <item name="checkedIconVisible">false</item>
     </style>
 </resources>
