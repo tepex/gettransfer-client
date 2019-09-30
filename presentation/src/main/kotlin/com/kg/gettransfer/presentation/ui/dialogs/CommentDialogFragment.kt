@@ -49,7 +49,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onCommentLister = (activity as? OnCommentListener)
+        onCommentLister = activity as? OnCommentListener
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,15 +81,16 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
             comment = etComment.text.toString().trim()
             onCommentLister?.onSetComment(comment)
             sendCommentToTargetFragment(comment)
-            setBottomSheetState(this@CommentDialogFragment.view!!, BottomSheetBehavior.STATE_HIDDEN)
+            view?.let { setBottomSheetState(it, BottomSheetBehavior.STATE_HIDDEN) }
             hideKeyboard()
         }
-        etComment.afterTextChanged {
-            comment = it.trim()
+        etComment.afterTextChanged { text ->
+            comment = text.trim()
             checkHints()
         }
     }
 
+    @Suppress("UnsafeCast")
     private fun checkHints() {
         for (i in 0 until chipGroup.childCount) {
             val chip = chipGroup.getChildAt(i) as Chip
