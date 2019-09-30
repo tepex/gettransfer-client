@@ -24,9 +24,7 @@ class SelectCurrencyFragment : SelectCurrencyBottomFragment() {
         toolbar.toolbar_title.text = getString(R.string.LNG_CURRENCIES_CHOOSE)
     }
 
-    override fun sendEvent(currency: CurrencyModel) {
-        super.sendEvent(currency)
-        // Hide fragment after changed value
+    override fun currencyChanged(currency: CurrencyModel) {
         findNavController().navigateUp()
     }
 }

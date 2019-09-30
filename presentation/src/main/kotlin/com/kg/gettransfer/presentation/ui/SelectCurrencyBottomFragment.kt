@@ -16,6 +16,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 
 import com.kg.gettransfer.presentation.adapter.CurrenciesListAdapter
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -91,9 +93,19 @@ open class SelectCurrencyBottomFragment : BaseBottomSheetFragment(), SelectCurre
         adapterPopular.update(popular)
     }
 
-    override fun sendEvent(currency: CurrencyModel) {
+    override fun currencyChanged(currency: CurrencyModel) {
         listener?.currencyChanged(currency)
     }
+
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
+
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
+
+    override fun setError(e: ApiException) {}
+
+    override fun setError(e: DatabaseException) {}
+
+    override fun setTransferNotFoundError(transferId: Long) {}
 
     @CallSuper
     override fun onDestroyView() {

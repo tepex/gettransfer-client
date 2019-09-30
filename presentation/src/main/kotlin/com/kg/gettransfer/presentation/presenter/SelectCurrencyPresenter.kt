@@ -1,16 +1,15 @@
 package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 
 import com.kg.gettransfer.core.presentation.WorkerManager
-import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.model.Currency
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
 import com.kg.gettransfer.sys.presentation.ConfigsManager
+import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,13 +19,12 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 @InjectViewState
-class SelectCurrencyPresenter : MvpPresenter<SelectCurrencyView>(), KoinComponent {
+class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinComponent {
 
     private val worker: WorkerManager by inject { parametersOf("SelectCurrencyPresenter") }
-    private val sessionInteractor: SessionInteractor by inject()
     private val configsManager: ConfigsManager by inject()
 
-    override fun attachView(view: SelectCurrencyView?) {
+    override fun attachView(view: SelectCurrencyView) {
         super.attachView(view)
         worker.main.launch {
             val selectedCurrency = withContext(worker.bg) { sessionInteractor.currency.map() }
@@ -40,7 +38,9 @@ class SelectCurrencyPresenter : MvpPresenter<SelectCurrencyView>(), KoinComponen
 
     fun changeCurrency(selected: CurrencyModel) {
         sessionInteractor.currency = selected.delegate
-        viewState.sendEvent(selected)
+        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, selected.code)
+        saveGeneralSettings()
+        viewState.currencyChanged(selected)
     }
 
     override fun onDestroy() {

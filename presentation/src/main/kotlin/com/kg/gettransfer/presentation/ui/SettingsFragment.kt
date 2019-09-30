@@ -19,8 +19,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Profile
 
 import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
@@ -41,8 +39,7 @@ import timber.log.Timber
 import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
 
 @Suppress("TooManyFunctions")
-class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
-        CurrencyChangedListener {
+class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
@@ -185,10 +182,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
 
     override fun setDistanceUnit(inMiles: Boolean) {
         settingsDistanceUnit.switch_button.isChecked = inMiles
-    }
-
-    override fun currencyChanged(currency: CurrencyModel) {
-        presenter.currencyChanged(currency)
     }
 
     override fun hideSomeDividers() {

@@ -12,7 +12,6 @@ import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 
 import com.kg.gettransfer.domain.model.DistanceUnit
 
-import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.Screens
@@ -160,12 +159,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.setEndpoints(endpoints)
         getPreferences().getModel().endpoint?.let { viewState.setEndpoint(it.map()) }
         viewState.showDebugMenu()
-    }
-
-    fun currencyChanged(currency: CurrencyModel) {
-        saveGeneralSettings()
-        viewState.setCurrency(currency.name)
-        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, currency.code)
     }
 
     fun onDistanceUnitSwitched(isChecked: Boolean) {
