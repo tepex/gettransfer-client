@@ -279,11 +279,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
         if (transfer.to != null) {
             transfer_details_main.tv_distance.text = SystemUtils.formatDistance(this, transfer.distance, false)
-            transfer_details_main.tv_time.text = Utils.durationToString(this, Utils.convertDuration(transfer.time ?: 0))
             transfer_details_main.tv_distance_dash.isVisible = false
-        } else {
-            transfer_details_main.tv_time.text = HourlyValuesHelper.getValue(transfer.duration ?: 0, this)
         }
+
+        transfer_details_main.tv_time.text = transfer.duration?.let {
+            HourlyValuesHelper.getValue(it, this)
+        } ?: transfer.time.let {
+            Utils.durationToString(this, Utils.convertDuration(it ?: 0))
+        }
+
         setPrices(transfer)
         setBookNow(transfer)
     }
