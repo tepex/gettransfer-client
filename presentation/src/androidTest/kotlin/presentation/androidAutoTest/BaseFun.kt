@@ -148,4 +148,8 @@ object BaseFun {
 
         onView(isRoot()).perform(waitId(R.id.flexboxTransportTypes, TimeUnit.SECONDS.toMillis(15)))
     }
+
+    fun okCancel() {
+        onView(allOf(withId(android.R.id.button1), withText("YES"))).perform(click())
+    }
 }
