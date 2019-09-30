@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.arellomobile.mvp.MvpAppCompatFragment
 
@@ -30,6 +31,7 @@ import com.kg.gettransfer.presentation.presenter.RequestsCategoryPresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
+import com.kg.gettransfer.utilities.PaginationHelper
 
 import kotlinx.android.synthetic.main.fragment_requests.*
 
@@ -68,6 +70,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         setTitleFragmentEmptyRequestsList()
         rvRequests.adapter = RequestsRVAdapter(presenter.transferType, onItemClickListener, onCallClickListener, onChatClickListener)
         initClickListeners()
+        initScrollListener()
     }
 
     private val onItemClickListener: ItemClickListener = { presenter.openTransferDetails(it.id, it.status, it.paidPercentage, it.pendingPaymentId) }
@@ -92,6 +95,27 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         btn_forward_main.setOnClickListener {
             presenter.onGetBookClicked()
         }
+    }
+
+    private fun initScrollListener() {
+        val layoutManager = rvRequests.layoutManager as LinearLayoutManager
+
+        rvRequests.addOnScrollListener(object : PaginationHelper(layoutManager) {
+
+            override fun loadMore() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun isLastPage(): Boolean {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun isLoading(): Boolean {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
+
     }
 
     override fun onDestroy() {
