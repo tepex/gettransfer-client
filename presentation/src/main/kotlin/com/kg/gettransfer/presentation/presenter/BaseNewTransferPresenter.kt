@@ -57,9 +57,6 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
 
     fun updateCurrentLocation(isFromField: Boolean) {
         updateCurrentLocationAsync(isFromField)
-        worker.main.launch {
-            withContext(worker.bg) { logIpapiRequest() }
-        }
     }
 
     open fun updateCurrentLocationAsync(isFromField: Boolean) {
@@ -81,7 +78,7 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
                         }
                     } else {
                         val result = geoInteractor.getMyLocationByIp()
-                        logIpapiRequest()
+                        logAddressByIpRequest()
                         if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
                             withContext<Unit>(worker.main.coroutineContext) { setLocation(isFromField, result.model) }
                         } else {
@@ -133,7 +130,7 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
         return latDiff < DELTA_MAX && lngDiff < DELTA_MAX
     }
 
-    private fun logIpapiRequest() = analytics.logSingleEvent(Analytics.EVENT_IPAPI_REQUEST)
+    private fun logAddressByIpRequest() = analytics.logSingleEvent(Analytics.EVENT_IPAPI_REQUEST)
 
     override fun onDestroy() {
         worker.cancel()
