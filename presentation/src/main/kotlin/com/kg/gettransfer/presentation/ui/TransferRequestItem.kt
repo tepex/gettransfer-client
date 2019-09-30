@@ -112,20 +112,22 @@ class TransferRequestItem @JvmOverloads constructor(
             tvFrom.setTextColor(this)
             tvTo.setTextColor(this)
         }
+
         tvFrom.text = item.from
+        tvOrderDateTime.text = SystemUtils.formatDateTime(item.dateTime)
+
         if (item.to != null) {
             tvTo.text = item.to
             tvDistance.text = SystemUtils.formatDistance(context, item.distance, false)
-            changeViewForHourlyTransfer(false)
-            item.dateTimeReturn?.run {
-                ivReturnIcon.isVisible = true
-                ivMarkersLine.isVisible = false
-            }
-        } else if (item.duration != null) {
-            changeViewForHourlyTransfer(true)
+        } else {
+            tvTo.text = ""
+            tvDistance.text = ""
+        }
+
+        if (item.duration != null) {
             tv_duration.text = HourlyValuesHelper.getValue(item.duration, context)
         }
-        tvOrderDateTime.text = SystemUtils.formatDateTime(item.dateTime)
+        changeViewForHourlyTransfer(item.duration != null)
 
         (item.dateTimeReturn == null).also { visible ->
             ivReturnIcon.isVisible = !visible
@@ -136,10 +138,6 @@ class TransferRequestItem @JvmOverloads constructor(
     private fun changeViewForHourlyTransfer(isHourlyTransfer: Boolean) {
         rl_hourly_info.isVisible = isHourlyTransfer
         tvMarkerTo.isVisible = !isHourlyTransfer
-        if (isHourlyTransfer) {
-            tvTo.text = ""
-            tvDistance.text = ""
-        }
     }
 
     fun showEvents(item: TransferModel, offerInfoShowed: Boolean, eventsCount: Int) {
