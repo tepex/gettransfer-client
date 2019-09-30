@@ -58,7 +58,7 @@ class DistanceValueCheckTest : TestCase(
                 }
             }
             SettingsScreen {
-                profileCell { click() }
+                tvProfileCell { click() }
             }
             step("Signed in account ") {
                 ProfileScreen {
@@ -67,7 +67,7 @@ class DistanceValueCheckTest : TestCase(
                         or(email) { typeText("mygtracc1@gmail.com") }
                     }
                     compose {
-                        or(pwd) { typeText("PassRR11") }
+                        or(tvPwd) { typeText("PassRR11") }
                         or(logoutBtn) { isVisible() }
                     }
                     compose {
@@ -83,7 +83,7 @@ class DistanceValueCheckTest : TestCase(
             Screen.idle(Delay.small)
             step("Choose KM") {
                 SettingsScreen {
-                    distanceSwitcher {
+                    tvDistanceSwitcher {
                         setChecked(checked = true)
                         click()
                     }
@@ -144,7 +144,7 @@ class DistanceValueCheckTest : TestCase(
             }
             step("Choose MILES") {
                 SettingsScreen {
-                    distanceSwitcher {
+                    tvDistanceSwitcher {
                         setChecked(checked = false)
                         click()
                     }

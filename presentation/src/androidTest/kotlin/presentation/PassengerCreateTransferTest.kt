@@ -53,7 +53,7 @@ class PassengerCreateTransferTest : TestCase() {
                 }
             }
             SettingsScreen {
-                profileCell {
+                tvProfileCell {
                     click()
                 }
             }
@@ -63,7 +63,7 @@ class PassengerCreateTransferTest : TestCase() {
                     or(email) { typeText("mygtracc1@gmail.com") }
                 }
                 compose {
-                    or(pwd) { typeText("PassRR11") }
+                    or(tvPwd) { typeText("PassRR11") }
                     or(logoutBtn) { isVisible() }
                 }
                 compose {
