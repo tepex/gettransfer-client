@@ -77,11 +77,21 @@ class RequestsCategoryPresenter(
         sessionInteractor.removeAccountChangedListener(this)
     }
 
-    fun getTransfers() {
+    fun getTransfers(page: Int = 1) {
+        val isBusinessAccount = accountManager.remoteAccount.isBusinessAccount
+        val role = if (isBusinessAccount) Transfer.Role.PARTNER.name
+        else Transfer.Role.PASSENGER.name
+
         worker.main.launch {
             transfers = when (transferType) {
-                TRANSFER_ACTIVE  -> withContext(worker.bg) { transferInteractor.getTransfersActive()  }.model
-                TRANSFER_ARCHIVE -> withContext(worker.bg) { transferInteractor.getTransfersArchive() }.model
+                TRANSFER_ACTIVE  -> withContext(worker.bg) {
+                    if (isBusinessAccount) transferInteractor.getAllTransfers(role, "active", page)
+                    else transferInteractor.getTransfersActive()
+                }.model
+                TRANSFER_ARCHIVE -> withContext(worker.bg) {
+                    if (isBusinessAccount) transferInteractor.getAllTransfers(role, "archive", page)
+                    else transferInteractor.getTransfersArchive()
+                }.model
                 else             -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
             }.sortedByDescending { it.dateToLocal }
             if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
@@ -113,8 +123,8 @@ class RequestsCategoryPresenter(
                                 transferModel
                             }
                         }
-                    }?.also { viewList ->
-                        viewState.updateTransfers(viewList)
+                    }?.also { transfersList ->
+                        viewState.updateTransfers(transfersList)
                         viewState.blockInterface(false)
                         updateEventsCount()
                     }

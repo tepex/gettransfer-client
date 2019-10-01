@@ -13,7 +13,10 @@ interface TransferRemote : KoinComponent {
 
     suspend fun getTransfer(id: Long): TransferEntity
 
-    suspend fun getAllTransfers(): List<TransferEntity>
+    suspend fun getAllTransfers(role: String,
+                                status: String,
+                                page: Int,
+                                perPage: Int): List<TransferEntity>
 
     suspend fun getTransfersArchive(): List<TransferEntity>
 

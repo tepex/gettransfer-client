@@ -196,9 +196,12 @@ class TransferRepositoryImpl(
         return eventsCount
     }
 
-    override suspend fun getAllTransfers(): Result<List<Transfer>> {
+    override suspend fun getAllTransfers(role: String,
+                                         status: String,
+                                         page: Int,
+                                         perPage: Int): Result<List<Transfer>> {
         val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).getAllTransfers()
+            factory.retrieveDataStore(fromRemote).getAllTransfers(role, status, page, perPage)
         }
         if (result.error == null) {
             result.entity?.apply {

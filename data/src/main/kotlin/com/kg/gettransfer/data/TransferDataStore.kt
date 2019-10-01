@@ -2,6 +2,7 @@ package com.kg.gettransfer.data
 
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
+import com.kg.gettransfer.domain.model.Transfer
 import org.koin.core.KoinComponent
 import java.io.InputStream
 
@@ -13,7 +14,10 @@ interface TransferDataStore : KoinComponent {
 
     suspend fun getTransfer(id: Long): TransferEntity?
 
-    suspend fun getAllTransfers(): List<TransferEntity>
+    suspend fun getAllTransfers(role: String = Transfer.Role.PASSENGER.name,
+                                status: String = "active",
+                                page: Int = 1,
+                                perPage: Int = 10): List<TransferEntity>
 
     suspend fun getTransfersArchive(): List<TransferEntity>
 

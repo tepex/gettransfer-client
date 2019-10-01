@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.arellomobile.mvp.MvpAppCompatFragment
 
@@ -31,7 +32,7 @@ import com.kg.gettransfer.presentation.presenter.RequestsCategoryPresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
-import com.kg.gettransfer.utilities.PaginationHelper
+import com.kg.gettransfer.utilities.EndlessRecyclerViewScrollListener
 
 import kotlinx.android.synthetic.main.fragment_requests.*
 
@@ -51,6 +52,8 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     private val rvAdapter: RequestsRVAdapter
     get() = rvRequests.adapter as RequestsRVAdapter
+
+    private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
     companion object {
         @JvmField val TRANSFER_TYPE_ARG = "TRANSFER_TYPE_ARG"
@@ -89,6 +92,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     private fun initClickListeners() {
         swipe_container.setOnRefreshListener {
+            scrollListener.resetState()
             presenter.getTransfers()
         }
 
@@ -100,22 +104,18 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     private fun initScrollListener() {
         val layoutManager = rvRequests.layoutManager as LinearLayoutManager
 
-        rvRequests.addOnScrollListener(object : PaginationHelper(layoutManager) {
+        scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
-            override fun loadMore() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
+                presenter.getTransfers(page)
             }
+        }
+        rvRequests.addOnScrollListener(scrollListener)
+    }
 
-            override fun isLastPage(): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun isLoading(): Boolean {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-        })
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        rvRequests.removeOnScrollListener(scrollListener)
     }
 
     override fun onDestroy() {
