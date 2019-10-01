@@ -162,6 +162,7 @@ val systemDomain = module {
     single { SetAppEntersInteractor(get()) }
     single { SetDebugMenuShowedInteractor(get()) }
     single { SetEndpointInteractor(get(), get()) }
+    single { SetIpApiKeyInteractor(get()) }
     single { SetFavoriteTransportsInteractor(get()) }
     single { SetFirstLaunchInteractor(get()) }
     single { SetOnboardingShowedInteractor(get()) }
@@ -207,4 +208,9 @@ val endpoints = module {
     }
 }
 
+val ipApiKey = module {
+    single<String>(named(IP_API_KEY)) {androidContext().getString(R.string.ipapi_key)}
+}
+
 const val ENDPOINTS = "endpoints"
+const val IP_API_KEY = "ipapi_key"
