@@ -236,7 +236,11 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/TransferDetailsView.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt"
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt",
+
+        "presentation/src/main/kotlin/com/kg/gettransfer/di/Modules.kt",
+
+        "presentation/src/main/kotlin/sys/presentation/ConfigsManager.kt",
     )
     config = files("detekt-config.yml")
 }

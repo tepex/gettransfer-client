@@ -97,4 +97,5 @@ val systemData = module {
         )
     }
     single<EndpointRepository> { EndpointRepositoryImpl(get<EndpointRemoteDataSource>()) }
+    single<IpApiKeyRepository> { IpApiKeyRepositoryImpl(get<IpApiRemoteDataSource>()) }
 }

@@ -73,6 +73,8 @@ class GTApplication : MultiDexApplication() {
                 domainModule,
 
                 endpoints,
+                ipApiKey,
+
                 systemCache,
                 systemRemote,
                 systemData,
