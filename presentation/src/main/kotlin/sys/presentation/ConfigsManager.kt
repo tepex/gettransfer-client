@@ -65,13 +65,17 @@ class ConfigsManager : KoinComponent {
     }
 
     /** Write preferences into DB */
-    suspend fun apply() {
-    }
+    suspend fun apply() {}
 
     private suspend fun myDelay() {
-        repeat(10) {
-            delay(1000)
-            log.debug("wait ${it+1}")
+        repeat(MY_DELAY_REPEAT_TIMES) { index ->
+            delay(MY_DELAY_MILLIS)
+            log.debug("wait ${index + 1}")
         }
+    }
+
+    companion object {
+        const val MY_DELAY_REPEAT_TIMES = 10
+        const val MY_DELAY_MILLIS = 1000L
     }
 }
