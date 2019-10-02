@@ -78,18 +78,14 @@ class RequestsCategoryPresenter(
     }
 
     fun getTransfers(page: Int = 1) {
-        val isBusinessAccount = accountManager.remoteAccount.isBusinessAccount
-        val role = if (isBusinessAccount) Transfer.Role.PARTNER.name
-        else Transfer.Role.PASSENGER.name
-
         worker.main.launch {
             transfers = when (transferType) {
                 TRANSFER_ACTIVE  -> withContext(worker.bg) {
-                    if (isBusinessAccount) transferInteractor.getAllTransfers(role, "active", page)
+                    if (isBusinessAccount()) transferInteractor.getAllTransfers(getUserRole(), "active", page)
                     else transferInteractor.getTransfersActive()
                 }.model
                 TRANSFER_ARCHIVE -> withContext(worker.bg) {
-                    if (isBusinessAccount) transferInteractor.getAllTransfers(role, "archive", page)
+                    if (isBusinessAccount()) transferInteractor.getAllTransfers(getUserRole(), "archive", page)
                     else transferInteractor.getTransfersArchive()
                 }.model
                 else             -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")

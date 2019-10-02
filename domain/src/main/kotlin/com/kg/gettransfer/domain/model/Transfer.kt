@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain.model
 
 import java.util.Date
+import java.util.Locale
 
 /*
 
@@ -86,7 +87,9 @@ data class Transfer(
     }
 
     enum class Role {
-        PASSENGER, PARTNER, CARRIER, MANAGER
+        PASSENGER, PARTNER, CARRIER, MANAGER;
+
+        override fun toString(): String = name.toLowerCase(Locale.US)
     }
 
     fun isCompletedTransfer() = status == Status.NOT_COMPLETED || status == Status.COMPLETED

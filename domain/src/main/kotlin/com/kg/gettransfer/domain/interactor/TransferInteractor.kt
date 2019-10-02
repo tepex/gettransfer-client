@@ -18,7 +18,7 @@ class TransferInteractor(private val repository: TransferRepository) {
 
     suspend fun setOffersUpdatedDate(id: Long) = repository.setOffersUpdateDate(id)
 
-    suspend fun getAllTransfers(role: String = Transfer.Role.PASSENGER.name,
+    suspend fun getAllTransfers(role: String = Transfer.Role.PASSENGER.toString(),
                                 status: String = "active",
                                 page: Int = 1,
                                 perPage: Int = 10) = repository.getAllTransfers(role, status, page, perPage)
