@@ -54,18 +54,18 @@ class ApiCore : KoinComponent {
             val request = chain.request()
             val urlBuilder = request.url().newBuilder()
             urlBuilder.apply {
-                if (request.url().host() != IPAPI_HOST_NAME) {
+                if (request.url().host() != IP_API_HOST_NAME) {
                     addQueryParameter(PARAM_API_KEY, apiKey)
                     addQueryParameter(PARAM_CURRENCY, sessionRepository.account.currency.code)
                     addQueryParameter(PARAM_LOCALE, sessionRepository.account.locale.language)
                 } else {
-                    addQueryParameter(PARAM_IPAPI_KEY, ipApiKey)
+                    addQueryParameter(PARAM_IP_API_KEY, ipApiKey)
                 }
             }
             val url = urlBuilder.build()
 
             val builder = request.newBuilder().url(url)
-            if (url.encodedPath() != Api.API_ACCESS_TOKEN && url.host() != IPAPI_HOST_NAME) {
+            if (url.encodedPath() != Api.API_ACCESS_TOKEN && url.host() != IP_API_HOST_NAME) {
                 builder.addHeader(Api.HEADER_TOKEN, preferences.accessToken)
             }
             try {
@@ -79,7 +79,7 @@ class ApiCore : KoinComponent {
     }.build()
 
     internal var ipApi = Retrofit.Builder().apply {
-        baseUrl(IPAPI_SCHEME + IPAPI_HOST_NAME)
+        baseUrl(IP_API_SCHEME + IP_API_HOST_NAME)
         callFactory { okHttpClient.newCall(it) }
         addConverterFactory(GsonConverterFactory.create())
     }.build().create(Api::class.java)
@@ -176,9 +176,9 @@ class ApiCore : KoinComponent {
     }
 
     companion object {
-        private const val IPAPI_SCHEME = "https://"
-        private const val IPAPI_HOST_NAME = "ipapi.co"
-        private const val PARAM_IPAPI_KEY  = "key"
+        private const val IP_API_SCHEME = "https://"
+        private const val IP_API_HOST_NAME = "ipapi.co"
+        private const val PARAM_IP_API_KEY  = "key"
 
         private val ERROR_PATTERN = Regex("^<h1>(.+)</h1>$")
 
