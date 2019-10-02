@@ -104,7 +104,6 @@ interface Api {
     @GET(API_TRANSFERS)
     suspend fun getAllTransfers(
             @Query("role") role: String,
-            @Query("status") status: String,
             @Query("page") page: Int,
             @Query("per_page") perPage: Int
     ): ResponseModel<TransfersModel>

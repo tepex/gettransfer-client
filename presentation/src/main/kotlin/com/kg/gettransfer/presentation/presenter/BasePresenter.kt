@@ -174,8 +174,8 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
             var transferID: Long? = null
             if (transferId == null) {
                 val result = withContext(worker.bg) { transferInteractor.getAllTransfers(getUserRole()) }
-                if (result.error == null && result.model.isNotEmpty()) {
-                    transferID = result.model.first().id
+                if (result.error == null && result.model.first.isNotEmpty()) {
+                    transferID = result.model.first.first().id
                 }
             } else {
                 transferID = transferId

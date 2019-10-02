@@ -21,6 +21,13 @@ abstract class EndlessRecyclerViewScrollListener(var layoutManager: LinearLayout
     // Sets the starting page index
     private var startingPageIndex = 1
 
+    private var totalPages = 0
+    var pages: Int = 0
+        set(value) {
+        totalPages = value
+            field = value
+        }
+
     fun getLastVisibleItem(lastVisiblePosition: IntArray): Int {
         var maxSize = 0
 
@@ -62,8 +69,10 @@ abstract class EndlessRecyclerViewScrollListener(var layoutManager: LinearLayout
         // threshold should reflect how many total columns there are too
         if (!loading && (lastVisibleItemPosition + visibleItemCount) > totalItemCount) {
             currentPage++
-            onLoadMore(currentPage, totalItemCount, recyclerView)
-            loading = true
+            if (currentPage < pages) {
+                onLoadMore(currentPage, totalItemCount, recyclerView)
+                loading = true
+            } else loading = false
         }
     }
 

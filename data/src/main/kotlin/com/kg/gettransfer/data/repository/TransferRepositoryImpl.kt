@@ -197,14 +197,13 @@ class TransferRepositoryImpl(
     }
 
     override suspend fun getAllTransfers(role: String,
-                                         status: String,
                                          page: Int,
-                                         perPage: Int): Result<List<Transfer>> {
-        val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).getAllTransfers(role, status, page, perPage)
+                                         perPage: Int): Result<Pair<List<Transfer>, Int?> {
+        val result: ResultEntity<Pair<List<TransferEntity>?, Int?>> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).getAllTransfers(role, page, perPage)
         }
         if (result.error == null) {
-            result.entity?.apply {
+            result.entity?.first.apply {
                 setLastOffersUpdate(this)
                 factory.retrieveCacheDataStore().addAllTransfers(this)
             }

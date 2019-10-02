@@ -22,7 +22,6 @@ open class TransferDataStoreCache : TransferDataStore {
 
     override suspend fun getTransfer(id: Long) = cache.getTransfer(id)
     override suspend fun getAllTransfers(role: String,
-                                         status: String,
                                          page: Int,
                                          perPage: Int) = cache.getAllTransfers()
     override suspend fun getTransfersArchive() = cache.getTransfersArchive()

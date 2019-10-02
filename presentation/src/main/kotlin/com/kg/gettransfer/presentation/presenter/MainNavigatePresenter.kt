@@ -78,7 +78,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
 
     private fun checkTransfers() {
         utils.launchSuspend {
-            fetchResultOnly { transferInteractor.getAllTransfers(getUserRole()) }.isSuccess()?.let { checkReview(it) }
+            fetchResultOnly { transferInteractor.getAllTransfers(getUserRole()) }.isSuccess()?.let { checkReview(it.first) }
             viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
         }
     }

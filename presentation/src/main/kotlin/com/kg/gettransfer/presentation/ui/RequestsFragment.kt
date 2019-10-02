@@ -127,7 +127,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         swipe_container.isRefreshing = false
 
         switchBackGroundData(false)
-        rvAdapter.updateTransfers(transfers)
+        rvAdapter.updateTransfers(transfers, false)
     }
 
     override fun updateCardWithDriverCoordinates(transferId: Long) {

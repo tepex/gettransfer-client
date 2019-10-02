@@ -9,9 +9,8 @@ import java.io.InputStream
 @Suppress("TooManyFunctions")
 interface TransferRepository {
     suspend fun getAllTransfers(role: String,
-                                status: String,
                                 page: Int,
-                                perPage: Int): Result<List<Transfer>>
+                                perPage: Int): Result<Pair<List<Transfer>, Int?>>
     suspend fun getTransfer(id: Long): Result<Transfer>
     suspend fun getTransferCached(id: Long): Result<Transfer>
     suspend fun getTransfersArchive(): Result<List<Transfer>>
