@@ -177,6 +177,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AboutActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AppsFlyerHandleDeepLinkActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseBottomSheetFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripDetailsActivity.kt",
@@ -202,6 +203,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SystemUtils.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferRequestItem.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransportTypeFragment.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/BottomSheetCreateOrderNewView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
