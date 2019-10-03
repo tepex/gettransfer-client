@@ -14,27 +14,27 @@ object Locations : Screen<Locations>()  {
         withText("Saint Petersburg, Россия")
         isDisplayed()
     }
-    val PointOnMap = KTextView {
+    val pointOnMap = KTextView {
         withId(R.id.popular_title)
         withText("Point on map")
         isDisplayed()
     }
-    val Airport = KTextView {
+    val airport = KTextView {
         withId(R.id.popular_title)
         withText("Airport")
         isDisplayed()
     }
-    val Station = KTextView {
+    val station = KTextView {
         withId(R.id.popular_title)
         withText("Station")
         isDisplayed()
     }
-    val Map = KSwipeView {
+    val map = KSwipeView {
         withId(R.id.popular_title)
         withText("Point on map")
         isDisplayed()
     }
-    val Hotel = KTextView {
+    val hotel = KTextView {
         withId(R.id.popular_title)
         withText("Hotel")
         isDisplayed()

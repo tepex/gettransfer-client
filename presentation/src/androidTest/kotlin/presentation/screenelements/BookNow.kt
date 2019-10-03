@@ -16,6 +16,6 @@ object BookNow : Screen<BookNow>() {
     val background = KSwipeView { withId(R.id.background) }
     val Balance = KView { withId(R.id.layoutBalance) }
     val Card = KView { withId(R.id.layoutCard) }
-    val Payment = KView { withId(R.id.btnGetPayment) }
+    val payment = KView { withId(R.id.btnGetPayment) }
     val request_info = KButton { withId(R.id.btn_request_info) }
 }

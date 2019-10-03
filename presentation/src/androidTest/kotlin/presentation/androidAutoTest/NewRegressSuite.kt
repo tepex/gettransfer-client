@@ -70,7 +70,7 @@ class NewRegressSuite : TestCase() {
             }
             step("cancelTransfer") {
                 Trips {
-                    Cancel { click() }
+                    cancel { click() }
                     val baseFun = BaseFun
                     baseFun.okCancel()
                 }
@@ -112,12 +112,12 @@ class NewRegressSuite : TestCase() {
                 Trips {
                     Screen.idle(DELAY_BIG)
                     swRequests { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeLeft() } }
-                    Requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
+                    requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                 }
             }
             step("RepeatTransfer") {
                 Trips {
-                    Repeat { click() }
+                    repeat { click() }
                 }
             }
             step("CreateTransfer") {
@@ -167,18 +167,18 @@ class NewRegressSuite : TestCase() {
             }
             step("OpenTransfer") {
                 Trips {
-                    RequestNumber { click() }
+                    requestNumber { click() }
                 }
             }
             step("OpenChat") {
                 Trips {
-                    Chat { click() }
+                    chat { click() }
                 }
             }
             step("SendMessage") {
                 Chat {
                     message { typeText("Test-Test") }
-                    Send { click() }
+                    send { click() }
                 }
             }
         }
