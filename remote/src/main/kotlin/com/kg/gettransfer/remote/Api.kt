@@ -105,7 +105,7 @@ interface Api {
     suspend fun getAllTransfers(
             @Query("role") role: String,
             @Query("page") page: Int,
-            @Query("per_page") perPage: Int
+            @Query("filtering[status]") status: String?
     ): ResponseModel<TransfersModel>
 
     @GET("$API_TRANSFERS/archive")

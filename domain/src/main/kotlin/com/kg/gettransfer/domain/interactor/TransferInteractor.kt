@@ -20,7 +20,7 @@ class TransferInteractor(private val repository: TransferRepository) {
 
     suspend fun getAllTransfers(role: String = Transfer.Role.PASSENGER.toString(),
                                 page: Int = 1,
-                                perPage: Int = 10) = repository.getAllTransfers(role, page, perPage)
+                                status: String? = null) = repository.getAllTransfers(role, page, status)
     suspend fun getTransfersActive() = repository.getTransfersActive()
     suspend fun getTransfersArchive() = repository.getTransfersArchive()
 

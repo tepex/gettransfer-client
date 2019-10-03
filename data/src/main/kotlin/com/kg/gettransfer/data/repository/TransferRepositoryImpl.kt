@@ -198,18 +198,20 @@ class TransferRepositoryImpl(
 
     override suspend fun getAllTransfers(role: String,
                                          page: Int,
-                                         perPage: Int): Result<Pair<List<Transfer>, Int?> {
-        val result: ResultEntity<Pair<List<TransferEntity>?, Int?>> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).getAllTransfers(role, page, perPage)
+                                         status: String?): Result<Pair<List<Transfer>, Int?>> {
+        val result: ResultEntity<Pair<List<TransferEntity>, Int?>?> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).getAllTransfers(role, page, status)
         }
         if (result.error == null) {
-            result.entity?.first.apply {
-                setLastOffersUpdate(this)
-                factory.retrieveCacheDataStore().addAllTransfers(this)
+            val list = result.entity?.first
+            list?.let {
+                setLastOffersUpdate(it)
+                factory.retrieveCacheDataStore().addAllTransfers(it)
             }
         }
+        val resultList = result.entity?.let { checkTransfersEvents(it.first, true) } ?: emptyList()
         return Result(
-            result.entity?.let { checkTransfersEvents(it, true) } ?: emptyList(),
+            Pair(resultList, result.entity?.second),
             result.error?.map(),
             result.error != null && result.entity != null
         )
@@ -254,13 +256,13 @@ class TransferRepositoryImpl(
     }
 
     private suspend fun setLastOffersUpdate(remoteTransfers: List<TransferEntity>) {
-        val result: ResultEntity<List<TransferEntity>?> = retrieveCacheEntity {
+        val result: ResultEntity<Pair<List<TransferEntity>, Int?>?> = retrieveCacheEntity {
             factory.retrieveCacheDataStore().getAllTransfers()
         }
         if (result.entity == null) return
 
         remoteTransfers.forEach { remoteTransfer ->
-            result.entity.find { it.id == remoteTransfer.id }?.let { cachedTransfer ->
+            result.entity.first.find { it.id == remoteTransfer.id }?.let { cachedTransfer ->
                 if (remoteTransfer.offersUpdatedAt == null) return
                 remoteTransfer.lastOffersUpdatedAt = cachedTransfer.lastOffersUpdatedAt
             }

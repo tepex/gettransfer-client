@@ -67,22 +67,26 @@ abstract class EndlessRecyclerViewScrollListener(var layoutManager: LinearLayout
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
-        if (!loading && (lastVisibleItemPosition + visibleItemCount) > totalItemCount) {
-            currentPage++
-            if (currentPage < pages) {
-                onLoadMore(currentPage, totalItemCount, recyclerView)
-                loading = true
-            } else loading = false
+        if (!loading && (lastVisibleItemPosition + visibleItemCount) >= totalItemCount && dy > 0) {
+            loading = if (currentPage < totalPages) {
+                currentPage++
+                onLoadMore(currentPage)
+                true
+            } else false
         }
+    }
+
+    fun setLoaded() {
+        loading = false
     }
 
     // Call this method whenever performing new searches
     fun resetState() {
-        currentPage = startingPageIndex
+        currentPage = 0
         previousTotalItemCount = 0
         loading = true
     }
 
-    protected abstract fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView)
+    protected abstract fun onLoadMore(page: Int)
 
 }

@@ -106,7 +106,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
         scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
-            override fun onLoadMore(page: Int, totalItemsCount: Int, recyclerView: RecyclerView) {
+            override fun onLoadMore(page: Int) {
                 presenter.getTransfers(page)
             }
         }
@@ -123,11 +123,13 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 //        AppWatcher.objectWatcher.watch(this)
     }
 
-    override fun updateTransfers(transfers: List<TransferModel>) {
+    override fun updateTransfers(transfers: List<TransferModel>, pagesCount: Int?) {
         swipe_container.isRefreshing = false
 
         switchBackGroundData(false)
         rvAdapter.updateTransfers(transfers, false)
+        scrollListener.setLoaded()
+        pagesCount?.let { scrollListener.pages = it }
     }
 
     override fun updateCardWithDriverCoordinates(transferId: Long) {
@@ -163,7 +165,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         (activity as BaseView).setError(finish, errId, *args)
 
     override fun setError(e: ApiException) {
-        Timber.e("code: ${e.code}", e)
+        Timber.e("code: ${e.code}")
         if(e.code != ApiException.NETWORK_ERROR) Utils.showError(context!!, false, "${getString(R.string.LNG_ERROR)}: ${e.message}")
     }
 

@@ -15,7 +15,7 @@ interface TransferRemote : KoinComponent {
 
     suspend fun getAllTransfers(role: String,
                                 page: Int,
-                                perPage: Int): Pair<List<TransferEntity>, Int?>
+                                status: String?): Pair<List<TransferEntity>, Int?>
 
     suspend fun getTransfersArchive(): List<TransferEntity>
 

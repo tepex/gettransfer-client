@@ -10,7 +10,7 @@ import java.io.InputStream
 interface TransferRepository {
     suspend fun getAllTransfers(role: String,
                                 page: Int,
-                                perPage: Int): Result<Pair<List<Transfer>, Int?>>
+                                status: String?): Result<Pair<List<Transfer>, Int?>>
     suspend fun getTransfer(id: Long): Result<Transfer>
     suspend fun getTransferCached(id: Long): Result<Transfer>
     suspend fun getTransfersArchive(): Result<List<Transfer>>

@@ -95,10 +95,11 @@ data class Transfer(
     fun isCompletedTransfer() = status == Status.NOT_COMPLETED || status == Status.COMPLETED
 
     companion object {
-        const val STATUS_CATEGORY_ACTIVE     = "active_status"
+        const val STATUS_CATEGORY_ACTIVE     = "active"
         const val STATUS_CATEGORY_CONFIRMED  = "confirmed_status"
         const val STATUS_CATEGORY_UNFINISHED = "unfinished_status"
         const val STATUS_CATEGORY_FINISHED   = "finished_status"
+        const val STATUS_CATEGORY_ARCHIVE    = "archive"
 
         val EMPTY = Transfer(
             id              = 0,
@@ -165,8 +166,10 @@ data class Transfer(
             it.status == Status.COMPLETED || it.status == Status.NOT_COMPLETED
         }
 
-        fun List<Transfer>.filterArchived() = filter {
-            it.status != Status.COMPLETED || it.status != Status.NOT_COMPLETED
+        fun List<Transfer>.filterPast() = filter {
+            it.status != Status.NEW ||
+            it.status != Status.PERFORMED ||
+            it.status != Status.PENDING_CONFIRMATION
         }
 
         fun List<Transfer>.filterRateable() =

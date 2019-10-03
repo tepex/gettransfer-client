@@ -17,7 +17,7 @@ open class TransferDataStoreRemote : TransferDataStore {
     override suspend fun getTransfer(id: Long) = remote.getTransfer(id)
     override suspend fun getAllTransfers(role: String,
                                          page: Int,
-                                         perPage: Int) = remote.getAllTransfers(role, page, perPage)
+                                         status: String?) = remote.getAllTransfers(role, page, status)
     override suspend fun getTransfersArchive() = remote.getTransfersArchive()
     override suspend fun getTransfersActive() = remote.getTransfersActive()
 
