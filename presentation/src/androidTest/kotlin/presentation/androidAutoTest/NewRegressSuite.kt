@@ -13,7 +13,6 @@ import org.junit.Rule
 import org.junit.Test
 
 import presentation.screenelements.*
-import presentation.screenelements.MainScreen
 
 class NewRegressSuite : TestCase() {
 
@@ -124,7 +123,7 @@ class NewRegressSuite : TestCase() {
             step("CreateTransfer") {
                 TransferDetails {
                     Screen.idle()
-                    typeCar { click() }                       // Выпилить после фикса
+                    typeCar { click() }                       // TODO Выпилить после фикса
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
