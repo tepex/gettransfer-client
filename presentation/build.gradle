@@ -340,7 +340,6 @@ dependencies {
     androidTestImplementation libs.androidx_text_ext_junit
     //dependencies for espresso
     androidTestImplementation libs.espresso_core
-
     //dependencies for Kakao
     androidTestImplementation libs.kakao
     // for web

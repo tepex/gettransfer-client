@@ -6,7 +6,7 @@ import com.agoda.kakao.text.KButton
 
 import com.kg.gettransfer.R
 
-object Profile : Screen<Profile>() {
+object ProfileScreen : Screen<ProfileScreen>() {
     val logoutBtn = KButton { withId(R.id.btnLogout) }
     val loginBtn  = KButton { withId(R.id.btnLogin) }
     val email = KEditText {
