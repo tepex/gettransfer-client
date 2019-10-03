@@ -129,13 +129,13 @@ class NewSmokeSuite : TestCase() {
                     btn_book { click() }
                     background { swipeUp() }
                     Balance { click() }
-                    Payment { click() }
+                    payment { click() }
                 }
             }
             step("PayCheck") {
                 Payment {
-                    PaidSuccessfully { isVisible() }
-                    BookingNumber { isVisible() }
+                    paidSuccessfully { isVisible() }
+                    bookingNumber { isVisible() }
                     mapRoute { isVisible() }
                     mapViewRoute { swipeUp() }
                     tvRemainTime { isVisible() }
@@ -199,7 +199,7 @@ class NewSmokeSuite : TestCase() {
                     btn_book { click() }
                     background { swipeUp() }
                     Card { click() }
-                    Payment { click() }
+                    payment { click() }
                 }
             }
             step("PayCard") {
@@ -209,9 +209,9 @@ class NewSmokeSuite : TestCase() {
             step("PayCheck") {
                 Screen.idle(DELAY_BIG)
                 Payment {
-                    BookingNumber { isVisible() }
+                    bookingNumber { isVisible() }
                     mapRoute { isVisible() }
-                    PaidSuccessfully { isVisible() }
+                    paidSuccessfully { isVisible() }
                     mapViewRoute { swipeUp() }
                     tvRemainTime { isVisible() }
                 }
@@ -250,7 +250,7 @@ class NewSmokeSuite : TestCase() {
             step("OpenTrips") {
                 Trips {
                     Screen.idle(DELAY_BIG)
-                    Requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
+                    requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                     transferDetails { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     bookNowInfo { swipeUp() }
@@ -287,20 +287,20 @@ class NewSmokeSuite : TestCase() {
             }
             step("CheckHelp") {
                 Help {
-                    WeSpeak { isVisible() }
+                    weSpeak { isVisible() }
                     aboutUs { isVisible() }
                     becomeCarrier { isVisible() }
-                    MessageUs { isVisible() }
-                    Languages { isVisible() }
+                    messageUs { isVisible() }
+                    languages { isVisible() }
                     socialNetwork { isVisible() }
                     ourLanguages { swipeUp() }
                     Screen.idle(DELAY_SMALL)
-                    WriteUs { isVisible() }
+                    writeUs { isVisible() }
                     include { isVisible() }
-                    Network { swipeUp() }
+                    network { swipeUp() }
                     Screen.idle(DELAY_SMALL)
-                    Email { isVisible() }
-                    CallUs { isVisible() }
+                    email { isVisible() }
+                    callUs { isVisible() }
                 }
             }
         }
@@ -327,11 +327,11 @@ class NewSmokeSuite : TestCase() {
             }
             step("SettingsCheck") {
                 SettingsScreen {
-                    Currency { isVisible() }
-                    Language { isVisible() }
-                    DistanceUnit { isVisible() }
-                    Profile { isVisible() }
-                    AboutApp { isVisible() }
+                    currency { isVisible() }
+                    language { isVisible() }
+                    distanceUnit { isVisible() }
+                    profile { isVisible() }
+                    aboutApp { isVisible() }
                 }
             }
         }
@@ -369,8 +369,8 @@ class NewSmokeSuite : TestCase() {
                 Trips {
                     Screen.idle(DELAY_BIG)
                     swRequests { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeLeft() } }
-                    Requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
-                    TransferTime { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
+                    requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
+                    transferTime { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
                     transfer { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
                     flexboxTransportTypes { isVisible() }
                     topCommunicationButtons { isVisible() }
@@ -402,9 +402,9 @@ class NewSmokeSuite : TestCase() {
                 Help {
                     aboutUs { click() }
                     viewpager { isVisible() }
-                    Next { click() }
+                    next { click() }
                     viewpager { isVisible() }
-                    Next { click() }
+                    next { click() }
                 }
             }
             step("CheckBecome") {
@@ -464,12 +464,12 @@ class NewSmokeSuite : TestCase() {
             }
             step("CheckTips") {
                 Locations {
-                    PointOnMap { isVisible() }
-                    Airport { click() }
-                    Station { click() }
-                    Map { swipeLeft() }
-                    Map { swipeLeft() }
-                    Hotel { click() }
+                    pointOnMap { isVisible() }
+                    airport { click() }
+                    station { click() }
+                    map { swipeLeft() }
+                    map { swipeLeft() }
+                    hotel { click() }
                 }
             }
         }

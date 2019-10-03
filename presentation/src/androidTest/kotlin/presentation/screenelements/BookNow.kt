@@ -3,6 +3,7 @@ package presentation.screenelements
 import com.agoda.kakao.common.views.KSwipeView
 import com.agoda.kakao.common.views.KView
 import com.agoda.kakao.screen.Screen
+import com.agoda.kakao.text.KButton
 import com.kg.gettransfer.R
 
 object BookNow : Screen<BookNow>() {
@@ -15,5 +16,6 @@ object BookNow : Screen<BookNow>() {
     val background = KSwipeView { withId(R.id.background) }
     val Balance = KView { withId(R.id.layoutBalance) }
     val Card = KView { withId(R.id.layoutCard) }
-    val Payment = KView { withId(R.id.btnGetPayment) }
+    val payment = KView { withId(R.id.btnGetPayment) }
+    val request_info = KButton { withId(R.id.btn_request_info) }
 }
