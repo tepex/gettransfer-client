@@ -1,4 +1,4 @@
-package presentation.screenelements
+package com.kg.gettransfer.presentation.screenelements
 
 import android.R
 

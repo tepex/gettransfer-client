@@ -1,4 +1,4 @@
-package com.kg.gettransfer.androidAutoTest
+package com.kg.gettransfer.presentation.androidAutoTest
 
 import androidx.test.espresso.web.sugar.Web
 

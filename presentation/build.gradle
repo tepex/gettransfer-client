@@ -311,6 +311,7 @@ dependencies {
     // Play services
     implementation "com.google.android.gms:play-services-base:$play_services"
 
+
     // Webkit
     implementation "androidx.webkit:webkit:$webkit_version"
 
@@ -336,13 +337,17 @@ dependencies {
 
     androidTestImplementation libs.androidx_test_runner
     androidTestImplementation libs.androidx_test_rules
+
     //dependencies for ui tests
     androidTestImplementation libs.androidx_text_ext_truth
     androidTestImplementation libs.androidx_text_ext_junit
+
     //dependencies for espresso
     androidTestImplementation libs.espresso_core
+
     //dependencies for Kakao
     androidTestImplementation libs.kakao
+
     // for web
     androidTestImplementation libs.espresso_web
     androidTestImplementation(libs.espresso_contrib) {

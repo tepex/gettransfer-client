@@ -1,4 +1,4 @@
-package com.kg.gettransfer.androidAutoTest
+package com.kg.gettransfer.presentation.androidAutoTest
 
 import android.graphics.Bitmap
 import android.os.Environment.DIRECTORY_PICTURES

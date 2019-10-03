@@ -1,4 +1,4 @@
-package presentation.screenelements
+package com.kg.gettransfer.presentation.screenelements
 
 import com.agoda.kakao.check.KCheckBox
 import com.agoda.kakao.common.views.KView
@@ -8,7 +8,10 @@ import com.agoda.kakao.text.KButton
 import com.kg.gettransfer.R
 
 object SettingsScreen : Screen<SettingsScreen>() {
-    val tvProfileCell = KView { withId(R.id.settingsProfile) }
+    val tvProfileCell = KView {
+        withId(R.id.settingsProfile)
+        isDisplayed()
+    }
     val tvCurrency = KView { withId(R.id.settingsCurrency) }
     val tvLanguage = KView { withId(R.id.settingsLanguage) }
     val tvDistanceUnit = KView { withId(R.id.settingsDistanceUnit) }
