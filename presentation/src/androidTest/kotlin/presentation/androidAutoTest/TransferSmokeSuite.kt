@@ -13,9 +13,8 @@ import org.junit.Rule
 import org.junit.Test
 
 import presentation.screenelements.*
-import presentation.screenelements.MainScreen
 
-class NewSmokeSuite : TestCase() {
+class TransferSmokeSuite : TestCase() {
 
     @Rule
     @JvmField
