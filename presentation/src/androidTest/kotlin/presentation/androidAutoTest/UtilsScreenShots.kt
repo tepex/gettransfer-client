@@ -22,7 +22,7 @@ class IDTScreenCaptureProcessor : BasicScreenCaptureProcessor() {
     }
 
     private fun getNewFilename() =
-        getInstrumentation().getTargetContext().getApplicationContext().getExternalFilesDir(DIRECTORY_PICTURES)
+        getInstrumentation().targetContext.applicationContext.getExternalFilesDir(DIRECTORY_PICTURES)
 }
 
 class ScreenshotTestRule : TestWatcher() {

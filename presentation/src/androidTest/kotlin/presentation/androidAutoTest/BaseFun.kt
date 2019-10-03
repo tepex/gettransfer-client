@@ -79,4 +79,8 @@ object BaseFun {
     fun okCancel() {
         onView(allOf(withId(android.R.id.button1), withText("YES"))).perform(click())
     }
+
+    fun okCancel() {
+        onView(allOf(withId(android.R.id.button1), withText("YES"))).perform(click())
+    }
 }

@@ -2,21 +2,21 @@ package com.kg.gettransfer.presentation
 
 import androidx.test.rule.ActivityTestRule
 
-import com.agoda.kakao.screen.Screen
-
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
+import com.kg.gettransfer.R
 
 import com.kg.gettransfer.presentation.ui.SplashActivity
-
-import presentation.screenelements.NavBar
-import presentation.screenelements.Onboarding
-import presentation.screenelements.Profile
-import presentation.screenelements.SettingsScreen
 
 import org.junit.Rule
 import org.junit.Test
 
-@Suppress("MagicNumber")
+import presentation.data.Delay
+
+import presentation.screenelements.NavBar
+import presentation.screenelements.Onboarding
+import presentation.screenelements.ProfileScreen
+import presentation.screenelements.SettingsScreen
+
 class LoginTest : TestCase() {
 
     @Rule
@@ -28,22 +28,21 @@ class LoginTest : TestCase() {
         before {
         }.after {
         }.run {
-            step("Pass Onboarding") {
-                Screen.idle(5_500L)
+            step("Pass onboarding") {
                 Onboarding {
-                    btnNext { flakySafely { click() } }
-                    btnNext { flakySafely { click() } }
+                    btnNext { flakySafely(timeoutMs = Delay.big) { click() } }
+                    btnNext { flakySafely(timeoutMs = Delay.big) { click() } }
                 }
             }
             step("Click settings menu") {
                 NavBar {
-                    settings { click() }
+                    settingsItem { click() }
                 }
             }
             SettingsScreen {
                 profileCell { click() }
             }
-            Profile {
+            ProfileScreen {
                 email { typeText("mygtracc1@gmail.com") }
                 pwd { typeText("PassRR11") }
                 loginBtn { click() }
