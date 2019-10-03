@@ -185,6 +185,10 @@ class NewRegressSuite : TestCase() {
     }
 
     companion object {
+        const val DELAY_SMALL  = 500L
+        const val DELAY_MEDIUM = 800L
+        const val DELAY_BIG    = 1000L
+    }
         const val DELAY_SMALL = 500L
         const val DELAY_MEDIUM = 800L
         const val DELAY_BIG = 1000L
