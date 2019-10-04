@@ -43,7 +43,6 @@ abstract class EndlessRecyclerViewScrollListener(var layoutManager: LinearLayout
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
 
-        val visibleItemCount = layoutManager.childCount
         val totalItemCount = layoutManager.itemCount
         val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
 
@@ -67,7 +66,7 @@ abstract class EndlessRecyclerViewScrollListener(var layoutManager: LinearLayout
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
-        if (!loading && (lastVisibleItemPosition + visibleItemCount) >= totalItemCount && dy > 0) {
+        if (!loading && (lastVisibleItemPosition + visibleThreshold) >= totalItemCount && dy > 0) {
             loading = if (currentPage < totalPages) {
                 currentPage++
                 onLoadMore(currentPage)

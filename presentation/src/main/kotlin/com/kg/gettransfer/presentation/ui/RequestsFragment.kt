@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 import com.arellomobile.mvp.MvpAppCompatFragment
 
@@ -93,6 +92,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     private fun initClickListeners() {
         swipe_container.setOnRefreshListener {
             scrollListener.resetState()
+            rvAdapter.removeAll()
             presenter.getTransfers()
         }
 
@@ -127,7 +127,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         swipe_container.isRefreshing = false
 
         switchBackGroundData(false)
-        rvAdapter.updateTransfers(transfers, false)
+        rvAdapter.updateTransfers(transfers)
         scrollListener.setLoaded()
         pagesCount?.let { scrollListener.pages = it }
     }
