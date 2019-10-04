@@ -18,8 +18,10 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.contrib.PickerActions
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
@@ -60,12 +62,21 @@ object BaseFun {
             onView(allOf(withId(R.id.etPassword), isDisplayed())).perform(replaceText("3000000"), closeSoftKeyboard())
 
             onView(withId(R.id.btnLogin)).perform(click())
-            val baseFun = BaseFun
-            baseFun.goTransferLater()
+            goTransferLater()
             onView(withId(R.id.nav_order)).perform(click())
         } else {
             onView(allOf(withContentDescription("Перейти вверх"))).perform(click())
             onView(withId(R.id.nav_order)).perform(click())
+        }
+    }
+
+    fun unLogin() {
+        onView(withId(R.id.nav_settings)).perform(click())
+        onView(withId(R.id.titleText)).perform(click())
+        if (onView(allOf(withId(R.id.btnLogout))).isDisplayed()) {
+            onView(withId(R.id.btnLogout)).perform(click())
+            Thread.sleep(1_000)
+            onView(withId(R.id.titleText)).perform(click())
         }
     }
 
@@ -80,7 +91,16 @@ object BaseFun {
         onView(allOf(withId(android.R.id.button1), withText("YES"))).perform(click())
     }
 
-    fun okCancel() {
-        onView(allOf(withId(android.R.id.button1), withText("YES"))).perform(click())
+    fun checkTips() {
+        onView(allOf(withId(R.id.rv_popularList))).isDisplayed()
+        onView(withId(R.id.rv_popularList))
+            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(1, click()))
+        onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
+        onView(withId(R.id.rv_popularList))
+            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(2, click()))
+        onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
+        onView(withId(R.id.rv_popularList))
+            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(3, click()))
+        onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
     }
 }

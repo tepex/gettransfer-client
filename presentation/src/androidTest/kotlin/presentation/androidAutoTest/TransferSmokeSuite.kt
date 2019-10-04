@@ -49,7 +49,7 @@ class TransferSmokeSuite : TestCase() {
             step("TakeGeo") {
                 MainScreen {
                     switchHourly { click() }
-                    next { click() }
+                    btnNext { click() }
                 }
             }
             step("CreateTransfer") {
@@ -65,8 +65,8 @@ class TransferSmokeSuite : TestCase() {
             }
             step("CheckElements") {
                 BookNow {
-                    driversCount { isVisible() }
-                    clock { isVisible() }
+                    tvDriversCount { isVisible() }
+                    tvClock { isVisible() }
                     tvWait { isVisible() }
                 }
             }
@@ -99,14 +99,14 @@ class TransferSmokeSuite : TestCase() {
             }
             step("TakeGeo") {
                 MainScreen {
-                    sub_title { click() }
+                    subTitle { click() }
                 }
             }
             step("Locations") {
                 Locations {
-                    searchTo { typeText("Saint-Petersburg") }
+                    tvSearchTo { typeText("Saint-Petersburg") }
                     Screen.idle(DELAY_SMALL)
-                    spdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
+                    tvSpdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                 }
             }
             step("CreateTransfer") {
@@ -125,16 +125,16 @@ class TransferSmokeSuite : TestCase() {
                 BookNow {
                     rvOffers { click() }
                     Screen.idle(DELAY_SMALL)
-                    btn_book { click() }
-                    background { swipeUp() }
-                    Balance { click() }
-                    payment { click() }
+                    btnBook { click() }
+                    tvBackground { swipeUp() }
+                    tvBalance { click() }
+                    tvPayment { click() }
                 }
             }
             step("PayCheck") {
                 Payment {
-                    paidSuccessfully { isVisible() }
-                    bookingNumber { isVisible() }
+                    tvPaidSuccessfully { isVisible() }
+                    tvBookingNumber { isVisible() }
                     mapRoute { isVisible() }
                     mapViewRoute { swipeUp() }
                     tvRemainTime { isVisible() }
@@ -169,14 +169,14 @@ class TransferSmokeSuite : TestCase() {
             }
             step("TakeGeo") {
                 MainScreen {
-                    sub_title { click() }
+                    subTitle { click() }
                 }
             }
             step("Locations") {
                 Locations {
-                    searchTo { typeText("Saint-Petersburg") }
+                    tvSearchTo { typeText("Saint-Petersburg") }
                     Screen.idle(DELAY_SMALL)
-                    spdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
+                    tvSpdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                 }
             }
             step("CreateTransfer") {
@@ -195,24 +195,25 @@ class TransferSmokeSuite : TestCase() {
                 BookNow {
                     rvOffers { click() }
                     Screen.idle(DELAY_SMALL)
-                    btn_book { click() }
-                    background { swipeUp() }
-                    Card { click() }
-                    payment { click() }
+                    btnBook { click() }
+                    tvBackground { swipeUp() }
+                    tvCard { click() }
+                    tvPayment { click() }
                 }
             }
             step("PayCard") {
                 val payFun = PayFun
-                payFun.goPayCard()
+                payFun.goGoodPayCard()
             }
             step("PayCheck") {
-                Screen.idle(DELAY_BIG)
+                Screen.idle(DELAY_VERY_BIG)
                 Payment {
-                    bookingNumber { isVisible() }
-                    mapRoute { isVisible() }
-                    paidSuccessfully { isVisible() }
-                    mapViewRoute { swipeUp() }
-                    tvRemainTime { isVisible() }
+                    btnSupport { flakySafely(timeoutMs = DELAY_BIG) { isVisible() } }
+                    tvBookingNumber { flakySafely(timeoutMs = DELAY_BIG) { isVisible() } }
+                    mapViewRoute { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
+                    mapRoute { flakySafely(timeoutMs = DELAY_MEDIUM) { isVisible() } }
+                    tvPaidSuccessfully { flakySafely(timeoutMs = DELAY_MEDIUM) { isVisible() } }
+                    tvRemainTime { flakySafely(timeoutMs = DELAY_MEDIUM) { isVisible() } }
                 }
             }
         }
@@ -258,8 +259,8 @@ class TransferSmokeSuite : TestCase() {
             }
             step("CheckTrips") {
                 Trips {
-                    transfer_details_main { isVisible() }
-                    bottomCommunicationButtons { isVisible() }
+                    tvDetailsMain { isVisible() }
+                    btnCommunication { isVisible() }
                 }
             }
         }
@@ -286,20 +287,20 @@ class TransferSmokeSuite : TestCase() {
             }
             step("CheckHelp") {
                 Help {
-                    weSpeak { isVisible() }
-                    aboutUs { isVisible() }
-                    becomeCarrier { isVisible() }
-                    messageUs { isVisible() }
-                    languages { isVisible() }
-                    socialNetwork { isVisible() }
-                    ourLanguages { swipeUp() }
+                    tvWeSpeak { isVisible() }
+                    tvAboutUs { isVisible() }
+                    tvBecomeCarrier { isVisible() }
+                    tvMessageUs { isVisible() }
+                    tvLanguages { isVisible() }
+                    tvSocialNetwork { isVisible() }
+                    tvOurLanguages { swipeUp() }
                     Screen.idle(DELAY_SMALL)
-                    writeUs { isVisible() }
+                    tvWriteUs { isVisible() }
                     include { isVisible() }
-                    network { swipeUp() }
+                    tvNetwork { swipeUp() }
                     Screen.idle(DELAY_SMALL)
-                    email { isVisible() }
-                    callUs { isVisible() }
+                    tvEmail { isVisible() }
+                    tvCallUs { isVisible() }
                 }
             }
         }
@@ -326,11 +327,11 @@ class TransferSmokeSuite : TestCase() {
             }
             step("SettingsCheck") {
                 SettingsScreen {
-                    currency { isVisible() }
-                    language { isVisible() }
-                    distanceUnit { isVisible() }
-                    profile { isVisible() }
-                    aboutApp { isVisible() }
+                    tvCurrency { isVisible() }
+                    tvLanguage { isVisible() }
+                    tvDistanceUnit { isVisible() }
+                    tvProfile { isVisible() }
+                    tvAboutApp { isVisible() }
                 }
             }
         }
@@ -370,8 +371,8 @@ class TransferSmokeSuite : TestCase() {
                     swRequests { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeLeft() } }
                     requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                     transferTime { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
-                    transfer { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
-                    flexboxTransportTypes { isVisible() }
+                    tvTransfer { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
+                    tvTransportTypes { isVisible() }
                     topCommunicationButtons { isVisible() }
                 }
             }
@@ -399,18 +400,18 @@ class TransferSmokeSuite : TestCase() {
             }
             step("CheckAbout") {
                 Help {
-                    aboutUs { click() }
-                    viewpager { isVisible() }
-                    next { click() }
-                    viewpager { isVisible() }
-                    next { click() }
+                    tvAboutUs { click() }
+                    tvViewPager { isVisible() }
+                    btnNext { click() }
+                    tvViewPager { isVisible() }
+                    btnNext { click() }
                 }
             }
             step("CheckBecome") {
                 Help {
-                    becomeCarrier { click() }
-                    tv_title { isVisible() }
-                    btn_continue { isVisible() }
+                    tvBecomeCarrier { click() }
+                    tvTitle { isVisible() }
+                    btnContinue { isVisible() }
                     ivBack { click() }
                 }
             }
@@ -433,9 +434,9 @@ class TransferSmokeSuite : TestCase() {
             }
             step("CheckReadMore") {
                 MainScreen {
-                    bestPriceLogo { isVisible() }
-                    layoutBestPriceText { click() }
-                    read_more_title { isVisible() }
+                    tvBestPriceLogo { isVisible() }
+                    tvLayoutBestPriceText { click() }
+                    tvReadMoreTitle { isVisible() }
                     btnClose { click() }
                 }
             }
@@ -458,18 +459,13 @@ class TransferSmokeSuite : TestCase() {
             }
             step("TakeGeo") {
                 MainScreen {
-                    sub_title { click() }
+                    subTitle { click() }
                 }
             }
             step("CheckTips") {
-                Locations {
-                    pointOnMap { isVisible() }
-                    airport { click() }
-                    station { click() }
-                    map { swipeLeft() }
-                    map { swipeLeft() }
-                    hotel { click() }
-                }
+                Screen.idle(DELAY_MEDIUM)
+                val baseFun = BaseFun
+                baseFun.checkTips()
             }
         }
     }
@@ -478,5 +474,6 @@ class TransferSmokeSuite : TestCase() {
         const val DELAY_SMALL = 500L
         const val DELAY_MEDIUM = 800L
         const val DELAY_BIG = 1000L
+        const val DELAY_VERY_BIG = 2000L
     }
 }

@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation
 import androidx.test.rule.ActivityTestRule
 
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
-import com.kg.gettransfer.R
 
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
@@ -40,11 +39,11 @@ class LoginTest : TestCase() {
                 }
             }
             SettingsScreen {
-                profileCell { click() }
+                tvProfileCell { click() }
             }
             ProfileScreen {
                 email { typeText("mygtracc1@gmail.com") }
-                pwd { typeText("PassRR11") }
+                tvPwd { typeText("PassRR11") }
                 loginBtn { click() }
             }
         }

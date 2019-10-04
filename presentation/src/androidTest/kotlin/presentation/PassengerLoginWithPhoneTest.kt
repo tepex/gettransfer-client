@@ -42,7 +42,7 @@ class PassengerLoginWithPhoneTest : TestCase() {
             }
             step("Go to login screen ") {
                 SettingsScreen {
-                    profileCell {
+                    tvProfileCell {
                         click()
                     }
                 }
@@ -53,12 +53,12 @@ class PassengerLoginWithPhoneTest : TestCase() {
                     or(email) { typeText("+79992223838") }
                 }
                 compose {
-                    or(pwd) { typeText("PassRR11") }
-                    or(SettingsScreen.profileCell) { isVisible() }
+                    or(tvPwd) { typeText("PassRR11") }
+                    or(SettingsScreen.tvProfileCell) { isVisible() }
                 }
                 compose {
                     or(loginBtn) { click() }
-                    or(SettingsScreen.profileCell) { click() }
+                    or(SettingsScreen.tvProfileCell) { click() }
                 }
                 compose {
                     or(NavBar.settingsItem) { click() }
@@ -66,7 +66,7 @@ class PassengerLoginWithPhoneTest : TestCase() {
                 }
                 compose {
                     or(NavBar.settingsItem) { click() }
-                    or(pwd) { typeText("PassRR11") }
+                    or(tvPwd) { typeText("PassRR11") }
                 }
                 compose {
                     or(loginBtn) { click() }

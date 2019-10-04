@@ -8,6 +8,6 @@ import com.kg.gettransfer.R
 
 object Chat : Screen<Chat>() {
 
-    val message = KEditText { withId(R.id.messageText) }
-    val send = KButton { withId(R.id.btnSend) }
+    val btnMessage = KEditText { withId(R.id.messageText) }
+    val btnSend = KButton { withId(R.id.btnSend) }
 }
