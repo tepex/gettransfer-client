@@ -107,6 +107,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
             override fun onLoadMore(page: Int) {
+                rvAdapter.addLoading()
                 presenter.getTransfers(page)
             }
         }
@@ -127,6 +128,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         swipe_container.isRefreshing = false
 
         switchBackGroundData(false)
+        rvAdapter.removeLoading()
         rvAdapter.updateTransfers(transfers)
         scrollListener.setLoaded()
         pagesCount?.let { scrollListener.pages = it }

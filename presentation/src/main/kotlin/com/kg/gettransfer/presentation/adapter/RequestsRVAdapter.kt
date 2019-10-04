@@ -18,7 +18,7 @@ class RequestsRVAdapter(
     private val onItemClick: ItemClickListener,
     private val onCallClick: BtnCallClickListener,
     private val onChatClick: BtnChatClickListener
-) : RecyclerView.Adapter<RequestsRVAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val transfers = mutableListOf<TransferModel>()
     private var eventsCount = mapOf<Long, Int>()
@@ -28,10 +28,11 @@ class RequestsRVAdapter(
 
     override fun getItemCount() = transfers.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = when (viewType) {
-        VIEW_TYPE_LOADING -> ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false))
-        else -> ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_request_item, parent, false))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+            when (viewType) {
+                VIEW_TYPE_LOADING -> ProgressHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false))
+                else -> RequestsHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_request_item, parent, false))
+            }
 
     override fun getItemViewType(position: Int): Int {
         return if (isLoading) {
@@ -40,22 +41,23 @@ class RequestsRVAdapter(
         } else VIEW_TYPE_NORMAl
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
-        val transfer = transfers[pos]
-        holder.bind(
-            transfer,
-            requestType,
-            eventsCount[transfer.id] ?: 0,
-            transfersWithDriverCoordinates.contains(transfer.id),
-            onItemClick,
-            onCallClick,
-            onChatClick
-        )
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (getItemViewType(position) == VIEW_TYPE_NORMAl) {
+            val transfer = transfers[position]
+            (holder as RequestsHolder).bind(
+                    transfer,
+                    requestType,
+                    eventsCount[transfer.id] ?: 0,
+                    transfersWithDriverCoordinates.contains(transfer.id),
+                    onItemClick,
+                    onCallClick,
+                    onChatClick
+            )
+        }
     }
 
-    class ViewHolder(override val containerView: View) :
-        RecyclerView.ViewHolder(containerView),
-        LayoutContainer {
+    class RequestsHolder(override val containerView: View) :
+            RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         private var firstInit = true
 
@@ -86,11 +88,8 @@ class RequestsRVAdapter(
         }
     }
 
-    class ProgressHolder(override val containerView: View):
-            RecyclerView.ViewHolder(containerView),
-            LayoutContainer {
-
-    }
+    class ProgressHolder(override val containerView: View) :
+            RecyclerView.ViewHolder(containerView), LayoutContainer
 
     fun updateTransfers(tr: List<TransferModel>) {
         val start = transfers.size
@@ -122,10 +121,12 @@ class RequestsRVAdapter(
     }
 
     fun removeLoading() {
-        isLoading = false
-        val position = transfers.size - 1
-        transfers.removeAt(position)
-        notifyItemRemoved(position)
+        if (isLoading) {
+            isLoading = false
+            val position = transfers.size - 1
+            transfers.removeAt(position)
+            notifyItemRemoved(position)
+        }
     }
 
     companion object {
