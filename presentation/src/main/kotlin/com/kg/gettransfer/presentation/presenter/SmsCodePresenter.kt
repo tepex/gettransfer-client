@@ -48,16 +48,6 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
         }
     }
 
-    override fun attachView(view: SmsCodeView) {
-        super.attachView(view)
-        setTimer()
-    }
-
-    override fun detachView(view: SmsCodeView) {
-        super.detachView(view)
-        timerBtnResendCode.cancel()
-    }
-
     fun sendVerificationCode() {
         analytics.logSingleEvent(Analytics.RESEND_CODE_CLICKED)
         if (!checkInputData()) return
@@ -153,6 +143,10 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     fun setTimer() {
         viewState.startTimer()
         timerBtnResendCode.start()
+    }
+
+    fun cancelTimer() {
+        timerBtnResendCode.cancel()
     }
 
     companion object {

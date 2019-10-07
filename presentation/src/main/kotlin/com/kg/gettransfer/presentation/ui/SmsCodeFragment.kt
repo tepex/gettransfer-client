@@ -36,6 +36,11 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     @ProvidePresenter
     fun smsCodePresenterProvider() = SmsCodePresenter()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter.setTimer()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_sms_code, container, false)
 
@@ -78,6 +83,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     override fun onDestroy() {
         super.onDestroy()
 //        AppWatcher.objectWatcher.watch(this)
+        presenter.cancelTimer()
     }
 
     override fun setBtnDoneIsEnabled(isEnabled: Boolean) {
@@ -173,11 +179,8 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     }
 
     companion object {
-        const val SMS_RESEND_DELAY_MILLIS = 90_000L
 
         const val EXTERNAL_IS_PHONE = ".presentation.ui.SmsCodeFragment_IS_PHONE"
-        const val EXTERNAL_EMAIL_OR_PHONE = ".presentation.ui.SmsCodeFragment_EMAIL_OR_PHONE"
-        const val EXTERNAL_SMS_RESEND_DELAY_SEC = ".presentation.ui.SmsCodeFragment_EMAIL_OR_PHONE"
 
         fun newInstance() = SmsCodeFragment()
     }
