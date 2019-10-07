@@ -60,7 +60,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
                 }
             }.also { result ->
                 if (result.error != null) {
-                    viewState.setError(result.error!!)
+                    result.error?.let { viewState.setError(it) }
                     logEvent(Analytics.EVENT_RESEND_CODE, Analytics.RESULT_FAIL)
                 } else {
                     setTimer()
@@ -86,9 +86,9 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
     }
 
     private fun validateInput(): Boolean {
-        LoginHelper.validateInput(params.emailOrPhone, isPhone) //force unwrap because null-check is already done
-            .also {
-                when (it) {
+        LoginHelper.validateInput(params.emailOrPhone, isPhone) // force unwrap because null-check is already done
+            .also { validate ->
+                when (validate) {
                     INVALID_EMAIL -> viewState.showValidationError(true, INVALID_EMAIL)
                     INVALID_PHONE -> viewState.showValidationError(true, INVALID_PHONE)
                     CREDENTIALS_VALID -> return true
@@ -108,13 +108,13 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
                     true -> accountManager.login(null, params.emailOrPhone, pinCode, true)
                     false -> accountManager.login(params.emailOrPhone, null, pinCode, true)
                 }
-            }.also {
-                it.error?.let { e ->
+            }.also { result ->
+                result.error?.let { e ->
                     viewState.setError(e)
                     logEvent(Analytics.EVENT_LOGIN_CODE, Analytics.RESULT_FAIL)
                 }
 
-                it.isSuccess()?.let {
+                result.isSuccess()?.let {
                     viewState.showErrorText(false)
                     openNextScreen()
                     logEvent(Analytics.EVENT_LOGIN_CODE, Analytics.RESULT_SUCCESS)
@@ -126,7 +126,7 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
         }
     }
 
-    private fun logEvent(event:String, value: String) =
+    private fun logEvent(event: String, value: String) =
             analytics.logEvent(event, Analytics.STATUS, value)
 
     fun back() {
