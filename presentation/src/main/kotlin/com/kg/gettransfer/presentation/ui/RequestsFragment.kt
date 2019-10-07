@@ -35,19 +35,21 @@ import com.kg.gettransfer.utilities.EndlessRecyclerViewScrollListener
 
 import kotlinx.android.synthetic.main.fragment_requests.*
 
-import timber.log.Timber
 import kotlinx.android.synthetic.main.view_shimmer_loader.view.*
-//import leakcanary.AppWatcher
+// import leakcanary.AppWatcher
+import timber.log.Timber
 
 /**
  * @TODO: Выделить BaseFragment
  */
-class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
+@Suppress("UnsafeCast")
+class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     @InjectPresenter
     internal lateinit var presenter: RequestsCategoryPresenter
 
     @ProvidePresenter
-    fun createRequestsCategoryPresenter() = RequestsCategoryPresenter(arguments!!.getInt(TRANSFER_TYPE_ARG))
+    fun createRequestsCategoryPresenter() =
+        arguments?.getInt(TRANSFER_TYPE_ARG)?.let { RequestsCategoryPresenter(it) }
 
     private val rvAdapter: RequestsRVAdapter
     get() = rvRequests.adapter as RequestsRVAdapter
@@ -55,7 +57,7 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
     companion object {
-        @JvmField val TRANSFER_TYPE_ARG = "TRANSFER_TYPE_ARG"
+        const val TRANSFER_TYPE_ARG = "TRANSFER_TYPE_ARG"
 
         fun newInstance(@RequestsView.TransferTypeAnnotation categoryName: Int) = RequestsFragment().apply {
             arguments = Bundle().apply { putInt(TRANSFER_TYPE_ARG, categoryName) }
@@ -70,19 +72,25 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         super.onViewCreated(view, savedInstanceState)
 
         setTitleFragmentEmptyRequestsList()
-        rvRequests.adapter = RequestsRVAdapter(presenter.transferType, onItemClickListener, onCallClickListener, onChatClickListener)
+        rvRequests.adapter = RequestsRVAdapter(
+                presenter.transferType,
+                onItemClickListener,
+                onCallClickListener,
+                onChatClickListener)
         initClickListeners()
         initScrollListener()
     }
 
-    private val onItemClickListener: ItemClickListener = { presenter.openTransferDetails(it.id, it.status, it.paidPercentage, it.pendingPaymentId) }
+    private val onItemClickListener: ItemClickListener = {
+        presenter.openTransferDetails(it.id, it.status, it.paidPercentage, it.pendingPaymentId)
+    }
 
     private val onCallClickListener: BtnCallClickListener = { presenter.callPhone(it) }
 
     private val onChatClickListener: BtnChatClickListener = { presenter.onChatClick(it) }
 
     private fun setTitleFragmentEmptyRequestsList() {
-        noTransfersText.text = when(presenter.transferType) {
+        noTransfersText.text = when (presenter.transferType) {
             RequestsView.TransferTypeAnnotation.TRANSFER_ACTIVE -> getString(R.string.LNG_TRIPS_EMPTY_ACTIVE)
             RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> getString(R.string.LNG_TRIPS_EMPTY_COMPLETED)
             else -> throw UnsupportedOperationException()
@@ -155,12 +163,11 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
         btn_forward_main.isVisible = isEmpty
     }
 
+    @Suppress("MandatoryBracesIfStatements")
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         transfers_loader.isVisible = block
-        if (block)
-            transfers_loader.shimmer_loader.startShimmer()
+        if (block) transfers_loader.shimmer_loader.startShimmer()
         else transfers_loader.shimmer_loader.stopShimmer()
-
     }
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) =
@@ -168,7 +175,9 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
-        if(e.code != ApiException.NETWORK_ERROR) Utils.showError(context!!, false, "${getString(R.string.LNG_ERROR)}: ${e.message}")
+        if (e.code != ApiException.NETWORK_ERROR) {
+            context?.let { Utils.showError(it, false, "${getString(R.string.LNG_ERROR)}: ${e.message}") }
+        }
     }
 
     override fun setError(e: DatabaseException) =

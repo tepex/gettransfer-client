@@ -3,7 +3,9 @@ package com.kg.gettransfer.utilities
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class EndlessRecyclerViewScrollListener(var layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
+abstract class EndlessRecyclerViewScrollListener(
+    var layoutManager: LinearLayoutManager
+) : RecyclerView.OnScrollListener() {
 
     // The current offset index of data you have loaded
     private var currentPage = START_PAGE
@@ -38,7 +40,7 @@ abstract class EndlessRecyclerViewScrollListener(var layoutManager: LinearLayout
         // If it’s still loading, we check to see if the data set count has
         // changed, if so we conclude it has finished loading and update the current page
         // number and total item count.
-        if (loading && (totalItemCount > previousTotalItemCount)) {
+        if (loading && totalItemCount > previousTotalItemCount) {
             loading = false
             previousTotalItemCount = totalItemCount
         }
@@ -47,7 +49,7 @@ abstract class EndlessRecyclerViewScrollListener(var layoutManager: LinearLayout
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
-        if (!loading && (lastVisibleItemPosition + VISIBLE_THRESHOLD) >= totalItemCount && dy > 0) {
+        if (!loading && lastVisibleItemPosition + VISIBLE_THRESHOLD >= totalItemCount && dy > 0) {
             loading = if (currentPage < totalPages) {
                 currentPage++
                 onLoadMore(currentPage)
@@ -60,7 +62,7 @@ abstract class EndlessRecyclerViewScrollListener(var layoutManager: LinearLayout
         loading = false
     }
 
-    // Call this method whenever performing new searches
+    // Call this method whenever performing new loading
     fun resetState() {
         currentPage = START_PAGE
         previousTotalItemCount = PREVIOUS_TOTAL_ITEM_COUNT_DEFAULT

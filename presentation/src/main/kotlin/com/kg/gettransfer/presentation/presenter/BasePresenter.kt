@@ -173,21 +173,25 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         worker.main.launch {
             var transferID: Long? = null
             if (transferId == null) {
-                val result = withContext(worker.bg) { transferInteractor.getAllTransfers(getUserRole()) }
+                val result = withContext(worker.bg) {
+                    transferInteractor.getAllTransfers(getUserRole())
+                }
                 if (result.error == null && result.model.first.isNotEmpty()) {
                     transferID = result.model.first.first().id
                 }
             } else {
                 transferID = transferId
             }
-            router.navigateTo(Screens.SendEmail(emailCarrier, transferID, accountManager.remoteProfile.email))
+            router.navigateTo(
+                Screens.SendEmail(emailCarrier, transferID, accountManager.remoteProfile.email)
+            )
         }
     }
 
-    fun getUserRole(): String {
-        return if (isBusinessAccount()) Transfer.Role.PARTNER.toString()
+    @Suppress("MandatoryBracesIfStatements")
+    fun getUserRole(): String =
+        if (isBusinessAccount()) Transfer.Role.PARTNER.toString()
         else Transfer.Role.PASSENGER.toString()
-    }
 
     fun isBusinessAccount(): Boolean = accountManager.remoteAccount.isBusinessAccount
 

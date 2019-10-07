@@ -14,9 +14,11 @@ interface TransferDataStore : KoinComponent {
 
     suspend fun getTransfer(id: Long): TransferEntity?
 
-    suspend fun getAllTransfers(role: String = Transfer.Role.PASSENGER.toString(),
-                                page: Int = 1,
-                                status: String? = null): Pair<List<TransferEntity>, Int?>
+    suspend fun getAllTransfers(
+        role: String = Transfer.Role.PASSENGER.toString(),
+        page: Int = 1,
+        status: String? = null
+    ): Pair<List<TransferEntity>, Int?>
 
     suspend fun getTransfersArchive(): List<TransferEntity>
 

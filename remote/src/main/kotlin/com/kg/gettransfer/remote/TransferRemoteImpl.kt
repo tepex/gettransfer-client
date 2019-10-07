@@ -11,6 +11,7 @@ import okhttp3.ResponseBody
 import org.koin.core.get
 import java.io.InputStream
 
+@Suppress("PreferToOverPairSyntax")
 class TransferRemoteImpl : TransferRemote {
     private val core = get<ApiCore>()
 
@@ -35,9 +36,12 @@ class TransferRemoteImpl : TransferRemote {
         return response.data!!.transfer.map()
     }
 
-    override suspend fun getAllTransfers(role: String,
-                                         page: Int,
-                                         status: String?): Pair<List<TransferEntity>, Int?> {
+    override suspend fun getAllTransfers(
+        role: String,
+        page: Int,
+        status: String?
+    ): Pair<List<TransferEntity>, Int?> {
+
         val response: ResponseModel<TransfersModel> = core.tryTwice {
             core.api.getAllTransfers(role, page, status)
         }

@@ -166,10 +166,10 @@ data class Transfer(
             it.status == Status.COMPLETED || it.status == Status.NOT_COMPLETED
         }
 
-        fun List<Transfer>.filterPast() = filter {
-            it.status != Status.NEW ||
-            it.status != Status.PERFORMED ||
-            it.status != Status.PENDING_CONFIRMATION
+        fun List<Transfer>.filterPast() = filter { tr ->
+            tr.status != Status.NEW ||
+            tr.status != Status.PERFORMED ||
+            tr.status != Status.PENDING_CONFIRMATION
         }
 
         fun List<Transfer>.filterRateable() =

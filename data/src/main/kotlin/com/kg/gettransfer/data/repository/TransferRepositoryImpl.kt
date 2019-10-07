@@ -27,6 +27,7 @@ import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 
+@Suppress("PreferToOverPairSyntax")
 class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>
 ) : BaseRepository(), TransferRepository {
@@ -196,17 +197,20 @@ class TransferRepositoryImpl(
         return eventsCount
     }
 
-    override suspend fun getAllTransfers(role: String,
-                                         page: Int,
-                                         status: String?): Result<Pair<List<Transfer>, Int?>> {
+    override suspend fun getAllTransfers(
+        role: String,
+        page: Int,
+        status: String?
+    ): Result<Pair<List<Transfer>, Int?>> {
+
         val result: ResultEntity<Pair<List<TransferEntity>, Int?>?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getAllTransfers(role, page, status)
         }
         if (result.error == null) {
             val list = result.entity?.first
-            list?.let {
-                setLastOffersUpdate(it)
-                factory.retrieveCacheDataStore().addAllTransfers(it)
+            list?.let { transfers ->
+                setLastOffersUpdate(transfers)
+                factory.retrieveCacheDataStore().addAllTransfers(transfers)
             }
         }
         val resultList = result.entity?.let { checkTransfersEvents(it.first, true) } ?: emptyList()

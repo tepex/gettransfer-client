@@ -48,8 +48,11 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     override fun systemInitialized() {
         if (accountManager.isLoggedIn) {
             worker.main.launch {
-                if (accountManager.remoteAccount.isDriver && !getPreferences().getModel().isNewDriverAppDialogShowed) {
-                    analytics.logEvent(Analytics.EVENT_NEW_CARRIER_APP_DIALOG, Analytics.OPEN_SCREEN, null)
+                if (accountManager.remoteAccount.isDriver &&
+                        !getPreferences().getModel().isNewDriverAppDialogShowed) {
+                    analytics.logEvent(
+                            Analytics.EVENT_NEW_CARRIER_APP_DIALOG,
+                            Analytics.OPEN_SCREEN, null)
                     viewState.showNewDriverAppDialog()
                     withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(true) }
                 }
@@ -78,13 +81,19 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
 
     private fun checkTransfers() {
         utils.launchSuspend {
-            fetchResultOnly { transferInteractor.getAllTransfers(getUserRole()) }.isSuccess()?.let { checkReview(it.first) }
+            fetchResultOnly {
+                transferInteractor.getAllTransfers(getUserRole())
+            }.isSuccess()?.let {
+                checkReview(it.first)
+            }
             viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
         }
     }
 
     override fun updateCounter() {
-        utils.launchSuspend { viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount) }
+        utils.launchSuspend {
+            viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
+        }
     }
 
     override suspend fun onNewOffer(offer: Offer): OfferModel {

@@ -78,6 +78,7 @@ class RequestsCategoryPresenter(
         sessionInteractor.removeAccountChangedListener(this)
     }
 
+    @Suppress("MandatoryBracesIfStatements")
     fun getTransfers(page: Int = 1) {
         worker.main.launch {
             transfers = when (transferType) {
@@ -92,19 +93,24 @@ class RequestsCategoryPresenter(
                 else -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
             }.sortedByDescending { it.dateToLocal }
 
-            if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
-                coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
-                if (driverCoordinate == null) {
-                    driverCoordinate = DriverCoordinate(Handler())
-                } else {
-                    driverCoordinate?.let { coordinate ->
-                        coordinate.transfersIds = transfers?.let { transfer ->
-                            transfer.map { it.id }
-                        }
+            setupCoordinate()
+            prepareDataAsync()
+        }
+    }
+
+    @Suppress("NestedBlockDepth", "UnnecessaryLet")
+    private fun setupCoordinate() {
+        if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
+            coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
+            if (driverCoordinate == null) {
+                driverCoordinate = DriverCoordinate(Handler())
+            } else {
+                driverCoordinate?.let { coordinate ->
+                    coordinate.transfersIds = transfers?.let { transfer ->
+                        transfer.map { it.id }
                     }
                 }
             }
-            prepareDataAsync()
         }
     }
 

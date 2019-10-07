@@ -30,17 +30,19 @@ class RequestsRVAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
             when (viewType) {
-                VIEW_TYPE_LOADING -> ProgressHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false))
-                else -> RequestsHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_request_item, parent, false))
+                VIEW_TYPE_LOADING -> ProgressHolder(LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_loading, parent, false))
+                else -> RequestsHolder(LayoutInflater.from(parent.context)
+                        .inflate(R.layout.view_transfer_request_item, parent, false))
             }
 
     override fun getItemViewType(position: Int): Int {
         return if (isLoading) {
             if (position == transfers.size - 1) VIEW_TYPE_LOADING else VIEW_TYPE_NORMAl
-
         } else VIEW_TYPE_NORMAl
     }
 
+    @Suppress("UnsafeCast")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == VIEW_TYPE_NORMAl) {
             val transfer = transfers[position]
@@ -61,13 +63,15 @@ class RequestsRVAdapter(
 
         private var firstInit = true
 
-        fun bind(item: TransferModel,
-                 requestType: Int,
-                 eventsCount: Int,
-                 haveDriverCoordinates: Boolean,
-                 onItemClick: ItemClickListener,
-                 onCallClick: BtnCallClickListener,
-                 onChatClick: BtnChatClickListener
+        @Suppress("LongParameterList")
+        fun bind(
+            item: TransferModel,
+            requestType: Int,
+            eventsCount: Int,
+            haveDriverCoordinates: Boolean,
+            onItemClick: ItemClickListener,
+            onCallClick: BtnCallClickListener,
+            onChatClick: BtnChatClickListener
         ) = with(containerView) {
             with(requestInfo) {
                 if (firstInit) {

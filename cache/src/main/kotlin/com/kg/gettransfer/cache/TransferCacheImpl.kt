@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.model.TransferEntity
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+@Suppress("PreferToOverPairSyntax")
 class TransferCacheImpl : TransferCache, KoinComponent {
 
     private val db: CacheDatabase by inject()
