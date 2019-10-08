@@ -43,6 +43,12 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     internal lateinit var presenter: SignUpPresenter
     private val loadingFragment by lazy { LoadingFragment() }
 
+    private lateinit var textError: String
+    var detailText = ""
+    var goToLogin = false
+
+    var changePage: ((String?, Boolean?) -> Unit)? = null
+
     @ProvidePresenter
     fun createLoginPresenter() = SignUpPresenter()
 
@@ -185,10 +191,11 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
-        var textError = e.message ?: "Error"
+        textError = e.message ?: getString(R.string.LNG_ERROR)
+
         when (e.type) {
-            ApiException.TYPE_EMAIL_TAKEN -> textError = getString(R.string.LNG_EMAIL_TAKEN_ERROR)
-            ApiException.TYPE_PHONE_TAKEN -> textError = getString(R.string.LNG_PHONE_TAKEN_ERROR)
+            ApiException.TYPE_EMAIL_TAKEN -> setTextIfAccountExist()
+            ApiException.TYPE_PHONE_TAKEN -> setTextIfAccountExist()
             ApiException.TYPE_EMAIL_INVALID -> textError = getString(R.string.LNG_ERROR_EMAIL)
             ApiException.TYPE_PHONE_INVALID -> textError = getString(R.string.LNG_ERROR_PHONE)
             ApiException.TYPE_PHONE_UNPROCESSABLE -> textError = getString(R.string.LNG_UNPROCESSABLE_ERROR)
@@ -203,9 +210,18 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             .newInstance()
             .apply {
                 title = textError
+                text = detailText
+                if (goToLogin) onClickOkButton = { changePage?.invoke(null, null) }
+                isShowCloseButton = true
                 onDismissCallBack = { hideLoading() }
             }
             .show(requireFragmentManager())
+    }
+
+    private fun setTextIfAccountExist() {
+        goToLogin = true
+        textError = getString(R.string.LNG_ACCOUNT_EXISTS_ERROR)
+        detailText = getString(R.string.LNG_LOGIN_REQUIRED)
     }
 
     // TODO remove BaseView or add code.

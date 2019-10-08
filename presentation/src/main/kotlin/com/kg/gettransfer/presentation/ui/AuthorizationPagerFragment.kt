@@ -71,11 +71,15 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         }
     }
 
-    fun showOtherPage(emailOrPhone: String, isPhone: Boolean) {
+    fun showOtherPage(emailOrPhone: String? = null, isPhone: Boolean? = null) {
         loginPager.currentItem = if (loginPager.currentItem == 0) 1 else 0
 
         (loginPager.adapter as LoginPagerAdapter).getItem(loginPager.currentItem).let { fragment ->
-            if (fragment is SignUpFragment) fragment.presenter.updateEmailOrPhone(emailOrPhone, isPhone)
+            if (fragment is SignUpFragment) emailOrPhone?.let { emailOrPhone ->
+                isPhone?.let { isPhone ->
+                    fragment.presenter.updateEmailOrPhone(emailOrPhone, isPhone)
+                }
+            }
         }
     }
 
@@ -125,7 +129,9 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
 
         //TODO for translate emailOrPhone to otherFragment
         private fun createSignUpFragment(): Fragment {
-            return SignUpFragment.newInstance()
+            return SignUpFragment.newInstance().apply {
+                changePage = { emailOrPhone, isPhone -> showOtherPage(emailOrPhone, isPhone) }
+            }
         }
     }
 
