@@ -37,10 +37,12 @@ class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinCompone
     }
 
     fun changeCurrency(selected: CurrencyModel) {
-        sessionInteractor.currency = selected.delegate
-        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, selected.code)
-        saveGeneralSettings()
-        viewState.currencyChanged(selected)
+        worker.main.launch {
+            sessionInteractor.currency = selected.delegate
+            analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, selected.code)
+            saveGeneralSettings()
+            viewState.currencyChanged(selected)
+        }
     }
 
     override fun onDestroy() {
