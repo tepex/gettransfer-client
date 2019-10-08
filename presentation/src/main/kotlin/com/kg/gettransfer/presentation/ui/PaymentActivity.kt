@@ -56,6 +56,8 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
         setContentView(R.layout.activity_payment)
 
+        hideKeyboard()
+
         setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT)
         webView.settings.javaScriptEnabled = true
         webView.setUserAgent()
