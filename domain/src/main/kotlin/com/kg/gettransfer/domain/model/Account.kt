@@ -30,7 +30,7 @@ data class Account(
         get() = partner != null
 
     companion object {
-        const val GROUP_CARRIER = "carrier"
+        const val GROUP_CARRIER = "carrier/"
         const val GROUP_MANAGER_VIEW_TRANSFERS = "manager/view_transfers"
         const val GROUP_EMAIL_NOTIFICATION_PASSENGER = "email_notifications/passenger"
 
