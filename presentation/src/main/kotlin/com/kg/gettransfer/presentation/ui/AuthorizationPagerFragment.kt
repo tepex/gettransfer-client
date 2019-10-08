@@ -12,14 +12,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.google.android.material.tabs.TabLayout
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.view.LogInView
-import com.kg.gettransfer.presentation.view.Screens
+
 import kotlinx.android.synthetic.main.fragment_pager_authorization.*
 import kotlinx.serialization.json.JSON
-//import leakcanary.AppWatcher
+// import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinComponent
@@ -30,6 +31,7 @@ import ru.terrakok.cicerone.Router
  *
  * @author П. Густокашин (Diwixis)
  */
+@Suppress("UnsafeCast")
 class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
 
     private val router by inject<Router>()
@@ -43,8 +45,8 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loginTitleTabs.setupWithViewPager(loginPager)
-        val semiboldFontRes = ResourcesCompat.getFont(context!!, R.font.sf_pro_text_semibold)
-        val regularFontRes = ResourcesCompat.getFont(context!!, R.font.sf_pro_text_regular)
+        val semiboldFontRes = context?.let { ResourcesCompat.getFont(it, R.font.sf_pro_text_semibold) }
+        val regularFontRes = context?.let { ResourcesCompat.getFont(it, R.font.sf_pro_text_regular) }
         loginTitleTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(p0: TabLayout.Tab) {}
             override fun onTabUnselected(tab: TabLayout.Tab) {
@@ -61,7 +63,7 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
                     .typeface = semiboldFontRes
             }
         })
-        loginPager.adapter = LoginPagerAdapter(fragmentManager!!)
+        fragmentManager?.let { loginPager.adapter = LoginPagerAdapter(it) }
 
         loginBackButton.setOnClickListener { router.exit() }
 
@@ -71,6 +73,7 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         }
     }
 
+    @Suppress("NestedBlockDepth")
     fun showOtherPage(emailOrPhone: String? = null, isPhone: Boolean? = null) {
         loginPager.currentItem = if (loginPager.currentItem == 0) 1 else 0
 
@@ -89,7 +92,7 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
     }
 
     private inner class LoginPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-        //TODO for translate emailOrPhone to otherFragment
+        // TODO for translate emailOrPhone to otherFragment
         val fragments = SparseArray<Fragment>()
 
         override fun getCount(): Int = COUNT_PAGE_FRAGMENTS
@@ -109,7 +112,7 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
                 }
             }
 
-        //TODO for translate emailOrPhone to otherFragment
+        // TODO for translate emailOrPhone to otherFragment
         private fun getFragment(position: Int, createFragment: (() -> Fragment)): Fragment {
             if (fragments[position] == null) {
                 fragments.put(position, createFragment())
@@ -117,7 +120,7 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
             return fragments[position]
         }
 
-        //TODO for translate emailOrPhone to otherFragment
+        // TODO for translate emailOrPhone to otherFragment
         private fun createLoginFragment(): Fragment {
             return LogInFragment.newInstance().apply {
                 changePage = { emailOrPhone, isPhone -> showOtherPage(emailOrPhone, isPhone) }
@@ -127,7 +130,7 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
             }
         }
 
-        //TODO for translate emailOrPhone to otherFragment
+        // TODO for translate emailOrPhone to otherFragment
         private fun createSignUpFragment(): Fragment {
             return SignUpFragment.newInstance().apply {
                 changePage = { emailOrPhone, isPhone -> showOtherPage(emailOrPhone, isPhone) }

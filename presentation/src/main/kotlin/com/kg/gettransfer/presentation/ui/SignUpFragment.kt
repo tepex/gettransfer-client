@@ -55,6 +55,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_sign_up, container, false)
 
+    @Suppress("NestedBlockDepth")
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -193,19 +194,12 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         Sentry.capture(e)
         textError = e.message ?: getString(R.string.LNG_ERROR)
 
-        when (e.type) {
-            ApiException.TYPE_EMAIL_TAKEN -> setTextIfAccountExist()
-            ApiException.TYPE_PHONE_TAKEN -> setTextIfAccountExist()
-            ApiException.TYPE_EMAIL_INVALID -> textError = getString(R.string.LNG_ERROR_EMAIL)
-            ApiException.TYPE_PHONE_INVALID -> textError = getString(R.string.LNG_ERROR_PHONE)
-            ApiException.TYPE_PHONE_UNPROCESSABLE -> textError = getString(R.string.LNG_UNPROCESSABLE_ERROR)
-        }
+        getErrorType(e)
+        getErrorCode(e)
+        showDialog()
+    }
 
-        when (e.code) {
-            ApiException.TOO_MANY_REQUESTS -> textError = getString(R.string.LNG_ERROR_RATE_LIMIT)
-            ApiException.NETWORK_ERROR -> textError = getString(R.string.LNG_NETWORK_ERROR)
-        }
-
+    private fun showDialog() {
         BottomSheetDialog
             .newInstance()
             .apply {
@@ -216,6 +210,23 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                 onDismissCallBack = { hideLoading() }
             }
             .show(requireFragmentManager())
+    }
+
+    private fun getErrorCode(e: ApiException) {
+        when (e.code) {
+            ApiException.TOO_MANY_REQUESTS -> textError = getString(R.string.LNG_ERROR_RATE_LIMIT)
+            ApiException.NETWORK_ERROR -> textError = getString(R.string.LNG_NETWORK_ERROR)
+        }
+    }
+
+    private fun getErrorType(e: ApiException) {
+        when (e.type) {
+            ApiException.TYPE_EMAIL_TAKEN -> setTextIfAccountExist()
+            ApiException.TYPE_PHONE_TAKEN -> setTextIfAccountExist()
+            ApiException.TYPE_EMAIL_INVALID -> textError = getString(R.string.LNG_ERROR_EMAIL)
+            ApiException.TYPE_PHONE_INVALID -> textError = getString(R.string.LNG_ERROR_PHONE)
+            ApiException.TYPE_PHONE_UNPROCESSABLE -> textError = getString(R.string.LNG_UNPROCESSABLE_ERROR)
+        }
     }
 
     private fun setTextIfAccountExist() {
