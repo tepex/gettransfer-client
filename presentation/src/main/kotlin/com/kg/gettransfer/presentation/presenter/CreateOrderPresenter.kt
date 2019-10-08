@@ -133,6 +133,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun updateDuration(durationValue: Int) {
         orderInteractor.apply {
+            initMapAndPrices()
             hourlyDuration = durationValue
             viewState.setHourlyDuration(hourlyDuration)
         }
