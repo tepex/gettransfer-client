@@ -62,23 +62,6 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnLogout"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/general_button_height"
-        android:background="@drawable/btn_bg_logout_rounded"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:textSize="@dimen/profile_settings_btns_text_size"
-        android:text="@string/LNG_UNLOGIN"
-        android:textColor="@color/color_gtr_red"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldsLayout"
-        android:layout_marginTop="@dimen/profile_settings_btn_logout_margin_top"
-        android:layout_marginStart="@dimen/profile_settings_btns_vertical_margin"
-        android:layout_marginEnd="@dimen/profile_settings_btns_vertical_margin"/>
-
-    <Button
         android:id="@+id/btnSave"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
@@ -91,8 +74,25 @@
         android:textColor="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/profile_settings_btn_save_margin_bottom"
+        app:layout_constraintTop_toBottomOf="@+id/fieldsLayout"
+        android:layout_marginTop="@dimen/profile_settings_btns_margin_top"
+        android:layout_marginStart="@dimen/profile_settings_btns_vertical_margin"
+        android:layout_marginEnd="@dimen/profile_settings_btns_vertical_margin"/>
+
+    <Button
+        android:id="@+id/btnLogout"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/general_button_height"
+        android:background="@drawable/btn_bg_logout_rounded"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textSize="@dimen/profile_settings_btns_text_size"
+        android:text="@string/LNG_UNLOGIN"
+        android:textColor="@color/color_gtr_red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSave"
+        android:layout_marginTop="@dimen/profile_settings_btns_margin_top"
         android:layout_marginStart="@dimen/profile_settings_btns_vertical_margin"
         android:layout_marginEnd="@dimen/profile_settings_btns_vertical_margin"/>
 
