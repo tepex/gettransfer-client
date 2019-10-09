@@ -660,7 +660,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun onChangeCurrencyClick() {
-        if (!accountManager.remoteAccount.isBusinessAccount) {
+        if (!isBusinessAccount()) {
             viewState.showCurrencies()
         }
     }

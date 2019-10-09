@@ -18,7 +18,7 @@ class TransferCacheImpl : TransferCache, KoinComponent {
 
     override fun getTransfer(id: Long) = db.transferCacheDao().getTransfer(id)?.map()
 
-    override fun getAllTransfers() = db.transferCacheDao().getAllTransfers().map { it.map() }
+    override fun getAllTransfers() = db.transferCacheDao().getAllTransfers().map { it.map() } to 0
 
     override fun getTransfersArchive() = db.transferCacheDao().getTransfersArchive().map { it.map() }
 
