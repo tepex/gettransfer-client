@@ -180,7 +180,6 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseBottomSheetFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
-        presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/BaseMapBottomSheetDialogFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripDetailsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripsMainActivity.kt",
@@ -213,11 +212,11 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RateField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RatingFieldView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SingleClickButton.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsCarrierInfoField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/VehiclePhotosView.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/BaseMapBottomSheetDialogFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/RatingDetailDialogFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/CommentDialogFragment.kt",
 

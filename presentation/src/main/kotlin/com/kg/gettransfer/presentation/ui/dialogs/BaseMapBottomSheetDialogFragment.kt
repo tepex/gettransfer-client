@@ -16,7 +16,9 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 import com.kg.gettransfer.presentation.view.BaseMapDialogView
 
-abstract class BaseMapBottomSheetDialogFragment : BaseBottomSheetDialogFragment(), BaseMapDialogView, OnMapReadyCallback {
+abstract class BaseMapBottomSheetDialogFragment : BaseBottomSheetDialogFragment(),
+    BaseMapDialogView,
+    OnMapReadyCallback {
 
     abstract fun getPresenter(): BaseMapDialogPresenter<*>
 
@@ -28,10 +30,12 @@ abstract class BaseMapBottomSheetDialogFragment : BaseBottomSheetDialogFragment(
 
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance()
-            (mapFragment as SupportMapFragment).getMapAsync(this)
+            mapFragment?.getMapAsync(this)
         }
 
-        childFragmentManager.beginTransaction().replace(layoutId, mapFragment as SupportMapFragment).commit()
+        mapFragment?.let {
+            childFragmentManager.beginTransaction().replace(layoutId, it).commit()
+        }
     }
 
     override fun onMapReady(map: GoogleMap) {
