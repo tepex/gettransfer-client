@@ -2,26 +2,16 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.google.android.gms.maps.model.LatLng
-
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
-import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.presentation.mapper.RouteMapper
-
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.map
-
-import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.RatingLastTripView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.sys.domain.Preferences
-import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -32,11 +22,9 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 @InjectViewState
-class RatingLastTripPresenter : BasePresenter<RatingLastTripView>() {
-    private val routeMapper: RouteMapper by inject()
-    private val configsManager: ConfigsManager by inject()
+class RatingLastTripPresenter : BaseMapDialogPresenter<RatingLastTripView>() {
+
     private val worker: WorkerManager by inject { parametersOf("RatingLastTripPresenter") }
-    private val transportTypes = configsManager.configs.transportTypes.map { it.map() }
 
     internal var transferId: Long = 0L
 
@@ -51,46 +39,9 @@ class RatingLastTripPresenter : BasePresenter<RatingLastTripView>() {
         }
     }
 
-    private suspend fun setupReview(transfer: Transfer) {
-        val routeModel = if (transfer.to != null) createRouteModel(transfer) else null
-        transfer.from.point?.let { point ->
-            viewState.setupReviewForLastTrip(
-                transfer.map(transportTypes),
-                LatLng(point.latitude, point.longitude),
-                routeModel
-            )
-        }
-    }
-
-    private suspend fun createRouteModel(transfer: Transfer): RouteModel? {
-        val route = transfer.from.point?.let { from ->
-            transfer.to?.point?.let { to ->
-                orderInteractor.getRouteInfo(
-                    RouteInfoRequest(
-                        from,
-                        to,
-                        false,
-                        false,
-                        sessionInteractor.currency.code,
-                        null
-                    )
-                ).model
-            }
-        }
-
-        return transfer.from.point?.let { fromPoint ->
-            transfer.to?.point?.let { toPoint ->
-                routeMapper.getView(
-                    route?.distance,
-                    route?.polyLines,
-                    transfer.from.name,
-                    transfer.to?.name,
-                    fromPoint,
-                    toPoint,
-                    SystemUtils.formatDateTime(transfer.map(transportTypes).dateTime)
-                )
-            }
-        }
+    override suspend fun setupReview(transfer: Transfer) {
+        super.setupReview(transfer)
+        viewState.setupReviewForLastTrip(transfer)
     }
 
     fun onTransferDetailsClick() {
