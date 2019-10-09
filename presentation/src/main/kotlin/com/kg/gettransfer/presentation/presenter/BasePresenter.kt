@@ -15,6 +15,7 @@ import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.model.ChatBadgeEvent
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.mapper.OfferMapper
@@ -72,7 +73,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
     protected val getPreferences: GetPreferencesInteractor by inject()
 
-    // private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
 
     protected val log: Logger by inject { parametersOf("GTR-presenter") }
@@ -173,16 +173,25 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         worker.main.launch {
             var transferID: Long? = null
             if (transferId == null) {
-                val result = withContext(worker.bg) { transferInteractor.getAllTransfers() }
-                if (result.error == null && result.model.isNotEmpty()) {
-                    transferID = result.model.first().id
+                val result = withContext(worker.bg) {
+                    transferInteractor.getAllTransfers(getUserRole())
+                }
+                if (result.error == null && result.model.first.isNotEmpty()) {
+                    transferID = result.model.first.first().id
                 }
             } else {
                 transferID = transferId
             }
-            router.navigateTo(Screens.SendEmail(emailCarrier, transferID, accountManager.remoteProfile.email))
+            router.navigateTo(
+                Screens.SendEmail(emailCarrier, transferID, accountManager.remoteProfile.email)
+            )
         }
     }
+
+    fun getUserRole(): String =
+        if (isBusinessAccount()) Transfer.Role.PARTNER.toString() else Transfer.Role.PASSENGER.toString()
+
+    fun isBusinessAccount(): Boolean = accountManager.remoteAccount.isBusinessAccount
 
     internal fun callPhone(phone: String) {
         router.navigateTo(Screens.CallPhone(phone))
@@ -202,14 +211,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
             }
         }
     }
-
-//    fun onOfferJsonReceived(jsonOffer: String, transferId: Long) =
-//            JSON.nonstrict.parse(OfferEntity.serializer(), jsonOffer)
-//                    .also { it.transferId = transferId }
-//                    .let  { offerEntityMapper.fromEntity(it) }
-//                    .also { it.vehicle.photos = it.vehicle.photos
-//                            .map { photo -> systemInteractor.endpoint.url.plus(photo) } }
-//                    .also { onNewOffer(it) }
 
     open suspend fun onNewOffer(offer: Offer): OfferModel {
         withContext(worker.bg) { offerInteractor.newOffer(offer) }

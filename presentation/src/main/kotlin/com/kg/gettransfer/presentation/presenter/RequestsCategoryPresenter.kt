@@ -54,6 +54,7 @@ class RequestsCategoryPresenter(
     private var transfers: List<Transfer>? = null
     private var driverCoordinate: DriverCoordinate? = null
     private val configsManager: ConfigsManager by inject()
+    private var pagesCount: Int? = null // for pagination
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -77,24 +78,39 @@ class RequestsCategoryPresenter(
         sessionInteractor.removeAccountChangedListener(this)
     }
 
-    fun getTransfers() {
+    @Suppress("MandatoryBracesIfStatements")
+    fun getTransfers(page: Int = 1) {
         worker.main.launch {
             transfers = when (transferType) {
-                TRANSFER_ACTIVE  -> withContext(worker.bg) { transferInteractor.getTransfersActive()  }.model
-                TRANSFER_ARCHIVE -> withContext(worker.bg) { transferInteractor.getTransfersArchive() }.model
-                else             -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
-            }.sortedByDescending { it.dateToLocal }
-            if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
-                coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
-                if (driverCoordinate == null) {
-                    driverCoordinate = DriverCoordinate(Handler())
-                } else {
-                    @Suppress("UnsafeCallOnNullableType")
-                    driverCoordinate!!.transfersIds = transfers!!.map { it.id }
+                TRANSFER_ACTIVE -> withContext(worker.bg) {
+                    if (isBusinessAccount()) getAllTransfersAnsPagesCount(page, Transfer.STATUS_CATEGORY_ACTIVE)
+                    else transferInteractor.getTransfersActive().model
                 }
-            }
+                TRANSFER_ARCHIVE -> withContext(worker.bg) {
+                    if (isBusinessAccount()) getAllTransfersAnsPagesCount(page, Transfer.STATUS_CATEGORY_ARCHIVE)
+                    else transferInteractor.getTransfersArchive().model
+                }
+                else -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
+            }.sortedByDescending { it.dateToLocal }
+
+            setupCoordinate()
             prepareDataAsync()
         }
+    }
+
+    private fun setupCoordinate() {
+        if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
+            coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
+            driverCoordinate?.let {
+                dc -> dc.transfersIds = transfers?.let { transfers?.map { it.id } }
+            } ?: run { driverCoordinate = DriverCoordinate(Handler()) }
+        }
+    }
+
+    private suspend fun getAllTransfersAnsPagesCount(page: Int, status: String): List<Transfer> {
+        val allTransfers = transferInteractor.getAllTransfers(getUserRole(), page, status)
+        pagesCount = allTransfers.model.second
+        return allTransfers.model.first
     }
 
     private suspend fun prepareDataAsync() {
@@ -113,8 +129,8 @@ class RequestsCategoryPresenter(
                                 transferModel
                             }
                         }
-                    }?.also { viewList ->
-                        viewState.updateTransfers(viewList)
+                    }?.also { transfersList ->
+                        viewState.updateTransfers(transfersList, pagesCount)
                         viewState.blockInterface(false)
                         updateEventsCount()
                     }

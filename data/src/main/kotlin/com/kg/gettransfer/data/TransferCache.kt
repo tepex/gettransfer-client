@@ -11,7 +11,7 @@ interface TransferCache : KoinComponent {
 
     fun getTransfer(id: Long): TransferEntity?
 
-    fun getAllTransfers(): List<TransferEntity>
+    fun getAllTransfers(): Pair<List<TransferEntity>, Int?>
 
     fun getTransfersArchive(): List<TransferEntity>
 

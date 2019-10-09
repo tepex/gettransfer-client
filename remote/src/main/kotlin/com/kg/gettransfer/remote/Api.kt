@@ -102,7 +102,11 @@ interface Api {
     ): ResponseModel<OffersModel>
 
     @GET(API_TRANSFERS)
-    suspend fun getAllTransfers(): ResponseModel<TransfersModel>
+    suspend fun getAllTransfers(
+        @Query("role") role: String,
+        @Query("page") page: Int,
+        @Query("filtering[status]") status: String?
+    ): ResponseModel<TransfersModel>
 
     @GET("$API_TRANSFERS/archive")
     suspend fun getTransfersArchive(): ResponseModel<TransfersModel>
