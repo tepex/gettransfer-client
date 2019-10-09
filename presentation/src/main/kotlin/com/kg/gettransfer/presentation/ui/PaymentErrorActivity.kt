@@ -1,12 +1,12 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import androidx.annotation.NonNull
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import android.view.View
+import androidx.annotation.NonNull
 
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
@@ -37,6 +37,7 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
         showPaymentDialog()
     }
 
+    @Suppress("UnsafeCast")
     private fun showPaymentDialog() {
         dialogView = layoutInflater.inflate(R.layout.dialog_payment_error, null)
 
@@ -47,7 +48,7 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
             bsPayment.setBottomSheetCallback(bsCallback)
             show()
         }
-        dialogView.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, 108f)
+        dialogView.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, DIALOG_HEIGHT)
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
 
@@ -61,17 +62,15 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
     }
 
     private fun setErrorInfo(dialogView: View) {
-        gatewayId?.let {
-            if (it == PaymentRequestModel.GROUND) {
+        gatewayId?.let { gateway ->
+            if (gateway == PaymentRequestModel.GROUND) {
                 dialogView.tvPaymentError.text = getString(R.string.LNG_PAYMENT_BALANCE_ERROR)
             }
         }
     }
 
     private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onSlide(p0: View, p1: Float) {
-
-        }
+        override fun onSlide(p0: View, p1: Float) { }
 
         override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_DRAGGING) {
@@ -88,5 +87,7 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
     companion object {
         const val TRANSFER_ID = "transferId"
         const val GATEWAY_ID  = "gatewayId"
+
+        private const val DIALOG_HEIGHT = 108f
     }
 }
