@@ -174,6 +174,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SupportPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/ThanksForRatePresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/TransferDetailsPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SmsCodePresenter.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AboutActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AppsFlyerHandleDeepLinkActivity.kt",
