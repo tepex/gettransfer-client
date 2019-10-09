@@ -89,4 +89,16 @@
         app:srcCompat="@drawable/ic_leaf"
         tools:visibility="visible" />
 
+    <ImageView
+        android:id="@+id/ivWheelchair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/vehicle_items_margin_start"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/imgGreen"
+        app:layout_constraintStart_toEndOf="@+id/imgGreen"
+        app:layout_constraintTop_toTopOf="@+id/imgGreen"
+        app:srcCompat="@drawable/ic_wheelchair"
+        tools:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
