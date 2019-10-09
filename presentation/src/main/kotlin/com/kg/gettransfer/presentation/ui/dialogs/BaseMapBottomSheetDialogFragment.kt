@@ -63,11 +63,11 @@ abstract class BaseMapBottomSheetDialogFragment : BaseBottomSheetDialogFragment(
 
     @Suppress("UNUSED_PARAMETER")
     private fun setPinForHourlyTransfer(
-            placeName: String,
-            info: String,
-            point: LatLng,
-            cameraUpdate: CameraUpdate,
-            driver: Boolean = false
+        placeName: String,
+        info: String,
+        point: LatLng,
+        cameraUpdate: CameraUpdate,
+        driver: Boolean = false
     ) {
         val markerRes = R.drawable.ic_map_label_a
         val bmPinA = MapHelper.getPinBitmap(layoutInflater, placeName, info, markerRes)

@@ -5,7 +5,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.kg.gettransfer.domain.model.Transfer
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface RatingLastTripView: BaseMapDialogView {
+interface RatingLastTripView : BaseMapDialogView {
 
     fun setupReviewForLastTrip(transfer: Transfer)
 

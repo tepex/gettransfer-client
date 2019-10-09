@@ -9,11 +9,11 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.BaseMapDialogView
 import org.koin.core.inject
 
-abstract class BaseMapDialogPresenter<BV : BaseMapDialogView>: BasePresenter<BV>() {
+abstract class BaseMapDialogPresenter<BV : BaseMapDialogView> : BasePresenter<BV>() {
 
     private val routeMapper: RouteMapper by inject()
 
-    var mapIsReady = false
+    private var mapIsReady = false
     var transfer: Transfer? = null
     var routeModel: RouteModel? = null
 
@@ -29,26 +29,29 @@ abstract class BaseMapDialogPresenter<BV : BaseMapDialogView>: BasePresenter<BV>
     }
 
     fun setRoute() {
-        val fromPoint = transfer!!.from.point!!
-        viewState.setRoute(
-                routeModel,
-                transfer!!.from.name,
-                LatLng(fromPoint.latitude, fromPoint.longitude)
-        )
+        transfer?.let { transfer ->
+            transfer.from.point?.let { fromPoint ->
+                viewState.setRoute(
+                    routeModel,
+                    transfer.from.name,
+                    LatLng(fromPoint.latitude, fromPoint.longitude)
+                )
+            }
+        }
     }
 
     private suspend fun createRouteModel(transfer: Transfer): RouteModel? {
         val route = transfer.from.point?.let { from ->
             transfer.to?.point?.let { to ->
                 orderInteractor.getRouteInfo(
-                        RouteInfoRequest(
-                                from,
-                                to,
-                                withPrices = false,
-                                returnWay = false,
-                                currency = sessionInteractor.currency.code,
-                                dateTime = null
-                        )
+                    RouteInfoRequest(
+                        from,
+                        to,
+                        withPrices = false,
+                        returnWay = false,
+                        currency = sessionInteractor.currency.code,
+                        dateTime = null
+                    )
                 ).model
             }
         }
@@ -56,16 +59,15 @@ abstract class BaseMapDialogPresenter<BV : BaseMapDialogView>: BasePresenter<BV>
         return transfer.from.point?.let { fromPoint ->
             transfer.to?.point?.let { toPoint ->
                 routeMapper.getView(
-                        route?.distance,
-                        route?.polyLines,
-                        transfer.from.name,
-                        transfer.to?.name,
-                        fromPoint,
-                        toPoint,
-                        SystemUtils.formatDateTime(transfer.dateToLocal)
+                    route?.distance,
+                    route?.polyLines,
+                    transfer.from.name,
+                    transfer.to?.name,
+                    fromPoint,
+                    toPoint,
+                    SystemUtils.formatDateTime(transfer.dateToLocal)
                 )
             }
         }
     }
-
 }
