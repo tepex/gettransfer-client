@@ -3,8 +3,10 @@ package com.kg.gettransfer.data
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
 import com.kg.gettransfer.domain.model.Transfer
-import org.koin.core.KoinComponent
+
 import java.io.InputStream
+
+import org.koin.core.KoinComponent
 
 interface TransferDataStore : KoinComponent {
 

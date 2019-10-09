@@ -11,7 +11,6 @@ import okhttp3.ResponseBody
 import org.koin.core.get
 import java.io.InputStream
 
-@Suppress("PreferToOverPairSyntax")
 class TransferRemoteImpl : TransferRemote {
     private val core = get<ApiCore>()
 
@@ -47,7 +46,7 @@ class TransferRemoteImpl : TransferRemote {
         }
         @Suppress("UnsafeCallOnNullableType")
         val transfers: List<TransferModel> = response.data!!.transfers
-        return Pair(transfers.map { it.map() }, response.data.pagesCount)
+        return transfers.map { it.map() } to response.data.pagesCount
     }
 
     override suspend fun getTransfersArchive(): List<TransferEntity> {

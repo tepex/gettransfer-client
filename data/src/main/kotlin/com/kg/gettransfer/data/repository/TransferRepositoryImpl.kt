@@ -27,7 +27,6 @@ import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 
-@Suppress("PreferToOverPairSyntax")
 class TransferRepositoryImpl(
     private val factory: DataStoreFactory<TransferDataStore, TransferDataStoreCache, TransferDataStoreRemote>
 ) : BaseRepository(), TransferRepository {
@@ -215,7 +214,7 @@ class TransferRepositoryImpl(
         }
         val resultList = result.entity?.let { checkTransfersEvents(it.first, true) } ?: emptyList()
         return Result(
-            Pair(resultList, result.entity?.second),
+            resultList to result.entity?.second,
             result.error?.map(),
             result.error != null && result.entity != null
         )

@@ -1,15 +1,17 @@
 package com.kg.gettransfer.presentation.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.kg.gettransfer.R
+import androidx.recyclerview.widget.RecyclerView
+
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.map
+import com.kg.gettransfer.R
+
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_request_item.view.*
 
@@ -29,32 +31,30 @@ class RequestsRVAdapter(
     override fun getItemCount() = transfers.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-            when (viewType) {
-                VIEW_TYPE_LOADING -> ProgressHolder(LayoutInflater.from(parent.context)
+            when (ViewType.values()[viewType]) {
+                ViewType.LOADING -> ProgressHolder(LayoutInflater.from(parent.context)
                         .inflate(R.layout.item_loading, parent, false))
                 else -> RequestsHolder(LayoutInflater.from(parent.context)
                         .inflate(R.layout.view_transfer_request_item, parent, false))
             }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (isLoading) {
-            if (position == transfers.size - 1) VIEW_TYPE_LOADING else VIEW_TYPE_NORMAl
-        } else VIEW_TYPE_NORMAl
-    }
+    override fun getItemViewType(position: Int): Int =
+        if (isLoading && position == transfers.size - 1) ViewType.LOADING.ordinal else ViewType.NORMAL.ordinal
 
-    @Suppress("UnsafeCast")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (getItemViewType(position) == VIEW_TYPE_NORMAl) {
+        if (getItemViewType(position) == ViewType.NORMAL.ordinal) {
             val transfer = transfers[position]
-            (holder as RequestsHolder).bind(
-                    transfer,
-                    requestType,
-                    eventsCount[transfer.id] ?: 0,
-                    transfersWithDriverCoordinates.contains(transfer.id),
-                    onItemClick,
-                    onCallClick,
-                    onChatClick
-            )
+            if (holder is RequestsHolder) {
+                holder.bind(
+                        transfer,
+                        requestType,
+                        eventsCount[transfer.id] ?: 0,
+                        transfersWithDriverCoordinates.contains(transfer.id),
+                        onItemClick,
+                        onCallClick,
+                        onChatClick
+                )
+            }
         }
     }
 
@@ -133,9 +133,8 @@ class RequestsRVAdapter(
         }
     }
 
-    companion object {
-        private const val VIEW_TYPE_LOADING = 0
-        private const val VIEW_TYPE_NORMAl = 1
+    enum class ViewType {
+        NORMAL, LOADING
     }
 }
 

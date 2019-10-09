@@ -6,7 +6,6 @@ import com.kg.gettransfer.data.model.TransferEntity
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-@Suppress("PreferToOverPairSyntax")
 class TransferCacheImpl : TransferCache, KoinComponent {
 
     private val db: CacheDatabase by inject()
@@ -19,7 +18,7 @@ class TransferCacheImpl : TransferCache, KoinComponent {
 
     override fun getTransfer(id: Long) = db.transferCacheDao().getTransfer(id)?.map()
 
-    override fun getAllTransfers() = Pair(db.transferCacheDao().getAllTransfers().map { it.map() }, 0)
+    override fun getAllTransfers() = db.transferCacheDao().getAllTransfers().map { it.map() } to 0
 
     override fun getTransfersArchive() = db.transferCacheDao().getTransfersArchive().map { it.map() }
 

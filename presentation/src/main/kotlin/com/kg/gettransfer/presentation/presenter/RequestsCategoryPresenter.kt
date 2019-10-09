@@ -98,19 +98,12 @@ class RequestsCategoryPresenter(
         }
     }
 
-    @Suppress("NestedBlockDepth", "UnnecessaryLet")
     private fun setupCoordinate() {
         if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
             coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
-            if (driverCoordinate == null) {
-                driverCoordinate = DriverCoordinate(Handler())
-            } else {
-                driverCoordinate?.let { coordinate ->
-                    coordinate.transfersIds = transfers?.let { transfer ->
-                        transfer.map { it.id }
-                    }
-                }
-            }
+            driverCoordinate?.let {
+                dc -> dc.transfersIds = transfers?.let { transfers?.map { it.id } }
+            } ?: run { driverCoordinate = DriverCoordinate(Handler()) }
         }
     }
 

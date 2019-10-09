@@ -188,10 +188,8 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
     }
 
-    @Suppress("MandatoryBracesIfStatements")
     fun getUserRole(): String =
-        if (isBusinessAccount()) Transfer.Role.PARTNER.toString()
-        else Transfer.Role.PASSENGER.toString()
+        if (isBusinessAccount()) Transfer.Role.PARTNER.toString() else Transfer.Role.PASSENGER.toString()
 
     fun isBusinessAccount(): Boolean = accountManager.remoteAccount.isBusinessAccount
 
