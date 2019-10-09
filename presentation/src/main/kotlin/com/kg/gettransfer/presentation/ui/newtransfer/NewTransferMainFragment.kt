@@ -65,6 +65,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     override fun onResume() {
         super.onResume()
         presenter.updateView()
+        presenter.tripModeSwitched(switcher_hourly.switch_mode_.isChecked)
     }
 
     private fun initClickListeners() {
