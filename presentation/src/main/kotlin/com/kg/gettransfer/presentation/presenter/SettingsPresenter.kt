@@ -110,7 +110,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.initGeneralSettingsLayout()
         viewState.setCurrency(sessionInteractor.currency.map().name)
         val locale = sessionInteractor.locale
-        val localeModel   = withContext(worker.bg) {
+        val localeModel = withContext(worker.bg) {
             configsManager.configs.availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
                 .map { it.map() }
                 .find { it.delegate.language == locale.language }
@@ -166,12 +166,16 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
             true  -> DistanceUnit.MI
             false -> DistanceUnit.KM
         }.apply { analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.UNITS_PARAM, name) }
-        saveGeneralSettings()
+        worker.main.launch {
+            saveGeneralSettings()
+        }
     }
 
     fun onEmailNotificationSwitched(isChecked: Boolean) {
         sessionInteractor.isEmailNotificationEnabled = isChecked
-        saveGeneralSettings()
+        worker.main.launch {
+            saveGeneralSettings()
+        }
     }
 
     fun onAboutAppClicked() {
