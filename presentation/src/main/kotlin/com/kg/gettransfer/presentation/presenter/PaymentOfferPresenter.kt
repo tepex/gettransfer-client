@@ -145,7 +145,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         val err = paymentResult.error
         if (err != null) {
             log.error("get by balance payment error", err)
-            router.navigateTo(Screens.PaymentError(paymentRequest.transferId))
+            router.navigateTo(Screens.PaymentError(paymentRequest.transferId, paymentRequest.gatewayId))
             analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         } else {
             router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))

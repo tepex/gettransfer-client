@@ -380,6 +380,7 @@
     <string name="LNG_BECOME_A_CARRIER_ANDROID_CONTINUE">Get in on Google Play</string>
     
     <string name="LNG_ERROR_RATE_LIMIT">Too many requests</string>
+    <string name="LNG_PAYMENT_BALANCE_ERROR">Insufficient funds in your balance to proceed with payment. Please, use another payment method</string>
 
     <string name="LNG_COLOR_BLACK">black</string>
     <string name="LNG_COLOR_WHITE">white</string>

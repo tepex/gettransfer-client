@@ -9,6 +9,7 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.presenter.PaymentErrorPresenter
 import com.kg.gettransfer.presentation.view.PaymentErrorView
 
@@ -26,11 +27,13 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
     override fun getPresenter(): PaymentErrorPresenter = presenter
 
     private var transferId: Long? = null
+    private var gatewayId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_error)
         transferId = intent.getLongExtra(TRANSFER_ID, 0L)
+        gatewayId = intent.getStringExtra(GATEWAY_ID)
         showPaymentDialog()
     }
 
@@ -50,9 +53,18 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
         with(dialogView) {
             tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" $transferId")
+            setErrorInfo(dialogView)
             ivClose.setOnClickListener     { this@PaymentErrorActivity.finish() }
             btnTryAgain.setOnClickListener { this@PaymentErrorActivity.finish() }
             btnSupport.setOnClickListener  { presenter.sendEmail(null, transferId) }
+        }
+    }
+
+    private fun setErrorInfo(dialogView: View) {
+        gatewayId?.let {
+            if (it == PaymentRequestModel.GROUND) {
+                dialogView.tvPaymentError.text = getString(R.string.LNG_PAYMENT_BALANCE_ERROR)
+            }
         }
     }
 
@@ -75,5 +87,6 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     companion object {
         const val TRANSFER_ID = "transferId"
+        const val GATEWAY_ID  = "gatewayId"
     }
 }
