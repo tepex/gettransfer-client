@@ -27,7 +27,7 @@ import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
-//import leakcanary.AppWatcher
+// import leakcanary.AppWatcher
 
 import org.koin.core.inject
 import pub.devrel.easypermissions.EasyPermissions
@@ -65,6 +65,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     override fun onResume() {
         super.onResume()
         presenter.updateView()
+        presenter.tripModeSwitched(switcher_hourly.switch_mode_.isChecked)
     }
 
     private fun initClickListeners() {
@@ -74,15 +75,13 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         }
 
         // Address panel
-        request_search_panel.setSearchFromClickListener {
-            presenter.navigateToFindAddress()}
-        request_search_panel.setSearchToClickListener {
-            presenter.navigateToFindAddress(true) }
+        request_search_panel.setSearchFromClickListener { presenter.navigateToFindAddress() }
+        request_search_panel.setSearchToClickListener { presenter.navigateToFindAddress(true) }
         request_search_panel.setHourlyClickListener { presenter.showHourlyDurationDialog() }
-        request_search_panel.setIvSelectFieldFromClickListener {  switchToMap() }
+        request_search_panel.setIvSelectFieldFromClickListener { switchToMap() }
 
         // Buttons
-        btnNextFragment.setThrottledClickListener(1500L) { presenter.onNextClick() }
+        btnNextFragment.setThrottledClickListener(THROTTLED_DELAY) { presenter.onNextClick() }
         bestPriceLogo.setOnClickListener(readMoreListener)
         layoutBestPriceText.setOnClickListener(readMoreListener)
     }
@@ -127,7 +126,9 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     }*/
 
     override fun setHourlyDuration(duration: Int?) {
-        duration?.let { request_search_panel.setCurrentHoursText(HourlyValuesHelper.getValue(duration, requireContext())) }
+        duration?.let {
+            request_search_panel.setCurrentHoursText(HourlyValuesHelper.getValue(duration, requireContext()))
+        }
     }
 
     override fun updateTripView(isHourly: Boolean) {
@@ -202,5 +203,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     companion object {
         @JvmField val PERMISSIONS =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        private const val THROTTLED_DELAY = 1500L
     }
 }
