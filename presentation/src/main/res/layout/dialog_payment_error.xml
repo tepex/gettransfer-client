@@ -99,12 +99,12 @@
         app:layout_constraintEnd_toStartOf="@+id/btnTryAgain"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/tvPaymentError"
         app:srcCompat="@drawable/ic_support" />
 
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/tvPaymentError"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"

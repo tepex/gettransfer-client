@@ -23,7 +23,8 @@ data class OfferModel(
     @SerializedName(OfferEntity.PASSENGER_FEEDBACK)  @Expose val passengerFeedback: String?,
     @SerializedName(OfferEntity.CARRIER)             @Expose val carrier: CarrierModel,
     @SerializedName(OfferEntity.VEHICLE)             @Expose val vehicle: VehicleModel,
-    @SerializedName(OfferEntity.DRIVER)              @Expose val driver: ProfileModel?
+    @SerializedName(OfferEntity.DRIVER)              @Expose val driver: ProfileModel?,
+    @SerializedName(OfferEntity.WHEELCHAIR)          @Expose val wheelchair: Boolean
 )
 
 fun OfferModel.map(transferId: Long) =
@@ -44,5 +45,6 @@ fun OfferModel.map(transferId: Long) =
         passengerFeedback,
         carrier.map(),
         vehicle.map(),
-        driver?.map()
+        driver?.map(),
+        wheelchair
     )

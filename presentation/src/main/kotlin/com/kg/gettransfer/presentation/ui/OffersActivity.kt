@@ -224,16 +224,17 @@ class OffersActivity : BaseActivity(), OffersView {
                 )
                 setCapacity(offer.vehicle.transportType)
                 with(vehicle_conveniences) {
-                    var isNameSignSection = false
+                    val isNameSignSection = offer.isNameSignPresent
                     imgWithNameSign.isVisible = offer.isNameSignPresent && offer.isWithNameSign
                     tvMissingNameSign.isVisible = offer.isNameSignPresent && !offer.isWithNameSign
                     imgMissingNameSign.isVisible = offer.isNameSignPresent && !offer.isWithNameSign
-                    isNameSignSection = offer.isNameSignPresent
 
                     imgFreeWater.isVisible = offer.refreshments
                     imgFreeWiFi.isVisible = offer.wifi
                     imgCharge.isVisible = offer.charger
-                    isVisible = offer.refreshments || offer.wifi || offer.charger || isNameSignSection
+                    ivWheelchair.isVisible = offer.wheelchair
+                    isVisible = offer.refreshments || offer.wifi || offer.charger ||
+                        isNameSignSection || offer.wheelchair
                 }
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)
