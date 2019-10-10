@@ -106,16 +106,7 @@ object DateTimePickerHelper : KoinComponent {
                 }
             })
 
-        if (Build.VERSION.SDK_INT < 21) {
-            boundDatePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
-            boundDatePickerDialog.setMin(
-                current.get(Calendar.YEAR),
-                current.get(Calendar.MONTH),
-                current.get(Calendar.DAY_OF_MONTH)
-            )
-        } else {
-            boundDatePickerDialog.datePicker.minDate = current.timeInMillis
-        }
+        boundDatePickerDialog.datePicker.minDate = current.timeInMillis
         boundDatePickerDialog.show()
     }
 
