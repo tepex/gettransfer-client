@@ -132,6 +132,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun updateDuration(durationValue: Int) {
+        saveSelectedTransportTypes()
         orderInteractor.apply {
             initMapAndPrices()
             hourlyDuration = durationValue
@@ -261,6 +262,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun getNewPrices() {
+        saveSelectedTransportTypes()
         orderInteractor.hourlyDuration?.let { initPrices(it) } ?: initPrices(dateDelegate.returnDate != null)
     }
 
@@ -352,6 +354,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun clearReturnDate() {
+        saveSelectedTransportTypes()
         dateDelegate.returnDate = null
         orderInteractor.flightNumberReturn = null
         initPrices(false)
