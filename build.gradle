@@ -207,6 +207,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransportTypeFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RequestsFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AuthorizationPagerFragment.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/NetworkNotAvailableView.kt",
