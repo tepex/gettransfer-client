@@ -46,7 +46,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
 
-        contentSuccessPayment.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, 8f)
+        contentSuccessPayment.layoutParams.height =
+            getScreenSide(true) - Utils.dpToPxInt(this, SCREEN_MARGIN_TOP)
 
         baseMapView = mapViewRoute
         initMapView(savedInstanceState)
@@ -88,7 +89,12 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
 
     override fun setRemainTime(days: Int, hours: Int, minutes: Int) {
-        val time = "$days${getString(R.string.LNG_D)}:$hours${getString(R.string.LNG_H)}:$minutes${getString(R.string.LNG_M)}"
+        val d = "$days${getString(R.string.LNG_D)}"
+        val h = "$hours${getString(R.string.LNG_H)}"
+        val m = "$minutes${getString(R.string.LNG_M)}"
+
+        val time = "$d:$h:$m"
+
         tvRemainTime.text = time
     }
 
@@ -130,5 +136,6 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
         const val TRANSFER_ID = "transferId"
         const val OFFER_ID = "offerId"
         private const val RC_WRITE_FILE = 111
+        private const val SCREEN_MARGIN_TOP = 8f
     }
 }

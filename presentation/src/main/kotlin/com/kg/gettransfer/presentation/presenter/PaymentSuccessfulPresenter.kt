@@ -3,6 +3,9 @@ package com.kg.gettransfer.presentation.presenter
 import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.model.LatLng
+import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
@@ -37,38 +40,29 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             val transfer = result.model
             val transferModel = transfer.map(configsManager.configs.transportTypes.map { it.map() })
             if (result.error != null && !result.fromCache) {
-                viewState.setError(result.error!!)
+                result.error?.let { viewState.setError(it) }
             } else {
-                if (transfer.to != null) {
-                    val r = utils.asyncAwait {
-                        orderInteractor.getRouteInfo(
-                            RouteInfoRequest(
-                                transfer.from.point!!,
-                                transfer.to!!.point!!,
-                                false,
-                                false,
-                                sessionInteractor.currency.code,
-                                null
-                            )
-                        )
+                transfer.to?.let { to ->
+                    transfer.from.point?.let { fromPoint ->
+                        transfer.to?.point?.let { toPoint ->
+                            val r = getRouteInfo(fromPoint, toPoint)
+                            r.cacheError?.let { viewState.setError(it) }
+                            if (r.error == null || r.error != null && r.fromCache) {
+                                val routeModel = routeMapper.getView(
+                                    r.model.distance,
+                                    r.model.polyLines,
+                                    transfer.from.name,
+                                    to.name,
+                                    fromPoint,
+                                    toPoint,
+                                    SystemUtils.formatDateTime(transferModel.dateTime)
+                                )
+                                viewState.setRoute(Utils.getPolyline(routeModel))
+                            }
+                        }
                     }
-                    r.cacheError?.let { viewState.setError(it) }
-                    if (r.error == null || (r.error != null && r.fromCache)) {
-                        val routeModel = routeMapper.getView(
-                            r.model.distance,
-                            r.model.polyLines,
-                            transfer.from.name,
-                            transfer.to!!.name,
-                            transfer.from.point!!,
-                            transfer.to!!.point!!,
-                            SystemUtils.formatDateTime(transferModel.dateTime)
-                        )
-                        viewState.setRoute(Utils.getPolyline(routeModel))
-                    }
-                } else {
-                    if (transfer.duration != null) {
-                        setHourlyTransfer(transfer)
-                    }
+                } ?: run {
+                    transfer.duration?.let { setHourlyTransfer(transfer) }
                 }
                 val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
                 viewState.setRemainTime(days, hours, minutes)
@@ -83,10 +77,24 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         }
     }
 
+    private suspend fun getRouteInfo(fromPoint: Point, toPoint: Point): Result<RouteInfo> =
+        utils.asyncAwait {
+            orderInteractor.getRouteInfo(
+                RouteInfoRequest(
+                    fromPoint,
+                    toPoint,
+                    withPrices = false,
+                    returnWay = false,
+                    currency = sessionInteractor.currency.code,
+                    dateTime = null
+                )
+            )
+        }
+
     private fun setHourlyTransfer(transfer: Transfer) {
-        val from = transfer.from.point!!
-        val point = LatLng(from.latitude, from.longitude)
-        viewState.setPinHourlyTransfer(point, Utils.getCameraUpdateForPin(point))
+        val from = transfer.from.point
+        val point = from?.let { LatLng(it.latitude, it.longitude) }
+        point?.let { viewState.setPinHourlyTransfer(it, Utils.getCameraUpdateForPin(it)) }
     }
 
     fun onCallClick() {
