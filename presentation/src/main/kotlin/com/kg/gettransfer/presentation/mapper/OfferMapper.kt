@@ -32,7 +32,8 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
             carrierMapper.toView(type.carrier),
             type.vehicle.map(url),
             type.driver?.let { profileMapper.toView(it) },
-            type.phoneToCall
+            type.phoneToCall,
+            type.wheelchair
         )
 
     override fun fromView(type: OfferModel): Offer { throw UnsupportedOperationException() }

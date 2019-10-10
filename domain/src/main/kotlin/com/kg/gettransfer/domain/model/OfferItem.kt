@@ -21,7 +21,8 @@ data class Offer(
     val passengerFeedback: String?,
     val carrier: Carrier,
     val vehicle: Vehicle,
-    val driver: Profile?
+    val driver: Profile?,
+    val wheelchair: Boolean
 ) : OfferItem() {
 
     val phoneToCall = when {

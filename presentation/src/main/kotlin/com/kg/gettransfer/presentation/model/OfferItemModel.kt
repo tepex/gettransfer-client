@@ -31,7 +31,8 @@ data class OfferModel(
     val carrier: CarrierModel,
     val vehicle: VehicleModel,
     val driver: ProfileModel?,
-    val phoneToCall: String?
+    val phoneToCall: String?,
+    val wheelchair: Boolean
 ) : OfferItemModel() {
 
     companion object {
