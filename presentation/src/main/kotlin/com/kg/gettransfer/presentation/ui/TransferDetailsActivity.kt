@@ -540,6 +540,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 imgFreeWater.isVisible  = offerModel.refreshments
                 imgFreeWiFi.isVisible   = offerModel.wifi
                 imgCharge.isVisible     = offerModel.charger
+                ivWheelchair.isVisible  = offerModel.wheelchair
 
                 offerModel.vehicle.color?.let { color ->
                     Utils.setCarColorInTextView(this@TransferDetailsActivity, carColor, color)

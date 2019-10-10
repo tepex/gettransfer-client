@@ -35,11 +35,18 @@ class TransferRemoteImpl : TransferRemote {
         return response.data!!.transfer.map()
     }
 
-    override suspend fun getAllTransfers(): List<TransferEntity> {
-        val response: ResponseModel<TransfersModel> = core.tryTwice { core.api.getAllTransfers() }
+    override suspend fun getAllTransfers(
+        role: String,
+        page: Int,
+        status: String?
+    ): Pair<List<TransferEntity>, Int?> {
+
+        val response: ResponseModel<TransfersModel> = core.tryTwice {
+            core.api.getAllTransfers(role, page, status)
+        }
         @Suppress("UnsafeCallOnNullableType")
         val transfers: List<TransferModel> = response.data!!.transfers
-        return transfers.map { it.map() }
+        return transfers.map { it.map() } to response.data.pagesCount
     }
 
     override suspend fun getTransfersArchive(): List<TransferEntity> {

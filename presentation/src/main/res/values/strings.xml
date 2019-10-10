@@ -365,11 +365,9 @@
     <string name="LNG_DOWNLOAD_COMPLETED">Download completed</string>
     <string name="LNG_VOUCHER">Voucher</string>
     <string name="LNG_NO_SEATS_REQUIRED">No child seats required</string>
-
     <string name="LNG_PAYMENT_AVAILABLE_S">Available: %s</string>
     <string name="LNG_PAYMENT_LIMIT">Limit:</string>
     <string name="LNG_PAYMENT_FROM_BALANCE_AVAILABLE">From balance (available: %s)</string>
-
     <string name="LNG_ABOUT_DRIVER_APP">Use new app for drivers</string>
     <string name="LNG_ABOUT_DRIVER_APP_INFO">Try a individual application for drivers. Now it will be more convenient to find applications and plan trips.</string>
     <string name="LNG_ABOUT_DRIVER_APP_NOT_SUPPORT">Unfortunately, the driver mode in your version of the application is no longer supported. Try a separate application for drivers. Now it will be more convenient to find applications and plan trips.</string>
@@ -378,9 +376,9 @@
     <string name="LNG_ABOUT_DRIVE_APP_CONTINUE_PAX">Continue as passenger</string>
     <string name="LNG_BECOME_A_CARRIER_INFO">Try a individual application for drivers. Now it will be more convenient to find applications and plan trips.</string>
     <string name="LNG_BECOME_A_CARRIER_ANDROID_CONTINUE">Get in on Google Play</string>
-    
     <string name="LNG_ERROR_RATE_LIMIT">Too many requests</string>
-    <string name="LNG_PAYMENT_BALANCE_ERROR">Insufficient funds in your balance to proceed with payment. Please, use another payment method</string>
+    <string name="LNG_ACCOUNT_EXISTS_ERROR">Account already exists</string>
+    <string name="LNG_LOGIN_REQUIRED">Please log in to continue</string>
 
     <string name="LNG_COLOR_BLACK">black</string>
     <string name="LNG_COLOR_WHITE">white</string>

@@ -169,7 +169,7 @@ class Analytics(
                         Transfer.Role.PASSENGER
                     }
                     utils.asyncAwait {
-                        transferInteractor.sendAnalytics(transfer.id, role.name.toLowerCase())
+                        transferInteractor.sendAnalytics(transfer.id, role.toString())
                     }
                 }
             }

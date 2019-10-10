@@ -12,11 +12,19 @@ open class TransferDataStoreRemote : TransferDataStore {
     private val remote: TransferRemote by inject()
 
     override suspend fun createTransfer(transferNew: TransferNewEntity) = remote.createTransfer(transferNew)
+
     override suspend fun cancelTransfer(id: Long, reason: String) = remote.cancelTransfer(id, reason)
 
     override suspend fun getTransfer(id: Long) = remote.getTransfer(id)
-    override suspend fun getAllTransfers() = remote.getAllTransfers()
+
+    override suspend fun getAllTransfers(
+        role: String,
+        page: Int,
+        status: String?
+    ) = remote.getAllTransfers(role, page, status)
+
     override suspend fun getTransfersArchive() = remote.getTransfersArchive()
+
     override suspend fun getTransfersActive() = remote.getTransfersActive()
 
     override fun clearTransfersCache() { throw UnsupportedOperationException() }

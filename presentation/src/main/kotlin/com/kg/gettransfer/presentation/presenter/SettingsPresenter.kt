@@ -239,7 +239,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     }
 
     fun onCurrencyClicked() {
-        if (!accountManager.remoteAccount.isBusinessAccount) {
+        if (!isBusinessAccount()) {
             viewState.showCurrencyChooser()
         }
     }

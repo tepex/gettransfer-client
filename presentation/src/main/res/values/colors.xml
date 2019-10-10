@@ -3,7 +3,7 @@
 
     <color name="colorPrimary">#ff6900</color>
     <color name="colorPrimaryDark">#ffffff</color>
-    <color name="colorAccent">#216edd</color>
+    <color name="colorAccent">@color/color_gtr_orange</color>
     <color name="colorGreen">#98b71b</color>
     <color name="book_btn">#31b700</color>
     <color name="book_btn_pressed">#2CA400</color>

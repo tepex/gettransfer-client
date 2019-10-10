@@ -23,9 +23,10 @@ import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.serialization.json.JSON
-//import leakcanary.AppWatcher
+// import leakcanary.AppWatcher
 import timber.log.Timber
 
+@Suppress("EmptyFunctionBlock")
 class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
 
     private val loadingFragment by lazy { LoadingFragment() }
@@ -36,6 +37,11 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     @ProvidePresenter
     fun smsCodePresenterProvider() = SmsCodePresenter()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter.setTimer()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_sms_code, container, false)
 
@@ -44,9 +50,12 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         super.onViewCreated(view, savedInstanceState)
 
         with(presenter) {
-            arguments?.let {
-                params = JSON.parse(LogInView.Params.serializer(), it.getString(LogInView.EXTRA_PARAMS) ?: "")
-                isPhone = it.getBoolean(EXTERNAL_IS_PHONE)
+            arguments?.let { bundle ->
+                params = JSON.parse(
+                    LogInView.Params.serializer(),
+                    bundle.getString(LogInView.EXTRA_PARAMS) ?: ""
+                )
+                isPhone = bundle.getBoolean(EXTERNAL_IS_PHONE)
             }
             pinItemsCount = pinView.itemCount
         }
@@ -58,19 +67,19 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
             presenter.checkAfterPinChanged()
         }
 
-        loginBackButton.setOnClickListener {
-            it.hideKeyboard()
+        loginBackButton.setOnClickListener { view ->
+            view.hideKeyboard()
             presenter.back()
         }
 
-        btnResendCode.setOnClickListener {
-            it.hideKeyboard()
+        btnResendCode.setOnClickListener { view ->
+            view.hideKeyboard()
             presenter.sendVerificationCode()
             presenter.setTimer()
         }
 
-        btnDone.setThrottledClickListener {
-            it.hideKeyboard()
+        btnDone.setThrottledClickListener { view ->
+            view.hideKeyboard()
             presenter.onLoginClick()
         }
     }
@@ -78,6 +87,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     override fun onDestroy() {
         super.onDestroy()
 //        AppWatcher.objectWatcher.watch(this)
+        presenter.cancelTimer()
     }
 
     override fun setBtnDoneIsEnabled(isEnabled: Boolean) {
@@ -100,21 +110,23 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     }
 
     override fun showErrorText(show: Boolean, text: String?) {
-        pinView.setTextColor(
-            ContextCompat.getColor(
-                context!!,
-                if (show) R.color.color_gtr_red else R.color.color_gtr_green
+        context?.let { context ->
+            pinView.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    if (show) R.color.color_gtr_red else R.color.color_gtr_green
+                )
             )
-        )
+        }
         wrongCodeError.isVisible = show
         text?.let { wrongCodeError.text = text }
     }
 
-    override fun showValidationError(b: Boolean, invaliD_EMAIL: Int) {
-        //TODO remove BaseView or add code.
+    override fun showValidationError(b: Boolean, invalidEmail: Int) {
+        // TODO remove BaseView or add code.
     }
 
-    //----------TODO остатки от группы Base.---------------
+    // ----------TODO остатки от группы Base.---------------
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if (block) {
@@ -123,23 +135,22 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     }
 
     override fun setError(e: ApiException) {
-        pinView.setTextColor(ContextCompat.getColor(context!!, R.color.color_gtr_red))
+        context?.let { pinView.setTextColor(ContextCompat.getColor(it, R.color.color_gtr_red)) }
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         when (e.code) {
-            ApiException.NOT_FOUND -> {
+            ApiException.NOT_FOUND ->
                 BottomSheetDialog
                     .newInstance()
                     .apply {
-                        title = this@SmsCodeFragment.getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.params.emailOrPhone)
+                        title = getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.params.emailOrPhone)
                         buttonOkText = this@SmsCodeFragment.getString(R.string.LNG_OK)
                         onDismissCallBack = {
                             presenter.back()
                         }
                     }
                     .show(requireFragmentManager())
-            }
         }
     }
 
@@ -149,7 +160,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     }
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        Utils.showError(context!!, false, getString(errId, *args))
+        context?.let { Utils.showError(it, false, getString(errId, *args)) }
     }
 
     private fun showLoading() {
@@ -169,15 +180,12 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     }
 
     override fun setTransferNotFoundError(transferId: Long) {
-        //TODO remove BaseView or add code.
+        // TODO remove BaseView or add code.
     }
 
     companion object {
-        const val SMS_RESEND_DELAY_MILLIS = 90_000L
 
         const val EXTERNAL_IS_PHONE = ".presentation.ui.SmsCodeFragment_IS_PHONE"
-        const val EXTERNAL_EMAIL_OR_PHONE = ".presentation.ui.SmsCodeFragment_EMAIL_OR_PHONE"
-        const val EXTERNAL_SMS_RESEND_DELAY_SEC = ".presentation.ui.SmsCodeFragment_EMAIL_OR_PHONE"
 
         fun newInstance() = SmsCodeFragment()
     }
