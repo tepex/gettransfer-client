@@ -265,9 +265,10 @@ object Screens {
         }
     }
 
-    data class PaymentError(val transferId: Long) : SupportAppScreen() {
+    data class PaymentError(val transferId: Long, val gatewayId: String? = null) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentErrorActivity::class.java).apply {
             putExtra(PaymentErrorActivity.TRANSFER_ID, transferId)
+            putExtra(PaymentErrorActivity.GATEWAY_ID, gatewayId)
         }
     }
 

@@ -1,14 +1,15 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import androidx.annotation.NonNull
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import android.view.View
+import androidx.annotation.NonNull
 
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.presenter.PaymentErrorPresenter
 import com.kg.gettransfer.presentation.view.PaymentErrorView
 
@@ -26,14 +27,17 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
     override fun getPresenter(): PaymentErrorPresenter = presenter
 
     private var transferId: Long? = null
+    private var gatewayId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_error)
         transferId = intent.getLongExtra(TRANSFER_ID, 0L)
+        gatewayId = intent.getStringExtra(GATEWAY_ID)
         showPaymentDialog()
     }
 
+    @Suppress("UnsafeCast")
     private fun showPaymentDialog() {
         dialogView = layoutInflater.inflate(R.layout.dialog_payment_error, null)
 
@@ -44,22 +48,29 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
             bsPayment.setBottomSheetCallback(bsCallback)
             show()
         }
-        dialogView.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, 108f)
+        dialogView.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, DIALOG_HEIGHT)
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
 
         with(dialogView) {
             tvBookingNumber.text = getString(R.string.LNG_BOOKING_NUMBER).plus(" $transferId")
+            setErrorInfo(dialogView)
             ivClose.setOnClickListener     { this@PaymentErrorActivity.finish() }
             btnTryAgain.setOnClickListener { this@PaymentErrorActivity.finish() }
             btnSupport.setOnClickListener  { presenter.sendEmail(null, transferId) }
         }
     }
 
-    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onSlide(p0: View, p1: Float) {
-
+    private fun setErrorInfo(dialogView: View) {
+        gatewayId?.let { gateway ->
+            if (gateway == PaymentRequestModel.GROUND) {
+                dialogView.tvPaymentError.text = getString(R.string.LNG_PAYMENT_BALANCE_ERROR)
+            }
         }
+    }
+
+    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onSlide(p0: View, p1: Float) { }
 
         override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_DRAGGING) {
@@ -75,5 +86,8 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
 
     companion object {
         const val TRANSFER_ID = "transferId"
+        const val GATEWAY_ID  = "gatewayId"
+
+        private const val DIALOG_HEIGHT = 108f
     }
 }
