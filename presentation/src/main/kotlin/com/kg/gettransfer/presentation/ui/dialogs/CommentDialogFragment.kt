@@ -125,8 +125,8 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
             for (hint in hints) {
 
                 val chip = Chip(chipGroup.context)
-                val drawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.Chip_Choice)
-                chip.setChipDrawable(drawable)
+                val drawable = context?.let { ChipDrawable.createFromAttributes(it, null, 0, R.style.Chip_Choice) }
+                drawable?.let { chip.setChipDrawable(it) }
                 chip.text = hint
                 chip.isClickable = true
                 chip.isCheckable = true
