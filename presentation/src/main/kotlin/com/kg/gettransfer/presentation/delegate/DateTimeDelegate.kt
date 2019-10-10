@@ -51,16 +51,15 @@ class DateTimeDelegate : KoinComponent {
     fun validate() = compareDates()
 
     // check exactly what is in domain
-    private fun compareDates() =
-        orderInteractor.run {
-                                                                          // true if hourly or return date not defined
+    private fun compareDates() = orderInteractor.run {
+            // true if hourly or return date not defined
             if (hourlyDuration != null) true else orderReturnTime?.after(orderStartTime) ?: true
         }
 
     fun chooseOrderTime(context: Context, fieldStart: Boolean, screen: DateTimeScreen?) =
         DateTimePickerHelper.showDatePickerDialog(
             context,
-            Calendar.getInstance().apply { time = if (fieldStart) startDate else returnDate ?: startDate},
+            Calendar.getInstance().apply { time = if (fieldStart) startDate else returnDate ?: startDate },
             getCurrentDateForField(fieldStart),
             object : DateTimeHandler {
 

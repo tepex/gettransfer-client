@@ -149,6 +149,7 @@ detekt {
             "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/OffersAdapter.kt",
             "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/RequestsRVAdapter.kt",
 
+            "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/DateTimeDelegate.kt",
             "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/OfferItemBindDelegate.kt",
 
             "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/VehicleModel.kt",
@@ -220,6 +221,7 @@ detekt {
 
             "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/RatingDetailDialogFragment.kt",
 
+            "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/DateTimePickerHelper.kt",
             "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LanguageDrawer.kt",
             "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LayoutHelper.kt",
             "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/ScrollGalleryInflater.kt",

@@ -18,8 +18,12 @@ import java.util.IllegalFormatConversionException
 
 object DateTimePickerHelper : KoinComponent {
 
+    private const val MIN_HOUR = -1
+    private const val MIN_MINUTE = 24
+
     /**
-     * It's a Samsung bug in their Lollipop UI implementation. It affects Galaxy S4, S5, Note 3 and probably more devices.
+     * It's a Samsung bug in their Lollipop UI implementation. It affects Galaxy S4, S5, Note 3 and
+     * probably more devices.
      * For us it occurs on de_DE and de_AT languages, but it appears to be an issue that affects multiple languages.
      *
      * I fixed it by forcing Samsung devices to use the Holo theme for the date picker.
@@ -32,8 +36,8 @@ object DateTimePickerHelper : KoinComponent {
 
     private fun isBetweenAndroidVersions(min: Int, max: Int) = Build.VERSION.SDK_INT in min..max
 
-    private fun getContextForDateTimePicker(context: Context) : Context {
-        if (isBrokenSamsungDevice())
+    private fun getContextForDateTimePicker(context: Context): Context {
+        if (isBrokenSamsungDevice()) {
             return object : ContextWrapper(context) {
                 private var wrappedResources: Resources? = null
 
@@ -57,6 +61,7 @@ object DateTimePickerHelper : KoinComponent {
                     return wrappedResources
                 }
             }
+        }
         return context
     }
 
@@ -76,8 +81,8 @@ object DateTimePickerHelper : KoinComponent {
                     calendarWithoutTime.time.after(current.time) -> showTimePickerDialog(
                         ctx,
                         calendar,
-                        -1,
-                        24,
+                        MIN_HOUR,
+                        MIN_MINUTE,
                         calendar.get(Calendar.HOUR_OF_DAY),
                         calendar.get(Calendar.MINUTE),
                         handler
@@ -110,6 +115,7 @@ object DateTimePickerHelper : KoinComponent {
         boundDatePickerDialog.show()
     }
 
+    @Suppress("LongParameterList")
     private fun showTimePickerDialog(
         context: Context,
         selectedDate: Calendar,
