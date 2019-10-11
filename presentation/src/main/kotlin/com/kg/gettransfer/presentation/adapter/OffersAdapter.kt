@@ -9,7 +9,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.model.OfferItemModel
-import com.kg.gettransfer.presentation.model.OfferModel
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.offer_tiny.view.*
@@ -23,6 +22,7 @@ class OffersAdapter(
     fun update(offers: List<OfferItemModel>) {
         this.offers.clear()
         this.offers.addAll(offers)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = offers.size
@@ -54,11 +54,6 @@ class OffersAdapter(
             bookView.setThrottledClickListener { clickHandler(offerItem, false) }
             initDetails.setOnClickListener { clickHandler(offerItem, true) }
         }
-    }
-
-    fun add(offer: OfferModel) {
-        offers.add(offer)
-        notifyItemInserted(offers.size - 1)
     }
 }
 

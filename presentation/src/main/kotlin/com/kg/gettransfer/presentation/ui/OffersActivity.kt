@@ -334,11 +334,6 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
-    override fun addNewOffer(offer: OfferModel) {
-        val adapter = rvOffers.adapter
-        if (adapter is OffersAdapter) adapter.add(offer)
-    }
-
     override fun setError(e: ApiException) {
         if (e.code != ApiException.NETWORK_ERROR) {
             Utils.showError(this, true, e.details)
