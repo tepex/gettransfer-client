@@ -438,7 +438,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     protected fun copyText(text: String) {
         val systemService = getSystemService(Context.CLIPBOARD_SERVICE)
         if (systemService is ClipboardManager) {
-            systemService.primaryClip = ClipData.newPlainText("Copied Text", text)
+            systemService.setPrimaryClip(ClipData.newPlainText("Copied Text", text))
         }
     }
 
