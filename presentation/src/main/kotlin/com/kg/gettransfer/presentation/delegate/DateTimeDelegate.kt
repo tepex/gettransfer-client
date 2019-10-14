@@ -51,16 +51,15 @@ class DateTimeDelegate : KoinComponent {
     fun validate() = compareDates()
 
     // check exactly what is in domain
-    private fun compareDates() =
-        orderInteractor.run {
-                                                                          // true if hourly or return date not defined
+    private fun compareDates() = orderInteractor.run {
+            // true if hourly or return date not defined
             if (hourlyDuration != null) true else orderReturnTime?.after(orderStartTime) ?: true
         }
 
     fun chooseOrderTime(context: Context, fieldStart: Boolean, screen: DateTimeScreen?) =
         DateTimePickerHelper.showDatePickerDialog(
             context,
-            Calendar.getInstance().apply { time = if (fieldStart) startDate else returnDate ?: startDate},
+            Calendar.getInstance().apply { time = if (fieldStart) startDate else returnDate ?: startDate },
             getCurrentDateForField(fieldStart),
             object : DateTimeHandler {
 
@@ -70,45 +69,30 @@ class DateTimeDelegate : KoinComponent {
 
                 override fun onTimeChosen(date: Date) {
                     handleTimeChoice(date, fieldStart).also {
-                        screen?.setFieldDate(getDisplayText(date, context), fieldStart)
+                        screen?.setFieldDate(date.simpleFormat(), fieldStart)
                     }
                 }
             }
         )
 
     private fun getCurrentDateForField(startsField: Boolean): Calendar {
-        currentData = getCurrentDatePlusMinimumHours()
+        currentData = getCurrentDate()
         if (!startsField) {
             currentData.time = Date(startDate.time + DATE_OFFSET)
         }
         return currentData
     }
 
-    fun getCurrentDatePlusMinimumHours(): Calendar {
-        val calendar = Calendar.getInstance(sessionInteractor.locale)
-        /* Server must send current locale time */
-        calendar.add(Calendar.HOUR_OF_DAY, configsManager.mobile.orderMinimum.hours.hours)
-        calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
-        return calendar
-    }
+    fun getCurrentDate(): Calendar = Calendar.getInstance(sessionInteractor.locale)
 
     private fun handleDateChoice(date: Date, field: Boolean) {
         if (field == START_DATE) startDate = date else returnDate = date
     }
 
     private fun handleTimeChoice(date: Date, startField: Boolean): Date =
-        getCurrentDatePlusMinimumHours().run {
+        getCurrentDate().run {
             (if (date.after(time)) date else time).also { if (startField) startDate = it else returnDate = it }
         }
-
-    private fun getDisplayText(date: Date, context: Context) =
-        if (date.after(getCurrentDatePlusMinimumHours().time)) date.simpleFormat() else getTextForMinDate(context)
-
-    private fun getTextForMinDate(context: Context) = context.getString(R.string.LNG_DATE_IN_HOURS)
-        .plus(" ")
-        .plus(configsManager.mobile.orderMinimum.hours.hours)
-        .plus(" ")
-        .plus(context.getString(R.string.LNG_HOUR_FEW))
 
     fun resetAfterOrder() {
         currentData.time = startDate
@@ -116,10 +100,7 @@ class DateTimeDelegate : KoinComponent {
     }
 
     companion object {
-        /* Пока сервевер не присылает минимальный временной промежуток до заказа */
-        private const val FUTURE_MINUTE = 5
         const val START_DATE = true
-        const val RETURN_DATE = false
         private const val DATE_OFFSET = 1000 * 60 * 5 // 5 minutes
     }
 }

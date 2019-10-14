@@ -202,7 +202,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     from.point!!,
                     to.point!!,
                     dateDelegate.run {
-                        startOrderedTime ?: getCurrentDatePlusMinimumHours().time.simpleFormat()
+                        startOrderedTime ?: getCurrentDate().time.simpleFormat()
                     }
             )
 
@@ -234,7 +234,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     track = cameraUpdate
                     viewState.setPinHourlyTransfer(
                         from.address ?: "",
-                        dateDelegate.run { startOrderedTime ?: getCurrentDatePlusMinimumHours().time.simpleFormat() },
+                        dateDelegate.run { startOrderedTime ?: getCurrentDate().time.simpleFormat() },
                         point,
                         cameraUpdate,
                         isDateChanged
