@@ -141,7 +141,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
     }
 
     fun navigateToFindAddress() {
-        viewState.goToSearchAddress(selectedField == FIELD_TO, true)
+        viewState.goToSearchAddress(selectedField == FIELD_TO)
     }
 
     override fun onNextClick() {

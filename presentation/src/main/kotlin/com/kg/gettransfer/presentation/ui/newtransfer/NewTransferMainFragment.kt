@@ -189,8 +189,8 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         findNavController().navigate(NewTransferMainFragmentDirections.goToMap())
     }
 
-    override fun goToSearchAddress(isClickTo: Boolean, isCameFromMap: Boolean) {
-        findNavController().navigate(NewTransferMainFragmentDirections.goToSearchAddress(isClickTo, isCameFromMap))
+    override fun goToSearchAddress(isClickTo: Boolean) {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToSearchAddress(isClickTo))
     }
 
     override fun goToCreateOrder() {

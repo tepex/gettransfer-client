@@ -114,8 +114,8 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
 
     private fun showBtnMyLocation(point: LatLng) = lastCurrentLocation == null || point != lastCurrentLocation
 
-    fun navigateToFindAddress(isClickTo: Boolean = false, isCameFromMap: Boolean = false) {
-        viewState.goToSearchAddress(isClickTo, isCameFromMap)
+    fun navigateToFindAddress(isClickTo: Boolean = false) {
+        viewState.goToSearchAddress(isClickTo)
     }
 
     abstract fun onNextClick()

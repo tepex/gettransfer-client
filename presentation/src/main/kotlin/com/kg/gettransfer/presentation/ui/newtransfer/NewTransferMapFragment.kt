@@ -215,8 +215,8 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         layoutTextNetworkNotAvailable.changeViewVisibility(!available)
     }
 
-    override fun goToSearchAddress(isClickTo: Boolean, isCameFromMap: Boolean) {
-        findNavController().navigate(NewTransferMapFragmentDirections.goToSearchAddress(isClickTo, isCameFromMap))
+    override fun goToSearchAddress(isClickTo: Boolean) {
+        findNavController().navigate(NewTransferMapFragmentDirections.goToSearchAddress(isClickTo))
     }
 
     override fun goToCreateOrder() {
