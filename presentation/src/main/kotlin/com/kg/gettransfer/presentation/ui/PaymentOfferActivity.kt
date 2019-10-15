@@ -515,6 +515,7 @@ class PaymentOfferActivity : BaseActivity(),
         Sentry.capture(e)
         val errorText = when {
             e.isBigPriceError()                  -> getString(R.string.LNG_BIG_PRICE_ERROR)
+            e.isOfferUnavailableError()          -> getString(R.string.LNG_OFFER_NO_LONGER_AVAILABLE)
             e.code != ApiException.NETWORK_ERROR -> getString(R.string.LNG_ERROR) + ": " + e.message
             else                                 -> null
         }

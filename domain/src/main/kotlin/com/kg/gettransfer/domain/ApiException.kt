@@ -43,6 +43,8 @@ class ApiException(
     /* PAYMENT ERRORS */
     fun isBigPriceError() = code == UNPROCESSABLE && details == DETAILS_BIG_PRICE
 
+    fun isOfferUnavailableError() = code == UNPROCESSABLE && details == DETAILS_OFFER_UNAVAILABLE
+
     companion object {
         const val APP_ERROR         = 0
         const val NETWORK_ERROR     = -1
@@ -57,6 +59,7 @@ class ApiException(
         const val CONNECTION_TIMED_OUT  = 522
 
         const val DETAILS_BIG_PRICE = "{price=[is_too_big]}"
+        const val DETAILS_OFFER_UNAVAILABLE = "{offer_id=[blocked]}"
         const val DETAILS_DATE_EARLY = "{date=[is too early]}"
 
         const val TYPE_ACCOUNT_EXIST = "account_exists"
