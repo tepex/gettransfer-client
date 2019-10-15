@@ -411,5 +411,6 @@
 
     <string name="LNG_SELECT_POINT_MAP">Point on map</string>
     <string name="LNG_RESTART_APP">Language was changed to switch language on map you need to restart app</string>
+    <string name="LNG_OFFER_NO_LONGER_AVAILABLE">Offer is no longer available</string>
     <string name="LNG_PAYMENT_BALANCE_ERROR">Insufficient funds in your balance to proceed with payment. Please, use another payment method</string>
 </resources>
