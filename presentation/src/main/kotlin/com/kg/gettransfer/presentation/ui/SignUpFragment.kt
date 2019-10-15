@@ -100,7 +100,6 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                 buttonOkText = this@SignUpFragment.getString(R.string.LNG_MENU_SUBTITLE_NEW)
                 onDismissCallBack = {
                     presenter.onBackCommandClick()
-                    hideLoading()
                 }
             }
             .show(requireFragmentManager())

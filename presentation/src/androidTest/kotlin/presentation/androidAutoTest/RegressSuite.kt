@@ -244,19 +244,24 @@ class RegressSuite : TestCase() {
             }
             step("Verification") {
                 ProfileScreen {
-                    Screen.idle(DELAY_MEDIUM)
                     loginPager { swipeLeft() }
                     tvName { typeText("Ricardo") }
-                    tvPhone { typeText("9116789567") }
+                    tvPhone { typeText("79116789567") }
                     tvEmailTo { typeText("i.marchenkov+42@gettransfer.com") }
+                    closeSoftKeyboard()
                     btnSwitch { click() }
-                    btnSignUp { click() }
+                    btnSignUp {
+                        scrollTo()
+                        click()
+                    }
                 }
             }
             step("CheckInvalid") {
                 ProfileScreen {
-                    dialogTitle { isVisible() }
-                    btnDialogOkButton { isVisible() }
+                    flakySafely(DELAY_BIG) {
+                        dialogTitle { isVisible() }
+                        btnDialogOkButton { isVisible() }
+                    }
                 }
             }
         }

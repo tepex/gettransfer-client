@@ -34,6 +34,7 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
     fun registration() {
         if (!checkFieldsIsValid()) {
             viewState.showValidationErrorDialog(Utils.phoneUtil.internationalExample(sessionInteractor.locale))
+            viewState.hideLoading()
             return
         }
 
@@ -47,11 +48,11 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
                 }
 
                 it.isSuccess()?.let {
-                    viewState.hideLoading()
                     viewState.showRegisterSuccessDialog()
                     registerPushToken()
                     logLoginEvent(Analytics.RESULT_SUCCESS)
                 }
+                viewState.hideLoading()
             }
         }
     }
