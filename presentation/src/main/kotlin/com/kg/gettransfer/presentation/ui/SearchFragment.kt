@@ -164,7 +164,7 @@ class SearchFragment : BaseFragment(), SearchView {
 
     override fun setSuggestedAddresses(addressesList: List<GTAddress>) {
         rv_popularList.adapter = PopularAddressAdapter(predefinedPopularPlaces) {
-            if (it == predefinedPopularPlaces[0]) presenter.selectFinishPointOnMap()
+            if (it == predefinedPopularPlaces[0]) presenter.selectPointOnMap()
             else presenter.onPopularSelected(it)
         }
         rv_addressList.adapter = AddressAdapter(addressesList) { presenter.onAddressSelected(it) }
@@ -186,10 +186,7 @@ class SearchFragment : BaseFragment(), SearchView {
     override fun goToMap() {
         view?.hideKeyboard()
         Handler().postDelayed({
-            if (SearchFragmentArgs.fromBundle(requireArguments()).isCameFromMap)
-                goToBack()
-            else
-                findNavController().navigate(SearchFragmentDirections.goToMap())
+            findNavController().navigate(SearchFragmentDirections.goToMap())
         }, 400)
     }
 
@@ -200,10 +197,7 @@ class SearchFragment : BaseFragment(), SearchView {
     override fun goToCreateOrder() {
         view?.hideKeyboard()
         Handler().postDelayed({
-        if (!SearchFragmentArgs.fromBundle(requireArguments()).isCameFromMap)
             findNavController().navigate(SearchFragmentDirections.goToCreateOrder())
-        else
-            goToBack()
         }, 400)
     }
 }

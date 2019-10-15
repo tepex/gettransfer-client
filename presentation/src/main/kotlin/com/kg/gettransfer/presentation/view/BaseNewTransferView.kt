@@ -8,6 +8,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface BaseNewTransferView : MvpView, BaseNetworkWarning {
     fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit)
-    fun goToSearchAddress(isClickTo: Boolean, isCameFromMap: Boolean)
+    fun goToSearchAddress(isClickTo: Boolean)
     fun goToCreateOrder()
 }

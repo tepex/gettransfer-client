@@ -157,7 +157,7 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
         analytics.logSingleEvent(Analytics.REQUEST_FORM)
     }
 
-    fun selectFinishPointOnMap() {
+    fun selectPointOnMap() {
         worker.main.launch {
             withContext(worker.bg) {
                 setSelectedField(if (isTo) FIELD_TO else FIELD_FROM)
