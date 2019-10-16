@@ -84,7 +84,6 @@
     <string name="LNG_FIELD_DESTINATION">To: airport, train station, city, hotel, other place</string>
     <string name="LNG_FIELD_DESTINATION_WHERE">Where to?</string>
     <string name="LNG_FIELD_DESTINATION_SELECT_POINT_MAP">Select a point on the map</string>
-    <string name="LNG_FIELD_ERROR_MATCH_ADDRESSES">Too close, choose another location</string>
     <string name="LNG_SHARE_TEXT">Check this app! %s</string>
     <string name="LNG_OFFLINE_MESSAGE">No Internet connection.\nTransfers information available in the menu.</string>
     <string name="LNG_OFFLINE_MESSAGE_CACHE">No Internet connection.\nShown last available data.</string>
