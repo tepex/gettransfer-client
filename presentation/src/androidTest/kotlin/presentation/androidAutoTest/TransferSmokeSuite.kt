@@ -369,6 +369,7 @@ class TransferSmokeSuite : TestCase() {
                 Trips {
                     Screen.idle(DELAY_BIG)
                     swRequests { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeLeft() } }
+                    Screen.idle(DELAY_BIG)
                     requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                     transferTime { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
                     tvTransfer { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }

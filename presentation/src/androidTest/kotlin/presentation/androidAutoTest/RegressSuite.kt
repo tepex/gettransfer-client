@@ -112,6 +112,7 @@ class RegressSuite : TestCase() {
                 Trips {
                     Screen.idle(DELAY_BIG)
                     swRequests { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeLeft() } }
+                    Screen.idle(DELAY_BIG)
                     requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                 }
             }
@@ -246,7 +247,7 @@ class RegressSuite : TestCase() {
                 ProfileScreen {
                     loginPager { swipeLeft() }
                     tvName { typeText("Ricardo") }
-                    tvPhone { typeText("79116789567") }
+                    tvPhone { typeText("9116789567") }
                     tvEmailTo { typeText("i.marchenkov+42@gettransfer.com") }
                     closeSoftKeyboard()
                     btnSwitch { click() }
@@ -259,8 +260,7 @@ class RegressSuite : TestCase() {
             step("CheckInvalid") {
                 ProfileScreen {
                     flakySafely(DELAY_BIG) {
-                        dialogTitle { isVisible() }
-                        btnDialogOkButton { isVisible() }
+                        btnDialogOkButton { click() }
                     }
                 }
             }
