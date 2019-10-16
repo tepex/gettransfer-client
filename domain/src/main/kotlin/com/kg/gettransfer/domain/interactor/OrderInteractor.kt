@@ -107,20 +107,10 @@ class OrderInteractor(
 
     fun isAddressesValid() = from != null && (to != null || hourlyDuration != null)
 
-    fun isDistanceFine() =
-        from?.cityPoint?.point?.let { fromPoint ->
-            to?.cityPoint?.point?.let { toPoint ->
-                (fromPoint.latitude - toPoint.latitude).absoluteValue > MIN_LAT_DIFF ||
-                (fromPoint.longitude - toPoint.longitude).absoluteValue > MIN_LON_DIFF
-            }
-        } ?: false
-
     fun isCanCreateOrder() =
-        from?.cityPoint != null && (to?.cityPoint != null && isDistanceFine() || hourlyDuration != null)
+        from?.cityPoint != null && (to?.cityPoint != null || hourlyDuration != null)
 
     companion object {
-        const val MIN_LAT_DIFF = 0.002
-        const val MIN_LON_DIFF = 0.003
         const val DEFAULT_PASSENGERS = 2
     }
 }
