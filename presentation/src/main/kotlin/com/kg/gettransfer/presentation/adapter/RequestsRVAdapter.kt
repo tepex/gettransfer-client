@@ -120,16 +120,11 @@ class RequestsRVAdapter(
 
     fun addLoading() {
         isLoading = true
-        transfers.add(Transfer.EMPTY.map(listOf(TransportType.DEFAULT_TRANSPORT_TYPE.map())))
-        notifyItemInserted(transfers.size - 1)
     }
 
     fun removeLoading() {
         if (isLoading) {
             isLoading = false
-            val position = transfers.size - 1
-            transfers.removeAt(position)
-            notifyItemRemoved(position)
         }
     }
 

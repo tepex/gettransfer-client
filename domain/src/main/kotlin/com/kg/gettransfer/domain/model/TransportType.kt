@@ -29,7 +29,5 @@ data class TransportType(
         )
 
         val BIG_TRANSPORT = arrayListOf<TransportType.ID>(ID.VAN, ID.MINIBUS, ID.BUS, ID.HELICOPTER)
-
-        val DEFAULT_TRANSPORT_TYPE = TransportType(ID.ECONOMY, 2, 0)
     }
 }
