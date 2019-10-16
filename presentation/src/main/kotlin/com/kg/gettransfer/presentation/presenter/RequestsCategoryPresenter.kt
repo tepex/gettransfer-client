@@ -83,11 +83,11 @@ class RequestsCategoryPresenter(
         worker.main.launch {
             transfers = when (transferType) {
                 TRANSFER_ACTIVE -> withContext(worker.bg) {
-                    if (isBusinessAccount()) getAllTransfersAnsPagesCount(page, Transfer.STATUS_CATEGORY_ACTIVE)
+                    if (isBusinessAccount()) getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ACTIVE)
                     else transferInteractor.getTransfersActive().model
                 }
                 TRANSFER_ARCHIVE -> withContext(worker.bg) {
-                    if (isBusinessAccount()) getAllTransfersAnsPagesCount(page, Transfer.STATUS_CATEGORY_ARCHIVE)
+                    if (isBusinessAccount()) getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ARCHIVE)
                     else transferInteractor.getTransfersArchive().model
                 }
                 else -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
@@ -107,7 +107,7 @@ class RequestsCategoryPresenter(
         }
     }
 
-    private suspend fun getAllTransfersAnsPagesCount(page: Int, status: String): List<Transfer> {
+    private suspend fun getAllTransfersAndPagesCount(page: Int, status: String): List<Transfer> {
         val allTransfers = transferInteractor.getAllTransfers(getUserRole(), page, status)
         pagesCount = allTransfers.model.second
         return allTransfers.model.first
