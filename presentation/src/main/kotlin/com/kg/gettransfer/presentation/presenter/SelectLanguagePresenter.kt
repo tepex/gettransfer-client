@@ -35,12 +35,10 @@ class SelectLanguagePresenter : BasePresenter<SelectLanguageView>(), KoinCompone
     }
 
     fun changeLanguage(selected: LocaleModel) {
-        worker.main.launch {
-            sessionInteractor.locale = selected.delegate
-            analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LANGUAGE_PARAM, selected.name)
-            saveGeneralSettings()
-            viewState.recreateActivity()
-        }
+        sessionInteractor.locale = selected.delegate
+        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LANGUAGE_PARAM, selected.name)
+        saveGeneralSettings()
+        viewState.recreateActivity()
     }
 
     override fun onDestroy() {

@@ -17,6 +17,8 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
@@ -38,7 +40,7 @@ import org.koin.core.KoinComponent
 import timber.log.Timber
 
 @Suppress("TooManyFunctions")
-class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
+class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyChangedListener {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
@@ -179,6 +181,10 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
 
     override fun setDistanceUnit(inMiles: Boolean) {
         settingsDistanceUnit.switch_button.isChecked = inMiles
+    }
+
+    override fun currencyChanged(currency: CurrencyModel) {
+        presenter.currencyChanged(currency)
     }
 
     override fun hideSomeDividers() {

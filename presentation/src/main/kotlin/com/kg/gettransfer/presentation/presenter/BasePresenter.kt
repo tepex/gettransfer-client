@@ -141,11 +141,13 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         countEventsInteractor.clearCountEvents()
     }
 
-    suspend fun saveGeneralSettings() {
-        viewState.blockInterface(true)
-        val result = utils.asyncAwait { accountManager.saveSettings() }
-        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
-        viewState.blockInterface(false)
+    fun saveGeneralSettings() {
+        utils.launchSuspend {
+            viewState.blockInterface(true)
+            val result = utils.asyncAwait { accountManager.saveSettings() }
+            result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
+            viewState.blockInterface(false)
+        }
     }
 
     /*fun checkNewMessagesCached() {
