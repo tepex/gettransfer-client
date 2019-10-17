@@ -5,11 +5,13 @@
     <string name="api_key_dev">771b0c837d2f992610408e3fe989211f</string>
     <string name="api_url_demo">https://stgtr.org</string>
     <string name="api_url_dev">https://development.stgtr.org</string>
-    <string name="api_key_prod">android_9614f456a934e340353e6c60c5fb9a48</string>
+    <string name="api_key_prod">android_a08d215c1976cef508350587784a0447</string>
     <string name="api_url_prod">https://gettransfer.com</string>
     <string name="endpoint_demo" translatable="false">Demo</string>
     <string name="endpoint_prod" translatable="false">Prod</string>
     <string name="endpoint_dev" translatable="false">Dev</string>
+
+    <string name="ipapi_key">b311f5bb4a4ee1534a23c243c824d93ab3cd8c25</string>
 
     <string name="api_url_transfers">/carrier/cabinet/transfers</string>
     <string name="api_url_restore_password">/forgot_password</string>

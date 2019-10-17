@@ -66,6 +66,8 @@
                 android:paddingBottom="@dimen/payment_tvPriceInfo_padding_bottom"
                 android:text="@string/LNG_MISSING_NAME_SIGN"
                 android:textColor="@color/color_transfer_details_text_red"
+                android:visibility="gone"
+                tools:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/offer_layout" />

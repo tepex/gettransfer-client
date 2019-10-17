@@ -20,8 +20,8 @@ data class Account(
             }
         }
 
-    val isDriver: Boolean
-        get() = groups.indexOf(GROUP_CARRIER_DRIVER) >= 0
+    val isCarrier: Boolean
+        get() = groups.find { it.contains(GROUP_CARRIER) } != null
 
     val isManager: Boolean
         get() = groups.indexOf(GROUP_MANAGER_VIEW_TRANSFERS) >= 0
@@ -30,7 +30,7 @@ data class Account(
         get() = partner != null
 
     companion object {
-        const val GROUP_CARRIER_DRIVER = "carrier/driver"
+        const val GROUP_CARRIER = "carrier/"
         const val GROUP_MANAGER_VIEW_TRANSFERS = "manager/view_transfers"
         const val GROUP_EMAIL_NOTIFICATION_PASSENGER = "email_notifications/passenger"
 

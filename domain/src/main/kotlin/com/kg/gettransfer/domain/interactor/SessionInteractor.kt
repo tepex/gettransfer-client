@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain.interactor
 
 import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
+import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
@@ -94,5 +95,17 @@ class SessionInteractor(
 
     fun removeAccountChangedListener(listener: AccountChangedListener) {
         sessionRepository.removeAccountChangedListener(listener)
+    }
+
+    fun addCreateTransferListener(listener: CreateTransferListener) {
+        sessionRepository.addCreateTransferListener(listener)
+    }
+
+    fun removeCreateTransferListener(listener: CreateTransferListener) {
+        sessionRepository.removeCreateTransferListener(listener)
+    }
+
+    fun notifyCreateTransfer() {
+        sessionRepository.notifyCreateTransfer()
     }
 }

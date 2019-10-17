@@ -41,6 +41,7 @@ class ApiCore : KoinComponent {
     lateinit var apiUrl: String
 
     private lateinit var apiKey: String
+    private lateinit var ipApiKey: String
     private val gson = GsonBuilder()
         .setLenient()
         .registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer())
@@ -52,11 +53,13 @@ class ApiCore : KoinComponent {
         addInterceptor { chain ->
             val request = chain.request()
             val urlBuilder = request.url().newBuilder()
-            if (request.url().host() != IP_API_HOST_NAME) {
-                urlBuilder.apply {
+            urlBuilder.apply {
+                if (request.url().host() != IP_API_HOST_NAME) {
                     addQueryParameter(PARAM_API_KEY, apiKey)
                     addQueryParameter(PARAM_CURRENCY, sessionRepository.account.currency.code)
                     addQueryParameter(PARAM_LOCALE, sessionRepository.account.locale.language)
+                } else {
+                    addQueryParameter(PARAM_IP_API_KEY, ipApiKey)
                 }
             }
             val url = urlBuilder.build()
@@ -89,6 +92,10 @@ class ApiCore : KoinComponent {
             callFactory { okHttpClient.newCall(it) }
             addConverterFactory(GsonConverterFactory.create(gson))
         }.build().create(Api::class.java)
+    }
+
+    fun changeIpApiKey(key: String) {
+        ipApiKey = key
     }
 
     /**
@@ -171,6 +178,7 @@ class ApiCore : KoinComponent {
     companion object {
         private const val IP_API_SCHEME = "https://"
         private const val IP_API_HOST_NAME = "ipapi.co"
+        private const val PARAM_IP_API_KEY  = "key"
 
         private val ERROR_PATTERN = Regex("^<h1>(.+)</h1>$")
 

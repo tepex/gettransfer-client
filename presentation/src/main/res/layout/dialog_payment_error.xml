@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="16dp"
-    android:paddingBottom="45dp"
+    android:paddingTop="@dimen/payment_error_padding_top"
     app:behavior_hideable="false"
     app:behavior_skipCollapsed="true"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -14,130 +13,101 @@
         android:id="@+id/ivClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/payment_error_iv_close_margin_end"
+        android:background="?android:attr/selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close_x"
-        android:background="?android:attr/selectableItemBackground"/>
+        app:srcCompat="@drawable/ic_close_x" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/imageError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/payment_error_img_error_margin_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivClose"
         app:srcCompat="@drawable/ic_block" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/bookingPaidStatus"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        style="@style/sf_font_semi_bold"
+        android:layout_marginStart="@dimen/payment_error_booking_paid_status_horizontal_margin"
+        android:layout_marginEnd="@dimen/payment_error_booking_paid_status_horizontal_margin"
         android:gravity="center_horizontal"
-        android:lineSpacingExtra="7sp"
-        android:text="@string/LNG_TRANSFER_NOT_PAID"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/paymentDeclined"
+        app:layout_constraintTop_toBottomOf="@+id/imageError">
 
-    <TextView
-        android:id="@+id/tvBookingNumber"
-        android:layout_width="wrap_content"
+        <TextView
+            style="@style/sf_font_semi_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="@dimen/payment_error_not_paid_spacing"
+            android:text="@string/LNG_TRANSFER_NOT_PAID"
+            android:textSize="@dimen/payment_error_not_paid_text_size" />
+
+        <TextView
+            android:id="@+id/tvBookingNumber"
+            style="@style/sf_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/payment_error_booking_number_margin_top"
+            android:gravity="center_horizontal"
+            android:textColor="@color/black_a30"
+            tools:text="Booking number 100500" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/paymentDeclined"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        style="@style/sf_font"
+        android:layout_marginStart="@dimen/payment_error_payment_declined_horizontal_margin"
+        android:layout_marginEnd="@dimen/payment_error_payment_declined_horizontal_margin"
         android:gravity="center_horizontal"
-        android:textColor="@color/black_a30"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:text="Booking number 100500" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/btnSupport"
+        app:layout_constraintTop_toBottomOf="@+id/bookingPaidStatus">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="28dp"
-        style="@style/sf_font_semi_bold_17_sp"
-        android:gravity="center_horizontal"
-        android:text="@string/LNG_PAYMENT_DECLINED"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvBookingNumber" />
+        <TextView
+            style="@style/sf_font_semi_bold_17_sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/LNG_PAYMENT_DECLINED" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnTryAgain"
-        android:layout_width="wrap_content"
-        android:layout_height="87dp"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/btnSupport"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnSupport"
-        app:layout_constraintTop_toTopOf="@+id/btnSupport"
-        app:srcCompat="@drawable/ic_repeat" />
+        <TextView
+            style="@style/sf_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/payment_error_try_another_card_margin_top"
+            android:gravity="center"
+            android:text="@string/LNG_PAYMENT_DECLINE_INFO" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    </LinearLayout>
+
+    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
         android:id="@+id/btnSupport"
-        android:layout_width="wrap_content"
-        android:layout_height="87dp"
-        android:layout_marginTop="57dp"
-        app:backgroundTint="@color/colorWhite"
-        app:fabSize="normal"
-        app:layout_constraintEnd_toEndOf="@+id/tvSupport"
+        android:layout_width="@dimen/payment_error_buttons_width"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/payment_error_buttons_margin_bottom"
+        app:btn_img="@drawable/ic_support"
+        app:btn_name="@string/LNG_OFFERS_SUPPORT"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnTryAgain"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPaymentError"
-        app:srcCompat="@drawable/ic_support" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-
-    <TextView
-        android:id="@+id/tvPaymentError"
-        android:layout_width="0dp"
+    <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
+        android:id="@+id/btnTryAgain"
+        android:layout_width="@dimen/payment_error_buttons_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="28dp"
-        style="@style/sf_font"
-        android:gravity="center"
-        android:text="@string/LNG_PAYMENT_DECLINE_INFO"
+        app:btn_img="@drawable/ic_repeat"
+        app:btn_name="@string/LNG_PAYMENT_TRY_AGAIN"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toEndOf="@+id/btnSupport"
+        app:layout_constraintTop_toTopOf="@+id/btnSupport" />
 
-    <TextView
-        android:id="@+id/tvSupport"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="@string/LNG_OFFERS_SUPPORT"
-        app:layout_constraintEnd_toEndOf="@+id/btnSupport"
-        app:layout_constraintStart_toStartOf="@+id/btnSupport"
-        app:layout_constraintTop_toBottomOf="@+id/btnSupport" />
-
-    <TextView
-        android:id="@+id/tvTryAgain"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center|top"
-        android:lines="2"
-        android:maxLines="2"
-        android:text="@string/LNG_PAYMENT_TRY_AGAIN"
-        app:layout_constraintEnd_toEndOf="@+id/btnTryAgain"
-        app:layout_constraintStart_toStartOf="@+id/btnTryAgain"
-        app:layout_constraintTop_toBottomOf="@+id/btnTryAgain" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ import com.kg.gettransfer.presentation.view.SelectCurrencyView
 
 import kotlinx.android.synthetic.main.layout_select_currency.*
 
+@Suppress("TooManyFunctions")
 open class SelectCurrencyBottomFragment : BaseBottomSheetFragment(), SelectCurrencyView {
 
     override val layout = R.layout.fragment_select_currency_bottom
@@ -45,7 +46,7 @@ open class SelectCurrencyBottomFragment : BaseBottomSheetFragment(), SelectCurre
         rvPopularCurrencies.adapter = CurrenciesListAdapter(presenter::changeCurrency, popular, selected)
     }
 
-    override fun sendEvent(currency: CurrencyModel) {
+    override fun currencyChanged(currency: CurrencyModel) {
         listener?.currencyChanged(currency)
     }
 

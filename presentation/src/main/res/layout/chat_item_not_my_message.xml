@@ -26,6 +26,7 @@
         android:textSize="@dimen/activity_chat_message_item_text_size"
         android:textColor="@color/color_gtr_black"
         android:fontFamily="@font/sf_pro_text_regular"
+        android:autoLink="all"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/notMyMessageTimeText"
         app:layout_constraintBottom_toBottomOf="parent"

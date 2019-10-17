@@ -591,6 +591,18 @@
 	<dimen name="payment_login_view_vertical_padding">16dp</dimen>
 	<dimen name="payment_login_view_margin_top">16dp</dimen>
 
+	<dimen name="payment_error_not_paid_text_size">24sp</dimen>
+	<dimen name="payment_error_not_paid_spacing">7sp</dimen>
+	<dimen name="payment_error_padding_top">16dp</dimen>
+	<dimen name="payment_error_iv_close_margin_end">16dp</dimen>
+	<dimen name="payment_error_img_error_margin_top">8dp</dimen>
+	<dimen name="payment_error_booking_paid_status_horizontal_margin">8dp</dimen>
+	<dimen name="payment_error_booking_number_margin_top">8dp</dimen>
+	<dimen name="payment_error_payment_declined_horizontal_margin">28dp</dimen>
+	<dimen name="payment_error_try_another_card_margin_top">16dp</dimen>
+	<dimen name="payment_error_buttons_width">100dp</dimen>
+	<dimen name="payment_error_buttons_margin_bottom">20dp</dimen>
+
 	<dimen name="btn_radius">22dp</dimen>
 	<dimen name="btn_rounded_height">56dp</dimen>
 
@@ -604,8 +616,7 @@
 
 	<!--Profile settings-->
 	<dimen name="profile_settings_btns_vertical_margin">20dp</dimen>
-	<dimen name="profile_settings_btn_save_margin_bottom">32dp</dimen>
-	<dimen name="profile_settings_btn_logout_margin_top">24dp</dimen>
+	<dimen name="profile_settings_btns_margin_top">24dp</dimen>
 	<dimen name="profile_settings_btns_text_size">14sp</dimen>
 
 	<!--Change email settings-->

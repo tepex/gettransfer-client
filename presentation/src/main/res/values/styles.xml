@@ -10,14 +10,12 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDisablePreview">true</item>
-        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
         <item name="android:timePickerDialogTheme">@style/MyTimePickerDialogTheme</item>
     </style>
 
     <style name="AppThemeTransparentStatusBar" parent="AppTheme">
-        <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimaryDark">@color/colorWhite</item>
     </style>
 
@@ -138,7 +136,7 @@
     </style>
 
     <style name="BorderlessBackground">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
     </style>
 
     <style name="TabLayoutTextStyle">
@@ -247,9 +245,6 @@
     </style>
 
     <style name="Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="android:textColor">@color/color_gtr_grey</item>
-        <item name="chipBackgroundColor">@color/color_gtr_light_grey</item>
-        <item name="rippleColor">@color/color_gtr_light_grey</item>
-
+        <item name="checkedIconVisible">false</item>
     </style>
 </resources>

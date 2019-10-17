@@ -9,15 +9,21 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.model.OfferItemModel
-import com.kg.gettransfer.presentation.model.OfferModel
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.offer_tiny.view.*
 
 class OffersAdapter(
-    private val offers: MutableList<OfferItemModel>,
     private val clickHandler: OfferClickListener
 ) : RecyclerView.Adapter<OffersAdapter.OfferItemViewHolder>() {
+
+    private var offers: ArrayList<OfferItemModel> = arrayListOf()
+
+    fun update(offers: List<OfferItemModel>) {
+        this.offers.clear()
+        this.offers.addAll(offers)
+        notifyDataSetChanged()
+    }
 
     override fun getItemCount() = offers.size
     override fun onBindViewHolder(p0: OfferItemViewHolder, p1: Int) =
@@ -33,25 +39,21 @@ class OffersAdapter(
         fun bindOffer(offerItem: OfferItemModel, clickListener: OfferClickListener) {
             with(containerView) {
                 OfferItemBindDelegate.bindOfferTiny(this, offerItem)
-                hangListeners(btn_book_tiny, img_car_photo_tiny, clickListener, offerItem)
-                setOnClickListener { clickListener(offerItem, true) }
+                hangListeners(this, btn_book_tiny, img_car_photo_tiny, clickListener, offerItem)
             }
         }
 
         private fun hangListeners(
+            offerView: View,
             bookView: View,
             initDetails: View,
             clickHandler: OfferClickListener,
             offerItem: OfferItemModel
         ) {
+            offerView.setOnClickListener { clickHandler(offerItem, true) }
             bookView.setThrottledClickListener { clickHandler(offerItem, false) }
             initDetails.setOnClickListener { clickHandler(offerItem, true) }
         }
-    }
-
-    fun add(offer: OfferModel) {
-        offers.add(offer)
-        notifyItemInserted(offers.size - 1)
     }
 }
 

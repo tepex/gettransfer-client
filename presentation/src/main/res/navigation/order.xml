@@ -83,10 +83,6 @@
             android:name="isClickTo"
             android:defaultValue="false"
             app:argType="boolean" />
-        <argument
-            android:name="isCameFromMap"
-            android:defaultValue="false"
-            app:argType="boolean" />
     </fragment>
 
     <activity

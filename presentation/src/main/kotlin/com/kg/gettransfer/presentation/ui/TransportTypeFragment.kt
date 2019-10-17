@@ -32,5 +32,7 @@ class TransportTypeFragment : BaseBottomSheetFragment() {
         }
     }
 
-    companion object { fun getInstance() = TransportTypeFragment() }
+    companion object {
+        fun getInstance() = TransportTypeFragment()
+    }
 }

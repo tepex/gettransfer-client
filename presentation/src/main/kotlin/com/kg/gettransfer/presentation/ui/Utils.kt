@@ -61,9 +61,6 @@ import com.kg.gettransfer.presentation.ui.utils.TopRightRoundedCornerTransform
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
-import java.text.SimpleDateFormat
-
-import java.util.Date
 import java.util.Locale
 
 import org.koin.core.inject
@@ -76,9 +73,6 @@ object Utils : KoinComponent {
     //private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
     private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
 
-    @JvmField val DATE_PATTERN = "dd MMM yyyy"
-    @JvmField val DATE_WITHOUT_YEAR_PATTERN = "dd MMM"
-    @JvmField val TIME_PATTERN = "HH:mm"
     const val MAX_BITMAP_SIZE = 4096
 
     internal val phoneUtil: PhoneNumberUtil by inject()
@@ -289,15 +283,6 @@ object Utils : KoinComponent {
 
     fun getCameraUpdateForPin(point: LatLng) =
         CameraUpdateFactory.newLatLngZoom(point, BaseGoogleMapActivity.MAP_MIN_ZOOM)
-
-    fun getDateTimeTransferDetails(locale: Locale, dateToLocal: Date, withYear: Boolean): Pair<String, String> {
-        val dateString = if (withYear) {
-            SimpleDateFormat(DATE_PATTERN, locale).format(dateToLocal)
-        } else {
-            SimpleDateFormat(DATE_WITHOUT_YEAR_PATTERN, locale).format(dateToLocal)
-        }
-        return dateString to SimpleDateFormat(TIME_PATTERN, locale).format(dateToLocal)
-    }
 
     fun convertDuration(min: Int): Triple<Int, Int, Int> {
         val hours = min / 60
