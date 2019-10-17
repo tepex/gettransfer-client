@@ -23,6 +23,8 @@ import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import org.koin.core.inject
 
+import java.util.Date
+
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     private val configsManager: ConfigsManager by inject()
@@ -42,28 +44,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             if (result.error != null && !result.fromCache) {
                 result.error?.let { viewState.setError(it) }
             } else {
-                transfer.to?.let { to ->
-                    transfer.from.point?.let { fromPoint ->
-                        transfer.to?.point?.let { toPoint ->
-                            val r = getRouteInfo(fromPoint, toPoint)
-                            r.cacheError?.let { viewState.setError(it) }
-                            if (r.error == null || r.error != null && r.fromCache) {
-                                val routeModel = routeMapper.getView(
-                                    r.model.distance,
-                                    r.model.polyLines,
-                                    transfer.from.name,
-                                    to.name,
-                                    fromPoint,
-                                    toPoint,
-                                    SystemUtils.formatDateTime(transferModel.dateTime)
-                                )
-                                viewState.setRoute(Utils.getPolyline(routeModel))
-                            }
-                        }
-                    }
-                } ?: run {
-                    transfer.duration?.let { setHourlyTransfer(transfer) }
-                }
+                setRoute(transfer)
                 val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
                 viewState.setRemainTime(days, hours, minutes)
             }
@@ -75,6 +56,53 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             }
             viewState.blockInterface(false)
         }
+    }
+
+    private suspend fun setRoute(transfer: Transfer) {
+        transfer.to?.let { to ->
+            transfer.from.point?.let { fromPoint ->
+                transfer.to?.point?.let { toPoint ->
+                    setPointToPointTransfer(
+                        transfer.from.name,
+                        to.name,
+                        fromPoint,
+                        toPoint,
+                        transfer.dateToLocal
+                    )
+                }
+            }
+        } ?: run {
+            transfer.duration?.let { setHourlyTransfer(transfer) }
+        }
+    }
+
+    private suspend fun setPointToPointTransfer(
+        fromName: String,
+        toName: String,
+        fromPoint: Point,
+        toPoint: Point,
+        date: Date
+    ) {
+        val r = getRouteInfo(fromPoint, toPoint)
+        r.cacheError?.let { viewState.setError(it) }
+        if (r.error == null || r.error != null && r.fromCache) {
+            val routeModel = routeMapper.getView(
+                r.model.distance,
+                r.model.polyLines,
+                fromName,
+                toName,
+                fromPoint,
+                toPoint,
+                SystemUtils.formatDateTime(date)
+            )
+            viewState.setRoute(Utils.getPolyline(routeModel))
+        }
+    }
+
+    private fun setHourlyTransfer(transfer: Transfer) {
+        val from = transfer.from.point
+        val point = from?.let { LatLng(it.latitude, it.longitude) }
+        point?.let { viewState.setPinHourlyTransfer(it, Utils.getCameraUpdateForPin(it)) }
     }
 
     private suspend fun getRouteInfo(fromPoint: Point, toPoint: Point): Result<RouteInfo> =
@@ -90,12 +118,6 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                 )
             )
         }
-
-    private fun setHourlyTransfer(transfer: Transfer) {
-        val from = transfer.from.point
-        val point = from?.let { LatLng(it.latitude, it.longitude) }
-        point?.let { viewState.setPinHourlyTransfer(it, Utils.getCameraUpdateForPin(it)) }
-    }
 
     fun onCallClick() {
         phoneToCall?.let { callPhone(it) }
