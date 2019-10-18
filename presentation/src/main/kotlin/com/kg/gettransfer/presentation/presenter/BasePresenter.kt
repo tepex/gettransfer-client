@@ -85,15 +85,16 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected fun login(nextScreen: String, email: String?) = router.navigateTo(Screens.MainLogin(nextScreen, email))
 
     override fun onFirstViewAttach() {
-        if (sessionInteractor.isInitialized) {
-            systemInitialized()
-            return
-        }
         worker.main.launch {
-            val result = withContext(worker.bg) { sessionInteractor.coldStart() }
-            getPreferences().getModel().endpoint?.let { initEndpoint(it) }
-            if (result.error == null) {
-                systemInitialized()
+            withContext(worker.bg) {
+                if (sessionInteractor.isInitialized) {
+                    systemInitialized()
+                } else {
+                    getPreferences().getModel().endpoint?.let { initEndpoint(it) }
+                    if (sessionInteractor.coldStart().error == null) {
+                        systemInitialized()
+                    }
+                }
             }
         }
     }
@@ -161,7 +162,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     // open fun doingSomethingAfterSendingNewMessagesCached() {}
 
-    protected open fun systemInitialized() {}
+    protected open fun systemInitialized() { }
 
     fun networkConnected() = worker.main.launch {
         withContext(worker.bg) { reviewInteractor.checkNotSendedReviews() }
