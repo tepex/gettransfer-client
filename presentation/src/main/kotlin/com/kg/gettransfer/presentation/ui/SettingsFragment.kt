@@ -3,21 +3,19 @@ package com.kg.gettransfer.presentation.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 
 import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
-
-import android.view.View
-import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.kg.gettransfer.BuildConfig
 
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Profile
-
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
@@ -30,18 +28,19 @@ import com.kg.gettransfer.sys.presentation.EndpointModel
 
 import java.util.Locale
 
+import kotlinx.android.synthetic.main.activity_main_navigate.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 import kotlinx.android.synthetic.main.view_settings_field_horizontal_picker.view.field_text
 import kotlinx.android.synthetic.main.view_settings_field_switch.view.switch_button
+import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
+
 import org.koin.core.KoinComponent
 
 import timber.log.Timber
-import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
 
 @Suppress("TooManyFunctions")
-class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
-        CurrencyChangedListener {
+class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyChangedListener {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
@@ -49,7 +48,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
     @ProvidePresenter
     fun createSettingsPresenter() = SettingsPresenter()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):View =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_settings, container, false)
 
     @CallSuper
@@ -164,15 +163,13 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
             setCompoundDrawables(
                 null,
                 null,
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        Utils.getLanguageImage(code)
-                    )?.apply {
+                    ContextCompat.getDrawable(requireContext(), Utils.getLanguageImage(code))?.apply {
                         setBounds(
                             0,
                             0,
                             resources.getDimensionPixelSize(langIconParams.width),
-                            resources.getDimensionPixelSize(langIconParams.height))
+                            resources.getDimensionPixelSize(langIconParams.height)
+                        )
                     },
                 null
             )
@@ -191,8 +188,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
     }
 
     override fun hideSomeDividers() {
-        if (!settingsEmailNotif.isVisible) settingsDistanceUnit.hideDivider()
-        else settingsDistanceUnit.showDivider()
+        if (settingsEmailNotif.isVisible) settingsDistanceUnit.showDivider() else settingsDistanceUnit.hideDivider()
     }
 
     override fun showCurrencyChooser() {
@@ -201,6 +197,13 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView,
 
     override fun showLanguageChooser() {
         findNavController().navigate(SettingsFragmentDirections.goToSelectLanguage())
+    }
+
+    override fun showOrderItem() {
+        val thisActivity = activity
+        if (thisActivity is MainNavigateActivity) {
+            thisActivity.bottom_nav.selectedItemId = R.id.nav_order
+        }
     }
 
     companion object {

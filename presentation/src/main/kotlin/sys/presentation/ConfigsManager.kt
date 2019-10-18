@@ -3,6 +3,7 @@ package com.kg.gettransfer.sys.presentation
 import com.kg.gettransfer.core.domain.Result
 
 import com.kg.gettransfer.di.ENDPOINTS
+import com.kg.gettransfer.di.IP_API_KEY
 
 import com.kg.gettransfer.sys.domain.*
 
@@ -27,12 +28,15 @@ class ConfigsManager : KoinComponent {
 
     private val endpoints: List<Endpoint> by inject(named(ENDPOINTS))
     private val defaultEndpoint: Endpoint by inject()
+    private val ipApiKey: String by inject(named(IP_API_KEY))
+
     private val log: Logger by inject { parametersOf("ConfigsManager") }
 
     private val getPreferences: GetPreferencesInteractor by inject()
     private val getConfigs: GetConfigsInteractor by inject()
     private val getMobileConfigs: GetMobileConfigsInteractor by inject()
     private val setEndpoint: SetEndpointInteractor by inject()
+    private val setIpApiKey: SetIpApiKeyInteractor by inject()
 
     /** Get configs and mobileConfigs concurrently. */
     suspend fun coldStart(backgroundScope: CoroutineScope): Result.Failure<Any>? {
@@ -44,6 +48,7 @@ class ConfigsManager : KoinComponent {
             preferences = preferences.copy(endpoint = defaultEndpoint)
         }
         backgroundScope.async { setEndpoint(endpoint) }.await()
+        backgroundScope.async { setIpApiKey(ipApiKey) }.await()
 
         val mobileDeferred  = backgroundScope.async { getMobileConfigs() }
         val configsDeferred = backgroundScope.async { getConfigs() }
@@ -60,13 +65,17 @@ class ConfigsManager : KoinComponent {
     }
 
     /** Write preferences into DB */
-    suspend fun apply() {
-    }
+    suspend fun apply() {}
 
     private suspend fun myDelay() {
-        repeat(10) {
-            delay(1000)
-            log.debug("wait ${it+1}")
+        repeat(MY_DELAY_REPEAT_TIMES) { index ->
+            delay(MY_DELAY_MILLIS)
+            log.debug("wait ${index + 1}")
         }
+    }
+
+    companion object {
+        const val MY_DELAY_REPEAT_TIMES = 10
+        const val MY_DELAY_MILLIS = 1000L
     }
 }

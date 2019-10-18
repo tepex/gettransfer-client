@@ -22,7 +22,6 @@ import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.extensions.visibleFade
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
@@ -59,6 +58,14 @@ class SearchFragment : BaseFragment(), SearchView {
         setupToolbar()
 
         predefinedPopularPlaces = initPredefinedPopularPlaces()
+
+        rv_addressList.setOnTouchListener(onTouchListener)
+
+        initSearchFields()
+        if (!presenter.isHourly()) {
+            ivInverseWay.isVisible = true
+            ivInverseWay.setOnClickListener { presenter.inverseWay() }
+        }
     }
 
     /**
@@ -66,15 +73,7 @@ class SearchFragment : BaseFragment(), SearchView {
      */
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
         return FragmentUtils.onCreateAnimation(requireContext(), enter) {
-
-            rv_addressList.setOnTouchListener(onTouchListener)
-
-            initSearchFields()
-            if (!presenter.isHourly()) {
-                ivInverseWay.isVisible = true
-                ivInverseWay.setOnClickListener { presenter.inverseWay() }
-            }
-            presenter.init()
+            presenter.initSuggestedAddresses()
             showKeyboard()
         }
     }
@@ -110,7 +109,7 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     fun onSearchFieldEmpty(isToField: Boolean) {
-        presenter.onSearchFieldEmpty()
+        presenter.initSuggestedAddresses()
         searchForm.markFieldEmpty(isToField)
     }
 
@@ -165,7 +164,7 @@ class SearchFragment : BaseFragment(), SearchView {
 
     override fun setSuggestedAddresses(addressesList: List<GTAddress>) {
         rv_popularList.adapter = PopularAddressAdapter(predefinedPopularPlaces) {
-            if (it == predefinedPopularPlaces[0]) presenter.selectFinishPointOnMap()
+            if (it == predefinedPopularPlaces[0]) presenter.selectPointOnMap()
             else presenter.onPopularSelected(it)
         }
         rv_addressList.adapter = AddressAdapter(addressesList) { presenter.onAddressSelected(it) }
@@ -187,10 +186,7 @@ class SearchFragment : BaseFragment(), SearchView {
     override fun goToMap() {
         view?.hideKeyboard()
         Handler().postDelayed({
-            if (SearchFragmentArgs.fromBundle(requireArguments()).isCameFromMap)
-                goToBack()
-            else
-                findNavController().navigate(SearchFragmentDirections.goToMap())
+            findNavController().navigate(SearchFragmentDirections.goToMap())
         }, 400)
     }
 
@@ -201,10 +197,7 @@ class SearchFragment : BaseFragment(), SearchView {
     override fun goToCreateOrder() {
         view?.hideKeyboard()
         Handler().postDelayed({
-        if (!SearchFragmentArgs.fromBundle(requireArguments()).isCameFromMap)
             findNavController().navigate(SearchFragmentDirections.goToCreateOrder())
-        else
-            goToBack()
         }, 400)
     }
 }

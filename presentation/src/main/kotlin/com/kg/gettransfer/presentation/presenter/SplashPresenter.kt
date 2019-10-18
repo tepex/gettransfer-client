@@ -12,6 +12,7 @@ import com.kg.gettransfer.presentation.view.SplashView
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.sys.domain.IsNeedUpdateAppInteractor
+import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
 import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
 
 import com.kg.gettransfer.sys.presentation.ConfigsManager
@@ -36,15 +37,18 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     private val isNeedUpdateApp: IsNeedUpdateAppInteractor by inject()
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
     private val getPreferences: GetPreferencesInteractor by inject()
+    private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
 
     fun onLaunchContinue() {
         /* Check PUSH notification */
         viewState.checkLaunchType()
         worker.main.launch {
-             val result = configsManager.coldStart(worker.backgroundScope)
-             // check result for network error
-
-             val needUpdateApp = withContext(worker.bg) {
+            val result = configsManager.coldStart(worker.backgroundScope)
+            // check result for network error
+            withContext(worker.bg) {
+                setNewDriverAppDialogShowedInteractor(false)
+            }
+            val needUpdateApp = withContext(worker.bg) {
                 isNeedUpdateApp(IsNeedUpdateAppInteractor.FIELD_UPDATE_REQUIRED, BuildConfig.VERSION_CODE)
             }
             if (needUpdateApp) viewState.onNeedAppUpdateInfo() else startApp()
@@ -58,7 +62,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
             router.replaceScreen(Screens.About(false))
             withContext(worker.bg) { setOnboardingShowed(true) }
         } else {
-            router.newRootScreen(Screens.MainPassenger(!isOnboardingShowed))
+            router.newRootScreen(Screens.MainPassenger())
         }
     }
 

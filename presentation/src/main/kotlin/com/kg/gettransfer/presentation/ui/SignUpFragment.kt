@@ -101,6 +101,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                 onDismissCallBack = {
                     presenter.onBackCommandClick()
                 }
+                onClickOkButton = { presenter.onCreateTransferClick() }
             }
             .show(requireFragmentManager())
     }

@@ -8,10 +8,11 @@ import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.di.ENDPOINTS
 import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
+import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 
 import com.kg.gettransfer.domain.model.DistanceUnit
-
 import com.kg.gettransfer.presentation.model.CurrencyModel
+
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.Screens
@@ -41,7 +42,7 @@ import org.koin.core.qualifier.named
 
 @Suppress("TooManyFunctions")
 @InjectViewState
-class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener {
+class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener, CreateTransferListener {
 
     private val endpoints: List<EndpointModel> = get<List<Endpoint>>(named(ENDPOINTS)).map { it.map() }
 
@@ -58,6 +59,11 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
     private val setAccessToken: SetAccessTokenInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        sessionInteractor.addCreateTransferListener(this)
+    }
 
     override fun attachView(view: SettingsView) {
         super.attachView(view)
@@ -97,11 +103,15 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
         worker.main.launch { initSettings() }
     }
 
+    override fun onCreateTransferClick() {
+        viewState.showOrderItem()
+    }
+
     private fun initGeneralSettings() = worker.main.launch {
         viewState.initGeneralSettingsLayout()
         viewState.setCurrency(sessionInteractor.currency.map().name)
         val locale = sessionInteractor.locale
-        val localeModel   = withContext(worker.bg) {
+        val localeModel = withContext(worker.bg) {
             configsManager.configs.availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
                 .map { it.map() }
                 .find { it.delegate.language == locale.language }
@@ -128,7 +138,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
                 if (!balance.isNullOrEmpty()) viewState.setBalance(balance) else viewState.hideBalance()
 
                 val creditLimit = partner?.creditLimit?.default
-                if (!creditLimit.isNullOrEmpty()) viewState.setCreditLimit(balance) else viewState.hideCreditLimit()
+                if (!creditLimit.isNullOrEmpty()) viewState.setCreditLimit(creditLimit) else viewState.hideCreditLimit()
             } else {
                 hideBalanceAndCreditLimit()
             }
@@ -272,6 +282,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener 
 
     override fun onDestroy() {
         worker.cancel()
+        sessionInteractor.removeCreateTransferListener(this)
         super.onDestroy()
     }
 

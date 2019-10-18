@@ -48,7 +48,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     override fun systemInitialized() {
         if (accountManager.isLoggedIn) {
             worker.main.launch {
-                if (accountManager.remoteAccount.isDriver &&
+                if (accountManager.remoteAccount.isCarrier &&
                         !getPreferences().getModel().isNewDriverAppDialogShowed) {
                     analytics.logEvent(
                             Analytics.EVENT_NEW_CARRIER_APP_DIALOG,

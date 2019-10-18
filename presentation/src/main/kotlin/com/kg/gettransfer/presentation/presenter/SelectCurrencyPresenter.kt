@@ -26,7 +26,7 @@ class SelectCurrencyPresenter : MvpPresenter<SelectCurrencyView>(), KoinComponen
     private val sessionInteractor: SessionInteractor by inject()
     private val configsManager: ConfigsManager by inject()
 
-    override fun attachView(view: SelectCurrencyView?) {
+    override fun attachView(view: SelectCurrencyView) {
         super.attachView(view)
         worker.main.launch {
             val selectedCurrency = withContext(worker.bg) { sessionInteractor.currency.map() }
@@ -42,7 +42,7 @@ class SelectCurrencyPresenter : MvpPresenter<SelectCurrencyView>(), KoinComponen
 
     fun changeCurrency(selected: CurrencyModel) {
         sessionInteractor.currency = selected.delegate
-        viewState.sendEvent(selected)
+        viewState.currencyChanged(selected)
     }
 
     override fun onDestroy() {

@@ -125,7 +125,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     private fun logout() {
         utils.launchSuspend {
             clearAllCachedData()
-            router.backTo(Screens.MainPassenger(true))
+            router.backTo(Screens.MainPassenger())
         }
     }
 

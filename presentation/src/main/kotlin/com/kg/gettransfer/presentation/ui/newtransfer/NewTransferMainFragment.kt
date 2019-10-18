@@ -3,14 +3,16 @@ package com.kg.gettransfer.presentation.ui.newtransfer
 import android.Manifest
 import android.animation.Animator
 import android.os.Bundle
-import androidx.annotation.CallSuper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
+import androidx.annotation.CallSuper
 import androidx.navigation.fragment.findNavController
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
@@ -22,6 +24,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.NewTransferMainView
+
 import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
@@ -30,6 +33,7 @@ import kotlinx.android.synthetic.main.view_switcher.*
 // import leakcanary.AppWatcher
 
 import org.koin.core.inject
+
 import pub.devrel.easypermissions.EasyPermissions
 
 @Suppress("TooManyFunctions")
@@ -76,8 +80,8 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
         // Address panel
         request_search_panel.setSearchFromClickListener { presenter.navigateToFindAddress() }
-        request_search_panel.setSearchToClickListener { presenter.navigateToFindAddress(true) }
-        request_search_panel.setHourlyClickListener { presenter.showHourlyDurationDialog() }
+        request_search_panel.setSearchToClickListener   { presenter.navigateToFindAddress(true) }
+        request_search_panel.setHourlyClickListener     { presenter.showHourlyDurationDialog() }
         request_search_panel.setIvSelectFieldFromClickListener { switchToMap() }
 
         // Buttons
@@ -126,8 +130,8 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     }*/
 
     override fun setHourlyDuration(duration: Int?) {
-        duration?.let {
-            request_search_panel.setCurrentHoursText(HourlyValuesHelper.getValue(duration, requireContext()))
+        duration?.let { dur ->
+            request_search_panel.setCurrentHoursText(HourlyValuesHelper.getValue(dur, requireContext()))
         }
     }
 
@@ -187,8 +191,8 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         findNavController().navigate(NewTransferMainFragmentDirections.goToMap())
     }
 
-    override fun goToSearchAddress(isClickTo: Boolean, isCameFromMap: Boolean) {
-        findNavController().navigate(NewTransferMainFragmentDirections.goToSearchAddress(isClickTo, isCameFromMap))
+    override fun goToSearchAddress(isClickTo: Boolean) {
+        findNavController().navigate(NewTransferMainFragmentDirections.goToSearchAddress(isClickTo))
     }
 
     override fun goToCreateOrder() {

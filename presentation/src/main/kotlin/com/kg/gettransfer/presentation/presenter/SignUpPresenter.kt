@@ -41,13 +41,13 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 accountManager.register(RegistrationAccount(email, phone, termsAccepted, name))
-            }.also {
-                it.error?.let { e ->
+            }.also { result ->
+                result.error?.let { e ->
                     viewState.setError(e)
                     logLoginEvent(Analytics.RESULT_FAIL)
                 }
 
-                it.isSuccess()?.let {
+                result.isSuccess()?.let {
                     viewState.showRegisterSuccessDialog()
                     registerPushToken()
                     logLoginEvent(Analytics.RESULT_SUCCESS)
@@ -57,13 +57,11 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
         }
     }
 
-    private fun logLoginEvent(value: String) =
-            analytics.logEvent(Analytics.EVENT_SIGN_UP, Analytics.STATUS, value)
+    private fun logLoginEvent(value: String) = analytics.logEvent(Analytics.EVENT_SIGN_UP, Analytics.STATUS, value)
 
-    private fun checkFieldsIsValid(): Boolean =
-        LoginHelper.phoneIsValid(phone) && LoginHelper.emailIsValid(email)
+    private fun checkFieldsIsValid() = LoginHelper.phoneIsValid(phone) && LoginHelper.emailIsValid(email)
 
-    fun checkFieldsIsEmpty(): Boolean = name.isNotEmpty() && phone.isNotEmpty() && email.isNotEmpty() && termsAccepted
+    fun checkFieldsIsEmpty() = name.isNotEmpty() && phone.isNotEmpty() && email.isNotEmpty() && termsAccepted
 
     fun showLicenceAgreement() {
         router.navigateTo(Screens.LicenceAgree)
@@ -76,5 +74,9 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
         } else {
             viewState.updateTextEmail(emailOrPhone)
         }
+    }
+
+    fun onCreateTransferClick() {
+        sessionInteractor.notifyCreateTransfer()
     }
 }

@@ -7,144 +7,165 @@
     android:layout_height="match_parent"
     android:elevation="@dimen/margin8"
     android:layout_marginTop="@dimen/margin8"
-    android:background="@drawable/back_top_rounded"
-    android:paddingStart="@dimen/margin24"
-    android:paddingEnd="@dimen/margin24">
+    android:background="@drawable/back_top_rounded">
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="110dp"
-        android:layout_height="5dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/rectangle_swipe_down"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnOk"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
-    <TextView
-        android:id="@+id/tvTypeTransfer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view"
-        tools:text="Economy"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin24"
+            android:paddingEnd="@dimen/margin24">
 
-    <ImageView
-        android:id="@+id/ivTypeTransfer"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/margin104"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTypeTransfer"
+            <View
+                android:id="@+id/view"
+                android:layout_width="110dp"
+                android:layout_height="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rectangle_swipe_down"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        tools:srcCompat="@drawable/ic_transport_type_economy" />
+            <TextView
+                android:id="@+id/tvTypeTransfer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view"
+                tools:text="Economy" />
 
-    <TextView
-        android:id="@+id/tvPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="22dp"
+            <ImageView
+                android:id="@+id/ivTypeTransfer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin104"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTypeTransfer"
 
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorTextBlack"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintTop_toTopOf="@+id/tvTypeTransfer"
-        tools:text="From $32"/>
+                tools:srcCompat="@drawable/ic_transport_type_economy" />
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/ivTypeTransfer"
-        app:layout_constraintTop_toBottomOf="@+id/ivTypeTransfer"
-        app:srcCompat="@drawable/ic_pass_transport_details"/>
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
 
-    <TextView
-        android:id="@+id/tvPassengers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/LNG_RIDE_PASSENGERS"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toTopOf="@+id/imageView4"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView4"/>
+                android:layout_marginEnd="24dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorTextBlack"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvTypeTransfer"
+                tools:text="From $32" />
 
-    <TextView
-        android:id="@+id/tvCountPassengers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="@+id/ivTypeTransfer"
-        app:layout_constraintTop_toTopOf="@+id/tvPassengers"
-        tools:text="3"/>
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="@+id/ivTypeTransfer"
+                app:layout_constraintTop_toBottomOf="@+id/ivTypeTransfer"
+                app:srcCompat="@drawable/ic_pass_transport_details" />
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="8dp"
+            <TextView
+                android:id="@+id/tvPassengers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/LNG_RIDE_PASSENGERS"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+                app:layout_constraintStart_toEndOf="@+id/imageView4"
+                app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
-        app:layout_constraintStart_toStartOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"
-        app:srcCompat="@drawable/ic_lugg_transport_details" />
+            <TextView
+                android:id="@+id/tvCountPassengers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/ivTypeTransfer"
+                app:layout_constraintTop_toTopOf="@+id/tvPassengers"
+                tools:text="3" />
 
-    <TextView
-        android:id="@+id/tvLuggage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+
+                app:layout_constraintStart_toStartOf="@+id/imageView4"
+                app:layout_constraintTop_toBottomOf="@+id/imageView4"
+                app:srcCompat="@drawable/ic_lugg_transport_details" />
+
+            <TextView
+                android:id="@+id/tvLuggage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
 
-        android:text="@string/LNG_RIDE_LUGGAGE"
-        app:layout_constraintStart_toStartOf="@+id/tvPassengers"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView5"/>
+                android:text="@string/LNG_RIDE_LUGGAGE"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+                app:layout_constraintStart_toStartOf="@+id/tvPassengers"
+                app:layout_constraintTop_toTopOf="@+id/imageView5" />
 
-    <TextView
-        android:id="@+id/tvCountLuggage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toEndOf="@+id/ivTypeTransfer"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
-        tools:text="3"/>
+            <TextView
+                android:id="@+id/tvCountLuggage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/ivTypeTransfer"
+                app:layout_constraintTop_toTopOf="@+id/imageView5"
+                tools:text="3" />
 
-    <TextView
-        android:id="@+id/tvCars"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/sf_pro_text_regular"
-        android:textColor="@color/hockeyapp_text_black"
-        android:textSize="@dimen/car_type_description"
-        app:autoSizeMaxTextSize="@dimen/car_type_description"
-        app:autoSizeMinTextSize="@dimen/car_type_description_min"
-        app:autoSizeStepGranularity="2sp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintStart_toStartOf="@+id/imageView5"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5"
+            <TextView
+                android:id="@+id/tvCars"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/sf_pro_text_regular"
+                android:textColor="@color/hockeyapp_text_black"
+                android:textSize="@dimen/car_type_description"
+                app:autoSizeMaxTextSize="@dimen/car_type_description"
+                app:autoSizeMinTextSize="@dimen/car_type_description_min"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintStart_toStartOf="@+id/imageView5"
+                app:layout_constraintTop_toBottomOf="@+id/imageView5"
 
-        tools:text="@string/LNG_TRANSPORT_EXAMPLES_ECONOMY" />
+                tools:text="@string/LNG_TRANSPORT_EXAMPLES_ECONOMY" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
     <Button
         android:id="@+id/btnOk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="@dimen/margin16"
+        android:layout_marginBottom="@dimen/margin16"
+        android:layout_marginStart="@dimen/margin24"
+        android:layout_marginEnd="@dimen/margin24"
         android:background="@drawable/btn_bg_rounded"
         android:text="@android:string/ok"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

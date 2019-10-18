@@ -100,24 +100,26 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/vehicle_items_margin_start"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/layoutRating"
             app:layout_constraintTop_toTopOf="@+id/layoutRating"
             app:layout_constraintBottom_toBottomOf="@id/layoutRating"
             app:layout_constraintDimensionRatio="H,1:1"
-            app:srcCompat="@drawable/ic_with_name_sign" />
+            app:srcCompat="@drawable/ic_with_name_sign"
+            tools:visibility="visible"/>
 
         <ImageView
             android:id="@+id/imgMissingNameSign"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/vehicle_items_margin_start"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/imgWithNameSign"
             app:layout_constraintTop_toTopOf="@+id/layoutRating"
             app:layout_constraintBottom_toBottomOf="@id/layoutRating"
             app:layout_constraintDimensionRatio="H,1:1"
-            app:srcCompat="@drawable/ic_missing_name_sign" />
+            app:srcCompat="@drawable/ic_missing_name_sign"
+            tools:visibility="visible"/>
 
 
         <include

@@ -27,9 +27,25 @@ import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 
-import com.kg.gettransfer.presentation.mapper.*
+import com.kg.gettransfer.presentation.mapper.CarrierMapper
+import com.kg.gettransfer.presentation.mapper.OfferMapper
+import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
+import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
+import com.kg.gettransfer.presentation.mapper.PointMapper
+import com.kg.gettransfer.presentation.mapper.ProfileMapper
+import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.mapper.UserMapper
+import com.kg.gettransfer.presentation.mapper.MessageMapper
+import com.kg.gettransfer.presentation.mapper.ChatAccountMapper
+import com.kg.gettransfer.presentation.mapper.ChatMapper
+import com.kg.gettransfer.presentation.mapper.CityPointMapper
+
 import com.kg.gettransfer.receiver.NetworkChangeCallback
-import com.kg.gettransfer.utilities.*
+
+import com.kg.gettransfer.utilities.LocaleManager
+import com.kg.gettransfer.utilities.GTNotificationManager
+import com.kg.gettransfer.utilities.NewTransferState
+import com.kg.gettransfer.utilities.GTDownloadManager
 
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 import com.kg.gettransfer.sys.domain.*
@@ -95,7 +111,7 @@ val prefsModule = module {
         var defaultEndpointName = prodEndpointName
         if (BuildConfig.FLAVOR == "dev") defaultEndpointName = demoEndpointName
 */
-        PreferencesImpl(androidContext(),/* endpoints, defaultEndpointName,*/ get())
+        PreferencesImpl(androidContext(), /* endpoints, defaultEndpointName,*/ get())
     }
 }
 
@@ -162,6 +178,7 @@ val systemDomain = module {
     single { SetAppEntersInteractor(get()) }
     single { SetDebugMenuShowedInteractor(get()) }
     single { SetEndpointInteractor(get(), get()) }
+    single { SetIpApiKeyInteractor(get()) }
     single { SetFavoriteTransportsInteractor(get()) }
     single { SetFirstLaunchInteractor(get()) }
     single { SetOnboardingShowedInteractor(get()) }
@@ -207,4 +224,9 @@ val endpoints = module {
     }
 }
 
+val ipApiKey = module {
+    single<String>(named(IP_API_KEY)) { androidContext().getString(R.string.ipapi_key) }
+}
+
 const val ENDPOINTS = "endpoints"
+const val IP_API_KEY = "ipapi_key"

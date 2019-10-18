@@ -10,5 +10,5 @@ import com.kg.gettransfer.presentation.model.CurrencyModel
 interface SelectCurrencyView : MvpView, BaseBottomSheetView {
     fun setCurrencies(all: List<CurrencyModel>, selected: CurrencyModel)
     fun setPopularCurrencies(popular: List<CurrencyModel>, selected: CurrencyModel)
-    fun sendEvent(currency: CurrencyModel)
+    fun currencyChanged(currency: CurrencyModel)
 }

@@ -132,7 +132,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun updateDuration(durationValue: Int) {
+        saveSelectedTransportTypes()
         orderInteractor.apply {
+            initMapAndPrices()
             hourlyDuration = durationValue
             viewState.setHourlyDuration(hourlyDuration)
         }
@@ -148,7 +150,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val prices = utils.asyncAwait {
+            val routeInfo = utils.asyncAwait {
                 @Suppress("UnsafeCallOnNullableType")
                 orderInteractor.getRouteInfoHourlyTransfer(
                     RouteInfoHourlyRequest(
@@ -158,7 +160,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                         dateTime
                     )
                 )
-            }.model.prices
+            }.model
+            val prices = routeInfo.prices
+            hintsToComments = routeInfo.hintsToComments
             setTransportTypePrices(prices)
             viewState.blockInterface(false)
         }
@@ -258,6 +262,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun getNewPrices() {
+        saveSelectedTransportTypes()
         orderInteractor.hourlyDuration?.let { initPrices(it) } ?: initPrices(dateDelegate.returnDate != null)
     }
 
@@ -315,10 +320,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    private suspend fun setTransportTypePrices(
-        prices: Map<TransportType.ID, TransportTypePrice>,
-        selectTransport: Boolean = false
-    ) {
+    private suspend fun setTransportTypePrices(prices: Map<TransportType.ID, TransportTypePrice>) {
         utils.compute {
             val pr = prices.mapValues { it.value.map() }
             val newTransportTypes = configsManager.configs.transportTypes.map { it.map(pr) }
@@ -327,13 +329,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             }
             transportTypes = newTransportTypes
         }
-        if (selectTransport) {
-            if (orderInteractor.selectedTransports != null) {
-                setSelectedTransportTypes()
-            } else {
-                setFavoriteTransportTypes()
-            }
-        }
+
+        orderInteractor.selectedTransports?.let { setSelectedTransportTypes() }
+                    ?: setFavoriteTransportTypes()
+
         transportTypes?.let { viewState.setTransportTypes(it) }
     }
 
@@ -355,6 +354,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun clearReturnDate() {
+        saveSelectedTransportTypes()
         dateDelegate.returnDate = null
         orderInteractor.flightNumberReturn = null
         initPrices(false)
@@ -544,7 +544,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setFavoriteTransportTypes() = worker.main.launch {
-        if (!getPreferences().getModel().favoriteTransports.isEmpty()) {
+        if (getPreferences().getModel().favoriteTransports.isNotEmpty()) {
             selectTransportTypes(getPreferences().getModel().favoriteTransports)
             setPassengersCountForSelectedTransportTypes()
         }

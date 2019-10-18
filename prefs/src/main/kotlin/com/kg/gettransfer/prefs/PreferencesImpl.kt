@@ -115,7 +115,7 @@ class PreferencesImpl(
         }
 
     override var appLanguage: String
-        get() = configsPrefs.getString(APP_LANGUAGE, Locale.getDefault().language)
+        get() = configsPrefs.getString(APP_LANGUAGE, Locale.getDefault().language).toString()
         set(value) { configsPrefs.edit().putString(APP_LANGUAGE, value).apply() }
 
     override var isAppLanguageChanged: Boolean
