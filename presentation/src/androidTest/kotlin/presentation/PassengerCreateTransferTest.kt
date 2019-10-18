@@ -30,7 +30,7 @@ class PassengerCreateTransferTest : TestCase() {
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
 
     @Test
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "MagicNumber")
     fun testPassengerCreateTransfer() {
         before {
         }.after {
