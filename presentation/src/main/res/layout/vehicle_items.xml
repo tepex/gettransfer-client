@@ -101,4 +101,16 @@
         app:srcCompat="@drawable/ic_wheelchair"
         tools:visibility="visible" />
 
+    <ImageView
+        android:id="@+id/ivArmor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/vehicle_items_margin_start"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/ivWheelchair"
+        app:layout_constraintStart_toEndOf="@+id/ivWheelchair"
+        app:layout_constraintTop_toTopOf="@+id/ivWheelchair"
+        app:srcCompat="@drawable/ic_armor"
+        tools:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

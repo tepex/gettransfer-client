@@ -82,10 +82,21 @@
         android:layout_width="@dimen/activity_transfer_details_transport_conveniences_height"
         android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/ivArmor"
+        app:layout_constraintEnd_toStartOf="@+id/ivArmor"
+        app:layout_constraintTop_toTopOf="@+id/ivArmor"
+        app:srcCompat="@drawable/ic_wheelchair"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/ivArmor"
+        android:layout_width="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/conveniences_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/conveniences_field"
-        app:srcCompat="@drawable/ic_wheelchair"
+        app:srcCompat="@drawable/ic_armor"
         tools:visibility="visible" />
 
     <View
