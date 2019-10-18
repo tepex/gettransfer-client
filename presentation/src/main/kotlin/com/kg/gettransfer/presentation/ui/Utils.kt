@@ -329,7 +329,7 @@ object Utils : KoinComponent {
 
     @StringRes
     fun getCarColorTextRes(color: String): Int {
-        val colorRes = R.string::class.members.find({ it.name == "LNG_COLOR_${color.toUpperCase()}" })
+        val colorRes = R.string::class.members.find({ it.name == "LNG_COLOR_${color.toUpperCase(Locale.US)}" })
         return (colorRes?.call() as Int?) ?: R.string.LNG_COLOR_WHITE
     }
 
@@ -391,7 +391,7 @@ object Utils : KoinComponent {
 
     fun getPhoneCodeByCountryIso(context: Context): Int {
         val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        return phoneUtil.getCountryCodeForRegion(telephonyManager.simCountryIso.toUpperCase())
+        return phoneUtil.getCountryCodeForRegion(telephonyManager.simCountryIso.toUpperCase(Locale.US))
     }
 
     fun formatPersons(context: Context, persons: Int) = context.getString(R.string.count_persons_and_baggage, persons)
