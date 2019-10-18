@@ -237,8 +237,9 @@ class OffersActivity : BaseActivity(), OffersView {
                     imgFreeWiFi.isVisible = offer.wifi
                     imgCharge.isVisible = offer.charger
                     ivWheelchair.isVisible = offer.wheelchair
+                    ivArmor.isVisible = offer.armored
                     isVisible = offer.refreshments || offer.wifi || offer.charger ||
-                        isNameSignSection || offer.wheelchair
+                        isNameSignSection || offer.wheelchair || offer.armored
                 }
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)

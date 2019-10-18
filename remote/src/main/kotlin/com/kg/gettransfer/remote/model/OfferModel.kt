@@ -24,7 +24,8 @@ data class OfferModel(
     @SerializedName(OfferEntity.CARRIER)             @Expose val carrier: CarrierModel,
     @SerializedName(OfferEntity.VEHICLE)             @Expose val vehicle: VehicleModel,
     @SerializedName(OfferEntity.DRIVER)              @Expose val driver: ProfileModel?,
-    @SerializedName(OfferEntity.WHEELCHAIR)          @Expose val wheelchair: Boolean
+    @SerializedName(OfferEntity.WHEELCHAIR)          @Expose val wheelchair: Boolean,
+    @SerializedName(OfferEntity.ARMORED)             @Expose val armored: Boolean
 )
 
 fun OfferModel.map(transferId: Long) =
@@ -46,5 +47,6 @@ fun OfferModel.map(transferId: Long) =
         carrier.map(),
         vehicle.map(),
         driver?.map(),
-        wheelchair
+        wheelchair,
+        armored
     )

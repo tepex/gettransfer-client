@@ -26,7 +26,8 @@ data class OfferCached(
     @Embedded(prefix = OfferEntity.CARRIER)            val carrier: CarrierCached,
     @Embedded(prefix = OfferEntity.VEHICLE)            val vehicle: VehicleCached,
     @Embedded(prefix = OfferEntity.DRIVER)             val driver: ProfileCached?,
-    @ColumnInfo(name = OfferEntity.WHEELCHAIR)         val wheelchair: Boolean
+    @ColumnInfo(name = OfferEntity.WHEELCHAIR)         val wheelchair: Boolean,
+    @ColumnInfo(name = OfferEntity.ARMORED)            val armored: Boolean
 )
 
 fun OfferCached.map() =
@@ -48,7 +49,8 @@ fun OfferCached.map() =
         carrier.map(),
         vehicle.map(),
         driver?.map(),
-        wheelchair
+        wheelchair,
+        armored
     )
 
 fun OfferEntity.map() =
@@ -70,5 +72,6 @@ fun OfferEntity.map() =
         carrier.map(),
         vehicle.map(),
         driver?.map(),
-        wheelchair
+        wheelchair,
+        armored
     )
