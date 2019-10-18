@@ -15,6 +15,6 @@ object Payment : Screen<Payment>() {
     val tvRemainTime = KView { withId(R.id.tvRemainTime) }
     val btnSupport = KButton { withId(R.id.btnSupport) }
     val btnTryAgain = KButton { withId(R.id.btnTryAgain) }
-    val tvTransferNotPaid = KView { withId(R.id.textView2) }
-    val tvImageFail = KView { withId(R.id.imageView3) }
+    val tvTransferNotPaid = KView { withId(R.id.tvNotPaid) }
+    val tvImageFail = KView { withId(R.id.imageError) }
 }
