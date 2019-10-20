@@ -91,9 +91,8 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
                     systemInitialized()
                 } else {
                     getPreferences().getModel().endpoint?.let { initEndpoint(it) }
-                    if (sessionInteractor.coldStart().error == null) {
-                        systemInitialized()
-                    }
+                    sessionInteractor.coldStart()
+                    systemInitialized()
                 }
             }
         }

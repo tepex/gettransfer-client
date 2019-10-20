@@ -22,21 +22,7 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
 import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
 import com.kg.gettransfer.presentation.view.HandleUrlView
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.CHOOSE_OFFER_ID
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.EQUAL
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.FROM_PLACE_ID
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.NEW_TRANSFER
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.OPEN_CHAT
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.PASSENGER_CABINET
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.PASSENGER_RATE
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.PROMO_CODE
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.QUESTION
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.RATE
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.RC_WRITE_FILE
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.SLASH
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.TO_PLACE_ID
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.TRANSFERS
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.VOUCHER
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.RC_WRITE_FILE
 
 import com.kg.gettransfer.utilities.GTDownloadManager.Companion.VOUCHERS_FOLDER
 
@@ -63,14 +49,12 @@ class HandleUrlActivity : BaseActivity(),
     @ProvidePresenter
     fun createHandleUrlPresenter() = HandleUrlPresenter()
 
-    private lateinit var url: String
-
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_handle_url)
         if (intent?.action == Intent.ACTION_VIEW) {
-            intent.data?.let { handleIntent(it) }
+            intent.data?.let { presenter.handleIntent(it) }
         }
     }
 
@@ -78,7 +62,7 @@ class HandleUrlActivity : BaseActivity(),
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent?.action == Intent.ACTION_VIEW) {
-            intent.data?.let { handleIntent(it) }
+            intent.data?.let { presenter.handleIntent(it) }
         }
     }
 
@@ -106,59 +90,12 @@ class HandleUrlActivity : BaseActivity(),
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
-    /** TODO: refactor to regular expressions */
-    @Suppress("ComplexMethod", "NestedBlockDepth", "UnsafeCallOnNullableType", "ReturnCount")
-    private fun handleIntent(appLinkData: Uri) {
-        url = appLinkData.toString()
-        val path = appLinkData.path
-        when {
-            path.equals(PASSENGER_CABINET) -> appLinkData.fragment?.let { fragment ->
-                if (fragment.startsWith(TRANSFERS)) {
-                    if (fragment.contains(CHOOSE_OFFER_ID)) {
-                        val transferId =
-                            fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
-                        val offerId =
-                            fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length).toLongOrNull()
-                        var bookNowTransportId: String? = null
-                        if (offerId == null) {
-                            bookNowTransportId = fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length)
-                        }
-                        transferId?.let { id -> presenter.openOffer(id, offerId, bookNowTransportId) }
-                        return
-                    } else if (fragment.contains(OPEN_CHAT)) {
-                        val chatId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION))
-                        presenter.openChat(chatId)
-                        return
-                    }
-                    val transferId = fragment.substring(fragment.indexOf(SLASH) + 1).toLongOrNull()
-                    transferId?.let { presenter.openTransfer(it) }
-                    return
-                }
-            }
-            path?.startsWith(PASSENGER_RATE)!! -> {
-                val transferId = appLinkData.lastPathSegment?.toLongOrNull()
-                val rate = appLinkData.getQueryParameter(RATE)?.toIntOrNull()
-                if (transferId != null && rate != null) {
-                    presenter.rateTransfer(transferId, rate)
-                }
-                return
-            }
-            path.contains(VOUCHER) -> checkPermissionForWrite()
-            path.contains(NEW_TRANSFER) -> presenter.createOrder(
-                appLinkData.getQueryParameter(FROM_PLACE_ID),
-                appLinkData.getQueryParameter(TO_PLACE_ID),
-                appLinkData.getQueryParameter(PROMO_CODE)
-            )
-            else -> showWebView(url)
-        }
-    }
-
     @AfterPermissionGranted(RC_WRITE_FILE)
-    private fun checkPermissionForWrite() {
+    override fun downloadVoucher() {
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
             presenter.openMainScreen()
-            downloadVoucher(url)
+            downloadVoucher(presenter.url)
         } else {
             EasyPermissions.requestPermissions(
                 this,
@@ -199,7 +136,7 @@ class HandleUrlActivity : BaseActivity(),
         longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
     }
 
-    private fun showWebView(url: String) {
+    override fun showWebView(url: String) {
         splashLayout.isVisible = false
         webView.settings.javaScriptEnabled = true
         webView.setUserAgent()
