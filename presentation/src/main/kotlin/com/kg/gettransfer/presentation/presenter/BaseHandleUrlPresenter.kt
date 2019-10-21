@@ -30,6 +30,7 @@ open class BaseHandleUrlPresenter<BV : BaseHandleUrlView> : BasePresenter<BV>() 
     }
 
     suspend fun checkInitialization() {
+        getPreferences().getModel().endpoint?.let { initEndpoint(it) }
         if (!configsManager.configsInitialized) {
             configsManager.coldStart(worker.backgroundScope)
         }
