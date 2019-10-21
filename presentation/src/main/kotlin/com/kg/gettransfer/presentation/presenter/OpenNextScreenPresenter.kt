@@ -6,14 +6,14 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.createStartChain
 import com.kg.gettransfer.extensions.newChainFromMain
 
-import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.LogInView
+import com.kg.gettransfer.presentation.view.OpenNextScreenView
 import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.coroutines.launch
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
-open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
+open class OpenNextScreenPresenter<BV : OpenNextScreenView> : BasePresenter<BV>() {
 
     val worker: WorkerManager by inject { parametersOf("OpenNextScreenPresenter") }
 
@@ -26,9 +26,10 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
             // from create order screen (needed delete)
             Screens.OFFERS -> router.newChainFromMain(Screens.Offers(params.transferId))
             // from deeplinks
-            Screens.DETAILS       -> openTransfer()
-            Screens.PAYMENT_OFFER -> openOffer()
-            Screens.RATE_TRANSFER -> rateTransfer()
+            Screens.DETAILS          -> openTransfer()
+            Screens.PAYMENT_OFFER    -> openOffer()
+            Screens.RATE_TRANSFER    -> rateTransfer()
+            Screens.DOWNLOAD_VOUCHER -> openVoucher()
         }
     }
 
@@ -77,6 +78,12 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
         }
     }
 
+    private fun openVoucher() = worker.main.launch {
+        checkTransfer(params.transferId).isSuccess()?.let {
+            viewState.downloadVoucher()
+        }
+    }
+
     private suspend fun checkTransfer(transferId: Long) =
         fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }.also { result ->
             result.error?.let { e ->
@@ -85,4 +92,11 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
                 }
             }
         }
+
+    fun downloadVoucher() {
+        params.transferId.let { downloadManager.downloadVoucher(it) }
+        openMainScreen()
+    }
+
+    fun openMainScreen() = router.replaceScreen(Screens.MainPassenger())
 }

@@ -1,9 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.TargetApi
-import android.app.DownloadManager
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.CallSuper
@@ -11,7 +9,6 @@ import androidx.annotation.CallSuper
 import android.webkit.WebViewClient
 import android.webkit.WebView
 import android.webkit.WebResourceRequest
-import android.webkit.URLUtil
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -24,16 +21,11 @@ import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.RC_WRITE_FILE
 
-import com.kg.gettransfer.utilities.GTDownloadManager.Companion.VOUCHERS_FOLDER
-
 import kotlinx.android.synthetic.main.activity_handle_url.*
 
 import org.jetbrains.anko.longToast
 
-import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
-
-import java.io.File
 
 @Suppress("TooManyFunctions")
 class HandleUrlActivity : BaseActivity(),
@@ -66,36 +58,15 @@ class HandleUrlActivity : BaseActivity(),
         }
     }
 
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        onPermissionDenied()
-    }
-
-    @Suppress("EmptyFunctionBlock")
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
-
-    override fun onRationaleDenied(requestCode: Int) {
-        onPermissionDenied()
-    }
-
-    override fun onRationaleAccepted(requestCode: Int) {}
-
     override fun setError(e: ApiException) {
         longToast(e.details)
         finish()
     }
 
-    @CallSuper
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-    }
-
-    @AfterPermissionGranted(RC_WRITE_FILE)
     override fun downloadVoucher() {
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
-            presenter.openMainScreen()
-            downloadVoucher(presenter.url)
+            presenter.downloadVoucher()
         } else {
             EasyPermissions.requestPermissions(
                 this,
@@ -105,31 +76,25 @@ class HandleUrlActivity : BaseActivity(),
         }
     }
 
-    private fun downloadVoucher(url: String) {
-        webView.loadUrl(url)
-        webView.setDownloadListener { _, _, contentDisposition, mimetype, _ ->
-            setupDownloadManager(url, contentDisposition, mimetype)
-        }
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
     }
 
-    private fun setupDownloadManager(url: String, contentDisposition: String?, mimeType: String?) {
-        val folderName = getVouchersFolderName()
-        val fileName = URLUtil.guessFileName(url, contentDisposition, mimeType)
-
-        val request = DownloadManager.Request(Uri.parse(url)).apply {
-            allowScanningByMediaScanner()
-            setMimeType(mimeType)
-            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            setDestinationInExternalPublicDir(folderName, fileName)
-        }
-        val dm = getSystemService(DOWNLOAD_SERVICE)
-        if (dm is DownloadManager) {
-            dm.enqueue(request)
-            longToast(getString(R.string.LNG_DOWNLOADING))
-        }
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        presenter.downloadVoucher()
     }
 
-    private fun getVouchersFolderName() = getString(R.string.app_name) + File.separator + VOUCHERS_FOLDER
+    override fun onRationaleDenied(requestCode: Int) {
+        onPermissionDenied()
+    }
+
+    override fun onRationaleAccepted(requestCode: Int) {}
+
+    @CallSuper
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
 
     private fun onPermissionDenied() {
         presenter.openMainScreen()

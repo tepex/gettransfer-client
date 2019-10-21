@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 class HandleUrlPresenter : BaseHandleUrlPresenter<HandleUrlView>() {
 
     lateinit var url: String
+    var transferId: Long? = null
 
     /** TODO: refactor to regular expressions */
     fun handleIntent(appLinkData: Uri) {
@@ -36,7 +37,10 @@ class HandleUrlPresenter : BaseHandleUrlPresenter<HandleUrlView>() {
             when {
                 path == PASSENGER_CABINET -> appLinkData.fragment?.let { checkPassengerCabinetUrl(it) }
                 path.startsWith(PASSENGER_RATE) -> checkPassengerRateUrl(appLinkData)
-                path.contains(VOUCHER) -> viewState.downloadVoucher()
+                path.contains(VOUCHER) -> {
+                    transferId = appLinkData.lastPathSegment?.toLongOrNull()
+                    transferId?.let { openVoucher(it) }
+                }
                 path.contains(NEW_TRANSFER) -> createOrder(
                     appLinkData.getQueryParameter(FROM_PLACE_ID),
                     appLinkData.getQueryParameter(TO_PLACE_ID),
@@ -141,6 +145,22 @@ class HandleUrlPresenter : BaseHandleUrlPresenter<HandleUrlView>() {
                 router.newRootScreen(Screens.MainPassengerToRateTransfer(transfer.id, rate))
             }
         }
+    }
+
+    private fun openVoucher(transferId: Long) = worker.main.launch {
+        checkInitialization()
+        if (!accountManager.isLoggedIn) {
+            router.createStartChain(Screens.LoginToDownloadVoucher(transferId))
+        } else {
+            if (checkTransfer(transferId).isSuccess() != null) {
+                viewState.downloadVoucher()
+            }
+        }
+    }
+
+    fun downloadVoucher() {
+        transferId?.let { downloadManager.downloadVoucher(it) }
+        openMainScreen()
     }
 
     private suspend fun checkTransfer(transferId: Long) =
