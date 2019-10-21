@@ -54,7 +54,6 @@ class TransferSmokeSuite : TestCase() {
             }
             step("CreateTransfer") {
                 TransferDetails {
-                    typeCar { click() }
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
@@ -112,7 +111,6 @@ class TransferSmokeSuite : TestCase() {
             step("CreateTransfer") {
                 TransferDetails {
                     Screen.idle(DELAY_MEDIUM)
-                    typeCar { click() }
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
@@ -182,7 +180,6 @@ class TransferSmokeSuite : TestCase() {
             step("CreateTransfer") {
                 TransferDetails {
                     Screen.idle()
-                    typeCar { click() }
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
