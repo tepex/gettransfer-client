@@ -31,6 +31,7 @@ object Screens {
     const val PAYMENT_OFFER    = "payment_offer"
     const val RATE_TRANSFER    = "rate_transfer"
     const val DOWNLOAD_VOUCHER = "download_voucher"
+    const val CHAT             = "chat"
 
     private const val EMAIL_DATA = "mailto:"
     private const val DIAL_SCHEME = "tel"
@@ -211,6 +212,18 @@ object Screens {
                 JSON.stringify(
                     LogInView.Params.serializer(),
                     LogInView.Params(Screens.DOWNLOAD_VOUCHER, transferId)
+                )
+            )
+        }
+    }
+
+    data class LoginToChat(val transferId: Long) : SupportAppScreen() {
+
+        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+            putExtra(LogInView.EXTRA_PARAMS,
+                JSON.stringify(
+                    LogInView.Params.serializer(),
+                    LogInView.Params(Screens.CHAT, transferId)
                 )
             )
         }

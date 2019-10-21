@@ -68,8 +68,8 @@ class HandleUrlPresenter : BaseHandleUrlPresenter<HandleUrlView>() {
                 transferId?.let { id -> openOffer(id, offerId, bookNowTransportId) }
                 return
             } else if (fragment.contains(OPEN_CHAT)) {
-                val chatId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION))
-                openChat(chatId)
+                val transferId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
+                transferId?.let { openChat(it) }
                 return
             }
             val transferId = fragment.substring(fragment.indexOf(SLASH) + 1).toLongOrNull()
@@ -116,9 +116,15 @@ class HandleUrlPresenter : BaseHandleUrlPresenter<HandleUrlView>() {
         }
     }
 
-    @Suppress("UNUSED_PARAMETER", "EmptyFunctionBlock")
-    private fun openChat(chatId: String) {
-        // needed realization
+    private fun openChat(transferId: Long) = worker.main.launch {
+        checkInitialization()
+        if (!accountManager.isLoggedIn) {
+            router.createStartChain(Screens.LoginToChat(transferId))
+        } else {
+            checkTransfer(transferId).isSuccess()?.let { transfer ->
+                router.createStartChain(Screens.Chat(transfer.id))
+            }
+        }
     }
 
     private fun openTransfer(transferId: Long) = worker.main.launch {

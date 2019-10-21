@@ -30,6 +30,7 @@ open class OpenNextScreenPresenter<BV : OpenNextScreenView> : BasePresenter<BV>(
             Screens.PAYMENT_OFFER    -> openOffer()
             Screens.RATE_TRANSFER    -> rateTransfer()
             Screens.DOWNLOAD_VOUCHER -> openVoucher()
+            Screens.CHAT             -> openChat()
         }
     }
 
@@ -58,10 +59,6 @@ open class OpenNextScreenPresenter<BV : OpenNextScreenView> : BasePresenter<BV>(
         }
     }
 
-    private fun openChat() = worker.main.launch {
-        // needed realization
-    }
-
     private fun openTransfer() = worker.main.launch {
         checkTransfer(params.transferId).isSuccess()?.let { transfer ->
             if (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_ACTIVE) {
@@ -75,6 +72,12 @@ open class OpenNextScreenPresenter<BV : OpenNextScreenView> : BasePresenter<BV>(
     private fun rateTransfer() = worker.main.launch {
         checkTransfer(params.transferId).isSuccess()?.let { transfer ->
             router.replaceScreen(Screens.MainPassengerToRateTransfer(transfer.id, params.rate))
+        }
+    }
+
+    private fun openChat() = worker.main.launch {
+        checkTransfer(params.transferId).isSuccess()?.let { transfer ->
+            router.createStartChain(Screens.Chat(transfer.id))
         }
     }
 
