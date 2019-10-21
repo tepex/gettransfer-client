@@ -170,10 +170,17 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
     }
 
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
-        val act = activity
-        if (act is BaseView) {
-            act.setTransferNotFoundError(transferId, dismissCallBack)
-        }
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                imageId = R.drawable.transfer_error
+                title = this@SmsCodeFragment.getString(R.string.LNG_ERROR)
+                text = this@SmsCodeFragment.getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString())
+                isShowCloseButton = true
+                isShowOkButton = false
+                dismissCallBack?.let { onDismissCallBack = it }
+            }
+            .show(requireFragmentManager())
     }
 
     companion object {

@@ -6,7 +6,6 @@ import com.kg.gettransfer.domain.model.OfferItem
 
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.createStartChain
-import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.CHOOSE_OFFER_ID
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.EQUAL
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.FROM_PLACE_ID

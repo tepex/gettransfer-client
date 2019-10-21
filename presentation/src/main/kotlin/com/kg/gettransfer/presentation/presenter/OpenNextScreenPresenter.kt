@@ -81,7 +81,7 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
         fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }.also { result ->
             result.error?.let { e ->
                 if (e.isNotFound()) {
-                    viewState.setTransferNotFoundError(transferId) { /*openMainScreen()*/ }
+                    viewState.setTransferNotFoundError(transferId) { router.exit() }
                 }
             }
         }

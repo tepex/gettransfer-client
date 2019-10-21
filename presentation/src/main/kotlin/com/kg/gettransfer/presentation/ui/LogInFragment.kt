@@ -142,10 +142,17 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     // TODO remove BaseView or add code.
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
-        val act = activity
-        if (act is BaseView) {
-            act.setTransferNotFoundError(transferId, dismissCallBack)
-        }
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                imageId = R.drawable.transfer_error
+                title = this@LogInFragment.getString(R.string.LNG_ERROR)
+                text = this@LogInFragment.getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString())
+                isShowCloseButton = true
+                isShowOkButton = false
+                dismissCallBack?.let { onDismissCallBack = it }
+            }
+            .show(requireFragmentManager())
     }
 
     override fun setError(e: ApiException) {

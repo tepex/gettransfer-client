@@ -213,12 +213,8 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     // TODO remove BaseView or add code.
     override fun setError(e: DatabaseException) {}
 
-    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
-        val act = activity
-        if (act is BaseView) {
-            act.setTransferNotFoundError(transferId, dismissCallBack)
-        }
-    }
+    // TODO remove BaseView or add code.
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 
     companion object {
         const val MIN_PHONE_LENGTH = 4
