@@ -26,8 +26,6 @@ object Screens {
     const val OFFERS = "offers"
     const val DETAILS = "details"
 
-    const val PASSENGER_MODE = "passenger_mode"
-
     const val CLOSE_AFTER_LOGIN = "close_after_login"
 
     const val PAYMENT_OFFER = "payment_offer"
@@ -176,13 +174,18 @@ object Screens {
         }
     }
 
-    data class LoginToPaymentOffer(val transferId: Long, val offerId: Long?) : SupportAppScreen() {
+    data class LoginToPaymentOffer(val transferId: Long, val offerId: Long?, val bookNowTransportId: String?) : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
-                    LogInView.Params(Screens.PAYMENT_OFFER, transferId, offerId = offerId ?: 0L)
+                    LogInView.Params(
+                        Screens.PAYMENT_OFFER,
+                        transferId,
+                        offerId = offerId ?: 0L,
+                        bookNowTransportId = bookNowTransportId ?: ""
+                    )
                 )
             )
         }

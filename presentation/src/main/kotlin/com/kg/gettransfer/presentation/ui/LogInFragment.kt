@@ -20,6 +20,7 @@ import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
+import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.LogInView
 
 import io.sentry.Sentry
@@ -140,7 +141,12 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {}
 
     // TODO remove BaseView or add code.
-    override fun setTransferNotFoundError(transferId: Long) {}
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
+        val act = activity
+        if (act is BaseView) {
+            act.setTransferNotFoundError(transferId, dismissCallBack)
+        }
+    }
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")

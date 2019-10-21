@@ -17,6 +17,7 @@ import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.SmsCodePresenter
+import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.SmsCodeView
 import io.sentry.Sentry
@@ -168,8 +169,11 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         }
     }
 
-    override fun setTransferNotFoundError(transferId: Long) {
-        //TODO remove BaseView or add code.
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
+        val act = activity
+        if (act is BaseView) {
+            act.setTransferNotFoundError(transferId, dismissCallBack)
+        }
     }
 
     companion object {

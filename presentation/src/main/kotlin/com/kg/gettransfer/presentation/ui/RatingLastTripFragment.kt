@@ -81,10 +81,10 @@ class RatingLastTripFragment : BaseMapBottomSheetDialogFragment(), RatingLastTri
         }
     }
 
-    override fun setTransferNotFoundError(transferId: Long) {
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
         val act = activity
         if (act is BaseView) {
-            act.setTransferNotFoundError(transferId)
+            act.setTransferNotFoundError(transferId, dismissCallBack)
         }
     }
 
