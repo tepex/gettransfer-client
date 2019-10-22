@@ -159,6 +159,10 @@
                     android:host="stgtr.org"
                     android:pathPattern=".*"
                     android:scheme="https" />
+                <data
+                    android:host="development.stgtr.org"
+                    android:pathPattern=".*"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
