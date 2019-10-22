@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import kotlinx.serialization.Serializable
 
-interface LogInView : OpenNextScreenView{
+interface LogInView : OpenDeepLinkScreenView {
     fun setEmail(login: String)
     fun showValidationError(errorType: Int)
     fun showLoading()

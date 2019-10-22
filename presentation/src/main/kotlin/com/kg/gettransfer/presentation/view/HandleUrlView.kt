@@ -4,7 +4,6 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface HandleUrlView : BaseHandleUrlView {
-    fun downloadVoucher()
+interface HandleUrlView : OpenDeepLinkScreenView {
     fun showWebView(url: String)
 }

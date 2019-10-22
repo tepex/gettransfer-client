@@ -1,105 +1,32 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.kg.gettransfer.core.presentation.WorkerManager
-import com.kg.gettransfer.domain.model.OfferItem
-import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.extensions.createStartChain
 import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.view.LogInView
-import com.kg.gettransfer.presentation.view.OpenNextScreenView
+import com.kg.gettransfer.presentation.view.OpenDeepLinkScreenView
 import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.coroutines.launch
-import org.koin.core.inject
-import org.koin.core.parameter.parametersOf
 
-open class OpenNextScreenPresenter<BV : OpenNextScreenView> : BasePresenter<BV>() {
-
-    val worker: WorkerManager by inject { parametersOf("OpenNextScreenPresenter") }
+open class OpenNextScreenPresenter<BV: OpenDeepLinkScreenView> : OpenDeepLinkScreenPresenter<BV>() {
 
     internal lateinit var params: LogInView.Params
 
-    fun openNextScreen() {
-        if (params.nextScreen.isEmpty()) return
+    fun openNextScreen() = worker.main.launch {
+        if (params.nextScreen.isEmpty()) openMainScreen()
         when (params.nextScreen) {
             Screens.CLOSE_AFTER_LOGIN -> router.exit()
             // from create order screen (needed delete)
             Screens.OFFERS -> router.newChainFromMain(Screens.Offers(params.transferId))
             // from deeplinks
-            Screens.DETAILS          -> openTransfer()
-            Screens.PAYMENT_OFFER    -> openOffer()
-            Screens.RATE_TRANSFER    -> rateTransfer()
-            Screens.DOWNLOAD_VOUCHER -> openVoucher()
-            Screens.CHAT             -> openChat()
+            Screens.DETAILS          -> openTransfer(params.transferId)
+            Screens.PAYMENT_OFFER    -> openOffer(params.transferId, params.offerId, params.bookNowTransportId)
+            Screens.RATE_TRANSFER    -> rateTransfer(params.transferId, params.rate)
+            Screens.DOWNLOAD_VOUCHER -> openVoucher(params.transferId)
+            Screens.CHAT             -> openChat(params.transferId)
         }
     }
 
-    private fun openOffer() = worker.main.launch {
-        checkTransfer(params.transferId).isSuccess()?.let { transfer ->
-            if (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_ACTIVE) {
-                val offerItem: OfferItem? = when {
-                    params.offerId != 0L            ->
-                        fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(transfer.id) }?.find { it.id == params.offerId }
-                    params.bookNowTransportId != "" ->
-                        transfer.bookNowOffers.find { it.transportType.id.name == params.bookNowTransportId }
-                    else                       -> null
-                }
-                if (offerItem != null) {
-                    with(paymentInteractor) {
-                        selectedTransfer = transfer
-                        selectedOffer = offerItem
-                    }
-                    router.createStartChain(Screens.PaymentOffer())
-                } else {
-                    router.createStartChain(Screens.Offers(transfer.id))
-                }
-            } else {
-                router.createStartChain(Screens.Details(transfer.id))
-            }
-        }
+    override fun onCloseTransferNotFoundDialog() {
+        router.exit()
     }
-
-    private fun openTransfer() = worker.main.launch {
-        checkTransfer(params.transferId).isSuccess()?.let { transfer ->
-            if (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_ACTIVE) {
-                router.createStartChain(Screens.Offers(transfer.id))
-            } else {
-                router.createStartChain(Screens.Details(transfer.id))
-            }
-        }
-    }
-
-    private fun rateTransfer() = worker.main.launch {
-        checkTransfer(params.transferId).isSuccess()?.let { transfer ->
-            router.replaceScreen(Screens.MainPassengerToRateTransfer(transfer.id, params.rate))
-        }
-    }
-
-    private fun openChat() = worker.main.launch {
-        checkTransfer(params.transferId).isSuccess()?.let { transfer ->
-            router.createStartChain(Screens.Chat(transfer.id))
-        }
-    }
-
-    private fun openVoucher() = worker.main.launch {
-        checkTransfer(params.transferId).isSuccess()?.let {
-            viewState.downloadVoucher()
-        }
-    }
-
-    private suspend fun checkTransfer(transferId: Long) =
-        fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }.also { result ->
-            result.error?.let { e ->
-                if (e.isNotFound()) {
-                    viewState.setTransferNotFoundError(transferId) { router.exit() }
-                }
-            }
-        }
-
-    fun downloadVoucher() {
-        params.transferId.let { downloadManager.downloadVoucher(it) }
-        openMainScreen()
-    }
-
-    fun openMainScreen() = router.replaceScreen(Screens.MainPassenger())
 }
