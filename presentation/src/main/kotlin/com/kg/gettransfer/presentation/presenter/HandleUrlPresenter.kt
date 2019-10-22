@@ -31,49 +31,54 @@ class HandleUrlPresenter : BaseHandleUrlPresenter<HandleUrlView>() {
     lateinit var url: String
 
     /** TODO: refactor to regular expressions */
-    @Suppress("ComplexMethod", "NestedBlockDepth", "UnsafeCallOnNullableType", "ReturnCount")
     fun handleIntent(appLinkData: Uri) {
         url = appLinkData.toString()
-        val path = appLinkData.path
-        when {
-            path == PASSENGER_CABINET -> appLinkData.fragment?.let { fragment ->
-                if (fragment.startsWith(TRANSFERS)) {
-                    if (fragment.contains(CHOOSE_OFFER_ID)) {
-                        val transferId =
-                            fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
-                        val offerId =
-                            fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length).toLongOrNull()
-                        var bookNowTransportId: String? = null
-                        if (offerId == null) {
-                            bookNowTransportId = fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length)
-                        }
-                        transferId?.let { id -> openOffer(id, offerId, bookNowTransportId) }
-                        return
-                    } else if (fragment.contains(OPEN_CHAT)) {
-                        val chatId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION))
-                        openChat(chatId)
-                        return
-                    }
-                    val transferId = fragment.substring(fragment.indexOf(SLASH) + 1).toLongOrNull()
-                    transferId?.let { openTransfer(it) }
-                    return
-                }
+        appLinkData.path?.let { path ->
+            when {
+                path == PASSENGER_CABINET -> appLinkData.fragment?.let { checkPassengerCabinetUrl(it) }
+                path.startsWith(PASSENGER_RATE) -> checkPassengerRateUrl(appLinkData)
+                path.contains(VOUCHER) -> viewState.downloadVoucher()
+                path.contains(NEW_TRANSFER) -> createOrder(
+                    appLinkData.getQueryParameter(FROM_PLACE_ID),
+                    appLinkData.getQueryParameter(TO_PLACE_ID),
+                    appLinkData.getQueryParameter(PROMO_CODE)
+                )
+                else -> viewState.showWebView(url)
             }
-            path?.startsWith(PASSENGER_RATE)!! -> {
-                val transferId = appLinkData.lastPathSegment?.toLongOrNull()
-                val rate = appLinkData.getQueryParameter(RATE)?.toIntOrNull()
-                if (transferId != null && rate != null) {
-                    rateTransfer(transferId, rate)
-                }
+        }
+    }
+
+    /** TODO: refactor to regular expressions */
+    private fun checkPassengerCabinetUrl(fragment: String) {
+        if (fragment.startsWith(TRANSFERS)) {
+            if (fragment.contains(CHOOSE_OFFER_ID)) {
+                val transferId =
+                    fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
+                val offerId =
+                    fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length).toLongOrNull()
+                val bookNowTransportId =
+                    if (offerId == null) {
+                        fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length)
+                    } else {
+                        null
+                    }
+                transferId?.let { id -> openOffer(id, offerId, bookNowTransportId) }
+                return
+            } else if (fragment.contains(OPEN_CHAT)) {
+                val chatId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION))
+                openChat(chatId)
                 return
             }
-            path.contains(VOUCHER) -> viewState.downloadVoucher()
-            path.contains(NEW_TRANSFER) -> createOrder(
-                appLinkData.getQueryParameter(FROM_PLACE_ID),
-                appLinkData.getQueryParameter(TO_PLACE_ID),
-                appLinkData.getQueryParameter(PROMO_CODE)
-            )
-            else -> viewState.showWebView(url)
+            val transferId = fragment.substring(fragment.indexOf(SLASH) + 1).toLongOrNull()
+            transferId?.let { openTransfer(it) }
+        }
+    }
+
+    private fun checkPassengerRateUrl(appLinkData: Uri) {
+        val transferId = appLinkData.lastPathSegment?.toLongOrNull()
+        val rate = appLinkData.getQueryParameter(RATE)?.toIntOrNull()
+        if (transferId != null && rate != null) {
+            rateTransfer(transferId, rate)
         }
     }
 
