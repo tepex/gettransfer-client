@@ -3,7 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import androidx.annotation.CallSuper
 
-import com.arellomobile.mvp.presenter.InjectPresenter
+import moxy.presenter.InjectPresenter
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap

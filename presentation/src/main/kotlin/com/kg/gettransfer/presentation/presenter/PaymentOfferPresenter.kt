@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.exceptions.InvalidArgumentException

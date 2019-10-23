@@ -8,8 +8,8 @@ import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.View
 import androidx.core.content.ContextCompat
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import com.google.android.material.chip.Chip
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible

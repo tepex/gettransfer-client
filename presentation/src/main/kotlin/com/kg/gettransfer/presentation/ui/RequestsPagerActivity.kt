@@ -3,7 +3,7 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 
 import androidx.annotation.CallSuper
-import com.arellomobile.mvp.MvpAppCompatActivity
+import moxy.MvpAppCompatActivity
 
 import com.kg.gettransfer.R
 

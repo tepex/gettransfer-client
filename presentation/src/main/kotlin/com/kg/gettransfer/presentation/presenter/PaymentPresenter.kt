@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import com.kg.gettransfer.domain.eventListeners.PaymentStatusEventListener
 
 import com.kg.gettransfer.domain.model.BookNowOffer

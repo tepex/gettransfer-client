@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Handler
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 

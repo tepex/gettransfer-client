@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.view
 
 import androidx.annotation.StringRes
 
-import com.arellomobile.mvp.MvpView
+import moxy.MvpView
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException

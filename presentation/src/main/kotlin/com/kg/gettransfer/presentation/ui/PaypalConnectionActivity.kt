@@ -7,8 +7,8 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import android.view.View
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.presenter.PaypalConnectionPresenter

@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import androidx.annotation.StringRes
-import com.arellomobile.mvp.MvpAppCompatFragment
+import moxy.MvpAppCompatFragment
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.ApiException

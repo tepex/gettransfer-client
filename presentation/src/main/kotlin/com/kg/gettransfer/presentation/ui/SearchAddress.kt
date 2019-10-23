@@ -15,9 +15,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 
-import com.arellomobile.mvp.MvpDelegate
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.MvpDelegate
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException

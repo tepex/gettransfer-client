@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import com.arellomobile.mvp.MvpAppCompatDialogFragment
+import moxy.MvpAppCompatDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 //import leakcanary.AppWatcher
 import java.lang.RuntimeException

@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.domain.interactor.SessionInteractor

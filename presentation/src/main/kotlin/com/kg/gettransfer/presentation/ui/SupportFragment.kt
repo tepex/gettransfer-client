@@ -11,8 +11,8 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.navigation.fragment.findNavController
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.SupportPresenter

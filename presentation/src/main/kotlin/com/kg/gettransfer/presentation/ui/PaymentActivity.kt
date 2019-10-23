@@ -19,8 +19,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible

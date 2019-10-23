@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.view
 
-import com.arellomobile.mvp.MvpView
+import moxy.MvpView
 
 import java.util.Locale
 

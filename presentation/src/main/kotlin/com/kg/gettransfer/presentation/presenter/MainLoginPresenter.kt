@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.MvpPresenter
+import moxy.MvpPresenter
 
 import com.kg.gettransfer.presentation.view.MainLoginView
 import com.kg.gettransfer.presentation.view.Screens
