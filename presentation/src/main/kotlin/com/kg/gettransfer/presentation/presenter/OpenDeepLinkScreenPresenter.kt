@@ -37,7 +37,11 @@ open class OpenDeepLinkScreenPresenter<BV: OpenDeepLinkScreenView>: BaseHandleUr
 
     suspend fun openChat(transferId: Long) {
         checkTransfer(transferId).isSuccess()?.let { transfer ->
-            router.createStartChain(Screens.Chat(transfer.id))
+            if (transfer.showOfferInfo) {
+                router.createStartChain(Screens.Chat(transfer.id))
+            } else {
+                viewState.setChatIsNoLongerAvailableError { onDialogDismissCallback() }
+            }
         }
     }
 
@@ -72,12 +76,12 @@ open class OpenDeepLinkScreenPresenter<BV: OpenDeepLinkScreenView>: BaseHandleUr
         fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }.also { result ->
             result.error?.let { e ->
                 if (e.isNotFound()) {
-                    viewState.setTransferNotFoundError(transferId) { onCloseTransferNotFoundDialog() }
+                    viewState.setTransferNotFoundError(transferId) { onDialogDismissCallback() }
                 }
             }
         }
 
-    open fun onCloseTransferNotFoundDialog() {
+    open fun onDialogDismissCallback() {
         openMainScreen()
     }
 

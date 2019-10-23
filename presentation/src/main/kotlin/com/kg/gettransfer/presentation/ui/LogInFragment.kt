@@ -270,4 +270,18 @@ class LogInFragment : MvpAppCompatFragment(),
         presenter.openMainScreen()
         requireActivity().longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
     }
+
+    override fun setChatIsNoLongerAvailableError(dismissCallBack: () -> Unit) {
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                imageId = R.drawable.transfer_error
+                title = this@LogInFragment.getString(R.string.LNG_ERROR)
+                text = this@LogInFragment.getString(R.string.LNG_CHAT_NO_LONGER_AVAILABLE)
+                isShowCloseButton = true
+                isShowOkButton = false
+                onDismissCallBack = dismissCallBack
+            }
+            .show(requireFragmentManager())
+    }
 }

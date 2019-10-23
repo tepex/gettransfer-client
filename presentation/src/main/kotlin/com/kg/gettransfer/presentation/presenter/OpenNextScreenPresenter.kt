@@ -26,7 +26,7 @@ open class OpenNextScreenPresenter<BV: OpenDeepLinkScreenView> : OpenDeepLinkScr
         }
     }
 
-    override fun onCloseTransferNotFoundDialog() {
+    override fun onDialogDismissCallback() {
         router.exit()
     }
 }
