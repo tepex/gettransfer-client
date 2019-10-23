@@ -7,7 +7,7 @@ import android.view.ViewGroup
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 
-import com.arellomobile.mvp.MvpAppCompatFragment
+import moxy.MvpAppCompatFragment
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 

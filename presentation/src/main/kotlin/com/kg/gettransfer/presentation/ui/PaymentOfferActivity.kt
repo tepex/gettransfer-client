@@ -13,8 +13,8 @@ import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.braintreepayments.api.BraintreeFragment
 import com.braintreepayments.api.PayPal

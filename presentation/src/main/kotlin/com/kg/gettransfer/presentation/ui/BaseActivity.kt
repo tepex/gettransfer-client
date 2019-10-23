@@ -42,7 +42,7 @@ import androidx.fragment.app.FragmentActivity
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
-import com.arellomobile.mvp.MvpAppCompatActivity
+import moxy.MvpAppCompatActivity
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 

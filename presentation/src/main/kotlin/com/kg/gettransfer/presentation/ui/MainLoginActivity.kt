@@ -5,8 +5,8 @@ import android.os.Bundle
 
 import androidx.annotation.CallSuper
 
-import com.arellomobile.mvp.MvpAppCompatActivity
-import com.arellomobile.mvp.presenter.InjectPresenter
+import moxy.MvpAppCompatActivity
+import moxy.presenter.InjectPresenter
 
 import com.kg.gettransfer.R
 

@@ -10,8 +10,8 @@ import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
