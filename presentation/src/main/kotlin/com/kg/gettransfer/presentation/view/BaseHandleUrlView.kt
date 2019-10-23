@@ -8,7 +8,9 @@ interface BaseHandleUrlView : BaseView {
     companion object {
         const val RC_WRITE_FILE = 111
         const val PASSENGER_CABINET = "/passenger/cabinet"
+        const val PARTNER_CABINET = "/partner/cabinet"
         const val PASSENGER_RATE = "/passenger/rate"
+        const val PARTNER_RATE = "/partner/rate"
         const val CARRIER_CABINET = "/carrier/cabinet"
         const val VOUCHER = "/transfers/voucher"
         const val CHOOSE_OFFER_ID = "choose_offer_id"

@@ -9,6 +9,8 @@ import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.EQUAL
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.FROM_PLACE_ID
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.NEW_TRANSFER
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.OPEN_CHAT
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PARTNER_CABINET
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PARTNER_RATE
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PASSENGER_CABINET
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PASSENGER_RATE
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PROMO_CODE
@@ -32,8 +34,12 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
         url = appLinkData.toString()
         appLinkData.path?.let { path ->
             when {
-                path == PASSENGER_CABINET -> appLinkData.fragment?.let { checkPassengerCabinetUrl(it) }
-                path.startsWith(PASSENGER_RATE) -> checkPassengerRateUrl(appLinkData)
+                path == PASSENGER_CABINET || path == PARTNER_CABINET -> {
+                    appLinkData.fragment?.let { checkPassengerCabinetUrl(it) }
+                }
+                path.startsWith(PASSENGER_RATE) || path.startsWith(PARTNER_RATE) -> {
+                    checkPassengerRateUrl(appLinkData)
+                }
                 path.contains(VOUCHER) -> {
                     transferId = appLinkData.lastPathSegment?.toLongOrNull()
                     transferId?.let { openVoucherLink(it) }
