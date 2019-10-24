@@ -3,15 +3,14 @@ package com.kg.gettransfer.presentation.presenter
 import android.net.Uri
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.domain.model.OfferItem
-import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.createStartChain
-import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.CHOOSE_OFFER_ID
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.EQUAL
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.FROM_PLACE_ID
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.NEW_TRANSFER
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.OPEN_CHAT
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PARTNER_CABINET
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PARTNER_RATE
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PASSENGER_CABINET
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PASSENGER_RATE
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PROMO_CODE
@@ -26,7 +25,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.coroutines.launch
 
 @InjectViewState
-class HandleUrlPresenter : BaseHandleUrlPresenter<HandleUrlView>() {
+class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
 
     lateinit var url: String
 
@@ -35,9 +34,16 @@ class HandleUrlPresenter : BaseHandleUrlPresenter<HandleUrlView>() {
         url = appLinkData.toString()
         appLinkData.path?.let { path ->
             when {
-                path == PASSENGER_CABINET -> appLinkData.fragment?.let { checkPassengerCabinetUrl(it) }
-                path.startsWith(PASSENGER_RATE) -> checkPassengerRateUrl(appLinkData)
-                path.contains(VOUCHER) -> viewState.downloadVoucher()
+                path == PASSENGER_CABINET || path == PARTNER_CABINET -> {
+                    appLinkData.fragment?.let { checkPassengerCabinetUrl(it) }
+                }
+                path.startsWith(PASSENGER_RATE) || path.startsWith(PARTNER_RATE) -> {
+                    checkPassengerRateUrl(appLinkData)
+                }
+                path.contains(VOUCHER) -> {
+                    transferId = appLinkData.lastPathSegment?.toLongOrNull()
+                    transferId?.let { openVoucherLink(it) }
+                }
                 path.contains(NEW_TRANSFER) -> createOrder(
                     appLinkData.getQueryParameter(FROM_PLACE_ID),
                     appLinkData.getQueryParameter(TO_PLACE_ID),
@@ -62,15 +68,15 @@ class HandleUrlPresenter : BaseHandleUrlPresenter<HandleUrlView>() {
                     } else {
                         null
                     }
-                transferId?.let { id -> openOffer(id, offerId, bookNowTransportId) }
+                transferId?.let { id -> openOfferLink(id, offerId, bookNowTransportId) }
                 return
             } else if (fragment.contains(OPEN_CHAT)) {
-                val chatId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION))
-                openChat(chatId)
+                val transferId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
+                transferId?.let { openChatLink(it) }
                 return
             }
             val transferId = fragment.substring(fragment.indexOf(SLASH) + 1).toLongOrNull()
-            transferId?.let { openTransfer(it) }
+            transferId?.let { openTransferLink(it) }
         }
     }
 
@@ -78,74 +84,52 @@ class HandleUrlPresenter : BaseHandleUrlPresenter<HandleUrlView>() {
         val transferId = appLinkData.lastPathSegment?.toLongOrNull()
         val rate = appLinkData.getQueryParameter(RATE)?.toIntOrNull()
         if (transferId != null && rate != null) {
-            rateTransfer(transferId, rate)
+            openRateTransferLink(transferId, rate)
         }
     }
 
-    @Suppress("ComplexMethod")
-    private fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) = worker.main.launch {
+    private fun openOfferLink(transferId: Long, offerId: Long?, bookNowTransportId: String?) = worker.main.launch {
         checkInitialization()
         if (!accountManager.isLoggedIn) {
-            router.newChainFromMain(Screens.LoginToPaymentOffer(transferId, offerId))
+            router.createStartChain(Screens.LoginToPaymentOffer(transferId, offerId, bookNowTransportId))
         } else {
-            val result = fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
-            result.error?.let { e ->
-                if (e.isNotFound()) {
-                    viewState.setTransferNotFoundError(transferId)
-                }
-                router.replaceScreen(Screens.MainPassenger())
-            }
-            result.isSuccess()?.let { transfer ->
-                val offerItem: OfferItem? = when {
-                    offerId != null            ->
-                        fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(transferId) }?.find { it.id == offerId }
-                    bookNowTransportId != null ->
-                        transfer.bookNowOffers.find { it.transportType.id.name == bookNowTransportId }
-                    else                       -> null
-                }
-                offerItem?.let { offer ->
-                    with(paymentInteractor) {
-                        selectedTransfer = transfer
-                        selectedOffer = offer
-                    }
-                    router.createStartChain(Screens.PaymentOffer())
-                }
-            }
+            openOffer(transferId, offerId, bookNowTransportId)
         }
     }
 
-    @Suppress("UNUSED_PARAMETER", "EmptyFunctionBlock")
-    private fun openChat(chatId: String) {}
+    private fun openChatLink(transferId: Long) = worker.main.launch {
+        checkInitialization()
+        if (!accountManager.isLoggedIn) {
+            router.createStartChain(Screens.LoginToChat(transferId))
+        } else {
+            openChat(transferId)
+        }
+    }
 
-    private fun openTransfer(transferId: Long) = worker.main.launch {
+    private fun openTransferLink(transferId: Long) = worker.main.launch {
         checkInitialization()
         if (!accountManager.isLoggedIn) {
             router.createStartChain(Screens.LoginToShowDetails(transferId))
         } else {
-            val result = fetchResult(SHOW_ERROR) { transferInteractor.getTransfer(transferId) }
-            result.error?.let { e ->
-                if (e.isNotFound()) {
-                    viewState.setTransferNotFoundError(transferId)
-                }
-            }
-            result.isSuccess()?.let { transfer ->
-                if (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_CONFIRMED) {
-                    router.createStartChain(Screens.Details(transferId))
-                } else {
-                    router.createStartChain(Screens.Offers(transferId))
-                }
-            }
+            openTransfer(transferId)
         }
     }
 
-    private fun rateTransfer(transferId: Long, rate: Int) = worker.main.launch {
+    private fun openRateTransferLink(transferId: Long, rate: Int) = worker.main.launch {
         checkInitialization()
         if (!accountManager.isLoggedIn) {
-            router.replaceScreen(Screens.LoginToRateTransfer(transferId, rate))
+            router.createStartChain(Screens.LoginToRateTransfer(transferId, rate))
         } else {
-            router.newRootScreen(Screens.MainPassengerToRateTransfer(transferId, rate))
+            rateTransfer(transferId, rate)
         }
     }
 
-    fun openMainScreen() = router.replaceScreen(Screens.MainPassenger())
+    private fun openVoucherLink(transferId: Long) = worker.main.launch {
+        checkInitialization()
+        if (!accountManager.isLoggedIn) {
+            router.createStartChain(Screens.LoginToDownloadVoucher(transferId))
+        } else {
+            openVoucher(transferId)
+        }
+    }
 }

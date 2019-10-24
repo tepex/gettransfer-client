@@ -146,5 +146,5 @@ class RequestsFragment: MvpAppCompatFragment(), RequestsFragmentView {
     override fun setError(e: DatabaseException) =
         (activity as BaseView).setError(e)
 
-    override fun setTransferNotFoundError(transferId: Long) {}
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 }

@@ -129,7 +129,6 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
                     openNextScreen()
                     logEvent(Analytics.EVENT_LOGIN_CODE, Analytics.RESULT_SUCCESS)
                     registerPushToken()
-                    router.exit()
                 }
             }
             viewState.blockInterface(false)

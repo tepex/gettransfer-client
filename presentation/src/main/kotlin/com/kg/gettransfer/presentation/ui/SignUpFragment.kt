@@ -20,6 +20,7 @@ import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.presenter.SignUpPresenter
+import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.SignUpView
 
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
@@ -213,7 +214,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     override fun setError(e: DatabaseException) {}
 
     // TODO remove BaseView or add code.
-    override fun setTransferNotFoundError(transferId: Long) {}
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 
     companion object {
         const val MIN_PHONE_LENGTH = 4

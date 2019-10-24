@@ -96,7 +96,7 @@ open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageVie
 
     override fun setError(e: DatabaseException) {}
 
-    override fun setTransferNotFoundError(transferId: Long) {}
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 
     @CallSuper
     override fun onDestroyView() {

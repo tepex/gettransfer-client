@@ -105,7 +105,7 @@ open class SelectCurrencyBottomFragment : BaseBottomSheetFragment(), SelectCurre
 
     override fun setError(e: DatabaseException) {}
 
-    override fun setTransferNotFoundError(transferId: Long) {}
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 
     @CallSuper
     override fun onDestroyView() {

@@ -20,6 +20,7 @@ import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PASSWORD
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView
 import com.kg.gettransfer.presentation.view.LogInView
 
 import io.sentry.Sentry
@@ -29,6 +30,8 @@ import kotlinx.android.synthetic.main.fragment_log_in.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 import kotlinx.android.synthetic.main.view_input_password.*
 import kotlinx.serialization.json.JSON
+import org.jetbrains.anko.longToast
+import pub.devrel.easypermissions.EasyPermissions
 //import leakcanary.AppWatcher
 
 import timber.log.Timber
@@ -39,7 +42,10 @@ import timber.log.Timber
  * @author П. Густокашин (Diwixis)
  */
 @Suppress("TooManyFunctions")
-class LogInFragment : MvpAppCompatFragment(), LogInView {
+class LogInFragment : MvpAppCompatFragment(),
+    LogInView,
+    EasyPermissions.PermissionCallbacks,
+    EasyPermissions.RationaleCallbacks {
 
     @InjectPresenter
     internal lateinit var presenter: LogInPresenter
@@ -140,7 +146,19 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {}
 
     // TODO remove BaseView or add code.
-    override fun setTransferNotFoundError(transferId: Long) {}
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                imageId = R.drawable.transfer_error
+                title = this@LogInFragment.getString(R.string.LNG_ERROR)
+                text = this@LogInFragment.getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString())
+                isShowCloseButton = true
+                isShowOkButton = false
+                dismissCallBack?.let { onDismissCallBack = it }
+            }
+            .show(requireFragmentManager())
+    }
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
@@ -211,5 +229,59 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
             remove(loadingFragment)
             commit()
         }
+    }
+
+    // for downloading voucher
+
+    override fun downloadVoucher() {
+        val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (EasyPermissions.hasPermissions(requireContext(), *perms)) {
+            presenter.downloadVoucher()
+        } else {
+            EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
+                BaseHandleUrlView.RC_WRITE_FILE, *perms
+            )
+        }
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        requireActivity().longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        presenter.downloadVoucher()
+    }
+
+    override fun onRationaleDenied(requestCode: Int) {
+        onPermissionDenied()
+    }
+
+    override fun onRationaleAccepted(requestCode: Int) {}
+
+    @CallSuper
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    private fun onPermissionDenied() {
+        presenter.openMainScreen()
+        requireActivity().longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+    }
+
+    override fun setChatIsNoLongerAvailableError(dismissCallBack: () -> Unit) {
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                imageId = R.drawable.transfer_error
+                title = this@LogInFragment.getString(R.string.LNG_ERROR)
+                text = this@LogInFragment.getString(R.string.LNG_CHAT_NO_LONGER_AVAILABLE)
+                isShowCloseButton = true
+                isShowOkButton = false
+                onDismissCallBack = dismissCallBack
+            }
+            .show(requireFragmentManager())
     }
 }

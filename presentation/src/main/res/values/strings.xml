@@ -412,4 +412,6 @@
 
     <string name="LNG_SELECT_POINT_MAP">Point on map</string>
     <string name="LNG_RESTART_APP">Language was changed to switch language on map you need to restart app</string>
+
+    <string name="LNG_CHAT_NO_LONGER_AVAILABLE">Chat is no longer available</string>
 </resources>

@@ -3,8 +3,10 @@ package com.kg.gettransfer.presentation.presenter
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.extensions.createStartChain
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView
+import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
@@ -22,15 +24,17 @@ open class BaseHandleUrlPresenter<BV : BaseHandleUrlView> : BasePresenter<BV>() 
             toPlaceId?.let   { fetchResult(SHOW_ERROR) { updatePoint(true, it) } }
             promo?.let { promoCode = it }
             if (isCanCreateOrder()) {
-                router.createStartChain(com.kg.gettransfer.presentation.view.Screens.CreateOrder)
+                router.createStartChain(Screens.CreateOrder)
             } else {
-                router.newRootScreen(com.kg.gettransfer.presentation.view.Screens.MainPassenger())
+                router.newRootScreen(Screens.MainPassenger())
             }
         }
     }
 
     suspend fun checkInitialization() {
-        getPreferences().getModel().endpoint?.let { initEndpoint(it) }
+        withContext(worker.bg) {
+            getPreferences().getModel().endpoint?.let { initEndpoint(it) }
+        }
         if (!configsManager.configsInitialized) {
             configsManager.coldStart(worker.backgroundScope)
         }
