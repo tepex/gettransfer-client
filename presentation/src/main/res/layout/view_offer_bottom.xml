@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/bottom_sheet_offer_details_margin_16dp"
+    android:paddingEnd="@dimen/bottom_sheet_offer_details_margin_16dp">
 
     <TextView
         android:id="@+id/tv_old_price"
@@ -20,7 +22,8 @@
         app:layout_constraintEnd_toStartOf="@+id/tv_current_price"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="990.00 P" />
+        tools:text="990.00 P"
+        tools:visibility="visible"/>
 
     <TextView
         android:id="@+id/tv_current_price"
@@ -38,15 +41,22 @@
         tools:text="888.00 Р" />
 
 
-    <include
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_book"
-        layout="@layout/btn_book"
         android:layout_width="@dimen/view_offer_bs_btn_book_width"
         android:layout_height="@dimen/view_offer_bs_btn_book_height"
         android:layout_marginTop="@dimen/view_offer_bs_btn_book_margin_top"
         android:layout_marginBottom="@dimen/view_offer_bs_btn_book_margin_bottom"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:text="@string/LNG_BOOK"
+        android:textAllCaps="true"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/view_offer_btn_book_text_size"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:backgroundTint="@color/color_gtr_green"
+        app:cornerRadius="@dimen/view_offer_btn_book_radius"/>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,41 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="4dp"
-    android:orientation="vertical">
+    android:padding="@dimen/view_transfer_details_transport_type_item_layout_padding">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="@drawable/bg_transfer_details_transport_type_item"
         android:gravity="center_horizontal"
-        android:padding="8dp"
-        android:paddingTop="11dp">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/view_transfer_details_transport_type_item_padding_bottom">
 
         <TextView
             android:id="@+id/transportType_Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_transport_name_margins"
+            android:layout_marginTop="@dimen/view_transfer_details_transport_type_item_transport_name_margins"
+            android:layout_marginEnd="@dimen/view_transfer_details_transport_type_item_transport_name_margins"
             android:fontFamily="@font/sf_pro_text_semibold"
-            android:text="Economy"
             android:textColor="@color/colorTextBlack"
-            android:textSize="@dimen/transport_type_name_text_size" />
+            android:textSize="@dimen/transport_type_name_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Economy" />
 
         <ImageView
             android:id="@+id/transportType_Img"
-            android:layout_width="87.5dp"
-            android:layout_height="43dp"
+            android:layout_width="@dimen/view_transfer_details_transport_type_item_car_img_width"
+            android:layout_height="@dimen/view_transfer_details_transport_type_item_car_img_height"
+            android:layout_marginStart="@dimen/view_transfer_details_transport_type_item_car_img_horizontal_margin"
+            android:layout_marginTop="@dimen/view_transfer_details_transport_type_item_car_img_margin_top"
+            android:layout_marginEnd="@dimen/view_transfer_details_transport_type_item_car_img_horizontal_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transportType_Name"
             app:srcCompat="@drawable/ic_transport_type_economy" />
 
-        <include
-            android:id="@+id/view_seats_and_lugg_count"
-            layout="@layout/view_transfer_details_transport_type_item" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transportType_Img"
+            android:layout_marginTop="@dimen/view_transfer_details_transport_type_item_capacity_margin_top">
 
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="@dimen/view_transfer_details_transport_type_item_img_passenger_width"
+                android:layout_height="@dimen/view_transfer_details_transport_type_item_img_passenger_height"
+                app:srcCompat="@drawable/ic_passenger_without_padding" />
 
+            <TextView
+                android:id="@+id/transportType_сountPassengers"
+                style="@style/sf_font_pro_text_regular_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_transport_capacity_small_text_margin_start"
+                android:textSize="@dimen/activity_transfer_details_text_size_11sp"
+                tools:text="X 3" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="@dimen/view_transfer_details_transport_type_item_img_baggage_width"
+                android:layout_height="@dimen/view_transfer_details_transport_type_item_img_baggage_height"
+                android:layout_marginStart="@dimen/view_transport_capacity_small_img_baggage_margin_start"
+                app:srcCompat="@drawable/ic_baggage" />
+
+            <TextView
+                android:id="@+id/transportType_сountBaggage"
+                style="@style/sf_font_pro_text_regular_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_transport_capacity_small_text_margin_start"
+                android:textSize="@dimen/activity_transfer_details_text_size_11sp"
+                tools:text="X 3" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
+
+
+

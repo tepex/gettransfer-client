@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/settings_field_height"
+    android:background="@color/colorWhite">
+
+    <TextView
+        android:id="@+id/field_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/field_divider"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/settings_field_title_margin_start"
+        android:textSize="@dimen/settings_field_text_size"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/color_gtr_grey"/>
+
+    <ImageView
+        android:id="@+id/field_chevron"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_chevron_right"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/field_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/settings_field_layout_btns_margin_end"/>
+
+    <TextView
+        android:id="@+id/field_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/field_divider"
+        app:layout_constraintStart_toEndOf="@+id/field_title"
+        app:layout_constraintEnd_toStartOf="@+id/field_chevron"
+        android:layout_marginStart="@dimen/settings_field_text_margin_start"
+        android:layout_marginEnd="@dimen/settings_field_text_margin_end"
+        android:textSize="@dimen/settings_field_text_size"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/colorTextBlack"
+        android:gravity="end"
+        android:lines="1"/>
+
+    <include
+        android:id="@+id/field_divider"
+        layout="@layout/view_divider_horizontal"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/settings_field_divider_horizontal_margins"
+        android:layout_marginEnd="@dimen/settings_field_divider_horizontal_margins"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

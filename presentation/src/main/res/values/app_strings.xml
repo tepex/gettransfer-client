@@ -2,11 +2,16 @@
 <resources>
     <!-- urls and keys -->
     <string name="api_key_demo">android_e3996c61be6786dfac7413d53be26e64</string>
+    <string name="api_key_dev">771b0c837d2f992610408e3fe989211f</string>
     <string name="api_url_demo">https://stgtr.org</string>
-    <string name="api_key_prod">android_9614f456a934e340353e6c60c5fb9a48</string>
+    <string name="api_url_dev">https://development.stgtr.org</string>
+    <string name="api_key_prod">android_a08d215c1976cef508350587784a0447</string>
     <string name="api_url_prod">https://gettransfer.com</string>
     <string name="endpoint_demo" translatable="false">Demo</string>
     <string name="endpoint_prod" translatable="false">Prod</string>
+    <string name="endpoint_dev" translatable="false">Dev</string>
+
+    <string name="ipapi_key">b311f5bb4a4ee1534a23c243c824d93ab3cd8c25</string>
 
     <string name="api_url_transfers">/carrier/cabinet/transfers</string>
     <string name="api_url_restore_password">/forgot_password</string>
@@ -14,32 +19,29 @@
     <string name="api_url_carrier">/carrier</string>
 
     <string name="market_link">market://details?id=</string>
+    <string name="market_site_link">https://play.google.com/store/apps/details?id=</string>
     <string name="app_market_package">com.gettransfer</string>
+    <string name="driver_app_market_package">com.kg.gettransferdriver</string>
 
     <!-- FCM -->
     <string name="new_offer_notification_channel_id" translatable="false">new_offer_channel</string>
     <string name="new_offer_notification_channel_name" translatable="true">New Offer</string>
 
     <!-- Logs -->
-    <string name="logs_file_name">Logs.txt</string>
-    <string name="share_extra_subject">GTR Logs</string>
     <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
 
-    <!-- Drawer -->
-    <string name="navigation_drawer_open" translatable="false">Open</string>
-    <string name="navigation_drawer_close" translatable="false">Close</string>
-
     <!--Strings for all types of builds-->
-    <string name="nav_footer_version">Version %1$s\nBuild %2$s</string>
+    <string name="app_version">Version %1$s (%2$s)</string>
 
     <!--Strings only for debug build-->
     <string name="share">Share</string>
     <string name="debug">Debug</string>
     <string name="endpoint">Endpoint</string>
-    <string name="logs">Logs</string>
     <string name="reset_onboarding">Reset onboarding</string>
     <string name="reset_rate">Reset play market rate</string>
     <string name="clear_access_token">Clear access token</string>
+    <string name="reset_new_driver_app_dialog">Reset new driver app dialog</string>
+    <string name="force_crash">Force crash</string>
 
     <!--Technical strings-->
     <string name="searchTransitionName">SEARCH_FORM</string>
@@ -50,10 +52,8 @@
     <!-- UI Strings -->
     <string name="transfer_start_sign">A</string>
     <string name="transfer_end_sign">B</string>ё
-    <string name="X_SIGN">x</string>
     <string name="passenger_number_default">0</string>
     <string name="rub">₽</string>
-    <string name="search_nothing"></string>
 
     <string name="count_persons_and_baggage"> x%1$d</string>
     <string name="text_in_parentheses">%1$s</string>

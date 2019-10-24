@@ -52,6 +52,16 @@ class OrderInteractor(
         nameSign = null
     }
 
+    fun clear() {
+        to              = null
+        hourlyDuration  = null
+        duration        = null
+        orderStartTime  = null
+        orderReturnTime = null
+
+        clearSelectedFields()
+    }
+
     suspend fun getAddressByLocation(isFrom: Boolean, point: Point): Result<GTAddress> {
         val gtAddress = geoRepository.getAddressByLocation(point, sessionRepository.account.locale.language)
 
@@ -104,8 +114,6 @@ class OrderInteractor(
                 (fromPoint.longitude - toPoint.longitude).absoluteValue > MIN_LON_DIFF
             }
         } ?: false
-    // 0.002 lat
-    // 0.003 lon
 
     fun isCanCreateOrder() =
         from?.cityPoint != null && (to?.cityPoint != null && isDistanceFine() || hourlyDuration != null)

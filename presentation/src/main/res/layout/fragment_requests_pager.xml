@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin44"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/layoutTextNetworkNotAvailable"/>
+
+    <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
+        android:id="@+id/layoutTextNetworkNotAvailable"
+        android:layout_width="@dimen/margin0"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/tabs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:text_no_internet="@string/LNG_OFFLINE_MESSAGE"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin44"
+        app:tabBackground="@color/colorWhite"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/color_gtr_orange"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/color_gtr_orange"
+        app:tabTextAppearance="@style/TabLayoutTextStyle"
+        app:tabTextColor="@color/colorTextBlack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutTextNetworkNotAvailable"/>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpRequests"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/divider_bottom_view"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+    </androidx.viewpager.widget.ViewPager>
+
+    <View
+        android:id="@+id/divider_top_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin4"
+        android:background="@drawable/requests_view_tab_dividers"
+        android:rotation="180"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tabs"/>
+
+    <View
+        android:id="@+id/divider_bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin4"
+        android:background="@drawable/requests_view_tab_dividers"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabs" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

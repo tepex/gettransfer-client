@@ -4,6 +4,8 @@ import com.arellomobile.mvp.MvpPresenter
 
 import com.google.firebase.iid.FirebaseInstanceId
 
+import com.kg.gettransfer.core.presentation.WorkerManager
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
@@ -17,15 +19,20 @@ import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
+
 import com.kg.gettransfer.presentation.view.BaseView
-import com.kg.gettransfer.presentation.view.CarrierTripsMainView.Companion.BG_COORDINATES_REJECTED
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.sys.domain.Endpoint
+
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
 import com.kg.gettransfer.utilities.GTNotificationManager
 
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
@@ -36,6 +43,7 @@ import org.slf4j.Logger
 
 import ru.terrakok.cicerone.Router
 
+@Suppress("TooManyFunctions")
 open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     OfferEventListener,
     ChatBadgeEventListener,
@@ -45,23 +53,26 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
-    protected val systemInteractor: SystemInteractor by inject()
     protected val offerMapper: OfferMapper by inject()
     protected val notificationManager: GTNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()
-    protected val carrierTripInteractor: CarrierTripInteractor by inject()
     protected val chatInteractor: ChatInteractor by inject()
     protected val countEventsInteractor: CountEventsInteractor by inject()
+    protected val reviewInteractor: ReviewInteractor by inject()
+    protected val paymentInteractor: PaymentInteractor by inject()
+    protected val orderInteractor: OrderInteractor by inject()
 
     private val pushTokenInteractor: PushTokenInteractor by inject()
     protected val socketInteractor: SocketInteractor by inject()
-    protected val logsInteractor: LogsInteractor by inject()
     protected val sessionInteractor: SessionInteractor by inject()
     protected val accountManager: AccountManager by inject()
     protected val downloadManager: GTDownloadManager by inject()
 
-    //private var sendingMessagesNow = false
+    private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
+    protected val getPreferences: GetPreferencesInteractor by inject()
+
+    // private var sendingMessagesNow = false
     private var openedLoginScreenForUnauthorizedUser = false
 
     protected val log: Logger by inject { parametersOf("GTR-presenter") }
@@ -74,10 +85,21 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected fun login(nextScreen: String, email: String?) = router.navigateTo(Screens.MainLogin(nextScreen, email))
 
     override fun onFirstViewAttach() {
-        if (sessionInteractor.isInitialized) return
-        utils.launchSuspend {
-            fetchData { sessionInteractor.coldStart() }?.let { systemInitialized() }
+        if (sessionInteractor.isInitialized) {
+            systemInitialized()
+            return
         }
+        worker.main.launch {
+            val result = withContext(worker.bg) { sessionInteractor.coldStart() }
+            getPreferences().getModel().endpoint?.let { initEndpoint(it) }
+            if (result.error == null) {
+                systemInitialized()
+            }
+        }
+    }
+
+    protected fun initEndpoint(endpoint: Endpoint) {
+        offerMapper.url = endpoint.url
     }
 
     override fun attachView(view: BV) {
@@ -103,19 +125,27 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     private fun logout() {
         utils.launchSuspend {
             clearAllCachedData()
-            router.backTo(Screens.MainPassenger(true))
+            router.backTo(Screens.MainPassenger())
         }
     }
 
     protected suspend fun clearAllCachedData() {
+        if (accountManager.remoteAccount.partner?.defaultPromoCode != null) orderInteractor.promoCode = ""
         utils.asyncAwait { pushTokenInteractor.unregisterPushToken() }
         utils.asyncAwait { accountManager.logout() }
 
         utils.asyncAwait { transferInteractor.clearTransfersCache() }
         utils.asyncAwait { offerInteractor.clearOffersCache() }
-        utils.asyncAwait { carrierTripInteractor.clearCarrierTripsCache() }
+        utils.asyncAwait { reviewInteractor.clearReviewCache() }
 
         countEventsInteractor.clearCountEvents()
+    }
+
+    suspend fun saveGeneralSettings() {
+        viewState.blockInterface(true)
+        val result = utils.asyncAwait { accountManager.saveSettings() }
+        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
+        viewState.blockInterface(false)
     }
 
     /*fun checkNewMessagesCached() {
@@ -129,31 +159,26 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
     }*/
 
-    //open fun doingSomethingAfterSendingNewMessagesCached() {}
-
-    override fun onDestroy() {
-        compositeDisposable.cancel()
-        super.onDestroy()
-    }
+    // open fun doingSomethingAfterSendingNewMessagesCached() {}
 
     protected open fun systemInitialized() {}
 
+    fun networkConnected() = worker.main.launch {
+        withContext(worker.bg) { reviewInteractor.checkNotSendedReviews() }
+    }
+
     internal fun sendEmail(emailCarrier: String?, transferId: Long?) {
-        utils.launchSuspend {
+        worker.main.launch {
             var transferID: Long? = null
             if (transferId == null) {
-                fetchData { transferInteractor.getAllTransfers() }
-                    ?.let { if (it.isNotEmpty()) transferID = it.first().id }
-            } else transferID = transferId
-
-            router.navigateTo(
-                Screens.SendEmail(
-                    emailCarrier,
-                    logsInteractor.logsFile,
-                    transferID,
-                    accountManager.remoteProfile.email
-                )
-            )
+                val result = withContext(worker.bg) { transferInteractor.getAllTransfers() }
+                if (result.error == null && result.model.isNotEmpty()) {
+                    transferID = result.model.first().id
+                }
+            } else {
+                transferID = transferId
+            }
+            router.navigateTo(Screens.SendEmail(emailCarrier, transferID, accountManager.remoteProfile.email))
         }
     }
 
@@ -162,15 +187,17 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     }
 
     protected fun registerPushToken() {
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
-            if (it.isSuccessful) {
-                it.result?.token?.let {
-                    log.debug("[FCM token]: $it")
-                    utils.launchSuspend {
-                        fetchResult { pushTokenInteractor.registerPushToken(it) }
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.result?.token?.let { token ->
+                    worker.main.launch {
+                        log.debug("[FCM token]: $token")
+                        withContext(worker.bg) { pushTokenInteractor.registerPushToken(token) }
                     }
                 }
-            } else log.warn("getInstanceId failed", it.exception)
+            } else {
+                log.warn("getInstanceId failed", task.exception)
+            }
         }
     }
 
@@ -182,86 +209,68 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 //                            .map { photo -> systemInteractor.endpoint.url.plus(photo) } }
 //                    .also { onNewOffer(it) }
 
-    open fun onNewOffer(offer: Offer): OfferModel {
-        utils.launchSuspend { utils.asyncAwait { offerInteractor.newOffer(offer) } }
+    open suspend fun onNewOffer(offer: Offer): OfferModel {
+        withContext(worker.bg) { offerInteractor.newOffer(offer) }
         return offerMapper.toView(offer).also { notificationManager.showOfferNotification(it) }
     }
 
     override fun onNewOfferEvent(offer: Offer) {
-        onNewOffer(offer.also {
-            utils.launchSuspend {
-                fetchDataOnly { offerInteractor.getOffers(offer.transferId, true) }?.let { offersCached ->
-                    if (offersCached.find { offerCached -> offerCached.id == offer.id } != null) {
-                        countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
-                            countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
-                                if (countNewOffers == countViewedOffers && countViewedOffers > 0) {
-                                    decreaseViewedOffersCounter(offer.transferId)
-                                }
-                            }
+        worker.main.launch {
+            onNewOffer(offer.also { updateOfferEventsCounter(it) })
+        }
+    }
+
+    @Suppress("NestedBlockDepth")
+    private suspend fun updateOfferEventsCounter(offer: Offer) {
+        val result = withContext(worker.bg) { offerInteractor.getOffers(offer.transferId, true) }
+        if (result.error == null) {
+            if (result.model.find { offerCached -> offerCached.id == offer.id } != null) {
+                countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
+                    countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
+                        if (countNewOffers == countViewedOffers && countViewedOffers > 0) {
+                            decreaseViewedOffersCounter(offer.transferId)
                         }
-                    } else {
-                        increaseEventsOffersCounter(it.transferId)
                     }
                 }
+            } else {
+                increaseEventsOffersCounter(offer.transferId)
             }
-        })
+        }
     }
 
     override fun onChatBadgeChangedEvent(chatBadgeEvent: ChatBadgeEvent) {
-        if (!chatBadgeEvent.clearBadge) {
-            utils.launchSuspend {
-                fetchDataOnly { transferInteractor.getTransfer(chatBadgeEvent.transferId) }?.let { transfer ->
-                    increaseEventsMessagesCounter(chatBadgeEvent.transferId, transfer.unreadMessagesCount)
+        worker.main.launch {
+            if (!chatBadgeEvent.clearBadge) {
+                val result = withContext(worker.bg) { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
+                if (result.error == null) {
+                    increaseEventsMessagesCounter(chatBadgeEvent.transferId, result.model.unreadMessagesCount)
                     notificationManager.showNewMessageNotification(
                         chatBadgeEvent.transferId,
-                        transfer.unreadMessagesCount,
+                        result.model.unreadMessagesCount,
                         true
                     )
                 }
-            }
-        } else {
-            with(countEventsInteractor) {
-                mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
-                    this[chatBadgeEvent.transferId]?.let {
-                        eventsCount -= it
-                        remove(chatBadgeEvent.transferId)
+            } else {
+                with(countEventsInteractor) {
+                    mapCountNewMessages = mapCountNewMessages.toMutableMap().apply {
+                        this[chatBadgeEvent.transferId]?.let { count ->
+                            eventsCount -= count
+                            remove(chatBadgeEvent.transferId)
+                        }
                     }
                 }
             }
         }
     }
 
-    fun saveGeneralSettings(withRestartApp: Boolean = false) {
-        if (accountManager.hasAccount) saveAccount(withRestartApp) else saveNoAccount(withRestartApp)
-    }
-
-    fun saveAccount(withRestartApp: Boolean = false) = utils.launchSuspend {
-        viewState.blockInterface(true)
-        val result = utils.asyncAwait { accountManager.putAccount(isTempAccount = false) }
-        result.error?.let { if (!it.isNotLoggedIn()) viewState.setError(it) }
-        if (result.error == null && withRestartApp) {
-            restartApp()
-        }
-        viewState.blockInterface(false)
-    }
-
-    fun saveNoAccount(withRestartApp: Boolean) = utils.launchSuspend {
-        val result = utils.asyncAwait { sessionInteractor.putNoAccount() }
-        if (result.error == null && withRestartApp) {
-            restartApp()
-        }
-    }
-
-    open fun restartApp() {}
-
-    fun onAppStateChanged(isForeGround: Boolean) {
+    fun onAppStateChanged(isForeGround: Boolean) = worker.main.launch {
         with(socketInteractor) {
-            if (isForeGround && accountManager.hasAccount) {
-                openSocketConnection()
-            } else if (systemInteractor.lastMode != Screens.CARRIER_MODE ||
-                carrierTripInteractor.bgCoordinatesPermission == BG_COORDINATES_REJECTED
-            ) {
-                closeSocketConnection()
+            withContext(worker.bg) {
+                if (isForeGround && accountManager.hasAccount) {
+                    openSocketConnection()
+                } else {
+                    closeSocketConnection()
+                }
             }
         }
     }
@@ -316,19 +325,20 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
      - DEFAULT_ERROR: if want to call only viewState.setError()
      - CHECK_CACHE: when want to show error also after check data in cache
      */
+    @Suppress("ComplexMethod")
     protected suspend fun <M> fetchResult(
         processError: Boolean = DEFAULT_ERROR,
         withCacheCheck: Boolean = CHECK_CACHE,
         checkLoginError: Boolean = true,
         block: suspend () -> Result<M>
-    ) = utils.asyncAwait { block() }.also {
-        it.error?.let { e -> if (checkLoginError) checkResultError(e) else true }
+    ) = utils.asyncAwait { block() }.also { result ->
+        result.error?.let { e -> if (checkLoginError) checkResultError(e) else true }
             ?.let { handle ->
                 if (!handle) return@also
-                if (withCacheCheck) !it.fromCache else true
+                if (withCacheCheck) !result.fromCache else true
             }?.let { resultCheck ->
-                if (!processError && resultCheck) it.error?.let { e -> viewState.setError(e) }
-                log.error("BasePresenter.fetchResult", it.error)
+                if (!processError && resultCheck) result.error?.let { e -> viewState.setError(e) }
+                log.error("BasePresenter.fetchResult", result.error)
             }
     }
 
@@ -355,12 +365,17 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected suspend fun <D> fetchDataOnly(block: suspend () -> Result<D>) =
         fetchData(WITHOUT_ERROR, NO_CACHE_CHECK, false) { block() }
 
-    companion object {
+    override fun onDestroy() {
+        compositeDisposable.cancel()
+        worker.cancel()
+        super.onDestroy()
+    }
 
-        //when you want to handle error in child presenter
+    companion object {
+        // when you want to handle error in child presenter
         const val SHOW_ERROR = true
         const val DEFAULT_ERROR = false
-        //the same as SHOW_ERROR, but when you will not show error even in child presenter
+        // the same as SHOW_ERROR, but when you will not show error even in child presenter
         const val WITHOUT_ERROR = true
         const val CHECK_CACHE = true
         const val NO_CACHE_CHECK = false

@@ -1,66 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools">
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_container"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvRequests"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:overScrollMode="never"
+        android:layout_height="match_parent">
 
-        tools:visibility="gone"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRequests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:paddingTop="@dimen/view_transfer_info_vertical_margin"
+            android:paddingBottom="@dimen/view_transfer_info_vertical_margin"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/iv_no_transfers"
-        android:layout_width="@dimen/no_transfers_image_width"
-        android:layout_height="@dimen/no_transfers_image_height"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="@dimen/lang_icon_height"
-        android:visibility="gone"
-        android:src="@drawable/ic_no_transfers"/>
+        <ImageView
+            android:id="@+id/iv_no_transfers"
+            android:layout_width="@dimen/no_transfers_image_width"
+            android:layout_height="@dimen/no_transfers_image_height"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/lang_icon_height"
+            android:src="@drawable/ic_no_transfers"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/noTransfersText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="@dimen/activity_requests_text_size_14sp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/iv_no_transfers"
-        android:layout_marginTop="@dimen/no_transfers_title_margin_top"
-        android:layout_marginStart="@dimen/no_transfers_title_margin_start"
-        android:layout_marginEnd="@dimen/no_transfers_title_margin_end"
-        android:textColor="@color/empty_data_text"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:textAllCaps="true"
-        android:visibility="gone"/>
+        <TextView
+            android:id="@+id/noTransfersText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_no_transfers"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="@dimen/no_transfers_title_margin_start"
+            android:layout_marginTop="@dimen/no_transfers_title_margin_top"
+            android:layout_marginEnd="@dimen/no_transfers_title_margin_end"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:textColor="@color/empty_data_text"
+            android:textSize="@dimen/activity_requests_text_size_14sp"
+            android:visibility="gone" />
 
-    <include
-        android:id="@+id/transfers_loader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/view_shimmer_loader"
-        android:visibility="visible"
+        <include
+            android:id="@+id/transfers_loader"
+            layout="@layout/view_shimmer_loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
 
-        tools:visibility="gone"/>
+            tools:visibility="gone" />
 
-    <Button
-        android:id="@+id/btn_forward_main"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="24dp"
-        android:layout_alignParentBottom="true"
-        android:text="@string/LNG_MENU_SUBTITLE_NEW"
-        android:textColor="@color/colorWhite"
-        android:textSize="14sp"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:background="@drawable/btn_bg_rounded"
+        <Button
+            android:id="@+id/btn_forward_main"
+            android:layout_alignParentBottom="true"
+            android:text="@string/LNG_MENU_SUBTITLE_NEW"
+            android:textColor="@color/colorWhite"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_without_map_btn_next_height"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/main_without_map_btn_next_horizontal_margin"
+            android:layout_marginEnd="@dimen/main_without_map_btn_next_horizontal_margin"
+            android:layout_marginBottom="@dimen/main_without_map_btn_next_margin_bottom"
+            android:background="@drawable/btn_bg_rounded"
+            android:visibility="gone" />
 
-        android:visibility="gone"/>
-
-</RelativeLayout>
+    </RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

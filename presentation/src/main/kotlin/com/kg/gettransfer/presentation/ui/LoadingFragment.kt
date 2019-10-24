@@ -2,9 +2,9 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +16,7 @@ import android.view.animation.RotateAnimation
 import com.kg.gettransfer.R
 
 import kotlinx.android.synthetic.main.fragment_loading_view.*
+//import leakcanary.AppWatcher
 
 class LoadingFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -24,9 +25,27 @@ class LoadingFragment: Fragment() {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val anim = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
-        anim.duration = 800
+
+        val anim = RotateAnimation(
+            0f,
+            360f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f)
+
+        anim.duration = 1500
         anim.repeatCount = Animation.INFINITE
         spinner.startAnimation(anim)
-    }    
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        spinner.clearAnimation()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
+    }
 }

@@ -12,14 +12,6 @@ data class TransportType(
         ECONOMY, COMFORT, PREMIUM, MINIBUS, BUS, HELICOPTER, LIMOUSINE, VIP, BUSINESS, VAN, SUV, UNKNOWN;
 
         override fun toString() = name.toLowerCase(Locale.US)
-
-        companion object {
-            fun parse(id: String): ID {
-                return try {
-                    enumValueOf<ID>(id.toUpperCase(Locale.US))
-                } catch (e: IllegalArgumentException) { UNKNOWN }
-            }
-        }
     }
 
     companion object {

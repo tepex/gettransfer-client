@@ -12,23 +12,49 @@ import com.facebook.appevents.AppEventsLogger
 
 import com.google.firebase.analytics.FirebaseAnalytics
 
-import com.kg.gettransfer.domain.model.ReviewRate
+import com.kg.gettransfer.domain.AsyncUtils
+import com.kg.gettransfer.domain.interactor.*
+import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.presentation.delegate.AccountManager
+
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.map
+import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.yandex.metrica.Revenue
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
 
+import io.sentry.Sentry
+
 import java.util.Currency
 
 import kotlin.math.roundToLong
+import kotlinx.coroutines.Job
 
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.inject
+
+@Suppress("TooManyFunctions")
 class Analytics(
     private val context: Context,
     private val firebase: FirebaseAnalytics,
     private val facebook: AppEventsLogger
-) {
+) : KoinComponent {
+
+    private val paymentInteractor: PaymentInteractor by inject()
+    private val sessionInteractor: SessionInteractor by inject()
+    private val orderInteractor: OrderInteractor by inject()
+    private val transferInteractor: TransferInteractor by inject()
+    private val offerInteractor: OfferInteractor by inject()
+    private val accountManager: AccountManager by inject()
+    private val configsManager: ConfigsManager by inject()
+
+    private val compositeDisposable = Job()
+    private val utils = AsyncUtils(get(), compositeDisposable)
 
     /**
      * log single value for event
@@ -90,36 +116,144 @@ class Analytics(
         }
     }
 
-    inner class EcommercePurchase(
-        private val transactionId: String,
-        private val promocode: String?,
-        private val hours: Int?,
-        private var paymentType: String,
-        private val offerType: String,
-        private val requestType: String,
-        private val currency: Currency,
-        private val currencyCode: String,
-        private val price: Double) {
+    open inner class EcommercePurchase {
 
+        protected var event: String = EVENT_ECOMMERCE_PURCHASE
+
+        private lateinit var transactionId: String
+        private var promocode: String? = null
+        private var duration: Int? = null
+        private lateinit var offerType: String
+        private lateinit var requestType: String
+        private lateinit var currency: Currency
+        private lateinit var currencyCode: String
+        private var price: Double = -1.0
+        private var campaign: String? = null
+        private var rubPrice: Double? = Double.NaN
+        private var offerId: String? = null
+        private var origin: String? = null
+        private var destination: String? = null
+        private var transportType: List<String>? = null
+        private var passengersCount: Int? = null
+        private var beginInHours: Int? = null // time to transfer
+        protected var paymentType: String? = null
+
+        private var offer: Offer? = null
+        private var bookNowOffer: BookNowOffer? = null
+        private var transfer: Transfer? = null
+        private var transferModel: TransferModel? = null
+        private var offers: List<OfferItem> = emptyList()
+
+        /**
+         * Send analytics for single transfer
+         */
         fun sendAnalytics() {
-            paymentType = when (paymentType) {
-                PaymentRequestModel.PLATRON -> CARD
-                PaymentRequestModel.PAYPAL -> PAYPAL
-                else -> BALANCE
+            getTransferAndOffer()
+            transfer?.let { sendAnalytics(it) }
+        }
+
+        /**
+         * Send analytics for single transfer
+         */
+        private fun sendAnalytics(transfer: Transfer) {
+            if (transfer.rubPrice != null && !transfer.analyticsSent) {
+                prepareData()
+                sendToFirebase()
+                sendToFacebook()
+                sendToYandex()
+                sendToAppsFlyer()
+                utils.launchSuspend {
+                    val role = if (accountManager.remoteAccount.isBusinessAccount) {
+                        Transfer.Role.PARTNER
+                    } else {
+                        Transfer.Role.PASSENGER
+                    }
+                    utils.asyncAwait {
+                        transferInteractor.sendAnalytics(transfer.id, role.name.toLowerCase())
+                    }
+                }
             }
-            sendToFirebase()
-            sendToFacebook()
-            sendToYandex()
-            sendToAppsFlyer()
-            logEvent(EVENT_MAKE_PAYMENT, STATUS, RESULT_SUCCESS)
+        }
+
+        /**
+         * Send analytics for list of transfers
+         */
+        fun sendAnalytics(transfers: List<Transfer>) {
+            transfers.forEach { tr ->
+                utils.launchSuspend {
+                    transfer = tr
+                    transferModel = tr.map(configsManager.configs.transportTypes.map { it.map() })
+                    getOffer(tr)
+                    sendAnalytics(tr)
+                }
+            }
+        }
+
+        private suspend fun getOffer(tr: Transfer) {
+            utils.asyncAwait { offerInteractor.getOffers(tr.id) }.also { result ->
+                if (!result.isError()) {
+                    offers = mutableListOf<OfferItem>().apply {
+                        addAll(result.model)
+                        addAll(tr.bookNowOffers)
+                    }
+                    offers.firstOrNull()?.let { getOfferType(it) }
+                }
+            }
+        }
+
+        protected fun prepareData() {
+            transactionId = transfer?.id.toString()
+            promocode = transfer?.promoCode
+            duration = orderInteractor.duration
+            offerType = if (offer != null) REGULAR else NOW
+            requestType = when {
+                transfer?.duration != null        -> TRIP_HOURLY
+                transfer?.dateReturnLocal != null -> TRIP_ROUND
+                else                              -> TRIP_DESTINATION
+            }
+            currencyCode = sessionInteractor.currency.code
+            currency = Currency.getInstance(currencyCode)
+            price = offer?.price?.amount ?: bookNowOffer?.amount ?: (-1.0).also {
+                Sentry.capture(
+                        """when try to get offer for analytics of payment - server return invalid value:
+                            |offer is null  - ${offer == null}
+                            |offer.price is null  - ${offer?.price == null}
+                            |offer.price.amount is null  - ${offer?.price?.amount == null}
+                            |bookNowOffer is null  - ${bookNowOffer == null}
+                            |bookNowOffer.amount is null  - ${bookNowOffer?.amount == null}
+                         """.trimMargin()
+                )
+            }
+            campaign = transfer?.campaign
+            rubPrice = transfer?.rubPrice
+            offerId = offer?.id.toString()
+            origin = orderInteractor.from?.variants?.first
+            destination = orderInteractor.to?.variants?.first
+            passengersCount = transfer?.pax
+            beginInHours = transferModel?.timeToTransfer?.div(MIN_PER_HOUR)
+            transportType = transfer?.transportTypeIds?.map { it.toString() }
+        }
+
+        protected fun getTransferAndOffer() = paymentInteractor.selectedTransfer?.let { st ->
+            paymentInteractor.selectedOffer?.let { so ->
+                transfer = st
+                transferModel = st.map(configsManager.configs.transportTypes.map { it.map() })
+                getOfferType(so)
+            }
+        }
+
+        private fun getOfferType(offerItem: OfferItem) {
+            when (offerItem) {
+                is Offer        -> offer = offerItem
+                is BookNowOffer -> bookNowOffer = offerItem
+            }
         }
 
         private fun sendToAppsFlyer() {
             val map = mutableMapOf<String, Any?>()
             map[TRANSACTION_ID] = transactionId
             map[PROMOCODE] = promocode
-            hours?.let { map[HOURS] = it }
-            map[PAYMENT_TYPE] = paymentType
+            duration?.let { map[DURATION] = it }
             map[OFFER_TYPE] = offerType
             map[TRIP_TYPE] = requestType
             map[AFInAppEventParameterName.CURRENCY] = currencyCode
@@ -127,27 +261,36 @@ class Analytics(
             logEventToAppsFlyer(AFInAppEventType.PURCHASE, map)
         }
 
-        private fun sendToYandex() {
+        protected fun sendToYandex() {
             val map = mutableMapOf<String, Any?>()
             map[TRANSACTION_ID] = transactionId
             map[PROMOCODE] = promocode
-            hours?.let { map[HOURS] = it }
-            map[PAYMENT_TYPE] = paymentType
+            duration?.let { map[DURATION] = it }
             map[OFFER_TYPE] = offerType
             map[TRIP_TYPE] = requestType
             map[CURRENCY] = currencyCode
             map[VALUE] = price
-            logEventToYandex(EVENT_ECOMMERCE_PURCHASE, map)
+            map[CAMPAIGN] = campaign
+            rubPrice?.let { map[RUB_PRICE] = it }
+            map[OFFER_ID] = offerId
+            map[ORIGIN] = origin
+            map[DESTINATION] = destination
+            map[NUMBER_OF_PASSENGERS] = passengersCount
+            map[TRAVEL_CLASS] = transportType
+            map[BEGIN_IN_HOURS] = beginInHours
+            paymentType?.let { map[PAYMENT_TYPE] = it }
+            logEventToYandex(event, map)
 
             sendRevenue()
         }
 
         private fun sendRevenue() {
-            val priceMicros = price.roundToLong() * 1000000L // priceMicros = price × 10^6
+            @Suppress("MagicNumber")
+            val priceMicros = price.roundToLong() * 1_000_000L // priceMicros = price × 10^6
             val revenue = Revenue.newBuilderWithMicros(priceMicros, currency)
-                    .withProductID(requestType)
-                    .withQuantity(1)
-                    .build()
+                .withProductID(requestType)
+                .withQuantity(1)
+                .build()
             YandexMetrica.reportRevenue(revenue)
         }
 
@@ -155,24 +298,57 @@ class Analytics(
             val bundle = Bundle()
             bundle.putString(TRANSACTION_ID, transactionId)
             bundle.putString(PROMOCODE, promocode)
-            hours?.let { bundle.putInt(HOURS, it) }
-            bundle.putString(PAYMENT_TYPE, paymentType)
+            duration?.let { bundle.putInt(DURATION, it) }
             bundle.putString(OFFER_TYPE, offerType)
             bundle.putString(TRIP_TYPE, requestType)
+            bundle.putString(OFFER_ID, offerId)
+            bundle.putString(ORIGIN, origin)
+            bundle.putString(DESTINATION, destination)
+            passengersCount?.let { bundle.putInt(NUMBER_OF_PASSENGERS, it) }
+            bundle.putStringArray(TRAVEL_CLASS, transportType?.toTypedArray())
+            beginInHours?.let { bundle.putInt(BEGIN_IN_HOURS, it) }
             facebook.logPurchase(price.toBigDecimal(), currency, bundle)
         }
 
-        private fun sendToFirebase() {
+        protected fun sendToFirebase() {
             val bundle = Bundle()
             bundle.putString(TRANSACTION_ID, transactionId)
             bundle.putString(PROMOCODE, promocode)
-            hours?.let { bundle.putInt(HOURS, it) }
-            bundle.putString(PAYMENT_TYPE, paymentType)
+            duration?.let { bundle.putInt(DURATION, it) }
             bundle.putString(OFFER_TYPE, offerType)
             bundle.putString(TRIP_TYPE, requestType)
             bundle.putString(CURRENCY, currencyCode)
             bundle.putDouble(VALUE, price)
-            logEventToFirebase(EVENT_ECOMMERCE_PURCHASE, bundle)
+            bundle.putString(CAMPAIGN, campaign)
+            rubPrice?.let { bundle.putDouble(RUB_PRICE, it) }
+            bundle.putString(OFFER_ID, offerId)
+            bundle.putString(ORIGIN, origin)
+            bundle.putString(DESTINATION, destination)
+            passengersCount?.let { bundle.putInt(NUMBER_OF_PASSENGERS, it) }
+            bundle.putStringArray(TRAVEL_CLASS, transportType?.toTypedArray())
+            beginInHours?.let { bundle.putInt(BEGIN_IN_HOURS, it) }
+            paymentType?.let { bundle.putString(PAYMENT_TYPE, paymentType) }
+            logEventToFirebase(event, bundle)
+        }
+    }
+
+    /**
+     * This class is child class of EcommercePurchase because it has almost the same parameters
+     * for analytics
+     */
+    inner class PaymentStatus(private var mPaymentType: String) : EcommercePurchase() {
+
+        fun sendAnalytics(event: String) {
+            super.event = event
+            super.paymentType = when (mPaymentType) {
+                PaymentRequestModel.PLATRON -> CARD
+                PaymentRequestModel.PAYPAL  -> PAYPAL
+                else                        -> BALANCE
+            }
+            getTransferAndOffer()
+            prepareData()
+            sendToFirebase()
+            sendToYandex()
         }
     }
 
@@ -190,8 +366,8 @@ class Analytics(
         fun sendAnalytics() {
             paymentType = when (paymentType) {
                 PaymentRequestModel.PLATRON -> CARD
-                PaymentRequestModel.PAYPAL -> PAYPAL
-                else -> BALANCE
+                PaymentRequestModel.PAYPAL  -> PAYPAL
+                else                        -> BALANCE
             }
             sendToFirebase()
             sendToFacebook()
@@ -251,23 +427,22 @@ class Analytics(
         }
     }
 
+    @Suppress("LongParameterList")
     fun logEventAddToCart(
-            numberOfPassengers: Int,
-            origin: String?,
-            destination: String?,
-            travelClass: String?,
-            hours: Int?,
-            tripType: String,
-            value: String?,
-            currency: String?) {
+        travelClass: String?,
+        hours: Int?,
+        tripType: String,
+        value: String?,
+        currency: String?
+    ) {
 
         val fbBundle = Bundle()
         val map = mutableMapOf<String, Any?>()
         val afMap = mutableMapOf<String, Any?>()
 
-        map[NUMBER_OF_PASSENGERS] = numberOfPassengers
-        map[ORIGIN] = origin
-        map[DESTINATION] = destination
+        map[NUMBER_OF_PASSENGERS] = orderInteractor.passengers
+        map[ORIGIN] = orderInteractor.from?.variants?.first
+        map[DESTINATION] = orderInteractor.to?.variants?.first
         map[TRAVEL_CLASS] = travelClass
         map[HOURS] = hours
         map[TRIP_TYPE] = tripType
@@ -293,10 +468,11 @@ class Analytics(
     }
 
     fun logCreateTransfer(
-            result: String,
-            value: String?,
-            currency: String?,
-            hours: Int?) {
+        result: String,
+        value: String?,
+        currency: String?,
+        hours: Int?
+    ) {
 
         val map = mutableMapOf<String, Any?>()
 
@@ -327,7 +503,8 @@ class Analytics(
         const val EVENT_TRANSFER = "create_transfer"
         const val EVENT_ADD_TO_CART = "add_to_cart"
         const val EVENT_SELECT_OFFER = "select_offer"
-        const val EVENT_MAKE_PAYMENT = "make_payment"
+        const val EVENT_PAYMENT_DONE = "payment_done"
+        const val EVENT_PAYMENT_FAILED = "payment_failed"
         const val EVENT_MENU = "menu"
         const val EVENT_MAIN = "main"
         const val EVENT_SETTINGS = "settings"
@@ -343,6 +520,11 @@ class Analytics(
         const val EVENT_TRANSFER_REVIEW_DETAILED = "transfer_review_detailed"
         const val EVENT_APP_REVIEW_REQUESTED = "app_review_requested"
         const val EVENT_IPAPI_REQUEST = "ipapi_request"
+
+        const val EVENT_BECOME_CARRIER = "become_carrier"
+        const val EVENT_NEW_CARRIER_APP_DIALOG = "new_carrier_app_dialog"
+        const val OPEN_SCREEN = "open_screen"
+        const val GO_TO_MARKET = "go_to_market"
 
         const val STATUS = "status"
         const val PARAM_KEY_NAME = "name"
@@ -401,6 +583,8 @@ class Analytics(
         const val TRANSACTION_ID = "transaction_id"
         const val BEGIN_IN_HOURS = "begin_in_hours"
         const val PROMOCODE = "promocode"
+        const val DURATION = "duration"
+        const val OFFER_ID = "offer_id"
 
         const val TRIP_HOURLY = "hourly"
         const val TRIP_DESTINATION = "destination"
@@ -458,5 +642,10 @@ class Analytics(
 
         const val MESSAGE_IN  = "message_in"
         const val MESSAGE_OUT = "message_out"
+
+        const val CAMPAIGN = "campaign"
+        const val RUB_PRICE = "rub_price"
+
+        const val MIN_PER_HOUR = 60
     }
 }

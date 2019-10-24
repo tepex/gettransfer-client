@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import android.view.View
 import android.widget.RemoteViews
 import com.bumptech.glide.Glide

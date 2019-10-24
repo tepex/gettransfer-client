@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/info_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="@dimen/margin8"
+    android:layout_marginTop="@dimen/margin8"
+    android:paddingBottom="16dp"
+    android:background="@drawable/back_top_rounded"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="@dimen/create_order_behaviour_peek_height"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="@dimen/rounded_rectangle_width"
+        android:layout_height="@dimen/rounded_rectangle_height"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="@dimen/rounded_rectangle_margin_top"
+        android:background="@drawable/rectangle_swipe_down" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTransferType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnGetOffers"
+        android:layout_below="@+id/rvTransferType"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/layout_hourly_duration"
+                android:id="@+id/hourly_duration"/>
+
+                <LinearLayout
+                    android:id="@+id/cl_offer_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/fl_currency"
+                        android:layout_width="@dimen/fl_currency_wight"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/tv_currency"
+                            android:layout_width="@dimen/currency_symbol_wight"
+                            android:layout_height="@dimen/currency_symbol_height"
+                            android:fontFamily="@font/sf_pro_text_regular"
+                            android:maxLines="1"
+                            android:text="@string/rub"
+                            android:clickable="false"
+                            android:textColor="@color/colorTextBlackBold"
+                            app:autoSizeMaxTextSize="@dimen/currency_symbol_size"
+                            app:autoSizeMinTextSize="@dimen/currency_symbol_min_size"
+                            app:autoSizeTextType="uniform"
+                            android:layout_marginStart="@dimen/currency_symbol_margin_start"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="$"/>
+
+                        <ImageView
+                            android:clickable="false"
+                            android:id="@+id/triangle_currency"
+                            android:layout_width="@dimen/triangle_currency_width"
+                            android:layout_height="@dimen/triangle_currency_height"
+                            app:layout_constraintStart_toEndOf="@+id/tv_currency"
+                            app:layout_constraintTop_toTopOf="@+id/tv_currency"
+                            app:srcCompat="@drawable/ic_triangle" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <!-- icon_img is changing at runtime-->
+                    <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                        android:id="@+id/price_field_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/create_transfer_price_field_input_padding_start"
+                        app:hint="@string/LNG_RIDE_PRICE"
+                        android:inputType="number"/>
+                </LinearLayout>
+
+                <include layout="@layout/view_divider_horizontal"/>
+
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                android:id="@+id/transfer_date_time_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/LNG_RIDE_DATE"
+                app:icon_img="@drawable/ic_calendar"
+                app:isFocusable="false"
+                app:showChevron="true"
+                android:inputType="textNoSuggestions"/>
+
+            <include layout="@layout/view_divider_horizontal"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_returnWayTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                    android:id="@+id/transfer_return_date_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/LNG_RIDE_DATE_RETURN"
+                    app:icon_img="@drawable/ic_plus"
+                    app:isFocusable="false"
+                    app:showChevron="true"
+                    android:inputType="textNoSuggestions"/>
+
+                <ImageView
+                    android:id="@+id/fl_DeleteReturnDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/margin16"
+                    app:srcCompat="@drawable/ic_close_x"
+                    android:visibility="gone"/>
+
+                <include
+                    layout="@layout/view_divider_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="@dimen/margin16"
+                    android:layout_marginEnd="@dimen/margin16"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false">
+                <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                    android:id="@+id/passengers_count_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:isFocusable="false"
+                    app:icon_img="@drawable/ic_passenger_small"
+                    app:hint="@string/LNG_RIDE_ADULTS"/>
+
+                <include
+                    android:id="@+id/passengers_count"
+                    layout="@layout/view_count_controller"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+            <include layout="@layout/view_divider_horizontal"/>
+
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                android:id="@+id/children_seat_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/LNG_NO_SEATS_REQUIRED"
+                app:isFocusable="false"
+                app:icon_img="@drawable/ic_child_seat"
+                app:showChevron="true"/>
+
+            <include layout="@layout/view_divider_horizontal"/>
+
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                android:id="@+id/sign_name_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/LNG_RIDE_NAME_PLACEHOLDER"
+                app:icon_img="@drawable/ic_passport" />
+
+            <include layout="@layout/view_divider_horizontal"/>
+
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                android:id="@+id/flight_number_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/LNG_RIDE_FLIGHT_PLACEHOLDER"
+                app:icon_img="@drawable/ic_flight" />
+
+            <include layout="@layout/view_divider_horizontal"/>
+
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                android:id="@+id/flight_numberReturn_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:hint="@string/LNG_RIDE_RETURN_FLIGHT_PLACEHOLDER"
+                app:icon_img="@drawable/ic_return_flight" />
+
+            <include
+                android:id="@+id/flight_numberReturn_divider"
+                layout="@layout/view_divider_horizontal"
+                android:visibility="gone" />
+
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                android:id="@+id/promo_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/LNG_RIDE_PROMOCODE_PLACEHOLDER"
+                app:icon_img="@drawable/ic_percentage" />
+
+            <include layout="@layout/view_divider_horizontal"/>
+
+            <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                android:id="@+id/comment_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/LNG_RIDE_COMMENT"
+                app:icon_img="@drawable/ic_comment"
+                app:isFocusable="false"
+                app:showChevron="true"/>
+
+            <include layout="@layout/view_divider_horizontal"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutAgreement"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/create_transfer_additionals_view_height"
+                android:layout_marginTop="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchAgreement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:theme="@style/SwitchCompatStyle"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvAgreement1"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvAgreement1" />
+
+                <TextView
+                    android:id="@+id/tvAgreement1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="@dimen/create_transfer_agreement_text_margin_end"
+                    android:fontFamily="@font/sf_pro_text_regular"
+                    android:text="@string/LNG_RIDE_OFFERT"
+                    android:textColor="@color/colorTextLightGray"
+                    android:textSize="@dimen/create_transfer_agreement_text_size"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/switchAgreement"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGetOffers"
+        android:layout_width="@dimen/get_offers_btn_weight"
+        android:layout_height="@dimen/get_offers_btn_height"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin16"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/LNG_RIDE_CREATE"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:textAllCaps="true"
+        app:backgroundTint="@color/color_gtr_green"
+        app:cornerRadius="@dimen/get_offers_btn_radius"
+        app:icon="@drawable/ic_check_circle"
+        app:iconTint="@null"
+        app:iconGravity="textStart">
+    </com.google.android.material.button.MaterialButton>
+</RelativeLayout>

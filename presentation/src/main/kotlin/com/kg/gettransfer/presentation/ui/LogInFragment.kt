@@ -1,9 +1,8 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
+import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.LogInPresenter
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_EMAIL
@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.fragment_log_in.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 import kotlinx.android.synthetic.main.view_input_password.*
 import kotlinx.serialization.json.JSON
+//import leakcanary.AppWatcher
 
 import timber.log.Timber
 
@@ -37,6 +38,7 @@ import timber.log.Timber
  *
  * @author П. Густокашин (Diwixis)
  */
+@Suppress("TooManyFunctions")
 class LogInFragment : MvpAppCompatFragment(), LogInView {
 
     @InjectPresenter
@@ -70,41 +72,27 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         emailLayout.fieldText.requestFocus()
     }
 
-    @CallSuper
-    override fun onDetach() {
-        /* dirty hack https://stackoverflow.com/a/15656428 */
-        try {
-            val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
-            childFragmentManager.isAccessible = true
-            childFragmentManager.set(this, null)
-
-        } catch (e: NoSuchFieldException) {
-            throw RuntimeException(e)
-        } catch (e: IllegalAccessException) {
-            throw RuntimeException(e)
-        }
-        super.onDetach()
-    }
-
     private fun initClickListeners() {
-        btnLogin.setThrottledClickListener {
+        btnLogin.setThrottledClickListener { view ->
+            view.hideKeyboard()
             showLoading()
             presenter.onLoginClick()
         }
-        btnRequestCode.setThrottledClickListener {
+        btnRequestCode.setThrottledClickListener { view ->
+            view.hideKeyboard()
             showLoading()
             presenter.sendVerificationCode()
         }
     }
 
     private fun initTextChangeListeners() {
-        emailLayout.fieldText.onTextChanged {
-            presenter.setEmailOrPhone(it)
+        emailLayout.fieldText.onTextChanged { text ->
+            presenter.setEmailOrPhone(text)
             btnLogin.isEnabled = presenter.isEnabledButtonLogin
             btnRequestCode.isEnabled = presenter.isEnabledRequestCodeButton
         }
-        etPassword.onTextChanged {
-            presenter.password = it
+        etPassword.onTextChanged { text ->
+            presenter.password = text
             btnLogin.isEnabled = presenter.isEnabledButtonLogin
         }
     }
@@ -127,7 +115,12 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
                 text = errStringRes
                 onDismissCallBack = { hideLoading() }
             }
-            .show(fragmentManager)
+            .show(requireFragmentManager())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     companion object {
@@ -135,7 +128,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         fun newInstance() = LogInFragment()
     }
 
-    //--------------------------------------------
+    // --------------------------------------------
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if (block) {
@@ -143,54 +136,59 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
         } else hideLoading()
     }
 
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        //TODO remove BaseView or add code.
-    }
+    // TODO remove BaseView or add code.
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {}
 
-    override fun setTransferNotFoundError(transferId: Long) {
-        //TODO remove BaseView or add code.
-    }
+    // TODO remove BaseView or add code.
+    override fun setTransferNotFoundError(transferId: Long) {}
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
+        val titleError = getTitleError(e)
         when (e.code) {
-            ApiException.NO_USER -> {
-                BottomSheetDialog
-                    .newInstance()
-                    .apply {
-                        title = this@LogInFragment.getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
-                        onDismissCallBack = { hideLoading() }
-                    }
-                    .show(fragmentManager)
-            }
-            ApiException.NOT_FOUND -> {
-                BottomSheetDialog
-                    .newInstance()
-                    .apply {
-                        title =
-                            this@LogInFragment.getString(
-                                R.string.LNG_ACCOUNT_NOTFOUND,
-                                presenter.params.emailOrPhone //TODO вот тут возможно придется просить поле из презентера. Или всегда в метожд передавать лишний параметр.
-                            )
-                        text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
-                        buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
-                        onClickOkButton = { changePage?.invoke(presenter.params.emailOrPhone, presenter.isPhone()) }
-                        onDismissCallBack = { hideLoading() }
-                        isShowCloseButton = true
-                    }
-                    .show(fragmentManager)
-            }
-            else -> {
-                BottomSheetDialog
-                    .newInstance()
-                    .apply {
-                        title = e.message ?: "Error"
-                        onDismissCallBack = { hideLoading() }
-                    }
-                    .show(fragmentManager)
-            }
+            ApiException.NO_USER -> BottomSheetDialog
+                .newInstance()
+                .apply {
+                    title = titleError
+                    onDismissCallBack = { hideLoading() }
+                }
+                .show(requireFragmentManager())
+
+            ApiException.NOT_FOUND -> BottomSheetDialog
+                .newInstance()
+                .apply {
+                    title = titleError
+                    text = this@LogInFragment.getString(R.string.LNG_ERROR_ACCOUNT_CREATE_USER)
+                    buttonOkText = this@LogInFragment.getString(R.string.LNG_SIGNUP)
+                    onClickOkButton = { changePage?.invoke(presenter.params.emailOrPhone, presenter.isPhone()) }
+                    onDismissCallBack = { hideLoading() }
+                    isShowCloseButton = true
+                }
+                .show(requireFragmentManager())
+
+            else -> BottomSheetDialog
+                .newInstance()
+                .apply {
+                    title = titleError
+                    onDismissCallBack = { hideLoading() }
+                }
+                .show(requireFragmentManager())
+        }
+    }
+
+    private fun getTitleError(e: ApiException): String {
+        return when (e.code) {
+            ApiException.NO_USER -> getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
+            ApiException.NOT_FOUND -> getString(
+                R.string.LNG_ACCOUNT_NOTFOUND,
+                /* TODO вот тут возможно придется просить поле из презентера.
+                           Или всегда в метод передавать лишний параметр. */
+                presenter.params.emailOrPhone
+            )
+            ApiException.NETWORK_ERROR -> getString(R.string.LNG_NETWORK_ERROR)
+            else -> e.message ?: "Error"
         }
     }
 
@@ -202,7 +200,7 @@ class LogInFragment : MvpAppCompatFragment(), LogInView {
     override fun showLoading() {
         if (loadingFragment.isAdded) return
         fragmentManager?.beginTransaction()?.apply {
-            replace(R.id.container, loadingFragment)
+            replace(android.R.id.content, loadingFragment)
             commit()
         }
     }

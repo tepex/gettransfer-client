@@ -137,9 +137,9 @@ fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateForm
         flightNumber,
 /* ================================================== */
         flightNumberReturn,
-        transportTypeIds.map { TransportType.ID.parse(it) },
+        transportTypeIds.map { it.map() },
         pax,
-        bookNow?.let { TransportType.ID.parse(it) },
+        bookNow?.map(),
         time,
         nameSign,
         comment,
@@ -157,7 +157,7 @@ fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateForm
         watertaxi,
         bookNowOffers.map { entry ->
             entry.value.map(
-                transportTypes.find { it.id === TransportType.ID.parse(entry.key) } ?: transportTypes.first()
+                transportTypes.find { it.id == entry.key.map() } ?: transportTypes.first()
             )
         },
         offersCount,
@@ -191,12 +191,12 @@ fun TransferEntity.allowOfferInfo(date: Date): Boolean =
 
         val calendar = Calendar.getInstance()
         calendar.time = date
-        calendar.add(Calendar.MINUTE, time ?: duration?.times(SEC_PER_MINUTE) ?: 0)
+        calendar.add(Calendar.MINUTE, time ?: duration?.times(MINUTES_PER_HOUR) ?: 0)
         calendar.add(Calendar.MINUTE, MINUTES_TO_SHOWING_OFFER_INFO)
         calendar.time.after(Calendar.getInstance().time)
     } else {
         status == Transfer.Status.PERFORMED.name.toLowerCase()
     }
 
-const val SEC_PER_MINUTE = 60
-const val MINUTES_TO_SHOWING_OFFER_INFO = 24 * SEC_PER_MINUTE
+const val MINUTES_PER_HOUR = 60
+const val MINUTES_TO_SHOWING_OFFER_INFO = 24 * MINUTES_PER_HOUR

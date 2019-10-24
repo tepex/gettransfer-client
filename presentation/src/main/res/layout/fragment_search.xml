@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.ui.SearchFragment">
+
+    <include
+        android:id="@+id/toolbarLayout"
+        layout="@layout/toolbar_search" />
+
+    <com.kg.gettransfer.presentation.ui.custom.SearchFormView
+        android:id="@+id/searchForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbarLayout" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_divider_height"
+        android:layout_below="@+id/searchForm"
+        android:layout_marginStart="@dimen/search_fragment_separator_horizontal_margin"
+        android:layout_marginEnd="@dimen/search_fragment_separator_horizontal_margin"
+        android:background="@color/colorDividerGray" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_addressList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rv_popularList"
+        android:layout_below="@+id/separator"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:paddingTop="@dimen/search_fragment_rv_padding"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_popularList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/search_fragment_rv_padding"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal" />
+
+</RelativeLayout>

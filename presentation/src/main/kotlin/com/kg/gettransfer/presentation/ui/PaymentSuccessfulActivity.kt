@@ -1,35 +1,40 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.NonNull
-import android.support.design.widget.BottomSheetBehavior
-import android.view.View
+import androidx.annotation.CallSuper
+
 import com.arellomobile.mvp.presenter.InjectPresenter
+
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
-import kotlinx.android.synthetic.main.activity_payment_successful.*
-import kotlinx.android.synthetic.main.dialog_payment_successful.*
-import org.jetbrains.anko.longToast
-import pub.devrel.easypermissions.EasyPermissions
-import java.io.InputStream
 
-class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView,
-        EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks {
+import kotlinx.android.synthetic.main.activity_payment_successful.*
+import kotlinx.android.synthetic.main.content_payment_successful.*
+import kotlinx.android.synthetic.main.view_communication_button.view.*
+
+import org.jetbrains.anko.longToast
+
+import pub.devrel.easypermissions.EasyPermissions
+
+class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
+    PaymentSuccessfulView,
+    EasyPermissions.PermissionCallbacks,
+    EasyPermissions.RationaleCallbacks {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentSuccessfulPresenter
 
-    private lateinit var bsPayment: BottomSheetBehavior<View>
-
     override fun getPresenter(): PaymentSuccessfulPresenter = presenter
 
+    @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_successful)
@@ -40,14 +45,10 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
     }
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
-        bsPayment = BottomSheetBehavior.from(sheetSuccessPayment)
-        bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
-        bsPayment.setBottomSheetCallback(bsCallback)
 
-        sheetSuccessPayment.layoutParams.height =
-                getScreenSide(true) - Utils.dpToPxInt(this, 8f)
+        contentSuccessPayment.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, 8f)
 
-        _mapView = mapViewRoute
+        baseMapView = mapViewRoute
         initMapView(savedInstanceState)
         presenter.setMapRoute()
 
@@ -56,36 +57,28 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
         if (presenter.offerId == 0L) {
             tvBookNowSuccess.isVisible = true
-            tvSupport.text = getString(R.string.LNG_OFFERS_SUPPORT)
-            groupVoucher.isInvisible = true
+            btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT)
+            tvDownloadVoucher.isInvisible = true
         }
         ivClose.setOnClickListener { finish() }
         btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
-        btnDownloadVoucher.setOnClickListener { checkPermissionForWrite() }
+        tvDownloadVoucher.setOnClickListener { checkPermissionForWrite() }
     }
 
     private fun checkPermissionForWrite() {
         val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (EasyPermissions.hasPermissions(this, *perms)) {
             presenter.onDownloadVoucherClick()
-        } else EasyPermissions.requestPermissions(
+        } else {
+            EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
-                RC_WRITE_FILE, *perms)
-    }
-
-    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onSlide(p0: View, p1: Float) {
-
-        }
-
-        override fun onStateChanged(@NonNull bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
-            }
+                RC_WRITE_FILE, *perms
+            )
         }
     }
 
+    @CallSuper
     override suspend fun customizeGoogleMaps(gm: GoogleMap) {
         super.customizeGoogleMaps(gm)
         gm.uiSettings.isScrollGesturesEnabled = false
@@ -99,20 +92,18 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
         tvRemainTime.text = time
     }
 
-    companion object {
-        const val TRANSFER_ID = "transferId"
-        const val OFFER_ID = "offerId"
-        private const val RC_WRITE_FILE = 111
-    }
-
     override fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate) {
         processGoogleMap(false) { setPinForHourlyWithoutInfo(point, cameraUpdate) }
     }
 
     override fun initCallButton() {
         btnCall.isVisible = true
-        tvCall.isVisible = true
         btnCall.setOnClickListener { presenter.onCallClick() }
+    }
+
+    override fun initChatButton() {
+        btnChat.isVisible = true
+        btnChat.setOnClickListener { presenter.onChatClick() }
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
@@ -129,8 +120,15 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(), PaymentSuccessfulView
 
     override fun onRationaleAccepted(requestCode: Int) {}
 
+    @CallSuper
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    companion object {
+        const val TRANSFER_ID = "transferId"
+        const val OFFER_ID = "offerId"
+        private const val RC_WRITE_FILE = 111
     }
 }

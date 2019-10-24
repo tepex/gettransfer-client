@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
-
 import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.view.BaseView
@@ -10,11 +8,8 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import org.koin.core.inject
 
 open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
-
-    private val paymentInteractor: PaymentInteractor by inject()
 
     internal lateinit var params: LogInView.Params
 
@@ -22,7 +17,6 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
         if (params.nextScreen.isEmpty()) return
         when (params.nextScreen) {
             Screens.CLOSE_AFTER_LOGIN -> router.exit()
-            Screens.CARRIER_MODE -> checkCarrierMode()
             Screens.PASSENGER_MODE -> {
                 router.exit()
                 analytics.logProfile(Analytics.PASSENGER_TYPE)
@@ -48,19 +42,6 @@ open class OpenNextScreenPresenter<BV : BaseView> : BasePresenter<BV>() {
             Screens.RATE_TRANSFER -> {
                 router.newRootScreen(Screens.MainPassengerToRateTransfer(params.transferId, params.rate))
             }
-        }
-    }
-
-    private fun checkCarrierMode() {
-        if (accountManager.remoteAccount.isDriver) {
-            if (accountManager.remoteAccount.isManager) {
-                analytics.logProfile(Analytics.CARRIER_TYPE)
-            } else {
-                analytics.logProfile(Analytics.DRIVER_TYPE)
-            }
-            router.newRootScreen(Screens.Carrier(Screens.CARRIER_MODE))
-        } else {
-            router.replaceScreen(Screens.Carrier(Screens.REG_CARRIER))
         }
     }
 }

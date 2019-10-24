@@ -1,21 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainLayoutActivityTransfer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:focusableInTouchMode="true">
-
-    <!--<include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -35,32 +25,38 @@
             android:background="@drawable/back_status_bar_gradient"
             android:layout_gravity="top"/>
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="@dimen/activity_main_buttons_size"
-            android:layout_height="@dimen/activity_main_buttons_size"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="top|start"
+            android:orientation="vertical"
             android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
-            android:layout_marginStart="@dimen/activity_main_buttons_margin_start_end"
-            android:clickable="true"
-            android:focusable="true"
-            app:srcCompat="@drawable/ic_circle_back"
-            android:background="@drawable/back_circle_white_buttons"
-            android:elevation="2dp"/>
+            android:layout_marginStart="@dimen/activity_main_buttons_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="@dimen/activity_main_buttons_size"
+                android:layout_height="@dimen/activity_main_buttons_size"
+                android:layout_margin="@dimen/activity_main_buttons_padding_for_shadow"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@drawable/ic_circle_back"
+                android:background="@drawable/back_circle_white_buttons"
+                android:elevation="2dp" />
 
 
-        <ImageView
-            android:id="@+id/btnCenterRoute"
-            android:layout_width="@dimen/activity_main_buttons_size"
-            android:layout_height="@dimen/activity_main_buttons_size"
-            android:layout_gravity="top|end"
-            android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
-            android:layout_marginEnd="@dimen/activity_main_buttons_margin_start_end"
-            android:clickable="true"
-            android:focusable="true"
-            app:srcCompat="@drawable/ic_change_route"
-            android:background="@drawable/back_circle_white_buttons"
-            android:elevation="2dp"/>
+            <ImageView
+                android:id="@+id/btnCenterRoute"
+                android:layout_width="@dimen/activity_main_buttons_size"
+                android:layout_height="@dimen/activity_main_buttons_size"
+                android:layout_margin="@dimen/activity_main_buttons_padding_for_shadow"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@drawable/ic_change_route"
+                android:background="@drawable/back_circle_white_buttons"
+                android:elevation="2dp"/>
+
+        </LinearLayout>
 
         <View
             android:id="@+id/tintBackground"
@@ -71,31 +67,31 @@
 
     </FrameLayout>
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/expended_sheet_order_height">
 
-        <include
+        <com.kg.gettransfer.presentation.ui.custom.BottomSheetCreateOrderNewView
             android:id="@+id/sheetOrder"
-            layout="@layout/bottom_sheet_create_order_new"/>
-    </android.support.design.widget.CoordinatorLayout>
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            android:layout_marginTop="@dimen/margin8"
+            app:behavior_hideable="false"
+            app:behavior_peekHeight="@dimen/create_order_behaviour_peek_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/secondary_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/expended_sheet_order_height"
+        app:behavior_hideable="true"
+        app:behavior_skipCollapsed="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         android:layout_gravity="bottom">
 
-        <FrameLayout
-            android:id="@+id/secondary_bottom_sheet"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            app:behavior_hideable="true"
-            app:behavior_skipCollapsed="true"
-            app:layout_behavior="android.support.design.widget.BottomSheetBehavior" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    </android.support.design.widget.CoordinatorLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

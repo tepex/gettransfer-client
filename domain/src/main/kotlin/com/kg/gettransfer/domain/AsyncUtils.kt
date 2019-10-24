@@ -74,6 +74,9 @@ class AsyncUtils(private val cc: CoroutineContexts, root: Job) : CoroutineScope 
     suspend fun <T> asyncAwait(bl: TaskResult<T>): Result<T> = async(bl).await()
 
     @Synchronized
+    suspend fun <T> asyncDataAwait(bl: TaskData<T>): T = coroutineScope { async(cc.bg) { bl() } }.await()
+
+    @Synchronized
     suspend fun <T> async(block: TaskResult<T>): Deferred<Result<T>> = coroutineScope { async(cc.bg) { block() } }
 
     @Synchronized

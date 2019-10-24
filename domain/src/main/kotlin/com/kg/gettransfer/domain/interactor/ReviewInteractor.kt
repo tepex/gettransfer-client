@@ -2,9 +2,9 @@ package com.kg.gettransfer.domain.interactor
 
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Ratings
-import com.kg.gettransfer.domain.repository.ReviewRepository
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.ReviewRate
+import com.kg.gettransfer.domain.repository.ReviewRepository
 
 class ReviewInteractor(private val repository: ReviewRepository) {
 
@@ -68,6 +68,16 @@ class ReviewInteractor(private val repository: ReviewRepository) {
     suspend fun pushComment() = repository.pushComment()
 
     fun releaseReviewData() = repository.releaseReviewData()
+
+    suspend fun checkNotSendedReviews(): Result<Unit> {
+        repository.checkCachedData()
+        return Result(Unit)
+    }
+
+    suspend fun clearReviewCache(): Result<Unit> {
+        repository.clearReviewCache()
+        return Result(Unit)
+    }
 
     companion object {
         const val MAX_RATE = 5

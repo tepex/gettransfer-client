@@ -1,33 +1,16 @@
 package com.kg.gettransfer.service
 
-import android.support.annotation.CallSuper
 import com.appsflyer.AppsFlyerLib
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.kg.gettransfer.domain.AsyncUtils
-import com.kg.gettransfer.domain.CoroutineContexts
-import com.kg.gettransfer.domain.interactor.SystemInteractor
-import kotlinx.coroutines.Job
-import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.inject
-import timber.log.Timber
-import android.R.id.message
+
 import com.yandex.metrica.push.firebase.MetricaMessagingService
 
+import org.koin.core.KoinComponent
 
+import timber.log.Timber
 
 class OffersPushService : KoinComponent, FirebaseMessagingService() {
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
-    private val systemInteractor: SystemInteractor by inject()
-
-    @CallSuper
-    override fun onDestroy() {
-        compositeDisposable.cancel()
-        super.onDestroy()
-    }
-
     // [START on_new_token]
     /**
      * Called if InstanceID token is updated. This may occur if the security of

@@ -1,10 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +23,7 @@ import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.serialization.json.JSON
+//import leakcanary.AppWatcher
 import timber.log.Timber
 
 class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
@@ -75,20 +75,9 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         }
     }
 
-    @CallSuper
-    override fun onDetach() {
-        /* dirty hack https://stackoverflow.com/a/15656428 */
-        try {
-            val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
-            childFragmentManager.isAccessible = true
-            childFragmentManager.set(this, null)
-
-        } catch (e: NoSuchFieldException) {
-            throw RuntimeException(e)
-        } catch (e: IllegalAccessException) {
-            throw RuntimeException(e)
-        }
-        super.onDetach()
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     override fun setBtnDoneIsEnabled(isEnabled: Boolean) {
@@ -149,7 +138,7 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
                             presenter.back()
                         }
                     }
-                    .show(fragmentManager)
+                    .show(requireFragmentManager())
             }
         }
     }

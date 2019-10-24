@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_settings"
+    app:startDestination="@+id/showSettings">
+
+    <fragment
+        android:id="@+id/showSettings"
+        android:name="com.kg.gettransfer.presentation.ui.SettingsFragment"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/go_to_select_currency"
+            app:destination="@id/selectCurrency"
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
+        <action
+            android:id="@+id/go_to_select_language"
+            app:destination="@id/selectLanguage"
+            app:enterAnim="@anim/transition_b2t"
+            app:popEnterAnim="@anim/fade_in"
+            app:exitAnim="@anim/transition_t2b"
+            app:popExitAnim="@anim/fade_out"/>
+    </fragment>
+
+    <fragment android:id="@+id/selectCurrency"
+        app:popUpTo="@id/showSettings"
+        android:name="com.kg.gettransfer.presentation.ui.SelectCurrencyFragment"
+        tools:layout="@layout/fragment_select_currency"/>
+
+    <fragment android:id="@+id/selectLanguage"
+        app:popUpTo="@id/showSettings"
+        android:name="com.kg.gettransfer.presentation.ui.SelectLanguageFragment"
+        tools:layout="@layout/fragment_select_language"/>
+</navigation>

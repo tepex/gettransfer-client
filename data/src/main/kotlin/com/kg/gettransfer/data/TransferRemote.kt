@@ -11,7 +11,7 @@ interface TransferRemote : KoinComponent {
 
     suspend fun cancelTransfer(id: Long, reason: String): TransferEntity
 
-    suspend fun getTransfer(id: Long, role: String): TransferEntity
+    suspend fun getTransfer(id: Long): TransferEntity
 
     suspend fun getAllTransfers(): List<TransferEntity>
 
@@ -20,4 +20,6 @@ interface TransferRemote : KoinComponent {
     suspend fun getTransfersActive(): List<TransferEntity>
 
     suspend fun downloadVoucher(transferId: Long): InputStream
+
+    suspend fun sendAnalytics(transferId: Long, role: String)
 }

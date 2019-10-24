@@ -2,6 +2,8 @@ package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.TransportType
 
+import java.util.Locale
+
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
@@ -21,4 +23,12 @@ data class TransportTypeEntity(
 }
 
 fun TransportType.map() = TransportTypeEntity(id.toString(), paxMax, luggageMax)
-fun TransportTypeEntity.map() = TransportType(TransportType.ID.parse(id), paxMax, luggageMax)
+
+fun TransportTypeEntity.map() = TransportType(id.map(), paxMax, luggageMax)
+
+fun String.map(): TransportType.ID =
+    try {
+        enumValueOf<TransportType.ID>(toUpperCase(Locale.US))
+    } catch (e: IllegalArgumentException) { TransportType.ID.UNKNOWN }
+
+fun TransportType.ID.map() = toString()

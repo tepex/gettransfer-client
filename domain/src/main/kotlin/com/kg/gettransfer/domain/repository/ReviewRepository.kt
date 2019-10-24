@@ -9,6 +9,12 @@ interface ReviewRepository {
     var rates: MutableSet<ReviewRate>
 
     suspend fun rateTrip(): Result<Unit>
+
     suspend fun pushComment(): Result<Unit>
+
+    suspend fun checkCachedData()
+
+    suspend fun clearReviewCache()
+
     fun releaseReviewData()
 }

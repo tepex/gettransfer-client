@@ -1,47 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/ivPassenger"
+        android:layout_width="@dimen/view_transport_capacity_small_img_passenger_width"
+        android:layout_height="@dimen/view_transport_capacity_small_img_passenger_height"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_passenger_without_padding" />
+
+    <TextView
+        android:id="@+id/transportType_сountPassengers"
+        style="@style/sf_font_pro_text_regular_black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_marginStart="@dimen/view_transport_capacity_small_text_margin_start"
+        android:textSize="@dimen/view_transport_capacity_small_text_size"
+        app:layout_constraintStart_toEndOf="@+id/ivPassenger"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="x 3" />
 
-        <ImageView
-            android:layout_width="@dimen/view_transport_capacity_small_img_passenger_width"
-            android:layout_height="@dimen/view_transport_capacity_small_img_passenger_height"
-            app:srcCompat="@drawable/ic_passenger_without_padding"/>
+    <ImageView
+        android:id="@+id/ivLuggage"
+        android:layout_width="@dimen/view_transport_capacity_small_img_baggage_width"
+        android:layout_height="@dimen/view_transport_capacity_small_img_baggage_height"
+        android:layout_marginStart="@dimen/view_transport_capacity_small_img_baggage_margin_start"
+        app:srcCompat="@drawable/ic_baggage_small"
+        app:layout_constraintStart_toEndOf="@+id/transportType_сountPassengers"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-            android:id="@+id/transportType_сountPassengers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorTextBlack"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:layout_marginStart="@dimen/view_transport_capacity_small_text_margin_start"
-            android:textSize="@dimen/view_transport_capacity_small_text_size"
-            android:text="x3"/>
+    <TextView
+        android:id="@+id/transportType_сountBaggage"
+        style="@style/sf_font_pro_text_regular_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/view_transport_capacity_small_text_margin_start"
+        android:textSize="@dimen/view_transport_capacity_small_text_size"
+        app:layout_constraintStart_toEndOf="@+id/ivLuggage"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="x 3" />
 
-        <ImageView
-            android:layout_width="@dimen/view_transport_capacity_small_img_baggage_width"
-            android:layout_height="@dimen/view_transport_capacity_small_img_baggage_height"
-            app:srcCompat="@drawable/ic_baggage_small"
-            android:layout_marginStart="@dimen/view_transport_capacity_small_img_baggage_margin_start"/>
-
-        <TextView
-            android:id="@+id/transportType_сountBaggage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/view_transport_capacity_small_text_margin_start"
-            android:textColor="@color/colorTextBlack"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="@dimen/view_transport_capacity_small_text_size"
-            android:text="x3"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

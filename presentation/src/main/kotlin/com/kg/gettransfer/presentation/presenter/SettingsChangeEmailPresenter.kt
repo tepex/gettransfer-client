@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 
 import com.arellomobile.mvp.InjectViewState
 
@@ -11,15 +11,14 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 
-import com.kg.gettransfer.sys.domain.GetSmsResendDelayInteractor
+import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import org.koin.core.inject
 
 @InjectViewState
 class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
-    private val getSmsResendDelay: GetSmsResendDelayInteractor by inject()
-    private val smsResendDelay = getSmsResendDelay().millis
+    private val configsManager: ConfigsManager by inject()
 
     private var newEmail: String? = null
     private var emailCode: String? = null
@@ -31,8 +30,8 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         accountManager.initTempUser()
+        super.onDestroy()
     }
 
     fun setEmail(email: String) {
@@ -47,8 +46,9 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
     }
 
     private fun checkBtnVisibility(correctAmountSymbols: Boolean = false) {
-        viewState.setEnabledBtnChangeEmail(!newEmail.isNullOrEmpty() &&
-                ((!emailCode.isNullOrEmpty() && correctAmountSymbols) || !smsSent))
+        viewState.setEnabledBtnChangeEmail(
+            !newEmail.isNullOrEmpty() && ((!emailCode.isNullOrEmpty() && correctAmountSymbols) || !smsSent)
+        )
     }
 
     fun onResendCodeClicked() {
@@ -72,7 +72,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
             val result = fetchResultOnly { sessionInteractor.getCodeForChangeEmail(it) }
             if (result.error == null && result.model) {
                 viewState.showCodeLayout()
-                viewState.setTimer(smsResendDelay)
+                viewState.setTimer(configsManager.mobile.smsResendDelay.millis)
                 smsSent = true
                 checkBtnVisibility()
             } else {

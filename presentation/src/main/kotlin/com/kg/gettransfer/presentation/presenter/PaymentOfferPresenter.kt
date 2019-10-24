@@ -7,8 +7,6 @@ import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.models.PayPalRequest
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.interactor.PaymentInteractor
 
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
@@ -30,6 +28,8 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
 
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+
 import com.kg.gettransfer.utilities.Analytics
 
 import io.sentry.Sentry
@@ -37,21 +37,15 @@ import io.sentry.Sentry
 import org.koin.core.inject
 
 @InjectViewState
+@Suppress("TooManyFunctions")
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
-
-    companion object {
-        const val PRICE_30 = 0.3
-    }
-
-    private val paymentInteractor: PaymentInteractor by inject()
-    private val orderInteractor: OrderInteractor by inject()
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
     private val profileMapper: ProfileMapper by inject()
+    private val configsManager: ConfigsManager by inject()
 
     private var transfer: Transfer? = null
     private var offer: OfferItem? = null
-    private var isBookNowOffer: Boolean = false
 
     private var url: String? = null
     internal var braintreeToken = ""
@@ -62,40 +56,40 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private lateinit var paymentRequest: PaymentRequestModel
 
+    @Suppress("ComplexMethod")
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
         viewState.blockInterface(false)
         with(paymentInteractor) {
             transfer = selectedTransfer
             offer = selectedOffer
-            offer?.let { isBookNowOffer = offer is BookNowOffer }
         }
         getPaymentRequest()
         with(accountManager) {
             val balance = remoteAccount.partner?.availableMoney?.default
 
-            viewState.setAuthUiVisible(
-                    hasAccount,
-                    profileMapper.toView(remoteProfile),
-                    balance)
+            viewState.setAuthUiVisible(hasAccount, profileMapper.toView(remoteProfile), balance)
         }
         transfer?.let { transfer ->
-            viewState.setToolbarTitle(transfer.map(systemInteractor.transportTypes.map { it.map() }))
+            viewState.setToolbarTitle(transfer.map(configsManager.configs.transportTypes.map { it.map() }))
             transfer.dateRefund?.let { dateRefund ->
-                val commission = systemInteractor.paymentCommission
+                val commission = configsManager.configs.paymentCommission
                 viewState.setCommission(
                     if (commission % 1.0 == 0.0) commission.toInt().toString() else commission.toString(),
                     SystemUtils.formatDateTime(dateRefund)
                 )
             }
         }
-        enablePaymentBtn()
+
         transfer?.paymentPercentages?.let { percentages ->
             offer?.let { offer ->
-                if (isBookNowOffer) viewState.setBookNowOffer((offer as BookNowOffer).map())
-                else viewState.setOffer(offerMapper.toView(offer as Offer), percentages)
+                when (offer) {
+                    is BookNowOffer -> viewState.setBookNowOffer(offer.map())
+                    is Offer        -> viewState.setOffer(offerMapper.toView(offer), percentages)
+                }
             }
         }
+
         if (loginScreenIsShowed) {
             loginScreenIsShowed = false
             if (accountManager.hasData) {
@@ -105,8 +99,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         accountManager.initTempUser()
+        super.onDestroy()
     }
 
     private fun getPaymentRequest() {
@@ -122,18 +116,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     fun setEmail(email: String) {
         accountManager.tempProfile.email = email.trim()
-        enablePaymentBtn()
     }
 
     fun setPhone(phone: String) {
         accountManager.tempProfile.phone = phone.trim()
-        enablePaymentBtn()
-    }
-
-    fun enablePaymentBtn() {
-        with(accountManager.tempProfile) {
-            viewState.enablePayment(!email.isNullOrEmpty() && !phone.isNullOrEmpty())
-        }
     }
 
     private fun getPayment() {
@@ -144,49 +130,52 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            paymentRequest.let {
-                it.gatewayId = selectedPayment
-                when (it.gatewayId) {
-                    PaymentRequestModel.PLATRON -> {
-                        payByCard(it)
-                    }
-                    PaymentRequestModel.PAYPAL -> {
-                        getBraintreeToken()
-                    }
-                    else -> {
-                        payByBalance(it)
-                    }
-                }
-                logEventBeginCheckout()
+            paymentRequest.gatewayId = selectedPayment
+            when (selectedPayment) {
+                PaymentRequestModel.PLATRON -> payByCard(paymentRequest)
+                PaymentRequestModel.PAYPAL  -> getBraintreeToken()
+                else                        -> payByBalance(paymentRequest)
             }
+            logEventBeginCheckout()
         }
     }
 
     private suspend fun payByBalance(paymentModel: PaymentRequestModel) {
         val paymentResult = getPaymentResult(paymentModel)
-        if (paymentResult.error != null) {
-            log.error("get payment error", paymentResult.error!!)
+        val err = paymentResult.error
+        if (err != null) {
+            log.error("get by balance payment error", err)
             router.navigateTo(Screens.PaymentError(paymentRequest.transferId))
-            analytics.logEvent(Analytics.EVENT_MAKE_PAYMENT, Analytics.STATUS, Analytics.RESULT_FAIL)
+            analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         } else {
             router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))
+            analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
+            transfer?.let {
+                val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(it.id) }
+                if (offerPaid.model.first) {
+                    transfer = offerPaid.model.second
+                    paymentInteractor.selectedTransfer = transfer
+                    analytics.EcommercePurchase().sendAnalytics()
+                }
+            }
         }
         viewState.blockInterface(false)
     }
 
     private suspend fun payByCard(paymentModel: PaymentRequestModel) {
         val paymentResult = getPaymentResult(paymentModel)
-        if (paymentResult.error != null) {
-            log.error("get payment error", paymentResult.error!!)
-            viewState.setError(paymentResult.error!!)
+        val err = paymentResult.error
+        if (err != null) {
+            log.error("get by card payment error", err)
+            viewState.setError(err)
         } else {
-            url = paymentResult.model?.url
-            navigateToPayment()
+            url = paymentResult.model.url
+            router.navigateTo(Screens.Payment(url, paymentRequest.percentage, selectedPayment))
         }
         viewState.blockInterface(false)
     }
 
-    private suspend fun getPaymentResult(paymentModel: PaymentRequestModel): Result<Payment?> =
+    private suspend fun getPaymentResult(paymentModel: PaymentRequestModel): Result<Payment> =
         utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentModel)) }
 
     fun onPaymentClicked() {
@@ -199,42 +188,35 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             utils.launchSuspend { pushAccount() }
         } else {
             viewState.showFieldError(error.stringId)
+            viewState.highLightError(error)
         }
     }
 
-    private suspend fun pushAccount() =
-        fetchResultOnly { accountManager.putAccount() }
-            .run {
-                when {
-                    error?.isAccountExistError() ?: false -> onAccountExists(error!!.checkExistedAccountField())
-                    error != null -> viewState.setError(error!!)
-                    else -> getPayment()
-                }
-            }
+    private suspend fun pushAccount() {
+        val result = fetchResultOnly { accountManager.putAccount() }
+        result.error?.let { err ->
+            if (err.isAccountExistError()) onAccountExists(err.checkExistedAccountField()) else viewState.setError(err)
+        } ?: getPayment()
+    }
 
     private fun onAccountExists(existedField: String) {
         loginScreenIsShowed = true
-        redirectToLogin(
-            with(accountManager) {
-                when (existedField) {
-                    ApiException.EMAIL_EXISTED -> tempProfile.email
-                    ApiException.PHONE_EXISTED -> tempProfile.phone
-                    else -> throw UnsupportedOperationException()
-                }!!
-            }
-        )
-    }
-
-    private fun redirectToLogin(existedEmailOrPhone: String) {
-        router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, existedEmailOrPhone))
+        val phoneOrEmail = when (existedField) {
+            ApiException.EMAIL_EXISTED -> accountManager.tempProfile.email
+            ApiException.PHONE_EXISTED -> accountManager.tempProfile.phone
+            else                       -> throw UnsupportedOperationException()
+        }
+        phoneOrEmail?.let { router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, it)) }
     }
 
     private fun getBraintreeToken() {
         utils.launchSuspend {
             val tokenResult = utils.asyncAwait { paymentInteractor.getBrainTreeToken() }
             if (tokenResult.error != null) {
-                viewState.setError(tokenResult.error!!)
-                viewState.blockInterface(false)
+                tokenResult.error?.let { err ->
+                    viewState.setError(err)
+                    viewState.blockInterface(false)
+                }
             } else {
                 braintreeToken = tokenResult.isSuccess()?.token ?: ""
                 createNewPayment()
@@ -243,13 +225,15 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun createNewPayment() {
-        val result = getPaymentResult(paymentRequest)
+        val result = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
         if (result.error != null) {
-            log.error("create new payment error", result.error!!)
-            viewState.setError(result.error!!)
-            viewState.blockInterface(false)
+            result.error?.let { err ->
+                log.error("create new payment error", err)
+                viewState.setError(err)
+                viewState.blockInterface(false)
+            }
         } else {
-            val params = result.model?.params
+            val params = result.model.params
             paymentId = params?.paymentId ?: 0L
             setupPaypal(params?.amount, params?.currency)
         }
@@ -271,42 +255,34 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     fun confirmPayment(nonce: String) {
         viewState.blockInterface(true, true)
-        transfer?.let {
+        transfer?.let { transfer ->
             router.navigateTo(
                 Screens.PayPalConnection(
                     paymentId,
                     nonce,
-                    it.id,
-                    if (!isBookNowOffer) (offer as Offer).id else null,
+                    transfer.id,
+                    offer?.let { if (it is Offer) it.id else null },
                     paymentRequest.percentage,
-                    if (isBookNowOffer) (offer as BookNowOffer).transportType.id.name.toLowerCase() else null
+                    offer?.let { if (it is BookNowOffer) it.transportType.id.name.toLowerCase() else null }
                 )
             )
         }
     }
 
-    private fun navigateToPayment() {
-        router.navigateTo(
-            Screens.Payment(
-                url,
-                paymentRequest.percentage,
-                selectedPayment
-            )
-        )
-    }
-
+    @Suppress("ComplexMethod")
     private fun logEventBeginCheckout() {
         val offerType = if (offer != null) Analytics.REGULAR else Analytics.NOW
         val requestType = when {
-            transfer?.duration != null -> Analytics.TRIP_HOURLY
+            transfer?.duration != null        -> Analytics.TRIP_HOURLY
             transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
-            else -> Analytics.TRIP_DESTINATION
+            else                              -> Analytics.TRIP_DESTINATION
         }
-        var price = 0.0
-        offer?.let {
-            price = if (!isBookNowOffer) (it as Offer).price.amount
-            else (it as BookNowOffer).amount
-        }
+        var price = offer?.let { offer ->
+            when (offer) {
+                is Offer        -> offer.price.amount
+                is BookNowOffer -> offer.amount
+            }
+        } ?: 0.0
         if (paymentRequest.percentage == OfferModel.PRICE_30) price *= PRICE_30
 
         val beginCheckout = analytics.BeginCheckout(
@@ -331,4 +307,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     fun onAgreementClicked() = router.navigateTo(Screens.LicenceAgree)
+
+    companion object {
+        const val PRICE_30 = 0.3
+    }
 }

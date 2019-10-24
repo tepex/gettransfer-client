@@ -1,22 +1,26 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.annotation.TargetApi
+import android.graphics.Bitmap
 
 import android.net.Uri
 
 import android.os.Build
 import android.os.Bundle
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
+import android.webkit.*
 
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import androidx.webkit.WebViewCompat
+import androidx.webkit.WebViewFeature
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
 
 import com.kg.gettransfer.presentation.presenter.PaymentPresenter
@@ -24,6 +28,9 @@ import com.kg.gettransfer.presentation.presenter.PaymentPresenter
 import com.kg.gettransfer.presentation.view.PaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
+import kotlinx.android.synthetic.main.activity_payment.spinner
+import org.jetbrains.anko.toast
+import timber.log.Timber
 
 class PaymentActivity: BaseActivity(), PaymentView {
     companion object {
@@ -34,6 +41,8 @@ class PaymentActivity: BaseActivity(), PaymentView {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentPresenter
+
+    private var safeBrowsingIsInitialized: Boolean = false
 
     override fun getPresenter(): PaymentPresenter = presenter
 
@@ -64,9 +73,62 @@ class PaymentActivity: BaseActivity(), PaymentView {
                 handleUri(Uri.parse(url))
                 return false
             }
-        }
 
+            override fun onSafeBrowsingHit(view: WebView?, request: WebResourceRequest?, threatType: Int, callback: SafeBrowsingResponse?) {
+                // The "true" argument indicates that your app reports incidents like
+                // this one to Safe Browsing.
+                if (WebViewFeature.isFeatureSupported(WebViewFeature.SAFE_BROWSING_RESPONSE_BACK_TO_SAFETY)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                        callback?.backToSafety(true)
+                        toast("Unsafe web page blocked.")
+                    }
+                }
+            }
+
+            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                showSpinner()
+                super.onPageStarted(view, url, favicon)
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                hideSpinner()
+                super.onPageFinished(view, url)
+            }
+        }
+        safeBrowsingIsInitialized = false
+        checkSafeBrowsing()
         webView.loadUrl(intent.getStringExtra(PaymentView.EXTRA_URL))
+    }
+
+    private fun hideSpinner() {
+        spinner.clearAnimation()
+        spinner.isVisible = false
+    }
+
+    private fun showSpinner() {
+        val anim = RotateAnimation(
+            0f,
+            360f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f)
+
+        anim.duration = 1500
+        anim.repeatCount = Animation.INFINITE
+        spinner.isVisible = true
+        spinner.startAnimation(anim)
+    }
+
+    private fun checkSafeBrowsing() {
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.START_SAFE_BROWSING)) {
+            WebViewCompat.startSafeBrowsing(this, { success ->
+                safeBrowsingIsInitialized = true
+                if (!success) {
+                    Timber.e("Unable to initialize Safe Browsing!")
+                }
+            })
+        }
     }
 
     private fun handleUri(uri: Uri?) {

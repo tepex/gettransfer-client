@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="wrap_content"
+	xmlns:tools="http://schemas.android.com/tools">
 
-	<android.support.constraint.ConstraintLayout
+	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-		<android.support.v7.widget.AppCompatImageView
+		<androidx.appcompat.widget.AppCompatImageView
 			android:id="@+id/ivClose"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -19,9 +20,9 @@
 			app:srcCompat="@drawable/ic_close_x"
 			android:background="?attr/selectableItemBackgroundBorderless"/>
 
-		<com.willy.ratingbar.ScaleRatingBar
+		<RatingBar
 			android:id="@+id/commonRate"
-			android:layout_width="match_parent"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_horizontal"
 			android:layout_marginEnd="32dp"
@@ -31,13 +32,13 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/ivClose"
-			app:srb_minimumStars="1"
-			app:srb_clearRatingEnabled="false"
-			app:srb_drawableEmpty="@drawable/ic_star_empty"
-			app:srb_drawableFilled="@drawable/ic_star_filled"
-			app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
-			app:srb_starWidth="@dimen/rating_bar_stars_enabled_width"
-			app:srb_stepSize="1" />
+			android:numStars="@integer/stars_number"
+			android:stepSize="1"
+			android:scaleX="1.5"
+			android:scaleY="1.5"
+			android:transformPivotX="45dp"
+			android:transformPivotY="0dp"
+			style="@style/CustomRatingBar" />
 
 		<TextView
 			android:id="@+id/tvRateTitle"
@@ -65,7 +66,8 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/tvRateTitle"
-			style="@style/transfer_details_secondary_text" />
+			style="@style/sf_font_pro_text_regular_grey"
+			android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"/>
 
 
 		<com.kg.gettransfer.presentation.ui.custom.RateField
@@ -80,7 +82,8 @@
 			app:layout_constraintTop_toBottomOf="@+id/tvRateDesc"
 			app:rate_sub_title="@string/LNG_PAYMENT_PROFFESSIONALISM"
 			app:rate_title="@string/LNG_DRIVER"
-			android:visibility="gone"/>
+			android:visibility="gone"
+			tools:visibility="visible"/>
 
 		<com.kg.gettransfer.presentation.ui.custom.RateField
 			android:id="@+id/punctualityRate"
@@ -94,7 +97,8 @@
 			app:layout_constraintTop_toBottomOf="@+id/driverRate"
 			app:rate_sub_title="@string/LNG_PAYMENT_ARRIVAL_TIME"
 			app:rate_title="@string/LNG_PAYMENT_PUNCTUALITY"
-			android:visibility="gone"/>
+			android:visibility="gone"
+			tools:visibility="visible"/>
 
 		<com.kg.gettransfer.presentation.ui.custom.RateField
 			android:id="@+id/vehicleRate"
@@ -108,7 +112,8 @@
 			app:layout_constraintTop_toBottomOf="@+id/punctualityRate"
 			app:rate_sub_title="@string/LNG_PAYMENT_CAR_CONDITIONAL"
 			app:rate_title="@string/LNG_VEHICLE_RATING"
-			android:visibility="gone"/>
+			android:visibility="gone"
+			tools:visibility="visible"/>
 
 		<TextView
 			android:id="@+id/tvCommentTitle"
@@ -137,15 +142,17 @@
 			android:paddingTop="16dp"
 			android:paddingBottom="18dp"
 			android:hint="@string/LNG_PAYMENT_YOUR_COMMENT"
-			android:textColorHint="@color/colorGrey"
+			android:textColorHint="@color/color_gtr_grey"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/tvCommentTitle"
-			style="@style/transfer_details_secondary_text"
+			style="@style/sf_font_pro_text_regular_grey"
+			android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"
 			android:maxLines="1"
-			android:ellipsize="end"/>
+			android:ellipsize="end"
+			android:inputType="textNoSuggestions" />
 
-		<android.support.design.button.MaterialButton
+		<com.google.android.material.button.MaterialButton
 			android:id="@+id/btnSend"
 			android:layout_width="match_parent"
 			android:layout_height="56dp"
@@ -162,6 +169,7 @@
 			app:backgroundTint="@color/color_gtr_green"
 			app:cornerRadius="22dp"
 			app:icon="@drawable/ic_check_circle"
+			app:iconTint="@null"
 			app:iconGravity="textStart"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -181,6 +189,6 @@
 			android:indeterminateDuration="1200"
 			android:visibility="gone"/>
 
-	</android.support.constraint.ConstraintLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
-</android.support.v4.widget.NestedScrollView>
+</androidx.core.widget.NestedScrollView>

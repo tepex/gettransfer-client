@@ -1,53 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:background="@color/toolbar_bg">
 
-    <android.support.v4.widget.NestedScrollView
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:fitsSystemWindows="true">
 
-        <LinearLayout
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_nav_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/fragment_currencies_padding_start_end"
-            android:paddingEnd="@dimen/fragment_currencies_padding_start_end"
-            android:paddingBottom="@dimen/fragment_currencies_padding_bottom"
-            android:orientation="vertical">
+            android:minHeight="?android:attr/actionBarSize"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/fragment_currencies_text_popular_padding_top_bottom"
-                android:paddingBottom="@dimen/fragment_currencies_text_popular_padding_top_bottom"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:textColor="@color/color_gtr_grey"
-                android:textSize="@dimen/fragment_currencies_title_text_size"
-                android:text="@string/LNG_CURRENCIES_POPULAR"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvPopularCurrencies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/fragment_currencies_text_all_padding_top"
-                android:paddingBottom="@dimen/fragment_currencies_text_all_padding_bottom"
-                android:fontFamily="@font/sf_pro_text_regular"
-                android:textColor="@color/color_gtr_grey"
-                android:textSize="@dimen/fragment_currencies_title_text_size"
-                android:text="@string/LNG_CURRENCIES_ALL"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvAllCurrencies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
-</FrameLayout>
+    <include
+        layout="@layout/layout_select_currency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

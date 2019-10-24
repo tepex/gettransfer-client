@@ -4,20 +4,12 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.google.android.gms.maps.model.LatLngBounds
 
-import com.kg.gettransfer.domain.interactor.OrderInteractor
-
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
 
-import org.koin.core.inject
-
-import timber.log.Timber
-
 @InjectViewState
 class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
-    private val orderInteractor: OrderInteractor by inject()
 
     /* Cache. @TODO */
     private var lastRequest: String? = null
@@ -30,12 +22,12 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
             return
         }
         if (prediction == lastRequest && lastResult != null) {
-            Timber.d("------ From cache $lastRequest")
+            log.debug("------ From cache $lastRequest")
             viewState.setAddressList(lastResult!!)
             return
         }
 
-        Timber.d("------ request list for prediction $prediction")
+        log.debug("------ request list for prediction $prediction")
         /*
         var latLonPair: Pair<Point, Point>? = null
         mBounds?.let {
@@ -49,11 +41,11 @@ class SearchAddressPresenter : BasePresenter<SearchAddressView>() {
             fetchData(checkLoginError = false) {
                 //orderInteractor.getAutocompletePredictions(prediction, latLonPair)
                 orderInteractor.getAutoCompletePredictions(prediction)
+            }?.let {
+                lastResult = it
+                lastRequest = prediction
+                viewState.setAddressList(it)
             }
-                    ?.let {
-                        lastResult = it
-                        lastRequest = prediction
-                        viewState.setAddressList(it) }
         }
     }
 

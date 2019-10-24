@@ -1,22 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:padding="8dp"
-    android:background="@drawable/selector_address_item"
-    android:layout_height="wrap_content">
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin4"
+    app:cardElevation="@dimen/popular_place_elevation"
+    app:cardCornerRadius="@dimen/popular_place_radius"
+    app:contentPadding="@dimen/popular_place_padding"
+    android:background="?android:attr/selectableItemBackground">
 
-    <ImageView
-        android:id="@+id/popular_icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
-
-    <TextView
-        android:id="@+id/popular_title"
-        android:layout_gravity="center_vertical"
-        style="@style/address_item"
-        android:paddingTop="0dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/popular_place_margin">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/popular_icon"
+            android:layout_width="@dimen/popular_place_icon_size"
+            android:layout_height="@dimen/popular_place_icon_size"
+            app:srcCompat="@drawable/btn_pin_location" />
+
+        <TextView
+            android:id="@+id/popular_title"
+            android:layout_gravity="center_vertical"
+            style="@style/popular_place_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/popular_place_title_margin_end"
+            android:layout_marginStart="@dimen/popular_place_title_margin_start"
+            tools:text="@string/LNG_SELECT_POINT_MAP" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

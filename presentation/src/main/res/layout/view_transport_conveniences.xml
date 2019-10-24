@@ -1,67 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:paddingEnd="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/activity_transfer_details_field_height"
+    android:paddingStart="@dimen/margin16"
+    android:paddingEnd="@dimen/margin16">
 
-    <com.kg.gettransfer.presentation.ui.custom.TransferDetailsField
-            android:id="@+id/conveniences_field"
-            tools:title_transfer_details="Business class"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/conveniences_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:textColor="@color/color_gtr_grey"
+        android:textSize="@dimen/activity_transfer_details_text_size_16sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider_transfer_details_field"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/LNG_TRANSPORT_BUSINESS" />
 
-    <LinearLayout
-            android:id="@+id/conveniences_items"
-            android:orientation="horizontal"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+    <TextView
+        android:id="@+id/carColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_transfer_details_car_color_margin_end"
+        android:elevation="@dimen/activity_transfer_details_car_color_elevation"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:paddingStart="@dimen/activity_transfer_details_car_color_horizontal_padding"
+        android:paddingTop="@dimen/activity_transfer_details_car_color_top_padding"
+        android:paddingEnd="@dimen/activity_transfer_details_car_color_horizontal_padding"
+        android:paddingBottom="@dimen/activity_transfer_details_car_color_bottom_padding"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/activity_transfer_details_car_color_text_size"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFreeWiFi"
+        app:layout_constraintEnd_toStartOf="@+id/imgFreeWiFi"
+        app:layout_constraintTop_toTopOf="@+id/imgFreeWiFi"
+        tools:text="@string/LNG_COLOR_BLUE"
+        tools:visibility="visible" />
 
-        <ImageView
-                android:id="@+id/carColor"
-                android:layout_width="@dimen/view_transfer_details_about_transport_car_color_image_size"
-                android:layout_height="@dimen/view_transfer_details_about_transport_car_color_image_size"
-                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-                android:visibility="gone"
-                app:srcCompat="@drawable/ic_circle_car_color_indicator"
-                android:background="@drawable/border_car_color_indicator"
+    <ImageView
+        android:id="@+id/imgFreeWiFi"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:layout_marginEnd="8dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/imgCharge"
+        app:layout_constraintEnd_toStartOf="@+id/imgCharge"
+        app:layout_constraintTop_toTopOf="@+id/imgCharge"
+        app:srcCompat="@drawable/ic_wifi"
+        tools:visibility="visible" />
 
-                tools:visibility="visible"/>
+    <ImageView
+        android:id="@+id/imgCharge"
+        android:layout_width="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFreeWater"
+        app:layout_constraintEnd_toStartOf="@+id/imgFreeWater"
+        app:layout_constraintTop_toTopOf="@+id/imgFreeWater"
+        app:srcCompat="@drawable/ic_charge"
+        tools:visibility="visible" />
 
-        <ImageView
-                android:id="@+id/imgFreeWiFi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-                app:srcCompat="@drawable/ic_wifi"
-                android:visibility="visible"
+    <ImageView
+        android:id="@+id/imgFreeWater"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/conveniences_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/conveniences_field"
+        app:srcCompat="@drawable/ic_free_water"
+        tools:visibility="visible" />
 
-                tools:visibility="visible"/>
+    <View
+        android:id="@+id/divider_transfer_details_field"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_transfer_details_horizontal_divider_new"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
-                android:id="@+id/imgCharge"
-                android:layout_width="22dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-                app:srcCompat="@drawable/ic_charge"
-                android:visibility="gone"
-
-                tools:visibility="visible"/>
-
-        <ImageView
-                android:id="@+id/imgFreeWater"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_transfer_details_margin_start_end_16dp"
-                app:srcCompat="@drawable/ic_free_water"
-                android:visibility="gone"
-
-                tools:visibility="visible"/>
-
-
-    </LinearLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

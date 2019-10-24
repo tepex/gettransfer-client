@@ -2,13 +2,15 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v4.app.FragmentManager
+import androidx.annotation.CallSuper
+import androidx.fragment.app.FragmentManager
 import android.view.View
+
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
+
 import kotlinx.android.synthetic.main.view_bottomsheet_dialog.*
 
 /**
@@ -39,6 +41,14 @@ class BottomSheetDialog : BaseBottomSheetDialogFragment() {
     var isShowCloseButton = false
     var isShowOkButton = true
 
+    override fun onStart() {
+        super.onStart()
+
+        if (dialog == null) return
+
+        dialog?.window?.setWindowAnimations(R.style.dialog_animation_fade)
+    }
+
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,12 +61,12 @@ class BottomSheetDialog : BaseBottomSheetDialogFragment() {
 
         bottomSheetDialogImage.setImageResource(imageId)
 
-        bottomSheetDialogOkButton.setThrottledClickListener(500L) {
+        bottomSheetDialogOkButton.setThrottledClickListener(THROTTLE_DELAY) {
             onClickOkButton?.invoke()
             dismiss()
         }
 
-        bottomSheetDialogCancelButton.setThrottledClickListener(500L) {
+        bottomSheetDialogCancelButton.setThrottledClickListener(THROTTLE_DELAY) {
             onClickCancelButton?.invoke()
             dismiss()
         }
@@ -73,18 +83,19 @@ class BottomSheetDialog : BaseBottomSheetDialogFragment() {
     }
 
     @CallSuper
-    fun show(manager: FragmentManager?) {
+    fun show(manager: FragmentManager) {
         super.show(manager, TAG)
     }
 
     @CallSuper
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         onDismissCallBack?.invoke()
     }
 
     companion object {
         const val TAG = ".presentation.ui.BottomSheetDialog"
+        const val THROTTLE_DELAY = 500L
 
         fun newInstance() = BottomSheetDialog()
     }

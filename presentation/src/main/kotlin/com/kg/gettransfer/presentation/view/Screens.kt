@@ -6,46 +6,32 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.FileProvider
+import androidx.fragment.app.Fragment
 
-import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.BuildConfig
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.ui.*
-import kotlinx.serialization.json.JSON
+import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
+import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
 
-import java.io.File
+import kotlinx.serialization.json.JSON
 
 import org.jetbrains.anko.toast
 
 import ru.terrakok.cicerone.android.support.SupportAppScreen
-import java.lang.IllegalArgumentException
 
 object Screens {
-    @JvmField val NOT_USED = -1
+    const val NOT_USED = -1
 
-    @JvmField val MAIN = "main"
-    @JvmField val MAIN_MENU = "show_menu"
-    @JvmField val OFFERS = "offers"
-    @JvmField val DETAILS = "details"
+    const val OFFERS = "offers"
+    const val DETAILS = "details"
 
-    @JvmField val CARRIER_MODE = "carrier_mode"
-    @JvmField val PASSENGER_MODE = "passenger_mode"
+    const val PASSENGER_MODE = "passenger_mode"
 
-    @JvmField val REG_CARRIER = "registration_carrier"
-    @JvmField val CLOSE_AFTER_LOGIN = "close_after_login"
+    const val CLOSE_AFTER_LOGIN = "close_after_login"
 
-    @JvmField val MAIN_WITH_MAP = "main_with_map"
-    @JvmField val MAIN_WITHOUT_MAP = "main_without_map"
-
-    @JvmField val CARRIER_TRIPS_TYPE_VIEW_CALENDAR = "carrier_trips_type_calendar"
-    @JvmField val CARRIER_TRIPS_TYPE_VIEW_LIST = "carrier_trips_type_list"
-
-    @JvmField val PAYMENT_OFFER = "payment_offer"
-    @JvmField val RATE_TRANSFER = "rate_transfer"
-    const val RETURN_MAIN = "return"
+    const val PAYMENT_OFFER = "payment_offer"
+    const val RATE_TRANSFER = "rate_transfer"
 
     private const val EMAIL_DATA = "mailto:"
     private const val DIAL_SCHEME = "tel"
@@ -55,85 +41,60 @@ object Screens {
 
     private var canSendEmail: Boolean? = null
 
-    data class MainPassenger(
-        val showDrawer: Boolean = false
-    ) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
-            .apply {
-                putExtra(MAIN_MENU, showDrawer)
-            }
+    class MainPassenger : SupportAppScreen() {
+
+        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java)
     }
 
     data class MainPassengerToRateTransfer(
-            val transferId: Long,
-            val rate: Int
+        val transferId: Long,
+        val rate: Int
     ) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, MainActivity::class.java)
-            .apply {
-                putExtra(MainView.EXTRA_RATE_TRANSFER_ID, transferId)
-                putExtra(MainView.EXTRA_RATE_VALUE, rate)
-            }
-    }
 
-    data class Carrier(val forIntent: String = CARRIER_MODE) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) =
-            when (forIntent) {
-                CARRIER_MODE -> Intent(context, CarrierTripsMainActivity()::class.java)
-                REG_CARRIER -> Intent(context, WebPageActivity()::class.java).apply {
-                    putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_REG_CARRIER)
-                }
-                else -> throw IllegalArgumentException("Unknown intent key when try to navigate to Carrier mode in ${this.javaClass.name}")
-            }
-    }
-
-    object ShareLogs : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, LogsActivity::class.java)
-    }
-
-    object Settings : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SettingsActivity::class.java)
+        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java).apply {
+            putExtra(EXTRA_RATE_TRANSFER_ID, transferId)
+            putExtra(EXTRA_RATE_VALUE, rate)
+        }
     }
 
     object Requests : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, RequestsActivity::class.java)
+
+        override fun getActivityIntent(context: Context?) = Intent(context, RequestsPagerActivity::class.java)
     }
 
     object LicenceAgree : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
             putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_LICENSE)
         }
     }
 
     object RestorePassword : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
             putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_RESTORE_PASS)
         }
     }
 
-    object CarrierTransfers : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
-            putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_TRANSFERS)
-        }
-    }
-
     object CreateOrder : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
     }
 
     data class About(val isOnboardingShowed: Boolean) : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, AboutActivity::class.java).apply {
             putExtra(AboutView.EXTRA_OPEN_MAIN, isOnboardingShowed)
         }
     }
 
     open class MainLogin(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
-                    LogInView.Params(
-                        nextScreen,
-                        emailOrPhone = emailOrPhone ?: "")
+                    LogInView.Params(nextScreen, emailOrPhone = emailOrPhone ?: "")
                 )
             )
         }
@@ -156,24 +117,25 @@ object Screens {
         }
     }*/
 
-    open class AuthorizationPager(private val params: String) :
-        SupportAppScreen() {
+    open class AuthorizationPager(private val params: String) : SupportAppScreen() {
+
         override fun getFragment(): Fragment = AuthorizationPagerFragment().apply {
-            arguments = Bundle().apply {
-                putString(LogInView.EXTRA_PARAMS, params)
-            }
+            arguments = Bundle().apply { putString(LogInView.EXTRA_PARAMS, params) }
         }
     }
 
-    open class ProfileSettings() : SupportAppScreen() {
+    open class ProfileSettings : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, ProfileSettingsActivity::class.java)
     }
 
-    open class ChangeEmail() : SupportAppScreen() {
+    open class ChangeEmail : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangeEmailActivity::class.java)
     }
 
-    open class ChangePassword() : SupportAppScreen() {
+    open class ChangePassword : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangePasswordActivity::class.java)
     }
 
@@ -181,88 +143,79 @@ object Screens {
         private val params: LogInView.Params,
         private val isPhone: Boolean
     ) : SupportAppScreen() {
+
         override fun getFragment() = SmsCodeFragment.newInstance().apply {
             arguments = Bundle().apply {
-                putString(
-                    LogInView.EXTRA_PARAMS,
-                    JSON.stringify(LogInView.Params.serializer(), params)
-                )
+                putString(LogInView.EXTRA_PARAMS, JSON.stringify(LogInView.Params.serializer(), params))
                 putBoolean(SmsCodeFragment.EXTERNAL_IS_PHONE, isPhone)
             }
         }
     }
 
     data class LoginToGetOffers(val transferId: Long, val email: String?) : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
-                    LogInView.Params(
-                        Screens.OFFERS,
-                        transferId,
-                        emailOrPhone = email ?: "")
+                    LogInView.Params(Screens.OFFERS, transferId, emailOrPhone = email ?: "")
                 )
             )
         }
     }
 
     data class LoginToShowDetails(val transferId: Long) : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
-                    LogInView.Params(
-                        Screens.DETAILS,
-                        transferId)
+                    LogInView.Params(Screens.DETAILS, transferId)
                 )
             )
         }
     }
 
     data class LoginToPaymentOffer(val transferId: Long, val offerId: Long?) : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
-                    LogInView.Params(
-                        Screens.PAYMENT_OFFER,
-                        transferId,
-                        offerId = offerId ?: 0L)
+                    LogInView.Params(Screens.PAYMENT_OFFER, transferId, offerId = offerId ?: 0L)
                 )
             )
         }
     }
 
     data class LoginToRateTransfer(val transferId: Long, val rate: Int) : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
-                    LogInView.Params(
-                        Screens.RATE_TRANSFER,
-                        transferId,
-                        rate = rate)
+                    LogInView.Params(Screens.RATE_TRANSFER, transferId, rate = rate)
                 )
             )
         }
     }
 
+/*
     data class FindAddress(
         val from: String,
         val to: String,
         val isClickTo: Boolean?,
-        val bounds: LatLngBounds,
         val returnMain: Boolean = false
     ) :
         SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SearchActivity::class.java).apply {
+        override fun getActivityIntent(context: Context?) = Intent(context, SearchFragment::class.java).apply {
             putExtra(SearchView.EXTRA_ADDRESS_FROM, from)
             putExtra(SearchView.EXTRA_ADDRESS_TO, to)
-            putExtra(SearchView.EXTRA_BOUNDS, bounds)
             putExtra(RETURN_MAIN, returnMain)
             isClickTo?.let { putExtra(SearchView.EXTRA_IS_CLICK_TO, it) }
         }
     }
+*/
 
     data class Offers(val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, OffersActivity::class.java).apply {
@@ -276,27 +229,18 @@ object Screens {
         }
     }
 
-    data class Chat(val transferId: Long, val tripId: Long? = null) : SupportAppScreen() {
+    data class Chat(val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, ChatActivity::class.java).apply {
             putExtra(ChatView.EXTRA_TRANSFER_ID, transferId)
-            tripId?.let { putExtra(ChatView.EXTRA_TRIP_ID, it) }
         }
-    }
-
-    data class TripDetails(val tripId: Long, val transferId: Long) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) =
-            Intent(context, CarrierTripDetailsActivity::class.java).apply {
-                putExtra(CarrierTripDetailsView.EXTRA_TRIP_ID, tripId)
-                putExtra(CarrierTripDetailsView.EXTRA_TRANSFER_ID, transferId)
-            }
     }
 
     data class Payment(
         val url: String?,
         val percentage: Int,
         val paymentType: String
-    ) :
-        SupportAppScreen() {
+    ) : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentActivity::class.java).apply {
             putExtra(PaymentView.EXTRA_URL, url)
             putExtra(PaymentView.EXTRA_PERCENTAGE, percentage)
@@ -331,9 +275,12 @@ object Screens {
     }
 
     data class SendEmail(
-        val emailCarrier: String?, val logsFile: File?,
-        val transferId: Long?, val userEmail: String?
+        val emailCarrier: String?,
+        val transferId: Long?,
+        val userEmail: String?
     ) : SupportAppScreen() {
+
+        @Suppress("UnsafeCallOnNullableType")
         override fun getActivityIntent(context: Context?): Intent? {
             val emailSelectorIntent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse(EMAIL_DATA)
@@ -341,33 +288,27 @@ object Screens {
 
             val emailIntent = Intent(Intent.ACTION_SEND).apply {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                if (emailCarrier != null)
+                if (emailCarrier != null) {
                     putExtra(Intent.EXTRA_EMAIL, arrayOf(emailCarrier))
-                else putExtra(Intent.EXTRA_EMAIL, arrayOf(context!!.getString(R.string.email_support)))
+                } else {
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf(context!!.getString(R.string.email_support)))
+                }
 
-                val subject = context?.getString(R.string.LNG_EMAIL_SUBJECT)
-                    .plus(" ${transferId ?: ""}")
+                val subject = context?.getString(R.string.LNG_EMAIL_SUBJECT).plus(" ${transferId ?: ""}")
 
                 putExtra(Intent.EXTRA_SUBJECT, subject)
                 putExtra(Intent.EXTRA_TEXT, createSignature())
 
                 selector = emailSelectorIntent
-
-                logsFile?.let {
-                    putExtra(
-                        Intent.EXTRA_STREAM,
-                        FileProvider.getUriForFile(context!!, context.getString(R.string.file_provider_authority), it)
-                    )
-                }
             }
-            return if (checkEmailIntent(context!!, emailIntent)) Intent.createChooser(
-                emailIntent,
-                context.getString(R.string.LNG_SEND_EMAIL)
-            )
-            else Intent()
+            return if (checkEmailIntent(context!!, emailIntent)) {
+                Intent.createChooser(emailIntent, context.getString(R.string.LNG_SEND_EMAIL))
+            } else {
+                Intent()
+            }
         }
 
-        private fun createSignature(): String =
+        private fun createSignature() =
             NEW_LINE.plus(UNDERSCORE)
                 .plus(UNDERSCORE).plus(NEW_LINE)
                 .plus(Build.DEVICE).plus(" ")
@@ -378,18 +319,17 @@ object Screens {
                 .plus(userEmail ?: "")
     }
 
-    class Share() : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?): Intent {
-            return Intent(Intent.ACTION_SEND).apply {
-                putExtra(
-                    Intent.EXTRA_TEXT,
-                    context?.getString(
-                        R.string.LNG_SHARE_TEXT,
-                        "https://play.google.com/store/apps/details?id=com.gettransfer"
-                    )
+    class Share : SupportAppScreen() {
+
+        override fun getActivityIntent(context: Context?) = Intent(Intent.ACTION_SEND).apply {
+            putExtra(
+                Intent.EXTRA_TEXT,
+                context?.getString(
+                    R.string.LNG_SHARE_TEXT,
+                    "https://play.google.com/store/apps/details?id=com.gettransfer"
                 )
-                type = "text/plain"
-            }
+            )
+            type = "text/plain"
         }
     }
 
@@ -398,10 +338,15 @@ object Screens {
             Intent(Intent.ACTION_DIAL, Uri.fromParts(DIAL_SCHEME, phoneCarrier, null))
     }
 
+    @Suppress("UnsafeCallOnNullableType")
     private fun checkEmailIntent(context: Context, intent: Intent): Boolean {
-        if (canSendEmail == null) canSendEmail =
-            context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isNotEmpty()
-        if (!canSendEmail!!) context.toast(context.getString(R.string.LNG_NO_EMAIL_APPS))
+        if (canSendEmail == null) {
+            canSendEmail =
+                context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).isNotEmpty()
+        }
+        if (!canSendEmail!!) {
+            context.toast(context.getString(R.string.LNG_NO_EMAIL_APPS))
+        }
         return canSendEmail!!
     }
 
@@ -413,6 +358,7 @@ object Screens {
         val percentage: Int,
         val bookNowTransportId: String?
     ) : SupportAppScreen() {
+
         override fun getActivityIntent(context: Context?) =
             Intent(context, PaypalConnectionActivity::class.java).apply {
                 putExtra(PaypalConnectionView.EXTRA_PAYMENT_ID, paymentId)
@@ -422,9 +368,5 @@ object Screens {
                 putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
                 putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
             }
-    }
-
-    object Support : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SupportActivity::class.java)
     }
 }

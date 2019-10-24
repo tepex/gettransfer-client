@@ -6,12 +6,13 @@ import com.kg.gettransfer.domain.model.TransferNew
 
 import com.kg.gettransfer.domain.repository.TransferRepository
 
+@Suppress("TooManyFunctions")
 class TransferInteractor(private val repository: TransferRepository) {
 
     suspend fun createTransfer(transferNew: TransferNew) = repository.createTransfer(transferNew)
 
-    suspend fun getTransfer(id: Long, fromCache: Boolean = false, role: String = "passenger") =
-        if (fromCache) repository.getTransferCached(id, role) else repository.getTransfer(id, role)
+    suspend fun getTransfer(id: Long, fromCache: Boolean = false) =
+        if (fromCache) repository.getTransferCached(id) else repository.getTransfer(id)
 
     suspend fun cancelTransfer(id: Long, reason: String) = repository.cancelTransfer(id, reason)
 
@@ -27,4 +28,14 @@ class TransferInteractor(private val repository: TransferRepository) {
     }
 
     suspend fun downloadVoucher(transferId: Long) = repository.downloadVoucher(transferId)
+
+    suspend fun sendAnalytics(transferId: Long, role: String) = repository.sendAnalytics(transferId, role)
+
+    suspend fun isOfferPaid(transferId: Long): Result<Pair<Boolean, Transfer?>> {
+        getTransfer(transferId).isSuccess()?.let { transfer ->
+            val isOfferPaid = transfer.status == Transfer.Status.PERFORMED || transfer.paidPercentage > 0
+            return Result(isOfferPaid to transfer)
+        }
+        return Result(false to null)
+    }
 }

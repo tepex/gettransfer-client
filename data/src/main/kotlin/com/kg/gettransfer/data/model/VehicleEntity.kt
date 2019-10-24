@@ -9,6 +9,7 @@ import kotlinx.serialization.SerialName
 data class VehicleEntity(
     @SerialName(ID) val id: Long,
     @SerialName(NAME) val name: String,
+    @SerialName(MODEL) val model: String,
     @SerialName(REGISTRATION_NUMBER) val registrationNumber: String?,
     @SerialName(YEAR) val year: Int,
     @SerialName(COLOR) val color: String?,
@@ -22,6 +23,7 @@ data class VehicleEntity(
     companion object {
         const val ID                  = "id"
         const val NAME                = "name"
+        const val MODEL               = "model"
         const val REGISTRATION_NUMBER = "registration_number"
         const val YEAR                = "year"
         const val COLOR               = "color"
@@ -34,6 +36,7 @@ fun Vehicle.map() =
     VehicleEntity(
         id,
         name,
+        model,
         registrationNumber,
         year,
         color,
@@ -47,9 +50,10 @@ fun VehicleEntity.map() =
     Vehicle(
         id,
         name,
+        model,
         registrationNumber,
         year,
         color,
-        TransportType(TransportType.ID.parse(transportTypeId), paxMax, luggageMax),
+        TransportType(transportTypeId.map(), paxMax, luggageMax),
         photos
     )

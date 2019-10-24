@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_tab_margin_top"
+        android:background="@drawable/bg_nav_header_selector"
+        android:duplicateParentState="true"/>
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/design_bottom_navigation_margin"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@null"
+        android:duplicateParentState="true"/>
+    <com.google.android.material.internal.BaselineLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:paddingBottom="10dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:duplicateParentState="true">
+        <TextView
+            android:id="@+id/smallLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/design_bottom_navigation_text_size"
+            tools:text="small"/>
+        <TextView
+            android:id="@+id/largeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/design_bottom_navigation_active_text_size"
+            android:visibility="invisible"
+            tools:text="large"/>
+    </com.google.android.material.internal.BaselineLayout>
+
+    <include layout="@layout/notification_badge_view"/>
+</merge>

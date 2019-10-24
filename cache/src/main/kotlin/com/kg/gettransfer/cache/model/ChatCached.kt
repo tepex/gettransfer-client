@@ -1,11 +1,13 @@
 package com.kg.gettransfer.cache.model
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 import com.kg.gettransfer.data.model.ChatAccountEntity
 import com.kg.gettransfer.data.model.ChatEntity
 import com.kg.gettransfer.data.model.MessageEntity
+
 import kotlinx.serialization.Serializable
 
 @Entity(tableName = ChatEntity.ENTITY_NAME)

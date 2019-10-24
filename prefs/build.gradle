@@ -5,7 +5,7 @@ apply plugin: 'kotlinx-serialization'
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
-    
+
     defaultConfig {
         minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
         targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
@@ -28,11 +28,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    
+
     lintOptions {
         abortOnError true
     }
-    
+
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
@@ -46,7 +46,7 @@ android {
         exclude 'META-INF/LGPL2.1'
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
-    
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -54,22 +54,18 @@ android {
 
 // enable @ParametersAreNonnullByDefault annotation. See https://blog.jetbrains.com/kotlin/2017/09/kotlin-1-1-50-is-out/
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-	kotlinOptions {
-		freeCompilerArgs = ["-Xjsr305=strict"]
-	}
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+    }
 }
 
 dependencies {
-	implementation libs.kotlin
-	implementation libs.coroutines
-	implementation libs.serialization
+    implementation libs.kotlin
+    implementation libs.coroutines
+    implementation libs.serialization
     implementation libs.gson
-	implementation project(":data")
-	implementation project(":domain")
+    implementation project(":data")
+    implementation project(":domain")
 
     implementation libs.timber
-    
-	testImplementation libs.junit
-	testImplementation libs.hamcrest
-	testImplementation libs.mockito
 }

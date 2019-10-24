@@ -3,9 +3,11 @@ package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.TransferDataStore
+
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.TransferDataStoreCache
 import com.kg.gettransfer.data.ds.TransferDataStoreRemote
+
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.map
@@ -13,14 +15,16 @@ import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransferNew
-import com.kg.gettransfer.domain.repository.SystemRepository
+
 import com.kg.gettransfer.domain.repository.TransferRepository
+import com.kg.gettransfer.sys.domain.ConfigsRepository
 
 import java.io.InputStream
 import java.text.DateFormat
 import java.util.Calendar
 
 import org.koin.core.get
+import org.koin.core.inject
 import org.koin.core.qualifier.named
 
 class TransferRepositoryImpl(
@@ -28,12 +32,14 @@ class TransferRepositoryImpl(
 ) : BaseRepository(), TransferRepository {
 
     private val preferencesCache = get<PreferencesCache>()
-    private val transportTypes = get<SystemRepository>().configs.transportTypes
+    private val configsRepository: ConfigsRepository by inject()
 
     private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
     private val dateFormatTZ = get<ThreadLocal<DateFormat>>(named("iso_date_TZ"))
     private val serverDateFormat = get<ThreadLocal<DateFormat>>(named("server_date"))
     private val serverTimeFormat = get<ThreadLocal<DateFormat>>(named("server_time"))
+
+    private var tempEventsCount: Int? = null
 
     override suspend fun createTransfer(transferNew: TransferNew): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveRemoteEntity {
@@ -43,7 +49,11 @@ class TransferRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
-            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.entity?.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ) ?: Transfer.EMPTY,
             result.error?.map()
         )
     }
@@ -54,14 +64,18 @@ class TransferRepositoryImpl(
         }
         result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
         return Result(
-            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.entity?.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ) ?: Transfer.EMPTY,
             result.error?.map()
         )
     }
 
     override suspend fun setOffersUpdateDate(id: Long): Result<Unit> {
         val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
-            factory.retrieveCacheDataStore().getTransfer(id, "")
+            factory.retrieveCacheDataStore().getTransfer(id)
         }
         result.entity?.let { entity ->
             if (entity.offersUpdatedAt != null) {
@@ -72,55 +86,84 @@ class TransferRepositoryImpl(
         return Result(Unit)
     }
 
-    override suspend fun getTransfer(id: Long, role: String): Result<Transfer> {
+    override suspend fun getTransfer(id: Long): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).getTransfer(id, role)
+            factory.retrieveDataStore(fromRemote).getTransfer(id)
         }
         if (result.error == null) {
             result.entity?.apply {
-                setLastOffersUpdate(this, role)
+                setLastOffersUpdate(this)
                 factory.retrieveCacheDataStore().addTransfer(this)
             }
         }
 
         return Result(
-            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.entity?.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ) ?: Transfer.EMPTY,
             result.error?.map(),
             result.error != null && result.entity != null
         )
     }
 
-    override suspend fun getTransferCached(id: Long, role: String): Result<Transfer> {
+    override suspend fun getTransferCached(id: Long): Result<Transfer> {
         val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
-            factory.retrieveCacheDataStore().getTransfer(id, role)
+            factory.retrieveCacheDataStore().getTransfer(id)
         }
         return Result(
-            result.entity?.map(transportTypes, dateFormat.get(), dateFormatTZ.get()) ?: Transfer.EMPTY,
+            result.entity?.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ) ?: Transfer.EMPTY,
             null,
             result.entity != null,
             result.cacheError?.map()
         )
     }
 
-    private fun mapTransfersList(transfersList: List<TransferEntity>): List<Transfer> {
+    private suspend fun checkTransfersEvents(
+        transfersList: List<TransferEntity>,
+        isAllTransfersList: Boolean
+    ): List<Transfer> {
+
         val mapCountNewMessages = preferencesCache.mapCountNewMessages.toMutableMap()
         val mapCountNewOffers = preferencesCache.mapCountNewOffers.toMutableMap()
 
         var eventsCount = 0
         val mappedTransfers = transfersList.map { entity ->
-            entity.map(transportTypes, dateFormat.get(), dateFormatTZ.get()).apply {
+            mapTransfer(entity).apply {
                 if (!entity.isBookNow()) {
                     eventsCount += checkNewMessagesAndOffersCount(this, mapCountNewMessages, mapCountNewOffers)
                 }
             }
         }
-        preferencesCache.eventsCount = eventsCount
+
+        if (isAllTransfersList) {
+            preferencesCache.eventsCount = eventsCount
+        } else {
+            if (tempEventsCount != null) {
+                tempEventsCount?.let { preferencesCache.eventsCount = eventsCount + it }
+                tempEventsCount = null
+            } else {
+                tempEventsCount = eventsCount
+            }
+        }
 
         preferencesCache.mapCountNewMessages = mapCountNewMessages
         preferencesCache.mapCountNewOffers = mapCountNewOffers
 
         return mappedTransfers
     }
+
+    private suspend fun mapTransfer(transfer: TransferEntity) =
+        transfer.map(
+            configsRepository.getResult().getModel().transportTypes,
+            dateFormat.get(),
+            dateFormatTZ.get()
+        )
 
     private fun checkNewMessagesAndOffersCount(
         transfer: Transfer,
@@ -164,7 +207,7 @@ class TransferRepositoryImpl(
             }
         }
         return Result(
-            result.entity?.let { mapTransfersList(it) } ?: emptyList(),
+            result.entity?.let { checkTransfersEvents(it, true) } ?: emptyList(),
             result.error?.map(),
             result.error != null && result.entity != null
         )
@@ -181,7 +224,7 @@ class TransferRepositoryImpl(
             }
         }
         return Result(
-            result.entity?.let { mapTransfersList(it) } ?: emptyList(),
+            result.entity?.let { checkTransfersEvents(it, false) } ?: emptyList(),
             result.error?.map(),
             result.error != null && result.entity != null
         )
@@ -198,7 +241,7 @@ class TransferRepositoryImpl(
             }
         }
         return Result(
-            result.entity?.let { mapTransfersList(it) } ?: emptyList(),
+            result.entity?.let { checkTransfersEvents(it, false) } ?: emptyList(),
             result.error?.map(),
             result.error != null && result.entity != null
         )
@@ -222,9 +265,9 @@ class TransferRepositoryImpl(
         }
     }
 
-    private suspend fun setLastOffersUpdate(remoteTransfer: TransferEntity, role: String) {
+    private suspend fun setLastOffersUpdate(remoteTransfer: TransferEntity) {
         val resultCached: ResultEntity<TransferEntity?> = retrieveCacheEntity {
-            factory.retrieveCacheDataStore().getTransfer(remoteTransfer.id, role)
+            factory.retrieveCacheDataStore().getTransfer(remoteTransfer.id)
         }
         resultCached.entity?.let { remoteTransfer.lastOffersUpdatedAt = it.lastOffersUpdatedAt }
     }
@@ -234,5 +277,10 @@ class TransferRepositoryImpl(
             factory.retrieveRemoteDataStore().downloadVoucher(transferId)
         }
         return Result(result.entity)
+    }
+
+    override suspend fun sendAnalytics(transferId: Long, role: String): Result<Unit> {
+        factory.retrieveRemoteDataStore().sendAnalytics(transferId, role)
+        return Result(Unit)
     }
 }

@@ -12,10 +12,9 @@ import com.kg.gettransfer.presentation.ui.helpers.DateTimeHandler
 import com.kg.gettransfer.presentation.ui.helpers.DateTimePickerHelper
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 
-import com.kg.gettransfer.sys.domain.GetOrderMinimumInteractor
+import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import org.koin.core.KoinComponent
-import org.koin.core.get
 import org.koin.core.inject
 
 import java.util.Calendar
@@ -23,10 +22,9 @@ import java.util.Date
 
 class DateTimeDelegate : KoinComponent {
 
-    val orderInteractor: OrderInteractor = get()
-    val sessionInteractor: SessionInteractor = get()
-
-    private val getOrderMinimum: GetOrderMinimumInteractor by inject()
+    val orderInteractor: OrderInteractor by inject()
+    val sessionInteractor: SessionInteractor by inject()
+    val configsManager: ConfigsManager by inject()
 
     lateinit var currentData: Calendar
 
@@ -41,16 +39,16 @@ class DateTimeDelegate : KoinComponent {
             orderInteractor.orderReturnTime = value
         }
 
-    private val futureHour = getOrderMinimum().hours
-
     val startOrderedTime
         get() = orderInteractor.orderStartTime?.simpleFormat()
     val returnOrderedTime
         get() = orderInteractor.orderReturnTime?.simpleFormat()
 
-    fun validateWith(errorAction: (Boolean) -> Unit) = compareDates().also { if (!it) errorAction(it) }
+    /*fun validateWith(errorAction: (Boolean) -> Unit) = compareDates().also { if (!it) errorAction(it) }
 
-    fun validate() = validateWith { }
+    fun validate() = validateWith { }*/
+
+    fun validate() = compareDates()
 
     // check exactly what is in domain
     private fun compareDates() =
@@ -79,9 +77,8 @@ class DateTimeDelegate : KoinComponent {
         )
 
     private fun getCurrentDateForField(startsField: Boolean): Calendar {
-        if (startsField) {
-            currentData = getCurrentDatePlusMinimumHours()
-        } else {
+        currentData = getCurrentDatePlusMinimumHours()
+        if (!startsField) {
             currentData.time = Date(startDate.time + DATE_OFFSET)
         }
         return currentData
@@ -90,7 +87,7 @@ class DateTimeDelegate : KoinComponent {
     fun getCurrentDatePlusMinimumHours(): Calendar {
         val calendar = Calendar.getInstance(sessionInteractor.locale)
         /* Server must send current locale time */
-        calendar.add(Calendar.HOUR_OF_DAY, futureHour.hours)
+        calendar.add(Calendar.HOUR_OF_DAY, configsManager.mobile.orderMinimum.hours.hours)
         calendar.add(Calendar.MINUTE, FUTURE_MINUTE)
         return calendar
     }
@@ -109,7 +106,7 @@ class DateTimeDelegate : KoinComponent {
 
     private fun getTextForMinDate(context: Context) = context.getString(R.string.LNG_DATE_IN_HOURS)
         .plus(" ")
-        .plus(futureHour.hours)
+        .plus(configsManager.mobile.orderMinimum.hours.hours)
         .plus(" ")
         .plus(context.getString(R.string.LNG_HOUR_FEW))
 

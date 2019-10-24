@@ -16,23 +16,24 @@
         android:padding="8dp"
         app:srcCompat="@drawable/ic_close_x"/>
 
-    <com.willy.ratingbar.ScaleRatingBar
+    <RatingBar
         android:id="@+id/rating"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="14dp"
         android:gravity="center_horizontal"
-        app:srb_minimumStars="5"
-        app:srb_clearRatingEnabled="false"
-        app:srb_drawableEmpty="@drawable/ic_star_empty"
-        app:srb_drawableFilled="@drawable/ic_star_filled"
-        app:srb_starHeight="@dimen/rating_bar_stars_enabled_height"
-        app:srb_starWidth="@dimen/rating_bar_stars_enabled_width"
-        app:srb_isIndicator="true"
-        app:srb_numStars="5"/>
+        android:numStars="@integer/stars_number"
+        android:rating="5"
+        android:stepSize="1"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:transformPivotX="45dp"
+        android:transformPivotY="0dp"
+        android:isIndicator="true"
+        style="@style/CustomRatingBar"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -52,7 +53,7 @@
         android:textSize="16sp"
         android:gravity="center"
         android:text="@string/LNG_PAYMENT_LEAVE_COMMENT"
-        style="@style/sf_font_pro_text_regular_grey"/>
+        style="@style/sf_font_pro_text_regular_grey" />
 
     <EditText
         android:id="@+id/etComment"
@@ -64,6 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:drawableEnd="@drawable/ic_arrow_right"
-        android:textColorHint="@color/colorGrey"
-        style="@style/transfer_details_secondary_text"/>
+        android:textColorHint="@color/color_gtr_grey"
+        style="@style/sf_font_pro_text_regular_grey"
+        android:textSize="@dimen/bottom_sheet_offer_details_text_size_17sp"/>
 </LinearLayout>

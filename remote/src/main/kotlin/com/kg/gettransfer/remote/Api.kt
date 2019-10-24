@@ -1,26 +1,25 @@
-@file:Suppress("TooManyFunctions", "WildcardImport")
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.remote.model.*
-import kotlinx.coroutines.Deferred
+
 import okhttp3.ResponseBody
+
 import retrofit2.http.*
 
+@Suppress("TooManyFunctions", "WildcardImport")
 interface Api {
     companion object {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
 
         const val API_ACCESS_TOKEN = "/api/access_token"
-        const val API_CONFIGS = "/api/configs"
         const val API_ACCOUNT = "/api/account"
         const val API_LOGIN = "/api/login"
-        const val API_VERIFICATION_CODE = "/api/account/verification_code"
+        const val API_VERIFICATION_CODE = "/api/account/request_verification_code"
         const val API_CODE_FOR_CHANGE_EMAIL = "/api/account/email_code"
         const val API_CHANGE_EMAIL = "/api/account/change_email"
         const val API_ACCOUNT_LOGIN = "/api/account/login"
         const val API_ACCOUNT_REGISTER = "/api/account"
         const val API_ROUTE_INFO = "/api/route_info"
-        const val API_CARRIER_TRIPS = "/api/trips"
         const val API_TRANSFERS = "/api/transfers"
         const val API_CREATE_NEW_PAYMENT = "/api/payments"
         const val API_PROMO = "/api/promo_codes/search"
@@ -32,8 +31,6 @@ interface Api {
         const val API_BRAINTREE_CONFIRM = "/payments/braintree/confirm"
         const val API_VOUCHER = "/api/transfers/voucher/"
 
-        const val MOBILE_CONFIGS = "/mobile/mobile.conf"
-
         const val API_LOCATION = "/json"
 
         /*Autocomplete & place*/
@@ -42,192 +39,184 @@ interface Api {
     }
 
     @GET(API_ACCESS_TOKEN)
-    fun accessToken(): Deferred<ResponseModel<TokenModel>>
-
-    @GET(API_CONFIGS)
-    fun getConfigs(): Deferred<ResponseModel<ConfigsModel>>
+    suspend fun accessToken(): ResponseModel<TokenModel>
 
     @GET(API_ACCOUNT)
-    fun getAccount(): Deferred<ResponseModel<AccountModelWrapper>>
+    suspend fun getAccount(): ResponseModel<AccountModelWrapper>
 
     @PUT(API_ACCOUNT)
-    fun putAccount(
+    suspend fun putAccount(
         @Body account: AccountModelWrapper
-    ): Deferred<ResponseModel<AccountModelWrapper>>
+    ): ResponseModel<AccountModelWrapper>
 
     /* If we are not signed in, don't post request to save account
     @POST("/api/account")
-    fun postAccount(@Body account: AccountModel): Deferred<ResponseModel<AccountWrapperModel>>
+    fun postAccount(@Body account: AccountModel): ResponseModel<AccountWrapperModel>
     */
 
     @POST(API_ACCOUNT_LOGIN)
     @FormUrlEncoded
-    fun login(
+    suspend fun login(
         @Field("email") email: String?,
         @Field("phone") phone: String?,
         @Field("password") password: String
-    ): Deferred<ResponseModel<AccountModelWrapper>>
+    ): ResponseModel<AccountModelWrapper>
 
     @POST(API_ACCOUNT_REGISTER)
-    fun register(
+    suspend fun register(
         @Body account: RegistrationAccountEntityWrapper
-    ): Deferred<ResponseModel<AccountModelWrapper>>
+    ): ResponseModel<AccountModelWrapper>
 
-    @GET(API_VERIFICATION_CODE)
-    fun getVerificationCode(
-        @Query("email") email: String?,
-        @Query("phone") phone: String?
-    ): Deferred<ResponseModel<String?>>
+    @POST(API_VERIFICATION_CODE)
+    @FormUrlEncoded
+    suspend fun getVerificationCode(
+        @Field("email") email: String?,
+        @Field("phone") phone: String?
+    ): ResponseModel<String?>
 
     @POST(API_CODE_FOR_CHANGE_EMAIL)
-    fun getCodeForChangeEmail(
+    suspend fun getCodeForChangeEmail(
         @Query("new_email") email: String
-    ): Deferred<ResponseModel<String?>>
+    ): ResponseModel<String?>
 
     @POST(API_CHANGE_EMAIL)
-    fun changeEmail(
+    suspend fun changeEmail(
         @Query("new_email") email: String,
         @Query("code") code: String
-    ): Deferred<ResponseModel<String?>>
+    ): ResponseModel<String?>
 
     @Suppress("LongParameterList")
     @GET(API_ROUTE_INFO)
-    fun getRouteInfo(
+    suspend fun getRouteInfo(
         @Query("points[]") points: Array<String>,
         @Query("duration") duration: Int?,
         @Query("with_prices") withPrices: Boolean,
         @Query("return_way") returnWay: Boolean,
         @Query("currency") currency: String,
         @Query("date_to") dateTime: String?
-    ): Deferred<ResponseModel<RouteInfoModel>>
-
-    @GET(API_CARRIER_TRIPS)
-    fun getCarrierTrips(): Deferred<ResponseModel<CarrierTripsBaseModel>>
-
-    @GET("$API_CARRIER_TRIPS/{id}")
-    fun getCarrierTrip(
-        @Path("id") id: Long
-    ): Deferred<ResponseModel<CarrierTripModelWrapper>>
+    ): ResponseModel<RouteInfoModel>
 
     @GET("$API_TRANSFERS/{id}/offers")
-    fun getOffers(
+    suspend fun getOffers(
         @Path("id") id: Long
-    ): Deferred<ResponseModel<OffersModel>>
+    ): ResponseModel<OffersModel>
 
     @GET(API_TRANSFERS)
-    fun getAllTransfers(): Deferred<ResponseModel<TransfersModel>>
+    suspend fun getAllTransfers(): ResponseModel<TransfersModel>
 
     @GET("$API_TRANSFERS/archive")
-    fun getTransfersArchive(): Deferred<ResponseModel<TransfersModel>>
+    suspend fun getTransfersArchive(): ResponseModel<TransfersModel>
 
     @GET("$API_TRANSFERS/active")
-    fun getTransfersActive(): Deferred<ResponseModel<TransfersModel>>
+    suspend fun getTransfersActive(): ResponseModel<TransfersModel>
 
     @POST(API_TRANSFERS)
-    fun postTransfer(
+    suspend fun postTransfer(
         @Body transfer: TransferNewWrapperModel
-    ): Deferred<ResponseModel<TransferWrapperModel>>
+    ): ResponseModel<TransferWrapperModel>
 
     @GET("$API_TRANSFERS/{id}")
-    fun getTransfer(
-        @Path("id") id: Long,
-        @Query("role") role: String
-    ): Deferred<ResponseModel<TransferWrapperModel>>
+    suspend fun getTransfer(
+        @Path("id") id: Long
+    ): ResponseModel<TransferWrapperModel>
 
     @POST("$API_TRANSFERS/{id}/cancel")
-    fun cancelTransfer(
+    suspend fun cancelTransfer(
         @Path("id") id: Long,
         @Body reason: ReasonModel
-    ): Deferred<ResponseModel<TransferWrapperModel>>
+    ): ResponseModel<TransferWrapperModel>
 
     @POST(API_CREATE_NEW_PAYMENT)
-    fun createNewPayment(
+    suspend fun createNewPayment(
         @Body createPayment: PaymentRequestModel
-    ): Deferred<ResponseModel<PaymentModel>>
+    ): ResponseModel<PaymentModel>
 
     @GET(API_PROMO)
-    fun getDiscount(
+    suspend fun getDiscount(
         @Query("value") code: String
-    ): Deferred<ResponseModel<String>>
+    ): ResponseModel<String>
 
     @GET("$API_CREATE_NEW_PAYMENT/{status}")
-    fun changePaymentStatus(
+    suspend fun changePaymentStatus(
         @Path("status") status: String,
         @Query("pg_order_id") pgOrderId: Long,
         @Query("without_redirect") withoutRedirect: Boolean
-    ): Deferred<ResponseModel<PaymentStatusWrapperModel>>
+    ): ResponseModel<PaymentStatusWrapperModel>
 
     @POST("$API_RATE_OFFER/{id}/{type}")
-    fun rateOffer(
+    suspend fun rateOffer(
         @Path("id") id: Long,
         @Path("type") type: String,
         @Body ratingModel: RateToRemote
-    ): Deferred<ResponseModel<RateModel>>
+    ): ResponseModel<RateModel>
 
     @POST("$API_FEEDBACK/{id}/feedback")
-    fun sendFeedBack(
+    suspend fun sendFeedBack(
         @Path("id") id: Long,
         @Body passengerComment: FeedBackToRemote
-    ): Deferred<ResponseModel<OfferModel>>
+    ): ResponseModel<OfferModel>
 
     @PUT("$API_WEBPUSH_TOKENS/{provider}/{id}")
-    fun registerPushToken(
+    suspend fun registerPushToken(
         @Path("provider") provider: String,
         @Path("id") id: String
-    ): Deferred<ResponseModel<String>>
+    ): ResponseModel<String>
 
     @DELETE("$API_WEBPUSH_TOKENS/{id}")
-    fun unregisterPushToken(
+    suspend fun unregisterPushToken(
         @Path("id") token: String
-    ): Deferred<ResponseModel<String>>
-
-    @GET(MOBILE_CONFIGS)
-    fun getMobileConfigs(): Deferred<MobileConfigModel>
+    ): ResponseModel<String>
 
     @GET("$API_MESSAGES/{id}")
-    fun getChat(
+    suspend fun getChat(
         @Path("id") transferId: Long
-    ): Deferred<ResponseModel<ChatModel>>
+    ): ResponseModel<ChatModel>
 
     @POST("$API_MESSAGES/{id}")
-    fun newMessage(
+    suspend fun newMessage(
         @Path("id") transferId: Long,
         @Body message: MessageNewWrapperModel
-    ): Deferred<ResponseModel<MessageWrapperModel>>
+    ): ResponseModel<MessageWrapperModel>
 
     @POST("$API_MESSAGES/read/{id}")
-    fun readMessage(
+    suspend fun readMessage(
         @Path("id") messageId: Long
-    ): Deferred<ResponseModel<MessageWrapperModel>>
+    ): ResponseModel<MessageWrapperModel>
 
     @GET(API_LOCATION)
-    fun getMyLocation(): Deferred<LocationModel>
+    suspend fun getMyLocation(): LocationModel
 
     @GET(API_BRAINTREE_TOKEN)
-    fun getBraintreeToken(): Deferred<ResponseModel<BraintreeTokenModel>>
+    suspend fun getBraintreeToken(): ResponseModel<BraintreeTokenModel>
 
     @POST(API_BRAINTREE_CONFIRM)
     @FormUrlEncoded
-    fun confirmPaypal(
+    suspend fun confirmPaypal(
         @Field("payment_id") paymentId: Long,
         @Field("nonce") nonce: String
-    ): Deferred<ResponseModel<PaymentStatusWrapperModel>>
+    ): ResponseModel<PaymentStatusWrapperModel>
 
     /*Autocomplete*/
     @GET(API_AUTOCOMPLETE)
-    fun getAutocompletePredictions(
+    suspend fun getAutocompletePredictions(
         @Query("query") query: String,
         @Query("lang") lang: String
-    ): Deferred<AutocompletePredictionsModel>
+    ): AutocompletePredictionsModel
 
     @GET(API_PLACE_DETAILS)
-    fun getPlaceDetails(
+    suspend fun getPlaceDetails(
         @Query("place_id") placeId: String,
         @Query("lang") lang: String
-    ): Deferred<PlaceDetailsResultModel>
+    ): PlaceDetailsResultModel
 
     @GET("$API_VOUCHER{id}")
-    fun downloadVoucher(
+    suspend fun downloadVoucher(
         @Path("id") transferId: Long
-    ): Deferred<ResponseBody>
+    ): ResponseBody
+
+    @POST("$API_TRANSFERS/{id}/analytics_sent")
+    suspend fun sendAnalytics(
+        @Path("id") transferId: Long,
+        @Body role: RoleModel
+    ): ResponseModel<String>
 }

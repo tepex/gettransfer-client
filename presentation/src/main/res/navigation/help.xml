@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_help"
+    app:startDestination="@+id/showHelp">
+
+    <fragment
+        android:id="@+id/showHelp"
+        android:name="com.kg.gettransfer.presentation.ui.SupportFragment"
+        android:label="support"
+        tools:layout="@layout/fragment_support">
+
+        <action
+            android:id="@+id/go_to_become_carrier"
+            app:destination="@id/showBecomeCarrier"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/showBecomeCarrier"
+        android:name="com.kg.gettransfer.presentation.ui.BecomeCarrierFragment"
+        android:label="becomeCarrier"
+        tools:layout="@layout/fragment_become_carrier"/>
+</navigation>

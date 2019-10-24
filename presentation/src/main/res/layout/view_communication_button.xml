@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    android:layout_width="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
-    android:orientation="vertical"
-    android:layout_weight="1"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:fabCustomSize="@dimen/view_communication_button_img_size"
-        android:background="@color/color_gtr_red"
         app:backgroundTint="@color/colorPrimaryDark"
         app:srcCompat="@drawable/ic_call"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,7 +23,7 @@
         android:id="@+id/btnName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/bottom_sheet_carrier_trip_texts_size_12sp"
+        android:textSize="@dimen/view_communication_button_name_text_size"
         app:layout_constraintTop_toBottomOf="@id/btnImg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,4 +36,19 @@
         android:fontFamily="@font/sf_pro_text_regular"
         android:text="@string/LNG_PAYMENT_CHAT"/>
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/tvEventsCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_circle_red"
+        android:textColor="@android:color/white"
+        android:paddingStart="@dimen/margin4"
+        android:paddingEnd="@dimen/margin4"
+        app:layout_constraintTop_toTopOf="@+id/btnImg"
+        app:layout_constraintEnd_toEndOf="@+id/btnImg"
+        tools:text="10"
+        android:gravity="center"
+        android:elevation="6dp"
+        android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

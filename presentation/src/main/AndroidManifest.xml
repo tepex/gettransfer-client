@@ -22,7 +22,8 @@
         android:roundIcon="@mipmap/launcher_icon"
         android:supportsRtl="true"
         android:largeHeap="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:networkSecurityConfig="@xml/network_security_config">
 
         <meta-data
             android:name="asset_statements"
@@ -62,7 +63,7 @@
         </activity>
         <activity
             android:launchMode="singleTask"
-            android:name=".presentation.ui.MainActivity"
+            android:name=".presentation.ui.MainNavigateActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeTransparentStatusBar"
@@ -71,11 +72,6 @@
             android:name=".presentation.ui.AboutActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.ui.SearchActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeTransparentStatusBar" />
         <activity
             android:name=".presentation.ui.CreateOrderActivity"
             android:resizeableActivity="false"
@@ -86,13 +82,8 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.ui.SettingsActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".presentation.ui.ProfileSettingsActivity"
             android:resizeableActivity="false"
-            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.SettingsChangePasswordActivity"
@@ -117,26 +108,13 @@
             -->
         </activity>
         <activity
-            android:name=".presentation.ui.RequestsActivity"
+            android:name=".presentation.ui.RequestsPagerActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.ui.TransferDetailsActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.ui.CarrierTripsMainActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.ui.CarrierTripDetailsActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".presentation.ui.LogsActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait" />
-
         <activity android:name=".presentation.ui.MainLoginActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
@@ -163,6 +141,7 @@
             android:name=".presentation.ui.ChatActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".presentation.ui.HandleUrlActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -183,6 +162,20 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".presentation.ui.AppsFlyerHandleDeepLinkActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https"
+                    android:host="gtr.onelink.me"
+                    android:pathPrefix="/KPFI" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
             <intent-filter>
@@ -197,12 +190,9 @@
         <activity
             android:name=".presentation.ui.PaypalConnectionActivity"
             android:resizeableActivity="false" />
-        <activity
-            android:name=".presentation.ui.SupportActivity"
-            android:resizeableActivity="false" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="@string/file_provider_authority"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -231,12 +221,6 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-        <service android:name=".service.CoordinateService">
-            <intent-filter>
-                <action android:name="com.kg.gettransfer.service.CoordinateService" />
-            </intent-filter>
-        </service>
 
         <receiver android:name=".receiver.SilentPushReceiver">
             <intent-filter>

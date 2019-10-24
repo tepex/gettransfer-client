@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.AppBarLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.appbar.AppBarLayout  xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
 
-	<android.support.v7.widget.Toolbar
+	<androidx.appcompat.widget.Toolbar
 		android:id="@+id/toolbar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -14,12 +14,11 @@
 		android:minHeight="?android:attr/actionBarSize"
 		tools:ignore="Overdraw">
 
-		<ImageView
+		<com.kg.gettransfer.presentation.ui.custom.SingleClickButton
 			android:id="@+id/ivBack"
-			android:layout_width="@dimen/back_circle_size"
-			android:layout_height="@dimen/back_circle_size"
-			app:srcCompat="@drawable/ic_circle_back"
-			android:clickable="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:srcCompat="@drawable/ic_back"
 			style="@style/BorderlessBackground" />
 
 		<TextView
@@ -31,6 +30,6 @@
 			android:gravity="center"
 			style="@style/sf_font_semi_bold_17_sp" />
 
-	</android.support.v7.widget.Toolbar>
-</android.support.design.widget.AppBarLayout>
+	</androidx.appcompat.widget.Toolbar>
+</com.google.android.material.appbar.AppBarLayout>
 

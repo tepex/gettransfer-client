@@ -2,44 +2,51 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
+import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.model.Currency
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.SelectCurrencyView
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+import com.kg.gettransfer.utilities.Analytics
+
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.core.KoinComponent
-import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 @InjectViewState
 class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinComponent {
 
-    private val currencies = systemInteractor.currencies.map { it.map() }
-    private val popularCurrencies = currencies.filter { Currency.POPULAR.contains(it.code) }
-    private var currencyChangedListener: CurrencyChangedListener? = null
+    private val worker: WorkerManager by inject { parametersOf("SelectCurrencyPresenter") }
+    private val configsManager: ConfigsManager by inject()
 
     override fun attachView(view: SelectCurrencyView) {
         super.attachView(view)
-        viewState.setCurrencies(
-            currencies.filter { !Currency.POPULAR.contains(it.code) },
-            popularCurrencies,
-            sessionInteractor.currency.map()
-        )
-    }
+        worker.main.launch {
+            val selectedCurrency = withContext(worker.bg) { sessionInteractor.currency.map() }
+            val currencies = withContext(worker.bg) { configsManager.configs.supportedCurrencies.map { it.map() } }
+            viewState.setCurrencies(currencies, selectedCurrency)
 
-    fun addCurrencyChangedListener(currencyChangedListener: CurrencyChangedListener) {
-        this.currencyChangedListener = currencyChangedListener
-    }
-
-    fun removeCurrencyChangedListener() {
-        currencyChangedListener = null
+            val popularCurrencies = withContext(worker.bg) { currencies.filter { Currency.POPULAR.contains(it.code) } }
+            viewState.setPopularCurrencies(popularCurrencies, selectedCurrency)
+        }
     }
 
     fun changeCurrency(selected: CurrencyModel) {
-        sessionInteractor.currency = selected.delegate
-        saveGeneralSettings()
-        currencyChangedListener?.currencyChanged(selected)
+        worker.main.launch {
+            sessionInteractor.currency = selected.delegate
+            analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, selected.code)
+            saveGeneralSettings()
+            viewState.currencyChanged(selected)
+        }
+    }
+
+    override fun onDestroy() {
+        worker.cancel()
+        super.onDestroy()
     }
 }

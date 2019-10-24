@@ -9,6 +9,11 @@
         <attr name="hint"/>
     </declare-styleable>
 
+    <declare-styleable name="SearchAddressReadOnly" parent="EditableView">
+        <attr name="hint"/>
+        <attr name="title" format="string"/>
+    </declare-styleable>
+
     <declare-styleable name="CreateOrderField" parent="EditableView">
         <attr name="hint"/>
         <attr name="icon_img" format="reference" />
@@ -27,11 +32,6 @@
         <attr name="img_about_item" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="IconWithNumberIndicator" parent="EditableField">
-        <attr name="icon_with_number_indicator" format="reference" />
-        <attr name="is_showing_number" format="boolean" />
-    </declare-styleable>
-
     <declare-styleable name="RateField">
         <attr name="rate_title" format="string"/>
         <attr name="rate_sub_title" format="string" />
@@ -44,11 +44,6 @@
         <attr name="time_title" format="string"/>
         <attr name="price" format="string"/>
         <attr name="price_title" format="string"/>
-    </declare-styleable>
-
-    <declare-styleable name="SeatsView">
-        <attr name="passenger_seats" format="string"/>
-        <attr name="child_seats" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="CommunicationButton">
@@ -73,12 +68,19 @@
         <attr name="phone" format="string"/>
     </declare-styleable>
 
-
-    <declare-styleable name="SettingsFieldPicker">
-        <attr name="settingsTitlePicker" format="string"/>
-        <attr name="settingsPickerDivider" format="boolean"/>
-        <attr name="settingsPickerBlackText" format="boolean"/>
+    <declare-styleable name="SettingsFieldHorizontalPicker">
+        <attr name="settingsTitlePicker"/>
+        <attr name="settingsPickerDivider"/>
+        <attr name="settingsPickerBlackText"/>
     </declare-styleable>
+
+    <declare-styleable name="SettingsFieldVerticalPicker">
+        <attr name="settingsTitlePicker"/>
+    </declare-styleable>
+
+    <attr name="settingsTitlePicker" format="string"/>
+    <attr name="settingsPickerDivider" format="boolean"/>
+    <attr name="settingsPickerBlackText" format="boolean"/>
 
     <declare-styleable name="SettingsEditableField">
         <attr name="settingsEditableFieldHint" format="string"/>
@@ -89,19 +91,17 @@
 
     <declare-styleable name="SettingsFieldSwitch">
         <attr name="settingsTitleSwitch" format="string"/>
+        <attr name="settingsShowDivider" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="SwitcherView">
         <attr name="switcher_title" format="string"/>
     </declare-styleable>
 
-    <declare-styleable name="SearchFormView">
-        <attr name="isInverseInvisible" format="boolean"/>
-    </declare-styleable>
-
-    <declare-styleable name="OrderFieldView">
-        <attr name="order_title" format="string"/>
-        <attr name="icon" format="reference"/>
+    <declare-styleable name="SearchFormMainView">
+        <attr name="ivSelectFieldToGone" format="boolean"/>
+        <attr name="ivSelectFieldFromGone" format="boolean"/>
+        <attr name="roundedTopCorners" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="RatingFieldView">
@@ -111,12 +111,6 @@
     <declare-styleable name="ChildCounterView">
         <attr name="counter_title" format="string"/>
         <attr name="counter_description" format="string"/>
-    </declare-styleable>
-
-    <declare-styleable name="NavigationViewMenuItem">
-        <attr name="menu_icon_img" format="reference" />
-        <attr name="menu_title_text" format="string"/>
-        <attr name="menu_subtitle_text" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="InputPasswordView">
@@ -129,5 +123,20 @@
         <attr name="account_field_view_divider_visible" format="boolean"/>
         <attr name="account_field_view_icon" format="reference"/>
         <attr name="android:inputType"/>
+    </declare-styleable>
+
+    <declare-styleable name="TransferDetailsCarrierInfoField">
+        <attr name="carrier_field_title" format="string"/>
+        <attr name="carrier_field_text" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="VehiclePhotosView">
+        <attr name="multiple_photos_width" format="dimension"/>
+        <attr name="multiple_photos_height" format="dimension"/>
+        <attr name="single_photo_height" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="NetworkNotAvailableView">
+        <attr name="text_no_internet" format="string"/>
     </declare-styleable>
 </resources>

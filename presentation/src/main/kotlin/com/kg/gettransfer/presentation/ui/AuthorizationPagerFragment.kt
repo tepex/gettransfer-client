@@ -1,12 +1,11 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.content.res.ResourcesCompat
+import androidx.annotation.CallSuper
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.core.content.res.ResourcesCompat
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +13,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.arellomobile.mvp.MvpAppCompatFragment
+import com.google.android.material.tabs.TabLayout
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.fragment_pager_authorization.*
 import kotlinx.serialization.json.JSON
+//import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinComponent
@@ -95,19 +96,14 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
             else -> throw UnsupportedOperationException()
         }
 
-        override fun getItem(position: Int): Fragment = when (position) {
-            0 -> {
-                getFragment(position) { createLoginFragment() }
-            }
-            1 -> {
-                if (nextScreen == Screens.CARRIER_MODE) {
-                    SignUpCarrierFragment.newInstance()
-                } else {
-                    getFragment(position) { createSignUpFragment() }
+        override fun getItem(position: Int): Fragment =
+            getFragment(position) {
+                when (position) {
+                    0 -> createLoginFragment()
+                    1 -> createSignUpFragment()
+                    else -> throw UnsupportedOperationException()
                 }
             }
-            else -> throw UnsupportedOperationException()
-        }
 
         //TODO for translate emailOrPhone to otherFragment
         private fun getFragment(position: Int, createFragment: (() -> Fragment)): Fragment {
@@ -131,5 +127,10 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         private fun createSignUpFragment(): Fragment {
             return SignUpFragment.newInstance()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 }

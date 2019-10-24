@@ -2,16 +2,14 @@ package com.kg.gettransfer.presentation.adapter
 
 import android.content.Context
 
-import android.support.v7.widget.RecyclerView
-
-import android.util.TypedValue
+import androidx.recyclerview.widget.RecyclerView
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
@@ -23,11 +21,17 @@ import kotlinx.android.synthetic.main.view_transfer_type.*
 import kotlinx.android.synthetic.main.view_transfer_type.view.*
 
 class TransferTypeAdapter(
-    private var list: List<TransportTypeModel>,
     private val listener: ChangeListener
 ) : RecyclerView.Adapter<TransferTypeAdapter.ViewHolder>() {
 
+    var list: ArrayList<TransportTypeModel> = arrayListOf()
+
     override fun getItemCount() = list.size
+
+    fun update(list: List<TransportTypeModel>){
+        this.list.clear()
+        this.list.addAll(list)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_type, parent, false))
@@ -39,7 +43,7 @@ class TransferTypeAdapter(
         LayoutContainer {
 
         fun bind(item: TransportTypeModel, listener: ChangeListener) = with(containerView) {
-            tvTransferType.setText(item.nameId!!)
+            tvTransferType.setText(item.nameId)
             tvNumberPersonsTransfer.text = Utils.formatPersons(context, item.paxMax)
             tvCountBaggage.text          = Utils.formatLuggage(context, item.luggageMax)
 
@@ -49,7 +53,7 @@ class TransferTypeAdapter(
                 tvPriceFrom.text = item.price.min
             }
 
-            ivTransferType.setImageResource(item.imageId!!)
+            ivTransferType.setImageResource(item.imageId)
             cbTransferType.isChecked = item.checked
             setVisibilityShadow(context, item)
             setOnClickListener {

@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/hourly_bottom_sheet_height"
-    app:behavior_peekHeight="@dimen/hourly_bottom_sheet_height_peek"
-    app:behavior_hideable="true"
-    android:background="@drawable/back_top_rounded"
-    android:id="@+id/hourly_picker"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    android:layout_height="@dimen/hourly_bottom_sheet_height">
 
     <!--<View-->
         <!--android:id="@+id/top_divider"-->
@@ -61,11 +55,12 @@
         android:id="@+id/np_hours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
+        android:theme="@style/AppTheme.Picker"
+        android:descendantFocusability="blocksDescendants"
         app:layout_constraintEnd_toEndOf="@id/rl_picker_header"
         app:layout_constraintStart_toStartOf="@id/rl_picker_header"
         app:layout_constraintTop_toBottomOf="@+id/bot_divider">
 
     </NumberPicker>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

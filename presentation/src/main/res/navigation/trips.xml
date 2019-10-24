@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_trips"
+    app:startDestination="@+id/showTrips">
+
+    <fragment
+        android:id="@+id/showTrips"
+        android:name="com.kg.gettransfer.presentation.ui.RequestsPagerFragment"
+        android:label="new_transfer_map"
+        tools:layout="@layout/fragment_requests_pager"/>
+</navigation>

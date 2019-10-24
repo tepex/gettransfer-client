@@ -15,6 +15,10 @@ class ApiException(
 
     fun isPhoneTaken() = type == TYPE_PHONE_TAKEN
 
+    fun isEmailTaken() = type == TYPE_EMAIL_TAKEN
+
+    fun isTooManyRequests() = code == TOO_MANY_REQUESTS
+
     fun isAccountExistError() = type == TYPE_ACCOUNT_EXIST
 
     fun isBadCodeError() = checkDetailsText(DETAILS_BAD_CODE_OR_EMAIL)
@@ -40,13 +44,14 @@ class ApiException(
     fun isBigPriceError() = code == UNPROCESSABLE && details == DETAILS_BIG_PRICE
 
     companion object {
-        const val APP_ERROR      = 0
-        const val NETWORK_ERROR  = -1
-        const val GEOCODER_ERROR = -2
-        const val NO_USER        = 400
-        const val NOT_LOGGED_IN  = 403
-        const val NOT_FOUND      = 404
-        const val UNPROCESSABLE  = 422
+        const val APP_ERROR         = 0
+        const val NETWORK_ERROR     = -1
+        const val GEOCODER_ERROR    = -2
+        const val NO_USER           = 400
+        const val NOT_LOGGED_IN     = 403
+        const val NOT_FOUND         = 404
+        const val UNPROCESSABLE     = 422
+        const val TOO_MANY_REQUESTS = 429
 
         const val INTERNAL_SERVER_ERROR = 500
         const val CONNECTION_TIMED_OUT  = 522
@@ -56,6 +61,10 @@ class ApiException(
 
         const val TYPE_ACCOUNT_EXIST = "account_exists"
         const val TYPE_PHONE_TAKEN = "phone_taken"
+        const val TYPE_EMAIL_TAKEN = "email_taken"
+        const val TYPE_EMAIL_INVALID = "email_invalid"
+        const val TYPE_PHONE_INVALID = "phone_invalid"
+        const val TYPE_PHONE_UNPROCESSABLE = "unprocessable"
 
         const val DETAILS_NEW_EMAIL_INVALID_1 = "new_email=[invalid]"
         const val DETAILS_NEW_EMAIL_INVALID_2 = "Email address is invalid"

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<integer name="map_min_zoom">13</integer>
-	<!-- минимальное расстояние для вычисления адреса -->
-	<integer name="map_min_distance_to_request_address">30</integer>
 
-	<!--Rating stars-->
+    <!--Rating stars-->
 	<integer name="stars_number">5</integer>
 	<integer name="stars_minimum">0</integer>
-	<integer name="default_stars_num">0</integer>
 
 </resources>

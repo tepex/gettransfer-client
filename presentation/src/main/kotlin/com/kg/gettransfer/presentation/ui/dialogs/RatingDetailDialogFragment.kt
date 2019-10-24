@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import androidx.annotation.CallSuper
+import android.widget.RatingBar
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -29,31 +31,28 @@ import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment.Companio
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RatingDetailView
 
-import com.willy.ratingbar.BaseRatingBar
-
 import kotlinx.android.synthetic.main.dialog_fragment_rating_detail.*
 import kotlinx.android.synthetic.main.view_rate_field.*
 
+@Suppress("TooManyFunctions")
 class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetailView {
 
     override val layout: Int = R.layout.dialog_fragment_rating_detail
-
     private var ratingListener: OnRatingChangeListener? = null
-
     private var isExitWithResult = false
 
-    private val commonRateListener = BaseRatingBar.OnRatingChangeListener { _, rate ->
+    private val commonRateListener = RatingBar.OnRatingBarChangeListener { _, rate, _ ->
         presenter.onCommonRatingChanged(rate)
     }
-    private val vehicleRateListener = BaseRatingBar.OnRatingChangeListener { _, rate ->
+    private val vehicleRateListener = RatingBar.OnRatingBarChangeListener { _, rate, _ ->
         presenter.vehicleRating = rate
         presenter.ratingChanged()
     }
-    private val driverRateListener = BaseRatingBar.OnRatingChangeListener { _, rate ->
+    private val driverRateListener = RatingBar.OnRatingBarChangeListener { _, rate, _ ->
         presenter.driverRating = rate
         presenter.ratingChanged()
     }
-    private val punctualityRateListener = BaseRatingBar.OnRatingChangeListener { _, rate ->
+    private val punctualityRateListener = RatingBar.OnRatingBarChangeListener { _, rate, _ ->
         presenter.communicationRating = rate
         presenter.ratingChanged()
     }
@@ -64,26 +63,29 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     @ProvidePresenter
     fun providePresenter() = RatingDetailPresenter()
 
-    override fun onAttach(context: Context?) {
+    @CallSuper
+    override fun onAttach(context: Context) {
         super.onAttach(context)
-        ratingListener = (activity as? OnRatingChangeListener)
+        ratingListener = activity as? OnRatingChangeListener
     }
 
+    @CallSuper
     override fun onDetach() {
-        super.onDetach()
         ratingListener = null
+        super.onDetach()
     }
 
+    @CallSuper
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
         btnSend.setOnClickListener { presenter.onClickSend() }
         ivClose.setOnClickListener { dismiss() }
         etComment.setThrottledClickListener { presenter.onClickComment(etComment.text.toString().trim()) }
         etComment.setUneditable()
-        commonRate.setOnRatingChangeListener(commonRateListener)
-        vehicleRate.rate_bar.setOnRatingChangeListener(vehicleRateListener)
-        driverRate.rate_bar.setOnRatingChangeListener(driverRateListener)
-        punctualityRate.rate_bar.setOnRatingChangeListener(punctualityRateListener)
+        commonRate.onRatingBarChangeListener = commonRateListener
+        vehicleRate.rate_bar.onRatingBarChangeListener = vehicleRateListener
+        driverRate.rate_bar.onRatingBarChangeListener = driverRateListener
+        punctualityRate.rate_bar.onRatingBarChangeListener = punctualityRateListener
     }
 
     override fun showProgress(isShow: Boolean) {
@@ -92,29 +94,29 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     }
 
     override fun setRatingCommon(rating: Float) {
-        commonRate.setOnRatingChangeListener(null)
+        commonRate.onRatingBarChangeListener = null
         commonRate.rating = rating
-        commonRate.setOnRatingChangeListener(commonRateListener)
+        commonRate.onRatingBarChangeListener = commonRateListener
     }
 
     override fun setRatingDriver(rating: Float) {
-        driverRate.rate_bar.setOnRatingChangeListener(null)
+        driverRate.rate_bar.onRatingBarChangeListener = null
         driverRate.rate_bar.rating = rating
-        driverRate.rate_bar.setOnRatingChangeListener(driverRateListener)
+        driverRate.rate_bar.onRatingBarChangeListener = driverRateListener
         driverRate.isVisible = true
     }
 
     override fun setRatingPunctuality(rating: Float) {
-        punctualityRate.rate_bar.setOnRatingChangeListener(null)
+        punctualityRate.rate_bar.onRatingBarChangeListener = null
         punctualityRate.rate_bar.rating = rating
-        punctualityRate.rate_bar.setOnRatingChangeListener(punctualityRateListener)
+        punctualityRate.rate_bar.onRatingBarChangeListener = punctualityRateListener
         punctualityRate.isVisible = true
     }
 
     override fun setRatingVehicle(rating: Float) {
-        vehicleRate.rate_bar.setOnRatingChangeListener(null)
+        vehicleRate.rate_bar.onRatingBarChangeListener = null
         vehicleRate.rate_bar.rating = rating
-        vehicleRate.rate_bar.setOnRatingChangeListener(vehicleRateListener)
+        vehicleRate.rate_bar.onRatingBarChangeListener = vehicleRateListener
         vehicleRate.isVisible = true
     }
 
@@ -134,17 +136,17 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     override fun showComment(comment: String) {
         etComment.setText(comment)
     }
-    
+
     override fun showCommentDialog(comment: String) {
         val commentDialog = CommentDialogFragment.newInstance(comment)
         commentDialog.setTargetFragment(this@RatingDetailDialogFragment, COMMENT_REQUEST_CODE)
-        commentDialog.show(fragmentManager, COMMENT_DIALOG_TAG)
+        commentDialog.show(requireFragmentManager(), COMMENT_DIALOG_TAG)
     }
 
+    @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK &&
-                requestCode == COMMENT_REQUEST_CODE) {
+        if (resultCode == Activity.RESULT_OK && requestCode == COMMENT_REQUEST_CODE) {
             val comment = data?.getStringExtra(CommentDialogFragment.EXTRA_COMMENT) ?: ""
             presenter.comment = comment
             setComment(comment)
@@ -152,24 +154,23 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     }
 
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
-        context?.let {
-            val errMessage = getString(errId, *args)
-            Utils.showError(it, finish, errMessage)
-        }
+        context?.let { Utils.showError(it, finish, getString(errId, *args)) }
     }
 
     override fun setError(e: ApiException) {
-        context?.let {
-            if (e.code != ApiException.NETWORK_ERROR) Utils.showError(it, false, getString(R.string.LNG_ERROR) + ": " + e.message)
+        if (e.code != ApiException.NETWORK_ERROR) {
+            context?.let { Utils.showError(it, false, getString(R.string.LNG_ERROR) + ": " + e.message) }
         }
     }
 
-    override fun setError(e: DatabaseException) {
-        //empty
-    }
+    override fun setError(e: DatabaseException) {}
 
-    override fun setTransferNotFoundError(transferId: Long) =
-            (activity as BaseView).setTransferNotFoundError(transferId)
+    override fun setTransferNotFoundError(transferId: Long) {
+        val act = activity
+        if (act is BaseView) {
+            act.setTransferNotFoundError(transferId)
+        }
+    }
 
     override fun exitAndReportSuccess(list: List<ReviewRate>, comment: String) {
         ratingListener?.onRatingChanged(list, comment)
@@ -177,17 +178,12 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         dismiss()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    @CallSuper
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         if (isExitWithResult) {
             ratingListener?.onRatingChangeCancelled()
         }
-    }
-
-    companion object {
-        const val RATE_DIALOG_TAG = "rate_dialog_tag"
-
-        fun newInstance() = RatingDetailDialogFragment()
     }
 
     private fun setComment(comment: String) = etComment.setText(comment)
@@ -195,5 +191,11 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     interface OnRatingChangeListener {
         fun onRatingChanged(list: List<ReviewRate>, comment: String)
         fun onRatingChangeCancelled()
+    }
+
+    companion object {
+        const val RATE_DIALOG_TAG = "rate_dialog_tag"
+
+        fun newInstance() = RatingDetailDialogFragment()
     }
 }

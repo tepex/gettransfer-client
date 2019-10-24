@@ -1,6 +1,7 @@
 package com.kg.gettransfer.cache.model
 
-import android.arch.persistence.room.ColumnInfo
+import androidx.room.ColumnInfo
+
 import com.kg.gettransfer.data.model.RatingsEntity
 
 data class RatingsCached(
@@ -11,4 +12,5 @@ data class RatingsCached(
 )
 
 fun RatingsCached.map() = RatingsEntity(average, vehicle, driver, communication)
+
 fun RatingsEntity.map() = RatingsCached(average, vehicle, driver, communication)

@@ -2,20 +2,16 @@ package com.kg.gettransfer.presentation.ui
 
 import android.app.Activity
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.graphics.*
 
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 
 import android.os.Build
-import android.os.Bundle
-
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 
 import android.telephony.TelephonyManager
 
@@ -28,18 +24,22 @@ import android.util.DisplayMetrics
 import android.util.Patterns
 
 import android.view.View
-import android.view.ViewGroup
 
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
+
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.FitCenter
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 
 import com.google.android.gms.maps.CameraUpdate
@@ -51,32 +51,28 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
-import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.ui.utils.TopRightRoundedCornerTransform
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
-import java.text.SimpleDateFormat
-
-import java.util.Date
 import java.util.Locale
 
 import org.koin.core.inject
 import org.koin.core.KoinComponent
 
 import timber.log.Timber
+import android.graphics.PorterDuffXfermode as PorterDuffXfermode1
 
 object Utils : KoinComponent {
     //private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
     private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
 
-    @JvmField val DATE_PATTERN = "dd MMM yyyy"
-    @JvmField val DATE_WITHOUT_YEAR_PATTERN = "dd MMM"
-    @JvmField val TIME_PATTERN = "HH:mm"
     const val MAX_BITMAP_SIZE = 4096
 
     internal val phoneUtil: PhoneNumberUtil by inject()
@@ -120,16 +116,6 @@ object Utils : KoinComponent {
         }
     }
 
-    fun showAlertUpdateApp(context: Context, listener: (Boolean) -> Unit) {
-        getAlertDialogBuilder(context).apply {
-            setTitle(R.string.LNG_NEW_VERSION_UPDATE)
-            setPositiveButton(R.string.LNG_UPDATE) { _, _ -> listener(true) }
-            setNegativeButton(R.string.LNG_CANCEL)  { _, _ -> listener(false) }
-            setOnCancelListener { listener(false) }
-            show()
-        }
-    }
-
     fun showAlertSetNewPassword(context: Context, listener: (Boolean) -> Unit) {
         getAlertDialogBuilder(context).apply {
             setTitle(R.string.LNG_AUTHORIZED)
@@ -159,20 +145,12 @@ object Utils : KoinComponent {
         listener: (Int) -> Unit
     ) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
 
-    fun setFirstDayOfWeekDialogListener(
+    fun setOfferFilterDialogListener(
             context: Context,
             view: View,
             items: List<CharSequence>,
             listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_WEEK_FIRST_DAY, items, listener) }
-
-    fun setCalendarModesDialogListener(
-            context: Context,
-            view: View,
-            items: List<CharSequence>,
-            @StringRes titleId: Int,
-            listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, titleId, items, listener) }
+    ) { setModelsDialogListener(context, view, R.string.LNG_SORT, items, listener) }
 
     fun setEndpointsDialogListener(
         context: Context,
@@ -207,14 +185,35 @@ object Utils : KoinComponent {
         }
     }
 
-    fun showBackGroundPermissionDialog(context: Context, clickResult: (result: Boolean) -> Unit){
-        getAlertDialogBuilder(context).apply {
-            setMessage(R.string.LNG_SEND_COORDINATES_IN_BACKGROUND_MESSAGE)
-            setTitle(R.string.LNG_SEND_COORDINATES_IN_BACKGROUND)
-            setNegativeButton(R.string.LNG_NO) { _, _ -> clickResult(false)}
-            setPositiveButton(R.string.LNG_YES) { _, _ -> clickResult(true)}
-            show()
+    /**
+     * Go to google play without result
+     */
+    fun goToGooglePlay(context: FragmentActivity, packageName: String) {
+        val marketLink = Uri.parse(context.getString(R.string.market_link) + packageName)
+        val siteMarketLink = Uri.parse(context.getString(R.string.market_site_link) + packageName)
+        try {
+            context.startActivity(createGooglePlayIntent(marketLink))
+        } catch (anfe: ActivityNotFoundException) {
+            context.startActivity(createGooglePlayIntent(siteMarketLink))
         }
+    }
+
+    /**
+     * Go to google play with return result
+     */
+    fun goToGooglePlay(context: FragmentActivity, packageName: String, requestCode: Int) {
+        val marketLink = Uri.parse(context.getString(R.string.market_link) + packageName)
+        val siteMarketLink = Uri.parse(context.getString(R.string.market_site_link) + packageName)
+        try {
+            context.startActivityForResult(createGooglePlayIntent(marketLink), requestCode)
+        } catch (anfe: ActivityNotFoundException) {
+            context.startActivityForResult(createGooglePlayIntent(siteMarketLink), requestCode)
+        }
+    }
+
+    private fun createGooglePlayIntent(uri: Uri) = Intent(Intent.ACTION_VIEW).apply {
+        data = uri
+        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
     }
 
     fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
@@ -277,22 +276,13 @@ object Utils : KoinComponent {
         return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track, isVerticalRoute)
     }
 
-    fun getCameraUpdate(list: List<LatLng>): CameraUpdate  =
-        LatLngBounds.Builder()
-                .also { b -> list.forEach { b.include(it) } }
-                .build()
-                .let { CameraUpdateFactory.newLatLngBounds(it, 150) }
+    fun getCameraUpdate(list: List<LatLng>) = LatLngBounds.Builder()
+        .also { b -> list.forEach { b.include(it) } }
+        .build()
+        .run { CameraUpdateFactory.newLatLngBounds(this, 150) }
 
-    fun getCameraUpdateForPin(point: LatLng) = CameraUpdateFactory.newLatLngZoom(point, BaseGoogleMapActivity.MAP_MIN_ZOOM)
-
-
-
-    fun getDateTimeTransferDetails(locale: Locale, dateToLocal: Date, withYear: Boolean): Pair<String, String> {
-        val dateString = if (withYear) SimpleDateFormat(DATE_PATTERN, locale).format(dateToLocal)
-                         else SimpleDateFormat(DATE_WITHOUT_YEAR_PATTERN, locale).format(dateToLocal)
-        val timeString = SimpleDateFormat(TIME_PATTERN, locale).format(dateToLocal)
-        return Pair(dateString, timeString)
-    }
+    fun getCameraUpdateForPin(point: LatLng) =
+        CameraUpdateFactory.newLatLngZoom(point, BaseGoogleMapActivity.MAP_MIN_ZOOM)
 
     fun convertDuration(min: Int): Triple<Int, Int, Int> {
         val hours = min / 60
@@ -303,8 +293,11 @@ object Utils : KoinComponent {
 
     fun formatDuration(context: Context, duration: Int): String {
         val days = duration / 24
-        return if (days > 0) "$days ".plus(context.getString(R.string.LNG_DAYS))
-        else "$duration ".plus(context.getString(R.string.LNG_HOURS))
+        return if (days > 0) {
+            "$days ".plus(context.getString(R.string.LNG_DAYS))
+        } else {
+            "$duration ".plus(context.getString(R.string.LNG_HOURS))
+        }
     }
 
     fun durationToString(context: Context, duration: Triple<Int, Int, Int>) = buildString {
@@ -321,8 +314,11 @@ object Utils : KoinComponent {
     }
 
     fun getSpannedStringFromHtmlString(htmlString: String): Spanned {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
-        else Html.fromHtml(htmlString)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            Html.fromHtml(htmlString)
+        }
     }
 
     @DrawableRes
@@ -331,19 +327,65 @@ object Utils : KoinComponent {
         return (imageRes?.call() as Int?) ?: R.drawable.ic_language_unknown
     }
 
-    fun getCarColorFormRes(context: Context, color: String): Drawable {
-        val colorRes = R.color::class.members.find({ it.name == "color_vehicle_$color" })
-        val colorId = (colorRes?.call() as Int?) ?: R.color.color_vehicle_white
-        return getCarColorDrawable(context, colorId)
+    @StringRes
+    fun getCarColorTextRes(color: String): Int {
+        val colorRes = R.string::class.members.find({ it.name == "LNG_COLOR_${color.toUpperCase()}" })
+        return (colorRes?.call() as Int?) ?: R.string.LNG_COLOR_WHITE
     }
 
-    private fun getCarColorDrawable(context: Context, colorId: Int): Drawable {
-        return GradientDrawable().apply {
-            setColor(ContextCompat.getColor(context, colorId))
-            if (colorId == R.color.color_vehicle_white)
-                setStroke(dpToPxInt(context, 1f), ContextCompat.getColor(context, R.color.color_gtr_light_grey))
-            shape = GradientDrawable.OVAL
-            cornerRadius = 5.0f
+    @ColorRes
+    private fun getCarColorResId(color: String): Int {
+        val colorRes = R.color::class.members.find({ it.name == "color_car_$color" })
+        return (colorRes?.call() as Int?) ?: R.color.color_car_white
+    }
+
+    fun getCarColorTextBackFormRes(context: Context, color: String) =
+        getCarColorTextBackDrawable(context, getCarColorResId(color))
+
+    private fun getCarColorTextBackDrawable(context: Context, colorId: Int) = GradientDrawable().apply {
+        setColor(ContextCompat.getColor(context, colorId))
+        if (colorId == R.color.color_car_white) {
+            setStroke(
+                dpToPxInt(context, 1f),
+                ContextCompat.getColor(context, R.color.color_gtr_light_grey)
+            )
+        }
+        shape = GradientDrawable.RECTANGLE
+        cornerRadius = convertDpToPixels(context, 24.0f)
+    }
+
+    fun getCarColorFormRes(context: Context, color: String) = getCarColorDrawable(context, getCarColorResId(color))
+
+    private fun getCarColorDrawable(context: Context, colorId: Int) = GradientDrawable().apply {
+        setColor(ContextCompat.getColor(context, colorId))
+        if (colorId == R.color.color_car_white) {
+            setStroke(
+                dpToPxInt(context, 1f),
+                ContextCompat.getColor(context, R.color.color_gtr_light_grey)
+            )
+        }
+        shape = GradientDrawable.OVAL
+        cornerRadius = 5.0f
+    }
+
+    fun setCarColorInTextView(context: Context, textView: TextView, color: String) {
+        @ColorRes
+        val colorId = getCarColorTextRes(color)
+        @StringRes
+        val colorNameId = when (colorId) {
+            R.string.LNG_COLOR_BEIGE,
+            R.string.LNG_COLOR_GOLD,
+            R.string.LNG_COLOR_SILVER,
+            R.string.LNG_COLOR_WHITE,
+            R.string.LNG_COLOR_YELLOW -> R.color.colorTextBlack
+            else -> R.color.colorWhite
+        }
+
+        with(textView) {
+            text = context.getString(colorId)
+            setTextColor(ContextCompat.getColor(context, colorNameId))
+            background = getCarColorTextBackFormRes(context, color)
+            isVisible = true
         }
     }
 
@@ -358,14 +400,12 @@ object Utils : KoinComponent {
     @Suppress("UNUSED_PARAMETER")
     fun formatPrice(context: Context, price: String) = "($price)"
 
-    private fun displayMetrics(context: Context) =
-            context.resources.displayMetrics
+    private fun displayMetrics(context: Context) = context.resources.displayMetrics
 
     fun convertDpToPixels(context: Context, dp: Float) =
         dp * displayMetrics(context).densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT
 
-    fun dpToPxInt(context: Context, dp: Float) =
-            convertDpToPixels(context, dp).toInt()
+    fun dpToPxInt(context: Context, dp: Float) = convertDpToPixels(context, dp).toInt()
 
 /*
         fun isConnectedToInternet(context: Context?): Boolean {
@@ -382,26 +422,6 @@ object Utils : KoinComponent {
         }
         */
     fun isValidBitmap(bitmap: Bitmap) = bitmap.width <= MAX_BITMAP_SIZE && bitmap.height <= MAX_BITMAP_SIZE
-
-    fun initCarrierLanguages(layoutCarrierLanguages: ViewGroup, languages: List<LocaleModel>) {
-        val context = layoutCarrierLanguages.context
-        layoutCarrierLanguages.removeAllViews()
-        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        lp.setMargins(8, 0, 8, 0)
-        for (item in languages) {
-            layoutCarrierLanguages.addView(ImageView(context).apply {
-                background = resources.getDrawable(R.drawable.back_rounded_stroke_light_grey, null)
-                setPadding(1,1,1,1)
-                layoutParams = lp
-            })
-            Glide.with(context)
-                    .load(getLanguageImage(item.delegate.toLanguageTag()))
-                    .apply(RequestOptions()
-                            .transform(RoundedCorners(layoutCarrierLanguages.context.resources.getDimensionPixelSize(R.dimen.view_offer_language_image_corner)))
-                            .override(Utils.dpToPxInt(context, 24F), Utils.dpToPxInt(context, 16F)))
-                    .into(layoutCarrierLanguages.getChildAt(layoutCarrierLanguages.childCount - 1) as ImageView)
-        }
-    }
 
     fun setDrawables(textView: TextView,
                      @DrawableRes start: Int,
@@ -421,7 +441,13 @@ object Utils : KoinComponent {
         path: String? = null,
         @DrawableRes resource: Int = 0
     ) = Glide
-        .with(parent).let { if (path != null) it.load(path) else it.load(resource) }
+        .with(parent).let {
+            if (path != null) it.load(path)
+            else {
+                view.setBackgroundResource(R.drawable.bg_rounded_bn_photo)
+                it.load(resource)
+            }
+        }
         .apply(
             RequestOptions()
                 .error(resource)
@@ -429,7 +455,7 @@ object Utils : KoinComponent {
                 .transform(
                     *arrayOf<Transformation<Bitmap>>(
                         path?.let { CenterCrop() } ?: FitCenter(),
-                        RoundedCorners(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))
+                        TopRightRoundedCornerTransform(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))
                     )
                 )
         )
@@ -452,3 +478,62 @@ fun EditText.afterTextChanged(cb: (String) -> Unit) {
     })
 }
 
+fun Bitmap.roundedSquareBitmap(dimensionPixelSize: Int, tl: Boolean, tr: Boolean, br: Boolean, bl: Boolean): Bitmap {
+    val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+
+    val paint = Paint()
+    val rect = Rect(0, 0, width + dimensionPixelSize, height + dimensionPixelSize)
+
+    paint.isAntiAlias = true
+    canvas.drawARGB(0, 0, 0, 0)
+    paint.color = Color.WHITE
+
+    canvas.drawPath(Path().roundedRect(0f, 0f, width.toFloat(), height.toFloat(),
+            dimensionPixelSize.toFloat(), dimensionPixelSize.toFloat(), tl, tr, br, bl), paint)
+    paint.xfermode = PorterDuffXfermode1(PorterDuff.Mode.SRC_IN)
+    canvas.drawBitmap(this, rect, rect, paint)
+    return output
+}
+
+fun Path.roundedRect(left: Float, top: Float, right: Float, bottom: Float, rx: Float, ry: Float,
+                     tl: Boolean, tr: Boolean, br: Boolean, bl: Boolean): Path {
+    val width = right - left
+    val height = bottom - top
+    val widthMinusCorners = (width - (2 * rx))
+    val heightMinusCorners = (height - (2 * ry))
+
+    moveTo(right, top + ry)
+    if (tr)
+        rQuadTo(0f, -ry, -rx, -ry)//top-right corner
+    else {
+        rLineTo(0f, -ry)
+        rLineTo(-rx, 0f)
+    }
+    rLineTo(-widthMinusCorners, 0f)
+    if (tl)
+        rQuadTo(-rx, 0f, -rx, ry) //top-left corner
+    else {
+        rLineTo(-rx, 0f)
+        rLineTo(0f, ry)
+    }
+    rLineTo(0f, heightMinusCorners)
+
+    if (bl)
+        rQuadTo(0f, ry, rx, ry)//bottom-left corner
+    else {
+        rLineTo(0f, ry)
+        rLineTo(rx, 0f)
+    }
+
+    rLineTo(widthMinusCorners, 0f)
+    if (br)
+        rQuadTo(rx, 0f, rx, -ry) //bottom-right corner
+    else {
+        rLineTo(rx, 0f)
+        rLineTo(0f, -ry)
+    }
+    rLineTo(0f, -heightMinusCorners)
+    close()//Given close, last lineto can be removed.
+    return this
+}

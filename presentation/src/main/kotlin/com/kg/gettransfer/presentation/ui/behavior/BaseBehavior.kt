@@ -2,14 +2,13 @@ package com.kg.gettransfer.presentation.ui.behavior
 
 import android.app.Activity
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 
-open class BaseBehavior<V : ViewGroup>(private val mContext: Context, attrs: AttributeSet) : CoordinatorLayout.Behavior<V>(mContext, attrs) {
+open class BaseBehavior (mContext: Context, attrs: AttributeSet) : CoordinatorLayout.Behavior<View>(mContext, attrs) {
     val screenHeight: Int
     var actionBarHeight: Int = 0
 
@@ -31,10 +30,5 @@ open class BaseBehavior<V : ViewGroup>(private val mContext: Context, attrs: Att
         return if (lp is CoordinatorLayout.LayoutParams) {
             lp.behavior is BottomSheetTripleStatesBehavior<*>
         } else false
-    }
-
-    protected fun convertDpToPixel(dp: Float, context: Context): Float {
-        val densityDpi = context.resources.displayMetrics.densityDpi.toFloat()
-        return dp * (densityDpi / DisplayMetrics.DENSITY_DEFAULT)
     }
 }

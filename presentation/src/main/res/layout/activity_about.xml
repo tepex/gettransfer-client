@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
@@ -9,7 +9,7 @@
 	tools:context=".presentation.ui.AboutActivity"
 	android:background="@color/colorWhite">
 
-	<ImageView
+	<com.kg.gettransfer.presentation.ui.custom.SingleClickButton
 		android:id="@+id/btnClose"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -17,15 +17,14 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		android:layout_marginTop="@dimen/about_activity_close_button_margin"
 		android:layout_marginEnd="@dimen/about_activity_close_button_margin"
+		style="@style/BorderlessBackground"
 		app:srcCompat="@drawable/ic_close_x"/>
 
-	<android.support.v4.view.ViewPager
+	<androidx.viewpager.widget.ViewPager
 		android:id="@+id/viewpager"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:overScrollMode="never"
-		android:layout_marginTop="@dimen/about_activity_view_pager_margin_top"
-		android:layout_marginBottom="@dimen/about_activity_view_pager_margin_bottom"
 		app:layout_constraintBottom_toTopOf="@+id/btnNext"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +43,7 @@
 			android:layout_height="match_parent"
 			app:img_about_item="@drawable/onboarding_1"
 			app:title_about_item="@string/LNG_PRESENTATION_TITLE_1" />
-	</android.support.v4.view.ViewPager>
+	</androidx.viewpager.widget.ViewPager>
 
 	<com.rd.PageIndicatorView
 		android:id="@+id/pageIndicator"
@@ -77,4 +76,4 @@
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintBottom_toTopOf="@+id/pageIndicator"/>
 
-</android.support.constraint.ConstraintLayout>	
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/contentMain"
+    android:animateLayoutChanges="true"
+    android:background="@color/colorWhite"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/search_content"
+        android:layout_marginBottom="@dimen/margin_for_area_behind_rounded_corners">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/mMarker"
+            android:layout_width="31dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="21dp"
+            app:srcCompat="@drawable/point_orange" />
+
+        <ImageView
+            android:id="@+id/markerShadow"
+            android:layout_width="31dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:src="@drawable/default_position_shadow" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/search_content"
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        android:layout_above="@+id/btnNext"
+        android:background="@drawable/back_top_rounded">
+
+        <com.kg.gettransfer.presentation.ui.custom.SearchFormMapView
+            android:id="@+id/search_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btnNext"
+        android:visibility="visible"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="@dimen/general_button_width"
+        android:layout_height="@dimen/general_button_height"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/btn_next_main_margin_16dp"
+        android:background="@drawable/btn_bg_rounded"
+        android:enabled="true"
+        android:text="@string/LNG_NEXT"
+        android:textColor="@color/colorWhite" />
+
+    <View
+        android:id="@+id/viewGradient"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_main_gradient_layout_height"
+        android:layout_gravity="top"
+        android:background="@drawable/back_status_bar_gradient" />
+
+    <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
+        android:id="@+id/layoutTextNetworkNotAvailable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:text_no_internet="@string/LNG_OFFLINE_MESSAGE"/>
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_below="@+id/layoutTextNetworkNotAvailable"
+        android:layout_width="@dimen/activity_main_buttons_size"
+        android:layout_height="@dimen/activity_main_buttons_size"
+        android:layout_marginStart="@dimen/activity_main_buttons_margin_start"
+        android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
+        android:background="@drawable/back_circle_white_buttons"
+        android:clickable="true"
+        android:elevation="2dp"
+        android:focusable="true"
+        app:srcCompat="@drawable/ic_circle_back" />
+
+    <ImageView
+        android:id="@+id/btnMyLocation"
+        android:layout_below="@+id/btnBack"
+        android:layout_width="@dimen/activity_main_buttons_size"
+        android:layout_height="@dimen/activity_main_buttons_size"
+        android:layout_marginStart="@dimen/activity_main_buttons_margin_start"
+        android:layout_marginTop="@dimen/activity_main_buttons_margin_top"
+        android:layout_marginBottom="@dimen/activity_main_buttons_margin_bottom"
+        android:background="@drawable/back_circle_white_buttons"
+        android:clickable="true"
+        android:elevation="2dp"
+        android:focusable="true"
+        app:srcCompat="@drawable/ic_my_location" />
+
+</RelativeLayout>
+

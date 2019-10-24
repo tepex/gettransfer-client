@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingStart="@dimen/margin16"
+    android:paddingEnd="@dimen/margin16"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/field_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/activity_transfer_details_carrier_field_title_margin_top"
+
+        style="@style/sf_font_pro_text_regular_grey"
+        android:textSize="@dimen/activity_transfer_details_text_size_12sp"
+        tools:text = "Carrier e-mail"/>
+
+    <TextView
+        android:id="@+id/field_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/field_title"
+        android:layout_marginTop="@dimen/activity_transfer_details_carrier_field_text_margin_top"
+
+        style="@style/sf_font_pro_display_regular_black"
+        android:textSize="@dimen/activity_transfer_details_text_size_16sp"
+        tools:text = "company@carrier.com"/>
+
+    <View
+        android:id="@+id/divider_transfer_details_field"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_transfer_details_field_horizontal_divider_height"
+        android:layout_marginTop="@dimen/activity_transfer_details_carrier_field_divider_margin_top"
+        android:background="@color/color_transfer_details_horizontal_divider_new"
+        app:layout_constraintTop_toBottomOf="@+id/field_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,9 +20,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?android:attr/actionBarSize"/>
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
+        android:id="@+id/fieldsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/appbar"
@@ -50,7 +51,7 @@
             app:settingsEditableFieldChevron="false"
             android:inputType="phone"/>
 
-        <com.kg.gettransfer.presentation.ui.custom.SettingsFieldPicker
+        <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
             android:id="@+id/passwordField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,12 +69,31 @@
         android:background="@drawable/btn_bg_rounded"
         android:enabled="false"
         android:text="@string/LNG_DONE"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textSize="@dimen/profile_settings_btns_text_size"
         android:textColor="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/profile_settings_btn_save_margin_bottom"
-        android:layout_marginStart="@dimen/profile_settings_btn_save_vertical_margin"
-        android:layout_marginEnd="@dimen/profile_settings_btn_save_vertical_margin"/>
+        app:layout_constraintTop_toBottomOf="@+id/fieldsLayout"
+        android:layout_marginTop="@dimen/profile_settings_btns_margin_top"
+        android:layout_marginStart="@dimen/profile_settings_btns_vertical_margin"
+        android:layout_marginEnd="@dimen/profile_settings_btns_vertical_margin"/>
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/btnLogout"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/general_button_height"
+        android:background="@drawable/btn_bg_logout_rounded"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:textSize="@dimen/profile_settings_btns_text_size"
+        android:text="@string/LNG_UNLOGIN"
+        android:textColor="@color/color_gtr_red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSave"
+        android:layout_marginTop="@dimen/profile_settings_btns_margin_top"
+        android:layout_marginStart="@dimen/profile_settings_btns_vertical_margin"
+        android:layout_marginEnd="@dimen/profile_settings_btns_vertical_margin"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

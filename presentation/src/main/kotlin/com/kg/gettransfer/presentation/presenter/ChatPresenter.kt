@@ -1,15 +1,14 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.support.annotation.CallSuper
-
 import com.arellomobile.mvp.InjectViewState
+
+import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.domain.eventListeners.ChatEventListener
 import com.kg.gettransfer.domain.eventListeners.SocketEventListener
 import com.kg.gettransfer.domain.model.Chat
 import com.kg.gettransfer.domain.model.Message
 
-import com.kg.gettransfer.presentation.mapper.CarrierTripMapper
 import com.kg.gettransfer.presentation.mapper.ChatMapper
 import com.kg.gettransfer.presentation.mapper.MessageMapper
 
@@ -17,65 +16,57 @@ import com.kg.gettransfer.presentation.model.ChatModel
 import com.kg.gettransfer.presentation.model.MessageModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
-import com.kg.gettransfer.presentation.model.CarrierTripModel
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.ChatView
-import com.kg.gettransfer.presentation.view.Screens
+
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+
 import com.kg.gettransfer.utilities.Analytics
 
 import java.util.Calendar
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 
 @InjectViewState
 class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventListener {
 
     private val chatMapper: ChatMapper by inject()
     private val messageMapper: MessageMapper by inject()
-    private val carrierTripMapper: CarrierTripMapper by inject()
+    private val worker: WorkerManager by inject { parametersOf("ChatPresenter") }
+    private val configsManager: ConfigsManager by inject()
 
     private var chatModel: ChatModel? = null
     private var transferModel: TransferModel? = null
     private var offerModel: OfferModel? = null
 
     internal var transferId = 0L
-    internal var tripId = 0L
 
-    private val userRole = when (systemInteractor.lastMode) {
-        Screens.PASSENGER_MODE -> ROLE_PASSENGER
-        Screens.CARRIER_MODE -> ROLE_CARRIER
-        else -> throw UnsupportedOperationException()
-    }
-
-    @CallSuper
     override fun attachView(view: ChatView) {
         super.attachView(view)
         socketInteractor.addSocketListener(this)
-        utils.launchSuspend {
-            val transferCachedResult = utils.asyncAwait { transferInteractor.getTransfer(transferId, false, userRole) }
-            val chatCachedResult = utils.asyncAwait { chatInteractor.getChat(transferId, true) }
+        worker.main.launch {
+            val transferCachedResult = withContext(worker.bg) {
+                transferInteractor.getTransfer(transferId, false)
+            }
+            val chatCachedResult = withContext(worker.bg) { chatInteractor.getChat(transferId, true) }
 
-            transferModel = transferCachedResult.model.map(systemInteractor.transportTypes.map { it.map() })
+            transferModel = transferCachedResult.model.map(configsManager.configs.transportTypes.map { it.map() })
             chatModel = chatMapper.toView(chatCachedResult.model)
             chatModel?.let { viewState.setChat(it) }
 
             getChatFromRemote()
 
-            if (tripId != NO_ID) {
-                val carrierTripCachedModel = utils.asyncAwait { carrierTripInteractor.getCarrierTrip(tripId) }.model
-                val carrierTripModel = carrierTripMapper.toView(carrierTripCachedModel)
-                if (carrierTripModel.base.id != NO_ID) {
-                    viewState.setToolbar(carrierTripModel)
-                } else {
-                    transferModel?.let { viewState.setToolbar(it, null, false) }
-                }
-            } else {
-                offerModel = utils.asyncAwait { offerInteractor.getOffers(transferId, true) }
-                    .model.firstOrNull()?.let { offerMapper.toView(it) }
-                transferModel?.let {
-                    viewState.setToolbar(it, offerModel, tripId == NO_ID && userRole == ROLE_PASSENGER)
-                }
+            offerModel = withContext(worker.bg) {
+                offerInteractor.getOffers(transferId, true).model.firstOrNull()?.let { offerMapper.toView(it) }
+            }
+
+            transferModel?.let {
+                viewState.setToolbar(it, offerModel)
             }
         }
         onJoinRoom()
@@ -153,10 +144,12 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
     private fun isIdValid(message: Message, accountId: Long) = message.accountId != accountId && accountId != NO_ID
 
-    companion object {
-        const val ROLE_CARRIER = "carrier"
-        const val ROLE_PASSENGER = "passenger"
+    override fun onDestroy() {
+        worker.cancel()
+        super.onDestroy()
+    }
 
-        const val NO_ID       = 0L
+    companion object {
+        const val NO_ID = 0L
     }
 }

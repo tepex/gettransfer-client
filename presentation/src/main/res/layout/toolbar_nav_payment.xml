@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/toolbar_bg"
-    app:elevation="8dp"
+    android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
     android:minHeight="?android:attr/actionBarSize"
     app:contentInsetStart="0dp"
+    app:elevation="8dp"
     tools:ignore="Overdraw">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -26,53 +26,51 @@
 
         <TextView
             android:id="@+id/tvTitle"
+            style="@style/sf_font_semi_bold_15_sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            style="@style/sf_font_semi_bold_15_sp"
+            android:layout_marginEnd="48dp"
             android:textSize="15sp"
-            tools:text="Title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btnBack"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
 
         <TextView
             android:id="@+id/tvSubTitle"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:singleLine="true"
             android:ellipsize="marquee"
-            android:gravity="center"
             android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="12sp"
-            android:scrollHorizontally="true"
+            android:gravity="center"
             android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@+id/tvSubTitle2"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/btnBack"
             app:layout_constraintTop_toBottomOf="@+id/tvTitle"
             tools:text="subtitle" />
 
-            <TextView
+        <TextView
             android:id="@+id/tvSubTitle2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="48dp"
             android:ellipsize="end"
+            android:fontFamily="@font/sf_pro_text_regular"
             android:gravity="center"
             android:singleLine="true"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tvSubTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvTitle"
-            tools:text="subtitle 2"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="12sp"/>
-    </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.Toolbar>
+            tools:text="subtitle 2" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.Toolbar>

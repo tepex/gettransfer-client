@@ -1,15 +1,12 @@
 package com.kg.gettransfer.presentation.view
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
-import com.google.android.gms.maps.CameraUpdate
-
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.presentation.model.CurrencyModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.UserModel
 
@@ -19,22 +16,23 @@ import com.kg.gettransfer.utilities.Analytics
 interface CreateOrderView : BaseView, RouteView {
     fun setTransportTypes(transportTypes: List<TransportTypeModel>)
     fun setTripType(withReturnWay: Boolean)
-    fun setFairPrice(price: String?, time: String?)
-    //fun setCurrencies(currencies: List<CurrencyModel>)
     fun setUser(user: UserModel, isLoggedIn: Boolean)
     fun setEditableFields(offeredPrice: Double?, flightNumber: String?, flightNumberReturn: String?, promo: String)
     fun setPassengers(count: Int)
     fun setChildSeats(setOf: Set<ChildSeatItem>, total: Int)
     fun setCurrency(currency: String, hideCurrencies: Boolean)
     fun setDateTimeTransfer(dateTimeString: String, startField: Boolean)
+    fun showHourlyDurationDialog(durationValue: Int?)
+    fun setHourlyDuration(durationValue: Int?)
     fun setHintForDateTimeTransfer(withReturnWay: Boolean)
-    fun enableReturnTimeChoose()
+    fun disablePromoCodeField()
     fun setPromoResult(discountInfo: String?)
     fun resetPromoView()
     fun showEmptyFieldError(@StringRes stringId: Int)
     fun showNotLoggedAlert(withOfferId: Long)
     fun highLightErrorField(errorField: FieldError)
     fun showCommentDialog(comment: String, hintsToComments: List<String>?)
+    fun showCurrencies()
 
     enum class FieldError(val value: String, @StringRes val stringId: Int) {
         EMAIL_FIELD(Analytics.INVALID_EMAIL, R.string.LNG_RIDE_EMAIL),

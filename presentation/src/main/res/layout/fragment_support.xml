@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/content"
+    android:animateLayoutChanges="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:fitsSystemWindows="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            tools:context=".presentation.ui.SupportFragment">
+
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
+                android:id="@+id/aboutUs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:settingsTitlePicker="@string/LNG_MENU_TITLE_ABOUT" />
+
+            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
+                android:id="@+id/becomeCarrier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/aboutUs"
+                app:settingsTitlePicker="@string/LNG_RIDE_CREATE_CARRIER" />
+
+            <TextView
+                android:id="@+id/tvWeSpeak"
+                style="@style/sf_font_pro_text_semibold_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_customer_support_titles_margin_start"
+                android:layout_marginTop="@dimen/activity_customer_support_we_speak_title_margin_top"
+                android:text="@string/LNG_CUSTOMER_SUPPORT_SPEAK_YOUR_LANG"
+                android:textSize="@dimen/activity_customer_support_titles_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/becomeCarrier" />
+
+            <include
+                android:id="@+id/ourLanguages"
+                layout="@layout/layout_our_languages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/tvWeSpeak"
+                android:layout_marginTop="@dimen/activity_customer_support_layout_our_lang_margin_top"/>
+
+            <TextView
+                android:id="@+id/tvMessageUs"
+                style="@style/sf_font_pro_text_semibold_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_customer_support_titles_margin_start"
+                android:layout_marginTop="@dimen/activity_customer_support_message_us_title_margin_top"
+                android:text="@string/LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSENGER"
+                android:textSize="@dimen/activity_customer_support_titles_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ourLanguages" />
+
+            <include
+                android:id="@+id/socialNetwork"
+                layout="@layout/layout_social_network"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/tvMessageUs"
+                android:layout_marginTop="@dimen/activity_customer_support_layout_social_networks_margin_top"/>
+
+            <TextView
+                android:id="@+id/tvWriteUs"
+                style="@style/sf_font_pro_text_semibold_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_customer_support_titles_margin_start"
+                android:layout_marginTop="@dimen/activity_customer_support_write_us_title_margin_top"
+                android:text="@string/LNG_CUSTOMER_SUPPORT_WRITE_TO_MESSAGE"
+                android:textSize="@dimen/activity_customer_support_titles_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/socialNetwork" />
+
+            <include
+                android:id="@+id/include"
+                layout="@layout/layout_write_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_customer_support_layout_write_us_margin_top"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvWriteUs" />
+
+            <TextView
+                android:id="@+id/tvCallUs"
+                style="@style/sf_font_pro_text_semibold_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_customer_support_titles_margin_start"
+                android:layout_marginTop="@dimen/activity_customer_support_call_us_title_margin_top"
+                android:text="@string/LNG_CUSTOMER_SUPPORT_CALL_BY_PHONE"
+                android:textSize="@dimen/activity_customer_support_titles_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/include" />
+
+            <include
+                android:id="@+id/phones"
+                layout="@layout/layout_phones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_customer_support_layout_phones_margin_top"
+                android:layout_marginBottom="@dimen/activity_customer_support_padding_bottom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCallUs" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

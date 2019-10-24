@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:paddingTop="@dimen/view_transfer_details_header_container_padding_top"
     android:paddingStart="@dimen/view_transfer_details_header_container_padding_horizontal"
+    android:paddingTop="@dimen/view_transfer_details_header_container_padding_top"
     android:paddingEnd="@dimen/view_transfer_details_header_container_padding_horizontal">
 
     <TextView
@@ -12,6 +14,8 @@
         style="@style/tv_transfer_details_header_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="14 aug 2020" />
 
     <TextView
@@ -19,15 +23,19 @@
         style="@style/tv_transfer_details_header_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_conversion_wrapHeight="54"
+        tools:layout_conversion_wrapWidth="109"
         tools:text="15:30" />
 
     <TextView
         android:id="@+id/booking_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvTransferDate"
         android:layout_marginTop="@dimen/booking_number_margin_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTransferDate"
         tools:text="Transfer #100500 wiil start in 15d 8h 30m" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

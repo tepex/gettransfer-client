@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contentMain"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackgroundGray">
+
+    <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
+        android:id="@+id/layoutTextNetworkNotAvailable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:text_no_internet="@string/LNG_OFFLINE_MESSAGE" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/bestPriceLogo"
+        android:layout_width="@dimen/main_without_map_logo_size"
+        android:layout_height="@dimen/main_without_map_logo_size"
+        android:layout_marginStart="@dimen/main_without_map_logo_margin_start"
+        android:layout_marginTop="@dimen/main_without_map_logo_margin_top"
+        android:background="@null"
+        android:scaleType="centerInside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layoutTextNetworkNotAvailable"
+        app:srcCompat="@drawable/ic_best_price_logo" />
+
+    <LinearLayout
+        android:id="@+id/layoutBestPriceText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/main_without_map_best_price_text_horizontal_margin"
+        android:layout_marginEnd="@dimen/main_without_map_best_price_text_horizontal_margin"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/bestPriceLogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bestPriceLogo"
+        app:layout_constraintTop_toTopOf="@+id/bestPriceLogo">
+
+        <TextView
+            style="@style/sf_font_pro_text_regular_black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="@string/LNG_BESTPRICES"
+            android:textSize="@dimen/main_without_map_best_price_text_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/main_without_map_read_more_text_margin_top"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="@string/LNG_READMORE"
+            android:textColor="@color/color_gtr_grey"
+            android:textSize="@dimen/main_without_map_best_price_text_size" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/layoutBestPriceText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/switcher_hourly"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/gtrLogo"
+        android:layout_width="@dimen/nav_header_logo_width"
+        android:layout_height="@dimen/nav_header_logo_height"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/promoText"
+        style="@style/sf_font_pro_text_semibold_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/main_without_map_promo_text_horizontal_margins"
+        android:layout_marginStart="@dimen/main_without_map_promo_text_horizontal_margins"
+        android:layout_marginEnd="@dimen/main_without_map_promo_text_horizontal_margins"
+        android:gravity="center_horizontal"
+        android:text="@string/LNG_MAIN_SCREEN_POINT_TO_POINT_TRANSFER_TITLE"
+        android:textSize="@dimen/main_without_map_promo_text_size"
+        android:maxLines="2"/>
+
+    </LinearLayout>
+
+    <com.kg.gettransfer.presentation.ui.custom.SwitcherView
+        android:id="@+id/switcher_hourly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/main_without_map_switch_hourly_margins"
+        android:layout_marginBottom="@dimen/main_without_map_switch_hourly_margins"
+        app:layout_constraintBottom_toTopOf="@+id/search_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:switcher_title="@string/LNG_PER_HOUR" />
+
+    <FrameLayout
+        android:id="@+id/search_content"
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        android:layout_marginBottom="@dimen/main_without_map_addresses_panel_margin_bottom"
+        android:background="@color/colorWhite"
+        app:layout_constraintBottom_toTopOf="@+id/btnNextFragment">
+
+        <com.kg.gettransfer.presentation.ui.custom.SearchFormMainView
+            android:id="@+id/request_search_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ivSelectFieldToGone="true"
+            app:roundedTopCorners="false" />
+    </FrameLayout>
+    <Button
+        android:id="@+id/btnNextFragment"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_without_map_btn_next_height"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/main_without_map_btn_next_horizontal_margin"
+        android:layout_marginEnd="@dimen/main_without_map_btn_next_horizontal_margin"
+        android:layout_marginBottom="@dimen/main_without_map_btn_next_margin_bottom"
+        android:background="@drawable/btn_bg_rounded"
+        android:enabled="false"
+        android:text="@string/LNG_NEXT"
+        android:textColor="@color/colorWhite"
+
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

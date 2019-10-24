@@ -1,14 +1,13 @@
 package com.kg.gettransfer.presentation.adapter
 
-import android.support.v7.widget.RecyclerView
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.extensions.*
+import com.kg.gettransfer.extensions.isVisible
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.address_list_item.*
@@ -17,8 +16,6 @@ class AddressAdapter(
     private var list: List<GTAddress>,
     private val selectListener: (GTAddress) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    var isLastAddresses = true
 
     init {
         selected = RecyclerView.NO_POSITION
@@ -30,7 +27,7 @@ class AddressAdapter(
         AddressViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.address_list_item, parent, false))
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
-        (holder as AddressViewHolder).bindViews(list[pos], isLastAddresses) {
+        (holder as AddressViewHolder).bindViews(list[pos]) {
             notifyDataSetChanged()
             selectListener(it)
         }
@@ -40,12 +37,14 @@ class AddressAdapter(
         RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        fun bindViews(address: GTAddress, isLastAddress: Boolean, listener: ClickHandler) = with(containerView) {
+        fun bindViews(address: GTAddress, listener: ClickHandler) = with(containerView) {
             addressItem.text = address.address
-            addressSecondaryItem.text = address.variants?.second
-            setSelected(selected == adapterPosition)
+            with(addressSecondaryItem) {
+                isVisible = !address.variants?.second.isNullOrEmpty()
+                addressSecondaryItem.text = address.variants?.second
+            }
+            isSelected = selected == adapterPosition
 
-            icon_for_last_place.isVisible = isLastAddress
             setOnClickListener {
                 selected = adapterPosition
                 listener(address)
@@ -63,7 +62,6 @@ class AddressAdapter(
             list.minusElement(item)
             notifyItemRemoved(it)
         }
-
     }
 
     companion object {

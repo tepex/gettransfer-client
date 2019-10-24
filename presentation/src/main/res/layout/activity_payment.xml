@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include
@@ -14,5 +14,14 @@
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/spinner"
+        android:layout_width="@dimen/ic_loading_size"
+        android:layout_height="@dimen/ic_loading_size"
+        android:src="@drawable/ic_loading_gray"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </RelativeLayout>

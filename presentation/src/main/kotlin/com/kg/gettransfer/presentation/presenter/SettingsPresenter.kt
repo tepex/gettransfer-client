@@ -4,152 +4,161 @@ import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.BuildConfig
 
-import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.core.presentation.WorkerManager
+
+import com.kg.gettransfer.di.ENDPOINTS
+import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
+import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
+
 import com.kg.gettransfer.domain.model.DistanceUnit
 
-import com.kg.gettransfer.presentation.model.*
-import com.kg.gettransfer.presentation.ui.days.GTDayOfWeek
-
-import com.kg.gettransfer.presentation.view.CarrierTripsMainView
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SettingsView
 
+import com.kg.gettransfer.sys.domain.Configs
+import com.kg.gettransfer.sys.domain.Endpoint
+import com.kg.gettransfer.sys.domain.SetAccessTokenInteractor
+import com.kg.gettransfer.sys.domain.SetDebugMenuShowedInteractor
+import com.kg.gettransfer.sys.domain.SetEndpointInteractor
+import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
+import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
+
+import com.kg.gettransfer.sys.presentation.ConfigsManager
+import com.kg.gettransfer.sys.presentation.EndpointModel
+import com.kg.gettransfer.sys.presentation.map
+
 import com.kg.gettransfer.utilities.Analytics
 
-import java.util.Locale
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.core.get
+import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
+@Suppress("TooManyFunctions")
 @InjectViewState
-class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener {
+class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener, CreateTransferListener {
 
-    private lateinit var locales: List<LocaleModel>
-    private lateinit var endpoints: List<EndpointModel>
-    private lateinit var calendarModes: List<String>
-    private lateinit var daysOfWeek: List<DayOfWeekModel>
+    private val endpoints: List<EndpointModel> = get<List<Endpoint>>(named(ENDPOINTS)).map { it.map() }
 
-    private val reviewInteractor = get<ReviewInteractor>()
-
-    private var localeWasChanged = false
     private var restart = true
 
-    val isBackGroundAccepted get() =
-        carrierTripInteractor.bgCoordinatesPermission != CarrierTripsMainView.BG_COORDINATES_REJECTED
+    private var count = 0
+    private var startMillis = 0L
 
-    internal var showingFragment: Int? = null
+    private val worker: WorkerManager by inject { parametersOf("SettingsPresenter") }
+    private val configsManager: ConfigsManager by inject()
 
-    companion object {
-        const val CLOSE_FRAGMENT  = 0
-        const val CURRENCIES_VIEW = 1
+    private val setDebugMenuShowed: SetDebugMenuShowedInteractor by inject()
+    private val setEndpoint: SetEndpointInteractor by inject()
+    private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
+    private val setAccessToken: SetAccessTokenInteractor by inject()
+    private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        sessionInteractor.addCreateTransferListener(this)
     }
 
     override fun attachView(view: SettingsView) {
         super.attachView(view)
+        sessionInteractor.addAccountChangedListener(this)
         if (restart) initConfigs()
-        initGeneralSettings()
-        if (accountManager.isLoggedIn) {
-            viewState.initProfileField()
-            viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
-        }
-
         initDebugMenu()
+        initSettings()
+        checkLanguage()
     }
 
-    private fun initDebugMenu() {
-        if (BuildConfig.FLAVOR == "dev") {
-            showDebugMenu()
-        } else if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
-            if (systemInteractor.isDebugMenuShowed)
-                showDebugMenu()
-        }
-    }
-
-    private fun initGeneralSettings() {
-        viewState.initGeneralSettingsLayout()
-
-        viewState.setCurrency(sessionInteractor.currency.map().name)
-
-        viewState.setLocales(locales)
-        val locale = sessionInteractor.locale
-        val localeModel = locales.find { it.delegate.language == locale.language }
-        viewState.setLocale(localeModel?.name ?: "", locale.language)
-
-        viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
-        viewState.setLogoutButtonEnabled(accountManager.hasAccount)
-    }
-
-    fun switchDebugSettings() {
-        if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
-            if (systemInteractor.isDebugMenuShowed) {
-                systemInteractor.isDebugMenuShowed = false
-                viewState.hideDebugMenu()
-            } else {
-                systemInteractor.isDebugMenuShowed = true
-                showDebugMenu()
+    /**
+     * check language after login and if it difference then recreate activity
+     * to change language for fragments
+     */
+    private fun checkLanguage() {
+        if (accountManager.isLoggedIn) {
+            val language = sessionInteractor.locale.language
+            if (language != sessionInteractor.appLanguage) {
+                sessionInteractor.appLanguage = language
+                viewState.recreate()
             }
         }
     }
 
-    private fun showDebugMenu() {
+    private fun initSettings() {
+        initGeneralSettings()
+        initProfileSettings()
+        worker.main.launch { viewState.hideSomeDividers() }
+    }
+
+    override fun detachView(view: SettingsView?) {
+        super.detachView(view)
+        sessionInteractor.removeAccountChangedListener(this)
+    }
+
+    override fun accountChanged() {
+        worker.main.launch { initSettings() }
+    }
+
+    override fun onCreateTransferClick() {
+        viewState.showOrderItem()
+    }
+
+    private fun initGeneralSettings() = worker.main.launch {
+        viewState.initGeneralSettingsLayout()
+        viewState.setCurrency(sessionInteractor.currency.map().name)
+        val locale = sessionInteractor.locale
+        val localeModel = withContext(worker.bg) {
+            configsManager.configs.availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
+                .map { it.map() }
+                .find { it.delegate.language == locale.language }
+        }
+        viewState.setLocale(localeModel?.name ?: "", locale.language)
+        viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
+    }
+
+    private fun initProfileSettings() = worker.main.launch {
+        viewState.initProfileField(accountManager.isLoggedIn, accountManager.remoteProfile)
+        if (accountManager.isLoggedIn) {
+            setBalanceAndCreditLimit()
+            viewState.setEmailNotifications(sessionInteractor.isEmailNotificationEnabled)
+        } else {
+            hideBalanceAndCreditLimit()
+            viewState.hideEmailNotifications()
+        }
+    }
+
+    private fun setBalanceAndCreditLimit() {
+        with(accountManager.remoteAccount) {
+            if (isBusinessAccount) {
+                val balance = partner?.availableMoney?.default
+                if (!balance.isNullOrEmpty()) viewState.setBalance(balance) else viewState.hideBalance()
+
+                val creditLimit = partner?.creditLimit?.default
+                if (!creditLimit.isNullOrEmpty()) viewState.setCreditLimit(creditLimit) else viewState.hideCreditLimit()
+            } else {
+                hideBalanceAndCreditLimit()
+            }
+        }
+    }
+
+    private fun hideBalanceAndCreditLimit() {
+        viewState.hideBalance()
+        viewState.hideCreditLimit()
+    }
+
+    private fun initDebugMenu() = worker.main.launch {
+        if (BuildConfig.FLAVOR == "dev" || getPreferences().getModel().isDebugMenuShowed) {
+            showDebugMenu()
+        }
+    }
+
+    private fun showDebugMenu() = worker.main.launch {
         viewState.setEndpoints(endpoints)
-        viewState.setEndpoint(systemInteractor.endpoint.map())
+        getPreferences().getModel().endpoint?.let { viewState.setEndpoint(it.map()) }
         viewState.showDebugMenu()
-    }
-
-    override fun currencyChanged(currency: CurrencyModel) {
-        viewState.setCurrency(currency.name)
-        viewState.showFragment(CLOSE_FRAGMENT)
-        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, currency.code)
-    }
-
-    fun changeLocale(selected: Int): Locale {
-        localeWasChanged = true
-        val localeModel = locales.get(selected)
-        sessionInteractor.locale = localeModel.delegate
-        viewState.setLocale(localeModel.name, localeModel.locale)
-        saveGeneralSettings(true)
-        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LANGUAGE_PARAM, localeModel.name)
-
-        Locale.setDefault(sessionInteractor.locale)
-        initConfigs()
-        viewState.setCalendarModes(calendarModes)
-
-        return sessionInteractor.locale
-    }
-
-    fun changeFirstDayOfWeek(selected: Int) {
-        with(daysOfWeek[selected]) {
-            systemInteractor.firstDayOfWeek = delegate.day
-            viewState.setFirstDayOfWeek(name)
-        }
-    }
-
-    fun changeCalendarMode(selected: String) {
-        systemInteractor.lastCarrierTripsTypeView = selected
-        viewState.setCalendarMode(selected)
-    }
-
-    fun changeEndpoint(selected: Int) {
-        val endpoint = endpoints[selected]
-        viewState.setEndpoint(endpoint)
-        systemInteractor.endpoint = endpoint.delegate
-        utils.launchSuspend {
-            viewState.blockInterface(true)
-            utils.asyncAwait { accountManager.logout() }
-            utils.asyncAwait { sessionInteractor.coldStart() }
-            viewState.blockInterface(false)
-            restart = true
-            router.exit() //Without restarting app
-        }
-    }
-
-    fun onLogout() {
-        utils.launchSuspend {
-            clearAllCachedData()
-            router.exit()
-        }
-        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
     }
 
     fun onDistanceUnitSwitched(isChecked: Boolean) {
@@ -157,61 +166,125 @@ class SettingsPresenter : BasePresenter<SettingsView>(), CurrencyChangedListener
             true  -> DistanceUnit.MI
             false -> DistanceUnit.KM
         }.apply { analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.UNITS_PARAM, name) }
-        saveGeneralSettings()
+        worker.main.launch {
+            saveGeneralSettings()
+        }
     }
 
     fun onEmailNotificationSwitched(isChecked: Boolean) {
         sessionInteractor.isEmailNotificationEnabled = isChecked
-        saveAccount()
+        worker.main.launch {
+            saveGeneralSettings()
+        }
     }
 
-    fun onLogsClicked() = router.navigateTo(Screens.ShareLogs)
+    fun onAboutAppClicked() {
+        val time = System.currentTimeMillis()
 
-    fun onResetOnboardingClicked() { systemInteractor.isOnboardingShowed = false }
+        // if it is the first time, or if it has been more than 3 seconds since the first tap
+        // (so it is like a new try), we reset everything
+        if (startMillis == 0L || time - startMillis > TIME_FOR_DEBUG) {
+            startMillis = time
+            count = 1
+        } else {
+            // it is not the first, and it has been  less than 3 seconds since the first
+            count++
+        }
+
+        if (count == COUNTS_FOR_DEBUG) {
+            count = 0
+            switchDebugSettings()
+        }
+    }
+
+    private fun switchDebugSettings() {
+        if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
+            worker.main.launch {
+                if (getPreferences().getModel().isDebugMenuShowed) {
+                    withContext(worker.bg) { setDebugMenuShowed(false) }
+                    viewState.hideDebugMenu()
+                } else {
+                    withContext(worker.bg) { setDebugMenuShowed(true) }
+                    showDebugMenu()
+                }
+            }
+        }
+    }
+
+    fun changeEndpoint(selected: Int) = worker.main.launch {
+        val endpoint = endpoints[selected]
+        viewState.setEndpoint(endpoint)
+        viewState.blockInterface(true)
+        withContext(worker.bg) {
+            endpoint.delegate.run {
+                initEndpoint(this)
+                setEndpoint(this)
+            }
+            accountManager.logout()
+        }
+        configsManager.coldStart(worker.backgroundScope)
+        fetchResult { sessionInteractor.coldStart() }
+        viewState.blockInterface(false)
+        restart = true
+        router.exit() // Without restarting app
+    }
+
+    fun onResetOnboardingClicked() {
+        worker.main.launch {
+            withContext(worker.bg) { setOnboardingShowed(false) }
+        }
+    }
 
     fun onResetRateClicked() { reviewInteractor.shouldAskRateInMarket = true }
 
-    fun onClearAccessTokenClicked() { systemInteractor.accessToken = "" }
-
-    fun onDriverCoordinatesSwitched(checked: Boolean) =
-            carrierTripInteractor.permissionChanged(checked)
-
-    fun onCurrencyClicked() {
-        showingFragment = CURRENCIES_VIEW
-        viewState.showFragment(CURRENCIES_VIEW)
+    fun onClearAccessTokenClicked() = worker.main.launch {
+        withContext(worker.bg) { setAccessToken("") }
     }
 
-    fun onPasswordClicked() {
-        router.navigateTo(Screens.ChangePassword())
+    fun onResetNewDriverAppDialogClicked() = worker.main.launch {
+        withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(false) }
+    }
+
+    fun onCurrencyClicked() {
+        if (!accountManager.remoteAccount.isBusinessAccount) {
+            viewState.showCurrencyChooser()
+        }
+    }
+
+    fun onLanguageClicked() {
+        viewState.showLanguageChooser()
     }
 
     fun onProfileFieldClicked() {
-        router.navigateTo(Screens.ProfileSettings())
+        if (accountManager.isLoggedIn) {
+            router.navigateTo(Screens.ProfileSettings())
+        } else {
+            router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, null))
+        }
     }
 
-    override fun onBackCommandClick() {
-        if (showingFragment != null) {
-            viewState.showFragment(CLOSE_FRAGMENT)
-            return
-        }
-        if (localeWasChanged) {
-            localeWasChanged = false
-            val screen = when (systemInteractor.lastMode) {
-                Screens.CARRIER_MODE   -> Screens.Carrier()
-                Screens.PASSENGER_MODE -> Screens.MainPassenger()
-                else                   -> throw IllegalArgumentException("Wrong last mode in onBackCommandClick in ${this.javaClass.name}")
-            }
-            router.backTo(screen)
-        } else super.onBackCommandClick()
+    fun onShareClick() {
+        log.debug("Share action")
+        analytics.logEvent(Analytics.EVENT_MENU, Analytics.PARAM_KEY_NAME, Analytics.SHARE)
+        router.navigateTo(Screens.Share())
     }
 
     private fun initConfigs() {
-        endpoints = systemInteractor.endpoints.map { it.map() }
-        locales = systemInteractor.locales.map { it.map() }
-        calendarModes = listOf(Screens.CARRIER_TRIPS_TYPE_VIEW_CALENDAR, Screens.CARRIER_TRIPS_TYPE_VIEW_LIST)
-        daysOfWeek = GTDayOfWeek.getWeekDays().map { DayOfWeekModel(it) }
         restart = false
     }
 
-    override fun restartApp() { viewState.restartApp() }
+    fun onForceCrashClick() {
+        error("This is force crash")
+    }
+
+    override fun onDestroy() {
+        worker.cancel()
+        sessionInteractor.removeCreateTransferListener(this)
+        super.onDestroy()
+    }
+
+    companion object {
+        private const val COUNTS_FOR_DEBUG = 7
+        private const val TIME_FOR_DEBUG = 3000L
+    }
 }

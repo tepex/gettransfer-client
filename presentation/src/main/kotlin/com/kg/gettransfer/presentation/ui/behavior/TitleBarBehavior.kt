@@ -1,22 +1,26 @@
 package com.kg.gettransfer.presentation.ui.behavior
 
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
+import com.kg.gettransfer.R
 
-class TitleBarBehavior<V : ViewGroup>(private val mContext: Context, attrs: AttributeSet) : BaseBehavior<V>(mContext, attrs) {
+class TitleBarBehavior(mContext: Context, attrs: AttributeSet) : BaseBehavior(mContext, attrs) {
 
-    override fun onDependentViewChanged(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
-        if (isBottomSheet(dependency)) {
-            child.bottom = when {
-                dependency.top <= actionBarHeight * 2 -> (actionBarHeight * 2) - dependency.top
-                else -> 0
-            }
-            child.top = child.bottom - actionBarHeight
-            return true
+    override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
+        return isBottomSheet(dependency)
+    }
+
+    override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
+        // anchorId needs to set programmatically(not in xml) otherwise onDependentViewChanged will called all the time
+        (child.layoutParams as CoordinatorLayout.LayoutParams).anchorId = R.id.sheetTransferDetails
+
+        child.bottom = when {
+            dependency.top <= actionBarHeight * 2 -> (actionBarHeight * 2) - dependency.top
+            else -> 0
         }
-        return false
+        child.top = child.bottom - actionBarHeight
+        return true
     }
 }

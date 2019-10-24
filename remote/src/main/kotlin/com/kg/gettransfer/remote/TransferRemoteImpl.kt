@@ -4,14 +4,8 @@ import com.kg.gettransfer.data.TransferRemote
 
 import com.kg.gettransfer.data.model.TransferEntity
 import com.kg.gettransfer.data.model.TransferNewEntity
+import com.kg.gettransfer.remote.model.*
 
-import com.kg.gettransfer.remote.model.ReasonModel
-import com.kg.gettransfer.remote.model.ResponseModel
-import com.kg.gettransfer.remote.model.TransferModel
-import com.kg.gettransfer.remote.model.TransferNewWrapperModel
-import com.kg.gettransfer.remote.model.TransfersModel
-import com.kg.gettransfer.remote.model.TransferWrapperModel
-import com.kg.gettransfer.remote.model.map
 import okhttp3.ResponseBody
 
 import org.koin.core.get
@@ -35,8 +29,8 @@ class TransferRemoteImpl : TransferRemote {
         return response.data!!.transfer.map()
     }
 
-    override suspend fun getTransfer(id: Long, role: String): TransferEntity {
-        val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id) { _id -> core.api.getTransfer(_id, role) }
+    override suspend fun getTransfer(id: Long): TransferEntity {
+        val response: ResponseModel<TransferWrapperModel> = core.tryTwice(id) { _id -> core.api.getTransfer(_id) }
         @Suppress("UnsafeCallOnNullableType")
         return response.data!!.transfer.map()
     }
@@ -65,5 +59,9 @@ class TransferRemoteImpl : TransferRemote {
     override suspend fun downloadVoucher(transferId: Long): InputStream {
         val response: ResponseBody = core.tryTwice { core.api.downloadVoucher(transferId) }
         return response.byteStream()
+    }
+
+    override suspend fun sendAnalytics(transferId: Long, role: String) {
+        core.tryTwice { core.api.sendAnalytics(transferId, RoleModel(role)) }
     }
 }

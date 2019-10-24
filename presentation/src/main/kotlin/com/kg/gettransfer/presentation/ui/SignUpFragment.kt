@@ -1,12 +1,12 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v4.app.Fragment
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
+import androidx.annotation.CallSuper
 
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -16,6 +16,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 
+import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.presenter.SignUpPresenter
@@ -36,6 +37,7 @@ import timber.log.Timber
  *
  * @author П. Густокашин (Diwixis)
  */
+@Suppress("TooManyFunctions")
 class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     @InjectPresenter
     internal lateinit var presenter: SignUpPresenter
@@ -53,7 +55,9 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
 
         initTextChangeListeners()
         initPhoneTextChangeListeners()
-        btnLogin.setThrottledClickListener(1000L) {
+        @Suppress("MagicNumber")
+        btnSignUp.setThrottledClickListener(1_000L) { v ->
+            v.hideKeyboard()
             showLoading()
             presenter.registration()
         }
@@ -63,20 +67,9 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         }
     }
 
-    @CallSuper
-    override fun onDetach() {
-        /* dirty hack https://stackoverflow.com/a/15656428 */
-        try {
-            val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
-            childFragmentManager.isAccessible = true
-            childFragmentManager.set(this, null)
-
-        } catch (e: NoSuchFieldException) {
-            throw RuntimeException(e)
-        } catch (e: IllegalAccessException) {
-            throw RuntimeException(e)
-        }
-        super.onDetach()
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     override fun showValidationErrorDialog(phoneExample: String) {
@@ -87,7 +80,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                 text = this@SignUpFragment.getString(R.string.LNG_ERROR_EMAIL_PHONE, phoneExample)
                 onDismissCallBack = { hideLoading() }
             }
-            .show(fragmentManager)
+            .show(requireFragmentManager())
     }
 
     override fun showRegisterSuccessDialog() {
@@ -102,32 +95,34 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                     presenter.onBackCommandClick()
                     hideLoading()
                 }
+                onClickOkButton = { presenter.onCreateTransferClick() }
             }
-            .show(fragmentManager)
+            .show(requireFragmentManager())
     }
 
     private fun initTextChangeListeners() {
-        nameLayout.fieldText.onTextChanged {
-            presenter.name = it
-            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
+        nameLayout.fieldText.onTextChanged { text ->
+            presenter.name = text
+            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
-        phoneLayout.fieldText.onTextChanged {
-            presenter.phone = it
-            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
+        phoneLayout.fieldText.onTextChanged { text ->
+            presenter.phone = text
+            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
-        emailLayout.fieldText.onTextChanged {
-            presenter.email = it
-            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
+        emailLayout.fieldText.onTextChanged { text ->
+            presenter.email = text
+            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
         }
 
         switchAgreementTb.setOnCheckedChangeListener { _, isChecked ->
             presenter.termsAccepted = isChecked
-            btnLogin.isEnabled = presenter.checkFieldsIsEmpty()
+            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
         }
     }
 
+    @Suppress("ComplexMethod")
     private fun initPhoneTextChangeListeners() {
         with(phoneLayout.fieldText) {
             onTextChanged { text ->
@@ -138,17 +133,14 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             }
             addTextChangedListener(PhoneNumberFormatter())
             setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) phoneLayout.fieldText.text.toString().let {
-                    val phoneCode = Utils.getPhoneCodeByCountryIso(context!!)
-                    if (it.isEmpty()) {
-                        setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
+                if (hasFocus) {
+                    phoneLayout.fieldText.text.toString().let { phone ->
+                        context?.let { context ->
+                            val phoneCode = Utils.getPhoneCodeByCountryIso(context)
+                            if (phone.isEmpty()) setText(if (phoneCode > 0) "+$phoneCode" else "+")
+                        }
                     }
-                }
-                else phoneLayout.fieldText.text.toString().let {
-                    if (it.length <= 4) {
-                        setText("")
-                    }
-                }
+                } else if (phoneLayout.fieldText.text.toString().length <= MIN_PHONE_LENGTH) setText("")
             }
         }
     }
@@ -161,11 +153,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         emailLayout.fieldText.setText(email)
     }
 
-    companion object {
-        fun newInstance() = SignUpFragment()
-    }
-
-    //---- Shit from base classes ------
+    // ---- Shit from base classes ------
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if (block) {
@@ -174,47 +162,62 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     override fun showLoading() {
-        if (loadingFragment.isAdded) return
-        fragmentManager?.beginTransaction()?.apply {
-            replace(R.id.container, loadingFragment)
-            commit()
+        if (!loadingFragment.isAdded) {
+            fragmentManager?.beginTransaction()?.apply {
+                replace(android.R.id.content, loadingFragment)
+                commit()
+            }
         }
     }
 
     override fun hideLoading() {
-        if (!loadingFragment.isAdded) return
-        fragmentManager?.beginTransaction()?.apply {
-            remove(loadingFragment)
-            commit()
+        if (loadingFragment.isAdded) {
+            fragmentManager?.beginTransaction()?.apply {
+                remove(loadingFragment)
+                commit()
+            }
         }
     }
 
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
-        //TODO remove BaseView or add code.
-    }
+    // TODO remove BaseView or add code.
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
         var textError = e.message ?: "Error"
-        when (e.code) {
-            ApiException.UNPROCESSABLE -> textError = getString(R.string.LNG_UNPROCESSABLE_ERROR)
+        when (e.type) {
+            ApiException.TYPE_EMAIL_TAKEN -> textError = getString(R.string.LNG_EMAIL_TAKEN_ERROR)
+            ApiException.TYPE_PHONE_TAKEN -> textError = getString(R.string.LNG_PHONE_TAKEN_ERROR)
+            ApiException.TYPE_EMAIL_INVALID -> textError = getString(R.string.LNG_ERROR_EMAIL)
+            ApiException.TYPE_PHONE_INVALID -> textError = getString(R.string.LNG_ERROR_PHONE)
+            ApiException.TYPE_PHONE_UNPROCESSABLE -> textError = getString(R.string.LNG_UNPROCESSABLE_ERROR)
         }
+
+        when (e.code) {
+            ApiException.TOO_MANY_REQUESTS -> textError = getString(R.string.LNG_ERROR_RATE_LIMIT)
+            ApiException.NETWORK_ERROR -> textError = getString(R.string.LNG_NETWORK_ERROR)
+        }
+
         BottomSheetDialog
             .newInstance()
             .apply {
                 title = textError
                 onDismissCallBack = { hideLoading() }
             }
-            .show(fragmentManager)
+            .show(requireFragmentManager())
     }
 
-    override fun setError(e: DatabaseException) {
-        //TODO remove BaseView or add code.
-    }
+    // TODO remove BaseView or add code.
+    override fun setError(e: DatabaseException) {}
 
-    override fun setTransferNotFoundError(transferId: Long) {
-        //TODO remove BaseView or add code.
+    // TODO remove BaseView or add code.
+    override fun setTransferNotFoundError(transferId: Long) {}
+
+    companion object {
+        const val MIN_PHONE_LENGTH = 4
+
+        fun newInstance() = SignUpFragment()
     }
 }

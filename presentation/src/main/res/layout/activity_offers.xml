@@ -1,249 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/layout_root_offers"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorBackgroundGray">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_root_offers"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbar_nav"
+            layout="@layout/toolbar_nav_offers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
+            android:layout_alignParentTop="true" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_rv_offers_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/appbar"
+        android:layout_alignParentBottom="true">
 
-        <FrameLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:fillViewport="true">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:background="@color/colorBackgroundGray">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/sortOrder"
+                    android:layout_width="@dimen/activity_offers_sort_order_btn_size"
+                    android:layout_height="@dimen/activity_offers_sort_order_btn_size"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/activity_offers_sort_order_btn_margin_start"
+                    android:layout_marginTop="@dimen/activity_offers_sorted_layout_padding_top"
+                    android:layout_marginBottom="@dimen/activity_offers_sorted_layout_padding_top"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_year_sort_title"
+                    app:layout_constraintStart_toEndOf="@+id/tv_year_sort_title"
+                    app:layout_constraintTop_toTopOf="@+id/tv_year_sort_title"
+                    app:srcCompat="@drawable/ic_btn_arrow" />
+
+                <TextView
+                    android:id="@+id/tv_year_sort_title"
+                    style="@style/sf_font_pro_text_semibold_black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/activity_offers_sorted_layout_text_height"
+                    android:layout_marginStart="@dimen/activity_offers_sorted_layout_text_margin_start"
+                    android:layout_marginTop="@dimen/activity_offers_sorted_layout_padding_top"
+                    android:layout_marginBottom="@dimen/activity_offers_sorted_layout_padding_top"
+                    android:background="@drawable/back_sorted_layout"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/activity_offers_sorted_layout_text_vertical_paddings"
+                    android:paddingEnd="@dimen/activity_offers_sorted_layout_text_vertical_paddings"
+                    android:text="@string/LNG_SORT"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_fixPrice" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/groupFilter"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorBackNetworkNotAvailable">
-
-                    <TextView
-                        android:id="@+id/textNetworkNotAvailable"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="12dp"
-                        android:fontFamily="@font/sf_pro_text_regular"
-                        android:gravity="center"
-                        android:text="@string/LNG_OFFLINE_MESSAGE_CACHE"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="12sp"
-                        android:visibility="gone" />
-
-                </LinearLayout>
-
-                <FrameLayout
-                    android:id="@+id/fl_drivers_count_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/activity_offers_drivers_connecting_text_height"
-                    android:background="@color/colorPrimary"
+                    app:constraint_referenced_ids="tv_year_sort_title,sortOrder"
                     android:visibility="gone"
-                    tools:visibility="visible">
+                    tools:visibility="visible"/>
 
-                    <ProgressBar
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="16dp"
-                        android:indeterminate="true"
-                        android:indeterminateDrawable="@drawable/progress_rotate"
-                        android:indeterminateDuration="1200" />
-
-                    <TextView
-                        android:id="@+id/tv_drivers_count"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/sf_pro_text_semibold"
-                        android:gravity="center"
-                        android:paddingStart="50dp"
-                        android:paddingEnd="50dp"
-                        android:textColor="@color/colorWhite"
-                        tools:text="Соединяем с 33 ближайшими перевозчиками" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:id="@+id/cl_fixPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/activity_offers_excellent_price_layout_height"
-                    android:background="@color/colorPrimary"
-                    android:visibility="gone"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:id="@+id/ivLock"
-                        android:layout_width="@dimen/activity_offers_iv_lock_width"
-                        android:layout_height="@dimen/activity_offers_iv_lock_height"
-                        android:layout_marginStart="@dimen/activity_offers_iv_lock_margin_start"
-                        android:layout_marginEnd="@dimen/activity_offers_iv_lock_margin_end"
-                        app:srcCompat="@drawable/ic_lock_new" />
-
-                    <TextView
-                        android:id="@+id/tvExcellentPrice"
-                        style="@style/sf_font_pro_display_regular"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="@dimen/offers_tv_excellent_price_margin_end"
-                        android:gravity="center"
-                        android:maxLines="3"
-                        android:text="@string/LNG_OFFERS_PROMO_MESSAGE"
-                        android:textColor="@color/colorWhite"
-                        app:autoSizeTextType="uniform"
-                        app:autoSizeMaxTextSize="@dimen/activity_offers_excellent_price_text_size"
-                        app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/activity_offers_sorted_layout_height"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/activity_offers_sorted_layout_padding_top_bottom"
-                        android:paddingBottom="@dimen/activity_offers_sorted_layout_padding_top_bottom"
-                        android:paddingStart="@dimen/activity_offers_sorted_layout_padding_start"
-                        android:paddingEnd="@dimen/activity_offers_sorted_layout_padding_start_end">
-
-                    <RelativeLayout
-                            android:id="@+id/sortYear"
-                            android:layout_width="match_parent"
-                            android:layout_weight="1"
-                            android:layout_height="@dimen/btn_offer_sort_height"
-                            android:layout_marginStart="5dp"
-                            android:background="@drawable/back_sorted_layouts">
-
-                        <TextView
-                            android:id="@+id/tv_year_sort_title"
-                            style="@style/black_regular"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_text_margin_start"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/triangleYear"
-                            android:text="@string/LNG_FILTER_YEAR"
-                            android:maxLines="1"
-                            app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
-                            app:autoSizeTextType="uniform"
-                            app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
-
-                        <ImageView
-                            android:id="@+id/triangleYear"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginEnd="@dimen/activity_offers_sorted_layout_triangle_margin_end"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
-                            android:visibility="invisible"
-                            app:srcCompat="@drawable/ic_triangle" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                            android:id="@+id/sortRating"
-                            android:layout_width="match_parent"
-                            android:layout_weight="1"
-                            android:layout_height="@dimen/btn_offer_sort_height"
-                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_center_element_margin_side"
-                            android:layout_marginEnd="@dimen/activity_offers_sorted_layout_center_element_margin_side"
-                            android:background="@drawable/back_sorted_layouts">
-
-                        <TextView
-                            android:id="@+id/tv_rating_sort_title"
-                            style="@style/black_regular"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_text_margin_start"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/triangleRating"
-                            android:gravity="center"
-                            android:maxLines="1"
-                            android:text="@string/LNG_FILTER_RATING"
-                            app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
-                            app:autoSizeTextType="uniform"
-                            app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
-
-                        <ImageView
-                            android:id="@+id/triangleRating"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
-                            android:layout_marginEnd="@dimen/activity_offers_sorted_layout_triangle_margin_end"
-                            android:visibility="invisible"
-                            app:srcCompat="@drawable/ic_triangle" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                            android:id="@+id/sortPrice"
-                            android:layout_width="match_parent"
-                            android:layout_weight="1"
-                            android:layout_height="@dimen/btn_offer_sort_height"
-                            android:orientation="horizontal"
-                            android:background="@drawable/back_sorted_layouts">
-
-                        <TextView
-                            android:id="@+id/tv_price_sort_title"
-                            style="@style/black_regular"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_text_margin_start"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@+id/trianglePrice"
-                            android:maxLines="1"
-                            android:text="@string/LNG_FILTER_PRICE"
-                            app:autoSizeMaxTextSize="@dimen/activity_offers_sorted_layout_texts_size"
-                            app:autoSizeTextType="uniform"
-                            app:autoSizeMinTextSize="@dimen/activity_offers_excellent_price_min_text_size"/>
-
-                        <ImageView
-                            android:id="@+id/trianglePrice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="@dimen/activity_offers_sorted_layout_triangle_margin_start"
-                            android:layout_marginEnd="@dimen/activity_offers_sorted_layout_triangle_margin_end"
-                            android:visibility="invisible"
-                            app:srcCompat="@drawable/ic_triangle" />
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvOffers"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="0dp"
+                    android:paddingStart="@dimen/activity_offers_recycler_horizontal_paddings"
+                    android:paddingEnd="@dimen/activity_offers_recycler_horizontal_paddings"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_year_sort_title" />
+
+                <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
+                    android:id="@+id/layoutTextNetworkNotAvailable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:text_no_internet="@string/LNG_OFFLINE_MESSAGE" />
+
+                <include
+                    android:id="@+id/fl_drivers_count_text"
+                    layout="@layout/drivers_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/activity_offers_drivers_connecting_text_height"
+                    android:layout_below="@+id/layoutTextNetworkNotAvailable"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutTextNetworkNotAvailable"
+                    tools:visibility="visible" />
 
                 <include
                     android:id="@+id/noOffers"
                     layout="@layout/card_empty_offers"
-                    android:visibility="gone"/>
+                    android:layout_marginStart="@dimen/margin8"
+                    android:layout_marginEnd="@dimen/margin8"
+                    android:layout_marginTop="@dimen/margin16"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_year_sort_title" />
 
-            </LinearLayout>
+                <include
+                    android:id="@+id/cl_fixPrice"
+                    layout="@layout/fix_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/fl_drivers_count_text"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fl_drivers_count_text"
+                    tools:visibility="visible" />
 
-        </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <View
         android:id="@+id/tintBackground"
@@ -252,16 +148,16 @@
         android:background="#99000000"
         android:visibility="gone" />
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/expended_sheet_order_height">
+        android:layout_marginTop="@dimen/expended_sheet_order_height"
+        android:layout_alignParentBottom="true">
 
         <include
             android:id="@+id/sheetOfferDetails"
             layout="@layout/bottom_sheet_offers" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>

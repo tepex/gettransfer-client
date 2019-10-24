@@ -4,7 +4,6 @@ import android.telephony.PhoneNumberUtils
 import android.text.Editable
 import android.text.Selection
 import android.text.TextWatcher
-import android.widget.EditText
 import io.michaelrocks.libphonenumber.android.AsYouTypeFormatter
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import org.koin.core.KoinComponent

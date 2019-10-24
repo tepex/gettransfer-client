@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:visibility="visible"
+    android:visibility="gone">
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/hourly_point"
+        android:layout_width="@dimen/a_b_point_iconSize"
+        android:layout_height="@dimen/a_b_point_iconSize"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/currency_symbol_margin_start"
+        android:src="@drawable/ic_hourly_driver" />
+
+    <TextView
+        android:id="@+id/hourly_title"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/search_sub_title_height"
+        android:layout_marginStart="@dimen/currency_symbol_margin_start"
+        android:layout_marginTop="@dimen/search_sub_title_marginTop"
+        android:layout_toEndOf="@id/hourly_point"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:text="@string/LNG_FIELD_PER_HOUSE"
+        android:textSize="@dimen/search_sub_title_textSize" />
+
+    <TextView
+        android:id="@+id/tvCurrent_hours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hourly_title"
+        android:layout_marginStart="@dimen/currency_symbol_margin_start"
+        android:layout_toEndOf="@id/hourly_point"
+        android:fontFamily="@font/sf_pro_text_semibold"
+        android:paddingBottom="@dimen/search_main_paddingBottom"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/search_main_textSize"
+        tools:text="2 hours" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin16"
+        app:srcCompat="@drawable/ic_arrow_right" />
+
+    <include
+        layout="@layout/view_divider_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/margin16"
+        android:layout_marginEnd="@dimen/margin16" />
+
+</RelativeLayout>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabFacebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_customer_support_social_networks_horizontal_padding"
+        android:layout_marginEnd="@dimen/activity_customer_support_social_networks_margins"
+        app:backgroundTint="@android:color/white"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toStartOf="@+id/fabWhatsapp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_facebook" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/fabFacebook"
+        app:layout_constraintEnd_toEndOf="@+id/fabFacebook"
+        app:layout_constraintTop_toBottomOf="@+id/fabFacebook"
+        android:layout_marginTop="@dimen/activity_customer_support_social_network_texts_margin_top"
+        style="@style/sf_font_pro_text_regular_grey"
+        android:textSize="@dimen/activity_customer_support_social_network_text_size"
+        android:text="@string/LNG_FACEBOOK"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabWhatsapp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_social_networks_margins"
+        android:visibility="gone"
+        app:backgroundTint="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@+id/fabViber"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fabFacebook"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_whatsapp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/fabWhatsapp"
+        app:layout_constraintEnd_toEndOf="@+id/fabWhatsapp"
+        app:layout_constraintTop_toBottomOf="@+id/fabWhatsapp"
+        android:layout_marginTop="@dimen/activity_customer_support_social_network_texts_margin_top"
+        style="@style/sf_font_pro_text_regular_grey"
+        android:textSize="@dimen/activity_customer_support_social_network_text_size"
+        android:text="@string/LNG_WHATSAPP"
+        android:visibility="gone"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabViber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_social_networks_margins"
+        app:backgroundTint="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@+id/fabTelegram"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fabWhatsapp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_viber" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/fabViber"
+        app:layout_constraintEnd_toEndOf="@+id/fabViber"
+        app:layout_constraintTop_toBottomOf="@+id/fabViber"
+        android:layout_marginTop="@dimen/activity_customer_support_social_network_texts_margin_top"
+        style="@style/sf_font_pro_text_regular_grey"
+        android:textSize="@dimen/activity_customer_support_social_network_text_size"
+        android:text="@string/LNG_VIBER"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabTelegram"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_customer_support_social_networks_horizontal_padding"
+        app:backgroundTint="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fabViber"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_telegram" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/fabTelegram"
+        app:layout_constraintEnd_toEndOf="@+id/fabTelegram"
+        app:layout_constraintTop_toBottomOf="@+id/fabTelegram"
+        android:layout_marginTop="@dimen/activity_customer_support_social_network_texts_margin_top"
+        style="@style/sf_font_pro_text_regular_grey"
+        android:textSize="@dimen/activity_customer_support_social_network_text_size"
+        android:text="@string/LNG_TELEGRAM"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

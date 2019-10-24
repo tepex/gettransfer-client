@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GetTransfer</string>
-	<string name="registration_carrier_url">https://gettransfer.com/en/carrier/new</string>
-	<string name="carrier_mode">https://gettransfer.com/en/carrier</string>
 
 	<string name="file_provider_authority">com.gettransfer.fileprovider</string>
+
+	<string name="hockeyAppId">62939f09f9e0489c8ada1c25d2f30d9d</string>
 </resources>

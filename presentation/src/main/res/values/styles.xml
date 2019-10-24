@@ -10,14 +10,12 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDisablePreview">true</item>
-        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
         <item name="android:timePickerDialogTheme">@style/MyTimePickerDialogTheme</item>
     </style>
 
     <style name="AppThemeTransparentStatusBar" parent="AppTheme">
-        <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimaryDark">@color/colorWhite</item>
     </style>
 
@@ -37,10 +35,8 @@
         <item name="android:headerBackground">@color/colorPrimary</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="ProgressBar" parent="ThemeOverlay.AppCompat.Light">
-        <item name="colorAccent">@color/colorWhite</item>
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 
     <style name="sf_font">
@@ -59,6 +55,9 @@
 
     <style name="sf_font_semi_bold_17_sp" parent="sf_font_semi_bold">
         <item name="android:textSize">17sp</item>
+    </style>
+    <style name="sf_font_semi_bold_16_sp" parent="sf_font_semi_bold">
+        <item name="android:textSize">16sp</item>
     </style>
     <style name="sf_font_semi_bold_15_sp" parent="sf_font_semi_bold">
         <item name="android:textSize">15sp</item>
@@ -81,8 +80,18 @@
     </style>
 
     <style name="sf_font_pro_text_regular_grey">
-        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textColor">@color/color_gtr_grey</item>
         <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="sf_font_pro_text_regular_black">
+        <item name="android:textColor">@color/color_gtr_black</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="sf_font_pro_text_semibold_black">
+        <item name="android:textColor">@color/color_gtr_black</item>
+        <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
     </style>
 
     <style name="sf_pro_text_semibold_white">
@@ -98,42 +107,6 @@
         <item name="android:fontFamily">@font/sf_pro_display_bold</item>
     </style>
 
-
-    <style name="nav_item">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-    </style>
-    <style name="nav_item_title" parent="sf_font">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/nav_item_title_size</item>
-        <item name="android:textColor">@color/colorTextBlack</item>
-        <item name="fontFamily">@font/sf_pro_text_semibold</item>
-    </style>
-    <style name="nav_item_subtitle" parent="sf_font">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/nav_item_subtitle_size</item>
-        <item name="android:textColor">@color/nav_item_subtitle</item>
-        <item name="fontFamily">@font/sf_pro_text_regular</item>
-    </style>
-    <style name="nav_footer_version" parent="sf_font">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/nav_footer_version_size</item>
-        <item name="android:textColor">@color/nav_item_subtitle</item>
-    </style>
-
-
-    <style name="ReadMoreDialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="windowFixedWidthMajor">95%</item>
-        <item name="windowFixedWidthMinor">95%</item>
-        <item name="android:windowTitleStyle">@style/read_more_title</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
-    </style>
     <style name="read_more_title" parent="sf_font_bold">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -146,61 +119,28 @@
     </style>
 
     <!-- Search address -->
-    <style name="address_item" parent="sf_font">
-        <item name="android:textSize">@dimen/address_item_size</item>
-        <item name="android:paddingTop">@dimen/address_item_padding_top</item>
-        <item name="android:paddingStart">@dimen/address_item_padding_start</item>
+    <style name="address_item" parent="sf_font_pro_text_semibold_black">
+        <item name="android:textSize">@dimen/address_item_text_size</item>
+        <item name="android:layout_marginTop">@dimen/address_item_padding</item>
     </style>
-    <style name="address_secondary_item" parent="sf_font">
-        <item name="android:textColor">@color/address_item_subtitle</item>
-        <item name="android:textSize">@dimen/address_secondary_item_size</item>
-        <item name="android:paddingStart">@dimen/address_item_padding_start</item>
+    <style name="address_secondary_item" parent="sf_font_pro_text_regular_grey">
+        <item name="android:textSize">@dimen/address_item_text_size</item>
     </style>
-    <style name="list_title" parent="sf_font">
-        <item name="android:layout_marginStart">@dimen/left_margin_title</item>
-        <item name="android:textSize">@dimen/title_text_size</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="android:textColor">@color/search_list_title</item>
-    </style>
-
-    <style name="etField">
-        <item name="android:background">@android:color/transparent</item>
-
-        <item name="android:paddingBottom">13dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
-        <item name="android:paddingTop">17dp</item>
-
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="line">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/colorBGSecondary</item>
-        <item name="layout_constraintEnd_toEndOf">parent</item>
-        <item name="layout_constraintStart_toStartOf">parent</item>
+    <style name="popular_place_item" parent="sf_font_pro_text_regular_grey">
+        <item name="android:textSize">@dimen/address_item_text_size</item>
+        <item name="android:layout_marginStart">@dimen/popular_place_item_margin_start</item>
     </style>
 
     <style name="SwitchCompatStyle" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/color_gtr_green</item>
     </style>
-    <style name="SwitcherViewStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/switchers_vertical_margin</item>
-        <item name="android:layout_alignParentEnd">true</item>
-    </style>
 
     <style name="BorderlessBackground">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
     </style>
 
     <style name="TabLayoutTextStyle">
-        <item name="android:textSize">@dimen/views_carrier_trips_activity_tab_layout_text_size</item>
+        <item name="android:textSize">@dimen/activity_requests_tab_layout_text_size</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:fontFamily">@font/sf_pro_text_regular</item>
         <item name="android:textAllCaps">false</item>
@@ -213,28 +153,18 @@
         <item name="android:textSize">@dimen/sub_title_rating_text_size</item>
     </style>
 
-    <style name="tv_rate" parent="sf_font_semi_bold">
-        <item name="android:layout_marginTop">@dimen/vertical_margin_rate_dialog</item>
-    </style>
-
     <style name="transfer_details_main_text">
         <item name="android:textColor">@color/colorTextBlack</item>
         <item name="android:textSize">@dimen/bottom_sheet_offer_details_text_size_17sp</item>
         <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
     </style>
 
-    <style name="transfer_details_secondary_text">
-        <item name="android:textColor">@color/colorGrey</item>
-        <item name="android:textSize">@dimen/bottom_sheet_offer_details_text_size_17sp</item>
-        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
-    </style>
-
     <style name="tv_transfer_details_header_main" parent="transfer_details_main_text"/>
 
     <style name="tv_transfer_details_header_sub">
-        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textColor">@color/color_gtr_grey</item>
         <item name="android:textSize">@dimen/bottom_sheet_offer_details_text_size_12sp</item>
-        <item name="android:fontFamily">@font/sf_pro_text_semibold</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
     </style>
     <style name="transfer_main_info_divider">
         <item name="android:layout_width">@dimen/activity_transfer_details_vertical_divider_width</item>
@@ -256,33 +186,20 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="requestCard" parent="Base.CardView">
+        <item name="android:layout_marginTop">@dimen/view_transfer_info_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/view_transfer_info_vertical_margin</item>
+        <item name="android:layout_marginStart">@dimen/view_transfer_info_horizontal_margin</item>
+        <item name="android:layout_marginEnd">@dimen/view_transfer_info_horizontal_margin</item>
+        <item name="cardCornerRadius">@dimen/view_transfer_info_corner_radius</item>
+    </style>
+
     <style name="offerCard" parent="Base.CardView">
         <item name="android:layout_marginTop">@dimen/card_view_margin_top_bottom</item>
         <item name="android:layout_marginBottom">@dimen/card_view_margin_top_bottom</item>
         <item name="android:layout_marginStart">@dimen/card_view_margin_start_end</item>
         <item name="android:layout_marginEnd">@dimen/card_view_margin_start_end</item>
         <item name="cardCornerRadius">@dimen/card_view_corners</item>
-    </style>
-
-    <!--<style name="etField" parent="Base.V7.Widget.AppCompat.EditText">-->
-    <!--<item name="android:background">@android:color/transparent</item>-->
-
-    <!--<item name="android:paddingBottom">15dp</item>-->
-    <!--<item name="android:paddingLeft">8dp</item>-->
-    <!--<item name="android:paddingRight">8dp</item>-->
-    <!--<item name="android:paddingTop">18dp</item>-->
-
-    <!--<item name="android:textSize">14sp</item>-->
-    <!--</style>-->
-
-    <style name="calendar_item_days_of_week">
-        <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
-        <item name="android:textColor">@color/color_driver_mode_text_gray</item>
-    </style>
-
-    <style name="sf_font_grey" parent="sf_font">
-        <item name="android:textColor">@color/colorGrey</item>
     </style>
     
     <style name="editTextHintCreateOrder" parent="ThemeOverlay.AppCompat.Light">
@@ -294,10 +211,6 @@
         <item name="android:textCursorDrawable">@drawable/login_cursor</item>
         <item name="android:textColor">@color/colorTextBlack</item>
         <item name="android:textSize">17sp</item>
-    </style>
-
-    <style name="CustomAlerDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
 
     <style name="DialogStyle" parent="Theme.MaterialComponents.BottomSheetDialog">
@@ -312,12 +225,26 @@
         <item name="android:background">@drawable/back_top_rounded</item>
     </style>
 
-    <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.Dialog">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <style name="shimmer_item">
         <item name="android:background">@color/shimmer</item>
+    </style>
+
+    <style name="dialog_animation_fade">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_rating_bar</item>
+        <item name="android:minHeight">16dp</item>
+    </style>
+
+    <style name="ChipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/color_gtr_grey</item>
+    </style>
+
+    <style name="Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="checkedIconVisible">false</item>
     </style>
 </resources>

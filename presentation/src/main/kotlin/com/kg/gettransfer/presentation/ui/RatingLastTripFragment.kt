@@ -1,44 +1,92 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import androidx.annotation.CallSuper
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
-import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.DatabaseException
-
-import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.presenter.RatingLastTripPresenter
 
-import com.kg.gettransfer.presentation.ui.dialogs.BaseBottomSheetDialogFragment
+import com.kg.gettransfer.presentation.ui.dialogs.BaseMapBottomSheetDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
-import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RatingLastTripView
 
 import kotlinx.android.synthetic.main.view_last_trip_rate.*
 
-class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripView, OnMapReadyCallback {
-
-    private lateinit var googleMap: GoogleMap
+@Suppress("TooManyFunctions")
+class RatingLastTripFragment : BaseMapBottomSheetDialogFragment(), RatingLastTripView {
 
     override val layout: Int = R.layout.view_last_trip_rate
 
     @InjectPresenter
-    lateinit var presenter: RatingLastTripPresenter
+    internal lateinit var presenter: RatingLastTripPresenter
 
     @ProvidePresenter
     fun providePresenter() = RatingLastTripPresenter()
+
+    override fun getPresenter(): RatingLastTripPresenter = presenter
+
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter.transferId = arguments?.getLong(EXTRA_TRANSFER_ID) ?: 0L
+    }
+
+    @CallSuper
+    override fun initUx(savedInstanceState: Bundle?) {
+        super.initUx(savedInstanceState)
+        tv_transfer_details.setOnClickListener { presenter.onTransferDetailsClick() }
+        ivClose.setOnClickListener { presenter.onReviewCanceled() }
+        rate_bar_last_trip.setOnRatingBarChangeListener { _, rating, _ ->
+            presenter.onRateClicked(rating)
+        }
+    }
+
+    @CallSuper
+    override fun initUi(savedInstanceState: Bundle?) {
+        super.initUi(savedInstanceState)
+        initMapFragment(R.id.rate_map)
+    }
+
+    override fun setupReviewForLastTrip(transfer: Transfer) {
+        tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
+        tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateToLocal)
+        tv_vehicle_model_rate.text = arguments?.getString(EXTRA_VEHICLE)
+        val color = arguments?.getString(EXTRA_COLOR) ?: ""
+        context?.let { carColor_rate.setImageDrawable(Utils.getCarColorFormRes(it, color)) }
+    }
+
+    override fun cancelReview() {
+        dismiss()
+    }
+
+    override fun thanksForRate() {
+        val parent = activity
+        if (parent is MainNavigateActivity) {
+            parent.thanksForRate()
+        }
+    }
+
+    override fun showDetailedReview() {
+        if (fragmentManager?.fragments?.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG } == null) {
+            RatingDetailDialogFragment
+                .newInstance()
+                .show(requireFragmentManager(), RatingDetailDialogFragment.RATE_DIALOG_TAG)
+        }
+    }
+
+    override fun setTransferNotFoundError(transferId: Long) {
+        val act = activity
+        if (act is BaseView) {
+            act.setTransferNotFoundError(transferId)
+        }
+    }
 
     companion object {
         const val RATING_LAST_TRIP_TAG = "rating_last_trip_tag"
@@ -54,90 +102,4 @@ class RatingLastTripFragment: BaseBottomSheetDialogFragment(), RatingLastTripVie
             }
         }
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        presenter.transferId = arguments?.getLong(EXTRA_TRANSFER_ID) ?: 0L
-    }
-
-    override fun initUx(savedInstanceState: Bundle?) {
-        super.initUx(savedInstanceState)
-        tv_transfer_details.setOnClickListener { presenter.onTransferDetailsClick() }
-        ivClose.setOnClickListener { presenter.onReviewCanceled() }
-        rate_bar_last_trip.setOnRatingChangeListener { _, fl ->
-            presenter.onRateClicked(fl)
-        }
-    }
-
-    override fun initUi(savedInstanceState: Bundle?) {
-        super.initUi(savedInstanceState)
-        (fragmentManager?.findFragmentById(R.id.rate_map) as SupportMapFragment).getMapAsync(this)
-    }
-
-    override fun onMapReady(map: GoogleMap) {
-        googleMap = map
-        customizeGoogleMaps(googleMap)
-    }
-
-    private fun customizeGoogleMaps(gm: GoogleMap) {
-        gm.uiSettings.isRotateGesturesEnabled = false
-        gm.uiSettings.isTiltGesturesEnabled = false
-        gm.uiSettings.isMyLocationButtonEnabled = false
-        gm.uiSettings.isScrollGesturesEnabled = false
-        gm.uiSettings.isZoomGesturesEnabled = false
-    }
-
-    override fun setupReviewForLastTrip(transfer: TransferModel, startPoint: LatLng, routeModel: RouteModel?) {
-        tv_transfer_number_rate.apply { text = text.toString().plus(" #${transfer.id}") }
-        tv_transfer_date_rate.text = SystemUtils.formatDateTime(transfer.dateTime)
-        tv_vehicle_model_rate.text = arguments?.getString(EXTRA_VEHICLE)
-        val color = arguments?.getString(EXTRA_COLOR) ?: ""
-        context?.let { carColor_rate.setImageDrawable(Utils.getCarColorFormRes(it, color)) }
-        drawMapForReview(routeModel, transfer.from, startPoint)
-    }
-
-    private fun drawMapForReview(routeModel: RouteModel?, from: String, startPoint: LatLng) {
-        if (routeModel != null) {
-            val polyline = Utils.getPolyline(routeModel)
-            if (MapHelper.isEmptyPolyline(polyline, routeModel)) return
-            else context?.let { MapHelper.setPolyline(it, layoutInflater, googleMap, polyline, routeModel) }
-        } else {
-            setPinForHourlyTransfer(from, "", startPoint, Utils.getCameraUpdateForPin(startPoint))
-        }
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    private fun setPinForHourlyTransfer(placeName: String, info: String, point: LatLng, cameraUpdate: CameraUpdate, driver: Boolean = false) {
-        val markerRes = R.drawable.ic_map_label_a
-        val bmPinA = MapHelper.getPinBitmap(layoutInflater, placeName, info, markerRes)
-        val startMakerOptions = MarkerOptions()
-                .position(point)
-                .icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
-        googleMap.addMarker(startMakerOptions)
-        googleMap.moveCamera(cameraUpdate)
-    }
-
-    override fun cancelReview() {
-        dismiss()
-    }
-
-    override fun thanksForRate() = (activity as MainActivity).thanksForRate()
-
-    override fun showDetailedReview() {
-        if (fragmentManager?.fragments?.firstOrNull {
-                it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG } == null) {
-            RatingDetailDialogFragment
-                .newInstance()
-                .show(fragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
-        }
-    }
-
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
-
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
-    override fun setError(e: ApiException) {}
-    override fun setError(e: DatabaseException) {}
-
-    override fun setTransferNotFoundError(transferId: Long) =
-        (activity as BaseView).setTransferNotFoundError(transferId)
 }

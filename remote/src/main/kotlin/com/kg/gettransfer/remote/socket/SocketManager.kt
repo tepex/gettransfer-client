@@ -1,25 +1,30 @@
-@file:Suppress("TooManyFunctions")
 package com.kg.gettransfer.remote.socket
 
+import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.model.ChatBadgeEventEntity
 import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.model.MessageEntity
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.data.model.PaymentStatusEventEntity
-import com.kg.gettransfer.remote.model.EndpointModel
+
 import io.socket.client.IO
 import io.socket.client.Manager
 import io.socket.client.Socket
 import io.socket.engineio.client.Transport
 import io.socket.engineio.client.transports.WebSocket
 import io.socket.parser.Packet
+
 import kotlinx.serialization.json.JSON
+
 import org.json.JSONArray
 import org.koin.core.parameter.parametersOf
 import org.koin.core.KoinComponent
+import org.koin.core.get
 import org.koin.core.inject
+
 import org.slf4j.Logger
 
+@Suppress("TooManyFunctions")
 class SocketManager : KoinComponent {
 
     private val log: Logger by inject { parametersOf("GTR-socket") }
@@ -29,6 +34,8 @@ class SocketManager : KoinComponent {
     private val chatEventer: ChatSocketImpl           by inject()
     private val systemEventer: SystemSocketImp        by inject()
     private val paymentEventer: PaymentSocketEventer  by inject()
+
+    private val preferences = get<PreferencesCache>()
 
     private var socket:      Socket? = null
     private var url:         String? = null
@@ -47,17 +54,20 @@ class SocketManager : KoinComponent {
         reconnectionDelay    = 2000
     }
 
-    fun startConnection(endpoint: EndpointModel, accessToken: String) {
-        prepareSocket(endpoint, accessToken, statusOpened)
+    fun changeEndpoint(url: String) {
+        this.url = url
     }
 
-    fun changeConnection(endpoint: EndpointModel, accessToken: String) {
-        if (statusOpened) prepareSocket(endpoint, accessToken, true)
+    fun startConnection() {
+        prepareSocket(statusOpened)
     }
 
-    private fun prepareSocket(endpoint: EndpointModel, accessToken: String, withReconnect: Boolean) {
-        url = endpoint.url
-        this.accessToken = accessToken
+    fun changeConnection() {
+        if (statusOpened) prepareSocket(true)
+    }
+
+    private fun prepareSocket(withReconnect: Boolean) {
+        this.accessToken = preferences.accessToken
         if (withReconnect) disconnect(true) else openSocket()
     }
 

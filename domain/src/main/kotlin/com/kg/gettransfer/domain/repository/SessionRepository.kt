@@ -1,10 +1,13 @@
 package com.kg.gettransfer.domain.repository
 
+import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
+import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.User
 
+@Suppress("TooManyFunctions")
 interface SessionRepository {
 
     val isInitialized: Boolean
@@ -13,6 +16,8 @@ interface SessionRepository {
     var userEmail: String?
     var userPhone: String?
     var userPassword: String
+    var appLanguage: String
+    var isAppLanguageChanged: Boolean
 
     suspend fun coldStart(): Result<Account>
     suspend fun putAccount(newAccount: Account, pass: String? = null, repeatedPass: String? = null): Result<Account>
@@ -24,4 +29,11 @@ interface SessionRepository {
 
     suspend fun getCodeForChangeEmail(email: String): Result<Boolean>
     suspend fun changeEmail(email: String, code: String): Result<Boolean>
+
+    fun addAccountChangedListener(listener: AccountChangedListener)
+    fun removeAccountChangedListener(listener: AccountChangedListener)
+
+    fun addCreateTransferListener(listener: CreateTransferListener)
+    fun removeCreateTransferListener(listener: CreateTransferListener)
+    fun notifyCreateTransfer()
 }

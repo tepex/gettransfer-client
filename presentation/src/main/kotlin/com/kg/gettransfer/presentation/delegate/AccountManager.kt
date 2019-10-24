@@ -3,7 +3,11 @@ package com.kg.gettransfer.presentation.delegate
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SocketInteractor
 
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Profile
+import com.kg.gettransfer.domain.model.User
+import com.kg.gettransfer.domain.model.RegistrationAccount
+import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
@@ -22,12 +26,12 @@ class AccountManager : KoinComponent {
 
     val remoteUser: User
         get() = remoteAccount.user
-        
+
     val remoteProfile: Profile
         get() = remoteUser.profile
 
     val isLoggedIn: Boolean //is authorized user
-        get() = (!remoteProfile.email.isNullOrEmpty() || !remoteProfile.phone.isNullOrEmpty()) && remoteUser.termsAccepted
+        get() = !remoteProfile.email.isNullOrEmpty() || !remoteProfile.phone.isNullOrEmpty()
 
     val hasAccount: Boolean //is temporary or authorized user
         get() = isLoggedIn || (remoteProfile.email.isNullOrEmpty() && remoteProfile.phone.isNullOrEmpty() && remoteUser.termsAccepted)
@@ -102,5 +106,18 @@ class AccountManager : KoinComponent {
             if (isTempAccount) initTempUser(result.model.user.copy())
         }
         return result
+    }
+
+    private suspend fun putNoAccount(): Result<Account> {
+        return sessionInteractor.putNoAccount()
+    }
+
+    /**
+     * Save general settings
+     */
+    suspend fun saveSettings(): Result<Account>  {
+        return if (hasAccount)
+            putAccount(isTempAccount = false)
+        else putNoAccount()
     }
 }

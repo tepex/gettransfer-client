@@ -1,7 +1,5 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.data.ds.CarrierTripDataStoreCache
-import com.kg.gettransfer.data.ds.CarrierTripDataStoreRemote
 import com.kg.gettransfer.data.ds.ChatDataStoreCache
 import com.kg.gettransfer.data.ds.ChatDataStoreRemote
 import com.kg.gettransfer.data.ds.DataStoreFactory
@@ -13,13 +11,12 @@ import com.kg.gettransfer.data.ds.PaymentDataStoreRemote
 import com.kg.gettransfer.data.ds.PromoDataStoreCache
 import com.kg.gettransfer.data.ds.PromoDataStoreRemote
 import com.kg.gettransfer.data.ds.PushTokenDataStoreRemote
+import com.kg.gettransfer.data.ds.ReviewDataStoreCache
 import com.kg.gettransfer.data.ds.ReviewDataStoreRemote
 import com.kg.gettransfer.data.ds.RouteDataStoreCache
 import com.kg.gettransfer.data.ds.RouteDataStoreRemote
 import com.kg.gettransfer.data.ds.SessionDataStoreCache
 import com.kg.gettransfer.data.ds.SessionDataStoreRemote
-import com.kg.gettransfer.data.ds.SystemDataStoreCache
-import com.kg.gettransfer.data.ds.SystemDataStoreRemote
 import com.kg.gettransfer.data.ds.TransferDataStoreCache
 import com.kg.gettransfer.data.ds.TransferDataStoreRemote
 
@@ -32,7 +29,6 @@ import com.kg.gettransfer.data.ds.io.PaymentSocketDataStoreInput
 import com.kg.gettransfer.data.ds.io.SystemSocketDataStoreInput
 import com.kg.gettransfer.data.ds.io.SystemSocketDataStoreOutput
 
-import com.kg.gettransfer.data.repository.CarrierTripRepositoryImpl
 import com.kg.gettransfer.data.repository.ChatRepositoryImpl
 import com.kg.gettransfer.data.repository.CoordinateRepositoryImpl
 import com.kg.gettransfer.data.repository.CountEventsRepositoryImpl
@@ -45,8 +41,6 @@ import com.kg.gettransfer.data.repository.ReviewRepositoryImpl
 import com.kg.gettransfer.data.repository.RouteRepositoryImpl
 import com.kg.gettransfer.data.repository.SessionRepositoryImpl
 import com.kg.gettransfer.data.repository.SocketRepositoryImpl
-import com.kg.gettransfer.data.repository.SystemRepositoryImpl
-import com.kg.gettransfer.data.repository.MobileConfigsRepositoryImpl
 import com.kg.gettransfer.data.repository.TransferRepositoryImpl
 
 import com.kg.gettransfer.data.socket.ChatDataStoreReceiver
@@ -55,7 +49,6 @@ import com.kg.gettransfer.data.socket.OfferDataStoreReceiver
 import com.kg.gettransfer.data.socket.PaymentDataStoreReceiver
 import com.kg.gettransfer.data.socket.SystemDataStoreReceiver
 
-import com.kg.gettransfer.domain.repository.CarrierTripRepository
 import com.kg.gettransfer.domain.repository.ChatRepository
 import com.kg.gettransfer.domain.repository.CoordinateRepository
 import com.kg.gettransfer.domain.repository.CountEventsRepository
@@ -68,11 +61,7 @@ import com.kg.gettransfer.domain.repository.ReviewRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
 import com.kg.gettransfer.domain.repository.SessionRepository
 import com.kg.gettransfer.domain.repository.SocketRepository
-import com.kg.gettransfer.domain.repository.SystemRepository
 import com.kg.gettransfer.domain.repository.TransferRepository
-
-import com.kg.gettransfer.core.domain.Repository
-import com.kg.gettransfer.sys.domain.MobileConfigs
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -109,7 +98,7 @@ val dataModule = module {
 
     single { OfferDataStoreCache() }
     single { OfferDataStoreRemote() }
-    single { OfferRepositoryImpl(DataStoreFactory(get(), get())) } bind OfferRepository::class
+    single { OfferRepositoryImpl(DataStoreFactory(get(), get()), get()) } bind OfferRepository::class
     single<OfferDataStoreReceiver> { OfferSocketDataStoreInput() }
 
     single { PaymentDataStoreCache() }
@@ -118,11 +107,6 @@ val dataModule = module {
 
     single { SystemSocketDataStoreOutput(get()) }
     single <SystemDataStoreReceiver> { SystemSocketDataStoreInput() }
-    single { SystemDataStoreCache() }
-    single { SystemDataStoreRemote() }
-    single { SystemRepositoryImpl(DataStoreFactory(get(), get())) } bind SystemRepository::class
-
-    single { MobileConfigsRepositoryImpl() } bind Repository::class
 
     single { GeoDataStore() }
     single <GeoRepository> { GeoRepositoryImpl(get()) }
@@ -140,10 +124,6 @@ val dataModule = module {
     single { RouteDataStoreRemote() }
     single<RouteRepository> { RouteRepositoryImpl(DataStoreFactory(get(), get())) }
 
-    single { CarrierTripDataStoreCache() }
-    single { CarrierTripDataStoreRemote() }
-    single<CarrierTripRepository> { CarrierTripRepositoryImpl(DataStoreFactory(get(), get()), get()) }
-
     single { TransferDataStoreCache() }
     single { TransferDataStoreRemote() }
     single { TransferRepositoryImpl(DataStoreFactory(get(), get())) } bind TransferRepository::class
@@ -152,8 +132,9 @@ val dataModule = module {
     single { PromoDataStoreRemote() }
     single<PromoRepository> { PromoRepositoryImpl(DataStoreFactory(get(), get())) }
 
+    single { ReviewDataStoreCache() }
     single { ReviewDataStoreRemote() }
-    single<ReviewRepository> { ReviewRepositoryImpl(get()) }
+    single<ReviewRepository> { ReviewRepositoryImpl(DataStoreFactory(get(), get())) }
 
     single { ChatDataStoreCache() }
     single { ChatDataStoreRemote() }

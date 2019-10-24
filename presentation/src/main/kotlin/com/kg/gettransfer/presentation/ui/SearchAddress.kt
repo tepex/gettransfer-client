@@ -2,10 +2,10 @@ package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
 
-import android.support.annotation.CallSuper
-import android.support.annotation.StringRes
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
 
-import android.support.constraint.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -23,8 +23,8 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.extensions.*
-import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.extensions.isInvisible
 
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
 import com.kg.gettransfer.presentation.view.SearchAddressView
@@ -44,7 +44,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
     @InjectPresenter
     lateinit var presenter: SearchAddressPresenter
-    private lateinit var parent: SearchActivity
+    private lateinit var parent: SearchFragment
 
     override val containerView: View
     /** From/To address flag */
@@ -75,19 +75,18 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
             addressField.requestFocus()
             parent.onSearchFieldEmpty(isTo)
         }
-        fl_clearBtn.setOnClickListener(clearListener)
         im_clearBtn.setOnClickListener(clearListener)
     }
 
     @ProvidePresenter
     fun createSearchAddressPresenter() = SearchAddressPresenter()
 
-    fun initWidget(parent: SearchActivity, isTo: Boolean) {
+    fun initWidget(parent: SearchFragment, isTo: Boolean) {
         this.parent = parent
         this.isTo = isTo
         addressField.setOnFocusChangeListener { _, hasFocus ->
             this.hasFocus = hasFocus
-            if (!hasFocus) fl_clearBtn.isVisible = false
+            if (!hasFocus) im_clearBtn.isVisible = false
             else {
                 setClearButtonVisibility()
                 parent.presenter.isTo = isTo
@@ -101,8 +100,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         parentDelegate = parent.mvpDelegate
         mvpDelegate.onCreate()
         mvpDelegate.onAttach()
-
-        presenter.mBounds = parent.mBounds
 // if(isTo) addressField.requestFocus()
         setClearButtonVisibility()
     }
@@ -111,7 +108,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     fun initText(text: String, sendRequest: Boolean, cursorOnEnd: Boolean) {
         blockRequest = true
         this.text = if (text.isNotEmpty()) "$text " else ""
-        if (cursorOnEnd) addressField.setSelection(addressField.text.length)
+        if (cursorOnEnd) addressField.setSelection(addressField.text?.length?:0)
         blockRequest = false
         if (sendRequest) presenter.requestAddressListByPrediction(text.trim())
     }
@@ -189,13 +186,13 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun setClearButtonVisibility() {
-        if (text.isBlank()) fl_clearBtn.isInvisible = true
-        else if (hasFocus)  fl_clearBtn.isInvisible = false
+        if (text.isBlank()) im_clearBtn.isInvisible = true
+        else if (hasFocus)  im_clearBtn.isInvisible = false
     }
 
     fun changeFocus() {
         addressField.requestFocus()
-        addressField.setSelection(addressField.text.length)
+        addressField.setSelection(addressField.text?.length?:0)
     }
 
     override fun setTransferNotFoundError(transferId: Long) {}

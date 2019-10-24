@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.model
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.TransportType
@@ -10,9 +10,9 @@ import com.kg.gettransfer.domain.model.TransportType.ID
 data class TransportTypeModel(
     val id: ID,
     @StringRes
-    val nameId: Int?,
+    val nameId: Int,
     @DrawableRes
-    val imageId: Int?,
+    val imageId: Int,
     val paxMax: Int,
     val luggageMax: Int,
     val price: TransportTypePriceModel? = null,
