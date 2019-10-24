@@ -118,7 +118,7 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
     private fun openRateTransferLink(transferId: Long, rate: Int) = worker.main.launch {
         checkInitialization()
         if (!accountManager.isLoggedIn) {
-            router.replaceScreen(Screens.LoginToRateTransfer(transferId, rate))
+            router.createStartChain(Screens.LoginToRateTransfer(transferId, rate))
         } else {
             rateTransfer(transferId, rate)
         }
