@@ -15,6 +15,7 @@ import presentation.data.Constants
 
 import presentation.screenelements.*
 
+@Suppress("LongMethod")
 class RegressSuite : TestCase() {
 
     @Rule

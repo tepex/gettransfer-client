@@ -91,7 +91,12 @@ object BaseFun {
 
     fun chooseData() {
         onView(withId(R.id.transfer_date_time_field)).perform(click())
-        onView(withClassName(equalTo(DatePicker::class.java.name))).perform(PickerActions.setDate(2020, 10, 9))
+        onView(withClassName(equalTo(DatePicker::class.java.name))).perform(PickerActions
+            .setDate
+            (
+            2020,
+            10,
+            9))
         onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).perform(click())
         onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).perform(click())
     }
