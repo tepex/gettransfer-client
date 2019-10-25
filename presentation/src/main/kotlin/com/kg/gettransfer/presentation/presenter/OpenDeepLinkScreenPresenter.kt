@@ -17,7 +17,7 @@ open class OpenDeepLinkScreenPresenter<BV: OpenDeepLinkScreenView>: BaseHandleUr
                     offerId != null            ->
                         fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(transfer.id) }?.find { it.id == offerId }
                     bookNowTransportId != null ->
-                        transfer.bookNowOffers.find { it.transportType.id.name == bookNowTransportId }
+                        transfer.bookNowOffers.find { it.transportType.id.toString() == bookNowTransportId }
                     else                       -> null
                 }
                 if (offerItem != null) {
