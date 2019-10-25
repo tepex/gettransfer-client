@@ -46,9 +46,11 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     }
 
     override fun systemInitialized() {
-        if (accountManager.isLoggedIn) {
+        if (accountManager.hasAccount) {
             worker.main.launch {
-                if (accountManager.remoteAccount.isCarrier && !getPreferences().getModel().isNewDriverAppDialogShowed) {
+                if (accountManager.isLoggedIn &&
+                        accountManager.remoteAccount.isCarrier &&
+                        !getPreferences().getModel().isNewDriverAppDialogShowed) {
                     analytics.logEvent(Analytics.EVENT_NEW_CARRIER_APP_DIALOG, Analytics.OPEN_SCREEN, null)
                     viewState.showNewDriverAppDialog()
                     withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(true) }
@@ -62,7 +64,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     override fun attachView(view: MainNavigateView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
-        if (accountManager.isLoggedIn && isAppLaunched) {
+        if (accountManager.hasAccount && isAppLaunched) {
             checkTransfers()
         } else {
             viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
