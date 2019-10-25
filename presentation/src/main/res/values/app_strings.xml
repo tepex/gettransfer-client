@@ -3,8 +3,8 @@
     <!-- urls and keys -->
     <string name="api_key_demo">android_e3996c61be6786dfac7413d53be26e64</string>
     <string name="api_key_dev">771b0c837d2f992610408e3fe989211f</string>
-    <string name="api_url_demo">https://stgtr.org</string>
-    <string name="api_url_dev">https://development.stgtr.org</string>
+    <string name="api_url_demo">https://gtrbox.org</string>
+    <string name="api_url_dev">https://development.gtrbox.org</string>
     <string name="api_key_prod">android_a08d215c1976cef508350587784a0447</string>
     <string name="api_url_prod">https://gettransfer.com</string>
     <string name="endpoint_demo" translatable="false">Demo</string>

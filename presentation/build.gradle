@@ -120,7 +120,7 @@ android {
 
             manifestPlaceholders = [
                     hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
-                    assetlinks    : "[{ \\\"include\\\": \\\"https://stgtr.org/.well-known/assetlinks.json\\\" }]"
+                    assetlinks    : "[{ \\\"include\\\": \\\"https://gtrbox.org/.well-known/assetlinks.json\\\" }]"
             ]
 
             dimension "type"
