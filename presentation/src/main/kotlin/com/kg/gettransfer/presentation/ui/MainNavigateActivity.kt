@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -63,11 +64,16 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         }
 
-        getIntents()
+        getIntents(intent)
 
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        getIntents(intent)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -81,10 +87,10 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     /**
      * Checking existing transfer for rate
      */
-    private fun getIntents() {
-        with(intent) {
-            val transferId = getLongExtra(EXTRA_RATE_TRANSFER_ID, 0L)
-            val rate = getIntExtra(EXTRA_RATE_VALUE, 0)
+    private fun getIntents(intent: Intent?) {
+        intent?.let {
+            val transferId = it.getLongExtra(EXTRA_RATE_TRANSFER_ID, 0L)
+            val rate = it.getIntExtra(EXTRA_RATE_VALUE, 0)
             if (transferId != 0L) presenter.rateTransfer(transferId, rate)
         }
     }
