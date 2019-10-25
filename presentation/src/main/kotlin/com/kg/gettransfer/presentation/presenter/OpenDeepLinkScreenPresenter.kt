@@ -77,6 +77,8 @@ open class OpenDeepLinkScreenPresenter<BV: OpenDeepLinkScreenView>: BaseHandleUr
             result.error?.let { e ->
                 if (e.isNotFound()) {
                     viewState.setTransferNotFoundError(transferId) { onDialogDismissCallback() }
+                } else {
+                    openMainScreen()
                 }
             }
         }
