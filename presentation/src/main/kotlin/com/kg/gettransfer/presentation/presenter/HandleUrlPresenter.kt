@@ -49,7 +49,7 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
                     appLinkData.getQueryParameter(TO_PLACE_ID),
                     appLinkData.getQueryParameter(PROMO_CODE)
                 )
-                else -> viewState.showWebView(url)
+                else -> showWebView()
             }
         }
     }
@@ -76,7 +76,9 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
                 return
             }
             val transferId = fragment.substring(fragment.indexOf(SLASH) + 1).toLongOrNull()
-            transferId?.let { openTransferLink(it) }
+            transferId?.let { openTransferLink(it) } ?: showWebView()
+        } else {
+            showWebView()
         }
     }
 
@@ -131,5 +133,9 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
         } else {
             openVoucher(transferId)
         }
+    }
+
+    private fun showWebView() {
+        viewState.showWebView(url)
     }
 }
