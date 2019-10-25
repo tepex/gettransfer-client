@@ -37,7 +37,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
 
-    private var isLoggedIn = false
+    private var isAppLaunched = false
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -62,12 +62,12 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     override fun attachView(view: MainNavigateView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
-        if (accountManager.isLoggedIn && !isLoggedIn) {
+        if (accountManager.isLoggedIn && isAppLaunched) {
             checkTransfers()
         } else {
             viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
         }
-        isLoggedIn = accountManager.isLoggedIn
+        isAppLaunched = true
         log.debug("MainPresenter.is user logged in: ${accountManager.isLoggedIn}")
     }
 
