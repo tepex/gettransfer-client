@@ -14,11 +14,11 @@ open class OpenDeepLinkScreenPresenter<BV: OpenDeepLinkScreenView>: BaseHandleUr
         checkTransfer(transferId).isSuccess()?.let { transfer ->
             if (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_ACTIVE) {
                 val offerItem: OfferItem? = when {
-                    offerId != null            ->
+                    offerId != null && offerId != DEFAULT_ID ->
                         fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(transfer.id) }?.find { it.id == offerId }
-                    bookNowTransportId != null ->
+                    !bookNowTransportId.isNullOrEmpty()      ->
                         transfer.bookNowOffers.find { it.transportType.id.toString() == bookNowTransportId }
-                    else                       -> null
+                    else                                     -> null
                 }
                 if (offerItem != null) {
                     with(paymentInteractor) {
@@ -88,4 +88,8 @@ open class OpenDeepLinkScreenPresenter<BV: OpenDeepLinkScreenView>: BaseHandleUr
     }
 
     fun openMainScreen() = router.replaceScreen(Screens.MainPassenger())
+
+    companion object {
+        const val DEFAULT_ID = 0L
+    }
 }
