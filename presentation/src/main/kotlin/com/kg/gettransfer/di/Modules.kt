@@ -26,6 +26,7 @@ import com.kg.gettransfer.geo.LocationImpl
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
+import com.kg.gettransfer.presentation.delegate.PushTokenManager
 
 import com.kg.gettransfer.presentation.mapper.CarrierMapper
 import com.kg.gettransfer.presentation.mapper.OfferMapper
@@ -161,6 +162,7 @@ val androidModule = module {
     single { AccountManager() }
     single { GTDownloadManager(androidApplication().applicationContext) }
     single { NetworkChangeCallback(androidApplication().applicationContext) }
+    single { PushTokenManager() }
 }
 
 val testModule = module {

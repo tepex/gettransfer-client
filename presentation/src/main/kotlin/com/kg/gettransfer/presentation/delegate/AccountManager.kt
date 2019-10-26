@@ -16,8 +16,9 @@ import org.koin.core.KoinComponent
 import org.koin.core.get
 
 class AccountManager : KoinComponent {
-    val sessionInteractor: SessionInteractor = get()
-    val socketInteractor: SocketInteractor = get()
+    private val sessionInteractor: SessionInteractor = get()
+    private val socketInteractor: SocketInteractor = get()
+    private val pushTokenManager: PushTokenManager = get()
 
     /* REMOTE ACCOUNT */
 
@@ -103,6 +104,7 @@ class AccountManager : KoinComponent {
             sessionInteractor.putAccount(if (isTempAccount) remoteAccount.copy(user = tempUser) else remoteAccount)
         if (result.error == null) {
             if (connectSocket && hasAccount) socketInteractor.openSocketConnection()
+            if (hasAccount) pushTokenManager.registerPushToken()
             if (isTempAccount) initTempUser(result.model.user.copy())
         }
         return result

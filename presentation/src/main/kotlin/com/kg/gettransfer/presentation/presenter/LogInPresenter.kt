@@ -97,7 +97,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
                 it.isSuccess()?.let {
                     openNextScreen()
                     analytics.logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.STATUS, Analytics.RESULT_SUCCESS)
-                    registerPushToken()
+                    pushTokenManager.registerPushToken()
                 }
 
                 viewState.hideLoading()
