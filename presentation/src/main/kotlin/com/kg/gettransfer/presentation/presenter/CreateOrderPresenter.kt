@@ -462,12 +462,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 viewState.blockInterface(true, true)
                 val result = utils.asyncAwait { transferInteractor.createTransfer(transferNew) }
                 if (result.error == null) {
+                    val neededRegisterPushToken = !accountManager.hasAccount
                     val logResult = utils.asyncAwait { accountManager.putAccount(connectSocket = true) }
                     logResult.error?.let { error ->
                         if (error.isNotLoggedIn() || error.isAccountExistError()) {
                             onAccountExists(result.model.id)
                         }
                     } ?: run {
+                        if (neededRegisterPushToken) registerPushToken()
                         utils.compute { handleSuccess() }
                         router.replaceScreen(Screens.Offers(result.model.id))
                     }
