@@ -2,8 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.MvpPresenter
 
-import com.google.firebase.iid.FirebaseInstanceId
-
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.domain.ApiException
@@ -17,6 +15,7 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.presentation.delegate.AccountManager
+import com.kg.gettransfer.presentation.delegate.PushTokenManager
 import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
 
@@ -63,10 +62,10 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val paymentInteractor: PaymentInteractor by inject()
     protected val orderInteractor: OrderInteractor by inject()
 
-    private val pushTokenInteractor: PushTokenInteractor by inject()
     protected val socketInteractor: SocketInteractor by inject()
     protected val sessionInteractor: SessionInteractor by inject()
     protected val accountManager: AccountManager by inject()
+    protected val pushTokenManager: PushTokenManager by inject()
     protected val downloadManager: GTDownloadManager by inject()
 
     private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
@@ -131,7 +130,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     protected suspend fun clearAllCachedData() {
         if (accountManager.remoteAccount.partner?.defaultPromoCode != null) orderInteractor.promoCode = ""
-        utils.asyncAwait { pushTokenInteractor.unregisterPushToken() }
+        utils.asyncAwait { pushTokenManager.unregisterPushToken() }
         utils.asyncAwait { accountManager.logout() }
 
         utils.asyncAwait { transferInteractor.clearTransfersCache() }
@@ -184,21 +183,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     internal fun callPhone(phone: String) {
         router.navigateTo(Screens.CallPhone(phone))
-    }
-
-    protected fun registerPushToken() {
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                task.result?.token?.let { token ->
-                    worker.main.launch {
-                        log.debug("[FCM token]: $token")
-                        withContext(worker.bg) { pushTokenInteractor.registerPushToken(token) }
-                    }
-                }
-            } else {
-                log.warn("getInstanceId failed", task.exception)
-            }
-        }
     }
 
 //    fun onOfferJsonReceived(jsonOffer: String, transferId: Long) =

@@ -128,7 +128,6 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
                     viewState.showErrorText(false)
                     openNextScreen()
                     logEvent(Analytics.EVENT_LOGIN_CODE, Analytics.RESULT_SUCCESS)
-                    registerPushToken()
                 }
             }
             viewState.blockInterface(false)

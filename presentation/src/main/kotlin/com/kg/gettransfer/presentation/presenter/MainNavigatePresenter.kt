@@ -56,7 +56,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
                     withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(true) }
                 }
             }
-            registerPushToken()
+            pushTokenManager.registerPushToken()
             checkTransfers()
         }
     }
