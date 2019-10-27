@@ -80,17 +80,20 @@ class AccountManager : KoinComponent {
 
     suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean): Result<Account> {
         val result = sessionInteractor.login(email, phone, password, withSmsCode)
-        if (result.error == null) {
-            initTempUser(result.model.user)
-            socketInteractor.openSocketConnection()
-        }
+        if (result.error == null) successAuthorization(result.model.user)
         return result
     }
 
     suspend fun register(registerAccount: RegistrationAccount): Result<Account> {
         val result = sessionInteractor.register(registerAccount)
-        if (result.error == null) initTempUser(result.model.user)
+        if (result.error == null) successAuthorization(result.model.user)
         return result
+    }
+
+    private suspend fun successAuthorization(user: User) {
+        initTempUser(user)
+        socketInteractor.openSocketConnection()
+        pushTokenManager.registerPushToken()
     }
 
     suspend fun logout(): Result<Account> {

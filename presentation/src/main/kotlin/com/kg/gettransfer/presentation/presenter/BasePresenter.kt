@@ -185,8 +185,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         router.navigateTo(Screens.CallPhone(phone))
     }
 
-    protected fun registerPushToken() = pushTokenManager.registerPushToken()
-
 //    fun onOfferJsonReceived(jsonOffer: String, transferId: Long) =
 //            JSON.nonstrict.parse(OfferEntity.serializer(), jsonOffer)
 //                    .also { it.transferId = transferId }

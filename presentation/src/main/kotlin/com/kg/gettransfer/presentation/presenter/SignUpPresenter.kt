@@ -49,7 +49,6 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
                 result.isSuccess()?.let {
                     viewState.hideLoading()
                     viewState.showRegisterSuccessDialog()
-                    pushTokenManager.registerPushToken()
                     logLoginEvent(Analytics.RESULT_SUCCESS)
                 }
             }
