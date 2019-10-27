@@ -289,7 +289,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         Sentry.capture(e)
     }
 
-    override fun setTransferNotFoundError(transferId: Long) {
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
         BottomSheetDialog
             .newInstance()
             .apply {
@@ -298,6 +298,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
                 text = this@BaseActivity.getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString())
                 isShowCloseButton = true
                 isShowOkButton = false
+                dismissCallBack?.let { onDismissCallBack = it }
             }
             .show(supportFragmentManager)
     }

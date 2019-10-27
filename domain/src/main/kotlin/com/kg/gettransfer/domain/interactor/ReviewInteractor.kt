@@ -57,11 +57,10 @@ class ReviewInteractor(private val repository: ReviewRepository) {
         return list
     }
 
-    fun rateCanceled() { isReviewSuggested = true }
+    fun reviewSuggested() { isReviewSuggested = true }
 
     suspend fun sendRates(isTopRate: Boolean = true): Result<Unit> {
         if (isTopRate) createListOfDetailedRates()
-        isReviewSuggested = true
         return repository.rateTrip()
     }
 

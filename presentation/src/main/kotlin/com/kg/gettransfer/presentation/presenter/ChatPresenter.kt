@@ -61,13 +61,11 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
             getChatFromRemote()
 
-            offerModel = withContext(worker.bg) {
-                offerInteractor.getOffers(transferId, true).model.firstOrNull()?.let { offerMapper.toView(it) }
-            }
+            offerModel = fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) {
+                offerInteractor.getOffers(transferId)
+            }.model.firstOrNull()?.let { offerMapper.toView(it) }
 
-            transferModel?.let {
-                viewState.setToolbar(it, offerModel)
-            }
+            transferModel?.let { viewState.setToolbar(it, offerModel) }
         }
         onJoinRoom()
     }

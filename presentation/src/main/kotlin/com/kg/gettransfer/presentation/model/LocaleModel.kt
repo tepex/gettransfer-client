@@ -6,7 +6,7 @@ class LocaleModel(val delegate: Locale) : CharSequence {
 
     val name = delegate.getDisplayLanguage(delegate).capitalize()
     override val length = name.length
-    val locale = delegate.language.toUpperCase()
+    val locale = delegate.language.toUpperCase(Locale.US)
 
     override fun toString(): String = name
 
