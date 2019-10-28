@@ -23,7 +23,6 @@ import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.presentation.adapter.BtnCallClickListener
 import com.kg.gettransfer.presentation.adapter.BtnChatClickListener
 import com.kg.gettransfer.presentation.adapter.ItemClickListener
-
 import com.kg.gettransfer.presentation.adapter.RequestsRVAdapter
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.RequestsCategoryPresenter
@@ -42,7 +41,6 @@ import timber.log.Timber
 /**
  * @TODO: Выделить BaseFragment
  */
-@Suppress("UnsafeCast")
 class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     @InjectPresenter
     internal lateinit var presenter: RequestsCategoryPresenter
@@ -51,8 +49,8 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     fun createRequestsCategoryPresenter() =
         arguments?.getInt(TRANSFER_TYPE_ARG)?.let { RequestsCategoryPresenter(it) }
 
-    private val rvAdapter: RequestsRVAdapter
-    get() = rvRequests.adapter as RequestsRVAdapter
+    private val rvAdapter: RequestsRVAdapter?
+    get() = rvRequests.adapter as? RequestsRVAdapter
 
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
@@ -72,11 +70,13 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
         super.onViewCreated(view, savedInstanceState)
 
         setTitleFragmentEmptyRequestsList()
-        rvRequests.adapter = RequestsRVAdapter(
+        rvRequests.adapter =
+            RequestsRVAdapter(
                 presenter.transferType,
                 onItemClickListener,
                 onCallClickListener,
-                onChatClickListener)
+                onChatClickListener
+            )
         initClickListeners()
         initScrollListener()
     }
@@ -100,7 +100,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     private fun initClickListeners() {
         swipe_container.setOnRefreshListener {
             scrollListener.resetState()
-            rvAdapter.removeAll()
+            rvAdapter?.removeAll()
             presenter.getTransfers()
         }
 
@@ -110,16 +110,16 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     private fun initScrollListener() {
-        val layoutManager = rvRequests.layoutManager as LinearLayoutManager
+        (rvRequests.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
+            scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
-        scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
-
-            override fun onLoadMore(page: Int) {
-                rvAdapter.addLoading()
-                presenter.getTransfers(page)
+                override fun onLoadMore(page: Int) {
+                    rvAdapter?.addLoading()
+                    presenter.getTransfers(page)
+                }
             }
+            rvRequests.addOnScrollListener(scrollListener)
         }
-        rvRequests.addOnScrollListener(scrollListener)
     }
 
     override fun onDestroyView() {
@@ -136,18 +136,18 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
         swipe_container.isRefreshing = false
 
         switchBackGroundData(false)
-        rvAdapter.removeLoading()
-        rvAdapter.updateTransfers(transfers)
+        rvAdapter?.removeLoading()
+        rvAdapter?.updateTransfers(transfers)
         scrollListener.setLoaded()
         pagesCount?.let { scrollListener.pages = it }
     }
 
     override fun updateCardWithDriverCoordinates(transferId: Long) {
-        activity?.runOnUiThread { rvAdapter.updateDriverCoordinates(transferId) }
+        activity?.runOnUiThread { rvAdapter?.updateDriverCoordinates(transferId) }
     }
 
     override fun updateEvents(eventsCount: Map<Long, Int>) {
-        rvAdapter.updateEvents(eventsCount)
+        rvAdapter?.updateEvents(eventsCount)
     }
 
     override fun onEmptyList() {
@@ -163,15 +163,16 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
         btn_forward_main.isVisible = isEmpty
     }
 
-    @Suppress("MandatoryBracesIfStatements")
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         transfers_loader.isVisible = block
-        if (block) transfers_loader.shimmer_loader.startShimmer()
-        else transfers_loader.shimmer_loader.stopShimmer()
+        with(transfers_loader.shimmer_loader) {
+            if (block) startShimmer() else stopShimmer()
+        }
     }
 
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) =
-        (activity as BaseView).setError(finish, errId, *args)
+    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
+        (activity as? BaseView)?.setError(finish, errId, *args)
+    }
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
@@ -180,8 +181,9 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
         }
     }
 
-    override fun setError(e: DatabaseException) =
-        (activity as BaseView).setError(e)
+    override fun setError(e: DatabaseException) {
+        (activity as? BaseView)?.setError(e)
+    }
 
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 }

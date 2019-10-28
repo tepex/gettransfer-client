@@ -29,7 +29,7 @@ import pub.devrel.easypermissions.EasyPermissions
 // import leakcanary.AppWatcher
 import timber.log.Timber
 
-@Suppress("EmptyFunctionBlock")
+@Suppress("TooManyFunctions")
 class SmsCodeFragment : MvpAppCompatFragment(),
     SmsCodeView,
     EasyPermissions.PermissionCallbacks,
@@ -57,10 +57,7 @@ class SmsCodeFragment : MvpAppCompatFragment(),
 
         with(presenter) {
             arguments?.let { bundle ->
-                params = JSON.parse(
-                    LogInView.Params.serializer(),
-                    bundle.getString(LogInView.EXTRA_PARAMS) ?: ""
-                )
+                params = JSON.parse(LogInView.Params.serializer(), bundle.getString(LogInView.EXTRA_PARAMS) ?: "")
                 isPhone = bundle.getBoolean(EXTERNAL_IS_PHONE)
             }
             pinItemsCount = pinView.itemCount
@@ -128,10 +125,6 @@ class SmsCodeFragment : MvpAppCompatFragment(),
         text?.let { wrongCodeError.text = text }
     }
 
-    override fun showValidationError(b: Boolean, invalidEmail: Int) {
-        // TODO remove BaseView or add code.
-    }
-
     // ----------TODO остатки от группы Base.---------------
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
@@ -145,18 +138,17 @@ class SmsCodeFragment : MvpAppCompatFragment(),
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
-        when (e.code) {
-            ApiException.NOT_FOUND ->
-                BottomSheetDialog
-                    .newInstance()
-                    .apply {
-                        title = getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.params.emailOrPhone)
-                        buttonOkText = this@SmsCodeFragment.getString(R.string.LNG_OK)
-                        onDismissCallBack = {
-                            presenter.back()
-                        }
+        if (e.code == ApiException.NOT_FOUND) {
+            BottomSheetDialog
+                .newInstance()
+                .apply {
+                    title = this@SmsCodeFragment.getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.params.emailOrPhone)
+                    buttonOkText = this@SmsCodeFragment.getString(R.string.LNG_OK)
+                    onDismissCallBack = {
+                        presenter.back()
                     }
-                    .show(requireFragmentManager())
+                }
+                .show(requireFragmentManager())
         }
     }
 

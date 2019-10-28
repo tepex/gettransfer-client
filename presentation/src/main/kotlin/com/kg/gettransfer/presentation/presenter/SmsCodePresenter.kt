@@ -11,11 +11,9 @@ import com.kg.gettransfer.core.domain.Second
 import com.kg.gettransfer.extensions.firstSign
 import com.kg.gettransfer.extensions.internationalExample
 
-import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
-import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
 
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
@@ -85,17 +83,8 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
         }
     }
 
-    private fun validateInput(): Boolean {
-        LoginHelper.validateInput(params.emailOrPhone, isPhone) // force unwrap because null-check is already done
-            .also { validate ->
-                when (validate) {
-                    INVALID_EMAIL -> viewState.showValidationError(true, INVALID_EMAIL)
-                    INVALID_PHONE -> viewState.showValidationError(true, INVALID_PHONE)
-                    CREDENTIALS_VALID -> return true
-                }
-            }
-        return false
-    }
+    private fun validateInput() =
+        LoginHelper.validateInput(params.emailOrPhone, isPhone) == CREDENTIALS_VALID
 
     fun onLoginClick() {
         analytics.logSingleEvent(Analytics.VERIFY_CODE_CLICKED)

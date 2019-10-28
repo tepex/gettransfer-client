@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.view_input_password.*
 import kotlinx.serialization.json.JSON
 import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.EasyPermissions
-//import leakcanary.AppWatcher
+// import leakcanary.AppWatcher
 
 import timber.log.Timber
 

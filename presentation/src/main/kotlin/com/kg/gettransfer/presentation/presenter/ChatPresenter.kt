@@ -92,8 +92,8 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         }
     }
 
-    private fun initChatModel(chatResult: Chat){
-        if (chatModel == null || chatModel!!.accountId == NO_ID) {
+    private fun initChatModel(chatResult: Chat) {
+        if (chatModel == null || chatModel?.accountId == NO_ID) {
             chatModel = chatMapper.toView(chatResult)
             chatModel?.let { viewState.setChat(it) }
         } else {
@@ -101,7 +101,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
                 val oldMessagesSize = messages.size
                 messages = chatResult.messages.map { messageMapper.toView(it) }
                 viewState.notifyData()
-                if(chatResult.messages.size > oldMessagesSize) viewState.scrollToEnd()
+                if (chatResult.messages.size > oldMessagesSize) viewState.scrollToEnd()
             }
         }
     }

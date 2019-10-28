@@ -44,8 +44,8 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
         LoginHelper.validateInput(
             params.emailOrPhone,
             isPhone()
-        ).also {
-            when (it) {
+        ).also { error ->
+            when (error) {
                 INVALID_EMAIL -> viewState.showValidationError(INVALID_EMAIL)
                 INVALID_PHONE -> viewState.showValidationError(INVALID_PHONE)
                 CREDENTIALS_VALID -> return true
@@ -67,20 +67,7 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
     }
 
     fun onLoginClick() {
-        analytics.logSingleEvent(Analytics.VERIFY_PASSWORD_CLICKED)
-        if (password.isEmpty()) {
-            viewState.showValidationError(MainLoginActivity.INVALID_PASSWORD)
-            return
-        }
-        if (params.emailOrPhone.isEmpty() ||
-            isPhone() && !LoginHelper.phoneIsValid(params.emailOrPhone) ||
-            !isPhone() && !LoginHelper.emailIsValid(params.emailOrPhone)
-        ) {
-            viewState.showValidationError(MainLoginActivity.INVALID_EMAIL)
-            return
-        }
-
-        if (!checkInputData()) return
+        if (!isCanLogIn()) return
 
         utils.launchSuspend {
             fetchResult(SHOW_ERROR, checkLoginError = false) {
@@ -88,13 +75,13 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
                     true -> accountManager.login(null, getInternationalNumber(params.emailOrPhone), password, false)
                     false -> accountManager.login(params.emailOrPhone, null, password, false)
                 }
-            }.also {
-                it.error?.let { e ->
+            }.also { result ->
+                result.error?.let { e ->
                     viewState.setError(e)
                     analytics.logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.STATUS, Analytics.RESULT_FAIL)
                 }
 
-                it.isSuccess()?.let {
+                result.isSuccess()?.let {
                     openNextScreen()
                     analytics.logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.STATUS, Analytics.RESULT_SUCCESS)
                 }
@@ -104,12 +91,30 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
         }
     }
 
+    private fun isCanLogIn(): Boolean {
+        analytics.logSingleEvent(Analytics.VERIFY_PASSWORD_CLICKED)
+
+        return when {
+            password.isEmpty() -> {
+                viewState.showValidationError(MainLoginActivity.INVALID_PASSWORD)
+                false
+            }
+            isEmailOrPhoneInvalid() -> {
+                viewState.showValidationError(MainLoginActivity.INVALID_EMAIL)
+                false
+            }
+            else -> checkInputData()
+        }
+    }
+
+    private fun isEmailOrPhoneInvalid() =
+        params.emailOrPhone.isEmpty() ||
+        isPhone() && !LoginHelper.phoneIsValid(params.emailOrPhone) ||
+        !isPhone() && !LoginHelper.emailIsValid(params.emailOrPhone)
+
     fun sendVerificationCode() {
         analytics.logSingleEvent(Analytics.GET_CODE_CLICKED)
-        if (params.emailOrPhone.isEmpty() ||
-            (!isPhone() && !LoginHelper.emailIsValid(params.emailOrPhone)) ||
-            (isPhone() && !LoginHelper.phoneIsValid(params.emailOrPhone))
-        ) {
+        if (isEmailOrPhoneInvalid()) {
             viewState.showValidationError(MainLoginActivity.INVALID_EMAIL)
             return
         }
@@ -123,9 +128,9 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
                     }
                     false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
                 }
-            }.also {
-                if (it.error != null) {
-                    viewState.setError(it.error!!)
+            }.also { result ->
+                if (result.error != null) {
+                    result.error?.let { viewState.setError(it) }
                     analytics.logEvent(Analytics.EVENT_GET_CODE, Analytics.STATUS, Analytics.RESULT_FAIL)
                 } else {
                     loginWithCode()
