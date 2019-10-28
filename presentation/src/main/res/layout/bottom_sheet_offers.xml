@@ -116,7 +116,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
-                app:layout_constraintStart_toStartOf="@+id/vehicle_conveniences"
+                android:layout_marginStart="@dimen/margin16"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/vehicle_conveniences" />
 
             <include
