@@ -54,7 +54,6 @@ class RegressSuite : TestCase() {
             }
             step("CreateTransfer") {
                 TransferDetails {
-                    typeCar { click() }
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
@@ -124,7 +123,6 @@ class RegressSuite : TestCase() {
             step("CreateTransfer") {
                 TransferDetails {
                     Screen.idle()
-                    typeCar { click() }                       // TODO Выпилить после фикса
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
@@ -168,6 +166,7 @@ class RegressSuite : TestCase() {
             }
             step("OpenTransfer") {
                 Trips {
+                    Screen.idle(DELAY_BIG)
                     tvRequestNumber { click() }
                 }
             }
@@ -304,8 +303,7 @@ class RegressSuite : TestCase() {
             }
             step("CreateTransfer") {
                 TransferDetails {
-                    Screen.idle()
-                    typeCar { click() }
+                    Screen.idle(DELAY_MEDIUM)
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
