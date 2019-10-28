@@ -206,7 +206,10 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             .apply {
                 title = textError
                 text = detailText
-                if (goToLogin) onClickOkButton = { changePage?.invoke(null, null) }
+                if (goToLogin) {
+                    onClickOkButton = { changePage?.invoke(null, null) }
+                    buttonOkText = this@SignUpFragment.getString(R.string.LNG_LOGIN_BUTTON)
+                }
                 isShowCloseButton = true
                 onDismissCallBack = { hideLoading() }
             }
