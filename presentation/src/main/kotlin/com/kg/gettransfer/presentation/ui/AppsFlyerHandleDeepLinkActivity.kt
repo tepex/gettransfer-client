@@ -10,23 +10,23 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
-import com.kg.gettransfer.presentation.view.HandleUrlView
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.FROM_PLACE_ID
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.PROMO_CODE
-import com.kg.gettransfer.presentation.view.HandleUrlView.Companion.TO_PLACE_ID
+import com.kg.gettransfer.presentation.presenter.BaseHandleUrlPresenter
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.FROM_PLACE_ID
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PROMO_CODE
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.TO_PLACE_ID
 
 import timber.log.Timber
 
-class AppsFlyerHandleDeepLinkActivity : BaseActivity(), HandleUrlView {
+class AppsFlyerHandleDeepLinkActivity : BaseActivity(), BaseHandleUrlView {
 
     @InjectPresenter
-    internal lateinit var presenter: HandleUrlPresenter
+    internal lateinit var presenter: BaseHandleUrlPresenter<BaseHandleUrlView>
 
-    override fun getPresenter(): HandleUrlPresenter = presenter
+    override fun getPresenter(): BaseHandleUrlPresenter<BaseHandleUrlView> = presenter
 
     @ProvidePresenter
-    fun createHandleUrlPresenter() = HandleUrlPresenter()
+    fun createHandleUrlPresenter() = BaseHandleUrlPresenter<BaseHandleUrlView>()
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {

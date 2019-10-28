@@ -24,6 +24,7 @@ class ConfigsManager : KoinComponent {
         private set
     lateinit var mobile: MobileConfigs
         private set
+    var configsInitialized = false
     private lateinit var preferences: Preferences
 
     private val endpoints: List<Endpoint> by inject(named(ENDPOINTS))
@@ -61,6 +62,8 @@ class ConfigsManager : KoinComponent {
             mobileResult  is Result.Failure -> mobileResult
             configsResult is Result.Failure -> configsResult
             else                            -> null
+        }.also { result ->
+            configsInitialized = result == null
         }
     }
 

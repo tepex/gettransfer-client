@@ -84,5 +84,5 @@ abstract class BaseMapBottomSheetDialogFragment : BaseBottomSheetDialogFragment(
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
     override fun setError(e: ApiException) {}
     override fun setError(e: DatabaseException) {}
-    override fun setTransferNotFoundError(transferId: Long) {}
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 }

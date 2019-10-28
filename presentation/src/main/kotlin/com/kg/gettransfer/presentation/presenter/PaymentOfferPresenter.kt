@@ -108,7 +108,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             offer?.let { offer ->
                 paymentRequest = when (offer) {
                     is Offer -> PaymentRequestModel(transferId, offer.id, null)
-                    is BookNowOffer -> PaymentRequestModel(transferId, null, offer.transportType.id.name.toLowerCase())
+                    is BookNowOffer -> PaymentRequestModel(transferId, null, offer.transportType.id.toString())
                 }
             }
         }
@@ -263,7 +263,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                     transfer.id,
                     offer?.let { if (it is Offer) it.id else null },
                     paymentRequest.percentage,
-                    offer?.let { if (it is BookNowOffer) it.transportType.id.name.toLowerCase() else null }
+                    offer?.let { if (it is BookNowOffer) it.transportType.id.toString() else null }
                 )
             )
         }

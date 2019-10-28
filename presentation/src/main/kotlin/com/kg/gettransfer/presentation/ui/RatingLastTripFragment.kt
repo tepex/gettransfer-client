@@ -42,7 +42,7 @@ class RatingLastTripFragment : BaseMapBottomSheetDialogFragment(), RatingLastTri
     override fun initUx(savedInstanceState: Bundle?) {
         super.initUx(savedInstanceState)
         tv_transfer_details.setOnClickListener { presenter.onTransferDetailsClick() }
-        ivClose.setOnClickListener { presenter.onReviewCanceled() }
+        ivClose.setOnClickListener { cancelReview() }
         rate_bar_last_trip.setOnRatingBarChangeListener { _, rating, _ ->
             presenter.onRateClicked(rating)
         }
@@ -81,10 +81,10 @@ class RatingLastTripFragment : BaseMapBottomSheetDialogFragment(), RatingLastTri
         }
     }
 
-    override fun setTransferNotFoundError(transferId: Long) {
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
         val act = activity
         if (act is BaseView) {
-            act.setTransferNotFoundError(transferId)
+            act.setTransferNotFoundError(transferId, dismissCallBack)
         }
     }
 

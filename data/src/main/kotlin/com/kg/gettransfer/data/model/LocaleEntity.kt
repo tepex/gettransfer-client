@@ -17,5 +17,5 @@ data class LocaleEntity(
     }
 }
 
-fun Locale.map() = LocaleEntity(language.toUpperCase(), displayLanguage)
+fun Locale.map() = LocaleEntity(language.toUpperCase(Locale.US), displayLanguage)
 fun LocaleEntity.map() = Locale(code)

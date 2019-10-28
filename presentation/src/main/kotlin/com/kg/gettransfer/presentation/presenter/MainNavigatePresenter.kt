@@ -37,7 +37,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
 
-    private var isLoggedIn = false
+    private var isAppLaunched = false
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -46,9 +46,10 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     }
 
     override fun systemInitialized() {
-        if (accountManager.isLoggedIn) {
+        if (accountManager.hasAccount) {
             worker.main.launch {
-                if (accountManager.remoteAccount.isCarrier &&
+                if (accountManager.isLoggedIn &&
+                        accountManager.remoteAccount.isCarrier &&
                         !getPreferences().getModel().isNewDriverAppDialogShowed) {
                     analytics.logEvent(
                             Analytics.EVENT_NEW_CARRIER_APP_DIALOG,
@@ -57,7 +58,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
                     withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(true) }
                 }
             }
-            registerPushToken()
+            pushTokenManager.registerPushToken()
             checkTransfers()
         }
     }
@@ -65,12 +66,12 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     override fun attachView(view: MainNavigateView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
-        if (accountManager.isLoggedIn && !isLoggedIn) {
+        if (accountManager.hasAccount && isAppLaunched) {
             checkTransfers()
         } else {
             viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
         }
-        isLoggedIn = accountManager.isLoggedIn
+        isAppLaunched = true
         log.debug("MainPresenter.is user logged in: ${accountManager.isLoggedIn}")
     }
 
