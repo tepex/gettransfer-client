@@ -7,7 +7,7 @@ import com.kg.gettransfer.presentation.view.OpenDeepLinkScreenView
 import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.coroutines.launch
 
-open class OpenNextScreenPresenter<BV: OpenDeepLinkScreenView> : OpenDeepLinkScreenPresenter<BV>() {
+open class OpenNextScreenPresenter<BV : OpenDeepLinkScreenView> : OpenDeepLinkScreenPresenter<BV>() {
 
     internal lateinit var params: LogInView.Params
 

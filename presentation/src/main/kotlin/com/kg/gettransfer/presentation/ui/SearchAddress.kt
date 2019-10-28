@@ -39,6 +39,8 @@ import kotlinx.android.synthetic.main.search_address.*
  * https://antonioleiva.com/kotlin-android-extensions/
  * https://antonioleiva.com/custom-views-android-kotlin/
  */
+
+@Suppress("TooManyFunctions")
 class SearchAddress @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer, SearchAddressView, TextWatcher {
 
@@ -57,7 +59,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
     private var parentDelegate: MvpDelegate<Any>? = null
     private val mvpDelegate by lazy {
-        MvpDelegate<SearchAddress>(this).apply { setParentDelegate(parentDelegate!!, id.toString()) }
+        MvpDelegate<SearchAddress>(this).apply { parentDelegate?.let { setParentDelegate(it, id.toString()) } }
     }
     private var blockRequest = false
     private var hasFocus     = false
@@ -86,13 +88,16 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         this.isTo = isTo
         addressField.setOnFocusChangeListener { _, hasFocus ->
             this.hasFocus = hasFocus
-            if (!hasFocus) im_clearBtn.isVisible = false
-            else {
+            if (!hasFocus) {
+                im_clearBtn.isVisible = false
+            } else {
                 setClearButtonVisibility()
                 parent.presenter.isTo = isTo
-                if(text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE)
+                if (text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE) {
                     presenter.requestAddressListByPrediction(text.trim())
-                else parent.onSearchFieldEmpty(isTo)
+                } else {
+                    parent.onSearchFieldEmpty(isTo)
+                }
             }
         }
         addressField.addTextChangedListener(this)
@@ -108,7 +113,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     fun initText(text: String, sendRequest: Boolean, cursorOnEnd: Boolean) {
         blockRequest = true
         this.text = if (text.isNotEmpty()) "$text " else ""
-        if (cursorOnEnd) addressField.setSelection(addressField.text?.length?:0)
+        if (cursorOnEnd) addressField.setSelection(addressField.text?.length ?: 0)
         blockRequest = false
         if (sendRequest) presenter.requestAddressListByPrediction(text.trim())
     }
@@ -162,7 +167,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     override fun setError(e: DatabaseException) {
-        if(addressField.isFocused) parent.setError(e)
+        if (addressField.isFocused) parent.setError(e)
     }
 
     override fun afterTextChanged(s: Editable?) {
@@ -186,13 +191,16 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun setClearButtonVisibility() {
-        if (text.isBlank()) im_clearBtn.isInvisible = true
-        else if (hasFocus)  im_clearBtn.isInvisible = false
+        if (text.isBlank()) {
+            im_clearBtn.isInvisible = true
+        } else if (hasFocus) {
+            im_clearBtn.isInvisible = false
+        }
     }
 
     fun changeFocus() {
         addressField.requestFocus()
-        addressField.setSelection(addressField.text?.length?:0)
+        addressField.setSelection(addressField.text?.length ?: 0)
     }
 
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}

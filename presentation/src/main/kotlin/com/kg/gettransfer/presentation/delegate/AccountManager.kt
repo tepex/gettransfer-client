@@ -31,11 +31,12 @@ class AccountManager : KoinComponent {
     val remoteProfile: Profile
         get() = remoteUser.profile
 
-    val isLoggedIn: Boolean //is authorized user
+    val isLoggedIn: Boolean // is authorized user
         get() = !remoteProfile.email.isNullOrEmpty() || !remoteProfile.phone.isNullOrEmpty()
 
-    val hasAccount: Boolean //is temporary or authorized user
-        get() = isLoggedIn || (remoteProfile.email.isNullOrEmpty() && remoteProfile.phone.isNullOrEmpty() && remoteUser.termsAccepted)
+    val hasAccount: Boolean // is temporary or authorized user
+        get() = isLoggedIn ||
+            remoteProfile.email.isNullOrEmpty() && remoteProfile.phone.isNullOrEmpty() && remoteUser.termsAccepted
 
     val hasData: Boolean
         get() = !remoteProfile.email.isNullOrEmpty() && !remoteProfile.phone.isNullOrEmpty()
@@ -61,16 +62,18 @@ class AccountManager : KoinComponent {
 
     fun isValidProfileForCreateOrder() =
         when {
-            !tempUser.profile.email.isNullOrEmpty() && !Utils.checkEmail(tempUser.profile.email) -> FieldError.INVALID_EMAIL
-            !tempUser.profile.phone.isNullOrEmpty() && !Utils.checkPhone(tempUser.profile.phone) -> FieldError.INVALID_PHONE
-            !tempUser.termsAccepted -> FieldError.TERMS_ACCEPTED_FIELD
-            else -> null
+            !tempUser.profile.email.isNullOrEmpty() &&
+                !Utils.checkEmail(tempUser.profile.email) -> FieldError.INVALID_EMAIL
+            !tempUser.profile.phone.isNullOrEmpty() &&
+                !Utils.checkPhone(tempUser.profile.phone) -> FieldError.INVALID_PHONE
+            !tempUser.termsAccepted                       -> FieldError.TERMS_ACCEPTED_FIELD
+            else                                          -> null
         }
 
     fun isValidEmailAndPhoneFieldsForPay() =
         when {
-            tempUser.profile.email.isNullOrEmpty() -> FieldError.EMAIL_FIELD
-            tempUser.profile.phone.isNullOrEmpty() -> FieldError.PHONE_FIELD
+            tempUser.profile.email.isNullOrEmpty()    -> FieldError.EMAIL_FIELD
+            tempUser.profile.phone.isNullOrEmpty()    -> FieldError.PHONE_FIELD
             !Utils.checkEmail(tempUser.profile.email) -> FieldError.INVALID_EMAIL
             !Utils.checkPhone(tempUser.profile.phone) -> FieldError.INVALID_PHONE
             else -> null
@@ -121,8 +124,10 @@ class AccountManager : KoinComponent {
      * Save general settings
      */
     suspend fun saveSettings(): Result<Account>  {
-        return if (hasAccount)
+        return if (hasAccount) {
             putAccount(isTempAccount = false)
-        else putNoAccount()
+        } else {
+            putNoAccount()
+        }
     }
 }

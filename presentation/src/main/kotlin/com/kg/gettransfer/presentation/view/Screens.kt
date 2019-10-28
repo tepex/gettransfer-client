@@ -176,7 +176,11 @@ object Screens {
         }
     }
 
-    data class LoginToPaymentOffer(val transferId: Long, val offerId: Long?, val bookNowTransportId: String?) : SupportAppScreen() {
+    data class LoginToPaymentOffer(
+        val transferId: Long,
+        val offerId: Long?,
+        val bookNowTransportId: String?
+    ) : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
