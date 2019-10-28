@@ -156,7 +156,11 @@
                     android:pathPattern=".*"
                     android:scheme="https" />
                 <data
-                    android:host="stgtr.org"
+                    android:host="gtrbox.org"
+                    android:pathPattern=".*"
+                    android:scheme="https" />
+                <data
+                    android:host="development.gtrbox.org"
                     android:pathPattern=".*"
                     android:scheme="https" />
             </intent-filter>

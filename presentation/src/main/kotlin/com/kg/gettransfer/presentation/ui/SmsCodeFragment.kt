@@ -17,17 +17,23 @@ import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.SmsCodePresenter
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.SmsCodeView
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.serialization.json.JSON
+import org.jetbrains.anko.longToast
+import pub.devrel.easypermissions.EasyPermissions
 // import leakcanary.AppWatcher
 import timber.log.Timber
 
 @Suppress("EmptyFunctionBlock")
-class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
+class SmsCodeFragment : MvpAppCompatFragment(),
+    SmsCodeView,
+    EasyPermissions.PermissionCallbacks,
+    EasyPermissions.RationaleCallbacks {
 
     private val loadingFragment by lazy { LoadingFragment() }
 
@@ -179,8 +185,18 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         }
     }
 
-    override fun setTransferNotFoundError(transferId: Long) {
-        // TODO remove BaseView or add code.
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                imageId = R.drawable.transfer_error
+                title = this@SmsCodeFragment.getString(R.string.LNG_ERROR)
+                text = this@SmsCodeFragment.getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString())
+                isShowCloseButton = true
+                isShowOkButton = false
+                dismissCallBack?.let { onDismissCallBack = it }
+            }
+            .show(requireFragmentManager())
     }
 
     companion object {
@@ -188,5 +204,59 @@ class SmsCodeFragment : MvpAppCompatFragment(), SmsCodeView {
         const val EXTERNAL_IS_PHONE = ".presentation.ui.SmsCodeFragment_IS_PHONE"
 
         fun newInstance() = SmsCodeFragment()
+    }
+
+    // for downloading voucher
+
+    override fun downloadVoucher() {
+        val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (EasyPermissions.hasPermissions(requireContext(), *perms)) {
+            presenter.downloadVoucher()
+        } else {
+            EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
+                BaseHandleUrlView.RC_WRITE_FILE, *perms
+            )
+        }
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        requireActivity().longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        presenter.downloadVoucher()
+    }
+
+    override fun onRationaleDenied(requestCode: Int) {
+        onPermissionDenied()
+    }
+
+    override fun onRationaleAccepted(requestCode: Int) {}
+
+    @CallSuper
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    private fun onPermissionDenied() {
+        presenter.openMainScreen()
+        requireActivity().longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+    }
+
+    override fun setChatIsNoLongerAvailableError(dismissCallBack: () -> Unit) {
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                imageId = R.drawable.transfer_error
+                title = this@SmsCodeFragment.getString(R.string.LNG_ERROR)
+                text = this@SmsCodeFragment.getString(R.string.LNG_CHAT_NO_LONGER_AVAILABLE)
+                isShowCloseButton = true
+                isShowOkButton = false
+                onDismissCallBack = dismissCallBack
+            }
+            .show(requireFragmentManager())
     }
 }

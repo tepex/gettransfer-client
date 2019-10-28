@@ -165,10 +165,10 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 
     override fun setError(e: DatabaseException) {}
 
-    override fun setTransferNotFoundError(transferId: Long) {
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
         val act = activity
         if (act is BaseView) {
-            act.setTransferNotFoundError(transferId)
+            act.setTransferNotFoundError(transferId, dismissCallBack)
         }
     }
 

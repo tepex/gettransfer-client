@@ -195,5 +195,5 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         addressField.setSelection(addressField.text?.length?:0)
     }
 
-    override fun setTransferNotFoundError(transferId: Long) {}
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 }

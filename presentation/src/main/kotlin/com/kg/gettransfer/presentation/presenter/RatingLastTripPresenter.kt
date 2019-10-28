@@ -31,6 +31,7 @@ class RatingLastTripPresenter : BaseMapDialogPresenter<RatingLastTripView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         getTransferAndSetupReview()
+        reviewInteractor.reviewSuggested()
     }
 
     private fun getTransferAndSetupReview() {
@@ -46,11 +47,6 @@ class RatingLastTripPresenter : BaseMapDialogPresenter<RatingLastTripView>() {
 
     fun onTransferDetailsClick() {
         router.navigateTo(Screens.Details(transferId))
-    }
-
-    fun onReviewCanceled() {
-        reviewInteractor.rateCanceled()
-        viewState.cancelReview()
     }
 
     fun onRateClicked(rate: Float) {

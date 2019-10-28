@@ -4,6 +4,7 @@ import com.kg.gettransfer.sys.domain.ContactEmail
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.Locale
 
 @Serializable
 data class ContactEmailEntity(
@@ -13,7 +14,7 @@ data class ContactEmailEntity(
 
     fun stringIdToEnum(id: String): ContactEmail.Id =
         try {
-            enumValueOf(id.toUpperCase())
+            enumValueOf(id.toUpperCase(Locale.US))
         } catch (e: IllegalArgumentException) {
             ContactEmail.Id.UNKNOWN
         }
