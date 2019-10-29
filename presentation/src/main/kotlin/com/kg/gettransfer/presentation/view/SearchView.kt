@@ -1,8 +1,8 @@
 package com.kg.gettransfer.presentation.view
 
 import androidx.annotation.StringRes
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.OneExecutionStateStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 import com.kg.gettransfer.domain.model.GTAddress
 

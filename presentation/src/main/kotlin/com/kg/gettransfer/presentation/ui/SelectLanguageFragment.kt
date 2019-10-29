@@ -7,8 +7,8 @@ import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.findNavController
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 

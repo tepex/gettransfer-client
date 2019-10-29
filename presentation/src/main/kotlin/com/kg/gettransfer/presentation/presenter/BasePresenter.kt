@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.MvpPresenter
-
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.domain.ApiException
@@ -33,6 +31,8 @@ import com.kg.gettransfer.utilities.GTNotificationManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+import moxy.MvpPresenter
 
 import org.koin.core.KoinComponent
 import org.koin.core.get

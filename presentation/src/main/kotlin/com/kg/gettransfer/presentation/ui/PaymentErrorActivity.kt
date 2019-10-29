@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.NonNull
 
-import com.arellomobile.mvp.presenter.InjectPresenter
+import moxy.presenter.InjectPresenter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 

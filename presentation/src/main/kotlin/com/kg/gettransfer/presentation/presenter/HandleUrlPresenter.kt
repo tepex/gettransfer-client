@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.net.Uri
-import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.extensions.createStartChain
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.CHOOSE_OFFER_ID
@@ -22,7 +21,10 @@ import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.TRANSFER
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.VOUCHER
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.presentation.view.Screens
+
 import kotlinx.coroutines.launch
+
+import moxy.InjectViewState
 
 /** TODO: refactor to regular expressions */
 @InjectViewState

@@ -13,7 +13,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 
-import com.arellomobile.mvp.MvpAppCompatFragment
+import moxy.MvpAppCompatFragment
 import com.google.android.material.tabs.TabLayout
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.view.LogInView
