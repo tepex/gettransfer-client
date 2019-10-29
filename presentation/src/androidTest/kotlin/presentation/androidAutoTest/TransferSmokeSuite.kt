@@ -59,6 +59,7 @@ class TransferSmokeSuite : TestCase() {
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
+                    baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
                 }
             }
@@ -116,6 +117,7 @@ class TransferSmokeSuite : TestCase() {
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
+                    baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
                 }
             }
@@ -185,6 +187,7 @@ class TransferSmokeSuite : TestCase() {
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
+                    baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
                 }
             }

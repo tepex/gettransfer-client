@@ -59,6 +59,7 @@ class RegressSuite : TestCase() {
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
+                    baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
                 }
             }
@@ -128,6 +129,7 @@ class RegressSuite : TestCase() {
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
+                    baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
                 }
             }
@@ -246,7 +248,7 @@ class RegressSuite : TestCase() {
                 ProfileScreen {
                     loginPager { swipeLeft() }
                     tvName { typeText("Ricardo") }
-                    tvPhone { typeText("9116789567") }
+                    tvPhone { typeText("79116789567") }
                     tvEmailTo { typeText("i.marchenkov+42@gettransfer.com") }
                     closeSoftKeyboard()
                     btnSwitch { click() }
@@ -309,6 +311,7 @@ class RegressSuite : TestCase() {
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
+                    baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
                 }
             }

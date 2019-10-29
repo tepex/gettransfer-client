@@ -44,6 +44,14 @@ object BaseFun {
         }
     }
 
+    fun goTransferType() {
+        if (onView(allOf(withId(android.R.id.button1), withText("OK"))).isDisplayed()) {
+            onView(allOf(withId(android.R.id.button1), withText("OK"))).perform(click())
+            onView(withId(R.id.rvTransferType)).perform(click())
+            onView(withId(R.id.btnGetOffers)).perform(click())
+        }
+    }
+
     fun goTransferLater() {
         Thread.sleep(1_000)
         if (onView(allOf(withId(R.id.tv_transfer_number_rate))).isDisplayed()) {
