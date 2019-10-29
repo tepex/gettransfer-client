@@ -133,8 +133,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
 
         tintBackgroundShadow = tintBackground
-        bsOrder.setBottomSheetCallback(bottomSheetCallback)
-        bsSecondarySheet.setBottomSheetCallback(bsCallback)
+        bsOrder.addBottomSheetCallback(bottomSheetCallback)
+        bsSecondarySheet.addBottomSheetCallback(bsCallback)
     }
 
     @CallSuper

@@ -108,7 +108,7 @@ class OffersActivity : BaseActivity(), OffersView {
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
         bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
         tintBackgroundShadow = tintBackground
-        bsOfferDetails.setBottomSheetCallback(bottomSheetCallback)
+        bsOfferDetails.addBottomSheetCallback(bottomSheetCallback)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
