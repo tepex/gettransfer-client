@@ -19,6 +19,14 @@ class CreateOrderField @JvmOverloads constructor(
             LayoutInflater.from(context)
                     .inflate(R.layout.view_create_order_field, this, true)
 
+    var text: String
+        get() = field_input.text.toString()
+        set(value) { field_input.setText(value) }
+
+    var hint: String
+        get() = input_layout.hint.toString()
+        set(value) { input_layout.hint = value }
+
     init {
         if (attrs != null) {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.CreateOrderField)
