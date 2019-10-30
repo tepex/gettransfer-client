@@ -134,21 +134,28 @@ class SmsCodeFragment : MvpAppCompatFragment(),
     }
 
     override fun setError(e: ApiException) {
-        context?.let { pinView.setTextColor(ContextCompat.getColor(it, R.color.color_gtr_red)) }
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
-        if (e.code == ApiException.NOT_FOUND) {
-            BottomSheetDialog
-                .newInstance()
-                .apply {
-                    title = this@SmsCodeFragment.getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.params.emailOrPhone)
-                    buttonOkText = this@SmsCodeFragment.getString(R.string.LNG_OK)
-                    onDismissCallBack = {
-                        presenter.back()
-                    }
-                }
-                .show(requireFragmentManager())
+        if (e.code == ApiException.NO_USER) {
+            context?.let { pinView.setTextColor(ContextCompat.getColor(it, R.color.color_gtr_red)) }
+            return
+        }
+        val titleError = getTitleError(e)
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                title = titleError
+                onDismissCallBack = { hideLoading() }
+            }
+            .show(requireFragmentManager())
+    }
+
+    private fun getTitleError(e: ApiException): String {
+        if (e.isHttpException && e.details.isNotEmpty()) return e.details
+        return when (e.code) {
+            ApiException.NETWORK_ERROR -> getString(R.string.LNG_NETWORK_ERROR)
+            else -> e.message ?: "Error"
         }
     }
 
