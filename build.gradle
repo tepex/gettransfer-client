@@ -233,6 +233,7 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/BottomSheetCreateOrderNewView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CreateOrderField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/NetworkNotAvailableView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RateField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RatingFieldView.kt",
