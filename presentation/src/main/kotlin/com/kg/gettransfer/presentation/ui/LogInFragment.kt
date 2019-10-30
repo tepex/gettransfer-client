@@ -166,14 +166,6 @@ class LogInFragment : MvpAppCompatFragment(),
         Sentry.capture(e)
         val titleError = getTitleError(e)
         when (e.code) {
-            ApiException.NO_USER -> BottomSheetDialog
-                .newInstance()
-                .apply {
-                    title = titleError
-                    onDismissCallBack = { hideLoading() }
-                }
-                .show(requireFragmentManager())
-
             ApiException.NOT_FOUND -> BottomSheetDialog
                 .newInstance()
                 .apply {
@@ -197,6 +189,7 @@ class LogInFragment : MvpAppCompatFragment(),
     }
 
     private fun getTitleError(e: ApiException): String {
+        if (e.isHttpException && e.details.isNotEmpty()) return e.details
         return when (e.code) {
             ApiException.NO_USER -> getString(R.string.LNG_BAD_CREDENTIALS_ERROR)
             ApiException.NOT_FOUND -> getString(

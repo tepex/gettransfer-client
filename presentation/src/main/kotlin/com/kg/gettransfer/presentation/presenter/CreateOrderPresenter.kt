@@ -145,7 +145,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val dateTime = orderInteractor.orderStartTime
         if (from?.point == null) {
 //            Timber.w("NPE! from: $from")
-            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set"))
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set", false))
             return
         }
         utils.launchSuspend {
@@ -175,7 +175,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val dateTime = orderInteractor.orderStartTime
         if (from.point == null || to.point == null) {
 //            Timber.w("NPE! from: $from, to: $to")
-            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set", false))
             return
         }
         utils.launchSuspend {
@@ -271,7 +271,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val to = orderInteractor.to?.cityPoint
         val dateTime = orderInteractor.orderStartTime
         if (from?.point == null || to?.point == null) {
-            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set"))
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set", false))
             return
         }
         utils.launchSuspend {
@@ -299,7 +299,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val dateTime = orderInteractor.orderStartTime
         if (from?.point == null) {
 //            Timber.w("NPE! from: $from")
-            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set"))
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set", false))
             return
         }
         utils.launchSuspend {

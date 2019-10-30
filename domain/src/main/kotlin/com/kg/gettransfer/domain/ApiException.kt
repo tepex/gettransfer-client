@@ -4,6 +4,7 @@ package com.kg.gettransfer.domain
 class ApiException(
     val code: Int,
     val details: String,
+    val isHttpException: Boolean,
     val type: String? = null
 ) : RuntimeException(details) {
 
