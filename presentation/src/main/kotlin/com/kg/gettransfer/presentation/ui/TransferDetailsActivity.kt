@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.ReviewRate
@@ -30,6 +32,7 @@ import com.kg.gettransfer.extensions.isNonZero
 
 import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
+import com.kg.gettransfer.presentation.listeners.CancelationReasonListener
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -45,11 +48,15 @@ import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import java.util.Date
 
 import kotlinx.android.synthetic.main.activity_transfer_details.*
+import kotlinx.android.synthetic.main.activity_transfer_details.btnBack
+import kotlinx.android.synthetic.main.activity_transfer_details.btnCenterRoute
+import kotlinx.android.synthetic.main.activity_transfer_details.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
 import kotlinx.android.synthetic.main.layout_passengers_seats.view.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
@@ -85,13 +92,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     RatingDetailDialogFragment.OnRatingChangeListener,
     StoreDialogFragment.OnStoreListener,
     EasyPermissions.PermissionCallbacks,
-    EasyPermissions.RationaleCallbacks {
+    EasyPermissions.RationaleCallbacks,
+    CancelationReasonListener {
 
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
 
     private lateinit var bsTransferDetails: BottomSheetTripleStatesBehavior<View>
     private lateinit var mapCollapseBehavior: MapCollapseBehavior
+
+    private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
@@ -180,8 +190,43 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private fun initBottomSheets() {
         bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
-
         bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+
+        bsSecondarySheet = BottomSheetBehavior.from(sheetSecondary)
+        bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
+
+        tintBackgroundShadow = tintBackground
+        bsSecondarySheet.addBottomSheetCallback(bsCallback)
+    }
+
+    @CallSuper
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action != MotionEvent.ACTION_DOWN) {
+            return super.dispatchTouchEvent(event)
+        }
+        val ret = when {
+            bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED && hideBottomSheet(
+                bsSecondarySheet,
+                sheetSecondary,
+                BottomSheetBehavior.STATE_HIDDEN,
+                event
+            ) -> true
+            else -> false
+        }
+        return if (ret) ret else super.dispatchTouchEvent(event)
+    }
+
+    private val bsCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                tintBackgroundShadow.isVisible = false
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            tintBackgroundShadow.isVisible = true
+            tintBackgroundShadow.alpha = slideOffset
+        }
     }
 
     private fun setClickListeners() {
@@ -585,8 +630,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         copyText(text)
     }
 
-    override fun showAlertCancelRequest() {
-        Utils.showAlertCancelRequest(this, presenter::cancelRequest)
+    override fun showCancelationReasonsList() {
+        FragmentUtils.replaceFragment(supportFragmentManager, SelectCancelationReasonBottomFragment(), R.id.sheetSecondary)
+    }
+
+    override fun onCancelationReasonSelected(reason: String) {
+        Utils.showAlertCancelRequest(this, reason) { if (it) presenter.cancelRequest(reason) }
     }
 
     override fun showCancelRequestToast() {
@@ -701,6 +750,16 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
+
+    @CallSuper
+    override fun onBackPressed() {
+        when {
+            bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED -> hideSecondaryBottomSheet()
+            else                                                         -> presenter.onBackCommandClick()
+        }
+    }
+
+    private fun hideSecondaryBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
 
     companion object {
         const val THANKS_DELAY = 3000L

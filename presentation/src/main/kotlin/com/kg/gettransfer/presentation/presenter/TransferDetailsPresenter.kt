@@ -173,7 +173,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun onCancelRequestClicked() {
-        viewState.showAlertCancelRequest()
+        viewState.showCancelationReasonsList()
     }
 
     fun onRepeatTransferClicked() {
@@ -246,11 +246,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    fun cancelRequest(isCancel: Boolean) {
-        if (!isCancel) return
+    fun cancelRequest(reason: String) {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = fetchResultOnly { transferInteractor.cancelTransfer(transferId, "") }
+            val result = fetchResultOnly { transferInteractor.cancelTransfer(transferId, reason) }
             if (result.isError()) {
                 result.error?.let { viewState.setError(it) }
             } else {

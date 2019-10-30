@@ -213,10 +213,6 @@ class OffersActivity : BaseActivity(), OffersView {
         sortOrder.rotation = if (!sortHigherToLower) SEMI_ROUND else 0f
     }
 
-    override fun showAlertCancelRequest() {
-        Utils.showAlertCancelRequest(this) { presenter.cancelRequest(it) }
-    }
-
     override fun showBottomSheetOfferDetails(offer: OfferItemModel) {
         when (offer) {
             is OfferModel -> {

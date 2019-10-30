@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/back_rounded"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/cancelation_request_dialog_horizontal_padding"
+    android:paddingTop="@dimen/cancelation_request_dialog_vertical_padding"
+    android:paddingEnd="@dimen/cancelation_request_dialog_horizontal_padding"
+    android:paddingBottom="@dimen/cancelation_request_dialog_vertical_padding">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/sf_font_pro_text_semibold_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="@dimen/cancelation_request_dialog_text_size"
+        tools:text="Согласны ли вы отменить заявку по причине “Изменились требования”?" />
+
+    <TextView
+        style="@style/sf_font_pro_text_regular_black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/LNG_OFFERS_FOR_REQUEST_WILL_BE_LOST"
+        android:textSize="@dimen/cancelation_request_dialog_text_size" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/cancelation_request_dialog_buttons_height"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/cancelation_request_dialog_button_cancel_margin_top"
+        android:background="@drawable/btn_bg_logout_rounded"
+        android:text="@string/LNG_CANCEL"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="@dimen/cancelation_request_dialog_buttons_text_size" />
+
+    <Button
+        android:id="@+id/btnOk"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/cancelation_request_dialog_buttons_height"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/cancelation_request_dialog_button_agree_margin_top"
+        android:background="@drawable/btn_bg_rounded"
+        android:text="@string/LNG_I_AGREE"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/cancelation_request_dialog_buttons_text_size" />
+
+</LinearLayout>

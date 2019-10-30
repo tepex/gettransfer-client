@@ -19,7 +19,7 @@ abstract class BaseBottomSheetFragment : MvpAppCompatFragment(), BaseBottomSheet
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(layout, container, false)
 
-    protected fun setBottomSheetState(view: View, state: Int) {
+    private fun setBottomSheetState(view: View, state: Int) {
         val parent = view.parent
         if (parent is ViewGroup) {
             val params = parent.layoutParams

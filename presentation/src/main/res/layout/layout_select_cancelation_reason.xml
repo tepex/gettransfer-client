@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin16"
+            android:layout_marginEnd="@dimen/margin16"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="@dimen/cancelation_reasons_iv_close_padding"
+                app:srcCompat="@drawable/ic_close_x" />
+
+            <TextView
+                style="@style/sf_font_pro_text_semibold_black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingTop="@dimen/cancelation_reasons_title_padding_top"
+                android:paddingBottom="@dimen/cancelation_reasons_title_padding_bottom"
+                android:text="@string/LNG_CANCELATION_REASONS"
+                android:textSize="@dimen/cancelation_reasons_title_text_size" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCancelationReasons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</merge>
