@@ -61,11 +61,11 @@
             android:textColor="@color/colorWhite"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/main_without_map_btn_next_height"
+            android:layout_height="@dimen/activity_requests_btn_forward_main_height"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/main_without_map_btn_next_horizontal_margin"
             android:layout_marginEnd="@dimen/main_without_map_btn_next_horizontal_margin"
-            android:layout_marginBottom="@dimen/main_without_map_btn_next_margin_bottom"
+            android:layout_marginBottom="@dimen/activity_requests_btn_forward_main_margin_bottom"
             android:background="@drawable/btn_bg_rounded"
             android:visibility="gone" />
 
