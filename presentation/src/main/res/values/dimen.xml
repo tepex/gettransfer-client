@@ -372,7 +372,6 @@
     <dimen name="bottom_sheet_offer_details_language_icon_horizontal_margins">4dp</dimen>
 	<dimen name="bottom_sheet_offer_details_languages_container_margin_start">7dp</dimen>
 	<dimen name="bottom_sheet_offer_details_current_price_margin_end">20dp</dimen>
-	<dimen name="bottom_sheet_offer_details_old_price_margin_end">20dp</dimen>
 	<dimen name="bottom_sheet_offer_details_multiple_photos_width">290dp</dimen>
 	<dimen name="bottom_sheet_offer_details_multiple_photos_height">170dp</dimen>
 	<dimen name="bottom_sheet_offer_details_single_photo_height">212dp</dimen>
