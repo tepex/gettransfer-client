@@ -277,6 +277,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
     fun setChildSeats(setOf: Set<CreateOrderView.ChildSeatItem>, total: Int) {
         if (total == 0) {
             children_seat_field.text = ""
+            children_seat_field.hint = context.getString(R.string.LNG_NO_SEATS_REQUIRED)
             return
         }
 
@@ -294,6 +295,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
             })
         }
         children_seat_field.text = text
+        children_seat_field.hint = context.getString(R.string.LNG_RIDE_CHILDREN)
     }
 
     fun updateTypes(types: List<TransportTypeModel>) {
