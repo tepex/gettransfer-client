@@ -64,9 +64,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
                     transfer.paidPercentage > 0) {
                     checkIfNeedNewChain()
                 } else {
-                    if (!configsManager.isInitialized()) {
-                        configsManager.coldStart(worker.backgroundScope)
-                    }
                     viewState.setTransfer(transfer.map(configsManager.configs.transportTypes.map { it.map() }))
                     checkNewOffersSuspended(transfer)
                 }

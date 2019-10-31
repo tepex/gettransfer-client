@@ -24,6 +24,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.sys.domain.Endpoint
 
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
+import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
@@ -76,6 +77,8 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     protected val log: Logger by inject { parametersOf("GTR-presenter") }
 
+    private val configsManager: ConfigsManager by inject()
+
     open fun onBackCommandClick() {
         analytics.logEvent(Analytics.EVENT_MAIN, Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED)
         router.exit()
@@ -85,6 +88,9 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     override fun onFirstViewAttach() {
         worker.main.launch {
+            if (!configsManager.configsInitialized) {
+                configsManager.coldStart(worker.backgroundScope)
+            }
             withContext(worker.bg) {
                 if (sessionInteractor.isInitialized) {
                     systemInitialized()
