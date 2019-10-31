@@ -2,8 +2,6 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 
-import com.kg.gettransfer.core.presentation.WorkerManager
-
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.OfferItem
@@ -23,7 +21,6 @@ import com.kg.gettransfer.sys.presentation.ConfigsManager
 import com.kg.gettransfer.utilities.Analytics
 
 import org.koin.core.inject
-import org.koin.core.parameter.parametersOf
 
 @Suppress("TooManyFunctions")
 @InjectViewState
@@ -36,7 +33,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
 
     private val configsManager: ConfigsManager by inject()
-    private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
 
     private var transfer: Transfer? = null
     private var offers: List<OfferItem> = emptyList()
