@@ -20,6 +20,7 @@
         tools:text="Согласны ли вы отменить заявку по причине “Изменились требования”?" />
 
     <TextView
+        android:id="@+id/subtitle"
         style="@style/sf_font_pro_text_regular_black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

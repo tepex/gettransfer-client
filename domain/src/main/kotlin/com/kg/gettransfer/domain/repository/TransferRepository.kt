@@ -27,6 +27,8 @@ interface TransferRepository {
 
     suspend fun cancelTransfer(id: Long, reason: String): Result<Transfer>
 
+    suspend fun restoreTransfer(id: Long): Result<Transfer>
+
     suspend fun setOffersUpdateDate(id: Long): Result<Unit>
 
     fun clearTransfersCache()

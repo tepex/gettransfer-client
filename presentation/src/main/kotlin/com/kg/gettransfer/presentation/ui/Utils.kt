@@ -129,6 +129,28 @@ object Utils : KoinComponent {
         }
     }
 
+    fun showAlertRestoreRequest(context: Context, listener: (Boolean) -> Unit) {
+        getAlertDialogBuilder(context).apply {
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
+            view.title.text = context.getString(R.string.LNG_REQUEST_CANCELED)
+            view.subtitle.isVisible = false
+            view.btnCancel.text = context.getString(R.string.LNG_RESTORE_REQUEST)
+            view.btnOk.text = context.getString(R.string.LNG_NEXT)
+            setView(view)
+            show().apply {
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                view.btnCancel.setOnClickListener {
+                    listener(true)
+                    dismiss()
+                }
+                view.btnOk.setOnClickListener {
+                    listener(false)
+                    dismiss()
+                }
+            }
+        }
+    }
+
     fun showAlertSetNewPassword(context: Context, listener: (Boolean) -> Unit) {
         getAlertDialogBuilder(context).apply {
             setTitle(R.string.LNG_AUTHORIZED)

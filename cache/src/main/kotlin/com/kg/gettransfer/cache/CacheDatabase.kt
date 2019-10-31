@@ -41,7 +41,7 @@ import com.kg.gettransfer.sys.cache.SystemConverters
     MessageCached::class,
     NewMessageCached::class,
     OfferRateCached::class,
-    OfferFeedbackCached::class], version = 34, exportSchema = false)
+    OfferFeedbackCached::class], version = 35, exportSchema = false)
 @TypeConverters(RoomConverters::class, SystemConverters::class)
 abstract class CacheDatabase : RoomDatabase() {
 

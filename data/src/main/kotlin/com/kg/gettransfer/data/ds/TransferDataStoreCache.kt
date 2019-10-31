@@ -43,6 +43,10 @@ open class TransferDataStoreCache : TransferDataStore {
         throw UnsupportedOperationException()
     }
 
+    override suspend fun restoreTransfer(id: Long): TransferEntity {
+        throw UnsupportedOperationException()
+    }
+
     override suspend fun downloadVoucher(transferId: Long): InputStream {
         throw UnsupportedOperationException()
     }

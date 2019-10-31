@@ -14,6 +14,7 @@ interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun setTransfer(transfer: TransferModel)
     fun setOffer(offer: OfferModel, childSeats: Int)
     fun showCancelationReasonsList()
+    fun showAlertRestoreRequest()
     fun copyField(text: String)
     fun showDetailRate()
     fun closeRateWindow()
@@ -22,7 +23,6 @@ interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun showCommonRating(isShow: Boolean)
     fun showYourRateMark(isShow: Boolean, averageRate: Double = 0.0)
     fun showYourDataProgress(isShow: Boolean)
-    fun showCancelRequestToast()
 
     fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)
     fun updateCamera(latLngList: List<LatLng>)

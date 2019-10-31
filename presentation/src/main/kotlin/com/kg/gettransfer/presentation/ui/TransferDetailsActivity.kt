@@ -262,13 +262,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             initTableLayoutTransportTypes(transfer.transportTypes)
         }
 
-        if (status == Transfer.STATUS_CATEGORY_ACTIVE) {
-            topCommunicationButtons.btnCancel.isVisible = !transfer.isBookNow()
-            bottomCommunicationButtons.btnCancel.isVisible = !transfer.isBookNow()
+        (status == Transfer.STATUS_CATEGORY_ACTIVE && !transfer.isBookNow()).let {
+            topCommunicationButtons.btnCancel.isVisible = it
+            bottomCommunicationButtons.btnCancel.isVisible = it
         }
-        if (status == Transfer.STATUS_CATEGORY_FINISHED || status == Transfer.STATUS_CATEGORY_UNFINISHED) {
-            topCommunicationButtons.btnRepeatTransfer.isVisible = true
-            bottomCommunicationButtons.btnRepeatTransfer.isVisible = true
+
+        (status == Transfer.STATUS_CATEGORY_FINISHED || status == Transfer.STATUS_CATEGORY_UNFINISHED).let {
+            topCommunicationButtons.btnRepeatTransfer.isVisible = it
+            bottomCommunicationButtons.btnRepeatTransfer.isVisible = it
         }
     }
 
@@ -638,8 +639,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         Utils.showAlertCancelRequest(this, reason) { if (it) presenter.cancelRequest(reason) }
     }
 
-    override fun showCancelRequestToast() {
-        longToast(R.string.LNG_TRANSFER_CANCELED)
+    override fun showAlertRestoreRequest() {
+        Utils.showAlertRestoreRequest(this) { if (it) presenter.restoreRequest() }
     }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) {
