@@ -252,11 +252,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResultOnly { transferInteractor.cancelTransfer(transferId, reason) }.also { result ->
-                result.error?.let {
-                    viewState.setError(it)
-                }
-                result.isSuccess()?.let {
-                    setTransferFields(it)
+                result.error?.let { viewState.setError(it) }
+                result.isSuccess()?.let { transfer ->
+                    setTransferFields(transfer)
                     viewState.showAlertRestoreRequest()
                 }
                 viewState.blockInterface(false)
@@ -268,11 +266,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchResultOnly { transferInteractor.restoreTransfer(transferId) }.also { result ->
-                result.error?.let {
-                    viewState.setError(it)
-                }
-                result.isSuccess()?.let {
-                    setTransferFields(it)
+                result.error?.let { viewState.setError(it) }
+                result.isSuccess()?.let { transfer ->
+                    setTransferFields(transfer)
                 }
                 viewState.blockInterface(false)
             }

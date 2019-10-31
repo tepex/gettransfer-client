@@ -23,7 +23,9 @@ class CancelationReasonsListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolderCurrency(LayoutInflater.from(parent.context).inflate(R.layout.view_cancelation_reason_item, parent, false))
+        ViewHolderCurrency(
+            LayoutInflater.from(parent.context).inflate(R.layout.view_cancelation_reason_item, parent, false)
+        )
 
     class ViewHolderCurrency(override val containerView: View) :
         RecyclerView.ViewHolder(containerView),

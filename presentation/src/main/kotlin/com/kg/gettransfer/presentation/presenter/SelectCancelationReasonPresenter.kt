@@ -4,7 +4,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.view.SelectCancelationReasonView
 import moxy.InjectViewState
 import moxy.MvpPresenter
-import org.koin.core.KoinComponent
 
 @InjectViewState
 class SelectCancelationReasonPresenter : MvpPresenter<SelectCancelationReasonView>() {

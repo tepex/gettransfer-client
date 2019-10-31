@@ -262,14 +262,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             initTableLayoutTransportTypes(transfer.transportTypes)
         }
 
-        (status == Transfer.STATUS_CATEGORY_ACTIVE && !transfer.isBookNow()).let {
-            topCommunicationButtons.btnCancel.isVisible = it
-            bottomCommunicationButtons.btnCancel.isVisible = it
+        (status == Transfer.STATUS_CATEGORY_ACTIVE && !transfer.isBookNow()).let { showBtnCancel ->
+            topCommunicationButtons.btnCancel.isVisible = showBtnCancel
+            bottomCommunicationButtons.btnCancel.isVisible = showBtnCancel
         }
 
-        (status == Transfer.STATUS_CATEGORY_FINISHED || status == Transfer.STATUS_CATEGORY_UNFINISHED).let {
-            topCommunicationButtons.btnRepeatTransfer.isVisible = it
-            bottomCommunicationButtons.btnRepeatTransfer.isVisible = it
+        (status == Transfer.STATUS_CATEGORY_FINISHED ||
+            status == Transfer.STATUS_CATEGORY_UNFINISHED).let { showBtnRepeatTransfer ->
+            topCommunicationButtons.btnRepeatTransfer.isVisible = showBtnRepeatTransfer
+            bottomCommunicationButtons.btnRepeatTransfer.isVisible = showBtnRepeatTransfer
         }
     }
 
@@ -632,7 +633,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun showCancelationReasonsList() {
-        FragmentUtils.replaceFragment(supportFragmentManager, SelectCancelationReasonBottomFragment(), R.id.sheetSecondary)
+        FragmentUtils.replaceFragment(
+            supportFragmentManager,
+            SelectCancelationReasonBottomFragment(),
+            R.id.sheetSecondary
+        )
     }
 
     override fun onCancelationReasonSelected(reason: String) {
