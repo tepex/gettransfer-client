@@ -32,11 +32,11 @@ open class BaseHandleUrlPresenter<BV : BaseHandleUrlView> : BasePresenter<BV>() 
     }
 
     suspend fun checkInitialization() {
-        withContext(worker.bg) {
-            getPreferences().getModel().endpoint?.let { initEndpoint(it) }
-        }
         if (!configsManager.configsInitialized) {
             configsManager.coldStart(worker.backgroundScope)
+        }
+        withContext(worker.bg) {
+            getPreferences().getModel().endpoint?.let { initEndpoint(it) }
         }
         if (!sessionInteractor.isInitialized) {
             fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }

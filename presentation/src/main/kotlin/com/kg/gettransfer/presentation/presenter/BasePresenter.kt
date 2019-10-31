@@ -92,10 +92,12 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
                 configsManager.coldStart(worker.backgroundScope)
             }
             withContext(worker.bg) {
+                if (!offerMapper.isUrlInitialized()) {
+                    getPreferences().getModel().endpoint?.let { initEndpoint(it) }
+                }
                 if (sessionInteractor.isInitialized) {
                     systemInitialized()
                 } else {
-                    getPreferences().getModel().endpoint?.let { initEndpoint(it) }
                     sessionInteractor.coldStart()
                     systemInitialized()
                 }
