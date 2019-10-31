@@ -147,7 +147,7 @@ object Screens {
         override fun getFragment() = SmsCodeFragment.newInstance().apply {
             arguments = Bundle().apply {
                 putString(LogInView.EXTRA_PARAMS, JSON.stringify(LogInView.Params.serializer(), params))
-                putBoolean(SmsCodeFragment.EXTERNAL_IS_PHONE, isPhone)
+                putBoolean(SmsCodeView.EXTRA_IS_PHONE, isPhone)
             }
         }
     }

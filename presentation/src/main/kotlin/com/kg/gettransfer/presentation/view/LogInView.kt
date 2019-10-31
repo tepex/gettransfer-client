@@ -4,9 +4,7 @@ import kotlinx.serialization.Serializable
 
 interface LogInView : OpenDeepLinkScreenView {
     fun setEmail(login: String)
-    fun showValidationError(errorType: Int)
-    fun showLoading()
-    fun hideLoading()
+    fun showValidationError(errorType: Int, phoneExample: String)
 
     companion object {
         val EXTRA_PARAMS = "${LogInView::class.java.name}.params"

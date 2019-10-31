@@ -4,16 +4,7 @@ import android.os.CountDownTimer
 
 import moxy.InjectViewState
 
-import com.kg.gettransfer.R
-
 import com.kg.gettransfer.core.domain.Second
-
-import com.kg.gettransfer.extensions.firstSign
-import com.kg.gettransfer.extensions.internationalExample
-
-import com.kg.gettransfer.presentation.ui.Utils
-import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
-import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
@@ -28,13 +19,16 @@ import kotlinx.serialization.json.JSON
 import org.koin.core.get
 
 @InjectViewState
-class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
+class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
 
     private val smsResendDelay = get<ConfigsManager>().mobile.smsResendDelay.millis
 
     var isPhone = false
     var pinCode = ""
     var pinItemsCount = PIN_ITEMS_COUNT
+
+    val isEnabledButtonDone
+        get() = pinCode.length == pinItemsCount
 
     private val timerBtnResendCode: CountDownTimer = object : CountDownTimer(smsResendDelay, Second.MILLIS_PER_SECOND) {
         override fun onTick(millisUntilFinished: Long) {
@@ -46,49 +40,8 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
         }
     }
 
-    fun sendVerificationCode() {
-        analytics.logSingleEvent(Analytics.RESEND_CODE_CLICKED)
-        if (!checkInputData()) return
-
-        utils.launchSuspend {
-            fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when (isPhone) {
-                    true -> sessionInteractor.getVerificationCode(null, params.emailOrPhone)
-                    false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
-                }
-            }.also { result ->
-                if (result.error != null) {
-                    result.error?.let { viewState.setError(it) }
-                    logEvent(Analytics.EVENT_RESEND_CODE, Analytics.RESULT_FAIL)
-                } else {
-                    setTimer()
-                    logEvent(Analytics.EVENT_RESEND_CODE, Analytics.RESULT_SUCCESS)
-                }
-            }
-        }
-    }
-
-    private fun checkInputData() = checkIfEmailOrPhone() && validateInput()
-
-    private fun checkIfEmailOrPhone() = params.emailOrPhone.run {
-        if (firstSign() == PHONE_ATTRIBUTE || any { it.toString() == EMAIL_ATTRIBUTE }) {
-            true
-        } else {
-            viewState.setError(
-                false,
-                R.string.LNG_ERROR_EMAIL_PHONE,
-                Utils.phoneUtil.internationalExample(sessionInteractor.locale)
-            )
-            false
-        }
-    }
-
-    private fun validateInput() =
-        LoginHelper.validateInput(params.emailOrPhone, isPhone) == CREDENTIALS_VALID
-
     fun onLoginClick() {
         analytics.logSingleEvent(Analytics.VERIFY_CODE_CLICKED)
-        if (!checkInputData()) return
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
@@ -98,33 +51,45 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
                     false -> accountManager.login(params.emailOrPhone, null, pinCode, true)
                 }
             }.also { result ->
-                result.error?.let { e ->
-                    viewState.setError(e)
+                viewState.blockInterface(false)
+
+                result.error?.let {
+                    viewState.setError(it)
                     logEvent(Analytics.EVENT_LOGIN_CODE, Analytics.RESULT_FAIL)
                 }
 
                 result.isSuccess()?.let {
-                    viewState.showErrorText(false)
                     openNextScreen()
                     logEvent(Analytics.EVENT_LOGIN_CODE, Analytics.RESULT_SUCCESS)
                 }
             }
-            viewState.blockInterface(false)
         }
     }
 
-    private fun logEvent(event: String, value: String) =
-            analytics.logEvent(event, Analytics.STATUS, value)
+    fun sendVerificationCode() {
+        analytics.logSingleEvent(Analytics.RESEND_CODE_CLICKED)
 
-    fun back() {
-        router.replaceScreen(Screens.AuthorizationPager(JSON.stringify(LogInView.Params.serializer(), params)))
-    }
+        utils.launchSuspend {
+            viewState.blockInterface(true, true)
+            fetchResult(SHOW_ERROR, checkLoginError = false) {
+                when (isPhone) {
+                    true -> sessionInteractor.getVerificationCode(null, params.emailOrPhone)
+                    false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
+                }
+            }.also { result ->
+                viewState.blockInterface(false)
 
-    fun getTitleId(): Int = if (isPhone) R.string.LNG_LOGIN_SEND_SMS_CODE else R.string.LNG_LOGIN_SEND_EMAIL_CODE
+                result.error?.let {
+                    viewState.setError(it)
+                    logEvent(Analytics.EVENT_RESEND_CODE, Analytics.RESULT_FAIL)
+                }
 
-    fun checkAfterPinChanged() {
-        viewState.showErrorText(false)
-        viewState.setBtnDoneIsEnabled(pinCode.length == pinItemsCount)
+                result.isSuccess()?.let {
+                    setTimer()
+                    logEvent(Analytics.EVENT_RESEND_CODE, Analytics.RESULT_SUCCESS)
+                }
+            }
+        }
     }
 
     fun setTimer() {
@@ -136,9 +101,11 @@ class SmsCodePresenter : OpenNextScreenPresenter<SmsCodeView>() {
         timerBtnResendCode.cancel()
     }
 
+    fun back() {
+        router.replaceScreen(Screens.AuthorizationPager(JSON.stringify(LogInView.Params.serializer(), params)))
+    }
+
     companion object {
-        const val PHONE_ATTRIBUTE = "+"
-        const val EMAIL_ATTRIBUTE = "@"
         const val PIN_ITEMS_COUNT = 4
     }
 }
