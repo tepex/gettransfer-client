@@ -67,6 +67,8 @@ class ConfigsManager : KoinComponent {
         }
     }
 
+    fun isInitialized() = ::configs.isInitialized && ::mobile.isInitialized && ::preferences.isInitialized
+
     /** Write preferences into DB */
     suspend fun apply() {}
 
