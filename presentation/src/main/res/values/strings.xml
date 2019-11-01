@@ -414,4 +414,6 @@
     <string name="LNG_PAYMENT_BALANCE_ERROR">Insufficient funds in your balance to proceed with payment. Please, use another payment method</string>
 
     <string name="LNG_CHAT_NO_LONGER_AVAILABLE">Chat is no longer available</string>
+
+    <string name="LNG_RIDE_CHILDREN">Child seats</string>
 </resources>

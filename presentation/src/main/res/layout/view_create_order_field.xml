@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <com.google.android.material.textfield.TextInputLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/input_layout"
+<com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/input_layout"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
     android:paddingStart="@dimen/margin16"
     android:paddingTop="@dimen/margin4"
     android:paddingEnd="@dimen/margin16"
     android:paddingBottom="@dimen/divider_create_order_margin_top"
-    android:layout_height="wrap_content"
-        android:gravity="center"
-        app:hintAnimationEnabled="false"
-        tools:hint="450"
-        android:theme="@style/editTextHintCreateOrder">
+    android:theme="@style/editTextHintCreateOrder"
+    app:hintAnimationEnabled="false"
+    tools:hint="450">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/field_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="6dp"
-            android:background="@null"
-            tools:drawableStart="@drawable/wrapped_ic_comment"
-            android:drawablePadding="8dp"
-            android:ellipsize="end"
-            android:gravity="start|center"
-            android:imeOptions="actionNext"
-            android:singleLine="true"
-            style="@style/sf_font"/>
-    </com.google.android.material.textfield.TextInputLayout>
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/field_input"
+        style="@style/sf_font"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:drawablePadding="8dp"
+        android:ellipsize="end"
+        android:gravity="start|center"
+        android:imeOptions="actionNext"
+        android:paddingTop="6dp"
+        android:singleLine="true"
+        tools:drawableStart="@drawable/wrapped_ic_comment" />
+</com.google.android.material.textfield.TextInputLayout>
