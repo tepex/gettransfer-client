@@ -45,7 +45,7 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
             setContentView(dialogView)
             bsPayment = BottomSheetBehavior.from(dialogView.parent as View)
             bsPayment.state = BottomSheetBehavior.STATE_EXPANDED
-            bsPayment.setBottomSheetCallback(bsCallback)
+            bsPayment.addBottomSheetCallback(bsCallback)
             show()
         }
         dialogView.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, DIALOG_HEIGHT)

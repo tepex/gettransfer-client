@@ -133,8 +133,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
 
         tintBackgroundShadow = tintBackground
-        bsOrder.setBottomSheetCallback(bottomSheetCallback)
-        bsSecondarySheet.setBottomSheetCallback(bsCallback)
+        bsOrder.addBottomSheetCallback(bottomSheetCallback)
+        bsSecondarySheet.addBottomSheetCallback(bsCallback)
     }
 
     @CallSuper
@@ -160,7 +160,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         return if (ret) ret else super.dispatchTouchEvent(event)
     }
 
-    fun hideBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
+    private fun hideSecondaryBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
 
     private fun toggleSheetOrder() {
         if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -310,7 +310,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
     override fun setCurrency(currency: String, hideCurrencies: Boolean) {
         sheetOrder.currency = currency
         if (hideCurrencies) {
-            hideBottomSheet()
+            hideSecondaryBottomSheet()
         }
     }
 
@@ -409,7 +409,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
     override fun onBackPressed() {
         when {
             isKeyBoardOpened                                             -> hideKeyboard()
-            bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED -> hideBottomSheet()
+            bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED -> hideSecondaryBottomSheet()
             bsOrder.state == BottomSheetBehavior.STATE_EXPANDED          -> toggleSheetOrder()
             else                                                         -> presenter.onBackClick()
         }

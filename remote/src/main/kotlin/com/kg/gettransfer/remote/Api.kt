@@ -132,6 +132,11 @@ interface Api {
         @Body reason: ReasonModel
     ): ResponseModel<TransferWrapperModel>
 
+    @POST("$API_TRANSFERS/{id}/restore")
+    suspend fun restoreTransfer(
+        @Path("id") id: Long
+    ): ResponseModel<TransferWrapperModel>
+
     @POST(API_CREATE_NEW_PAYMENT)
     suspend fun createNewPayment(
         @Body createPayment: PaymentRequestModel

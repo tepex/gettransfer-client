@@ -108,7 +108,7 @@ class OffersActivity : BaseActivity(), OffersView {
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
         bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
         tintBackgroundShadow = tintBackground
-        bsOfferDetails.setBottomSheetCallback(bottomSheetCallback)
+        bsOfferDetails.addBottomSheetCallback(bottomSheetCallback)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -211,10 +211,6 @@ class OffersActivity : BaseActivity(), OffersView {
         })
         tv_year_sort_title.text = "${getString(R.string.LNG_SORT)}: $sortName"
         sortOrder.rotation = if (!sortHigherToLower) SEMI_ROUND else 0f
-    }
-
-    override fun showAlertCancelRequest() {
-        Utils.showAlertCancelRequest(this) { presenter.cancelRequest(it) }
     }
 
     override fun showBottomSheetOfferDetails(offer: OfferItemModel) {

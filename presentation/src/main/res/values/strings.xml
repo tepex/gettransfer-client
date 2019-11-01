@@ -416,4 +416,21 @@
     <string name="LNG_CHAT_NO_LONGER_AVAILABLE">Chat is no longer available</string>
 
     <string name="LNG_RIDE_CHILDREN">Child seats</string>
+
+    <string name="LNG_CANCELATION_REASONS">Cancelation reasons</string>
+    <string name="LNG_CANCELATION_REASON_CHANGED_REQUIREMENTS">The changed requirements</string>
+    <string name="LNG_CANCELATION_REASON_WANTED_KNOW_THE_PRICE">Wanted to know the price for the next trip</string>
+    <string name="LNG_CANCELATION_REASON_FOUND_CHEAPER">Found a cheaper</string>
+    <string name="LNG_CANCELATION_REASON_GO_TO_THE_BUS_OR_TRAIN">Go to the bus / train</string>
+    <string name="LNG_CANCELATION_REASON_RENTED_CAR">Rented car</string>
+    <string name="LNG_CANCELATION_REASON_RELATIVES_OR_FRIENDS_WILL_THROW">Relatives or friends will throw</string>
+    <string name="LNG_CANCELATION_REASON_DIDNT_EXPECT_TO_GET_A_FEW_PRICES">I didn\'t expect to get a few prices from companies</string>
+    <string name="LNG_CANCELATION_REASON_TOOK_THE_TOUR_WITH_TRANSFER">Took the tour with transfer</string>
+    <string name="LNG_CANCELATION_REASON_NO_OFFERS_RECEIVED">No offers received</string>
+    <string name="LNG_CANCELATION_REASON_ANOTHER_REASON">Another reason</string>
+    <string name="LNG_CANCELATION_REQUEST_AGREEMENT">Do you agree to cancel the request due to \“%s\”?</string>
+    <string name="LNG_OFFERS_FOR_REQUEST_WILL_BE_LOST">All offers for this request will be lost!</string>
+    <string name="LNG_I_AGREE">I agree</string>
+    <string name="LNG_REQUEST_CANCELED">Your application has been successfully canceled!</string>
+    <string name="LNG_RESTORE_REQUEST">Restore request</string>
 </resources>

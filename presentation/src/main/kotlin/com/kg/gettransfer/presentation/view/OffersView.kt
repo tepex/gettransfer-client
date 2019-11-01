@@ -13,7 +13,6 @@ interface OffersView : BaseView {
 //    fun setDate(date: String)
     fun setOffers(offers: List<OfferItemModel>)
     fun setSortType(sortType: Sort, sortHigherToLower: Boolean)
-    fun showAlertCancelRequest()
     fun showBottomSheetOfferDetails(offer: OfferItemModel)
     fun setBannersVisible(hasOffers: Boolean)
     fun hideRefreshSpinner()

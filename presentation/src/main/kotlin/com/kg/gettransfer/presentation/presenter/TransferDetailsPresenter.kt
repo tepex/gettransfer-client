@@ -26,8 +26,6 @@ import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.COMMUNICATION
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
 
-import com.kg.gettransfer.extensions.finishChainAndBackTo
-
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 
 import com.kg.gettransfer.presentation.mapper.CityPointMapper
@@ -94,26 +92,20 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             viewState.blockInterface(true, true)
             fetchData { transferInteractor.getTransfer(transferId) }?.let { transfer ->
                 setTransferFields(transfer)
-                setOffer(transfer.id)?.let { found ->
-                    if (transferModel.status.checkOffers) {
-                        offer = found
-                        updateRatingState()
-                    }
-                }
-                viewState.setTransfer(transferModel)
                 setTransferType(transfer)
+                getOffer()
             }
             viewState.blockInterface(false)
         }
     }
 
-    private fun setTransferFields(transfer: Transfer) {
-        transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
-        fromPoint = cityPointMapper.toView(transfer.from)
-        transfer.to?.let { toPoint = cityPointMapper.toView(it) }
-        hourlyDuration = transfer.duration
-
-        transferModel = transfer.map(configsManager.configs.transportTypes.map { it.map() })
+    private suspend fun getOffer() {
+        setOffer(transferId)?.let { found ->
+            if (transferModel.status.checkOffers) {
+                offer = found
+                updateRatingState()
+            }
+        }
     }
 
     private suspend fun setOffer(transferId: Long) = fetchData { offerInteractor.getOffers(transferId) }
@@ -130,6 +122,16 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 null
             }
         }
+
+    private fun setTransferFields(transfer: Transfer) {
+        transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
+        fromPoint = cityPointMapper.toView(transfer.from)
+        transfer.to?.let { toPoint = cityPointMapper.toView(it) }
+        hourlyDuration = transfer.duration
+
+        transferModel = transfer.map(configsManager.configs.transportTypes.map { it.map() })
+        viewState.setTransfer(transferModel)
+    }
 
     private suspend fun setTransferType(transfer: Transfer) {
         if (transfer.to != null) {
@@ -173,7 +175,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun onCancelRequestClicked() {
-        viewState.showAlertCancelRequest()
+        viewState.showCancelationReasonsList()
     }
 
     fun onRepeatTransferClicked() {
@@ -246,23 +248,31 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    fun cancelRequest(isCancel: Boolean) {
-        if (!isCancel) return
+    fun cancelRequest(reason: String) {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = fetchResultOnly { transferInteractor.cancelTransfer(transferId, "") }
-            if (result.isError()) {
+            fetchResultOnly { transferInteractor.cancelTransfer(transferId, reason) }.also { result ->
                 result.error?.let { viewState.setError(it) }
-            } else {
-                showMainActivity()
+                result.isSuccess()?.let { transfer ->
+                    setTransferFields(transfer)
+                    viewState.showAlertRestoreRequest()
+                }
+                viewState.blockInterface(false)
             }
-            viewState.blockInterface(false)
         }
     }
 
-    private fun showMainActivity() {
-        viewState.showCancelRequestToast()
-        router.finishChainAndBackTo(Screens.MainPassenger())
+    fun restoreRequest() {
+        utils.launchSuspend {
+            viewState.blockInterface(true, true)
+            fetchResultOnly { transferInteractor.restoreTransfer(transferId) }.also { result ->
+                result.error?.let { viewState.setError(it) }
+                result.isSuccess()?.let { transfer ->
+                    setTransferFields(transfer)
+                }
+                viewState.blockInterface(false)
+            }
+        }
     }
 
     fun makeFieldOperation(field: String, operation: String, text: String) {

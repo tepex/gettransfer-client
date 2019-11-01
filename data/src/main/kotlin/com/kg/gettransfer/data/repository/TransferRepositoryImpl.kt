@@ -73,6 +73,21 @@ class TransferRepositoryImpl(
         )
     }
 
+    override suspend fun restoreTransfer(id: Long): Result<Transfer> {
+        val result: ResultEntity<TransferEntity?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().restoreTransfer(id)
+        }
+        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
+        return Result(
+            result.entity?.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ) ?: Transfer.EMPTY,
+            result.error?.map()
+        )
+    }
+
     override suspend fun setOffersUpdateDate(id: Long): Result<Unit> {
         val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
             factory.retrieveCacheDataStore().getTransfer(id)

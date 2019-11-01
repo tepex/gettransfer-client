@@ -15,6 +15,8 @@ open class TransferDataStoreRemote : TransferDataStore {
 
     override suspend fun cancelTransfer(id: Long, reason: String) = remote.cancelTransfer(id, reason)
 
+    override suspend fun restoreTransfer(id: Long) = remote.restoreTransfer(id)
+
     override suspend fun getTransfer(id: Long) = remote.getTransfer(id)
 
     override suspend fun getAllTransfers(

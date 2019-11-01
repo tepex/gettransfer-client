@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.kg.gettransfer.R
 
-class TitleBarBehavior(mContext: Context, attrs: AttributeSet) : BaseBehavior(mContext, attrs) {
+class TitleBarBehavior(context: Context, attrs: AttributeSet) : BaseBehavior(context, attrs) {
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
         return isBottomSheet(dependency)

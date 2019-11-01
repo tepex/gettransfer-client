@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
+import android.graphics.drawable.ColorDrawable
 
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
@@ -22,6 +23,7 @@ import android.text.TextWatcher
 
 import android.util.DisplayMetrics
 import android.util.Patterns
+import android.view.LayoutInflater
 
 import android.view.View
 
@@ -60,6 +62,7 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.utils.TopRightRoundedCornerTransform
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import kotlinx.android.synthetic.main.dialog_cancel_request.view.*
 
 import java.util.Locale
 
@@ -107,12 +110,44 @@ object Utils : KoinComponent {
                 }
     }
 
-    fun showAlertCancelRequest(context: Context, listener: (Boolean) -> Unit) {
+    fun showAlertCancelRequest(context: Context, reason: String, listener: (Boolean) -> Unit) {
         getAlertDialogBuilder(context).apply {
-            setTitle(R.string.LNG_CANCEL_CONFIRM)
-            setPositiveButton(R.string.LNG_YES) { _, _ -> listener(true) }
-            setNegativeButton(R.string.LNG_NO)  { _, _ -> listener(false) }
-            show()
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
+            view.title.text = context.getString(R.string.LNG_CANCELATION_REQUEST_AGREEMENT, reason)
+            setView(view)
+            show().apply {
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                view.btnCancel.setOnClickListener {
+                    listener(false)
+                    dismiss()
+                }
+                view.btnOk.setOnClickListener {
+                    listener(true)
+                    dismiss()
+                }
+            }
+        }
+    }
+
+    fun showAlertRestoreRequest(context: Context, listener: (Boolean) -> Unit) {
+        getAlertDialogBuilder(context).apply {
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
+            view.title.text = context.getString(R.string.LNG_REQUEST_CANCELED)
+            view.subtitle.isVisible = false
+            view.btnCancel.text = context.getString(R.string.LNG_RESTORE_REQUEST)
+            view.btnOk.text = context.getString(R.string.LNG_NEXT)
+            setView(view)
+            show().apply {
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                view.btnCancel.setOnClickListener {
+                    listener(true)
+                    dismiss()
+                }
+                view.btnOk.setOnClickListener {
+                    listener(false)
+                    dismiss()
+                }
+            }
         }
     }
 
