@@ -170,9 +170,9 @@ class ApiCore : KoinComponent {
             } catch (js: JsonSyntaxException) {
                 null
             }
-            RemoteException(e.code(), msg ?: e.message ?: "", type)
+            RemoteException(e.code(), msg ?: e.message ?: "", true, type)
         }
-        else -> RemoteException(RemoteException.NOT_HTTP, e.message ?: "")
+        else -> RemoteException(RemoteException.NOT_HTTP, e.message ?: "", false)
     }
 
     companion object {

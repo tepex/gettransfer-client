@@ -6,6 +6,7 @@ import kotlinx.io.IOException
 class RemoteException(
     val code: Int,
     val details: String,
+    val isHttpException: Boolean,
     val type: String? = null
 ) : IOException(details) {
 
@@ -13,7 +14,7 @@ class RemoteException(
     fun isNotLoggedIn()  = code == NOT_LOGGED_IN
     fun isConnectionError() = code == NOT_HTTP || code == CONNECTION_TIMED_OUT
 
-    fun map() = ApiException(code, details, type)
+    fun map() = ApiException(code, details, isHttpException, type)
 
     companion object {
         const val NOT_HTTP      = ApiException.NETWORK_ERROR

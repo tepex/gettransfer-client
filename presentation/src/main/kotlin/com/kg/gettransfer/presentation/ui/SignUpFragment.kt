@@ -20,7 +20,6 @@ import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.presenter.SignUpPresenter
-import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.SignUpView
 
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
@@ -63,69 +62,28 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
 
         initTextChangeListeners()
         initPhoneTextChangeListeners()
-        @Suppress("MagicNumber")
-        btnSignUp.setThrottledClickListener(1_000L) { v ->
-            v.hideKeyboard()
-            showLoading()
-            presenter.registration()
-        }
-        licenseAgreementTv.setThrottledClickListener {
-            showLoading()
-            presenter.showLicenceAgreement()
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        AppWatcher.objectWatcher.watch(this)
-    }
-
-    override fun showValidationErrorDialog(phoneExample: String) {
-        BottomSheetDialog
-            .newInstance()
-            .apply {
-                title = this@SignUpFragment.getString(R.string.LNG_ERROR_CREDENTIALS)
-                text = this@SignUpFragment.getString(R.string.LNG_ERROR_EMAIL_PHONE, phoneExample)
-                onDismissCallBack = { hideLoading() }
-            }
-            .show(requireFragmentManager())
-    }
-
-    override fun showRegisterSuccessDialog() {
-        BottomSheetDialog
-            .newInstance()
-            .apply {
-                imageId = R.drawable.logo
-                title = this@SignUpFragment.getString(R.string.LNG_REGISTERED)
-                text = this@SignUpFragment.getString(R.string.LNG_TRANSFER_CREATE_HINT)
-                buttonOkText = this@SignUpFragment.getString(R.string.LNG_MENU_SUBTITLE_NEW)
-                onDismissCallBack = {
-                    presenter.onBackCommandClick()
-                }
-                onClickOkButton = { presenter.onCreateTransferClick() }
-            }
-            .show(requireFragmentManager())
+        initClickListeners()
     }
 
     private fun initTextChangeListeners() {
         nameLayout.fieldText.onTextChanged { text ->
             presenter.name = text
-            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
+            btnSignUp.isEnabled = presenter.isEnabledSignUpButton
         }
 
         phoneLayout.fieldText.onTextChanged { text ->
             presenter.phone = text
-            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
+            btnSignUp.isEnabled = presenter.isEnabledSignUpButton
         }
 
         emailLayout.fieldText.onTextChanged { text ->
             presenter.email = text
-            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
+            btnSignUp.isEnabled = presenter.isEnabledSignUpButton
         }
 
         switchAgreementTb.setOnCheckedChangeListener { _, isChecked ->
             presenter.termsAccepted = isChecked
-            btnSignUp.isEnabled = presenter.checkFieldsIsEmpty()
+            btnSignUp.isEnabled = presenter.isEnabledSignUpButton
         }
     }
 
@@ -152,6 +110,32 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         }
     }
 
+    private fun initClickListeners() {
+        btnSignUp.setThrottledClickListener(THROTTLED_DELAY) { v ->
+            v.hideKeyboard()
+            presenter.registration()
+        }
+        licenseAgreementTv.setThrottledClickListener {
+            presenter.showLicenceAgreement()
+        }
+    }
+
+    override fun showRegisterSuccessDialog() {
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                imageId = R.drawable.logo
+                title = this@SignUpFragment.getString(R.string.LNG_REGISTERED)
+                text = this@SignUpFragment.getString(R.string.LNG_TRANSFER_CREATE_HINT)
+                buttonOkText = this@SignUpFragment.getString(R.string.LNG_MENU_SUBTITLE_NEW)
+                onDismissCallBack = {
+                    presenter.onBackCommandClick()
+                }
+                onClickOkButton = { presenter.onCreateTransferClick() }
+            }
+            .show(requireFragmentManager())
+    }
+
     override fun updateTextPhone(phone: String) {
         phoneLayout.fieldText.setText(phone)
     }
@@ -160,7 +144,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         emailLayout.fieldText.setText(email)
     }
 
-    // ---- Shit from base classes ------
+    // loading fragment
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         if (block) {
@@ -168,7 +152,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         } else hideLoading()
     }
 
-    override fun showLoading() {
+    private fun showLoading() {
         if (!loadingFragment.isAdded) {
             fragmentManager?.beginTransaction()?.apply {
                 replace(android.R.id.content, loadingFragment)
@@ -177,7 +161,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         }
     }
 
-    override fun hideLoading() {
+    private fun hideLoading() {
         if (loadingFragment.isAdded) {
             fragmentManager?.beginTransaction()?.apply {
                 remove(loadingFragment)
@@ -186,8 +170,17 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         }
     }
 
-    // TODO remove BaseView or add code.
-    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
+    // errors
+
+    override fun showValidationErrorDialog(phoneExample: String) {
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                title = this@SignUpFragment.getString(R.string.LNG_ERROR_CREDENTIALS)
+                text = this@SignUpFragment.getString(R.string.LNG_ERROR_EMAIL_PHONE, phoneExample)
+            }
+            .show(requireFragmentManager())
+    }
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
@@ -211,7 +204,6 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                     buttonOkText = this@SignUpFragment.getString(R.string.LNG_LOGIN_BUTTON)
                 }
                 isShowCloseButton = true
-                onDismissCallBack = { hideLoading() }
             }
             .show(requireFragmentManager())
     }
@@ -239,15 +231,21 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         detailText = getString(R.string.LNG_LOGIN_REQUIRED)
     }
 
-    // TODO remove BaseView or add code.
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
+
     override fun setError(e: DatabaseException) {}
 
-    // TODO remove BaseView or add code.
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 
     companion object {
         const val MIN_PHONE_LENGTH = 4
+        const val THROTTLED_DELAY = 1_000L
 
         fun newInstance() = SignUpFragment()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 }

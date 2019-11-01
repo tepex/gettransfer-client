@@ -5,9 +5,10 @@ import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.OpenDeepLinkScreenView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.Analytics
 import kotlinx.coroutines.launch
 
-open class OpenNextScreenPresenter<BV : OpenDeepLinkScreenView> : OpenDeepLinkScreenPresenter<BV>() {
+open class BaseLogInPresenter<BV : OpenDeepLinkScreenView> : OpenDeepLinkScreenPresenter<BV>() {
 
     internal lateinit var params: LogInView.Params
 
@@ -29,4 +30,6 @@ open class OpenNextScreenPresenter<BV : OpenDeepLinkScreenView> : OpenDeepLinkSc
     override fun onDialogDismissCallback() {
         router.exit()
     }
+
+    fun logEvent(event: String, value: String) = analytics.logEvent(event, Analytics.STATUS, value)
 }
