@@ -21,6 +21,7 @@
     <color name="colorWhitePressed">#d2d2d2</color>
 
     <color name="colorBtnRed">#FF0000</color>
+    <color name="colorBtnRedPressed">#D70000</color>
     <color name="colorDividerGray">@color/colorDivider</color>
     <color name="create_order_fields_divider">@color/color_gtr_light_grey</color>
 

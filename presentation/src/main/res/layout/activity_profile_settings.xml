@@ -88,7 +88,7 @@
         android:fontFamily="@font/sf_pro_text_semibold"
         android:textSize="@dimen/profile_settings_btns_text_size"
         android:text="@string/LNG_UNLOGIN"
-        android:textColor="@color/color_gtr_red"
+        android:textColor="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSave"
