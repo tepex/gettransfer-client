@@ -389,6 +389,8 @@
 	<!-- fragment_requests_pager -->
 	<dimen name="activity_requests_tab_layout_text_size">17sp</dimen>
 	<dimen name="activity_requests_text_size_14sp">14sp</dimen>
+	<dimen name="activity_requests_btn_forward_main_margin_bottom">34dp</dimen>
+	<dimen name="activity_requests_btn_forward_main_height">48dp</dimen>
 
     <!-- activity_chat -->
     <dimen name="activity_chat_message_text_size">17sp</dimen>
@@ -709,9 +711,10 @@
 	<dimen name="main_without_map_read_more_text_margin_top">6dp</dimen>
 	<dimen name="main_without_map_promo_text_size">17sp</dimen>
 	<dimen name="main_without_map_promo_text_horizontal_margins">30dp</dimen>
-	<dimen name="main_without_map_btn_next_height">48dp</dimen>
+	<dimen name="main_without_map_btn_next_height">60dp</dimen>
 	<dimen name="main_without_map_btn_next_horizontal_margin">16dp</dimen>
-	<dimen name="main_without_map_btn_next_margin_bottom">34dp</dimen>
+	<dimen name="main_without_map_btn_next_margin_bottom">28dp</dimen>
+	<dimen name="main_without_map_btn_next_radius">30dp</dimen>
 	<dimen name="main_without_map_addresses_panel_margin_bottom">24dp</dimen>
 	<dimen name="main_without_map_switch_hourly_margins">16dp</dimen>
 

@@ -112,20 +112,26 @@
             app:ivSelectFieldToGone="true"
             app:roundedTopCorners="false" />
     </FrameLayout>
-    <Button
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnNextFragment"
-        style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/main_without_map_btn_next_height"
         android:layout_gravity="center"
         android:layout_marginStart="@dimen/main_without_map_btn_next_horizontal_margin"
         android:layout_marginEnd="@dimen/main_without_map_btn_next_horizontal_margin"
         android:layout_marginBottom="@dimen/main_without_map_btn_next_margin_bottom"
-        android:background="@drawable/btn_bg_rounded"
         android:enabled="false"
-        android:text="@string/LNG_NEXT"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="center"
+        android:text="@string/LNG_RIDE_CREATE"
+        android:textAllCaps="true"
         android:textColor="@color/colorWhite"
-
+        app:backgroundTint="@drawable/material_btn_bg_color"
+        app:cornerRadius="@dimen/main_without_map_btn_next_radius"
+        app:icon="@drawable/ic_check_circle"
+        app:iconGravity="textStart"
+        app:iconTint="@null"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
