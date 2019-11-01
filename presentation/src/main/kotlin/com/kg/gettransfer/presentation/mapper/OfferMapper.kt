@@ -12,7 +12,10 @@ import org.koin.core.inject
 open class OfferMapper : Mapper<OfferModel, Offer> {
     private val carrierMapper: CarrierMapper by inject()
     private val profileMapper: ProfileMapper by inject()
+
     lateinit var url: String
+
+    fun isUrlInitialized() = ::url.isInitialized
 
     override fun toView(type: Offer) =
         OfferModel(
