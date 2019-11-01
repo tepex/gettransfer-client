@@ -45,10 +45,6 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
     }
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
-
-        contentSuccessPayment.layoutParams.height =
-            getScreenSide(true) - Utils.dpToPxInt(this, SCREEN_MARGIN_TOP)
-
         baseMapView = mapViewRoute
         initMapView(savedInstanceState)
         presenter.setMapRoute()
