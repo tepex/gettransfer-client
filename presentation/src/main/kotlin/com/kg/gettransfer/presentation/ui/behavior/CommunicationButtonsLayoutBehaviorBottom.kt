@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import android.util.AttributeSet
 import android.view.View
-import android.widget.FrameLayout
+import android.widget.LinearLayout
 import com.kg.gettransfer.R
 
-class CommunicationButtonsLayoutAboveBottomSheetBehavior(private val mContext: Context, attrs: AttributeSet) : BaseBehavior(mContext, attrs) {
+class CommunicationButtonsLayoutBehaviorBottom(mContext: Context, attrs: AttributeSet) : BaseBehavior(mContext, attrs) {
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
         return isBottomSheet(dependency)
@@ -17,13 +17,12 @@ class CommunicationButtonsLayoutAboveBottomSheetBehavior(private val mContext: C
         // anchorId needs to set programmatically(not in xml) otherwise onDependentViewChanged will called all the time
         (child.layoutParams as CoordinatorLayout.LayoutParams).anchorId = R.id.sheetTransferDetails
 
-        val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior as BottomSheetTripleStatesBehavior
-        val anchorPoint = behavior.anchorPoint
+        val childHeight = (child as LinearLayout).measuredHeight
         child.bottom = when {
-            dependency.top >= anchorPoint -> dependency.top
-            else -> anchorPoint
+            dependency.top <= actionBarHeight + childHeight -> dependency.bottom + dependency.top - actionBarHeight
+            else -> screenHeight + childHeight
         }
-        child.top = child.bottom - (child as FrameLayout).measuredHeight
+        child.top = child.bottom - childHeight
         return true
     }
 }

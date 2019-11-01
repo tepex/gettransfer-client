@@ -63,10 +63,10 @@
             android:layout_height="wrap_content" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.CommunicationButtonsLayoutAboveBottomSheetBehavior">
+        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.CommunicationButtonsLayoutBehaviorTop">
 
         <include
             android:id="@+id/topCommunicationButtons"
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_transfer_details_top_buttons_margin_bottom" />
 
-    </FrameLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/sheetTransferDetails"
@@ -94,8 +94,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
         android:elevation="8dp"
-        android:orientation="vertical"
-        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.BottomCommunicationButtonsLayoutBehavior">
+        app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.CommunicationButtonsLayoutBehaviorBottom">
 
         <include
             android:id="@+id/bottomCommunicationButtons"
