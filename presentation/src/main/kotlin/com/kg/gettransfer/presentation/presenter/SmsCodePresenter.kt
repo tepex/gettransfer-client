@@ -53,8 +53,8 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
             }.also { result ->
                 viewState.blockInterface(false)
 
-                result.error?.let {
-                    viewState.setError(it)
+                result.error?.let { e ->
+                    viewState.setError(e)
                     logEvent(Analytics.EVENT_LOGIN_CODE, Analytics.RESULT_FAIL)
                 }
 
@@ -79,8 +79,8 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
             }.also { result ->
                 viewState.blockInterface(false)
 
-                result.error?.let {
-                    viewState.setError(it)
+                result.error?.let { e ->
+                    viewState.setError(e)
                     logEvent(Analytics.EVENT_RESEND_CODE, Analytics.RESULT_FAIL)
                 }
 

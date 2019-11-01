@@ -111,7 +111,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     }
 
     private fun initClickListeners() {
-        btnSignUp.setThrottledClickListener(1_000L) { v ->
+        btnSignUp.setThrottledClickListener(THROTTLED_DELAY) { v ->
             v.hideKeyboard()
             presenter.registration()
         }
@@ -239,6 +239,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
 
     companion object {
         const val MIN_PHONE_LENGTH = 4
+        const val THROTTLED_DELAY = 1_000L
 
         fun newInstance() = SignUpFragment()
     }

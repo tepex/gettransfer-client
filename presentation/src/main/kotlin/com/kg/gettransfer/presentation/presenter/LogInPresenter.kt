@@ -6,7 +6,6 @@ import moxy.InjectViewState
 import com.kg.gettransfer.presentation.ui.MainLoginActivity
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
-import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_PHONE
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.getInternationalNumber
@@ -52,8 +51,8 @@ class LogInPresenter : BaseLogInPresenter<LogInView>(), KoinComponent {
             }.also { result ->
                 viewState.blockInterface(false)
 
-                result.error?.let {
-                    viewState.setError(it)
+                result.error?.let { e ->
+                    viewState.setError(e)
                     logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.RESULT_FAIL)
                 }
 
@@ -83,8 +82,8 @@ class LogInPresenter : BaseLogInPresenter<LogInView>(), KoinComponent {
             }.also { result ->
                 viewState.blockInterface(false)
 
-                result.error?.let {
-                    viewState.setError(it)
+                result.error?.let { e ->
+                    viewState.setError(e)
                     logEvent(Analytics.EVENT_GET_CODE, Analytics.RESULT_FAIL)
                 }
 
@@ -107,22 +106,22 @@ class LogInPresenter : BaseLogInPresenter<LogInView>(), KoinComponent {
         }
     }
 
-    private fun validateInput(): Boolean {
+    private fun validateInput() =
         if (params.emailOrPhone.isEmpty()) {
             showValidationError(MainLoginActivity.INVALID_EMAIL)
-            return false
-        }
+            false
+        } else checkEmailOrPhone()
+
+    private fun checkEmailOrPhone() =
         LoginHelper.validateInput(
             params.emailOrPhone,
             isPhone
         ).let { error ->
-            when (error) {
-                INVALID_EMAIL, INVALID_PHONE -> showValidationError(error)
-                CREDENTIALS_VALID -> return true
-            }
+            if (error == INVALID_EMAIL || error == INVALID_PHONE) {
+                showValidationError(error)
+                false
+            } else true
         }
-        return false
-    }
 
     private fun showValidationError(errorType: Int) {
         viewState.showValidationError(errorType, Utils.phoneUtil.internationalExample(sessionInteractor.locale))
