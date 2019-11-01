@@ -91,7 +91,6 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
             }
 
             if (placeType != ROUTE_TYPE || isDoubleClickOnRoute) {
-                viewState.markFieldFilled(isTo)
                 if (newAddress.cityPoint.point != null) {
                     pointReady(checkZeroPoint(newAddress), isDoubleClickOnRoute, true)
                 } else if (selected.cityPoint.placeId != null) {

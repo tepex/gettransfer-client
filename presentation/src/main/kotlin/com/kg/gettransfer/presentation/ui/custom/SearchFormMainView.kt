@@ -6,18 +6,16 @@ import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isGone
-import com.kg.gettransfer.extensions.isInvisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 import kotlinx.android.synthetic.main.search_form_main.*
 
 class SearchFormMainView @JvmOverloads constructor(
-        context: Context,
-        attributeSet: AttributeSet? = null,
-        defStyle: Int = 0
+    context: Context,
+    attributeSet: AttributeSet? = null,
+    defStyle: Int = 0
 ) : ConstraintLayout(context, attributeSet, defStyle), LayoutContainer {
     override val containerView: View = LayoutInflater.from(context).inflate(R.layout.search_form_main, this, true)
 
@@ -64,7 +62,6 @@ class SearchFormMainView @JvmOverloads constructor(
         rl_hourly.isGone = !turnOn
         hourly_point.isGone = !turnOn
         tv_b_point.isGone = turnOn
-        link_line.isInvisible = turnOn
         searchTo.isGone = turnOn
         ivSelectFieldTo.isGone = ivSelectFieldToIsGone || turnOn
     }
@@ -81,30 +78,16 @@ class SearchFormMainView @JvmOverloads constructor(
         return searchTo.text.isEmpty()
     }
 
-    fun setPointsView(textView: TextView, empty: Boolean) {
-        with(textView) {
-            background = if (empty) {
-                setTextColor(ContextCompat.getColor(context, R.color.colorWhite))
-                ContextCompat.getDrawable(context, R.drawable.back_circle_marker_orange_filled)
-            } else {
-                setTextColor(ContextCompat.getColor(context, R.color.colorTextBlack))
-                ContextCompat.getDrawable(context, R.drawable.back_orange_empty)
-            }
-        }
-    }
-
     fun setSearchFrom(value: String) {
         if (value != searchFrom.text) {
             searchFrom.text = value
         }
-        setPointsView(tv_a_point, value.isNotEmpty())
     }
 
     fun setSearchTo(value: String) {
         if (value != searchTo.text) {
             searchTo.text = value
         }
-        setPointsView(tv_b_point, value.isNotEmpty())
     }
 
     fun selectSearchFrom() {

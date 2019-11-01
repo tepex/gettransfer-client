@@ -110,7 +110,6 @@ class SearchFragment : BaseFragment(), SearchView {
 
     fun onSearchFieldEmpty(isToField: Boolean) {
         presenter.initSuggestedAddresses()
-        searchForm.markFieldEmpty(isToField)
     }
 
     private fun initPredefinedPopularPlaces() = listOf(
@@ -122,12 +121,10 @@ class SearchFragment : BaseFragment(), SearchView {
     /* SearchView */
     override fun setAddressFrom(address: String, sendRequest: Boolean, isEditing: Boolean) {
         searchFrom.initText(address, sendRequest, isEditing)
-        if (address.isNotEmpty()) markFieldFilled(false)
     }
 
     override fun setAddressTo(address: String, sendRequest: Boolean, isEditing: Boolean) {
         searchTo.initText(address, sendRequest, isEditing)
-        if (address.isNotEmpty()) markFieldFilled(true)
     }
 
     override fun changeFocusToDestField() = searchTo.changeFocus()
@@ -169,8 +166,6 @@ class SearchFragment : BaseFragment(), SearchView {
         }
         rv_addressList.adapter = AddressAdapter(addressesList) { presenter.onAddressSelected(it) }
     }
-
-    override fun markFieldFilled(isToField: Boolean) = searchForm.markFiledFilled(isToField)
 
     override fun setFocus(isToField: Boolean) = searchForm.changeFocus(isToField)
 
