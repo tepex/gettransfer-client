@@ -116,8 +116,8 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/sheetSecondary"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/expended_sheet_order_height"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/expended_sheet_transfer_details_height"
         android:elevation="10dp"
         app:behavior_hideable="true"
         app:behavior_skipCollapsed="true"

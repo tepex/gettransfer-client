@@ -279,6 +279,7 @@
 
 	<dimen name="view_transfer_details_header_container_padding_horizontal">16dp</dimen>
 	<dimen name="view_transfer_details_header_container_padding_top">10dp</dimen>
+	<dimen name="expended_sheet_transfer_details_height">68dp</dimen>
 
 	<!-- view_trips_info -->
 	<dimen name="transport_type_name_text_size">14sp</dimen>
