@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.kg.gettransfer.R
 
-class CommunicationButtonsLayoutBehaviorBottom(mContext: Context, attrs: AttributeSet) : BaseBehavior(mContext, attrs) {
+class CommunicationButtonsLayoutBehaviorBottom(context: Context, attrs: AttributeSet) : BaseBehavior(context, attrs) {
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
         return isBottomSheet(dependency)

@@ -9,7 +9,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.R
 
-class MapCollapseBehavior(mContext: Context, attrs: AttributeSet): BaseBehavior(mContext, attrs) {
+class MapCollapseBehavior(context: Context, attrs: AttributeSet): BaseBehavior(context, attrs) {
 
     private var dependencyTopPos = -1
     private var bounds: LatLngBounds? = null
