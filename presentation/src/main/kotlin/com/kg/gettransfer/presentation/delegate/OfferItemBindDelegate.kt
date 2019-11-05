@@ -73,7 +73,9 @@ object OfferItemBindDelegate {
 
         with(offer.carrier) {
             bindRating(view_rating_tiny, ratings, approved)
-            bindLanguages(Either.Single(languages_container_tiny), languages,
+            bindLanguages(
+                Either.Single(languages_container_tiny),
+                languages.map { it.map() },
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_ITEM)
         }
 
