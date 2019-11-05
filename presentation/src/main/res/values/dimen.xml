@@ -362,6 +362,7 @@
 	<dimen name="bottom_sheet_offer_details_text_size_11sp">11sp</dimen>
 	<dimen name="bottom_sheet_offer_details_vehicle_name_margin_top">22dp</dimen>
 	<dimen name="bottom_sheet_offer_details_vehicle_icons_margin_top">16dp</dimen>
+	<dimen name="bottom_sheet_offer_details_margin_10dp">10dp</dimen>
 	<dimen name="bottom_sheet_offer_details_margin_16dp">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_width">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_car_color_height">16dp</dimen>
@@ -492,6 +493,8 @@
 	<dimen name="lang_icon_height">16dp</dimen>
 
 	<!--vehicle_items-->
+	<dimen name="vehicle_items_icons_size">16dp</dimen>
+	<dimen name="vehicle_items_wifi_icon_width">24dp</dimen>
 	<dimen name="vehicle_items_margin_start">6dp</dimen>
 
 	<!--offer_rating-->
