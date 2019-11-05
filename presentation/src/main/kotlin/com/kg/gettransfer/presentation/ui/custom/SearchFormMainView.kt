@@ -22,12 +22,14 @@ class SearchFormMainView @JvmOverloads constructor(
     private var ivSelectFieldToIsGone: Boolean = false
 
     init {
-        if (attributeSet != null)
+        if (attributeSet != null) {
             context.obtainStyledAttributes(attributeSet, R.styleable.SearchFormMainView)
                 .apply {
-                    ivSelectFieldToIsGone = getBoolean(R.styleable.SearchFormMainView_ivSelectFieldToGone, ivSelectFieldToIsGone)
+                    ivSelectFieldToIsGone =
+                        getBoolean(R.styleable.SearchFormMainView_ivSelectFieldToGone, ivSelectFieldToIsGone)
                     ivSelectFieldTo.isGone = ivSelectFieldToIsGone
-                    ivSelectFieldFrom.isGone = getBoolean(R.styleable.SearchFormMainView_ivSelectFieldFromGone, false)
+                    ivSelectFieldFrom.isGone =
+                        getBoolean(R.styleable.SearchFormMainView_ivSelectFieldFromGone, false)
                     setBackgroundResource(
                         when (getBoolean(R.styleable.SearchFormMainView_roundedTopCorners, false)) {
                             true  -> R.drawable.back_top_rounded
@@ -36,6 +38,7 @@ class SearchFormMainView @JvmOverloads constructor(
                     )
                     recycle()
                 }
+        }
     }
 
     fun setSearchFromClickListener(clickListener: ((View) -> Unit)?) {
@@ -92,14 +95,16 @@ class SearchFormMainView @JvmOverloads constructor(
 
     fun selectSearchFrom() {
         setSearchFromAlpha(ALPHA_FULL)
-        if (!ivSelectFieldToIsGone)
+        if (!ivSelectFieldToIsGone) {
             ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.btn_pin_location))
+        }
     }
 
     fun selectSearchTo() {
         setSearchFromAlpha(ALPHA_DISABLED)
-        if (!ivSelectFieldToIsGone)
+        if (!ivSelectFieldToIsGone) {
             ivSelectFieldTo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.btn_pin_enabled))
+        }
     }
 
     private fun setSearchFromAlpha(alpha: Float) {

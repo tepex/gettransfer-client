@@ -39,6 +39,7 @@ import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.toolbar_search.view.*
 
+@Suppress("TooManyFunctions")
 class SearchFragment : BaseFragment(), SearchView {
 
     @InjectPresenter
@@ -95,16 +96,17 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     private fun changeFocusForSearch() {
-        if(SearchFragmentArgs.fromBundle(requireArguments()).isClickTo)
+        if (SearchFragmentArgs.fromBundle(requireArguments()).isClickTo) {
             searchTo.changeFocus()
-        else
+        } else {
             searchFrom.changeFocus()
+        }
     }
 
     private fun setupToolbar() {
         toolbarLayout.ivBack.setThrottledClickListener {
             view?.hideKeyboard()
-            Handler().postDelayed( {goToBack()}, 400)
+            Handler().postDelayed({ goToBack() }, DELAY)
         }
     }
 
@@ -152,17 +154,18 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     override fun setAddressListByAutoComplete(list: List<GTAddress>) {
-        rv_addressList.adapter?.let {
-            (it as AddressAdapter).updateList(list)
-        }
+        (rv_addressList.adapter as? AddressAdapter)?.updateList(list)
     }
 
     override fun onFindPopularPlace(isToField: Boolean, place: String) = searchForm.findPopularPlace(isToField, place)
 
     override fun setSuggestedAddresses(addressesList: List<GTAddress>) {
-        rv_popularList.adapter = PopularAddressAdapter(predefinedPopularPlaces) {
-            if (it == predefinedPopularPlaces[0]) presenter.selectPointOnMap()
-            else presenter.onPopularSelected(it)
+        rv_popularList.adapter = PopularAddressAdapter(predefinedPopularPlaces) { place ->
+            if (place == predefinedPopularPlaces[0]) {
+                presenter.selectPointOnMap()
+            } else {
+                presenter.onPopularSelected(place)
+            }
         }
         rv_addressList.adapter = AddressAdapter(addressesList) { presenter.onAddressSelected(it) }
     }
@@ -170,7 +173,7 @@ class SearchFragment : BaseFragment(), SearchView {
     override fun setFocus(isToField: Boolean) = searchForm.changeFocus(isToField)
 
     override fun onAddressError(message: Int, address: GTAddress, fieldTo: Boolean) {
-        (rv_addressList.adapter as AddressAdapter).removeItem(address)
+        (rv_addressList.adapter as? AddressAdapter)?.removeItem(address)
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
@@ -182,7 +185,7 @@ class SearchFragment : BaseFragment(), SearchView {
         view?.hideKeyboard()
         Handler().postDelayed({
             findNavController().navigate(SearchFragmentDirections.goToMap())
-        }, 400)
+        }, DELAY)
     }
 
     override fun goToBack() {
@@ -193,6 +196,10 @@ class SearchFragment : BaseFragment(), SearchView {
         view?.hideKeyboard()
         Handler().postDelayed({
             findNavController().navigate(SearchFragmentDirections.goToCreateOrder())
-        }, 400)
+        }, DELAY)
+    }
+
+    companion object {
+        const val DELAY = 400L
     }
 }

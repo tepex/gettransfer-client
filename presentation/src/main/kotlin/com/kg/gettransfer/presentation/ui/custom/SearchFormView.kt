@@ -16,9 +16,9 @@ import kotlinx.android.synthetic.main.search_address.*
 import kotlinx.android.synthetic.main.search_form.*
 
 class SearchFormView @JvmOverloads constructor(
-        context: Context,
-        attributeSet: AttributeSet? = null,
-        defStyle: Int = 0
+    context: Context,
+    attributeSet: AttributeSet? = null,
+    defStyle: Int = 0
 ) : ConstraintLayout(context, attributeSet, defStyle), LayoutContainer {
     override val containerView: View = LayoutInflater.from(context).inflate(R.layout.search_form, this, true)
 
