@@ -48,8 +48,8 @@
 
         <ImageView
             android:id="@+id/ivCarColor"
-            android:layout_width="@dimen/bottom_sheet_offer_details_car_color_width"
-            android:layout_height="@dimen/bottom_sheet_offer_details_car_color_height"
+            android:layout_width="@dimen/offer_tiny_car_color_width"
+            android:layout_height="@dimen/offer_tiny_car_color_height"
             android:layout_marginTop="@dimen/payment_offer_tiny_ivCarColor_margins"
             android:layout_marginEnd="@dimen/payment_offer_tiny_ivCarColor_margins"
             android:background="@drawable/border_car_color_indicator"

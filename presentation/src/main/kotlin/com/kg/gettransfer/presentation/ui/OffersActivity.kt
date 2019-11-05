@@ -291,14 +291,10 @@ class OffersActivity : BaseActivity(), OffersView {
     private fun setVehicleNameAndColor(nameById: String? = null, vehicle: VehicleModel? = null) {
         if (nameById == null && vehicle == null) throw IllegalArgumentException()
         tv_car_model_bs.text = vehicle?.name ?: nameById
-        with(ivCarColor) {
-            if (vehicle?.color != null && vehicle.photos.isEmpty()) {
-                isVisible = true
-                setImageDrawable(Utils.getCarColorFormRes(this@OffersActivity, vehicle.color))
-            } else {
-                isVisible = false
-            }
-        }
+        carColor.isVisible = vehicle?.color?.let { color ->
+            Utils.setCarColorInTextView(this@OffersActivity, carColor, color)
+            true
+        } ?: false
     }
 
     private fun setRating(carrier: CarrierModel) {
