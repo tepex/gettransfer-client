@@ -49,60 +49,32 @@
             <include layout="@layout/layout_hourly_duration"
                 android:id="@+id/hourly_duration"/>
 
-                <LinearLayout
-                    android:id="@+id/cl_offer_price"
+            <RelativeLayout
+                android:id="@+id/cl_offer_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
+                    android:id="@+id/price_field_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    app:hint="@string/LNG_RIDE_PRICE"
+                    app:icon_img="@drawable/ic_coin_stack"
+                    android:layout_toStartOf="@+id/select_currency"
+                    android:inputType="number"/>
 
+                <include
+                    android:id="@+id/select_currency"
+                    layout="@layout/view_selected_currency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"/>
 
+            </RelativeLayout>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/fl_currency"
-                        android:layout_width="@dimen/fl_currency_wight"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/tv_currency"
-                            android:layout_width="@dimen/currency_symbol_wight"
-                            android:layout_height="@dimen/currency_symbol_height"
-                            android:fontFamily="@font/sf_pro_text_regular"
-                            android:maxLines="1"
-                            android:text="@string/rub"
-                            android:clickable="false"
-                            android:textColor="@color/colorTextBlackBold"
-                            app:autoSizeMaxTextSize="@dimen/currency_symbol_size"
-                            app:autoSizeMinTextSize="@dimen/currency_symbol_min_size"
-                            app:autoSizeTextType="uniform"
-                            android:layout_marginStart="@dimen/currency_symbol_margin_start"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:text="$"/>
-
-                        <ImageView
-                            android:clickable="false"
-                            android:id="@+id/triangle_currency"
-                            android:layout_width="@dimen/triangle_currency_width"
-                            android:layout_height="@dimen/triangle_currency_height"
-                            app:layout_constraintStart_toEndOf="@+id/tv_currency"
-                            app:layout_constraintTop_toTopOf="@+id/tv_currency"
-                            app:srcCompat="@drawable/ic_triangle" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <!-- icon_img is changing at runtime-->
-                    <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
-                        android:id="@+id/price_field_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/create_transfer_price_field_input_padding_start"
-                        app:hint="@string/LNG_RIDE_PRICE"
-                        android:inputType="number"/>
-                </LinearLayout>
-
-                <include layout="@layout/view_divider_horizontal"/>
+            <include layout="@layout/view_divider_horizontal"/>
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/transfer_date_time_field"
