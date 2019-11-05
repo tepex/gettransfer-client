@@ -168,7 +168,7 @@
                         android:gravity="center"
                         android:visibility="visible"
                         android:text="@string/transfer_end_sign"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/colorTextBlack"
                         android:textSize="@dimen/transfer_start_end_sign_marker_text_size"
                         android:fontFamily="@font/sf_pro_text_semibold"/>
 
@@ -199,7 +199,7 @@
                             android:layout_width="@dimen/view_transfer_info_markers_hourly_size"
                             android:layout_height="@dimen/view_transfer_info_markers_hourly_size"
                             android:gravity="center"
-                            app:srcCompat="@drawable/ic_hourly_orange_24dp" />
+                            app:srcCompat="@drawable/ic_hourly_orange" />
 
                     </RelativeLayout>
 
