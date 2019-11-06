@@ -70,33 +70,39 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
             viewState.setAuthUiVisible(hasAccount, profileMapper.toView(remoteProfile), balance)
         }
-        transfer?.let { transfer ->
-            viewState.setToolbarTitle(transfer.map(configsManager.configs.transportTypes.map { it.map() }))
-            transfer.dateRefund?.let { dateRefund ->
-                val commission = configsManager.configs.paymentCommission
-                viewState.setCommission(
-                    if (commission % 1.0 == 0.0) commission.toInt().toString() else commission.toString(),
-                    SystemUtils.formatDateTime(dateRefund)
-                )
-            }
-        }
 
         transfer?.let { transfer ->
-            transfer.paymentPercentages?.let { percentages ->
-                offer?.let { offer ->
-                    val nameSignPresent = !transfer.nameSign.isNullOrEmpty()
-                    when (offer) {
-                        is BookNowOffer -> viewState.setBookNowOffer(offer.map(), nameSignPresent)
-                        is Offer        -> viewState.setOffer(offerMapper.toView(offer), percentages, nameSignPresent)
-                    }
-                }
-            }
+            setInfo(transfer)
+            setPaymentOptions(transfer)
         }
 
         if (loginScreenIsShowed) {
             loginScreenIsShowed = false
             if (accountManager.hasData) {
                 getPayment()
+            }
+        }
+    }
+
+    private fun setInfo(transfer: Transfer) {
+        viewState.setToolbarTitle(transfer.map(configsManager.configs.transportTypes.map { it.map() }))
+        transfer.dateRefund?.let { dateRefund ->
+            val commission = configsManager.configs.paymentCommission
+            viewState.setCommission(
+                if (commission % 1.0 == 0.0) commission.toInt().toString() else commission.toString(),
+                SystemUtils.formatDateTime(dateRefund)
+            )
+        }
+    }
+
+    private fun setPaymentOptions(transfer: Transfer) {
+        transfer.paymentPercentages?.let { percentages ->
+            offer?.let { offer ->
+                val nameSignPresent = !transfer.nameSign.isNullOrEmpty()
+                when (offer) {
+                    is BookNowOffer -> viewState.setBookNowOffer(offer.map(), nameSignPresent)
+                    is Offer        -> viewState.setOffer(offerMapper.toView(offer), percentages, nameSignPresent)
+                }
             }
         }
     }
