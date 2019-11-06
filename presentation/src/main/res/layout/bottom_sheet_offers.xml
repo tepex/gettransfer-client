@@ -36,16 +36,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/ivCarColor"
-                android:layout_width="@dimen/bottom_sheet_offer_details_car_color_width"
-                android:layout_height="@dimen/bottom_sheet_offer_details_car_color_height"
+            <TextView
+                android:id="@+id/carColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/bottom_sheet_offer_details_car_color_margin_top"
-                android:background="@drawable/border_car_color_indicator"
+                android:elevation="@dimen/activity_transfer_details_car_color_elevation"
+                android:fontFamily="@font/sf_pro_text_semibold"
+                android:paddingStart="@dimen/activity_transfer_details_car_color_horizontal_padding"
+                android:paddingTop="@dimen/activity_transfer_details_car_color_top_padding"
+                android:paddingEnd="@dimen/activity_transfer_details_car_color_horizontal_padding"
+                android:paddingBottom="@dimen/activity_transfer_details_car_color_bottom_padding"
+                android:textAllCaps="true"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/activity_transfer_details_car_color_text_size"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/tv_car_model_bs"
                 app:layout_constraintTop_toBottomOf="@+id/tv_car_model_bs"
-                app:srcCompat="@drawable/ic_circle_car_color_indicator"
+                tools:text="@string/LNG_COLOR_BLUE"
                 tools:visibility="visible" />
 
             <LinearLayout
@@ -107,7 +115,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ivCarColor"
+                app:layout_constraintTop_toBottomOf="@+id/carColor"
                 tools:visibility="visible" />
 
             <include

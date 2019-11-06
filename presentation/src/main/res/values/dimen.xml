@@ -361,9 +361,7 @@
 	<dimen name="bottom_sheet_offer_details_vehicle_name_margin_top">22dp</dimen>
 	<dimen name="bottom_sheet_offer_details_vehicle_icons_margin_top">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_margin_16dp">16dp</dimen>
-	<dimen name="bottom_sheet_offer_details_car_color_width">16dp</dimen>
-	<dimen name="bottom_sheet_offer_details_car_color_height">16dp</dimen>
-	<dimen name="bottom_sheet_offer_details_car_color_margin_top">11dp</dimen>
+	<dimen name="bottom_sheet_offer_details_car_color_margin_top">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_swipe_view_margin_top">15dp</dimen>
     <dimen name="bottom_sheet_offer_details_language_icon_width">24dp</dimen>
     <dimen name="bottom_sheet_offer_details_language_icon_height">16dp</dimen>
@@ -578,6 +576,8 @@
 	<dimen name="offer_tiny_languages_min_height">12dp</dimen>
 	<dimen name="offer_tiny_car_class_margin_top">7dp</dimen>
 	<dimen name="offer_tiny_capacity_margin_start">8dp</dimen>
+	<dimen name="offer_tiny_car_color_width">16dp</dimen>
+	<dimen name="offer_tiny_car_color_height">16dp</dimen>
 
 	<dimen name="payment_dialog_corner_radius">16dp</dimen>
 	<dimen name="payment_ivGtrBonus_layout_marginTop">16dp</dimen>
