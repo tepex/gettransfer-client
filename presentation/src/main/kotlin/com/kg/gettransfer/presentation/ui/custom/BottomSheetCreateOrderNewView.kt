@@ -35,6 +35,7 @@ import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.layout_hourly_duration.view.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.*
+import kotlinx.android.synthetic.main.view_selected_currency.tv_currency
 
 @Suppress("TooManyFunctions")
 class BottomSheetCreateOrderNewView @JvmOverloads constructor(
@@ -127,7 +128,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         price_field_input.field_input.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) { listener?.onPriceFocused() }
         }
-        fl_currency.setOnClickListener                         { listener?.onCurrencyClick() }
+        select_currency.setOnClickListener                     { listener?.onCurrencyClick() }
         sign_name_field.field_input.onTextChanged              { listener?.onNameChanged(it.trim()) }
         flight_number_field.field_input.onTextChanged          { listener?.onFlightNumberChanged(it.trim()) }
         flight_numberReturn_field.field_input.onTextChanged    { listener?.onFlightNumberReturnChanged(it.trim()) }
@@ -171,7 +172,6 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
     }
 
     private fun initFieldsViews() {
-        price_field_input.field_input.compoundDrawablePadding = 0
         passengers_count.person_count.text = context.getString(R.string.passenger_number_default)
         sign_name_field.field_input.filters =
             arrayOf<InputFilter>(InputFilter.LengthFilter(CreateOrderActivity.SIGN_NAME_FIELD_MAX_LENGTH))
