@@ -6,55 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tvMissingNameSign"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/vehicle_items_margin_start"
-        android:maxLines="2"
-        android:paddingBottom="@dimen/bottom_sheet_offer_details_vehicle_icons_margin_top"
-        android:text="@string/LNG_MISSING_NAME_SIGN"
-        android:textColor="@color/color_gtr_orange"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/imgWithNameSign"
-        android:layout_width="@dimen/vehicle_items_icons_size"
-        android:layout_height="@dimen/vehicle_items_icons_size"
-        android:layout_marginStart="@dimen/vehicle_items_margin_start"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imgMissingNameSign"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvMissingNameSign"
-        app:srcCompat="@drawable/ic_with_name_sign"
-        tools:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/imgMissingNameSign"
-        android:layout_width="@dimen/vehicle_items_icons_size"
-        android:layout_height="@dimen/vehicle_items_icons_size"
-        android:layout_marginStart="@dimen/vehicle_items_margin_start"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/imgWithNameSign"
-        app:layout_constraintStart_toEndOf="@+id/imgWithNameSign"
-        app:layout_constraintTop_toTopOf="@+id/imgWithNameSign"
-        app:srcCompat="@drawable/ic_missing_name_sign"
-        tools:visibility="visible" />
-
     <ImageView
         android:id="@+id/imgFreeWater"
         android:layout_width="@dimen/vehicle_items_icons_size"
         android:layout_height="@dimen/vehicle_items_icons_size"
         android:layout_marginStart="@dimen/vehicle_items_margin_start"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/imgMissingNameSign"
-        app:layout_constraintStart_toEndOf="@+id/imgMissingNameSign"
-        app:layout_constraintTop_toTopOf="@+id/imgMissingNameSign"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
         app:srcCompat="@drawable/ic_free_water"
         tools:visibility="visible" />
 

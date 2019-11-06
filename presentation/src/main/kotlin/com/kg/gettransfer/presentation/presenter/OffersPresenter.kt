@@ -239,7 +239,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 is Offer        -> offerMapper.toView(offer)
                 is BookNowOffer -> offer.map()
             }
-        })
+        }, !transfer?.nameSign.isNullOrEmpty())
         viewState.setSortType(sortCategory, sortHigherToLower)
     }
 

@@ -32,7 +32,6 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.Ratings
 import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.extensions.isGone
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.delegate.Either
@@ -335,15 +334,8 @@ class PaymentOfferActivity : BaseActivity(),
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW)
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
-        showNameplate(offer, isNameSignPresent)
-    }
-
-    private fun showNameplate(offer: OfferModel, isNameSignPresent: Boolean) {
-        val isWithNameSign = offer.isWithNameSign
-
-        imgWithNameSign.isVisible = isNameSignPresent && isWithNameSign
-        imgMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
-        tvMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
+        OfferItemBindDelegate.bindNameSignPlate(this, imgNameSign, tvMissingNameSign,
+            isNameSignPresent, offer.isWithNameSign)
     }
 
     private fun hidePaymentPercentage() {

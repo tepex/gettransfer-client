@@ -18,16 +18,18 @@ class OffersAdapter(
 ) : RecyclerView.Adapter<OffersAdapter.OfferItemViewHolder>() {
 
     private var offers: ArrayList<OfferItemModel> = arrayListOf()
+    private var isNameSignPresent = false
 
-    fun update(offers: List<OfferItemModel>) {
+    fun update(offers: List<OfferItemModel>, isNameSignPresent: Boolean) {
         this.offers.clear()
         this.offers.addAll(offers)
+        this.isNameSignPresent = isNameSignPresent
         notifyDataSetChanged()
     }
 
     override fun getItemCount() = offers.size
     override fun onBindViewHolder(p0: OfferItemViewHolder, p1: Int) =
-        p0.bindOffer(offers[p0.adapterPosition], clickHandler)
+        p0.bindOffer(offers[p0.adapterPosition], isNameSignPresent, clickHandler)
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int) =
         OfferItemViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.offer_tiny, p0, false))
@@ -36,9 +38,9 @@ class OffersAdapter(
         override val containerView: View
     ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        fun bindOffer(offerItem: OfferItemModel, clickListener: OfferClickListener) {
+        fun bindOffer(offerItem: OfferItemModel, isNameSignPresent: Boolean, clickListener: OfferClickListener) {
             with(containerView) {
-                OfferItemBindDelegate.bindOfferTiny(this, offerItem)
+                OfferItemBindDelegate.bindOfferTiny(this, offerItem, isNameSignPresent)
                 hangListeners(this, btn_book_tiny, img_car_photo_tiny, clickListener, offerItem)
             }
         }

@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_capacity"
+                app:layout_constraintTop_toBottomOf="@+id/tvMissingNameSign"
                 app:multiple_photos_height="@dimen/bottom_sheet_offer_details_multiple_photos_height"
                 app:multiple_photos_width="@dimen/bottom_sheet_offer_details_multiple_photos_width"
                 app:single_photo_height="@dimen/bottom_sheet_offer_details_single_photo_height" />
@@ -127,6 +127,34 @@
                 android:layout_marginStart="@dimen/margin16"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/vehicle_conveniences" />
+
+            <ImageView
+                android:id="@+id/iconNameSign"
+                android:layout_width="@dimen/bottom_sheet_offer_details_name_sign_img_size"
+                android:layout_height="@dimen/bottom_sheet_offer_details_name_sign_img_size"
+                android:layout_marginStart="@dimen/vehicle_items_margin_start"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/view_capacity"
+                app:layout_constraintStart_toEndOf="@+id/view_capacity"
+                app:layout_constraintTop_toTopOf="@+id/view_capacity"
+                app:srcCompat="@drawable/ic_with_name_sign"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tvMissingNameSign"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:text="@string/LNG_MISSING_NAME_SIGN"
+                android:textColor="@color/color_gtr_orange"
+                android:textSize="@dimen/bottom_sheet_offer_details_name_sign_text_size"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_capacity"
+                tools:visibility="visible" />
 
             <include
                 android:id="@+id/divider"
