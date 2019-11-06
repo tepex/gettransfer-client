@@ -81,6 +81,7 @@
         android:id="@+id/ivWheelchair"
         android:layout_width="@dimen/activity_transfer_details_transport_conveniences_height"
         android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:layout_marginEnd="@dimen/margin8"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/ivArmor"
         app:layout_constraintEnd_toStartOf="@+id/ivArmor"
