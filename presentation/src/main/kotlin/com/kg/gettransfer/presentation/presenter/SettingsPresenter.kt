@@ -162,23 +162,21 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.showDebugMenu()
     }
 
-    fun currencyChanged(currency: CurrencyModel) {
-        saveGeneralSettings()
-        viewState.setCurrency(currency.name)
-        analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.CURRENCY_PARAM, currency.code)
-    }
-
     fun onDistanceUnitSwitched(isChecked: Boolean) {
         sessionInteractor.distanceUnit = when (isChecked) {
             true  -> DistanceUnit.MI
             false -> DistanceUnit.KM
         }.apply { analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.UNITS_PARAM, name) }
-        saveGeneralSettings()
+        worker.main.launch {
+            saveGeneralSettings()
+        }
     }
 
     fun onEmailNotificationSwitched(isChecked: Boolean) {
         sessionInteractor.isEmailNotificationEnabled = isChecked
-        saveGeneralSettings()
+        worker.main.launch {
+            saveGeneralSettings()
+        }
     }
 
     fun onAboutAppClicked() {

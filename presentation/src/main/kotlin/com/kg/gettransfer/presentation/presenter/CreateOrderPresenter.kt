@@ -362,7 +362,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun currencyChanged(currency: CurrencyModel) {
         setCurrency(currency, true)
-        saveGeneralSettings()
         getNewPrices()
     }
 

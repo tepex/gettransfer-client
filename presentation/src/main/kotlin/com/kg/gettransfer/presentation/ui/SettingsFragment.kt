@@ -40,7 +40,7 @@ import org.koin.core.KoinComponent
 import timber.log.Timber
 
 @Suppress("TooManyFunctions")
-class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyChangedListener {
+class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsPresenter
@@ -181,10 +181,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView, CurrencyCh
 
     override fun setDistanceUnit(inMiles: Boolean) {
         settingsDistanceUnit.switch_button.isChecked = inMiles
-    }
-
-    override fun currencyChanged(currency: CurrencyModel) {
-        presenter.currencyChanged(currency)
     }
 
     override fun hideSomeDividers() {
