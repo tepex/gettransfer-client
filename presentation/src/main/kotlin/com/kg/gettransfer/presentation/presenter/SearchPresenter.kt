@@ -35,8 +35,8 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
     private val orderInteractor: OrderInteractor by inject()
     private val setSelectedField: SetSelectedFieldInteractor by inject()
     private val setAddressHistory: SetAddressHistoryInteractor by inject()
-    protected val getPreferences: GetPreferencesInteractor by inject()
-    protected val analytics: Analytics by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
+    private val analytics: Analytics by inject()
 
     internal var isTo = false
 
@@ -62,11 +62,13 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
     }
 
     fun onAddressSelected(selected: GTAddress) {
-        worker.main.launch{
-            val oldAddress = if (isTo) orderInteractor.to else orderInteractor.from //for detecting double click
-            var updatedGTAddress: GTAddress? = null //address with point
+        worker.main.launch {
+            val oldAddress = if (isTo) orderInteractor.to else orderInteractor.from // for detecting double click
+            var updatedGTAddress: GTAddress? = null // address with point
             selected.cityPoint.placeId?.let { placeId ->
-                withContext(worker.bg) { orderInteractor.updatePoint(isTo, placeId) }.isSuccess()?.let { updatedGTAddress = it }
+                withContext(worker.bg) {
+                    orderInteractor.updatePoint(isTo, placeId)
+                }.isSuccess()?.let { updatedGTAddress = it }
             }
             val newAddress = updatedGTAddress ?: selected
             analytics.logSingleEvent(Analytics.LAST_PLACE_CLICKED)
@@ -74,39 +76,55 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
             val isDoubleClickOnRoute =
                 oldAddress?.cityPoint?.point?.let { it == updatedGTAddress?.cityPoint?.point } ?: false
 
-            if (isTo) {
-                viewState.setAddressTo(
-                    newAddress.variants?.first ?: newAddress.cityPoint.name,
-                    placeType == ROUTE_TYPE,
-                    true
-                )
-                orderInteractor.to = newAddress
-            } else {
-                viewState.setAddressFrom(
-                    newAddress.variants?.first ?: newAddress.cityPoint.name,
-                    placeType == ROUTE_TYPE,
-                    true
-                )
-                orderInteractor.from = newAddress
-            }
+            setAddress(newAddress, placeType)
 
             if (placeType != ROUTE_TYPE || isDoubleClickOnRoute) {
-                viewState.markFieldFilled(isTo)
-                if (newAddress.cityPoint.point != null) {
-                    pointReady(checkZeroPoint(newAddress), isDoubleClickOnRoute, true)
-                } else if (selected.cityPoint.placeId != null) {
-                    withContext(worker.bg) { orderInteractor.updatePoint(isTo, selected.cityPoint.placeId!!) }
-                        .isSuccess()?.let { pointReady(checkZeroPoint(it), isDoubleClickOnRoute, true) }
-                }
+                initAddress(selected, newAddress, isDoubleClickOnRoute)
             } else {
-                val sendRequest = newAddress.needApproximation() /* dirty hack */
+                initRouteTypeAddress(newAddress)
+            }
+        }
+    }
 
-                if (isTo) {
-                    viewState.setAddressTo(newAddress.variants?.first ?: newAddress.cityPoint.name, sendRequest, true)
-                } else {
-                    viewState.setAddressFrom(newAddress.variants?.first ?: newAddress.cityPoint.name, sendRequest, true)
+    private fun setAddress(newAddress: GTAddress, placeType: Int) {
+        if (isTo) {
+            viewState.setAddressTo(
+                newAddress.variants?.first ?: newAddress.cityPoint.name,
+                placeType == ROUTE_TYPE,
+                true
+            )
+            orderInteractor.to = newAddress
+        } else {
+            viewState.setAddressFrom(
+                newAddress.variants?.first ?: newAddress.cityPoint.name,
+                placeType == ROUTE_TYPE,
+                true
+            )
+            orderInteractor.from = newAddress
+        }
+    }
+
+    private suspend fun initAddress(selected: GTAddress, newAddress: GTAddress, isDoubleClickOnRoute: Boolean) {
+        if (newAddress.cityPoint.point != null) {
+            pointReady(checkZeroPoint(newAddress), isDoubleClickOnRoute, true)
+        } else {
+            selected.cityPoint.placeId?.let { placeId ->
+                withContext(worker.bg) {
+                    orderInteractor.updatePoint(isTo, placeId)
+                }.isSuccess()?.let {
+                    pointReady(checkZeroPoint(it), isDoubleClickOnRoute, true)
                 }
             }
+        }
+    }
+
+    private fun initRouteTypeAddress(newAddress: GTAddress) {
+        val sendRequest = newAddress.needApproximation() /* dirty hack */
+
+        if (isTo) {
+            viewState.setAddressTo(newAddress.variants?.first ?: newAddress.cityPoint.name, sendRequest, true)
+        } else {
+            viewState.setAddressFrom(newAddress.variants?.first ?: newAddress.cityPoint.name, sendRequest, true)
         }
     }
 
@@ -175,8 +193,8 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
     }
 
     private fun checkZeroPoint(address: GTAddress): Boolean {
-        val point = address.cityPoint.point!!
-        return if (point.latitude == NO_POINT && point.longitude == NO_POINT) {
+        val point = address.cityPoint.point
+        return if (point == null || point.latitude == NO_POINT && point.longitude == NO_POINT) {
             orderInteractor.noPointPlaces += address
             if (isTo) orderInteractor.to else orderInteractor.from = null
             viewState.onAddressError(R.string.LNG_LOOKUP_ERROR, address, isTo)
@@ -188,7 +206,11 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
 
     private fun fillHistory() = worker.main.launch {
         withContext(worker.bg) {
-            setAddressHistory(mutableListOf(orderInteractor.from!!).apply { orderInteractor.to?.let { add(it) } })
+            orderInteractor.from?.let { from ->
+                setAddressHistory(mutableListOf(from).apply {
+                    orderInteractor.to?.let { add(it) }
+                })
+            }
         }
     }
 

@@ -16,7 +16,6 @@ import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
-import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.presenter.NewTransferMainPresenter
 import com.kg.gettransfer.presentation.ui.BaseFragment
 import com.kg.gettransfer.presentation.ui.ReadMoreFragment
@@ -32,8 +31,6 @@ import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
 // import leakcanary.AppWatcher
 
-import org.koin.core.inject
-
 import pub.devrel.easypermissions.EasyPermissions
 
 @Suppress("TooManyFunctions")
@@ -46,8 +43,6 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
     @ProvidePresenter
     fun createMainRequestPresenter() = NewTransferMainPresenter()
-
-    private val dateDelegate: DateTimeDelegate by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

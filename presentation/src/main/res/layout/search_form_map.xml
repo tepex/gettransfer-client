@@ -16,8 +16,8 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="20dp"
         android:gravity="center"
-        android:background="@drawable/back_circle_marker_orange_filled"
-        android:textColor="@color/colorWhite"
+        android:background="@drawable/back_circle_marker_filled_orange"
+        android:textColor="@color/colorTextBlack"
         tools:text="A"/>
 
     <com.kg.gettransfer.presentation.ui.SearchAddressReadOnly

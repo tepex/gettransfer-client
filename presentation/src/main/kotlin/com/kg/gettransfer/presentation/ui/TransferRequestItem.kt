@@ -46,9 +46,9 @@ class TransferRequestItem @JvmOverloads constructor(
                     tvMarkerTo.background = this
                 }
                 ivReturnIcon.setImageResource(R.drawable.ic_roundtrip_arrows)
-                ivMarkersLine.setImageResource(R.drawable.ic_markers_line_orange_18dp)
+                ivMarkersLine.setImageResource(R.drawable.ic_markers_line_orange)
                 tv_duration.background = ContextCompat.getDrawable(context, R.drawable.back_hours_info_orange)
-                ivHourlyPoint.setImageResource(R.drawable.ic_hourly_orange_24dp)
+                ivHourlyPoint.setImageResource(R.drawable.ic_hourly_orange)
                 tvEventsCount.background = ContextCompat.getDrawable(context, R.drawable.bg_circle_red)
             }
             RequestsView.TransferTypeAnnotation.TRANSFER_ARCHIVE -> {
@@ -62,9 +62,9 @@ class TransferRequestItem @JvmOverloads constructor(
                     tvMarkerTo.background = this
                 }
                 ivReturnIcon.setImageResource(R.drawable.ic_roundtrip_arrows_grey)
-                ivMarkersLine.setImageResource(R.drawable.ic_markers_line_grey_18dp)
+                ivMarkersLine.setImageResource(R.drawable.ic_markers_line_grey)
                 tv_duration.background = ContextCompat.getDrawable(context, R.drawable.back_hours_info_grey)
-                ivHourlyPoint.setImageResource(R.drawable.ic_hourly_grey_24dp)
+                ivHourlyPoint.setImageResource(R.drawable.ic_hourly_grey)
                 tvEventsCount.background = ContextCompat.getDrawable(context, R.drawable.bg_circle_grey)
             }
             else -> throw UnsupportedOperationException()

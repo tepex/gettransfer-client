@@ -16,7 +16,6 @@ interface SearchView : BaseView {
     fun changeViewToHourlyDuration(durationValue: Int?)
     fun setHourlyDuration(duration: Int?)
     fun setSuggestedAddresses(addressesList: List<GTAddress>)
-    fun markFieldFilled(isToField: Boolean)
     fun setFocus(isToField: Boolean)
     fun changeFocusToDestField()
     fun onAddressError(@StringRes message: Int, address: GTAddress, fieldTo: Boolean)
