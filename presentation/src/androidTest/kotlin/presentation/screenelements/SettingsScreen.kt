@@ -3,6 +3,7 @@ package presentation.screenelements
 import com.agoda.kakao.check.KCheckBox
 import com.agoda.kakao.common.views.KView
 import com.agoda.kakao.screen.Screen
+import com.agoda.kakao.text.KButton
 
 import com.kg.gettransfer.R
 
@@ -18,4 +19,5 @@ object SettingsScreen : Screen<SettingsScreen>() {
         isDescendantOfA { withId(R.id.settingsDistanceUnit) }
         isDisplayed()
     }
+    val tvBtnRequestCode = KButton {withId(R.id.btnRequestCode)}
 }
