@@ -8,6 +8,8 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 
 import com.kg.gettransfer.presentation.adapter.CurrenciesListAdapter
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -49,6 +51,17 @@ open class SelectCurrencyBottomFragment : BaseBottomSheetFragment(), SelectCurre
     override fun currencyChanged(currency: CurrencyModel) {
         listener?.currencyChanged(currency)
     }
+
+    override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
+
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
+
+    override fun setError(e: ApiException) {}
+
+    override fun setError(e: DatabaseException) {}
+
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
+
 
     @CallSuper
     override fun onDestroyView() {
