@@ -13,10 +13,12 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Dest
+import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.RouteInfoHourlyRequest
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.Trip
+import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
@@ -118,12 +120,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private fun initMapAndPrices() {
         with(orderInteractor) {
             if (from == null || to == null && hourlyDuration == null) {
-//                Timber.w("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
-            } else if (hourlyDuration != null) { // not need route info when hourly
-                hourlyDuration?.let { getPricesForHourlyTransfer(it) }
-            } else {
-                getRouteAndPricesForPointToPointTransfer()
-            }
+                return
+            } else hourlyDuration?.let { duration ->
+                if (to == null) getPricesForHourlyTransfer(duration) else getRouteAndPricesForPointToPointTransfer()
+            } ?: getRouteAndPricesForPointToPointTransfer()
         }
     }
 
@@ -144,7 +144,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val from = orderInteractor.from?.cityPoint
         val dateTime = orderInteractor.orderStartTime
         if (from?.point == null) {
-//            Timber.w("NPE! from: $from")
             viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set", false))
             return
         }
@@ -164,6 +163,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             val prices = routeInfo.prices
             hintsToComments = routeInfo.hintsToComments
             setTransportTypePrices(prices)
+            setHourlyPoint()
             viewState.blockInterface(false)
         }
     }
@@ -174,7 +174,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         val to = orderInteractor.to!!.cityPoint
         val dateTime = orderInteractor.orderStartTime
         if (from.point == null || to.point == null) {
-//            Timber.w("NPE! from: $from, to: $to")
             viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set", false))
             return
         }
@@ -219,11 +218,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         isMapInitialized = true
         with(orderInteractor) {
             if (from == null || to == null && hourlyDuration == null) {
-//                Timber.w("routerInteractor init error. from: $from, to: $to, duration: $hourlyDuration")
                 return
-            } else if (hourlyDuration != null) { // not need route info when hourly
+            } else if (hourlyDuration != null && !orderInteractor.dropfOff) {
                 setHourlyPoint()
-                return
             } else {
                 if (routeModel != null) setRoute()
             }
@@ -425,71 +422,82 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun showLicenceAgreement() = router.navigateTo(Screens.LicenceAgree)
 
-    @Suppress("ComplexMethod", "LongMethod")
     fun onGetTransferClick() {
         if (!checkFieldsForRequest()) return
 
-        val toPoint: Dest<CityPoint, Int>? = orderInteractor.hourlyDuration?.let { Dest.Duration(it) }
-                ?: orderInteractor.to?.let { Dest.Point(it.cityPoint) }
-
-        @Suppress("UnsafeCallOnNullableType")
-        val transferNew = toPoint?.let { dest ->
-            orderInteractor.from?.cityPoint?.let { from ->
-                transportTypes?.filter { it.checked }?.map { it.id }?.let { transportTypes ->
-                    TransferNew(
-                            from,
-                            dest,
-                            Trip(dateDelegate.startDate, orderInteractor.flightNumber),
-                            dateDelegate.returnDate?.let { Trip(it, orderInteractor.flightNumberReturn) },
-                            transportTypes,
-                            orderInteractor.passengers + childSeatsDelegate.getTotalSeats(),
-                            childSeatsDelegate.infantSeats.isNonZero(),
-                            childSeatsDelegate.convertibleSeats.isNonZero(),
-                            childSeatsDelegate.boosterSeats.isNonZero(),
-                            orderInteractor.offeredPrice?.times(CENTS)?.toInt(),
-                            orderInteractor.comment,
-                            orderInteractor.nameSign,
-                            accountManager.tempUser,
-                            orderInteractor.promoCode,
-                            false)
-                }
-            }
-        }
-//        Timber.d("new transfer: $transferNew")
+        val transferNew = getTransfer()
 
         transferNew?.let {
             utils.launchSuspend {
                 viewState.blockInterface(true, true)
                 val result = utils.asyncAwait { transferInteractor.createTransfer(transferNew) }
                 if (result.error == null) {
-                    val logResult = utils.asyncAwait { accountManager.putAccount(connectSocket = true) }
-                    logResult.error?.let { error ->
-                        if (error.isNotLoggedIn() || error.isAccountExistError()) {
-                            onAccountExists(result.model.id)
-                        }
-                    } ?: run {
-                        utils.compute { handleSuccess() }
-                        router.replaceScreen(Screens.Offers(result.model.id))
-                    }
+                    putAccount(result)
                 } else {
-                    logCreateTransfer(Analytics.SERVER_ERROR)
-                    result.error?.let { error ->
-                        when {
-                            error.isPhoneTaken() -> router.newRootScreen(
-                                Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, accountManager.tempProfile.phone)
-                            )
-                            error.isEarlyDateError() -> viewState.setError(false, R.string.LNG_DATE_EARLY_ERROR)
-                            error.code == ApiException.NETWORK_ERROR -> viewState.setError(
-                                false,
-                                R.string.LNG_NETWORK_ERROR
-                            )
-                            else -> viewState.setError(error)
-                        }
-                    }
+                    handleErrorCreateTransfer(result)
                 }
                 viewState.blockInterface(false)
             }
         } ?: viewState.setError(false, R.string.LNG_RIDE_CANT_CREATE)
+    }
+
+    private fun handleErrorCreateTransfer(result: Result<Transfer>) {
+        logCreateTransfer(Analytics.SERVER_ERROR)
+        result.error?.let { error ->
+            when {
+                error.isPhoneTaken() -> router.newRootScreen(
+                    Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, accountManager.tempProfile.phone)
+                )
+                error.isEarlyDateError() -> viewState.setError(false, R.string.LNG_DATE_EARLY_ERROR)
+                error.code == ApiException.NETWORK_ERROR -> viewState.setError(
+                    false,
+                    R.string.LNG_NETWORK_ERROR
+                )
+                else -> viewState.setError(error)
+            }
+        }
+    }
+
+    private suspend fun putAccount(result: Result<Transfer>) {
+        val logResult = utils.asyncAwait { accountManager.putAccount(connectSocket = true) }
+        logResult.error?.let { error ->
+            if (error.isNotLoggedIn() || error.isAccountExistError()) {
+                onAccountExists(result.model.id)
+            }
+        } ?: run {
+            utils.compute { handleSuccess() }
+            router.replaceScreen(Screens.Offers(result.model.id))
+        }
+    }
+
+    private fun getTransfer(): TransferNew? {
+        val hourlyDuration = orderInteractor.hourlyDuration
+        val toPoint: Dest<CityPoint, Int>? = orderInteractor.to?.let { to ->
+            hourlyDuration?.let { hourly -> Dest.Duration(hourly, to.cityPoint) } ?: Dest.Point(to.cityPoint)
+        } ?: hourlyDuration?.let { Dest.Duration(it, null) }
+
+        return toPoint?.let { dest ->
+            orderInteractor.from?.cityPoint?.let { from ->
+                transportTypes?.filter { it.checked }?.map { it.id }?.let { transportTypes ->
+                    TransferNew(
+                        from,
+                        dest,
+                        Trip(dateDelegate.startDate, orderInteractor.flightNumber),
+                        dateDelegate.returnDate?.let { Trip(it, orderInteractor.flightNumberReturn) },
+                        transportTypes,
+                        orderInteractor.passengers + childSeatsDelegate.getTotalSeats(),
+                        childSeatsDelegate.infantSeats.isNonZero(),
+                        childSeatsDelegate.convertibleSeats.isNonZero(),
+                        childSeatsDelegate.boosterSeats.isNonZero(),
+                        orderInteractor.offeredPrice?.times(CENTS)?.toInt(),
+                        orderInteractor.comment,
+                        orderInteractor.nameSign,
+                        accountManager.tempUser,
+                        orderInteractor.promoCode,
+                        false)
+                }
+            }
+        }
     }
 
     private fun onAccountExists(transferId: Long) {

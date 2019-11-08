@@ -191,7 +191,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         presenter.mapInitialized()
     }
 
-    // ---------------------------------------------------------------------------
     override fun checkPromoCode() {
         presenter.checkPromoCode()
     }
@@ -280,8 +279,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
     override fun onGetOffersClick() {
         presenter.onGetTransferClick()
     }
-
-    // ------------------------------------------------------------------------------
 
     override fun showHourlyDurationDialog(durationValue: Int?) {
         HourlyDurationDialogFragment

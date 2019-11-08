@@ -134,26 +134,27 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     private suspend fun setTransferType(transfer: Transfer) {
-        if (transfer.to != null) {
-            fetchResult {
-                orderInteractor.getRouteInfo(
-                    @Suppress("UnsafeCallOnNullableType")
-                    RouteInfoRequest(
-                        transfer.from.point!!,
-                        transfer.to!!.point!!,
-                        false,
-                        false,
-                        sessionInteractor.currency.code,
-                        null
-                    )
-                )
-            }.also { result ->
-                result.cacheError?.let { viewState.setError(it) }
-                setRouteTransfer(transfer, result.model)
+        transfer.to?.let { to ->
+            transfer.from.point?.let { fromPoint ->
+                to.point?.let { toPoint ->
+                    fetchResult {
+                        orderInteractor.getRouteInfo(
+                            RouteInfoRequest(
+                                from = fromPoint,
+                                to = toPoint,
+                                withPrices = false,
+                                returnWay = false,
+                                currency = sessionInteractor.currency.code,
+                                dateTime = null
+                            )
+                        )
+                    }.also { result ->
+                        result.cacheError?.let { viewState.setError(it) }
+                        setRouteTransfer(transfer, result.model)
+                    }
+                }
             }
-        } else if (transfer.duration != null) {
-            setHourlyTransfer(transfer)
-        }
+        } ?: transfer.duration?.let { setHourlyTransfer(transfer) }
     }
 
     override fun detachView(view: TransferDetailsView?) {
@@ -225,11 +226,13 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         )
         routeModel?.let { routeModel ->
             polyline = Utils.getPolyline(routeModel)
-            track = polyline!!.track
-            if (polyline!!.isVerticalRoute) {
-                viewState.setMapBottomPadding()
+            polyline?.let { polyline ->
+                track = polyline.track
+                if (polyline.isVerticalRoute) {
+                    viewState.setMapBottomPadding()
+                }
+                viewState.setRoute(polyline, routeModel)
             }
-            viewState.setRoute(polyline!!, routeModel)
         }
     }
 

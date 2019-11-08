@@ -104,7 +104,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
 
     private fun setAddressInSelectedField(address: String?) {
         worker.main.launch {
-            with (address ?: EMPTY_ADDRESS) {
+            with(address ?: EMPTY_ADDRESS) {
                 when (getPreferences().getModel().selectedField) {
                     FIELD_FROM -> viewState.setAddressFrom(this)
                     FIELD_TO   -> viewState.setAddressTo(this)
@@ -154,5 +154,14 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     override fun destroyView(view: NewTransferMainView) {
         geoInteractor.disconnectGoogleApiClient()
         super.destroyView(view)
+    }
+
+    fun switchPointB(checked: Boolean) {
+        orderInteractor.dropfOff = checked
+        viewState.showPointB(checked)
+    }
+
+    fun clearToAddress() {
+        orderInteractor.to = null
     }
 }

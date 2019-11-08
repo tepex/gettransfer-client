@@ -17,6 +17,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.presenter.NewTransferMainPresenter
+import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.ui.BaseFragment
 import com.kg.gettransfer.presentation.ui.ReadMoreFragment
 import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
@@ -64,13 +65,20 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     override fun onResume() {
         super.onResume()
         presenter.updateView()
-        presenter.tripModeSwitched(switcher_hourly.switch_mode_.isChecked)
+        val hourly = switcher_hourly.switch_mode_.isChecked
+        presenter.tripModeSwitched(hourly)
+        if (hourly) {
+            presenter.switchPointB(request_search_panel.switchPointB.isChecked)
+        }
     }
 
     private fun initClickListeners() {
         // Switchers
         switcher_hourly.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
             presenter.tripModeSwitched(isChecked)
+        }
+        request_search_panel.switchPointB.setOnCheckedChangeListener { _, isChecked ->
+            presenter.switchPointB(isChecked)
         }
 
         // Address panel
@@ -186,12 +194,26 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         findNavController().navigate(NewTransferMainFragmentDirections.goToMap())
     }
 
+    override fun showPointB(checked: Boolean) {
+        request_search_panel.switchPointB(checked)
+    }
+
     override fun goToSearchAddress(isClickTo: Boolean) {
         findNavController().navigate(NewTransferMainFragmentDirections.goToSearchAddress(isClickTo))
     }
 
     override fun goToCreateOrder() {
+        clearToAddress()
         findNavController().navigate(NewTransferMainFragmentDirections.goToCreateOrder())
+    }
+
+    private fun clearToAddress() {
+        val hourly = switcher_hourly.switch_mode_.isChecked
+        val needPointB = request_search_panel.switchPointB.isChecked
+        if (hourly && !needPointB) {
+            request_search_panel.setSearchTo(SearchPresenter.EMPTY_ADDRESS)
+            presenter.clearToAddress()
+        }
     }
 
     override fun onDestroy() {
