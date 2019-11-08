@@ -67,8 +67,8 @@ class ConfigsManager : KoinComponent {
         }
     }
 
-    /** Write preferences into DB */
-    suspend fun apply() {}
+    // TODO Write preferences into DB
+    suspend fun apply() { }
 
     private suspend fun myDelay() {
         repeat(MY_DELAY_REPEAT_TIMES) { index ->

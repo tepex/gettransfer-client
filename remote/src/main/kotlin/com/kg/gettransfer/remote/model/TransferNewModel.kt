@@ -62,6 +62,7 @@ class TransferPointToPointNewModel(
 
 class TransferHourlyNewModel(
     from: CityPointModel,
+    to: CityPointModel?,
     tripTo: TripModel,
     transportTypeIds: List<String>,
     pax: Int,
@@ -76,7 +77,7 @@ class TransferHourlyNewModel(
     @SerializedName(TransferNewEntity.DURATION) @Expose val duration: Int
 ) : TransferNewBase(
     from,
-    null,
+    to,
     tripTo,
     transportTypeIds,
     pax,
@@ -102,15 +103,16 @@ fun TripEntity.map() = TripModel(date, time, flight)
 
 fun TransferNewEntity.map(): TransferNewBase {
     return when (val type = dest) {
-        is DestDurationEntity -> this.map(type.duration)
+        is DestDurationEntity -> this.map(type.duration, type.to)
         is DestPointEntity    -> this.map(type.to)
     }
 }
 
 @Suppress("MagicNumber")
-fun TransferNewEntity.map(duration: Int) =
+fun TransferNewEntity.map(duration: Int, to: CityPointEntity?) =
     TransferHourlyNewModel(
         from.map(),
+        to?.map(),
         tripTo.map(),
         transportTypeIds,
         pax,

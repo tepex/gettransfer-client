@@ -18,4 +18,5 @@ interface NewTransferMainView : BaseNewTransferView {
 
     fun switchToMap()
     fun showReadMoreDialog()
+    fun showPointB(checked: Boolean)
 }

@@ -28,6 +28,7 @@ class OrderInteractor(
     var duration: Int?         = null
     var orderStartTime: Date?  = null
     var orderReturnTime: Date? = null
+    var dropfOff: Boolean      = false
 
     var offeredPrice: Double? = null
     var passengers: Int = DEFAULT_PASSENGERS
@@ -58,6 +59,7 @@ class OrderInteractor(
         duration        = null
         orderStartTime  = null
         orderReturnTime = null
+        dropfOff        = false
 
         clearSelectedFields()
     }

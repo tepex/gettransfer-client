@@ -57,16 +57,18 @@ class SearchFormMainView @JvmOverloads constructor(
         ivSelectFieldFrom.setOnClickListener(clickListener)
     }
 
-    fun setIvSelectFieldToClickListener(clickListener: ((View) -> Unit)?) {
-        ivSelectFieldTo.setOnClickListener(clickListener)
-    }
-
     fun hourlyMode(turnOn: Boolean = true) {
         rl_hourly.isGone = !turnOn
         hourly_point.isGone = !turnOn
         tv_b_point.isGone = turnOn
         searchTo.isGone = turnOn
         ivSelectFieldTo.isGone = ivSelectFieldToIsGone || turnOn
+        switchLayout.isGone = !turnOn
+        if (turnOn) switchPointB(switchPointB.isChecked) else searchTo.isGone = turnOn
+    }
+
+    fun switchPointB(checked: Boolean) {
+        searchTo.isGone = !checked
     }
 
     fun setCurrentHoursText(value: String) {

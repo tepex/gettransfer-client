@@ -100,7 +100,7 @@
     <FrameLayout
         android:id="@+id/search_content"
         android:layout_width="match_parent"
-        android:layout_height="115dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/main_without_map_addresses_panel_margin_bottom"
         android:background="@color/colorWhite"
         app:layout_constraintBottom_toTopOf="@+id/btnNextFragment">

@@ -42,11 +42,19 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        setAddress()
+    }
+
+    private fun setAddress() {
         viewState.setAddressFrom(orderInteractor.from?.cityPoint?.name ?: "", true, !isTo)
         if (orderInteractor.hourlyDuration == null) {
             viewState.setAddressTo(orderInteractor.to?.cityPoint?.name ?: "", true, isTo)
         } else {
-            viewState.changeViewToHourlyDuration(orderInteractor.hourlyDuration)
+            if (orderInteractor.dropfOff) {
+                viewState.setAddressTo(orderInteractor.to?.cityPoint?.name ?: "", true, isTo)
+            } else {
+                viewState.changeViewToHourlyDuration(orderInteractor.hourlyDuration)
+            }
         }
     }
 
