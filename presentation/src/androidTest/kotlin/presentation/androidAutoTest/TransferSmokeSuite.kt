@@ -11,6 +11,7 @@ import com.kg.gettransfer.presentation.ui.SplashActivity
 
 import org.junit.Rule
 import org.junit.Test
+import presentation.data.Constants
 
 import presentation.screenelements.*
 
@@ -59,6 +60,7 @@ class TransferSmokeSuite : TestCase() {
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
+                    baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
                 }
             }
@@ -103,7 +105,7 @@ class TransferSmokeSuite : TestCase() {
             }
             step("Locations") {
                 Locations {
-                    tvSearchTo { typeText("Saint-Petersburg") }
+                    tvSearchTo { typeText(Constants.TEXT_PETERSBURG) }
                     Screen.idle(DELAY_SMALL)
                     tvSpdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                 }
@@ -116,6 +118,7 @@ class TransferSmokeSuite : TestCase() {
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
+                    baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
                 }
             }
@@ -172,7 +175,7 @@ class TransferSmokeSuite : TestCase() {
             }
             step("Locations") {
                 Locations {
-                    tvSearchTo { typeText("Saint-Petersburg") }
+                    tvSearchTo { typeText(Constants.TEXT_PETERSBURG) }
                     Screen.idle(DELAY_SMALL)
                     tvSpdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                 }
@@ -185,6 +188,7 @@ class TransferSmokeSuite : TestCase() {
                     val baseFun = BaseFun
                     baseFun.chooseData()
                     getOffers { click() }
+                    baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
                 }
             }

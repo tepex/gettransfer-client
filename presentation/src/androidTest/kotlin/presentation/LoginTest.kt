@@ -9,7 +9,7 @@ import com.kg.gettransfer.presentation.ui.SplashActivity
 import org.junit.Rule
 import org.junit.Test
 
-import presentation.data.Delay
+import presentation.data.Constants
 
 import presentation.screenelements.NavBar
 import presentation.screenelements.Onboarding
@@ -29,8 +29,8 @@ class LoginTest : TestCase() {
         }.run {
             step("Pass onboarding") {
                 Onboarding {
-                    btnNext { flakySafely(timeoutMs = Delay.big) { click() } }
-                    btnNext { flakySafely(timeoutMs = Delay.big) { click() } }
+                    btnNext { flakySafely(timeoutMs = Constants.big) { click() } }
+                    btnNext { flakySafely(timeoutMs = Constants.big) { click() } }
                 }
             }
             step("Click settings menu") {
