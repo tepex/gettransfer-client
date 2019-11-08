@@ -11,6 +11,7 @@ import com.kg.gettransfer.presentation.ui.SplashActivity
 
 import org.junit.Rule
 import org.junit.Test
+import presentation.data.Constants
 
 import presentation.screenelements.*
 
@@ -179,7 +180,7 @@ class RegressSuite : TestCase() {
             }
             step("SendMessage") {
                 Chat {
-                    btnMessage { typeText("Test-Test") }
+                    btnMessage { typeText(Constants.TEXT_TEST) }
                     btnSend { click() }
                 }
             }
@@ -208,8 +209,8 @@ class RegressSuite : TestCase() {
             }
             step("Verification") {
                 ProfileScreen {
-                    email { typeText("79007777777") }
-                    tvPwd { typeText("12345") }
+                    email { typeText(Constants.TEXT_PHONE_IVAN) }
+                    tvPwd { typeText(Constants.TEXT_PWD_IVAN) }
                     loginBtn { click() }
                 }
             }
@@ -247,9 +248,9 @@ class RegressSuite : TestCase() {
             step("Verification") {
                 ProfileScreen {
                     loginPager { swipeLeft() }
-                    tvName { typeText("Ricardo") }
-                    tvPhone { typeText("79116789567") }
-                    tvEmailTo { typeText("i.marchenkov+42@gettransfer.com") }
+                    tvName { typeText(Constants.TEXT_RECARDO) }
+                    tvPhone { typeText(Constants.TEXT_NUMBER_IVAN) }
+                    tvEmailTo { typeText(Constants.TEXT_EMAIL_IVAN) }
                     closeSoftKeyboard()
                     btnSwitch { click() }
                     btnSignUp {
@@ -298,7 +299,7 @@ class RegressSuite : TestCase() {
             }
             step("Locations") {
                 Locations {
-                    tvSearchTo { typeText("Saint-Petersburg") }
+                    tvSearchTo { typeText(Constants.TEXT_PETERSBURG) }
                     Screen.idle(DELAY_SMALL)
                     tvSpdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
                 }

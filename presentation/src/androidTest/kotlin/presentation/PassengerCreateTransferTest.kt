@@ -11,7 +11,7 @@ import com.kg.gettransfer.presentation.ui.SplashActivity
 import org.junit.Rule
 import org.junit.Test
 
-import presentation.data.Delay
+import presentation.data.Constants
 
 import presentation.screenelements.Calendar
 import presentation.screenelements.DialogWindow
@@ -85,14 +85,14 @@ class PassengerCreateTransferTest : TestCase() {
                 addressFrom {
                     typeText("Moscow")
                 }
-                Thread.sleep(Delay.small)
+                Thread.sleep(Constants.small)
                 mskAddressItem {
                     click()
                 }
                 addressTo {
                     typeText("Saint Petersburg")
                 }
-                Thread.sleep(Delay.small)
+                Thread.sleep(Constants.small)
                 spbAddressItem {
                     click()
                 }
@@ -102,12 +102,12 @@ class PassengerCreateTransferTest : TestCase() {
                 content {
                     swipeUp()
                 }
-                Thread.sleep(Delay.small)
+                Thread.sleep(Constants.small)
                 plusPassenger {
                     click()
                 }
             }
-            Screen.idle(Delay.medium)
+            Screen.idle(Constants.medium)
             Calendar {
                 transferDate {
                     click()

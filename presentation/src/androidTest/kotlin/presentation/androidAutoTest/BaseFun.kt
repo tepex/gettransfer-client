@@ -25,6 +25,7 @@ import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
+import presentation.data.Constants
 
 @Suppress("MagicNumber")
 object BaseFun {
@@ -37,16 +38,16 @@ object BaseFun {
     }
 
     fun goSwitchAgreement() {
-        if (onView(allOf(withId(android.R.id.button1), withText("OK"))).isDisplayed()) {
-            onView(allOf(withId(android.R.id.button1), withText("OK"))).perform(click())
+        if (onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).isDisplayed()) {
+            onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).perform(click())
             onView(withId(R.id.switchAgreement)).perform(click())
             onView(withId(R.id.btnGetOffers)).perform(click())
         }
     }
 
     fun goTransferType() {
-        if (onView(allOf(withId(android.R.id.button1), withText("OK"))).isDisplayed()) {
-            onView(allOf(withId(android.R.id.button1), withText("OK"))).perform(click())
+        if (onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).isDisplayed()) {
+            onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).perform(click())
             onView(withId(R.id.rvTransferType)).perform(click())
             onView(withId(R.id.btnGetOffers)).perform(click())
         }
@@ -64,16 +65,16 @@ object BaseFun {
         onView(withId(R.id.titleText)).perform(click())
         if (onView(allOf(withId(R.id.btnLogin))).isDisplayed()) {
             onView(allOf(withId(R.id.fieldText), isDisplayed()))
-                .perform(replaceText("i.marchenkov+42@gettransfer.com"), closeSoftKeyboard())
+                .perform(replaceText(Constants.TEXT_EMAIL_IVAN), closeSoftKeyboard())
 
             onView(withId(R.id.etPassword)).perform(click())
-            onView(allOf(withId(R.id.etPassword), isDisplayed())).perform(replaceText("3000000"), closeSoftKeyboard())
+            onView(allOf(withId(R.id.etPassword), isDisplayed())).perform(replaceText(Constants.TEXT_RANDOM_NUMBER), closeSoftKeyboard())
 
             onView(withId(R.id.btnLogin)).perform(click())
             goTransferLater()
             onView(withId(R.id.nav_order)).perform(click())
         } else {
-            onView(allOf(withContentDescription("Перейти вверх"))).perform(click())
+            onView(allOf(withContentDescription(Constants.TEXT_GO_UP))).perform(click())
             onView(withId(R.id.nav_order)).perform(click())
         }
     }
@@ -91,12 +92,12 @@ object BaseFun {
     fun chooseData() {
         onView(withId(R.id.transfer_date_time_field)).perform(click())
         onView(withClassName(equalTo(DatePicker::class.java.name))).perform(PickerActions.setDate(2020, 10, 9))
-        onView(allOf(withId(android.R.id.button1), withText("ОК"))).perform(click())
-        onView(allOf(withId(android.R.id.button1), withText("ОК"))).perform(click())
+        onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).perform(click())
+        onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).perform(click())
     }
 
     fun okCancel() {
-        onView(allOf(withId(android.R.id.button1), withText("YES"))).perform(click())
+        onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_YES))).perform(click())
     }
 
     fun checkTips() {

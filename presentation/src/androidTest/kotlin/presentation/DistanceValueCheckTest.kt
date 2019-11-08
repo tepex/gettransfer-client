@@ -12,7 +12,7 @@ import com.kg.gettransfer.presentation.ui.SplashActivity
 import org.junit.Rule
 import org.junit.Test
 
-import presentation.data.Delay
+import presentation.data.Constants
 
 import presentation.screenelements.NavBar
 import presentation.screenelements.Onboarding
@@ -26,7 +26,7 @@ import presentation.screenelements.TripsScreen
 class DistanceValueCheckTest : TestCase(
     Kaspresso.Builder.default().apply {
     flakySafetyParams = flakySafetyParams.apply {
-        timeoutMs = Delay.big
+        timeoutMs = Constants.big
     }
 }) {
     @Rule
@@ -80,7 +80,7 @@ class DistanceValueCheckTest : TestCase(
                     }
                 }
             }
-            Screen.idle(Delay.small)
+            Screen.idle(Constants.small)
             step("Choose KM") {
                 SettingsScreen {
                     tvDistanceSwitcher {
@@ -121,19 +121,19 @@ class DistanceValueCheckTest : TestCase(
             }
             SearchForm {
                 addressFrom { typeText("Moscow") }
-                Screen.idle(Delay.small)
+                Screen.idle(Constants.small)
                 mskAddressItem {
                     isVisible()
                     click()
                 }
                 addressTo { typeText("Saint Petersburg") }
-                Screen.idle(Delay.small)
+                Screen.idle(Constants.small)
                 spbAddressItem {
                     isVisible()
                     click()
                 }
             }
-            Screen.idle(Delay.small)
+            Screen.idle(Constants.small)
             OrdersDetails {
                 btnBack { click() }
             }
@@ -183,18 +183,18 @@ class DistanceValueCheckTest : TestCase(
                 addressFrom {
                     clearText()
                     typeText("Moscow") }
-                Screen.idle(Delay.small)
+                Screen.idle(Constants.small)
                 mskAddressItem {
                     isVisible()
                     click()
                 }
                 closeSoftKeyboard()
-                Screen.idle(Delay.small)
+                Screen.idle(Constants.small)
                 addressTo {
                     clearText()
                     typeText("Saint Petersburg")
                 }
-                Screen.idle(Delay.small)
+                Screen.idle(Constants.small)
                 spbAddressItem {
                     isVisible()
                     click()
