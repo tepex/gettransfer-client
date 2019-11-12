@@ -44,7 +44,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
 
     private fun fillViewFromState() {
         worker.main.launch {
-            selectedField = getPreferences().getModel().selectedField
+            selectedField = withContext(worker.bg) { getPreferences().getModel() }.selectedField
             viewState.initUIForSelectedField(selectedField)
             initAddressFieldAndMarker(selectedField)
             if (fillAddressFieldsCheckIsEmpty()) {

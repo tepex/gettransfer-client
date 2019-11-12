@@ -6,6 +6,7 @@ import com.kg.gettransfer.domain.model.TransportType
 data class Preferences(
     val accessToken: String,
     val endpoint: Endpoint?,
+    val ipApiKey: String?,
     val isFirstLaunch: Boolean,
     val isOnboardingShowed: Boolean,
     val isNewDriverAppDialogShowed: Boolean,

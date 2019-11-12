@@ -10,7 +10,6 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SplashView
 
 import com.kg.gettransfer.core.presentation.WorkerManager
-import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.sys.domain.IsNeedUpdateAppInteractor
 import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
 import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
@@ -36,7 +35,6 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     private val configsManager: ConfigsManager by inject()
     private val isNeedUpdateApp: IsNeedUpdateAppInteractor by inject()
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
-    private val getPreferences: GetPreferencesInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
 
     fun onLaunchContinue() {
@@ -57,7 +55,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
 
     fun startApp() = worker.main.launch {
         viewState.dispatchAppState(sessionInteractor.locale)
-        val isOnboardingShowed = getPreferences().getModel().isOnboardingShowed
+        val isOnboardingShowed = configsManager.getPreferences().isOnboardingShowed
         if (!isOnboardingShowed) {
             router.replaceScreen(Screens.About(false))
             withContext(worker.bg) { setOnboardingShowed(true) }

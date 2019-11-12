@@ -17,7 +17,6 @@ import com.kg.gettransfer.presentation.view.MainNavigateView
 
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
-import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -32,7 +31,6 @@ import org.koin.core.parameter.parametersOf
 @Suppress("TooManyFunctions")
 class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventListener {
 
-    private val configsManager: ConfigsManager by inject()
     private val worker: WorkerManager by inject { parametersOf("MainNavigatePresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
@@ -50,7 +48,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
             worker.main.launch {
                 if (accountManager.isLoggedIn &&
                         accountManager.remoteAccount.isCarrier &&
-                        !getPreferences().getModel().isNewDriverAppDialogShowed) {
+                        !configsManager.getPreferences().isNewDriverAppDialogShowed) {
                     analytics.logEvent(Analytics.EVENT_NEW_CARRIER_APP_DIALOG, Analytics.OPEN_SCREEN, null)
                     viewState.showNewDriverAppDialog()
                     withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(true) }
@@ -149,7 +147,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
             false
         } else {
             val transfer = transferResult.model
-            val transferModel = transfer.map(configsManager.configs.transportTypes.map { it.map() })
+            val transferModel = transfer.map(configsManager.getConfigs().transportTypes.map { it.map() })
             transferModel.status.checkOffers
         }
     }

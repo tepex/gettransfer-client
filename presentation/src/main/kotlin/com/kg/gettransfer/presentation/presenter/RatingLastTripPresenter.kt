@@ -57,7 +57,7 @@ class RatingLastTripPresenter : BaseMapDialogPresenter<RatingLastTripView>() {
                 withContext(worker.bg) { reviewInteractor.sendRates() }
                 viewState.cancelReview()
 
-                val showStoreDialog = getPreferences().getModel().appEnters != Preferences.IMMUTABLE
+                val showStoreDialog = configsManager.getPreferences().appEnters != Preferences.IMMUTABLE
                 if (showStoreDialog) {
                     reviewInteractor.shouldAskRateInMarket = true
                     logAppReviewRequest()

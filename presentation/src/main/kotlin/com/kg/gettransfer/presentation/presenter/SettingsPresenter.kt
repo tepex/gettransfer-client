@@ -25,7 +25,6 @@ import com.kg.gettransfer.sys.domain.SetEndpointInteractor
 import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
 import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
 import com.kg.gettransfer.sys.presentation.EndpointModel
 import com.kg.gettransfer.sys.presentation.map
 
@@ -51,7 +50,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     private var startMillis = 0L
 
     private val worker: WorkerManager by inject { parametersOf("SettingsPresenter") }
-    private val configsManager: ConfigsManager by inject()
 
     private val setDebugMenuShowed: SetDebugMenuShowedInteractor by inject()
     private val setEndpoint: SetEndpointInteractor by inject()
@@ -111,7 +109,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.setCurrency(sessionInteractor.currency.map().name)
         val locale = sessionInteractor.locale
         val localeModel = withContext(worker.bg) {
-            configsManager.configs.availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
+            configsManager.getConfigs().availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
                 .map { it.map() }
                 .find { it.delegate.language == locale.language }
         }
@@ -150,14 +148,14 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     }
 
     private fun initDebugMenu() = worker.main.launch {
-        if (BuildConfig.FLAVOR == "dev" || getPreferences().getModel().isDebugMenuShowed) {
+        if (BuildConfig.FLAVOR == "dev" || configsManager.getPreferences().isDebugMenuShowed) {
             showDebugMenu()
         }
     }
 
     private fun showDebugMenu() = worker.main.launch {
         viewState.setEndpoints(endpoints)
-        getPreferences().getModel().endpoint?.let { viewState.setEndpoint(it.map()) }
+        configsManager.getPreferences().endpoint?.let { viewState.setEndpoint(it.map()) }
         viewState.showDebugMenu()
     }
 
@@ -200,7 +198,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     private fun switchDebugSettings() {
         if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
             worker.main.launch {
-                if (getPreferences().getModel().isDebugMenuShowed) {
+                if (configsManager.getPreferences().isDebugMenuShowed) {
                     withContext(worker.bg) { setDebugMenuShowed(false) }
                     viewState.hideDebugMenu()
                 } else {
@@ -217,7 +215,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.blockInterface(true)
         withContext(worker.bg) {
             endpoint.delegate.run {
-                initEndpoint(this)
                 setEndpoint(this)
             }
             accountManager.logout()

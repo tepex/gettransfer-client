@@ -1,6 +1,7 @@
 package com.kg.gettransfer.data.repository
 
 import com.kg.gettransfer.data.OfferDataStore
+import com.kg.gettransfer.data.PreferencesCache
 
 import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.OfferDataStoreCache
@@ -36,6 +37,7 @@ class OfferRepositoryImpl(
 
     private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
     private val offerReceiver: OfferInteractor by inject()
+    private val preferencesCache: PreferencesCache by inject()
 
     override fun newOffer(offer: Offer): Result<Offer> {
         log.debug("OfferRepository.newOffer: $offer")
@@ -52,7 +54,7 @@ class OfferRepositoryImpl(
             result.entity?.let {
                 checkCachedReview(it)
             }?.map {
-                it.map(dateFormat.get())
+                it.map(dateFormat.get(), preferencesCache.endpointUrl)
             } ?: emptyList(),
             result.error?.map(),
             result.error != null && result.entity != null
@@ -67,7 +69,7 @@ class OfferRepositoryImpl(
             result.entity?.let {
                 checkCachedReview(it)
             }?.map {
-                it.map(dateFormat.get())
+                it.map(dateFormat.get(), preferencesCache.endpointUrl)
             } ?: emptyList(),
             null,
             result.error != null && result.entity != null,
@@ -118,5 +120,5 @@ class OfferRepositoryImpl(
 
     override fun clearOffersCache() { factory.retrieveCacheDataStore().clearOffersCache() }
 
-    internal fun onNewOfferEvent(offer: OfferEntity) = offerReceiver.onNewOfferEvent(offer.map(dateFormat.get()))
+    internal fun onNewOfferEvent(offer: OfferEntity) = offerReceiver.onNewOfferEvent(offer.map(dateFormat.get(), preferencesCache.endpointUrl))
 }

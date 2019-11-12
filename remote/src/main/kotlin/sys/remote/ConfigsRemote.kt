@@ -16,8 +16,9 @@ class ConfigsRemote : ConfigsRemoteDataSource, KoinComponent {
 
     private val apiWrapper: SystemApiWrapper by inject()
 
-    override suspend fun getResult(): ResultData<ConfigsEntity> =
-        runCatching<ResponseModel<ConfigsModel>> { apiWrapper.api.getConfigs() }.fold(
+    override suspend fun getResult(): ResultData<ConfigsEntity> {
+        apiWrapper.checkApiInitialization()
+        return runCatching<ResponseModel<ConfigsModel>> { apiWrapper.api.getConfigs() }.fold(
             { responseModel ->
                 if (responseModel.data != null) {
                     /* ConfigsModel => ResultData<ConfigsEntity> */
@@ -28,6 +29,7 @@ class ConfigsRemote : ConfigsRemoteDataSource, KoinComponent {
             },
             ::onFailure
         )
+    }
 
     private fun onFailure(exception: Throwable) = processError(apiWrapper.gson, exception)
 }

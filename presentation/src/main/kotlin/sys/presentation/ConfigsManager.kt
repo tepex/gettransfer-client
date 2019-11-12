@@ -1,15 +1,16 @@
 package com.kg.gettransfer.sys.presentation
 
 import com.kg.gettransfer.core.domain.Result
+import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.di.ENDPOINTS
 import com.kg.gettransfer.di.IP_API_KEY
 
 import com.kg.gettransfer.sys.domain.*
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -20,12 +21,7 @@ import org.slf4j.Logger
 
 class ConfigsManager : KoinComponent {
 
-    lateinit var configs: Configs
-        private set
-    lateinit var mobile: MobileConfigs
-        private set
-    var configsInitialized = false
-    private lateinit var preferences: Preferences
+    private val worker: WorkerManager by inject { parametersOf("ConfigsManager") }
 
     private val endpoints: List<Endpoint> by inject(named(ENDPOINTS))
     private val defaultEndpoint: Endpoint by inject()
@@ -33,37 +29,36 @@ class ConfigsManager : KoinComponent {
 
     private val log: Logger by inject { parametersOf("ConfigsManager") }
 
-    private val getPreferences: GetPreferencesInteractor by inject()
-    private val getConfigs: GetConfigsInteractor by inject()
-    private val getMobileConfigs: GetMobileConfigsInteractor by inject()
+    private val getPreferencesInteractor: GetPreferencesInteractor by inject()
+    private val getConfigsInteractor: GetConfigsInteractor by inject()
+    private val getMobileConfigsInteractor: GetMobileConfigsInteractor by inject()
     private val setEndpoint: SetEndpointInteractor by inject()
     private val setIpApiKey: SetIpApiKeyInteractor by inject()
+
+    suspend fun getConfigs() = withContext(worker.bg) { getConfigsInteractor().getModel() }
+
+    suspend fun getMobileConfigs() = withContext(worker.bg) { getMobileConfigsInteractor().getModel() }
+
+    suspend fun getPreferences() = withContext(worker.bg) { getPreferencesInteractor().getModel() }
 
     /** Get configs and mobileConfigs concurrently. */
     suspend fun coldStart(backgroundScope: CoroutineScope): Result.Failure<Any>? {
         /* We should await for preferences, cause we need to know endpoint to call network
            getMobileConfigs and getConfigs */
-        preferences = backgroundScope.async { getPreferences() }.await().getModel()
+        val preferences = getPreferences()
         val endpoint = endpoints.find { it == preferences.endpoint } ?: defaultEndpoint
-        if (preferences.endpoint == null) {
-            preferences = preferences.copy(endpoint = defaultEndpoint)
-        }
+
         backgroundScope.async { setEndpoint(endpoint) }.await()
         backgroundScope.async { setIpApiKey(ipApiKey) }.await()
 
-        val mobileDeferred  = backgroundScope.async { getMobileConfigs() }
-        val configsDeferred = backgroundScope.async { getConfigs() }
-
-        val mobileResult = mobileDeferred.await().apply { mobile = getModel() }
-        val configsResult = configsDeferred.await().apply { configs = getModel() }
+        val mobileResult  = backgroundScope.async { getMobileConfigsInteractor() }.await()
+        val configsResult = backgroundScope.async { getConfigsInteractor() }.await()
 
         /* Return null on success or Result.Failure */
         return when {
             mobileResult  is Result.Failure -> mobileResult
             configsResult is Result.Failure -> configsResult
             else                            -> null
-        }.also { result ->
-            configsInitialized = result == null
         }
     }
 

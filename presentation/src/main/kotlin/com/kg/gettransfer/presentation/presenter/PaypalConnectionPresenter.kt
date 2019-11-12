@@ -54,7 +54,7 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
         viewState.stopAnimation()
     }
 
-    private fun showFailedPayment() {
+    private suspend fun showFailedPayment() {
         analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         router.exit()
         router.navigateTo(Screens.PaymentError(transferId))
