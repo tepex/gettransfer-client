@@ -42,7 +42,7 @@ class OrderInteractor(
 
     var noPointPlaces: List<GTAddress> = emptyList()
 
-    fun clearSelectedFields() {
+    private fun clearSelectedFields() {
         offeredPrice = null
         passengers = DEFAULT_PASSENGERS
         promoCode = ""
