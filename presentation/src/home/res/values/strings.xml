@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">GetTransfer (home)</string>
-
-    <string name="file_provider_authority">com.kg.gettransfer.fileprovider</string>
-</resources>
