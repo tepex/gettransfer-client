@@ -76,11 +76,12 @@ class RequestsCategoryPresenter(
 
     fun getTransfers() {
         worker.main.launch {
-            transfers = when (transferType) {
-                TRANSFER_ACTIVE  -> withContext(worker.bg) { transferInteractor.getTransfersActive()  }.model
-                TRANSFER_ARCHIVE -> withContext(worker.bg) { transferInteractor.getTransfersArchive() }.model
+            val transfersResult = when (transferType) {
+                TRANSFER_ACTIVE  -> withContext(worker.bg) { transferInteractor.getTransfersActive()  }
+                TRANSFER_ARCHIVE -> withContext(worker.bg) { transferInteractor.getTransfersArchive() }
                 else             -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
-            }.sortedByDescending { it.dateToLocal }
+            }
+            transfers = transfersResult.model.sortedByDescending { it.dateToLocal }
             if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
                 coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
                 if (driverCoordinate == null) {
@@ -90,36 +91,34 @@ class RequestsCategoryPresenter(
                     driverCoordinate!!.transfersIds = transfers!!.map { it.id }
                 }
             }
-            prepareDataAsync()
+            prepareDataAsync(!transfersResult.isError())
         }
     }
 
-    private suspend fun prepareDataAsync() {
-        worker.main.launch {
-            transfers?.let { trs ->
-                if (trs.isNotEmpty()) {
-                    withContext(worker.bg) {
-                        val transportTypes = configsManager.getConfigs().transportTypes.map { it.map() }
-                        transfers?.map { it.map(transportTypes) }?.map { transferModel ->
-                            if (transferModel.status == Transfer.Status.PERFORMED && isShowOfferInfo(transferModel)) {
-                                val offer = offerInteractor.getOffers(transferModel.id).model.let { list ->
-                                    if (list.size == 1) list.first() else null
-                                }
-                                transferModel.copy(matchedOffer = offer)
-                            } else {
-                                transferModel
+    private suspend fun prepareDataAsync(isRemoteData: Boolean) {
+        transfers?.let { trs ->
+            if (trs.isNotEmpty()) {
+                withContext(worker.bg) {
+                    val transportTypes = configsManager.getConfigs().transportTypes.map { it.map() }
+                    transfers?.map { it.map(transportTypes) }?.map { transferModel ->
+                        if (transferModel.status == Transfer.Status.PERFORMED && isShowOfferInfo(transferModel)) {
+                            val offer = offerInteractor.getOffers(transferModel.id).model.let { list ->
+                                if (list.size == 1) list.first() else null
                             }
+                            transferModel.copy(matchedOffer = offer)
+                        } else {
+                            transferModel
                         }
-                    }?.also { viewList ->
-                        viewState.updateTransfers(viewList)
-                        viewState.blockInterface(false)
-                        updateEventsCount()
                     }
-                    sendAnalytics()
-                } else {
+                }?.also { viewList ->
+                    viewState.updateTransfers(viewList)
                     viewState.blockInterface(false)
-                    viewState.onEmptyList()
+                    updateEventsCount()
                 }
+                if (isRemoteData && transferType == TRANSFER_ACTIVE) sendAnalytics()
+            } else {
+                viewState.blockInterface(false)
+                viewState.onEmptyList()
             }
         }
     }
@@ -144,9 +143,7 @@ class RequestsCategoryPresenter(
     }
 
     private suspend fun sendAnalytics() {
-        when (transferType) {
-            TRANSFER_ACTIVE -> transfers?.let { analytics.EcommercePurchase().sendAnalytics(it) }
-        }
+        transfers?.let { analytics.EcommercePurchase().sendAnalytics(it) }
     }
 
     private fun updateEventsCount() {
