@@ -43,14 +43,12 @@ import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.sys.domain.SetFavoriteTransportsInteractor
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.NewTransferState
 
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
