@@ -29,7 +29,7 @@ class ConfigsManager : KoinComponent {
 
     private val log: Logger by inject { parametersOf("ConfigsManager") }
 
-    private val getPreferencesInteractor: GetPreferencesInteractor by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
     private val getConfigsInteractor: GetConfigsInteractor by inject()
     private val getMobileConfigsInteractor: GetMobileConfigsInteractor by inject()
     private val setEndpoint: SetEndpointInteractor by inject()
@@ -39,13 +39,11 @@ class ConfigsManager : KoinComponent {
 
     suspend fun getMobileConfigs() = withContext(worker.bg) { getMobileConfigsInteractor().getModel() }
 
-    suspend fun getPreferences() = withContext(worker.bg) { getPreferencesInteractor().getModel() }
-
     /** Get configs and mobileConfigs concurrently. */
     suspend fun coldStart(backgroundScope: CoroutineScope): Result.Failure<Any>? {
         /* We should await for preferences, cause we need to know endpoint to call network
            getMobileConfigs and getConfigs */
-        val preferences = getPreferences()
+        val preferences = backgroundScope.async { getPreferences() }.await().getModel()
         val endpoint = endpoints.find { it == preferences.endpoint } ?: defaultEndpoint
 
         backgroundScope.async { setEndpoint(endpoint) }.await()

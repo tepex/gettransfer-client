@@ -40,6 +40,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import com.kg.gettransfer.sys.domain.SetFavoriteTransportsInteractor
 
@@ -66,6 +67,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private val nState: NewTransferState by inject()
     private val setFavoriteTransports: SetFavoriteTransportsInteractor by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
 
     private var currencies: List<CurrencyModel>? = null
     private var duration: Int? = null
@@ -544,8 +546,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setFavoriteTransportTypes() = worker.main.launch {
-        if (configsManager.getPreferences().favoriteTransports.isNotEmpty()) {
-            selectTransportTypes(configsManager.getPreferences().favoriteTransports)
+        val favoriteTransports = withContext(worker.bg) { getPreferences().getModel() }.favoriteTransports
+        if (favoriteTransports.isNotEmpty()) {
+            selectTransportTypes(favoriteTransports)
             setPassengersCountForSelectedTransportTypes()
         }
     }

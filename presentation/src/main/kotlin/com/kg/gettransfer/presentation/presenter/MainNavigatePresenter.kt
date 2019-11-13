@@ -14,6 +14,7 @@ import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.MainNavigateView
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
@@ -34,6 +35,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     private val worker: WorkerManager by inject { parametersOf("MainNavigatePresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
 
     private var isAppLaunched = false
 
@@ -46,9 +48,10 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     override fun systemInitialized() {
         if (accountManager.hasAccount) {
             worker.main.launch {
+                val isNewDriverAppDialogShowed = withContext(worker.bg) { getPreferences().getModel() }.isNewDriverAppDialogShowed
                 if (accountManager.isLoggedIn &&
                         accountManager.remoteAccount.isCarrier &&
-                        !configsManager.getPreferences().isNewDriverAppDialogShowed) {
+                        !isNewDriverAppDialogShowed) {
                     analytics.logEvent(Analytics.EVENT_NEW_CARRIER_APP_DIALOG, Analytics.OPEN_SCREEN, null)
                     viewState.showNewDriverAppDialog()
                     withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(true) }

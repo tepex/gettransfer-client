@@ -47,6 +47,7 @@ import com.kg.gettransfer.presentation.ui.icons.transport.CarIconResourceProvide
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.TransferDetailsView
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import com.kg.gettransfer.sys.domain.Preferences
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
@@ -63,6 +64,7 @@ import org.koin.core.parameter.parametersOf
 @Suppress("TooManyFunctions")
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener {
     private val coordinateInteractor: CoordinateInteractor by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
     private val worker: WorkerManager by inject { parametersOf("TransferDetailsPresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
 
@@ -286,7 +288,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                         Analytics.REVIEW,
                         ReviewInteractor.MAX_RATE.toFloat()
                     )
-                    if (configsManager.getPreferences().appEnters != Preferences.IMMUTABLE) {
+                    val appEnters = withContext(worker.bg) { getPreferences().getModel() }.appEnters
+                    if (appEnters != Preferences.IMMUTABLE) {
                         viewState.askRateInPlayMarket()
                         analytics.logSingleEvent(Analytics.EVENT_APP_REVIEW_REQUESTED)
                     }
