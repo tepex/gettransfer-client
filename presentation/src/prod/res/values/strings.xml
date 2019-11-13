@@ -5,4 +5,9 @@
 	<string name="file_provider_authority">com.gettransfer.fileprovider</string>
 
 	<string name="hockeyAppId">62939f09f9e0489c8ada1c25d2f30d9d</string>
+
+	<string name="appmetrica_api_key" translatable="false">92343e03-0fb3-4acd-96c4-37e6559cca84</string>
+	<string name="facebook_app_id" translatable="false">1936584423312748</string>
+	<string name="appsflyer_api_key" translatable="false">hJyRc3M35GUMZELe3hzds4</string>
+	<string name="sender_id" translatable="false">200820403845</string>
 </resources>

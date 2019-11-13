@@ -3,4 +3,9 @@
     <string name="app_name">GetTransfer (home)</string>
 
     <string name="file_provider_authority">com.kg.gettransfer.fileprovider</string>
+
+    <string name="appmetrica_api_key" translatable="false">4de7177a-de34-42ae-9c2e-8bad5c7955eb</string>
+    <string name="facebook_app_id" translatable="false">466831170587153</string>
+    <string name="appsflyer_api_key" translatable="false">hJyRc3M35GUMZELe3hzds4</string>
+    <string name="sender_id" translatable="false">341635256675</string>
 </resources>
