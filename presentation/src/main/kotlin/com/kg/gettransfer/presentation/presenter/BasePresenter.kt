@@ -152,7 +152,10 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
     }
 
-    protected fun clearChosenTransportTypes() = saveChosenTransportTypes(emptySet())
+    protected fun clearChosenTransportTypes() {
+        orderInteractor.clear()
+        saveChosenTransportTypes(emptySet())
+    }
 
     suspend fun saveGeneralSettings() {
         viewState.blockInterface(true)
