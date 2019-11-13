@@ -11,8 +11,8 @@ import com.kg.gettransfer.presentation.ui.SplashActivity
 
 import org.junit.Rule
 import org.junit.Test
-import presentation.data.Constants
 
+import presentation.data.Constants
 import presentation.screenelements.*
 
 class TransferSmokeSuite : TestCase() {
