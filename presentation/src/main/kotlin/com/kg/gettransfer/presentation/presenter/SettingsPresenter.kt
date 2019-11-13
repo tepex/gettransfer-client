@@ -199,7 +199,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     }
 
     private fun switchDebugSettings() {
-        if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
+        if (BuildConfig.FLAVOR == "prod") {
             worker.main.launch {
                 if (getPreferences().getModel().isDebugMenuShowed) {
                     withContext(worker.bg) { setDebugMenuShowed(false) }
