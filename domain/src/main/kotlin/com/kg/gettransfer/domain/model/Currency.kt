@@ -14,7 +14,7 @@ data class Currency(
     }
 
     companion object {
-        val DEFAULT = Currency("USD", "\$")
+        val DEFAULT = Currency("USD", "US\$")
         val POPULAR = arrayOf(DEFAULT.code, "EUR", "GBP", "RUB")
         val DEFAULT_LIST = listOf<Currency>(
             Currency("RUB", "\u20BD"),
