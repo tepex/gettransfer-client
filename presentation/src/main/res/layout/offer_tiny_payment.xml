@@ -41,29 +41,15 @@
             app:srcCompat="@drawable/ic_circle_car_color_indicator" />
 
         <ImageView
-            android:id="@+id/imgWithNameSign"
-            android:layout_width="@dimen/payment_offer_tiny_name_sign_icons_size"
-            android:layout_height="@dimen/payment_offer_tiny_name_sign_icons_size"
-            android:layout_marginStart="@dimen/vehicle_items_margin_start"
+            android:id="@+id/imgNameSign"
+            android:layout_width="@dimen/payment_offer_tiny_name_sign_icon_size"
+            android:layout_height="@dimen/payment_offer_tiny_name_sign_icon_size"
+            android:layout_marginStart="@dimen/payment_offer_tiny_name_sign_icon_margin_start"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/tvClass"
-            app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintStart_toEndOf="@+id/view_capacity"
             app:layout_constraintTop_toTopOf="@+id/tvClass"
             app:srcCompat="@drawable/ic_with_name_sign"
-            tools:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/imgMissingNameSign"
-            android:layout_width="@dimen/payment_offer_tiny_name_sign_icons_size"
-            android:layout_height="@dimen/payment_offer_tiny_name_sign_icons_size"
-            android:layout_marginStart="@dimen/vehicle_items_margin_start"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/tvClass"
-            app:layout_constraintDimensionRatio="H,1:1"
-            app:layout_constraintStart_toEndOf="@+id/imgWithNameSign"
-            app:layout_constraintTop_toTopOf="@+id/tvClass"
-            app:srcCompat="@drawable/ic_missing_name_sign"
             tools:visibility="visible" />
 
         <LinearLayout

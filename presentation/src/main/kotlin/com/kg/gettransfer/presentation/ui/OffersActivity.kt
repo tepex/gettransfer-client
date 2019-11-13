@@ -155,9 +155,9 @@ class OffersActivity : BaseActivity(), OffersView {
         rvOffers.adapter = offersAdapter
     }
 
-    override fun setOffers(offers: List<OfferItemModel>) {
+    override fun setOffers(offers: List<OfferItemModel>, isNameSignPresent: Boolean) {
         hideSheetOfferDetails()
-        setupAdapter(offers)
+        setupAdapter(offers, isNameSignPresent)
         setupPriceOrDriversInfo(offers)
     }
 
@@ -174,8 +174,8 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
-    private fun setupAdapter(offers: List<OfferItemModel>) {
-        offersAdapter.update(offers)
+    private fun setupAdapter(offers: List<OfferItemModel>, isNameSignPresent: Boolean) {
+        offersAdapter.update(offers, isNameSignPresent)
     }
 
     override fun setBannersVisible(hasOffers: Boolean) {
@@ -213,7 +213,7 @@ class OffersActivity : BaseActivity(), OffersView {
         sortOrder.rotation = if (!sortHigherToLower) SEMI_ROUND else 0f
     }
 
-    override fun showBottomSheetOfferDetails(offer: OfferItemModel) {
+    override fun showBottomSheetOfferDetails(offer: OfferItemModel, isNameSignPresent: Boolean) {
         when (offer) {
             is OfferModel -> {
                 setVehicleNameAndColor(vehicle = offer.vehicle)
@@ -223,19 +223,16 @@ class OffersActivity : BaseActivity(), OffersView {
                     layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_DETAILS
                 )
                 setCapacity(offer.vehicle.transportType)
+                OfferItemBindDelegate.bindNameSignPlate(this, iconNameSign,
+                    tvMissingNameSign, isNameSignPresent, offer.isWithNameSign)
                 with(vehicle_conveniences) {
-                    val isNameSignSection = offer.isNameSignPresent
-                    imgWithNameSign.isVisible = offer.isNameSignPresent && offer.isWithNameSign
-                    tvMissingNameSign.isVisible = offer.isNameSignPresent && !offer.isWithNameSign
-                    imgMissingNameSign.isVisible = offer.isNameSignPresent && !offer.isWithNameSign
-
                     imgFreeWater.isVisible = offer.refreshments
                     imgFreeWiFi.isVisible = offer.wifi
                     imgCharge.isVisible = offer.charger
                     ivWheelchair.isVisible = offer.wheelchair
                     ivArmor.isVisible = offer.armored
                     isVisible = offer.refreshments || offer.wifi || offer.charger ||
-                        isNameSignSection || offer.wheelchair || offer.armored
+                        offer.wheelchair || offer.armored
                 }
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)

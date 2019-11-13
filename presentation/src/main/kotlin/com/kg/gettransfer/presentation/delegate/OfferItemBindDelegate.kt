@@ -1,10 +1,13 @@
 package com.kg.gettransfer.presentation.delegate
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.View
+import android.widget.ImageView
 
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 
 import com.kg.gettransfer.R
 
@@ -35,14 +38,14 @@ object OfferItemBindDelegate {
 
     private const val RATE_SHOWN = true
 
-    fun bindOfferTiny(view: View, offer: OfferItemModel) = when (offer) {
-        is OfferModel        -> bindOfferModelTiny(view, offer)
+    fun bindOfferTiny(view: View, offer: OfferItemModel, isNameSignPresent: Boolean) = when (offer) {
+        is OfferModel        -> bindOfferModelTiny(view, offer, isNameSignPresent)
         is BookNowOfferModel -> bindBookNowTiny(view, offer)
     }
 
     @SuppressLint("SetTextI18n")
     @Suppress("NestedBlockDepth")
-    private fun bindOfferModelTiny(view: View, offer: OfferModel) = with(view) {
+    private fun bindOfferModelTiny(view: View, offer: OfferModel, isNameSignPresent: Boolean) = with(view) {
         with(offer.vehicle) {
             tv_car_model_tiny.text = "$model $year"
             tv_car_class_tiny.text = context.getString(transportType.nameId)
@@ -77,6 +80,7 @@ object OfferItemBindDelegate {
             setStrikePriceText(tv_price_no_discount, withoutDiscount?.preferred ?: withoutDiscount?.def)
             tv_price_final.text = base.preferred ?: base.def
         }
+        bindNameSignPlate(context, imgNameSign, null, isNameSignPresent, offer.isWithNameSign)
     }
 
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) = with(view) {
@@ -130,6 +134,21 @@ object OfferItemBindDelegate {
             is Either.Single -> LanguageDrawer.drawSingleLine(container.layout, languages, layoutParamsRes)
             is Either.Multi  -> LanguageDrawer.drawMultipleLine(container.layout, languages, colNumber, layoutParamsRes)
         }
+    }
+
+    internal fun bindNameSignPlate(
+        context: Context,
+        iconNameSign: ImageView,
+        textMissingNameSign: TextView?,
+        isNameSignPresent: Boolean,
+        isWithNameSign: Boolean
+    ) {
+        iconNameSign.isVisible = if (isNameSignPresent) {
+            val imgResId = if (isWithNameSign) R.drawable.ic_with_name_sign else R.drawable.ic_missing_name_sign
+            iconNameSign.setImageDrawable(ContextCompat.getDrawable(context, imgResId))
+            true
+        } else false
+        textMissingNameSign?.isVisible = isNameSignPresent && !isWithNameSign
     }
 }
 
