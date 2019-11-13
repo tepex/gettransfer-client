@@ -18,4 +18,7 @@ object Constants {
     const val TEXT_PWD_IVAN = "12345"
     const val TEXT_TEST = "Test-Test"
     const val TEXT_PETERSBURG = "Saint-Petersburg"
+    const val TEXT_EMAIL_MAILSLURP = "68889e96-7719-4bb8-99fc-1e96f95ce2cc@mailslurp.com"
+    const val HTTP_REQUEST = "68889e96-7719-4bb8-99fc-1e96f95ce2cc@mailslurp.com"
+    const val API_KEY = "ac292be85aeee46f99c9cc2be6a1bbcd84d149d601202a6e4601f8a97e348fbe"
 }
