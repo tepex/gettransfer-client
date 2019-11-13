@@ -20,8 +20,6 @@ import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.ChatView
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
-
 import com.kg.gettransfer.utilities.Analytics
 
 import java.util.Calendar
@@ -38,7 +36,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     private val chatMapper: ChatMapper by inject()
     private val messageMapper: MessageMapper by inject()
     private val worker: WorkerManager by inject { parametersOf("ChatPresenter") }
-    private val configsManager: ConfigsManager by inject()
 
     private var chatModel: ChatModel? = null
     private var transferModel: TransferModel? = null
@@ -55,7 +52,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
             }
             val chatCachedResult = withContext(worker.bg) { chatInteractor.getChat(transferId, true) }
 
-            transferModel = transferCachedResult.model.map(configsManager.configs.transportTypes.map { it.map() })
+            transferModel = transferCachedResult.model.map(configsManager.getConfigs().transportTypes.map { it.map() })
             chatModel = chatMapper.toView(chatCachedResult.model)
             chatModel?.let { viewState.setChat(it) }
 

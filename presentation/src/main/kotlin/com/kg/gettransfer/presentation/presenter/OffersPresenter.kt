@@ -16,11 +16,7 @@ import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
-
 import com.kg.gettransfer.utilities.Analytics
-
-import org.koin.core.inject
 
 @Suppress("TooManyFunctions")
 @InjectViewState
@@ -31,8 +27,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
             field = value
             offerInteractor.lastTransferId = value
         }
-
-    private val configsManager: ConfigsManager by inject()
 
     private var transfer: Transfer? = null
     private var offers: List<OfferItem> = emptyList()
@@ -60,7 +54,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                     transfer.paidPercentage > 0) {
                     checkIfNeedNewChain()
                 } else {
-                    viewState.setTransfer(transfer.map(configsManager.configs.transportTypes.map { it.map() }))
+                    viewState.setTransfer(transfer.map(configsManager.getConfigs().transportTypes.map { it.map() }))
                     checkNewOffersSuspended(transfer)
                 }
             }

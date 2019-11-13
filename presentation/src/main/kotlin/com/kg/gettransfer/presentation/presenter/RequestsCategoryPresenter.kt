@@ -23,8 +23,6 @@ import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
-
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -53,7 +51,6 @@ class RequestsCategoryPresenter(
 
     private var transfers: List<Transfer>? = null
     private var driverCoordinate: DriverCoordinate? = null
-    private val configsManager: ConfigsManager by inject()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -102,7 +99,7 @@ class RequestsCategoryPresenter(
             transfers?.let { trs ->
                 if (trs.isNotEmpty()) {
                     withContext(worker.bg) {
-                        val transportTypes = configsManager.configs.transportTypes.map { it.map() }
+                        val transportTypes = configsManager.getConfigs().transportTypes.map { it.map() }
                         transfers?.map { it.map(transportTypes) }?.map { transferModel ->
                             if (transferModel.status == Transfer.Status.PERFORMED && isShowOfferInfo(transferModel)) {
                                 val offer = offerInteractor.getOffers(transferModel.id).model.let { list ->
@@ -146,7 +143,7 @@ class RequestsCategoryPresenter(
         return dateNow.after(dateStart) && dateNow.before(dateEnd)
     }
 
-    private fun sendAnalytics() {
+    private suspend fun sendAnalytics() {
         when (transferType) {
             TRANSFER_ACTIVE -> transfers?.let { analytics.EcommercePurchase().sendAnalytics(it) }
         }

@@ -13,7 +13,7 @@ data class VehicleModel(
     val photos: List<String>
 )
 
-fun Vehicle.map(url: String) =
+fun Vehicle.map() =
     VehicleModel(
         id,
         name,
@@ -22,5 +22,5 @@ fun Vehicle.map(url: String) =
         year,
         color,
         transportType.map(),
-        photos.map { if (it.startsWith(url)) it else "$url$it" }
+        photos
     )

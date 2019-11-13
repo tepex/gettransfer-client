@@ -28,8 +28,6 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
-
 import com.kg.gettransfer.utilities.Analytics
 
 import io.sentry.Sentry
@@ -42,7 +40,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
     private val profileMapper: ProfileMapper by inject()
-    private val configsManager: ConfigsManager by inject()
 
     private var transfer: Transfer? = null
     private var offer: OfferItem? = null
@@ -59,33 +56,35 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     @Suppress("ComplexMethod")
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
-        viewState.blockInterface(false)
-        with(paymentInteractor) {
-            transfer = selectedTransfer
-            offer = selectedOffer
-        }
-        getPaymentRequest()
-        with(accountManager) {
-            val balance = remoteAccount.partner?.availableMoney?.default
-
-            viewState.setAuthUiVisible(hasAccount, profileMapper.toView(remoteProfile), balance)
-        }
-        transfer?.let { transfer ->
-            viewState.setToolbarTitle(transfer.map(configsManager.configs.transportTypes.map { it.map() }))
-            transfer.dateRefund?.let { dateRefund ->
-                val commission = configsManager.configs.paymentCommission
-                viewState.setCommission(
-                    if (commission % 1.0 == 0.0) commission.toInt().toString() else commission.toString(),
-                    SystemUtils.formatDateTime(dateRefund)
-                )
+        utils.launchSuspend {
+            viewState.blockInterface(false)
+            with(paymentInteractor) {
+                transfer = selectedTransfer
+                offer = selectedOffer
             }
-        }
+            getPaymentRequest()
+            with(accountManager) {
+                val balance = remoteAccount.partner?.availableMoney?.default
 
-        transfer?.paymentPercentages?.let { percentages ->
-            offer?.let { offer ->
-                when (offer) {
-                    is BookNowOffer -> viewState.setBookNowOffer(offer.map())
-                    is Offer        -> viewState.setOffer(offerMapper.toView(offer), percentages)
+                viewState.setAuthUiVisible(hasAccount, profileMapper.toView(remoteProfile), balance)
+            }
+            transfer?.let { transfer ->
+                viewState.setToolbarTitle(transfer.map(configsManager.getConfigs().transportTypes.map { it.map() }))
+                transfer.dateRefund?.let { dateRefund ->
+                    val commission = configsManager.getConfigs().paymentCommission
+                    viewState.setCommission(
+                            if (commission % 1.0 == 0.0) commission.toInt().toString() else commission.toString(),
+                            SystemUtils.formatDateTime(dateRefund)
+                    )
+                }
+            }
+
+            transfer?.paymentPercentages?.let { percentages ->
+                offer?.let { offer ->
+                    when (offer) {
+                        is BookNowOffer -> viewState.setBookNowOffer(offer.map())
+                        is Offer -> viewState.setOffer(offerMapper.toView(offer), percentages)
+                    }
                 }
             }
         }

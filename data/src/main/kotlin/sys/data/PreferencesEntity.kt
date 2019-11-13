@@ -8,6 +8,7 @@ import com.kg.gettransfer.sys.domain.Preferences
 data class PreferencesEntity(
     val accessToken: String,
     val endpoint: EndpointEntity?,
+    val ipApiKey: String?,
     val isFirstLaunch: Boolean,
     val isOnboardingShowed: Boolean,
     val isNewDriverAppDialogShowed: Boolean,
@@ -22,6 +23,7 @@ data class PreferencesEntity(
         const val ENTITY_NAME              = "preferences"
         const val ACCESS_TOKEN             = "access_token"
         const val ENDPOINT                 = "endpoint"
+        const val IP_API_KEY               = "ip_api_key"
         const val IS_FIRST_LAUNCH          = "is_first_launch"
         const val IS_ONBOARDING_SHOWED     = "is_onboarding_showed"
         const val IS_NEW_DRIVER_APP_SHOWER = "is_new_driver_app_showed"
@@ -37,6 +39,7 @@ fun PreferencesEntity.map() =
     Preferences(
         accessToken,
         endpoint?.map(),
+        ipApiKey,
         isFirstLaunch,
         isOnboardingShowed,
         isNewDriverAppDialogShowed,
@@ -51,6 +54,7 @@ fun Preferences.map() =
     PreferencesEntity(
         accessToken,
         endpoint?.map(),
+        ipApiKey,
         isFirstLaunch,
         isOnboardingShowed,
         isNewDriverAppDialogShowed,

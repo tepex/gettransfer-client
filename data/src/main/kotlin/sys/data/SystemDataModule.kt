@@ -58,6 +58,7 @@ val systemData = module {
         Preferences(
             accessToken                = "invalid token",
             endpoint                   = null,
+            ipApiKey                   = null,
             isFirstLaunch              = true,
             isOnboardingShowed         = false,
             isNewDriverAppDialogShowed = false,

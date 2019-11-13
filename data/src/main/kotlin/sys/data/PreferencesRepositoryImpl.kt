@@ -1,6 +1,5 @@
 package com.kg.gettransfer.sys.data
 
-import com.kg.gettransfer.core.data.CacheStrategy
 import com.kg.gettransfer.core.data.MutableDataSource
 import com.kg.gettransfer.core.data.ResultData
 import com.kg.gettransfer.core.domain.Result

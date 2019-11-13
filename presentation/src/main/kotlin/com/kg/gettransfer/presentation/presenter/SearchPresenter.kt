@@ -35,8 +35,8 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
     private val orderInteractor: OrderInteractor by inject()
     private val setSelectedField: SetSelectedFieldInteractor by inject()
     private val setAddressHistory: SetAddressHistoryInteractor by inject()
-    protected val getPreferences: GetPreferencesInteractor by inject()
-    protected val analytics: Analytics by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
+    private val analytics: Analytics by inject()
 
     internal var isTo = false
 
@@ -52,7 +52,7 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
 
     fun initSuggestedAddresses() {
         worker.main.launch {
-            viewState.setSuggestedAddresses(getPreferences().getModel().addressHistory)
+            viewState.setSuggestedAddresses(withContext(worker.bg) { getPreferences().getModel() }.addressHistory)
         }
     }
 

@@ -112,7 +112,7 @@ val prefsModule = module {
         var defaultEndpointName = prodEndpointName
         if (BuildConfig.FLAVOR == "dev") defaultEndpointName = demoEndpointName
 */
-        PreferencesImpl(androidContext(), /* endpoints, defaultEndpointName,*/ get())
+        PreferencesImpl(androidContext(), get<Endpoint>().url, get())
     }
 }
 
@@ -180,7 +180,7 @@ val systemDomain = module {
     single { SetAppEntersInteractor(get()) }
     single { SetDebugMenuShowedInteractor(get()) }
     single { SetEndpointInteractor(get(), get()) }
-    single { SetIpApiKeyInteractor(get()) }
+    single { SetIpApiKeyInteractor(get(), get()) }
     single { SetFavoriteTransportsInteractor(get()) }
     single { SetFirstLaunchInteractor(get()) }
     single { SetOnboardingShowedInteractor(get()) }

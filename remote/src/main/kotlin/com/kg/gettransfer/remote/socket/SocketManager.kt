@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.model.MessageEntity
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.data.model.PaymentStatusEventEntity
+import com.kg.gettransfer.sys.domain.PreferencesRepository
 
 import io.socket.client.IO
 import io.socket.client.Manager
@@ -72,6 +73,7 @@ class SocketManager : KoinComponent {
     }
 
     private fun openSocket() {
+        if (url == null) url = preferences.endpointUrl
         val s = IO.socket(url, options)
         addSocketHandlers(s)
         s.connect()

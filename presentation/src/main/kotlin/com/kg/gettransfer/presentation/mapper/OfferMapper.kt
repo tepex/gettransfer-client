@@ -13,10 +13,6 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
     private val carrierMapper: CarrierMapper by inject()
     private val profileMapper: ProfileMapper by inject()
 
-    lateinit var url: String
-
-    fun isUrlInitialized() = ::url.isInitialized
-
     override fun toView(type: Offer) =
         OfferModel(
             type.id,
@@ -33,7 +29,7 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
             type.ratings,
             type.passengerFeedback,
             carrierMapper.toView(type.carrier),
-            type.vehicle.map(url),
+            type.vehicle.map(),
             type.driver?.let { profileMapper.toView(it) },
             type.phoneToCall
         )

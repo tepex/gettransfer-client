@@ -34,9 +34,9 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
 
     private val worker: WorkerManager by inject { parametersOf("SplashPresenter") }
     private val configsManager: ConfigsManager by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
     private val isNeedUpdateApp: IsNeedUpdateAppInteractor by inject()
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
-    private val getPreferences: GetPreferencesInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
 
     fun onLaunchContinue() {
@@ -57,7 +57,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
 
     fun startApp() = worker.main.launch {
         viewState.dispatchAppState(sessionInteractor.locale)
-        val isOnboardingShowed = getPreferences().getModel().isOnboardingShowed
+        val isOnboardingShowed = withContext(worker.bg) { getPreferences().getModel() }.isOnboardingShowed
         if (!isOnboardingShowed) {
             router.replaceScreen(Screens.About(false))
             withContext(worker.bg) { setOnboardingShowed(true) }
