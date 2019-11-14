@@ -29,6 +29,7 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 @InjectViewState
+@Suppress("TooManyFunctions")
 class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
 
     private val worker: WorkerManager by inject { parametersOf("SearchPresenter") }

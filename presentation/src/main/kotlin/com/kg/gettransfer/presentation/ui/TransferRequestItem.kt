@@ -96,8 +96,8 @@ class TransferRequestItem @JvmOverloads constructor(
                 Transfer.Status.OUTDATED  -> R.color.color_transfer_details_text_red
                 Transfer.Status.PERFORMED -> R.color.color_gtr_green
                 Transfer.Status.COMPLETED -> R.color.colorTextBlack
-                Transfer.Status.NEW       -> if (item.isBookNow()) R.color.color_gtr_green
-                                             else R.color.colorTransferRequestText
+                Transfer.Status.NEW       ->
+                    if (item.isBookNow()) R.color.color_gtr_green else R.color.colorTransferRequestText
                 else                      -> R.color.colorTransferRequestText
             }))
         ContextCompat.getColor(

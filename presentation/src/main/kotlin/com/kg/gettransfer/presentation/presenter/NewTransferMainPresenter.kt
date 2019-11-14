@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import org.koin.core.inject
 
 @InjectViewState
+@Suppress("TooManyFunctions")
 class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>() {
 
     private val setSelectedField: SetSelectedFieldInteractor by inject()
