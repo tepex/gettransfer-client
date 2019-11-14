@@ -57,6 +57,7 @@ class LogInPresenter : BaseLogInPresenter<LogInView>(), KoinComponent {
                 }
 
                 result.isSuccess()?.let {
+                    clearChosenTransportTypes()
                     openNextScreen()
                     logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.RESULT_SUCCESS)
                 }

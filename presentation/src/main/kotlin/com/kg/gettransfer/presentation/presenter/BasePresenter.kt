@@ -12,6 +12,7 @@ import com.kg.gettransfer.domain.model.ChatBadgeEvent
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.PushTokenManager
@@ -23,6 +24,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.sys.domain.Endpoint
 
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
+import com.kg.gettransfer.sys.domain.SetFavoriteTransportsInteractor
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
@@ -71,6 +73,8 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
     protected val getPreferences: GetPreferencesInteractor by inject()
+
+    private val setFavoriteTransports: SetFavoriteTransportsInteractor by inject()
 
     private var openedLoginScreenForUnauthorizedUser = false
 
@@ -138,6 +142,19 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         utils.asyncAwait { reviewInteractor.clearReviewCache() }
 
         countEventsInteractor.clearCountEvents()
+
+        clearChosenTransportTypes()
+    }
+
+    protected fun saveChosenTransportTypes(transportTypes: Set<TransportType.ID>) {
+        worker.main.launch {
+            withContext(worker.bg) { setFavoriteTransports(transportTypes) }
+        }
+    }
+
+    protected fun clearChosenTransportTypes() {
+        orderInteractor.clear()
+        saveChosenTransportTypes(emptySet())
     }
 
     suspend fun saveGeneralSettings() {

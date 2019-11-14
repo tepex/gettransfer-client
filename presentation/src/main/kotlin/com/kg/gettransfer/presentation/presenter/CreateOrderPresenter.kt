@@ -43,14 +43,12 @@ import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.sys.domain.SetFavoriteTransportsInteractor
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.NewTransferState
 
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
@@ -69,7 +67,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val userMapper: UserMapper by inject()
 
     private val nState: NewTransferState by inject()
-    private val setFavoriteTransports: SetFavoriteTransportsInteractor by inject()
 
     private val currencies by lazy { configsManager.configs.supportedCurrencies.map { it.map() } }
     private var duration: Int? = null
@@ -507,7 +504,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun handleSuccess() {
         logGetOffers()
-        saveChosenTransportTypes()
+        saveChosenTransportTypes(getSelectedTransportTypes())
         releaseDelegates()
     }
 
@@ -551,8 +548,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun setFavoriteTransportTypes() = worker.main.launch {
-        if (getPreferences().getModel().favoriteTransports.isNotEmpty()) {
-            selectTransportTypes(getPreferences().getModel().favoriteTransports)
+        val favoriteTransports = getPreferences().getModel().favoriteTransports
+        if (favoriteTransports.isNotEmpty()) {
+            selectTransportTypes(favoriteTransports)
             setPassengersCountForSelectedTransportTypes()
         }
     }
@@ -566,12 +564,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private fun selectTransportTypes(selectedTransport: Set<TransportType.ID>) {
         selectedTransport.forEach { favorite ->
             transportTypes?.find { it.id == favorite }?.checked = true
-        }
-    }
-
-    private fun saveChosenTransportTypes() {
-        worker.main.launch {
-            withContext(worker.bg) { setFavoriteTransports(getSelectedTransportTypes()) }
         }
     }
 
