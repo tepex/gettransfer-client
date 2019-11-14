@@ -14,6 +14,7 @@ import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.MainNavigateView
+import com.kg.gettransfer.sys.domain.AddCountOfShowNewDriverAppDialogInteractor
 
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
@@ -36,6 +37,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     private val worker: WorkerManager by inject { parametersOf("MainNavigatePresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
+    private val addCountOfShowDriverAppDialogInteractor: AddCountOfShowNewDriverAppDialogInteractor by inject()
 
     private var isAppLaunched = false
 
@@ -47,19 +49,24 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
 
     override fun systemInitialized() {
         if (accountManager.hasAccount) {
-            worker.main.launch {
-                if (accountManager.isLoggedIn &&
-                        accountManager.remoteAccount.isCarrier &&
-                        !getPreferences().getModel().isNewDriverAppDialogShowed) {
-                    analytics.logEvent(
-                            Analytics.EVENT_NEW_CARRIER_APP_DIALOG,
-                            Analytics.OPEN_SCREEN, null)
-                    viewState.showNewDriverAppDialog()
-                    withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(true) }
-                }
+            if (accountManager.isLoggedIn && accountManager.remoteAccount.isCarrier) {
+                checkShowingNewDriverAppDialog()
             }
             pushTokenManager.registerPushToken()
             checkTransfers()
+        }
+    }
+
+    private fun checkShowingNewDriverAppDialog() = worker.main.launch {
+        val prefs = withContext(worker.bg) { getPreferences().getModel() }
+        if (!prefs.isNewDriverAppDialogShowed &&
+                prefs.countOfShowNewDriverAppDialog < MAX_COUNT_OF_SHOW_NEW_DRIVER_APP_DIALOG) {
+            analytics.logEvent(Analytics.EVENT_NEW_CARRIER_APP_DIALOG, Analytics.OPEN_SCREEN, null)
+            viewState.showNewDriverAppDialog()
+            withContext(worker.bg) {
+                setNewDriverAppDialogShowedInteractor(true)
+                addCountOfShowDriverAppDialogInteractor()
+            }
         }
     }
 
@@ -187,5 +194,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
 
     companion object {
         const val ONE_SEC_DELAY = 1000L
+        const val MAX_COUNT_OF_SHOW_NEW_DRIVER_APP_DIALOG = 2
     }
 }

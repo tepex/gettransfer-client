@@ -56,16 +56,17 @@ val systemData = module {
 
     single {
         Preferences(
-            accessToken                = "invalid token",
-            endpoint                   = null,
-            isFirstLaunch              = true,
-            isOnboardingShowed         = false,
-            isNewDriverAppDialogShowed = false,
-            selectedField              = "",
-            addressHistory             = emptyList(),
-            favoriteTransports         = emptySet(),
-            appEnters                  = 0,
-            isDebugMenuShowed          = false
+            accessToken                   = "invalid token",
+            endpoint                      = null,
+            isFirstLaunch                 = true,
+            isOnboardingShowed            = false,
+            isNewDriverAppDialogShowed    = false,
+            countOfShowNewDriverAppDialog = 0,
+            selectedField                 = "",
+            addressHistory                = emptyList(),
+            favoriteTransports            = emptySet(),
+            appEnters                     = 0,
+            isDebugMenuShowed             = false
         )
     }
 
