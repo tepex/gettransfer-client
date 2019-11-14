@@ -27,6 +27,7 @@ import com.kg.gettransfer.presentation.view.NewTransferMainView
 
 import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 
+import kotlinx.android.synthetic.main.content_new_transfer.*
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
@@ -47,7 +48,6 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Added network change listener
         lifecycle.addObserver(NetworkLifeCycleObserver(this, this))
     }
 
@@ -57,8 +57,8 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        scrollDownContent()
         initClickListeners()
-
         presenter.checkBtnNextState()
     }
 
@@ -75,9 +75,11 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     private fun initClickListeners() {
         // Switchers
         switcher_hourly.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
+            scrollDownContent()
             presenter.tripModeSwitched(isChecked)
         }
         request_search_panel.switchPointB.setOnCheckedChangeListener { _, isChecked ->
+            scrollDownContent()
             presenter.switchPointB(isChecked)
         }
 
@@ -91,6 +93,10 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         btnNextFragment.setThrottledClickListener(THROTTLED_DELAY) { presenter.onNextClick() }
         bestPriceLogo.setOnClickListener(readMoreListener)
         layoutBestPriceText.setOnClickListener(readMoreListener)
+    }
+
+    private fun scrollDownContent() {
+        scrollContent.post { scrollContent.fullScroll(View.FOCUS_DOWN) }
     }
 
     /**
