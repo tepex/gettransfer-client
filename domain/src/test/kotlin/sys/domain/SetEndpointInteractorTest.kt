@@ -59,6 +59,7 @@ class SetEndpointInteractorTest : StringSpec() {
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
                 isNewDriverAppDialogShowed = false,
+                countOfShowingNewDriverAppDialog = 0,
                 selectedField = "selected field",
                 addressHistory = emptyList(),
                 favoriteTransports = emptySet(),
