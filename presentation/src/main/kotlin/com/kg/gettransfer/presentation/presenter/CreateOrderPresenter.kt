@@ -118,7 +118,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         with(orderInteractor) {
             if (from == null || to == null && hourlyDuration == null) {
                 return
-            } else hourlyDuration?.let { duration ->
+            }
+            hourlyDuration?.let { duration ->
                 if (to == null) getPricesForHourlyTransfer(duration) else getRouteAndPricesForPointToPointTransfer()
             } ?: getRouteAndPricesForPointToPointTransfer()
         }

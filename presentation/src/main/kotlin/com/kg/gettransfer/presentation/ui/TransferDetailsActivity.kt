@@ -282,13 +282,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 append(" #${transfer.id} ")
                 if (transfer.offersCount > 0 && !transfer.isBookNow() && transfer.pendingPaymentId == null) {
                     append(getString(R.string.LNG_BOOK_OFFER))
-                } else if (transfer.pendingPaymentId != null) {
-                    append(getString(R.string.LNG_WILL_START_IN))
-                    append(" ")
-                    append(Utils.durationToString(
-                        this@TransferDetailsActivity,
-                        Utils.convertDuration(transfer.timeToTransfer)
-                    ))
+                } else if (transfer.pendingPaymentId != null || transfer.isBookNow()) {
+                    append(getMatchedTransferStatusText(transfer.timeToTransfer))
                 } else {
                     append(getString(R.string.LNG_WAIT_FOR_OFFERS))
                 }
@@ -297,12 +292,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 append(getString(R.string.LNG_TRANSFER))
                 append(" #${transfer.id} ")
                 if (transfer.dateTimeTZ.after(Date())) {
-                    append(getString(R.string.LNG_WILL_START_IN))
-                    append(" ")
-                    append(Utils.durationToString(
-                        this@TransferDetailsActivity,
-                        Utils.convertDuration(transfer.timeToTransfer)
-                    ))
+                    append(getMatchedTransferStatusText(transfer.timeToTransfer))
                 } else {
                     append(getString(R.string.LNG_IN_PROGRESS))
                 }
@@ -317,6 +307,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             }
         }
     }
+
+    private fun getMatchedTransferStatusText(timeToTransfer: Int) =
+        getString(R.string.LNG_WILL_START_IN)
+            .plus("")
+            .plus(Utils.durationToString(
+                this@TransferDetailsActivity,
+                Utils.convertDuration(timeToTransfer)
+            ))
 
     private fun initInfoView(transfer: TransferModel) {
         transfer_details_header.apply {

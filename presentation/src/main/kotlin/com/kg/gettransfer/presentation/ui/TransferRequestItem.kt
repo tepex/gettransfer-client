@@ -75,15 +75,13 @@ class TransferRequestItem @JvmOverloads constructor(
     fun setInfo(item: TransferModel, requestType: Int) {
         tvTransferRequestNumber.text = context.getString(R.string.LNG_RIDE_NUMBER).plus(item.id)
         tvTransferRequestStatus.text = when (item.status) {
-            Transfer.Status.NEW -> if (item.offersCount > 0 && !item.isBookNow()) {
-                context.getString(R.string.LNG_BOOK_OFFER)
-            } else {
-                context.getString(R.string.LNG_WAIT_FOR_OFFERS)
+            Transfer.Status.NEW -> when {
+                item.isBookNow() -> getMatchedTransferStatusText(item.timeToTransfer)
+                item.offersCount > 0 -> context.getString(R.string.LNG_BOOK_OFFER)
+                else -> context.getString(R.string.LNG_WAIT_FOR_OFFERS)
             }
             Transfer.Status.PERFORMED -> if (item.dateTime.after(Calendar.getInstance().time)) {
-                context.getString(R.string.LNG_TRANSFER_WILL_START)
-                    .plus("")
-                    .plus(Utils.durationToString(context, Utils.convertDuration(item.timeToTransfer)))
+                getMatchedTransferStatusText(item.timeToTransfer)
             } else {
                 context.getString(R.string.LNG_TRANSFER_IN_PROGRESS)
             }
@@ -98,6 +96,8 @@ class TransferRequestItem @JvmOverloads constructor(
                 Transfer.Status.OUTDATED  -> R.color.color_transfer_details_text_red
                 Transfer.Status.PERFORMED -> R.color.color_gtr_green
                 Transfer.Status.COMPLETED -> R.color.colorTextBlack
+                Transfer.Status.NEW       ->
+                    if (item.isBookNow()) R.color.color_gtr_green else R.color.colorTransferRequestText
                 else                      -> R.color.colorTransferRequestText
             }))
         ContextCompat.getColor(
@@ -134,6 +134,11 @@ class TransferRequestItem @JvmOverloads constructor(
             ivMarkersLine.isVisible = visible
         }
     }
+
+    private fun getMatchedTransferStatusText(timeToTransfer: Int) =
+        context.getString(R.string.LNG_TRANSFER_WILL_START)
+            .plus("")
+            .plus(Utils.durationToString(context, Utils.convertDuration(timeToTransfer)))
 
     private fun changeViewForHourlyTransfer(isHourlyTransfer: Boolean) {
         rl_hourly_info.isVisible = isHourlyTransfer
