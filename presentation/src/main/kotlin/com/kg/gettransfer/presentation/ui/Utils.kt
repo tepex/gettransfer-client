@@ -379,7 +379,7 @@ object Utils : KoinComponent {
 
     private fun getCarColorTextBackDrawable(context: Context, colorId: Int) = GradientDrawable().apply {
         setColor(ContextCompat.getColor(context, colorId))
-        if (colorId == R.color.color_car_white) {
+        if (colorId == R.color.color_car_white || colorId == R.color.color_car_yellow) {
             setStroke(
                 dpToPxInt(context, 1f),
                 ContextCompat.getColor(context, R.color.color_gtr_light_grey)
