@@ -565,7 +565,7 @@
 	<dimen name="payment_offer_tiny_tvModel_horizontal_margin">8dp</dimen>
 	<dimen name="payment_offer_tiny_tvModel_margin_top">12dp</dimen>
 	<dimen name="payment_offer_tiny_ivCarColor_margins">4dp</dimen>
-	<dimen name="payment_offer_tiny_tvClass_margin_start">16dp</dimen>
+	<dimen name="payment_offer_tiny_tvClass_margin_start">8dp</dimen>
 	<dimen name="payment_offer_tiny_tvClass_margin_top">8dp</dimen>
 	<dimen name="payment_offer_tiny_rating_margin_top">6dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_bottom">12dp</dimen>
