@@ -6,6 +6,8 @@ import com.kg.gettransfer.data.model.PaymentEntity
 import com.kg.gettransfer.data.model.PaymentRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
+import com.kg.gettransfer.data.model.GooglePayPaymentEntity
+import com.kg.gettransfer.data.model.GooglePayPaymentProcessEntity
 
 /**
  * Implementation of the [PaymentDataStore] interface to provide a means of communicating with the cache data source.
@@ -13,6 +15,14 @@ import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
 open class PaymentDataStoreCache : PaymentDataStore {
 
     override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
+        throw UnsupportedOperationException()
+    }
+
+    override suspend fun createGooglePayPayment(paymentRequest: PaymentRequestEntity): GooglePayPaymentEntity {
+        throw UnsupportedOperationException()
+    }
+
+    override suspend fun processGooglePayPayment(paymentProcess: GooglePayPaymentProcessEntity): PaymentEntity {
         throw UnsupportedOperationException()
     }
 

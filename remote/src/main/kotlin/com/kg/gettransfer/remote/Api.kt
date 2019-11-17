@@ -22,6 +22,7 @@ interface Api {
         const val API_ROUTE_INFO = "/api/route_info"
         const val API_TRANSFERS = "/api/transfers"
         const val API_CREATE_NEW_PAYMENT = "/api/payments"
+        const val API_CREATE_NEW_GOOGLE_PAY_PAYMENT = "/api/payments/process"
         const val API_PROMO = "/api/promo_codes/search"
         const val API_RATE_OFFER = "/api/offers/rate"
         const val API_FEEDBACK = "/api/offers"
@@ -140,6 +141,16 @@ interface Api {
     @POST(API_CREATE_NEW_PAYMENT)
     suspend fun createNewPayment(
         @Body createPayment: PaymentRequestModel
+    ): ResponseModel<PaymentModel>
+
+    @POST(API_CREATE_NEW_PAYMENT)
+    suspend fun createNewGooglePayPayment(
+        @Body createPayment: PaymentRequestModel
+    ): ResponseModel<WrappedGooglePayPaymentModel>
+
+    @POST(API_CREATE_NEW_GOOGLE_PAY_PAYMENT)
+    suspend fun processGooglePayPayment(
+        @Body paymentProcess: GooglePayPaymentProcessModel
     ): ResponseModel<PaymentModel>
 
     @GET(API_PROMO)

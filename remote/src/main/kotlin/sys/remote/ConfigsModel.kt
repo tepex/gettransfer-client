@@ -5,11 +5,13 @@ import com.google.gson.annotations.SerializedName
 
 import com.kg.gettransfer.remote.model.CurrencyModel
 import com.kg.gettransfer.remote.model.LocaleModel
-import com.kg.gettransfer.remote.model.TransportTypeModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
 import com.kg.gettransfer.remote.model.map
 
 import com.kg.gettransfer.sys.data.ConfigsEntity
+import sys.remote.CheckoutCredentialsModel
+import sys.remote.GooglePayCredentialsModel
+import sys.remote.map
 
 data class ConfigsModel(
     @SerializedName(ConfigsEntity.TRANSPORT_TYPES) @Expose val transportTypes: TransportTypesWrapperModel,
@@ -17,7 +19,9 @@ data class ConfigsModel(
     @SerializedName(ConfigsEntity.PAYMENT_COMMISSION) @Expose val paymentCommission: Float,
     @SerializedName(ConfigsEntity.SUPPORTED_CURRENCIES) @Expose val supportedCurrencies: List<CurrencyModel>,
     @SerializedName(ConfigsEntity.SUPPORTED_DISTANCE_UNITS) @Expose val supportedDistanceUnits: List<String>,
-    @SerializedName(ConfigsEntity.CONTACT_EMAILS) @Expose val contactEmails: ContactEmailsWrapperModel
+    @SerializedName(ConfigsEntity.CONTACT_EMAILS) @Expose val contactEmails: ContactEmailsWrapperModel,
+    @SerializedName(ConfigsEntity.CHECKOUT_CREDENTIALS) @Expose val checkoutCredentials: CheckoutCredentialsModel,
+    @SerializedName(ConfigsEntity.GOOGLEPAY_CREDENTIALS) @Expose val googlePayCredentials: GooglePayCredentialsModel
 )
 
 fun ConfigsModel.map() =
@@ -27,5 +31,7 @@ fun ConfigsModel.map() =
         paymentCommission,
         supportedCurrencies.map { it.map() },
         supportedDistanceUnits,
-        contactEmails.map { it.map() }
+        contactEmails.map { it.map() },
+        checkoutCredentials.map(),
+        googlePayCredentials.map()
     )

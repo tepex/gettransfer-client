@@ -18,4 +18,5 @@ fun PaymentRequestEntity.map() =
         offerId,
         gatewayId,
         percentage,
-        bookNowTransportType)
+        bookNowTransportType
+    )

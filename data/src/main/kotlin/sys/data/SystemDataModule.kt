@@ -14,6 +14,8 @@ import com.kg.gettransfer.sys.domain.*
 import java.util.Locale
 
 import org.koin.dsl.module
+import sys.domain.CheckoutCredentials
+import sys.domain.GooglePayCredentials
 
 val systemData = module {
     /* Default models */
@@ -37,7 +39,20 @@ val systemData = module {
                 ContactEmail(ContactEmail.Id.FINANCE, "finance@gettransfer.com"),
                 ContactEmail(ContactEmail.Id.INFO, "info@gettransfer.com"),
                 ContactEmail(ContactEmail.Id.PARTNER, "partner@gettransfer.com")
-            )
+            ),
+            // TODO: check params bellow from gettransfer.com/api/configs
+            checkoutCredentials =
+                CheckoutCredentials(
+                    "pk_11671baf-3b96-4bab-9eb1-fd4814e0919d"
+                ),
+            googlePayCredentials =
+                GooglePayCredentials(
+                    "TEST",
+                    "",
+                    "",
+                    listOf("AMEX", "JCB", "MASTERCARD", "VISA"),
+                    listOf("CRYPTOGRAM_3DS")
+                )
         )
     }
     single {

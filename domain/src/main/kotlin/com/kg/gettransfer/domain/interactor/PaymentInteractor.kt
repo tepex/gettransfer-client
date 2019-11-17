@@ -5,6 +5,7 @@ import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.PaymentRequest
 import com.kg.gettransfer.domain.model.PaymentStatusRequest
+import com.kg.gettransfer.domain.model.GooglePayPaymentProcess
 
 import com.kg.gettransfer.domain.repository.PaymentRepository
 
@@ -21,6 +22,10 @@ class PaymentInteractor(private val repository: PaymentRepository) {
         set(value) { repository.selectedOffer = value }
 
     suspend fun getPayment(paymentRequest: PaymentRequest) = repository.getPayment(paymentRequest)
+
+    suspend fun getGooglePayPayment(paymentRequest: PaymentRequest) = repository.getGooglePayPayment(paymentRequest)
+
+    suspend fun processGooglePayPayment(paymentProcess: GooglePayPaymentProcess) = repository.processGooglePayPayment(paymentProcess)
 
     suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequest) =
         repository.changeStatusPayment(paymentStatusRequest)

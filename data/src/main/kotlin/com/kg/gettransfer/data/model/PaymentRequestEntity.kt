@@ -19,4 +19,11 @@ data class PaymentRequestEntity(
     }
 }
 
-fun PaymentRequest.map() = PaymentRequestEntity(transferId, offerId, gatewayId, percentage, bookNowTransportType)
+fun PaymentRequest.map() =
+    PaymentRequestEntity(
+        transferId,
+        offerId,
+        gatewayId,
+        percentage,
+        bookNowTransportType
+    )

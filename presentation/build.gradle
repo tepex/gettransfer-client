@@ -54,6 +54,9 @@ ext {
     lifecycle_runtime_version  = "2.0.0"
     lifecycle_extensions_ver   = "2.0.0"
     maps_utils_version         = "0.5"
+    play_services_walet        = "18.0.0"
+    support_appcompat_v7       = "28.0.0"
+    swipe_refresh_version      = "1.1.0-alpha03"
 }
 
 android {
@@ -313,6 +316,13 @@ dependencies {
 
     // Webkit
     implementation "androidx.webkit:webkit:$webkit_version"
+
+    // SwipeRefreshLayout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_version"
+
+    // GooglePay
+    implementation "com.google.android.gms:play-services-wallet:$play_services_walet"
+    implementation "com.android.support:appcompat-v7:$support_appcompat_v7"
 
     api("androidx.transition:transition:$androidx_transition")
 

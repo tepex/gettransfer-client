@@ -22,7 +22,7 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:overScrollMode="never"
-        app:layout_constraintBottom_toTopOf="@id/btnGetPayment"
+        app:layout_constraintBottom_toTopOf="@id/layoutPayButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
@@ -174,32 +174,47 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGetPayment"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+    <LinearLayout
+        android:id="@+id/layoutPayButtons"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_rounded_height"
-        android:layout_marginStart="@dimen/payment_button_pay_horizontal_margin"
-        android:layout_marginTop="@dimen/payment_button_pay_margin_top"
-        android:layout_marginEnd="@dimen/payment_button_pay_horizontal_margin"
-        android:layout_marginBottom="@dimen/payment_button_pay_margin_bottom"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:gravity="center"
-        android:text="@string/LNG_PAYMENT_PAY"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/payment_text_size_14sp"
-
-        app:backgroundTint="@color/color_gtr_green"
-        app:cornerRadius="@dimen/btn_radius"
-        app:icon="@drawable/ic_credit_card"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/payment_button_icon_padding"
-        app:iconTint="@android:color/white"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/payment_button_pay_horizontal_margin"
+        android:paddingEnd="@dimen/payment_button_pay_horizontal_margin"
+        android:paddingTop="@dimen/payment_button_pay_margin_top"
+        android:paddingBottom="@dimen/payment_button_pay_margin_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sv_root"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGetPayment"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_rounded_height"
+
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:gravity="center"
+            android:text="@string/LNG_PAYMENT_PAY"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/payment_text_size_14sp"
+
+            app:backgroundTint="@color/color_gtr_green"
+            app:cornerRadius="@dimen/btn_radius"
+            app:icon="@drawable/ic_credit_card"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/payment_button_icon_padding"
+            app:iconTint="@android:color/white"
+            android:visibility="visible"/>
+
+        <include
+            android:id="@+id/btnGetPaymentWithGooglePay"
+            layout="@layout/buy_with_googlepay_button"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

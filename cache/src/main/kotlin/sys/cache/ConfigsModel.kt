@@ -1,6 +1,7 @@
 package com.kg.gettransfer.sys.cache
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -11,6 +12,9 @@ import com.kg.gettransfer.cache.model.TransportTypesCachedList
 import com.kg.gettransfer.cache.model.map
 
 import com.kg.gettransfer.sys.data.ConfigsEntity
+import sys.cache.CheckoutCredentialsModel
+import sys.cache.GooglePayCredentialsModel
+import sys.cache.map
 
 @Entity(tableName = ConfigsEntity.ENTITY_NAME)
 data class ConfigsModel(
@@ -20,6 +24,8 @@ data class ConfigsModel(
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_CURRENCIES) val supportedCurrencies: CurrencyCachedList,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: StringList,
     @ColumnInfo(name = ConfigsEntity.CONTACT_EMAILS) val contactEmails: ContactEmailModelList,
+    @Embedded(prefix = ConfigsEntity.CHECKOUT_CREDENTIALS) val checkoutCredentials: CheckoutCredentialsModel,
+    @Embedded(prefix = ConfigsEntity.GOOGLEPAY_CREDENTIALS) val googlePayCredentials: GooglePayCredentialsModel,
     @PrimaryKey(autoGenerate = true) val id: Long = 15
 )
 
@@ -30,7 +36,9 @@ fun ConfigsModel.map() =
         paymentCommission,
         supportedCurrencies.list.map { it.map() },
         supportedDistanceUnits.list,
-        contactEmails.list.map { it.map() }
+        contactEmails.list.map { it.map() },
+        checkoutCredentials.map(),
+        googlePayCredentials.map()
     )
 
 fun ConfigsEntity.map() =
@@ -40,5 +48,7 @@ fun ConfigsEntity.map() =
         paymentCommission,
         CurrencyCachedList(supportedCurrencies.map { it.map() }),
         StringList(supportedDistanceUnits),
-        ContactEmailModelList(contactEmails.map { it.map() })
+        ContactEmailModelList(contactEmails.map { it.map() }),
+        checkoutCredentials.map(),
+        googlePayCredentials.map()
     )

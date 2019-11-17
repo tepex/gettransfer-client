@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -26,6 +25,10 @@ import com.braintreepayments.api.interfaces.BraintreeCancelListener
 import com.braintreepayments.api.interfaces.BraintreeErrorListener
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.PaymentMethodNonce
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.wallet.Wallet
+import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.AutoResolveHelper
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -74,6 +77,7 @@ import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
+import org.json.JSONObject
 
 import timber.log.Timber
 
@@ -107,6 +111,14 @@ class PaymentOfferActivity : BaseActivity(),
         initToolbar()
     }
 
+    override fun initGooglePayPaymentsClient(environment: Int) {
+        presenter.googlePayPaymentsClient = Wallet.getPaymentsClient(
+            this,
+            Wallet.WalletOptions.Builder()
+                .setEnvironment(environment)
+                .build())
+    }
+
     private fun initToolbar() {
         val tb = toolbar
         if (tb is Toolbar) {
@@ -119,9 +131,12 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun initListeners() {
         tvPaymentAgreement.setOnClickListener { presenter.onAgreementClicked() }
-        btnGetPayment.setOnClickListener {
+        View.OnClickListener {
             clearHighLightErrorField(errorField)
             presenter.onPaymentClicked()
+        }.apply {
+            btnGetPayment.setOnClickListener(this)
+            btnGetPaymentWithGooglePay.setOnClickListener(this)
         }
         View.OnClickListener { changePayment(rbCard, PaymentRequestModel.PLATRON) }.apply {
             rbCard.setOnClickListener(this)
@@ -134,6 +149,10 @@ class PaymentOfferActivity : BaseActivity(),
         View.OnClickListener { changePayment(rbBalance, PaymentRequestModel.GROUND) }.apply {
             rbBalance.setOnClickListener(this)
             layoutBalance.setOnClickListener(this)
+        }
+        View.OnClickListener { changePayment(rbGooglePay, PaymentRequestModel.GOOGLE_PAY) }.apply {
+            rbGooglePay.setOnClickListener(this)
+            layoutGooglePay.setOnClickListener(this)
         }
         addKeyBoardDismissListener { state ->
             Handler().postDelayed({
@@ -216,25 +235,28 @@ class PaymentOfferActivity : BaseActivity(),
     private fun clearHighLightErrorField(view: View?) = view?.setBackgroundResource(0)
 
     private fun changePayment(view: View, payment: String) {
+        clearPaymentsRadioButtons()
         when (view.id) {
-            R.id.rbCard -> {
-                rbCard.isChecked = true
-                rbPaypal.isChecked = false
-                rbBalance.isChecked = false
-            }
-            R.id.rbPaypal -> {
-                rbPaypal.isChecked = true
-                rbCard.isChecked = false
-                rbBalance.isChecked = false
-            }
-            R.id.rbBalance -> {
-                rbBalance.isChecked = true
-                rbCard.isChecked = false
-                rbPaypal.isChecked = false
-            }
+            R.id.rbCard      -> rbCard.isChecked = true
+            R.id.rbPaypal    -> rbPaypal.isChecked = true
+            R.id.rbBalance   -> rbBalance.isChecked = true
+            R.id.rbGooglePay -> rbGooglePay.isChecked = true
         }
+        changePayButton(view.id == R.id.rbGooglePay)
         presenter.selectedPayment = payment
         presenter.changePayment(payment)
+    }
+
+    private fun clearPaymentsRadioButtons() {
+        rbCard.isChecked = false
+        rbPaypal.isChecked = false
+        rbBalance.isChecked = false
+        rbGooglePay.isChecked = false
+    }
+
+    private fun changePayButton(isPaymentWithGooglePay: Boolean) {
+        btnGetPayment.isVisible = !isPaymentWithGooglePay
+        btnGetPaymentWithGooglePay.isVisible = isPaymentWithGooglePay
     }
 
     @Suppress("NestedBlockDepth")
@@ -396,7 +418,7 @@ class PaymentOfferActivity : BaseActivity(),
     override fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String) {
         blockInterface(false)
         when {
-            payPalInstalled()  -> startActivityForResult(dropInRequest.getIntent(this), PAYMENT_REQUEST_CODE)
+            payPalInstalled()  -> startActivityForResult(dropInRequest.getIntent(this), PAYPAL_PAYMENT_REQUEST_CODE)
             browserInstalled() -> {
                 val braintreeFragment = BraintreeFragment.newInstance(this, presenter.braintreeToken)
                 PayPal.requestOneTimePayment(braintreeFragment, dropInRequest.payPalRequest)
@@ -405,22 +427,48 @@ class PaymentOfferActivity : BaseActivity(),
         }
     }
 
+    override fun startGooglePay(task: Task<PaymentData>) {
+        AutoResolveHelper.resolveTask(task, this, GOOGLE_PAY_PAYMENT_REQUEST_CODE)
+    }
+
     @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PAYMENT_REQUEST_CODE) {
-            when (resultCode) {
-                Activity.RESULT_OK -> {
-                    val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-                    result?.paymentMethodNonce?.nonce?.let { presenter.confirmPayment(it) }
+        when(requestCode) {
+            PAYPAL_PAYMENT_REQUEST_CODE     -> checkPaypalPaymentResult(resultCode, data)
+            GOOGLE_PAY_PAYMENT_REQUEST_CODE -> checkGooglePayPaymentResult(resultCode, data)
+        }
+    }
+
+    private fun checkPaypalPaymentResult(resultCode: Int, data: Intent?) {
+        when (resultCode) {
+            RESULT_OK       -> {
+                val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
+                result?.paymentMethodNonce?.nonce?.let { presenter.confirmPayment(it) }
+            }
+            RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.PAYPAL)
+            else            -> {
+                val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR)
+                if (error is Exception) {
+                    Timber.e(error)
                 }
-                RESULT_CANCELED    -> presenter.changePayment(PaymentRequestModel.PAYPAL)
-                else               -> {
-                    val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR)
-                    if (error is Exception) {
-                        Timber.e(error)
-                    }
-                }
+            }
+        }
+    }
+
+    private fun checkGooglePayPaymentResult(resultCode: Int, data: Intent?) {
+        when (resultCode) {
+            RESULT_OK       -> {
+                val paymentData = data?.let { PaymentData.getFromIntent(it) }
+                val json = paymentData?.toJson()?.let { JSONObject(it) }
+                val token = json?.getJSONObject("paymentMethodData")?.getJSONObject("tokenizationData")?.getString("token")
+                token?.let { presenter.payByGooglePay(it) } ?: blockInterface(false)
+            }
+            RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.GOOGLE_PAY)
+            AutoResolveHelper.RESULT_ERROR -> {
+                val status = data?.let { AutoResolveHelper.getStatusFromIntent(it) }
+                status?.statusMessage?.let { Timber.e(it) }
+                blockInterface(false)
             }
         }
     }
@@ -527,8 +575,17 @@ class PaymentOfferActivity : BaseActivity(),
         }
     }
 
+    override fun showGooglePayButton() {
+        layoutGooglePay.isVisible = true
+    }
+
+    override fun hideGooglePayButton() {
+        layoutGooglePay.isVisible = false
+    }
+
     companion object {
-        const val PAYMENT_REQUEST_CODE = 100
+        const val PAYPAL_PAYMENT_REQUEST_CODE = 100
+        const val GOOGLE_PAY_PAYMENT_REQUEST_CODE = 42
         const val PAYPAL_PACKAGE_NAME = "com.paypal.android.p2pmobile"
 
         const val INVALID_EMAIL = 1
