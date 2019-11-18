@@ -40,10 +40,9 @@ val systemData = module {
                 ContactEmail(ContactEmail.Id.INFO, "info@gettransfer.com"),
                 ContactEmail(ContactEmail.Id.PARTNER, "partner@gettransfer.com")
             ),
-            // TODO: check params bellow from gettransfer.com/api/configs
             checkoutCredentials =
                 CheckoutCredentials(
-                    "pk_11671baf-3b96-4bab-9eb1-fd4814e0919d"
+                    ""
                 ),
             googlePayCredentials =
                 GooglePayCredentials(

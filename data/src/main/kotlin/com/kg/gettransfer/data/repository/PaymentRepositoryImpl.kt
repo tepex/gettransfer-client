@@ -14,8 +14,7 @@ import com.kg.gettransfer.domain.model.Payment
 import com.kg.gettransfer.domain.model.PaymentRequest
 import com.kg.gettransfer.domain.model.PaymentStatus
 import com.kg.gettransfer.domain.model.PaymentStatusRequest
-import com.kg.gettransfer.domain.model.GooglePayPayment
-import com.kg.gettransfer.domain.model.GooglePayPaymentProcess
+import com.kg.gettransfer.domain.model.PaymentProcess
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.repository.PaymentRepository
@@ -38,16 +37,9 @@ class PaymentRepositoryImpl(
             Result(Payment.EMPTY, e.map())
         }
 
-    override suspend fun getGooglePayPayment(paymentRequest: PaymentRequest): Result<GooglePayPayment> =
+    override suspend fun processPayment(paymentProcess: PaymentProcess): Result<Payment> =
         try {
-            Result(factory.retrieveRemoteDataStore().createGooglePayPayment(paymentRequest.map()).map())
-        } catch (e: RemoteException) {
-            Result(GooglePayPayment.EMPTY, e.map())
-        }
-
-    override suspend fun processGooglePayPayment(paymentProcess: GooglePayPaymentProcess): Result<Payment> =
-        try {
-            Result(factory.retrieveRemoteDataStore().processGooglePayPayment(paymentProcess.map()).map())
+            Result(factory.retrieveRemoteDataStore().processPayment(paymentProcess.map()).map())
         } catch (e: RemoteException) {
             Result(Payment.EMPTY, e.map())
         }

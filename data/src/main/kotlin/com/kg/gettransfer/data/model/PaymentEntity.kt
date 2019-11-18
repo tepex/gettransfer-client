@@ -19,7 +19,7 @@ data class PaymentEntity(
 }
 
 data class ParamsEntity(
-    val amount: String,
+    val amount: Float,
     val currency: String,
     val paymentId: Long
 ) {

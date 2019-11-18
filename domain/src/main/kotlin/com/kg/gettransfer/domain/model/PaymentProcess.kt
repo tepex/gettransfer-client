@@ -1,6 +1,6 @@
 package com.kg.gettransfer.domain.model
 
-data class GooglePayPaymentProcess(
-    val paymentId: String,
+data class PaymentProcess(
+    val paymentId: Long,
     val token: String
 )

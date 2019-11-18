@@ -14,14 +14,14 @@ import sys.remote.GooglePayCredentialsModel
 import sys.remote.map
 
 data class ConfigsModel(
-    @SerializedName(ConfigsEntity.TRANSPORT_TYPES) @Expose val transportTypes: TransportTypesWrapperModel,
-    @SerializedName(ConfigsEntity.AVAILABLE_LOCALES) @Expose val availableLocales: List<LocaleModel>,
-    @SerializedName(ConfigsEntity.PAYMENT_COMMISSION) @Expose val paymentCommission: Float,
-    @SerializedName(ConfigsEntity.SUPPORTED_CURRENCIES) @Expose val supportedCurrencies: List<CurrencyModel>,
+    @SerializedName(ConfigsEntity.TRANSPORT_TYPES)          @Expose val transportTypes: TransportTypesWrapperModel,
+    @SerializedName(ConfigsEntity.AVAILABLE_LOCALES)        @Expose val availableLocales: List<LocaleModel>,
+    @SerializedName(ConfigsEntity.PAYMENT_COMMISSION)       @Expose val paymentCommission: Float,
+    @SerializedName(ConfigsEntity.SUPPORTED_CURRENCIES)     @Expose val supportedCurrencies: List<CurrencyModel>,
     @SerializedName(ConfigsEntity.SUPPORTED_DISTANCE_UNITS) @Expose val supportedDistanceUnits: List<String>,
-    @SerializedName(ConfigsEntity.CONTACT_EMAILS) @Expose val contactEmails: ContactEmailsWrapperModel,
-    @SerializedName(ConfigsEntity.CHECKOUT_CREDENTIALS) @Expose val checkoutCredentials: CheckoutCredentialsModel,
-    @SerializedName(ConfigsEntity.GOOGLEPAY_CREDENTIALS) @Expose val googlePayCredentials: GooglePayCredentialsModel
+    @SerializedName(ConfigsEntity.CONTACT_EMAILS)           @Expose val contactEmails: ContactEmailsWrapperModel,
+    @SerializedName(ConfigsEntity.CHECKOUT_CREDENTIALS)     @Expose val checkoutCredentials: CheckoutCredentialsModel,
+    @SerializedName(ConfigsEntity.GOOGLEPAY_CREDENTIALS)    @Expose val googlePayCredentials: GooglePayCredentialsModel
 )
 
 fun ConfigsModel.map() =

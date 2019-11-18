@@ -18,14 +18,14 @@ import sys.cache.map
 
 @Entity(tableName = ConfigsEntity.ENTITY_NAME)
 data class ConfigsModel(
-    @ColumnInfo(name = ConfigsEntity.TRANSPORT_TYPES) val transportTypes: TransportTypesCachedList,
-    @ColumnInfo(name = ConfigsEntity.AVAILABLE_LOCALES) val availableLocales: LocaleCachedList,
-    @ColumnInfo(name = ConfigsEntity.PAYMENT_COMMISSION) val paymentCommission: Float,
-    @ColumnInfo(name = ConfigsEntity.SUPPORTED_CURRENCIES) val supportedCurrencies: CurrencyCachedList,
+    @ColumnInfo(name = ConfigsEntity.TRANSPORT_TYPES)          val transportTypes: TransportTypesCachedList,
+    @ColumnInfo(name = ConfigsEntity.AVAILABLE_LOCALES)        val availableLocales: LocaleCachedList,
+    @ColumnInfo(name = ConfigsEntity.PAYMENT_COMMISSION)       val paymentCommission: Float,
+    @ColumnInfo(name = ConfigsEntity.SUPPORTED_CURRENCIES)     val supportedCurrencies: CurrencyCachedList,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: StringList,
-    @ColumnInfo(name = ConfigsEntity.CONTACT_EMAILS) val contactEmails: ContactEmailModelList,
-    @Embedded(prefix = ConfigsEntity.CHECKOUT_CREDENTIALS) val checkoutCredentials: CheckoutCredentialsModel,
-    @Embedded(prefix = ConfigsEntity.GOOGLEPAY_CREDENTIALS) val googlePayCredentials: GooglePayCredentialsModel,
+    @ColumnInfo(name = ConfigsEntity.CONTACT_EMAILS)           val contactEmails: ContactEmailModelList,
+    @Embedded(prefix = ConfigsEntity.CHECKOUT_CREDENTIALS)     val checkoutCredentials: CheckoutCredentialsModel,
+    @Embedded(prefix = ConfigsEntity.GOOGLEPAY_CREDENTIALS)    val googlePayCredentials: GooglePayCredentialsModel,
     @PrimaryKey(autoGenerate = true) val id: Long = 15
 )
 

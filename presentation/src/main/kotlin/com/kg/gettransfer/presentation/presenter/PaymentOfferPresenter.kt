@@ -18,18 +18,18 @@ import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Payment
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.GooglePayPayment
 
 import com.kg.gettransfer.extensions.newChainFromMain
 
+import com.kg.gettransfer.presentation.mapper.PaymentProcessMapper
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.PaymentProcessModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
-import com.kg.gettransfer.presentation.mapper.GooglePayPaymentProcessMapper
-import com.kg.gettransfer.presentation.model.GooglePayPaymentProcessModel
 import com.kg.gettransfer.presentation.model.map
+
 import com.kg.gettransfer.presentation.ui.helpers.GooglePayRequestsHelper
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
@@ -47,7 +47,7 @@ import org.koin.core.inject
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
-    private val googlePayPaymentProcessMapper: GooglePayPaymentProcessMapper by inject()
+    private val paymentProcessMapper: PaymentProcessMapper by inject()
     private val profileMapper: ProfileMapper by inject()
 
     private var transfer: Transfer? = null
@@ -63,7 +63,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private lateinit var paymentRequest: PaymentRequestModel
 
     lateinit var googlePayPaymentsClient: PaymentsClient
-    var googlePayPaymentId: String? = null
+    private var googlePayPaymentId = 0L
 
     @Suppress("ComplexMethod")
     override fun attachView(view: PaymentOfferView) {
@@ -71,8 +71,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         utils.launchSuspend {
             viewState.blockInterface(false)
 
+        if (configsManager.configs.checkoutCredentials.publicKey.isNotEmpty()) {
             viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
             isReadyToPayWithGooglePayRequest()
+        }
 
             with(paymentInteractor) {
                 transfer = selectedTransfer
@@ -176,7 +178,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             when (selectedPayment) {
                 PaymentRequestModel.PLATRON    -> payByCard(paymentRequest)
                 PaymentRequestModel.PAYPAL     -> getBraintreeToken()
-                PaymentRequestModel.GOOGLE_PAY -> loadGooglePayPaymentData(paymentRequest)
+                PaymentRequestModel.GOOGLE_PAY -> getGooglePayPaymentData(paymentRequest)
                 else                           -> payByBalance(paymentRequest)
             }
             logEventBeginCheckout()
@@ -202,18 +204,17 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         viewState.blockInterface(false)
     }
 
-    private fun loadGooglePayPaymentData(paymentModel: PaymentRequestModel) {
+    private fun getGooglePayPaymentData(paymentModel: PaymentRequestModel) {
         utils.launchSuspend {
-            val googlePayPaymentResult = getGooglePayPaymentResult(paymentModel)
-            val err = googlePayPaymentResult.error
+            val paymentResult = getPaymentResult(paymentModel)
+            val err = paymentResult.error
             if (err != null) {
                 log.error("get by google pay payment error", err)
                 viewState.setError(err)
             } else {
-                val model = googlePayPaymentResult.model
-                if (model.paymentId != null && model.amount != null && model.currency != null) {
-                    googlePayPaymentId = model.paymentId
-                    val paymentDataRequest = GooglePayRequestsHelper.getPaymentDataRequest(model.amount!!.toString(), model.currency!!).toString()
+                paymentResult.model.params?.let { params ->
+                    googlePayPaymentId = params.paymentId
+                    val paymentDataRequest = GooglePayRequestsHelper.getPaymentDataRequest(params.amount, params.currency).toString()
                     val request = PaymentDataRequest.fromJson(paymentDataRequest)
                     request?.let { viewState.startGooglePay(googlePayPaymentsClient.loadPaymentData(it)) }
                 }
@@ -225,18 +226,15 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     fun payByGooglePay(token: String) {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val paymentProcess = GooglePayPaymentProcessModel(googlePayPaymentId!!, token)
-            val processResult = processGooglePayPayment(paymentProcess)
+            val paymentProcess = PaymentProcessModel(googlePayPaymentId, token)
+            val processResult = getProcessPaymentResult(paymentProcess)
             checkPaymentResult(processResult.error)
             viewState.blockInterface(false)
         }
     }
 
-    private suspend fun getGooglePayPaymentResult(paymentModel: PaymentRequestModel): Result<GooglePayPayment> =
-        utils.asyncAwait { paymentInteractor.getGooglePayPayment(paymentRequestMapper.fromView(paymentModel)) }
-
-    private suspend fun processGooglePayPayment(paymentProcess: GooglePayPaymentProcessModel): Result<Payment> =
-        utils.asyncAwait { paymentInteractor.processGooglePayPayment(googlePayPaymentProcessMapper.fromView(paymentProcess)) }
+    private suspend fun getProcessPaymentResult(paymentProcess: PaymentProcessModel): Result<Payment> =
+        utils.asyncAwait { paymentInteractor.processPayment(paymentProcessMapper.fromView(paymentProcess)) }
 
     private suspend fun getPaymentResult(paymentModel: PaymentRequestModel): Result<Payment> =
         utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentModel)) }
@@ -325,11 +323,11 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private fun setupPaypal(amount: String?, currency: String?) {
+    private fun setupPaypal(amount: Float?, currency: String?) {
         try {
             val dropInRequest = DropInRequest().clientToken(braintreeToken)
 
-            val paypal = PayPalRequest(amount)
+            val paypal = PayPalRequest(amount.toString())
                 .currencyCode(currency).intent(PayPalRequest.INTENT_AUTHORIZE)
             dropInRequest.paypalRequest(paypal)
             viewState.startPaypal(dropInRequest, braintreeToken)

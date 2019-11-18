@@ -6,11 +6,11 @@ import sys.domain.GooglePayCredentials
 
 @Serializable
 data class GooglePayCredentialsEntity(
-    @SerialName(ENVIRONMENT) val environment: String,
-    @SerialName(MERCHANT_ID) val merchantId: String,
+    @SerialName(ENVIRONMENT)   val environment: String,
+    @SerialName(MERCHANT_ID)   val merchantId: String,
     @SerialName(MERCHANT_NAME) val merchantName: String,
     @SerialName(CARD_NETWORKS) val cardNetworks: List<String>,
-    @SerialName(AUTH_METHODS) val authMethods: List<String>
+    @SerialName(AUTH_METHODS)  val authMethods: List<String>
 ) {
     companion object {
         const val ENVIRONMENT   = "environment"

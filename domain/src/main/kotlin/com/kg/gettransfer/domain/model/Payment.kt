@@ -15,7 +15,7 @@ data class Payment(
 }
 
 data class Params(
-    val amount: String,
+    val amount: Float,
     val currency: String,
     val paymentId: Long
 )

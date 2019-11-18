@@ -7,15 +7,13 @@ import com.kg.gettransfer.data.model.PaymentEntity
 import com.kg.gettransfer.data.model.PaymentRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
-import com.kg.gettransfer.data.model.GooglePayPaymentEntity
-import com.kg.gettransfer.data.model.GooglePayPaymentProcessEntity
+import com.kg.gettransfer.data.model.PaymentProcessEntity
 
 import com.kg.gettransfer.remote.model.BraintreeTokenModel
 import com.kg.gettransfer.remote.model.PaymentModel
 import com.kg.gettransfer.remote.model.PaymentStatusRequestModel
 import com.kg.gettransfer.remote.model.PaymentStatusWrapperModel
 import com.kg.gettransfer.remote.model.ResponseModel
-import com.kg.gettransfer.remote.model.WrappedGooglePayPaymentModel
 import com.kg.gettransfer.remote.model.map
 
 import org.koin.core.get
@@ -29,14 +27,8 @@ class PaymentRemoteImpl : PaymentRemote {
         return response.data!!.map()
     }
 
-    override suspend fun createGooglePayPayment(paymentRequest: PaymentRequestEntity): GooglePayPaymentEntity {
-        val response: ResponseModel<WrappedGooglePayPaymentModel> = core.tryTwice { core.api.createNewGooglePayPayment(paymentRequest.map()) }
-        @Suppress("UnsafeCallOnNullableType")
-        return response.data!!.params.map()
-    }
-
-    override suspend fun processGooglePayPayment(paymentProcess: GooglePayPaymentProcessEntity): PaymentEntity {
-        val response: ResponseModel<PaymentModel> = core.tryTwice { core.api.processGooglePayPayment(paymentProcess.map()) }
+    override suspend fun processPayment(paymentProcess: PaymentProcessEntity): PaymentEntity {
+        val response: ResponseModel<PaymentModel> = core.tryTwice { core.api.processPayment(paymentProcess.map()) }
         @Suppress("UnsafeCallOnNullableType")
         return response.data!!.map()
     }

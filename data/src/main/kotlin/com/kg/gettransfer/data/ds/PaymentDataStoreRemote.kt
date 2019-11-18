@@ -5,7 +5,7 @@ import com.kg.gettransfer.data.PaymentRemote
 import com.kg.gettransfer.data.model.BraintreeTokenEntity
 import com.kg.gettransfer.data.model.PaymentRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
-import com.kg.gettransfer.data.model.GooglePayPaymentProcessEntity
+import com.kg.gettransfer.data.model.PaymentProcessEntity
 import org.koin.core.inject
 
 /**
@@ -17,9 +17,7 @@ open class PaymentDataStoreRemote : PaymentDataStore {
 
     override suspend fun createPayment(paymentRequest: PaymentRequestEntity) = remote.createPayment(paymentRequest)
 
-    override suspend fun createGooglePayPayment(paymentRequest: PaymentRequestEntity) = remote.createGooglePayPayment(paymentRequest)
-
-    override suspend fun processGooglePayPayment(paymentProcess: GooglePayPaymentProcessEntity) = remote.processGooglePayPayment(paymentProcess)
+    override suspend fun processPayment(paymentProcess: PaymentProcessEntity) = remote.processPayment(paymentProcess)
 
     override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity) =
         remote.changeStatusPayment(paymentStatusRequest)

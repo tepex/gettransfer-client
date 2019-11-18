@@ -13,5 +13,7 @@ open class PaymentRequestMapper : Mapper<PaymentRequestModel, PaymentRequest> {
             type.bookNowTransportType
         )
 
-    override fun toView(type: PaymentRequest): PaymentRequestModel { throw UnsupportedOperationException() }
+    override fun toView(type: PaymentRequest): PaymentRequestModel {
+        throw UnsupportedOperationException()
+    }
 }

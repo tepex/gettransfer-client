@@ -462,13 +462,12 @@ class PaymentOfferActivity : BaseActivity(),
                 val paymentData = data?.let { PaymentData.getFromIntent(it) }
                 val json = paymentData?.toJson()?.let { JSONObject(it) }
                 val token = json?.getJSONObject("paymentMethodData")?.getJSONObject("tokenizationData")?.getString("token")
-                token?.let { presenter.payByGooglePay(it) } ?: blockInterface(false)
+                token?.let { presenter.payByGooglePay(it) }
             }
             RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.GOOGLE_PAY)
             AutoResolveHelper.RESULT_ERROR -> {
                 val status = data?.let { AutoResolveHelper.getStatusFromIntent(it) }
                 status?.statusMessage?.let { Timber.e(it) }
-                blockInterface(false)
             }
         }
     }
