@@ -14,12 +14,10 @@ import com.kg.gettransfer.domain.interactor.PromoInteractor
 import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Dest
 import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.RouteInfoHourlyRequest
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.TransferNew
 import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
 
@@ -69,7 +67,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val nState: NewTransferState by inject()
 
     private val currencies by lazy { configsManager.configs.supportedCurrencies.map { it.map() } }
-    private var duration: Int? = null
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
@@ -81,7 +78,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var isTimeSetByUser = false
 
     fun init() {
-        initMapAndPrices()
+        updateRouteInfo(true, saveSelectedTransportTypes = false)
         setCurrency(sessionInteractor.currency.map())
         with(accountManager) {
             if (isLoggedIn && remoteAccount.isBusinessAccount) {
@@ -102,102 +99,26 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         checkOrderDateTime()
     }
 
-    private fun checkOrderDateTime() = with(orderInteractor) {
-        orderStartTime?.let { time ->
-            viewState.setDateTimeTransfer(time.simpleFormat(), true)
-            isTimeSetByUser = true
-        } ?: viewState.setHintForDateTimeTransfer(orderInteractor.hourlyDuration == null)
-        if (hourlyDuration != null) {
-            viewState.setTripType(false)
-        } else {
-            orderReturnTime?.let { viewState.setDateTimeTransfer(it.simpleFormat(), false) }
-        }
-    }
-
-    private fun initMapAndPrices() {
-        with(orderInteractor) {
-            if (from == null || to == null && hourlyDuration == null) {
-                return
-            }
-            hourlyDuration?.let { duration ->
-                if (to == null) getPricesForHourlyTransfer(duration) else getRouteAndPricesForPointToPointTransfer()
-            } ?: getRouteAndPricesForPointToPointTransfer()
-        }
-    }
-
-    fun showHourlyDurationDialog() {
-        viewState.showHourlyDurationDialog(orderInteractor.hourlyDuration)
-    }
-
-    fun updateDuration(durationValue: Int) {
-        saveSelectedTransportTypes()
-        orderInteractor.apply {
-            initMapAndPrices()
-            hourlyDuration = durationValue
-            viewState.setHourlyDuration(hourlyDuration)
-        }
-    }
-
-    private fun getPricesForHourlyTransfer(duration: Int) {
+    private fun updateRouteInfo(
+        updateMap: Boolean,
+        saveSelectedTransportTypes: Boolean = true,
+        isDateOrDistanceChanged: Boolean = false
+    ) {
+        if (saveSelectedTransportTypes) saveSelectedTransportTypes()
         val from = orderInteractor.from?.cityPoint
-        val dateTime = orderInteractor.orderStartTime
-        if (from?.point == null) {
-            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set", false))
-            return
-        }
+        val to = orderInteractor.to?.cityPoint
+        val hourlyDuration = orderInteractor.hourlyDuration
+        if (!pointsAndDurationIsValid(from, to, hourlyDuration)) return
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val routeInfo = utils.asyncAwait {
-                @Suppress("UnsafeCallOnNullableType")
-                orderInteractor.getRouteInfoHourlyTransfer(
-                    RouteInfoHourlyRequest(
-                        from.point!!,
-                        duration,
-                        sessionInteractor.currency.code,
-                        dateTime
-                    )
-                )
-            }.model
-            val prices = routeInfo.prices
+            val routeInfo = getRouteInfo(from!!, to, hourlyDuration)
+
             hintsToComments = routeInfo.hintsToComments
-            setTransportTypePrices(prices)
-            setHourlyPoint()
-            viewState.blockInterface(false)
-        }
-    }
-
-    @Suppress("UnsafeCallOnNullableType")
-    private fun getRouteAndPricesForPointToPointTransfer() {
-        val from = orderInteractor.from!!.cityPoint
-        val to = orderInteractor.to!!.cityPoint
-        val dateTime = orderInteractor.orderStartTime
-        if (from.point == null || to.point == null) {
-            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set", false))
-            return
-        }
-        utils.launchSuspend {
-            viewState.blockInterface(true, true)
-            val route: RouteInfo? = utils.asyncAwait {
-                orderInteractor.getRouteInfo(
-                        RouteInfoRequest(
-                                from.point!!,
-                                to.point!!,
-                                true,
-                                false,
-                                sessionInteractor.currency.code,
-                                dateTime
-                        )
-                )
-            }.model
-            route?.let { rt ->
-                duration = rt.duration
-                hintsToComments = rt.hintsToComments
-            }
-            setTransportTypePrices(route?.prices ?: emptyMap())
-
-            routeModel = routeMapper.getView(
-                    route?.distance,
-                    route?.polyLines,
+            setTransportTypePrices(routeInfo.prices)
+            to?.let { to ->
+                routeModel = routeMapper.getView(
+                    routeInfo.distance,
+                    routeInfo.polyLines,
                     from.name,
                     to.name,
                     from.point!!,
@@ -205,19 +126,48 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     dateDelegate.run {
                         startOrderedTime ?: getCurrentDate().time.simpleFormat()
                     }
-            )
+                )
 
-            if (isMapInitialized) setRoute()
+                if (isMapInitialized && updateMap) setRoute(isDateOrDistanceChanged)
+            } ?: if (isMapInitialized && updateMap) setHourlyPoint(isDateOrDistanceChanged)
+
             viewState.blockInterface(false)
         }
     }
+
+    private fun pointsAndDurationIsValid(from: CityPoint?, to: CityPoint?, hourlyDuration: Int?) =
+        if (from?.point == null) {
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set", false))
+            false
+        } else if (to?.point == null && hourlyDuration == null) {
+            viewState.setError(ApiException(ApiException.APP_ERROR, "`To` ($to) or 'Hourly duration' ($hourlyDuration) is not set", false))
+            false
+        } else {
+            true
+        }
+
+    @Suppress("UnsafeCallOnNullableType")
+    private suspend fun getRouteInfo(from: CityPoint, to: CityPoint?, hourlyDuration: Int?) =
+        utils.asyncAwait {
+            orderInteractor.getRouteInfo(
+                RouteInfoRequest(
+                    from.point!!,
+                    to?.point,
+                    hourlyDuration,
+                    true,
+                    if (hourlyDuration != null) false else dateDelegate.returnDate != null,
+                    sessionInteractor.currency.code,
+                    orderInteractor.orderStartTime
+                )
+            )
+        }.model
 
     fun mapInitialized() {
         isMapInitialized = true
         with(orderInteractor) {
             if (from == null || to == null && hourlyDuration == null) {
                 return
-            } else if (hourlyDuration != null && !orderInteractor.dropfOff) {
+            } else if (to == null) {
                 setHourlyPoint()
             } else {
                 if (routeModel != null) setRoute()
@@ -243,75 +193,42 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
-    private fun setRoute() {
+    private fun setRoute(isDateOrDistanceChanged: Boolean = false) {
         utils.launchSuspend {
             @Suppress("UnsafeCallOnNullableType")
             routeModel?.let { routeModel ->
-                utils.compute {
-                    polyline = Utils.getPolyline(routeModel)
-                    track = polyline!!.track
+                if (polyline == null) {
+                    utils.compute {
+                        polyline = Utils.getPolyline(routeModel)
+                        track = polyline!!.track
+                    }
                 }
-                viewState.setRoute(polyline!!, routeModel, false)
+                viewState.setRoute(polyline!!, routeModel, isDateOrDistanceChanged)
             }
         }
     }
 
-    private fun getNewPrices() {
-        saveSelectedTransportTypes()
-        orderInteractor.hourlyDuration?.let { initPrices(it) } ?: initPrices(dateDelegate.returnDate != null)
-    }
-
-    private fun initPrices(returnWay: Boolean) {
-        val from = orderInteractor.from?.cityPoint
-        val to = orderInteractor.to?.cityPoint
-        val dateTime = orderInteractor.orderStartTime
-        if (from?.point == null || to?.point == null) {
-            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) or `To` {$to} is not set", false))
-            return
-        }
-        utils.launchSuspend {
-            viewState.blockInterface(true, true)
-            val prices = utils.asyncAwait {
-                @Suppress("UnsafeCallOnNullableType")
-                orderInteractor.getRouteInfo(
-                    RouteInfoRequest(
-                        from.point!!,
-                        to.point!!,
-                        true,
-                        returnWay,
-                        sessionInteractor.currency.code,
-                        dateTime
-                    )
-                )
-            }.model.prices
-            setTransportTypePrices(prices)
-            viewState.blockInterface(false)
+    private fun checkOrderDateTime() = with(orderInteractor) {
+        orderStartTime?.let { time ->
+            viewState.setDateTimeTransfer(time.simpleFormat(), true)
+            isTimeSetByUser = true
+        } ?: viewState.setHintForDateTimeTransfer(orderInteractor.hourlyDuration == null)
+        if (hourlyDuration != null) {
+            viewState.setTripType(false)
+        } else {
+            orderReturnTime?.let { viewState.setDateTimeTransfer(it.simpleFormat(), false) }
         }
     }
 
-    private fun initPrices(duration: Int) {
-        val from = orderInteractor.from?.cityPoint
-        val dateTime = orderInteractor.orderStartTime
-        if (from?.point == null) {
-//            Timber.w("NPE! from: $from")
-            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set", false))
-            return
-        }
-        utils.launchSuspend {
-            viewState.blockInterface(true, true)
-            val prices = utils.asyncAwait {
-                @Suppress("UnsafeCallOnNullableType")
-                orderInteractor.getRouteInfoHourlyTransfer(
-                    RouteInfoHourlyRequest(
-                        from.point!!,
-                        duration,
-                        sessionInteractor.currency.code,
-                        dateTime
-                    )
-                )
-            }.model.prices
-            setTransportTypePrices(prices)
-            viewState.blockInterface(false)
+    fun showHourlyDurationDialog() {
+        viewState.showHourlyDurationDialog(orderInteractor.hourlyDuration)
+    }
+
+    fun updateDuration(durationValue: Int) {
+        orderInteractor.apply {
+            updateRouteInfo(false)
+            hourlyDuration = durationValue
+            viewState.setHourlyDuration(hourlyDuration)
         }
     }
 
@@ -332,32 +249,19 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     fun changeDate(isStartDate: Boolean) {
-        if (isStartDate) {
-            isTimeSetByUser = true
-            if (orderInteractor.hourlyDuration != null) {
-                setHourlyPoint(true)
-            } else {
-                @Suppress("UnsafeCallOnNullableType")
-                routeModel?.let { routeModel ->
-                    // value came from DateDelegate, so start_time was set
-                    routeModel.dateTime = dateDelegate.startOrderedTime!!
-                    viewState.setRoute(polyline!!, routeModel, true)
-                }
-            }
-            getNewPrices()
-        }
+        if (isStartDate) isTimeSetByUser = true
+        updateRouteInfo(true, isDateOrDistanceChanged = true)
     }
 
     fun clearReturnDate() {
-        saveSelectedTransportTypes()
         dateDelegate.returnDate = null
         orderInteractor.flightNumberReturn = null
-        initPrices(false)
+        updateRouteInfo(true, isDateOrDistanceChanged = true)
     }
 
     fun currencyChanged(currency: CurrencyModel) {
         setCurrency(currency, true)
-        getNewPrices()
+        updateRouteInfo(false)
     }
 
     private fun setCurrency(currency: CurrencyModel, hideCurrencies: Boolean = false) {
@@ -611,15 +515,16 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             result,
             orderInteractor.offeredPrice?.toString(),
             currency,
-            duration
+            orderInteractor.hourlyDuration ?: orderInteractor.duration
         )
     }
 
     private fun logEventAddToCart() {
+
         val tripType = when {
-            duration != null                -> Analytics.TRIP_HOURLY
-            dateDelegate.returnDate != null -> Analytics.TRIP_ROUND
-            else                            -> Analytics.TRIP_DESTINATION
+            orderInteractor.hourlyDuration != null -> Analytics.TRIP_HOURLY
+            dateDelegate.returnDate != null        -> Analytics.TRIP_ROUND
+            else                                   -> Analytics.TRIP_DESTINATION
         }
 
         val value = orderInteractor.offeredPrice?.toString()
@@ -628,7 +533,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         analytics.logEventAddToCart(
             transportTypes?.filter { it.checked }?.joinToString(),
-            duration,
+            orderInteractor.hourlyDuration ?: orderInteractor.duration,
             tripType,
             value,
             currency

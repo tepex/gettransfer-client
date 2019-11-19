@@ -282,12 +282,12 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
 
     override fun showHourlyDurationDialog(durationValue: Int?) {
         HourlyDurationDialogFragment
-                .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
-                    override fun onDone(durationValue: Int) {
-                        presenter.updateDuration(durationValue)
-                    }
-                })
-                .show(supportFragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
+            .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
+                override fun onDone(durationValue: Int) {
+                    presenter.updateDuration(durationValue)
+                }
+            })
+            .show(supportFragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
     }
 
     override fun currencyChanged(currency: CurrencyModel) {
@@ -323,8 +323,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         }
     }
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
-        if (isDateChanged) {
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateOrDistanceChanged: Boolean) {
+        if (isDateOrDistanceChanged) {
             clearMarkersAndPolylines()
         }
         setPolyline(polyline, routeModel)

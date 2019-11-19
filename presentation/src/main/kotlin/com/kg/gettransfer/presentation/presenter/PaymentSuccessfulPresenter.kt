@@ -67,6 +67,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                         to.name,
                         fromPoint,
                         toPoint,
+                        transfer.duration,
                         transfer.dateToLocal
                     )
                 }
@@ -81,9 +82,10 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         toName: String,
         fromPoint: Point,
         toPoint: Point,
+        duration: Int?,
         date: Date
     ) {
-        val r = getRouteInfo(fromPoint, toPoint)
+        val r = getRouteInfo(fromPoint, toPoint, duration)
         r.cacheError?.let { viewState.setError(it) }
         if (r.error == null || r.error != null && r.fromCache) {
             val routeModel = routeMapper.getView(
@@ -105,12 +107,13 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         point?.let { viewState.setPinHourlyTransfer(it, Utils.getCameraUpdateForPin(it)) }
     }
 
-    private suspend fun getRouteInfo(fromPoint: Point, toPoint: Point): Result<RouteInfo> =
+    private suspend fun getRouteInfo(fromPoint: Point, toPoint: Point, duration: Int?): Result<RouteInfo> =
         utils.asyncAwait {
             orderInteractor.getRouteInfo(
                 RouteInfoRequest(
-                    fromPoint,
-                    toPoint,
+                    from = fromPoint,
+                    to = toPoint,
+                    hourlyDuration = duration,
                     withPrices = false,
                     returnWay = false,
                     currency = sessionInteractor.currency.code,
