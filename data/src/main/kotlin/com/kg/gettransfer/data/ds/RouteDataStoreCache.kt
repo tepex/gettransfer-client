@@ -15,9 +15,10 @@ import org.koin.core.inject
 open class RouteDataStoreCache : RouteDataStore {
     private val cache: RouteCache by inject()
 
+    @Suppress("UnsafeCallOnNullableType")
     override suspend fun getRouteInfo(request: RouteInfoRequestEntity): RouteInfoEntity? {
         return try {
-            cache.getRouteInfo(request.from, request.to!!)
+            cache.getRouteInfo(request.from, request.to!!) // request.to can't be null
         } catch (e: CacheException) { throw e }
     }
 

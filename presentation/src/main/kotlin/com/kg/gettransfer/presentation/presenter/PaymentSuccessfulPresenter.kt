@@ -53,9 +53,9 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         }
     }
 
-    private suspend fun setRoute(transfer: Transfer) = with(transfer) {
-        to?.let { to ->
-            from.point?.let { fromPoint ->
+    private suspend fun setRoute(transfer: Transfer) {
+        transfer.to?.let { to ->
+            transfer.from.point?.let { fromPoint ->
                 to.point?.let { toPoint ->
                     setPointToPointTransfer(fromPoint, toPoint, transfer)
                 }

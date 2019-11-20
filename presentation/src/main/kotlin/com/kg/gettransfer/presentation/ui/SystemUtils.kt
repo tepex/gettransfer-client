@@ -26,7 +26,9 @@ internal object SystemUtils : KoinComponent {
         if (distance == null) return ""
         return if (withDistanceText) {
             val distanceText = if (splitDistance) "${distance / 2}x2=$distance" else distance
-            context.getString(R.string.LNG_RIDE_DISTANCE).plus(" $distanceText ").plus(sessionInteractor.distanceUnit.name)
+            context.getString(R.string.LNG_RIDE_DISTANCE)
+                .plus(" $distanceText ")
+                .plus(sessionInteractor.distanceUnit.name)
         } else {
             distance.toString().plus(sessionInteractor.distanceUnit.name)
         }
