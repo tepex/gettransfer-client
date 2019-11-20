@@ -20,6 +20,7 @@ import com.kg.gettransfer.domain.model.Trip
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.TransportTypePrice
+import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.extensions.isNonZero
 import com.kg.gettransfer.extensions.simpleFormat
@@ -114,40 +115,30 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         if (!pointsAndDurationIsValid(from, to, hourlyDuration)) return
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val routeInfo = getRouteInfo(from!!, to, hourlyDuration)
+            from?.let { from ->
+                val routeInfo = getRouteInfo(from, to, hourlyDuration)
 
-            hintsToComments = routeInfo.hintsToComments
-            setTransportTypePrices(routeInfo.prices)
-            to?.let { to ->
-                routeModel = routeMapper.getView(
-                    routeInfo.distance,
-                    routeInfo.polyLines,
-                    from.name,
-                    to.name,
-                    from.point!!,
-                    to.point!!,
-                    dateDelegate.run {
-                        startOrderedTime ?: getCurrentDate().time.simpleFormat()
-                    }
-                )
+                hintsToComments = routeInfo.hintsToComments
+                setTransportTypePrices(routeInfo.prices)
 
-                if (isMapInitialized && updateMap) setRoute(isDateOrDistanceChanged)
-            } ?: if (isMapInitialized && updateMap) setHourlyPoint(isDateOrDistanceChanged)
-
+                to?.let { to ->
+                    setPointToPointRoute(from, to, routeInfo, updateMap, isDateOrDistanceChanged)
+                } ?: if (isMapInitialized && updateMap) setHourlyPoint(isDateOrDistanceChanged)
+            }
             viewState.blockInterface(false)
         }
     }
 
-    private fun pointsAndDurationIsValid(from: CityPoint?, to: CityPoint?, hourlyDuration: Int?) =
-        if (from?.point == null) {
-            viewState.setError(ApiException(ApiException.APP_ERROR, "`From` ($from) is not set", false))
-            false
-        } else if (to?.point == null && hourlyDuration == null) {
-            viewState.setError(ApiException(ApiException.APP_ERROR, "`To` ($to) or 'Hourly duration' ($hourlyDuration) is not set", false))
-            false
-        } else {
-            true
-        }
+    private fun pointsAndDurationIsValid(from: CityPoint?, to: CityPoint?, hourlyDuration: Int?): Boolean {
+        val errorText =
+            if (from?.point == null) {
+                "`From` ($from) is not set"
+            } else if (to?.point == null && hourlyDuration == null) {
+                "`To` ($to) or 'Hourly duration' ($hourlyDuration) is not set"
+            } else null
+        errorText?.let { viewState.setError(ApiException(ApiException.APP_ERROR, it, false)) }
+        return errorText == null
+    }
 
     @Suppress("UnsafeCallOnNullableType")
     private suspend fun getRouteInfo(from: CityPoint, to: CityPoint?, hourlyDuration: Int?) =
@@ -175,6 +166,32 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 return
             } else {
                 if (routeModel != null) setRoute()
+            }
+        }
+    }
+
+    private fun setPointToPointRoute(
+        from: CityPoint,
+        to: CityPoint,
+        routeInfo: RouteInfo,
+        updateMap: Boolean,
+        isDateOrDistanceChanged: Boolean = false
+    ) {
+        from.point?.let { fromPoint ->
+            to.point?.let { toPoint ->
+                val isRoundTrip = dateDelegate.returnDate != null
+                routeModel = routeMapper.getView(
+                    from.name,
+                    to.name,
+                    fromPoint,
+                    toPoint,
+                    dateDelegate.run { startOrderedTime ?: getCurrentDate().time.simpleFormat() },
+                    routeInfo.distance?.let { if (isRoundTrip) it.times(2) else it },
+                    isRoundTrip,
+                    routeInfo.polyLines
+                )
+
+                if (isMapInitialized && updateMap) setRoute(isDateOrDistanceChanged)
             }
         }
     }

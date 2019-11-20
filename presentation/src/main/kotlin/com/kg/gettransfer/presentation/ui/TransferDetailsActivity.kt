@@ -323,7 +323,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
 
         if (transfer.to != null) {
-            transfer_details_main.tv_distance.text = SystemUtils.formatDistance(this, transfer.distance, false)
+            transfer_details_main.tv_distance.text =
+                SystemUtils.formatDistance(this, transfer.distance, false, false)
             transfer_details_main.tv_distance_dash.isVisible = false
         }
 

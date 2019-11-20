@@ -158,6 +158,7 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/listeners/CancelationReasonListener.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/RouteModel.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/VehicleModel.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/TransportTypeModel.kt",
 

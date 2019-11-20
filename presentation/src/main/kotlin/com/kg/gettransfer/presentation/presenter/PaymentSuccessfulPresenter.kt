@@ -21,8 +21,6 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import org.koin.core.inject
 
-import java.util.Date
-
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
 
@@ -58,15 +56,8 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     private suspend fun setRoute(transfer: Transfer) {
         transfer.to?.let { to ->
             transfer.from.point?.let { fromPoint ->
-                transfer.to?.point?.let { toPoint ->
-                    setPointToPointTransfer(
-                        transfer.from.name,
-                        to.name,
-                        fromPoint,
-                        toPoint,
-                        transfer.duration,
-                        transfer.dateToLocal
-                    )
+                to.point?.let { toPoint ->
+                    setPointToPointTransfer(fromPoint, toPoint, transfer)
                 }
             }
         } ?: run {
@@ -74,25 +65,19 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         }
     }
 
-    private suspend fun setPointToPointTransfer(
-        fromName: String,
-        toName: String,
-        fromPoint: Point,
-        toPoint: Point,
-        duration: Int?,
-        date: Date
-    ) {
-        val r = getRouteInfo(fromPoint, toPoint, duration)
+    private suspend fun setPointToPointTransfer(fromPoint: Point, toPoint: Point, transfer: Transfer) {
+        val r = getRouteInfo(fromPoint, toPoint, transfer.duration)
         r.cacheError?.let { viewState.setError(it) }
         if (r.error == null || r.error != null && r.fromCache) {
             val routeModel = routeMapper.getView(
-                r.model.distance,
-                r.model.polyLines,
-                fromName,
-                toName,
+                transfer.from.name,
+                transfer.to?.name,
                 fromPoint,
                 toPoint,
-                SystemUtils.formatDateTime(date)
+                SystemUtils.formatDateTime(transfer.dateToLocal),
+                transfer.distance,
+                transfer.dateReturnLocal != null,
+                r.model.polyLines
             )
             viewState.setRoute(Utils.getPolyline(routeModel))
         }

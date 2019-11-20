@@ -217,13 +217,14 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     @Suppress("UnsafeCallOnNullableType")
     private fun setRouteTransfer(transfer: Transfer, route: RouteInfo) {
         routeModel = routeMapper.getView(
-            transfer.distance,
-            route.polyLines,
             transfer.from.name,
             transfer.to!!.name,
             transfer.from.point!!,
             transfer.to!!.point!!,
-            SystemUtils.formatDateTime(transferModel.dateTime)
+            SystemUtils.formatDateTime(transferModel.dateTime),
+            transfer.distance,
+            transfer.dateReturnLocal != null,
+            route.polyLines
         )
         routeModel?.let { routeModel ->
             polyline = Utils.getPolyline(routeModel)

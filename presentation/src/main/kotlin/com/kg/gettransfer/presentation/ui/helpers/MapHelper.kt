@@ -62,7 +62,7 @@ object MapHelper {
 
         val bmPinA = getPinBitmap(layoutInflater, routeModel.from, routeModel.dateTime, aBitmap)
         val bmPinB = getPinBitmap(layoutInflater, routeModel.to!!,
-                SystemUtils.formatDistance(context, routeModel.distance, true), bBitmap)
+                SystemUtils.formatDistance(context, routeModel.distance, routeModel.isRoundTrip, true), bBitmap)
 
         if (Utils.isValidBitmap(bmPinA) && Utils.isValidBitmap(bmPinB)) {
             val startMakerOptions = polyline.startPoint?.let { createStartMarker(it, bmPinA) }

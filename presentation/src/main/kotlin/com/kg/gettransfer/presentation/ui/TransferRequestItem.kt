@@ -118,7 +118,8 @@ class TransferRequestItem @JvmOverloads constructor(
 
         if (item.to != null) {
             tvTo.text = item.to
-            tvDistance.text = SystemUtils.formatDistance(context, item.distance, false)
+            tvDistance.text =
+                SystemUtils.formatDistance(context, item.distance, false, false)
         } else {
             tvTo.text = ""
             tvDistance.text = ""
