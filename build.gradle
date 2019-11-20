@@ -158,6 +158,11 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/listeners/CancelationReasonListener.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/PaymentProcessMapper.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/PaymentRequestMapper.kt",
+
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/PaymentProcessModel.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/PaymentRequestModel.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/RouteModel.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/VehicleModel.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/TransportTypeModel.kt",
@@ -257,6 +262,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/RatingDetailDialogFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/CommentDialogFragment.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/GooglePayRequestsHelper.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/DateTimePickerHelper.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LanguageDrawer.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LayoutHelper.kt",
@@ -275,6 +281,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/NewTransferMainView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/OffersView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/OpenDeepLinkScreenView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/PaymentOfferView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/RatingLastTripView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SearchView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/Screens.kt",
