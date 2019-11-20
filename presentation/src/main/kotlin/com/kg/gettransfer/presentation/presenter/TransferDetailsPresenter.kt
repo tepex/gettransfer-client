@@ -47,10 +47,10 @@ import com.kg.gettransfer.presentation.ui.icons.transport.CarIconResourceProvide
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.TransferDetailsView
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import com.kg.gettransfer.sys.domain.Preferences
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
-import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -64,8 +64,8 @@ import org.koin.core.parameter.parametersOf
 @Suppress("TooManyFunctions")
 class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), CoordinateEventListener {
     private val coordinateInteractor: CoordinateInteractor by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
     private val worker: WorkerManager by inject { parametersOf("TransferDetailsPresenter") }
-    private val configsManager: ConfigsManager by inject()
     private val setAppEnters: SetAppEntersInteractor by inject()
 
     private val routeMapper: RouteMapper by inject()
@@ -107,13 +107,13 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    private fun setTransferFields(transfer: Transfer) {
+    private suspend fun setTransferFields(transfer: Transfer) {
         transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
         fromPoint = cityPointMapper.toView(transfer.from)
         transfer.to?.let { toPoint = cityPointMapper.toView(it) }
         hourlyDuration = transfer.duration
 
-        transferModel = transfer.map(configsManager.configs.transportTypes.map { it.map() })
+        transferModel = withContext(worker.bg) { transfer.map(configsManager.getConfigs().transportTypes.map { it.map() }) }
     }
 
     private suspend fun setOffer(transferId: Long) = fetchData { offerInteractor.getOffers(transferId) }
@@ -288,7 +288,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                         Analytics.REVIEW,
                         ReviewInteractor.MAX_RATE.toFloat()
                     )
-                    if (getPreferences().getModel().appEnters != Preferences.IMMUTABLE) {
+                    val appEnters = withContext(worker.bg) { getPreferences().getModel() }.appEnters
+                    if (appEnters != Preferences.IMMUTABLE) {
                         viewState.askRateInPlayMarket()
                         analytics.logSingleEvent(Analytics.EVENT_APP_REVIEW_REQUESTED)
                     }

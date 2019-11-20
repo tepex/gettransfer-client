@@ -46,7 +46,7 @@ fun Vehicle.map() =
         photos
     )
 
-fun VehicleEntity.map() =
+fun VehicleEntity.map(url: String) =
     Vehicle(
         id,
         name,
@@ -55,5 +55,5 @@ fun VehicleEntity.map() =
         year,
         color,
         TransportType(transportTypeId.map(), paxMax, luggageMax),
-        photos
+        photos.map { url.plus(it) }
     )

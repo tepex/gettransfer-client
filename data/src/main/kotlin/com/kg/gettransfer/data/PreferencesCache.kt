@@ -1,6 +1,7 @@
 package com.kg.gettransfer.data
 
 interface PreferencesCache {
+    var endpointUrl: String
     var accessToken: String
     var userEmail: String?
     var userPhone: String?

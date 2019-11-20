@@ -13,6 +13,7 @@ import kotlinx.serialization.Serializable
 data class PreferencesModel(
     @ColumnInfo(name = PreferencesEntity.ACCESS_TOKEN) val accessToken: String,
     @Embedded(prefix = PreferencesEntity.ENDPOINT) val endpoint: EndpointModel?,
+    @ColumnInfo(name = PreferencesEntity.IP_API_KEY) val ipApiKey: String?,
     @ColumnInfo(name = PreferencesEntity.IS_FIRST_LAUNCH) val isFirstLaunch: Boolean,
     @ColumnInfo(name = PreferencesEntity.IS_ONBOARDING_SHOWED) val isOnboardingShowed: Boolean,
     @ColumnInfo(name = PreferencesEntity.IS_NEW_DRIVER_APP_SHOWER) val isNewDriverAppDialogShowed: Boolean,
@@ -32,6 +33,7 @@ fun PreferencesModel.map() =
     PreferencesEntity(
         accessToken = accessToken,
         endpoint = endpoint?.map(),
+        ipApiKey = ipApiKey,
         isFirstLaunch = isFirstLaunch,
         isOnboardingShowed = isOnboardingShowed,
         isNewDriverAppDialogShowed = isNewDriverAppDialogShowed,
@@ -46,6 +48,7 @@ fun PreferencesEntity.map() =
     PreferencesModel(
         accessToken = accessToken,
         endpoint = endpoint?.map(),
+        ipApiKey = ipApiKey,
         isFirstLaunch = isFirstLaunch,
         isOnboardingShowed = isOnboardingShowed,
         isNewDriverAppDialogShowed = isNewDriverAppDialogShowed,

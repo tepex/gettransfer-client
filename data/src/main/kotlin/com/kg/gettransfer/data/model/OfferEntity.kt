@@ -56,7 +56,7 @@ data class OfferEntity(
     }
 }
 
-fun OfferEntity.map(dateFormat: DateFormat) =
+fun OfferEntity.map(dateFormat: DateFormat, url: String) =
     Offer(
         id,
         transferId ?: 0,
@@ -73,7 +73,7 @@ fun OfferEntity.map(dateFormat: DateFormat) =
         ratings?.map(),
         passengerFeedback,
         carrier.map(),
-        vehicle.map(),
+        vehicle.map(url),
         driver?.map()
     )
 
