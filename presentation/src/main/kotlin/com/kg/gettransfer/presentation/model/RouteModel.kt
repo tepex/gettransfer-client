@@ -3,7 +3,7 @@ package com.kg.gettransfer.presentation.model
 import com.kg.gettransfer.domain.model.Point
 
 data class RouteModel(
-    val distance: Int?,
+    var distance: Int?,
     val polyLines: List<String>?,
     val from: String,
     val to: String?,

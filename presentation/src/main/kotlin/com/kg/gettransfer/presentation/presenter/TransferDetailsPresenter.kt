@@ -142,6 +142,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                             RouteInfoRequest(
                                 from = fromPoint,
                                 to = toPoint,
+                                hourlyDuration = transfer.duration,
                                 withPrices = false,
                                 returnWay = false,
                                 currency = sessionInteractor.currency.code,

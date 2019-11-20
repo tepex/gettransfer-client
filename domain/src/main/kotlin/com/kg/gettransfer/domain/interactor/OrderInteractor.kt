@@ -5,7 +5,6 @@ import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.RouteInfoRequest
-import com.kg.gettransfer.domain.model.RouteInfoHourlyRequest
 import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.repository.GeoRepository
@@ -13,8 +12,6 @@ import com.kg.gettransfer.domain.repository.RouteRepository
 import com.kg.gettransfer.domain.repository.SessionRepository
 
 import java.util.Date
-
-import kotlin.math.absoluteValue
 
 class OrderInteractor(
     private val geoRepository: GeoRepository,
@@ -96,12 +93,6 @@ class OrderInteractor(
     }
 
     suspend fun getRouteInfo(request: RouteInfoRequest): Result<RouteInfo> {
-        val routeInfo = routeRepository.getRouteInfo(request)
-        duration = routeInfo.model.duration
-        return routeInfo
-    }
-
-    suspend fun getRouteInfoHourlyTransfer(request: RouteInfoHourlyRequest): Result<RouteInfo> {
         val routeInfo = routeRepository.getRouteInfo(request)
         duration = routeInfo.model.duration
         return routeInfo

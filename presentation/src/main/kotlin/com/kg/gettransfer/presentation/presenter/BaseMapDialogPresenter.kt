@@ -45,8 +45,9 @@ abstract class BaseMapDialogPresenter<BV : BaseMapDialogView> : BasePresenter<BV
             transfer.to?.point?.let { to ->
                 orderInteractor.getRouteInfo(
                     RouteInfoRequest(
-                        from,
-                        to,
+                        from = from,
+                        to = to,
+                        hourlyDuration = transfer.duration,
                         withPrices = false,
                         returnWay = false,
                         currency = sessionInteractor.currency.code,

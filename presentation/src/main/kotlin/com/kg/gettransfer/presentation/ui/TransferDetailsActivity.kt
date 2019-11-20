@@ -599,7 +599,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         vehiclePhotosView.setPhotos(offerModel.vehicle.transportType.imageId, offerModel.vehicle.photos)
     }
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateOrDistanceChanged: Boolean) {
         setPolyline(polyline, routeModel)
         btnCenterRoute.isVisible = false
         updateMapBehaviorBounds()
