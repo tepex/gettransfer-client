@@ -129,7 +129,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         transfer.to?.let { toPoint = cityPointMapper.toView(it) }
         hourlyDuration = transfer.duration
 
-        transferModel = withContext(worker.bg) { transfer.map(configsManager.getConfigs().transportTypes.map { it.map() }) }
+        transferModel = transfer.map(configsManager.getConfigs().transportTypes.map { it.map() })
         viewState.setTransfer(transferModel)
     }
 

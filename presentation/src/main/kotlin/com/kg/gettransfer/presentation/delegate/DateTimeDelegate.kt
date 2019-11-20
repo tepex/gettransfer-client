@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.delegate
 
 import android.content.Context
 
-import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 
@@ -71,7 +70,6 @@ class DateTimeDelegate : KoinComponent {
                 }
             }
         )
-    }
 
     private fun getCurrentDateForField(startsField: Boolean): Calendar {
         currentData = getCurrentDate()

@@ -180,12 +180,10 @@ class Analytics(
          */
         suspend fun sendAnalytics(transfers: List<Transfer>) {
             transfers.forEach { tr ->
-                utils.launchSuspend {
-                    transfer = tr
-                    transferModel = tr.map(configsManager.getConfigs().transportTypes.map { it.map() })
-                    getOffer(tr)
-                    sendAnalytics(tr)
-                }
+                transfer = tr
+                transferModel = tr.map(configsManager.getConfigs().transportTypes.map { it.map() })
+                getOffer(tr)
+                sendAnalytics(tr)
             }
         }
 

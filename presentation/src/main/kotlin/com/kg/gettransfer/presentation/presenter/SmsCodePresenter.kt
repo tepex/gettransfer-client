@@ -43,8 +43,9 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
                 viewState.tickTimer(millisUntilFinished, Second.MILLIS_PER_SECOND)
             }
 
-        override fun onFinish() {
-            viewState.finishTimer()
+            override fun onFinish() {
+                viewState.finishTimer()
+            }
         }
     }
 

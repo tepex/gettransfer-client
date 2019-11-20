@@ -94,7 +94,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         }
     }
 
-    override fun setPointAddress(currentAddress: GTAddress) {
+    override suspend fun setPointAddress(currentAddress: GTAddress) {
         super.setPointAddress(currentAddress)
         setAddressInSelectedField(currentAddress.cityPoint.name)
     }

@@ -46,6 +46,7 @@ import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.NewTransferState
 
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
@@ -171,13 +172,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 return
             } else if (to == null) {
                 setHourlyPoint()
+                return
             } else {
                 if (routeModel != null) setRoute()
             }
         }
     }
 
-    private fun setHourlyPoint(isDateChanged: Boolean = false) = worker.main.launch {
+    private fun setHourlyPoint(isDateChanged: Boolean = false) {
         orderInteractor.from?.let { from ->
             from.cityPoint.point?.let { p ->
                 val point = LatLng(p.latitude, p.longitude)
@@ -244,8 +246,9 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             transportTypes = newTransportTypes
         }
 
-        orderInteractor.selectedTransports?.let { setSelectedTransportTypes() }
-                    ?: setFavoriteTransportTypes()
+        orderInteractor.selectedTransports?.let {
+            setSelectedTransportTypes()
+        } ?: setFavoriteTransportTypes()
 
         transportTypes?.let { viewState.setTransportTypes(it) }
     }
@@ -454,7 +457,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         analytics.logSingleEvent(Analytics.SHOW_ROUTE_CLICKED)
     }
 
-    private fun setFavoriteTransportTypes() = worker.main.launch {
+    private suspend fun setFavoriteTransportTypes() {
         val favoriteTransports = withContext(worker.bg) { getPreferences().getModel() }.favoriteTransports
         if (favoriteTransports.isNotEmpty()) {
             selectTransportTypes(favoriteTransports)

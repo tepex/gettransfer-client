@@ -26,7 +26,7 @@ class SelectCurrencyPresenter : BasePresenter<SelectCurrencyView>(), KoinCompone
         super.attachView(view)
         worker.main.launch {
             val selectedCurrency = withContext(worker.bg) { sessionInteractor.currency.map() }
-            val currencies = withContext(worker.bg) { configsManager.getConfigs().supportedCurrencies.map { it.map() } }
+            val currencies = configsManager.getConfigs().supportedCurrencies.map { it.map() }
             viewState.setCurrencies(currencies, selectedCurrency)
 
             val popularCurrencies = withContext(worker.bg) { currencies.filter { Currency.POPULAR.contains(it.code) } }

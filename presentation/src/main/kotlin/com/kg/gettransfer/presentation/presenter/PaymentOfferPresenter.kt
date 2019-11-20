@@ -83,7 +83,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private fun setInfo(transfer: Transfer) {
+    private suspend fun setInfo(transfer: Transfer) {
         viewState.setToolbarTitle(transfer.map(configsManager.getConfigs().transportTypes.map { it.map() }))
         transfer.dateRefund?.let { dateRefund ->
             val commission = configsManager.getConfigs().paymentCommission

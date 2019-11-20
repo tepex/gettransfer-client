@@ -81,7 +81,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         super.updateCurrentLocationAsync(isFromField)
     }
 
-    override fun setPointAddress(currentAddress: GTAddress) {
+    override suspend fun setPointAddress(currentAddress: GTAddress) {
         super.setPointAddress(currentAddress)
 
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)

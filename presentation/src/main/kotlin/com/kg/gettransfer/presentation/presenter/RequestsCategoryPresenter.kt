@@ -12,6 +12,7 @@ import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.model.Coordinate
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -78,21 +79,35 @@ class RequestsCategoryPresenter(
     @Suppress("MandatoryBracesIfStatements")
     fun getTransfers(page: Int = 1) {
         worker.main.launch {
-            val transfersResult = when (transferType) {
+            var isError = false
+            transfers = when (transferType) {
                 TRANSFER_ACTIVE -> withContext(worker.bg) {
-                    if (isBusinessAccount()) getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ACTIVE)
-                    else transferInteractor.getTransfersActive().model
+                    if (isBusinessAccount()) {
+                        getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ACTIVE).also {
+                            isError = it.isError()
+                        }.model.first
+                    } else {
+                        transferInteractor.getTransfersActive().also {
+                            isError = it.isError()
+                        }.model
+                    }
                 }
                 TRANSFER_ARCHIVE -> withContext(worker.bg) {
-                    if (isBusinessAccount()) getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ARCHIVE)
-                    else transferInteractor.getTransfersArchive().model
+                    if (isBusinessAccount()) {
+                        getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ARCHIVE).also {
+                            isError = it.isError()
+                        }.model.first
+                    } else {
+                        transferInteractor.getTransfersArchive().also {
+                            isError = it.isError()
+                        }.model
+                    }
                 }
                 else -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
-            }
-            transfers = transfersResult.sortedByDescending { it.dateToLocal }
+            }.sortedByDescending { it.dateToLocal }
 
             setupCoordinate()
-            prepareDataAsync(!transfersResult.isError())
+            prepareDataAsync(!isError)
         }
     }
 
@@ -105,27 +120,10 @@ class RequestsCategoryPresenter(
         }
     }
 
-    private suspend fun getAllTransfersAndPagesCount(page: Int, status: String): List<Transfer> {
+    private suspend fun getAllTransfersAndPagesCount(page: Int, status: String): Result<Pair<List<Transfer>, Int?>> {
         val allTransfers = transferInteractor.getAllTransfers(getUserRole(), page, status)
         pagesCount = allTransfers.model.second
-        return allTransfers.model.first
-            val transfersResult = when (transferType) {
-                TRANSFER_ACTIVE  -> withContext(worker.bg) { transferInteractor.getTransfersActive()  }
-                TRANSFER_ARCHIVE -> withContext(worker.bg) { transferInteractor.getTransfersArchive() }
-                else             -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
-            }
-            transfers = transfersResult.model.sortedByDescending { it.dateToLocal }
-            if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
-                coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
-                if (driverCoordinate == null) {
-                    driverCoordinate = DriverCoordinate(Handler())
-                } else {
-                    @Suppress("UnsafeCallOnNullableType")
-                    driverCoordinate!!.transfersIds = transfers!!.map { it.id }
-                }
-            }
-            prepareDataAsync(!transfersResult.isError())
-        }
+        return allTransfers
     }
 
     private suspend fun prepareDataAsync(isRemoteData: Boolean) {

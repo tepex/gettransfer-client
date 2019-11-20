@@ -11,7 +11,6 @@ import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.presentation.model.CurrencyModel
 
 import com.kg.gettransfer.presentation.model.map
 
@@ -111,11 +110,10 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.initGeneralSettingsLayout()
         viewState.setCurrency(sessionInteractor.currency.map().name)
         val locale = sessionInteractor.locale
-        val localeModel = withContext(worker.bg) {
-            configsManager.getConfigs().availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
-                .map { it.map() }
-                .find { it.delegate.language == locale.language }
-        }
+        val localeModel = configsManager.getConfigs().availableLocales
+            .filter { Configs.LOCALES_FILTER.contains(it.language) }
+            .map { it.map() }
+            .find { it.delegate.language == locale.language }
         viewState.setLocale(localeModel?.name ?: "", locale.language)
         viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
     }
@@ -157,7 +155,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         }
     }
 
-    private fun showDebugMenu() = worker.main.launch {
+    private suspend fun showDebugMenu() {
         viewState.setEndpoints(endpoints)
         withContext(worker.bg) { getPreferences().getModel() }.endpoint?.let {
             viewState.setEndpoint(it.map())
