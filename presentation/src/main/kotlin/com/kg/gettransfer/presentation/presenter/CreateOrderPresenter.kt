@@ -119,16 +119,18 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             hintsToComments = routeInfo.hintsToComments
             setTransportTypePrices(routeInfo.prices)
             to?.let { to ->
+                val isRoundTrip = dateDelegate.returnDate != null
                 routeModel = routeMapper.getView(
-                    routeInfo.distance,
-                    routeInfo.polyLines,
                     from.name,
                     to.name,
                     from.point!!,
                     to.point!!,
                     dateDelegate.run {
                         startOrderedTime ?: getCurrentDate().time.simpleFormat()
-                    }
+                    },
+                    routeInfo.distance?.let { if (isRoundTrip) it.times(2) else it },
+                    isRoundTrip,
+                    routeInfo.polyLines
                 )
 
                 if (isMapInitialized && updateMap) setRoute(isDateOrDistanceChanged)

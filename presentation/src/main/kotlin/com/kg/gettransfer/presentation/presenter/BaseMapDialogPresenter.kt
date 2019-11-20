@@ -59,14 +59,16 @@ abstract class BaseMapDialogPresenter<BV : BaseMapDialogView> : BasePresenter<BV
 
         return transfer.from.point?.let { fromPoint ->
             transfer.to?.point?.let { toPoint ->
+                val isRoundTrip = transfer.dateReturnLocal != null
                 routeMapper.getView(
-                    route?.distance,
-                    route?.polyLines,
                     transfer.from.name,
                     transfer.to?.name,
                     fromPoint,
                     toPoint,
-                    SystemUtils.formatDateTime(transfer.dateToLocal)
+                    SystemUtils.formatDateTime(transfer.dateToLocal),
+                    transfer.distance,
+                    isRoundTrip,
+                    route?.polyLines
                 )
             }
         }

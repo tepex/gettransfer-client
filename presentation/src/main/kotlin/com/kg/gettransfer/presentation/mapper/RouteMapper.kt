@@ -6,21 +6,23 @@ import com.kg.gettransfer.presentation.model.RouteModel
 
 open class RouteMapper {
     fun getView(
-        distance: Int?,
-        polyLines: List<String>?,
         from: String,
         to: String?,
         fromPoint: Point,
         toPoint: Point,
-        dateTime: String
+        dateTime: String,
+        distance: Int?,
+        isRoundTrip: Boolean,
+        polyLines: List<String>?
     ) =
     RouteModel(
-        distance ?: Mapper.checkDistance(fromPoint, toPoint),
-        polyLines,
         from,
         to,
         fromPoint,
         toPoint,
-        dateTime
+        dateTime,
+        distance ?: Mapper.checkDistance(fromPoint, toPoint),
+        isRoundTrip,
+        polyLines
     )
 }

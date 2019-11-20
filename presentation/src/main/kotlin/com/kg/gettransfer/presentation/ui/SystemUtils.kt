@@ -22,12 +22,13 @@ internal object SystemUtils : KoinComponent {
     private const val TIME_PATTERN = "HH:mm"
     private const val SLASH = "/"
 
-    fun formatDistance(context: Context, distance: Int?, withDistanceText: Boolean): String {
+    fun formatDistance(context: Context, distance: Int?, splitDistance: Boolean, withDistanceText: Boolean): String {
         if (distance == null) return ""
         return if (withDistanceText) {
-            context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $distance ").plus(sessionInteractor.distanceUnit.name)
+            val distanceText = if (splitDistance) "${distance / 2}x2=$distance" else distance
+            context.getString(R.string.LNG_RIDE_DISTANCE).plus(" $distanceText ").plus(sessionInteractor.distanceUnit.name)
         } else {
-            distance.toString().plus("${sessionInteractor.distanceUnit.name}")
+            distance.toString().plus(sessionInteractor.distanceUnit.name)
         }
     }
 
