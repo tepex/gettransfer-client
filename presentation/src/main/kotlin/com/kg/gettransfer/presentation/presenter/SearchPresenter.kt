@@ -61,7 +61,7 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
 
     fun initSuggestedAddresses() {
         worker.main.launch {
-            viewState.setSuggestedAddresses(getPreferences().getModel().addressHistory)
+            viewState.setSuggestedAddresses(withContext(worker.bg) { getPreferences().getModel() }.addressHistory)
         }
     }
 

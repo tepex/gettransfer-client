@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.delegate
 
 import android.content.Context
 
-import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 
@@ -11,8 +10,6 @@ import com.kg.gettransfer.extensions.simpleFormat
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeHandler
 import com.kg.gettransfer.presentation.ui.helpers.DateTimePickerHelper
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
-
-import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -24,7 +21,6 @@ class DateTimeDelegate : KoinComponent {
 
     val orderInteractor: OrderInteractor by inject()
     val sessionInteractor: SessionInteractor by inject()
-    val configsManager: ConfigsManager by inject()
 
     lateinit var currentData: Calendar
 

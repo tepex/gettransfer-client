@@ -44,7 +44,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
 
     private fun fillViewFromState() {
         worker.main.launch {
-            selectedField = getPreferences().getModel().selectedField
+            selectedField = withContext(worker.bg) { getPreferences().getModel() }.selectedField
             viewState.initUIForSelectedField(selectedField)
             initAddressFieldAndMarker(selectedField)
             if (fillAddressFieldsCheckIsEmpty()) {
@@ -81,7 +81,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         super.updateCurrentLocationAsync(isFromField)
     }
 
-    override fun setPointAddress(currentAddress: GTAddress) {
+    override suspend fun setPointAddress(currentAddress: GTAddress) {
         super.setPointAddress(currentAddress)
 
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)

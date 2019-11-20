@@ -17,17 +17,14 @@ import kotlinx.android.synthetic.main.view_language_item.view.*
 
 class LanguagesListAdapter(
     private val listener: SelectLanguageListener,
-    private var languages: List<LocaleModel>,
-    private var selectedLanguage: LocaleModel
+    private val languages: List<LocaleModel>,
+    private val selectedLanguage: LocaleModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount() = languages.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
-        if (holder is ViewHolderLanguage) {
-            holder.bind(languages[pos], languages[pos].locale == selectedLanguage.locale, listener)
-        }
-    }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) =
+        (holder as ViewHolderLanguage).bind(languages[pos], languages[pos].locale == selectedLanguage.locale, listener)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolderLanguage(LayoutInflater.from(parent.context).inflate(R.layout.view_language_item, parent, false))

@@ -12,7 +12,6 @@ import org.koin.core.inject
 open class OfferMapper : Mapper<OfferModel, Offer> {
     private val carrierMapper: CarrierMapper by inject()
     private val profileMapper: ProfileMapper by inject()
-    lateinit var url: String
 
     override fun toView(type: Offer) =
         OfferModel(
@@ -29,7 +28,7 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
             type.ratings,
             type.passengerFeedback,
             carrierMapper.toView(type.carrier),
-            type.vehicle.map(url),
+            type.vehicle.map(),
             type.driver?.let { profileMapper.toView(it) },
             type.phoneToCall,
             type.wheelchair,

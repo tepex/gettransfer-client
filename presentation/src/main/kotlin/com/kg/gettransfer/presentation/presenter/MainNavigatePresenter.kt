@@ -14,11 +14,11 @@ import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.MainNavigateView
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.sys.domain.AddCountOfShowNewDriverAppDialogInteractor
 
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
-import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -33,10 +33,10 @@ import org.koin.core.parameter.parametersOf
 @Suppress("TooManyFunctions")
 class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventListener {
 
-    private val configsManager: ConfigsManager by inject()
     private val worker: WorkerManager by inject { parametersOf("MainNavigatePresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
     private val addCountOfShowDriverAppDialogInteractor: AddCountOfShowNewDriverAppDialogInteractor by inject()
 
     private var isAppLaunched = false
@@ -164,7 +164,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
             false
         } else {
             val transfer = transferResult.model
-            val transferModel = transfer.map(configsManager.configs.transportTypes.map { it.map() })
+            val transferModel = transfer.map(configsManager.getConfigs().transportTypes.map { it.map() })
             transferModel.status.checkOffers
         }
     }

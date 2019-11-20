@@ -1,6 +1,7 @@
 package com.kg.gettransfer.sys.remote
 
 import com.google.gson.GsonBuilder
+import com.kg.gettransfer.data.PreferencesCache
 
 import com.kg.gettransfer.remote.PrivateHttpLoggingInterceptor
 import com.kg.gettransfer.remote.TransportTypesDeserializer
@@ -10,11 +11,14 @@ import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 
 import org.koin.core.KoinComponent
+import org.koin.core.get
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SystemApiWrapper : KoinComponent {
+
+    private val preferences = get<PreferencesCache>()
 
     internal lateinit var api: SystemApi
         private set
@@ -36,5 +40,11 @@ class SystemApiWrapper : KoinComponent {
             callFactory { okHttpClient.newCall(it) }
             addConverterFactory(GsonConverterFactory.create(gson))
         }.build().create(SystemApi::class.java)
+    }
+
+    fun checkApiInitialization() {
+        if (!::api.isInitialized) {
+            changeEndpoint(preferences.endpointUrl)
+        }
     }
 }

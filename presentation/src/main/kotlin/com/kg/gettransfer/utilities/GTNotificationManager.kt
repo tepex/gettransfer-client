@@ -42,6 +42,8 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
         const val MESSAGE_CHANEL_ID = "message_chanel"
         const val MESSAGE_GROUP     = "message_group"
         const val MESSAGE_GROUP_ID  = 1
+
+        const val EMPTY_GROUP = 2
     }
 
     fun showOfferNotification(offer: OfferModel) {
@@ -76,7 +78,37 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
         }
     }
 
-    fun clearOffers(offerIds: List<Int>) = offerIds.forEach { getManager().cancel(it) }
+    fun clearOffers(offerIds: List<Int>) = offerIds.forEach { clearOfferNotification(it) }
+
+    private fun clearOfferNotification(notifyId: Int) {
+        val notificationManager = getManager()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val statusBarNotifications = notificationManager.activeNotifications
+
+            var groupKey: String? = null
+            for (statusBarNotification in statusBarNotifications) {
+                if (notifyId == statusBarNotification.id) {
+                    groupKey = statusBarNotification.groupKey
+                    break
+                }
+            }
+
+            var counter = 0
+            for (statusBarNotification in statusBarNotifications) {
+                if (statusBarNotification.groupKey == groupKey) {
+                    counter++
+                }
+            }
+
+            if (counter == EMPTY_GROUP) {
+                notificationManager.deleteNotificationChannel(OFFER_CHANEL_ID)
+                return
+            }
+        }
+
+        notificationManager.cancel(notifyId)
+    }
 
     fun showNewMessageNotification(transferId: Long, countNewMessages: Int, isMessageByDriver: Boolean) {
         val layout = RemoteViews(context.packageName, R.layout.notification_view)

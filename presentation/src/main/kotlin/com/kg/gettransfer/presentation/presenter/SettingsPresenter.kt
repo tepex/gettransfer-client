@@ -11,7 +11,6 @@ import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.presentation.model.CurrencyModel
 
 import com.kg.gettransfer.presentation.model.map
 
@@ -25,8 +24,8 @@ import com.kg.gettransfer.sys.domain.SetDebugMenuShowedInteractor
 import com.kg.gettransfer.sys.domain.SetEndpointInteractor
 import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
 import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
 import com.kg.gettransfer.sys.presentation.EndpointModel
 import com.kg.gettransfer.sys.presentation.map
 
@@ -52,8 +51,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     private var startMillis = 0L
 
     private val worker: WorkerManager by inject { parametersOf("SettingsPresenter") }
-    private val configsManager: ConfigsManager by inject()
 
+    private val getPreferences: GetPreferencesInteractor by inject()
     private val setDebugMenuShowed: SetDebugMenuShowedInteractor by inject()
     private val setEndpoint: SetEndpointInteractor by inject()
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
@@ -111,11 +110,10 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.initGeneralSettingsLayout()
         viewState.setCurrency(sessionInteractor.currency.map().name)
         val locale = sessionInteractor.locale
-        val localeModel = withContext(worker.bg) {
-            configsManager.configs.availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
-                .map { it.map() }
-                .find { it.delegate.language == locale.language }
-        }
+        val localeModel = configsManager.getConfigs().availableLocales
+            .filter { Configs.LOCALES_FILTER.contains(it.language) }
+            .map { it.map() }
+            .find { it.delegate.language == locale.language }
         viewState.setLocale(localeModel?.name ?: "", locale.language)
         viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
     }
@@ -151,14 +149,17 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     }
 
     private fun initDebugMenu() = worker.main.launch {
-        if (BuildConfig.FLAVOR == "dev" || getPreferences().getModel().isDebugMenuShowed) {
+        val isDebugMenuShowed = withContext(worker.bg) { getPreferences().getModel() }.isDebugMenuShowed
+        if (BuildConfig.FLAVOR == "dev" || isDebugMenuShowed) {
             showDebugMenu()
         }
     }
 
-    private fun showDebugMenu() = worker.main.launch {
+    private suspend fun showDebugMenu() {
         viewState.setEndpoints(endpoints)
-        getPreferences().getModel().endpoint?.let { viewState.setEndpoint(it.map()) }
+        withContext(worker.bg) { getPreferences().getModel() }.endpoint?.let {
+            viewState.setEndpoint(it.map())
+        }
         viewState.showDebugMenu()
     }
 
@@ -201,7 +202,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     private fun switchDebugSettings() {
         if (BuildConfig.FLAVOR == "prod") {
             worker.main.launch {
-                if (getPreferences().getModel().isDebugMenuShowed) {
+                val isDebugMenuShowed = withContext(worker.bg) { getPreferences().getModel() }.isDebugMenuShowed
+                if (isDebugMenuShowed) {
                     withContext(worker.bg) { setDebugMenuShowed(false) }
                     viewState.hideDebugMenu()
                 } else {
@@ -218,7 +220,6 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.blockInterface(true)
         withContext(worker.bg) {
             endpoint.delegate.run {
-                initEndpoint(this)
                 setEndpoint(this)
             }
             accountManager.logout()

@@ -40,13 +40,13 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
-
-import com.kg.gettransfer.sys.presentation.ConfigsManager
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.NewTransferState
 
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
@@ -59,14 +59,14 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val promoInteractor: PromoInteractor by inject()
     private val dateDelegate: DateTimeDelegate by inject()
     private val childSeatsDelegate: PassengersDelegate by inject()
-    private val configsManager: ConfigsManager by inject()
 
     private val routeMapper: RouteMapper by inject()
     private val userMapper: UserMapper by inject()
 
     private val nState: NewTransferState by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
 
-    private val currencies by lazy { configsManager.configs.supportedCurrencies.map { it.map() } }
+    private var currencies: List<CurrencyModel>? = null
     private var transportTypes: List<TransportTypeModel>? = null
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
@@ -79,7 +79,10 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun init() {
         updateRouteInfo(true, saveSelectedTransportTypes = false)
-        setCurrency(sessionInteractor.currency.map())
+        worker.main.launch {
+            currencies = configsManager.getConfigs().supportedCurrencies.map { it.map() }
+            setCurrency(sessionInteractor.currency.map())
+        }
         with(accountManager) {
             if (isLoggedIn && remoteAccount.isBusinessAccount) {
                 remoteAccount.partner?.defaultPromoCode?.let { promoCode ->
@@ -169,6 +172,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                 return
             } else if (to == null) {
                 setHourlyPoint()
+                return
             } else {
                 if (routeModel != null) setRoute()
             }
@@ -235,15 +239,16 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private suspend fun setTransportTypePrices(prices: Map<TransportType.ID, TransportTypePrice>) {
         utils.compute {
             val pr = prices.mapValues { it.value.map() }
-            val newTransportTypes = configsManager.configs.transportTypes.map { it.map(pr) }
+            val newTransportTypes = configsManager.getConfigs().transportTypes.map { it.map(pr) }
             transportTypes?.let { tt ->
                 newTransportTypes.forEach { it.checked = tt.find { old -> old.id == it.id }?.checked ?: false }
             }
             transportTypes = newTransportTypes
         }
 
-        orderInteractor.selectedTransports?.let { setSelectedTransportTypes() }
-                    ?: setFavoriteTransportTypes()
+        orderInteractor.selectedTransports?.let {
+            setSelectedTransportTypes()
+        } ?: setFavoriteTransportTypes()
 
         transportTypes?.let { viewState.setTransportTypes(it) }
     }
@@ -266,7 +271,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun setCurrency(currency: CurrencyModel, hideCurrencies: Boolean = false) {
         viewState.setCurrency(currency.symbol, hideCurrencies)
-        selectedCurrency = currencies.indexOf(currency)
+        currencies?.indexOf(currency)?.let { selectedCurrency = it }
     }
 
     fun changePassengers(count: Int) {
@@ -452,8 +457,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         analytics.logSingleEvent(Analytics.SHOW_ROUTE_CLICKED)
     }
 
-    private fun setFavoriteTransportTypes() = worker.main.launch {
-        val favoriteTransports = getPreferences().getModel().favoriteTransports
+    private suspend fun setFavoriteTransportTypes() {
+        val favoriteTransports = withContext(worker.bg) { getPreferences().getModel() }.favoriteTransports
         if (favoriteTransports.isNotEmpty()) {
             selectTransportTypes(favoriteTransports)
             setPassengersCountForSelectedTransportTypes()
@@ -509,7 +514,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun logCreateTransfer(result: String) {
 
-        val currency = if (selectedCurrency != INVALID_CURRENCY_INDEX) currencies[selectedCurrency].name else null
+        val currency = if (selectedCurrency != INVALID_CURRENCY_INDEX) currencies?.get(selectedCurrency)?.name else null
 
         analytics.logCreateTransfer(
             result,
@@ -529,7 +534,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
         val value = orderInteractor.offeredPrice?.toString()
 
-        val currency = if (selectedCurrency != INVALID_CURRENCY_INDEX) currencies[selectedCurrency].name else null
+        val currency = if (selectedCurrency != INVALID_CURRENCY_INDEX) currencies?.get(selectedCurrency)?.name else null
 
         analytics.logEventAddToCart(
             transportTypes?.filter { it.checked }?.joinToString(),

@@ -50,7 +50,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
                 if (!orderInteractor.isAddressesValid()) {
                     changeUsedField(FIELD_FROM)
                 } else {
-                    changeUsedField(getPreferences().getModel().selectedField)
+                    changeUsedField(withContext(worker.bg) { getPreferences().getModel() }.selectedField)
                 }
             }
         }
@@ -82,7 +82,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
 
     override fun updateCurrentLocationAsync(isFromField: Boolean) {
         worker.main.launch {
-            blockSelectedField(getPreferences().getModel().selectedField)
+            blockSelectedField(withContext(worker.bg) { getPreferences().getModel() }.selectedField)
         }
         super.updateCurrentLocationAsync(isFromField)
     }
@@ -94,7 +94,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         }
     }
 
-    override fun setPointAddress(currentAddress: GTAddress) {
+    override suspend fun setPointAddress(currentAddress: GTAddress) {
         super.setPointAddress(currentAddress)
         setAddressInSelectedField(currentAddress.cityPoint.name)
     }
@@ -106,7 +106,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     private fun setAddressInSelectedField(address: String?) {
         worker.main.launch {
             with(address ?: EMPTY_ADDRESS) {
-                when (getPreferences().getModel().selectedField) {
+                when (withContext(worker.bg) { getPreferences().getModel() }.selectedField) {
                     FIELD_FROM -> viewState.setAddressFrom(this)
                     FIELD_TO   -> viewState.setAddressTo(this)
                 }
@@ -118,7 +118,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         updateDuration(if (hourly) orderInteractor.hourlyDuration ?: MIN_HOURLY else null)
         viewState.updateTripView(hourly)
         worker.main.launch {
-            if (getPreferences().getModel().selectedField == FIELD_TO) {
+            if (withContext(worker.bg) { getPreferences().getModel() }.selectedField == FIELD_TO) {
                 changeUsedField(FIELD_FROM)
             }
         }

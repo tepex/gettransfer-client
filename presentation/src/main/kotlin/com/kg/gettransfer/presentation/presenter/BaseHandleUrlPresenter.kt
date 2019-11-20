@@ -4,16 +4,13 @@ import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.extensions.createStartChain
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.sys.presentation.ConfigsManager
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 open class BaseHandleUrlPresenter<BV : BaseHandleUrlView> : BasePresenter<BV>() {
 
     val worker: WorkerManager by inject { parametersOf("BaseHandleUrlPresenter") }
-    val configsManager: ConfigsManager by inject()
 
     override fun onFirstViewAttach() {}
 
@@ -32,12 +29,7 @@ open class BaseHandleUrlPresenter<BV : BaseHandleUrlView> : BasePresenter<BV>() 
     }
 
     suspend fun checkInitialization() {
-        withContext(worker.bg) {
-            getPreferences().getModel().endpoint?.let { initEndpoint(it) }
-        }
-        if (!configsManager.configsInitialized) {
-            configsManager.coldStart(worker.backgroundScope)
-        }
+        configsManager.coldStart(worker.backgroundScope)
         if (!sessionInteractor.isInitialized) {
             fetchResult(SHOW_ERROR) { sessionInteractor.coldStart() }
         }

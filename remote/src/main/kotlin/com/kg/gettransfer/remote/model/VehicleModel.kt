@@ -17,7 +17,7 @@ data class VehicleModel(
     @SerializedName(TransportTypeEntity.PAX_MAX) @Expose val paxMax: Int,
     @SerializedName(TransportTypeEntity.LUGGAGE_MAX) @Expose val luggageMax: Int,
 
-    @SerializedName(VehicleEntity.PHOTOS) @Expose var photos: List<String>
+    @SerializedName(VehicleEntity.PHOTOS) @Expose val photos: List<String>
 )
 
 fun VehicleModel.map() =

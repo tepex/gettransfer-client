@@ -19,15 +19,12 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
-
 import org.koin.core.inject
 
 import java.util.Date
 
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
-    private val configsManager: ConfigsManager by inject()
 
     private val routeMapper: RouteMapper by inject()
 
@@ -40,7 +37,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
             viewState.blockInterface(true, true)
             val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
             val transfer = result.model
-            val transferModel = transfer.map(configsManager.configs.transportTypes.map { it.map() })
+            val transferModel = transfer.map(configsManager.getConfigs().transportTypes.map { it.map() })
             if (result.error != null && !result.fromCache) {
                 result.error?.let { viewState.setError(it) }
             } else {

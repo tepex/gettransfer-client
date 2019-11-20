@@ -10,6 +10,7 @@ import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.presentation.view.RatingLastTripView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import com.kg.gettransfer.sys.domain.Preferences
 
@@ -25,6 +26,7 @@ import org.koin.core.parameter.parametersOf
 class RatingLastTripPresenter : BaseMapDialogPresenter<RatingLastTripView>() {
 
     private val worker: WorkerManager by inject { parametersOf("RatingLastTripPresenter") }
+    private val getPreferences: GetPreferencesInteractor by inject()
 
     internal var transferId: Long = 0L
 
@@ -56,8 +58,8 @@ class RatingLastTripPresenter : BaseMapDialogPresenter<RatingLastTripView>() {
             worker.main.launch {
                 withContext(worker.bg) { reviewInteractor.sendRates() }
                 viewState.cancelReview()
-
-                val showStoreDialog = getPreferences().getModel().appEnters != Preferences.IMMUTABLE
+                val appEnters = withContext(worker.bg) { getPreferences().getModel() }.appEnters
+                val showStoreDialog = appEnters != Preferences.IMMUTABLE
                 if (showStoreDialog) {
                     reviewInteractor.shouldAskRateInMarket = true
                     logAppReviewRequest()

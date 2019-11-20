@@ -13,6 +13,8 @@ import com.kg.gettransfer.remote.model.TokenModel
 import com.kg.gettransfer.remote.model.TransportTypesWrapperModel
 
 import com.kg.gettransfer.sys.data.EndpointEntity
+import com.kg.gettransfer.sys.data.map
+import com.kg.gettransfer.sys.domain.PreferencesRepository
 
 import java.io.IOException
 
@@ -36,12 +38,15 @@ class ApiCore : KoinComponent {
     val log: Logger by inject { parametersOf("GTR-remote") }
     private val preferences = get<PreferencesCache>()
     private val sessionRepository: SessionRepository by inject()
+    private val preferencesRepository: PreferencesRepository by inject()
 
-    internal lateinit var api: Api
     lateinit var apiUrl: String
-
     private lateinit var apiKey: String
     private lateinit var ipApiKey: String
+
+    internal lateinit var api: Api
+    internal lateinit var ipApi: Api
+
     private val gson = GsonBuilder()
         .setLenient()
         .registerTypeAdapter(TransportTypesWrapperModel::class.java, TransportTypesDeserializer())
@@ -78,12 +83,6 @@ class ApiCore : KoinComponent {
         .cookieJar(CookieJar.NO_COOKIES)
     }.build()
 
-    internal var ipApi = Retrofit.Builder().apply {
-        baseUrl(IP_API_SCHEME + IP_API_HOST_NAME)
-        callFactory { okHttpClient.newCall(it) }
-        addConverterFactory(GsonConverterFactory.create())
-    }.build().create(Api::class.java)
-
     fun changeEndpoint(endpoint: EndpointEntity) {
         apiKey = endpoint.key
         apiUrl = endpoint.url
@@ -96,6 +95,20 @@ class ApiCore : KoinComponent {
 
     fun changeIpApiKey(key: String) {
         ipApiKey = key
+        ipApi = Retrofit.Builder().apply {
+            baseUrl(IP_API_SCHEME + IP_API_HOST_NAME)
+            callFactory { okHttpClient.newCall(it) }
+            addConverterFactory(GsonConverterFactory.create())
+        }.build().create(Api::class.java)
+    }
+
+    private suspend fun checkApiInitialization() {
+        if (!::api.isInitialized) {
+            changeEndpoint(preferencesRepository.getResult().getModel().endpoint!!.map())
+        }
+        if (!::ipApi.isInitialized) {
+            changeIpApiKey(preferencesRepository.getResult().getModel().ipApiKey!!)
+        }
     }
 
     /**
@@ -105,6 +118,7 @@ class ApiCore : KoinComponent {
     @Suppress("ThrowsCount")
     internal suspend fun <R> tryTwice(apiCall: suspend () -> R): R =
         try {
+            checkApiInitialization()
             apiCall()
         } catch (e: Exception) {
             if (e is RemoteException) throw e /* second invocation */
@@ -125,6 +139,7 @@ class ApiCore : KoinComponent {
     @Suppress("ThrowsCount")
     internal suspend fun <R> tryTwice(id: Long, apiCall: suspend (Long) -> R): R =
         try {
+            checkApiInitialization()
             apiCall(id)
         } catch (e: Exception) {
             if (e is RemoteException) throw e /* second invocation */

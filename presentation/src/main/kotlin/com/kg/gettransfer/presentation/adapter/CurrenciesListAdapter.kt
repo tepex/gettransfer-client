@@ -23,11 +23,8 @@ class CurrenciesListAdapter(
 
     override fun getItemCount() = currencies.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
-        if (holder is ViewHolderCurrency) {
-            holder.bind(currencies[pos], currencies[pos].code == selectedCurrency.code, listener)
-        }
-    }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) =
+        (holder as ViewHolderCurrency).bind(currencies[pos], currencies[pos].code == selectedCurrency.code, listener)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolderCurrency(LayoutInflater.from(parent.context).inflate(R.layout.view_currency_item, parent, false))

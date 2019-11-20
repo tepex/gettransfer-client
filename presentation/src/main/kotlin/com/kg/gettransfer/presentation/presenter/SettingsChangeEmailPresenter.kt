@@ -11,14 +11,8 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
-
-import org.koin.core.inject
-
 @InjectViewState
 class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
-
-    private val configsManager: ConfigsManager by inject()
 
     private var newEmail: String? = null
     private var emailCode: String? = null
@@ -72,7 +66,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
             val result = fetchResultOnly { sessionInteractor.getCodeForChangeEmail(it) }
             if (result.error == null && result.model) {
                 viewState.showCodeLayout()
-                viewState.setTimer(configsManager.mobile.smsResendDelay.millis)
+                viewState.setTimer(configsManager.getMobileConfigs().smsResendDelay.millis)
                 smsSent = true
                 checkBtnVisibility()
             } else {
