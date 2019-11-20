@@ -11,8 +11,8 @@ object GooglePayRequestsHelper : KoinComponent {
 
     private val configsManager: ConfigsManager by inject()
 
-    fun getEnvironment() =
-        when(configsManager.configs.googlePayCredentials.environment) {
+    suspend fun getEnvironment() =
+        when(configsManager.getConfigs().googlePayCredentials.environment) {
             "production" -> WalletConstants.ENVIRONMENT_PRODUCTION
             else         -> WalletConstants.ENVIRONMENT_TEST
         }
@@ -23,25 +23,25 @@ object GooglePayRequestsHelper : KoinComponent {
             put("apiVersionMinor", 0)
         }
 
-    private fun getTokenizationSpecification() =
+    private suspend fun getTokenizationSpecification() =
         JSONObject().apply {
             put("type", "PAYMENT_GATEWAY")
             put(
                 "parameters",
                 JSONObject().apply {
                     put("gateway", "checkoutltd")
-                    put("gatewayMerchantId", configsManager.configs.checkoutCredentials.publicKey)
+                    put("gatewayMerchantId", configsManager.getConfigs().checkoutCredentials.publicKey)
                 }
             )
         }
 
-    private fun getAllowedCardNetworks() =
-        JSONArray(configsManager.configs.googlePayCredentials.cardNetworks)
+    private suspend fun getAllowedCardNetworks() =
+        JSONArray(configsManager.getConfigs().googlePayCredentials.cardNetworks)
 
-    private fun getAllowedCardAuthMethods() =
-        JSONArray(configsManager.configs.googlePayCredentials.authMethods)
+    private suspend fun getAllowedCardAuthMethods() =
+        JSONArray(configsManager.getConfigs().googlePayCredentials.authMethods)
 
-    private fun getBaseCardPaymentMethod() =
+    private suspend fun getBaseCardPaymentMethod() =
         JSONObject().apply {
             put("type", "CARD")
             put(
@@ -53,12 +53,12 @@ object GooglePayRequestsHelper : KoinComponent {
             )
         }
 
-    private fun getCardPaymentMethod() =
+    private suspend fun getCardPaymentMethod() =
         getBaseCardPaymentMethod().apply {
             put("tokenizationSpecification", getTokenizationSpecification())
         }
 
-    fun getIsReadyToPayRequest() =
+    suspend fun getIsReadyToPayRequest() =
         getBaseRequest().apply {
             put(
                 "allowedPaymentMethods",
@@ -76,13 +76,13 @@ object GooglePayRequestsHelper : KoinComponent {
             put("currencyCode", currency)
         }
 
-    private fun getMerchantInfo() =
+    private suspend fun getMerchantInfo() =
         JSONObject().apply {
-            put("merchantId", configsManager.configs.googlePayCredentials.merchantId)
-            put("merchantName", configsManager.configs.googlePayCredentials.merchantName)
+            put("merchantId", configsManager.getConfigs().googlePayCredentials.merchantId)
+            put("merchantName", configsManager.getConfigs().googlePayCredentials.merchantName)
         }
 
-    fun getPaymentDataRequest(price: Float, currency: String) =
+    suspend fun getPaymentDataRequest(price: Float, currency: String) =
         getBaseRequest().apply {
             put(
                 "allowedPaymentMethods",

@@ -71,10 +71,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         utils.launchSuspend {
             viewState.blockInterface(false)
 
-        if (configsManager.configs.checkoutCredentials.publicKey.isNotEmpty()) {
-            viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
-            isReadyToPayWithGooglePayRequest()
-        }
+            if (configsManager.getConfigs().checkoutCredentials.publicKey.isNotEmpty()) {
+                viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
+                isReadyToPayWithGooglePayRequest()
+            }
 
             with(paymentInteractor) {
                 transfer = selectedTransfer
@@ -101,7 +101,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private fun isReadyToPayWithGooglePayRequest() {
+    private suspend fun isReadyToPayWithGooglePayRequest() {
         val isReadyToPayRequest = GooglePayRequestsHelper.getIsReadyToPayRequest().toString()
         val request = IsReadyToPayRequest.fromJson(isReadyToPayRequest)
         val task = googlePayPaymentsClient.isReadyToPay(request)
@@ -243,7 +243,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         error?.let { paymentError(it) } ?: paymentSuccess()
     }
 
-    private fun paymentError(err: ApiException) {
+    private suspend fun paymentError(err: ApiException) {
         log.error("get by ${paymentRequest.gatewayId} payment error", err)
         router.navigateTo(Screens.PaymentError(paymentRequest.transferId, paymentRequest.gatewayId))
         analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
