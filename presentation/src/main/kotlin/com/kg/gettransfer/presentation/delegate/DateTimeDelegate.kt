@@ -12,8 +12,6 @@ import com.kg.gettransfer.presentation.ui.helpers.DateTimeHandler
 import com.kg.gettransfer.presentation.ui.helpers.DateTimePickerHelper
 import com.kg.gettransfer.presentation.ui.helpers.DateTimeScreen
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
-
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -24,7 +22,6 @@ class DateTimeDelegate : KoinComponent {
 
     val orderInteractor: OrderInteractor by inject()
     val sessionInteractor: SessionInteractor by inject()
-    val configsManager: ConfigsManager by inject()
 
     lateinit var currentData: Calendar
 
@@ -74,6 +71,7 @@ class DateTimeDelegate : KoinComponent {
                 }
             }
         )
+    }
 
     private fun getCurrentDateForField(startsField: Boolean): Calendar {
         currentData = getCurrentDate()

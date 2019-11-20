@@ -23,13 +23,14 @@ import com.kg.gettransfer.presentation.presenter.WebPagePresenter
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.WebPageView
-
+import com.kg.gettransfer.sys.domain.GetMobileConfigsInteractor
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
 import kotlinx.android.synthetic.main.activity_web_page.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 //import leakcanary.AppWatcher
 
 import org.koin.android.ext.android.inject
@@ -42,6 +43,7 @@ class WebPageActivity : MvpAppCompatActivity(), WebPageView {
     var navigator = SupportAppNavigator(this, Screens.NOT_USED)
     val navigatorHolder: NavigatorHolder by inject()
     private val worker: WorkerManager by inject { parametersOf("WebPage") }
+    private val getMobileConfigs: GetMobileConfigsInteractor by inject()
     private val getPreferences: GetPreferencesInteractor by inject()
 
     @InjectPresenter
@@ -70,27 +72,31 @@ class WebPageActivity : MvpAppCompatActivity(), WebPageView {
         webView.webViewClient = object : WebViewClient() {}
 
         worker.main.launch {
+            val url = withContext(worker.bg) { getPreferences().getModel() }.endpoint!!.url
             when (intent.getStringExtra(WebPageView.EXTRA_SCREEN)) {
-                WebPageView.SCREEN_LICENSE -> initActivity(
-                    R.string.LNG_RIDE_OFFERT_TITLE,
-                    SystemUtils.getUrlWithLocale(getPreferences().getModel().endpoint!!.url).plus(presenter.termsUrl)
-                )
+                WebPageView.SCREEN_LICENSE -> {
+                    val termsUrl = withContext(worker.bg) { getMobileConfigs().getModel() }.termsUrl
+                    initActivity(
+                        R.string.LNG_RIDE_OFFERT_TITLE,
+                        SystemUtils.getUrlWithLocale(url).plus("/$termsUrl")
+                    )
+                }
                 WebPageView.SCREEN_REG_CARRIER -> initActivity(
                     R.string.LNG_RIDE_CREATE_CARRIER,
-                    SystemUtils.getUrlWithLocale(getPreferences().getModel().endpoint!!.url).plus(getString(R.string.api_url_carrier_new))
+                    SystemUtils.getUrlWithLocale(url).plus(getString(R.string.api_url_carrier_new))
                 )
                 WebPageView.SCREEN_CARRIER -> initActivity(
                     R.string.LNG_RIDE_CREATE_CARRIER,
-                    SystemUtils.getUrlWithLocale(getPreferences().getModel().endpoint!!.url).plus(getString(R.string.api_url_carrier))
+                    SystemUtils.getUrlWithLocale(url).plus(getString(R.string.api_url_carrier))
                 )
                 WebPageView.SCREEN_RESTORE_PASS -> initActivity(
                     R.string.LNG_LOGIN_RECOVERY_PASSWORD,
-                    SystemUtils.getUrlWithLocale(getPreferences().getModel().endpoint!!.url).plus(getString(R.string.api_url_restore_password))
+                    SystemUtils.getUrlWithLocale(url).plus(getString(R.string.api_url_restore_password))
                 )
                 WebPageView.SCREEN_TRANSFERS -> initActivity(
                     null,
-                    SystemUtils.getUrlWithLocale(getPreferences().getModel().endpoint!!.url).plus(getString(R.string.api_url_transfers)),
-                    getPreferences().getModel().endpoint!!.url
+                    SystemUtils.getUrlWithLocale(url).plus(getString(R.string.api_url_transfers)),
+                    url
                 )
             }
         }

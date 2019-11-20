@@ -6,8 +6,8 @@ import com.kg.gettransfer.presentation.view.AboutView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.core.presentation.WorkerManager
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.sys.domain.SetFirstLaunchInteractor
-import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 
@@ -20,9 +20,9 @@ import org.koin.core.parameter.parametersOf
 @InjectViewState
 class AboutPresenter : BasePresenter<AboutView>() {
 
-    private val configsManager: ConfigsManager by inject()
     private val setFirstLaunch: SetFirstLaunchInteractor by inject()
     private val worker: WorkerManager by inject { parametersOf("AboutPresenter") }
+    private val getPreferences: GetPreferencesInteractor by inject()
 
     internal var openMain = false
 
@@ -31,7 +31,8 @@ class AboutPresenter : BasePresenter<AboutView>() {
     }
 
     fun logExitStep(value: Int) = worker.main.launch {
-        if (getPreferences().getModel().isFirstLaunch) {
+        val isFirstLaunch = withContext(worker.bg) { getPreferences().getModel() }.isFirstLaunch
+        if (isFirstLaunch) {
             withContext(worker.bg) { setFirstLaunch(false) }
             analytics.logEvent(Analytics.EVENT_ONBOARDING, Analytics.EXIT_STEP, value)
         }

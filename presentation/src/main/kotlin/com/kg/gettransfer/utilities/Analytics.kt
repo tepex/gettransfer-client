@@ -147,7 +147,7 @@ class Analytics(
         /**
          * Send analytics for single transfer
          */
-        fun sendAnalytics() {
+        suspend fun sendAnalytics() {
             getTransferAndOffer()
             transfer?.let { sendAnalytics(it) }
         }
@@ -178,11 +178,11 @@ class Analytics(
         /**
          * Send analytics for list of transfers
          */
-        fun sendAnalytics(transfers: List<Transfer>) {
+        suspend fun sendAnalytics(transfers: List<Transfer>) {
             transfers.forEach { tr ->
                 utils.launchSuspend {
                     transfer = tr
-                    transferModel = tr.map(configsManager.configs.transportTypes.map { it.map() })
+                    transferModel = tr.map(configsManager.getConfigs().transportTypes.map { it.map() })
                     getOffer(tr)
                     sendAnalytics(tr)
                 }
@@ -234,10 +234,10 @@ class Analytics(
             transportType = transfer?.transportTypeIds?.map { it.toString() }
         }
 
-        protected fun getTransferAndOffer() = paymentInteractor.selectedTransfer?.let { st ->
+        protected suspend fun getTransferAndOffer() = paymentInteractor.selectedTransfer?.let { st ->
             paymentInteractor.selectedOffer?.let { so ->
                 transfer = st
-                transferModel = st.map(configsManager.configs.transportTypes.map { it.map() })
+                transferModel = st.map(configsManager.getConfigs().transportTypes.map { it.map() })
                 getOfferType(so)
             }
         }
@@ -338,7 +338,7 @@ class Analytics(
      */
     inner class PaymentStatus(private var mPaymentType: String) : EcommercePurchase() {
 
-        fun sendAnalytics(event: String) {
+        suspend fun sendAnalytics(event: String) {
             super.event = event
             super.paymentType = when (mPaymentType) {
                 PaymentRequestModel.PLATRON -> CARD

@@ -16,6 +16,7 @@ import kotlinx.serialization.json.JSON
 @Suppress("WildcardImport")
 class PreferencesImpl(
     context: Context,
+    private val defaultUrl: String,
     private val encryptPass: EncryptPass
 ) : PreferencesCache {
 
@@ -30,7 +31,25 @@ class PreferencesImpl(
     private var _userPassword = INVALID_PASSWORD
     private var counterUpdated = false
 
+    private var _endpointUrl: String? = null
+
     inline fun <reified T> genericType() = object : TypeToken<T>() {}.type
+
+    override var endpointUrl: String
+        get() {
+            if (_endpointUrl == null) {
+                _endpointUrl = configsPrefs.getString(ENDPOINT_URL, defaultUrl)
+            }
+            @Suppress("UnsafeCallOnNullableType")
+            return _endpointUrl!!
+        }
+        set(value) {
+            _endpointUrl = value
+            with(configsPrefs.edit()) {
+                putString(ENDPOINT_URL, value)
+                apply()
+            }
+        }
 
     override var accessToken: String
         get() {
@@ -176,7 +195,7 @@ class PreferencesImpl(
         const val FIRST_LAUNCH        = "first_launch"
         const val ONBOARDING          = "onboarding"
         const val SELECTED_FIELD      = "selected_field"
-        const val ENDPOINT            = "endpoint"
+        const val ENDPOINT_URL        = "endpoint"
         const val ADDRESS_HISTORY     = "history"
         const val APP_ENTERS_COUNT    = "enters_count"
         const val FAVORITE_TRANSPORT  = "favorite_transport"

@@ -12,9 +12,11 @@ class MobileConfigsRemote : MobileConfigsRemoteDataSource, KoinComponent {
 
     private val apiWrapper: SystemApiWrapper by inject()
 
-    override suspend fun getResult(): ResultData<MobileConfigsEntity> =
-        runCatching<MobileConfigsModel> { apiWrapper.api.getMobileConfigs() }.fold(
+    override suspend fun getResult(): ResultData<MobileConfigsEntity> {
+        apiWrapper.checkApiInitialization()
+        return runCatching<MobileConfigsModel> { apiWrapper.api.getMobileConfigs() }.fold(
             { ResultData.Success(it.map()) },
             { ResultData.NetworkError(it) }
         )
+    }
 }

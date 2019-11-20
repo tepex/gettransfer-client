@@ -23,8 +23,6 @@ import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
-
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -53,7 +51,6 @@ class RequestsCategoryPresenter(
 
     private var transfers: List<Transfer>? = null
     private var driverCoordinate: DriverCoordinate? = null
-    private val configsManager: ConfigsManager by inject()
     private var pagesCount: Int? = null // for pagination
 
     override fun onFirstViewAttach() {
@@ -81,7 +78,7 @@ class RequestsCategoryPresenter(
     @Suppress("MandatoryBracesIfStatements")
     fun getTransfers(page: Int = 1) {
         worker.main.launch {
-            transfers = when (transferType) {
+            val transfersResult = when (transferType) {
                 TRANSFER_ACTIVE -> withContext(worker.bg) {
                     if (isBusinessAccount()) getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ACTIVE)
                     else transferInteractor.getTransfersActive().model
@@ -91,10 +88,11 @@ class RequestsCategoryPresenter(
                     else transferInteractor.getTransfersArchive().model
                 }
                 else -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
-            }.sortedByDescending { it.dateToLocal }
+            }
+            transfers = transfersResult.sortedByDescending { it.dateToLocal }
 
             setupCoordinate()
-            prepareDataAsync()
+            prepareDataAsync(!transfersResult.isError())
         }
     }
 
@@ -111,34 +109,49 @@ class RequestsCategoryPresenter(
         val allTransfers = transferInteractor.getAllTransfers(getUserRole(), page, status)
         pagesCount = allTransfers.model.second
         return allTransfers.model.first
+            val transfersResult = when (transferType) {
+                TRANSFER_ACTIVE  -> withContext(worker.bg) { transferInteractor.getTransfersActive()  }
+                TRANSFER_ARCHIVE -> withContext(worker.bg) { transferInteractor.getTransfersArchive() }
+                else             -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
+            }
+            transfers = transfersResult.model.sortedByDescending { it.dateToLocal }
+            if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
+                coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
+                if (driverCoordinate == null) {
+                    driverCoordinate = DriverCoordinate(Handler())
+                } else {
+                    @Suppress("UnsafeCallOnNullableType")
+                    driverCoordinate!!.transfersIds = transfers!!.map { it.id }
+                }
+            }
+            prepareDataAsync(!transfersResult.isError())
+        }
     }
 
-    private suspend fun prepareDataAsync() {
-        worker.main.launch {
-            transfers?.let { trs ->
-                if (trs.isNotEmpty()) {
-                    withContext(worker.bg) {
-                        val transportTypes = configsManager.configs.transportTypes.map { it.map() }
-                        transfers?.map { it.map(transportTypes) }?.map { transferModel ->
-                            if (transferModel.status == Transfer.Status.PERFORMED && isShowOfferInfo(transferModel)) {
-                                val offer = offerInteractor.getOffers(transferModel.id).model.let { list ->
-                                    if (list.size == 1) list.first() else null
-                                }
-                                transferModel.copy(matchedOffer = offer)
-                            } else {
-                                transferModel
+    private suspend fun prepareDataAsync(isRemoteData: Boolean) {
+        transfers?.let { trs ->
+            if (trs.isNotEmpty()) {
+                withContext(worker.bg) {
+                    val transportTypes = configsManager.getConfigs().transportTypes.map { it.map() }
+                    transfers?.map { it.map(transportTypes) }?.map { transferModel ->
+                        if (transferModel.status == Transfer.Status.PERFORMED && isShowOfferInfo(transferModel)) {
+                            val offer = offerInteractor.getOffers(transferModel.id).model.let { list ->
+                                if (list.size == 1) list.first() else null
                             }
+                            transferModel.copy(matchedOffer = offer)
+                        } else {
+                            transferModel
                         }
-                    }?.also { transfersList ->
-                        viewState.updateTransfers(transfersList, pagesCount)
-                        viewState.blockInterface(false)
-                        updateEventsCount()
                     }
-                    sendAnalytics()
-                } else {
+                }?.also { transfersList ->
+                    viewState.updateTransfers(transfersList, pagesCount)
                     viewState.blockInterface(false)
-                    viewState.onEmptyList()
+                    updateEventsCount()
                 }
+                if (isRemoteData && transferType == TRANSFER_ACTIVE) sendAnalytics()
+            } else {
+                viewState.blockInterface(false)
+                viewState.onEmptyList()
             }
         }
     }
@@ -162,10 +175,8 @@ class RequestsCategoryPresenter(
         return dateNow.after(dateStart) && dateNow.before(dateEnd)
     }
 
-    private fun sendAnalytics() {
-        when (transferType) {
-            TRANSFER_ACTIVE -> transfers?.let { analytics.EcommercePurchase().sendAnalytics(it) }
-        }
+    private suspend fun sendAnalytics() {
+        transfers?.let { analytics.EcommercePurchase().sendAnalytics(it) }
     }
 
     private fun updateEventsCount() {

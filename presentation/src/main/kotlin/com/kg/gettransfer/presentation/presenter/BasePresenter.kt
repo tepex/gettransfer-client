@@ -21,10 +21,9 @@ import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.sys.domain.Endpoint
 
-import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.sys.domain.SetFavoriteTransportsInteractor
+import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
@@ -72,13 +71,14 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val downloadManager: GTDownloadManager by inject()
 
     private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
-    protected val getPreferences: GetPreferencesInteractor by inject()
 
     private val setFavoriteTransports: SetFavoriteTransportsInteractor by inject()
 
     private var openedLoginScreenForUnauthorizedUser = false
 
     protected val log: Logger by inject { parametersOf("GTR-presenter") }
+
+    protected val configsManager: ConfigsManager by inject()
 
     open fun onBackCommandClick() {
         analytics.logEvent(Analytics.EVENT_MAIN, Analytics.PARAM_KEY_NAME, Analytics.BACK_CLICKED)
@@ -93,16 +93,11 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
                 if (sessionInteractor.isInitialized) {
                     systemInitialized()
                 } else {
-                    getPreferences().getModel().endpoint?.let { initEndpoint(it) }
                     sessionInteractor.coldStart()
                     systemInitialized()
                 }
             }
         }
-    }
-
-    protected fun initEndpoint(endpoint: Endpoint) {
-        offerMapper.url = endpoint.url
     }
 
     override fun attachView(view: BV) {

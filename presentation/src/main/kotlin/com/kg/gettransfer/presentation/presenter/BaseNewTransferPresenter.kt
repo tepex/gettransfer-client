@@ -103,7 +103,7 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
 
     open fun setPointAddress(currentAddress: GTAddress) {
         worker.main.launch {
-            when (getPreferences().getModel().selectedField) {
+            when (withContext(worker.bg) { getPreferences().getModel() }.selectedField) {
                 FIELD_FROM -> orderInteractor.from = currentAddress
                 FIELD_TO   -> orderInteractor.to   = currentAddress
             }

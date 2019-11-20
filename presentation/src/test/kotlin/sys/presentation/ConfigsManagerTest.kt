@@ -118,8 +118,8 @@ class ConfigsManagerTest : StringSpec(), KoinTest {
             confirmVerified(endpointRepository)
 
             result.shouldBeNull()
-            configsManager.configs shouldBe CONFIGS
-            configsManager.mobile shouldBe MOBILE_CONFIGS
+            configsManager.getConfigs() shouldBe CONFIGS
+            configsManager.getConfigs() shouldBe MOBILE_CONFIGS
             // configsManager.preferences shouldBe PREFERENCES
         }
 
@@ -165,8 +165,8 @@ class ConfigsManagerTest : StringSpec(), KoinTest {
                 confirmVerified(preferencesRepository)
 
                 result.shouldBeNull()
-                configsManager.configs shouldBe CONFIGS
-                configsManager.mobile shouldBe MOBILE_CONFIGS
+                configsManager.getConfigs() shouldBe CONFIGS
+                configsManager.getMobileConfigs() shouldBe MOBILE_CONFIGS
                 // configsManager.preferences shouldBe PREFERENCES
             }
         }

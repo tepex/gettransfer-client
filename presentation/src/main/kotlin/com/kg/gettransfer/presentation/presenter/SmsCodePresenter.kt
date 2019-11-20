@@ -10,18 +10,13 @@ import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SmsCodeView
 
-import com.kg.gettransfer.sys.presentation.ConfigsManager
-
 import com.kg.gettransfer.utilities.Analytics
+import kotlinx.coroutines.launch
 
 import kotlinx.serialization.json.JSON
 
-import org.koin.core.get
-
 @InjectViewState
 class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
-
-    private val smsResendDelay = get<ConfigsManager>().mobile.smsResendDelay.millis
 
     var isPhone = false
     var pinCode = ""
@@ -30,10 +25,23 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
     val isEnabledButtonDone
         get() = pinCode.length == pinItemsCount
 
-    private val timerBtnResendCode: CountDownTimer = object : CountDownTimer(smsResendDelay, Second.MILLIS_PER_SECOND) {
-        override fun onTick(millisUntilFinished: Long) {
-            viewState.tickTimer(millisUntilFinished, Second.MILLIS_PER_SECOND)
+    private var smsResendDelay = Second(90).millis
+    private lateinit var timerBtnResendCode: CountDownTimer
+
+    override fun attachView(view: SmsCodeView) {
+        super.attachView(view)
+        worker.main.launch {
+            smsResendDelay = configsManager.getMobileConfigs().smsResendDelay.millis
+            initTimer()
+            setTimer()
         }
+    }
+
+    private fun initTimer() {
+        timerBtnResendCode = object : CountDownTimer(smsResendDelay, Second.MILLIS_PER_SECOND) {
+            override fun onTick(millisUntilFinished: Long) {
+                viewState.tickTimer(millisUntilFinished, Second.MILLIS_PER_SECOND)
+            }
 
         override fun onFinish() {
             viewState.finishTimer()

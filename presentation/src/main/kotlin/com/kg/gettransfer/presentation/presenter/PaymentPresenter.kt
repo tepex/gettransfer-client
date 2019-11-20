@@ -69,7 +69,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
     }
 
     override fun onNewPaymentStatusEvent(isSuccess: Boolean) {
-        if (isSuccess) utils.launchSuspend { isPaymentWasSuccessful() } else showFailedPayment()
+        utils.launchSuspend { if (isSuccess) isPaymentWasSuccessful() else showFailedPayment() }
     }
 
     private suspend fun isPaymentWasSuccessful() {
@@ -83,7 +83,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
         }
     }
 
-    private fun showFailedPayment() {
+    private suspend fun showFailedPayment() {
         if (!showFailedPayment) {
             showFailedPayment = true
             viewState.blockInterface(false)
@@ -93,7 +93,7 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
         }
     }
 
-    private fun showSuccessfulPayment() {
+    private suspend fun showSuccessfulPayment() {
         if (!showSuccessPayment) {
             showSuccessPayment = true
             viewState.blockInterface(false)
