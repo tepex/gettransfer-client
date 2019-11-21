@@ -39,71 +39,53 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin16"
-            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/rbCard"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/ivVisa"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/payment_logo_card_height"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:srcCompat="@drawable/ic_visa"
-                    tools:ignore="MissingConstraints" />
-
-                <ImageView
-                    android:id="@+id/ivMasterCard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/payment_logo_card_height"
-                    android:layout_weight="1"
-                    app:layout_constraintEnd_toStartOf="@+id/ivAmex"
-                    app:layout_constraintStart_toEndOf="@+id/ivVisa"
-                    app:srcCompat="@drawable/ic_master_card"
-                    tools:ignore="MissingConstraints" />
-
-                <ImageView
-                    android:id="@+id/ivAmex"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/payment_logo_card_height"
-                    android:layout_weight="1"
-                    app:layout_constraintEnd_toStartOf="@+id/ivDiscover"
-                    app:layout_constraintStart_toEndOf="@+id/ivMasterCard"
-                    app:srcCompat="@drawable/ic_amex"
-                    tools:ignore="MissingConstraints" />
-
-                <ImageView
-                    android:id="@+id/ivDiscover"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/payment_logo_card_height"
-                    android:layout_weight="1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/ic_discover"
-                    tools:ignore="MissingConstraints" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/cardsCommission"
-                style="@style/sf_font_pro_text_regular_grey"
+            <ImageView
+                android:id="@+id/ivVisa"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/payment_card_commission_margin_top"
-                android:textSize="@dimen/payment_commission_text_size"
-                android:visibility="gone"
-                tools:text="Commission 2%."
-                tools:visibility="visible" />
+                android:layout_height="@dimen/payment_logo_card_height"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/ic_visa"
+                tools:ignore="MissingConstraints" />
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/ivMasterCard"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/payment_logo_card_height"
+                android:layout_weight="1"
+                app:layout_constraintEnd_toStartOf="@+id/ivAmex"
+                app:layout_constraintStart_toEndOf="@+id/ivVisa"
+                app:srcCompat="@drawable/ic_master_card"
+                tools:ignore="MissingConstraints" />
+
+            <ImageView
+                android:id="@+id/ivAmex"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/payment_logo_card_height"
+                android:layout_weight="1"
+                app:layout_constraintEnd_toStartOf="@+id/ivDiscover"
+                app:layout_constraintStart_toEndOf="@+id/ivMasterCard"
+                app:srcCompat="@drawable/ic_amex"
+                tools:ignore="MissingConstraints" />
+
+            <ImageView
+                android:id="@+id/ivDiscover"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/payment_logo_card_height"
+                android:layout_weight="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_discover"
+                tools:ignore="MissingConstraints" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -133,38 +115,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/ivPaypal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/payment_logo_card_height"
+            android:layout_marginTop="@dimen/payment_paypal_logo_vertical_margin"
+            android:layout_marginBottom="@dimen/payment_paypal_logo_vertical_margin"
+            app:srcCompat="@drawable/ic_paypal"
             android:layout_marginStart="@dimen/margin16"
-            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/rbPaypal"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/ivPaypal"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/payment_logo_card_height"
-                android:layout_marginTop="@dimen/payment_paypal_logo_vertical_margin"
-                android:layout_marginBottom="@dimen/payment_paypal_logo_vertical_margin"
-                app:srcCompat="@drawable/ic_paypal" />
-
-            <TextView
-                android:id="@+id/paypalCommission"
-                style="@style/sf_font_pro_text_regular_grey"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/payment_paypal_commission_margin_top"
-                android:textSize="@dimen/payment_commission_text_size"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/ivPaypal"
-                app:layout_constraintTop_toBottomOf="@+id/ivPaypal"
-                tools:text="Commission 2%."
-                tools:visibility="visible" />
-
-        </LinearLayout>
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
