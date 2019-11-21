@@ -11,18 +11,18 @@ import com.kg.gettransfer.presentation.ui.SplashActivity
 import org.junit.Rule
 import org.junit.Test
 
-import presentation.data.Constants
+import com.kg.gettransfer.presentation.data.Constants
 
-import presentation.screenelements.Calendar
-import presentation.screenelements.DialogWindow
-import presentation.screenelements.NavBar
-import presentation.screenelements.OffersScreen
-import presentation.screenelements.Onboarding
-import presentation.screenelements.OrderScreen
-import presentation.screenelements.OrdersDetails
-import presentation.screenelements.ProfileScreen
-import presentation.screenelements.SearchForm
-import presentation.screenelements.SettingsScreen
+import com.kg.gettransfer.presentation.screenelements.Calendar
+import com.kg.gettransfer.presentation.screenelements.DialogWindow
+import com.kg.gettransfer.presentation.screenelements.NavBar
+import com.kg.gettransfer.presentation.screenelements.OffersScreen
+import com.kg.gettransfer.presentation.screenelements.Onboarding
+import com.kg.gettransfer.presentation.screenelements.OrderScreen
+import com.kg.gettransfer.presentation.screenelements.OrdersDetails
+import com.kg.gettransfer.presentation.screenelements.ProfileScreen
+import com.kg.gettransfer.presentation.screenelements.SearchForm
+import com.kg.gettransfer.presentation.screenelements.SettingsScreen
 
 class PassengerCreateTransferTest : TestCase() {
     @Rule

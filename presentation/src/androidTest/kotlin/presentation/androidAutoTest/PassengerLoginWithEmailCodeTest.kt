@@ -14,9 +14,12 @@ import okhttp3.Request
 
 import org.junit.Rule
 import org.junit.Test
-import presentation.data.Constants
-
-import presentation.screenelements.*
+import com.kg.gettransfer.presentation.data.Constants
+import com.kg.gettransfer.presentation.screenelements.NavBar
+import com.kg.gettransfer.presentation.screenelements.Onboarding
+import com.kg.gettransfer.presentation.screenelements.ProfileScreen
+import com.kg.gettransfer.presentation.screenelements.SettingsScreen
+import com.kg.gettransfer.presentation.screenelements.SmsScreen
 
 class PassengerLoginWithEmailCodeTest  : TestCase(Kaspresso.Builder.default().apply {
     flakySafetyParams = flakySafetyParams.apply {

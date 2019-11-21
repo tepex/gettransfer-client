@@ -1,4 +1,4 @@
-package com.kg.gettransfer.androidAutoTest
+package com.kg.gettransfer.presentation.androidAutoTest
 
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -11,9 +11,9 @@ import com.kg.gettransfer.presentation.ui.SplashActivity
 
 import org.junit.Rule
 import org.junit.Test
-import presentation.data.Constants
+import com.kg.gettransfer.presentation.data.Constants
 
-import presentation.screenelements.*
+import com.kg.gettransfer.presentation.screenelements.*
 
 @Suppress("LongMethod")
 class RegressSuite : TestCase() {

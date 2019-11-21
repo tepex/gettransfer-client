@@ -9,10 +9,10 @@ import com.kg.gettransfer.presentation.ui.SplashActivity
 import org.junit.Rule
 import org.junit.Test
 
-import presentation.screenelements.NavBar
-import presentation.screenelements.Onboarding
-import presentation.screenelements.ProfileScreen
-import presentation.screenelements.SettingsScreen
+import com.kg.gettransfer.presentation.screenelements.NavBar
+import com.kg.gettransfer.presentation.screenelements.Onboarding
+import com.kg.gettransfer.presentation.screenelements.ProfileScreen
+import com.kg.gettransfer.presentation.screenelements.SettingsScreen
 
 class PassengerLoginWithPhoneTest : TestCase() {
     @Rule

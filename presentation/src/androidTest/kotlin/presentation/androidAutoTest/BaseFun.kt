@@ -1,4 +1,4 @@
-package com.kg.gettransfer.androidAutoTest
+package com.kg.gettransfer.presentation.androidAutoTest
 
 import android.widget.DatePicker
 
@@ -25,7 +25,7 @@ import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
-import presentation.data.Constants
+import com.kg.gettransfer.presentation.data.Constants
 
 @Suppress("MagicNumber")
 object BaseFun {
@@ -68,7 +68,8 @@ object BaseFun {
                 .perform(replaceText(Constants.TEXT_EMAIL_IVAN), closeSoftKeyboard())
 
             onView(withId(R.id.etPassword)).perform(click())
-            onView(allOf(withId(R.id.etPassword), isDisplayed())).perform(replaceText(Constants.TEXT_RANDOM_NUMBER), closeSoftKeyboard())
+            onView(allOf(withId(R.id.etPassword), isDisplayed()))
+                .perform(replaceText(Constants.TEXT_RANDOM_NUMBER), closeSoftKeyboard())
 
             onView(withId(R.id.btnLogin)).perform(click())
             goTransferLater()
