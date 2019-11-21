@@ -369,7 +369,7 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun setCommission(paymentCommission: String, dateRefund: String) {
-        getString(R.string.LNG_PAYMENT_COMISSION3, paymentCommission).run {
+        getString(R.string.LNG_PAYMENT_SERVICE_FEE, paymentCommission).run {
             tvCommission.text = this
             cardsCommission.text = this
             paypalCommission.text = this

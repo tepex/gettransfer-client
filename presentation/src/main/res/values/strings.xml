@@ -143,7 +143,7 @@
     <string name="LNG_PAYMENT_TERM_LATER">(%s later to the driver)</string>
     <string name="LNG_PAYMENT_METHOD"><b>Select your payment method</b></string>
     <string name="LNG_PAYMENT_COLLECT_MILES">To collect miles please  log in</string>
-    <string name="LNG_PAYMENT_COMISSION3">Payment commission is %s%%</string>
+    <string name="LNG_PAYMENT_SERVICE_FEE">Service fee is  %s%%</string>
     <string name="LNG_PAYMENT_REFUND">Free cancellation before %s</string>
     <string name="LNG_PAYMENT_PAY">Pay</string>
     <string name="LNG_RIDE_CANT_CREATE">Can\'t create transfer</string>
