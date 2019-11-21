@@ -35,6 +35,7 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.Ratings
 import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.delegate.Either
@@ -242,6 +243,7 @@ class PaymentOfferActivity : BaseActivity(),
             R.id.rbBalance   -> rbBalance.isChecked = true
             R.id.rbGooglePay -> rbGooglePay.isChecked = true
         }
+        tvCommission.isInvisible = view.id == R.id.rbBalance
         changePayButton(view.id == R.id.rbGooglePay)
         presenter.selectedPayment = payment
         presenter.changePayment(payment)
@@ -369,11 +371,7 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun setCommission(paymentCommission: String, dateRefund: String) {
-        getString(R.string.LNG_PAYMENT_SERVICE_FEE, paymentCommission).run {
-            tvCommission.text = this
-            cardsCommission.text = this
-            paypalCommission.text = this
-        }
+        tvCommission.text = getString(R.string.LNG_PAYMENT_SERVICE_FEE, paymentCommission)
         tvRefundDate.text = getString(R.string.LNG_PAYMENT_REFUND, dateRefund)
     }
 
@@ -532,13 +530,10 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     private fun setBalance(balance: String?) {
-        balance.isNullOrEmpty().run {
-            layoutBalance.isVisible = !this
-            tvCommission.isVisible = this
-            cardsCommission.isVisible = !this
-            paypalCommission.isVisible = !this
+        if (!balance.isNullOrEmpty()) {
+            layoutBalance.isVisible = true
+            tvBalance.text = getString(R.string.LNG_PAYMENT_FROM_BALANCE_AVAILABLE, balance)
         }
-        tvBalance.text = getString(R.string.LNG_PAYMENT_FROM_BALANCE_AVAILABLE, balance)
     }
 
     override fun showBadCredentialsInfo(field: Int) {

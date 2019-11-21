@@ -530,9 +530,6 @@
 	<dimen name="payment_layout_constraintGuide_begin">160dp</dimen>
 	<dimen name="payment_type_select_layout_height">64dp</dimen>
 	<dimen name="payment_type_from_balance_layout_height">80dp</dimen>
-	<dimen name="payment_card_commission_margin_top">10dp</dimen>
-	<dimen name="payment_paypal_commission_margin_top">4dp</dimen>
-	<dimen name="payment_commission_text_size">12sp</dimen>
 	<dimen name="payment_layout_card_margin_top">12dp</dimen>
 	<dimen name="payment_logo_card_height">40dp</dimen>
 	<dimen name="payment_paypal_logo_vertical_margin">2dp</dimen>
