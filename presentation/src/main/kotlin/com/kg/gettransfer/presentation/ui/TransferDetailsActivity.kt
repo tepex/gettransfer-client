@@ -103,6 +103,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private lateinit var bsSecondarySheet: BottomSheetBehavior<View>
 
+    private val rateAnimation by lazy { RateTripAnimationFragment() }
+
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
 
@@ -600,6 +602,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         vehiclePhotosView.setPhotos(offerModel.vehicle.transportType.imageId, offerModel.vehicle.photos)
     }
 
+    private fun showRateAnimation() {
+        if (!rateAnimation.isAdded) {
+            supportFragmentManager.beginTransaction().apply {
+                replace(android.R.id.content, rateAnimation)
+                commit()
+            }
+        }
+    }
+
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateOrDistanceChanged: Boolean) {
         setPolyline(polyline, routeModel)
         btnCenterRoute.isVisible = false
@@ -721,7 +732,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun onRatingChangeCancelled() {
+        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
         presenter.ratingChangeCancelled()
+        showRateAnimation()
     }
 
     override fun onClickGoToStore() {
@@ -729,7 +742,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun goToGooglePlay() {
-        Utils.goToGooglePlay(this, getString(R.string.app_market_package), BaseActivity.PLAY_MARKET_RATE)
+        Utils.goToGooglePlay(this, getString(R.string.app_market_package), PLAY_MARKET_RATE)
     }
 
     private fun clearMarker() {

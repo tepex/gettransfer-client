@@ -66,17 +66,6 @@ fun WebView.setUserAgent() {
     this.settings.userAgentString = sbAgent.toString()
 }
 
-fun View.show(isShow: Boolean, isGone: Boolean = true) {
-    visibility = if (isShow)
-        View.VISIBLE
-    else {
-        if (isGone)
-            View.GONE
-        else
-            View.INVISIBLE
-    }
-}
-
 private var lastClickTimestamp = 0L
 
 fun View.setThrottledClickListener(delay: Long = 400L, clickListener: ((View) -> Unit)?) {

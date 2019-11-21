@@ -292,7 +292,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     fun rateTrip(rating: Float, isNeedCheckStoreRate: Boolean) {
         @Suppress("UnsafeCallOnNullableType")
-        reviewInteractor.setOfferReview(offer!!) // In this line offer can't be null
+        offer?.let { reviewInteractor.setOfferReview(it) }
         if (isNeedCheckStoreRate) {
             reviewInteractor.setRates(rating)
             if (rating.toInt() == ReviewInteractor.MAX_RATE) {

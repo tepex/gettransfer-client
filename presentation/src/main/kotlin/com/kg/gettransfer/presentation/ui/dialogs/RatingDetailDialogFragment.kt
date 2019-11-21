@@ -20,9 +20,9 @@ import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.setUneditable
-import com.kg.gettransfer.extensions.show
 
 import com.kg.gettransfer.presentation.presenter.RatingDetailPresenter
+import com.kg.gettransfer.presentation.ui.RateTripAnimationFragment
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment.Companion.COMMENT_DIALOG_TAG
@@ -86,11 +86,6 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         vehicleRate.rate_bar.onRatingBarChangeListener = vehicleRateListener
         driverRate.rate_bar.onRatingBarChangeListener = driverRateListener
         punctualityRate.rate_bar.onRatingBarChangeListener = punctualityRateListener
-    }
-
-    override fun showProgress(isShow: Boolean) {
-        btnSend.show(!isShow, false)
-        progressBar.show(isShow)
     }
 
     override fun setRatingCommon(rating: Float) {
