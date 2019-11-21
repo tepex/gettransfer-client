@@ -167,7 +167,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/LNG_RIDE_PAYMENT_OFFER"
+                    android:text="@string/LNG_RIDE_PAY_OFFERT"
                     android:textSize="@dimen/payment_text_size_12sp" />
 
             </LinearLayout>

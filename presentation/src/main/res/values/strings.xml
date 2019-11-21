@@ -127,7 +127,7 @@
     <string name="LNG_RIDE_CONNECT_CARRIERS_NONUM">Connecting with nearby carriers</string>
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
     <string name="LNG_RIDE_OFFERT">I aggree with \n<a href='#'>License agreement</a></string>
-    <string name="LNG_RIDE_PAYMENT_OFFER">By pressing \"\PAY\"\ you accept <a href="#">terms of the Agreement</a></string>
+    <string name="LNG_RIDE_PAY_OFFERT">By pressing \"\PAY\"\ you accept <a href="#">the terms of the Agreement</a></string>
     <string name="LNG_RIDE_OFFERT_TITLE">License agreement</string>
     <string name="LNG_RIDE_OFFERT_ERROR">You should accept terms of use</string>
 <!--    <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %s (ETA ~%s)</string>-->
