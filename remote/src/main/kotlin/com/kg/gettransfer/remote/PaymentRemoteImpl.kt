@@ -7,6 +7,7 @@ import com.kg.gettransfer.data.model.PaymentEntity
 import com.kg.gettransfer.data.model.PaymentRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
+import com.kg.gettransfer.data.model.PaymentProcessEntity
 
 import com.kg.gettransfer.remote.model.BraintreeTokenModel
 import com.kg.gettransfer.remote.model.PaymentModel
@@ -22,6 +23,12 @@ class PaymentRemoteImpl : PaymentRemote {
 
     override suspend fun createPayment(paymentRequest: PaymentRequestEntity): PaymentEntity {
         val response: ResponseModel<PaymentModel> = core.tryTwice { core.api.createNewPayment(paymentRequest.map()) }
+        @Suppress("UnsafeCallOnNullableType")
+        return response.data!!.map()
+    }
+
+    override suspend fun processPayment(paymentProcess: PaymentProcessEntity): PaymentEntity {
+        val response: ResponseModel<PaymentModel> = core.tryTwice { core.api.processPayment(paymentProcess.map()) }
         @Suppress("UnsafeCallOnNullableType")
         return response.data!!.map()
     }

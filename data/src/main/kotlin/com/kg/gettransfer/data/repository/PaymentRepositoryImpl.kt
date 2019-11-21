@@ -14,6 +14,7 @@ import com.kg.gettransfer.domain.model.Payment
 import com.kg.gettransfer.domain.model.PaymentRequest
 import com.kg.gettransfer.domain.model.PaymentStatus
 import com.kg.gettransfer.domain.model.PaymentStatusRequest
+import com.kg.gettransfer.domain.model.PaymentProcess
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.repository.PaymentRepository
@@ -32,6 +33,13 @@ class PaymentRepositoryImpl(
     override suspend fun getPayment(paymentRequest: PaymentRequest): Result<Payment> =
         try {
             Result(factory.retrieveRemoteDataStore().createPayment(paymentRequest.map()).map())
+        } catch (e: RemoteException) {
+            Result(Payment.EMPTY, e.map())
+        }
+
+    override suspend fun processPayment(paymentProcess: PaymentProcess): Result<Payment> =
+        try {
+            Result(factory.retrieveRemoteDataStore().processPayment(paymentProcess.map()).map())
         } catch (e: RemoteException) {
             Result(Payment.EMPTY, e.map())
         }

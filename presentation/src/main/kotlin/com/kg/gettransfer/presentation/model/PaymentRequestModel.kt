@@ -13,8 +13,9 @@ data class PaymentRequestModel(
         const val FULL_PRICE = 100
         const val PRICE_30   = 30
 
-        const val PLATRON = "platron"
-        const val PAYPAL  = "braintree"
-        const val GROUND  = "ground"
+        const val PLATRON    = "platron"
+        const val PAYPAL     = "braintree"
+        const val GROUND     = "ground"
+        const val GOOGLE_PAY = "googlepay"
     }
 }
