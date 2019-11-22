@@ -15,6 +15,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 
 import android.util.DisplayMetrics
@@ -222,7 +223,13 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     /********************************************************************************************************/
     /************************************************ Life cycles *******************************************/
-    /********************************************************************************************************/
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            localeManager.updateResources(this, sessionInteractor.locale)
+        }
+    }
 
     @CallSuper
     protected override fun onStart() {
