@@ -36,8 +36,8 @@
 	<dimen name="view_hourly_switcher_padding">5dp</dimen>
 
 	<!-- Navigation view menu -->
-	<dimen name="nav_header_logo_width">104dp</dimen>
-	<dimen name="nav_header_logo_height">56dp</dimen>
+	<dimen name="nav_header_logo_width">130dp</dimen>
+	<dimen name="nav_header_logo_height">75dp</dimen>
 
 	<!-- Search form -->
 	<dimen name="search_form_address_margin">10dp</dimen>
@@ -707,12 +707,13 @@
 	<dimen name="network_not_available_text_horizontal_margin">12sp</dimen>
 
 	<!--Main screen without map-->
-	<dimen name="main_without_map_logo_size">64dp</dimen>
+	<dimen name="main_without_map_logo_size">80dp</dimen>
 	<dimen name="main_without_map_logo_margin_start">24dp</dimen>
 	<dimen name="main_without_map_logo_margin_top">16dp</dimen>
 	<dimen name="main_without_map_best_price_text_size">12sp</dimen>
+	<dimen name="best_price_text_size">14sp</dimen>
 	<dimen name="main_without_map_best_price_text_horizontal_margin">12dp</dimen>
-	<dimen name="main_without_map_read_more_text_margin_top">6dp</dimen>
+	<dimen name="main_without_map_read_more_text_margin_top">5dp</dimen>
 	<dimen name="main_without_map_promo_text_size">17sp</dimen>
 	<dimen name="main_without_map_promo_text_horizontal_margins">24dp</dimen>
 	<dimen name="main_without_map_btn_next_height">60dp</dimen>
