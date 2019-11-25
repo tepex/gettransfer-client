@@ -42,6 +42,7 @@ val systemData = module {
             ),
             checkoutCredentials =
                 CheckoutCredentials(
+                    "",
                     ""
                 ),
             googlePayCredentials =

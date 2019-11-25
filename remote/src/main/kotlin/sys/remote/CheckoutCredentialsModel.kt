@@ -5,10 +5,12 @@ import com.google.gson.annotations.SerializedName
 import sys.data.CheckoutCredentialsEntity
 
 data class CheckoutCredentialsModel(
-    @SerializedName(CheckoutCredentialsEntity.PUBLIC_KEY) @Expose val publicKey: String
+    @SerializedName(CheckoutCredentialsEntity.ENVIRONMENT) @Expose val environment: String,
+    @SerializedName(CheckoutCredentialsEntity.PUBLIC_KEY)  @Expose val publicKey: String
 )
 
 fun CheckoutCredentialsModel.map() =
     CheckoutCredentialsEntity(
+        environment,
         publicKey
     )

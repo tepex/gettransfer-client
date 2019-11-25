@@ -7,7 +7,8 @@ data class PaymentEntity(
     val type: String?,
     val url: String?,
     val id: Long?,
-    val params: ParamsEntity?
+    val params: ParamsEntity?,
+    val redirect: String?
 ) {
 
     companion object {
@@ -15,6 +16,7 @@ data class PaymentEntity(
         const val URL        = "url"
         const val PAYMENT_ID = "payment_id"
         const val PARAMS     = "params"
+        const val REDIRECT   = "redirect"
     }
 }
 
@@ -38,5 +40,6 @@ fun PaymentEntity.map() =
         Payment.Type.values().find { it.name.toLowerCase() == type } ?: Payment.Type.NOTHING,
         url,
         id,
-        params?.map()
+        params?.map(),
+        redirect
     )

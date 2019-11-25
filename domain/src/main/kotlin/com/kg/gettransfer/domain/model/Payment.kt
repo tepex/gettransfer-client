@@ -4,13 +4,14 @@ data class Payment(
     val type: Type,
     val url: String?,
     val id: Long?,
-    val params: Params?
+    val params: Params?,
+    val redirect: String?
 ) {
 
     enum class Type { IFRAME, WIDGET, NOTHING }
 
     companion object {
-        val EMPTY = Payment(Type.NOTHING, null, null, null)
+        val EMPTY = Payment(Type.NOTHING, null, null, null, null)
     }
 }
 

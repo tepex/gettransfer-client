@@ -6,14 +6,17 @@ import sys.domain.CheckoutCredentials
 
 @Serializable
 data class CheckoutCredentialsEntity(
-    @SerialName(PUBLIC_KEY) val publicKey: String
+    @SerialName(ENVIRONMENT) val environment: String,
+    @SerialName(PUBLIC_KEY)  val publicKey: String
 ) {
     companion object {
+        const val ENVIRONMENT = "environment"
         const val PUBLIC_KEY = "public_key"
     }
 }
 
 fun CheckoutCredentialsEntity.map() =
     CheckoutCredentials(
+        environment,
         publicKey
     )

@@ -139,7 +139,7 @@ class PaymentOfferActivity : BaseActivity(),
             btnGetPayment.setOnClickListener(this)
             btnGetPaymentWithGooglePay.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbCard, PaymentRequestModel.PLATRON) }.apply {
+        View.OnClickListener { changePayment(rbCard, PaymentRequestModel.CHECKOUT) }.apply {
             rbCard.setOnClickListener(this)
             layoutCard.setOnClickListener(this)
         }

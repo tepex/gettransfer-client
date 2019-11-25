@@ -6,7 +6,7 @@ data class PaymentRequestModel(
     val bookNowTransportType: String?
 ) {
 
-    var gatewayId = PLATRON
+    var gatewayId = CHECKOUT
     var percentage = FULL_PRICE
 
     companion object {
@@ -14,6 +14,7 @@ data class PaymentRequestModel(
         const val PRICE_30   = 30
 
         const val PLATRON    = "platron"
+        const val CHECKOUT   = "checkoutcom"
         const val PAYPAL     = "braintree"
         const val GROUND     = "ground"
         const val GOOGLE_PAY = "googlepay"

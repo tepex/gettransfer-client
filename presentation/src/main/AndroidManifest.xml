@@ -23,6 +23,7 @@
         android:supportsRtl="true"
         android:largeHeap="true"
         android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup,icon,roundIcon"
         android:networkSecurityConfig="@xml/network_security_config">
 
         <meta-data
@@ -124,6 +125,10 @@
             android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
         <activity
             android:name=".presentation.ui.PaymentActivity"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.ui.CheckoutPaymentActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity

@@ -7,7 +7,8 @@ open class PaymentProcessMapper : Mapper<PaymentProcessModel, PaymentProcess> {
     override fun fromView(type: PaymentProcessModel) =
         PaymentProcess(
             type.paymentId,
-            type.token
+            type.token,
+            type.isStringToken
         )
 
     override fun toView(type: PaymentProcess): PaymentProcessModel {

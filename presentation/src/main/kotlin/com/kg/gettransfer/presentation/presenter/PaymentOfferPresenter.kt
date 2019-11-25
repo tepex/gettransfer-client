@@ -56,7 +56,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private var url: String? = null
     internal var braintreeToken = ""
     private var paymentId = 0L
-    internal var selectedPayment = PaymentRequestModel.PLATRON
+    internal var selectedPayment = PaymentRequestModel.CHECKOUT
 
     private var loginScreenIsShowed = false
 
@@ -177,7 +177,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             viewState.blockInterface(true, true)
             paymentRequest.gatewayId = selectedPayment
             when (selectedPayment) {
-                PaymentRequestModel.PLATRON    -> payByCard(paymentRequest)
+                PaymentRequestModel.PLATRON,
+                PaymentRequestModel.CHECKOUT   -> payByCard(paymentRequest)
                 PaymentRequestModel.PAYPAL     -> getBraintreeToken()
                 PaymentRequestModel.GOOGLE_PAY -> getGooglePayPaymentData(paymentRequest)
                 else                           -> payByBalance(paymentRequest)
@@ -195,12 +196,18 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private suspend fun payByCard(paymentModel: PaymentRequestModel) {
         val paymentResult = getPaymentResult(paymentModel)
         val err = paymentResult.error
-        if (err != null) {
-            log.error("get by card payment error", err)
-            viewState.setError(err)
-        } else {
-            url = paymentResult.model.url
-            router.navigateTo(Screens.Payment(url, paymentRequest.percentage, selectedPayment))
+        when {
+            err != null -> {
+                log.error("get by card payment error", err)
+                viewState.setError(err)
+            }
+            selectedPayment == PaymentRequestModel.CHECKOUT -> {
+                paymentResult.model.id?.let { router.navigateTo(Screens.CheckoutPayment(it)) }
+            }
+            else -> {
+                url = paymentResult.model.url
+                router.navigateTo(Screens.Payment(url, paymentRequest.percentage, selectedPayment))
+            }
         }
         viewState.blockInterface(false)
     }
@@ -227,7 +234,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     fun payByGooglePay(token: String) {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val paymentProcess = PaymentProcessModel(googlePayPaymentId, token)
+            val paymentProcess = PaymentProcessModel(googlePayPaymentId, token, false)
             val processResult = getProcessPaymentResult(paymentProcess)
             checkPaymentResult(processResult.error)
             viewState.blockInterface(false)

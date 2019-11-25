@@ -10,7 +10,8 @@ data class PaymentModel(
     @SerializedName(PaymentEntity.TYPE)       @Expose val type: String?,
     @SerializedName(PaymentEntity.URL)        @Expose val url: String?,
     @SerializedName(PaymentEntity.PAYMENT_ID) @Expose val id: Long?,
-    @SerializedName(PaymentEntity.PARAMS)     @Expose val params: Params?
+    @SerializedName(PaymentEntity.PARAMS)     @Expose val params: Params?,
+    @SerializedName(PaymentEntity.REDIRECT)   @Expose val redirect: String?
 )
 
 data class Params(
@@ -31,5 +32,6 @@ fun PaymentModel.map() =
         type,
         url,
         id,
-        params?.map()
+        params?.map(),
+        redirect
     )
