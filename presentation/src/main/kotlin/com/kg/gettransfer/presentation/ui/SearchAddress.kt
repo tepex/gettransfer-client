@@ -14,6 +14,7 @@ import android.util.AttributeSet
 
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.content.withStyledAttributes
 
 import moxy.MvpDelegate
 import moxy.presenter.InjectPresenter
@@ -66,13 +67,11 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
     init {
         containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
-        if (attrs != null) {
-            val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
-            addressField.hint = ta.getString(R.styleable.SearchAddress_hint)
-            ta.recycle()
+        context.withStyledAttributes(attrs, R.styleable.SearchAddress) {
+            addressField.hint = getString(R.styleable.SearchAddress_hint)
         }
 
-        val clearListener = View.OnClickListener {
+        val clearListener = OnClickListener {
             text = ""
             addressField.requestFocus()
             parent.onSearchFieldEmpty(isTo)
@@ -105,7 +104,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         parentDelegate = parent.mvpDelegate
         mvpDelegate.onCreate()
         mvpDelegate.onAttach()
-// if(isTo) addressField.requestFocus()
         setClearButtonVisibility()
     }
 
