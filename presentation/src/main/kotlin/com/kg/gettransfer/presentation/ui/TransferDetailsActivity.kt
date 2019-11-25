@@ -602,15 +602,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         vehiclePhotosView.setPhotos(offerModel.vehicle.transportType.imageId, offerModel.vehicle.photos)
     }
 
-    private fun showRateAnimation() {
-        if (!rateAnimation.isAdded) {
-            supportFragmentManager.beginTransaction().apply {
-                replace(android.R.id.content, rateAnimation)
-                commit()
-            }
-        }
-    }
-
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateOrDistanceChanged: Boolean) {
         setPolyline(polyline, routeModel)
         btnCenterRoute.isVisible = false
@@ -671,8 +662,21 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         )
     }
 
+    override fun showRateAnimation() {
+        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+        if (!rateAnimation.isAdded) {
+            supportFragmentManager.beginTransaction().apply {
+                replace(android.R.id.content, rateAnimation)
+                commit()
+            }
+        }
+    }
+
     override fun askRateInPlayMarket() {
-        StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
+        // dirty hack to show after animation ended
+        Handler().postDelayed( {
+            StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
+        }, RateTripAnimationFragment.DURATION_OF_ANIMATION )
     }
 
     override fun thanksForRate() {
@@ -734,7 +738,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     override fun onRatingChangeCancelled() {
         bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
         presenter.ratingChangeCancelled()
-        showRateAnimation()
     }
 
     override fun onClickGoToStore() {

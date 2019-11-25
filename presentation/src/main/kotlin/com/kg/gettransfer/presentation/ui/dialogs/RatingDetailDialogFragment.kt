@@ -41,6 +41,8 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     private var ratingListener: OnRatingChangeListener? = null
     private var isExitWithResult = false
 
+    private val rateAnimation by lazy { RateTripAnimationFragment() }
+
     private val commonRateListener = RatingBar.OnRatingBarChangeListener { _, rate, _ ->
         presenter.onCommonRatingChanged(rate)
     }
@@ -86,6 +88,15 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         vehicleRate.rate_bar.onRatingBarChangeListener = vehicleRateListener
         driverRate.rate_bar.onRatingBarChangeListener = driverRateListener
         punctualityRate.rate_bar.onRatingBarChangeListener = punctualityRateListener
+    }
+
+    private fun showRateAnimation() {
+        if (!rateAnimation.isAdded) {
+            fragmentManager?.beginTransaction()?.apply {
+                replace(android.R.id.content, rateAnimation)
+                commit()
+            }
+        }
     }
 
     override fun setRatingCommon(rating: Float) {
@@ -178,6 +189,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         super.onDismiss(dialog)
         if (isExitWithResult) {
             ratingListener?.onRatingChangeCancelled()
+            showRateAnimation()
         }
     }
 
