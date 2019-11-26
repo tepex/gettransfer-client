@@ -39,7 +39,9 @@
 		app:layout_constraintEnd_toStartOf="@id/im_clearBtn"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@id/sub_title"
-		tools:text="Address location"/>
+		tools:text="Address location"
+		android:imeOptions="actionDone"
+		android:inputType="text" />
 
 	<ImageView
 		android:id="@+id/im_clearBtn"
