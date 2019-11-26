@@ -13,10 +13,8 @@ import com.kg.gettransfer.presentation.model.PaymentProcessRequestModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.view.CheckoutPaymentView
 import com.kg.gettransfer.presentation.view.Screens
-import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.utilities.Analytics
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import moxy.InjectViewState
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
@@ -25,7 +23,6 @@ import org.koin.core.parameter.parametersOf
 class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
 
     private val worker: WorkerManager by inject { parametersOf("CheckoutPaymentPresenter") }
-    private val getPreferences: GetPreferencesInteractor by inject()
 
     private val paymentProcessRequestMapper: PaymentProcessRequestMapper by inject()
 
@@ -61,13 +58,11 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
         result.error?.let {
             paymentError(it)
         } ?: result.model.redirect?.let { redirectUrl ->
-            withContext(worker.bg) { getPreferences().getModel() }.endpoint?.url?.let { baseUrl ->
-                viewState.redirectTo3ds(
-                    redirectUrl,
-                    baseUrl.plus(PAYMENT_RESULT_SUCCESSFUL),
-                    baseUrl.plus(PAYMENT_RESULT_FAILED)
-                )
-            }
+            viewState.redirectTo3ds(
+                redirectUrl,
+                PAYMENT_RESULT_SUCCESSFUL,
+                PAYMENT_RESULT_FAILED
+            )
         } ?: paymentSuccess()
     }
 

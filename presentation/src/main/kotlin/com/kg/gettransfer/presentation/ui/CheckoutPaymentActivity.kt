@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import com.android.volley.VolleyError
-import com.checkout.android_sdk.PaymentForm
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.CheckoutPaymentPresenter
 import com.kg.gettransfer.presentation.view.CheckoutPaymentView
@@ -11,8 +10,8 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import com.checkout.android_sdk.Response.CardTokenisationFail
 import com.checkout.android_sdk.Response.CardTokenisationResponse
-import com.checkout.android_sdk.PaymentForm.PaymentFormCallback
 import com.checkout.android_sdk.Utils.Environment
+import com.kg.gettransfer.presentation.ui.custom.CustomPaymentForm
 import kotlinx.android.synthetic.main.activity_checkout_payment.*
 
 class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
@@ -25,7 +24,7 @@ class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
     @ProvidePresenter
     fun createPaymentPresenter() = CheckoutPaymentPresenter()
 
-    private lateinit var paymentForm: PaymentForm
+    private lateinit var paymentForm: CustomPaymentForm
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +35,8 @@ class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
     }
 
     override fun initPaymentForm(environment: Environment, publicKey: String) {
-        paymentForm.mSubmitFormListener = object : PaymentFormCallback {
+        paymentForm.includeBilling(false)
+        paymentForm.mSubmitFormListener = object : CustomPaymentForm.PaymentFormCallback {
             override fun onFormSubmit() {
                 // form submit initiated; you can potentially display a loader
             }
@@ -62,20 +62,18 @@ class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
         }
         paymentForm.setEnvironment(environment)
         paymentForm.setKey(publicKey)
-        paymentForm.includeBilling(false)
-
-        }
+    }
 
     override fun redirectTo3ds(redirectUrl: String, successUrl: String, failedUrl: String) {
-        paymentForm.set3DSListener(object: PaymentForm.On3DSFinished {
-            override fun onSuccess(token: String) {
-               presenter.handle3DS(true)
+        paymentForm.m3DSecureListener = object: CustomPaymentForm.On3DSFinished {
+            override fun onSuccess() {
+                presenter.handle3DS(true)
             }
 
-            override fun onError(errorMessage: String) {
+            override fun onError() {
                 presenter.handle3DS(false)
             }
-        })
+        }
         paymentForm.handle3DS(redirectUrl, successUrl, failedUrl)
     }
 }
