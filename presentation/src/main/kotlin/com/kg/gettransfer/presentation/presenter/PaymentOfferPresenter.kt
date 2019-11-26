@@ -71,10 +71,11 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         utils.launchSuspend {
             viewState.blockInterface(false)
 
-            if (configsManager.getConfigs().checkoutCredentials.publicKey.isNotEmpty()) {
+            //TODO: return when fixed configs request
+            /*if (configsManager.getConfigs().checkoutCredentials.publicKey.isNotEmpty()) {
                 viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
                 isReadyToPayWithGooglePayRequest()
-            }
+            }*/
 
             with(paymentInteractor) {
                 transfer = selectedTransfer
