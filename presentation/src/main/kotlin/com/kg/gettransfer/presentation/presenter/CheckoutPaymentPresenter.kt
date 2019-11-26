@@ -5,10 +5,11 @@ import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Payment
+import com.kg.gettransfer.domain.model.PaymentProcess
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.extensions.newChainFromMain
-import com.kg.gettransfer.presentation.mapper.PaymentProcessMapper
-import com.kg.gettransfer.presentation.model.PaymentProcessModel
+import com.kg.gettransfer.presentation.mapper.PaymentProcessRequestMapper
+import com.kg.gettransfer.presentation.model.PaymentProcessRequestModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.view.CheckoutPaymentView
 import com.kg.gettransfer.presentation.view.Screens
@@ -26,7 +27,7 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
     private val worker: WorkerManager by inject { parametersOf("CheckoutPaymentPresenter") }
     private val getPreferences: GetPreferencesInteractor by inject()
 
-    private val paymentProcessMapper: PaymentProcessMapper by inject()
+    private val paymentProcessRequestMapper: PaymentProcessRequestMapper by inject()
 
     internal var paymentId = 0L
 
@@ -46,17 +47,17 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
     fun onTokenGenerated(token: String) {
         utils.launchSuspend{
             viewState.blockInterface(true, true)
-            val paymentProcess = PaymentProcessModel(paymentId, token, true)
+            val paymentProcess = PaymentProcessRequestModel(paymentId, token, true)
             val processResult = getProcessPaymentResult(paymentProcess)
             checkPaymentResult(processResult)
             viewState.blockInterface(false)
         }
     }
 
-    private suspend fun getProcessPaymentResult(paymentProcess: PaymentProcessModel): Result<Payment> =
-        utils.asyncAwait { paymentInteractor.processPayment(paymentProcessMapper.fromView(paymentProcess)) }
+    private suspend fun getProcessPaymentResult(paymentProcessModel: PaymentProcessRequestModel): Result<PaymentProcess> =
+        utils.asyncAwait { paymentInteractor.processPayment(paymentProcessRequestMapper.fromView(paymentProcessModel)) }
 
-    private suspend fun checkPaymentResult(result: Result<Payment>) {
+    private suspend fun checkPaymentResult(result: Result<PaymentProcess>) {
         result.error?.let {
             paymentError(it)
         } ?: result.model.redirect?.let { redirectUrl ->

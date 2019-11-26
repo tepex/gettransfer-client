@@ -105,7 +105,7 @@ class PaymentOfferActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // presenter.params =
-        // JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
+        // JSON.parse(PaymentOfferView.PaypalParams.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
         setContentView(R.layout.activity_payment_offer)
         initListeners()
@@ -442,7 +442,7 @@ class PaymentOfferActivity : BaseActivity(),
         when (resultCode) {
             RESULT_OK       -> {
                 val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-                result?.paymentMethodNonce?.nonce?.let { presenter.confirmPayment(it) }
+                result?.paymentMethodNonce?.nonce?.let { presenter.confirmPaypalPayment(it) }
             }
             RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.PAYPAL)
             else            -> {
@@ -460,7 +460,7 @@ class PaymentOfferActivity : BaseActivity(),
                 val paymentData = data?.let { PaymentData.getFromIntent(it) }
                 val json = paymentData?.toJson()?.let { JSONObject(it) }
                 val token = json?.getJSONObject("paymentMethodData")?.getJSONObject("tokenizationData")?.getString("token")
-                token?.let { presenter.payByGooglePay(it) }
+                token?.let { presenter.processGooglePayPayment(it) }
             }
             RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.GOOGLE_PAY)
             AutoResolveHelper.RESULT_ERROR -> {
@@ -484,7 +484,7 @@ class PaymentOfferActivity : BaseActivity(),
         ) != null
 
     override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce?) {
-        presenter.confirmPayment(paymentMethodNonce?.nonce ?: "")
+        presenter.confirmPaypalPayment(paymentMethodNonce?.nonce ?: "")
         blockInterface(true, true)
     }
 

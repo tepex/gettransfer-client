@@ -1,6 +1,6 @@
-package com.kg.gettransfer.presentation.model
+package com.kg.gettransfer.domain.model
 
-data class PaymentProcessModel(
+data class PaymentProcessRequest(
     val paymentId: Long,
     val token: String,
     val isStringToken: Boolean

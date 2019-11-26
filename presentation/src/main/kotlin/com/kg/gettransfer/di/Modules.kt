@@ -40,7 +40,7 @@ import com.kg.gettransfer.presentation.mapper.MessageMapper
 import com.kg.gettransfer.presentation.mapper.ChatAccountMapper
 import com.kg.gettransfer.presentation.mapper.ChatMapper
 import com.kg.gettransfer.presentation.mapper.CityPointMapper
-import com.kg.gettransfer.presentation.mapper.PaymentProcessMapper
+import com.kg.gettransfer.presentation.mapper.PaymentProcessRequestMapper
 
 import com.kg.gettransfer.receiver.NetworkChangeCallback
 
@@ -137,7 +137,7 @@ val mappersModule = module {
     single { CarrierMapper() }
     single { OfferMapper() }
     single { PaymentRequestMapper() }
-    single { PaymentProcessMapper() }
+    single { PaymentProcessRequestMapper() }
     single { PaymentStatusRequestMapper() }
     single { PointMapper() }
     single { ProfileMapper() }

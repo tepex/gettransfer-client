@@ -11,22 +11,16 @@ import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.android.gms.wallet.PaymentsClient
 
 import com.kg.gettransfer.domain.ApiException
-
-import com.kg.gettransfer.domain.model.BookNowOffer
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.OfferItem
-import com.kg.gettransfer.domain.model.Payment
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.*
 
 import com.kg.gettransfer.extensions.newChainFromMain
 
-import com.kg.gettransfer.presentation.mapper.PaymentProcessMapper
+import com.kg.gettransfer.presentation.mapper.PaymentProcessRequestMapper
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.PaymentProcessModel
+import com.kg.gettransfer.presentation.model.PaymentProcessRequestModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.map
 
@@ -47,7 +41,7 @@ import org.koin.core.inject
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
-    private val paymentProcessMapper: PaymentProcessMapper by inject()
+    private val paymentProcessRequestMapper: PaymentProcessRequestMapper by inject()
     private val profileMapper: ProfileMapper by inject()
 
     private var transfer: Transfer? = null
@@ -175,84 +169,155 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            paymentRequest.gatewayId = selectedPayment
             when (selectedPayment) {
-                PaymentRequestModel.PLATRON,
-                PaymentRequestModel.CHECKOUT   -> payByCard(paymentRequest)
-                PaymentRequestModel.PAYPAL     -> getBraintreeToken()
-                PaymentRequestModel.GOOGLE_PAY -> getGooglePayPaymentData(paymentRequest)
+                PaymentRequestModel.PLATRON    -> payByPlatron(paymentRequest)
+                PaymentRequestModel.CHECKOUT   -> payByCheckoutcom(paymentRequest)
+                PaymentRequestModel.PAYPAL     -> payByPaypal(paymentRequest)
+                PaymentRequestModel.GOOGLE_PAY -> payByGooglePay(paymentRequest)
                 else                           -> payByBalance(paymentRequest)
             }
             logEventBeginCheckout()
         }
     }
 
-    private suspend fun payByBalance(paymentModel: PaymentRequestModel) {
-        val paymentResult = getPaymentResult(paymentModel)
-        checkPaymentResult(paymentResult.error)
-        viewState.blockInterface(false)
-    }
-
-    private suspend fun payByCard(paymentModel: PaymentRequestModel) {
-        val paymentResult = getPaymentResult(paymentModel)
-        val err = paymentResult.error
-        when {
-            err != null -> {
-                log.error("get by card payment error", err)
-                viewState.setError(err)
-            }
-            selectedPayment == PaymentRequestModel.CHECKOUT -> {
-                paymentResult.model.id?.let { router.navigateTo(Screens.CheckoutPayment(it)) }
-            }
-            else -> {
-                url = paymentResult.model.url
-                router.navigateTo(Screens.Payment(url, paymentRequest.percentage, selectedPayment))
-            }
+    private suspend fun payByPlatron(paymentModel: PaymentRequestModel) {
+        val paymentResult = getPlatronPaymentResult(paymentModel)
+        paymentResult.error?.let {
+            log.error("get by platron payment error", it)
+            viewState.setError(it)
+        } ?: paymentResult.model.let {
+            url = it.url
+            router.navigateTo(Screens.Payment(url, paymentRequest.percentage, selectedPayment))
         }
         viewState.blockInterface(false)
     }
 
-    private fun getGooglePayPaymentData(paymentModel: PaymentRequestModel) {
+    private suspend fun getPlatronPaymentResult(paymentModel: PaymentRequestModel): Result<PlatronPayment> =
+        utils.asyncAwait { paymentInteractor.getPlatronPayment(paymentRequestMapper.fromView(paymentModel)) }
+
+    private suspend fun payByCheckoutcom(paymentModel: PaymentRequestModel) {
+        val paymentResult = getCheckoutcomPaymentResult(paymentModel)
+        paymentResult.error?.let {
+            log.error("get by checkoutcom payment error", it)
+            viewState.setError(it)
+        } ?: paymentResult.model.paymentId.let {
+            router.navigateTo(Screens.CheckoutPayment(it))
+        }
+        viewState.blockInterface(false)
+    }
+
+    private suspend fun getCheckoutcomPaymentResult(paymentModel: PaymentRequestModel): Result<CheckoutcomPayment> =
+        utils.asyncAwait { paymentInteractor.getCheckoutcomPayment(paymentRequestMapper.fromView(paymentModel)) }
+
+    private fun payByPaypal(paymentModel: PaymentRequestModel) {
         utils.launchSuspend {
-            val paymentResult = getPaymentResult(paymentModel)
-            val err = paymentResult.error
-            if (err != null) {
-                log.error("get by google pay payment error", err)
-                viewState.setError(err)
-            } else {
-                paymentResult.model.params?.let { params ->
-                    googlePayPaymentId = params.paymentId
-                    val paymentDataRequest = GooglePayRequestsHelper.getPaymentDataRequest(params.amount, params.currency).toString()
-                    val request = PaymentDataRequest.fromJson(paymentDataRequest)
-                    request?.let { viewState.startGooglePay(googlePayPaymentsClient.loadPaymentData(it)) }
+            val tokenResult = utils.asyncAwait { paymentInteractor.getBrainTreeToken() }
+            if (tokenResult.error != null) {
+                tokenResult.error?.let { err ->
+                    viewState.setError(err)
+                    viewState.blockInterface(false)
                 }
+            } else {
+                braintreeToken = tokenResult.isSuccess()?.token ?: ""
+                createBraintreePayment(paymentModel)
+            }
+        }
+    }
+
+    private suspend fun createBraintreePayment(paymentModel: PaymentRequestModel) {
+        val paymentResult = getBraintreePaymentResult(paymentModel)
+        paymentResult.error?.let {
+            log.error("create new payment error", it)
+            viewState.setError(it)
+            viewState.blockInterface(false)
+        } ?: paymentResult.model.params.let {
+            paymentId = it.paymentId
+            setupPaypal(it.amount, it.currency)
+        }
+    }
+
+    private suspend fun getBraintreePaymentResult(paymentModel: PaymentRequestModel): Result<BraintreePayment> =
+        utils.asyncAwait { paymentInteractor.getBraintreePayment(paymentRequestMapper.fromView(paymentModel)) }
+
+    private fun setupPaypal(amount: Float, currency: String) {
+        try {
+            val dropInRequest = DropInRequest().clientToken(braintreeToken)
+            val paypal = PayPalRequest(amount.toString())
+                    .currencyCode(currency).intent(PayPalRequest.INTENT_AUTHORIZE)
+            dropInRequest.paypalRequest(paypal)
+            viewState.startPaypal(dropInRequest, braintreeToken)
+        } catch (e: InvalidArgumentException) {
+            Sentry.capture(e)
+            viewState.blockInterface(false)
+        }
+    }
+
+    fun confirmPaypalPayment(nonce: String) {
+        viewState.blockInterface(true, true)
+        transfer?.let { transfer ->
+            router.navigateTo(
+                Screens.PayPalConnection(
+                    paymentId,
+                    nonce,
+                    transfer.id,
+                    offer?.let { if (it is Offer) it.id else null },
+                    paymentRequest.percentage,
+                    offer?.let { if (it is BookNowOffer) it.transportType.id.toString() else null }
+                )
+            )
+        }
+    }
+
+    private fun payByGooglePay(paymentModel: PaymentRequestModel) {
+        utils.launchSuspend {
+            val paymentResult = getGooglePayPaymentResult(paymentModel)
+            paymentResult.error?.let {
+                log.error("get by google pay payment error", it)
+                viewState.setError(it)
+            } ?: paymentResult.model.params.let { params ->
+                googlePayPaymentId = params.paymentId
+                val paymentDataRequest = GooglePayRequestsHelper.getPaymentDataRequest(params.amount, params.currency).toString()
+                val request = PaymentDataRequest.fromJson(paymentDataRequest)
+                request?.let { viewState.startGooglePay(googlePayPaymentsClient.loadPaymentData(it)) }
             }
             viewState.blockInterface(false)
         }
     }
 
-    fun payByGooglePay(token: String) {
+    private suspend fun getGooglePayPaymentResult(paymentModel: PaymentRequestModel): Result<GooglePayPayment> =
+        utils.asyncAwait { paymentInteractor.getGooglePayPayment(paymentRequestMapper.fromView(paymentModel)) }
+
+    fun processGooglePayPayment(token: String) {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val paymentProcess = PaymentProcessModel(googlePayPaymentId, token, false)
-            val processResult = getProcessPaymentResult(paymentProcess)
-            checkPaymentResult(processResult.error)
+            val paymentProcess = PaymentProcessRequestModel(googlePayPaymentId, token, false)
+            val processResult = getProcessGooglePayPaymentResult(paymentProcess)
+            processResult.error?.let {
+                paymentError(it)
+            } ?: processResult.model.payment.status.let {
+                if (it == PaymentStatus.Status.SUCCESS) paymentSuccess()
+                else paymentError()
+            }
             viewState.blockInterface(false)
         }
     }
 
-    private suspend fun getProcessPaymentResult(paymentProcess: PaymentProcessModel): Result<Payment> =
-        utils.asyncAwait { paymentInteractor.processPayment(paymentProcessMapper.fromView(paymentProcess)) }
+    private suspend fun getProcessGooglePayPaymentResult(paymentProcessModel: PaymentProcessRequestModel): Result<PaymentProcess> =
+        utils.asyncAwait { paymentInteractor.processPayment(paymentProcessRequestMapper.fromView(paymentProcessModel)) }
 
-    private suspend fun getPaymentResult(paymentModel: PaymentRequestModel): Result<Payment> =
-        utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentModel)) }
-
-    private suspend fun checkPaymentResult(error: ApiException?) {
-        error?.let { paymentError(it) } ?: paymentSuccess()
+    private suspend fun payByBalance(paymentModel: PaymentRequestModel) {
+        val paymentResult = getGroundPaymentResult(paymentModel)
+        paymentResult.error?.let {
+            paymentError(it)
+        } ?: paymentSuccess()
+        viewState.blockInterface(false)
     }
 
-    private suspend fun paymentError(err: ApiException) {
-        log.error("get by ${paymentRequest.gatewayId} payment error", err)
+    private suspend fun getGroundPaymentResult(paymentModel: PaymentRequestModel): Result<Unit> =
+        utils.asyncAwait { paymentInteractor.getGroundPayment(paymentRequestMapper.fromView(paymentModel)) }
+
+    private suspend fun paymentError(err: ApiException? = null) {
+        err?.let { log.error("get by ${paymentRequest.gatewayId} payment error", it) }
         router.navigateTo(Screens.PaymentError(paymentRequest.transferId, paymentRequest.gatewayId))
         analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
     }
@@ -299,66 +364,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             else                       -> throw UnsupportedOperationException()
         }
         phoneOrEmail?.let { router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, it)) }
-    }
-
-    private fun getBraintreeToken() {
-        utils.launchSuspend {
-            val tokenResult = utils.asyncAwait { paymentInteractor.getBrainTreeToken() }
-            if (tokenResult.error != null) {
-                tokenResult.error?.let { err ->
-                    viewState.setError(err)
-                    viewState.blockInterface(false)
-                }
-            } else {
-                braintreeToken = tokenResult.isSuccess()?.token ?: ""
-                createNewPayment()
-            }
-        }
-    }
-
-    private suspend fun createNewPayment() {
-        val result = utils.asyncAwait { paymentInteractor.getPayment(paymentRequestMapper.fromView(paymentRequest)) }
-        if (result.error != null) {
-            result.error?.let { err ->
-                log.error("create new payment error", err)
-                viewState.setError(err)
-                viewState.blockInterface(false)
-            }
-        } else {
-            val params = result.model.params
-            paymentId = params?.paymentId ?: 0L
-            setupPaypal(params?.amount, params?.currency)
-        }
-    }
-
-    private fun setupPaypal(amount: Float?, currency: String?) {
-        try {
-            val dropInRequest = DropInRequest().clientToken(braintreeToken)
-
-            val paypal = PayPalRequest(amount.toString())
-                .currencyCode(currency).intent(PayPalRequest.INTENT_AUTHORIZE)
-            dropInRequest.paypalRequest(paypal)
-            viewState.startPaypal(dropInRequest, braintreeToken)
-        } catch (e: InvalidArgumentException) {
-            Sentry.capture(e)
-            viewState.blockInterface(false)
-        }
-    }
-
-    fun confirmPayment(nonce: String) {
-        viewState.blockInterface(true, true)
-        transfer?.let { transfer ->
-            router.navigateTo(
-                Screens.PayPalConnection(
-                    paymentId,
-                    nonce,
-                    transfer.id,
-                    offer?.let { if (it is Offer) it.id else null },
-                    paymentRequest.percentage,
-                    offer?.let { if (it is BookNowOffer) it.transportType.id.toString() else null }
-                )
-            )
-        }
     }
 
     @Suppress("ComplexMethod")

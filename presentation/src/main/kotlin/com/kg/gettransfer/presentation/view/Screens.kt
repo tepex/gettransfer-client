@@ -295,8 +295,8 @@ object Screens {
             /*putExtra(
                 PaymentOfferView.EXTRA_PARAMS,
                 JSON.stringify(
-                    PaymentOfferView.Params.serializer(),
-                    PaymentOfferView.Params(dateRefund, transferId, paymentPercentages)
+                    PaymentOfferView.PaypalParams.serializer(),
+                    PaymentOfferView.PaypalParams(dateRefund, transferId, paymentPercentages)
                 )
             )*/
         }

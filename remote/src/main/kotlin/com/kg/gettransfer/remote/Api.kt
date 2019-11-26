@@ -21,7 +21,7 @@ interface Api {
         const val API_ACCOUNT_REGISTER = "/api/account"
         const val API_ROUTE_INFO = "/api/route_info"
         const val API_TRANSFERS = "/api/transfers"
-        const val API_CREATE_NEW_PAYMENT = "/api/payments"
+        const val API_PAYMENT = "/api/payments"
         const val API_PAYMENT_PROCESS = "/api/payments/process"
         const val API_PROMO = "/api/promo_codes/search"
         const val API_RATE_OFFER = "/api/offers/rate"
@@ -138,22 +138,47 @@ interface Api {
         @Path("id") id: Long
     ): ResponseModel<TransferWrapperModel>
 
-    @POST(API_CREATE_NEW_PAYMENT)
-    suspend fun createNewPayment(
+    @POST(API_PAYMENT)
+    suspend fun createPlatronPayment(
         @Body createPayment: PaymentRequestModel
-    ): ResponseModel<PaymentModel>
+    ): ResponseModel<PlatronPaymentModel>
+
+    @POST(API_PAYMENT)
+    suspend fun createCheckoutcomPayment(
+        @Body createPayment: PaymentRequestModel
+    ): ResponseModel<CheckoutcomPaymentModel>
+
+    @POST(API_PAYMENT)
+    suspend fun createBraintreePayment(
+        @Body createPayment: PaymentRequestModel
+    ): ResponseModel<BraintreePaymentModel>
+
+    @POST(API_PAYMENT)
+    suspend fun createGooglePayPayment(
+        @Body createPayment: PaymentRequestModel
+    ): ResponseModel<GooglePayPaymentModel>
+
+    @POST(API_PAYMENT)
+    suspend fun createGroundPayment(
+        @Body createPayment: PaymentRequestModel
+    ): ResponseModel<Unit>
 
     @POST(API_PAYMENT_PROCESS)
     suspend fun processPayment(
-        @Body paymentProcess: PaymentProcessModel
-    ): ResponseModel<PaymentModel>
+        @Body paymentProcess: StringPaymentProcessRequestModel
+    ): ResponseModel<PaymentProcessModel>
+
+    @POST(API_PAYMENT_PROCESS)
+    suspend fun processPayment(
+        @Body paymentProcess: JsonPaymentProcessRequestModel
+    ): ResponseModel<PaymentProcessModel>
 
     @GET(API_PROMO)
     suspend fun getDiscount(
         @Query("value") code: String
     ): ResponseModel<String>
 
-    @GET("$API_CREATE_NEW_PAYMENT/{status}")
+    @GET("$API_PAYMENT/{status}")
     suspend fun changePaymentStatus(
         @Path("status") status: String,
         @Query("pg_order_id") pgOrderId: Long,

@@ -1,7 +1,11 @@
 package com.kg.gettransfer.domain.model
 
 data class PaymentProcess(
-    val paymentId: Long,
-    val token: String,
-    val isStringToken: Boolean
-)
+    val payment: PaymentStatus,
+    val redirect: String?
+) {
+
+    companion object {
+        val EMPTY = PaymentProcess(PaymentStatus.EMPTY, null)
+    }
+}
