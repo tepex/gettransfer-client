@@ -74,5 +74,6 @@ class RateTripAnimationFragment : Fragment(R.layout.fragment_rate_trip_animation
 
     companion object {
         private const val DELAY_TO_CLOSE_FRAGMENT = 800L
+        const val DURATION_OF_ANIMATION = 1900L
     }
 }

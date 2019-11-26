@@ -291,13 +291,15 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun rateTrip(rating: Float, isNeedCheckStoreRate: Boolean) {
-        @Suppress("UnsafeCallOnNullableType")
         offer?.let { reviewInteractor.setOfferReview(it) }
         if (isNeedCheckStoreRate) {
             reviewInteractor.setRates(rating)
             if (rating.toInt() == ReviewInteractor.MAX_RATE) {
                 worker.main.launch {
-                    withContext(worker.bg) { reviewInteractor.sendRates() }
+                    withContext(worker.bg) {
+                        reviewInteractor.sendRates()
+                        viewState.showRateAnimation()
+                    }
                     analytics.logEvent(
                         Analytics.EVENT_REVIEW_AVERAGE,
                         Analytics.REVIEW,
