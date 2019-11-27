@@ -435,4 +435,5 @@
     <string name="LNG_REQUEST_CANCELED">Your application has been successfully canceled!</string>
     <string name="LNG_RESTORE_REQUEST">Restore request</string>
     <string name="LNG_REVIEW_SENT">Your review has been sent, thanks!</string>
+    <string name="LNG_WILL_BE_WAITING_FOR_YOU">Will be waiting for you:</string>
 </resources>

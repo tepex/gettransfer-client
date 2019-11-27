@@ -256,7 +256,7 @@
                         android:layout_height="wrap_content"
                         style="@style/sf_font_pro_text_semibold_black"
                         android:textSize="16sp"
-                        android:text="Вас будет ждать:" />
+                        android:text="@string/LNG_WILL_BE_WAITING_FOR_YOU" />
 
                     <TextView
                         android:id="@+id/carColor"
