@@ -339,9 +339,11 @@ class Analytics(
         suspend fun sendAnalytics(event: String) {
             super.event = event
             super.paymentType = when (mPaymentType) {
-                PaymentRequestModel.CHECKOUT -> CARD
-                PaymentRequestModel.PAYPAL  -> PAYPAL
-                else                        -> BALANCE
+                PaymentRequestModel.PLATRON,
+                PaymentRequestModel.CHECKOUT   -> CARD
+                PaymentRequestModel.PAYPAL     -> PAYPAL
+                PaymentRequestModel.GOOGLE_PAY -> GOOGLE_PAY
+                else                           -> BALANCE
             }
             getTransferAndOffer()
             prepareData()
@@ -362,9 +364,11 @@ class Analytics(
 
         fun sendAnalytics() {
             paymentType = when (paymentType) {
-                PaymentRequestModel.CHECKOUT -> CARD
-                PaymentRequestModel.PAYPAL  -> PAYPAL
-                else                        -> BALANCE
+                PaymentRequestModel.PLATRON,
+                PaymentRequestModel.CHECKOUT   -> CARD
+                PaymentRequestModel.PAYPAL     -> PAYPAL
+                PaymentRequestModel.GOOGLE_PAY -> GOOGLE_PAY
+                else                           -> BALANCE
             }
             sendToFirebase()
             sendToFacebook()
@@ -623,6 +627,7 @@ class Analytics(
         const val CARD = "card"
         const val PAYPAL = "paypal"
         const val BALANCE = "balance"
+        const val GOOGLE_PAY = "google_pay"
 
         const val USER_TYPE = "usertype"
         const val DRIVER_TYPE = "driver"
