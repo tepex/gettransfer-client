@@ -67,7 +67,6 @@ import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.layout_payments.*
-import kotlinx.android.synthetic.main.layout_prices.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
 import kotlinx.android.synthetic.main.payment_refund.*
 import kotlinx.android.synthetic.main.paymet_gtr_bonus.*
@@ -98,8 +97,6 @@ class PaymentOfferActivity : BaseActivity(),
 
     @ProvidePresenter
     fun createPaymentSettingsPresenter() = PaymentOfferPresenter()
-
-    private var selectedPercentage = PaymentRequestModel.FULL_PRICE
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -261,36 +258,13 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     @Suppress("NestedBlockDepth")
-    override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>, isNameSignPresent: Boolean) {
-        if (paymentPercentages.isNotEmpty()) {
-            if (paymentPercentages.size == 1) {
-                hidePaymentPercentage()
-            } else {
-                paymentPercentages.forEach { percentage ->
-                    when (percentage) {
-                        OfferModel.FULL_PRICE -> {
-                            rbPay100.text = getString(R.string.LNG_PAYMENT_TERM_PAY, OfferModel.FULL_PRICE.toString())
-                            tvFullPrice.text = offer.price.base.preferred.plus(R.string.LNG_PAYMENT_TERM_NOW)
-                            rbPay100.setOnClickListener { changePaymentSettings(it) }
-                        }
-                        OfferModel.PRICE_30 -> {
-                            rbPay30.text = getString(R.string.LNG_PAYMENT_TERM_PAY, OfferModel.PRICE_30.toString())
-                            tvThirdOfPrice.text = offer.price.percentage30.plus(R.string.LNG_PAYMENT_TERM_NOW)
-                            tvLaterPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, offer.price.percentage70)
-                            rbPay30.setOnClickListener { changePaymentSettings(it) }
-                        }
-                    }
-                }
-            }
-            selectPaymentPercentage(selectedPercentage)
-        }
+    override fun setOffer(offer: OfferModel, isNameSignPresent: Boolean) {
         setCarInfo(offer, isNameSignPresent)
         setPriceInfo(offer.price.base.def, offer.price.base.preferred)
         setCapacity(offer.vehicle.transportType)
     }
 
     override fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean) {
-        hidePaymentPercentage()
         setCarInfo(bookNowOffer, isNameSignPresent)
         setPriceInfo(bookNowOffer.base.def, bookNowOffer.base.preferred)
         setCapacity(bookNowOffer.transportType)
@@ -361,10 +335,6 @@ class PaymentOfferActivity : BaseActivity(),
             isNameSignPresent, offer.isWithNameSign)
     }
 
-    private fun hidePaymentPercentage() {
-        layoutPrices.isVisible = false
-    }
-
     override fun showOfferError() {
         toast(getString(R.string.LNG_RIDE_OFFER_CANCELLED))
     }
@@ -388,28 +358,6 @@ class PaymentOfferActivity : BaseActivity(),
             offerCurrency.symbol,
             offerCurrency.code
         )
-    }
-
-    private fun changePaymentSettings(view: View?) {
-        when (view?.id) {
-            R.id.rbPay100 -> selectPaymentPercentage(PaymentRequestModel.FULL_PRICE)
-            R.id.rbPay30 -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
-        }
-    }
-
-    private fun selectPaymentPercentage(selectedPercentage: Int) {
-        when (selectedPercentage) {
-            PaymentRequestModel.FULL_PRICE -> {
-                rbPay100.isChecked = true
-                rbPay30.isChecked = false
-            }
-            PaymentRequestModel.PRICE_30 -> {
-                rbPay100.isChecked = false
-                rbPay30.isChecked = true
-            }
-        }
-        presenter.changePrice(selectedPercentage)
-        this.selectedPercentage = selectedPercentage
     }
 
     override fun startPaypal(dropInRequest: DropInRequest, token: String) {

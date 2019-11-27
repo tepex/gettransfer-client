@@ -66,7 +66,6 @@ data class TransferModel(
 /* ================================================== */
     val editableFields: List<String>?, /* not used */
     val airlineCard: String?,
-    val paymentPercentages: List<Int>?,
     val unreadMessagesCount: Int,
 /* ================================================== */
 /* ================================================== */
@@ -133,7 +132,6 @@ fun Transfer.map(transportTypesModels: List<TransportTypeModel>) =
 /* ================================================== */
         editableFields,
         airlineCard,
-        paymentPercentages,
         unreadMessagesCount,
 /* ================================================== */
 /* ================================================== */

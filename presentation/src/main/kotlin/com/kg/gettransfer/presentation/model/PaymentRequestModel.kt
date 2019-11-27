@@ -7,12 +7,8 @@ data class PaymentRequestModel(
 ) {
 
     var gatewayId = CHECKOUT
-    var percentage = FULL_PRICE
 
     companion object {
-        const val FULL_PRICE = 100
-        const val PRICE_30   = 30
-
         const val PLATRON    = "platron"
         const val CHECKOUT   = "checkoutcom"
         const val PAYPAL     = "braintree"

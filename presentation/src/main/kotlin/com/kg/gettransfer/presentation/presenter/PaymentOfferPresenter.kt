@@ -19,7 +19,6 @@ import com.kg.gettransfer.presentation.mapper.PaymentProcessRequestMapper
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 
-import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentProcessRequestModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.map
@@ -123,13 +122,11 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private fun setPaymentOptions(transfer: Transfer) {
-        transfer.paymentPercentages?.let { percentages ->
-            offer?.let { offer ->
-                val nameSignPresent = !transfer.nameSign.isNullOrEmpty()
-                when (offer) {
-                    is BookNowOffer -> viewState.setBookNowOffer(offer.map(), nameSignPresent)
-                    is Offer        -> viewState.setOffer(offerMapper.toView(offer), percentages, nameSignPresent)
-                }
+        offer?.let { offer ->
+            val nameSignPresent = !transfer.nameSign.isNullOrEmpty()
+            when (offer) {
+                is BookNowOffer -> viewState.setBookNowOffer(offer.map(), nameSignPresent)
+                is Offer        -> viewState.setOffer(offerMapper.toView(offer), nameSignPresent)
             }
         }
     }
@@ -360,16 +357,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             transfer?.dateReturnLocal != null -> Analytics.TRIP_ROUND
             else                              -> Analytics.TRIP_DESTINATION
         }
-        var price = offer?.let { offer ->
+        val price = offer?.let { offer ->
             when (offer) {
                 is Offer        -> offer.price.amount
                 is BookNowOffer -> offer.amount
             }
         } ?: 0.0
-        if (paymentRequest.percentage == OfferModel.PRICE_30) price *= PRICE_30
 
         val beginCheckout = analytics.BeginCheckout(
-            paymentRequest.percentage,
             transfer?.promoCode,
             orderInteractor.duration,
             selectedPayment,
@@ -381,13 +376,5 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         beginCheckout.sendAnalytics()
     }
 
-    fun changePrice(price: Int) {
-        paymentRequest.percentage = price
-    }
-
     fun onAgreementClicked() = router.navigateTo(Screens.LicenceAgree)
-
-    companion object {
-        const val PRICE_30 = 0.3
-    }
 }

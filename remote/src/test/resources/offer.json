@@ -7,8 +7,6 @@
     "updated_at":"",
     "price":{
         "base":{"default":"qqq","preferred":"sdfs"},
-        "percentage_30":"30",
-        "percentage_70":"70",
         "without_discount":{"default":"qqq","preferred":"sdfs"},
         "amount":222
     },

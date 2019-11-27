@@ -21,7 +21,7 @@ interface PaymentOfferView : BaseView {
 
     fun initGooglePayPaymentsClient(environment: Int)
 
-    fun setOffer(offer: OfferModel, paymentPercentages: List<Int>, isNameSignPresent: Boolean)
+    fun setOffer(offer: OfferModel, isNameSignPresent: Boolean)
     fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean)
     fun setCommission(paymentCommission: String, dateRefund: String)
     fun setToolbarTitle(transferModel: TransferModel)

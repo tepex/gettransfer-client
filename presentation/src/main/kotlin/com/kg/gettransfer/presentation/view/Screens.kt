@@ -287,15 +287,7 @@ object Screens {
     }
 
     class PaymentOffer : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, PaymentOfferActivity::class.java).apply {
-            /*putExtra(
-                PaymentOfferView.EXTRA_PARAMS,
-                JSON.stringify(
-                    PaymentOfferView.PaypalParams.serializer(),
-                    PaymentOfferView.PaypalParams(dateRefund, transferId, paymentPercentages)
-                )
-            )*/
-        }
+        override fun getActivityIntent(context: Context?) = Intent(context, PaymentOfferActivity::class.java)
     }
 
     data class PaymentError(val transferId: Long, val gatewayId: String? = null) : SupportAppScreen() {

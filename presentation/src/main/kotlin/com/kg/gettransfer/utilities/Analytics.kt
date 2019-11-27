@@ -351,7 +351,6 @@ class Analytics(
     }
 
     inner class BeginCheckout(
-        private val share: Int,
         private val promocode: String?,
         private val hours: Int?,
         private var paymentType: String,
@@ -375,7 +374,6 @@ class Analytics(
 
         private fun sendToAppsFlyer() {
             val map = mutableMapOf<String, Any?>()
-            map[SHARE] = share
             map[PROMOCODE] = promocode
             hours?.let { map[HOURS] = it }
             map[PAYMENT_TYPE] = paymentType
@@ -388,7 +386,6 @@ class Analytics(
 
         private fun sendToYandex() {
             val map = mutableMapOf<String, Any?>()
-            map[SHARE] = share
             map[PROMOCODE] = promocode
             hours?.let { map[HOURS] = it }
             map[PAYMENT_TYPE] = paymentType
@@ -401,7 +398,6 @@ class Analytics(
 
         private fun sendToFacebook() {
             val bundle = Bundle()
-            bundle.putInt(SHARE, share)
             bundle.putString(PROMOCODE, promocode)
             hours?.let { bundle.putInt(HOURS, it) }
             bundle.putString(PAYMENT_TYPE, paymentType)
@@ -413,7 +409,6 @@ class Analytics(
 
         private fun sendToFirebase() {
             val bundle = Bundle()
-            bundle.putInt(SHARE, share)
             bundle.putString(PROMOCODE, promocode)
             hours?.let { bundle.putInt(HOURS, it) }
             bundle.putString(PAYMENT_TYPE, paymentType)

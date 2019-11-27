@@ -418,12 +418,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         setFullPrice(remainsToPay, 100)
     }
 
-    private fun setFullPrice(price: String, paymentPercentages: Int) {
+    private fun setFullPrice(price: String, paymentPercentage: Int) {
         full_price.apply {
             isVisible = true
             field_text.text = price
             field_more_text.isVisible = true
-            field_more_text.text = getString(R.string.LNG_RIDE_PAYMENT_PAID_DETAILS, paymentPercentages.toString())
+            field_more_text.text = getString(R.string.LNG_RIDE_PAYMENT_PAID_DETAILS, paymentPercentage.toString())
         }
     }
 
