@@ -339,6 +339,7 @@ class Analytics(
         suspend fun sendAnalytics(event: String) {
             super.event = event
             super.paymentType = when (mPaymentType) {
+                PaymentRequestModel.CARD,
                 PaymentRequestModel.PLATRON,
                 PaymentRequestModel.CHECKOUT   -> CARD
                 PaymentRequestModel.PAYPAL     -> PAYPAL
@@ -364,6 +365,7 @@ class Analytics(
 
         fun sendAnalytics() {
             paymentType = when (paymentType) {
+                PaymentRequestModel.CARD,
                 PaymentRequestModel.PLATRON,
                 PaymentRequestModel.CHECKOUT   -> CARD
                 PaymentRequestModel.PAYPAL     -> PAYPAL

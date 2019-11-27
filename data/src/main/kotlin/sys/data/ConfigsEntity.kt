@@ -26,7 +26,8 @@ data class ConfigsEntity(
     val supportedDistanceUnits: List<String>,
     val contactEmails: List<ContactEmailEntity>,
     val checkoutCredentials: CheckoutCredentialsEntity,
-    val googlePayCredentials: GooglePayCredentialsEntity
+    val googlePayCredentials: GooglePayCredentialsEntity,
+    val defaultCardGateway: String
 ) {
 
     companion object {
@@ -39,6 +40,7 @@ data class ConfigsEntity(
         const val CONTACT_EMAILS           = "contact_emails"
         const val CHECKOUT_CREDENTIALS     = "checkoutcom_credentials"
         const val GOOGLEPAY_CREDENTIALS    = "googlepay_credentials"
+        const val DEFAULT_CARD_GATEWAY     = "default_card_gateway"
     }
 }
 
@@ -51,5 +53,6 @@ fun ConfigsEntity.map() =
         supportedDistanceUnits.map { DistanceUnit.valueOf(it.toUpperCase(Locale.US)) },
         contactEmails.map { it.map() },
         checkoutCredentials.map(),
-        googlePayCredentials.map()
+        googlePayCredentials.map(),
+        defaultCardGateway
     )

@@ -16,7 +16,8 @@ data class Configs(
     val supportedDistanceUnits: List<DistanceUnit>,
     val contactEmails: List<ContactEmail>,
     val checkoutCredentials: CheckoutCredentials,
-    val googlePayCredentials: GooglePayCredentials
+    val googlePayCredentials: GooglePayCredentials,
+    val defaultCardGateway: String
 ) {
 
     companion object {

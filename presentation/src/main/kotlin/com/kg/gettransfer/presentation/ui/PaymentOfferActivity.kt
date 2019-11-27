@@ -136,7 +136,7 @@ class PaymentOfferActivity : BaseActivity(),
             btnGetPayment.setOnClickListener(this)
             btnGetPaymentWithGooglePay.setOnClickListener(this)
         }
-        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.CHECKOUT) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.CARD) }.apply {
             rbCard.setOnClickListener(this)
             layoutCard.setOnClickListener(this)
         }
@@ -235,8 +235,7 @@ class PaymentOfferActivity : BaseActivity(),
     override fun selectPaymentType(type: String) {
         clearPaymentsRadioButtons()
         when(type) {
-            PaymentRequestModel.PLATRON,
-            PaymentRequestModel.CHECKOUT   -> rbCard.isChecked = true
+            PaymentRequestModel.CARD       -> rbCard.isChecked = true
             PaymentRequestModel.PAYPAL     -> rbPaypal.isChecked = true
             PaymentRequestModel.GOOGLE_PAY -> rbGooglePay.isChecked = true
             PaymentRequestModel.GROUND     -> rbBalance.isChecked = true

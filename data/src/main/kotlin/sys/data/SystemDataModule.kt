@@ -52,7 +52,8 @@ val systemData = module {
                     "",
                     listOf("AMEX", "JCB", "MASTERCARD", "VISA"),
                     listOf("CRYPTOGRAM_3DS")
-                )
+                ),
+            defaultCardGateway = "checkoutcom"
         )
     }
     single {

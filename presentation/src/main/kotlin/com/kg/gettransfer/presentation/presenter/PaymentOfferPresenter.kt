@@ -48,7 +48,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private var transfer: Transfer? = null
     private var offer: OfferItem? = null
 
-    private var selectedPayment = PaymentRequestModel.CHECKOUT
+    private var selectedPayment = PaymentRequestModel.CARD
     private var paymentId = 0L
 
     private lateinit var paymentRequest: PaymentRequestModel
@@ -71,7 +71,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 transfer = selectedTransfer
                 offer = selectedOffer
             }
-            getPaymentRequest()
             with(accountManager) {
                 val balance = remoteAccount.partner?.availableMoney?.default
 
@@ -137,17 +136,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         super.onDestroy()
     }
 
-    private fun getPaymentRequest() {
-        transfer?.id?.let { transferId ->
-            offer?.let { offer ->
-                paymentRequest = when (offer) {
-                    is Offer -> PaymentRequestModel(transferId, offer.id, null)
-                    is BookNowOffer -> PaymentRequestModel(transferId, null, offer.transportType.id.toString())
-                }
-            }
-        }
-    }
-
     fun setEmail(email: String) {
         accountManager.tempProfile.email = email.trim()
     }
@@ -164,15 +152,31 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            paymentRequest.gatewayId = selectedPayment
-            when (selectedPayment) {
-                PaymentRequestModel.PLATRON    -> payByPlatron(paymentRequest)
-                PaymentRequestModel.CHECKOUT   -> payByCheckoutcom(paymentRequest)
-                PaymentRequestModel.PAYPAL     -> payByPaypal(paymentRequest)
-                PaymentRequestModel.GOOGLE_PAY -> payByGooglePay(paymentRequest)
-                else                           -> payByBalance(paymentRequest)
+            getPaymentRequest(selectedPayment)?.let {
+                when (it.gatewayId) {
+                    PaymentRequestModel.PLATRON    -> payByPlatron(it)
+                    PaymentRequestModel.CHECKOUT   -> payByCheckoutcom(it)
+                    PaymentRequestModel.PAYPAL     -> payByPaypal(it)
+                    PaymentRequestModel.GOOGLE_PAY -> payByGooglePay(it)
+                    else                           -> payByBalance(it)
+                }
+                logEventBeginCheckout()
             }
-            logEventBeginCheckout()
+        }
+    }
+
+    private suspend fun getPaymentRequest(selectedPayment: String): PaymentRequestModel? {
+        val gatewayId = when(selectedPayment) {
+            PaymentRequestModel.CARD -> configsManager.getConfigs().defaultCardGateway
+            else                     -> selectedPayment
+        }
+        return transfer?.id?.let { transferId ->
+            offer?.let { offer ->
+                when (offer) {
+                    is Offer -> PaymentRequestModel(transferId, offer.id, null, gatewayId)
+                    is BookNowOffer -> PaymentRequestModel(transferId, null, offer.transportType.id.toString(), gatewayId)
+                }.also { paymentRequest = it }
+            }
         }
     }
 

@@ -21,7 +21,8 @@ data class ConfigsModel(
     @SerializedName(ConfigsEntity.SUPPORTED_DISTANCE_UNITS) @Expose val supportedDistanceUnits: List<String>,
     @SerializedName(ConfigsEntity.CONTACT_EMAILS)           @Expose val contactEmails: ContactEmailsWrapperModel,
     @SerializedName(ConfigsEntity.CHECKOUT_CREDENTIALS)     @Expose val checkoutCredentials: CheckoutCredentialsModel,
-    @SerializedName(ConfigsEntity.GOOGLEPAY_CREDENTIALS)    @Expose val googlePayCredentials: GooglePayCredentialsModel
+    @SerializedName(ConfigsEntity.GOOGLEPAY_CREDENTIALS)    @Expose val googlePayCredentials: GooglePayCredentialsModel,
+    @SerializedName(ConfigsEntity.DEFAULT_CARD_GATEWAY)     @Expose val defaultCardGateway: String
 )
 
 fun ConfigsModel.map() =
@@ -33,5 +34,6 @@ fun ConfigsModel.map() =
         supportedDistanceUnits,
         contactEmails.map { it.map() },
         checkoutCredentials.map(),
-        googlePayCredentials.map()
+        googlePayCredentials.map(),
+        defaultCardGateway
     )
