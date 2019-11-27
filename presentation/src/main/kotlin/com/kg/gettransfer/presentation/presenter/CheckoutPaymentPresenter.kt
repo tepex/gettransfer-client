@@ -3,9 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import com.checkout.android_sdk.Utils.Environment
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.PaymentProcess
-import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.mapper.PaymentProcessRequestMapper
 import com.kg.gettransfer.presentation.model.PaymentProcessRequestModel
@@ -27,7 +25,6 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
 
     internal var paymentId = 0L
 
-
     override fun attachView(view: CheckoutPaymentView) {
         super.attachView(view)
         worker.main.launch {
@@ -41,7 +38,7 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
     }
 
     fun onTokenGenerated(token: String) {
-        utils.launchSuspend{
+        utils.launchSuspend {
             viewState.blockInterface(true, true)
             val paymentProcess = PaymentProcessRequestModel(paymentId, token, true)
             val processResult = getProcessPaymentResult(paymentProcess)
@@ -67,7 +64,7 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
     }
 
     fun handle3DS(isSuccess: Boolean) {
-        utils.launchSuspend{
+        utils.launchSuspend {
             if (isSuccess) paymentSuccess()
             else paymentError()
         }
@@ -76,11 +73,11 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
     private suspend fun paymentError(err: ApiException? = null) {
         val gatewayId = PaymentRequestModel.CHECKOUT
         log.error("get by $gatewayId payment error", err)
+        analytics.PaymentStatus(gatewayId).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         paymentInteractor.selectedTransfer?.id?.let {
             router.exit()
-            router.navigateTo(Screens.PaymentError(it, gatewayId))
+            router.navigateTo(Screens.PaymentError(it))
         }
-        analytics.PaymentStatus(gatewayId).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
     }
 
     private suspend fun paymentSuccess() {

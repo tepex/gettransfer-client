@@ -39,8 +39,8 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_successful)
         setStatusBarColor(R.color.black_50)
-        presenter.offerId = intent.getLongExtra(OFFER_ID, 0L)
-        presenter.transferId = intent.getLongExtra(TRANSFER_ID, 0L)
+        presenter.transferId = intent.getLongExtra(PaymentSuccessfulView.EXTRA_TRANSFER_ID, 0L)
+        presenter.offerId = intent.getLongExtra(PaymentSuccessfulView.EXTRA_OFFER_ID, 0L)
         showPaymentDialog(savedInstanceState)
     }
 
@@ -129,9 +129,6 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
     }
 
     companion object {
-        const val TRANSFER_ID = "transferId"
-        const val OFFER_ID = "offerId"
         private const val RC_WRITE_FILE = 111
-        private const val SCREEN_MARGIN_TOP = 8f
     }
 }

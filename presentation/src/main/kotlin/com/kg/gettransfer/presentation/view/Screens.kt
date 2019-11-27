@@ -269,15 +269,11 @@ object Screens {
     }
 
     data class Payment(
-        val url: String?,
-        val percentage: Int,
-        val paymentType: String
+        val url: String
     ) : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentActivity::class.java).apply {
             putExtra(PaymentView.EXTRA_URL, url)
-            putExtra(PaymentView.EXTRA_PERCENTAGE, percentage)
-            putExtra(PaymentView.EXTRA_PAYMENT_TYPE, paymentType)
         }
     }
 
@@ -304,16 +300,16 @@ object Screens {
 
     data class PaymentError(val transferId: Long, val gatewayId: String? = null) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentErrorActivity::class.java).apply {
-            putExtra(PaymentErrorActivity.TRANSFER_ID, transferId)
-            putExtra(PaymentErrorActivity.GATEWAY_ID, gatewayId)
+            putExtra(PaymentErrorView.EXTRA_TRANSFER_ID, transferId)
+            putExtra(PaymentErrorView.EXTRA_GATEWAY_ID, gatewayId)
         }
     }
 
     data class PaymentSuccess(val transferId: Long, val offerId: Long?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
             Intent(context, PaymentSuccessfulActivity::class.java).apply {
-                putExtra(PaymentSuccessfulActivity.TRANSFER_ID, transferId)
-                putExtra(PaymentSuccessfulActivity.OFFER_ID, offerId)
+                putExtra(PaymentSuccessfulView.EXTRA_TRANSFER_ID, transferId)
+                putExtra(PaymentSuccessfulView.EXTRA_OFFER_ID, offerId)
             }
     }
 
@@ -397,9 +393,7 @@ object Screens {
         val paymentId: Long,
         val nonce: String,
         val transferId: Long,
-        val offerId: Long?,
-        val percentage: Int,
-        val bookNowTransportId: String?
+        val offerId: Long?
     ) : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) =
@@ -408,8 +402,6 @@ object Screens {
                 putExtra(PaypalConnectionView.EXTRA_NONCE, nonce)
                 putExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, transferId)
                 putExtra(PaypalConnectionView.EXTRA_OFFER_ID, offerId)
-                putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
-                putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
             }
     }
 }

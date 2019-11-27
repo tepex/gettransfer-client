@@ -16,7 +16,7 @@ data class PaymentRequestModel(
         const val PLATRON    = "platron"
         const val CHECKOUT   = "checkoutcom"
         const val PAYPAL     = "braintree"
-        const val GROUND     = "ground"
         const val GOOGLE_PAY = "googlepay"
+        const val GROUND     = "ground"
     }
 }

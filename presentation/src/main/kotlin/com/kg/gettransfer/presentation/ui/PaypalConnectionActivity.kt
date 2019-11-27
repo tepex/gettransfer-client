@@ -34,8 +34,6 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
         presenter.nonce = intent.getStringExtra(PaypalConnectionView.EXTRA_NONCE)
         presenter.transferId = intent.getLongExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, 0L)
         presenter.offerId = intent.getLongExtra(PaypalConnectionView.EXTRA_OFFER_ID, 0L)
-        presenter.percentage = intent.getIntExtra(PaypalConnectionView.EXTRA_PERCENTAGE, PaymentRequestModel.FULL_PRICE)
-        presenter.bookNowTransportId = intent.getStringExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID)
         setContentView(R.layout.activity_paypal_connection)
     }
 

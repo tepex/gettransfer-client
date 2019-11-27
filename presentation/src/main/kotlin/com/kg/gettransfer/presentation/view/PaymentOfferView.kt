@@ -36,6 +36,6 @@ interface PaymentOfferView : BaseView {
     fun showGooglePayButton()
     fun hideGooglePayButton()
 
-    fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String)
+    fun startPaypal(dropInRequest: DropInRequest, token: String)
     fun startGooglePay(task: Task<PaymentData>)
 }

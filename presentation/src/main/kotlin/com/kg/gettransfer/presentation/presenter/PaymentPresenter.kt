@@ -3,13 +3,11 @@ package com.kg.gettransfer.presentation.presenter
 import moxy.InjectViewState
 import com.kg.gettransfer.domain.eventListeners.PaymentStatusEventListener
 
-import com.kg.gettransfer.domain.model.BookNowOffer
-
 import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
+import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 
@@ -25,28 +23,12 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
 
     private val mapper: PaymentStatusRequestMapper by inject()
 
-    private var offer: Offer? = null
-    private var bookNowOffer: BookNowOffer? = null
-    private var transfer: Transfer? = null
-
-    internal var percentage = 0
-    internal var paymentType = ""
-
     private var showSuccessPayment = false
     private var showFailedPayment = false
 
     override fun attachView(view: PaymentView) {
         super.attachView(view)
         paymentInteractor.eventPaymentReceiver = this
-        paymentInteractor.selectedTransfer?.let { st ->
-            paymentInteractor.selectedOffer?.let { so ->
-                transfer = st
-                when (so) {
-                    is Offer -> offer = so
-                    is BookNowOffer -> bookNowOffer = so
-                }
-            }
-        }
     }
 
     override fun detachView(view: PaymentView?) {
@@ -58,27 +40,27 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
         viewState.blockInterface(true)
         val model = PaymentStatusRequestModel(null, orderId, true, success)
         val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
-        val err = result.error
-        if (err != null) {
-            log.error("change payment status error", err)
-            viewState.setError(err)
+        result.error?.let {
+            log.error("change payment status error", it)
+            viewState.setError(it)
             router.exit()
-        } else {
-            if (result.model.isSuccess) isPaymentWasSuccessful() else showFailedPayment()
+        } ?: result.model.isSuccess.let {
+            if (it) isPaymentWasSuccessful() else showFailedPayment()
         }
     }
 
     override fun onNewPaymentStatusEvent(isSuccess: Boolean) {
-        utils.launchSuspend { if (isSuccess) isPaymentWasSuccessful() else showFailedPayment() }
+        utils.launchSuspend {
+            if (isSuccess) isPaymentWasSuccessful() else showFailedPayment()
+        }
     }
 
     private suspend fun isPaymentWasSuccessful() {
-        transfer?.let {
+        paymentInteractor.selectedTransfer?.let {
             val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(it.id) }
             if (offerPaid.model.first) {
-                transfer = offerPaid.model.second
-                paymentInteractor.selectedTransfer = transfer
-                showSuccessfulPayment()
+                paymentInteractor.selectedTransfer = offerPaid.model.second
+                showSuccessfulPayment(it.id)
             }
         }
     }
@@ -87,18 +69,19 @@ class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListene
         if (!showFailedPayment) {
             showFailedPayment = true
             viewState.blockInterface(false)
+            analytics.PaymentStatus(PaymentRequestModel.PLATRON).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
             router.exit()
-            transfer?.let { router.navigateTo(Screens.PaymentError(it.id)) }
-            analytics.PaymentStatus(paymentType).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
+            paymentInteractor.selectedTransfer?.let { router.navigateTo(Screens.PaymentError(it.id)) }
         }
     }
 
-    private suspend fun showSuccessfulPayment() {
+    private suspend fun showSuccessfulPayment(transferId: Long) {
         if (!showSuccessPayment) {
             showSuccessPayment = true
             viewState.blockInterface(false)
-            transfer?.let { router.newChainFromMain(Screens.PaymentSuccess(it.id, offer?.id)) }
-            analytics.PaymentStatus(paymentType).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
+            analytics.PaymentStatus(PaymentRequestModel.PLATRON).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
+            val offerId = (paymentInteractor.selectedOffer as? Offer)?.id
+            router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
             analytics.EcommercePurchase().sendAnalytics()
         }
     }

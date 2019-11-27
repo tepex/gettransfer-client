@@ -44,20 +44,17 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private val paymentProcessRequestMapper: PaymentProcessRequestMapper by inject()
     private val profileMapper: ProfileMapper by inject()
 
+    lateinit var googlePayPaymentsClient: PaymentsClient
+
     private var transfer: Transfer? = null
     private var offer: OfferItem? = null
 
-    private var url: String? = null
-    internal var braintreeToken = ""
-    private var paymentId = 0L
     internal var selectedPayment = PaymentRequestModel.CHECKOUT
-
-    private var loginScreenIsShowed = false
+    private var paymentId = 0L
 
     private lateinit var paymentRequest: PaymentRequestModel
 
-    lateinit var googlePayPaymentsClient: PaymentsClient
-    private var googlePayPaymentId = 0L
+    private var loginScreenIsShowed = false
 
     @Suppress("ComplexMethod")
     override fun attachView(view: PaymentOfferView) {
@@ -169,6 +166,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true, true)
+            paymentRequest.gatewayId = selectedPayment
             when (selectedPayment) {
                 PaymentRequestModel.PLATRON    -> payByPlatron(paymentRequest)
                 PaymentRequestModel.CHECKOUT   -> payByCheckoutcom(paymentRequest)
@@ -180,16 +178,20 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
+    private fun setError(err: ApiException, logText: String? = null) {
+        log.error(logText ?: "get by $selectedPayment payment error", err)
+        viewState.setError(err)
+        viewState.blockInterface(false)
+    }
+
     private suspend fun payByPlatron(paymentModel: PaymentRequestModel) {
         val paymentResult = getPlatronPaymentResult(paymentModel)
         paymentResult.error?.let {
-            log.error("get by platron payment error", it)
-            viewState.setError(it)
+            setError(it)
         } ?: paymentResult.model.let {
-            url = it.url
-            router.navigateTo(Screens.Payment(url, paymentRequest.percentage, selectedPayment))
+            router.navigateTo(Screens.Payment(it.url))
+            viewState.blockInterface(false)
         }
-        viewState.blockInterface(false)
     }
 
     private suspend fun getPlatronPaymentResult(paymentModel: PaymentRequestModel): Result<PlatronPayment> =
@@ -198,54 +200,43 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private suspend fun payByCheckoutcom(paymentModel: PaymentRequestModel) {
         val paymentResult = getCheckoutcomPaymentResult(paymentModel)
         paymentResult.error?.let {
-            log.error("get by checkoutcom payment error", it)
-            viewState.setError(it)
+            setError(it)
         } ?: paymentResult.model.paymentId.let {
             router.navigateTo(Screens.CheckoutPayment(it))
+            viewState.blockInterface(false)
         }
-        viewState.blockInterface(false)
     }
 
     private suspend fun getCheckoutcomPaymentResult(paymentModel: PaymentRequestModel): Result<CheckoutcomPayment> =
         utils.asyncAwait { paymentInteractor.getCheckoutcomPayment(paymentRequestMapper.fromView(paymentModel)) }
 
-    private fun payByPaypal(paymentModel: PaymentRequestModel) {
-        utils.launchSuspend {
-            val tokenResult = utils.asyncAwait { paymentInteractor.getBrainTreeToken() }
-            if (tokenResult.error != null) {
-                tokenResult.error?.let { err ->
-                    viewState.setError(err)
-                    viewState.blockInterface(false)
-                }
-            } else {
-                braintreeToken = tokenResult.isSuccess()?.token ?: ""
-                createBraintreePayment(paymentModel)
-            }
-        }
+    private suspend fun payByPaypal(paymentModel: PaymentRequestModel) {
+        val tokenResult = utils.asyncAwait { paymentInteractor.getBrainTreeToken() }
+        tokenResult.error?.let {
+            setError(it, "get braintree token error")
+        } ?: createBraintreePayment(paymentModel, tokenResult.model.token)
     }
 
-    private suspend fun createBraintreePayment(paymentModel: PaymentRequestModel) {
+    private suspend fun createBraintreePayment(paymentModel: PaymentRequestModel, token: String) {
         val paymentResult = getBraintreePaymentResult(paymentModel)
         paymentResult.error?.let {
-            log.error("create new payment error", it)
-            viewState.setError(it)
-            viewState.blockInterface(false)
+            setError(it)
         } ?: paymentResult.model.params.let {
             paymentId = it.paymentId
-            setupPaypal(it.amount, it.currency)
+            setupPaypal(it.amount, it.currency, token)
         }
     }
 
     private suspend fun getBraintreePaymentResult(paymentModel: PaymentRequestModel): Result<BraintreePayment> =
         utils.asyncAwait { paymentInteractor.getBraintreePayment(paymentRequestMapper.fromView(paymentModel)) }
 
-    private fun setupPaypal(amount: Float, currency: String) {
+    private fun setupPaypal(amount: Float, currency: String, token: String) {
         try {
-            val dropInRequest = DropInRequest().clientToken(braintreeToken)
+            val dropInRequest = DropInRequest().clientToken(token)
             val paypal = PayPalRequest(amount.toString())
                     .currencyCode(currency).intent(PayPalRequest.INTENT_AUTHORIZE)
             dropInRequest.paypalRequest(paypal)
-            viewState.startPaypal(dropInRequest, braintreeToken)
+            viewState.startPaypal(dropInRequest, token)
         } catch (e: InvalidArgumentException) {
             Sentry.capture(e)
             viewState.blockInterface(false)
@@ -260,26 +251,21 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                     paymentId,
                     nonce,
                     transfer.id,
-                    offer?.let { if (it is Offer) it.id else null },
-                    paymentRequest.percentage,
-                    offer?.let { if (it is BookNowOffer) it.transportType.id.toString() else null }
+                    offer?.let { if (it is Offer) it.id else null }
                 )
             )
         }
     }
 
-    private fun payByGooglePay(paymentModel: PaymentRequestModel) {
-        utils.launchSuspend {
-            val paymentResult = getGooglePayPaymentResult(paymentModel)
-            paymentResult.error?.let {
-                log.error("get by google pay payment error", it)
-                viewState.setError(it)
-            } ?: paymentResult.model.params.let { params ->
-                googlePayPaymentId = params.paymentId
-                val paymentDataRequest = GooglePayRequestsHelper.getPaymentDataRequest(params.amount, params.currency).toString()
-                val request = PaymentDataRequest.fromJson(paymentDataRequest)
-                request?.let { viewState.startGooglePay(googlePayPaymentsClient.loadPaymentData(it)) }
-            }
+    private suspend fun payByGooglePay(paymentModel: PaymentRequestModel) {
+        val paymentResult = getGooglePayPaymentResult(paymentModel)
+        paymentResult.error?.let {
+            setError(it)
+        } ?: paymentResult.model.params.let { params ->
+            paymentId = params.paymentId
+            val paymentDataRequest = GooglePayRequestsHelper.getPaymentDataRequest(params.amount, params.currency).toString()
+            val request = PaymentDataRequest.fromJson(paymentDataRequest)
+            request?.let { viewState.startGooglePay(googlePayPaymentsClient.loadPaymentData(it)) }
             viewState.blockInterface(false)
         }
     }
@@ -290,7 +276,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     fun processGooglePayPayment(token: String) {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val paymentProcess = PaymentProcessRequestModel(googlePayPaymentId, token, false)
+            val paymentProcess = PaymentProcessRequestModel(paymentId, token, false)
             val processResult = getProcessGooglePayPaymentResult(paymentProcess)
             processResult.error?.let {
                 paymentError(it)
@@ -317,14 +303,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         utils.asyncAwait { paymentInteractor.getGroundPayment(paymentRequestMapper.fromView(paymentModel)) }
 
     private suspend fun paymentError(err: ApiException? = null) {
-        err?.let { log.error("get by ${paymentRequest.gatewayId} payment error", it) }
-        router.navigateTo(Screens.PaymentError(paymentRequest.transferId, paymentRequest.gatewayId))
+        log.error("get by $selectedPayment payment error", err)
         analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
+        router.navigateTo(Screens.PaymentError(paymentRequest.transferId, selectedPayment))
     }
 
     private suspend fun paymentSuccess() {
-        router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))
         analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
+        router.newChainFromMain(Screens.PaymentSuccess(paymentRequest.transferId, paymentRequest.offerId))
         transfer?.let {
             val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(it.id) }
             if (offerPaid.model.first) {
@@ -397,10 +383,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     fun changePrice(price: Int) {
         paymentRequest.percentage = price
-    }
-
-    fun changePayment(payment: String) {
-        paymentRequest.gatewayId = payment
     }
 
     fun onAgreementClicked() = router.navigateTo(Screens.LicenceAgree)

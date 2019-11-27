@@ -50,8 +50,6 @@ class PaymentActivity : BaseActivity(), PaymentView {
     @Suppress("UnsafeCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.percentage = intent.getIntExtra(PaymentView.EXTRA_PERCENTAGE, 0)
-        presenter.paymentType = intent.getStringExtra(PaymentView.EXTRA_PAYMENT_TYPE)
 
         setContentView(R.layout.activity_payment)
 

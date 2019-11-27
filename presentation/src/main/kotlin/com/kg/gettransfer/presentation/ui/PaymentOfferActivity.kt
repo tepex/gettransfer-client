@@ -246,7 +246,6 @@ class PaymentOfferActivity : BaseActivity(),
         tvCommission.isInvisible = view.id == R.id.rbBalance
         changePayButton(view.id == R.id.rbGooglePay)
         presenter.selectedPayment = payment
-        presenter.changePayment(payment)
     }
 
     private fun clearPaymentsRadioButtons() {
@@ -413,12 +412,12 @@ class PaymentOfferActivity : BaseActivity(),
         this.selectedPercentage = selectedPercentage
     }
 
-    override fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String) {
+    override fun startPaypal(dropInRequest: DropInRequest, token: String) {
         blockInterface(false)
         when {
             payPalInstalled()  -> startActivityForResult(dropInRequest.getIntent(this), PAYPAL_PAYMENT_REQUEST_CODE)
             browserInstalled() -> {
-                val braintreeFragment = BraintreeFragment.newInstance(this, presenter.braintreeToken)
+                val braintreeFragment = BraintreeFragment.newInstance(this, token)
                 PayPal.requestOneTimePayment(braintreeFragment, dropInRequest.payPalRequest)
             }
             else               -> longToast(getString(R.string.LNG_PAYMENT_INSTALL_PAYPAL))
@@ -444,7 +443,7 @@ class PaymentOfferActivity : BaseActivity(),
                 val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
                 result?.paymentMethodNonce?.nonce?.let { presenter.confirmPaypalPayment(it) }
             }
-            RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.PAYPAL)
+            RESULT_CANCELED -> presenter.selectedPayment = PaymentRequestModel.PAYPAL
             else            -> {
                 val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR)
                 if (error is Exception) {
@@ -462,7 +461,7 @@ class PaymentOfferActivity : BaseActivity(),
                 val token = json?.getJSONObject("paymentMethodData")?.getJSONObject("tokenizationData")?.getString("token")
                 token?.let { presenter.processGooglePayPayment(it) }
             }
-            RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.GOOGLE_PAY)
+            RESULT_CANCELED -> presenter.selectedPayment = PaymentRequestModel.GOOGLE_PAY
             AutoResolveHelper.RESULT_ERROR -> {
                 val status = data?.let { AutoResolveHelper.getStatusFromIntent(it) }
                 status?.statusMessage?.let { Timber.e(it) }
@@ -504,7 +503,7 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun onCancel(requestCode: Int) {
-        presenter.changePayment(PaymentRequestModel.PAYPAL)
+        presenter.selectedPayment = PaymentRequestModel.PAYPAL
     }
 
     override fun setToolbarTitle(transferModel: TransferModel) {
