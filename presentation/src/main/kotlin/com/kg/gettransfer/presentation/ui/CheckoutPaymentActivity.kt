@@ -11,7 +11,7 @@ import moxy.presenter.ProvidePresenter
 import com.checkout.android_sdk.Response.CardTokenisationFail
 import com.checkout.android_sdk.Response.CardTokenisationResponse
 import com.checkout.android_sdk.Utils.Environment
-import com.kg.gettransfer.presentation.ui.custom.CustomPaymentForm
+import com.kg.gettransfer.presentation.ui.custom.CheckoutcomPaymentForm
 import kotlinx.android.synthetic.main.activity_checkout_payment.*
 
 class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
@@ -24,7 +24,7 @@ class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
     @ProvidePresenter
     fun createPaymentPresenter() = CheckoutPaymentPresenter()
 
-    private lateinit var paymentForm: CustomPaymentForm
+    private lateinit var paymentForm: CheckoutcomPaymentForm
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,16 +35,13 @@ class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
     }
 
     override fun initPaymentForm(environment: Environment, publicKey: String) {
-        paymentForm.includeBilling(false)
-        paymentForm.mSubmitFormListener = object : CustomPaymentForm.PaymentFormCallback {
+        paymentForm.mSubmitFormListener = object : CheckoutcomPaymentForm.PaymentFormCallback {
             override fun onFormSubmit() {
                 // form submit initiated; you can potentially display a loader
             }
 
             override fun onTokenGenerated(response: CardTokenisationResponse) {
-                // your token is here: response.token
                 presenter.onTokenGenerated(response.token)
-                paymentForm.clearForm() // this clears the Payment Form
             }
 
             override fun onError(response: CardTokenisationFail) {
@@ -56,16 +53,16 @@ class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
             }
 
             override fun onBackPressed() {
-                // the user decided to leave the payment page
-                paymentForm.clearForm() // this clears the Payment Form
+                presenter.onBackCommandClick()
             }
         }
         paymentForm.setEnvironment(environment)
         paymentForm.setKey(publicKey)
+        paymentForm.includeBilling(false)
     }
 
     override fun redirectTo3ds(redirectUrl: String, successUrl: String, failedUrl: String) {
-        paymentForm.m3DSecureListener = object: CustomPaymentForm.On3DSFinished {
+        paymentForm.m3DSecureListener = object: CheckoutcomPaymentForm.On3DSFinished {
             override fun onSuccess() {
                 presenter.handle3DS(true)
             }
@@ -75,5 +72,13 @@ class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
             }
         }
         paymentForm.handle3DS(redirectUrl, successUrl, failedUrl)
+    }
+
+    override fun clearForm() {
+        paymentForm.clearForm()
+    }
+
+    override fun onBackPressed() {
+        presenter.onBackCommandClick()
     }
 }

@@ -8,6 +8,7 @@ import moxy.viewstate.strategy.StateStrategyType
 interface CheckoutPaymentView: BaseView {
     fun initPaymentForm(environment: Environment, publicKey: String)
     fun redirectTo3ds(redirectUrl: String, successUrl: String, failedUrl: String)
+    fun clearForm()
 
     companion object {
         val EXTRA_PAYMENT_ID = "${CheckoutPaymentView::class.java.name}.paymentId"

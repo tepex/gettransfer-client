@@ -4,7 +4,6 @@ import com.checkout.android_sdk.Utils.Environment
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.Payment
 import com.kg.gettransfer.domain.model.PaymentProcess
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.extensions.newChainFromMain
@@ -55,6 +54,7 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
         utils.asyncAwait { paymentInteractor.processPayment(paymentProcessRequestMapper.fromView(paymentProcessModel)) }
 
     private suspend fun checkPaymentResult(result: Result<PaymentProcess>) {
+        viewState.clearForm()
         result.error?.let {
             paymentError(it)
         } ?: result.model.redirect?.let { redirectUrl ->
@@ -77,6 +77,7 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
         val gatewayId = PaymentRequestModel.CHECKOUT
         log.error("get by $gatewayId payment error", err)
         paymentInteractor.selectedTransfer?.id?.let {
+            router.exit()
             router.navigateTo(Screens.PaymentError(it, gatewayId))
         }
         analytics.PaymentStatus(gatewayId).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
@@ -93,6 +94,11 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
                 analytics.EcommercePurchase().sendAnalytics()
             }
         }
+    }
+
+    override fun onBackCommandClick() {
+        viewState.clearForm()
+        super.onBackCommandClick()
     }
 
     companion object {

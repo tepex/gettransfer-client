@@ -37,10 +37,37 @@ import java.util.Locale
  * callbacks to communicate outcomes. Please make sure you set the key/environment
  * and appropriate  callbacks to a ensure successful interaction
  */
-class CustomPaymentForm @JvmOverloads constructor(
-    val mContext: Context,
+class CheckoutcomPaymentForm @JvmOverloads constructor(
+    private val mContext: Context,
     val attrs: AttributeSet? = null
 ) : FrameLayout(mContext, attrs) {
+
+    /**
+     * This is interface used as a callback for when the 3D secure functionality is used
+     */
+    interface On3DSFinished {
+        fun onSuccess()
+
+        fun onError()
+    }
+
+    /**
+     * This is interface used as a callback for when the form is completed and the user pressed the
+     * pay button. You can use this to potentially display a loader.
+     */
+    interface PaymentFormCallback {
+        fun onFormSubmit()
+        fun onTokenGenerated(response: CardTokenisationResponse)
+        fun onError(response: CardTokenisationFail)
+        fun onNetworkError(error: VolleyError)
+        fun onBackPressed()
+    }
+
+    companion object {
+        // Indexes for the pages
+        private const val CARD_DETAILS_PAGE_INDEX = 0
+        private const val BILLING_DETAILS_PAGE_INDEX = 1
+    }
 
     /**
      * This is a callback used to generate a payload with the user details and pass them to the
@@ -65,10 +92,10 @@ class CustomPaymentForm @JvmOverloads constructor(
         }
 
         override fun onBackPressed() {
-            mDataStore?.cleanState()
+            mDataStore.cleanState()
             mDataStore.lastCustomerNameState = null
             mDataStore.lastBillingValidState = null
-            customAdapter?.clearFields()
+            customAdapter.clearFields()
             mSubmitFormListener?.onBackPressed()
         }
     }
@@ -79,47 +106,27 @@ class CustomPaymentForm @JvmOverloads constructor(
      */
     private val mBillingListener = object : BillingDetailsView.Listener {
         override fun onBillingCompleted() {
-            customAdapter?.updateBillingSpinner()
-            mPager?.currentItem = CARD_DETAILS_PAGE_INDEX
+            customAdapter.updateBillingSpinner()
+            mPager.currentItem = CARD_DETAILS_PAGE_INDEX
         }
 
         override fun onBillingCanceled() {
-            customAdapter?.clearBillingSpinner()
-            mPager?.currentItem = CARD_DETAILS_PAGE_INDEX
+            customAdapter.clearBillingSpinner()
+            mPager.currentItem = CARD_DETAILS_PAGE_INDEX
         }
     }
 
     /**
      * This is a callback used to navigate to the billing details page
      */
-    private val mCardListener = CardDetailsView.GoToBillingListener { mPager?.currentItem = BILLING_DETAILS_PAGE_INDEX }
+    private val mCardListener = CardDetailsView.GoToBillingListener { mPager.currentItem = BILLING_DETAILS_PAGE_INDEX }
+
     var m3DSecureListener: On3DSFinished? = null
     var mSubmitFormListener: PaymentFormCallback? = null
 
-    private var customAdapter: CustomAdapter? = null
-    private var mPager: ViewPager? = null
+    private lateinit var customAdapter: CustomAdapter
+    private lateinit var mPager: ViewPager
     private val mDataStore = DataStore.getInstance()
-
-    /**
-     * This is interface used as a callback for when the 3D secure functionality is used
-     */
-    interface On3DSFinished {
-        fun onSuccess()
-
-        fun onError()
-    }
-
-    /**
-     * This is interface used as a callback for when the form is completed and the user pressed the
-     * pay button. You can use this to potentially display a loader.
-     */
-    interface PaymentFormCallback {
-        fun onFormSubmit()
-        fun onTokenGenerated(response: CardTokenisationResponse)
-        fun onError(response: CardTokenisationFail)
-        fun onNetworkError(error: VolleyError)
-        fun onBackPressed()
-    }
 
     /**
      * This method is used to initialise the UI of the module
@@ -132,11 +139,11 @@ class CustomPaymentForm @JvmOverloads constructor(
         // Use a custom adapter for the viewpager
         customAdapter = CustomAdapter(mContext)
         // Set up the callbacks
-        customAdapter?.setCardDetailsListener(mCardListener)
-        customAdapter?.setBillingListener(mBillingListener)
-        customAdapter?.setTokenDetailsCompletedListener(mDetailsCompletedListener)
-        mPager?.adapter = customAdapter
-        mPager?.isEnabled = false
+        customAdapter.setCardDetailsListener(mCardListener)
+        customAdapter.setBillingListener(mBillingListener)
+        customAdapter.setTokenDetailsCompletedListener(mDetailsCompletedListener)
+        mPager.adapter = customAdapter
+        mPager.isEnabled = false
     }
 
     /**
@@ -144,8 +151,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param cards array of accepted cards
      */
-    fun setAcceptedCard(cards: Array<CardUtils.Cards>): CustomPaymentForm {
-        mDataStore?.acceptedCards = cards
+    fun setAcceptedCard(cards: Array<CardUtils.Cards>): CheckoutcomPaymentForm {
+        mDataStore.acceptedCards = cards
         return this
     }
 
@@ -161,7 +168,7 @@ class CustomPaymentForm @JvmOverloads constructor(
      * @param failsUrl   the Redirection Fail url set up in the Checkout.com HUB
      */
     fun handle3DS(url: String, successUrl: String, failsUrl: String) {
-        mPager?.visibility = View.GONE // dismiss the card form UI
+        mPager.visibility = View.GONE // dismiss the card form UI
 
         val web = WebView(mContext)
         web.loadUrl(url)
@@ -205,9 +212,9 @@ class CustomPaymentForm @JvmOverloads constructor(
      */
     fun includeBilling(include: Boolean) {
         if (!include) {
-            mDataStore?.setShowBilling(false)
+            mDataStore.setShowBilling(false)
         } else {
-            mDataStore?.setShowBilling(true)
+            mDataStore.setShowBilling(true)
         }
     }
 
@@ -216,8 +223,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param country Locale representing the default country for the Spinner
      */
-    fun setDefaultBillingCountry(country: Locale): CustomPaymentForm {
-        mDataStore?.customerCountry = country.country
+    fun setDefaultBillingCountry(country: Locale): CheckoutcomPaymentForm {
+        mDataStore.customerCountry = country.country
         mDataStore.defaultCountry = country
         mDataStore.customerPhonePrefix = PhoneUtils.getPrefix(country.country)
         return this
@@ -228,8 +235,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param accepted String representing the value for the Label
      */
-    fun setAcceptedCardsLabel(accepted: String): CustomPaymentForm {
-        mDataStore?.acceptedLabel = accepted
+    fun setAcceptedCardsLabel(accepted: String): CheckoutcomPaymentForm {
+        mDataStore.acceptedLabel = accepted
         return this
     }
 
@@ -238,8 +245,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param card String representing the value for the Label
      */
-    fun setCardLabel(card: String): CustomPaymentForm {
-        mDataStore?.cardLabel = card
+    fun setCardLabel(card: String): CheckoutcomPaymentForm {
+        mDataStore.cardLabel = card
         return this
     }
 
@@ -248,8 +255,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param date String representing the value for the Label
      */
-    fun setDateLabel(date: String): CustomPaymentForm {
-        mDataStore?.dateLabel = date
+    fun setDateLabel(date: String): CheckoutcomPaymentForm {
+        mDataStore.dateLabel = date
         return this
     }
 
@@ -258,8 +265,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param cvv String representing the value for the Label
      */
-    fun setCvvLabel(cvv: String): CustomPaymentForm {
-        mDataStore?.cvvLabel = cvv
+    fun setCvvLabel(cvv: String): CheckoutcomPaymentForm {
+        mDataStore.cvvLabel = cvv
         return this
     }
 
@@ -268,8 +275,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param label String representing the value for the Label
      */
-    fun setCardHolderLabel(label: String): CustomPaymentForm {
-        mDataStore?.cardHolderLabel = label
+    fun setCardHolderLabel(label: String): CheckoutcomPaymentForm {
+        mDataStore.cardHolderLabel = label
         return this
     }
 
@@ -278,8 +285,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param label String representing the value for the Label
      */
-    fun setAddress1Label(label: String): CustomPaymentForm {
-        mDataStore?.addressLine1Label = label
+    fun setAddress1Label(label: String): CheckoutcomPaymentForm {
+        mDataStore.addressLine1Label = label
         return this
     }
 
@@ -288,8 +295,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param label String representing the value for the Label
      */
-    fun setAddress2Label(label: String): CustomPaymentForm {
-        mDataStore?.addressLine2Label = label
+    fun setAddress2Label(label: String): CheckoutcomPaymentForm {
+        mDataStore.addressLine2Label = label
         return this
     }
 
@@ -298,8 +305,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param label String representing the value for the Label
      */
-    fun setTownLabel(label: String): CustomPaymentForm {
-        mDataStore?.townLabel = label
+    fun setTownLabel(label: String): CheckoutcomPaymentForm {
+        mDataStore.townLabel = label
         return this
     }
 
@@ -308,8 +315,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param label String representing the value for the Label
      */
-    fun setStateLabel(label: String): CustomPaymentForm {
-        mDataStore?.stateLabel = label
+    fun setStateLabel(label: String): CheckoutcomPaymentForm {
+        mDataStore.stateLabel = label
         return this
     }
 
@@ -318,8 +325,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param label String representing the value for the Label
      */
-    fun setPostcodeLabel(label: String): CustomPaymentForm {
-        mDataStore?.postCodeLabel = label
+    fun setPostcodeLabel(label: String): CheckoutcomPaymentForm {
+        mDataStore.postCodeLabel = label
         return this
     }
 
@@ -328,8 +335,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param label String representing the value for the Label
      */
-    fun setPhoneLabel(label: String): CustomPaymentForm {
-        mDataStore?.phoneLabel = label
+    fun setPhoneLabel(label: String): CheckoutcomPaymentForm {
+        mDataStore.phoneLabel = label
         return this
     }
 
@@ -338,8 +345,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param text String representing the text for the Button
      */
-    fun setPayButtonText(text: String): CustomPaymentForm {
-        mDataStore?.payButtonText = text
+    fun setPayButtonText(text: String): CheckoutcomPaymentForm {
+        mDataStore.payButtonText = text
         return this
     }
 
@@ -348,8 +355,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param text String representing the text for the Button
      */
-    fun setDoneButtonText(text: String): CustomPaymentForm {
-        mDataStore?.doneButtonText = text
+    fun setDoneButtonText(text: String): CheckoutcomPaymentForm {
+        mDataStore.doneButtonText = text
         return this
     }
 
@@ -358,8 +365,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param text String representing the text for the Button
      */
-    fun setClearButtonText(text: String): CustomPaymentForm {
-        mDataStore?.clearButtonText = text
+    fun setClearButtonText(text: String): CheckoutcomPaymentForm {
+        mDataStore.clearButtonText = text
         return this
     }
 
@@ -368,8 +375,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param layout LayoutParameters representing the style for the Button
      */
-    fun setPayButtonLayout(layout: LinearLayout.LayoutParams): CustomPaymentForm {
-        mDataStore?.payButtonLayout = layout
+    fun setPayButtonLayout(layout: LinearLayout.LayoutParams): CheckoutcomPaymentForm {
+        mDataStore.payButtonLayout = layout
         return this
     }
 
@@ -378,8 +385,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param layout LayoutParameters representing the style for the Button
      */
-    fun setDoneButtonLayout(layout: LinearLayout.LayoutParams): CustomPaymentForm {
-        mDataStore?.doneButtonLayout = layout
+    fun setDoneButtonLayout(layout: LinearLayout.LayoutParams): CheckoutcomPaymentForm {
+        mDataStore.doneButtonLayout = layout
         return this
     }
 
@@ -388,8 +395,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param layout LayoutParameters representing the style for the Button
      */
-    fun setClearButtonLayout(layout: LinearLayout.LayoutParams): CustomPaymentForm {
-        mDataStore?.clearButtonLayout = layout
+    fun setClearButtonLayout(layout: LinearLayout.LayoutParams): CheckoutcomPaymentForm {
+        mDataStore.clearButtonLayout = layout
         return this
     }
 
@@ -398,8 +405,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param billing BillingModel representing the value for the billing details
      */
-    fun injectBilling(billing: BillingModel): CustomPaymentForm {
-        mDataStore?.isBillingCompleted = true
+    fun injectBilling(billing: BillingModel): CheckoutcomPaymentForm {
+        mDataStore.isBillingCompleted = true
         mDataStore.lastBillingValidState = billing
         mDataStore.defaultBillingDetails = billing
         mDataStore.customerAddress1 = billing.address_line1
@@ -416,20 +423,20 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param phone PhoneModel representing the value for the phone details
      */
-    fun injectPhone(phone: PhoneModel): CustomPaymentForm {
-        mDataStore?.customerPhone = phone.number
+    fun injectPhone(phone: PhoneModel): CheckoutcomPaymentForm {
+        mDataStore.customerPhone = phone.number
         mDataStore.customerPhonePrefix = phone.country_code
         mDataStore.defaultPhoneDetails = phone
         return this
     }
 
-    fun setEnvironment(env: Environment): CustomPaymentForm {
-        mDataStore?.environment = env
+    fun setEnvironment(env: Environment): CheckoutcomPaymentForm {
+        mDataStore.environment = env
         return this
     }
 
-    fun setKey(key: String): CustomPaymentForm {
-        mDataStore?.key = key
+    fun setKey(key: String): CheckoutcomPaymentForm {
+        mDataStore.key = key
         return this
     }
 
@@ -438,8 +445,8 @@ class CustomPaymentForm @JvmOverloads constructor(
      *
      * @param name String representing the value for the cardholder name
      */
-    fun injectCardHolderName(name: String): CustomPaymentForm {
-        mDataStore?.customerName = name
+    fun injectCardHolderName(name: String): CheckoutcomPaymentForm {
+        mDataStore.customerName = name
         mDataStore.defaultCustomerName = name
         mDataStore.lastCustomerNameState = name
         return this
@@ -449,7 +456,7 @@ class CustomPaymentForm @JvmOverloads constructor(
      * This method used to clear the state and fields of the Payment Form
      */
     fun clearForm() {
-        mDataStore?.cleanState()
+        mDataStore.cleanState()
         if (mDataStore != null && mDataStore.defaultBillingDetails != null) {
             mDataStore.isBillingCompleted = true
             mDataStore.lastBillingValidState = mDataStore.defaultBillingDetails
@@ -470,7 +477,7 @@ class CustomPaymentForm @JvmOverloads constructor(
         if (mDataStore != null && mDataStore.defaultCountry != null) {
             mDataStore.defaultCountry = mDataStore.defaultCountry
         }
-        customAdapter?.clearFields()
+        customAdapter.clearFields()
         if (mDataStore != null && mDataStore.defaultBillingDetails != null) {
             mDataStore.isBillingCompleted = true
             mDataStore.lastBillingValidState = mDataStore.defaultBillingDetails
@@ -495,7 +502,7 @@ class CustomPaymentForm @JvmOverloads constructor(
     /**
      * This method used to set a callback for when the 3D Secure handling.
      */
-    fun set3DSListener(listener: On3DSFinished): CustomPaymentForm {
+    fun set3DSListener(listener: On3DSFinished): CheckoutcomPaymentForm {
         this.m3DSecureListener = listener
         return this
     }
@@ -503,19 +510,9 @@ class CustomPaymentForm @JvmOverloads constructor(
     /**
      * This method used to set a callback for when the form is submitted
      */
-    fun setFormListener(listener: PaymentFormCallback): CustomPaymentForm {
+    fun setFormListener(listener: PaymentFormCallback): CheckoutcomPaymentForm {
         this.mSubmitFormListener = listener
         return this
     }
 
-    companion object {
-
-        // Indexes for the pages
-        private const val CARD_DETAILS_PAGE_INDEX = 0
-        private const val BILLING_DETAILS_PAGE_INDEX = 1
-    }
-
 }
-/**
- * This is the constructor used when the module is used without the UI.
- */

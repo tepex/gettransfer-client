@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".presentation.ui.CheckoutPaymentActivity">
 
-    <com.kg.gettransfer.presentation.ui.custom.CustomPaymentForm
+    <com.kg.gettransfer.presentation.ui.custom.CheckoutcomPaymentForm
         android:id="@+id/checkout_card_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:theme="@style/CheckoutcomPaymentForm"/>
 
 </LinearLayout>
