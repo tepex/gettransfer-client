@@ -27,6 +27,7 @@ interface PaymentOfferView : BaseView {
     fun setToolbarTitle(transferModel: TransferModel)
     fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency)
     fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel, balance: String?)
+    fun selectPaymentType(type: String)
 
     fun showOfferError()
     fun showBadCredentialsInfo(field: Int)

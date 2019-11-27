@@ -48,7 +48,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private var transfer: Transfer? = null
     private var offer: OfferItem? = null
 
-    internal var selectedPayment = PaymentRequestModel.CHECKOUT
+    private var selectedPayment = PaymentRequestModel.CHECKOUT
     private var paymentId = 0L
 
     private lateinit var paymentRequest: PaymentRequestModel
@@ -82,6 +82,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 setInfo(transfer)
                 setPaymentOptions(transfer)
             }
+            viewState.selectPaymentType(selectedPayment)
         }
 
         if (loginScreenIsShowed) {
@@ -377,4 +378,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     fun onAgreementClicked() = router.navigateTo(Screens.LicenceAgree)
+
+    fun changePaymentType(type: String) {
+        selectedPayment = type
+        viewState.selectPaymentType(type)
+    }
 }

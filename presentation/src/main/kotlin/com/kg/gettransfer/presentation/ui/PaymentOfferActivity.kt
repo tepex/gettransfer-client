@@ -136,19 +136,19 @@ class PaymentOfferActivity : BaseActivity(),
             btnGetPayment.setOnClickListener(this)
             btnGetPaymentWithGooglePay.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbCard, PaymentRequestModel.CHECKOUT) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.CHECKOUT) }.apply {
             rbCard.setOnClickListener(this)
             layoutCard.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbPaypal, PaymentRequestModel.PAYPAL) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.PAYPAL) }.apply {
             rbPaypal.setOnClickListener(this)
             layoutPaypal.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbBalance, PaymentRequestModel.GROUND) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.GROUND) }.apply {
             rbBalance.setOnClickListener(this)
             layoutBalance.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbGooglePay, PaymentRequestModel.GOOGLE_PAY) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.GOOGLE_PAY) }.apply {
             rbGooglePay.setOnClickListener(this)
             layoutGooglePay.setOnClickListener(this)
         }
@@ -232,17 +232,17 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun clearHighLightErrorField(view: View?) = view?.setBackgroundResource(0)
 
-    private fun changePayment(view: View, payment: String) {
+    override fun selectPaymentType(type: String) {
         clearPaymentsRadioButtons()
-        when (view.id) {
-            R.id.rbCard      -> rbCard.isChecked = true
-            R.id.rbPaypal    -> rbPaypal.isChecked = true
-            R.id.rbBalance   -> rbBalance.isChecked = true
-            R.id.rbGooglePay -> rbGooglePay.isChecked = true
+        when(type) {
+            PaymentRequestModel.PLATRON,
+            PaymentRequestModel.CHECKOUT   -> rbCard.isChecked = true
+            PaymentRequestModel.PAYPAL     -> rbPaypal.isChecked = true
+            PaymentRequestModel.GOOGLE_PAY -> rbGooglePay.isChecked = true
+            PaymentRequestModel.GROUND     -> rbBalance.isChecked = true
         }
-        tvCommission.isInvisible = view.id == R.id.rbBalance
-        changePayButton(view.id == R.id.rbGooglePay)
-        presenter.selectedPayment = payment
+        tvCommission.isInvisible = type == PaymentRequestModel.GROUND
+        changePayButton(type == PaymentRequestModel.GOOGLE_PAY)
     }
 
     private fun clearPaymentsRadioButtons() {
@@ -391,7 +391,7 @@ class PaymentOfferActivity : BaseActivity(),
                 val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
                 result?.paymentMethodNonce?.nonce?.let { presenter.confirmPaypalPayment(it) }
             }
-            RESULT_CANCELED -> presenter.selectedPayment = PaymentRequestModel.PAYPAL
+            RESULT_CANCELED -> presenter.changePaymentType(PaymentRequestModel.PAYPAL)
             else            -> {
                 val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR)
                 if (error is Exception) {
@@ -409,7 +409,7 @@ class PaymentOfferActivity : BaseActivity(),
                 val token = json?.getJSONObject("paymentMethodData")?.getJSONObject("tokenizationData")?.getString("token")
                 token?.let { presenter.processGooglePayPayment(it) }
             }
-            RESULT_CANCELED -> presenter.selectedPayment = PaymentRequestModel.GOOGLE_PAY
+            RESULT_CANCELED -> presenter.changePaymentType(PaymentRequestModel.GOOGLE_PAY)
             AutoResolveHelper.RESULT_ERROR -> {
                 val status = data?.let { AutoResolveHelper.getStatusFromIntent(it) }
                 status?.statusMessage?.let { Timber.e(it) }
@@ -451,7 +451,7 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun onCancel(requestCode: Int) {
-        presenter.selectedPayment = PaymentRequestModel.PAYPAL
+        presenter.changePaymentType(PaymentRequestModel.PAYPAL)
     }
 
     override fun setToolbarTitle(transferModel: TransferModel) {
