@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.PaymentStatusEntity
 
-data class PaymentStatusWrapperModel(
+data class PaymentStatusWrappedModel(
     @SerializedName(PaymentStatusEntity.ENTITY_NAME) @Expose val payment: PaymentStatusModel
 )
 

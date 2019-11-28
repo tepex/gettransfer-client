@@ -2,10 +2,10 @@ package sys.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import sys.domain.CheckoutCredentials
+import sys.domain.CheckoutcomCredentials
 
 @Serializable
-data class CheckoutCredentialsEntity(
+data class CheckoutcomCredentialsEntity(
     @SerialName(ENVIRONMENT) val environment: String,
     @SerialName(PUBLIC_KEY)  val publicKey: String
 ) {
@@ -15,8 +15,8 @@ data class CheckoutCredentialsEntity(
     }
 }
 
-fun CheckoutCredentialsEntity.map() =
-    CheckoutCredentials(
+fun CheckoutcomCredentialsEntity.map() =
+    CheckoutcomCredentials(
         environment,
         publicKey
     )

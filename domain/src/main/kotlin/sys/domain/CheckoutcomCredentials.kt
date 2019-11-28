@@ -1,6 +1,6 @@
 package sys.domain
 
-data class CheckoutCredentials(
+data class CheckoutcomCredentials(
     val environment: String,
     val publicKey: String
 )

@@ -1,6 +1,18 @@
 package com.kg.gettransfer.domain.repository
 
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.OfferItem
+import com.kg.gettransfer.domain.model.PaymentRequest
+import com.kg.gettransfer.domain.model.PlatronPayment
+import com.kg.gettransfer.domain.model.CheckoutcomPayment
+import com.kg.gettransfer.domain.model.BraintreePayment
+import com.kg.gettransfer.domain.model.GooglePayPayment
+import com.kg.gettransfer.domain.model.PaymentProcessRequest
+import com.kg.gettransfer.domain.model.PaymentProcess
+import com.kg.gettransfer.domain.model.PaymentStatusRequest
+import com.kg.gettransfer.domain.model.PaymentStatus
+import com.kg.gettransfer.domain.model.BraintreeToken
+import com.kg.gettransfer.domain.model.Result
 
 interface PaymentRepository {
     var selectedTransfer: Transfer?
@@ -8,7 +20,7 @@ interface PaymentRepository {
 
     suspend fun getPlatronPayment(paymentRequest: PaymentRequest): Result<PlatronPayment>
 
-    suspend fun getCheckoutPayment(paymentRequest: PaymentRequest): Result<CheckoutcomPayment>
+    suspend fun getCheckoutcomPayment(paymentRequest: PaymentRequest): Result<CheckoutcomPayment>
 
     suspend fun getBraintreePayment(paymentRequest: PaymentRequest): Result<BraintreePayment>
 

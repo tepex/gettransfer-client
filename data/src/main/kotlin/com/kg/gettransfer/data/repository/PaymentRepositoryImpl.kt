@@ -8,7 +8,19 @@ import com.kg.gettransfer.data.ds.PaymentDataStoreRemote
 import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.domain.interactor.PaymentInteractor
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.OfferItem
+import com.kg.gettransfer.domain.model.PaymentRequest
+import com.kg.gettransfer.domain.model.PlatronPayment
+import com.kg.gettransfer.domain.model.CheckoutcomPayment
+import com.kg.gettransfer.domain.model.BraintreePayment
+import com.kg.gettransfer.domain.model.GooglePayPayment
+import com.kg.gettransfer.domain.model.PaymentProcessRequest
+import com.kg.gettransfer.domain.model.PaymentProcess
+import com.kg.gettransfer.domain.model.PaymentStatusRequest
+import com.kg.gettransfer.domain.model.PaymentStatus
+import com.kg.gettransfer.domain.model.BraintreeToken
+import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.PaymentRepository
 
 import org.koin.core.inject
@@ -29,7 +41,7 @@ class PaymentRepositoryImpl(
             Result(PlatronPayment.EMPTY, e.map())
         }
 
-    override suspend fun getCheckoutPayment(paymentRequest: PaymentRequest): Result<CheckoutcomPayment> =
+    override suspend fun getCheckoutcomPayment(paymentRequest: PaymentRequest): Result<CheckoutcomPayment> =
         try {
             Result(factory.retrieveRemoteDataStore().createCheckoutcomPayment(paymentRequest.map()).map())
         } catch (e: RemoteException) {

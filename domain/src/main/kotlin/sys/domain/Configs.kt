@@ -3,7 +3,7 @@ package com.kg.gettransfer.sys.domain
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.TransportType
-import sys.domain.CheckoutCredentials
+import sys.domain.CheckoutcomCredentials
 import sys.domain.GooglePayCredentials
 
 import java.util.Locale
@@ -15,7 +15,7 @@ data class Configs(
     val supportedCurrencies: List<Currency>,
     val supportedDistanceUnits: List<DistanceUnit>,
     val contactEmails: List<ContactEmail>,
-    val checkoutCredentials: CheckoutCredentials,
+    val checkoutcomCredentials: CheckoutcomCredentials,
     val googlePayCredentials: GooglePayCredentials,
     val defaultCardGateway: String
 ) {

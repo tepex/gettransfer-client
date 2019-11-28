@@ -11,7 +11,17 @@ import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.android.gms.wallet.PaymentsClient
 
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.OfferItem
+import com.kg.gettransfer.domain.model.BookNowOffer
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.PlatronPayment
+import com.kg.gettransfer.domain.model.BraintreePayment
+import com.kg.gettransfer.domain.model.CheckoutcomPayment
+import com.kg.gettransfer.domain.model.GooglePayPayment
+import com.kg.gettransfer.domain.model.PaymentStatus
+import com.kg.gettransfer.domain.model.PaymentProcess
+import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.extensions.newChainFromMain
 
@@ -62,7 +72,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             viewState.blockInterface(false)
 
             //TODO: return when fixed configs request
-            /*if (configsManager.getConfigs().checkoutCredentials.publicKey.isNotEmpty()) {
+            /*if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
                 viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
                 isReadyToPayWithGooglePayRequest()
             }*/
@@ -154,11 +164,11 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             viewState.blockInterface(true, true)
             getPaymentRequest(selectedPayment)?.let {
                 when (it.gatewayId) {
-                    PaymentRequestModel.PLATRON    -> payByPlatron(it)
-                    PaymentRequestModel.CHECKOUT   -> payByCheckoutcom(it)
-                    PaymentRequestModel.PAYPAL     -> payByPaypal(it)
-                    PaymentRequestModel.GOOGLE_PAY -> payByGooglePay(it)
-                    else                           -> payByBalance(it)
+                    PaymentRequestModel.PLATRON     -> payByPlatron(it)
+                    PaymentRequestModel.CHECKOUTCOM -> payByCheckoutcom(it)
+                    PaymentRequestModel.PAYPAL      -> payByPaypal(it)
+                    PaymentRequestModel.GOOGLE_PAY  -> payByGooglePay(it)
+                    else                            -> payByBalance(it)
                 }
                 logEventBeginCheckout()
             }
@@ -204,7 +214,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         paymentResult.error?.let {
             setError(it)
         } ?: paymentResult.model.paymentId.let {
-            router.navigateTo(Screens.CheckoutPayment(it))
+            router.navigateTo(Screens.CheckoutcomPayment(it))
             viewState.blockInterface(false)
         }
     }

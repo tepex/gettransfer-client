@@ -12,7 +12,7 @@ import com.kg.gettransfer.cache.model.TransportTypesCachedList
 import com.kg.gettransfer.cache.model.map
 
 import com.kg.gettransfer.sys.data.ConfigsEntity
-import sys.cache.CheckoutCredentialsModel
+import sys.cache.CheckoutcomCredentialsModel
 import sys.cache.GooglePayCredentialsModel
 import sys.cache.map
 
@@ -24,7 +24,7 @@ data class ConfigsModel(
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_CURRENCIES)     val supportedCurrencies: CurrencyCachedList,
     @ColumnInfo(name = ConfigsEntity.SUPPORTED_DISTANCE_UNITS) val supportedDistanceUnits: StringList,
     @ColumnInfo(name = ConfigsEntity.CONTACT_EMAILS)           val contactEmails: ContactEmailModelList,
-    @Embedded(prefix = ConfigsEntity.CHECKOUT_CREDENTIALS)     val checkoutCredentials: CheckoutCredentialsModel,
+    @Embedded(prefix = ConfigsEntity.CHECKOUTCOM_CREDENTIALS)  val checkoutcomCredentials: CheckoutcomCredentialsModel,
     @Embedded(prefix = ConfigsEntity.GOOGLEPAY_CREDENTIALS)    val googlePayCredentials: GooglePayCredentialsModel,
     @ColumnInfo(name = ConfigsEntity.DEFAULT_CARD_GATEWAY)     val defaultCardGateway: String,
     @PrimaryKey(autoGenerate = true) val id: Long = 15
@@ -38,7 +38,7 @@ fun ConfigsModel.map() =
         supportedCurrencies.list.map { it.map() },
         supportedDistanceUnits.list,
         contactEmails.list.map { it.map() },
-        checkoutCredentials.map(),
+        checkoutcomCredentials.map(),
         googlePayCredentials.map(),
         defaultCardGateway
     )
@@ -51,7 +51,7 @@ fun ConfigsEntity.map() =
         CurrencyCachedList(supportedCurrencies.map { it.map() }),
         StringList(supportedDistanceUnits),
         ContactEmailModelList(contactEmails.map { it.map() }),
-        checkoutCredentials.map(),
+        checkoutcomCredentials.map(),
         googlePayCredentials.map(),
         defaultCardGateway
     )

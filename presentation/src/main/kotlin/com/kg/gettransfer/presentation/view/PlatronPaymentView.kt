@@ -4,9 +4,9 @@ import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface PaymentView: BaseView {
+interface PlatronPaymentView: BaseView {
 
     companion object {
-        val EXTRA_URL = "${PaymentView::class.java.name}.url"
+        val EXTRA_URL = "${PlatronPaymentView::class.java.name}.url"
     }
 }

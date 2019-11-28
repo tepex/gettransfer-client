@@ -341,10 +341,10 @@ class Analytics(
             super.paymentType = when (mPaymentType) {
                 PaymentRequestModel.CARD,
                 PaymentRequestModel.PLATRON,
-                PaymentRequestModel.CHECKOUT   -> CARD
-                PaymentRequestModel.PAYPAL     -> PAYPAL
-                PaymentRequestModel.GOOGLE_PAY -> GOOGLE_PAY
-                else                           -> BALANCE
+                PaymentRequestModel.CHECKOUTCOM -> CARD
+                PaymentRequestModel.PAYPAL      -> PAYPAL
+                PaymentRequestModel.GOOGLE_PAY  -> GOOGLE_PAY
+                else                            -> BALANCE
             }
             getTransferAndOffer()
             prepareData()
@@ -367,10 +367,10 @@ class Analytics(
             paymentType = when (paymentType) {
                 PaymentRequestModel.CARD,
                 PaymentRequestModel.PLATRON,
-                PaymentRequestModel.CHECKOUT   -> CARD
-                PaymentRequestModel.PAYPAL     -> PAYPAL
-                PaymentRequestModel.GOOGLE_PAY -> GOOGLE_PAY
-                else                           -> BALANCE
+                PaymentRequestModel.CHECKOUTCOM -> CARD
+                PaymentRequestModel.PAYPAL      -> PAYPAL
+                PaymentRequestModel.GOOGLE_PAY  -> GOOGLE_PAY
+                else                            -> BALANCE
             }
             sendToFirebase()
             sendToFacebook()

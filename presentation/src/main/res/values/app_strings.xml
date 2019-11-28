@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<string name="api_key_demo">test</string>
-    <string name="api_url_demo">http://192.168.44.239:3000</string>-->
     <!-- urls and keys -->
     <string name="api_key_demo">android_e3996c61be6786dfac7413d53be26e64</string>
     <string name="api_key_dev">771b0c837d2f992610408e3fe989211f</string>

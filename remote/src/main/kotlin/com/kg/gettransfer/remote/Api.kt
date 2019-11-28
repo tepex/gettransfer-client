@@ -183,7 +183,7 @@ interface Api {
         @Path("status") status: String,
         @Query("pg_order_id") pgOrderId: Long,
         @Query("without_redirect") withoutRedirect: Boolean
-    ): ResponseModel<PaymentStatusWrapperModel>
+    ): ResponseModel<PaymentStatusWrappedModel>
 
     @POST("$API_RATE_OFFER/{id}/{type}")
     suspend fun rateOffer(
@@ -236,7 +236,7 @@ interface Api {
     suspend fun confirmPaypal(
         @Field("payment_id") paymentId: Long,
         @Field("nonce") nonce: String
-    ): ResponseModel<PaymentStatusWrapperModel>
+    ): ResponseModel<PaymentStatusWrappedModel>
 
     /*Autocomplete*/
     @GET(API_AUTOCOMPLETE)

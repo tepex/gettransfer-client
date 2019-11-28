@@ -11,7 +11,7 @@ import com.kg.gettransfer.presentation.model.PaymentRequestModel
 
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 
-import com.kg.gettransfer.presentation.view.PaymentView
+import com.kg.gettransfer.presentation.view.PlatronPaymentView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
@@ -19,19 +19,19 @@ import com.kg.gettransfer.utilities.Analytics
 import org.koin.core.inject
 
 @InjectViewState
-class PaymentPresenter : BasePresenter<PaymentView>(), PaymentStatusEventListener {
+class PlatronPaymentPresenter : BasePresenter<PlatronPaymentView>(), PaymentStatusEventListener {
 
     private val mapper: PaymentStatusRequestMapper by inject()
 
     private var showSuccessPayment = false
     private var showFailedPayment = false
 
-    override fun attachView(view: PaymentView) {
+    override fun attachView(view: PlatronPaymentView) {
         super.attachView(view)
         paymentInteractor.eventPaymentReceiver = this
     }
 
-    override fun detachView(view: PaymentView?) {
+    override fun detachView(view: PlatronPaymentView?) {
         super.detachView(view)
         paymentInteractor.eventPaymentReceiver = null
     }

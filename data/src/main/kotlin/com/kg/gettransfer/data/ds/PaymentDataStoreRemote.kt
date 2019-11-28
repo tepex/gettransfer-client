@@ -2,7 +2,10 @@ package com.kg.gettransfer.data.ds
 
 import com.kg.gettransfer.data.PaymentDataStore
 import com.kg.gettransfer.data.PaymentRemote
-import com.kg.gettransfer.data.model.*
+import com.kg.gettransfer.data.model.PaymentRequestEntity
+import com.kg.gettransfer.data.model.PaymentProcessRequestEntity
+import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
+import com.kg.gettransfer.data.model.BraintreeTokenEntity
 import org.koin.core.inject
 
 /**

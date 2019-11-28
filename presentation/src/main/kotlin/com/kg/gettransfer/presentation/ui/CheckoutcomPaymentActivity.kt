@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.annotation.CallSuper
 import com.android.volley.VolleyError
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.presenter.CheckoutPaymentPresenter
-import com.kg.gettransfer.presentation.view.CheckoutPaymentView
+import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter
+import com.kg.gettransfer.presentation.view.CheckoutcomPaymentView
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import com.checkout.android_sdk.Response.CardTokenisationFail
@@ -14,15 +14,15 @@ import com.checkout.android_sdk.Utils.Environment
 import com.kg.gettransfer.presentation.ui.custom.CheckoutcomPaymentForm
 import kotlinx.android.synthetic.main.activity_checkout_payment.*
 
-class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
+class CheckoutcomPaymentActivity: BaseActivity(), CheckoutcomPaymentView {
 
     @InjectPresenter
-    internal lateinit var presenter: CheckoutPaymentPresenter
+    internal lateinit var presenter: CheckoutcomPaymentPresenter
 
-    override fun getPresenter(): CheckoutPaymentPresenter = presenter
+    override fun getPresenter(): CheckoutcomPaymentPresenter = presenter
 
     @ProvidePresenter
-    fun createPaymentPresenter() = CheckoutPaymentPresenter()
+    fun createPaymentPresenter() = CheckoutcomPaymentPresenter()
 
     private lateinit var paymentForm: CheckoutcomPaymentForm
 
@@ -31,7 +31,7 @@ class CheckoutPaymentActivity: BaseActivity(), CheckoutPaymentView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_checkout_payment)
         paymentForm = checkout_card_form
-        presenter.paymentId = intent.getLongExtra(CheckoutPaymentView.EXTRA_PAYMENT_ID, 0L)
+        presenter.paymentId = intent.getLongExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, 0L)
     }
 
     override fun initPaymentForm(environment: Environment, publicKey: String) {

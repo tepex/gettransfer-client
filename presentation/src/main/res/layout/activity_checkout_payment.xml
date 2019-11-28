@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.ui.CheckoutPaymentActivity">
+    tools:context=".presentation.ui.CheckoutcomPaymentActivity">
 
     <com.kg.gettransfer.presentation.ui.custom.CheckoutcomPaymentForm
         android:id="@+id/checkout_card_form"

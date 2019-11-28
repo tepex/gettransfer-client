@@ -1,9 +1,29 @@
 package com.kg.gettransfer.remote
 
 import com.kg.gettransfer.data.PaymentRemote
-import com.kg.gettransfer.data.model.*
+import com.kg.gettransfer.data.model.PaymentRequestEntity
+import com.kg.gettransfer.data.model.PlatronPaymentEntity
+import com.kg.gettransfer.data.model.CheckoutcomPaymentEntity
+import com.kg.gettransfer.data.model.BraintreePaymentEntity
+import com.kg.gettransfer.data.model.GooglePayPaymentEntity
+import com.kg.gettransfer.data.model.PaymentProcessRequestEntity
+import com.kg.gettransfer.data.model.PaymentProcessEntity
+import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
+import com.kg.gettransfer.data.model.PaymentStatusEntity
+import com.kg.gettransfer.data.model.BraintreeTokenEntity
 
-import com.kg.gettransfer.remote.model.*
+import com.kg.gettransfer.remote.model.ResponseModel
+import com.kg.gettransfer.remote.model.PlatronPaymentModel
+import com.kg.gettransfer.remote.model.CheckoutcomPaymentModel
+import com.kg.gettransfer.remote.model.BraintreePaymentModel
+import com.kg.gettransfer.remote.model.GooglePayPaymentModel
+import com.kg.gettransfer.remote.model.PaymentProcessModel
+import com.kg.gettransfer.remote.model.PaymentStatusRequestModel
+import com.kg.gettransfer.remote.model.PaymentStatusWrappedModel
+import com.kg.gettransfer.remote.model.BraintreeTokenModel
+import com.kg.gettransfer.remote.model.map
+import com.kg.gettransfer.remote.model.mapString
+import com.kg.gettransfer.remote.model.mapJson
 
 import org.koin.core.get
 
@@ -59,7 +79,7 @@ class PaymentRemoteImpl : PaymentRemote {
             PaymentStatusRequestModel.STATUS_FAILED
         }
         val request = paymentStatusRequest.map()
-        val response: ResponseModel<PaymentStatusWrapperModel> = core.tryTwice {
+        val response: ResponseModel<PaymentStatusWrappedModel> = core.tryTwice {
             @Suppress("UnsafeCallOnNullableType")
             core.api.changePaymentStatus(status, request.pgOrderId!!, request.withoutRedirect!!)
         }
@@ -74,7 +94,7 @@ class PaymentRemoteImpl : PaymentRemote {
     }
 
     override suspend fun confirmPaypal(paymentId: Long, nonce: String): PaymentStatusEntity {
-        val response: ResponseModel<PaymentStatusWrapperModel> = core.tryTwice {
+        val response: ResponseModel<PaymentStatusWrappedModel> = core.tryTwice {
             core.api.confirmPaypal(paymentId, nonce)
         }
         @Suppress("UnsafeCallOnNullableType")

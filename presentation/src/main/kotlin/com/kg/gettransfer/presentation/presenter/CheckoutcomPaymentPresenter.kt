@@ -3,12 +3,14 @@ package com.kg.gettransfer.presentation.presenter
 import com.checkout.android_sdk.Utils.Environment
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.model.*
+import com.kg.gettransfer.domain.model.PaymentProcess
+import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.newChainFromMain
 import com.kg.gettransfer.presentation.mapper.PaymentProcessRequestMapper
 import com.kg.gettransfer.presentation.model.PaymentProcessRequestModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
-import com.kg.gettransfer.presentation.view.CheckoutPaymentView
+import com.kg.gettransfer.presentation.view.CheckoutcomPaymentView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import kotlinx.coroutines.launch
@@ -17,23 +19,23 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 @InjectViewState
-class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
+class CheckoutcomPaymentPresenter: BasePresenter<CheckoutcomPaymentView>() {
 
-    private val worker: WorkerManager by inject { parametersOf("CheckoutPaymentPresenter") }
+    private val worker: WorkerManager by inject { parametersOf("CheckoutcomPaymentPresenter") }
 
     private val paymentProcessRequestMapper: PaymentProcessRequestMapper by inject()
 
     internal var paymentId = 0L
 
-    override fun attachView(view: CheckoutPaymentView) {
+    override fun attachView(view: CheckoutcomPaymentView) {
         super.attachView(view)
         worker.main.launch {
-            val checkoutCredentials = configsManager.getConfigs().checkoutCredentials
-            val environment = when(checkoutCredentials.environment) {
+            val checkoutcomCredentials = configsManager.getConfigs().checkoutcomCredentials
+            val environment = when(checkoutcomCredentials.environment) {
                 "live" -> Environment.LIVE
                 else   -> Environment.SANDBOX
             }
-            viewState.initPaymentForm(environment, checkoutCredentials.publicKey)
+            viewState.initPaymentForm(environment, checkoutcomCredentials.publicKey)
         }
     }
 
@@ -71,7 +73,7 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
     }
 
     private suspend fun paymentError(err: ApiException? = null) {
-        val gatewayId = PaymentRequestModel.CHECKOUT
+        val gatewayId = PaymentRequestModel.CHECKOUTCOM
         log.error("get by $gatewayId payment error", err)
         analytics.PaymentStatus(gatewayId).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         paymentInteractor.selectedTransfer?.id?.let {
@@ -81,7 +83,7 @@ class CheckoutPaymentPresenter: BasePresenter<CheckoutPaymentView>() {
     }
 
     private suspend fun paymentSuccess() {
-        analytics.PaymentStatus(PaymentRequestModel.CHECKOUT).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
+        analytics.PaymentStatus(PaymentRequestModel.CHECKOUTCOM).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
         paymentInteractor.selectedTransfer?.let {
             val offerId = (paymentInteractor.selectedOffer as? Offer)?.id
             router.newChainFromMain(Screens.PaymentSuccess(it.id, offerId))

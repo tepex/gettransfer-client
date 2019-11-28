@@ -8,12 +8,12 @@ data class PaymentRequestModel(
 ) {
 
     companion object {
-        const val CARD       = "card"
-        const val PLATRON    = "platron"
-        const val CHECKOUT   = "checkoutcom"
+        const val CARD        = "card"
+        const val PLATRON     = "platron"
+        const val CHECKOUTCOM = "checkoutcom"
 
-        const val PAYPAL     = "braintree"
-        const val GOOGLE_PAY = "googlepay"
-        const val GROUND     = "ground"
+        const val PAYPAL      = "braintree"
+        const val GOOGLE_PAY  = "googlepay"
+        const val GROUND      = "ground"
     }
 }

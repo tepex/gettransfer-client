@@ -23,7 +23,7 @@ class PaymentInteractor(private val repository: PaymentRepository) {
 
     suspend fun getPlatronPayment(paymentRequest: PaymentRequest) = repository.getPlatronPayment(paymentRequest)
 
-    suspend fun getCheckoutcomPayment(paymentRequest: PaymentRequest) = repository.getCheckoutPayment(paymentRequest)
+    suspend fun getCheckoutcomPayment(paymentRequest: PaymentRequest) = repository.getCheckoutcomPayment(paymentRequest)
 
     suspend fun getBraintreePayment(paymentRequest: PaymentRequest) = repository.getBraintreePayment(paymentRequest)
 
