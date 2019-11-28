@@ -45,7 +45,8 @@ class CheckoutcomPaymentActivity: BaseActivity(), CheckoutcomPaymentView {
             }
 
             override fun onError(response: CardTokenisationFail) {
-                // token request error
+                setError(true, R.string.LNG_UNEXPECTED_PAYMENT_ERROR)
+                errorToSentry("Checkoutcom token error", response.errorType)
             }
 
             override fun onNetworkError(error: VolleyError) {

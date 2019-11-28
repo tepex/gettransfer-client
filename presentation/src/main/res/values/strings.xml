@@ -434,4 +434,5 @@
     <string name="LNG_RESTORE_REQUEST">Restore request</string>
     <string name="LNG_REVIEW_SENT">Your review has been sent, thanks!</string>
     <string name="LNG_WILL_BE_WAITING_FOR_YOU">Will be waiting for you:</string>
+    <string name="LNG_UNEXPECTED_PAYMENT_ERROR">Unexpected error in payment process. Please call support.</string>
 </resources>
