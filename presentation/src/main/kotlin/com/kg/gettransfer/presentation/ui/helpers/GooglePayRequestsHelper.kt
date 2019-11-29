@@ -23,14 +23,14 @@ object GooglePayRequestsHelper : KoinComponent {
             put("apiVersionMinor", 0)
         }
 
-    private suspend fun getTokenizationSpecification() =
+    private fun getTokenizationSpecification(gateway: String, gatewayMerchantId: String) =
         JSONObject().apply {
             put("type", "PAYMENT_GATEWAY")
             put(
                 "parameters",
                 JSONObject().apply {
-                    put("gateway", "checkoutltd")
-                    put("gatewayMerchantId", configsManager.getConfigs().checkoutcomCredentials.publicKey)
+                    put("gateway", gateway)
+                    put("gatewayMerchantId", gatewayMerchantId)
                 }
             )
         }
@@ -53,9 +53,9 @@ object GooglePayRequestsHelper : KoinComponent {
             )
         }
 
-    private suspend fun getCardPaymentMethod() =
+    private suspend fun getCardPaymentMethod(gateway: String, gatewayMerchantId: String) =
         getBaseCardPaymentMethod().apply {
-            put("tokenizationSpecification", getTokenizationSpecification())
+            put("tokenizationSpecification", getTokenizationSpecification(gateway, gatewayMerchantId))
         }
 
     suspend fun getIsReadyToPayRequest() =
@@ -82,12 +82,12 @@ object GooglePayRequestsHelper : KoinComponent {
             put("merchantName", configsManager.getConfigs().googlePayCredentials.merchantName)
         }
 
-    suspend fun getPaymentDataRequest(price: Float, currency: String) =
+    suspend fun getPaymentDataRequest(price: Float, currency: String, gateway: String, gatewayMerchantId: String) =
         getBaseRequest().apply {
             put(
                 "allowedPaymentMethods",
                 JSONArray().apply {
-                    put(getCardPaymentMethod())
+                    put(getCardPaymentMethod(gateway, gatewayMerchantId))
                 }
             )
             put("transactionInfo", getTransactionInfo(price, currency))
