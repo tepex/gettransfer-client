@@ -57,6 +57,9 @@ ext {
     play_services_walet        = "18.0.0"
     support_appcompat_v7       = "28.0.0"
     swipe_refresh_version      = "1.1.0-alpha03"
+    support_design_version     = "28.0.0"
+    checkout_frames_version    = "2.1.0"
+    voley_version              = "1.1.0"
 }
 
 android {
@@ -324,6 +327,11 @@ dependencies {
     // GooglePay
     implementation "com.google.android.gms:play-services-wallet:$play_services_walet"
     implementation "com.android.support:appcompat-v7:$support_appcompat_v7"
+
+    // Checkout.com
+    implementation "com.android.support:design:$support_design_version"
+    implementation "com.github.checkout:frames-android:v$checkout_frames_version"
+    implementation "com.android.volley:volley:$voley_version"
 
     api("androidx.transition:transition:$androidx_transition")
 

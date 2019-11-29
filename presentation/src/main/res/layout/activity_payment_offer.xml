@@ -110,17 +110,6 @@
                 tools:visibility="visible" />
 
             <include
-                android:id="@+id/layoutPrices"
-                layout="@layout/layout_prices"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/payment_layout_prices_margin_top"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_currency_converting_info"
-                tools:visibility="gone" />
-
-            <include
                 android:id="@+id/layoutPayments"
                 layout="@layout/layout_payments"
                 android:layout_width="match_parent"
@@ -128,7 +117,7 @@
                 android:layout_marginTop="@dimen/payment_layout_payments_margin_top"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutPrices" />
+                app:layout_constraintTop_toBottomOf="@+id/view_currency_converting_info" />
 
             <include
                 android:id="@+id/ll_auth_container"

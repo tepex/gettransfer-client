@@ -67,7 +67,6 @@ import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.layout_payments.*
-import kotlinx.android.synthetic.main.layout_prices.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
 import kotlinx.android.synthetic.main.payment_refund.*
 import kotlinx.android.synthetic.main.paymet_gtr_bonus.*
@@ -99,13 +98,11 @@ class PaymentOfferActivity : BaseActivity(),
     @ProvidePresenter
     fun createPaymentSettingsPresenter() = PaymentOfferPresenter()
 
-    private var selectedPercentage = PaymentRequestModel.FULL_PRICE
-
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // presenter.params =
-        // JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
+        // JSON.parse(PaymentOfferView.PaypalParams.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
 
         setContentView(R.layout.activity_payment_offer)
         initListeners()
@@ -139,19 +136,19 @@ class PaymentOfferActivity : BaseActivity(),
             btnGetPayment.setOnClickListener(this)
             btnGetPaymentWithGooglePay.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbCard, PaymentRequestModel.PLATRON) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.CARD) }.apply {
             rbCard.setOnClickListener(this)
             layoutCard.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbPaypal, PaymentRequestModel.PAYPAL) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.PAYPAL) }.apply {
             rbPaypal.setOnClickListener(this)
             layoutPaypal.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbBalance, PaymentRequestModel.GROUND) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.GROUND) }.apply {
             rbBalance.setOnClickListener(this)
             layoutBalance.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbGooglePay, PaymentRequestModel.GOOGLE_PAY) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.GOOGLE_PAY) }.apply {
             rbGooglePay.setOnClickListener(this)
             layoutGooglePay.setOnClickListener(this)
         }
@@ -235,18 +232,16 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun clearHighLightErrorField(view: View?) = view?.setBackgroundResource(0)
 
-    private fun changePayment(view: View, payment: String) {
+    override fun selectPaymentType(type: String) {
         clearPaymentsRadioButtons()
-        when (view.id) {
-            R.id.rbCard      -> rbCard.isChecked = true
-            R.id.rbPaypal    -> rbPaypal.isChecked = true
-            R.id.rbBalance   -> rbBalance.isChecked = true
-            R.id.rbGooglePay -> rbGooglePay.isChecked = true
+        when(type) {
+            PaymentRequestModel.CARD       -> rbCard.isChecked = true
+            PaymentRequestModel.PAYPAL     -> rbPaypal.isChecked = true
+            PaymentRequestModel.GOOGLE_PAY -> rbGooglePay.isChecked = true
+            PaymentRequestModel.GROUND     -> rbBalance.isChecked = true
         }
-        tvCommission.isInvisible = view.id == R.id.rbBalance
-        changePayButton(view.id == R.id.rbGooglePay)
-        presenter.selectedPayment = payment
-        presenter.changePayment(payment)
+        tvCommission.isInvisible = type == PaymentRequestModel.GROUND
+        changePayButton(type == PaymentRequestModel.GOOGLE_PAY)
     }
 
     private fun clearPaymentsRadioButtons() {
@@ -262,36 +257,13 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     @Suppress("NestedBlockDepth")
-    override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>, isNameSignPresent: Boolean) {
-        if (paymentPercentages.isNotEmpty()) {
-            if (paymentPercentages.size == 1) {
-                hidePaymentPercentage()
-            } else {
-                paymentPercentages.forEach { percentage ->
-                    when (percentage) {
-                        OfferModel.FULL_PRICE -> {
-                            rbPay100.text = getString(R.string.LNG_PAYMENT_TERM_PAY, OfferModel.FULL_PRICE.toString())
-                            tvFullPrice.text = offer.price.base.preferred.plus(R.string.LNG_PAYMENT_TERM_NOW)
-                            rbPay100.setOnClickListener { changePaymentSettings(it) }
-                        }
-                        OfferModel.PRICE_30 -> {
-                            rbPay30.text = getString(R.string.LNG_PAYMENT_TERM_PAY, OfferModel.PRICE_30.toString())
-                            tvThirdOfPrice.text = offer.price.percentage30.plus(R.string.LNG_PAYMENT_TERM_NOW)
-                            tvLaterPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, offer.price.percentage70)
-                            rbPay30.setOnClickListener { changePaymentSettings(it) }
-                        }
-                    }
-                }
-            }
-            selectPaymentPercentage(selectedPercentage)
-        }
+    override fun setOffer(offer: OfferModel, isNameSignPresent: Boolean) {
         setCarInfo(offer, isNameSignPresent)
         setPriceInfo(offer.price.base.def, offer.price.base.preferred)
         setCapacity(offer.vehicle.transportType)
     }
 
     override fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean) {
-        hidePaymentPercentage()
         setCarInfo(bookNowOffer, isNameSignPresent)
         setPriceInfo(bookNowOffer.base.def, bookNowOffer.base.preferred)
         setCapacity(bookNowOffer.transportType)
@@ -362,10 +334,6 @@ class PaymentOfferActivity : BaseActivity(),
             isNameSignPresent, offer.isWithNameSign)
     }
 
-    private fun hidePaymentPercentage() {
-        layoutPrices.isVisible = false
-    }
-
     override fun showOfferError() {
         toast(getString(R.string.LNG_RIDE_OFFER_CANCELLED))
     }
@@ -391,34 +359,12 @@ class PaymentOfferActivity : BaseActivity(),
         )
     }
 
-    private fun changePaymentSettings(view: View?) {
-        when (view?.id) {
-            R.id.rbPay100 -> selectPaymentPercentage(PaymentRequestModel.FULL_PRICE)
-            R.id.rbPay30 -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
-        }
-    }
-
-    private fun selectPaymentPercentage(selectedPercentage: Int) {
-        when (selectedPercentage) {
-            PaymentRequestModel.FULL_PRICE -> {
-                rbPay100.isChecked = true
-                rbPay30.isChecked = false
-            }
-            PaymentRequestModel.PRICE_30 -> {
-                rbPay100.isChecked = false
-                rbPay30.isChecked = true
-            }
-        }
-        presenter.changePrice(selectedPercentage)
-        this.selectedPercentage = selectedPercentage
-    }
-
-    override fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String) {
+    override fun startPaypal(dropInRequest: DropInRequest, token: String) {
         blockInterface(false)
         when {
             payPalInstalled()  -> startActivityForResult(dropInRequest.getIntent(this), PAYPAL_PAYMENT_REQUEST_CODE)
             browserInstalled() -> {
-                val braintreeFragment = BraintreeFragment.newInstance(this, presenter.braintreeToken)
+                val braintreeFragment = BraintreeFragment.newInstance(this, token)
                 PayPal.requestOneTimePayment(braintreeFragment, dropInRequest.payPalRequest)
             }
             else               -> longToast(getString(R.string.LNG_PAYMENT_INSTALL_PAYPAL))
@@ -442,9 +388,9 @@ class PaymentOfferActivity : BaseActivity(),
         when (resultCode) {
             RESULT_OK       -> {
                 val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-                result?.paymentMethodNonce?.nonce?.let { presenter.confirmPayment(it) }
+                result?.paymentMethodNonce?.nonce?.let { presenter.confirmPaypalPayment(it) }
             }
-            RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.PAYPAL)
+            RESULT_CANCELED -> presenter.changePaymentType(PaymentRequestModel.PAYPAL)
             else            -> {
                 val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR)
                 if (error is Exception) {
@@ -460,9 +406,9 @@ class PaymentOfferActivity : BaseActivity(),
                 val paymentData = data?.let { PaymentData.getFromIntent(it) }
                 val json = paymentData?.toJson()?.let { JSONObject(it) }
                 val token = json?.getJSONObject("paymentMethodData")?.getJSONObject("tokenizationData")?.getString("token")
-                token?.let { presenter.payByGooglePay(it) }
+                token?.let { presenter.processGooglePayPayment(it) }
             }
-            RESULT_CANCELED -> presenter.changePayment(PaymentRequestModel.GOOGLE_PAY)
+            RESULT_CANCELED -> presenter.changePaymentType(PaymentRequestModel.GOOGLE_PAY)
             AutoResolveHelper.RESULT_ERROR -> {
                 val status = data?.let { AutoResolveHelper.getStatusFromIntent(it) }
                 status?.statusMessage?.let { Timber.e(it) }
@@ -484,7 +430,7 @@ class PaymentOfferActivity : BaseActivity(),
         ) != null
 
     override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce?) {
-        presenter.confirmPayment(paymentMethodNonce?.nonce ?: "")
+        presenter.confirmPaypalPayment(paymentMethodNonce?.nonce ?: "")
         blockInterface(true, true)
     }
 
@@ -504,7 +450,7 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun onCancel(requestCode: Int) {
-        presenter.changePayment(PaymentRequestModel.PAYPAL)
+        presenter.changePaymentType(PaymentRequestModel.PAYPAL)
     }
 
     override fun setToolbarTitle(transferModel: TransferModel) {

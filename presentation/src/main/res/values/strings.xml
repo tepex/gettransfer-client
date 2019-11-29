@@ -138,9 +138,7 @@
     <string name="LNG_RIDE_YOUR_MARK">Your mark</string>
     <string name="LNG_RIDE_YOUR_COMMENT">Your comment</string>
     <string name="LNG_PAYMENT_SETTINGS">Payment options</string>
-    <string name="LNG_PAYMENT_TERM_PAY">Pay %s%%</string>
     <string name="LNG_PAYMENT_TERM_NOW"> now</string>
-    <string name="LNG_PAYMENT_TERM_LATER">(%s later to the driver)</string>
     <string name="LNG_PAYMENT_METHOD"><b>Select your payment method</b></string>
     <string name="LNG_PAYMENT_COLLECT_MILES">To collect miles please  log in</string>
     <string name="LNG_PAYMENT_SERVICE_FEE">Service fee is  %s%%</string>
@@ -436,4 +434,5 @@
     <string name="LNG_RESTORE_REQUEST">Restore request</string>
     <string name="LNG_REVIEW_SENT">Your review has been sent, thanks!</string>
     <string name="LNG_WILL_BE_WAITING_FOR_YOU">Will be waiting for you:</string>
+    <string name="LNG_UNEXPECTED_PAYMENT_ERROR">Unexpected error in payment process. Please call support.</string>
 </resources>

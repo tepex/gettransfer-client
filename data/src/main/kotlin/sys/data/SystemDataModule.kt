@@ -14,7 +14,7 @@ import com.kg.gettransfer.sys.domain.*
 import java.util.Locale
 
 import org.koin.dsl.module
-import sys.domain.CheckoutCredentials
+import sys.domain.CheckoutcomCredentials
 import sys.domain.GooglePayCredentials
 
 val systemData = module {
@@ -40,8 +40,9 @@ val systemData = module {
                 ContactEmail(ContactEmail.Id.INFO, "info@gettransfer.com"),
                 ContactEmail(ContactEmail.Id.PARTNER, "partner@gettransfer.com")
             ),
-            checkoutCredentials =
-                CheckoutCredentials(
+            checkoutcomCredentials =
+                CheckoutcomCredentials(
+                    "",
                     ""
                 ),
             googlePayCredentials =
@@ -51,7 +52,8 @@ val systemData = module {
                     "",
                     listOf("AMEX", "JCB", "MASTERCARD", "VISA"),
                     listOf("CRYPTOGRAM_3DS")
-                )
+                ),
+            defaultCardGateway = "checkoutcom"
         )
     }
     single {

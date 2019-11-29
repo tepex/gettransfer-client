@@ -51,7 +51,6 @@ data class TransferModel(
 /* ================================================== */
     @SerializedName(TransferEntity.EDITABLE_FIELDS) @Expose       val editableFields: List<String>?,
     @SerializedName(TransferEntity.AIRLINE_CARD) @Expose          val airlineCard: String?,
-    @SerializedName(TransferEntity.PAYMENT_PERCENTAGES) @Expose   val paymentPercentages: List<Int>?,
     @SerializedName(TransferEntity.UNREAD_MESSAGES_COUNT) @Expose val unreadMessagesCount: Int
 )
 
@@ -112,6 +111,5 @@ fun TransferModel.map() =
 /* ================================================== */
         editableFields,
         airlineCard,
-        paymentPercentages,
         unreadMessagesCount
     )

@@ -26,32 +26,30 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
 
-import com.kg.gettransfer.presentation.presenter.PaymentPresenter
+import com.kg.gettransfer.presentation.presenter.PlatronPaymentPresenter
 
-import com.kg.gettransfer.presentation.view.PaymentView
+import com.kg.gettransfer.presentation.view.PlatronPaymentView
 
 import kotlinx.android.synthetic.main.activity_payment.*
 import kotlinx.android.synthetic.main.activity_payment.spinner
 import org.jetbrains.anko.toast
 import timber.log.Timber
 
-class PaymentActivity : BaseActivity(), PaymentView {
+class PlatronPaymentActivity : BaseActivity(), PlatronPaymentView {
 
     @InjectPresenter
-    internal lateinit var presenter: PaymentPresenter
+    internal lateinit var presenter: PlatronPaymentPresenter
 
     private var safeBrowsingIsInitialized: Boolean = false
 
-    override fun getPresenter(): PaymentPresenter = presenter
+    override fun getPresenter(): PlatronPaymentPresenter = presenter
 
     @ProvidePresenter
-    fun createPaymentPresenter() = PaymentPresenter()
+    fun createPaymentPresenter() = PlatronPaymentPresenter()
 
     @Suppress("UnsafeCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.percentage = intent.getIntExtra(PaymentView.EXTRA_PERCENTAGE, 0)
-        presenter.paymentType = intent.getStringExtra(PaymentView.EXTRA_PAYMENT_TYPE)
 
         setContentView(R.layout.activity_payment)
 
@@ -104,7 +102,7 @@ class PaymentActivity : BaseActivity(), PaymentView {
         }
         safeBrowsingIsInitialized = false
         checkSafeBrowsing()
-        webView.loadUrl(intent.getStringExtra(PaymentView.EXTRA_URL))
+        webView.loadUrl(intent.getStringExtra(PlatronPaymentView.EXTRA_URL))
     }
 
     private fun hideSpinner() {

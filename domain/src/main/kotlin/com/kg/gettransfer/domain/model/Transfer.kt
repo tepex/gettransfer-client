@@ -57,7 +57,6 @@ data class Transfer(
 /* ================================================== */
     val editableFields: List<String>?, /* not used */
     val airlineCard: String?,
-    val paymentPercentages: List<Int>?,
     val unreadMessagesCount: Int,
     val showOfferInfo: Boolean,
     val lastOffersUpdatedAt: Date?
@@ -150,7 +149,6 @@ data class Transfer(
 /* ================================================== */
             editableFields      = emptyList<String>(),
             airlineCard         = null,
-            paymentPercentages  = emptyList<Int>(),
             unreadMessagesCount = 0,
             showOfferInfo       = false,
             lastOffersUpdatedAt = null

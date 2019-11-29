@@ -9,7 +9,6 @@ open class PaymentRequestMapper : Mapper<PaymentRequestModel, PaymentRequest> {
             type.transferId,
             type.offerId,
             type.gatewayId,
-            type.percentage,
             type.bookNowTransportType
         )
 

@@ -21,12 +21,13 @@ interface PaymentOfferView : BaseView {
 
     fun initGooglePayPaymentsClient(environment: Int)
 
-    fun setOffer(offer: OfferModel, paymentPercentages: List<Int>, isNameSignPresent: Boolean)
+    fun setOffer(offer: OfferModel, isNameSignPresent: Boolean)
     fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean)
     fun setCommission(paymentCommission: String, dateRefund: String)
     fun setToolbarTitle(transferModel: TransferModel)
     fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency)
     fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel, balance: String?)
+    fun selectPaymentType(type: String)
 
     fun showOfferError()
     fun showBadCredentialsInfo(field: Int)
@@ -36,6 +37,6 @@ interface PaymentOfferView : BaseView {
     fun showGooglePayButton()
     fun hideGooglePayButton()
 
-    fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String)
+    fun startPaypal(dropInRequest: DropInRequest, token: String)
     fun startGooglePay(task: Task<PaymentData>)
 }

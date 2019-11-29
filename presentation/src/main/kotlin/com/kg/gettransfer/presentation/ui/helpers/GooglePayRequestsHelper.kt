@@ -30,7 +30,7 @@ object GooglePayRequestsHelper : KoinComponent {
                 "parameters",
                 JSONObject().apply {
                     put("gateway", "checkoutltd")
-                    put("gatewayMerchantId", configsManager.getConfigs().checkoutCredentials.publicKey)
+                    put("gatewayMerchantId", configsManager.getConfigs().checkoutcomCredentials.publicKey)
                 }
             )
         }

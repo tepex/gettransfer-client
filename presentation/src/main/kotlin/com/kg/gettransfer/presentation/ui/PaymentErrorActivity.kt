@@ -32,8 +32,8 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_error)
-        transferId = intent.getLongExtra(TRANSFER_ID, 0L)
-        gatewayId = intent.getStringExtra(GATEWAY_ID)
+        transferId = intent.getLongExtra(PaymentErrorView.EXTRA_TRANSFER_ID, 0L)
+        gatewayId = intent.getStringExtra(PaymentErrorView.EXTRA_GATEWAY_ID)
         showPaymentDialog()
     }
 
@@ -85,9 +85,6 @@ class PaymentErrorActivity : BaseActivity(), PaymentErrorView {
     }
 
     companion object {
-        const val TRANSFER_ID = "transferId"
-        const val GATEWAY_ID  = "gatewayId"
-
         private const val DIALOG_HEIGHT = 108f
     }
 }

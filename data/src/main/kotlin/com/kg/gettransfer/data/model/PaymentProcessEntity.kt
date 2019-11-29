@@ -3,17 +3,18 @@ package com.kg.gettransfer.data.model
 import com.kg.gettransfer.domain.model.PaymentProcess
 
 data class PaymentProcessEntity(
-    val paymentId: Long,
-    val token: String
+    val payment: PaymentStatusEntity,
+    val redirect: String?
 ) {
+
     companion object {
-        const val PAYMENT_ID = "payment_id"
-        const val TOKEN      = "token"
+        const val PAYMENT  = "payment"
+        const val REDIRECT = "redirect"
     }
 }
 
-fun PaymentProcess.map() =
-    PaymentProcessEntity(
-        paymentId,
-        token
+fun PaymentProcessEntity.map() =
+    PaymentProcess(
+        payment.map(),
+        redirect
     )

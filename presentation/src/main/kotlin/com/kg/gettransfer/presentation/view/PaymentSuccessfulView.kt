@@ -10,4 +10,9 @@ interface PaymentSuccessfulView: BaseView {
     fun setPinHourlyTransfer(point: LatLng, cameraUpdate: CameraUpdate)
     fun initCallButton()
     fun initChatButton()
+
+    companion object {
+        val EXTRA_TRANSFER_ID = "${PaymentSuccessfulView::class.java.name}.transferId"
+        val EXTRA_OFFER_ID    = "${PaymentSuccessfulView::class.java.name}.offerId"
+    }
 }

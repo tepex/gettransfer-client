@@ -33,13 +33,6 @@ data class OfferModel(
     val phoneToCall: String?,
     val wheelchair: Boolean,
     val armored: Boolean
-) : OfferItemModel() {
-
-    companion object {
-        const val FULL_PRICE = 100
-        const val PRICE_30   = 30
-        const val PRICE_70   = 70
-    }
-}
+) : OfferItemModel()
 
 fun BookNowOffer.map() = BookNowOfferModel(amount, base, withoutDiscount, transportType.map())
