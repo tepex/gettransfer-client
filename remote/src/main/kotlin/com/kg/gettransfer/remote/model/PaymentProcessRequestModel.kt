@@ -1,7 +1,6 @@
 package com.kg.gettransfer.remote.model
 
 import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.PaymentProcessRequestEntity
@@ -24,14 +23,14 @@ class JsonPaymentProcessRequestModel(
      paymentId
 )
 
-fun PaymentProcessRequestEntity.mapString() =
+fun PaymentProcessRequestEntity.map(token: String) =
     StringPaymentProcessRequestModel(
         paymentId,
         token
     )
 
-fun PaymentProcessRequestEntity.mapJson() =
+fun PaymentProcessRequestEntity.map(token: JsonObject) =
     JsonPaymentProcessRequestModel(
         paymentId,
-        JsonParser().parse(token).asJsonObject
+        token
     )

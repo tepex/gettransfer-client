@@ -4,11 +4,11 @@ import com.checkout.android_sdk.Utils.Environment
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.PaymentProcess
+import com.kg.gettransfer.domain.model.PaymentProcessRequest
+import com.kg.gettransfer.domain.model.Token
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.extensions.newChainFromMain
-import com.kg.gettransfer.presentation.mapper.PaymentProcessRequestMapper
-import com.kg.gettransfer.presentation.model.PaymentProcessRequestModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.view.CheckoutcomPaymentView
 import com.kg.gettransfer.presentation.view.Screens
@@ -22,8 +22,6 @@ import org.koin.core.parameter.parametersOf
 class CheckoutcomPaymentPresenter: BasePresenter<CheckoutcomPaymentView>() {
 
     private val worker: WorkerManager by inject { parametersOf("CheckoutcomPaymentPresenter") }
-
-    private val paymentProcessRequestMapper: PaymentProcessRequestMapper by inject()
 
     internal var paymentId = 0L
 
@@ -42,15 +40,15 @@ class CheckoutcomPaymentPresenter: BasePresenter<CheckoutcomPaymentView>() {
     fun onTokenGenerated(token: String) {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val paymentProcess = PaymentProcessRequestModel(paymentId, token, true)
+            val paymentProcess = PaymentProcessRequest(paymentId, Token.StringToken(token))
             val processResult = getProcessPaymentResult(paymentProcess)
             checkPaymentResult(processResult)
             viewState.blockInterface(false)
         }
     }
 
-    private suspend fun getProcessPaymentResult(paymentProcessModel: PaymentProcessRequestModel): Result<PaymentProcess> =
-        utils.asyncAwait { paymentInteractor.processPayment(paymentProcessRequestMapper.fromView(paymentProcessModel)) }
+    private suspend fun getProcessPaymentResult(paymentProcess: PaymentProcessRequest): Result<PaymentProcess> =
+        utils.asyncAwait { paymentInteractor.processPayment(paymentProcess) }
 
     private suspend fun checkPaymentResult(result: Result<PaymentProcess>) {
         viewState.clearForm()

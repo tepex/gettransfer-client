@@ -1,7 +1,8 @@
 package com.kg.gettransfer.domain.model
 
+import com.google.gson.JsonObject
+
 data class PaymentProcessRequest(
     val paymentId: Long,
-    val token: String,
-    val isStringToken: Boolean
+    val token: Token<String, JsonObject>
 )

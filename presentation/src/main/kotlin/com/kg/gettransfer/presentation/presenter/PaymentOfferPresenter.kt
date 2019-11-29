@@ -9,6 +9,7 @@ import com.braintreepayments.api.models.PayPalRequest
 import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.android.gms.wallet.PaymentsClient
+import com.google.gson.JsonParser
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Transfer
@@ -21,15 +22,15 @@ import com.kg.gettransfer.domain.model.CheckoutcomPayment
 import com.kg.gettransfer.domain.model.GooglePayPayment
 import com.kg.gettransfer.domain.model.PaymentStatus
 import com.kg.gettransfer.domain.model.PaymentProcess
+import com.kg.gettransfer.domain.model.PaymentProcessRequest
+import com.kg.gettransfer.domain.model.Token
 import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.extensions.newChainFromMain
 
-import com.kg.gettransfer.presentation.mapper.PaymentProcessRequestMapper
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 
-import com.kg.gettransfer.presentation.model.PaymentProcessRequestModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.map
 
@@ -50,7 +51,6 @@ import org.koin.core.inject
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
-    private val paymentProcessRequestMapper: PaymentProcessRequestMapper by inject()
     private val profileMapper: ProfileMapper by inject()
 
     lateinit var googlePayPaymentsClient: PaymentsClient
@@ -288,7 +288,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     fun processGooglePayPayment(token: String) {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val paymentProcess = PaymentProcessRequestModel(paymentId, token, false)
+            val jsonToken = JsonParser().parse(token).asJsonObject
+            val paymentProcess = PaymentProcessRequest(paymentId, Token.JsonToken(jsonToken))
             val processResult = getProcessGooglePayPaymentResult(paymentProcess)
             processResult.error?.let {
                 paymentError(it)
@@ -300,8 +301,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private suspend fun getProcessGooglePayPaymentResult(paymentProcessModel: PaymentProcessRequestModel): Result<PaymentProcess> =
-        utils.asyncAwait { paymentInteractor.processPayment(paymentProcessRequestMapper.fromView(paymentProcessModel)) }
+    private suspend fun getProcessGooglePayPaymentResult(paymentProcess: PaymentProcessRequest): Result<PaymentProcess> =
+        utils.asyncAwait { paymentInteractor.processPayment(paymentProcess) }
 
     private suspend fun payByBalance(paymentModel: PaymentRequestModel) {
         val paymentResult = getGroundPaymentResult(paymentModel)

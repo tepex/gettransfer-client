@@ -1,11 +1,11 @@
 package com.kg.gettransfer.data.model
 
+import com.google.gson.JsonObject
 import com.kg.gettransfer.domain.model.PaymentProcessRequest
 
 data class PaymentProcessRequestEntity(
     val paymentId: Long,
-    val token: String,
-    val isStringToken: Boolean
+    val token: TokenEntity<String, JsonObject>
 ) {
     companion object {
         const val PAYMENT_ID = "payment_id"
@@ -16,6 +16,5 @@ data class PaymentProcessRequestEntity(
 fun PaymentProcessRequest.map() =
     PaymentProcessRequestEntity(
         paymentId,
-        token,
-        isStringToken
+        token.map()
     )

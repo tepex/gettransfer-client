@@ -29,6 +29,7 @@ dependencies {
     implementation libs.koin_core
     implementation libs.koin_core_ext
     implementation libs.slf4j
+    implementation libs.gson
 
     testImplementation libs.koin_test
     testImplementation libs.kotlintest

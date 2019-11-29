@@ -11,6 +11,8 @@ import com.kg.gettransfer.data.model.PaymentProcessEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.data.model.BraintreeTokenEntity
+import com.kg.gettransfer.data.model.StringTokenEntity
+import com.kg.gettransfer.data.model.JsonTokenEntity
 
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.PlatronPaymentModel
@@ -22,8 +24,6 @@ import com.kg.gettransfer.remote.model.PaymentStatusRequestModel
 import com.kg.gettransfer.remote.model.PaymentStatusWrappedModel
 import com.kg.gettransfer.remote.model.BraintreeTokenModel
 import com.kg.gettransfer.remote.model.map
-import com.kg.gettransfer.remote.model.mapString
-import com.kg.gettransfer.remote.model.mapJson
 
 import org.koin.core.get
 
@@ -62,10 +62,9 @@ class PaymentRemoteImpl : PaymentRemote {
 
     override suspend fun processPayment(paymentProcessRequest: PaymentProcessRequestEntity): PaymentProcessEntity {
         val response: ResponseModel<PaymentProcessModel> = core.tryTwice {
-            if (paymentProcessRequest.isStringToken) {
-                core.api.processPayment(paymentProcessRequest.mapString())
-            } else {
-                core.api.processPayment(paymentProcessRequest.mapJson())
+            when (val type = paymentProcessRequest.token) {
+                is StringTokenEntity -> core.api.processPayment(paymentProcessRequest.map(type.token))
+                is JsonTokenEntity   -> core.api.processPayment(paymentProcessRequest.map(type.token))
             }
         }
         @Suppress("UnsafeCallOnNullableType")
