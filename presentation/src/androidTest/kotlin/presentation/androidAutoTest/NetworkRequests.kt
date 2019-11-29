@@ -5,6 +5,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 class NetworkRequests {
+
+    @Suppress("UnsafeCallOnNullableType")
     fun receiveEmail(urlChangeEmail: String, apiKey: String): CharSequence {
         val client = OkHttpClient()
         val request = Request.Builder()

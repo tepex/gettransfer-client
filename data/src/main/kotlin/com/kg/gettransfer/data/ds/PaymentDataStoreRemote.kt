@@ -15,22 +15,29 @@ open class PaymentDataStoreRemote : PaymentDataStore {
 
     private val remote: PaymentRemote by inject()
 
-    override suspend fun createPlatronPayment(paymentRequest: PaymentRequestEntity) = remote.createPlatronPayment(paymentRequest)
+    override suspend fun createPlatronPayment(paymentRequest: PaymentRequestEntity) =
+        remote.createPlatronPayment(paymentRequest)
 
-    override suspend fun createCheckoutcomPayment(paymentRequest: PaymentRequestEntity) = remote.createCheckoutcomPayment(paymentRequest)
+    override suspend fun createCheckoutcomPayment(paymentRequest: PaymentRequestEntity) =
+        remote.createCheckoutcomPayment(paymentRequest)
 
-    override suspend fun createBraintreePayment(paymentRequest: PaymentRequestEntity) = remote.createBraintreePayment(paymentRequest)
+    override suspend fun createBraintreePayment(paymentRequest: PaymentRequestEntity) =
+        remote.createBraintreePayment(paymentRequest)
 
-    override suspend fun createGooglePayPayment(paymentRequest: PaymentRequestEntity) = remote.createGooglePayPayment(paymentRequest)
+    override suspend fun createGooglePayPayment(paymentRequest: PaymentRequestEntity) =
+        remote.createGooglePayPayment(paymentRequest)
 
-    override suspend fun createGroundPayment(paymentRequest: PaymentRequestEntity) = remote.createGroundPayment(paymentRequest)
+    override suspend fun createGroundPayment(paymentRequest: PaymentRequestEntity) =
+        remote.createGroundPayment(paymentRequest)
 
-    override suspend fun processPayment(paymentProcessRequest: PaymentProcessRequestEntity) = remote.processPayment(paymentProcessRequest)
+    override suspend fun processPayment(paymentProcessRequest: PaymentProcessRequestEntity) =
+        remote.processPayment(paymentProcessRequest)
 
     override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity) =
         remote.changeStatusPayment(paymentStatusRequest)
 
     override suspend fun getBraintreeToken(): BraintreeTokenEntity = remote.getBraintreeToken()
 
-    override suspend fun confirmPaypal(paymentId: Long, nonce: String) = remote.confirmPaypal(paymentId, nonce)
+    override suspend fun confirmPaypal(paymentId: Long, nonce: String) =
+        remote.confirmPaypal(paymentId, nonce)
 }

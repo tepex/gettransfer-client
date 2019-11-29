@@ -10,6 +10,7 @@ import com.kg.gettransfer.domain.model.Transfer.Status
 import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.presentation.mapper.Mapper
+import com.kg.gettransfer.presentation.model.TransferModel.Companion.MILLIS_PER_MINUTE
 
 import kotlin.math.absoluteValue
 
@@ -77,6 +78,10 @@ data class TransferModel(
     fun isBookNow() = paidPercentage != 0 && bookNow != null
 
     fun getChildrenCount() = childSeatsInfant + childSeatsBooster + childSeatsConvertible
+
+    companion object {
+        const val MILLIS_PER_MINUTE = 60_000
+    }
 }
 
 // private val systemTransportTypes = get<SystemInteractor>().transportTypes
@@ -86,9 +91,9 @@ fun Transfer.map(transportTypesModels: List<TransportTypeModel>) =
         id,
         createdAt,
         duration,
-        to?.let { distance ?: Mapper.checkDistance(from.point!!, to!!.point) },
+        to?.let { to -> distance ?: from.point?.let { fromPoint -> Mapper.checkDistance(fromPoint, to.point) } },
         status,
-        R.string::class.members.find( { it.name == "LNG_RIDE_STATUS_${status.name}" } )?.call() as Int?,
+        R.string::class.members.find { it.name == "LNG_RIDE_STATUS_${status.name}" }?.call() as? Int,
         from.name,
         to?.name,
         dateToLocal,
@@ -136,7 +141,7 @@ fun Transfer.map(transportTypesModels: List<TransportTypeModel>) =
 /* ================================================== */
 /* ================================================== */
         checkStatusCategory(),
-        ((dateToTZ.time - Date().time).absoluteValue / 60_000).toInt(),
+        ((dateToTZ.time - Date().time).absoluteValue / MILLIS_PER_MINUTE).toInt(),
         showOfferInfo
         // checkOffers
     )

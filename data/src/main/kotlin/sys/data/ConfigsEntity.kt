@@ -20,7 +20,7 @@ import java.util.Locale
 data class ConfigsEntity(
     val transportTypes: List<TransportTypeEntity>,
     val availableLocales: List<LocaleEntity>,
-    /* TODO: change to Double */
+    /* TODO change to Double */
     val paymentCommission: Float,
     val supportedCurrencies: List<CurrencyEntity>,
     val supportedDistanceUnits: List<String>,

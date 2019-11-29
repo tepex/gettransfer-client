@@ -20,7 +20,6 @@ import com.kg.gettransfer.domain.model.PlatronPayment
 import com.kg.gettransfer.domain.model.BraintreePayment
 import com.kg.gettransfer.domain.model.CheckoutcomPayment
 import com.kg.gettransfer.domain.model.GooglePayPayment
-import com.kg.gettransfer.domain.model.PaymentStatus
 import com.kg.gettransfer.domain.model.PaymentProcess
 import com.kg.gettransfer.domain.model.PaymentProcessRequest
 import com.kg.gettransfer.domain.model.Token
@@ -71,7 +70,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         utils.launchSuspend {
             viewState.blockInterface(false)
 
-            //TODO: return when fixed configs request
+            // TODO uncomment after than fixed configs request
             /*if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
                 viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
                 isReadyToPayWithGooglePayRequest()
@@ -162,13 +161,13 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            getPaymentRequest(selectedPayment)?.let {
-                when (it.gatewayId) {
-                    PaymentRequestModel.PLATRON     -> payByPlatron(it)
-                    PaymentRequestModel.CHECKOUTCOM -> payByCheckoutcom(it)
-                    PaymentRequestModel.PAYPAL      -> payByPaypal(it)
-                    PaymentRequestModel.GOOGLE_PAY  -> payByGooglePay(it)
-                    else                            -> payByBalance(it)
+            getPaymentRequest(selectedPayment)?.let { paymentRequest ->
+                when (paymentRequest.gatewayId) {
+                    PaymentRequestModel.PLATRON     -> payByPlatron(paymentRequest)
+                    PaymentRequestModel.CHECKOUTCOM -> payByCheckoutcom(paymentRequest)
+                    PaymentRequestModel.PAYPAL      -> payByPaypal(paymentRequest)
+                    PaymentRequestModel.GOOGLE_PAY  -> payByGooglePay(paymentRequest)
+                    else                            -> payByBalance(paymentRequest)
                 }
                 logEventBeginCheckout()
             }
@@ -176,15 +175,27 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun getPaymentRequest(selectedPayment: String): PaymentRequestModel? {
-        val gatewayId = when(selectedPayment) {
+        val gatewayId = when (selectedPayment) {
             PaymentRequestModel.CARD -> configsManager.getConfigs().defaultCardGateway
             else                     -> selectedPayment
         }
         return transfer?.id?.let { transferId ->
             offer?.let { offer ->
                 when (offer) {
-                    is Offer -> PaymentRequestModel(transferId, offer.id, null, gatewayId)
-                    is BookNowOffer -> PaymentRequestModel(transferId, null, offer.transportType.id.toString(), gatewayId)
+                    is Offer ->
+                        PaymentRequestModel(
+                            transferId,
+                            offer.id,
+                            null,
+                            gatewayId
+                        )
+                    is BookNowOffer ->
+                        PaymentRequestModel(
+                            transferId,
+                            null,
+                            offer.transportType.id.toString(),
+                            gatewayId
+                        )
                 }.also { paymentRequest = it }
             }
         }
@@ -200,8 +211,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         val paymentResult = getPlatronPaymentResult(paymentModel)
         paymentResult.error?.let {
             setError(it)
-        } ?: paymentResult.model.let {
-            router.navigateTo(Screens.Payment(it.url))
+        } ?: paymentResult.model.url.let { url ->
+            router.navigateTo(Screens.Payment(url))
             viewState.blockInterface(false)
         }
     }
@@ -213,8 +224,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         val paymentResult = getCheckoutcomPaymentResult(paymentModel)
         paymentResult.error?.let {
             setError(it)
-        } ?: paymentResult.model.paymentId.let {
-            router.navigateTo(Screens.CheckoutcomPayment(it))
+        } ?: paymentResult.model.paymentId.let { paymentId ->
+            router.navigateTo(Screens.CheckoutcomPayment(paymentId))
             viewState.blockInterface(false)
         }
     }
@@ -233,9 +244,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         val paymentResult = getBraintreePaymentResult(paymentModel)
         paymentResult.error?.let {
             setError(it)
-        } ?: paymentResult.model.params.let {
-            paymentId = it.paymentId
-            setupPaypal(it.amount, it.currency, token)
+        } ?: paymentResult.model.params.let { params ->
+            paymentId = params.paymentId
+            setupPaypal(params.amount, params.currency, token)
         }
     }
 
@@ -275,7 +286,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             setError(it)
         } ?: paymentResult.model.params.let { params ->
             paymentId = params.paymentId
-            val paymentDataRequest = GooglePayRequestsHelper.getPaymentDataRequest(params.amount, params.currency).toString()
+            val paymentDataRequest =
+                GooglePayRequestsHelper.getPaymentDataRequest(params.amount, params.currency).toString()
             val request = PaymentDataRequest.fromJson(paymentDataRequest)
             request?.let { viewState.startGooglePay(googlePayPaymentsClient.loadPaymentData(it)) }
             viewState.blockInterface(false)
@@ -300,8 +312,11 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private suspend fun getProcessGooglePayPaymentResult(paymentProcess: PaymentProcessRequest): Result<PaymentProcess> =
-        utils.asyncAwait { paymentInteractor.processPayment(paymentProcess) }
+    private suspend fun getProcessGooglePayPaymentResult(
+        paymentProcess: PaymentProcessRequest
+    ): Result<PaymentProcess> = utils.asyncAwait {
+        paymentInteractor.processPayment(paymentProcess)
+    }
 
     private suspend fun payByBalance(paymentModel: PaymentRequestModel) {
         val paymentResult = getGroundPaymentResult(paymentModel)

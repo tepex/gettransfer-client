@@ -103,7 +103,7 @@ class ProfileScreenTest : TestCase(Kaspresso.Builder.default().apply {
             }
             ChangingPasswordScreen {
                 newPwd { flakySafely { typeText(Constants.TEXT_CHANGE_PASSWORD_SIM) } }
-                repeatPwd {flakySafely { typeText(Constants.TEXT_CHANGE_PASSWORD_SIM) } }
+                repeatPwd { flakySafely { typeText(Constants.TEXT_CHANGE_PASSWORD_SIM) } }
                 doneBtn { flakySafely { click() } }
             }
             ProfileScreen {
@@ -115,7 +115,7 @@ class ProfileScreenTest : TestCase(Kaspresso.Builder.default().apply {
                 Screen.idle(Constants.big)
                 Screen.idle(Constants.big)
                 Screen.idle(Constants.big)
-                var code: String? = parseEmailCode(NetworkRequests().receiveEmail(
+                val code: String? = parseEmailCode(NetworkRequests().receiveEmail(
                     urlChangeEmail = Constants.TEXT_URL_CHANGE_EMAIL,
                     apiKey = Constants.TEXT_API_CHANGE_EMAIL)
                 )
@@ -132,7 +132,7 @@ class ProfileScreenTest : TestCase(Kaspresso.Builder.default().apply {
                 Screen.idle(Constants.big)
                 Screen.idle(Constants.big)
                 Screen.idle(Constants.big)
-                var codeSim: String? = parseEmailCode(NetworkRequests().receiveEmail(
+                val codeSim: String? = parseEmailCode(NetworkRequests().receiveEmail(
                     urlChangeEmail = Constants.TEXT_URL_EMAIL_SIM,
                     apiKey = Constants.TEXT_API_EMAIL_SIM))
                 emailCode { flakySafely { codeSim?.let { typeText(it) } } }
@@ -141,7 +141,7 @@ class ProfileScreenTest : TestCase(Kaspresso.Builder.default().apply {
         }
     }
 
-    fun parseEmailCode(map:CharSequence): String? {
+    fun parseEmailCode(map: CharSequence): String? {
         Screen.idle(Constants.big)
         val regexcode = Regex(Constants.REGEXCODE)
         val matchercode = regexcode.find(map)

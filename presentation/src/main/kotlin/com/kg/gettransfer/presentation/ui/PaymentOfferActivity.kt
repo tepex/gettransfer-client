@@ -234,7 +234,7 @@ class PaymentOfferActivity : BaseActivity(),
 
     override fun selectPaymentType(type: String) {
         clearPaymentsRadioButtons()
-        when(type) {
+        when (type) {
             PaymentRequestModel.CARD       -> rbCard.isChecked = true
             PaymentRequestModel.PAYPAL     -> rbPaypal.isChecked = true
             PaymentRequestModel.GOOGLE_PAY -> rbGooglePay.isChecked = true
@@ -378,7 +378,7 @@ class PaymentOfferActivity : BaseActivity(),
     @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode) {
+        when (requestCode) {
             PAYPAL_PAYMENT_REQUEST_CODE     -> checkPaypalPaymentResult(resultCode, data)
             GOOGLE_PAY_PAYMENT_REQUEST_CODE -> checkGooglePayPaymentResult(resultCode, data)
         }
@@ -405,7 +405,10 @@ class PaymentOfferActivity : BaseActivity(),
             RESULT_OK       -> {
                 val paymentData = data?.let { PaymentData.getFromIntent(it) }
                 val json = paymentData?.toJson()?.let { JSONObject(it) }
-                val token = json?.getJSONObject("paymentMethodData")?.getJSONObject("tokenizationData")?.getString("token")
+                val token = json
+                    ?.getJSONObject("paymentMethodData")
+                    ?.getJSONObject("tokenizationData")
+                    ?.getString("token")
                 token?.let { presenter.processGooglePayPayment(it) }
             }
             RESULT_CANCELED -> presenter.changePaymentType(PaymentRequestModel.GOOGLE_PAY)

@@ -12,7 +12,7 @@ object GooglePayRequestsHelper : KoinComponent {
     private val configsManager: ConfigsManager by inject()
 
     suspend fun getEnvironment() =
-        when(configsManager.getConfigs().googlePayCredentials.environment) {
+        when (configsManager.getConfigs().googlePayCredentials.environment) {
             "production" -> WalletConstants.ENVIRONMENT_PRODUCTION
             else         -> WalletConstants.ENVIRONMENT_TEST
         }
@@ -45,7 +45,7 @@ object GooglePayRequestsHelper : KoinComponent {
         JSONObject().apply {
             put("type", "CARD")
             put(
-               "parameters",
+                "parameters",
                 JSONObject().apply {
                     put("allowedAuthMethods", getAllowedCardAuthMethods())
                     put("allowedCardNetworks", getAllowedCardNetworks())

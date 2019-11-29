@@ -120,5 +120,7 @@ class OfferRepositoryImpl(
 
     override fun clearOffersCache() { factory.retrieveCacheDataStore().clearOffersCache() }
 
-    internal fun onNewOfferEvent(offer: OfferEntity) = offerReceiver.onNewOfferEvent(offer.map(dateFormat.get(), preferencesCache.endpointUrl))
+    internal fun onNewOfferEvent(offer: OfferEntity) {
+        offerReceiver.onNewOfferEvent(offer.map(dateFormat.get(), preferencesCache.endpointUrl))
+    }
 }

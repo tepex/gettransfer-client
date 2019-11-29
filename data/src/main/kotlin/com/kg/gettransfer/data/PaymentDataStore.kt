@@ -25,7 +25,7 @@ interface PaymentDataStore : KoinComponent {
 
     suspend fun createGroundPayment(paymentRequest: PaymentRequestEntity)
 
-    suspend fun processPayment(paymentProcessRequest: PaymentProcessRequestEntity) : PaymentProcessEntity
+    suspend fun processPayment(paymentProcessRequest: PaymentProcessRequestEntity): PaymentProcessEntity
 
     suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity): PaymentStatusEntity
 

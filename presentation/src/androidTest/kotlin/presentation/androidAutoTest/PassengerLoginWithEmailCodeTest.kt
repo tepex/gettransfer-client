@@ -79,12 +79,13 @@ class PassengerLoginWithEmailCodeTest  : TestCase(Kaspresso.Builder.default().ap
             }
             SmsScreen {
                 pinText { click() }
-                var s: String? = parse()
+                val s: String? = parse()
                 pinText { s?.let { typeText(it) } }
                 btnDone { click() }
             }
         }
     }
+
     fun parse(): String? {
         Screen.idle(Constants.medium)
         val currEmail = receiveEmail()
@@ -93,6 +94,8 @@ class PassengerLoginWithEmailCodeTest  : TestCase(Kaspresso.Builder.default().ap
         val code = matchercode?.value
         return code
     }
+
+    @Suppress("UnsafeCallOnNullableType")
     fun receiveEmail(): CharSequence {
         val client = OkHttpClient()
         val request = Request.Builder()

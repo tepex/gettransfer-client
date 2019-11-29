@@ -8,11 +8,11 @@ import com.kg.gettransfer.R
 object ChangingPasswordScreen : Screen<ChangingPasswordScreen>() {
     val newPwd = KEditText {
         withId(R.id.etPassword)
-        isDescendantOfA { (withId(R.id.newPasswordLayout)) }
+        isDescendantOfA { withId(R.id.newPasswordLayout) }
     }
     val repeatPwd = KEditText {
         withId(R.id.etPassword)
-        isDescendantOfA { (withId(R.id.repeatNewPasswordLayout)) }
+        isDescendantOfA { withId(R.id.repeatNewPasswordLayout) }
     }
     val doneBtn = KButton { withId(R.id.btnSave) }
 }
