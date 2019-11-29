@@ -674,9 +674,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     override fun askRateInPlayMarket() {
         // dirty hack to show after animation ended
-        Handler().postDelayed( {
+        Handler().postDelayed({
             StoreDialogFragment.newInstance().show(supportFragmentManager, StoreDialogFragment.STORE_DIALOG_TAG)
-        }, RateTripAnimationFragment.DURATION_OF_ANIMATION )
+        }, RateTripAnimationFragment.DURATION_OF_ANIMATION)
     }
 
     override fun thanksForRate() {

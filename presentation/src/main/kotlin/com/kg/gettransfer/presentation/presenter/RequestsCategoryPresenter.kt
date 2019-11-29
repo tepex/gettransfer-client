@@ -127,22 +127,10 @@ class RequestsCategoryPresenter(
     }
 
     private suspend fun prepareDataAsync(isRemoteData: Boolean) {
-        transfers?.let { trs ->
-            if (trs.isNotEmpty()) {
-                withContext(worker.bg) {
-                    val transportTypes = configsManager.getConfigs().transportTypes.map { it.map() }
-                    transfers?.map { it.map(transportTypes) }?.map { transferModel ->
-                        if (transferModel.status == Transfer.Status.PERFORMED && isShowOfferInfo(transferModel)) {
-                            val offer = offerInteractor.getOffers(transferModel.id).model.let { list ->
-                                if (list.size == 1) list.first() else null
-                            }
-                            transferModel.copy(matchedOffer = offer)
-                        } else {
-                            transferModel
-                        }
-                    }
-                }?.also { transfersList ->
-                    viewState.updateTransfers(transfersList, pagesCount)
+        transfers?.let { transfers ->
+            if (transfers.isNotEmpty()) {
+                getTransfersWithMatchedOffers(transfers).also { transfersWithOffers ->
+                    viewState.updateTransfers(transfersWithOffers, pagesCount)
                     viewState.blockInterface(false)
                     updateEventsCount()
                 }
@@ -153,6 +141,21 @@ class RequestsCategoryPresenter(
             }
         }
     }
+
+    private suspend fun getTransfersWithMatchedOffers(transfers: List<Transfer>) =
+        withContext(worker.bg) {
+            val transportTypes = configsManager.getConfigs().transportTypes.map { it.map() }
+            transfers.map { it.map(transportTypes) }.map { transferModel ->
+                if (transferModel.status == Transfer.Status.PERFORMED && isShowOfferInfo(transferModel)) {
+                    val offer = offerInteractor.getOffers(transferModel.id).model.let { list ->
+                        if (list.size == 1) list.first() else null
+                    }
+                    transferModel.copy(matchedOffer = offer)
+                } else {
+                    transferModel
+                }
+            }
+        }
 
     private fun isShowOfferInfo(transfer: TransferModel): Boolean {
         val durationInMinutes = transfer.duration?.times(MINUTES_PER_HOUR) ?: transfer.time ?: return false

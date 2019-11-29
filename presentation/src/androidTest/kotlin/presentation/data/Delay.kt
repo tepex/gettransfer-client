@@ -8,9 +8,9 @@ object Delay {
     const val big = 7_000L
     // Strings time sleep state end
 }
+
 object Profile {
     const val password = "PassRR11"
     const val email = "mygtracc1@gmail.com"
     const val phone = "+79992223838"
 }
-

@@ -17,6 +17,6 @@ fun GooglePayCredentialsModel.map() =
         environment,
         merchantId,
         merchantName,
-        cardNetworks?: emptyList(),
+        cardNetworks ?: emptyList(),
         authMethods ?: emptyList()
     )

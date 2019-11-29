@@ -20,7 +20,7 @@ class JsonPaymentProcessRequestModel(
     paymentId: Long,
     @SerializedName(PaymentProcessRequestEntity.TOKEN) @Expose val token: JsonObject
 ) : PaymentProcessRequestModel(
-     paymentId
+    paymentId
 )
 
 fun PaymentProcessRequestEntity.map(token: String) =

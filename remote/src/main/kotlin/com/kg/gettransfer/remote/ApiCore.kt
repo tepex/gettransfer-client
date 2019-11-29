@@ -104,10 +104,10 @@ class ApiCore : KoinComponent {
 
     private suspend fun checkApiInitialization() {
         if (!::api.isInitialized) {
-            changeEndpoint(preferencesRepository.getResult().getModel().endpoint!!.map())
+            preferencesRepository.getResult().getModel().endpoint?.let { changeEndpoint(it.map()) }
         }
         if (!::ipApi.isInitialized) {
-            changeIpApiKey(preferencesRepository.getResult().getModel().ipApiKey!!)
+            preferencesRepository.getResult().getModel().ipApiKey?.let { changeIpApiKey(it) }
         }
     }
 

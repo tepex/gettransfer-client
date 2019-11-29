@@ -31,31 +31,41 @@ class PaymentRemoteImpl : PaymentRemote {
     private val core = get<ApiCore>()
 
     override suspend fun createPlatronPayment(paymentRequest: PaymentRequestEntity): PlatronPaymentEntity {
-        val response: ResponseModel<PlatronPaymentModel> = core.tryTwice { core.api.createPlatronPayment(paymentRequest.map()) }
+        val response: ResponseModel<PlatronPaymentModel> = core.tryTwice {
+            core.api.createPlatronPayment(paymentRequest.map())
+        }
         @Suppress("UnsafeCallOnNullableType")
         return response.data!!.map()
     }
 
     override suspend fun createCheckoutcomPayment(paymentRequest: PaymentRequestEntity): CheckoutcomPaymentEntity {
-        val response: ResponseModel<CheckoutcomPaymentModel> = core.tryTwice { core.api.createCheckoutcomPayment(paymentRequest.map()) }
+        val response: ResponseModel<CheckoutcomPaymentModel> = core.tryTwice {
+            core.api.createCheckoutcomPayment(paymentRequest.map())
+        }
         @Suppress("UnsafeCallOnNullableType")
         return response.data!!.map()
     }
 
     override suspend fun createBraintreePayment(paymentRequest: PaymentRequestEntity): BraintreePaymentEntity {
-        val response: ResponseModel<BraintreePaymentModel> = core.tryTwice { core.api.createBraintreePayment(paymentRequest.map()) }
+        val response: ResponseModel<BraintreePaymentModel> = core.tryTwice {
+            core.api.createBraintreePayment(paymentRequest.map())
+        }
         @Suppress("UnsafeCallOnNullableType")
         return response.data!!.map()
     }
 
     override suspend fun createGooglePayPayment(paymentRequest: PaymentRequestEntity): GooglePayPaymentEntity {
-        val response: ResponseModel<GooglePayPaymentModel> = core.tryTwice { core.api.createGooglePayPayment(paymentRequest.map()) }
+        val response: ResponseModel<GooglePayPaymentModel> = core.tryTwice {
+            core.api.createGooglePayPayment(paymentRequest.map())
+        }
         @Suppress("UnsafeCallOnNullableType")
         return response.data!!.map()
     }
 
     override suspend fun createGroundPayment(paymentRequest: PaymentRequestEntity) {
-        val response: ResponseModel<Unit> = core.tryTwice { core.api.createGroundPayment(paymentRequest.map()) }
+        val response: ResponseModel<Unit> = core.tryTwice {
+            core.api.createGroundPayment(paymentRequest.map())
+        }
         @Suppress("UnsafeCallOnNullableType")
         return response.data!!
     }

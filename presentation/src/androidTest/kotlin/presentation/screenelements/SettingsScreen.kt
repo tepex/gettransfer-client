@@ -22,5 +22,5 @@ object SettingsScreen : Screen<SettingsScreen>() {
         isDescendantOfA { withId(R.id.settingsDistanceUnit) }
         isDisplayed()
     }
-    val tvBtnRequestCode = KButton {withId(R.id.btnRequestCode)}
+    val tvBtnRequestCode = KButton { withId(R.id.btnRequestCode) }
 }

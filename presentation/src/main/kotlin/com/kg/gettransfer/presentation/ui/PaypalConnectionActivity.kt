@@ -15,6 +15,7 @@ import com.kg.gettransfer.presentation.presenter.PaypalConnectionPresenter
 import com.kg.gettransfer.presentation.view.PaypalConnectionView
 import kotlinx.android.synthetic.main.activity_paypal_connection.*
 
+@Suppress("MagicNumber")
 class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
 
     @InjectPresenter
@@ -74,7 +75,7 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
                     duration = 700
                     startDelay = 600
                 }
-        return Pair(lftToRgt2, lftToRgt4)
+        return lftToRgt2 to lftToRgt4
     }
 
     private fun animateRightToLeft24(dx: Float): Pair<ObjectAnimator, ObjectAnimator> {
@@ -90,7 +91,7 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
                     duration = 1000
                     startDelay = 300
                 }
-        return Pair(rgtToLft2, rgtToLft4)
+        return rgtToLft2 to rgtToLft4
     }
 
     private fun animateRightToLeft13(dx: Float): Pair<ObjectAnimator, ObjectAnimator> {
@@ -103,7 +104,7 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
         val rgtToLft3 = ObjectAnimator
                 .ofFloat(ivRec3, View.TRANSLATION_X, dx, 0f)
                 .setDuration(800)
-        return Pair(rgtToLft1, rgtToLft3)
+        return rgtToLft1 to rgtToLft3
     }
 
     private fun animateLeftToRight13(dx: Float): Pair<ObjectAnimator, ObjectAnimator> {
@@ -116,7 +117,7 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
                     duration = 1000
                     startDelay = 300
                 }
-        return Pair(lftToRgt1, lftToRgt3)
+        return lftToRgt1 to lftToRgt3
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

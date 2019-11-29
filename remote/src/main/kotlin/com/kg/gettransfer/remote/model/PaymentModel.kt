@@ -64,11 +64,11 @@ fun PlatronPaymentModel.map() =
     )
 
 fun CheckoutcomPaymentModel.map() =
-     CheckoutcomPaymentEntity(
-         type,
-         url,
-         paymentId
-     )
+    CheckoutcomPaymentEntity(
+        type,
+        url,
+        paymentId
+    )
 
 fun PaypalPaymentModel.map() =
     PaypalPaymentEntity(

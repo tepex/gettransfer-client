@@ -19,12 +19,12 @@ class LanguagesListAdapter(
     private val listener: SelectLanguageListener,
     private val languages: List<LocaleModel>,
     private val selectedLanguage: LocaleModel
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<LanguagesListAdapter.ViewHolderLanguage>() {
 
     override fun getItemCount() = languages.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) =
-        (holder as ViewHolderLanguage).bind(languages[pos], languages[pos].locale == selectedLanguage.locale, listener)
+    override fun onBindViewHolder(holder: ViewHolderLanguage, pos: Int) =
+        holder.bind(languages[pos], languages[pos].locale == selectedLanguage.locale, listener)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolderLanguage(LayoutInflater.from(parent.context).inflate(R.layout.view_language_item, parent, false))

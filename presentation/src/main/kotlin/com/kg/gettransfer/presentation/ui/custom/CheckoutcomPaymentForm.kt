@@ -37,6 +37,7 @@ import java.util.Locale
  * callbacks to communicate outcomes. Please make sure you set the key/environment
  * and appropriate  callbacks to a ensure successful interaction
  */
+@Suppress("TooManyFunctions")
 class CheckoutcomPaymentForm @JvmOverloads constructor(
     private val mContext: Context,
     val attrs: AttributeSet? = null
@@ -200,8 +201,11 @@ class CheckoutcomPaymentForm @JvmOverloads constructor(
     }
 
     private fun handleUri(path: String, successUrl: String, failsUrl: String) {
-        if (path == successUrl) m3DSecureListener?.onSuccess()
-        else if (path == failsUrl) m3DSecureListener?.onError()
+        if (path == successUrl) {
+            m3DSecureListener?.onSuccess()
+        } else if (path == failsUrl) {
+            m3DSecureListener?.onError()
+        }
     }
 
     /**
@@ -514,5 +518,4 @@ class CheckoutcomPaymentForm @JvmOverloads constructor(
         this.mSubmitFormListener = listener
         return this
     }
-
 }

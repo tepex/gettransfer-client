@@ -281,9 +281,10 @@ object Screens {
         val paymentId: Long
     ) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, CheckoutcomPaymentActivity::class.java).apply {
-            putExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, paymentId)
-        }
+        override fun getActivityIntent(context: Context?) =
+            Intent(context, CheckoutcomPaymentActivity::class.java).apply {
+                putExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, paymentId)
+            }
     }
 
     class PaymentOffer : SupportAppScreen() {

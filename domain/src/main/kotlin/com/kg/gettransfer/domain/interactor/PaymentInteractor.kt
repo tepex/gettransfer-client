@@ -21,24 +21,33 @@ class PaymentInteractor(private val repository: PaymentRepository) {
         get() = repository.selectedOffer
         set(value) { repository.selectedOffer = value }
 
-    suspend fun getPlatronPayment(paymentRequest: PaymentRequest) = repository.getPlatronPayment(paymentRequest)
+    suspend fun getPlatronPayment(paymentRequest: PaymentRequest) =
+        repository.getPlatronPayment(paymentRequest)
 
-    suspend fun getCheckoutcomPayment(paymentRequest: PaymentRequest) = repository.getCheckoutcomPayment(paymentRequest)
+    suspend fun getCheckoutcomPayment(paymentRequest: PaymentRequest) =
+        repository.getCheckoutcomPayment(paymentRequest)
 
-    suspend fun getBraintreePayment(paymentRequest: PaymentRequest) = repository.getBraintreePayment(paymentRequest)
+    suspend fun getBraintreePayment(paymentRequest: PaymentRequest) =
+        repository.getBraintreePayment(paymentRequest)
 
-    suspend fun getGooglePayPayment(paymentRequest: PaymentRequest) = repository.getGooglePayPayment(paymentRequest)
+    suspend fun getGooglePayPayment(paymentRequest: PaymentRequest) =
+        repository.getGooglePayPayment(paymentRequest)
 
-    suspend fun getGroundPayment(paymentRequest: PaymentRequest) = repository.getGroundPayment(paymentRequest)
+    suspend fun getGroundPayment(paymentRequest: PaymentRequest) =
+        repository.getGroundPayment(paymentRequest)
 
-    suspend fun processPayment(paymentProcessRequest: PaymentProcessRequest) = repository.processPayment(paymentProcessRequest)
+    suspend fun processPayment(paymentProcessRequest: PaymentProcessRequest) =
+        repository.processPayment(paymentProcessRequest)
 
     suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequest) =
         repository.changeStatusPayment(paymentStatusRequest)
 
     suspend fun getBrainTreeToken() = repository.getBrainTreeToken()
 
-    suspend fun confirmPaypal(paymentId: Long, nonce: String) = repository.confirmPaypal(paymentId, nonce)
+    suspend fun confirmPaypal(paymentId: Long, nonce: String) =
+        repository.confirmPaypal(paymentId, nonce)
 
-    fun onNewPaymentStatusEvent(isSuccess: Boolean) { eventPaymentReceiver?.onNewPaymentStatusEvent(isSuccess) }
+    fun onNewPaymentStatusEvent(isSuccess: Boolean) {
+        eventPaymentReceiver?.onNewPaymentStatusEvent(isSuccess)
+    }
 }
