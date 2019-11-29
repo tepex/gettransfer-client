@@ -293,9 +293,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             val processResult = getProcessGooglePayPaymentResult(paymentProcess)
             processResult.error?.let {
                 paymentError(it)
-            } ?: processResult.model.payment.status.let {
-                if (it == PaymentStatus.Status.SUCCESS) paymentSuccess()
-                else paymentError()
+            } ?: processResult.model.payment.isSuccess.let {
+                if (it) paymentSuccess() else paymentError()
             }
             viewState.blockInterface(false)
         }

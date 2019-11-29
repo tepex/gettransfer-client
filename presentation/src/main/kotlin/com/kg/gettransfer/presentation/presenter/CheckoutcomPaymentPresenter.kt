@@ -60,7 +60,9 @@ class CheckoutcomPaymentPresenter: BasePresenter<CheckoutcomPaymentView>() {
                 PAYMENT_RESULT_SUCCESSFUL,
                 PAYMENT_RESULT_FAILED
             )
-        } ?: paymentSuccess()
+        } ?: result.model.payment.isSuccess.let {
+            if (it) paymentSuccess() else paymentError()
+        }
     }
 
     fun handle3DS(isSuccess: Boolean) {
