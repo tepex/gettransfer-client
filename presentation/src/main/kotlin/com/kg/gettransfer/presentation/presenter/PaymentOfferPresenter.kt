@@ -287,7 +287,12 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         } ?: paymentResult.model.params.let { params ->
             paymentId = params.paymentId
             val paymentDataRequest =
-                GooglePayRequestsHelper.getPaymentDataRequest(params.amount, params.currency).toString()
+                GooglePayRequestsHelper.getPaymentDataRequest(
+                    params.amount,
+                    params.currency,
+                    params.gateway,
+                    params.gatewayMerchantId
+                ).toString()
             val request = PaymentDataRequest.fromJson(paymentDataRequest)
             request?.let { viewState.startGooglePay(googlePayPaymentsClient.loadPaymentData(it)) }
             viewState.blockInterface(false)
