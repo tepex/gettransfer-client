@@ -81,6 +81,8 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private lateinit var offersAdapter: OffersAdapter
 
+    private var isNetworkWasAvailable = true
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -338,7 +340,7 @@ class OffersActivity : BaseActivity(), OffersView {
     @CallSuper
     override fun setNetworkAvailability(context: Context): Boolean {
         val available = super.setNetworkAvailability(context)
-        if (available) {
+        if (available && !isNetworkWasAvailable) {
             presenter.checkNewOffers()
         }
         offer_bottom_bs.btn_book.isEnabled = viewNetworkNotAvailable?.isShowing()?.not() ?: true
@@ -348,6 +350,7 @@ class OffersActivity : BaseActivity(), OffersView {
             cl_fixPrice.isVisible = false
             fl_drivers_count_text.isVisible = false
         }
+        isNetworkWasAvailable = available
         return available
     }
 

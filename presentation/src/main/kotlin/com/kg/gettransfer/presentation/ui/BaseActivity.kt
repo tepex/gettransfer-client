@@ -238,7 +238,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         super.onStart()
 
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        setNetworkAvailability(this)
     }
 
     @CallSuper
