@@ -171,7 +171,9 @@ val testModule = module {
 
 val systemDomain = module {
     single { GetConfigsInteractor(get()) }
+    single { ClearConfigsInteractor(get()) }
     single { GetMobileConfigsInteractor(get()) }
+    single { ClearMobileConfigsInteractor(get()) }
     single { GetPreferencesInteractor(get()) }
     single { IsNeedUpdateAppInteractor(get()) }
     single { IsShouldAskForRateInMarketInteractor(get()) }
