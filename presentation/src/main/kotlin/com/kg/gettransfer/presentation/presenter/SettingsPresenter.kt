@@ -25,6 +25,8 @@ import com.kg.gettransfer.sys.domain.SetEndpointInteractor
 import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
 import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
+import com.kg.gettransfer.sys.domain.ClearConfigsInteractor
+import com.kg.gettransfer.sys.domain.ClearMobileConfigsInteractor
 
 import com.kg.gettransfer.sys.presentation.EndpointModel
 import com.kg.gettransfer.sys.presentation.map
@@ -58,6 +60,9 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
     private val setAccessToken: SetAccessTokenInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
+
+    private val clearConfigsInteractor: ClearConfigsInteractor by inject()
+    private val clearMobileConfigsInteractor: ClearMobileConfigsInteractor by inject()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -219,6 +224,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.setEndpoint(endpoint)
         viewState.blockInterface(true)
         withContext(worker.bg) {
+            clearConfigsInteractor()
+            clearMobileConfigsInteractor()
             endpoint.delegate.run {
                 setEndpoint(this)
             }
