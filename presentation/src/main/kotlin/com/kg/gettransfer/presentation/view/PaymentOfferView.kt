@@ -26,7 +26,10 @@ interface PaymentOfferView : BaseView {
     fun setCommission(paymentCommission: String, dateRefund: String)
     fun setToolbarTitle(transferModel: TransferModel)
     fun setCurrencyConvertingInfo(offerCurrency: Currency, ownCurrency: Currency)
-    fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel, balance: String?)
+    fun setAuthUi(hasAccount: Boolean, profile: ProfileModel)
+    fun hideAuthUi()
+    fun setBalance(value: String)
+    fun hideBalance()
     fun selectPaymentType(type: String)
 
     fun showOfferError()

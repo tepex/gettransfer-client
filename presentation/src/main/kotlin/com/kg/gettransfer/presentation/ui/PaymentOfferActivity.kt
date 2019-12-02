@@ -465,24 +465,25 @@ class PaymentOfferActivity : BaseActivity(),
         toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
     }
 
-    override fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel, balance: String?) {
-        if (hasAccount && (profile.email.isNullOrEmpty() || profile.phone.isNullOrEmpty())) {
-            ll_auth_container.isVisible = true
-            initEmailTextChangeListeners()
-            initPhoneTextChangeListeners()
-            profile.email?.let { emailLayout.fieldText.setText(it) }
-            profile.phone?.let { phoneLayout.fieldText.setText(it) }
-        } else {
-            ll_auth_container.isVisible = false
-            setBalance(balance)
-        }
+    override fun setAuthUi(hasAccount: Boolean, profile: ProfileModel) {
+        ll_auth_container.isVisible = true
+        initEmailTextChangeListeners()
+        initPhoneTextChangeListeners()
+        profile.email?.let { emailLayout.fieldText.setText(it) }
+        profile.phone?.let { phoneLayout.fieldText.setText(it) }
     }
 
-    private fun setBalance(balance: String?) {
-        if (!balance.isNullOrEmpty()) {
-            layoutBalance.isVisible = true
-            tvBalance.text = getString(R.string.LNG_PAYMENT_FROM_BALANCE_AVAILABLE, balance)
-        }
+    override fun hideAuthUi() {
+        ll_auth_container.isVisible = false
+    }
+
+    override fun setBalance(balance: String) {
+        layoutBalance.isVisible = true
+        tvBalance.text = getString(R.string.LNG_PAYMENT_FROM_BALANCE_AVAILABLE, balance)
+    }
+
+    override fun hideBalance() {
+        layoutBalance.isVisible = false
     }
 
     override fun showBadCredentialsInfo(field: Int) {

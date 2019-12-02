@@ -12,6 +12,7 @@ import com.google.android.gms.wallet.PaymentsClient
 import com.google.gson.JsonParser
 
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.model.Balance
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.BookNowOffer
@@ -81,9 +82,16 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 offer = selectedOffer
             }
             with(accountManager) {
-                val balance = remoteAccount.partner?.availableMoney?.default
+                val profileModel = profileMapper.toView(remoteProfile)
+                if (hasAccount && (profileModel.email.isNullOrEmpty() || profileModel.phone.isNullOrEmpty())) {
+                    viewState.setAuthUi(hasAccount, profileModel)
+                } else {
+                    viewState.hideAuthUi()
+                    remoteAccount.partner?.availableMoney?.let {
+                        setBalance(it)
+                    } ?: viewState.hideBalance()
 
-                viewState.setAuthUiVisible(hasAccount, profileMapper.toView(remoteProfile), balance)
+                }
             }
 
             transfer?.let { transfer ->
@@ -117,6 +125,20 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 viewState.hideGooglePayButton()
             }
         }
+    }
+
+    private fun setBalance(availableMoney: Balance) {
+        when (val offer = offer) {
+            is BookNowOffer -> offer.amount
+            is Offer        -> offer.price.amount
+            else            -> null
+        }?.let { offerPrice ->
+            if (availableMoney.amount >= offerPrice) {
+                viewState.setBalance(availableMoney.default)
+            } else {
+                viewState.hideBalance()
+            }
+        } ?: viewState.hideBalance()
     }
 
     private suspend fun setInfo(transfer: Transfer) {
