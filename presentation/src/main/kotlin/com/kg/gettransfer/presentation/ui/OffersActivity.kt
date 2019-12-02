@@ -177,7 +177,9 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun setupAdapter(offers: List<OfferItemModel>, isNameSignPresent: Boolean) {
+        val rvState = rvOffers.layoutManager?.onSaveInstanceState()
         offersAdapter.update(offers, isNameSignPresent)
+        rvOffers.layoutManager?.onRestoreInstanceState(rvState)
     }
 
     override fun setBannersVisible(hasOffers: Boolean) {
