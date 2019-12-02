@@ -70,6 +70,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         super.attachView(view)
         utils.launchSuspend {
             viewState.blockInterface(false)
+            var isShowedBalanceField = false
 
             // TODO uncomment after than fixed configs request
             /*if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
@@ -87,8 +88,11 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                     viewState.setAuthUi(hasAccount, profileModel)
                 } else {
                     viewState.hideAuthUi()
-                    remoteAccount.partner?.availableMoney?.let {
-                        setBalance(it)
+                    remoteAccount.partner?.availableMoney?.let { availableMoney ->
+                        getShowingBalance(availableMoney)?.let { balance ->
+                            isShowedBalanceField = true
+                            viewState.setBalance(balance)
+                        } ?: viewState.hideBalance()
                     } ?: viewState.hideBalance()
 
                 }
@@ -99,12 +103,12 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 setPaymentOptions(transfer)
             }
             viewState.selectPaymentType(selectedPayment)
-        }
 
-        if (loginScreenIsShowed) {
-            loginScreenIsShowed = false
-            if (accountManager.hasData) {
-                getPayment()
+            if (loginScreenIsShowed) {
+                loginScreenIsShowed = false
+                if (accountManager.hasData && !isShowedBalanceField) {
+                    getPayment()
+                }
             }
         }
     }
@@ -127,19 +131,18 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private fun setBalance(availableMoney: Balance) {
+    private fun getShowingBalance(availableMoney: Balance) =
         when (val offer = offer) {
             is BookNowOffer -> offer.amount
             is Offer        -> offer.price.amount
             else            -> null
         }?.let { offerPrice ->
             if (availableMoney.amount >= offerPrice) {
-                viewState.setBalance(availableMoney.default)
+                availableMoney.default
             } else {
-                viewState.hideBalance()
+                null
             }
-        } ?: viewState.hideBalance()
-    }
+        }
 
     private suspend fun setInfo(transfer: Transfer) {
         viewState.setToolbarTitle(transfer.map(configsManager.getConfigs().transportTypes.map { it.map() }))
