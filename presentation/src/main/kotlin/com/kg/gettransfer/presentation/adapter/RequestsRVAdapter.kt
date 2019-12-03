@@ -102,8 +102,9 @@ class RequestsRVAdapter(
     }
 
     fun removeAll() {
+        val count = transfers.size
         transfers.clear()
-        notifyDataSetChanged()
+        notifyItemRangeRemoved(0, count)
     }
 
     fun updateEvents(eventsCount: Map<Long, Int>) {

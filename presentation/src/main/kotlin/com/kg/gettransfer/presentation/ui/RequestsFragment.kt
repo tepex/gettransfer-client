@@ -137,6 +137,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
 
         switchBackGroundData(false)
         rvAdapter?.removeLoading()
+        rvAdapter?.removeAll()
         rvAdapter?.updateTransfers(transfers)
         scrollListener.setLoaded()
         pagesCount?.let { scrollListener.pages = it }
