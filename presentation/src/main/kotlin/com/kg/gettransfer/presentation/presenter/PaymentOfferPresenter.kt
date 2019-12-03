@@ -65,30 +65,18 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private lateinit var paymentRequest: PaymentRequestModel
 
-    private var loginScreenIsShowed = false
-    private var isShowedBalanceField = false
     private var currency: String? = null
-    private var isCurrencyChanged = false
+    private var loginScreenIsShowed = false
+    private var isCanPayAfterLogIn = true
 
     @Suppress("ComplexMethod")
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
         utils.launchSuspend {
             viewState.blockInterface(false)
-            initGPay()
-
-            currency?.let { selectedCurrency ->
-                if (selectedCurrency != sessionInteractor.currency.code) {
-                    viewState.blockInterface(true, true)
-                    isCurrencyChanged = true
-                    transfer?.id?.let { transferId ->
-                        updatePaymentData(transferId)
-                    }
-                    viewState.blockInterface(false)
-                }
-            }
-            currency = sessionInteractor.currency.code
-
+            // TODO uncomment after than fixed configs request
+            //initGPay()
+            checkCurrencyChanging()
             getTransferAndOffer()
             setupBalance()
             transfer?.let { setInfo(it) }
@@ -101,9 +89,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private fun checkLoginScreen() {
         if (loginScreenIsShowed) {
             loginScreenIsShowed = false
-            if (accountManager.hasData && !isShowedBalanceField && !isCurrencyChanged) {
-                isShowedBalanceField = false
-                isCurrencyChanged = false
+            if (accountManager.hasData && isCanPayAfterLogIn) {
+                isCanPayAfterLogIn = true
                 getPayment()
             }
         }
@@ -118,7 +105,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 viewState.hideAuthUi()
                 remoteAccount.partner?.availableMoney?.let { availableMoney ->
                     getShowingBalance(availableMoney)?.let { balance ->
-                        isShowedBalanceField = true
+                        isCanPayAfterLogIn = false
                         viewState.setBalance(balance)
                     } ?: viewState.hideBalance()
                 } ?: viewState.hideBalance()
@@ -133,12 +120,16 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private fun initGPay() {
-        // TODO uncomment after than fixed configs request
-        /*if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
-                viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
-                isReadyToPayWithGooglePayRequest()
-            }*/
+    private suspend fun checkCurrencyChanging() {
+        currency?.let { selectedCurrency ->
+            if (selectedCurrency != sessionInteractor.currency.code) {
+                viewState.blockInterface(true, true)
+                isCanPayAfterLogIn = false
+                transfer?.id?.let { updatePaymentData(it) }
+                viewState.blockInterface(false)
+            }
+        }
+        currency = sessionInteractor.currency.code
     }
 
     private suspend fun updatePaymentData(transferId: Long) {
@@ -162,6 +153,13 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }.also { updatedTransfer ->
             paymentInteractor.selectedTransfer = updatedTransfer
         }?.bookNowOffers?.getOffer(transportTypeId)
+
+    private suspend fun initGPay() {
+        if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
+            viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
+            isReadyToPayWithGooglePayRequest()
+        }
+    }
 
     private suspend fun isReadyToPayWithGooglePayRequest() {
         val isReadyToPayRequest = GooglePayRequestsHelper.getIsReadyToPayRequest().toString()
