@@ -13,6 +13,7 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.extensions.getOffer
 
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.PushTokenManager
@@ -229,7 +230,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     private suspend fun updateOfferEventsCounter(offer: Offer) {
         val result = withContext(worker.bg) { offerInteractor.getOffers(offer.transferId, true) }
         if (result.error == null) {
-            if (result.model.find { offerCached -> offerCached.id == offer.id } != null) {
+            if (result.model.getOffer(offer.id) != null) {
                 countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
                     countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
                         if (countNewOffers == countViewedOffers && countViewedOffers > 0) {

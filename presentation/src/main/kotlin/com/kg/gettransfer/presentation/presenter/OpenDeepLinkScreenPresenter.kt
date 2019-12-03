@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.createStartChain
+import com.kg.gettransfer.extensions.getOffer
 import com.kg.gettransfer.presentation.view.OpenDeepLinkScreenView
 import com.kg.gettransfer.presentation.view.Screens
 
@@ -23,7 +24,7 @@ open class OpenDeepLinkScreenPresenter<BV : OpenDeepLinkScreenView> : BaseHandle
     private suspend fun openPaymentOffer(transfer: Transfer, offerId: Long?, bookNowTransportId: String?) {
         val offerItem: OfferItem? = when {
             offerId != null && offerId != DEFAULT_ID ->
-                fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(transfer.id) }?.find { it.id == offerId }
+                fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(transfer.id) }?.getOffer(offerId)
             !bookNowTransportId.isNullOrEmpty()      ->
                 transfer.bookNowOffers.find { it.transportType.id.toString() == bookNowTransportId }
             else                                     -> null

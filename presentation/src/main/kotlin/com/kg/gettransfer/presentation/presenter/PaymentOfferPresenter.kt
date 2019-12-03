@@ -14,6 +14,7 @@ import com.google.gson.JsonParser
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Balance
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
@@ -25,6 +26,7 @@ import com.kg.gettransfer.domain.model.PaymentProcess
 import com.kg.gettransfer.domain.model.PaymentProcessRequest
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Token
+import com.kg.gettransfer.extensions.getOffer
 
 import com.kg.gettransfer.extensions.newChainFromMain
 
@@ -141,29 +143,25 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private suspend fun updatePaymentData(transferId: Long) {
         when (val selectedOffer = offer) {
-            is Offer        -> getOffer(transferId, selectedOffer)
-            is BookNowOffer -> getBookNowOffer(transferId, selectedOffer)
+            is Offer        -> getOffer(transferId, selectedOffer.id)
+            is BookNowOffer -> getBookNowOffer(transferId, selectedOffer.transportType.id)
             else            -> null
         }.let { updatedOffer ->
             paymentInteractor.selectedOffer = updatedOffer
         }
     }
 
-    private suspend fun getOffer(transferId: Long, selectedOffer: Offer) =
+    private suspend fun getOffer(transferId: Long, offerId: Long) =
         fetchDataOnly {
             offerInteractor.getOffers(transferId)
-        }?.find {
-            it.id == selectedOffer.id
-        }
+        }?.getOffer(offerId)
 
-    private suspend fun getBookNowOffer(transferId: Long, selectedOffer: BookNowOffer) =
+    private suspend fun getBookNowOffer(transferId: Long, transportTypeId: TransportType.ID) =
         fetchDataOnly {
             transferInteractor.getTransfer(transferId)
         }.also { updatedTransfer ->
             paymentInteractor.selectedTransfer = updatedTransfer
-        }?.bookNowOffers?.find {
-            it.transportType.id == selectedOffer.transportType.id
-        }
+        }?.bookNowOffers?.getOffer(transportTypeId)
 
     private suspend fun isReadyToPayWithGooglePayRequest() {
         val isReadyToPayRequest = GooglePayRequestsHelper.getIsReadyToPayRequest().toString()

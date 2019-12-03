@@ -23,10 +23,6 @@ import com.kg.gettransfer.utilities.Analytics
 class OffersPresenter : BasePresenter<OffersView>() {
 
     internal var transferId = 0L
-        set(value) {
-            field = value
-            offerInteractor.lastTransferId = value
-        }
 
     private var transfer: Transfer? = null
     private var offers: List<OfferItem> = emptyList()

@@ -9,6 +9,7 @@ import com.kg.gettransfer.domain.model.RouteInfo
 
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.extensions.getOffer
 
 import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.model.map
@@ -43,8 +44,9 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                 val (days, hours, minutes) = Utils.convertDuration(transferModel.timeToTransfer)
                 viewState.setRemainTime(days, hours, minutes)
             }
-            utils.asyncAwait { offerInteractor.getOffers(transfer.id) }
-            phoneToCall = offerInteractor.getOffer(offerId)?.phoneToCall
+            phoneToCall = fetchData(processError = WITHOUT_ERROR, checkLoginError = false) {
+                offerInteractor.getOffers(transfer.id)
+            }?.getOffer(offerId)?.phoneToCall
             if (offerId != 0L) {
                 viewState.initChatButton()
                 if (phoneToCall != null) viewState.initCallButton()
