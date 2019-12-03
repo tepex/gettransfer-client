@@ -10,12 +10,10 @@ import android.view.View
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.presenter.PaypalConnectionPresenter
 import com.kg.gettransfer.presentation.view.PaypalConnectionView
 import kotlinx.android.synthetic.main.activity_paypal_connection.*
 
-@Suppress("MagicNumber")
 class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
 
     @InjectPresenter
@@ -41,7 +39,7 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
     private fun playAnimation() {
         animator = AnimatorSet()
 
-        val dx = 3 * ivRec1.width.toFloat()
+        val dx = DX * ivRec1.width.toFloat()
 
         // animation for left rectangles
         val (lftToRgt1, lftToRgt3) = animateLeftToRight13(dx)
@@ -66,14 +64,14 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
         val lftToRgt2 = ObjectAnimator
                 .ofFloat(ivRec2, View.TRANSLATION_X, -ivRec1.right.toFloat(), 0f)
                 .apply {
-                    duration = 700
-                    startDelay = 400
+                    duration = DURATION_LEFT_TO_RIGHT_24
+                    startDelay = START_DELAY_LFT_TO_RGT_2
                 }
         val lftToRgt4 = ObjectAnimator
                 .ofFloat(ivRec4, View.TRANSLATION_X, -ivRec3.right.toFloat(), 0f)
                 .apply {
-                    duration = 700
-                    startDelay = 600
+                    duration = DURATION_LEFT_TO_RIGHT_24
+                    startDelay = START_DELAY_LFT_TO_RGT_4
                 }
         return lftToRgt2 to lftToRgt4
     }
@@ -82,14 +80,14 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
         val rgtToLft2 = ObjectAnimator
                 .ofFloat(ivRec2, View.TRANSLATION_X, 0f, -dx)
                 .apply {
-                    duration = 1000
-                    startDelay = 500
+                    duration = DURATION_1000
+                    startDelay = START_DELAY_RGT_TO_LFT_2
                 }
         val rgtToLft4 = ObjectAnimator
                 .ofFloat(ivRec4, View.TRANSLATION_X, 0f, -dx)
                 .apply {
-                    duration = 1000
-                    startDelay = 300
+                    duration = DURATION_1000
+                    startDelay = START_DELAY_300
                 }
         return rgtToLft2 to rgtToLft4
     }
@@ -98,24 +96,24 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
         val rgtToLft1 = ObjectAnimator
                 .ofFloat(ivRec1, View.TRANSLATION_X, dx, 0f)
                 .apply {
-                    duration = 1000
-                    startDelay = 200
+                    duration = DURATION_1000
+                    startDelay = START_DELAY_RGT_TO_LFT_1
                 }
         val rgtToLft3 = ObjectAnimator
                 .ofFloat(ivRec3, View.TRANSLATION_X, dx, 0f)
-                .setDuration(800)
+                .setDuration(DURATION_RGT_TO_LFT_3)
         return rgtToLft1 to rgtToLft3
     }
 
     private fun animateLeftToRight13(dx: Float): Pair<ObjectAnimator, ObjectAnimator> {
         val lftToRgt1 = ObjectAnimator
                 .ofFloat(ivRec1, View.TRANSLATION_X, 0f, dx)
-                .setDuration(1000)
+                .setDuration(DURATION_1000)
         val lftToRgt3 = ObjectAnimator
                 .ofFloat(ivRec3, View.TRANSLATION_X, 0f, dx)
                 .apply {
-                    duration = 1000
-                    startDelay = 300
+                    duration = DURATION_1000
+                    startDelay = START_DELAY_300
                 }
         return lftToRgt1 to lftToRgt3
     }
@@ -130,5 +128,17 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
     override fun stopAnimation() {
         animator.cancel()
         animator.removeAllListeners()
+    }
+
+    companion object {
+        private const val DURATION_LEFT_TO_RIGHT_24 = 700L
+        private const val DURATION_RGT_TO_LFT_3 = 800L
+        private const val DURATION_1000 = 1000L
+        private const val START_DELAY_LFT_TO_RGT_2 = 400L
+        private const val START_DELAY_LFT_TO_RGT_4 = 600L
+        private const val START_DELAY_RGT_TO_LFT_2 = 500L
+        private const val START_DELAY_RGT_TO_LFT_1 = 200L
+        private const val START_DELAY_300 = 300L
+        private const val DX = 3
     }
 }

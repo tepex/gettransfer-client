@@ -21,6 +21,8 @@ class PaymentInteractor(private val repository: PaymentRepository) {
         get() = repository.selectedOffer
         set(value) { repository.selectedOffer = value }
 
+    var isFailedPayment: Boolean = false
+
     suspend fun getPlatronPayment(paymentRequest: PaymentRequest) =
         repository.getPlatronPayment(paymentRequest)
 

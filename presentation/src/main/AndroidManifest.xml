@@ -136,11 +136,6 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.ui.PaymentErrorActivity"
-            android:resizeableActivity="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
             android:name=".presentation.ui.PaymentSuccessfulActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"

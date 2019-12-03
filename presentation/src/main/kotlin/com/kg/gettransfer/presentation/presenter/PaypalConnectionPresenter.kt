@@ -37,8 +37,8 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
 
     private suspend fun showFailedPayment() {
         analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
+        paymentInteractor.isFailedPayment = true
         router.exit()
-        router.navigateTo(Screens.PaymentError(transferId))
     }
 
     private suspend fun showSuccessfulPayment() {

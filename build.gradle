@@ -213,6 +213,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseLogInFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BecomeCarrierFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripDetailsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripsMainActivity.kt",
@@ -228,7 +229,6 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainRequestFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/OffersActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentErrorActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentOfferActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentSuccessfulActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaypalConnectionActivity.kt",
@@ -248,6 +248,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SmsCodeFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SupportActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SupportFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SystemUtils.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferRequestItem.kt",
@@ -270,6 +271,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/BaseMapBottomSheetDialogFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/RatingDetailDialogFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/CommentDialogFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/PaymentErrorDialog.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/GooglePayRequestsHelper.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/DateTimePickerHelper.kt",
@@ -278,6 +280,8 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/ScrollGalleryInflater.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/newtransfer/NewTransferMainFragment.kt",
+
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/utils/FragmentUtils.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseBottomSheetView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseHandleUrlView.kt",
