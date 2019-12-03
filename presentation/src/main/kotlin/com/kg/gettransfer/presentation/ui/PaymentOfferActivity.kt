@@ -40,6 +40,7 @@ import com.kg.gettransfer.extensions.isVisible
 
 import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
+import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.LocaleModel
@@ -59,6 +60,7 @@ import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.PaymentOfferView
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
 
@@ -86,7 +88,8 @@ class PaymentOfferActivity : BaseActivity(),
     PaymentOfferView,
     PaymentMethodNonceCreatedListener,
     BraintreeErrorListener,
-    BraintreeCancelListener {
+    BraintreeCancelListener,
+    GoToPlayMarketListener {
 
     private var errorField: View? = null
 
@@ -101,9 +104,6 @@ class PaymentOfferActivity : BaseActivity(),
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // presenter.params =
-        // JSON.parse(PaymentOfferView.PaypalParams.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
-
         setContentView(R.layout.activity_payment_offer)
         initListeners()
         initToolbar()
@@ -525,6 +525,14 @@ class PaymentOfferActivity : BaseActivity(),
 
     override fun hideGooglePayButton() {
         layoutGooglePay.isVisible = false
+    }
+
+    override fun showPaymentError(transferId: Long, gatewayId: String?) {
+        Screens.PaymentError(supportFragmentManager, transferId, gatewayId).showDialog()
+    }
+
+    override fun onClickGoToDriverApp() {
+        Utils.goToGooglePlay(this, getString(R.string.driver_app_market_package))
     }
 
     companion object {

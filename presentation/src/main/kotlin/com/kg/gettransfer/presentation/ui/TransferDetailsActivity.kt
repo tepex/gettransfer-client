@@ -33,6 +33,7 @@ import com.kg.gettransfer.extensions.isNonZero
 import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 import com.kg.gettransfer.presentation.listeners.CancelationReasonListener
+import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -49,6 +50,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
+import com.kg.gettransfer.presentation.view.Screens.showSupportScreen
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import java.util.Date
@@ -93,7 +95,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     StoreDialogFragment.OnStoreListener,
     EasyPermissions.PermissionCallbacks,
     EasyPermissions.RationaleCallbacks,
-    CancelationReasonListener {
+    CancelationReasonListener,
+    GoToPlayMarketListener {
 
     @InjectPresenter
     internal lateinit var presenter: TransferDetailsPresenter
@@ -245,9 +248,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     override fun setTransfer(transfer: TransferModel) {
         initInfoView(transfer)
         initAboutRequestView(transfer)
-        topCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
-        bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.sendEmail(null, transfer.id) }
-
+        topCommunicationButtons.btnSupport.setOnClickListener {
+            showSupportScreen(supportFragmentManager, transfer.id)
+        }
+        bottomCommunicationButtons.btnSupport.setOnClickListener {
+            showSupportScreen(supportFragmentManager, transfer.id)
+        }
         setBookingInfo(transfer)
 
         if (transfer.status == Transfer.Status.REJECTED) {
@@ -770,6 +776,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    override fun onClickGoToDriverApp() {
+        Utils.goToGooglePlay(this, getString(R.string.driver_app_market_package))
     }
 
     @CallSuper

@@ -23,8 +23,8 @@ import com.kg.gettransfer.domain.model.CheckoutcomPayment
 import com.kg.gettransfer.domain.model.GooglePayPayment
 import com.kg.gettransfer.domain.model.PaymentProcess
 import com.kg.gettransfer.domain.model.PaymentProcessRequest
-import com.kg.gettransfer.domain.model.Token
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.Token
 
 import com.kg.gettransfer.extensions.newChainFromMain
 
@@ -64,53 +64,63 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private lateinit var paymentRequest: PaymentRequestModel
 
     private var loginScreenIsShowed = false
+    private var isShowedBalanceField = false
 
     @Suppress("ComplexMethod")
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
         utils.launchSuspend {
             viewState.blockInterface(false)
-            var isShowedBalanceField = false
+            initGPay()
+            getTransferAndOffer()
+            setupBalance()
+            transfer?.let { setInfo(it) }
+            viewState.selectPaymentType(selectedPayment)
+        }
+        checkLoginScreen()
+        checkPaymentStatus()
+    }
 
-            // TODO uncomment after than fixed configs request
-            /*if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
+    private fun checkLoginScreen() {
+        if (loginScreenIsShowed) {
+            loginScreenIsShowed = false
+            if (accountManager.hasData && !isShowedBalanceField) {
+                isShowedBalanceField = false
+                getPayment()
+            }
+        }
+    }
+
+    private fun setupBalance() {
+        with(accountManager) {
+            val profileModel = profileMapper.toView(remoteProfile)
+            if (hasAccount && (profileModel.email.isNullOrEmpty() || profileModel.phone.isNullOrEmpty())) {
+                viewState.setAuthUi(hasAccount, profileModel)
+            } else {
+                viewState.hideAuthUi()
+                remoteAccount.partner?.availableMoney?.let { availableMoney ->
+                    getShowingBalance(availableMoney)?.let { balance ->
+                        isShowedBalanceField = true
+                        viewState.setBalance(balance)
+                    } ?: viewState.hideBalance()
+                } ?: viewState.hideBalance()
+            }
+        }
+    }
+
+    private fun getTransferAndOffer() {
+        with(paymentInteractor) {
+            transfer = selectedTransfer
+            offer = selectedOffer
+        }
+    }
+
+    private fun initGPay() {
+        // TODO uncomment after than fixed configs request
+        /*if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
                 viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
                 isReadyToPayWithGooglePayRequest()
             }*/
-
-            with(paymentInteractor) {
-                transfer = selectedTransfer
-                offer = selectedOffer
-            }
-            with(accountManager) {
-                val profileModel = profileMapper.toView(remoteProfile)
-                if (hasAccount && (profileModel.email.isNullOrEmpty() || profileModel.phone.isNullOrEmpty())) {
-                    viewState.setAuthUi(hasAccount, profileModel)
-                } else {
-                    viewState.hideAuthUi()
-                    remoteAccount.partner?.availableMoney?.let { availableMoney ->
-                        getShowingBalance(availableMoney)?.let { balance ->
-                            isShowedBalanceField = true
-                            viewState.setBalance(balance)
-                        } ?: viewState.hideBalance()
-                    } ?: viewState.hideBalance()
-
-                }
-            }
-
-            transfer?.let { transfer ->
-                setInfo(transfer)
-                setPaymentOptions(transfer)
-            }
-            viewState.selectPaymentType(selectedPayment)
-
-            if (loginScreenIsShowed) {
-                loginScreenIsShowed = false
-                if (accountManager.hasData && !isShowedBalanceField) {
-                    getPayment()
-                }
-            }
-        }
     }
 
     private suspend fun isReadyToPayWithGooglePayRequest() {
@@ -153,6 +163,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 SystemUtils.formatDateTime(dateRefund)
             )
         }
+        setPaymentOptions(transfer)
     }
 
     private fun setPaymentOptions(transfer: Transfer) {
@@ -361,8 +372,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private suspend fun paymentError(err: ApiException? = null) {
         log.error("get by $selectedPayment payment error", err)
+        viewState.showPaymentError(paymentRequest.transferId, paymentRequest.gatewayId)
         analytics.PaymentStatus(selectedPayment).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
-        router.navigateTo(Screens.PaymentError(paymentRequest.transferId, selectedPayment))
     }
 
     private suspend fun paymentSuccess() {
@@ -437,6 +448,15 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     fun onAgreementClicked() = router.navigateTo(Screens.LicenceAgree)
+
+    private fun checkPaymentStatus() {
+        with(paymentInteractor) {
+            if (isFailedPayment) {
+                isFailedPayment = false
+                selectedTransfer?.let { viewState.showPaymentError(it.id, null) }
+            }
+        }
+    }
 
     fun changePaymentType(type: String) {
         selectedPayment = type

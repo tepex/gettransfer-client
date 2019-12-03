@@ -7,10 +7,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.ui.*
+import com.kg.gettransfer.presentation.ui.dialogs.PaymentErrorDialog
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
 
@@ -69,13 +72,6 @@ object Screens {
         }
     }
 
-    object RestorePassword : SupportAppScreen() {
-
-        override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
-            putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_RESTORE_PASS)
-        }
-    }
-
     object CreateOrder : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
@@ -99,23 +95,6 @@ object Screens {
             )
         }
     }
-
-    /*open class Login(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
-        override fun getFragment(): Fragment {
-            return LogInFragment().apply {
-                arguments = Bundle().apply {
-                    putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
-                    putString(LogInView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
-                }
-            }
-        }
-    }
-
-    open class SignUp() : SupportAppScreen() {
-        override fun getFragment(): Fragment {
-            return SignUpFragment()
-        }
-    }*/
 
     open class AuthorizationPager(private val params: String) : SupportAppScreen() {
 
@@ -233,23 +212,6 @@ object Screens {
         }
     }
 
-/*
-    data class FindAddress(
-        val from: String,
-        val to: String,
-        val isClickTo: Boolean?,
-        val returnMain: Boolean = false
-    ) :
-        SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SearchFragment::class.java).apply {
-            putExtra(SearchView.EXTRA_ADDRESS_FROM, from)
-            putExtra(SearchView.EXTRA_ADDRESS_TO, to)
-            putExtra(RETURN_MAIN, returnMain)
-            isClickTo?.let { putExtra(SearchView.EXTRA_IS_CLICK_TO, it) }
-        }
-    }
-*/
-
     data class Offers(val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, OffersActivity::class.java).apply {
             putExtra(OffersView.EXTRA_TRANSFER_ID, transferId)
@@ -291,10 +253,19 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, PaymentOfferActivity::class.java)
     }
 
-    data class PaymentError(val transferId: Long, val gatewayId: String? = null) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, PaymentErrorActivity::class.java).apply {
-            putExtra(PaymentErrorView.EXTRA_TRANSFER_ID, transferId)
-            putExtra(PaymentErrorView.EXTRA_GATEWAY_ID, gatewayId)
+    data class PaymentError(
+        val fragmentManager: FragmentManager,
+        val transferId: Long,
+        val gatewayId: String? = null
+    ) {
+
+        fun showDialog() {
+            PaymentErrorDialog().apply {
+                arguments = Bundle().apply {
+                    putLong(PaymentErrorDialog.TRANSFER_ID, transferId)
+                    putString(PaymentErrorDialog.GATEWAY_ID, gatewayId)
+                }
+            }.show(fragmentManager, PaymentErrorDialog.TAG)
         }
     }
 
@@ -396,5 +367,18 @@ object Screens {
                 putExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, transferId)
                 putExtra(PaypalConnectionView.EXTRA_OFFER_ID, offerId)
             }
+    }
+
+    fun showSupportScreen(
+        fragmentManager: FragmentManager,
+        transferId: Long?
+    ) {
+
+        FragmentUtils.replaceFragment(
+            fragmentManager,
+            fragment = SupportFragment.newInstance(transferId, true),
+            containerViewId = android.R.id.content,
+            tag = null,
+            addToBackStack = true)
     }
 }

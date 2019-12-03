@@ -12,11 +12,11 @@ import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 import com.kg.gettransfer.utilities.Analytics
 import kotlinx.android.synthetic.main.dialog_fragment_about_driver_app.btn_continue
-import kotlinx.android.synthetic.main.fragment_become_carrier.*
+import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 import org.koin.android.ext.android.inject
 
-class BecomeCarrierFragment: MvpAppCompatFragment() {
+class BecomeCarrierFragment : MvpAppCompatFragment() {
     private val analytics: Analytics by inject()
     private var onAboutDriverAppListener: GoToPlayMarketListener? = null
 
@@ -29,17 +29,26 @@ class BecomeCarrierFragment: MvpAppCompatFragment() {
         btn_continue.setOnClickListener {
             analytics.logEvent(Analytics.EVENT_BECOME_CARRIER, Analytics.GO_TO_MARKET, null)
             onAboutDriverAppListener?.onClickGoToDriverApp()
-            findNavController().navigateUp()
+            navigateUp()
         }
     }
 
     private fun setupToolbar() {
-        toolbar.ivBack.setThrottledClickListener { findNavController().navigateUp() }
+        toolbar.ivBack.setThrottledClickListener { navigateUp() }
         toolbar.toolbar_title.text = getString(R.string.LNG_RIDE_CREATE_CARRIER)
+    }
+
+    private fun navigateUp() {
+        // TODO fix it after support single activity in whole app
+        if (activity is MainNavigateActivity) {
+            findNavController().navigateUp()
+        } else {
+            fragmentManager?.popBackStack()
+        }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onAboutDriverAppListener = activity as GoToPlayMarketListener
+        onAboutDriverAppListener = activity as? GoToPlayMarketListener
     }
 }

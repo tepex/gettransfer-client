@@ -25,7 +25,7 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
     val isEnabledButtonDone
         get() = pinCode.length == pinItemsCount
 
-    private var smsResendDelay = Second(DEFAULT_SECONDS_TO_REPEAT_REQUEST).millis
+    private var smsResendDelay = Second(RESENT_DELAY).millis
     private lateinit var timerBtnResendCode: CountDownTimer
 
     override fun attachView(view: SmsCodeView) {
@@ -116,6 +116,6 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
 
     companion object {
         const val PIN_ITEMS_COUNT = 4
-        const val DEFAULT_SECONDS_TO_REPEAT_REQUEST = 90
+        private const val RESENT_DELAY = 90
     }
 }

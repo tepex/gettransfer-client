@@ -12,11 +12,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isInvisible
 import com.kg.gettransfer.extensions.isVisible
+import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
+import com.kg.gettransfer.presentation.view.Screens.showSupportScreen
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 
-import kotlinx.android.synthetic.main.activity_payment_successful.*
 import kotlinx.android.synthetic.main.content_payment_successful.*
 import kotlinx.android.synthetic.main.view_communication_button.view.*
 
@@ -27,7 +28,8 @@ import pub.devrel.easypermissions.EasyPermissions
 class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
     PaymentSuccessfulView,
     EasyPermissions.PermissionCallbacks,
-    EasyPermissions.RationaleCallbacks {
+    EasyPermissions.RationaleCallbacks,
+    GoToPlayMarketListener {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentSuccessfulPresenter
@@ -58,7 +60,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
             tvDownloadVoucher.isInvisible = true
         }
         ivClose.setOnClickListener { finish() }
-        btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
+        btnSupport.setOnClickListener { showSupportScreen(supportFragmentManager, presenter.transferId) }
         tvDownloadVoucher.setOnClickListener { checkPermissionForWrite() }
     }
 
@@ -126,6 +128,10 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    override fun onClickGoToDriverApp() {
+        Utils.goToGooglePlay(this, getString(R.string.driver_app_market_package))
     }
 
     companion object {

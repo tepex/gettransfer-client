@@ -178,10 +178,10 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         withContext(worker.bg) { reviewInteractor.checkNotSendedReviews() }
     }
 
-    internal fun sendEmail(emailCarrier: String?, transferId: Long?) {
+    internal fun sendEmail(transferId: Long?, emailCarrier: String? = null) {
         worker.main.launch {
             var transferID: Long? = null
-            if (transferId == null) {
+            if (transferId == null || transferId == -1L) {
                 val result = withContext(worker.bg) {
                     transferInteractor.getAllTransfers(getUserRole())
                 }

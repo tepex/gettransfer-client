@@ -285,7 +285,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             OPERATION_COPY -> viewState.copyField(text)
             OPERATION_OPEN -> when (field) {
                 FIELD_PHONE -> callPhone(text)
-                FIELD_EMAIL -> sendEmail(text, transferId)
+                FIELD_EMAIL -> sendEmail(transferId, text)
             }
         }
     }

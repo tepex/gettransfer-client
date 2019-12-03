@@ -42,4 +42,5 @@ interface PaymentOfferView : BaseView {
 
     fun startPaypal(dropInRequest: DropInRequest, token: String)
     fun startGooglePay(task: Task<PaymentData>)
+    fun showPaymentError(transferId: Long, gatewayId: String?)
 }

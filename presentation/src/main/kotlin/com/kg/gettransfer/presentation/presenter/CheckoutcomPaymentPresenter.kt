@@ -76,10 +76,8 @@ class CheckoutcomPaymentPresenter: BasePresenter<CheckoutcomPaymentView>() {
         val gatewayId = PaymentRequestModel.CHECKOUTCOM
         log.error("get by $gatewayId payment error", err)
         analytics.PaymentStatus(gatewayId).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
-        paymentInteractor.selectedTransfer?.id?.let {
-            router.exit()
-            router.navigateTo(Screens.PaymentError(it))
-        }
+        paymentInteractor.isFailedPayment = true
+        router.exit()
     }
 
     private suspend fun paymentSuccess() {

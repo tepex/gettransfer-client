@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import moxy.InjectViewState
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.sys.domain.ContactEmail
@@ -11,6 +10,8 @@ import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+import moxy.InjectViewState
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf

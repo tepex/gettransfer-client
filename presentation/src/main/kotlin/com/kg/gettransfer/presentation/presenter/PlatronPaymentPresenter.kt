@@ -69,9 +69,9 @@ class PlatronPaymentPresenter : BasePresenter<PlatronPaymentView>(), PaymentStat
         if (!showFailedPayment) {
             showFailedPayment = true
             viewState.blockInterface(false)
-            analytics.PaymentStatus(PaymentRequestModel.PLATRON).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
             router.exit()
-            paymentInteractor.selectedTransfer?.let { router.navigateTo(Screens.PaymentError(it.id)) }
+            paymentInteractor.isFailedPayment = true
+            analytics.PaymentStatus(PaymentRequestModel.PLATRON).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         }
     }
 
