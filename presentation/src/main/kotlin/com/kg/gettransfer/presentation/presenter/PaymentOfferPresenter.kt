@@ -65,6 +65,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private var loginScreenIsShowed = false
     private var isShowedBalanceField = false
+    private var currency: String? = null
 
     @Suppress("ComplexMethod")
     override fun attachView(view: PaymentOfferView) {
@@ -72,6 +73,18 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         utils.launchSuspend {
             viewState.blockInterface(false)
             initGPay()
+
+            currency?.let { selectedCurrency ->
+                if (selectedCurrency != sessionInteractor.currency.code) {
+                    viewState.blockInterface(true, true)
+                    transfer?.id?.let { transferId ->
+                        updatePaymentData(transferId)
+                    }
+                    viewState.blockInterface(false)
+                }
+            }
+            currency = sessionInteractor.currency.code
+
             getTransferAndOffer()
             setupBalance()
             transfer?.let { setInfo(it) }
@@ -122,6 +135,32 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 isReadyToPayWithGooglePayRequest()
             }*/
     }
+
+    private suspend fun updatePaymentData(transferId: Long) {
+        when (val selectedOffer = offer) {
+            is Offer        -> getOffer(transferId, selectedOffer)
+            is BookNowOffer -> getBookNowOffer(transferId, selectedOffer)
+            else            -> null
+        }.let { updatedOffer ->
+            paymentInteractor.selectedOffer = updatedOffer
+        }
+    }
+
+    private suspend fun getOffer(transferId: Long, selectedOffer: Offer) =
+        fetchDataOnly {
+            offerInteractor.getOffers(transferId)
+        }?.find {
+            it.id == selectedOffer.id
+        }
+
+    private suspend fun getBookNowOffer(transferId: Long, selectedOffer: BookNowOffer) =
+        fetchDataOnly {
+            transferInteractor.getTransfer(transferId)
+        }.also { updatedTransfer ->
+            paymentInteractor.selectedTransfer = updatedTransfer
+        }?.bookNowOffers?.find {
+            it.transportType.id == selectedOffer.transportType.id
+        }
 
     private suspend fun isReadyToPayWithGooglePayRequest() {
         val isReadyToPayRequest = GooglePayRequestsHelper.getIsReadyToPayRequest().toString()
