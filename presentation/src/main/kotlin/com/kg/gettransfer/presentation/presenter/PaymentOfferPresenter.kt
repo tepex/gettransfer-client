@@ -66,6 +66,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private var loginScreenIsShowed = false
     private var isShowedBalanceField = false
     private var currency: String? = null
+    private var isCurrencyChanged = false
 
     @Suppress("ComplexMethod")
     override fun attachView(view: PaymentOfferView) {
@@ -77,6 +78,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             currency?.let { selectedCurrency ->
                 if (selectedCurrency != sessionInteractor.currency.code) {
                     viewState.blockInterface(true, true)
+                    isCurrencyChanged = true
                     transfer?.id?.let { transferId ->
                         updatePaymentData(transferId)
                     }
@@ -97,8 +99,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private fun checkLoginScreen() {
         if (loginScreenIsShowed) {
             loginScreenIsShowed = false
-            if (accountManager.hasData && !isShowedBalanceField) {
+            if (accountManager.hasData && !isShowedBalanceField && !isCurrencyChanged) {
                 isShowedBalanceField = false
+                isCurrencyChanged = false
                 getPayment()
             }
         }
