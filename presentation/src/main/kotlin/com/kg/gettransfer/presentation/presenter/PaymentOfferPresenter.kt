@@ -14,6 +14,7 @@ import com.google.gson.JsonParser
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Balance
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.TransportType
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
@@ -25,6 +26,7 @@ import com.kg.gettransfer.domain.model.PaymentProcess
 import com.kg.gettransfer.domain.model.PaymentProcessRequest
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Token
+import com.kg.gettransfer.extensions.getOffer
 
 import com.kg.gettransfer.extensions.newChainFromMain
 
@@ -63,15 +65,18 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private lateinit var paymentRequest: PaymentRequestModel
 
+    private var currency: String? = null
     private var loginScreenIsShowed = false
-    private var isShowedBalanceField = false
+    private var isCanPayAfterLogIn = true
 
     @Suppress("ComplexMethod")
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
         utils.launchSuspend {
             viewState.blockInterface(false)
-            initGPay()
+            // TODO uncomment after than fixed configs request
+            //initGPay()
+            checkCurrencyChanging()
             getTransferAndOffer()
             setupBalance()
             transfer?.let { setInfo(it) }
@@ -84,8 +89,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private fun checkLoginScreen() {
         if (loginScreenIsShowed) {
             loginScreenIsShowed = false
-            if (accountManager.hasData && !isShowedBalanceField) {
-                isShowedBalanceField = false
+            if (accountManager.hasData && isCanPayAfterLogIn) {
+                isCanPayAfterLogIn = true
                 getPayment()
             }
         }
@@ -100,7 +105,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 viewState.hideAuthUi()
                 remoteAccount.partner?.availableMoney?.let { availableMoney ->
                     getShowingBalance(availableMoney)?.let { balance ->
-                        isShowedBalanceField = true
+                        isCanPayAfterLogIn = false
                         viewState.setBalance(balance)
                     } ?: viewState.hideBalance()
                 } ?: viewState.hideBalance()
@@ -115,12 +120,45 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private fun initGPay() {
-        // TODO uncomment after than fixed configs request
-        /*if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
-                viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
-                isReadyToPayWithGooglePayRequest()
-            }*/
+    private suspend fun checkCurrencyChanging() {
+        currency?.let { selectedCurrency ->
+            if (selectedCurrency != sessionInteractor.currency.code) {
+                viewState.blockInterface(true, true)
+                isCanPayAfterLogIn = false
+                transfer?.id?.let { updatePaymentData(it) }
+                viewState.blockInterface(false)
+            }
+        }
+        currency = sessionInteractor.currency.code
+    }
+
+    private suspend fun updatePaymentData(transferId: Long) {
+        when (val selectedOffer = offer) {
+            is Offer        -> getOffer(transferId, selectedOffer.id)
+            is BookNowOffer -> getBookNowOffer(transferId, selectedOffer.transportType.id)
+            else            -> null
+        }.let { updatedOffer ->
+            paymentInteractor.selectedOffer = updatedOffer
+        }
+    }
+
+    private suspend fun getOffer(transferId: Long, offerId: Long) =
+        fetchDataOnly {
+            offerInteractor.getOffers(transferId)
+        }?.getOffer(offerId)
+
+    private suspend fun getBookNowOffer(transferId: Long, transportTypeId: TransportType.ID) =
+        fetchDataOnly {
+            transferInteractor.getTransfer(transferId)
+        }.also { updatedTransfer ->
+            paymentInteractor.selectedTransfer = updatedTransfer
+        }?.bookNowOffers?.getOffer(transportTypeId)
+
+    private suspend fun initGPay() {
+        if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
+            viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
+            isReadyToPayWithGooglePayRequest()
+        }
     }
 
     private suspend fun isReadyToPayWithGooglePayRequest() {

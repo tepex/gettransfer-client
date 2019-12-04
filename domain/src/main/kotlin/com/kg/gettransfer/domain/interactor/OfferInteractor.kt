@@ -8,23 +8,12 @@ import com.kg.gettransfer.domain.repository.OfferRepository
 
 class OfferInteractor(private val repository: OfferRepository) {
 
-    var offers: List<Offer> = emptyList()
-    var lastTransferId = -1L
     var eventReceiver: OfferEventListener? = null
 
-    suspend fun getOffers(transferId: Long, fromCache: Boolean = false): Result<List<Offer>> {
-        val result = if (fromCache) repository.getOffersCached(transferId) else repository.getOffers(transferId)
-        offers = result.model
-        return result
-    }
+    suspend fun getOffers(transferId: Long, fromCache: Boolean = false) =
+        if (fromCache) repository.getOffersCached(transferId) else repository.getOffers(transferId)
 
-    fun getOffer(id: Long) = offers.find { it.id == id }
-
-    fun newOffer(offer: Offer): Result<Offer> {
-        val newOffer = repository.newOffer(offer)
-        offers = offers.toMutableList().apply { add(newOffer.model) }
-        return newOffer
-    }
+    fun newOffer(offer: Offer) = repository.newOffer(offer)
 
     fun clearOffersCache(): Result<Unit> {
         repository.clearOffersCache()
