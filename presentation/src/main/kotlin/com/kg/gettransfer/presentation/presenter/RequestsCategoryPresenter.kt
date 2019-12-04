@@ -54,11 +54,6 @@ class RequestsCategoryPresenter(
     private var driverCoordinate: DriverCoordinate? = null
     private var pagesCount: Int? = null // for pagination
 
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        viewState.blockInterface(true, true)
-    }
-
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
@@ -69,6 +64,7 @@ class RequestsCategoryPresenter(
     override fun detachView(view: RequestsFragmentView?) {
         super.detachView(view)
         transfers = null
+        viewState.removeTransfers()
         countEventsInteractor.removeCounterListener(this)
         coordinateInteractor.removeCoordinateListener(this)
         driverCoordinate?.requestCoordinates = false
@@ -78,6 +74,7 @@ class RequestsCategoryPresenter(
 
     @Suppress("MandatoryBracesIfStatements")
     fun getTransfers(page: Int = 1) {
+        viewState.blockInterface(true, true)
         worker.main.launch {
             var isError = false
             transfers = when (transferType) {
