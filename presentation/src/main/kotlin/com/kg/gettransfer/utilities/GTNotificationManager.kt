@@ -36,7 +36,6 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
     companion object {
         const val OFFER_CHANEL_ID = "offer_chanel"
         const val OFFER_GROUP     = "offer_group"
-        const val OFFER_TAG       = "com.kg.gettransfer.offers"
         const val OFFER_GROUP_ID  = -1
 
         const val MESSAGE_CHANEL_ID = "message_chanel"
@@ -65,10 +64,10 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
             utils.launchSuspend {
                 val notificationTarget = NotificationTarget(context, R.id.ivCarPhoto, layout, notification, offer.id.toInt())
                 Glide.with(context)
-                        .asBitmap()
-                        .load(offer.vehicle.photos.first())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(notificationTarget)
+                    .asBitmap()
+                    .load(offer.vehicle.photos.first())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(notificationTarget)
             }
         }
 
@@ -83,26 +82,14 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
     private fun clearOfferNotification(notifyId: Int) {
         val notificationManager = getManager()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val statusBarNotifications = notificationManager.activeNotifications
-
-            var groupKey: String? = null
-            for (statusBarNotification in statusBarNotifications) {
-                if (notifyId == statusBarNotification.id) {
-                    groupKey = statusBarNotification.groupKey
-                    break
+            val groupKey = statusBarNotifications.find { it.id == notifyId }?.groupKey
+            val groupNotifications = statusBarNotifications.filter { it.groupKey == groupKey }
+            if (groupNotifications.size == EMPTY_GROUP) {
+                groupNotifications.forEach {
+                    notificationManager.cancel(it.id)
                 }
-            }
-
-            var counter = 0
-            for (statusBarNotification in statusBarNotifications) {
-                if (statusBarNotification.groupKey == groupKey) {
-                    counter++
-                }
-            }
-
-            if (counter == EMPTY_GROUP) {
-                notificationManager.deleteNotificationChannel(OFFER_CHANEL_ID)
                 return
             }
         }
@@ -110,7 +97,7 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
         notificationManager.cancel(notifyId)
     }
 
-    fun showNewMessageNotification(transferId: Long, countNewMessages: Int, isMessageByDriver: Boolean) {
+    fun showNewMessageNotification(transferId: Long, countNewMessages: Int) {
         val layout = RemoteViews(context.packageName, R.layout.notification_view)
 
         val notification = createNotification(transferId, layout, MESSAGE_CHANEL_ID, MESSAGE_GROUP)
@@ -118,19 +105,9 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
         createNotificationChannel(MESSAGE_CHANEL_ID)
 
         layout.setViewVisibility(R.id.tvCarInfo, View.GONE)
-        layout.setTextViewText(R.id.tvTitle, context.getString( if(isMessageByDriver) R.string.LNG_NEW_DRIVER_CHAT_TITLE else R.string.LNG_NEW_PASSENGER_CHAT_TITLE))
+        layout.setTextViewText(R.id.tvTitle, context.getString(R.string.LNG_NEW_DRIVER_CHAT_TITLE))
         if (countNewMessages > 0) layout.setTextViewText(R.id.tvContent, context.getString(R.string.LNG_UNREAD_MESSAGES_COUNT, countNewMessages.toString()))
 
-        /*if (!offer.vehicle.photos.isEmpty()) {
-            utils.launchSuspend {
-                val notificationTarget = NotificationTarget(context, R.id.ivCarPhoto, layout, notification, transferId.toInt())
-                Glide.with(context)
-                        .asBitmap()
-                        .load(offer.vehicle.photos.first())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(notificationTarget)
-            }
-        }*/
         layout.setImageViewResource(R.id.ivCarPhoto, R.mipmap.launcher_icon)
 
         with(NotificationManagerCompat.from(context)) {
@@ -147,29 +124,29 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
         }
 
         return NotificationCompat.Builder(context, chanelId)
-                .setSmallIcon(R.drawable.ic_offer_notification)
-                .setCustomContentView(layout)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setGroup(group)
-                .setPriority(NotificationManagerCompat.IMPORTANCE_HIGH)
-                .setDefaults(NotificationCompat.DEFAULT_SOUND)
-                .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
-                .setVibrate(longArrayOf(0))
-                .build()
+            .setSmallIcon(R.drawable.ic_offer_notification)
+            .setCustomContentView(layout)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setGroup(group)
+            .setPriority(NotificationManagerCompat.IMPORTANCE_HIGH)
+            .setDefaults(NotificationCompat.DEFAULT_SOUND)
+            .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
+            .setVibrate(longArrayOf(0))
+            .build()
     }
 
     private fun createGroupNotification(chanelId: String, group: String): Notification? {
 
         return NotificationCompat.Builder(context, chanelId)
-                .setSmallIcon(R.drawable.ic_offer_notification)
-                .setContentText(context.getString(R.string.LNG_NEW_OFFER_TITLE))
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setGroup(group)
-                .setGroupSummary(true)
-                .setAutoCancel(true)
-                .build()
+            .setSmallIcon(R.drawable.ic_offer_notification)
+            .setContentText(context.getString(R.string.LNG_NEW_OFFER_TITLE))
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setGroup(group)
+            .setGroupSummary(true)
+            .setAutoCancel(true)
+            .build()
     }
 
     private fun createOfferPendingIntent(transferId: Long): PendingIntent {
@@ -190,23 +167,20 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
 
     private fun createNotificationChannel(chanelId: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = context.getString(R.string.offer_channel_name)
-            val descriptionText = context.getString(R.string.offer_channel_description)
-            val importance = android.app.NotificationManager.IMPORTANCE_HIGH
+            val name = when (chanelId) {
+                OFFER_CHANEL_ID   -> getString(R.string.offer_channel_name)
+                MESSAGE_CHANEL_ID -> getString(R.string.message_channel_name)
+                else              -> throw UnsupportedOperationException()
+            }
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(chanelId, name, importance).apply {
-                description = descriptionText
                 setShowBadge(true)
                 lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
             }
 
-            val notificationManager: NotificationManager =
-                    context.getSystemService(Context.NOTIFICATION_SERVICE)
-                            as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+            getManager().createNotificationChannel(channel)
         }
     }
 
-    private fun getManager() =
-            context.getSystemService(Context.NOTIFICATION_SERVICE)
-                    as NotificationManager
+    private fun getManager() = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 }

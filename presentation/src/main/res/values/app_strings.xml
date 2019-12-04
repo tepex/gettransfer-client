@@ -47,7 +47,7 @@
     <string name="searchTransitionName">SEARCH_FORM</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
     <string name="offer_channel_name">Offer</string>
-    <string name="offer_channel_description">@string/offer_channel_name</string>
+    <string name="message_channel_name">Message</string>
 
     <!-- UI Strings -->
     <string name="transfer_start_sign">A</string>
