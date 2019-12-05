@@ -109,13 +109,13 @@ class RequestsRVAdapter(
 
     fun updateEvents(eventsCount: Map<Long, Int>) {
         this.eventsCount = eventsCount
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, transfers.size)
     }
 
     fun updateDriverCoordinates(transferId: Long) {
         if (!transfersWithDriverCoordinates.contains(transferId)) {
             transfersWithDriverCoordinates.add(transferId)
-            notifyDataSetChanged()
+            notifyItemRangeChanged(0, transfers.size)
         }
     }
 

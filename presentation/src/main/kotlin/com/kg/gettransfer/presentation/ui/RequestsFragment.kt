@@ -137,10 +137,9 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
 
         switchBackGroundData(false)
         rvAdapter?.removeLoading()
-        rvAdapter?.removeAll()
+        pagesCount?.let { scrollListener.pages = it } ?: rvAdapter?.removeAll()
         rvAdapter?.updateTransfers(transfers)
         scrollListener.setLoaded()
-        pagesCount?.let { scrollListener.pages = it }
     }
 
     override fun updateCardWithDriverCoordinates(transferId: Long) {
@@ -187,4 +186,8 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
+
+    override fun removeTransfers() {
+        rvAdapter?.removeAll()
+    }
 }
