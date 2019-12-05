@@ -5,28 +5,34 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.FileProvider
+
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.interactor.TransferInteractor
-import kotlinx.coroutines.Job
-import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.inject
-import timber.log.Timber
+import com.kg.gettransfer.core.presentation.WorkerManager
+
 import java.io.File
 import java.io.InputStream
-import android.content.pm.PackageManager
+
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
+
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+import timber.log.Timber
 
 class GTDownloadManager(val context: Context): KoinComponent {
 
-    private val compositeDisposable = Job()
-    private val utils = AsyncUtils(get(), compositeDisposable)
+    private val worker: WorkerManager by inject { parametersOf(GTDownloadManager::class.java.simpleName) }
 
     private lateinit var builder: NotificationCompat.Builder
     private lateinit var notificationManager: NotificationManagerCompat
@@ -38,16 +44,14 @@ class GTDownloadManager(val context: Context): KoinComponent {
         createNotificationChannel()
 
         notificationManager = NotificationManagerCompat.from(context).apply {
-            utils.launchSuspend {
+            worker.main.launch {
                 builder.setProgress(0, 0, true)
                 notify(transferId.toInt(), builder.build())
 
-                val result = utils.asyncAwait { transferInteractor.downloadVoucher(transferId) }
-                if (result.isSuccess() != null) {
+                val result = withContext(worker.bg) { transferInteractor.downloadVoucher(transferId) }
+                result.isSuccess()?.let {
                     saveVoucher(result.model, transferId)
-                } else {
-                    showDownloadError(transferId)
-                }
+                } ?: showDownloadError(transferId)
             }
         }
     }
@@ -170,7 +174,10 @@ class GTDownloadManager(val context: Context): KoinComponent {
             context.getString(R.string.app_name) + File.separator + VOUCHERS_FOLDER
 
     private fun getVouchersFolder(downloadFolder: String): File {
-        val storage = Environment.getExternalStorageDirectory()
+        val storage: File? = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            Environment.getExternalStorageDirectory()
+        } else context.getExternalFilesDir(null)
+
         val file = File(storage, downloadFolder)
         if (!file.mkdirs()) {
             Timber.e("Directory not created")
