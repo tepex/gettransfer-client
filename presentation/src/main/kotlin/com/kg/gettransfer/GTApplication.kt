@@ -5,6 +5,8 @@ import android.app.NotificationManager
 import android.os.Build
 
 import androidx.annotation.CallSuper
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDexApplication
 
@@ -26,6 +28,7 @@ import com.kg.gettransfer.sys.data.systemData
 import com.kg.gettransfer.sys.remote.systemRemote
 
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
+import com.kg.gettransfer.utilities.GTNotificationManager
 
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
@@ -41,6 +44,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 import timber.log.Timber
+import java.lang.UnsupportedOperationException
 
 class GTApplication : MultiDexApplication() {
 
@@ -140,11 +144,12 @@ class GTApplication : MultiDexApplication() {
     private fun setupFcm() {
         FirebaseApp.initializeApp(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = getString(R.string.new_offer_notification_channel_id)
-            val channelName = getString(R.string.new_offer_notification_channel_name)
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager?.createNotificationChannel(NotificationChannel(channelId,
-                    channelName, NotificationManager.IMPORTANCE_LOW))
+            createNotificationChannel(
+                getString(R.string.new_offer_notification_channel_id),
+                getString(R.string.new_offer_notification_channel_name)
+            )
+            createNotificationChannel(GTNotificationManager.OFFER_CHANEL_ID)
+            createNotificationChannel(GTNotificationManager.MESSAGE_CHANEL_ID)
         }
 
         Timber.d("Subscribing to new offers")
@@ -162,5 +167,22 @@ class GTApplication : MultiDexApplication() {
             })
             */
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel(chanelId: String, chanelName: String? = null) {
+        val name = chanelName ?: when (chanelId) {
+            GTNotificationManager.OFFER_CHANEL_ID   -> getString(R.string.offer_channel_name)
+            GTNotificationManager.MESSAGE_CHANEL_ID -> getString(R.string.message_channel_name)
+            else              -> throw UnsupportedOperationException()
+        }
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel(chanelId, name, importance).apply {
+            setShowBadge(true)
+            lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
+        }
+
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager?.createNotificationChannel(channel)
     }
 }

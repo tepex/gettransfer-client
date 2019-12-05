@@ -95,7 +95,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
             } else {
                 offers = mutableListOf<OfferItem>().apply {
                     addAll(result.model)
-                    notificationManager.clearOffers(result.model.map { offer -> offer.id.toInt() })
+                    notificationManager.clearNotifications(result.model.map { offer -> offer.id.toInt() })
                     addAll(transfer.bookNowOffers)
                 }
             }
