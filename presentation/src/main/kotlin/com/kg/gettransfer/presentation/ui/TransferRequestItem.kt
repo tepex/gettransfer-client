@@ -150,8 +150,7 @@ class TransferRequestItem @JvmOverloads constructor(
         @Suppress("ComplexCondition")
         if (eventsCount == 0 ||
             !item.showOfferInfo &&
-            item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE ||
-            item.isBookNow()
+            item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE
         ) {
             tvEventsCount.isVisible = false
             btnChat.tvEventsCounter.isVisible = false
