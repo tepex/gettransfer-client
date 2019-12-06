@@ -252,8 +252,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
                     increaseEventsMessagesCounter(chatBadgeEvent.transferId, result.model.unreadMessagesCount)
                     notificationManager.showNewMessageNotification(
                         chatBadgeEvent.transferId,
-                        result.model.unreadMessagesCount,
-                        true
+                        result.model.unreadMessagesCount
                     )
                 }
             } else {

@@ -35,7 +35,10 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.FragmentActivity
 
 import com.bumptech.glide.Glide
@@ -70,6 +73,7 @@ import org.koin.core.inject
 import org.koin.core.KoinComponent
 
 import timber.log.Timber
+import kotlin.math.max
 import android.graphics.PorterDuffXfermode as PorterDuffXfermode1
 
 object Utils : KoinComponent {
@@ -495,6 +499,12 @@ object Utils : KoinComponent {
                 )
         )
         .into(view)
+
+    fun getRoundedBitmap(context: Context, drawableId: Int, bacColorResId: Int?) =
+        AppCompatResources.getDrawable(context, drawableId)?.toBitmap()
+            ?.squareBitmap(bacColorResId?.let { ContextCompat.getColor(context, it) })?.let {
+                RoundedBitmapDrawableFactory.create(context.resources, it).apply { isCircular = true }.toBitmap()
+            }
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {
@@ -571,4 +581,17 @@ fun Path.roundedRect(left: Float, top: Float, right: Float, bottom: Float, rx: F
     rLineTo(0f, -heightMinusCorners)
     close()//Given close, last lineto can be removed.
     return this
+}
+
+fun Bitmap.squareBitmap(backColor: Int?): Bitmap {
+    val size = max(width, height)
+    val resBmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+
+    val canvas = Canvas(resBmp)
+    backColor?.let { canvas.drawColor(it) }
+    val leftPadding = 0f
+    val topPadding = ((size - height) / 2).toFloat()
+    canvas.drawBitmap(this, leftPadding, topPadding, null)
+
+    return resBmp
 }

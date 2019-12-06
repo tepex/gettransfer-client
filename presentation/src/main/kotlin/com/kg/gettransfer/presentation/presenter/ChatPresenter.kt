@@ -85,7 +85,12 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
     private fun getChatFromRemote() {
         utils.launchSuspend {
-            fetchData(withCacheCheck = NO_CACHE_CHECK) { chatInteractor.getChat(transferId) }?.let { initChatModel(it) }
+            fetchData(withCacheCheck = NO_CACHE_CHECK) {
+                chatInteractor.getChat(transferId)
+            }?.let {
+                initChatModel(it)
+                notificationManager.clearNotification(transferId.toInt())
+            }
         }
     }
 
