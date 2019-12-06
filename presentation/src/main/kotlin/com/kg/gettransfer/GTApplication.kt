@@ -26,7 +26,6 @@ import com.kg.gettransfer.sys.data.systemData
 import com.kg.gettransfer.sys.remote.systemRemote
 
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
-import com.kg.gettransfer.utilities.CustomCrashManagerListener
 
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
@@ -35,7 +34,8 @@ import com.yandex.metrica.push.YandexMetricaPush
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 // import leakcanary.AppWatcher
-import net.hockeyapp.android.CrashManager
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.crashes.Crashes
 
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -53,7 +53,7 @@ class GTApplication : MultiDexApplication() {
             System.setProperty("kotlinx.coroutines.debug", "on")
 //            setUpLeakCanary(false)
         } else {
-            CrashManager.register(this, getString(R.string.hockeyAppId), CustomCrashManagerListener())
+            setupAppCenter()
         }
         if (BuildConfig.FLAVOR == "dev") {
 //            Timber.plant(FileLoggingTree(applicationContext))
@@ -94,6 +94,10 @@ class GTApplication : MultiDexApplication() {
         setupPushSdk()
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifeCycleObserver(applicationContext))
+    }
+
+    private fun setupAppCenter() {
+        AppCenter.start(this, getString(R.string.appCenterKey), Crashes::class.java)
     }
 
     private fun setupPushSdk() = YandexMetricaPush.init(applicationContext)
