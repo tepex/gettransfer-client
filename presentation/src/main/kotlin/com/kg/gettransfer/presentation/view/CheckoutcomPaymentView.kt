@@ -5,9 +5,9 @@ import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface CheckoutcomPaymentView: BaseView {
+interface CheckoutcomPaymentView : BaseView {
     fun initPaymentForm(environment: Environment, publicKey: String)
-    fun redirectTo3ds(redirectUrl: String, successUrl: String, failedUrl: String)
+    fun redirectTo3ds(redirectUrl: String)
     fun clearForm()
 
     companion object {

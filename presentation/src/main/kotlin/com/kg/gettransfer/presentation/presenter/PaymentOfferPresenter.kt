@@ -78,7 +78,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             // initGPay()
             checkCurrencyChanging()
             getTransferAndOffer()
-            setupBalance()
+            checkAccount()
             transfer?.let { setInfo(it) }
             viewState.selectPaymentType(selectedPayment)
         }
@@ -96,21 +96,25 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
     }
 
-    private fun setupBalance() {
+    private fun checkAccount() {
         with(accountManager) {
             val profileModel = profileMapper.toView(remoteProfile)
             if (hasAccount && (profileModel.email.isNullOrEmpty() || profileModel.phone.isNullOrEmpty())) {
                 viewState.setAuthUi(hasAccount, profileModel)
             } else {
                 viewState.hideAuthUi()
-                remoteAccount.partner?.availableMoney?.let { availableMoney ->
-                    getShowingBalance(availableMoney)?.let { balance ->
-                        isCanPayAfterLogIn = false
-                        viewState.setBalance(balance)
-                    } ?: viewState.hideBalance()
-                } ?: viewState.hideBalance()
+                checkBalance()
             }
         }
+    }
+
+    private fun checkBalance() {
+        accountManager.remoteAccount.partner?.availableMoney?.let { availableMoney ->
+            getShowingBalance(availableMoney)?.let { balance ->
+                isCanPayAfterLogIn = false
+                viewState.setBalance(balance)
+            } ?: viewState.hideBalance()
+        } ?: viewState.hideBalance()
     }
 
     private fun getTransferAndOffer() {
@@ -286,7 +290,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         paymentResult.error?.let {
             setError(it)
         } ?: paymentResult.model.url.let { url ->
-            router.navigateTo(Screens.Payment(url))
+            router.navigateTo(Screens.PlatronPayment(url))
             viewState.blockInterface(false)
         }
     }

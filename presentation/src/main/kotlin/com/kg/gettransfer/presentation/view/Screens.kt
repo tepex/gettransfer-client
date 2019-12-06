@@ -230,18 +230,15 @@ object Screens {
         }
     }
 
-    data class Payment(
-        val url: String
-    ) : SupportAppScreen() {
+    data class PlatronPayment(val url: String) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, PlatronPaymentActivity::class.java).apply {
-            putExtra(PlatronPaymentView.EXTRA_URL, url)
-        }
+        override fun getActivityIntent(context: Context?) =
+            Intent(context, PlatronPaymentActivity::class.java).apply {
+                putExtra(PlatronPaymentView.EXTRA_URL, url)
+            }
     }
 
-    data class CheckoutcomPayment(
-        val paymentId: Long
-    ) : SupportAppScreen() {
+    data class CheckoutcomPayment(val paymentId: Long) : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) =
             Intent(context, CheckoutcomPaymentActivity::class.java).apply {

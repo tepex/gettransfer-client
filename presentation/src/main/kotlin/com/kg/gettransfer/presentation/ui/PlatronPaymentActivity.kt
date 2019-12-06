@@ -25,6 +25,7 @@ import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
+import com.kg.gettransfer.presentation.presenter.BaseCardPaymentPresenter
 
 import com.kg.gettransfer.presentation.presenter.PlatronPaymentPresenter
 
@@ -136,22 +137,25 @@ class PlatronPaymentActivity : BaseActivity(), PlatronPaymentView {
         }
     }
 
-    @Suppress("MandatoryBracesIfStatements")
-    private fun handleUri(uri: Uri?) {
-        val path = uri?.path
-        if (path.equals(PAYMENT_RESULT_SUCCESSFUL)) changePaymentStatus(uri, true)
-        else if (path.equals(PAYMENT_RESULT_FAILED)) changePaymentStatus(uri, false)
+    private fun handleUri(handledUri: Uri?) {
+        handledUri?.let { uri ->
+            when (uri.path) {
+                BaseCardPaymentPresenter.PAYMENT_RESULT_SUCCESSFUL -> changePaymentStatus(uri, true)
+                BaseCardPaymentPresenter.PAYMENT_RESULT_FAILED     -> changePaymentStatus(uri, false)
+            }
+        }
     }
 
     private fun changePaymentStatus(uri: Uri?, success: Boolean) {
-        val orderId = uri?.getQueryParameter(PG_ORDER_ID)?.toLong()
-        orderId?.let { presenter.changePaymentStatus(it, success) }
+        uri?.getQueryParameter(PG_ORDER_ID)?.toLong()?.let { paymentId ->
+            presenter.paymentId = paymentId
+            presenter.changePaymentStatus(success, uri.getQueryParameter(PG_FAILURE_DESCRIPTION))
+        }
     }
 
     companion object {
-        private const val PAYMENT_RESULT_SUCCESSFUL = "/api/payments/successful"
-        private const val PAYMENT_RESULT_FAILED = "/api/payments/failed"
-        private const val PG_ORDER_ID = "pg_order_id"
+        private const val PG_ORDER_ID            = "pg_order_id"
+        private const val PG_FAILURE_DESCRIPTION = "pg_failure_description"
 
         private const val FROM_DEGREES = 0f
         private const val TO_DEGREES = 360f

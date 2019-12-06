@@ -16,6 +16,7 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.TransferModel
 
+@Suppress("TooManyFunctions")
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface PaymentOfferView : BaseView {
 

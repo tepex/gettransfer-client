@@ -61,6 +61,7 @@ class ConfigsManager : KoinComponent {
     }
 
     // TODO Write preferences into DB
+    @Suppress("EmptyFunctionBlock")
     suspend fun apply() { }
 
     private suspend fun myDelay() {

@@ -11,10 +11,11 @@ import moxy.presenter.ProvidePresenter
 import com.checkout.android_sdk.Response.CardTokenisationFail
 import com.checkout.android_sdk.Response.CardTokenisationResponse
 import com.checkout.android_sdk.Utils.Environment
+import com.kg.gettransfer.presentation.presenter.BaseCardPaymentPresenter
 import com.kg.gettransfer.presentation.ui.custom.CheckoutcomPaymentForm
 import kotlinx.android.synthetic.main.activity_checkout_payment.*
 
-class CheckoutcomPaymentActivity: BaseActivity(), CheckoutcomPaymentView {
+class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
 
     @InjectPresenter
     internal lateinit var presenter: CheckoutcomPaymentPresenter
@@ -34,6 +35,7 @@ class CheckoutcomPaymentActivity: BaseActivity(), CheckoutcomPaymentView {
         presenter.paymentId = intent.getLongExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, 0L)
     }
 
+    @Suppress("EmptyFunctionBlock")
     override fun initPaymentForm(environment: Environment, publicKey: String) {
         paymentForm.mSubmitFormListener = object : CheckoutcomPaymentForm.PaymentFormCallback {
             override fun onFormSubmit() {
@@ -62,17 +64,21 @@ class CheckoutcomPaymentActivity: BaseActivity(), CheckoutcomPaymentView {
         paymentForm.includeBilling(false)
     }
 
-    override fun redirectTo3ds(redirectUrl: String, successUrl: String, failedUrl: String) {
-        paymentForm.m3DSecureListener = object: CheckoutcomPaymentForm.On3DSFinished {
+    override fun redirectTo3ds(redirectUrl: String) {
+        paymentForm.m3DSecureListener = object : CheckoutcomPaymentForm.On3DSFinished {
             override fun onSuccess() {
-                presenter.handle3DS(true)
+                presenter.changePaymentStatus(true)
             }
 
             override fun onError() {
-                presenter.handle3DS(false)
+                presenter.changePaymentStatus(false)
             }
         }
-        paymentForm.handle3DS(redirectUrl, successUrl, failedUrl)
+        paymentForm.handle3DS(
+            redirectUrl,
+            BaseCardPaymentPresenter.PAYMENT_RESULT_SUCCESSFUL,
+            BaseCardPaymentPresenter.PAYMENT_RESULT_FAILED
+        )
     }
 
     override fun clearForm() {

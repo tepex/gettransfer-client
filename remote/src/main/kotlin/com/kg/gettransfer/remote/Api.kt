@@ -181,7 +181,8 @@ interface Api {
     @GET("$API_PAYMENT/{status}")
     suspend fun changePaymentStatus(
         @Path("status") status: String,
-        @Query("pg_order_id") pgOrderId: Long,
+        @Query("payment_id") paymentId: Long,
+        @Query("pg_failure_description") pgFailureDescription: String?,
         @Query("without_redirect") withoutRedirect: Boolean
     ): ResponseModel<PaymentStatusWrappedModel>
 
