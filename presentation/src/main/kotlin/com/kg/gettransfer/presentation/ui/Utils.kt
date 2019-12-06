@@ -589,7 +589,9 @@ fun Bitmap.squareBitmap(backColor: Int?): Bitmap {
 
     val canvas = Canvas(resBmp)
     backColor?.let { canvas.drawColor(it) }
-    canvas.drawBitmap(this, 0f, ((size - height) / 2).toFloat(), null)
+    val leftPadding = 0f
+    val topPadding = ((size - height) / 2).toFloat()
+    canvas.drawBitmap(this, leftPadding, topPadding, null)
 
     return resBmp
 }
