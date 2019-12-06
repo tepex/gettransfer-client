@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.PaymentStatusEventListener
 import com.kg.gettransfer.domain.model.Offer
@@ -11,11 +10,8 @@ import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 import org.koin.core.inject
-import org.koin.core.parameter.parametersOf
 
 open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), PaymentStatusEventListener {
-
-    private val worker: WorkerManager by inject { parametersOf("BaseCardPaymentPresenter") }
 
     private val mapper: PaymentStatusRequestMapper by inject()
 
