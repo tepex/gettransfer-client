@@ -15,7 +15,7 @@ import com.kg.gettransfer.presentation.presenter.BaseCardPaymentPresenter
 import com.kg.gettransfer.presentation.ui.custom.CheckoutcomPaymentForm
 import kotlinx.android.synthetic.main.activity_checkout_payment.*
 
-class CheckoutcomPaymentActivity: BaseActivity(), CheckoutcomPaymentView {
+class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
 
     @InjectPresenter
     internal lateinit var presenter: CheckoutcomPaymentPresenter
@@ -35,6 +35,7 @@ class CheckoutcomPaymentActivity: BaseActivity(), CheckoutcomPaymentView {
         presenter.paymentId = intent.getLongExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, 0L)
     }
 
+    @Suppress("EmptyFunctionBlock")
     override fun initPaymentForm(environment: Environment, publicKey: String) {
         paymentForm.mSubmitFormListener = object : CheckoutcomPaymentForm.PaymentFormCallback {
             override fun onFormSubmit() {
@@ -64,7 +65,7 @@ class CheckoutcomPaymentActivity: BaseActivity(), CheckoutcomPaymentView {
     }
 
     override fun redirectTo3ds(redirectUrl: String) {
-        paymentForm.m3DSecureListener = object: CheckoutcomPaymentForm.On3DSFinished {
+        paymentForm.m3DSecureListener = object : CheckoutcomPaymentForm.On3DSFinished {
             override fun onSuccess() {
                 presenter.changePaymentStatus(true)
             }

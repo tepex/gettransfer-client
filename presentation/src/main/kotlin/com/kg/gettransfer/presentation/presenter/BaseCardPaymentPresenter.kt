@@ -41,11 +41,11 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
         val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
         result.error?.let {
             showFailedPayment(it)
-        } ?: result.model.let {
+        } ?: result.model.let { status ->
             when {
-                it.isSuccess -> isPaymentWasSuccessful()
-                it.isFailed  -> showFailedPayment()
-                else         -> viewState.blockInterface(true, true)
+                status.isSuccess -> isPaymentWasSuccessful()
+                status.isFailed  -> showFailedPayment()
+                else             -> viewState.blockInterface(true, true)
             }
         }
     }
@@ -57,11 +57,11 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
     }
 
     suspend fun isPaymentWasSuccessful() {
-        paymentInteractor.selectedTransfer?.let {
-            val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(it.id) }
+        paymentInteractor.selectedTransfer?.id?.let { transferId ->
+            val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(transferId) }
             if (offerPaid.model.first) {
                 paymentInteractor.selectedTransfer = offerPaid.model.second
-                showSuccessfulPayment(it.id)
+                showSuccessfulPayment(transferId)
             }
         }
     }
@@ -81,9 +81,9 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
         if (!showFailedPayment) {
             showFailedPayment = true
             viewState.blockInterface(false)
-            err?.let {
-                log.error("get by $gatewayId payment error", it)
-                viewState.setError(it)
+            err?.let { e ->
+                log.error("get by $gatewayId payment error", e)
+                viewState.setError(e)
             }
             analytics.PaymentStatus(gatewayId).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
             paymentInteractor.isFailedPayment = true

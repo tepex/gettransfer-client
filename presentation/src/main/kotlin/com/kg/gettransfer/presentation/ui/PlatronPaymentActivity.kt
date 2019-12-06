@@ -137,18 +137,18 @@ class PlatronPaymentActivity : BaseActivity(), PlatronPaymentView {
         }
     }
 
-    private fun handleUri(uri: Uri?) {
-        uri?.let {
-            when (it.path) {
-                BaseCardPaymentPresenter.PAYMENT_RESULT_SUCCESSFUL -> changePaymentStatus(it, true)
-                BaseCardPaymentPresenter.PAYMENT_RESULT_FAILED     -> changePaymentStatus(it, false)
+    private fun handleUri(handledUri: Uri?) {
+        handledUri?.let { uri ->
+            when (uri.path) {
+                BaseCardPaymentPresenter.PAYMENT_RESULT_SUCCESSFUL -> changePaymentStatus(uri, true)
+                BaseCardPaymentPresenter.PAYMENT_RESULT_FAILED     -> changePaymentStatus(uri, false)
             }
         }
     }
 
     private fun changePaymentStatus(uri: Uri?, success: Boolean) {
-        uri?.getQueryParameter(PG_ORDER_ID)?.toLong()?.let {
-            presenter.paymentId = it
+        uri?.getQueryParameter(PG_ORDER_ID)?.toLong()?.let { paymentId ->
+            presenter.paymentId = paymentId
             presenter.changePaymentStatus(success, uri.getQueryParameter(PG_FAILURE_DESCRIPTION))
         }
     }

@@ -15,7 +15,7 @@ import org.koin.core.parameter.parametersOf
 import sys.domain.CheckoutcomCredentials
 
 @InjectViewState
-class CheckoutcomPaymentPresenter: BaseCardPaymentPresenter<CheckoutcomPaymentView>() {
+class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentView>() {
 
     private val worker: WorkerManager by inject { parametersOf("CheckoutcomPaymentPresenter") }
 
@@ -24,7 +24,7 @@ class CheckoutcomPaymentPresenter: BaseCardPaymentPresenter<CheckoutcomPaymentVi
         gatewayId = PaymentRequestModel.CHECKOUTCOM
         worker.main.launch {
             val checkoutcomCredentials = configsManager.getConfigs().checkoutcomCredentials
-            val environment = when(checkoutcomCredentials.environment) {
+            val environment = when (checkoutcomCredentials.environment) {
                 CheckoutcomCredentials.ENVIRONMENT_LIVE -> Environment.LIVE
                 else                                    -> Environment.SANDBOX
             }
