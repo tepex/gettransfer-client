@@ -75,7 +75,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         utils.launchSuspend {
             viewState.blockInterface(false)
             // TODO uncomment after than fixed configs request
-            //initGPay()
+            // initGPay()
             checkCurrencyChanging()
             getTransferAndOffer()
             setupBalance()
