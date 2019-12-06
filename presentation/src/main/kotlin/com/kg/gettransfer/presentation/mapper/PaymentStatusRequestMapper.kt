@@ -5,7 +5,7 @@ import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 
 open class PaymentStatusRequestMapper : Mapper<PaymentStatusRequestModel, PaymentStatusRequest> {
     override fun fromView(type: PaymentStatusRequestModel) =
-        PaymentStatusRequest(type.paymentId, type.pgOrderId, type.withoutRedirect, type.success)
+        PaymentStatusRequest(type.paymentId, type.isSuccess, type.failureDescription)
 
     override fun toView(type: PaymentStatusRequest): PaymentStatusRequestModel { throw UnsupportedOperationException() }
 }

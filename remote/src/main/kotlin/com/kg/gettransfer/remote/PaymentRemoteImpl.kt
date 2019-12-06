@@ -20,7 +20,6 @@ import com.kg.gettransfer.remote.model.CheckoutcomPaymentModel
 import com.kg.gettransfer.remote.model.BraintreePaymentModel
 import com.kg.gettransfer.remote.model.GooglePayPaymentModel
 import com.kg.gettransfer.remote.model.PaymentProcessModel
-import com.kg.gettransfer.remote.model.PaymentStatusRequestModel
 import com.kg.gettransfer.remote.model.PaymentStatusWrappedModel
 import com.kg.gettransfer.remote.model.BraintreeTokenModel
 import com.kg.gettransfer.remote.model.map
@@ -82,15 +81,18 @@ class PaymentRemoteImpl : PaymentRemote {
     }
 
     override suspend fun changeStatusPayment(paymentStatusRequest: PaymentStatusRequestEntity): PaymentStatusEntity {
-        val status = if (paymentStatusRequest.success) {
-            PaymentStatusRequestModel.STATUS_SUCCESSFUL
+        val status = if (paymentStatusRequest.isSuccess) {
+            PaymentStatusRequestEntity.STATUS_SUCCESSFUL
         } else {
-            PaymentStatusRequestModel.STATUS_FAILED
+            PaymentStatusRequestEntity.STATUS_FAILED
         }
-        val request = paymentStatusRequest.map()
         val response: ResponseModel<PaymentStatusWrappedModel> = core.tryTwice {
-            @Suppress("UnsafeCallOnNullableType")
-            core.api.changePaymentStatus(status, request.pgOrderId!!, request.withoutRedirect!!)
+            core.api.changePaymentStatus(
+                status,
+                paymentStatusRequest.paymentId,
+                paymentStatusRequest.failureDescription,
+                true
+            )
         }
         @Suppress("UnsafeCallOnNullableType")
         return response.data!!.payment.map()

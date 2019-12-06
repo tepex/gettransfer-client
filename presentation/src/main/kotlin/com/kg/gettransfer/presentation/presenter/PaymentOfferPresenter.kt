@@ -286,7 +286,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         paymentResult.error?.let {
             setError(it)
         } ?: paymentResult.model.url.let { url ->
-            router.navigateTo(Screens.Payment(url))
+            router.navigateTo(Screens.PlatronPayment(url))
             viewState.blockInterface(false)
         }
     }

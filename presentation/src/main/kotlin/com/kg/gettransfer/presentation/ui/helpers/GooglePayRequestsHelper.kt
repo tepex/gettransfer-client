@@ -6,6 +6,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import sys.domain.GooglePayCredentials
 
 object GooglePayRequestsHelper : KoinComponent {
 
@@ -13,8 +14,8 @@ object GooglePayRequestsHelper : KoinComponent {
 
     suspend fun getEnvironment() =
         when (configsManager.getConfigs().googlePayCredentials.environment) {
-            "production" -> WalletConstants.ENVIRONMENT_PRODUCTION
-            else         -> WalletConstants.ENVIRONMENT_TEST
+            GooglePayCredentials.ENVIRONMENT_PRODUCTION -> WalletConstants.ENVIRONMENT_PRODUCTION
+            else                                        -> WalletConstants.ENVIRONMENT_TEST
         }
 
     private fun getBaseRequest() =

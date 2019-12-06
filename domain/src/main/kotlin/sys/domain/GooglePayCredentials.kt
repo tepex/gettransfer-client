@@ -6,4 +6,8 @@ data class GooglePayCredentials(
     val merchantName: String,
     val cardNetworks: List<String>,
     val authMethods: List<String>
-)
+) {
+    companion object {
+        const val ENVIRONMENT_PRODUCTION = "production"
+    }
+}
