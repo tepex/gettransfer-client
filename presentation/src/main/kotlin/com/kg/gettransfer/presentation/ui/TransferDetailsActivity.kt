@@ -288,7 +288,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             Transfer.Status.NEW -> buildString {
                 append(getString(R.string.LNG_TRANSFER))
                 append(" #${transfer.id} ")
-                if ((transfer.offersCount > 0 || transfer.bookNowOffers.isNotEmpty()) && transfer.pendingPaymentId == null) {
+                val isOffersExist = transfer.offersCount > 0 || transfer.bookNowOffers.isNotEmpty()
+                if (isOffersExist && transfer.pendingPaymentId == null) {
                     append(getString(R.string.LNG_BOOK_OFFER))
                 } else if (transfer.pendingPaymentId != null || transfer.isBookNow()) {
                     append(getMatchedTransferStatusText(transfer.timeToTransfer))

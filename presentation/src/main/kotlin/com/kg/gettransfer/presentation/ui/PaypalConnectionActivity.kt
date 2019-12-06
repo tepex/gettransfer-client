@@ -24,7 +24,7 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
     @ProvidePresenter
     fun createPaypalConnectionPresenter() = PaypalConnectionPresenter()
 
-    private lateinit var animator: AnimatorSet
+    private var animator: AnimatorSet? = null
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,6 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
     }
 
     private fun playAnimation() {
-        animator = AnimatorSet()
 
         val dx = DX * ivRec1.width.toFloat()
 
@@ -49,15 +48,17 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
         val (rgtToLft2, rgtToLft4) = animateRightToLeft24(dx)
         val (lftToRgt2, lftToRgt4) = animateLeftToRight24()
 
-        animator.play(lftToRgt1).with(lftToRgt3).with(rgtToLft2).with(rgtToLft4)
-        animator.play(rgtToLft1).with(rgtToLft3).with(lftToRgt2).with(lftToRgt4).after(lftToRgt3)
-        animator.start()
-        animator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
-                super.onAnimationEnd(animation)
-                animation?.start()
-            }
-        })
+        animator = AnimatorSet().apply {
+            play(lftToRgt1).with(lftToRgt3).with(rgtToLft2).with(rgtToLft4)
+            play(rgtToLft1).with(rgtToLft3).with(lftToRgt2).with(lftToRgt4).after(lftToRgt3)
+            start()
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    animation?.start()
+                }
+            })
+        }
     }
 
     private fun animateLeftToRight24(): Pair<ObjectAnimator, ObjectAnimator> {
@@ -126,8 +127,10 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
     }
 
     override fun stopAnimation() {
-        animator.cancel()
-        animator.removeAllListeners()
+        animator?.apply {
+            cancel()
+            removeAllListeners()
+        }
     }
 
     companion object {
