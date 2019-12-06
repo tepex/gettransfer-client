@@ -9,12 +9,10 @@ buildscript {
         kotlin_version        = "1.3.41"
         coroutines_version    = "1.3.0-RC"
         serialization_version = "0.9.1"
-        // gradle_version        = "3.4.0-alpha07"
         gradle_version        = '3.4.0'
         koin_version          = "2.0.1"
         gms_version           = "16.0.0"
         gs_version            = "4.2.0"
-        hockeyapp_version     = "3.7.6"
         jsr250_version        = "1.0"
         timber_version        = "4.7.1"
         slf4j_version         = "1.7.25"
@@ -26,6 +24,7 @@ buildscript {
         detekt_version        = "1.0.0-RC15"
         sentry_version        = "1.7.23"
         nav_version           = "2.2.0-alpha01"
+        appcenter_plugin_ver  = "1.1.16"
 
         core_testing_version            = "2.1.0"
         androidx_test_runner_version    = "1.2.0"
@@ -82,11 +81,11 @@ buildscript {
         classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        classpath "com.github.3mph4515:gradle-hockeyapp-plugin:$hockeyapp_version"
         classpath "com.google.gms:google-services:$gs_version"
         classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$dexcount_version"
         classpath "io.sentry:sentry-android-gradle-plugin:$sentry_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
+        classpath "gradle.plugin.com.betomorrow.gradle:appcenter-plugin:$appcenter_plugin_ver"
     }
 }
 

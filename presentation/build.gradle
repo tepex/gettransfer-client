@@ -7,9 +7,9 @@ apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
 apply plugin: "kotlin-kapt"
 apply plugin: "kotlinx-serialization"
-apply plugin: "de.felixschulze.gradle.hockeyapp"
 apply plugin: "io.sentry.android.gradle" // for Proguard"s mapping file
 apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: "com.betomorrow.appcenter"
 
 ext {
     multidex_version           = "2.0.1"
@@ -17,7 +17,6 @@ ext {
     moxy_version               = "2.0.2"
     cicerone_version           = "5.0.0"
     circle_indicator_version   = "1.2.2"
-    hockey_version             = "5.2.0"
     firebase_core_version      = "16.0.6"
     firebase_iid_version       = "17.0.4"
     firebase_messaging_version = "17.3.4"
@@ -60,6 +59,7 @@ ext {
     support_design_version     = "28.0.0"
     checkout_frames_version    = "2.1.0"
     voley_version              = "1.1.0"
+    appcenter_version          = "2.5.0"
 }
 
 android {
@@ -73,6 +73,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionName '3.0'
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -139,10 +140,9 @@ android {
             signingConfig signingConfigs.config
 
             versionCode getBuildNumber() as Integer
-            versionName System.getenv("VERSION_NAME") ?: "2.0"
+            versionName System.getenv("VERSION_NAME")
 
             manifestPlaceholders = [
-                    hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
                     assetlinks    : "[{ \\\"include\\\": \\\"https://gtrbox.org/.well-known/assetlinks.json\\\" }]"
             ]
 
@@ -158,7 +158,6 @@ android {
             versionName System.getenv("VERSION_NAME")
 
             manifestPlaceholders = [
-                    hockeyAppId   : "62939f09f9e0489c8ada1c25d2f30d9d",
                     assetlinks    : "[{ \\\"include\\\": \\\"https://gettransfer.com/.well-known/assetlinks.json\\\" }]"
             ]
 
@@ -187,21 +186,22 @@ androidExtensions {
     experimental = true
 }
 
-hockeyapp {
-    apiToken = "7381bebd314d4f69b363cd29d4ce6b41" //api token with owner rights
-    restoreAllowed = true // Enables restoring function for previous versions
-    notes = generateChangeLog() // Generates default notes - feel free to change this
-    buildServerUrl = System.getenv("JOB_URL") ?: "Unknown"
-    repositoryUrl = System.getenv("GIT_URL") ?: "Unknown"
-    variantToApplicationId = [
-            devRelease:  "1f061f58b7bd42c387ecd8681d30df48",
-            prodRelease:  "62939f09f9e0489c8ada1c25d2f30d9d",
-    ]
-    variantToReleaseType = [
-            devRelease:  "2",
-            prodRelease:  "1",
-    ]
-    mappingFileNameRegex="mapping.txt"
+appcenter {
+    apiToken = "23fb501c92886c574b2e165f8befc92224802e4d" // Api Token from AppCenter user profile
+    ownerName = "apps-gettransfer.com"                    // Owner Name from AppCenter Application
+    distributionGroups = ["Collaborators"]                // Name of the AppCenter Distribution Group
+    releaseNotes = generateChangeLog()                    // Can be a file or text
+    notifyTesters = true                                  // Send mail to testers
+    apps {
+        devRelease {                                      // When no dimension is provided, this name match the full variant name
+            appName = "Get-Transfer"                      // Application Name from AppCenter.
+                                                          // ownerName and appName can be found from AppCenter application url
+                                                          // (https://appcenter.ms/users/{ownerName}/apps/{appName})
+        }
+        prodRelease {
+            appName = "Get-Transfer-2"
+        }
+    }
 }
 
 dependencies {
@@ -255,9 +255,6 @@ dependencies {
     // Logger
     implementation libs.timber
     implementation "at.favre.lib:slf4j-timber:$slf4j_timber_version"
-
-    // Hockey
-    implementation "net.hockeyapp.android:HockeySDK:$hockey_version"
 
     //Firebase
     // https://firebase.google.com/support/release-notes/android
@@ -332,6 +329,9 @@ dependencies {
     implementation "com.android.support:design:$support_design_version"
     implementation "com.github.checkout:frames-android:v$checkout_frames_version"
     implementation "com.android.volley:volley:$voley_version"
+
+    //AppCenter
+    implementation "com.microsoft.appcenter:appcenter-crashes:$appcenter_version"
 
     api("androidx.transition:transition:$androidx_transition")
 
