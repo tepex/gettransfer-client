@@ -29,7 +29,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
 
     private var idleAndMoveCamera = true
 
-    private lateinit var selectedField: String
+    private var selectedField = FIELD_FROM
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
