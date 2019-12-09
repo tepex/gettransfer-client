@@ -2,11 +2,10 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 
-import androidx.annotation.CallSuper
-
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 
@@ -20,9 +19,9 @@ import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.AboutPresenter
 import com.kg.gettransfer.presentation.view.AboutView
 
-import kotlinx.android.synthetic.main.activity_about.*
+import kotlinx.android.synthetic.main.fragment_about.*
 
-class AboutActivity : BaseActivity(), AboutView {
+class AboutFragment : Fragment(R.layout.fragment_about), AboutView {
 
     @InjectPresenter
     internal lateinit var presenter: AboutPresenter
@@ -30,26 +29,20 @@ class AboutActivity : BaseActivity(), AboutView {
     @ProvidePresenter
     fun createMainPresenter() = AboutPresenter()
 
-    override fun getPresenter(): AboutPresenter = presenter
-
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
-    @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_about)
 
-        presenter.openMain = intent.getBooleanExtra(AboutView.EXTRA_OPEN_MAIN, true)
+        getExtras()
+        setupViewPager()
+        setupPageIndicator()
+        initClickListeners()
+    }
 
-        val adapter = AboutAdapter()
-        viewpager.adapter = adapter
-        viewpager.offscreenPageLimit = adapter.count - 1
-
-        pageIndicator.count = COUNT_PAGE
-        pageIndicator.setSelected(DEFAULT_PAGE)
-
+    private fun initClickListeners() {
         btnClose.setThrottledClickListener {
             presenter.closeAboutActivity()
             if (viewpager.currentItem == viewpager.childCount - 1) {
@@ -67,6 +60,23 @@ class AboutActivity : BaseActivity(), AboutView {
                 viewpager.currentItem = viewpager.currentItem + 1
             }
         }
+    }
+
+    private fun getExtras() {
+        arguments?.let {
+            presenter.openMain = it.getBoolean(AboutView.EXTRA_OPEN_MAIN, false)
+        }
+    }
+
+    private fun setupPageIndicator() {
+        pageIndicator.count = COUNT_PAGE
+        pageIndicator.setSelected(DEFAULT_PAGE)
+    }
+
+    private fun setupViewPager() {
+        val adapter = AboutAdapter()
+        viewpager.adapter = adapter
+        viewpager.offscreenPageLimit = adapter.count - 1
         viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
@@ -93,11 +103,7 @@ class AboutActivity : BaseActivity(), AboutView {
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
     override fun setError(e: ApiException) {}
     override fun setError(e: DatabaseException) {}
-
-    companion object {
-        private const val COUNT_PAGE = 2
-        private const val DEFAULT_PAGE = 1
-    }
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 
     inner class AboutAdapter : PagerAdapter() {
         private val pages = arrayOf<AboutItem>(item_0, item_1)
@@ -110,5 +116,10 @@ class AboutActivity : BaseActivity(), AboutView {
                 container.removeView(obj)
             }
         }
+    }
+
+    companion object {
+        private const val COUNT_PAGE = 2
+        private const val DEFAULT_PAGE = 1
     }
 }

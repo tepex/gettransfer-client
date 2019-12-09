@@ -79,8 +79,8 @@ object Screens {
 
     data class About(val isOnboardingShowed: Boolean) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, AboutActivity::class.java).apply {
-            putExtra(AboutView.EXTRA_OPEN_MAIN, isOnboardingShowed)
+        override fun getFragment(): Fragment = AboutFragment().apply {
+            arguments = Bundle().apply { putBoolean(AboutView.EXTRA_OPEN_MAIN, isOnboardingShowed) }
         }
     }
 

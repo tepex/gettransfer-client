@@ -38,6 +38,10 @@ class AboutPresenter : BasePresenter<AboutView>() {
         }
     }
 
+    override fun onBackCommandClick() {
+        viewState.onBackPressed()
+    }
+
     override fun onDestroy() {
         worker.cancel()
         super.onDestroy()
