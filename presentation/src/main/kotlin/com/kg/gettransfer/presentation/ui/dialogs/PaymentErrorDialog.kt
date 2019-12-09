@@ -19,9 +19,9 @@ class PaymentErrorDialog : BaseBottomSheetDialogFragment() {
     private var gatewayId: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         transferId = arguments?.getLong(TRANSFER_ID, 0L)
         gatewayId = arguments?.getString(GATEWAY_ID)
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun initUx(savedInstanceState: Bundle?) {
