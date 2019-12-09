@@ -227,6 +227,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainNavigateActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainLoginActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainRequestFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/NewTransferMapPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/OffersActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PlatronPaymentActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentOfferActivity.kt",
