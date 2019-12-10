@@ -15,6 +15,7 @@ import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.TransferModel
+import com.kg.gettransfer.presentation.model.VehicleModel
 
 @Suppress("TooManyFunctions")
 @StateStrategyType(OneExecutionStateStrategy::class)
@@ -23,6 +24,7 @@ interface PaymentOfferView : BaseView {
     fun initGooglePayPaymentsClient(environment: Int)
 
     fun setOffer(offer: OfferModel, isNameSignPresent: Boolean)
+    fun setCarPhotoOffer(vehicle: VehicleModel)
     fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean)
     fun setCommission(paymentCommission: String, dateRefund: String)
     fun setToolbarTitle(transferModel: TransferModel)
