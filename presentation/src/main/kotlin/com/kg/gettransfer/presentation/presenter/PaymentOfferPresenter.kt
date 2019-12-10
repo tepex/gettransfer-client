@@ -86,9 +86,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             checkAccount()
             transfer?.let { setInfo(it) }
             viewState.selectPaymentType(selectedPayment)
+            checkLoginScreen()
+            checkPaymentStatus()
         }
-        checkLoginScreen()
-        checkPaymentStatus()
     }
 
     private fun checkLoginScreen() {
