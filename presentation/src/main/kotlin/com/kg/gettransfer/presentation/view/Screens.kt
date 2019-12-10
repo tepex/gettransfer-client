@@ -378,6 +378,7 @@ object Screens {
             fragment = AboutFragment(),
             containerViewId = android.R.id.content,
             tag = null,
-            addToBackStack = true)
+            addToBackStack = true,
+            useAnimation = false)
     }
 }

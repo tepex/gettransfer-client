@@ -115,6 +115,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
     }
 
     override fun showAbout() {
+        window.statusBarColor = ContextCompat.getColor(this, android.R.color.transparent)
         Screens.showAboutScreen(supportFragmentManager)
     }
 
