@@ -24,10 +24,11 @@ class AboutPresenter : BasePresenter<AboutView>() {
     private val worker: WorkerManager by inject { parametersOf("AboutPresenter") }
     private val getPreferences: GetPreferencesInteractor by inject()
 
-    internal var openMain = false
-
     fun closeAboutActivity() {
-        if (!openMain) router.newRootScreen(Screens.MainPassenger()) else router.exit()
+        worker.main.launch {
+            val isOnboardingShowed = withContext(worker.bg) { getPreferences().getModel() }.isOnboardingShowed
+            if (!isOnboardingShowed) router.newRootScreen(Screens.MainPassenger()) else viewState.navigateUp()
+        }
     }
 
     fun logExitStep(value: Int) = worker.main.launch {

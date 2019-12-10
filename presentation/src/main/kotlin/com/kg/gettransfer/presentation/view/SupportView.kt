@@ -7,4 +7,5 @@ import moxy.viewstate.strategy.StateStrategyType
 interface SupportView : BaseView {
     fun showEmail(email: String)
     fun openBecomeCarrier()
+    fun showAboutUs()
 }

@@ -77,13 +77,6 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
     }
 
-    data class About(val isOnboardingShowed: Boolean) : SupportAppScreen() {
-
-        override fun getFragment(): Fragment = AboutFragment().apply {
-            arguments = Bundle().apply { putBoolean(AboutView.EXTRA_OPEN_MAIN, isOnboardingShowed) }
-        }
-    }
-
     open class MainLogin(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
@@ -374,6 +367,15 @@ object Screens {
         FragmentUtils.replaceFragment(
             fragmentManager,
             fragment = SupportFragment.newInstance(transferId, true),
+            containerViewId = android.R.id.content,
+            tag = null,
+            addToBackStack = true)
+    }
+
+    fun showAboutScreen(fragmentManager: FragmentManager) {
+        FragmentUtils.replaceFragment(
+            fragmentManager,
+            fragment = AboutFragment(),
             containerViewId = android.R.id.content,
             tag = null,
             addToBackStack = true)

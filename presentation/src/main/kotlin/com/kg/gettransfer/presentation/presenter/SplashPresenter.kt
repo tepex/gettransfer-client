@@ -59,7 +59,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
         viewState.dispatchAppState(sessionInteractor.locale)
         val isOnboardingShowed = withContext(worker.bg) { getPreferences().getModel() }.isOnboardingShowed
         if (!isOnboardingShowed) {
-            router.replaceScreen(Screens.About(false))
+            viewState.showAbout()
             withContext(worker.bg) { setOnboardingShowed(true) }
         } else {
             router.newRootScreen(Screens.MainPassenger())

@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
+import moxy.MvpAppCompatFragment
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -21,22 +22,20 @@ import com.kg.gettransfer.presentation.view.AboutView
 
 import kotlinx.android.synthetic.main.fragment_about.*
 
-class AboutFragment : Fragment(R.layout.fragment_about), AboutView {
+class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
 
     @InjectPresenter
     internal lateinit var presenter: AboutPresenter
 
     @ProvidePresenter
-    fun createMainPresenter() = AboutPresenter()
+    fun createAboutPresenter() = AboutPresenter()
 
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        getExtras()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupViewPager()
         setupPageIndicator()
         initClickListeners()
@@ -59,12 +58,6 @@ class AboutFragment : Fragment(R.layout.fragment_about), AboutView {
             } else {
                 viewpager.currentItem = viewpager.currentItem + 1
             }
-        }
-    }
-
-    private fun getExtras() {
-        arguments?.let {
-            presenter.openMain = it.getBoolean(AboutView.EXTRA_OPEN_MAIN, false)
         }
     }
 
@@ -96,6 +89,15 @@ class AboutFragment : Fragment(R.layout.fragment_about), AboutView {
             presenter.closeAboutActivity()
         } else {
             viewpager.currentItem = viewpager.currentItem - 1
+        }
+    }
+
+    override fun navigateUp() {
+        // TODO fix it after support single activity in whole app
+        if (activity is MainNavigateActivity) {
+            findNavController().navigateUp()
+        } else {
+            fragmentManager?.popBackStack()
         }
     }
 
