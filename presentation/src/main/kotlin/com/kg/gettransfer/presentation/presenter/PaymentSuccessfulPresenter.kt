@@ -111,7 +111,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
     }
 
     fun onChatClick() {
-        router.replaceScreen(Screens.Chat(transferId))
+        router.navigateTo(Screens.Chat(transferId))
     }
 
     fun onDetailsClick() {
