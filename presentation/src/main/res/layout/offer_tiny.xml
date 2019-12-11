@@ -159,7 +159,7 @@
             android:layout_marginStart="@dimen/view_offer_btn_book_margin_end"
             android:layout_marginEnd="@dimen/view_offer_btn_book_margin_end"
             style="?android:attr/borderlessButtonStyle"
-            android:background="@drawable/btn_bg_rounded"
+            android:background="@drawable/btn_bg_rounded_green"
             android:textColor="@color/colorWhite"
             android:text="@string/LNG_BOOK"
             android:textAllCaps="true"

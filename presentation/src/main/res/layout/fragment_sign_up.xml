@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/general_button_height"
             android:layout_marginTop="@dimen/fragment_sign_up_btn_login_margin_top"
-            android:background="@drawable/btn_bg_rounded"
+            android:background="@drawable/btn_bg_rounded_green"
             android:enabled="false"
             android:text="@string/LNG_SIGNUP"
             android:textColor="@color/colorWhite"

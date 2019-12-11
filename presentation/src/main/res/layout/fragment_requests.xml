@@ -66,7 +66,7 @@
             android:layout_marginStart="@dimen/main_without_map_btn_next_horizontal_margin"
             android:layout_marginEnd="@dimen/main_without_map_btn_next_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_requests_btn_forward_main_margin_bottom"
-            android:background="@drawable/btn_bg_rounded"
+            android:background="@drawable/btn_bg_rounded_green"
             android:visibility="gone" />
 
     </RelativeLayout>

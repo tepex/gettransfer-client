@@ -69,6 +69,7 @@
     <color name="color_gtr_super_light_grey">#F6F6F6</color>
     <color name="color_gtr_green">#31B700</color>
     <color name="color_gtr_orange">#FF6900</color>
+    <color name="color_gtr_orange_pressed">#F56904</color>
     <color name="color_gtr_red">#FF3B30</color>
 
     <color name="color_car_black">#000000</color>

@@ -66,7 +66,7 @@
         android:layout_marginStart="@dimen/become_a_carrier_title_continue_btn_horizontal_margins"
         android:layout_marginEnd="@dimen/become_a_carrier_title_continue_btn_horizontal_margins"
         android:layout_marginBottom="@dimen/become_a_carrier_title_continue_btn_margin_bottom"
-        android:background="@drawable/btn_bg_rounded"
+        android:background="@drawable/btn_bg_rounded_green"
         android:text="@string/LNG_BECOME_A_CARRIER_ANDROID_CONTINUE"
         android:textSize="@dimen/become_a_carrier_continue_btn_text_size" />
 

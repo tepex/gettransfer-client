@@ -29,25 +29,25 @@
         android:textSize="@dimen/cancelation_request_dialog_text_size" />
 
     <Button
-        android:id="@+id/btnCancel"
+        android:id="@+id/topButton"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/cancelation_request_dialog_buttons_height"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/cancelation_request_dialog_button_cancel_margin_top"
-        android:background="@drawable/btn_bg_logout_rounded"
+        android:background="@drawable/btn_bg_rounded_red"
         android:text="@string/LNG_CANCEL"
-        android:textColor="@color/colorTextBlack"
+        android:textColor="@color/colorWhite"
         android:textSize="@dimen/cancelation_request_dialog_buttons_text_size" />
 
     <Button
-        android:id="@+id/btnOk"
+        android:id="@+id/bottomButton"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/cancelation_request_dialog_buttons_height"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/cancelation_request_dialog_button_agree_margin_top"
-        android:background="@drawable/btn_bg_rounded"
+        android:background="@drawable/btn_bg_rounded_green"
         android:text="@string/LNG_I_AGREE"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/cancelation_request_dialog_buttons_text_size" />
