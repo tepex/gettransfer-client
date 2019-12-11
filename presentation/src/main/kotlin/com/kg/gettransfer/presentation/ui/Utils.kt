@@ -26,6 +26,7 @@ import android.util.Patterns
 import android.view.LayoutInflater
 
 import android.view.View
+import android.widget.Button
 
 import android.widget.EditText
 import android.widget.ImageView
@@ -138,11 +139,19 @@ object Utils : KoinComponent {
             val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
             view.title.text = context.getString(R.string.LNG_REQUEST_CANCELED)
             view.subtitle.isVisible = false
-            view.topButton.text = context.getString(R.string.LNG_RESTORE_REQUEST)
-            view.topButton.background = context.getDrawable(R.drawable.btn_bg_rounded_green)
-            view.bottomButton.text = context.getString(R.string.LNG_NEXT)
-            view.bottomButton.background = context.getDrawable(R.drawable.btn_bg_rounded_orange)
-            view.bottomButton.setTextColor(ContextCompat.getColor(context, R.color.colorTextBlack))
+            setButtonStyle(
+                context,
+                view.topButton,
+                R.string.LNG_RESTORE_REQUEST,
+                R.drawable.btn_bg_rounded_green
+            )
+            setButtonStyle(
+                context,
+                view.bottomButton,
+                R.string.LNG_NEXT,
+                R.drawable.btn_bg_rounded_orange,
+                R.color.colorTextBlack
+            )
             setView(view)
             show().apply {
                 window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -156,6 +165,12 @@ object Utils : KoinComponent {
                 }
             }
         }
+    }
+
+    private fun setButtonStyle(context: Context, button: Button, textId: Int, backId: Int, textColorId: Int? = null) {
+        button.text = context.getString(textId)
+        button.background = context.getDrawable(backId)
+        textColorId?.let { button.setTextColor(ContextCompat.getColor(context, it)) }
     }
 
     fun showAlertSetNewPassword(context: Context, listener: (Boolean) -> Unit) {
