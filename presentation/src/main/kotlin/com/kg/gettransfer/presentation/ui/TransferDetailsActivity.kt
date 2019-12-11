@@ -353,7 +353,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         val isCanDownloadVoucher =
             transfer.statusCategory == Transfer.STATUS_CATEGORY_CONFIRMED ||
             transfer.statusCategory == Transfer.STATUS_CATEGORY_FINISHED
-        if(isCanDownloadVoucher) setVoucher()
+        if (isCanDownloadVoucher) setVoucher()
     }
 
     private fun setPrices(transfer: TransferModel) {

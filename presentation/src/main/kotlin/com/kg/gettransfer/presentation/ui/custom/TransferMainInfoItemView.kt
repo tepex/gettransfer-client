@@ -12,13 +12,16 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_main_info_item.view.*
 
 class TransferMainInfoItemView @JvmOverloads constructor(
-    context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0):
-    ConstraintLayout(context, attributes, defStyleAttr), LayoutContainer {
+    context: Context,
+    attributes: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ConstraintLayout(context, attributes, defStyleAttr), LayoutContainer {
 
-    override val containerView: View = LayoutInflater.from(context).inflate(R.layout.view_transfer_main_info_item, this, true)
+    override val containerView: View =
+        LayoutInflater.from(context).inflate(R.layout.view_transfer_main_info_item, this, true)
 
     init {
-        if(attributes != null) {
+        if (attributes != null) {
             val ta = context.obtainStyledAttributes(attributes, R.styleable.TransferMainInfoItemView)
             tv_title.text = ta.getString(R.styleable.TransferMainInfoItemView_transfer_main_info_title)
             ta.recycle()

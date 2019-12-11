@@ -24,17 +24,23 @@ internal object SystemUtils : KoinComponent {
 
     fun formatDistance(context: Context, distance: Int?, splitDistance: Boolean, withDistanceText: Boolean): String {
         if (distance == null) return ""
-        val distanceText = when {
+        val distanceValueText = when {
             distance == 0                     -> "-"
             withDistanceText && splitDistance -> "${distance / 2}x2=$distance"
             else                              -> distance.toString()
         }
 
+        val distanceText = if (distance != 0) {
+            distanceValueText.plus(" ${sessionInteractor.distanceUnit.name}")
+        } else {
+            distanceValueText
+        }
+
         return if (withDistanceText) {
-            context.getString(R.string.LNG_RIDE_DISTANCE).plus(" $distanceText ")
+            context.getString(R.string.LNG_RIDE_DISTANCE).plus(" $distanceText")
         } else {
             distanceText
-        }.let { if (distance != 0) it.plus(sessionInteractor.distanceUnit.name) else it }
+        }
     }
 
     fun formatMessageDateTimePattern(date: Date): String = getFormattedDate(MESSAGE_DATE_TIME_PATTERN, date)

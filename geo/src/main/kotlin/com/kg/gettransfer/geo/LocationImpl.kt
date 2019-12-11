@@ -75,8 +75,8 @@ class LocationImpl(private val context: Context) :
             // In some rare situations Location can be null.
             // https://developer.android.com/training/location/retrieve-current#last-known
             .addOnSuccessListener { l: android.location.Location? ->
-                l?.let { cont.resume(LocationEntity(it.latitude, it.longitude)) } ?:
-                    cont.resumeWithException(LocationException(LocationException.NOT_FOUND, "Unknown"))
+                l?.let { cont.resume(LocationEntity(it.latitude, it.longitude)) }
+                    ?: cont.resumeWithException(LocationException(LocationException.NOT_FOUND, "Unknown"))
             }
             .addOnFailureListener {
                 cont.resumeWithException(LocationException(LocationException.NOT_FOUND, "Unknown"))

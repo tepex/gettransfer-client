@@ -87,8 +87,8 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         utils.launchSuspend {
             fetchData(withCacheCheck = NO_CACHE_CHECK) {
                 chatInteractor.getChat(transferId)
-            }?.let {
-                initChatModel(it)
+            }?.let { chat ->
+                initChatModel(chat)
                 notificationManager.clearNotification(transferId.toInt())
             }
         }
