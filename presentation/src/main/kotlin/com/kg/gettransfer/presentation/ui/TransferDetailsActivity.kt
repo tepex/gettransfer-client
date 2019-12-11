@@ -331,22 +331,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             tvTransferTime.text = SystemUtils.formatTime(transfer.dateTime)
         }
 
-        if (transfer.to != null) {
-            if (transfer.distance == 0) {
-                transfer_details_main.distance_view.showDash()
-            } else {
-                transfer_details_main.distance_view.setValue(
-                    SystemUtils.formatDistance(this, transfer.distance, false, false))
-            }
-        }
-
-        val timeValue = transfer.duration?.let {
-            HourlyValuesHelper.getValue(it, this)
-        } ?: transfer.time.let {
-            Utils.durationToString(this, Utils.convertDuration(it ?: 0))
-        }
-        transfer_details_main.time_view.setValue(timeValue)
-
+        if (transfer.to != null) setDistance(transfer.distance)
+        setDuration(transfer.duration, transfer.time)
         setPrices(transfer)
         setBookNow(transfer)
 
@@ -354,6 +340,27 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             transfer.statusCategory == Transfer.STATUS_CATEGORY_CONFIRMED ||
             transfer.statusCategory == Transfer.STATUS_CATEGORY_FINISHED
         if (isCanDownloadVoucher) setVoucher()
+    }
+
+    private fun setDistance(distance: Int?) {
+        if (distance == null || distance == TransferModel.ZERO_VALUE) {
+            transfer_details_main.distance_view.showDash()
+        } else {
+            transfer_details_main.distance_view.setValue(SystemUtils.formatDistance(this, distance, false, false))
+        }
+    }
+
+    private fun setDuration(duration: Int?, time: Int?) {
+        val timeValue = duration?.let {
+            HourlyValuesHelper.getValue(it, this)
+        } ?: time?.let {
+            if (it != TransferModel.ZERO_VALUE) Utils.durationToString(this, Utils.convertDuration(it)) else null
+        }
+        timeValue?.let {
+            transfer_details_main.time_view.setValue(it)
+        } ?: run {
+            transfer_details_main.time_view.showDash()
+        }
     }
 
     private fun setPrices(transfer: TransferModel) {
