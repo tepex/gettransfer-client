@@ -332,16 +332,20 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
 
         if (transfer.to != null) {
-            transfer_details_main.tv_distance.text =
-                SystemUtils.formatDistance(this, transfer.distance, false, false)
-            transfer_details_main.tv_distance_dash.isVisible = false
+            if (transfer.distance == 0) {
+                transfer_details_main.distance_view.showDash()
+            } else {
+                transfer_details_main.distance_view.setValue(
+                    SystemUtils.formatDistance(this, transfer.distance, false, false))
+            }
         }
 
-        transfer_details_main.tv_time.text = transfer.duration?.let {
+        val timeValue = transfer.duration?.let {
             HourlyValuesHelper.getValue(it, this)
         } ?: transfer.time.let {
             Utils.durationToString(this, Utils.convertDuration(it ?: 0))
         }
+        transfer_details_main.time_view.setValue(timeValue)
 
         setPrices(transfer)
         setBookNow(transfer)
@@ -375,9 +379,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) }
             transfer.pendingPaymentId?.let {
                 transfer_details_main.apply {
-                    tv_price.text = getString(R.string.LNG_RIDE_PAYMENT)
-                    tv_price_dash.isVisible = false
-                    tv_price_title.isVisible = false
+                    price_view.setValue(getString(R.string.LNG_RIDE_PAYMENT))
+                    price_view.hideTitle()
                 }
             }
         }
@@ -410,19 +413,17 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private fun setPassengerOfferedPrice(price: String) {
         transfer_details_main.apply {
-            tv_price.text = price
-            tv_price_dash.isVisible = false
+            price_view.setValue(price)
         }
     }
 
     private fun setRemainToPayInfo(remainsToPay: String, title: String? = null) {
         transfer_details_main.apply {
-            tv_price.text = remainsToPay
-            tv_price_dash.isVisible = false
+            price_view.setValue(remainsToPay)
             if (title != null) {
-                tv_price_title.text = title
+                price_view.setTitle(title)
             } else {
-                tv_price_title.isVisible = false
+                price_view.hideTitle()
             }
         }
         @Suppress("MagicNumber")
