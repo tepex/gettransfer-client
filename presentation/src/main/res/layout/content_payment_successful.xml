@@ -153,7 +153,7 @@
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
         android:id="@+id/btnCall"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:visibility="gone"
@@ -169,7 +169,7 @@
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
         android:id="@+id/btnChat"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:visibility="gone"
@@ -185,7 +185,7 @@
 
     <com.kg.gettransfer.presentation.ui.custom.CommunicationButton
         android:id="@+id/btnSupport"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:visibility="visible"
