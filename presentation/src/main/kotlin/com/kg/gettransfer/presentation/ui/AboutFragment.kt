@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.os.Bundle
 
 import android.view.View
@@ -30,6 +31,8 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
     @ProvidePresenter
     fun createAboutPresenter() = AboutPresenter()
 
+    private var cancelListener: CancelAboutListener? = null
+
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
@@ -41,9 +44,19 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
         initClickListeners()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        cancelListener = activity as? CancelAboutListener
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        cancelListener = null
+    }
+
     private fun initClickListeners() {
         btnClose.setThrottledClickListener {
-            presenter.closeAboutActivity()
+            closeAbout()
             if (viewpager.currentItem == viewpager.childCount - 1) {
                 presenter.logExitStep(0)
             } else {
@@ -53,7 +66,7 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
         btnNext.setOnClickListener {
             if (viewpager.currentItem == viewpager.childCount - 1) {
                 btnNext.isEnabled = false
-                presenter.closeAboutActivity()
+                closeAbout()
                 presenter.logExitStep(0)
             } else {
                 viewpager.currentItem = viewpager.currentItem + 1
@@ -86,10 +99,14 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
 
     override fun onBackPressed() {
         if (viewpager.currentItem == 0) {
-            presenter.closeAboutActivity()
+            closeAbout()
         } else {
             viewpager.currentItem = viewpager.currentItem - 1
         }
+    }
+
+    private fun closeAbout() {
+        presenter.closeAbout(cancelListener != null)
     }
 
     override fun navigateUp() {
@@ -99,6 +116,10 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
         } else {
             fragmentManager?.popBackStack()
         }
+    }
+
+    override fun openMain() {
+        cancelListener?.onCancelAbout()
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
@@ -118,6 +139,10 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
                 container.removeView(obj)
             }
         }
+    }
+
+    interface CancelAboutListener {
+        fun onCancelAbout()
     }
 
     companion object {

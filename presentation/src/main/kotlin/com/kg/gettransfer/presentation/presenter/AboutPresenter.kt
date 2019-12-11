@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.presenter
 import moxy.InjectViewState
 
 import com.kg.gettransfer.presentation.view.AboutView
-import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
@@ -24,11 +23,8 @@ class AboutPresenter : BasePresenter<AboutView>() {
     private val worker: WorkerManager by inject { parametersOf("AboutPresenter") }
     private val getPreferences: GetPreferencesInteractor by inject()
 
-    fun closeAboutActivity() {
-        worker.main.launch {
-            val isOnboardingShowed = withContext(worker.bg) { getPreferences().getModel() }.isOnboardingShowed
-            if (!isOnboardingShowed) router.newRootScreen(Screens.MainPassenger()) else viewState.navigateUp()
-        }
+    fun closeAbout(openMain: Boolean = false) {
+        if (openMain) viewState.openMain() else viewState.navigateUp()
     }
 
     fun logExitStep(value: Int) = worker.main.launch {

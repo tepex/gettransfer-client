@@ -43,7 +43,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
         /* Check PUSH notification */
         viewState.checkLaunchType()
         worker.main.launch {
-            val result = configsManager.coldStart(worker.backgroundScope)
+            configsManager.coldStart(worker.backgroundScope)
             // check result for network error
             withContext(worker.bg) {
                 setNewDriverAppDialogShowedInteractor(false)
@@ -62,7 +62,7 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
             viewState.showAbout()
             withContext(worker.bg) { setOnboardingShowed(true) }
         } else {
-            router.newRootScreen(Screens.MainPassenger())
+            goToMainScreen()
         }
     }
 
@@ -73,5 +73,9 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     override fun onDestroy() {
         worker.cancel()
         super.onDestroy()
+    }
+
+    fun goToMainScreen() {
+        router.newRootScreen(Screens.MainPassenger())
     }
 }

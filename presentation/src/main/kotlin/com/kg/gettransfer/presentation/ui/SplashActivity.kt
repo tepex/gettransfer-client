@@ -32,7 +32,7 @@ import ru.terrakok.cicerone.android.support.SupportAppNavigator
 
 import timber.log.Timber
 
-class SplashActivity : MvpAppCompatActivity(), SplashView {
+class SplashActivity : MvpAppCompatActivity(), SplashView, AboutFragment.CancelAboutListener {
     @InjectPresenter
     lateinit var presenter: SplashPresenter
 
@@ -117,6 +117,10 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
     override fun showAbout() {
         window.statusBarColor = ContextCompat.getColor(this, android.R.color.transparent)
         Screens.showAboutScreen(supportFragmentManager)
+    }
+
+    override fun onCancelAbout() {
+        presenter.goToMainScreen()
     }
 
     override fun onDestroy() {
