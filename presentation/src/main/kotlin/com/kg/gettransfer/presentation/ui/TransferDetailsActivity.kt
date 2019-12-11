@@ -345,6 +345,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
         setPrices(transfer)
         setBookNow(transfer)
+
+        val isCanDownloadVoucher =
+            transfer.statusCategory == Transfer.STATUS_CATEGORY_CONFIRMED ||
+            transfer.statusCategory == Transfer.STATUS_CATEGORY_FINISHED
+        if(isCanDownloadVoucher) setVoucher()
     }
 
     private fun setPrices(transfer: TransferModel) {
@@ -355,10 +360,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 transfer.price,
                 transfer.paidPercentage
             )
-            Transfer.STATUS_CATEGORY_FINISHED -> {
-                setRemainToPayInfo(transfer.price ?: "", getString(R.string.LNG_RIDE_PAYMENT_COST))
-                setVoucher()
-            }
+            Transfer.STATUS_CATEGORY_FINISHED -> setRemainToPayInfo(
+                transfer.price ?: "",
+                getString(R.string.LNG_RIDE_PAYMENT_COST)
+            )
             Transfer.STATUS_CATEGORY_UNFINISHED -> transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) }
         }
     }
@@ -383,7 +388,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             setRemainToPayInfo(remainsToPay, getString(R.string.LNG_RIDE_PAYMENT_REMAINS))
         } else {
             setRemainToPayInfo(getString(R.string.LNG_RIDE_PAYMENT_PAID))
-            setVoucher()
         }
         setFullPrice(price ?: "", paidPercentage)
     }
