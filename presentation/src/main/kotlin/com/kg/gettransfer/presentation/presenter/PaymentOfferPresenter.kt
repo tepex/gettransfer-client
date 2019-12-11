@@ -65,6 +65,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private lateinit var paymentRequest: PaymentRequestModel
 
+    private var isTransferDataChanged = false
+    private var isOfferDataChanged = false
+    private var isCarPhotoChanged = false
+
     private var currency: String? = null
     private var loginScreenIsShowed = false
     private var isCanPayAfterLogIn = true
@@ -77,13 +81,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             // TODO uncomment after than fixed configs request
             // initGPay()
             checkCurrencyChanging()
+            checkTransferAndOfferDataChanging()
             getTransferAndOffer()
             checkAccount()
             transfer?.let { setInfo(it) }
             viewState.selectPaymentType(selectedPayment)
+            checkLoginScreen()
+            checkPaymentStatus()
         }
-        checkLoginScreen()
-        checkPaymentStatus()
     }
 
     private fun checkLoginScreen() {
@@ -121,6 +126,20 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         with(paymentInteractor) {
             transfer = selectedTransfer
             offer = selectedOffer
+        }
+    }
+
+    private fun checkTransferAndOfferDataChanging() {
+        with(paymentInteractor) {
+            if (transfer != selectedTransfer) isTransferDataChanged = true
+            if (offer != selectedOffer) isOfferDataChanged = true
+            offer?.let { oldOfferData ->
+                (selectedOffer as? Offer)?.vehicle?.photos?.firstOrNull().let { newCarPhoto ->
+                    (oldOfferData as? Offer)?.vehicle?.photos?.firstOrNull().let { oldCarPhoto ->
+                        isCarPhotoChanged = oldCarPhoto != newCarPhoto
+                    }
+                }
+            } ?: run { isCarPhotoChanged = true }
         }
     }
 
@@ -197,15 +216,18 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }
 
     private suspend fun setInfo(transfer: Transfer) {
-        viewState.setToolbarTitle(transfer.map(configsManager.getConfigs().transportTypes.map { it.map() }))
-        transfer.dateRefund?.let { dateRefund ->
-            val commission = configsManager.getConfigs().paymentCommission
-            viewState.setCommission(
-                if (commission % 1.0 == 0.0) commission.toInt().toString() else commission.toString(),
-                SystemUtils.formatDateTime(dateRefund)
-            )
+        if (isTransferDataChanged) {
+            viewState.setToolbarTitle(transfer.map(configsManager.getConfigs().transportTypes.map { it.map() }))
+            transfer.dateRefund?.let { dateRefund ->
+                val commission = configsManager.getConfigs().paymentCommission
+                viewState.setCommission(
+                        if (commission % 1.0 == 0.0) commission.toInt().toString() else commission.toString(),
+                        SystemUtils.formatDateTime(dateRefund)
+                )
+            }
         }
-        setPaymentOptions(transfer)
+        if (isTransferDataChanged || isOfferDataChanged) setPaymentOptions(transfer)
+        infoUpdated()
     }
 
     private fun setPaymentOptions(transfer: Transfer) {
@@ -213,9 +235,18 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             val nameSignPresent = !transfer.nameSign.isNullOrEmpty()
             when (offer) {
                 is BookNowOffer -> viewState.setBookNowOffer(offer.map(), nameSignPresent)
-                is Offer        -> viewState.setOffer(offerMapper.toView(offer), nameSignPresent)
+                is Offer        -> {
+                    viewState.setOffer(offerMapper.toView(offer), nameSignPresent)
+                    if (isCarPhotoChanged) viewState.setCarPhotoOffer(offer.vehicle.map())
+                }
             }
         }
+    }
+
+    private fun infoUpdated() {
+        isTransferDataChanged = false
+        isOfferDataChanged = false
+        isCarPhotoChanged = false
     }
 
     override fun onDestroy() {

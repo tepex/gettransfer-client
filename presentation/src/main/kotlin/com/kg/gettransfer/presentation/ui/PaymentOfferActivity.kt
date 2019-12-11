@@ -50,6 +50,7 @@ import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.VehicleModel
 import com.kg.gettransfer.presentation.model.getEmptyImageRes
 import com.kg.gettransfer.presentation.model.getImageRes
 import com.kg.gettransfer.presentation.model.getModelsRes
@@ -258,13 +259,13 @@ class PaymentOfferActivity : BaseActivity(),
 
     @Suppress("NestedBlockDepth")
     override fun setOffer(offer: OfferModel, isNameSignPresent: Boolean) {
-        setCarInfo(offer, isNameSignPresent)
+        setCarInfoOffer(offer, isNameSignPresent)
         setPriceInfo(offer.price.base.def, offer.price.base.preferred)
         setCapacity(offer.vehicle.transportType)
     }
 
     override fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean) {
-        setCarInfo(bookNowOffer, isNameSignPresent)
+        setCarInfoBookNow(bookNowOffer.transportType.id)
         setPriceInfo(bookNowOffer.base.def, bookNowOffer.base.preferred)
         setCapacity(bookNowOffer.transportType)
     }
@@ -285,14 +286,7 @@ class PaymentOfferActivity : BaseActivity(),
         }
     }
 
-    private fun setCarInfo(offer: OfferItemModel?, isNameSignPresent: Boolean) {
-        when (offer) {
-            is OfferModel -> showCarInfoOffer(offer, isNameSignPresent)
-            is BookNowOfferModel -> showCarInfoBookNow(offer.transportType.id)
-        }
-    }
-
-    private fun showCarInfoBookNow(transportTypeId: TransportType.ID) {
+    private fun setCarInfoBookNow(transportTypeId: TransportType.ID) {
         tvClass.text = getString(transportTypeId.getNameRes())
         tvModel.text = getString(transportTypeId.getModelsRes())
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = transportTypeId.getImageRes())
@@ -304,23 +298,9 @@ class PaymentOfferActivity : BaseActivity(),
         )
     }
 
-    private fun showCarInfoOffer(offer: OfferModel, isNameSignPresent: Boolean) {
+    private fun setCarInfoOffer(offer: OfferModel, isNameSignPresent: Boolean) {
         with(offer.vehicle) {
             tvModel.text = name
-            if (photos.isEmpty()) {
-                color?.let { col ->
-                    ivCarColor.isVisible = true
-                    ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this@PaymentOfferActivity, col))
-                }
-            }
-            photos.firstOrNull().also { photo ->
-                Utils.bindMainOfferPhoto(
-                    ivCarPhoto,
-                    content,
-                    path = photo,
-                    resource = transportType.id.getEmptyImageRes()
-                )
-            }
             tvClass.text = getString(transportType.nameId)
         }
         with(offer.carrier) {
@@ -332,6 +312,25 @@ class PaymentOfferActivity : BaseActivity(),
         }
         OfferItemBindDelegate.bindNameSignPlate(this, imgNameSign, tvMissingNameSign,
             isNameSignPresent, offer.isWithNameSign)
+    }
+
+    override fun setCarPhotoOffer(vehicle: VehicleModel) {
+        with(vehicle) {
+            photos.firstOrNull().also { photo ->
+                ivCarColor.isVisible = false
+                Utils.bindMainOfferPhoto(
+                    ivCarPhoto,
+                    content,
+                    path = photo,
+                    resource = transportType.id.getEmptyImageRes()
+                )
+            } ?: color?.let { col ->
+                ivCarColor.isVisible = true
+                ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this@PaymentOfferActivity, col))
+            } ?: run {
+                ivCarColor.isVisible = false
+            }
+        }
     }
 
     override fun showOfferError() {
