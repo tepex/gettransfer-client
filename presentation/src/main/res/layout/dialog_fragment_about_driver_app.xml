@@ -62,7 +62,7 @@
         android:layout_marginStart="@dimen/driver_app_dialog_elements_horizontal_margin"
         android:layout_marginTop="@dimen/driver_app_dialog_continue_btn_margin_top"
         android:layout_marginEnd="@dimen/driver_app_dialog_elements_horizontal_margin"
-        android:background="@drawable/btn_bg_rounded"
+        android:background="@drawable/btn_bg_rounded_green"
         android:gravity="center"
         android:text="@string/LNG_ABOUT_DRIVE_APP_ANDROID_CONTINUE"
         android:textSize="@dimen/driver_app_dialog_continue_btn_text_size" />

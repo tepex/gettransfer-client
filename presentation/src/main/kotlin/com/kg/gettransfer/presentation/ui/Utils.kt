@@ -121,11 +121,11 @@ object Utils : KoinComponent {
             setView(view)
             show().apply {
                 window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                view.btnCancel.setOnClickListener {
+                view.topButton.setOnClickListener {
                     listener(false)
                     dismiss()
                 }
-                view.btnOk.setOnClickListener {
+                view.bottomButton.setOnClickListener {
                     listener(true)
                     dismiss()
                 }
@@ -138,16 +138,19 @@ object Utils : KoinComponent {
             val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
             view.title.text = context.getString(R.string.LNG_REQUEST_CANCELED)
             view.subtitle.isVisible = false
-            view.btnCancel.text = context.getString(R.string.LNG_RESTORE_REQUEST)
-            view.btnOk.text = context.getString(R.string.LNG_NEXT)
+            view.topButton.text = context.getString(R.string.LNG_RESTORE_REQUEST)
+            view.topButton.background = context.getDrawable(R.drawable.btn_bg_rounded_green)
+            view.bottomButton.text = context.getString(R.string.LNG_NEXT)
+            view.bottomButton.background = context.getDrawable(R.drawable.btn_bg_rounded_orange)
+            view.bottomButton.setTextColor(ContextCompat.getColor(context, R.color.colorTextBlack))
             setView(view)
             show().apply {
                 window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                view.btnCancel.setOnClickListener {
+                view.topButton.setOnClickListener {
                     listener(true)
                     dismiss()
                 }
-                view.btnOk.setOnClickListener {
+                view.bottomButton.setOnClickListener {
                     listener(false)
                     dismiss()
                 }

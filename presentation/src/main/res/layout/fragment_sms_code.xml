@@ -80,7 +80,7 @@
             android:layout_marginStart="@dimen/fragment_sms_btn_done_vertical_margin"
             android:layout_marginEnd="@dimen/fragment_sms_btn_done_vertical_margin"
             android:layout_marginBottom="@dimen/fragment_sms_btn_done_margin_bottom"
-            android:background="@drawable/btn_bg_rounded"
+            android:background="@drawable/btn_bg_rounded_green"
             android:enabled="false"
             android:text="@string/LNG_DONE"
             android:textColor="@color/colorWhite"
