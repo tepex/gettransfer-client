@@ -147,6 +147,6 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
 
     companion object {
         private const val COUNT_PAGE = 2
-        private const val DEFAULT_PAGE = 1
+        private const val DEFAULT_PAGE = 0
     }
 }
