@@ -81,6 +81,7 @@ data class TransferModel(
 
     companion object {
         const val MILLIS_PER_MINUTE = 60_000
+        const val ZERO_VALUE = 0
     }
 }
 

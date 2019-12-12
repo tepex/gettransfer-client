@@ -134,11 +134,9 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             if (transfer != selectedTransfer) isTransferDataChanged = true
             if (offer != selectedOffer) isOfferDataChanged = true
             offer?.let { oldOfferData ->
-                (selectedOffer as? Offer)?.vehicle?.photos?.firstOrNull().let { newCarPhoto ->
-                    (oldOfferData as? Offer)?.vehicle?.photos?.firstOrNull().let { oldCarPhoto ->
-                        isCarPhotoChanged = oldCarPhoto != newCarPhoto
-                    }
-                }
+                val newCarPhoto = (selectedOffer as? Offer)?.vehicle?.photos?.firstOrNull()
+                val oldCarPhoto = (oldOfferData as? Offer)?.vehicle?.photos?.firstOrNull()
+                isCarPhotoChanged = oldCarPhoto != newCarPhoto
             } ?: run { isCarPhotoChanged = true }
         }
     }

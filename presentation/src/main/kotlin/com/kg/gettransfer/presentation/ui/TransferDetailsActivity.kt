@@ -331,25 +331,36 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             tvTransferTime.text = SystemUtils.formatTime(transfer.dateTime)
         }
 
-        if (transfer.to != null) {
-            transfer_details_main.tv_distance.text =
-                SystemUtils.formatDistance(this, transfer.distance, false, false)
-            transfer_details_main.tv_distance_dash.isVisible = false
-        }
-
-        transfer_details_main.tv_time.text = transfer.duration?.let {
-            HourlyValuesHelper.getValue(it, this)
-        } ?: transfer.time.let {
-            Utils.durationToString(this, Utils.convertDuration(it ?: 0))
-        }
-
+        if (transfer.to != null) setDistance(transfer.distance)
+        setDuration(transfer.duration, transfer.time)
         setPrices(transfer)
         setBookNow(transfer)
 
         val isCanDownloadVoucher =
             transfer.statusCategory == Transfer.STATUS_CATEGORY_CONFIRMED ||
             transfer.statusCategory == Transfer.STATUS_CATEGORY_FINISHED
-        if(isCanDownloadVoucher) setVoucher()
+        if (isCanDownloadVoucher) setVoucher()
+    }
+
+    private fun setDistance(distance: Int?) {
+        if (distance == null || distance == TransferModel.ZERO_VALUE) {
+            transfer_details_main.distance_view.showDash()
+        } else {
+            transfer_details_main.distance_view.setValue(SystemUtils.formatDistance(this, distance, false, false))
+        }
+    }
+
+    private fun setDuration(duration: Int?, time: Int?) {
+        val timeValue = duration?.let {
+            HourlyValuesHelper.getValue(it, this)
+        } ?: time?.let {
+            if (it != TransferModel.ZERO_VALUE) Utils.durationToString(this, Utils.convertDuration(it)) else null
+        }
+        timeValue?.let {
+            transfer_details_main.time_view.setValue(it)
+        } ?: run {
+            transfer_details_main.time_view.showDash()
+        }
     }
 
     private fun setPrices(transfer: TransferModel) {
@@ -375,9 +386,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) }
             transfer.pendingPaymentId?.let {
                 transfer_details_main.apply {
-                    tv_price.text = getString(R.string.LNG_RIDE_PAYMENT)
-                    tv_price_dash.isVisible = false
-                    tv_price_title.isVisible = false
+                    price_view.setValue(getString(R.string.LNG_RIDE_PAYMENT))
+                    price_view.hideTitle()
                 }
             }
         }
@@ -410,19 +420,17 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private fun setPassengerOfferedPrice(price: String) {
         transfer_details_main.apply {
-            tv_price.text = price
-            tv_price_dash.isVisible = false
+            price_view.setValue(price)
         }
     }
 
     private fun setRemainToPayInfo(remainsToPay: String, title: String? = null) {
         transfer_details_main.apply {
-            tv_price.text = remainsToPay
-            tv_price_dash.isVisible = false
+            price_view.setValue(remainsToPay)
             if (title != null) {
-                tv_price_title.text = title
+                price_view.setTitle(title)
             } else {
-                tv_price_title.isVisible = false
+                price_view.hideTitle()
             }
         }
         @Suppress("MagicNumber")
