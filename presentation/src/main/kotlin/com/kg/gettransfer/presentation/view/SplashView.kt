@@ -4,7 +4,7 @@ import moxy.MvpView
 
 import java.util.Locale
 
-interface SplashView: MvpView {
+interface SplashView : MvpView {
 
     fun checkLaunchType()
 

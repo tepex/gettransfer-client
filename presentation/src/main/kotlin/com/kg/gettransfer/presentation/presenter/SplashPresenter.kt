@@ -40,18 +40,18 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
 
     fun onLaunchContinue() {
-        /* Check PUSH notification */
         viewState.checkLaunchType()
         worker.main.launch {
             configsManager.coldStart(worker.backgroundScope)
-            // check result for network error
             withContext(worker.bg) {
                 setNewDriverAppDialogShowedInteractor(false)
+
+                val needUpdateApp = isNeedUpdateApp(
+                    IsNeedUpdateAppInteractor.FIELD_UPDATE_REQUIRED,
+                    BuildConfig.VERSION_CODE
+                )
+                if (needUpdateApp) viewState.onNeedAppUpdateInfo() else startApp()
             }
-            val needUpdateApp = withContext(worker.bg) {
-                isNeedUpdateApp(IsNeedUpdateAppInteractor.FIELD_UPDATE_REQUIRED, BuildConfig.VERSION_CODE)
-            }
-            if (needUpdateApp) viewState.onNeedAppUpdateInfo() else startApp()
         }
     }
 

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 
 import androidx.annotation.CallSuper
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -21,7 +22,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SplashView
 
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
-//import leakcanary.AppWatcher
+// import leakcanary.AppWatcher
 
 import java.util.Locale
 
@@ -52,7 +53,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView, AboutFragment.CancelA
         if (checkIsTaskRoot()) {
             return
         }
-        window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        setStatusBarColor(R.color.colorPrimary)
         presenter.onLaunchContinue()
 
         Timber.d(getString(R.string.title_starting_session))
@@ -60,8 +61,8 @@ class SplashActivity : MvpAppCompatActivity(), SplashView, AboutFragment.CancelA
 
     override fun checkLaunchType() {
         /* Check PUSH notification */
-        intent.extras?.let {
-            if (it.containsKey("new_offer")) {
+        intent.extras?.let { bundle ->
+            if (bundle.containsKey("new_offer")) {
                 presenter.enterByPush()
                 return
             }
@@ -102,7 +103,10 @@ class SplashActivity : MvpAppCompatActivity(), SplashView, AboutFragment.CancelA
 
     override fun dispatchAppState(locale: Locale) {
         val intent = Intent(AppLifeCycleObserver.APP_STATE).apply { putExtra(AppLifeCycleObserver.STATUS, true) }
-        Handler().postDelayed({ LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent) }, 1000)
+        Handler().postDelayed(
+            { LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent) },
+            DELAY_TO_SEND_BROADCAST
+        )
     }
 
     private fun checkIsTaskRoot(): Boolean {
@@ -114,17 +118,26 @@ class SplashActivity : MvpAppCompatActivity(), SplashView, AboutFragment.CancelA
         }
     }
 
+    private fun setStatusBarColor(@ColorRes color: Int) {
+        window.statusBarColor = ContextCompat.getColor(this, color)
+    }
+
     override fun showAbout() {
-        window.statusBarColor = ContextCompat.getColor(this, android.R.color.transparent)
+        setStatusBarColor(android.R.color.transparent)
         Screens.showAboutScreen(supportFragmentManager)
     }
 
     override fun onCancelAbout() {
+        setStatusBarColor(R.color.colorPrimary)
         presenter.goToMainScreen()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 //        AppWatcher.objectWatcher.watch(this)
+    }
+
+    companion object {
+        private const val DELAY_TO_SEND_BROADCAST = 1000L
     }
 }
