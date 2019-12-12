@@ -16,10 +16,12 @@ object FragmentUtils {
         fragment: Fragment,
         @IdRes containerViewId: Int,
         tag: String? = null,
-        addToBackStack: Boolean = false
+        addToBackStack: Boolean = false,
+        useAnimation: Boolean = true
     ) = fragmentManager
-        .beginTransaction()
-        .setCustomAnimations(R.anim.transition_b2t, R.anim.transition_t2b)
+        .beginTransaction().apply {
+            if (useAnimation) setCustomAnimations(R.anim.transition_b2t, R.anim.transition_t2b)
+        }
         .replace(containerViewId, fragment, tag).apply {
             if (addToBackStack) addToBackStack(null)
         }

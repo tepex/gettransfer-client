@@ -1,17 +1,18 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Context
 import android.os.Bundle
-
-import androidx.annotation.CallSuper
 
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
+import moxy.MvpAppCompatFragment
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -20,38 +21,42 @@ import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.AboutPresenter
 import com.kg.gettransfer.presentation.view.AboutView
 
-import kotlinx.android.synthetic.main.activity_about.*
+import kotlinx.android.synthetic.main.fragment_about.*
 
-class AboutActivity : BaseActivity(), AboutView {
+class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
 
     @InjectPresenter
     internal lateinit var presenter: AboutPresenter
 
     @ProvidePresenter
-    fun createMainPresenter() = AboutPresenter()
+    fun createAboutPresenter() = AboutPresenter()
 
-    override fun getPresenter(): AboutPresenter = presenter
+    private var cancelListener: CancelAboutListener? = null
 
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
-    @CallSuper
-    protected override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_about)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupViewPager()
+        setupPageIndicator()
+        initClickListeners()
+    }
 
-        presenter.openMain = intent.getBooleanExtra(AboutView.EXTRA_OPEN_MAIN, true)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        cancelListener = activity as? CancelAboutListener
+    }
 
-        val adapter = AboutAdapter()
-        viewpager.adapter = adapter
-        viewpager.offscreenPageLimit = adapter.count - 1
+    override fun onDetach() {
+        super.onDetach()
+        cancelListener = null
+    }
 
-        pageIndicator.count = COUNT_PAGE
-        pageIndicator.setSelected(DEFAULT_PAGE)
-
+    private fun initClickListeners() {
         btnClose.setThrottledClickListener {
-            presenter.closeAboutActivity()
+            closeAbout()
             if (viewpager.currentItem == viewpager.childCount - 1) {
                 presenter.logExitStep(0)
             } else {
@@ -61,12 +66,23 @@ class AboutActivity : BaseActivity(), AboutView {
         btnNext.setOnClickListener {
             if (viewpager.currentItem == viewpager.childCount - 1) {
                 btnNext.isEnabled = false
-                presenter.closeAboutActivity()
+                closeAbout()
                 presenter.logExitStep(0)
             } else {
                 viewpager.currentItem = viewpager.currentItem + 1
             }
         }
+    }
+
+    private fun setupPageIndicator() {
+        pageIndicator.count = COUNT_PAGE
+        pageIndicator.setSelected(DEFAULT_PAGE)
+    }
+
+    private fun setupViewPager() {
+        val adapter = AboutAdapter()
+        viewpager.adapter = adapter
+        viewpager.offscreenPageLimit = adapter.count - 1
         viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
@@ -83,21 +99,34 @@ class AboutActivity : BaseActivity(), AboutView {
 
     override fun onBackPressed() {
         if (viewpager.currentItem == 0) {
-            presenter.closeAboutActivity()
+            closeAbout()
         } else {
             viewpager.currentItem = viewpager.currentItem - 1
         }
+    }
+
+    private fun closeAbout() {
+        presenter.closeAbout(cancelListener != null)
+    }
+
+    override fun navigateUp() {
+        // TODO fix it after support single activity in whole app
+        if (activity is MainNavigateActivity) {
+            findNavController().navigateUp()
+        } else {
+            fragmentManager?.popBackStack()
+        }
+    }
+
+    override fun openMain() {
+        cancelListener?.onCancelAbout()
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
     override fun setError(finish: Boolean, errId: Int, vararg args: String?) {}
     override fun setError(e: ApiException) {}
     override fun setError(e: DatabaseException) {}
-
-    companion object {
-        private const val COUNT_PAGE = 2
-        private const val DEFAULT_PAGE = 1
-    }
+    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 
     inner class AboutAdapter : PagerAdapter() {
         private val pages = arrayOf<AboutItem>(item_0, item_1)
@@ -110,5 +139,14 @@ class AboutActivity : BaseActivity(), AboutView {
                 container.removeView(obj)
             }
         }
+    }
+
+    interface CancelAboutListener {
+        fun onCancelAbout()
+    }
+
+    companion object {
+        private const val COUNT_PAGE = 2
+        private const val DEFAULT_PAGE = 0
     }
 }

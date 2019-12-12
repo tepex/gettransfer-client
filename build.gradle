@@ -205,7 +205,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/ThanksForRatePresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/TransferDetailsPresenter.kt",
 
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AboutActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AboutFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AppsFlyerHandleDeepLinkActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AuthorizationPagerFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
@@ -248,7 +248,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SmsCodeFragment.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SupportActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SplashActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SupportFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SystemUtils.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
@@ -285,6 +285,7 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/utils/FragmentUtils.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/AboutView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseBottomSheetView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseHandleUrlView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseMapDialogView.kt",
@@ -312,6 +313,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SettingsView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SignUpView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SmsCodeView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SplashView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SupportView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/TransferDetailsView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/RequestsFragmentView.kt",

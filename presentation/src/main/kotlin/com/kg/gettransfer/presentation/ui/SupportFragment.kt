@@ -20,6 +20,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.SupportPresenter
 import com.kg.gettransfer.presentation.ui.custom.ContactsView
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
+import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SupportView
 
 import kotlinx.android.synthetic.main.fragment_support.*
@@ -36,7 +37,7 @@ class SupportFragment : BaseFragment(), SupportView {
     internal lateinit var presenter: SupportPresenter
 
     @ProvidePresenter
-    fun createSettingsPresenter() = SupportPresenter()
+    fun createSupportPresenter() = SupportPresenter()
 
     private var transferId: Long? = null
     private var showBackArrow = false
@@ -125,6 +126,15 @@ class SupportFragment : BaseFragment(), SupportView {
                     android.R.id.content,
                     null, true)
             }
+        }
+    }
+
+    override fun showAboutUs() {
+        // TODO fix it after support single activity in whole app
+        if (activity is MainNavigateActivity) {
+            findNavController().navigate(SupportFragmentDirections.goToAbout())
+        } else {
+            fragmentManager?.let { Screens.showAboutScreen(it) }
         }
     }
 
