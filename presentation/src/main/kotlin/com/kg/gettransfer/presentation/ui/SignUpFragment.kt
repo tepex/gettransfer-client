@@ -106,7 +106,7 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                                 setText(if (phoneCode > 0) "+$phoneCode" else "+")
                             }
                         }
-                        post { setSelection(phoneLayout.fieldText.text.toString().length) }
+                        post { setSelection(this.text.toString().length) }
                     }
                 }
             }

@@ -58,9 +58,12 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
     }
 
     private fun checkFieldsIsValid(): Boolean {
-        return LoginHelper.phoneIsValid(phone) && LoginHelper.emailIsValid(email).also {
-            if (!it) viewState.showValidationErrorDialog(Utils.phoneUtil.internationalExample(sessionInteractor.locale))
+        val isValid = LoginHelper.phoneIsValid(phone) && LoginHelper.emailIsValid(email)
+        if (!isValid) {
+            val phoneExample = Utils.phoneUtil.internationalExample(sessionInteractor.locale)
+            viewState.showValidationErrorDialog(phoneExample)
         }
+        return isValid
     }
 
     fun updateEmailOrPhone(emailOrPhone: String, isPhone: Boolean) {
