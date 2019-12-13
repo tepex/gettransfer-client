@@ -101,11 +101,14 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
                 if (hasFocus) {
                     phoneLayout.fieldText.text.toString().let { phone ->
                         context?.let { context ->
-                            val phoneCode = Utils.getPhoneCodeByCountryIso(context)
-                            if (phone.isEmpty()) setText(if (phoneCode > 0) "+$phoneCode" else "+")
+                            if (phone.isEmpty()) {
+                                val phoneCode = Utils.getPhoneCodeByCountryIso(context)
+                                setText(if (phoneCode > 0) "+$phoneCode" else "+")
+                            }
                         }
+                        post { setSelection(phoneLayout.fieldText.text.toString().length) }
                     }
-                } else if (phoneLayout.fieldText.text.toString().length <= MIN_PHONE_LENGTH) setText("")
+                }
             }
         }
     }
@@ -238,7 +241,6 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 
     companion object {
-        const val MIN_PHONE_LENGTH = 4
         const val THROTTLED_DELAY = 1_000L
 
         fun newInstance() = SignUpFragment()
