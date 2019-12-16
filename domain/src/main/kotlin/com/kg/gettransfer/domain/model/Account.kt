@@ -36,7 +36,7 @@ data class Account(
 
         val EMPTY = Account(
             user = User.EMPTY,
-            locale = Locale.getDefault(),
+            locale = Locale.ENGLISH,
             currency = Currency.DEFAULT,
             distanceUnit = DistanceUnit.KM,
             groups = emptyList(),

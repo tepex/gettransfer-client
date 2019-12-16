@@ -11,6 +11,7 @@ import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.model.map
 
@@ -118,8 +119,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         val localeModel = configsManager.getConfigs().availableLocales
             .filter { Configs.LOCALES_FILTER.contains(it.language) }
             .map { it.map() }
-            .find { it.delegate.language == locale.language }
-        viewState.setLocale(localeModel?.name ?: "", locale.language)
+            .find { it.delegate.language == locale.language } ?: LocaleModel(locale)
+        viewState.setLocale(localeModel.name, locale.language)
         viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
     }
 
