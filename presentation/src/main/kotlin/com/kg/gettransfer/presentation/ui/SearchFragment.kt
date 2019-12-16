@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui
 
 import android.animation.Animator
 import android.os.Bundle
-import android.os.Handler
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
@@ -106,11 +105,11 @@ class SearchFragment : BaseFragment(), SearchView {
     private fun setupToolbar() {
         toolbarLayout.ivBack.setThrottledClickListener {
             view?.hideKeyboard()
-            Handler().postDelayed({ goToBack() }, DELAY)
+            goToBack()
         }
     }
 
-    fun onSearchFieldEmpty(isToField: Boolean) {
+    fun onSearchFieldEmpty() {
         presenter.initSuggestedAddresses()
     }
 
@@ -183,9 +182,7 @@ class SearchFragment : BaseFragment(), SearchView {
 
     override fun goToMap() {
         view?.hideKeyboard()
-        Handler().postDelayed({
-            findNavController().navigate(SearchFragmentDirections.goToMap())
-        }, DELAY)
+        findNavController().navigate(SearchFragmentDirections.goToMap())
     }
 
     override fun goToBack() {
@@ -194,12 +191,6 @@ class SearchFragment : BaseFragment(), SearchView {
 
     override fun goToCreateOrder() {
         view?.hideKeyboard()
-        Handler().postDelayed({
-            findNavController().navigate(SearchFragmentDirections.goToCreateOrder())
-        }, DELAY)
-    }
-
-    companion object {
-        const val DELAY = 400L
+        findNavController().navigate(SearchFragmentDirections.goToCreateOrder())
     }
 }
