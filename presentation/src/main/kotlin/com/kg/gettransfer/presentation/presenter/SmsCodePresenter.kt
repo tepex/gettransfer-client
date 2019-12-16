@@ -28,8 +28,8 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
     private var smsResendDelay = Second(RESENT_DELAY).millis
     private lateinit var timerBtnResendCode: CountDownTimer
 
-    override fun attachView(view: SmsCodeView) {
-        super.attachView(view)
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
         worker.main.launch {
             smsResendDelay = configsManager.getMobileConfigs().smsResendDelay.millis
             initTimer()
@@ -101,17 +101,22 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
         }
     }
 
-    fun setTimer() {
+    private fun setTimer() {
         viewState.startTimer()
         timerBtnResendCode.start()
     }
 
-    fun cancelTimer() {
+    private fun cancelTimer() {
         timerBtnResendCode.cancel()
     }
 
     fun back() {
         router.replaceScreen(Screens.AuthorizationPager(JSON.stringify(LogInView.Params.serializer(), params)))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cancelTimer()
     }
 
     companion object {

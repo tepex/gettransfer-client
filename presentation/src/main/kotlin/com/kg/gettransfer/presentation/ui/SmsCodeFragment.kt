@@ -33,11 +33,6 @@ class SmsCodeFragment : BaseLogInFragment(), SmsCodeView {
 
     override fun getPresenter(): SmsCodePresenter = presenter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        presenter.setTimer()
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_sms_code, container, false)
 
@@ -122,7 +117,6 @@ class SmsCodeFragment : BaseLogInFragment(), SmsCodeView {
     override fun onDestroy() {
         super.onDestroy()
 //        AppWatcher.objectWatcher.watch(this)
-        presenter.cancelTimer()
     }
 
     companion object {
