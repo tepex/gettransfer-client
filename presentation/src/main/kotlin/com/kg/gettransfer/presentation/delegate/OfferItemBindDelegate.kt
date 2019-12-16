@@ -25,6 +25,7 @@ import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.getEmptyImageRes
 import com.kg.gettransfer.presentation.model.getImageRes
 import com.kg.gettransfer.presentation.model.getModelsRes
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
