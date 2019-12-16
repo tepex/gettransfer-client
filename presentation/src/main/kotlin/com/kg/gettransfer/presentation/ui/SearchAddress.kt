@@ -74,7 +74,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         val clearListener = OnClickListener {
             text = ""
             addressField.requestFocus()
-            parent.onSearchFieldEmpty(isTo)
+            parent.onSearchFieldEmpty()
         }
         im_clearBtn.setOnClickListener(clearListener)
     }
@@ -95,7 +95,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
                 if (text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE) {
                     presenter.requestAddressListByPrediction(text.trim())
                 } else {
-                    parent.onSearchFieldEmpty(isTo)
+                    parent.onSearchFieldEmpty()
                 }
             }
         }
@@ -173,10 +173,10 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         if (!blockRequest && text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE) {
             presenter.requestAddressListByPrediction(text.trim())
         } else {
-            parent.onSearchFieldEmpty(isTo)
+            parent.onSearchFieldEmpty()
         }
         if (s.isNullOrBlank() && addressField.hasFocus()) {
-            parent.onSearchFieldEmpty(isTo)
+            parent.onSearchFieldEmpty()
             presenter.onClearAddress(isTo)
         }
     }
