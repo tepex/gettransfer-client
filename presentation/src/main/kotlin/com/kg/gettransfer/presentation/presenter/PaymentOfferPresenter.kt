@@ -77,14 +77,16 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     override fun attachView(view: PaymentOfferView) {
         super.attachView(view)
         utils.launchSuspend {
-            viewState.blockInterface(false)
-            initGPay()
+            viewState.selectPaymentType(selectedPayment)
+            if (!::googlePayPaymentsClient.isInitialized) {
+                viewState.blockInterface(true, true)
+                initGPay()
+            }
             checkCurrencyChanging()
             checkTransferAndOfferDataChanging()
             getTransferAndOffer()
             checkAccount()
             transfer?.let { setInfo(it) }
-            viewState.selectPaymentType(selectedPayment)
             checkLoginScreen()
             checkPaymentStatus()
         }
@@ -190,11 +192,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 val result = task.getResult(com.google.android.gms.common.api.ApiException::class.java)
                 if (result == true) {
                     viewState.showGooglePayButton()
+                    changePaymentType(PaymentRequestModel.GOOGLE_PAY)
                 } else {
                     viewState.hideGooglePayButton()
                 }
             } catch (e: ApiException) {
                 viewState.hideGooglePayButton()
+            } finally {
+                viewState.blockInterface(false)
             }
         }
     }
