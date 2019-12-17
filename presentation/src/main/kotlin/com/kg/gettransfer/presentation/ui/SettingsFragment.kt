@@ -156,7 +156,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
     override fun setCurrency(currency: String) { settingsCurrency.field_text.text = currency }
 
     override fun setLocale(locale: String, code: String) {
-        settingsLanguage.field_text.text = locale
         val langIconParams = LanguageDrawer.LanguageLayoutParamsRes.SETTINGS
         with(settingsLanguage.field_text) {
             text = locale

@@ -41,9 +41,7 @@ data class AccountEntity(
 fun AccountEntity.map(configs: Configs) =
     Account(
         user.map(),
-        configs.availableLocales.find { it.language == locale }?.let {
-            Locale(it.language, Locale.getDefault().country)
-        } ?: Locale.getDefault(),
+        configs.availableLocales.find { it.language == locale } ?: Account.EMPTY.locale,
         configs.supportedCurrencies.find { it.code == currency } ?: Currency.DEFAULT,
         distanceUnit?.let { DistanceUnit.valueOf(it.toUpperCase(Locale.US)) } ?: DistanceUnit.KM,
         groups ?: emptyList(),
@@ -52,4 +50,4 @@ fun AccountEntity.map(configs: Configs) =
     )
 
 fun Account.map() =
-    AccountEntity(user.map(), locale.language, currency.code, distanceUnit.name.toLowerCase(), groups, carrierId)
+    AccountEntity(user.map(), locale.language, currency.code, distanceUnit.name.toLowerCase(Locale.US), groups, carrierId)
