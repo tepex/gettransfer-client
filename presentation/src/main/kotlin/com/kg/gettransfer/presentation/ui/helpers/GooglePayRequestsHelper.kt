@@ -12,11 +12,14 @@ object GooglePayRequestsHelper : KoinComponent {
 
     private val configsManager: ConfigsManager by inject()
 
-    suspend fun getEnvironment() =
-        when (configsManager.getConfigs().googlePayCredentials.environment) {
+    suspend fun getEnvironment(): Int? {
+        val configsEnvironment = configsManager.getConfigs().googlePayCredentials.environment
+        if (configsEnvironment.isEmpty()) return null
+        return when (configsEnvironment) {
             GooglePayCredentials.ENVIRONMENT_PRODUCTION -> WalletConstants.ENVIRONMENT_PRODUCTION
             else                                        -> WalletConstants.ENVIRONMENT_TEST
         }
+    }
 
     private fun getBaseRequest() =
         JSONObject().apply {
