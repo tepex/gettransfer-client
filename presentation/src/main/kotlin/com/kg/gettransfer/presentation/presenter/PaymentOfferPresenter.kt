@@ -177,9 +177,11 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         }?.bookNowOffers?.getOffer(transportTypeId)
 
     private suspend fun initGPay() {
-        if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
-            viewState.initGooglePayPaymentsClient(GooglePayRequestsHelper.getEnvironment())
-            isReadyToPayWithGooglePayRequest()
+        GooglePayRequestsHelper.getEnvironment()?.let { environment ->
+            if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
+                viewState.initGooglePayPaymentsClient(environment)
+                isReadyToPayWithGooglePayRequest()
+            }
         }
     }
 
