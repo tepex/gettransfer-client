@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/field"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/checkoutcom_card_field_height"
+    android:background="@drawable/back_checkoutcom_card_field"
+    android:paddingStart="@dimen/margin16"
+    android:paddingEnd="@dimen/margin16">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:theme="@style/editTextHintCheckoutcomCard"
+        app:hintAnimationEnabled="false">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/field_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:ellipsize="end"
+            android:fontFamily="@font/helvetica_neue"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/checkoutcom_texts_size"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</FrameLayout>

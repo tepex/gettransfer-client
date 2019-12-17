@@ -11,6 +11,7 @@ import com.kg.gettransfer.R
 
 object FragmentUtils {
 
+    @Suppress("LongParameterList")
     fun replaceFragment(
         fragmentManager: FragmentManager,
         fragment: Fragment,

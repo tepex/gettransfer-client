@@ -22,6 +22,13 @@
         <attr name="android:inputType"/>
     </declare-styleable>
 
+    <declare-styleable name="CheckoutcomCardFieldView" parent="EditableView">
+        <attr name="hint"/>
+        <attr name="android:inputType"/>
+        <attr name="android:digits"/>
+        <attr name="android:textAllCaps"/>
+    </declare-styleable>
+
     <declare-styleable name="TransferDetailsField" parent="EditableView">
         <attr name="title_transfer_details" format="string" />
         <attr name="input_transfer_details" format="string"/>
