@@ -787,4 +787,27 @@
 	<dimen name="cancelation_request_dialog_button_cancel_margin_top">20dp</dimen>
 	<dimen name="cancelation_request_dialog_button_agree_margin_top">10dp</dimen>
 
+	<!-- Checkoutcom paying screen -->
+	<dimen name="checkoutcom_secure_payment_text_size">16sp</dimen>
+	<dimen name="checkoutcom_paid_text_margin_start">4dp</dimen>
+	<dimen name="checkoutcom_paid_sum_text_size">24sp</dimen>
+	<dimen name="checkoutcom_texts_size">14sp</dimen>
+	<dimen name="checkoutcom_horizontal_margins_16">16dp</dimen>
+	<dimen name="checkoutcom_img_lock_margin_top">32dp</dimen>
+	<dimen name="checkoutcom_payment_form_margin_top">24dp</dimen>
+	<dimen name="checkoutcom_payment_form_margin_bottom">40dp</dimen>
+	<dimen name="checkoutcom_payment_form_elevation">8dp</dimen>
+	<dimen name="checkoutcom_paid_sum_margin_top">24dp</dimen>
+	<dimen name="checkoutcom_paid_sum_margin_start">8dp</dimen>
+	<dimen name="checkoutcom_img_card_type_height">24dp</dimen>
+	<dimen name="checkoutcom_card_field_height">48dp</dimen>
+	<dimen name="checkoutcom_card_field_hint_padding">4dp</dimen>
+	<dimen name="checkoutcom_card_number_margin_top">32dp</dimen>
+	<dimen name="checkoutcom_card_date_margin_top">24dp</dimen>
+	<dimen name="checkoutcom_card_date_and_svs_horizontal_margin">8dp</dimen>
+	<dimen name="checkoutcom_pay_button_height">48dp</dimen>
+	<dimen name="checkoutcom_pay_button_margin_top">24dp</dimen>
+	<dimen name="checkoutcom_currency_warning_margin_top">16dp</dimen>
+	<dimen name="checkoutcom_currency_warning_margin_bottom">24dp</dimen>
+
 </resources>

@@ -259,7 +259,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         if (transfer.status == Transfer.Status.REJECTED) {
             transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(
                 this@TransferDetailsActivity,
-                R.color.color_transfer_details_text_red
+                R.color.color_gtr_red
             ))
         }
 

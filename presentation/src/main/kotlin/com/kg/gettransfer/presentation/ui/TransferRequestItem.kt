@@ -93,7 +93,7 @@ class TransferRequestItem @JvmOverloads constructor(
         tvTransferRequestStatus.setTextColor(ContextCompat.getColor(
             context,
             when (item.status) {
-                Transfer.Status.OUTDATED  -> R.color.color_transfer_details_text_red
+                Transfer.Status.OUTDATED  -> R.color.color_gtr_red
                 Transfer.Status.PERFORMED -> R.color.color_gtr_green
                 Transfer.Status.COMPLETED -> R.color.colorTextBlack
                 Transfer.Status.NEW       ->

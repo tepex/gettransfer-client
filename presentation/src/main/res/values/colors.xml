@@ -32,6 +32,11 @@
 
     <color name="payment_currency_info_text">#3d3d3d</color>
 
+    <color name="checkoutcom_pay_btn_color">#A1B634</color>
+    <color name="checkoutcom_pay_btn_pressed_color">#96AA30</color>
+    <color name="checkoutcom_hint_color">#808080</color>
+    <color name="checkoutcom_field_error">#A21818</color>
+
     <!--view_trip_info-->
     <color name="colorTransferRequestText">#9b9b9b</color>
 
@@ -56,7 +61,6 @@
     <color name="color_transfer_details_horizontal_divider">@color/colorDivider</color> <!--TODO remove and replace all gray dividers to sh_divider_gray.xml-->
     <color name="color_transfer_details_horizontal_divider_new">@color/colorDividerLight</color> <!--TODO remove and replace all gray dividers to sh_divider_light_gray.xml-->
     <color name="color_transfer_details_text_gray">#B2B2B2</color>
-    <color name="color_transfer_details_text_red">#ff3b30</color>
 
     <!--Driver mode -->
     <color name="color_driver_mode_divider">#19000000</color>

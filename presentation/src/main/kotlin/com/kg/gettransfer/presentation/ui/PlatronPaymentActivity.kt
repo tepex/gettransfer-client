@@ -31,8 +31,8 @@ import com.kg.gettransfer.presentation.presenter.PlatronPaymentPresenter
 
 import com.kg.gettransfer.presentation.view.PlatronPaymentView
 
-import kotlinx.android.synthetic.main.activity_payment.*
-import kotlinx.android.synthetic.main.activity_payment.spinner
+import kotlinx.android.synthetic.main.activity_platron_payment.*
+import kotlinx.android.synthetic.main.activity_platron_payment.spinner
 import org.jetbrains.anko.toast
 import timber.log.Timber
 
@@ -52,7 +52,7 @@ class PlatronPaymentActivity : BaseActivity(), PlatronPaymentView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_payment)
+        setContentView(R.layout.activity_platron_payment)
 
         hideKeyboard()
 
