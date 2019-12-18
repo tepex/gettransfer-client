@@ -36,6 +36,7 @@ interface PaymentOfferView : BaseView {
     fun selectPaymentType(type: String)
 
     fun showOfferError()
+    fun showPaymentInProgressError()
     fun showBadCredentialsInfo(field: Int)
     fun showFieldError(@StringRes stringId: Int)
     fun highLightError(error: CreateOrderView.FieldError?)

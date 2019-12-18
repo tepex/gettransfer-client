@@ -78,8 +78,13 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         super.attachView(view)
         utils.launchSuspend {
             viewState.selectPaymentType(selectedPayment)
-            if (!::googlePayPaymentsClient.isInitialized) initGPay()
+            updateTransferData()
             checkCurrencyChanging()
+            if (!::googlePayPaymentsClient.isInitialized) {
+                initGooglePayClient()
+            } else {
+                viewState.blockInterface(false)
+            }
             checkTransferAndOfferDataChanging()
             getTransferAndOffer()
             checkAccount()
@@ -145,7 +150,6 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 viewState.blockInterface(true, true)
                 isCanPayAfterLogIn = false
                 transfer?.id?.let { updatePaymentData(it) }
-                viewState.blockInterface(false)
             }
         }
         currency = sessionInteractor.currency.code
@@ -154,10 +158,21 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private suspend fun updatePaymentData(transferId: Long) {
         when (val selectedOffer = offer) {
             is Offer        -> getOffer(transferId, selectedOffer.id)
-            is BookNowOffer -> getBookNowOffer(transferId, selectedOffer.transportType.id)
+            is BookNowOffer -> getBookNowOffer(selectedOffer.transportType.id)
             else            -> null
         }.let { updatedOffer ->
             paymentInteractor.selectedOffer = updatedOffer
+        }
+    }
+
+    private suspend fun updateTransferData() {
+        transfer?.id?.let { transferId ->
+            viewState.blockInterface(true, true)
+            fetchDataOnly {
+                transferInteractor.getTransfer(transferId)
+            }.also { updatedTransfer ->
+                paymentInteractor.selectedTransfer = updatedTransfer
+            }
         }
     }
 
@@ -166,14 +181,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             offerInteractor.getOffers(transferId)
         }?.getOffer(offerId)
 
-    private suspend fun getBookNowOffer(transferId: Long, transportTypeId: TransportType.ID) =
-        fetchDataOnly {
-            transferInteractor.getTransfer(transferId)
-        }.also { updatedTransfer ->
-            paymentInteractor.selectedTransfer = updatedTransfer
-        }?.bookNowOffers?.getOffer(transportTypeId)
+    private fun getBookNowOffer(transportTypeId: TransportType.ID) =
+        paymentInteractor.selectedTransfer?.bookNowOffers?.getOffer(transportTypeId)
 
-    private suspend fun initGPay() {
+    private suspend fun initGooglePayClient() {
         GooglePayRequestsHelper.getEnvironment()?.let { environment ->
             if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
                 viewState.blockInterface(true, true)
@@ -268,6 +279,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         if (transfer == null || offer == null) {
             viewState.blockInterface(false)
             viewState.showOfferError()
+            return
+        }
+        if (transfer?.pendingPaymentId != null) {
+            viewState.showPaymentInProgressError()
             return
         }
         utils.launchSuspend {
