@@ -3,8 +3,6 @@ package com.kg.gettransfer.presentation.presenter
 import com.checkout.android_sdk.Utils.CardUtils
 import com.checkout.android_sdk.Utils.Environment
 import com.kg.gettransfer.core.presentation.WorkerManager
-import com.kg.gettransfer.domain.model.BookNowOffer
-import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.PaymentProcessRequest
 import com.kg.gettransfer.domain.model.Token
 import com.kg.gettransfer.domain.model.PaymentProcess
@@ -46,12 +44,6 @@ class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentV
         super.attachView(view)
         gatewayId = PaymentRequestModel.CHECKOUTCOM
 
-        paymentInteractor.selectedOffer?.let { offer ->
-            when (offer) {
-                is BookNowOffer -> offer.base.def
-                is Offer        -> offer.price.base.def
-            }
-        }?.let { viewState.setPrice(it) }
         viewState.setCVCLength(maxCVCLength)
 
         worker.main.launch {

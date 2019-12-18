@@ -6,7 +6,6 @@ import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface CheckoutcomPaymentView : BaseView {
-    fun setPrice(price: String)
     fun initPaymentForm(environment: Environment, publicKey: String)
 
     fun setCardNumberLength(length: Int)
@@ -20,5 +19,6 @@ interface CheckoutcomPaymentView : BaseView {
 
     companion object {
         val EXTRA_PAYMENT_ID = "${CheckoutcomPaymentView::class.java.name}.paymentId"
+        val EXTRA_AMOUNT_FORMATTED = "${CheckoutcomPaymentView::class.java.name}.amountFormatted"
     }
 }

@@ -335,8 +335,8 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         val paymentResult = getCheckoutcomPaymentResult(paymentModel)
         paymentResult.error?.let {
             setError(it)
-        } ?: paymentResult.model.paymentId.let { paymentId ->
-            router.navigateTo(Screens.CheckoutcomPayment(paymentId))
+        } ?: paymentResult.model.let { payment ->
+            router.navigateTo(Screens.CheckoutcomPayment(payment.paymentId, payment.amountFormatted))
             viewState.blockInterface(false)
         }
     }

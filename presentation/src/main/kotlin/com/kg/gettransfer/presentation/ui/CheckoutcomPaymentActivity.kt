@@ -53,6 +53,7 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
         presenter.paymentId = intent.getLongExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, 0L)
 
         setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT)
+        setPrice(intent.getStringExtra(CheckoutcomPaymentView.EXTRA_AMOUNT_FORMATTED) ?: "")
         cardDate.setMaxLength(CARD_DATE_LENGTH)
         initTextChangedListeners()
         payButton.setOnClickListener { presenter.onPayButtonPressed() }
@@ -89,7 +90,7 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
         cardCVC.field_input.addTextChangedListener { presenter.cardCVC = it.toString() }
     }
 
-    override fun setPrice(price: String) {
+    private fun setPrice(price: String) {
         paidSum.text = price
     }
 

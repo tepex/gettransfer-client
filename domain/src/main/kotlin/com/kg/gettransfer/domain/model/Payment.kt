@@ -25,11 +25,12 @@ class PlatronPayment(
 class CheckoutcomPayment(
     type: Type,
     val url: String,
-    val paymentId: Long
+    val paymentId: Long,
+    val amountFormatted: String
 ) : Payment(type) {
 
     companion object {
-        val EMPTY = CheckoutcomPayment(EMPTY_TYPE, "", 0L)
+        val EMPTY = CheckoutcomPayment(EMPTY_TYPE, "", 0L, "")
     }
 }
 
