@@ -8,6 +8,7 @@ import com.kg.gettransfer.data.ds.RouteDataStoreRemote
 import com.kg.gettransfer.data.model.ResultEntity
 import com.kg.gettransfer.data.model.RouteInfoEntity
 import com.kg.gettransfer.data.model.map
+import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.RouteInfoRequest
@@ -22,7 +23,7 @@ class RouteRepositoryImpl(
 
     private val dateFormatTZ = get<ThreadLocal<DateFormat>>(named("iso_date_TZ"))
 
-    override suspend fun getRouteInfo(request: RouteInfoRequest): Result<RouteInfo> {
+    override suspend fun getRouteInfo(request: RouteInfoRequest, distanceUnit: DistanceUnit): Result<RouteInfo> {
 
         val requestEntity = request.map(dateFormatTZ.get())
         val result: ResultEntity<RouteInfoEntity?> = if (requestEntity.to != null) {
@@ -45,14 +46,14 @@ class RouteRepositoryImpl(
                 }
             }
         } catch (e: CacheException) {
-            return getResult(result)
+            return getResult(result, distanceUnit)
         }
-        return getResult(result)
+        return getResult(result, distanceUnit)
     }
 
-    private fun getResult(result: ResultEntity<RouteInfoEntity?>) =
+    private fun getResult(result: ResultEntity<RouteInfoEntity?>, distanceUnit: DistanceUnit) =
         Result(
-            result.entity?.map() ?: RouteInfo.EMPTY,
+            result.entity?.map(distanceUnit) ?: RouteInfo.EMPTY,
             result.error?.map(),
             result.error != null && result.entity != null,
             result.cacheError?.map()

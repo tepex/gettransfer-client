@@ -93,7 +93,7 @@ class OrderInteractor(
     }
 
     suspend fun getRouteInfo(request: RouteInfoRequest): Result<RouteInfo> {
-        val routeInfo = routeRepository.getRouteInfo(request)
+        val routeInfo = routeRepository.getRouteInfo(request, sessionRepository.account.distanceUnit)
         duration = routeInfo.model.duration
         return routeInfo
     }
