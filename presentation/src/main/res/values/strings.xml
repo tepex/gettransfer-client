@@ -439,7 +439,6 @@
     <string name="LNG_CHECKOUT_SECURE_LABEL">Secure bank card payment</string>
     <string name="LNG_CHECKOUT_PAYING">Amount to pay:</string>
     <string name="LNG_CHECKOUT_CARD_NUMBER">Card number</string>
-    <string name="LNG_CHECKOUT_CARD_HOLDER">Card holder</string>
     <string name="LNG_CHECKOUT_EXPIRATION_DATE">Expiration date</string>
     <string name="LNG_CHECKOUT_CVC">CVC</string>
     <string name="LNG_CHECKOUT_PAY">Pay</string>

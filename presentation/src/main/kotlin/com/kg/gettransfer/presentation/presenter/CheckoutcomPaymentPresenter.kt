@@ -32,7 +32,7 @@ class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentV
             viewState.setCVCLength(cardType.maxCvvLength)
             viewState.setCardTypeIcon(cardType.resourceId)
         }
-    var cardName = ""
+
     var cardMonth = ""
     var cardYear = ""
     var cardCVC = ""
@@ -60,7 +60,6 @@ class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentV
         if (!cardInfoDataIsValid()) return
         viewState.generateToken(
             cardNumber,
-            cardName,
             cardMonth,
             cardYear,
             cardCVC

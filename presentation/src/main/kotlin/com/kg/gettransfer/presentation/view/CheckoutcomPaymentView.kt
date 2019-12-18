@@ -12,7 +12,7 @@ interface CheckoutcomPaymentView : BaseView {
     fun setCVCLength(length: Int)
     fun setCardTypeIcon(iconResId: Int)
 
-    fun generateToken(number: String, name: String, month: String, year: String, cvc: String)
+    fun generateToken(number: String, month: String, year: String, cvc: String)
     fun redirectTo3ds(redirectUrl: String)
 
     fun highLightErrorField(fields: List<Int>)

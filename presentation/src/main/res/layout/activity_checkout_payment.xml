@@ -146,16 +146,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/paidSum" />
 
                 <com.kg.gettransfer.presentation.ui.custom.CheckoutcomCardFieldView
-                    android:id="@+id/cardName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/checkoutcom_horizontal_margins_16"
-                    android:inputType="text"
-                    android:textAllCaps="true"
-                    app:hint="@string/LNG_CHECKOUT_CARD_HOLDER"
-                    app:layout_constraintTop_toBottomOf="@+id/cardNumber" />
-
-                <com.kg.gettransfer.presentation.ui.custom.CheckoutcomCardFieldView
                     android:id="@+id/cardDate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -166,7 +156,7 @@
                     app:hint="@string/LNG_CHECKOUT_EXPIRATION_DATE"
                     app:layout_constraintEnd_toStartOf="@+id/cardCVC"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardName" />
+                    app:layout_constraintTop_toBottomOf="@+id/cardNumber" />
 
                 <com.kg.gettransfer.presentation.ui.custom.CheckoutcomCardFieldView
                     android:id="@+id/cardCVC"

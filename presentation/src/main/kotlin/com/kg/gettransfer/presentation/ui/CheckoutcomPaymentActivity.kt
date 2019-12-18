@@ -86,7 +86,6 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
             }
         }
 
-        cardName.field_input.addTextChangedListener { presenter.cardName = it.toString() }
         cardCVC.field_input.addTextChangedListener { presenter.cardCVC = it.toString() }
     }
 
@@ -127,8 +126,8 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
         })
     }
 
-    override fun generateToken(number: String, name: String, month: String, year: String, cvc: String) {
-        checkoutcomApiClient.generateToken(CardTokenisationRequest(number, name, month, year, cvc))
+    override fun generateToken(number: String, month: String, year: String, cvc: String) {
+        checkoutcomApiClient.generateToken(CardTokenisationRequest(number, "", month, year, cvc))
     }
 
     override fun redirectTo3ds(redirectUrl: String) {
