@@ -19,7 +19,7 @@ import androidx.navigation.fragment.FragmentNavigator
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 
 import com.kg.gettransfer.extensions.setupWithNavController
 import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener

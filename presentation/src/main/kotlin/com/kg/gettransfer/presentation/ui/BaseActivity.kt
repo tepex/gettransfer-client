@@ -51,7 +51,7 @@ import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 
 import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.showKeyboard
 import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 

@@ -10,8 +10,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isInvisible
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter

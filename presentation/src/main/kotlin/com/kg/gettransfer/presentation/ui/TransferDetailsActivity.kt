@@ -27,7 +27,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.model.Transfer
 
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.isNonZero
 
 import com.kg.gettransfer.presentation.delegate.Either

@@ -11,7 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 
 import com.kg.gettransfer.presentation.adapter.ChatAdapter
 import com.kg.gettransfer.presentation.adapter.CopyMessageListener

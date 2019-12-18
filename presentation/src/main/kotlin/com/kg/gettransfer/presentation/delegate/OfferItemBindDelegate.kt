@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.strikeText
 
 import com.kg.gettransfer.domain.model.Ratings
