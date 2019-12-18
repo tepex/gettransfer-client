@@ -20,7 +20,7 @@ import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.setThrottledClickListener
 

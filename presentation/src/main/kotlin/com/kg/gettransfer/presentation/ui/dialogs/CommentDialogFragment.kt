@@ -12,7 +12,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import com.google.android.material.chip.Chip
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.presentation.presenter.CommentPresenter
 import com.kg.gettransfer.presentation.ui.afterTextChanged
 import com.kg.gettransfer.presentation.view.CommentView

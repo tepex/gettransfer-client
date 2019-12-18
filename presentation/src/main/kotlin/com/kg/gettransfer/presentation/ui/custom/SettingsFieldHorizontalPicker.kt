@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_settings_field_horizontal_picker.*
 

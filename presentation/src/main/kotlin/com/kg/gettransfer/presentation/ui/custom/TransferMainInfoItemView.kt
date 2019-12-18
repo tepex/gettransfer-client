@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isInvisible
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_transfer_main_info_item.view.*
 

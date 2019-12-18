@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isGone
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.kg.gettransfer.presentation.ui.SearchFragment
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.a_b_orange_view.view.hourly_point

@@ -35,8 +35,8 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.Ratings
 import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.extensions.isInvisible
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 
 import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
@@ -44,7 +44,6 @@ import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.LocaleModel
-import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.ProfileModel

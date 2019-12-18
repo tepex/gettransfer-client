@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.ui.Utils

@@ -11,7 +11,7 @@ import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 
 import kotlinx.android.synthetic.main.fragment_rate_trip_animation.*
 

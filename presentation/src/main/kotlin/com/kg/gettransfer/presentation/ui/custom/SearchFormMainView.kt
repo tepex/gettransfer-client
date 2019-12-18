@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isGone
+import androidx.core.view.isGone
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.a_b_orange_view.view.*
 import kotlinx.android.synthetic.main.search_form_main.*

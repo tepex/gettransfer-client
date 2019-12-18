@@ -15,7 +15,7 @@ import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
 import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
 import com.kg.gettransfer.presentation.view.HandleUrlView

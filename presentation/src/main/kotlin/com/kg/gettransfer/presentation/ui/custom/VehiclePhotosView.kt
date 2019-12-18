@@ -14,7 +14,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.presentation.ui.OffersActivity.Companion.PHOTO_CORNER
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.ScrollGalleryInflater
