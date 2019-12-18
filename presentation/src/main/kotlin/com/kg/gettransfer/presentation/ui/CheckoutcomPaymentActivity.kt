@@ -53,6 +53,7 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
         presenter.paymentId = intent.getLongExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, 0L)
 
         setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT)
+        setPrice(intent.getStringExtra(CheckoutcomPaymentView.EXTRA_AMOUNT_FORMATTED) ?: "")
         cardDate.setMaxLength(CARD_DATE_LENGTH)
         initTextChangedListeners()
         payButton.setOnClickListener { presenter.onPayButtonPressed() }
@@ -85,11 +86,10 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
             }
         }
 
-        cardName.field_input.addTextChangedListener { presenter.cardName = it.toString() }
         cardCVC.field_input.addTextChangedListener { presenter.cardCVC = it.toString() }
     }
 
-    override fun setPrice(price: String) {
+    private fun setPrice(price: String) {
         paidSum.text = price
     }
 
@@ -126,8 +126,8 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
         })
     }
 
-    override fun generateToken(number: String, name: String, month: String, year: String, cvc: String) {
-        checkoutcomApiClient.generateToken(CardTokenisationRequest(number, name, month, year, cvc))
+    override fun generateToken(number: String, month: String, year: String, cvc: String) {
+        checkoutcomApiClient.generateToken(CardTokenisationRequest(number, "", month, year, cvc))
     }
 
     override fun redirectTo3ds(redirectUrl: String) {

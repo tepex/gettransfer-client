@@ -26,7 +26,6 @@
         <attr name="hint"/>
         <attr name="android:inputType"/>
         <attr name="android:digits"/>
-        <attr name="android:textAllCaps"/>
     </declare-styleable>
 
     <declare-styleable name="TransferDetailsField" parent="EditableView">

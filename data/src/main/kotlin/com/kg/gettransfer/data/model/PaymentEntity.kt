@@ -21,6 +21,7 @@ open class PaymentEntity(
         const val URL        = "url"
         const val PAYMENT_ID = "payment_id"
         const val PARAMS     = "params"
+        const val AMOUNT_FORMATTED = "amount_formatted"
     }
 }
 
@@ -32,7 +33,8 @@ class PlatronPaymentEntity(
 class CheckoutcomPaymentEntity(
     type: String,
     val url: String,
-    val paymentId: Long
+    val paymentId: Long,
+    val amountFormatted: String
 ) : PaymentEntity(type)
 
 class PaypalPaymentEntity(
@@ -88,7 +90,8 @@ fun CheckoutcomPaymentEntity.map() =
     CheckoutcomPayment(
         getMappedType(),
         url,
-        paymentId
+        paymentId,
+        amountFormatted
     )
 
 fun PaypalPaymentEntity.map() =

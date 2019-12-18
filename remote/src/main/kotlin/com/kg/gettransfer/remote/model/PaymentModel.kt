@@ -20,7 +20,8 @@ data class PlatronPaymentModel(
 data class CheckoutcomPaymentModel(
     @SerializedName(PaymentEntity.TYPE)       @Expose val type: String,
     @SerializedName(PaymentEntity.URL)        @Expose val url: String,
-    @SerializedName(PaymentEntity.PAYMENT_ID) @Expose val paymentId: Long
+    @SerializedName(PaymentEntity.PAYMENT_ID) @Expose val paymentId: Long,
+    @SerializedName(PaymentEntity.AMOUNT_FORMATTED) @Expose val amountFormatted: String
 )
 
 data class PaypalPaymentModel(
@@ -67,7 +68,8 @@ fun CheckoutcomPaymentModel.map() =
     CheckoutcomPaymentEntity(
         type,
         url,
-        paymentId
+        paymentId,
+        amountFormatted
     )
 
 fun PaypalPaymentModel.map() =

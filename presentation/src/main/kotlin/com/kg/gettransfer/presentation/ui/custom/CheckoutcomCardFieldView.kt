@@ -42,9 +42,6 @@ class CheckoutcomCardFieldView @JvmOverloads constructor(
             getString(R.styleable.CheckoutcomCardFieldView_android_digits)?.let { digits ->
                 field_input.keyListener = DigitsKeyListener.getInstance(digits)
             }
-            if (getBoolean(R.styleable.CheckoutcomCardFieldView_android_textAllCaps, false)) {
-                field_input.filters = arrayOf(InputFilter.AllCaps())
-            }
         }
 
         input_layout.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
