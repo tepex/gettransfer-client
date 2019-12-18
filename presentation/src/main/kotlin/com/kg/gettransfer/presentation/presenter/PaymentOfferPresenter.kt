@@ -78,10 +78,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         super.attachView(view)
         utils.launchSuspend {
             viewState.selectPaymentType(selectedPayment)
-            if (!::googlePayPaymentsClient.isInitialized) {
-                viewState.blockInterface(true, true)
-                initGPay()
-            }
+            if (!::googlePayPaymentsClient.isInitialized) initGPay()
             checkCurrencyChanging()
             checkTransferAndOfferDataChanging()
             getTransferAndOffer()
@@ -179,6 +176,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private suspend fun initGPay() {
         GooglePayRequestsHelper.getEnvironment()?.let { environment ->
             if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
+                viewState.blockInterface(true, true)
                 viewState.initGooglePayPaymentsClient(environment)
                 isReadyToPayWithGooglePayRequest()
             }
