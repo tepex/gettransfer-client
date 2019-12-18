@@ -164,10 +164,10 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        transfers_loader.isVisible = block
-        with(transfers_loader.shimmer_loader) {
+        with(transfers_loader) {
             requireActivity().runOnUiThread {
-                if (block) startShimmer() else stopShimmer()
+                isVisible = block
+                if (block) shimmer_loader.startShimmer() else shimmer_loader.stopShimmer()
             }
         }
     }
