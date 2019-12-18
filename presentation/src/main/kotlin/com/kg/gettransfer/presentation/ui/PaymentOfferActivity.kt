@@ -336,6 +336,10 @@ class PaymentOfferActivity : BaseActivity(),
         toast(getString(R.string.LNG_RIDE_OFFER_CANCELLED))
     }
 
+    override fun showPaymentInProgressError() {
+        Utils.showError(this, false, getString(R.string.LNG_RIDE_PAYMENT))
+    }
+
     override fun setCommission(paymentCommission: String, dateRefund: String) {
         tvCommission.text = getString(R.string.LNG_PAYMENT_SERVICE_FEE, paymentCommission)
         tvRefundDate.text = getString(R.string.LNG_PAYMENT_REFUND, dateRefund)
