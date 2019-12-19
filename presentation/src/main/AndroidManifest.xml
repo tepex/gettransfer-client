@@ -147,6 +147,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <!-- TODO needed refactoring -->
+
                 <data
                     android:host="gettransfer.com"
                     android:pathPattern="/passenger/cabinet"
