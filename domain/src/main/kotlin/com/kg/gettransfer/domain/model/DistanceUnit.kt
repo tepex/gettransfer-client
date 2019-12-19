@@ -6,12 +6,12 @@ import kotlin.math.roundToInt
  * Kilometers & miles
  */
 enum class DistanceUnit {
-    KM(), MI();
+    KM, MI;
 
     companion object {
-        val DEFAULT_LIST = arrayListOf(DistanceUnit.KM, DistanceUnit.MI)
-
+        val DEFAULT_LIST = arrayListOf(KM, MI)
         private const val MI_IN_KM = 0.6214
+
         fun kmToMi(km: Int) = (km * MI_IN_KM).roundToInt()
     }
 }

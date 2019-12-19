@@ -4,6 +4,7 @@ import android.content.Context
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.SessionInteractor
+import com.kg.gettransfer.domain.model.DistanceUnit
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -31,7 +32,11 @@ internal object SystemUtils : KoinComponent {
         }
 
         val distanceText = if (distance != 0) {
-            distanceValueText.plus(" ${sessionInteractor.distanceUnit.name}")
+            val distanceUnit = when (sessionInteractor.distanceUnit) {
+                DistanceUnit.KM -> context.getString(R.string.LNG_KM)
+                DistanceUnit.MI -> context.resources.getQuantityString(R.plurals.miles, distance, distance)
+            }
+            distanceValueText.plus(" $distanceUnit")
         } else {
             distanceValueText
         }

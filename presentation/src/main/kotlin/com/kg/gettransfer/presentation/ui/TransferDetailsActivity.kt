@@ -346,7 +346,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         if (distance == null || distance == TransferModel.ZERO_VALUE) {
             transfer_details_main.distance_view.showDash()
         } else {
-            transfer_details_main.distance_view.setValue(SystemUtils.formatDistance(this, distance, false, false))
+            transfer_details_main.distance_view.setValue(
+                SystemUtils.formatDistance(
+                    context = this,
+                    distance = distance,
+                    splitDistance = false,
+                    withDistanceText = false))
         }
     }
 
