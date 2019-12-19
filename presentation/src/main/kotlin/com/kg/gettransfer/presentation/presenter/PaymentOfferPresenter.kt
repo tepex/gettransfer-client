@@ -185,12 +185,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         paymentInteractor.selectedTransfer?.bookNowOffers?.getOffer(transportTypeId)
 
     private suspend fun initGooglePayClient() {
-        GooglePayRequestsHelper.getEnvironment()?.let { environment ->
-            if (configsManager.getConfigs().checkoutcomCredentials.publicKey.isNotEmpty()) {
-                viewState.blockInterface(true, true)
-                viewState.initGooglePayPaymentsClient(environment)
-                isReadyToPayWithGooglePayRequest()
-            }
+        val environment = GooglePayRequestsHelper.getEnvironment()
+        val publicKey = configsManager.getConfigs().checkoutcomCredentials.publicKey
+        if (environment != null && publicKey.isNotEmpty()) {
+            viewState.blockInterface(true, true)
+            viewState.initGooglePayPaymentsClient(environment)
+            isReadyToPayWithGooglePayRequest()
+        } else {
+            viewState.blockInterface(false)
         }
     }
 
