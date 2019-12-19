@@ -443,4 +443,9 @@
     <string name="LNG_CHECKOUT_CVC">CVC</string>
     <string name="LNG_CHECKOUT_PAY">Pay</string>
     <string name="LNG_CHECKOUT_CURRENCY_WARNING">The amount may be debited from your account in different currency upon the request of the acquirer bank</string>
+
+    <string name="LNG_KM">km</string>
+    <string name="LNG_MI">miles</string>
+    <string name="LNG_MI_ONE">mile</string>
+    <string name="LNG_MI_FEW">miles</string>
 </resources>

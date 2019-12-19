@@ -13,4 +13,11 @@
         <item quantity="many">@string/LNG_HOURS</item>
         <item quantity="other">@string/LNG_HOURS</item>
     </plurals>
+
+    <plurals name="miles">
+        <item quantity="one">@string/LNG_MI_ONE</item>
+        <item quantity="few">@string/LNG_MI_FEW</item>
+        <item quantity="many">@string/LNG_MI</item>
+        <item quantity="other">@string/LNG_MI</item>
+    </plurals>
 </resources>

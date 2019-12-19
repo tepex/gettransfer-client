@@ -8,7 +8,7 @@ class DistanceUnitModel(val delegate: DistanceUnit) : CharSequence {
 
     override fun toString(): String = name
 
-    override operator fun get(index: Int): Char = name.get(index)
+    override operator fun get(index: Int): Char = name[index]
 
     override fun subSequence(startIndex: Int, endIndex: Int): CharSequence = name.subSequence(startIndex, endIndex)
 }
