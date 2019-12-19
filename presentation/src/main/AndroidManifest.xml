@@ -147,17 +147,81 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <!-- TODO needed refactoring -->
+
                 <data
                     android:host="gettransfer.com"
-                    android:pathPattern=".*"
+                    android:pathPattern="/passenger/cabinet"
+                    android:scheme="https" />
+                <data
+                    android:host="gettransfer.com"
+                    android:pathPattern="/partner/cabinet"
+                    android:scheme="https" />
+                <data
+                    android:host="gettransfer.com"
+                    android:pathPrefix="/passenger/rate"
+                    android:scheme="https" />
+                <data
+                    android:host="gettransfer.com"
+                    android:pathPrefix="/partner/rate"
+                    android:scheme="https" />
+                <data
+                    android:host="gettransfer.com"
+                    android:pathPrefix="/api/transfers/voucher"
+                    android:scheme="https" />
+                <data
+                    android:host="gettransfer.com"
+                    android:pathPattern="/transfers/new"
+                    android:scheme="https" />
+
+                <data
+                    android:host="gtrbox.org"
+                    android:pathPattern="/passenger/cabinet"
                     android:scheme="https" />
                 <data
                     android:host="gtrbox.org"
-                    android:pathPattern=".*"
+                    android:pathPattern="/partner/cabinet"
+                    android:scheme="https" />
+                <data
+                    android:host="gtrbox.org"
+                    android:pathPrefix="/passenger/rate"
+                    android:scheme="https" />
+                <data
+                    android:host="gtrbox.org"
+                    android:pathPrefix="/partner/rate"
+                    android:scheme="https" />
+                <data
+                    android:host="gtrbox.org"
+                    android:pathPrefix="/api/transfers/voucher"
+                    android:scheme="https" />
+                <data
+                    android:host="gtrbox.org"
+                    android:pathPattern="/transfers/new"
+                    android:scheme="https" />
+
+                <data
+                    android:host="development.gtrbox.org"
+                    android:pathPattern="/passenger/cabinet"
                     android:scheme="https" />
                 <data
                     android:host="development.gtrbox.org"
-                    android:pathPattern=".*"
+                    android:pathPattern="/partner/cabinet"
+                    android:scheme="https" />
+                <data
+                    android:host="development.gtrbox.org"
+                    android:pathPrefix="/passenger/rate"
+                    android:scheme="https" />
+                <data
+                    android:host="development.gtrbox.org"
+                    android:pathPrefix="/partner/rate"
+                    android:scheme="https" />
+                <data
+                    android:host="development.gtrbox.org"
+                    android:pathPrefix="/api/transfers/voucher"
+                    android:scheme="https" />
+                <data
+                    android:host="development.gtrbox.org"
+                    android:pathPattern="/transfers/new"
                     android:scheme="https" />
             </intent-filter>
         </activity>
