@@ -12,6 +12,8 @@ import com.kg.gettransfer.domain.model.PaymentProcess
 import com.kg.gettransfer.domain.model.PaymentStatusRequest
 import com.kg.gettransfer.domain.model.PaymentStatus
 import com.kg.gettransfer.domain.model.BraintreeToken
+import com.kg.gettransfer.domain.model.CheckoutcomTokenRequest
+import com.kg.gettransfer.domain.model.CheckoutcomToken
 import com.kg.gettransfer.domain.model.Result
 
 interface PaymentRepository {
@@ -21,6 +23,12 @@ interface PaymentRepository {
     suspend fun getPlatronPayment(paymentRequest: PaymentRequest): Result<PlatronPayment>
 
     suspend fun getCheckoutcomPayment(paymentRequest: PaymentRequest): Result<CheckoutcomPayment>
+
+    suspend fun getCheckoutcomToken(
+        tokenRequest: CheckoutcomTokenRequest,
+        url: String,
+        key: String
+    ): Result<CheckoutcomToken>
 
     suspend fun getBraintreePayment(paymentRequest: PaymentRequest): Result<BraintreePayment>
 

@@ -21,6 +21,8 @@ import com.kg.gettransfer.domain.model.PaymentStatusRequest
 import com.kg.gettransfer.domain.model.PaymentStatus
 import com.kg.gettransfer.domain.model.BraintreeToken
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.CheckoutcomTokenRequest
+import com.kg.gettransfer.domain.model.CheckoutcomToken
 import com.kg.gettransfer.domain.repository.PaymentRepository
 
 import org.koin.core.inject
@@ -46,6 +48,17 @@ class PaymentRepositoryImpl(
             Result(factory.retrieveRemoteDataStore().createCheckoutcomPayment(paymentRequest.map()).map())
         } catch (e: RemoteException) {
             Result(CheckoutcomPayment.EMPTY, e.map())
+        }
+
+    override suspend fun getCheckoutcomToken(
+        tokenRequest: CheckoutcomTokenRequest,
+        url: String,
+        key: String
+    ): Result<CheckoutcomToken> =
+        try {
+            Result(factory.retrieveRemoteDataStore().getCheckoutcomToken(tokenRequest.map(), url, key).map())
+        } catch (e: RemoteException) {
+            Result(CheckoutcomToken.EMPTY, e.map())
         }
 
     override suspend fun getBraintreePayment(paymentRequest: PaymentRequest): Result<BraintreePayment> =

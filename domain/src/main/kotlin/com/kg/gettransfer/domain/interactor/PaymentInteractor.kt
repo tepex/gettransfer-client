@@ -6,6 +6,7 @@ import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.PaymentRequest
 import com.kg.gettransfer.domain.model.PaymentStatusRequest
 import com.kg.gettransfer.domain.model.PaymentProcessRequest
+import com.kg.gettransfer.domain.model.CheckoutcomTokenRequest
 
 import com.kg.gettransfer.domain.repository.PaymentRepository
 
@@ -28,6 +29,9 @@ class PaymentInteractor(private val repository: PaymentRepository) {
 
     suspend fun getCheckoutcomPayment(paymentRequest: PaymentRequest) =
         repository.getCheckoutcomPayment(paymentRequest)
+
+    suspend fun getCheckoutcomToken(tokenRequest: CheckoutcomTokenRequest, url: String, key: String) =
+        repository.getCheckoutcomToken(tokenRequest, url, key)
 
     suspend fun getBraintreePayment(paymentRequest: PaymentRequest) =
         repository.getBraintreePayment(paymentRequest)

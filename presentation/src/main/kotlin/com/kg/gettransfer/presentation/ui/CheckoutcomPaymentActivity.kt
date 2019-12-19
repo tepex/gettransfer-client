@@ -10,29 +10,27 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.content.ContextCompat
-import com.android.volley.VolleyError
-import com.checkout.android_sdk.CheckoutAPIClient
-import com.checkout.android_sdk.Request.CardTokenisationRequest
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter
 import com.kg.gettransfer.presentation.view.CheckoutcomPaymentView
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
-import com.checkout.android_sdk.Response.CardTokenisationFail
-import com.checkout.android_sdk.Response.CardTokenisationResponse
 import com.checkout.android_sdk.Utils.AfterTextChangedListener
-import com.checkout.android_sdk.Utils.Environment
 import com.kg.gettransfer.presentation.presenter.BaseCardPaymentPresenter
 import kotlinx.android.synthetic.main.activity_checkout_payment.*
 import kotlinx.android.synthetic.main.view_checkoutcom_card_field.*
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.addTextChangedListener
 import com.checkout.android_sdk.Utils.CardUtils
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter.Companion.CARD_CVC_ERROR
 import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter.Companion.CARD_DATE_ERROR
 import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter.Companion.CARD_DATE_LENGTH
 import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter.Companion.CARD_NUMBER_ERROR
 import com.kg.gettransfer.utilities.CardDateFormatter
+import io.sentry.Sentry
+import io.sentry.event.BreadcrumbBuilder
+import timber.log.Timber
 
 class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
 
@@ -43,8 +41,6 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
 
     @ProvidePresenter
     fun createPaymentPresenter() = CheckoutcomPaymentPresenter()
-
-    private lateinit var checkoutcomApiClient: CheckoutAPIClient
 
     @Suppress("UnsafeCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,29 +103,6 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
         cardTypeIcon.setImageDrawable(if (iconResId == 0) null else ContextCompat.getDrawable(this, iconResId))
     }
 
-    override fun initPaymentForm(environment: Environment, publicKey: String) {
-        checkoutcomApiClient = CheckoutAPIClient(this, publicKey, environment)
-        checkoutcomApiClient.setTokenListener(object : CheckoutAPIClient.OnTokenGenerated {
-            override fun onTokenGenerated(response: CardTokenisationResponse) {
-                presenter.onTokenGenerated(response.token)
-            }
-
-            override fun onError(error: CardTokenisationFail) {
-                setError(true, R.string.LNG_UNEXPECTED_PAYMENT_ERROR)
-                errorToSentry("Checkoutcom token error", error.errorType)
-            }
-
-            @Suppress("EmptyFunctionBlock")
-            override fun onNetworkError(error: VolleyError) {
-                // network error
-            }
-        })
-    }
-
-    override fun generateToken(number: String, month: String, year: String, cvc: String) {
-        checkoutcomApiClient.generateToken(CardTokenisationRequest(number, "", month, year, cvc))
-    }
-
     override fun redirectTo3ds(redirectUrl: String) {
         val web = WebView(this)
         web.loadUrl(redirectUrl)
@@ -174,6 +147,18 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
                 CARD_CVC_ERROR    -> cardCVC
                 else              -> null
             }?.showError()
+        }
+    }
+
+    override fun setError(e: ApiException) {
+        Timber.e(e, "code: ${e.code}")
+        Sentry.getContext().recordBreadcrumb(
+            BreadcrumbBuilder().setMessage("Checkoutcom token error: ${e.details}").build())
+        Sentry.capture(e)
+        if (e.code == ApiException.NETWORK_ERROR) {
+            Utils.showError(this, false, getString(R.string.LNG_NETWORK_ERROR))
+        } else {
+            Utils.showError(this, true, getString(R.string.LNG_UNEXPECTED_PAYMENT_ERROR))
         }
     }
 }

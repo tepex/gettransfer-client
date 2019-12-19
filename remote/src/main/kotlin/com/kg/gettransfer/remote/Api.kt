@@ -10,6 +10,7 @@ import retrofit2.http.*
 interface Api {
     companion object {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
+        const val CHECKOUTCOM_HEADER_TOKEN = "Authorization"
 
         const val API_ACCESS_TOKEN = "/api/access_token"
         const val API_ACCOUNT = "/api/account"
@@ -147,6 +148,11 @@ interface Api {
     suspend fun createCheckoutcomPayment(
         @Body createPayment: PaymentRequestModel
     ): ResponseModel<CheckoutcomPaymentModel>
+
+    @POST(".")
+    suspend fun getCheckoutcomToken(
+        @Body tokenRequest: CheckoutcomTokenRequestModel
+    ): CheckoutcomTokenModel
 
     @POST(API_PAYMENT)
     suspend fun createBraintreePayment(

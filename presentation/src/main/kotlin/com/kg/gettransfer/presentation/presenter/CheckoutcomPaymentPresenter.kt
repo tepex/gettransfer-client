@@ -2,25 +2,20 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.checkout.android_sdk.Utils.CardUtils
 import com.checkout.android_sdk.Utils.Environment
-import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.model.PaymentProcessRequest
 import com.kg.gettransfer.domain.model.Token
 import com.kg.gettransfer.domain.model.PaymentProcess
+import com.kg.gettransfer.domain.model.CheckoutcomTokenRequest
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.view.CheckoutcomPaymentView
 import com.kg.gettransfer.utilities.CardDateFormatter
-import kotlinx.coroutines.launch
 import moxy.InjectViewState
-import org.koin.core.inject
-import org.koin.core.parameter.parametersOf
 import sys.domain.CheckoutcomCredentials
 import java.util.Calendar
 
 @InjectViewState
 class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentView>() {
-
-    private val worker: WorkerManager by inject { parametersOf("CheckoutcomPaymentPresenter") }
 
     var cardNumber = ""
         set(value) {
@@ -45,25 +40,24 @@ class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentV
         gatewayId = PaymentRequestModel.CHECKOUTCOM
 
         viewState.setCVCLength(maxCVCLength)
-
-        worker.main.launch {
-            val checkoutcomCredentials = configsManager.getConfigs().checkoutcomCredentials
-            val environment = when (checkoutcomCredentials.environment) {
-                CheckoutcomCredentials.ENVIRONMENT_LIVE -> Environment.LIVE
-                else                                    -> Environment.SANDBOX
-            }
-            viewState.initPaymentForm(environment, checkoutcomCredentials.publicKey)
-        }
     }
 
     fun onPayButtonPressed() {
         if (!cardInfoDataIsValid()) return
-        viewState.generateToken(
-            cardNumber,
-            cardMonth,
-            cardYear,
-            cardCVC
-        )
+        utils.launchSuspend {
+            val checkoutcomCredentials = configsManager.getConfigs().checkoutcomCredentials
+            val url = when (checkoutcomCredentials.environment) {
+                CheckoutcomCredentials.ENVIRONMENT_LIVE -> Environment.LIVE
+                else                                    -> Environment.SANDBOX
+            }.token
+            val key = checkoutcomCredentials.publicKey
+            val tokenRequest =
+                CheckoutcomTokenRequest(CheckoutcomTokenRequest.CARD, cardNumber, cardMonth, cardYear, cardCVC)
+            fetchResultOnly { paymentInteractor.getCheckoutcomToken(tokenRequest, url, key) }.let { result ->
+                result.isSuccess()?.token?.let { onTokenGenerated(it) }
+                result.error?.let { viewState.setError(it) }
+            }
+        }
     }
 
     private fun cardInfoDataIsValid(): Boolean {
