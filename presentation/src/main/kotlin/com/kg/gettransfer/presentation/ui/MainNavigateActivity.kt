@@ -30,6 +30,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment
+import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment
 import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
@@ -69,6 +70,17 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // TODO temporary solution
+        (currentNavController?.value?.currentDestination as? FragmentNavigator.Destination)?.let { currentDest ->
+            val backToMain =
+                currentDest.className == NewTransferMapFragment::class.java.name ||
+                currentDest.className == SearchFragment::class.java.name
+            if (backToMain) currentNavController?.value?.navigateUp()
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {

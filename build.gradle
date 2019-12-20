@@ -23,7 +23,7 @@ buildscript {
         dexcount_version      = "0.8.4"
         detekt_version        = "1.0.0-RC15"
         sentry_version        = "1.7.23"
-        nav_version           = "2.2.0-alpha01"
+        nav_version           = "2.2.0-rc03"
         appcenter_plugin_ver  = "1.1.16"
 
         core_testing_version            = "2.1.0"
