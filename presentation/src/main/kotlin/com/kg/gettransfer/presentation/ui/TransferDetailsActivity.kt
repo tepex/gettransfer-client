@@ -334,7 +334,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         if (transfer.to != null) setDistance(transfer.distance)
         setDuration(transfer.duration, transfer.time)
         setPrices(transfer)
-        setBookNow(transfer)
 
         val isCanDownloadVoucher =
             transfer.statusCategory == Transfer.STATUS_CATEGORY_CONFIRMED ||
@@ -451,11 +450,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
     }
 
-    private fun setBookNow(transfer: TransferModel) {
-        tv_bookNow_info.isVisible = transfer.isBookNow()
-        if (layoutAboutDriver.isShown) tv_bookNow_info.isVisible = false
-    }
-
     @Suppress("ComplexMethod")
     private fun initAboutRequestView(transfer: TransferModel) {
         transfer.nameSign?.let { initField(passenger_name, it) }
@@ -538,6 +532,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         initChatButton()
 
         initCarMarker(offer)
+    }
+
+    override fun setBookNowOfferInfo(isBookNowOffer: Boolean) {
+        tv_bookNow_info.isVisible = isBookNowOffer
     }
 
     private fun initChatButton() {
