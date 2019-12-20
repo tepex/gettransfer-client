@@ -230,7 +230,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
             endpoint.delegate.run {
                 setEndpoint(this)
             }
-            accountManager.logout()
+            clearAllCachedData()
         }
         configsManager.coldStart(worker.backgroundScope)
         fetchResult { sessionInteractor.coldStart() }
