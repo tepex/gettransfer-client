@@ -195,10 +195,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private fun initBottomSheets() {
         bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
-        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+        hideDetailsBottomSheet()
 
         bsSecondarySheet = BottomSheetBehavior.from(sheetSecondary)
-        bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
+        hideSecondaryBottomSheet()
 
         tintBackgroundShadow = tintBackground
         bsSecondarySheet.addBottomSheetCallback(bsCallback)
@@ -334,7 +334,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         if (transfer.to != null) setDistance(transfer.distance)
         setDuration(transfer.duration, transfer.time)
         setPrices(transfer)
-        setBookNow(transfer)
 
         val isCanDownloadVoucher =
             transfer.statusCategory == Transfer.STATUS_CATEGORY_CONFIRMED ||
@@ -451,11 +450,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
     }
 
-    private fun setBookNow(transfer: TransferModel) {
-        tv_bookNow_info.isVisible = transfer.isBookNow()
-        if (layoutAboutDriver.isShown) tv_bookNow_info.isVisible = false
-    }
-
     @Suppress("ComplexMethod")
     private fun initAboutRequestView(transfer: TransferModel) {
         transfer.nameSign?.let { initField(passenger_name, it) }
@@ -538,6 +532,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         initChatButton()
 
         initCarMarker(offer)
+    }
+
+    override fun setBookNowOfferInfo(isBookNowOffer: Boolean) {
+        tv_bookNow_info.isVisible = isBookNowOffer
     }
 
     private fun initChatButton() {
@@ -687,7 +685,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun showRateAnimation() {
-        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+        hideDetailsBottomSheet()
         if (!rateAnimation.isAdded) {
             supportFragmentManager.beginTransaction().apply {
                 replace(android.R.id.content, rateAnimation)
@@ -760,7 +758,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun onRatingChangeCancelled() {
-        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+        hideDetailsBottomSheet()
         presenter.ratingChangeCancelled()
     }
 
@@ -806,6 +804,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED -> hideSecondaryBottomSheet()
             else                                                         -> presenter.onBackCommandClick()
         }
+    }
+
+    private fun hideDetailsBottomSheet() {
+        scrollContent.post { scrollContent.fullScroll(View.FOCUS_UP) }
+        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
 
     private fun hideSecondaryBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }

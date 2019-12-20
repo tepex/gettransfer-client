@@ -13,6 +13,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun setTransfer(transfer: TransferModel)
     fun setOffer(offer: OfferModel, childSeats: Int)
+    fun setBookNowOfferInfo(isBookNowOffer: Boolean)
     fun showCancelationReasonsList()
     fun showAlertRestoreRequest()
     fun copyField(text: String)

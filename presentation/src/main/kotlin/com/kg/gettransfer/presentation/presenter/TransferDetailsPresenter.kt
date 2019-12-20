@@ -105,7 +105,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 offer = found
                 updateRatingState()
             }
-        }
+        } ?: run { viewState.setBookNowOfferInfo(transferModel.isBookNow()) }
     }
 
     private suspend fun setOffer(transferId: Long) = fetchData { offerInteractor.getOffers(transferId) }
@@ -116,6 +116,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 reviewInteractor.offerRateID = offer.id
                 if (transferModel.showOfferInfo) {
                     viewState.setOffer(offerModel, transferModel.countChilds)
+                    viewState.setBookNowOfferInfo(false)
                 }
                 offer
             } else {
