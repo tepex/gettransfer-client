@@ -6,6 +6,7 @@ import com.kg.gettransfer.data.model.PaymentRequestEntity
 import com.kg.gettransfer.data.model.PaymentProcessRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
 import com.kg.gettransfer.data.model.BraintreeTokenEntity
+import com.kg.gettransfer.data.model.CheckoutcomTokenRequestEntity
 import org.koin.core.inject
 
 /**
@@ -20,6 +21,9 @@ open class PaymentDataStoreRemote : PaymentDataStore {
 
     override suspend fun createCheckoutcomPayment(paymentRequest: PaymentRequestEntity) =
         remote.createCheckoutcomPayment(paymentRequest)
+
+    override suspend fun getCheckoutcomToken(tokenRequest: CheckoutcomTokenRequestEntity, url: String, key: String) =
+        remote.getCheckoutcomToken(tokenRequest, url, key)
 
     override suspend fun createBraintreePayment(paymentRequest: PaymentRequestEntity) =
         remote.createBraintreePayment(paymentRequest)

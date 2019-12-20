@@ -291,10 +291,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         Sentry.capture(e)
     }
 
-    fun errorToSentry(errName: String, message: String) {
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage("$errName: $message").build())
-    }
-
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
         BottomSheetDialog
             .newInstance()

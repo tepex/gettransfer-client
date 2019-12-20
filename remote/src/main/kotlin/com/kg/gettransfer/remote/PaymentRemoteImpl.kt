@@ -13,6 +13,8 @@ import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.data.model.BraintreeTokenEntity
 import com.kg.gettransfer.data.model.StringTokenEntity
 import com.kg.gettransfer.data.model.JsonTokenEntity
+import com.kg.gettransfer.data.model.CheckoutcomTokenRequestEntity
+import com.kg.gettransfer.data.model.CheckoutcomTokenEntity
 
 import com.kg.gettransfer.remote.model.ResponseModel
 import com.kg.gettransfer.remote.model.PlatronPaymentModel
@@ -22,6 +24,7 @@ import com.kg.gettransfer.remote.model.GooglePayPaymentModel
 import com.kg.gettransfer.remote.model.PaymentProcessModel
 import com.kg.gettransfer.remote.model.PaymentStatusWrappedModel
 import com.kg.gettransfer.remote.model.BraintreeTokenModel
+import com.kg.gettransfer.remote.model.CheckoutcomTokenModel
 import com.kg.gettransfer.remote.model.map
 
 import org.koin.core.get
@@ -43,6 +46,18 @@ class PaymentRemoteImpl : PaymentRemote {
         }
         @Suppress("UnsafeCallOnNullableType")
         return response.data!!.map()
+    }
+
+    override suspend fun getCheckoutcomToken(
+        tokenRequest: CheckoutcomTokenRequestEntity,
+        url: String,
+        key: String
+    ): CheckoutcomTokenEntity {
+        core.initChickoutcomApi(url, key)
+        val response: CheckoutcomTokenModel = core.tryTwice {
+            core.checkoutcomApi.getCheckoutcomToken(tokenRequest.map())
+        }
+        return response.map()
     }
 
     override suspend fun createBraintreePayment(paymentRequest: PaymentRequestEntity): BraintreePaymentEntity {

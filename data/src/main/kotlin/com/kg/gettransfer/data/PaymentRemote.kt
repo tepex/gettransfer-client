@@ -10,6 +10,8 @@ import com.kg.gettransfer.data.model.PaymentProcessEntity
 import com.kg.gettransfer.data.model.PaymentStatusRequestEntity
 import com.kg.gettransfer.data.model.PaymentStatusEntity
 import com.kg.gettransfer.data.model.BraintreeTokenEntity
+import com.kg.gettransfer.data.model.CheckoutcomTokenRequestEntity
+import com.kg.gettransfer.data.model.CheckoutcomTokenEntity
 
 import org.koin.core.KoinComponent
 
@@ -18,6 +20,12 @@ interface PaymentRemote : KoinComponent {
     suspend fun createPlatronPayment(paymentRequest: PaymentRequestEntity): PlatronPaymentEntity
 
     suspend fun createCheckoutcomPayment(paymentRequest: PaymentRequestEntity): CheckoutcomPaymentEntity
+
+    suspend fun getCheckoutcomToken(
+        tokenRequest: CheckoutcomTokenRequestEntity,
+        url: String,
+        key: String
+    ): CheckoutcomTokenEntity
 
     suspend fun createBraintreePayment(paymentRequest: PaymentRequestEntity): BraintreePaymentEntity
 
