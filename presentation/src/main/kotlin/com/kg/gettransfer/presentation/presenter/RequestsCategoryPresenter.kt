@@ -52,7 +52,7 @@ class RequestsCategoryPresenter(
 
     private var transfers: List<Transfer>? = null
     private var driverCoordinate: DriverCoordinate? = null
-    private var pagesCount: Int? = null // for pagination
+    //private var pagesCount: Int? = null // for pagination
 
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
@@ -63,8 +63,8 @@ class RequestsCategoryPresenter(
 
     override fun detachView(view: RequestsFragmentView?) {
         super.detachView(view)
-        transfers = null
-        viewState.removeTransfers()
+        //transfers = null
+        //viewState.removeTransfers()
         countEventsInteractor.removeCounterListener(this)
         coordinateInteractor.removeCoordinateListener(this)
         driverCoordinate?.requestCoordinates = false
@@ -79,7 +79,10 @@ class RequestsCategoryPresenter(
             var isError = false
             transfers = when (transferType) {
                 TRANSFER_ACTIVE -> withContext(worker.bg) {
-                    if (isBusinessAccount()) {
+                    transferInteractor.getTransfersActive().also {
+                        isError = it.isError()
+                    }.model
+                    /*if (isBusinessAccount()) {
                         getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ACTIVE).also {
                             isError = it.isError()
                         }.model.first
@@ -87,10 +90,13 @@ class RequestsCategoryPresenter(
                         transferInteractor.getTransfersActive().also {
                             isError = it.isError()
                         }.model
-                    }
+                    }*/
                 }
                 TRANSFER_ARCHIVE -> withContext(worker.bg) {
-                    if (isBusinessAccount()) {
+                    transferInteractor.getTransfersArchive().also {
+                        isError = it.isError()
+                    }.model
+                    /*if (isBusinessAccount()) {
                         getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ARCHIVE).also {
                             isError = it.isError()
                         }.model.first
@@ -98,7 +104,7 @@ class RequestsCategoryPresenter(
                         transferInteractor.getTransfersArchive().also {
                             isError = it.isError()
                         }.model
-                    }
+                    }*/
                 }
                 else -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
             }.sortedByDescending { it.dateToLocal }
@@ -117,17 +123,17 @@ class RequestsCategoryPresenter(
         }
     }
 
-    private suspend fun getAllTransfersAndPagesCount(page: Int, status: String): Result<Pair<List<Transfer>, Int?>> {
+    /*private suspend fun getAllTransfersAndPagesCount(page: Int, status: String): Result<Pair<List<Transfer>, Int?>> {
         val allTransfers = transferInteractor.getAllTransfers(getUserRole(), page, status)
         pagesCount = allTransfers.model.second
         return allTransfers
-    }
+    }*/
 
     private suspend fun prepareDataAsync(isRemoteData: Boolean) {
         transfers?.let { transfers ->
             if (transfers.isNotEmpty()) {
                 getTransfersWithMatchedOffers(transfers).also { transfersWithOffers ->
-                    viewState.updateTransfers(transfersWithOffers, pagesCount)
+                    viewState.updateTransfers(transfersWithOffers/*, pagesCount*/)
                     viewState.blockInterface(false)
                     updateEventsCount()
                 }
