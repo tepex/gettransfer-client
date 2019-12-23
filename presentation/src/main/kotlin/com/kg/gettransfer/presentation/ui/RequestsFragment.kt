@@ -8,7 +8,6 @@ import androidx.annotation.StringRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 
 import moxy.MvpAppCompatFragment
 
@@ -30,7 +29,6 @@ import com.kg.gettransfer.presentation.presenter.RequestsCategoryPresenter
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RequestsFragmentView
 import com.kg.gettransfer.presentation.view.RequestsView
-import com.kg.gettransfer.utilities.EndlessRecyclerViewScrollListener
 
 import kotlinx.android.synthetic.main.fragment_requests.*
 
@@ -52,7 +50,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     private val rvAdapter: RequestsRVAdapter?
     get() = rvRequests.adapter as? RequestsRVAdapter
 
-    private lateinit var scrollListener: EndlessRecyclerViewScrollListener
+    //private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
     companion object {
         const val TRANSFER_TYPE_ARG = "TRANSFER_TYPE_ARG"
@@ -78,7 +76,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
                 onChatClickListener
             )
         initClickListeners()
-        initScrollListener()
+        //initScrollListener()
     }
 
     private val onItemClickListener: ItemClickListener = {
@@ -99,7 +97,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
 
     private fun initClickListeners() {
         swipe_container.setOnRefreshListener {
-            scrollListener.resetState()
+            //scrollListener.resetState()
             rvAdapter?.removeAll()
             presenter.getTransfers()
         }
@@ -109,7 +107,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
         }
     }
 
-    private fun initScrollListener() {
+    /*private fun initScrollListener() {
         (rvRequests.layoutManager as? LinearLayoutManager)?.let { layoutManager ->
             scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
 
@@ -125,21 +123,23 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     override fun onDestroyView() {
         super.onDestroyView()
         rvRequests.removeOnScrollListener(scrollListener)
-    }
+    }*/
 
     override fun onDestroy() {
         super.onDestroy()
 //        AppWatcher.objectWatcher.watch(this)
     }
 
-    override fun updateTransfers(transfers: List<TransferModel>, pagesCount: Int?) {
-        swipe_container.isRefreshing = false
+    override fun updateTransfers(transfers: List<TransferModel>/*, pagesCount: Int?*/) {
+        rvAdapter?.apply {
+            swipe_container.isRefreshing = false
 
-        switchBackGroundData(false)
-        rvAdapter?.removeLoading()
-        pagesCount?.let { scrollListener.pages = it } ?: rvAdapter?.removeAll()
-        rvAdapter?.updateTransfers(transfers)
-        scrollListener.setLoaded()
+            switchBackGroundData(false)
+            removeLoading()
+            //pagesCount?.let { scrollListener.pages = it } ?: rvAdapter?.removeAll()
+            updateTransfers(transfers)
+            //scrollListener.setLoaded()
+        }
     }
 
     override fun updateCardWithDriverCoordinates(transferId: Long) {
@@ -166,8 +166,9 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
         with(transfers_loader) {
             requireActivity().runOnUiThread {
-                isVisible = block
-                if (block) shimmer_loader.startShimmer() else shimmer_loader.stopShimmer()
+                val showShimmer = block && rvAdapter?.isEmptyList() ?: true
+                isVisible = showShimmer
+                if (showShimmer) shimmer_loader.startShimmer() else shimmer_loader.stopShimmer()
             }
         }
     }
@@ -189,7 +190,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
 
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}
 
-    override fun removeTransfers() {
+    /*override fun removeTransfers() {
         rvAdapter?.removeAll()
-    }
+    }*/
 }
