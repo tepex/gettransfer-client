@@ -11,6 +11,4 @@ interface SplashView : MvpView {
     fun onNeedAppUpdateInfo()
 
     fun dispatchAppState(locale: Locale)
-
-    fun showAbout()
 }

@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.content.Context
 import android.os.Bundle
 
 import android.view.View
@@ -31,27 +30,22 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
     @ProvidePresenter
     fun createAboutPresenter() = AboutPresenter()
 
-    private var cancelListener: CancelAboutListener? = null
-
     init {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
+    private var firstLaunch = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getBundle()
         setupViewPager()
         setupPageIndicator()
         initClickListeners()
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        cancelListener = activity as? CancelAboutListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        cancelListener = null
+    private fun getBundle() {
+        arguments?.let { firstLaunch = it.getBoolean(FIRST_LAUNCH) }
     }
 
     private fun initClickListeners() {
@@ -106,7 +100,7 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
     }
 
     private fun closeAbout() {
-        presenter.closeAbout(cancelListener != null)
+        presenter.closeAbout(firstLaunch)
     }
 
     override fun navigateUp() {
@@ -114,12 +108,12 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
         if (activity is MainNavigateActivity) {
             findNavController().navigateUp()
         } else {
-            fragmentManager?.popBackStack()
+            parentFragmentManager.popBackStack()
         }
     }
 
     override fun openMain() {
-        cancelListener?.onCancelAbout()
+        parentFragmentManager.popBackStack()
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {}
@@ -141,12 +135,13 @@ class AboutFragment : MvpAppCompatFragment(R.layout.fragment_about), AboutView {
         }
     }
 
-    interface CancelAboutListener {
-        fun onCancelAbout()
-    }
-
     companion object {
         private const val COUNT_PAGE = 2
         private const val DEFAULT_PAGE = 0
+        private const val FIRST_LAUNCH = "first_launch"
+
+        fun newInstance(firstLaunch: Boolean = false) = AboutFragment().apply {
+            arguments = Bundle().apply { putBoolean(FIRST_LAUNCH, firstLaunch) }
+        }
     }
 }

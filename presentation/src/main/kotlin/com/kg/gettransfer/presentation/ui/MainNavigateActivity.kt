@@ -34,6 +34,8 @@ import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment
 import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
+import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.SHOW_ABOUT
+import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.activity_main_navigate.*
 import kotlinx.android.synthetic.main.notification_badge_view.view.*
 import org.jetbrains.anko.find
@@ -96,14 +98,16 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         setupBottomNavigationBar()
     }
 
-    /**
-     * Checking existing transfer for rate
-     */
     private fun getIntents(intent: Intent?) {
         intent?.let { arguments ->
             val transferId = arguments.getLongExtra(EXTRA_RATE_TRANSFER_ID, 0L)
             val rate = arguments.getIntExtra(EXTRA_RATE_VALUE, 0)
             if (transferId != 0L) presenter.rateTransfer(transferId, rate)
+            val showAbout = arguments.getBooleanExtra(SHOW_ABOUT, false)
+            if (showAbout) Screens.showAboutScreen(
+                fragmentManager = supportFragmentManager,
+                firstLaunch = true
+            )
         }
     }
 
