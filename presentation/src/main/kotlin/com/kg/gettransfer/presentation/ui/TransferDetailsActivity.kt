@@ -290,7 +290,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             append(when (transfer.status) {
                 Transfer.Status.NEW ->
                     when {
-                        transfer.isBookNow()                -> getMatchedTransferStatusText(transfer.timeToTransfer)
+                        transfer.isBookNow() ||
+                        transfer.pendingPaymentId != null   -> getMatchedTransferStatusText(transfer.timeToTransfer)
                         transfer.offersCount > 0 ||
                         transfer.bookNowOffers.isNotEmpty() -> getString(R.string.LNG_BOOK_OFFER)
                         else                                -> getString(R.string.LNG_WAIT_FOR_OFFERS)

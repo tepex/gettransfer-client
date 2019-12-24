@@ -75,15 +75,18 @@ class TransferRequestItem @JvmOverloads constructor(
         tvTransferRequestNumber.text = context.getString(R.string.LNG_RIDE_NUMBER).plus(item.id)
         tvTransferRequestStatus.text = when (item.status) {
             Transfer.Status.NEW -> when {
-                item.isBookNow() -> getMatchedTransferStatusText(item.timeToTransfer)
-                item.offersCount > 0 || item.bookNowOffers.isNotEmpty() -> context.getString(R.string.LNG_BOOK_OFFER)
-                else -> context.getString(R.string.LNG_WAIT_FOR_OFFERS)
+                item.isBookNow() ||
+                item.pendingPaymentId != null   -> getMatchedTransferStatusText(item.timeToTransfer)
+                item.offersCount > 0 ||
+                item.bookNowOffers.isNotEmpty() -> context.getString(R.string.LNG_BOOK_OFFER)
+                else                            -> context.getString(R.string.LNG_WAIT_FOR_OFFERS)
             }
-            Transfer.Status.PERFORMED -> if (item.dateTimeTZ.after(Date())) {
-                getMatchedTransferStatusText(item.timeToTransfer)
-            } else {
-                context.getString(R.string.LNG_TRANSFER_IN_PROGRESS)
-            }
+            Transfer.Status.PERFORMED ->
+                if (item.dateTimeTZ.after(Date())) {
+                    getMatchedTransferStatusText(item.timeToTransfer)
+                } else {
+                    context.getString(R.string.LNG_TRANSFER_IN_PROGRESS)
+                }
             else -> item.statusName?.run { context.getString(R.string.LNG_TRANSFER_WAS)
                 .plus(" ")
                 .plus(context.getString(item.statusName).toLowerCase())
