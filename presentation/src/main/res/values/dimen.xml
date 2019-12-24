@@ -761,14 +761,6 @@
 	<dimen name="driver_app_dialog_cancel_btn_vertical_margin">24dp</dimen>
 	<dimen name="driver_app_dialog_close_btn_margin_top_end">16dp</dimen>
 
-	<!-- Become a carrier screen -->
-	<dimen name="become_a_carrier_elements_horizontal_margin">26dp</dimen>
-	<dimen name="become_a_carrier_title_vertical_margins">40dp</dimen>
-	<dimen name="become_a_carrier_title_continue_btn_horizontal_margins">20dp</dimen>
-	<dimen name="become_a_carrier_title_continue_btn_margin_bottom">28dp</dimen>
-	<dimen name="become_a_carrier_continue_btn_text_size">14sp</dimen>
-	<dimen name="become_a_carrier_info_text_size">16sp</dimen>
-
 	<!-- Cancelation reasons -->
 	<dimen name="cancelation_reasons_padding_top">16dp</dimen>
 	<dimen name="cancelation_reasons_title_text_size">16sp</dimen>

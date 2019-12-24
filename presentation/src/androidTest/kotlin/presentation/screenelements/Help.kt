@@ -12,7 +12,6 @@ object Help : Screen<Help>() {
 
     val tvWeSpeak = KView { withId(R.id.tvWeSpeak) }
     val tvAboutUs = KView { withId(R.id.aboutUs) }
-    val tvBecomeCarrier  = KView { withId(R.id.becomeCarrier) }
     val tvMessageUs = KView { withId(R.id.tvMessageUs) }
     val tvLanguages = KView { withId(R.id.ourLanguages) }
     val tvSocialNetwork = KView { withId(R.id.socialNetwork) }
