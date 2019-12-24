@@ -18,11 +18,10 @@ import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.RequestsView
 
-import java.util.Calendar
-
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_communication_button.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
+import java.util.Date
 
 class TransferRequestItem @JvmOverloads constructor(
     context: Context,
@@ -80,7 +79,7 @@ class TransferRequestItem @JvmOverloads constructor(
                 item.offersCount > 0 || item.bookNowOffers.isNotEmpty() -> context.getString(R.string.LNG_BOOK_OFFER)
                 else -> context.getString(R.string.LNG_WAIT_FOR_OFFERS)
             }
-            Transfer.Status.PERFORMED -> if (item.dateTime.after(Calendar.getInstance().time)) {
+            Transfer.Status.PERFORMED -> if (item.dateTimeTZ.after(Date())) {
                 getMatchedTransferStatusText(item.timeToTransfer)
             } else {
                 context.getString(R.string.LNG_TRANSFER_IN_PROGRESS)

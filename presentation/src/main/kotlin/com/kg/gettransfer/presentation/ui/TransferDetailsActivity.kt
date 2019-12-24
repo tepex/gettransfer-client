@@ -284,36 +284,25 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     @Suppress("ComplexMethod")
     private fun setBookingInfo(transfer: TransferModel) {
-        booking_info.text = when (transfer.status) {
-            Transfer.Status.NEW -> buildString {
-                append(getString(R.string.LNG_TRANSFER))
-                append(" #${transfer.id} ")
-                val isOffersExist = transfer.offersCount > 0 || transfer.bookNowOffers.isNotEmpty()
-                if (isOffersExist && transfer.pendingPaymentId == null) {
-                    append(getString(R.string.LNG_BOOK_OFFER))
-                } else if (transfer.pendingPaymentId != null || transfer.isBookNow()) {
-                    append(getMatchedTransferStatusText(transfer.timeToTransfer))
-                } else {
-                    append(getString(R.string.LNG_WAIT_FOR_OFFERS))
-                }
-            }
-            Transfer.Status.PERFORMED -> buildString {
-                append(getString(R.string.LNG_TRANSFER))
-                append(" #${transfer.id} ")
-                if (transfer.dateTimeTZ.after(Date())) {
-                    append(getMatchedTransferStatusText(transfer.timeToTransfer))
-                } else {
-                    append(getString(R.string.LNG_IN_PROGRESS))
-                }
-            }
-            else -> transfer.statusName?.let { statusName ->
-                buildString {
-                    append(getString(R.string.LNG_TRANSFER_WAS))
-                    append(" #${transfer.id} ")
-                    append(" ")
-                    append(getString(statusName).toLowerCase())
-                }
-            }
+        booking_info.text = buildString {
+            append(getString(R.string.LNG_TRANSFER))
+            append(" #${transfer.id} ")
+            append(when (transfer.status) {
+                Transfer.Status.NEW ->
+                    when {
+                        transfer.isBookNow()                -> getMatchedTransferStatusText(transfer.timeToTransfer)
+                        transfer.offersCount > 0 ||
+                        transfer.bookNowOffers.isNotEmpty() -> getString(R.string.LNG_BOOK_OFFER)
+                        else                                -> getString(R.string.LNG_WAIT_FOR_OFFERS)
+                    }
+                Transfer.Status.PERFORMED ->
+                    if (transfer.dateTimeTZ.after(Date())) {
+                        getMatchedTransferStatusText(transfer.timeToTransfer)
+                    } else {
+                        getString(R.string.LNG_IN_PROGRESS)
+                    }
+                else -> transfer.statusName?.let { getString(it).toLowerCase() }
+            })
         }
     }
 
