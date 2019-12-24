@@ -46,7 +46,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 import timber.log.Timber
-import java.lang.UnsupportedOperationException
 
 class GTApplication : MultiDexApplication() {
 
@@ -108,7 +107,9 @@ class GTApplication : MultiDexApplication() {
 
     private fun setupPushSdk() {
         YandexMetricaPush.init(applicationContext)
-        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.DEBUG, OneSignal.LOG_LEVEL.DEBUG)
+        if (BuildConfig.DEBUG) {
+            OneSignal.setLogLevel(OneSignal.LOG_LEVEL.DEBUG, OneSignal.LOG_LEVEL.ERROR)
+        }
         // OneSignal Initialization
         OneSignal.startInit(this)
             .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
