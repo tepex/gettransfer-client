@@ -30,6 +30,8 @@ import com.kg.gettransfer.sys.remote.systemRemote
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
 import com.kg.gettransfer.utilities.GTNotificationManager
 
+import com.onesignal.OneSignal
+
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
 import com.yandex.metrica.push.YandexMetricaPush
@@ -104,7 +106,15 @@ class GTApplication : MultiDexApplication() {
         AppCenter.start(this, getString(R.string.appCenterKey), Crashes::class.java)
     }
 
-    private fun setupPushSdk() = YandexMetricaPush.init(applicationContext)
+    private fun setupPushSdk() {
+        YandexMetricaPush.init(applicationContext)
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.DEBUG, OneSignal.LOG_LEVEL.DEBUG)
+        // OneSignal Initialization
+        OneSignal.startInit(this)
+            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+            .unsubscribeWhenNotificationsAreDisabled(true)
+            .init()
+    }
 
     private fun setupAppsFlyer() {
         val conversionListener = object : AppsFlyerConversionListener {

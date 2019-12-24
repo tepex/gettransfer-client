@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/"}
+    }
+    dependencies {
+        classpath "gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.4, 0.99.99]"
+    }
+}
+
 plugins {
     id "io.qameta.allure" version "2.5" // Latest Plugin Version
 }
@@ -10,6 +19,11 @@ apply plugin: "kotlinx-serialization"
 apply plugin: "io.sentry.android.gradle" // for Proguard"s mapping file
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: "com.betomorrow.appcenter"
+apply plugin: "com.onesignal.androidsdk.onesignal-gradle-plugin"
+
+repositories {
+    maven { url 'https://maven.google.com' }
+}
 
 ext {
     multidex_version           = "2.0.1"
@@ -55,6 +69,7 @@ ext {
     swipe_refresh_version      = "1.1.0-alpha03"
     checkout_frames_version    = "2.1.1"
     appcenter_version          = "2.5.1"
+    onesignal_version          = "[3.11.2, 3.99.99]"
 }
 
 android {
@@ -77,6 +92,12 @@ android {
                 ]
             }
         }
+
+        manifestPlaceholders = [
+            onesignal_app_id: "9f8efc07-f660-44f7-bcac-24bb600dc5c3",
+            // Project number pulled from dashboard, local value is ignored.
+            onesignal_google_project_number: "REMOTE"
+        ]
     }
 
     signingConfigs {
@@ -327,8 +348,11 @@ dependencies {
     // Checkout.com
     implementation "com.github.checkout:frames-android:v$checkout_frames_version"
 
-    //AppCenter
+    // AppCenter
     implementation "com.microsoft.appcenter:appcenter-crashes:$appcenter_version"
+
+    // OneSignal
+    implementation "com.onesignal:OneSignal:$onesignal_version"
 
     api("androidx.transition:transition:$androidx_transition")
 
