@@ -29,22 +29,21 @@
         <TextView
             android:id="@+id/tvTransferType"
             style="@style/sf_pro_display_semibold"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/transfer_types_title_margin_start"
             android:layout_marginEnd="@dimen/transfer_types_title_margin_end"
+            android:gravity="center_vertical|end"
             android:maxLines="1"
             android:textSize="@dimen/transfer_types_title_text_size"
-            app:layout_constrainedWidth="true"
+            app:autoSizeMaxTextSize="@dimen/transfer_types_title_text_size"
+            app:autoSizeMinTextSize="@dimen/transfer_types_title_min_text_size"
+            app:autoSizeTextType="uniform"
             app:layout_constraintBottom_toBottomOf="@+id/cbTransferType"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/cbTransferType"
             app:layout_constraintTop_toTopOf="@+id/cbTransferType"
-            tools:text="Economy"
-            app:autoSizeTextType="uniform"
-            app:autoSizeMinTextSize="@dimen/transfer_types_title_min_text_size"
-            app:autoSizeMaxTextSize="@dimen/transfer_types_title_text_size"/>
+            tools:text="Economy" />
 
 
         <ImageView
