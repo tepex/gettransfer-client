@@ -418,6 +418,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
                 GooglePayRequestsHelper.getPaymentDataRequest(
                     params.amount,
                     params.currency,
+                    params.countryCode,
                     params.gateway,
                     params.gatewayMerchantId
                 ).toString()

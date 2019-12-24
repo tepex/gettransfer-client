@@ -72,11 +72,12 @@ object GooglePayRequestsHelper : KoinComponent {
             put("existingPaymentMethodRequired", true)
         }
 
-    private fun getTransactionInfo(price: Float, currency: String) =
+    private fun getTransactionInfo(price: Float, currency: String, countryCode: String) =
         JSONObject().apply {
             put("totalPrice", price.toString())
             put("totalPriceStatus", "FINAL")
             put("currencyCode", currency)
+            put("countryCode", countryCode)
         }
 
     private suspend fun getMerchantInfo() =
@@ -85,7 +86,7 @@ object GooglePayRequestsHelper : KoinComponent {
             put("merchantName", configsManager.getConfigs().googlePayCredentials.merchantName)
         }
 
-    suspend fun getPaymentDataRequest(price: Float, currency: String, gateway: String, gatewayMerchantId: String) =
+    suspend fun getPaymentDataRequest(price: Float, currency: String, countryCode: String, gateway: String, gatewayMerchantId: String) =
         getBaseRequest().apply {
             put(
                 "allowedPaymentMethods",
@@ -93,7 +94,7 @@ object GooglePayRequestsHelper : KoinComponent {
                     put(getCardPaymentMethod(gateway, gatewayMerchantId))
                 }
             )
-            put("transactionInfo", getTransactionInfo(price, currency))
+            put("transactionInfo", getTransactionInfo(price, currency, countryCode))
             put("merchantInfo", getMerchantInfo())
         }
 }
