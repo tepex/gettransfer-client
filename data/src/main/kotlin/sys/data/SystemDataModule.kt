@@ -47,7 +47,7 @@ val systemData = module {
                 ),
             googlePayCredentials =
                 GooglePayCredentials(
-                    "TEST",
+                    GooglePayCredentials.ENVIRONMENT.UNKNOWN,
                     "",
                     "",
                     listOf("AMEX", "JCB", "MASTERCARD", "VISA"),

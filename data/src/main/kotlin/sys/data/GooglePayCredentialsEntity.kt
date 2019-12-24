@@ -3,6 +3,7 @@ package sys.data
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import sys.domain.GooglePayCredentials
+import java.util.Locale
 
 @Serializable
 data class GooglePayCredentialsEntity(
@@ -23,9 +24,14 @@ data class GooglePayCredentialsEntity(
 
 fun GooglePayCredentialsEntity.map() =
     GooglePayCredentials(
-        environment,
+        environment.map(),
         merchantId,
         merchantName,
         cardNetworks,
         authMethods
     )
+
+fun String.map(): GooglePayCredentials.ENVIRONMENT =
+    try {
+        enumValueOf<GooglePayCredentials.ENVIRONMENT>(toUpperCase(Locale.US))
+    } catch (e: IllegalArgumentException) { GooglePayCredentials.ENVIRONMENT.UNKNOWN }
