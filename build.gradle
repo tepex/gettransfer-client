@@ -14,7 +14,7 @@ buildscript {
         gradle_version        = "3.5.3"
         koin_version          = "2.1.0-alpha-8"
         gms_version           = "16.0.0"
-        gs_version            = "4.2.0"
+        gs_version            = "4.3.3"
         jsr250_version        = "1.0"
         timber_version        = "4.7.1"
         slf4j_version         = "1.7.25"
