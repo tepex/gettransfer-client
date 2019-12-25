@@ -96,7 +96,7 @@ plugins {
     https://github.com/ben-manes/gradle-versions-plugin
     $./gradlew dependencyUpdates
     */
-    id 'com.github.ben-manes.versions' version '0.20.0'
+    id 'com.github.ben-manes.versions' version '0.27.0'
     id 'com.gladed.androidgitversion'  version '0.4.11'
     /* code analysis tool  */
     id 'io.gitlab.arturbosch.detekt' version '1.0.0-RC15'
