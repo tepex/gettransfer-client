@@ -92,7 +92,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
 
     private fun showRateAnimation() {
         if (!rateAnimation.isAdded) {
-            fragmentManager?.beginTransaction()?.apply {
+            parentFragmentManager.beginTransaction().apply {
                 replace(android.R.id.content, rateAnimation)
                 commit()
             }
