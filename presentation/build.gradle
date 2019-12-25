@@ -30,7 +30,7 @@ ext {
     anko_version               = "0.10.8"
     flexbox_layout_version     = "1.0.0"
     pageindicator_version      = "1.0.3"
-    sentry_version             = "1.7.23"
+    sentry_version             = "1.7.29"
     appsflyer_version          = "4.8.19"
     installreferrer_version    = "1.0"
     life_cycle_version         = "1.1.1"
@@ -377,10 +377,10 @@ dependencies {
 
 allure {
     autoconfigure = true
-    version = '2.7.0'  // Latest Allure Version
+    version = '2.13.1'  // Latest Allure Version
 
     useJUnit5 {
-        version = '2.7.0' // Latest Allure Version
+        version = '2.13.1' // Latest Allure Version
     }
 }
 
