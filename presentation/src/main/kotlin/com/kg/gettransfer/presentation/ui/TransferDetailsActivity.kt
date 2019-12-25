@@ -131,7 +131,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         setClickListeners()
         initMapView(savedInstanceState)
         setupToolbar()
-        initButtonTitles()
         setClickListeners()
     }
 
@@ -160,17 +159,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         supportActionBar?.setDisplayShowTitleEnabled(false)
         toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
         toolbar.toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS)
-    }
-
-    private fun initButtonTitles() {
-        topCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT).replace(" ", "\n")
-        bottomCommunicationButtons.btnSupport.btnName.text = getString(R.string.LNG_OFFERS_SUPPORT).replace(" ", "\n")
-        topCommunicationButtons.btnRepeatTransfer.btnName.text =
-            getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
-        bottomCommunicationButtons.btnRepeatTransfer.btnName.text =
-            getString(R.string.LNG_DETAILS_REPEAT_ROUTE).replace(" ", "\n")
-        topCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
-        bottomCommunicationButtons.btnCancel.btnName.text = getString(R.string.LNG_CANCEL_REQUEST).replace(" ", "\n")
     }
 
     @CallSuper
