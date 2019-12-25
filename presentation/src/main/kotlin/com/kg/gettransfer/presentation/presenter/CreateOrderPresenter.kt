@@ -373,6 +373,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, accountManager.tempProfile.phone)
                 )
                 error.isEarlyDateError() -> viewState.setError(false, R.string.LNG_DATE_EARLY_ERROR)
+                error.isLateDateError() -> viewState.setError(false, R.string.LNG_DATE_LATE_ERROR)
                 error.code == ApiException.NETWORK_ERROR -> viewState.setError(
                     false,
                     R.string.LNG_NETWORK_ERROR

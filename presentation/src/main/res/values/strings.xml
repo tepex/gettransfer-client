@@ -24,6 +24,7 @@
     <string name="LNG_UNPROCESSABLE_ERROR">Unprocessable</string>
     <string name="LNG_PHONE_TAKEN_ERROR">Phone number already taken</string>
     <string name="LNG_DATE_EARLY_ERROR">Date is too early</string>
+    <string name="LNG_DATE_LATE_ERROR">Date is too late</string>
     <string name="LNG_M">m</string>
     <string name="LNG_D">d</string>
     <string name="LNG_H">h</string>

@@ -41,6 +41,8 @@ class ApiException(
 
     fun isEarlyDateError() = details == DETAILS_DATE_EARLY
 
+    fun isLateDateError() = details == DETAILS_DATE_LATE
+
     /* PAYMENT ERRORS */
     fun isBigPriceError() = code == UNPROCESSABLE && details == DETAILS_BIG_PRICE
 
@@ -62,6 +64,7 @@ class ApiException(
         const val DETAILS_BIG_PRICE = "{price=[is_too_big]}"
         const val DETAILS_OFFER_UNAVAILABLE = "{offer_id=[blocked]}"
         const val DETAILS_DATE_EARLY = "{date=[is too early]}"
+        const val DETAILS_DATE_LATE = "{date=[is too late]}"
 
         const val TYPE_ACCOUNT_EXIST = "account_exists"
         const val TYPE_PHONE_TAKEN = "phone_taken"
