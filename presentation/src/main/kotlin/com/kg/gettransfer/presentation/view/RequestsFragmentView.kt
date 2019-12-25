@@ -11,5 +11,5 @@ interface RequestsFragmentView : BaseView {
     fun updateCardWithDriverCoordinates(transferId: Long)
     fun updateEvents(eventsCount: Map<Long, Int>)
     fun onEmptyList()
-    //fun removeTransfers()
+    // fun removeTransfers()
 }

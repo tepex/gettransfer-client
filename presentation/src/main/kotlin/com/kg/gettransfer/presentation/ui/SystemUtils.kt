@@ -23,6 +23,7 @@ internal object SystemUtils : KoinComponent {
     private const val TIME_PATTERN = "HH:mm"
     private const val SLASH = "/"
 
+    @Suppress("ComplexMethod")
     fun formatDistance(context: Context, distance: Int?, splitDistance: Boolean, withDistanceText: Boolean): String {
         if (distance == null) return ""
         val distanceValueText = when {

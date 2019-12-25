@@ -52,7 +52,7 @@ class RequestsCategoryPresenter(
 
     private var transfers: List<Transfer>? = null
     private var driverCoordinate: DriverCoordinate? = null
-    //private var pagesCount: Int? = null // for pagination
+    // private var pagesCount: Int? = null // for pagination
 
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
@@ -63,8 +63,8 @@ class RequestsCategoryPresenter(
 
     override fun detachView(view: RequestsFragmentView?) {
         super.detachView(view)
-        //transfers = null
-        //viewState.removeTransfers()
+        // transfers = null
+        // viewState.removeTransfers()
         countEventsInteractor.removeCounterListener(this)
         coordinateInteractor.removeCoordinateListener(this)
         driverCoordinate?.requestCoordinates = false
