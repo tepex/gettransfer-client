@@ -6,7 +6,6 @@ import com.kg.gettransfer.data.OfferRemote
 import com.kg.gettransfer.data.OnesignalRemote
 import com.kg.gettransfer.data.PaymentRemote
 import com.kg.gettransfer.data.PromoRemote
-import com.kg.gettransfer.data.PushTokenRemote
 import com.kg.gettransfer.data.ReviewRemote
 import com.kg.gettransfer.data.RouteRemote
 import com.kg.gettransfer.data.SessionRemote
@@ -39,7 +38,6 @@ val remoteModule = module {
     single<ChatRemote> { ChatRemoteImpl() }
     single<ReviewRemote> { ReviewRemoteImpl() }
     single<GeoRemote> { GeoRemoteImpl() }
-    single<PushTokenRemote> { PushTokenRemoteImpl() }
     single<OnesignalRemote> { OnesignalRemoteImpl() }
 }
 

@@ -27,7 +27,6 @@ interface Api {
         const val API_PROMO = "/api/promo_codes/search"
         const val API_RATE_OFFER = "/api/offers/rate"
         const val API_FEEDBACK = "/api/offers"
-        const val API_WEBPUSH_TOKENS = "/api/webpush_tokens"
         const val API_MESSAGES = "/api/messages"
         const val API_BRAINTREE_TOKEN = "/payments/braintree/client_token"
         const val API_BRAINTREE_CONFIRM = "/payments/braintree/confirm"
@@ -205,17 +204,6 @@ interface Api {
         @Path("id") id: Long,
         @Body passengerComment: FeedBackToRemote
     ): ResponseModel<OfferModel>
-
-    @PUT("$API_WEBPUSH_TOKENS/{provider}/{id}")
-    suspend fun registerPushToken(
-        @Path("provider") provider: String,
-        @Path("id") id: String
-    ): ResponseModel<String>
-
-    @DELETE("$API_WEBPUSH_TOKENS/{id}")
-    suspend fun unregisterPushToken(
-        @Path("id") token: String
-    ): ResponseModel<String>
 
     @GET("$API_MESSAGES/{id}")
     suspend fun getChat(
