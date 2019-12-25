@@ -50,7 +50,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     private val rvAdapter: RequestsRVAdapter?
     get() = rvRequests.adapter as? RequestsRVAdapter
 
-    //private lateinit var scrollListener: EndlessRecyclerViewScrollListener
+    // private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
     companion object {
         const val TRANSFER_TYPE_ARG = "TRANSFER_TYPE_ARG"
@@ -76,7 +76,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
                 onChatClickListener
             )
         initClickListeners()
-        //initScrollListener()
+        // initScrollListener()
     }
 
     private val onItemClickListener: ItemClickListener = {
@@ -97,7 +97,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
 
     private fun initClickListeners() {
         swipe_container.setOnRefreshListener {
-            //scrollListener.resetState()
+            // scrollListener.resetState()
             rvAdapter?.removeAll()
             presenter.getTransfers()
         }
@@ -136,9 +136,9 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
 
             switchBackGroundData(false)
             removeLoading()
-            //pagesCount?.let { scrollListener.pages = it } ?: rvAdapter?.removeAll()
+            // pagesCount?.let { scrollListener.pages = it } ?: rvAdapter?.removeAll()
             updateTransfers(transfers)
-            //scrollListener.setLoaded()
+            // scrollListener.setLoaded()
         }
     }
 
