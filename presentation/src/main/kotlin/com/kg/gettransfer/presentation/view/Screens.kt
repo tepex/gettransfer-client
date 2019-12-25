@@ -16,6 +16,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.PaymentErrorDialog
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
+import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.SHOW_ABOUT
 
 import kotlinx.serialization.json.JSON
 
@@ -44,9 +45,11 @@ object Screens {
 
     private var canSendEmail: Boolean? = null
 
-    class MainPassenger : SupportAppScreen() {
+    data class MainPassenger(val showAbout: Boolean = false) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java)
+        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java).apply {
+            putExtra(SHOW_ABOUT, showAbout)
+        }
     }
 
     data class MainPassengerToRateTransfer(
@@ -373,10 +376,13 @@ object Screens {
             addToBackStack = true)
     }
 
-    fun showAboutScreen(fragmentManager: FragmentManager) {
+    /**
+     * @param firstLaunch will be true if Onboarding hasn't been shown yet otherwise always be false
+     */
+    fun showAboutScreen(fragmentManager: FragmentManager, firstLaunch: Boolean = false) {
         FragmentUtils.replaceFragment(
             fragmentManager,
-            fragment = AboutFragment(),
+            fragment = AboutFragment.newInstance(firstLaunch),
             containerViewId = android.R.id.content,
             tag = null,
             addToBackStack = true,
