@@ -47,7 +47,7 @@ ext {
     recyclerview_version       = "1.0.0"
     cardview_version           = "1.0.0"
     material_version           = "1.1.0-beta01"
-    core_ktx_version           = "1.1.0"
+    core_ktx_version           = "1.2.0-rc01"
     fragment_version           = "1.2.0-rc04"
     fragment_ktx_version       = "1.2.0-rc04"
     lifecycle_runtime_version  = "2.0.0"
@@ -172,6 +172,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
