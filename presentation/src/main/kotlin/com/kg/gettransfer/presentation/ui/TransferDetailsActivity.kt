@@ -195,7 +195,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private fun initBottomSheets() {
         bsTransferDetails = BottomSheetTripleStatesBehavior.from(sheetTransferDetails)
-        hideDetailsBottomSheet()
+        collapseDetailsBottomSheet()
 
         bsSecondarySheet = BottomSheetBehavior.from(sheetSecondary)
         hideSecondaryBottomSheet()
@@ -682,10 +682,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             supportFragmentManager,
             RatingDetailDialogFragment.RATE_DIALOG_TAG
         )
+        Handler().postDelayed({ collapseDetailsBottomSheet() }, DETAIL_RATE_DELAY)
     }
 
     override fun showRateAnimation() {
-        hideDetailsBottomSheet()
+        collapseDetailsBottomSheet()
         if (!rateAnimation.isAdded) {
             supportFragmentManager.beginTransaction().apply {
                 replace(android.R.id.content, rateAnimation)
@@ -758,7 +759,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun onRatingChangeCancelled() {
-        hideDetailsBottomSheet()
         presenter.ratingChangeCancelled()
     }
 
@@ -806,7 +806,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
     }
 
-    private fun hideDetailsBottomSheet() {
+    private fun collapseDetailsBottomSheet() {
         scrollContent.post { scrollContent.fullScroll(View.FOCUS_UP) }
         bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
     }
@@ -816,5 +816,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     companion object {
         const val THANKS_DELAY = 3000L
         private const val RC_WRITE_FILE = 111
+        private const val DETAIL_RATE_DELAY = 500L
     }
 }

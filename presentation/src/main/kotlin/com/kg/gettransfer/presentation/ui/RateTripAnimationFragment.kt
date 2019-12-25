@@ -64,7 +64,7 @@ class RateTripAnimationFragment : Fragment(R.layout.fragment_rate_trip_animation
 
     private fun closeFragment() {
         if (isAdded) {
-            fragmentManager?.beginTransaction()?.apply {
+            parentFragmentManager.beginTransaction().apply {
                 setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 remove(this@RateTripAnimationFragment)
                 commit()
