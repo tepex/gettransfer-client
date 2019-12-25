@@ -20,7 +20,7 @@ ext {
     firebase_core_version      = "16.0.6"
     firebase_iid_version       = "17.0.4"
     firebase_messaging_version = "17.3.4"
-    glide_version              = "4.9.0"
+    glide_version              = "4.10.0"
     slf4j_timber_version       = "1.0.1"
     socket_io_version          = "1.0.0"
     libphonenumber_version     = "8.11.1"
