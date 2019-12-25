@@ -33,7 +33,7 @@ buildscript {
         androidx_test_ext_junit_version = "1.1.2-alpha03"
         espresso_version                = "3.3.0-alpha03"
         espresso_contrib_version        = "3.0.2"
-        jupiter_version                 = "5.5.2"
+        jupiter_version                 = "5.6.0-M1"
         kakao_version                   = "2.2.0"
         kaspresso_version               = "1.0.1"
         uiautomator_version             = "2.2.0"
