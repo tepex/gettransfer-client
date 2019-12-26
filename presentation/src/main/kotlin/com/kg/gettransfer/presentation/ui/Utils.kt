@@ -58,12 +58,14 @@ import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
 import androidx.core.view.isVisible
+import com.kg.gettransfer.extensions.internationalExample
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.utils.TopRightRoundedCornerTransform
+import com.kg.gettransfer.utilities.CountryCodeManager
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import kotlinx.android.synthetic.main.dialog_cancel_request.view.*
@@ -84,6 +86,7 @@ object Utils : KoinComponent {
     const val MAX_BITMAP_SIZE = 4096
 
     internal val phoneUtil: PhoneNumberUtil by inject()
+    internal val countryCodeManager: CountryCodeManager by inject()
 
     private val pointMapper: PointMapper by inject()
 
@@ -285,6 +288,11 @@ object Utils : KoinComponent {
             Timber.w(e, "phone parse error: $phone")
             return false
         }
+    }
+
+    fun getPhoneNumberExample(accountLocale: String): String {
+        val countryCode = countryCodeManager.getCountryCode(accountLocale)
+        return phoneUtil.internationalExample(countryCode)
     }
 
     fun convertToInternationalPhone(phone: String): String {

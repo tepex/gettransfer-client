@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.presenter
 import moxy.InjectViewState
 
 import com.kg.gettransfer.domain.model.RegistrationAccount
-import com.kg.gettransfer.extensions.internationalExample
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
@@ -60,7 +59,7 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
     private fun checkFieldsIsValid(): Boolean {
         val isValid = LoginHelper.phoneIsValid(phone) && LoginHelper.emailIsValid(email)
         if (!isValid) {
-            val phoneExample = Utils.phoneUtil.internationalExample(sessionInteractor.locale)
+            val phoneExample = Utils.getPhoneNumberExample(sessionInteractor.locale.language)
             viewState.showValidationErrorDialog(phoneExample)
         }
         return isValid
