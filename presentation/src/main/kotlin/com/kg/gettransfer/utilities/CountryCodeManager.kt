@@ -11,9 +11,9 @@ class CountryCodeManager(val context: Context) : KoinComponent {
 
     private fun detectSIMCountry(): String? {
         try {
-            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            return telephonyManager.simCountryIso
-        } catch (e: Exception) {
+            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            return telephonyManager?.simCountryIso
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             e.printStackTrace()
         }
         return null
@@ -21,9 +21,9 @@ class CountryCodeManager(val context: Context) : KoinComponent {
 
     private fun detectNetworkCountry(): String? {
         try {
-            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            return telephonyManager.networkCountryIso
-        } catch (e: Exception) {
+            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            return telephonyManager?.networkCountryIso
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             e.printStackTrace()
         }
         return null
@@ -32,7 +32,7 @@ class CountryCodeManager(val context: Context) : KoinComponent {
     private fun detectLocaleCountry(): String? {
         try {
             return context.resources.configuration.locale.country
-        } catch (e: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             e.printStackTrace()
         }
         return null

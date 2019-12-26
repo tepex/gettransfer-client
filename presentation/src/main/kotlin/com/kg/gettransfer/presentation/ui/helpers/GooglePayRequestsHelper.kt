@@ -13,7 +13,7 @@ object GooglePayRequestsHelper : KoinComponent {
     private val configsManager: ConfigsManager by inject()
 
     suspend fun getEnvironment(): Int? {
-        return when(configsManager.getConfigs().googlePayCredentials.environment) {
+        return when (configsManager.getConfigs().googlePayCredentials.environment) {
             GooglePayCredentials.ENVIRONMENT.PRODUCTION -> WalletConstants.ENVIRONMENT_PRODUCTION
             GooglePayCredentials.ENVIRONMENT.TEST       -> WalletConstants.ENVIRONMENT_TEST
             else                                        -> null
@@ -86,15 +86,20 @@ object GooglePayRequestsHelper : KoinComponent {
             put("merchantName", configsManager.getConfigs().googlePayCredentials.merchantName)
         }
 
-    suspend fun getPaymentDataRequest(price: Float, currency: String, countryCode: String, gateway: String, gatewayMerchantId: String) =
-        getBaseRequest().apply {
-            put(
-                "allowedPaymentMethods",
-                JSONArray().apply {
-                    put(getCardPaymentMethod(gateway, gatewayMerchantId))
-                }
-            )
-            put("transactionInfo", getTransactionInfo(price, currency, countryCode))
-            put("merchantInfo", getMerchantInfo())
-        }
+    suspend fun getPaymentDataRequest(
+        price: Float,
+        currency: String,
+        countryCode: String,
+        gateway: String,
+        gatewayMerchantId: String
+    ) = getBaseRequest().apply {
+        put(
+            "allowedPaymentMethods",
+            JSONArray().apply {
+                put(getCardPaymentMethod(gateway, gatewayMerchantId))
+            }
+        )
+        put("transactionInfo", getTransactionInfo(price, currency, countryCode))
+        put("merchantInfo", getMerchantInfo())
+    }
 }
