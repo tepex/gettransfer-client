@@ -34,7 +34,7 @@ ext {
     appsflyer_version          = "4.8.19"
     installreferrer_version    = "1.1"
     life_cycle_version         = "1.1.1"
-    easy_permissions_version   = "2.0.1"
+    easy_permissions_version   = "3.0.0"
     braintree_version          = "2.22.0" //don't update until migration to AndroidX
     drop_in_version            = "3.7.1"  //don't update until migration to AndroidX
     pinview_version            = "1.4.3"
