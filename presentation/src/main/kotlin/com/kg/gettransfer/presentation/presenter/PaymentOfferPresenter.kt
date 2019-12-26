@@ -497,7 +497,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun pushAccount() {
-        val result = fetchResultOnly { accountManager.putAccount() }
+        val result = fetchResultOnly { accountManager.putAccount(updateConfigs = true) }
         result.error?.let { err ->
             if (err.isAccountExistError()) onAccountExists(err.checkExistedAccountField()) else viewState.setError(err)
         } ?: getPayment()
