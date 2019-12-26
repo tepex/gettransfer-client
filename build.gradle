@@ -37,7 +37,7 @@ buildscript {
         espresso_contrib_version        = "3.0.2"
         jupiter_version                 = "5.6.0-M1"
         kakao_version                   = "2.2.0"
-        kaspresso_version               = "1.0.1"
+        kaspresso_version               = "1.0.2-alpha2"
         uiautomator_version             = "2.2.0"
 
         libs = [
