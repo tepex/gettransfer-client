@@ -13,7 +13,7 @@ buildscript {
         // https://github.com/oliviergauthier/gradle-appcenter-plugin/issues/41
         gradle_version        = "3.5.3"
         koin_version          = "2.1.0-alpha-8"
-        gms_version           = "16.0.0"
+        gms_version           = "17.0.0"
         gs_version            = "4.3.3"
         jsr250_version        = "1.0"
         timber_version        = "4.7.1"
