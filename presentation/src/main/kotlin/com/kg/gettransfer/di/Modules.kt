@@ -43,6 +43,7 @@ import com.kg.gettransfer.presentation.mapper.CityPointMapper
 
 import com.kg.gettransfer.receiver.NetworkChangeCallback
 
+import com.kg.gettransfer.utilities.CountryCodeManager
 import com.kg.gettransfer.utilities.LocaleManager
 import com.kg.gettransfer.utilities.GTNotificationManager
 import com.kg.gettransfer.utilities.NewTransferState
@@ -163,6 +164,7 @@ val androidModule = module {
     single { GTDownloadManager(androidApplication().applicationContext) }
     single { NetworkChangeCallback(androidApplication().applicationContext) }
     single { PushTokenManager() }
+    single { CountryCodeManager(androidApplication().applicationContext) }
 }
 
 val testModule = module {
