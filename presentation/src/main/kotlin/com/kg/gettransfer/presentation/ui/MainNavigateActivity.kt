@@ -71,6 +71,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
 
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
+            showAbout(intent)
         } // Else, need to wait for onRestoreInstanceState
     }
 
@@ -102,13 +103,21 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         intent?.let { arguments ->
             val transferId = arguments.getLongExtra(EXTRA_RATE_TRANSFER_ID, 0L)
             val rate = arguments.getIntExtra(EXTRA_RATE_VALUE, 0)
-            if (transferId != 0L) presenter.rateTransfer(transferId, rate)
-            val showAbout = arguments.getBooleanExtra(SHOW_ABOUT, false)
+            rateTransfer(transferId, rate)
+        }
+    }
+
+    private fun showAbout(intent: Intent) {
+        intent.getBooleanExtra(SHOW_ABOUT, false).also { showAbout ->
             if (showAbout) Screens.showAboutScreen(
                 fragmentManager = supportFragmentManager,
                 firstLaunch = true
             )
         }
+    }
+
+    private fun rateTransfer(transferId: Long, rate: Int) {
+        if (transferId != 0L) presenter.rateTransfer(transferId, rate)
     }
 
     @CallSuper
