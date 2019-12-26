@@ -37,7 +37,7 @@ ext {
     easy_permissions_version   = "2.0.1"
     braintree_version          = "2.22.0" //don't update until migration to AndroidX
     drop_in_version            = "3.7.1"  //don't update until migration to AndroidX
-    pinview_version            = "1.4.2"
+    pinview_version            = "1.4.3"
     fb_shimmer_version         = "0.4.0"
     appmetrica_push            = "1.4.1"
     play_services              = "16.1.0"
