@@ -2,6 +2,7 @@ package com.kg.gettransfer.sys.remote
 
 import com.google.gson.GsonBuilder
 import com.kg.gettransfer.data.PreferencesCache
+import com.kg.gettransfer.remote.Api
 
 import com.kg.gettransfer.remote.PrivateHttpLoggingInterceptor
 import com.kg.gettransfer.remote.TransportTypesDeserializer
@@ -12,11 +13,17 @@ import okhttp3.OkHttpClient
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
+import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
+import org.slf4j.Logger
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 class SystemApiWrapper : KoinComponent {
+
+    val log: Logger by inject { parametersOf("GTR-remote-system") }
 
     private val preferences = get<PreferencesCache>()
 
@@ -31,6 +38,25 @@ class SystemApiWrapper : KoinComponent {
 
     private var okHttpClient = OkHttpClient.Builder().apply {
         addInterceptor(PrivateHttpLoggingInterceptor())
+        addInterceptor { chain ->
+            val request = chain.request()
+            val urlBuilder = request.url().newBuilder()
+
+            val url = urlBuilder.build()
+            val builder = request.newBuilder().url(url)
+
+            val isConfigsRequest = request.url().encodedPath() == SystemApi.API_CONFIGS
+            if (isConfigsRequest) {
+                builder.addHeader(Api.HEADER_TOKEN, preferences.accessToken)
+            }
+
+            try {
+                chain.proceed(builder.build())
+            } catch (e: Exception) {
+                log.error("Maybe DNS Exception", e)
+                throw IOException(e)
+            }
+        }
         cookieJar(CookieJar.NO_COOKIES)
     }.build()
 
