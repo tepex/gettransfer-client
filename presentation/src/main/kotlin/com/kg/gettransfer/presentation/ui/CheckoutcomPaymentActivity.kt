@@ -20,6 +20,7 @@ import com.kg.gettransfer.presentation.presenter.BaseCardPaymentPresenter
 import kotlinx.android.synthetic.main.activity_checkout_payment.*
 import kotlinx.android.synthetic.main.view_checkoutcom_card_field.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import com.checkout.android_sdk.Utils.CardUtils
 import com.kg.gettransfer.domain.ApiException
@@ -132,11 +133,15 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
     }
 
     private fun handleUri(path: String) {
-        if (path == BaseCardPaymentPresenter.PAYMENT_RESULT_SUCCESSFUL) {
-            presenter.changePaymentStatus(true)
-        } else if (path == BaseCardPaymentPresenter.PAYMENT_RESULT_FAILED) {
-            presenter.changePaymentStatus(false)
+        when (path) {
+            BaseCardPaymentPresenter.PAYMENT_RESULT_SUCCESSFUL -> changePaymentStatus(true)
+            BaseCardPaymentPresenter.PAYMENT_RESULT_FAILED     -> changePaymentStatus(false)
         }
+    }
+
+    private fun changePaymentStatus(isSuccess: Boolean) {
+        hidePaymentForm()
+        presenter.changePaymentStatus(isSuccess)
     }
 
     override fun highLightErrorField(fields: List<Int>) {
@@ -148,6 +153,11 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
                 else              -> null
             }?.showError()
         }
+    }
+
+    private fun hidePaymentForm() {
+        webView.isVisible = false
+        content.isVisible = false
     }
 
     override fun setError(e: ApiException) {
