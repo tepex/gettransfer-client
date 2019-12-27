@@ -32,7 +32,7 @@ class PaymentErrorDialog : BaseBottomSheetDialogFragment() {
         btnTryAgain.btnImg.setOnClickListener { dismiss() }
         btnSupport.btnImg.setOnClickListener {
             view?.let { setBottomSheetState(it, BottomSheetBehavior.STATE_HIDDEN) }
-            fragmentManager?.let { showSupportScreen(it, transferId) }
+            showSupportScreen(parentFragmentManager, transferId)
         }
     }
 
