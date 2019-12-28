@@ -83,7 +83,8 @@ val systemData = module {
             addressHistory                = emptyList(),
             favoriteTransports            = emptySet(),
             appEnters                     = 0,
-            isDebugMenuShowed             = false
+            isDebugMenuShowed             = false,
+            isPaymentRequestWithoutDelay  = false
         )
     }
 
