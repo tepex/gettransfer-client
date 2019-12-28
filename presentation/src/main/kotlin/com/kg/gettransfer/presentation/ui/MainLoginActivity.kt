@@ -1,12 +1,13 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 
 import androidx.annotation.CallSuper
 
-import com.arellomobile.mvp.MvpAppCompatActivity
-import com.arellomobile.mvp.presenter.InjectPresenter
+import moxy.MvpAppCompatActivity
+import moxy.presenter.InjectPresenter
 
 import com.kg.gettransfer.R
 
@@ -50,6 +51,9 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            localeManager.updateResources(this, sessionInteractor.locale)
+        }
         setContentView(R.layout.activity_user_login)
         presenter.showLoginFragment(intent.getStringExtra(LogInView.EXTRA_PARAMS))
     }

@@ -4,6 +4,7 @@ package com.kg.gettransfer.domain
 class ApiException(
     val code: Int,
     val details: String,
+    val isHttpException: Boolean,
     val type: String? = null
 ) : RuntimeException(details) {
 
@@ -40,8 +41,14 @@ class ApiException(
 
     fun isEarlyDateError() = details == DETAILS_DATE_EARLY
 
+    fun isLateDateError() = details == DETAILS_DATE_LATE
+
     /* PAYMENT ERRORS */
     fun isBigPriceError() = code == UNPROCESSABLE && details == DETAILS_BIG_PRICE
+
+    fun isOfferUnavailableError() = code == UNPROCESSABLE && details == DETAILS_OFFER_UNAVAILABLE
+
+    fun isTransferStatusMismatchError() = details.contains(DETAILS_TRANSFER_STATUS_MISMATCH)
 
     companion object {
         const val APP_ERROR         = 0
@@ -57,7 +64,10 @@ class ApiException(
         const val CONNECTION_TIMED_OUT  = 522
 
         const val DETAILS_BIG_PRICE = "{price=[is_too_big]}"
+        const val DETAILS_OFFER_UNAVAILABLE = "{offer_id=[blocked]}"
         const val DETAILS_DATE_EARLY = "{date=[is too early]}"
+        const val DETAILS_DATE_LATE = "{date=[is too late]}"
+        const val DETAILS_TRANSFER_STATUS_MISMATCH = "transfer_status_mismatch"
 
         const val TYPE_ACCOUNT_EXIST = "account_exists"
         const val TYPE_PHONE_TAKEN = "phone_taken"
@@ -66,9 +76,9 @@ class ApiException(
         const val TYPE_PHONE_INVALID = "phone_invalid"
         const val TYPE_PHONE_UNPROCESSABLE = "unprocessable"
 
-        const val DETAILS_NEW_EMAIL_INVALID_1 = "new_email=[invalid]"
+        const val DETAILS_NEW_EMAIL_INVALID_1 = "email=[invalid]"
         const val DETAILS_NEW_EMAIL_INVALID_2 = "Email address is invalid"
-        const val DETAILS_NEW_EMAIL_TAKEN = "new_email=[already_taken]"
+        const val DETAILS_NEW_EMAIL_TAKEN = "email=[already_taken]"
         const val DETAILS_EMAIL_NOT_CHANGEABLE = "account=[email_not_manually_changeable]"
         const val DETAILS_BAD_CODE_OR_EMAIL = "bad_code_or_email"
         const val DETAILS_REDIRECT_EMAIL = "email"

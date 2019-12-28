@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.presentation.view.RatingDetailView
@@ -32,7 +32,6 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         initRatingFields()
-        viewState.showProgress(false)
     }
 
     private fun initRatingFields() {
@@ -73,15 +72,11 @@ class RatingDetailPresenter : BasePresenter<RatingDetailView>() {
 
     fun onClickSend() = utils.launchSuspend {
         val listRates = reviewInteractor.createListOfDetailedRates()
-        viewState.showProgress(true)
-        viewState.blockInterface(true, true)
         utils.asyncAwait { reviewInteractor.sendRates(false) }
         utils.asyncAwait { reviewInteractor.pushComment() }
         viewState.exitAndReportSuccess(listRates, comment)
         logAverageRate(listRates.map { it.rateValue }.average())
         logDetailRate(listRates, comment)
-        viewState.blockInterface(false)
-        viewState.showProgress(false)
     }
 
     fun onClickComment(comment: String) {

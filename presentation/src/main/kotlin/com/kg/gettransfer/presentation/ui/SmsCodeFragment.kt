@@ -2,45 +2,36 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
-import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.MvpAppCompatFragment
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.SmsCodePresenter
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.SmsCodeView
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.serialization.json.JSON
-import org.jetbrains.anko.longToast
-import pub.devrel.easypermissions.EasyPermissions
-//import leakcanary.AppWatcher
+// import leakcanary.AppWatcher
 import timber.log.Timber
 
-class SmsCodeFragment : MvpAppCompatFragment(),
-    SmsCodeView,
-    EasyPermissions.PermissionCallbacks,
-    EasyPermissions.RationaleCallbacks {
-
-    private val loadingFragment by lazy { LoadingFragment() }
+@Suppress("TooManyFunctions")
+class SmsCodeFragment : BaseLogInFragment(), SmsCodeView {
 
     @InjectPresenter
     internal lateinit var presenter: SmsCodePresenter
 
     @ProvidePresenter
     fun smsCodePresenterProvider() = SmsCodePresenter()
+
+    override fun getPresenter(): SmsCodePresenter = presenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_sms_code, container, false)
@@ -50,45 +41,38 @@ class SmsCodeFragment : MvpAppCompatFragment(),
         super.onViewCreated(view, savedInstanceState)
 
         with(presenter) {
-            arguments?.let {
-                params = JSON.parse(LogInView.Params.serializer(), it.getString(LogInView.EXTRA_PARAMS) ?: "")
-                isPhone = it.getBoolean(EXTERNAL_IS_PHONE)
+            arguments?.let { bundle ->
+                params = JSON.parse(LogInView.Params.serializer(), bundle.getString(LogInView.EXTRA_PARAMS) ?: "")
+                isPhone = bundle.getBoolean(SmsCodeView.EXTRA_IS_PHONE)
             }
             pinItemsCount = pinView.itemCount
         }
 
-        smsTitle.text = "${getString(presenter.getTitleId())} ${presenter.params.emailOrPhone}"
+        smsTitle.text = "${getString(getTitleId())} ${presenter.params.emailOrPhone}"
 
         pinView.onTextChanged { code ->
             presenter.pinCode = code
-            presenter.checkAfterPinChanged()
+            btnDone.isEnabled = presenter.isEnabledButtonDone
         }
 
-        loginBackButton.setOnClickListener {
-            it.hideKeyboard()
+        loginBackButton.setOnClickListener { v ->
+            v.hideKeyboard()
             presenter.back()
         }
 
-        btnResendCode.setOnClickListener {
-            it.hideKeyboard()
+        btnResendCode.setOnClickListener { v ->
+            v.hideKeyboard()
             presenter.sendVerificationCode()
-            presenter.setTimer()
         }
 
-        btnDone.setThrottledClickListener {
-            it.hideKeyboard()
+        btnDone.setThrottledClickListener { v ->
+            v.hideKeyboard()
             presenter.onLoginClick()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-//        AppWatcher.objectWatcher.watch(this)
-    }
-
-    override fun setBtnDoneIsEnabled(isEnabled: Boolean) {
-        btnDone.isEnabled = isEnabled
-    }
+    private fun getTitleId() =
+        if (presenter.isPhone) R.string.LNG_LOGIN_SEND_SMS_CODE else R.string.LNG_LOGIN_SEND_EMAIL_CODE
 
     override fun startTimer() {
         btnResendCode.isEnabled = false
@@ -105,150 +89,37 @@ class SmsCodeFragment : MvpAppCompatFragment(),
         btnResendCode.text = getText(R.string.LNG_LOGIN_RESEND_ALLOW)
     }
 
-    override fun showErrorText(show: Boolean, text: String?) {
-        pinView.setTextColor(
-            ContextCompat.getColor(
-                context!!,
-                if (show) R.color.color_gtr_red else R.color.color_gtr_green
-            )
-        )
-        wrongCodeError.isVisible = show
-        text?.let { wrongCodeError.text = text }
-    }
-
-    override fun showValidationError(b: Boolean, invaliD_EMAIL: Int) {
-        //TODO remove BaseView or add code.
-    }
-
-    //----------TODO остатки от группы Base.---------------
-
-    override fun blockInterface(block: Boolean, useSpinner: Boolean) {
-        if (block) {
-            if (useSpinner) showLoading()
-        } else hideLoading()
-    }
-
     override fun setError(e: ApiException) {
-        pinView.setTextColor(ContextCompat.getColor(context!!, R.color.color_gtr_red))
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
         Sentry.capture(e)
-        when (e.code) {
-            ApiException.NOT_FOUND -> {
-                BottomSheetDialog
-                    .newInstance()
-                    .apply {
-                        title = this@SmsCodeFragment.getString(R.string.LNG_ACCOUNT_NOTFOUND, presenter.params.emailOrPhone)
-                        buttonOkText = this@SmsCodeFragment.getString(R.string.LNG_OK)
-                        onDismissCallBack = {
-                            presenter.back()
-                        }
-                    }
-                    .show(requireFragmentManager())
-            }
+        if (e.code == ApiException.NO_USER) {
+            context?.let { pinView.setTextColor(ContextCompat.getColor(it, R.color.color_gtr_red)) }
+            return
         }
-    }
-
-    override fun setError(e: DatabaseException) {
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage("CacheError: ${e.details}").build())
-        Sentry.capture(e)
-    }
-
-    override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {
-        Utils.showError(context!!, false, getString(errId, *args))
-    }
-
-    private fun showLoading() {
-        if (loadingFragment.isAdded) return
-        fragmentManager?.beginTransaction()?.apply {
-            replace(android.R.id.content, loadingFragment)
-            commit()
-        }
-    }
-
-    private fun hideLoading() {
-        if (!loadingFragment.isAdded) return
-        fragmentManager?.beginTransaction()?.apply {
-            remove(loadingFragment)
-            commit()
-        }
-    }
-
-    override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {
+        val titleError = getTitleError(e)
         BottomSheetDialog
             .newInstance()
             .apply {
-                imageId = R.drawable.transfer_error
-                title = this@SmsCodeFragment.getString(R.string.LNG_ERROR)
-                text = this@SmsCodeFragment.getString(R.string.LNG_TRANSFER_NOT_FOUND, transferId.toString())
-                isShowCloseButton = true
-                isShowOkButton = false
-                dismissCallBack?.let { onDismissCallBack = it }
+                title = titleError
             }
             .show(requireFragmentManager())
+    }
+
+    private fun getTitleError(e: ApiException): String {
+        if (e.isHttpException && e.details.isNotEmpty()) return e.details
+        return when (e.code) {
+            ApiException.NETWORK_ERROR -> getString(R.string.LNG_NETWORK_ERROR)
+            else -> e.message ?: "Error"
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        AppWatcher.objectWatcher.watch(this)
     }
 
     companion object {
-        const val SMS_RESEND_DELAY_MILLIS = 90_000L
-
-        const val EXTERNAL_IS_PHONE = ".presentation.ui.SmsCodeFragment_IS_PHONE"
-        const val EXTERNAL_EMAIL_OR_PHONE = ".presentation.ui.SmsCodeFragment_EMAIL_OR_PHONE"
-        const val EXTERNAL_SMS_RESEND_DELAY_SEC = ".presentation.ui.SmsCodeFragment_EMAIL_OR_PHONE"
-
         fun newInstance() = SmsCodeFragment()
-    }
-
-    // for downloading voucher
-
-    override fun downloadVoucher() {
-        val perms = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if (EasyPermissions.hasPermissions(requireContext(), *perms)) {
-            presenter.downloadVoucher()
-        } else {
-            EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
-                BaseHandleUrlView.RC_WRITE_FILE, *perms
-            )
-        }
-    }
-
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        requireActivity().longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
-    }
-
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        presenter.downloadVoucher()
-    }
-
-    override fun onRationaleDenied(requestCode: Int) {
-        onPermissionDenied()
-    }
-
-    override fun onRationaleAccepted(requestCode: Int) {}
-
-    @CallSuper
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-    }
-
-    private fun onPermissionDenied() {
-        presenter.openMainScreen()
-        requireActivity().longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
-    }
-
-    override fun setChatIsNoLongerAvailableError(dismissCallBack: () -> Unit) {
-        BottomSheetDialog
-            .newInstance()
-            .apply {
-                imageId = R.drawable.transfer_error
-                title = this@SmsCodeFragment.getString(R.string.LNG_ERROR)
-                text = this@SmsCodeFragment.getString(R.string.LNG_CHAT_NO_LONGER_AVAILABLE)
-                isShowCloseButton = true
-                isShowOkButton = false
-                onDismissCallBack = dismissCallBack
-            }
-            .show(requireFragmentManager())
     }
 }

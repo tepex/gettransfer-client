@@ -14,17 +14,18 @@ import android.util.AttributeSet
 
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.content.withStyledAttributes
 
-import com.arellomobile.mvp.MvpDelegate
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.MvpDelegate
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.extensions.isVisible
-import com.kg.gettransfer.extensions.isInvisible
+import androidx.core.view.isVisible
+import androidx.core.view.isInvisible
 
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
 import com.kg.gettransfer.presentation.view.SearchAddressView
@@ -39,6 +40,8 @@ import kotlinx.android.synthetic.main.search_address.*
  * https://antonioleiva.com/kotlin-android-extensions/
  * https://antonioleiva.com/custom-views-android-kotlin/
  */
+
+@Suppress("TooManyFunctions")
 class SearchAddress @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer, SearchAddressView, TextWatcher {
 
@@ -57,23 +60,21 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
 
     private var parentDelegate: MvpDelegate<Any>? = null
     private val mvpDelegate by lazy {
-        MvpDelegate<SearchAddress>(this).apply { setParentDelegate(parentDelegate!!, id.toString()) }
+        MvpDelegate<SearchAddress>(this).apply { parentDelegate?.let { setParentDelegate(it, id.toString()) } }
     }
     private var blockRequest = false
     private var hasFocus     = false
 
     init {
         containerView = LayoutInflater.from(context).inflate(R.layout.search_address, this, true)
-        if (attrs != null) {
-            val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchAddress)
-            addressField.hint = ta.getString(R.styleable.SearchAddress_hint)
-            ta.recycle()
+        context.withStyledAttributes(attrs, R.styleable.SearchAddress) {
+            addressField.hint = getString(R.styleable.SearchAddress_hint)
         }
 
-        val clearListener = View.OnClickListener {
+        val clearListener = OnClickListener {
             text = ""
             addressField.requestFocus()
-            parent.onSearchFieldEmpty(isTo)
+            parent.onSearchFieldEmpty()
         }
         im_clearBtn.setOnClickListener(clearListener)
     }
@@ -86,13 +87,16 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         this.isTo = isTo
         addressField.setOnFocusChangeListener { _, hasFocus ->
             this.hasFocus = hasFocus
-            if (!hasFocus) im_clearBtn.isVisible = false
-            else {
+            if (!hasFocus) {
+                im_clearBtn.isVisible = false
+            } else {
                 setClearButtonVisibility()
                 parent.presenter.isTo = isTo
-                if(text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE)
+                if (text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE) {
                     presenter.requestAddressListByPrediction(text.trim())
-                else parent.onSearchFieldEmpty(isTo)
+                } else {
+                    parent.onSearchFieldEmpty()
+                }
             }
         }
         addressField.addTextChangedListener(this)
@@ -100,7 +104,6 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         parentDelegate = parent.mvpDelegate
         mvpDelegate.onCreate()
         mvpDelegate.onAttach()
-// if(isTo) addressField.requestFocus()
         setClearButtonVisibility()
     }
 
@@ -108,7 +111,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     fun initText(text: String, sendRequest: Boolean, cursorOnEnd: Boolean) {
         blockRequest = true
         this.text = if (text.isNotEmpty()) "$text " else ""
-        if (cursorOnEnd) addressField.setSelection(addressField.text?.length?:0)
+        if (cursorOnEnd) addressField.setSelection(addressField.text?.length ?: 0)
         blockRequest = false
         if (sendRequest) presenter.requestAddressListByPrediction(text.trim())
     }
@@ -162,7 +165,7 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     override fun setError(e: DatabaseException) {
-        if(addressField.isFocused) parent.setError(e)
+        if (addressField.isFocused) parent.setError(e)
     }
 
     override fun afterTextChanged(s: Editable?) {
@@ -170,10 +173,10 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
         if (!blockRequest && text.trim().length >= SearchAddressPresenter.ADDRESS_PREDICTION_SIZE) {
             presenter.requestAddressListByPrediction(text.trim())
         } else {
-            parent.onSearchFieldEmpty(isTo)
+            parent.onSearchFieldEmpty()
         }
         if (s.isNullOrBlank() && addressField.hasFocus()) {
-            parent.onSearchFieldEmpty(isTo)
+            parent.onSearchFieldEmpty()
             presenter.onClearAddress(isTo)
         }
     }
@@ -186,13 +189,16 @@ class SearchAddress @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun setClearButtonVisibility() {
-        if (text.isBlank()) im_clearBtn.isInvisible = true
-        else if (hasFocus)  im_clearBtn.isInvisible = false
+        if (text.isBlank()) {
+            im_clearBtn.isInvisible = true
+        } else if (hasFocus) {
+            im_clearBtn.isInvisible = false
+        }
     }
 
     fun changeFocus() {
         addressField.requestFocus()
-        addressField.setSelection(addressField.text?.length?:0)
+        addressField.setSelection(addressField.text?.length ?: 0)
     }
 
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {}

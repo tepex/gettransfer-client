@@ -13,8 +13,8 @@ import android.view.WindowManager
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
@@ -22,7 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 
@@ -133,8 +133,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN
 
         tintBackgroundShadow = tintBackground
-        bsOrder.setBottomSheetCallback(bottomSheetCallback)
-        bsSecondarySheet.setBottomSheetCallback(bsCallback)
+        bsOrder.addBottomSheetCallback(bottomSheetCallback)
+        bsSecondarySheet.addBottomSheetCallback(bsCallback)
     }
 
     @CallSuper
@@ -160,7 +160,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         return if (ret) ret else super.dispatchTouchEvent(event)
     }
 
-    fun hideBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
+    private fun hideSecondaryBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
 
     private fun toggleSheetOrder() {
         if (bsOrder.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -191,7 +191,6 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         presenter.mapInitialized()
     }
 
-    // ---------------------------------------------------------------------------
     override fun checkPromoCode() {
         presenter.checkPromoCode()
     }
@@ -281,16 +280,14 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         presenter.onGetTransferClick()
     }
 
-    // ------------------------------------------------------------------------------
-
     override fun showHourlyDurationDialog(durationValue: Int?) {
         HourlyDurationDialogFragment
-                .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
-                    override fun onDone(durationValue: Int) {
-                        presenter.updateDuration(durationValue)
-                    }
-                })
-                .show(supportFragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
+            .newInstance(durationValue, object : HourlyDurationDialogFragment.OnHourlyDurationListener {
+                override fun onDone(durationValue: Int) {
+                    presenter.updateDuration(durationValue)
+                }
+            })
+            .show(supportFragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
     }
 
     override fun currencyChanged(currency: CurrencyModel) {
@@ -310,7 +307,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
     override fun setCurrency(currency: String, hideCurrencies: Boolean) {
         sheetOrder.currency = currency
         if (hideCurrencies) {
-            hideBottomSheet()
+            hideSecondaryBottomSheet()
         }
     }
 
@@ -326,8 +323,8 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         }
     }
 
-    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateChanged: Boolean) {
-        if (isDateChanged) {
+    override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateOrDistanceChanged: Boolean) {
+        if (isDateOrDistanceChanged) {
             clearMarkersAndPolylines()
         }
         setPolyline(polyline, routeModel)
@@ -409,7 +406,7 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
     override fun onBackPressed() {
         when {
             isKeyBoardOpened                                             -> hideKeyboard()
-            bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED -> hideBottomSheet()
+            bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED -> hideSecondaryBottomSheet()
             bsOrder.state == BottomSheetBehavior.STATE_EXPANDED          -> toggleSheetOrder()
             else                                                         -> presenter.onBackClick()
         }

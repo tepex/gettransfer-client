@@ -22,6 +22,12 @@
         <attr name="android:inputType"/>
     </declare-styleable>
 
+    <declare-styleable name="CheckoutcomCardFieldView" parent="EditableView">
+        <attr name="hint"/>
+        <attr name="android:inputType"/>
+        <attr name="android:digits"/>
+    </declare-styleable>
+
     <declare-styleable name="TransferDetailsField" parent="EditableView">
         <attr name="title_transfer_details" format="string" />
         <attr name="input_transfer_details" format="string"/>
@@ -37,13 +43,8 @@
         <attr name="rate_sub_title" format="string" />
     </declare-styleable>
 
-    <declare-styleable name="TransferMainInfoView">
-        <attr name="distance" format="string"/>
-        <attr name="distance_title" format="string"/>
-        <attr name="time" format="string"/>
-        <attr name="time_title" format="string"/>
-        <attr name="price" format="string"/>
-        <attr name="price_title" format="string"/>
+    <declare-styleable name="TransferMainInfoItemView">
+        <attr name="transfer_main_info_title" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="CommunicationButton">

@@ -33,36 +33,43 @@ fun TransportType.map(prices: Map<ID, TransportTypePriceModel>? = null) =
         id.getDescriptionRes()
     )
 
+fun TransportTypeModel.map() = TransportType(id, paxMax, luggageMax)
+
+@Suppress("UnsafeCast")
 @StringRes
 fun ID.getNameRes(): Int {
     val nameId = (if (this == ID.LIMOUSINE) ID.VIP else this).name
-    val nameRes = R.string::class.members.find( { it.name == "LNG_TRANSPORT_$nameId" } )
-    return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_ECONOMY
+    val nameRes = R.string::class.members.find { it.name == "LNG_TRANSPORT_$nameId" }
+    return nameRes?.call() as Int? ?: R.string.LNG_TRANSPORT_ECONOMY
 }
 
+@Suppress("UnsafeCast")
 @DrawableRes
 fun ID.getImageRes(): Int {
     val nameId = if (this == ID.LIMOUSINE) ID.VIP else this
-    val imageRes = R.drawable::class.members.find( { it.name == "ic_transport_type_$nameId" } )
-    return (imageRes?.call() as Int?) ?: R.drawable.ic_transport_type_economy
+    val imageRes = R.drawable::class.members.find { it.name == "ic_transport_type_$nameId" }
+    return imageRes?.call() as Int? ?: R.drawable.ic_transport_type_economy
 }
 
+@Suppress("UnsafeCast")
 @DrawableRes
 fun ID.getEmptyImageRes(): Int {
     val nameId = if (this == ID.LIMOUSINE) ID.VIP else this
-    val imageRes = R.drawable::class.members.find( { it.name == "ic_empty_car_$nameId" } )
-    return (imageRes?.call() as Int?) ?: R.drawable.ic_empty_car_economy
+    val imageRes = R.drawable::class.members.find { it.name == "ic_empty_car_$nameId" }
+    return imageRes?.call() as Int? ?: R.drawable.ic_empty_car_economy
 }
 
+@Suppress("UnsafeCast")
 @StringRes
 fun ID.getDescriptionRes(): Int {
     val nameRes = R.string::class.members.find { it.name == "LNG_TRANSPORT_EXAMPLES_${this.name}" }
-    return (nameRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
+    return nameRes?.call() as Int? ?: R.string.LNG_TRANSPORT_EXAMPLES_ECONOMY
 }
 
+@Suppress("UnsafeCast")
 @StringRes
 fun ID.getModelsRes(): Int {
     val nameId = (if (this == ID.LIMOUSINE) ID.VIP else this).name
-    val modelRes = R.string::class.members.find({it.name == "LNG_TRANSPORT_${nameId}_MODELS"})
-    return (modelRes?.call() as Int?) ?: R.string.LNG_TRANSPORT_ECONOMY_MODELS
+    val modelRes = R.string::class.members.find { it.name == "LNG_TRANSPORT_${nameId}_MODELS" }
+    return modelRes?.call() as Int? ?: R.string.LNG_TRANSPORT_ECONOMY_MODELS
 }

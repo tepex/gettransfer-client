@@ -39,15 +39,6 @@
         app:layout_constraintStart_toStartOf="@+id/searchFrom"
         app:layout_constraintTop_toBottomOf="@+id/searchFrom" />
 
-    <com.kg.gettransfer.presentation.ui.SearchAddress
-        android:id="@+id/searchTo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:hint="@string/LNG_FIELD_DESTINATION_WHERE"
-        app:layout_constraintEnd_toEndOf="@+id/searchFrom"
-        app:layout_constraintStart_toStartOf="@+id/searchFrom"
-        app:layout_constraintTop_toBottomOf="@+id/fieldsSeparator" />
-
     <RelativeLayout
         android:id="@+id/rl_hourly"
         android:layout_width="0dp"
@@ -55,7 +46,8 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/searchFrom"
         app:layout_constraintStart_toStartOf="@+id/searchFrom"
-        app:layout_constraintTop_toBottomOf="@+id/fieldsSeparator">
+        app:layout_constraintTop_toBottomOf="@+id/fieldsSeparator"
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/hourly_title"
@@ -83,9 +75,16 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_arrow_right" />
-
-
     </RelativeLayout>
+
+    <com.kg.gettransfer.presentation.ui.SearchAddress
+        android:id="@+id/searchTo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:hint="@string/LNG_FIELD_DESTINATION_WHERE"
+        app:layout_constraintEnd_toEndOf="@+id/searchFrom"
+        app:layout_constraintStart_toStartOf="@+id/searchFrom"
+        app:layout_constraintTop_toBottomOf="@+id/rl_hourly" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:visibility="gone"

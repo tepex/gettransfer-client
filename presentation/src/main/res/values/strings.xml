@@ -24,6 +24,7 @@
     <string name="LNG_UNPROCESSABLE_ERROR">Unprocessable</string>
     <string name="LNG_PHONE_TAKEN_ERROR">Phone number already taken</string>
     <string name="LNG_DATE_EARLY_ERROR">Date is too early</string>
+    <string name="LNG_DATE_LATE_ERROR">Date is too late</string>
     <string name="LNG_M">m</string>
     <string name="LNG_D">d</string>
     <string name="LNG_H">h</string>
@@ -84,7 +85,6 @@
     <string name="LNG_FIELD_DESTINATION">To: airport, train station, city, hotel, other place</string>
     <string name="LNG_FIELD_DESTINATION_WHERE">Where to?</string>
     <string name="LNG_FIELD_DESTINATION_SELECT_POINT_MAP">Select a point on the map</string>
-    <string name="LNG_FIELD_ERROR_MATCH_ADDRESSES">Too close, choose another location</string>
     <string name="LNG_SHARE_TEXT">Check this app! %s</string>
     <string name="LNG_OFFLINE_MESSAGE">No Internet connection.\nTransfers information available in the menu.</string>
     <string name="LNG_OFFLINE_MESSAGE_CACHE">No Internet connection.\nShown last available data.</string>
@@ -128,7 +128,7 @@
     <string name="LNG_RIDE_CONNECT_CARRIERS_NONUM">Connecting with nearby carriers</string>
     <string name="LNG_RIDE_CHOOSE_TRANSPORT">Please select transport type</string>
     <string name="LNG_RIDE_OFFERT">I aggree with \n<a href='#'>License agreement</a></string>
-    <string name="LNG_RIDE_PAYMENT_OFFER">By pressing \"\PAY\"\ you accept <a href="#">terms of the Agreement</a></string>
+    <string name="LNG_RIDE_PAY_OFFERT">By pressing \"\PAY\"\ you accept <a href="#">the terms of the Agreement</a></string>
     <string name="LNG_RIDE_OFFERT_TITLE">License agreement</string>
     <string name="LNG_RIDE_OFFERT_ERROR">You should accept terms of use</string>
 <!--    <string name="LNG_RIDE_FAIR_PRICE_FORMAT">Average rate on route %s (ETA ~%s)</string>-->
@@ -139,12 +139,10 @@
     <string name="LNG_RIDE_YOUR_MARK">Your mark</string>
     <string name="LNG_RIDE_YOUR_COMMENT">Your comment</string>
     <string name="LNG_PAYMENT_SETTINGS">Payment options</string>
-    <string name="LNG_PAYMENT_TERM_PAY">Pay %s%%</string>
     <string name="LNG_PAYMENT_TERM_NOW"> now</string>
-    <string name="LNG_PAYMENT_TERM_LATER">(%s later to the driver)</string>
     <string name="LNG_PAYMENT_METHOD"><b>Select your payment method</b></string>
     <string name="LNG_PAYMENT_COLLECT_MILES">To collect miles please  log in</string>
-    <string name="LNG_PAYMENT_COMISSION3">Payment commission is %s%%</string>
+    <string name="LNG_PAYMENT_SERVICE_FEE">Service fee is  %s%%</string>
     <string name="LNG_PAYMENT_REFUND">Free cancellation before %s</string>
     <string name="LNG_PAYMENT_PAY">Pay</string>
     <string name="LNG_RIDE_CANT_CREATE">Can\'t create transfer</string>
@@ -356,30 +354,24 @@
     <string name="LNG_RIDE_PAY_CHARGE2"><b>You will be charged %s</b></string>
     <string name="LNG_TRANSFER_CANCELED">Transfer canceled</string>
     <string name="LNG_LOGIN_LOGIN_TITLE">Log in &amp; Sign up</string>
-    <string name="LNG_LOGIN_CARRIER_SIGNUP_TITLE">Begin to earn more with GetTransfer.com!</string>
-    <string name="LNG_LOGIN_CARRIER_SIGNUP_HINT">Carrier registration is available on our web site gettransfer.com</string>
-    <string name="LNG_LOGIN_CARRIER_SIGNUP_BUTTON">Sign up on gettransfer.com</string>
     <string name="LNG_SIGNUP">Sign up</string>
     <string name="LNG_SEND_EMAIL">Send email...</string>
     <string name="LNG_NO_EMAIL_APPS">There are no email apps installed.</string>
     <string name="LNG_DOWNLOAD_COMPLETED">Download completed</string>
     <string name="LNG_VOUCHER">Voucher</string>
     <string name="LNG_NO_SEATS_REQUIRED">No child seats required</string>
-
     <string name="LNG_PAYMENT_AVAILABLE_S">Available: %s</string>
     <string name="LNG_PAYMENT_LIMIT">Limit:</string>
     <string name="LNG_PAYMENT_FROM_BALANCE_AVAILABLE">From balance (available: %s)</string>
-
     <string name="LNG_ABOUT_DRIVER_APP">Use new app for drivers</string>
     <string name="LNG_ABOUT_DRIVER_APP_INFO">Try a individual application for drivers. Now it will be more convenient to find applications and plan trips.</string>
     <string name="LNG_ABOUT_DRIVER_APP_NOT_SUPPORT">Unfortunately, the driver mode in your version of the application is no longer supported. Try a separate application for drivers. Now it will be more convenient to find applications and plan trips.</string>
     <string name="LNG_ABOUT_DRIVE_APP_ANDROID_CONTINUE">Open in Google Play</string>
     <string name="LNG_ABOUT_DRIVE_APP_NOT_NOW">Thanks, not now!</string>
     <string name="LNG_ABOUT_DRIVE_APP_CONTINUE_PAX">Continue as passenger</string>
-    <string name="LNG_BECOME_A_CARRIER_INFO">Try a individual application for drivers. Now it will be more convenient to find applications and plan trips.</string>
-    <string name="LNG_BECOME_A_CARRIER_ANDROID_CONTINUE">Get in on Google Play</string>
-    
     <string name="LNG_ERROR_RATE_LIMIT">Too many requests</string>
+    <string name="LNG_ACCOUNT_EXISTS_ERROR">Account already exists</string>
+    <string name="LNG_LOGIN_REQUIRED">Please log in to continue</string>
 
     <string name="LNG_COLOR_BLACK">black</string>
     <string name="LNG_COLOR_WHITE">white</string>
@@ -412,6 +404,44 @@
 
     <string name="LNG_SELECT_POINT_MAP">Point on map</string>
     <string name="LNG_RESTART_APP">Language was changed to switch language on map you need to restart app</string>
+    <string name="LNG_OFFER_NO_LONGER_AVAILABLE">Offer is no longer available</string>
+    <string name="LNG_PAYMENT_BALANCE_ERROR">Insufficient funds in your balance to proceed with payment. Please, use another payment method</string>
 
     <string name="LNG_CHAT_NO_LONGER_AVAILABLE">Chat is no longer available</string>
+    <string name="LNG_DROP_OFF_AT_THE_DIFF_LOC">Drop off at the different location</string>
+
+    <string name="LNG_RIDE_CHILDREN">Child seats</string>
+
+    <string name="LNG_CANCELATION_REASONS">Cancelation reasons</string>
+    <string name="LNG_CANCELATION_REASON_CHANGED_REQUIREMENTS">The changed requirements</string>
+    <string name="LNG_CANCELATION_REASON_WANTED_KNOW_THE_PRICE">Wanted to know the price for the next trip</string>
+    <string name="LNG_CANCELATION_REASON_FOUND_CHEAPER">Found a cheaper</string>
+    <string name="LNG_CANCELATION_REASON_GO_TO_THE_BUS_OR_TRAIN">Go to the bus / train</string>
+    <string name="LNG_CANCELATION_REASON_RENTED_CAR">Rented car</string>
+    <string name="LNG_CANCELATION_REASON_RELATIVES_OR_FRIENDS_WILL_THROW">Relatives or friends will throw</string>
+    <string name="LNG_CANCELATION_REASON_DIDNT_EXPECT_TO_GET_A_FEW_PRICES">I didn\'t expect to get a few prices from companies</string>
+    <string name="LNG_CANCELATION_REASON_TOOK_THE_TOUR_WITH_TRANSFER">Took the tour with transfer</string>
+    <string name="LNG_CANCELATION_REASON_NO_OFFERS_RECEIVED">No offers received</string>
+    <string name="LNG_CANCELATION_REASON_ANOTHER_REASON">Another reason</string>
+    <string name="LNG_CANCELATION_REQUEST_AGREEMENT">Do you agree to cancel the request due to \“%s\”?</string>
+    <string name="LNG_OFFERS_FOR_REQUEST_WILL_BE_LOST">All offers for this request will be lost!</string>
+    <string name="LNG_I_AGREE">I agree</string>
+    <string name="LNG_REQUEST_CANCELED">Your application has been successfully canceled!</string>
+    <string name="LNG_RESTORE_REQUEST">Restore request</string>
+    <string name="LNG_REVIEW_SENT">Your review has been sent, thanks!</string>
+    <string name="LNG_WILL_BE_WAITING_FOR_YOU">Will be waiting for you:</string>
+    <string name="LNG_UNEXPECTED_PAYMENT_ERROR">Unexpected error in payment process. Please call support.</string>
+
+    <string name="LNG_CHECKOUT_SECURE_LABEL">Secure bank card payment</string>
+    <string name="LNG_CHECKOUT_PAYING">Amount to pay:</string>
+    <string name="LNG_CHECKOUT_CARD_NUMBER">Card number</string>
+    <string name="LNG_CHECKOUT_EXPIRATION_DATE">Expiration date</string>
+    <string name="LNG_CHECKOUT_CVC">CVC</string>
+    <string name="LNG_CHECKOUT_PAY">Pay</string>
+    <string name="LNG_CHECKOUT_CURRENCY_WARNING">The amount may be debited from your account in different currency upon the request of the acquirer bank</string>
+
+    <string name="LNG_KM">km</string>
+    <string name="LNG_MI">miles</string>
+    <string name="LNG_MI_ONE">mile</string>
+    <string name="LNG_MI_FEW">miles</string>
 </resources>

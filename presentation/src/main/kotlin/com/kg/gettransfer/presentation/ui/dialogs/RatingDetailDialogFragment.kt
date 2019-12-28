@@ -8,21 +8,21 @@ import android.os.Bundle
 import androidx.annotation.CallSuper
 import android.widget.RatingBar
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.model.ReviewRate
 
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.setUneditable
-import com.kg.gettransfer.extensions.show
 
 import com.kg.gettransfer.presentation.presenter.RatingDetailPresenter
+import com.kg.gettransfer.presentation.ui.RateTripAnimationFragment
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.dialogs.CommentDialogFragment.Companion.COMMENT_DIALOG_TAG
@@ -40,6 +40,8 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     override val layout: Int = R.layout.dialog_fragment_rating_detail
     private var ratingListener: OnRatingChangeListener? = null
     private var isExitWithResult = false
+
+    private val rateAnimation by lazy { RateTripAnimationFragment() }
 
     private val commonRateListener = RatingBar.OnRatingBarChangeListener { _, rate, _ ->
         presenter.onCommonRatingChanged(rate)
@@ -88,9 +90,13 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         punctualityRate.rate_bar.onRatingBarChangeListener = punctualityRateListener
     }
 
-    override fun showProgress(isShow: Boolean) {
-        btnSend.show(!isShow, false)
-        progressBar.show(isShow)
+    private fun showRateAnimation() {
+        if (!rateAnimation.isAdded) {
+            parentFragmentManager.beginTransaction().apply {
+                replace(android.R.id.content, rateAnimation)
+                commit()
+            }
+        }
     }
 
     override fun setRatingCommon(rating: Float) {
@@ -183,6 +189,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         super.onDismiss(dialog)
         if (isExitWithResult) {
             ratingListener?.onRatingChangeCancelled()
+            showRateAnimation()
         }
     }
 

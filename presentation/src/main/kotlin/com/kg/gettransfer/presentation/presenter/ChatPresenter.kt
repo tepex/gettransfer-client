@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 
@@ -85,12 +85,17 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
     private fun getChatFromRemote() {
         utils.launchSuspend {
-            fetchData(withCacheCheck = NO_CACHE_CHECK) { chatInteractor.getChat(transferId) }?.let { initChatModel(it) }
+            fetchData(withCacheCheck = NO_CACHE_CHECK) {
+                chatInteractor.getChat(transferId)
+            }?.let { chat ->
+                initChatModel(chat)
+                notificationManager.clearNotification(transferId.toInt())
+            }
         }
     }
 
-    private fun initChatModel(chatResult: Chat){
-        if (chatModel == null || chatModel!!.accountId == NO_ID) {
+    private fun initChatModel(chatResult: Chat) {
+        if (chatModel == null || chatModel?.accountId == NO_ID) {
             chatModel = chatMapper.toView(chatResult)
             chatModel?.let { viewState.setChat(it) }
         } else {
@@ -98,7 +103,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
                 val oldMessagesSize = messages.size
                 messages = chatResult.messages.map { messageMapper.toView(it) }
                 viewState.notifyData()
-                if(chatResult.messages.size > oldMessagesSize) viewState.scrollToEnd()
+                if (chatResult.messages.size > oldMessagesSize) viewState.scrollToEnd()
             }
         }
     }

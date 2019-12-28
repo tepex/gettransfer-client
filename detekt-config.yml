@@ -87,7 +87,7 @@ complexity:
     ignoredLabels: ""
   LargeClass:
     active: true
-    threshold: 600
+    threshold: 1000
   LongMethod:
     active: true
     threshold: 60
@@ -540,4 +540,5 @@ style:
         kotlinx.coroutines.*,
         org.hamcrest.*,
         org.hamcrest.Matchers.*,
-        retrofit2.http.*"
+        retrofit2.http.*,
+        presentation.screenelements.*"

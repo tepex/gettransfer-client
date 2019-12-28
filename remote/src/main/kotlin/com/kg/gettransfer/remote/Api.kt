@@ -10,6 +10,7 @@ import retrofit2.http.*
 interface Api {
     companion object {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
+        const val CHECKOUTCOM_HEADER_TOKEN = "Authorization"
 
         const val API_ACCESS_TOKEN = "/api/access_token"
         const val API_ACCOUNT = "/api/account"
@@ -21,7 +22,8 @@ interface Api {
         const val API_ACCOUNT_REGISTER = "/api/account"
         const val API_ROUTE_INFO = "/api/route_info"
         const val API_TRANSFERS = "/api/transfers"
-        const val API_CREATE_NEW_PAYMENT = "/api/payments"
+        const val API_PAYMENT = "/api/payments"
+        const val API_PAYMENT_PROCESS = "/api/payments/process"
         const val API_PROMO = "/api/promo_codes/search"
         const val API_RATE_OFFER = "/api/offers/rate"
         const val API_FEEDBACK = "/api/offers"
@@ -102,7 +104,13 @@ interface Api {
     ): ResponseModel<OffersModel>
 
     @GET(API_TRANSFERS)
-    suspend fun getAllTransfers(): ResponseModel<TransfersModel>
+    suspend fun getAllTransfers(
+        @Query("role") role: String,
+        @Query("page") page: Int,
+        @Query("filtering[status]") status: String?,
+        @Query("sorting[field]") sortType: String? = "date_to",
+        @Query("sorting[order_by]") sortOrder: String? = "desc"
+    ): ResponseModel<TransfersModel>
 
     @GET("$API_TRANSFERS/archive")
     suspend fun getTransfersArchive(): ResponseModel<TransfersModel>
@@ -126,22 +134,63 @@ interface Api {
         @Body reason: ReasonModel
     ): ResponseModel<TransferWrapperModel>
 
-    @POST(API_CREATE_NEW_PAYMENT)
-    suspend fun createNewPayment(
+    @POST("$API_TRANSFERS/{id}/restore")
+    suspend fun restoreTransfer(
+        @Path("id") id: Long
+    ): ResponseModel<TransferWrapperModel>
+
+    @POST(API_PAYMENT)
+    suspend fun createPlatronPayment(
         @Body createPayment: PaymentRequestModel
-    ): ResponseModel<PaymentModel>
+    ): ResponseModel<PlatronPaymentModel>
+
+    @POST(API_PAYMENT)
+    suspend fun createCheckoutcomPayment(
+        @Body createPayment: PaymentRequestModel
+    ): ResponseModel<CheckoutcomPaymentModel>
+
+    @POST(".")
+    suspend fun getCheckoutcomToken(
+        @Body tokenRequest: CheckoutcomTokenRequestModel
+    ): CheckoutcomTokenModel
+
+    @POST(API_PAYMENT)
+    suspend fun createBraintreePayment(
+        @Body createPayment: PaymentRequestModel
+    ): ResponseModel<BraintreePaymentModel>
+
+    @POST(API_PAYMENT)
+    suspend fun createGooglePayPayment(
+        @Body createPayment: PaymentRequestModel
+    ): ResponseModel<GooglePayPaymentModel>
+
+    @POST(API_PAYMENT)
+    suspend fun createGroundPayment(
+        @Body createPayment: PaymentRequestModel
+    ): ResponseModel<Unit>
+
+    @POST(API_PAYMENT_PROCESS)
+    suspend fun processPayment(
+        @Body paymentProcess: StringPaymentProcessRequestModel
+    ): ResponseModel<PaymentProcessModel>
+
+    @POST(API_PAYMENT_PROCESS)
+    suspend fun processPayment(
+        @Body paymentProcess: JsonPaymentProcessRequestModel
+    ): ResponseModel<PaymentProcessModel>
 
     @GET(API_PROMO)
     suspend fun getDiscount(
         @Query("value") code: String
     ): ResponseModel<String>
 
-    @GET("$API_CREATE_NEW_PAYMENT/{status}")
+    @GET("$API_PAYMENT/{status}")
     suspend fun changePaymentStatus(
         @Path("status") status: String,
-        @Query("pg_order_id") pgOrderId: Long,
+        @Query("payment_id") paymentId: Long,
+        @Query("pg_failure_description") pgFailureDescription: String?,
         @Query("without_redirect") withoutRedirect: Boolean
-    ): ResponseModel<PaymentStatusWrapperModel>
+    ): ResponseModel<PaymentStatusWrappedModel>
 
     @POST("$API_RATE_OFFER/{id}/{type}")
     suspend fun rateOffer(
@@ -194,7 +243,7 @@ interface Api {
     suspend fun confirmPaypal(
         @Field("payment_id") paymentId: Long,
         @Field("nonce") nonce: String
-    ): ResponseModel<PaymentStatusWrapperModel>
+    ): ResponseModel<PaymentStatusWrappedModel>
 
     /*Autocomplete*/
     @GET(API_AUTOCOMPLETE)

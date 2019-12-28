@@ -4,6 +4,9 @@ import com.kg.gettransfer.data.model.CurrencyEntity
 import com.kg.gettransfer.data.model.LocaleEntity
 import com.kg.gettransfer.data.model.TransportTypeEntity
 import com.kg.gettransfer.data.model.map
+import sys.data.CheckoutcomCredentialsEntity
+import sys.data.GooglePayCredentialsEntity
+import sys.data.map
 
 import com.kg.gettransfer.domain.model.DistanceUnit
 
@@ -17,11 +20,14 @@ import java.util.Locale
 data class ConfigsEntity(
     val transportTypes: List<TransportTypeEntity>,
     val availableLocales: List<LocaleEntity>,
-    /* TODO: change to Double */
+    /* TODO change to Double */
     val paymentCommission: Float,
     val supportedCurrencies: List<CurrencyEntity>,
     val supportedDistanceUnits: List<String>,
-    val contactEmails: List<ContactEmailEntity>
+    val contactEmails: List<ContactEmailEntity>,
+    val checkoutcomCredentials: CheckoutcomCredentialsEntity,
+    val googlePayCredentials: GooglePayCredentialsEntity,
+    val defaultCardGateway: String
 ) {
 
     companion object {
@@ -32,6 +38,9 @@ data class ConfigsEntity(
         const val SUPPORTED_CURRENCIES     = "supported_currencies"
         const val SUPPORTED_DISTANCE_UNITS = "supported_distance_units"
         const val CONTACT_EMAILS           = "contact_emails"
+        const val CHECKOUTCOM_CREDENTIALS  = "checkoutcom_credentials"
+        const val GOOGLEPAY_CREDENTIALS    = "googlepay_credentials"
+        const val DEFAULT_CARD_GATEWAY     = "default_card_gateway"
     }
 }
 
@@ -42,5 +51,8 @@ fun ConfigsEntity.map() =
         paymentCommission,
         supportedCurrencies.map { it.map() },
         supportedDistanceUnits.map { DistanceUnit.valueOf(it.toUpperCase(Locale.US)) },
-        contactEmails.map { it.map() }
+        contactEmails.map { it.map() },
+        checkoutcomCredentials.map(),
+        googlePayCredentials.map(),
+        defaultCardGateway
     )

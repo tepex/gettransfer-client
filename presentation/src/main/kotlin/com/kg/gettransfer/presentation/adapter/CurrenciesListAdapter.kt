@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.model.CurrencyModel
 
@@ -19,12 +19,12 @@ class CurrenciesListAdapter(
     private val listener: SelectCurrencyListener,
     private val currencies: List<CurrencyModel>,
     private val selectedCurrency: CurrencyModel
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<CurrenciesListAdapter.ViewHolderCurrency>() {
 
     override fun getItemCount() = currencies.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) =
-        (holder as ViewHolderCurrency).bind(currencies[pos], currencies[pos].code == selectedCurrency.code, listener)
+    override fun onBindViewHolder(holder: ViewHolderCurrency, pos: Int) =
+        holder.bind(currencies[pos], currencies[pos].code == selectedCurrency.code, listener)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolderCurrency(LayoutInflater.from(parent.context).inflate(R.layout.view_currency_item, parent, false))

@@ -9,12 +9,10 @@ buildscript {
         kotlin_version        = "1.3.41"
         coroutines_version    = "1.3.0-RC"
         serialization_version = "0.9.1"
-        // gradle_version        = "3.4.0-alpha07"
         gradle_version        = '3.4.0'
         koin_version          = "2.0.1"
         gms_version           = "16.0.0"
         gs_version            = "4.2.0"
-        hockeyapp_version     = "3.7.6"
         jsr250_version        = "1.0"
         timber_version        = "4.7.1"
         slf4j_version         = "1.7.25"
@@ -23,9 +21,10 @@ buildscript {
         gson_version          = "2.8.5"
         room_version          = "2.2.0-alpha02"
         dexcount_version      = "0.8.4"
-        detekt_version        = "1.0.0-RC15"
+        detekt_version        = "1.3.0"
         sentry_version        = "1.7.23"
-        nav_version           = "2.2.0-alpha01"
+        nav_version           = "2.2.0-rc03"
+        appcenter_plugin_ver  = "1.1.16"
 
         core_testing_version            = "2.1.0"
         androidx_test_runner_version    = "1.2.0"
@@ -82,11 +81,11 @@ buildscript {
         classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        classpath "com.github.3mph4515:gradle-hockeyapp-plugin:$hockeyapp_version"
         classpath "com.google.gms:google-services:$gs_version"
         classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$dexcount_version"
         classpath "io.sentry:sentry-android-gradle-plugin:$sentry_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
+        classpath "gradle.plugin.com.betomorrow.gradle:appcenter-plugin:$appcenter_plugin_ver"
     }
 }
 
@@ -143,109 +142,193 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/GTApplication.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/extensions/CiceroneRouterExtension.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/extensions/PhoneNumberUtilExtension.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/CancelationReasonsListAdapter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/ChatAdapter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/CurrenciesListAdapter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/LanguagesListAdapter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/OffersAdapter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/adapter/RequestsRVAdapter.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/AccountManager.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/DateTimeDelegate.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/OfferItemBindDelegate.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/delegate/PushTokenManager.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/listeners/CancelationReasonListener.kt",
+
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/PaymentProcessRequestMapper.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/PaymentRequestMapper.kt",
+
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/OfferItemModel.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/PaymentProcessRequestModel.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/PaymentRequestModel.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/RouteModel.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/VehicleModel.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/TransferModel.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/TransportTypeModel.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/AboutPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BaseCardPaymentPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BaseHandleUrlPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BaseLogInPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BaseMapDialogPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BaseNewTransferPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/BasePresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CarrierTripDetailsPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/ChatPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CheckoutcomPaymentPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/CreateOrderPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/HandleUrlPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/LogInPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/MainNavigatePresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/MainPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/NewTransferMainPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/OffersPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/OpenDeepLinkScreenPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentOfferPresenter.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PlatronPaymentPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentSuccessfulPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaypalConnectionPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/RatingDetailPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/RatingLastTripPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/RequestsCategoryPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SearchPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectCancelationReasonPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectCurrencyPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectLanguagePresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SettingsPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SignUpPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SmsCodePresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SplashPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SupportPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/ThanksForRatePresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/TransferDetailsPresenter.kt",
 
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AboutActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AboutFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AppsFlyerHandleDeepLinkActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/AuthorizationPagerFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseBottomSheetFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseGoogleMapActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BaseLogInFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BecomeCarrierFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/BottomSheetDialog.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripDetailsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CarrierTripsMainActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ChatActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CheckoutcomPaymentActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ChildSeatsFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/CreateOrderActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/HandleUrlActivity.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/LoadingFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/LogInFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainNavigateActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainLoginActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/MainRequestFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/NewTransferMapPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/OffersActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PlatronPaymentActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentOfferActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaymentSuccessfulActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/PaypalConnectionActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/ProfileSettingsActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RateTripAnimationFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RatingLastTripFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RequestsActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/RequestsFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SearchAddress.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SearchFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCancelationReasonBottomFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCurrencyBottomFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCurrencyFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectLanguageFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsFragment.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpCarrierFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpFragment.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SupportActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SmsCodeFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SplashActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SupportFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SystemUtils.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferRequestItem.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransportTypeFragment.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/BottomSheetCreateOrderNewView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CheckoutcomCardFieldView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CreateOrderField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/NetworkNotAvailableView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RateField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RatingFieldView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SearchFormMainView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SearchFormView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SingleClickButton.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsCarrierInfoField.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferMainInfoItemView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/VehiclePhotosView.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/BaseMapBottomSheetDialogFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/RatingDetailDialogFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/CommentDialogFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/dialogs/PaymentErrorDialog.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/GooglePayRequestsHelper.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/DateTimePickerHelper.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LanguageDrawer.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/LayoutHelper.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/helpers/ScrollGalleryInflater.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/newtransfer/NewTransferMainFragment.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/utils/FragmentUtils.kt",
+
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/AboutView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseBottomSheetView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseHandleUrlView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseMapDialogView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/CarrierTripDetailsView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/CheckoutcomPaymentView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/HandleUrlView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/LogInView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/MainView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/NewTransferMainView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/OffersView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/OpenDeepLinkScreenView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/PaymentErrorView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/PaymentOfferView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/PaymentSuccessfulView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/PlatronPaymentView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/PaypalConnectionView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/RatingDetailView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/RatingLastTripView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SearchView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/Screens.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SelectCancelationReasonView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SelectCurrencyView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SelectLanguageView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SettingsView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SignUpView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SmsCodeView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SplashView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SupportView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/TransferDetailsView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/RequestsFragmentView.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CardDateFormatter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CountryCodeManager.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/EndlessRecyclerViewScrollListener.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/GTDownloadManager.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/di/Modules.kt",
 
-        "presentation/src/main/kotlin/sys/presentation/ConfigsManager.kt",
+        "presentation/src/main/kotlin/sys/presentation/ConfigsManager.kt"
     )
     config = files("detekt-config.yml")
 }

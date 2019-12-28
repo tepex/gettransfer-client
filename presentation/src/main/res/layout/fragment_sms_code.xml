@@ -72,19 +72,6 @@
             <requestFocus />
         </com.chaos.view.PinView>
 
-        <TextView
-            android:id="@+id/wrongCodeError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fragment_sms_code_error_margin_top"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:textColor="@color/color_gtr_red"
-            android:textSize="@dimen/fragment_sms_text_size_12sp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pinView" />
-
         <Button
             android:id="@+id/btnDone"
             style="@style/Widget.AppCompat.Button.Colored"
@@ -93,7 +80,7 @@
             android:layout_marginStart="@dimen/fragment_sms_btn_done_vertical_margin"
             android:layout_marginEnd="@dimen/fragment_sms_btn_done_vertical_margin"
             android:layout_marginBottom="@dimen/fragment_sms_btn_done_margin_bottom"
-            android:background="@drawable/btn_bg_rounded"
+            android:background="@drawable/btn_bg_rounded_green"
             android:enabled="false"
             android:text="@string/LNG_DONE"
             android:textColor="@color/colorWhite"

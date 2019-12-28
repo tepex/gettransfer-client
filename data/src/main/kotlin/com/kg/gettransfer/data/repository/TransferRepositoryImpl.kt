@@ -73,6 +73,21 @@ class TransferRepositoryImpl(
         )
     }
 
+    override suspend fun restoreTransfer(id: Long): Result<Transfer> {
+        val result: ResultEntity<TransferEntity?> = retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().restoreTransfer(id)
+        }
+        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().addTransfer(it) }
+        return Result(
+            result.entity?.map(
+                configsRepository.getResult().getModel().transportTypes,
+                dateFormat.get(),
+                dateFormatTZ.get()
+            ) ?: Transfer.EMPTY,
+            result.error?.map()
+        )
+    }
+
     override suspend fun setOffersUpdateDate(id: Long): Result<Unit> {
         val result: ResultEntity<TransferEntity?> = retrieveCacheEntity {
             factory.retrieveCacheDataStore().getTransfer(id)
@@ -196,18 +211,25 @@ class TransferRepositoryImpl(
         return eventsCount
     }
 
-    override suspend fun getAllTransfers(): Result<List<Transfer>> {
-        val result: ResultEntity<List<TransferEntity>?> = retrieveEntity { fromRemote ->
-            factory.retrieveDataStore(fromRemote).getAllTransfers()
+    override suspend fun getAllTransfers(
+        role: String,
+        page: Int,
+        status: String?
+    ): Result<Pair<List<Transfer>, Int?>> {
+
+        val result: ResultEntity<Pair<List<TransferEntity>, Int?>?> = retrieveEntity { fromRemote ->
+            factory.retrieveDataStore(fromRemote).getAllTransfers(role, page, status)
         }
         if (result.error == null) {
-            result.entity?.apply {
-                setLastOffersUpdate(this)
-                factory.retrieveCacheDataStore().addAllTransfers(this)
+            val list = result.entity?.first
+            list?.let { transfers ->
+                setLastOffersUpdate(transfers)
+                factory.retrieveCacheDataStore().addAllTransfers(transfers)
             }
         }
+        val resultList = result.entity?.let { checkTransfersEvents(it.first, true) } ?: emptyList()
         return Result(
-            result.entity?.let { checkTransfersEvents(it, true) } ?: emptyList(),
+            resultList to result.entity?.second,
             result.error?.map(),
             result.error != null && result.entity != null
         )
@@ -252,13 +274,13 @@ class TransferRepositoryImpl(
     }
 
     private suspend fun setLastOffersUpdate(remoteTransfers: List<TransferEntity>) {
-        val result: ResultEntity<List<TransferEntity>?> = retrieveCacheEntity {
+        val result: ResultEntity<Pair<List<TransferEntity>, Int?>?> = retrieveCacheEntity {
             factory.retrieveCacheDataStore().getAllTransfers()
         }
         if (result.entity == null) return
 
         remoteTransfers.forEach { remoteTransfer ->
-            result.entity.find { it.id == remoteTransfer.id }?.let { cachedTransfer ->
+            result.entity.first.find { it.id == remoteTransfer.id }?.let { cachedTransfer ->
                 if (remoteTransfer.offersUpdatedAt == null) return
                 remoteTransfer.lastOffersUpdatedAt = cachedTransfer.lastOffersUpdatedAt
             }

@@ -5,7 +5,7 @@
     <string name="api_key_dev">771b0c837d2f992610408e3fe989211f</string>
     <string name="api_url_demo">https://gtrbox.org</string>
     <string name="api_url_dev">https://development.gtrbox.org</string>
-    <string name="api_key_prod">android_a08d215c1976cef508350587784a0447</string>
+    <string name="api_key_prod">android_53ee3d9f48c19db9e684b689ec8b221b</string>
     <string name="api_url_prod">https://gettransfer.com</string>
     <string name="endpoint_demo" translatable="false">Demo</string>
     <string name="endpoint_prod" translatable="false">Prod</string>
@@ -41,13 +41,14 @@
     <string name="reset_rate">Reset play market rate</string>
     <string name="clear_access_token">Clear access token</string>
     <string name="reset_new_driver_app_dialog">Reset new driver app dialog</string>
+    <string name="payment_request_without_delay">Payment request without delay</string>
     <string name="force_crash">Force crash</string>
 
     <!--Technical strings-->
     <string name="searchTransitionName">SEARCH_FORM</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
     <string name="offer_channel_name">Offer</string>
-    <string name="offer_channel_description">@string/offer_channel_name</string>
+    <string name="message_channel_name">Message</string>
 
     <!-- UI Strings -->
     <string name="transfer_start_sign">A</string>
@@ -59,6 +60,9 @@
     <string name="text_in_parentheses">%1$s</string>
     <string name="chat_transfer_date_transfer_id_format">%1$s (%2$s)</string>
 
+    <!-- Error strings (needed strings from Crowdin) -->
+    <string name="transfer_status_mismatch_error">Transfer status mismatch</string>
+
     <!--Needed add this strings to remote configs-->
     <string name="email_support" translatable="false">info@gettransfer.com</string>
     <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
@@ -67,4 +71,5 @@
     <string name="russia_phone" translatable="false">+7 495 414 23 87</string>
     <string name="florida_phone" translatable="false">+1 786 870 1567</string>
     <string name="china_phone" translatable="false">+852 5803 1035</string>
+
 </resources>

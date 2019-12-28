@@ -10,14 +10,14 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.navigation.fragment.findNavController
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.setThrottledClickListener
 
-import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.presenter.NewTransferMainPresenter
+import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.ui.BaseFragment
 import com.kg.gettransfer.presentation.ui.ReadMoreFragment
 import com.kg.gettransfer.presentation.ui.dialogs.HourlyDurationDialogFragment
@@ -27,11 +27,11 @@ import com.kg.gettransfer.presentation.view.NewTransferMainView
 
 import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 
+import kotlinx.android.synthetic.main.content_new_transfer.*
 import kotlinx.android.synthetic.main.fragment_new_transfer_main.*
 import kotlinx.android.synthetic.main.search_form_main.*
 import kotlinx.android.synthetic.main.view_switcher.*
-
-import org.koin.core.inject
+// import leakcanary.AppWatcher
 
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -46,11 +46,8 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     @ProvidePresenter
     fun createMainRequestPresenter() = NewTransferMainPresenter()
 
-    private val dateDelegate: DateTimeDelegate by inject()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Added network change listener
         lifecycle.addObserver(NetworkLifeCycleObserver(this, this))
     }
 
@@ -60,32 +57,46 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        scrollDownContent()
         initClickListeners()
-
         presenter.checkBtnNextState()
     }
 
     override fun onResume() {
         super.onResume()
         presenter.updateView()
+        val hourly = switcher_hourly.switch_mode_.isChecked
+        presenter.tripModeSwitched(hourly)
+        if (hourly) {
+            presenter.switchPointB(request_search_panel.switchPointB.isChecked)
+        }
     }
 
     private fun initClickListeners() {
         // Switchers
         switcher_hourly.switch_mode_.setOnCheckedChangeListener { _, isChecked ->
+            scrollDownContent()
             presenter.tripModeSwitched(isChecked)
+        }
+        request_search_panel.switchPointB.setOnCheckedChangeListener { _, isChecked ->
+            scrollDownContent()
+            presenter.switchPointB(isChecked)
         }
 
         // Address panel
         request_search_panel.setSearchFromClickListener { presenter.navigateToFindAddress() }
         request_search_panel.setSearchToClickListener   { presenter.navigateToFindAddress(true) }
         request_search_panel.setHourlyClickListener     { presenter.showHourlyDurationDialog() }
-        request_search_panel.setIvSelectFieldFromClickListener {  switchToMap() }
+        request_search_panel.setIvSelectFieldFromClickListener { switchToMap() }
 
         // Buttons
-        btnNextFragment.setThrottledClickListener(TROTTLE) { presenter.onNextClick() }
+        btnNextFragment.setThrottledClickListener(THROTTLED_DELAY) { presenter.onNextClick() }
         bestPriceLogo.setOnClickListener(readMoreListener)
         layoutBestPriceText.setOnClickListener(readMoreListener)
+    }
+
+    private fun scrollDownContent() {
+        scrollContent.post { scrollContent.fullScroll(View.FOCUS_DOWN) }
     }
 
     /**
@@ -189,12 +200,26 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         findNavController().navigate(NewTransferMainFragmentDirections.goToMap())
     }
 
+    override fun showPointB(checked: Boolean) {
+        request_search_panel.switchPointB(checked)
+    }
+
     override fun goToSearchAddress(isClickTo: Boolean) {
         findNavController().navigate(NewTransferMainFragmentDirections.goToSearchAddress(isClickTo))
     }
 
     override fun goToCreateOrder() {
+        clearToAddress()
         findNavController().navigate(NewTransferMainFragmentDirections.goToCreateOrder())
+    }
+
+    private fun clearToAddress() {
+        val hourly = switcher_hourly.switch_mode_.isChecked
+        val needPointB = request_search_panel.switchPointB.isChecked
+        if (hourly && !needPointB) {
+            request_search_panel.setSearchTo(SearchPresenter.EMPTY_ADDRESS)
+            presenter.clearToAddress()
+        }
     }
 
     override fun onDestroy() {
@@ -205,6 +230,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     companion object {
         @JvmField val PERMISSIONS =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        const val TROTTLE = 1500L
+
+        private const val THROTTLED_DELAY = 1500L
     }
 }

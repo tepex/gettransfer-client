@@ -1,13 +1,10 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
-
-import com.kg.gettransfer.extensions.internationalExample
+import moxy.InjectViewState
 
 import com.kg.gettransfer.presentation.ui.MainLoginActivity
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
-import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.CREDENTIALS_VALID
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_EMAIL
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.INVALID_PHONE
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper.getInternationalNumber
@@ -20,7 +17,7 @@ import com.kg.gettransfer.utilities.Analytics
 import org.koin.core.KoinComponent
 
 @InjectViewState
-class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
+class LogInPresenter : BaseLogInPresenter<LogInView>(), KoinComponent {
 
     var password: String = ""
 
@@ -28,8 +25,8 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
         get() = password.isNotEmpty() && params.emailOrPhone.isNotEmpty()
     val isEnabledRequestCodeButton
         get() = params.emailOrPhone.isNotEmpty()
-
-    fun isPhone(value: String = params.emailOrPhone) = LoginHelper.checkIsNumber(value)
+    val isPhone
+        get() = LoginHelper.checkIsNumber(params.emailOrPhone)
 
     override fun attachView(view: LogInView) {
         super.attachView(view)
@@ -40,81 +37,40 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
         params.emailOrPhone = value.trim()
     }
 
-    private fun validateInput(): Boolean {
-        LoginHelper.validateInput(
-            params.emailOrPhone,
-            isPhone()
-        ).also {
-            when (it) {
-                INVALID_EMAIL -> viewState.showValidationError(INVALID_EMAIL)
-                INVALID_PHONE -> viewState.showValidationError(INVALID_PHONE)
-                CREDENTIALS_VALID -> return true
-            }
-        }
-        return false
-    }
-
-    private fun checkInputData() = params.emailOrPhone.isNotEmpty() && validateInput()
-
-    override fun onBackCommandClick() {
-        router.backTo(Screens.MainPassenger())
-    }
-
-    private fun loginWithCode() {
-        if (!checkInputData()) return
-        viewState.hideLoading()
-        router.replaceScreen(Screens.SmsCode(params, isPhone()))
-    }
-
     fun onLoginClick() {
-        analytics.logSingleEvent(Analytics.VERIFY_PASSWORD_CLICKED)
-        if (password.isEmpty()) {
-            viewState.showValidationError(MainLoginActivity.INVALID_PASSWORD)
-            return
-        }
-        if (params.emailOrPhone.isEmpty() ||
-            isPhone() && !LoginHelper.phoneIsValid(params.emailOrPhone) ||
-            !isPhone() && !LoginHelper.emailIsValid(params.emailOrPhone)
-        ) {
-            viewState.showValidationError(MainLoginActivity.INVALID_EMAIL)
-            return
-        }
-
-        if (!checkInputData()) return
+        if (!isCanLogIn()) return
 
         utils.launchSuspend {
+            viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when (isPhone()) {
+                when (isPhone) {
                     true -> accountManager.login(null, getInternationalNumber(params.emailOrPhone), password, false)
                     false -> accountManager.login(params.emailOrPhone, null, password, false)
                 }
-            }.also {
-                it.error?.let { e ->
+            }.also { result ->
+                viewState.blockInterface(false)
+
+                result.error?.let { e ->
                     viewState.setError(e)
-                    analytics.logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.STATUS, Analytics.RESULT_FAIL)
+                    logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.RESULT_FAIL)
                 }
 
-                it.isSuccess()?.let {
+                result.isSuccess()?.let {
+                    clearChosenTransportTypes()
                     openNextScreen()
-                    analytics.logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.STATUS, Analytics.RESULT_SUCCESS)
+                    logEvent(Analytics.EVENT_LOGIN_PASS, Analytics.RESULT_SUCCESS)
                 }
-
-                viewState.hideLoading()
             }
         }
     }
 
     fun sendVerificationCode() {
         analytics.logSingleEvent(Analytics.GET_CODE_CLICKED)
-        if (params.emailOrPhone.isEmpty() ||
-            (!isPhone() && !LoginHelper.emailIsValid(params.emailOrPhone)) ||
-            (isPhone() && !LoginHelper.phoneIsValid(params.emailOrPhone))
-        ) {
-            viewState.showValidationError(MainLoginActivity.INVALID_EMAIL)
-            return
-        }
-        val isPhone = isPhone()
+
+        if (!validateInput()) return
+
         utils.launchSuspend {
+            viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 when (isPhone) {
                     true -> {
@@ -123,17 +79,55 @@ class LogInPresenter : OpenNextScreenPresenter<LogInView>(), KoinComponent {
                     }
                     false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
                 }
-            }.also {
-                if (it.error != null) {
-                    viewState.setError(it.error!!)
-                    analytics.logEvent(Analytics.EVENT_GET_CODE, Analytics.STATUS, Analytics.RESULT_FAIL)
-                } else {
-                    loginWithCode()
-                    analytics.logEvent(Analytics.EVENT_GET_CODE, Analytics.STATUS, Analytics.RESULT_SUCCESS)
+            }.also { result ->
+                viewState.blockInterface(false)
+
+                result.error?.let { e ->
+                    viewState.setError(e)
+                    logEvent(Analytics.EVENT_GET_CODE, Analytics.RESULT_FAIL)
+                }
+
+                result.isSuccess()?.let {
+                    router.replaceScreen(Screens.SmsCode(params, isPhone))
+                    logEvent(Analytics.EVENT_GET_CODE, Analytics.RESULT_SUCCESS)
                 }
             }
         }
     }
 
-    fun getPhoneExample(): String = Utils.phoneUtil.internationalExample(sessionInteractor.locale)
+    private fun isCanLogIn(): Boolean {
+        analytics.logSingleEvent(Analytics.VERIFY_PASSWORD_CLICKED)
+
+        return if (password.isEmpty()) {
+            showValidationError(MainLoginActivity.INVALID_PASSWORD)
+            false
+        } else {
+            validateInput()
+        }
+    }
+
+    private fun validateInput() =
+        if (params.emailOrPhone.isEmpty()) {
+            showValidationError(MainLoginActivity.INVALID_EMAIL)
+            false
+        } else checkEmailOrPhone()
+
+    private fun checkEmailOrPhone() =
+        LoginHelper.validateInput(
+            params.emailOrPhone,
+            isPhone
+        ).let { error ->
+            if (error == INVALID_EMAIL || error == INVALID_PHONE) {
+                showValidationError(error)
+                false
+            } else true
+        }
+
+    private fun showValidationError(errorType: Int) {
+        viewState.showValidationError(errorType, Utils.getPhoneNumberExample(sessionInteractor.locale.language))
+    }
+
+    override fun onBackCommandClick() {
+        router.backTo(Screens.MainPassenger())
+    }
 }

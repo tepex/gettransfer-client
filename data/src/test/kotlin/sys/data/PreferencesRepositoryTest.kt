@@ -127,11 +127,13 @@ class PreferencesRepositoryTest : StringSpec(), KoinTest {
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
                 isNewDriverAppDialogShowed = false,
+                countOfShowNewDriverAppDialog = 0,
                 selectedField = "selected field",
                 addressHistory = emptyList(),
                 appEnters = 2,
                 isDebugMenuShowed = false,
-                favoriteTransports = emptySet()
+                favoriteTransports = emptySet(),
+                isPaymentRequestWithoutDelay = false
             )
         val PREFERENCES_ENTITY =
             PreferencesEntity(
@@ -140,11 +142,13 @@ class PreferencesRepositoryTest : StringSpec(), KoinTest {
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
                 isNewDriverAppDialogShowed = false,
+                countOfShowNewDriverAppDialog = 0,
                 selectedField = "selected field",
                 addressHistory = emptyList(),
                 appEnters = 2,
                 isDebugMenuShowed = false,
-                favoriteTransports = emptySet()
+                favoriteTransports = emptySet(),
+                isPaymentRequestWithoutDelay = false
             )
     }
 }

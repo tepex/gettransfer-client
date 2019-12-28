@@ -17,8 +17,6 @@ data class OfferEntity(
     @SerialName(CURRENCY)           val currency: String,
     @SerialName(WIFI)               val wifi: Boolean,
     @Optional
-    @SerialName(NAME_SIGN_PRESENT)  val isNameSignPresent: Boolean? = null,
-    @Optional
     @SerialName(WITH_NAME_SIGN)     val isWithNameSign: Boolean? = null,
     @SerialName(REFRESHMENTS)       val refreshments: Boolean,
     @SerialName(CHARGER)            val charger: Boolean,
@@ -31,7 +29,9 @@ data class OfferEntity(
     @SerialName(CARRIER)            val carrier: CarrierEntity,
     @SerialName(VEHICLE)            val vehicle: VehicleEntity,
     @Optional
-    @SerialName(DRIVER)             val driver: ProfileEntity? = null
+    @SerialName(DRIVER)             val driver: ProfileEntity? = null,
+    @SerialName(WHEELCHAIR)         val wheelchair: Boolean,
+    @SerialName(ARMORED)            val armored: Boolean
 ) {
 
     companion object {
@@ -41,7 +41,6 @@ data class OfferEntity(
         const val STATUS             = "status"
         const val CURRENCY           = "currency"
         const val WIFI               = "wifi"
-        const val NAME_SIGN_PRESENT  = "name_sign_present"
         const val WITH_NAME_SIGN     = "with_name_sign"
         const val REFRESHMENTS       = "refreshments"
         const val CREATED_AT         = "created_at"
@@ -53,6 +52,8 @@ data class OfferEntity(
         const val VEHICLE            = "vehicle"
         const val DRIVER             = "driver"
         const val CHARGER            = "charger"
+        const val WHEELCHAIR         = "wheelchair"
+        const val ARMORED            = "armored"
     }
 }
 
@@ -63,7 +64,6 @@ fun OfferEntity.map(dateFormat: DateFormat, url: String) =
         status,
         currency,
         wifi,
-        isNameSignPresent ?: false,
         isWithNameSign ?: false,
         refreshments,
         charger,
@@ -74,7 +74,9 @@ fun OfferEntity.map(dateFormat: DateFormat, url: String) =
         passengerFeedback,
         carrier.map(),
         vehicle.map(url),
-        driver?.map()
+        driver?.map(),
+        wheelchair,
+        armored
     )
 
 fun Offer.map(dateFormat: DateFormat) =
@@ -84,7 +86,6 @@ fun Offer.map(dateFormat: DateFormat) =
         status,
         currency,
         wifi,
-        isNameSignPresent,
         isWithNameSign,
         refreshments,
         charger,
@@ -95,5 +96,7 @@ fun Offer.map(dateFormat: DateFormat) =
         passengerFeedback,
         carrier.map(),
         vehicle.map(),
-        driver?.map()
+        driver?.map(),
+        wheelchair,
+        armored
     )

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/root"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".presentation.ui.AboutFragment"
+	android:background="@color/colorWhite">
+
+	<com.kg.gettransfer.presentation.ui.custom.SingleClickButton
+		android:id="@+id/btnClose"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		android:layout_marginTop="@dimen/about_activity_close_button_margin"
+		android:layout_marginEnd="@dimen/about_activity_close_button_margin"
+		style="@style/BorderlessBackground"
+		app:srcCompat="@drawable/ic_close_x"/>
+
+	<androidx.viewpager.widget.ViewPager
+		android:id="@+id/viewpager"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:overScrollMode="never"
+		app:layout_constraintBottom_toTopOf="@+id/btnNext"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/btnClose">
+
+		<com.kg.gettransfer.presentation.ui.AboutItem
+			android:id="@+id/item_0"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:img_about_item="@drawable/onboarding_0"
+			app:title_about_item="@string/LNG_PRESENTATION_TITLE_0" />
+
+		<com.kg.gettransfer.presentation.ui.AboutItem
+			android:id="@+id/item_1"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:img_about_item="@drawable/onboarding_1"
+			app:title_about_item="@string/LNG_PRESENTATION_TITLE_1" />
+	</androidx.viewpager.widget.ViewPager>
+
+	<com.rd.PageIndicatorView
+		android:id="@+id/pageIndicator"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/margin32"
+		android:paddingTop="@dimen/margin1"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:piv_animationType="fill"
+		app:piv_interactiveAnimation="true"
+		app:piv_radius="@dimen/about_activity_indicator_radius"
+		app:piv_selectedColor="@color/color_gtr_green"
+		app:piv_unselectedColor="@color/color_gtr_light_grey"
+		app:piv_viewPager="@id/viewpager" />
+
+	<Button
+		android:id="@+id/btnNext"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/about_activity_button_height"
+		android:background="@drawable/bg_rounded_22_green"
+		android:layout_marginBottom="@dimen/about_activity_button_margin_bottom"
+		android:layout_marginStart="@dimen/about_activity_button_margin_start_end"
+		android:layout_marginEnd="@dimen/about_activity_button_margin_start_end"
+		style="@style/sf_font_semi_bold_15_sp"
+		android:text="@string/LNG_NEXT"
+		android:textAllCaps="false"
+		android:textColor="@android:color/white"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintBottom_toTopOf="@+id/pageIndicator"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

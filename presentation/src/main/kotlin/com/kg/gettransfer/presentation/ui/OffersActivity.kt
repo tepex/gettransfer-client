@@ -13,8 +13,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -22,7 +22,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Money
 
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.strikeText
 import com.kg.gettransfer.extensions.toHalfEvenRoundedFloat
@@ -81,6 +81,8 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private lateinit var offersAdapter: OffersAdapter
 
+    private var isNetworkWasAvailable = true
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +110,7 @@ class OffersActivity : BaseActivity(), OffersView {
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
         bsOfferDetails.state = BottomSheetBehavior.STATE_HIDDEN
         tintBackgroundShadow = tintBackground
-        bsOfferDetails.setBottomSheetCallback(bottomSheetCallback)
+        bsOfferDetails.addBottomSheetCallback(bottomSheetCallback)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -155,9 +157,9 @@ class OffersActivity : BaseActivity(), OffersView {
         rvOffers.adapter = offersAdapter
     }
 
-    override fun setOffers(offers: List<OfferItemModel>) {
+    override fun setOffers(offers: List<OfferItemModel>, isNameSignPresent: Boolean) {
         hideSheetOfferDetails()
-        setupAdapter(offers)
+        setupAdapter(offers, isNameSignPresent)
         setupPriceOrDriversInfo(offers)
     }
 
@@ -174,8 +176,10 @@ class OffersActivity : BaseActivity(), OffersView {
         }
     }
 
-    private fun setupAdapter(offers: List<OfferItemModel>) {
-        offersAdapter.update(offers)
+    private fun setupAdapter(offers: List<OfferItemModel>, isNameSignPresent: Boolean) {
+        val rvState = rvOffers.layoutManager?.onSaveInstanceState()
+        offersAdapter.update(offers, isNameSignPresent)
+        rvOffers.layoutManager?.onRestoreInstanceState(rvState)
     }
 
     override fun setBannersVisible(hasOffers: Boolean) {
@@ -213,11 +217,7 @@ class OffersActivity : BaseActivity(), OffersView {
         sortOrder.rotation = if (!sortHigherToLower) SEMI_ROUND else 0f
     }
 
-    override fun showAlertCancelRequest() {
-        Utils.showAlertCancelRequest(this) { presenter.cancelRequest(it) }
-    }
-
-    override fun showBottomSheetOfferDetails(offer: OfferItemModel) {
+    override fun showBottomSheetOfferDetails(offer: OfferItemModel, isNameSignPresent: Boolean) {
         when (offer) {
             is OfferModel -> {
                 setVehicleNameAndColor(vehicle = offer.vehicle)
@@ -227,17 +227,16 @@ class OffersActivity : BaseActivity(), OffersView {
                     layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_DETAILS
                 )
                 setCapacity(offer.vehicle.transportType)
+                OfferItemBindDelegate.bindNameSignPlate(this, iconNameSign,
+                    tvMissingNameSign, isNameSignPresent, offer.isWithNameSign)
                 with(vehicle_conveniences) {
-                    var isNameSignSection = false
-                    imgWithNameSign.isVisible = offer.isNameSignPresent && offer.isWithNameSign
-                    tvMissingNameSign.isVisible = offer.isNameSignPresent && !offer.isWithNameSign
-                    imgMissingNameSign.isVisible = offer.isNameSignPresent && !offer.isWithNameSign
-                    isNameSignSection = offer.isNameSignPresent
-
                     imgFreeWater.isVisible = offer.refreshments
                     imgFreeWiFi.isVisible = offer.wifi
                     imgCharge.isVisible = offer.charger
-                    isVisible = offer.refreshments || offer.wifi || offer.charger || isNameSignSection
+                    ivWheelchair.isVisible = offer.wheelchair
+                    ivArmor.isVisible = offer.armored
+                    isVisible = offer.refreshments || offer.wifi || offer.charger ||
+                        offer.wheelchair || offer.armored
                 }
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)
@@ -293,14 +292,10 @@ class OffersActivity : BaseActivity(), OffersView {
     private fun setVehicleNameAndColor(nameById: String? = null, vehicle: VehicleModel? = null) {
         if (nameById == null && vehicle == null) throw IllegalArgumentException()
         tv_car_model_bs.text = vehicle?.name ?: nameById
-        with(ivCarColor) {
-            if (vehicle?.color != null && vehicle.photos.isEmpty()) {
-                isVisible = true
-                setImageDrawable(Utils.getCarColorFormRes(this@OffersActivity, vehicle.color))
-            } else {
-                isVisible = false
-            }
-        }
+        carColor.isVisible = vehicle?.color?.let { color ->
+            Utils.setCarColorInTextView(this@OffersActivity, carColor, color)
+            true
+        } ?: false
     }
 
     private fun setRating(carrier: CarrierModel) {
@@ -347,7 +342,7 @@ class OffersActivity : BaseActivity(), OffersView {
     @CallSuper
     override fun setNetworkAvailability(context: Context): Boolean {
         val available = super.setNetworkAvailability(context)
-        if (available) {
+        if (available && !isNetworkWasAvailable) {
             presenter.checkNewOffers()
         }
         offer_bottom_bs.btn_book.isEnabled = viewNetworkNotAvailable?.isShowing()?.not() ?: true
@@ -357,6 +352,7 @@ class OffersActivity : BaseActivity(), OffersView {
             cl_fixPrice.isVisible = false
             fl_drivers_count_text.isVisible = false
         }
+        isNetworkWasAvailable = available
         return available
     }
 

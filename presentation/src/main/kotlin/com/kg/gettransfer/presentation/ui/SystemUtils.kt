@@ -4,6 +4,7 @@ import android.content.Context
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.interactor.SessionInteractor
+import com.kg.gettransfer.domain.model.DistanceUnit
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -22,12 +23,29 @@ internal object SystemUtils : KoinComponent {
     private const val TIME_PATTERN = "HH:mm"
     private const val SLASH = "/"
 
-    fun formatDistance(context: Context, distance: Int?, withDistanceText: Boolean): String {
+    @Suppress("ComplexMethod")
+    fun formatDistance(context: Context, distance: Int?, splitDistance: Boolean, withDistanceText: Boolean): String {
         if (distance == null) return ""
-        return if (withDistanceText) {
-            context.getString(R.string.LNG_RIDE_DISTANCE).plus(": $distance ").plus(sessionInteractor.distanceUnit.name)
+        val distanceValueText = when {
+            distance == 0                     -> "-"
+            withDistanceText && splitDistance -> "${distance / 2}x2=$distance"
+            else                              -> distance.toString()
+        }
+
+        val distanceText = if (distance != 0) {
+            val distanceUnit = when (sessionInteractor.distanceUnit) {
+                DistanceUnit.KM -> context.getString(R.string.LNG_KM)
+                DistanceUnit.MI -> context.resources.getQuantityString(R.plurals.miles, distance, distance)
+            }
+            distanceValueText.plus(" $distanceUnit")
         } else {
-            distance.toString().plus("${sessionInteractor.distanceUnit.name}")
+            distanceValueText
+        }
+
+        return if (withDistanceText) {
+            context.getString(R.string.LNG_RIDE_DISTANCE).plus(" $distanceText")
+        } else {
+            distanceText
         }
     }
 

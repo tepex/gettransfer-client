@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 
@@ -15,6 +15,7 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
+import com.kg.gettransfer.sys.domain.AddCountOfShowNewDriverAppDialogInteractor
 
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
@@ -36,6 +37,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
     private val getPreferences: GetPreferencesInteractor by inject()
+    private val addCountOfShowDriverAppDialogInteractor: AddCountOfShowNewDriverAppDialogInteractor by inject()
 
     private var isAppLaunched = false
 
@@ -47,18 +49,24 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
 
     override fun systemInitialized() {
         if (accountManager.hasAccount) {
-            worker.main.launch {
-                val isNewDriverAppDialogShowed = withContext(worker.bg) { getPreferences().getModel() }.isNewDriverAppDialogShowed
-                if (accountManager.isLoggedIn &&
-                        accountManager.remoteAccount.isCarrier &&
-                        !isNewDriverAppDialogShowed) {
-                    analytics.logEvent(Analytics.EVENT_NEW_CARRIER_APP_DIALOG, Analytics.OPEN_SCREEN, null)
-                    viewState.showNewDriverAppDialog()
-                    withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(true) }
-                }
+            if (accountManager.isLoggedIn && accountManager.remoteAccount.isCarrier) {
+                checkShowingNewDriverAppDialog()
             }
             pushTokenManager.registerPushToken()
             checkTransfers()
+        }
+    }
+
+    private fun checkShowingNewDriverAppDialog() = worker.main.launch {
+        val prefs = withContext(worker.bg) { getPreferences().getModel() }
+        if (!prefs.isNewDriverAppDialogShowed &&
+                prefs.countOfShowNewDriverAppDialog < MAX_COUNT_OF_SHOW_NEW_DRIVER_APP_DIALOG) {
+            analytics.logEvent(Analytics.EVENT_NEW_CARRIER_APP_DIALOG, Analytics.OPEN_SCREEN, null)
+            viewState.showNewDriverAppDialog()
+            withContext(worker.bg) {
+                setNewDriverAppDialogShowedInteractor(true)
+                addCountOfShowDriverAppDialogInteractor()
+            }
         }
     }
 
@@ -81,13 +89,19 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
 
     private fun checkTransfers() {
         utils.launchSuspend {
-            fetchResultOnly { transferInteractor.getAllTransfers() }.isSuccess()?.let { checkReview(it) }
+            fetchResultOnly {
+                transferInteractor.getAllTransfers(getUserRole())
+            }.isSuccess()?.let {
+                checkReview(it.first)
+            }
             viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
         }
     }
 
     override fun updateCounter() {
-        utils.launchSuspend { viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount) }
+        utils.launchSuspend {
+            viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
+        }
     }
 
     override suspend fun onNewOffer(offer: Offer): OfferModel {
@@ -180,5 +194,6 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
 
     companion object {
         const val ONE_SEC_DELAY = 1000L
+        const val MAX_COUNT_OF_SHOW_NEW_DRIVER_APP_DIALOG = 2
     }
 }

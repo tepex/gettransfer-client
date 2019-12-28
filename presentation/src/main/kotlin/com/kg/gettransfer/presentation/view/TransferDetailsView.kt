@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.view
 
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.OneExecutionStateStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 import com.google.android.gms.maps.model.LatLng
 
@@ -13,7 +13,9 @@ import com.kg.gettransfer.presentation.model.TransferModel
 interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun setTransfer(transfer: TransferModel)
     fun setOffer(offer: OfferModel, childSeats: Int)
-    fun showAlertCancelRequest()
+    fun setBookNowOfferInfo(isBookNowOffer: Boolean)
+    fun showCancelationReasonsList()
+    fun showAlertRestoreRequest()
     fun copyField(text: String)
     fun showDetailRate()
     fun closeRateWindow()
@@ -22,10 +24,10 @@ interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun showCommonRating(isShow: Boolean)
     fun showYourRateMark(isShow: Boolean, averageRate: Double = 0.0)
     fun showYourDataProgress(isShow: Boolean)
-    fun showCancelRequestToast()
 
     fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)
     fun updateCamera(latLngList: List<LatLng>)
+    fun showRateAnimation()
 
     companion object {
         val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"

@@ -14,6 +14,8 @@ import com.kg.gettransfer.sys.domain.*
 import java.util.Locale
 
 import org.koin.dsl.module
+import sys.domain.CheckoutcomCredentials
+import sys.domain.GooglePayCredentials
 
 val systemData = module {
     /* Default models */
@@ -37,7 +39,21 @@ val systemData = module {
                 ContactEmail(ContactEmail.Id.FINANCE, "finance@gettransfer.com"),
                 ContactEmail(ContactEmail.Id.INFO, "info@gettransfer.com"),
                 ContactEmail(ContactEmail.Id.PARTNER, "partner@gettransfer.com")
-            )
+            ),
+            checkoutcomCredentials =
+                CheckoutcomCredentials(
+                    "",
+                    ""
+                ),
+            googlePayCredentials =
+                GooglePayCredentials(
+                    GooglePayCredentials.ENVIRONMENT.UNKNOWN,
+                    "",
+                    "",
+                    listOf("AMEX", "JCB", "MASTERCARD", "VISA"),
+                    listOf("CRYPTOGRAM_3DS")
+                ),
+            defaultCardGateway = "checkoutcom"
         )
     }
     single {
@@ -56,17 +72,19 @@ val systemData = module {
 
     single {
         Preferences(
-            accessToken                = "invalid token",
-            endpoint                   = null,
-            ipApiKey                   = null,
-            isFirstLaunch              = true,
-            isOnboardingShowed         = false,
-            isNewDriverAppDialogShowed = false,
-            selectedField              = "",
-            addressHistory             = emptyList(),
-            favoriteTransports         = emptySet(),
-            appEnters                  = 0,
-            isDebugMenuShowed          = false
+            accessToken                   = "invalid token",
+            endpoint                      = null,
+            ipApiKey                      = null,
+            isFirstLaunch                 = true,
+            isOnboardingShowed            = false,
+            isNewDriverAppDialogShowed    = false,
+            countOfShowNewDriverAppDialog = 0,
+            selectedField                 = "",
+            addressHistory                = emptyList(),
+            favoriteTransports            = emptySet(),
+            appEnters                     = 0,
+            isDebugMenuShowed             = false,
+            isPaymentRequestWithoutDelay  = false
         )
     }
 

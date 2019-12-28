@@ -49,7 +49,6 @@
         <action
             android:id="@+id/go_to_create_order"
             app:destination="@id/showCreateOrder"
-            app:popUpTo="@id/showNewOrder"
             app:enterAnim="@anim/transition_b2t"
             app:popEnterAnim="@anim/fade_in"
             app:exitAnim="@anim/transition_t2b"
@@ -73,7 +72,6 @@
         <action
             android:id="@+id/go_to_create_order"
             app:destination="@id/showCreateOrder"
-            app:popUpTo="@id/showNewOrder"
             app:enterAnim="@anim/transition_b2t"
             app:popEnterAnim="@anim/fade_in"
             app:exitAnim="@anim/transition_t2b"

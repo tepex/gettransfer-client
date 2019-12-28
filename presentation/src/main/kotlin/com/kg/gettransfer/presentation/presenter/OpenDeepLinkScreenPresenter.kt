@@ -3,35 +3,40 @@ package com.kg.gettransfer.presentation.presenter
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.createStartChain
+import com.kg.gettransfer.extensions.getOffer
 import com.kg.gettransfer.presentation.view.OpenDeepLinkScreenView
 import com.kg.gettransfer.presentation.view.Screens
 
-open class OpenDeepLinkScreenPresenter<BV: OpenDeepLinkScreenView>: BaseHandleUrlPresenter<BV>() {
+open class OpenDeepLinkScreenPresenter<BV : OpenDeepLinkScreenView> : BaseHandleUrlPresenter<BV>() {
 
     var transferId: Long? = null
 
     suspend fun openOffer(transferId: Long, offerId: Long?, bookNowTransportId: String?) {
         checkTransfer(transferId).isSuccess()?.let { transfer ->
             if (transfer.checkStatusCategory() == Transfer.STATUS_CATEGORY_ACTIVE) {
-                val offerItem: OfferItem? = when {
-                    offerId != null && offerId != DEFAULT_ID ->
-                        fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(transfer.id) }?.find { it.id == offerId }
-                    !bookNowTransportId.isNullOrEmpty()      ->
-                        transfer.bookNowOffers.find { it.transportType.id.toString() == bookNowTransportId }
-                    else                                     -> null
-                }
-                if (offerItem != null) {
-                    with(paymentInteractor) {
-                        selectedTransfer = transfer
-                        selectedOffer = offerItem
-                    }
-                    router.createStartChain(Screens.PaymentOffer())
-                } else {
-                    router.createStartChain(Screens.Offers(transfer.id))
-                }
+                openPaymentOffer(transfer, offerId, bookNowTransportId)
             } else {
                 router.createStartChain(Screens.Details(transfer.id))
             }
+        }
+    }
+
+    private suspend fun openPaymentOffer(transfer: Transfer, offerId: Long?, bookNowTransportId: String?) {
+        val offerItem: OfferItem? = when {
+            offerId != null && offerId != DEFAULT_ID ->
+                fetchData(NO_CACHE_CHECK) { offerInteractor.getOffers(transfer.id) }?.getOffer(offerId)
+            !bookNowTransportId.isNullOrEmpty()      ->
+                transfer.bookNowOffers.find { it.transportType.id.toString() == bookNowTransportId }
+            else                                     -> null
+        }
+        if (offerItem != null) {
+            with(paymentInteractor) {
+                selectedTransfer = transfer
+                selectedOffer = offerItem
+            }
+            router.createStartChain(Screens.PaymentOffer())
+        } else {
+            router.createStartChain(Screens.Offers(transfer.id))
         }
     }
 

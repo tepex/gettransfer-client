@@ -7,12 +7,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.ui.*
+import com.kg.gettransfer.presentation.ui.dialogs.PaymentErrorDialog
+import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
+import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.SHOW_ABOUT
 
 import kotlinx.serialization.json.JSON
 
@@ -41,9 +45,11 @@ object Screens {
 
     private var canSendEmail: Boolean? = null
 
-    class MainPassenger : SupportAppScreen() {
+    data class MainPassenger(val showAbout: Boolean = false) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java)
+        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java).apply {
+            putExtra(SHOW_ABOUT, showAbout)
+        }
     }
 
     data class MainPassengerToRateTransfer(
@@ -69,23 +75,9 @@ object Screens {
         }
     }
 
-    object RestorePassword : SupportAppScreen() {
-
-        override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
-            putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_RESTORE_PASS)
-        }
-    }
-
     object CreateOrder : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
-    }
-
-    data class About(val isOnboardingShowed: Boolean) : SupportAppScreen() {
-
-        override fun getActivityIntent(context: Context?) = Intent(context, AboutActivity::class.java).apply {
-            putExtra(AboutView.EXTRA_OPEN_MAIN, isOnboardingShowed)
-        }
     }
 
     open class MainLogin(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
@@ -99,23 +91,6 @@ object Screens {
             )
         }
     }
-
-    /*open class Login(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
-        override fun getFragment(): Fragment {
-            return LogInFragment().apply {
-                arguments = Bundle().apply {
-                    putString(LogInView.EXTRA_NEXT_SCREEN, nextScreen)
-                    putString(LogInView.EXTRA_EMAIL_TO_LOGIN, emailOrPhone)
-                }
-            }
-        }
-    }
-
-    open class SignUp() : SupportAppScreen() {
-        override fun getFragment(): Fragment {
-            return SignUpFragment()
-        }
-    }*/
 
     open class AuthorizationPager(private val params: String) : SupportAppScreen() {
 
@@ -147,7 +122,7 @@ object Screens {
         override fun getFragment() = SmsCodeFragment.newInstance().apply {
             arguments = Bundle().apply {
                 putString(LogInView.EXTRA_PARAMS, JSON.stringify(LogInView.Params.serializer(), params))
-                putBoolean(SmsCodeFragment.EXTERNAL_IS_PHONE, isPhone)
+                putBoolean(SmsCodeView.EXTRA_IS_PHONE, isPhone)
             }
         }
     }
@@ -176,7 +151,11 @@ object Screens {
         }
     }
 
-    data class LoginToPaymentOffer(val transferId: Long, val offerId: Long?, val bookNowTransportId: String?) : SupportAppScreen() {
+    data class LoginToPaymentOffer(
+        val transferId: Long,
+        val offerId: Long?,
+        val bookNowTransportId: String?
+    ) : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
@@ -229,23 +208,6 @@ object Screens {
         }
     }
 
-/*
-    data class FindAddress(
-        val from: String,
-        val to: String,
-        val isClickTo: Boolean?,
-        val returnMain: Boolean = false
-    ) :
-        SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, SearchFragment::class.java).apply {
-            putExtra(SearchView.EXTRA_ADDRESS_FROM, from)
-            putExtra(SearchView.EXTRA_ADDRESS_TO, to)
-            putExtra(RETURN_MAIN, returnMain)
-            isClickTo?.let { putExtra(SearchView.EXTRA_IS_CLICK_TO, it) }
-        }
-    }
-*/
-
     data class Offers(val transferId: Long) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) = Intent(context, OffersActivity::class.java).apply {
             putExtra(OffersView.EXTRA_TRANSFER_ID, transferId)
@@ -264,42 +226,48 @@ object Screens {
         }
     }
 
-    data class Payment(
-        val url: String?,
-        val percentage: Int,
-        val paymentType: String
-    ) : SupportAppScreen() {
+    data class PlatronPayment(val url: String) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, PaymentActivity::class.java).apply {
-            putExtra(PaymentView.EXTRA_URL, url)
-            putExtra(PaymentView.EXTRA_PERCENTAGE, percentage)
-            putExtra(PaymentView.EXTRA_PAYMENT_TYPE, paymentType)
-        }
+        override fun getActivityIntent(context: Context?) =
+            Intent(context, PlatronPaymentActivity::class.java).apply {
+                putExtra(PlatronPaymentView.EXTRA_URL, url)
+            }
+    }
+
+    data class CheckoutcomPayment(val paymentId: Long, val amountFormatted: String) : SupportAppScreen() {
+
+        override fun getActivityIntent(context: Context?) =
+            Intent(context, CheckoutcomPaymentActivity::class.java).apply {
+                putExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, paymentId)
+                putExtra(CheckoutcomPaymentView.EXTRA_AMOUNT_FORMATTED, amountFormatted)
+            }
     }
 
     class PaymentOffer : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, PaymentOfferActivity::class.java).apply {
-            /*putExtra(
-                PaymentOfferView.EXTRA_PARAMS,
-                JSON.stringify(
-                    PaymentOfferView.Params.serializer(),
-                    PaymentOfferView.Params(dateRefund, transferId, paymentPercentages)
-                )
-            )*/
-        }
+        override fun getActivityIntent(context: Context?) = Intent(context, PaymentOfferActivity::class.java)
     }
 
-    data class PaymentError(val transferId: Long) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, PaymentErrorActivity::class.java).apply {
-            putExtra(PaymentErrorActivity.TRANSFER_ID, transferId)
+    data class PaymentError(
+        val fragmentManager: FragmentManager,
+        val transferId: Long,
+        val gatewayId: String? = null
+    ) {
+
+        fun showDialog() {
+            PaymentErrorDialog().apply {
+                arguments = Bundle().apply {
+                    putLong(PaymentErrorDialog.TRANSFER_ID, transferId)
+                    putString(PaymentErrorDialog.GATEWAY_ID, gatewayId)
+                }
+            }.show(fragmentManager, PaymentErrorDialog.TAG)
         }
     }
 
     data class PaymentSuccess(val transferId: Long, val offerId: Long?) : SupportAppScreen() {
         override fun getActivityIntent(context: Context?) =
             Intent(context, PaymentSuccessfulActivity::class.java).apply {
-                putExtra(PaymentSuccessfulActivity.TRANSFER_ID, transferId)
-                putExtra(PaymentSuccessfulActivity.OFFER_ID, offerId)
+                putExtra(PaymentSuccessfulView.EXTRA_TRANSFER_ID, transferId)
+                putExtra(PaymentSuccessfulView.EXTRA_OFFER_ID, offerId)
             }
     }
 
@@ -383,9 +351,7 @@ object Screens {
         val paymentId: Long,
         val nonce: String,
         val transferId: Long,
-        val offerId: Long?,
-        val percentage: Int,
-        val bookNowTransportId: String?
+        val offerId: Long?
     ) : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) =
@@ -394,8 +360,32 @@ object Screens {
                 putExtra(PaypalConnectionView.EXTRA_NONCE, nonce)
                 putExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, transferId)
                 putExtra(PaypalConnectionView.EXTRA_OFFER_ID, offerId)
-                putExtra(PaypalConnectionView.EXTRA_PERCENTAGE, percentage)
-                putExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID, bookNowTransportId)
             }
+    }
+
+    fun showSupportScreen(
+        fragmentManager: FragmentManager,
+        transferId: Long?
+    ) {
+
+        FragmentUtils.replaceFragment(
+            fragmentManager,
+            fragment = SupportFragment.newInstance(transferId, true),
+            containerViewId = android.R.id.content,
+            tag = null,
+            addToBackStack = true)
+    }
+
+    /**
+     * @param firstLaunch will be true if Onboarding hasn't been shown yet otherwise always be false
+     */
+    fun showAboutScreen(fragmentManager: FragmentManager, firstLaunch: Boolean = false) {
+        FragmentUtils.replaceFragment(
+            fragmentManager,
+            fragment = AboutFragment.newInstance(firstLaunch),
+            containerViewId = android.R.id.content,
+            tag = null,
+            addToBackStack = true,
+            useAnimation = false)
     }
 }

@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.domain.interactor.SessionInteractor
@@ -40,18 +40,18 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
 
     fun onLaunchContinue() {
-        /* Check PUSH notification */
         viewState.checkLaunchType()
         worker.main.launch {
-            val result = configsManager.coldStart(worker.backgroundScope)
-            // check result for network error
+            configsManager.coldStart(worker.backgroundScope)
             withContext(worker.bg) {
                 setNewDriverAppDialogShowedInteractor(false)
+
+                val needUpdateApp = isNeedUpdateApp(
+                    IsNeedUpdateAppInteractor.FIELD_UPDATE_REQUIRED,
+                    BuildConfig.VERSION_CODE
+                )
+                if (needUpdateApp) viewState.onNeedAppUpdateInfo() else startApp()
             }
-            val needUpdateApp = withContext(worker.bg) {
-                isNeedUpdateApp(IsNeedUpdateAppInteractor.FIELD_UPDATE_REQUIRED, BuildConfig.VERSION_CODE)
-            }
-            if (needUpdateApp) viewState.onNeedAppUpdateInfo() else startApp()
         }
     }
 
@@ -59,11 +59,9 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
         viewState.dispatchAppState(sessionInteractor.locale)
         val isOnboardingShowed = withContext(worker.bg) { getPreferences().getModel() }.isOnboardingShowed
         if (!isOnboardingShowed) {
-            router.replaceScreen(Screens.About(false))
             withContext(worker.bg) { setOnboardingShowed(true) }
-        } else {
-            router.newRootScreen(Screens.MainPassenger())
         }
+        goToMainScreen(isOnboardingShowed)
     }
 
     fun enterByPush() {
@@ -73,5 +71,9 @@ class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
     override fun onDestroy() {
         worker.cancel()
         super.onDestroy()
+    }
+
+    private fun goToMainScreen(onboardingShowed: Boolean) {
+        router.newRootScreen(Screens.MainPassenger(!onboardingShowed))
     }
 }

@@ -10,13 +10,15 @@ import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Profile
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
+import com.kg.gettransfer.presentation.model.CurrencyModel
+import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
@@ -141,6 +143,14 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
         settingsResetRate.setOnClickListener { presenter.onResetRateClicked() }
         settingsClearAccessToken.setOnClickListener { presenter.onClearAccessTokenClicked() }
         settingsResetNewDriverAppDialog.setOnClickListener { presenter.onResetNewDriverAppDialogClicked() }
+        with(settingsPaymentRequestWithoutDelay) {
+            setOnClickListener { view ->
+                with(view.switch_button) {
+                    isChecked = !isChecked
+                    presenter.onPaymentRequestWithoutDelaySwitched(isChecked)
+                }
+            }
+        }
         forceCrash.setOnClickListener { presenter.onForceCrashClick() }
     }
 
@@ -154,7 +164,6 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
     override fun setCurrency(currency: String) { settingsCurrency.field_text.text = currency }
 
     override fun setLocale(locale: String, code: String) {
-        settingsLanguage.field_text.text = locale
         val langIconParams = LanguageDrawer.LanguageLayoutParamsRes.SETTINGS
         with(settingsLanguage.field_text) {
             text = locale
@@ -179,6 +188,10 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
 
     override fun setDistanceUnit(inMiles: Boolean) {
         settingsDistanceUnit.switch_button.isChecked = inMiles
+    }
+
+    override fun setPaymentRequestWithoutDelay(withoutDelay: Boolean) {
+        settingsPaymentRequestWithoutDelay.switch_button.isChecked = withoutDelay
     }
 
     override fun hideSomeDividers() {

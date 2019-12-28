@@ -25,6 +25,8 @@ class SelectCurrencyFragment : SelectCurrencyBottomFragment() {
     }
 
     override fun currencyChanged(currency: CurrencyModel) {
+        super.currencyChanged(currency)
+        // Hide fragment after changed value
         findNavController().navigateUp()
     }
 }

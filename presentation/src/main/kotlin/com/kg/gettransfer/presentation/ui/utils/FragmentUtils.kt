@@ -11,12 +11,22 @@ import com.kg.gettransfer.R
 
 object FragmentUtils {
 
-    fun replaceFragment(fm: FragmentManager, fragment: Fragment, @IdRes id: Int, tag: String? = null) =
-            fm
-                    .beginTransaction()
-                    .setCustomAnimations(R.anim.transition_b2t, R.anim.transition_t2b)
-                    .replace(id, fragment, tag)
-                    .commitAllowingStateLoss()
+    @Suppress("LongParameterList")
+    fun replaceFragment(
+        fragmentManager: FragmentManager,
+        fragment: Fragment,
+        @IdRes containerViewId: Int,
+        tag: String? = null,
+        addToBackStack: Boolean = false,
+        useAnimation: Boolean = true
+    ) = fragmentManager
+        .beginTransaction().apply {
+            if (useAnimation) setCustomAnimations(R.anim.transition_b2t, R.anim.transition_t2b)
+        }
+        .replace(containerViewId, fragment, tag).apply {
+            if (addToBackStack) addToBackStack(null)
+        }
+        .commitAllowingStateLoss()
 
     fun onCreateAnimation(context: Context, enter: Boolean, executeAfterAnimEnd: () -> Unit): Animator {
         val animatorId: Int = if (enter) R.animator.transition_b2t else R.animator.transition_t2b
@@ -31,5 +41,4 @@ object FragmentUtils {
         })
         return anim
     }
-
 }

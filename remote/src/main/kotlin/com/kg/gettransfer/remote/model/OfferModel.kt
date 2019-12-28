@@ -12,7 +12,6 @@ data class OfferModel(
     @SerializedName(OfferEntity.STATUS)              @Expose val status: String,
     @SerializedName(OfferEntity.CURRENCY)            @Expose val currency: String,
     @SerializedName(OfferEntity.WIFI)                @Expose val wifi: Boolean,
-    @SerializedName(OfferEntity.NAME_SIGN_PRESENT)   @Expose val isNameSignPresent: Boolean,
     @SerializedName(OfferEntity.WITH_NAME_SIGN)      @Expose val isWithNameSign: Boolean,
     @SerializedName(OfferEntity.REFRESHMENTS)        @Expose val refreshments: Boolean,
     @SerializedName(OfferEntity.CHARGER)             @Expose val charger: Boolean,
@@ -23,7 +22,9 @@ data class OfferModel(
     @SerializedName(OfferEntity.PASSENGER_FEEDBACK)  @Expose val passengerFeedback: String?,
     @SerializedName(OfferEntity.CARRIER)             @Expose val carrier: CarrierModel,
     @SerializedName(OfferEntity.VEHICLE)             @Expose val vehicle: VehicleModel,
-    @SerializedName(OfferEntity.DRIVER)              @Expose val driver: ProfileModel?
+    @SerializedName(OfferEntity.DRIVER)              @Expose val driver: ProfileModel?,
+    @SerializedName(OfferEntity.WHEELCHAIR)          @Expose val wheelchair: Boolean,
+    @SerializedName(OfferEntity.ARMORED)             @Expose val armored: Boolean
 )
 
 fun OfferModel.map(transferId: Long) =
@@ -33,7 +34,6 @@ fun OfferModel.map(transferId: Long) =
         status,
         currency,
         wifi,
-        isNameSignPresent,
         isWithNameSign,
         refreshments,
         charger,
@@ -44,5 +44,7 @@ fun OfferModel.map(transferId: Long) =
         passengerFeedback,
         carrier.map(),
         vehicle.map(),
-        driver?.map()
+        driver?.map(),
+        wheelchair,
+        armored
     )

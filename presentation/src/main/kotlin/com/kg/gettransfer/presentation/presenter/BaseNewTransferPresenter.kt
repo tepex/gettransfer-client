@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.MvpPresenter
+import moxy.MvpPresenter
 
 import com.google.android.gms.maps.model.LatLng
 
@@ -62,31 +62,40 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
     open fun updateCurrentLocationAsync(isFromField: Boolean) {
         viewState.defineAddressRetrieving { withGps ->
             worker.main.launch {
-                withContext<Unit>(worker.bg) {
+                withContext(worker.bg) {
                     if (geoInteractor.isGpsEnabled && withGps) {
-                        val currentLocation = geoInteractor.getCurrentLocation().isSuccess()
-                        if (currentLocation != null) {
-                            lastCurrentLocation = pointMapper.toLatLng(currentLocation)
-                            val address = geoInteractor.getAddressByLocation(currentLocation).isSuccess()
-                            if (address?.cityPoint?.point != null) {
-                                withContext<Unit>(worker.main.coroutineContext) { setPointAddress(address) }
-                            } else {
-                                withContext<Unit>(worker.main.coroutineContext) { setEmptyAddress() }
-                            }
-                        } else {
-                            withContext<Unit>(worker.main.coroutineContext) { setEmptyAddress() }
-                        }
+                        getLocationFromGPS(isFromField)
                     } else {
-                        val result = geoInteractor.getMyLocationByIp()
-                        logAddressByIpRequest()
-                        if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
-                            withContext<Unit>(worker.main.coroutineContext) { setLocation(isFromField, result.model) }
-                        } else {
-                            withContext<Unit>(worker.main.coroutineContext) { setEmptyAddress() }
-                        }
+                        getLocationFromIpApi(isFromField)
                     }
                 }
             }
+        }
+    }
+
+    private suspend fun getLocationFromGPS(isFromField: Boolean) {
+        val locationResult = geoInteractor.getCurrentLocation()
+        val currentLocation = locationResult.isSuccess()
+        if (currentLocation != null && !locationResult.isGeoError()) {
+            lastCurrentLocation = pointMapper.toLatLng(currentLocation)
+            val address = geoInteractor.getAddressByLocation(currentLocation).isSuccess()
+            if (address?.cityPoint?.point != null) {
+                withContext(worker.main.coroutineContext) { setPointAddress(address) }
+            } else {
+                getLocationFromIpApi(isFromField)
+            }
+        } else {
+            getLocationFromIpApi(isFromField)
+        }
+    }
+
+    private suspend fun getLocationFromIpApi(isFromField: Boolean) {
+        val result = geoInteractor.getMyLocationByIp()
+        logAddressByIpRequest()
+        if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
+            withContext(worker.main.coroutineContext) { setLocation(isFromField, result.model) }
+        } else {
+            withContext(worker.main.coroutineContext) { setEmptyAddress() }
         }
     }
 
@@ -101,12 +110,10 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
         }
     }
 
-    open fun setPointAddress(currentAddress: GTAddress) {
-        worker.main.launch {
-            when (withContext(worker.bg) { getPreferences().getModel() }.selectedField) {
-                FIELD_FROM -> orderInteractor.from = currentAddress
-                FIELD_TO   -> orderInteractor.to   = currentAddress
-            }
+    open suspend fun setPointAddress(currentAddress: GTAddress) {
+        when (withContext(worker.bg) { getPreferences().getModel() }.selectedField) {
+            FIELD_FROM -> orderInteractor.from = currentAddress
+            FIELD_TO   -> orderInteractor.to   = currentAddress
         }
     }
 

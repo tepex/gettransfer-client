@@ -15,6 +15,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 
 import android.util.DisplayMetrics
@@ -31,18 +32,16 @@ import android.widget.PopupWindow
 
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
-import com.arellomobile.mvp.MvpAppCompatActivity
+import moxy.MvpAppCompatActivity
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -50,11 +49,11 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.SessionInteractor
-import com.kg.gettransfer.domain.model.Account
 
 import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.showKeyboard
+import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
@@ -66,8 +65,6 @@ import com.kg.gettransfer.utilities.LocaleManager
 
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
-
-import java.util.Locale
 
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
@@ -222,7 +219,13 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     /********************************************************************************************************/
     /************************************************ Life cycles *******************************************/
-    /********************************************************************************************************/
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            localeManager.updateResources(this, sessionInteractor.locale)
+        }
+    }
 
     @CallSuper
     protected override fun onStart() {
@@ -231,7 +234,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         super.onStart()
 
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        setNetworkAvailability(this)
     }
 
     @CallSuper
@@ -459,10 +461,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         val value = fieldPaused.get(this)
         return if (value is Boolean) value else false
     }
-
-    @Deprecated(message = "we are going to replace with FragmentUtils.replaceFragment")
-    protected fun replaceFragment(fragment: Fragment, @IdRes id: Int, tag: String? = null) =
-        supportFragmentManager.beginTransaction().replace(id, fragment, tag).commitAllowingStateLoss()
 
     override fun onDestroy() {
         super.onDestroy()

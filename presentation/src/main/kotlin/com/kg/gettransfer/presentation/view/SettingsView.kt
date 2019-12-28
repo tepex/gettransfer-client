@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.view
 
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.OneExecutionStateStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.sys.presentation.EndpointModel
@@ -22,6 +22,7 @@ interface SettingsView : BaseView {
     fun setLocale(locale: String, code: String)
     fun setEndpoint(endpoint: EndpointModel)
     fun setDistanceUnit(inMiles: Boolean)
+    fun setPaymentRequestWithoutDelay(withoutDelay: Boolean)
 
     fun showCurrencyChooser()
     fun showLanguageChooser()

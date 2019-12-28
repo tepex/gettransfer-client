@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Handler
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 
@@ -12,6 +12,7 @@ import com.kg.gettransfer.domain.eventListeners.CounterEventListener
 import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.model.Coordinate
 import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -51,11 +52,7 @@ class RequestsCategoryPresenter(
 
     private var transfers: List<Transfer>? = null
     private var driverCoordinate: DriverCoordinate? = null
-
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        viewState.blockInterface(true, true)
-    }
+    // private var pagesCount: Int? = null // for pagination
 
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
@@ -66,7 +63,8 @@ class RequestsCategoryPresenter(
 
     override fun detachView(view: RequestsFragmentView?) {
         super.detachView(view)
-        transfers = null
+        // transfers = null
+        // viewState.removeTransfers()
         countEventsInteractor.removeCounterListener(this)
         coordinateInteractor.removeCoordinateListener(this)
         driverCoordinate?.requestCoordinates = false
@@ -74,44 +72,68 @@ class RequestsCategoryPresenter(
         sessionInteractor.removeAccountChangedListener(this)
     }
 
-    fun getTransfers() {
+    @Suppress("MandatoryBracesIfStatements")
+    fun getTransfers(page: Int = 1) {
+        viewState.blockInterface(true, true)
         worker.main.launch {
-            val transfersResult = when (transferType) {
-                TRANSFER_ACTIVE  -> withContext(worker.bg) { transferInteractor.getTransfersActive()  }
-                TRANSFER_ARCHIVE -> withContext(worker.bg) { transferInteractor.getTransfersArchive() }
-                else             -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
-            }
-            transfers = transfersResult.model.sortedByDescending { it.dateToLocal }
-            if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
-                coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
-                if (driverCoordinate == null) {
-                    driverCoordinate = DriverCoordinate(Handler())
-                } else {
-                    @Suppress("UnsafeCallOnNullableType")
-                    driverCoordinate!!.transfersIds = transfers!!.map { it.id }
+            var isError = false
+            transfers = when (transferType) {
+                TRANSFER_ACTIVE -> withContext(worker.bg) {
+                    transferInteractor.getTransfersActive().also {
+                        isError = it.isError()
+                    }.model
+                    /*if (isBusinessAccount()) {
+                        getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ACTIVE).also {
+                            isError = it.isError()
+                        }.model.first
+                    } else {
+                        transferInteractor.getTransfersActive().also {
+                            isError = it.isError()
+                        }.model
+                    }*/
                 }
-            }
-            prepareDataAsync(!transfersResult.isError())
+                TRANSFER_ARCHIVE -> withContext(worker.bg) {
+                    transferInteractor.getTransfersArchive().also {
+                        isError = it.isError()
+                    }.model
+                    /*if (isBusinessAccount()) {
+                        getAllTransfersAndPagesCount(page, Transfer.STATUS_CATEGORY_ARCHIVE).also {
+                            isError = it.isError()
+                        }.model.first
+                    } else {
+                        transferInteractor.getTransfersArchive().also {
+                            isError = it.isError()
+                        }.model
+                    }*/
+                }
+                else -> error("Wrong transfer type in ${this@RequestsCategoryPresenter::class.java.name}")
+            }.sortedByDescending { it.dateToLocal }
+
+            setupCoordinate()
+            prepareDataAsync(!isError)
         }
     }
 
+    private fun setupCoordinate() {
+        if (transferType == TRANSFER_ACTIVE && !transfers.isNullOrEmpty()) {
+            coordinateInteractor.addCoordinateListener(this@RequestsCategoryPresenter)
+            driverCoordinate?.let {
+                dc -> dc.transfersIds = transfers?.let { transfers?.map { it.id } }
+            } ?: run { driverCoordinate = DriverCoordinate(Handler()) }
+        }
+    }
+
+    /*private suspend fun getAllTransfersAndPagesCount(page: Int, status: String): Result<Pair<List<Transfer>, Int?>> {
+        val allTransfers = transferInteractor.getAllTransfers(getUserRole(), page, status)
+        pagesCount = allTransfers.model.second
+        return allTransfers
+    }*/
+
     private suspend fun prepareDataAsync(isRemoteData: Boolean) {
-        transfers?.let { trs ->
-            if (trs.isNotEmpty()) {
-                withContext(worker.bg) {
-                    val transportTypes = configsManager.getConfigs().transportTypes.map { it.map() }
-                    transfers?.map { it.map(transportTypes) }?.map { transferModel ->
-                        if (transferModel.status == Transfer.Status.PERFORMED && isShowOfferInfo(transferModel)) {
-                            val offer = offerInteractor.getOffers(transferModel.id).model.let { list ->
-                                if (list.size == 1) list.first() else null
-                            }
-                            transferModel.copy(matchedOffer = offer)
-                        } else {
-                            transferModel
-                        }
-                    }
-                }?.also { viewList ->
-                    viewState.updateTransfers(viewList)
+        transfers?.let { transfers ->
+            if (transfers.isNotEmpty()) {
+                getTransfersWithMatchedOffers(transfers).also { transfersWithOffers ->
+                    viewState.updateTransfers(transfersWithOffers/*, pagesCount*/)
                     viewState.blockInterface(false)
                     updateEventsCount()
                 }
@@ -122,6 +144,21 @@ class RequestsCategoryPresenter(
             }
         }
     }
+
+    private suspend fun getTransfersWithMatchedOffers(transfers: List<Transfer>) =
+        withContext(worker.bg) {
+            val transportTypes = configsManager.getConfigs().transportTypes.map { it.map() }
+            transfers.map { it.map(transportTypes) }.map { transferModel ->
+                if (transferModel.status == Transfer.Status.PERFORMED && isShowOfferInfo(transferModel)) {
+                    val offer = offerInteractor.getOffers(transferModel.id).model.let { list ->
+                        if (list.size == 1) list.first() else null
+                    }
+                    transferModel.copy(matchedOffer = offer)
+                } else {
+                    transferModel
+                }
+            }
+        }
 
     private fun isShowOfferInfo(transfer: TransferModel): Boolean {
         val durationInMinutes = transfer.duration?.times(MINUTES_PER_HOUR) ?: transfer.time ?: return false

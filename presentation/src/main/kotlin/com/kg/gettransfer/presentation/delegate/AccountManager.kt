@@ -11,6 +11,8 @@ import com.kg.gettransfer.domain.model.Result
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
+import com.kg.gettransfer.sys.domain.ClearConfigsInteractor
+import com.kg.gettransfer.sys.domain.GetConfigsInteractor
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
@@ -19,6 +21,8 @@ class AccountManager : KoinComponent {
     private val sessionInteractor: SessionInteractor = get()
     private val socketInteractor: SocketInteractor = get()
     private val pushTokenManager: PushTokenManager = get()
+    private val clearConfigsInteractor: ClearConfigsInteractor = get()
+    private val getConfigsInteractor: GetConfigsInteractor = get()
 
     /* REMOTE ACCOUNT */
 
@@ -31,11 +35,12 @@ class AccountManager : KoinComponent {
     val remoteProfile: Profile
         get() = remoteUser.profile
 
-    val isLoggedIn: Boolean //is authorized user
+    val isLoggedIn: Boolean // is authorized user
         get() = !remoteProfile.email.isNullOrEmpty() || !remoteProfile.phone.isNullOrEmpty()
 
-    val hasAccount: Boolean //is temporary or authorized user
-        get() = isLoggedIn || (remoteProfile.email.isNullOrEmpty() && remoteProfile.phone.isNullOrEmpty() && remoteUser.termsAccepted)
+    val hasAccount: Boolean // is temporary or authorized user
+        get() = isLoggedIn ||
+            remoteProfile.email.isNullOrEmpty() && remoteProfile.phone.isNullOrEmpty() && remoteUser.termsAccepted
 
     val hasData: Boolean
         get() = !remoteProfile.email.isNullOrEmpty() && !remoteProfile.phone.isNullOrEmpty()
@@ -61,16 +66,18 @@ class AccountManager : KoinComponent {
 
     fun isValidProfileForCreateOrder() =
         when {
-            !tempUser.profile.email.isNullOrEmpty() && !Utils.checkEmail(tempUser.profile.email) -> FieldError.INVALID_EMAIL
-            !tempUser.profile.phone.isNullOrEmpty() && !Utils.checkPhone(tempUser.profile.phone) -> FieldError.INVALID_PHONE
-            !tempUser.termsAccepted -> FieldError.TERMS_ACCEPTED_FIELD
-            else -> null
+            !tempUser.profile.email.isNullOrEmpty() &&
+                !Utils.checkEmail(tempUser.profile.email) -> FieldError.INVALID_EMAIL
+            !tempUser.profile.phone.isNullOrEmpty() &&
+                !Utils.checkPhone(tempUser.profile.phone) -> FieldError.INVALID_PHONE
+            !tempUser.termsAccepted                       -> FieldError.TERMS_ACCEPTED_FIELD
+            else                                          -> null
         }
 
     fun isValidEmailAndPhoneFieldsForPay() =
         when {
-            tempUser.profile.email.isNullOrEmpty() -> FieldError.EMAIL_FIELD
-            tempUser.profile.phone.isNullOrEmpty() -> FieldError.PHONE_FIELD
+            tempUser.profile.email.isNullOrEmpty()    -> FieldError.EMAIL_FIELD
+            tempUser.profile.phone.isNullOrEmpty()    -> FieldError.PHONE_FIELD
             !Utils.checkEmail(tempUser.profile.email) -> FieldError.INVALID_EMAIL
             !Utils.checkPhone(tempUser.profile.phone) -> FieldError.INVALID_PHONE
             else -> null
@@ -94,6 +101,7 @@ class AccountManager : KoinComponent {
         initTempUser(user)
         socketInteractor.openSocketConnection()
         pushTokenManager.registerPushToken()
+        updateConfigs()
     }
 
     suspend fun logout(): Result<Account> {
@@ -102,13 +110,18 @@ class AccountManager : KoinComponent {
         return sessionInteractor.logout()
     }
 
-    suspend fun putAccount(isTempAccount: Boolean = true, connectSocket: Boolean = false): Result<Account> {
+    suspend fun putAccount(
+        isTempAccount: Boolean = true,
+        connectSocket: Boolean = false,
+        updateConfigs: Boolean = false
+    ): Result<Account> {
         val result =
             sessionInteractor.putAccount(if (isTempAccount) remoteAccount.copy(user = tempUser) else remoteAccount)
         if (result.error == null) {
             if (connectSocket && hasAccount) socketInteractor.openSocketConnection()
             if (hasAccount) pushTokenManager.registerPushToken()
             if (isTempAccount) initTempUser(result.model.user.copy())
+            if (updateConfigs) updateConfigs()
         }
         return result
     }
@@ -117,12 +130,19 @@ class AccountManager : KoinComponent {
         return sessionInteractor.putNoAccount()
     }
 
+    private suspend fun updateConfigs() {
+        clearConfigsInteractor()
+        getConfigsInteractor().getModel()
+    }
+
     /**
      * Save general settings
      */
     suspend fun saveSettings(): Result<Account>  {
-        return if (hasAccount)
+        return if (hasAccount) {
             putAccount(isTempAccount = false)
-        else putNoAccount()
+        } else {
+            putNoAccount()
+        }
     }
 }

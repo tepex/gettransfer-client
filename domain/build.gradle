@@ -4,6 +4,7 @@ apply plugin: 'kotlin'
 dependencies {
     implementation libs.kotlin
     implementation libs.coroutines
+    implementation libs.gson
 
     testImplementation libs.mockk
     testImplementation libs.kotlintest

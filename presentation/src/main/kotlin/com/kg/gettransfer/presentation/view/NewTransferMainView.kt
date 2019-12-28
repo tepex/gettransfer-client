@@ -1,7 +1,7 @@
 package com.kg.gettransfer.presentation.view
 
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.OneExecutionStateStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface NewTransferMainView : BaseNewTransferView {
@@ -18,4 +18,5 @@ interface NewTransferMainView : BaseNewTransferView {
 
     fun switchToMap()
     fun showReadMoreDialog()
+    fun showPointB(checked: Boolean)
 }

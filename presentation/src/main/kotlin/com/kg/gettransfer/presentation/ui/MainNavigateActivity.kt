@@ -16,10 +16,10 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigator
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 
 import com.kg.gettransfer.extensions.setupWithNavController
 import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
@@ -30,9 +30,12 @@ import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment
+import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment
 import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
+import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.SHOW_ABOUT
+import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.android.synthetic.main.activity_main_navigate.*
 import kotlinx.android.synthetic.main.notification_badge_view.view.*
 import org.jetbrains.anko.find
@@ -68,7 +71,19 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
 
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
+            showAbout(intent)
         } // Else, need to wait for onRestoreInstanceState
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // TODO temporary solution
+        (currentNavController?.value?.currentDestination as? FragmentNavigator.Destination)?.let { currentDest ->
+            val backToMain =
+                currentDest.className == NewTransferMapFragment::class.java.name ||
+                currentDest.className == SearchFragment::class.java.name
+            if (backToMain) currentNavController?.value?.navigateUp()
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -84,15 +99,25 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         setupBottomNavigationBar()
     }
 
-    /**
-     * Checking existing transfer for rate
-     */
     private fun getIntents(intent: Intent?) {
-        intent?.let {
-            val transferId = it.getLongExtra(EXTRA_RATE_TRANSFER_ID, 0L)
-            val rate = it.getIntExtra(EXTRA_RATE_VALUE, 0)
-            if (transferId != 0L) presenter.rateTransfer(transferId, rate)
+        intent?.let { arguments ->
+            val transferId = arguments.getLongExtra(EXTRA_RATE_TRANSFER_ID, 0L)
+            val rate = arguments.getIntExtra(EXTRA_RATE_VALUE, 0)
+            rateTransfer(transferId, rate)
         }
+    }
+
+    private fun showAbout(intent: Intent) {
+        intent.getBooleanExtra(SHOW_ABOUT, false).also { showAbout ->
+            if (showAbout) Screens.showAboutScreen(
+                fragmentManager = supportFragmentManager,
+                firstLaunch = true
+            )
+        }
+    }
+
+    private fun rateTransfer(transferId: Long, rate: Int) {
+        if (transferId != 0L) presenter.rateTransfer(transferId, rate)
     }
 
     @CallSuper
@@ -105,16 +130,16 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         supportFragmentManager.fragments.firstOrNull { fragment ->
             fragment.tag == RatingLastTripFragment.RATING_LAST_TRIP_TAG
         } ?: RatingLastTripFragment
-                .newInstance(transferId, vehicle, color)
-                .show(supportFragmentManager, RatingLastTripFragment.RATING_LAST_TRIP_TAG)
+            .newInstance(transferId, vehicle, color)
+            .show(supportFragmentManager, RatingLastTripFragment.RATING_LAST_TRIP_TAG)
     }
 
     override fun showDetailedReview() {
         supportFragmentManager.fragments.firstOrNull { fragment ->
             fragment.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG
         } ?: RatingDetailDialogFragment
-                .newInstance()
-                .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
+            .newInstance()
+            .show(supportFragmentManager, RatingDetailDialogFragment.RATE_DIALOG_TAG)
     }
 
     override fun showNewDriverAppDialog() =
@@ -137,12 +162,12 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     }
 
     override fun thanksForRate() =
-            ThanksForRateFragment
-                    .newInstance()
-                    .show(supportFragmentManager, ThanksForRateFragment.TAG)
+        ThanksForRateFragment
+            .newInstance()
+            .show(supportFragmentManager, ThanksForRateFragment.TAG)
 
     override fun setEventCount(isVisible: Boolean, count: Int) {
-        with (getNavTripsItem()) {
+        with(getNavTripsItem()) {
             notifications_badge.text = count.toString()
             setEventsCounterStyle(isVisible && count > 0, isNavTripsSelected(), this)
         }
@@ -161,7 +186,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     }
 
     private fun setNotificationItemsVisibility(view: View, showIcon: Boolean, showBadge: Boolean) {
-        with (view) {
+        with(view) {
             notifications_badge.isVisible = showBadge
             notifications_icon.isVisible = showIcon
         }
@@ -176,21 +201,20 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     }
 
     val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
-        when ((destination as FragmentNavigator.Destination).className) {
-            //visible bottom menu
-            NewTransferMainFragment::class.java.name,
-            RequestsPagerFragment::class.java.name,
-            SettingsFragment::class.java.name,
-            SupportFragment::class.java.name -> {
-                Handler().postDelayed({bottomNavSliding(true)}, 100)
+        (destination as? FragmentNavigator.Destination)?.let { newDestination ->
+            when (newDestination.className) {
+                // visible bottom menu
+                NewTransferMainFragment::class.java.name,
+                RequestsPagerFragment::class.java.name,
+                SettingsFragment::class.java.name,
+                SupportFragment::class.java.name ->
+                    Handler().postDelayed({ bottomNavSliding(true) }, DELAY)
+                // not visible bottom menu
+                else -> bottomNavSliding(false)
             }
-            //not visible bottom menu
-            else -> {
-                bottomNavSliding(false)
-            }
+            setEventsCounterStyle(isNotificationShowed(),
+                destination.className == RequestsPagerFragment::class.java.name, getNavTripsItem())
         }
-        setEventsCounterStyle(isNotificationShowed(),
-            (destination).className == RequestsPagerFragment::class.java.name, getNavTripsItem())
     }
 
     private fun bottomNavSliding(show: Boolean) {
@@ -202,24 +226,28 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
      * Called on first creation and when restoring state.
      */
     private fun setupBottomNavigationBar() {
-        //Setup controller
+        // Setup controller
         val navGraphIds = listOf(R.navigation.order, R.navigation.trips, R.navigation.help, R.navigation.settings)
 
         // Setup the bottom navigation view with a list of navigation graphs
         val controller = bottom_nav.setupWithNavController(
-                navGraphIds = navGraphIds,
-                fragmentManager = supportFragmentManager,
-                containerId = R.id.nav_host_container,
-                intent = intent
+            navGraphIds = navGraphIds,
+            fragmentManager = supportFragmentManager,
+            containerId = R.id.nav_host_container,
+            intent = intent
         )
         currentNavController = controller
-        currentNavController?.observe(this, Observer {
-            it.removeOnDestinationChangedListener(listener)
-            it.addOnDestinationChangedListener(listener)
+        currentNavController?.observe(this, Observer { navController ->
+            navController.removeOnDestinationChangedListener(listener)
+            navController.addOnDestinationChangedListener(listener)
         })
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return currentNavController?.value?.navigateUp() ?: false
+    }
+
+    companion object {
+        const val DELAY = 100L
     }
 }

@@ -1,8 +1,8 @@
 package com.kg.gettransfer.presentation.view
 
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import moxy.MvpView
+import moxy.viewstate.strategy.OneExecutionStateStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 @Suppress("TooManyFunctions")
 @StateStrategyType(OneExecutionStateStrategy::class)

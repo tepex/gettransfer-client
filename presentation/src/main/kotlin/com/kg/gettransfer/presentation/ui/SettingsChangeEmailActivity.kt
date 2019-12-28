@@ -6,10 +6,10 @@ import androidx.annotation.CallSuper
 import androidx.core.content.ContextCompat
 import androidx.appcompat.widget.Toolbar
 import android.text.InputFilter
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.presentation.presenter.SettingsChangeEmailPresenter
 import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 import kotlinx.android.synthetic.main.activity_settings_change_email.*

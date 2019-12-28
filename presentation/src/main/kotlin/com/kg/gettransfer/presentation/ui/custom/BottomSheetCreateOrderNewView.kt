@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.showKeyboard
 
@@ -35,6 +35,7 @@ import kotlinx.android.synthetic.main.bottom_sheet_create_order.*
 import kotlinx.android.synthetic.main.layout_hourly_duration.view.*
 import kotlinx.android.synthetic.main.view_count_controller.view.*
 import kotlinx.android.synthetic.main.view_create_order_field.*
+import kotlinx.android.synthetic.main.view_selected_currency.tv_currency
 
 @Suppress("TooManyFunctions")
 class BottomSheetCreateOrderNewView @JvmOverloads constructor(
@@ -55,28 +56,28 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         }
 
     var price: Double?
-        get() = price_field_input.field_input.toString().toDoubleOrNull()
+        get() = price_field_input.text.toDoubleOrNull()
         set(value) {
-            value?.let { price_field_input.field_input.setText(value.toString()) }
+            value?.let { price_field_input.text = value.toString() }
         }
 
     var flightNumber: String?
-        get() = flight_number_field.field_input.toString().trim()
+        get() = flight_number_field.text.trim()
         set(value) {
-            value?.let { flight_number_field.field_input.setText(value) }
+            value?.let { flight_number_field.text = value }
         }
 
     var flightNumberReturn: String?
-        get() = flight_numberReturn_field.field_input.toString().trim()
+        get() = flight_numberReturn_field.text.trim()
         set(value) {
-            value?.let { flight_numberReturn_field.field_input.setText(value) }
+            value?.let { flight_numberReturn_field.text = value }
         }
 
     var promoCode: String
-        get() = promo_field.field_input.toString()
+        get() = promo_field.text
         set(value) {
             if (value.isNotEmpty()) {
-                promo_field.field_input.setText(value)
+                promo_field.text = value
             }
         }
 
@@ -87,9 +88,9 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         }
 
     var comment: String
-        get() = comment_field.field_input.text.toString().trim()
+        get() = comment_field.text.trim()
         set(value) {
-            comment_field.field_input.setText(value)
+            comment_field.text = value
         }
 
     var showAgreement: Boolean
@@ -127,7 +128,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         price_field_input.field_input.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) { listener?.onPriceFocused() }
         }
-        fl_currency.setOnClickListener                         { listener?.onCurrencyClick() }
+        select_currency.setOnClickListener                     { listener?.onCurrencyClick() }
         sign_name_field.field_input.onTextChanged              { listener?.onNameChanged(it.trim()) }
         flight_number_field.field_input.onTextChanged          { listener?.onFlightNumberChanged(it.trim()) }
         flight_numberReturn_field.field_input.onTextChanged    { listener?.onFlightNumberReturnChanged(it.trim()) }
@@ -171,7 +172,6 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
     }
 
     private fun initFieldsViews() {
-        price_field_input.field_input.compoundDrawablePadding = 0
         passengers_count.person_count.text = context.getString(R.string.passenger_number_default)
         sign_name_field.field_input.filters =
             arrayOf<InputFilter>(InputFilter.LengthFilter(CreateOrderActivity.SIGN_NAME_FIELD_MAX_LENGTH))
@@ -196,7 +196,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
             text = di
         }
         promo_field.field_input.setTextColor(ContextCompat.getColor(context, colorText))
-        promo_field.input_layout.hint = text
+        promo_field.hint = text
     }
 
     fun disablePromoView() {
@@ -204,7 +204,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
     }
 
     fun resetPromoView() {
-        promo_field.input_layout.hint = context.getString(R.string.LNG_RIDE_PROMOCODE_PLACEHOLDER)
+        promo_field.hint = context.getString(R.string.LNG_RIDE_PROMOCODE_PLACEHOLDER)
         promo_field.field_input.setTextColor(ContextCompat.getColor(context, R.color.colorTextLightGray))
     }
 
@@ -227,10 +227,10 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
 
     fun setTransferDateTime(date: String, field: Boolean) {
         if (field == DateTimeDelegate.START_DATE) {
-            transfer_date_time_field.field_input.setText(date)
+            transfer_date_time_field.text = date
         } else {
             showReturnFlight(CreateOrderActivity.SHOW)
-            transfer_return_date_field.field_input.setText(date)
+            transfer_return_date_field.text = date
         }
         checkErrorField(transfer_date_time_field)
     }
@@ -242,9 +242,9 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         if (!show) {
             transfer_return_date_field.field_input.text?.clear()
             flight_numberReturn_field.field_input.text?.clear()
-            transfer_return_date_field.input_layout.hint = context.getString(R.string.LNG_RIDE_DATE_RETURN)
+            transfer_return_date_field.hint = context.getString(R.string.LNG_RIDE_DATE_RETURN)
         } else {
-            transfer_return_date_field.input_layout.hint = context.getString(R.string.LNG_RIDE_RETURN_TRANSFER)
+            transfer_return_date_field.hint = context.getString(R.string.LNG_RIDE_RETURN_TRANSFER)
         }
         changeReturnTransferIcon(show)
     }
@@ -276,7 +276,8 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
 
     fun setChildSeats(setOf: Set<CreateOrderView.ChildSeatItem>, total: Int) {
         if (total == 0) {
-            children_seat_field.field_input.setText("")
+            children_seat_field.text = ""
+            children_seat_field.hint = context.getString(R.string.LNG_NO_SEATS_REQUIRED)
             return
         }
 
@@ -293,7 +294,8 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
                 }
             })
         }
-        children_seat_field.field_input.setText(text)
+        children_seat_field.text = text
+        children_seat_field.hint = context.getString(R.string.LNG_RIDE_CHILDREN)
     }
 
     fun updateTypes(types: List<TransportTypeModel>) {

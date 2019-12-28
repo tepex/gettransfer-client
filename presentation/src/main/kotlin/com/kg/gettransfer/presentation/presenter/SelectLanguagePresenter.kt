@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.map
@@ -8,7 +8,6 @@ import com.kg.gettransfer.presentation.view.SelectLanguageView
 import com.kg.gettransfer.sys.domain.Configs
 import com.kg.gettransfer.utilities.Analytics
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
@@ -22,12 +21,11 @@ class SelectLanguagePresenter : BasePresenter<SelectLanguageView>(), KoinCompone
         super.attachView(view)
 
         worker.main.launch {
-            val locales = withContext(worker.bg) {
-                configsManager.getConfigs().availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
-                        .map { it.map() }
-            }
+            val locales = configsManager.getConfigs().availableLocales
+                .filter { Configs.LOCALES_FILTER.contains(it.language) }.map { it.map() }
             val selectedLanguage = sessionInteractor.locale.map()
             viewState.setLanguages(locales, selectedLanguage)
+            viewState.showBottomSheet()
         }
     }
 

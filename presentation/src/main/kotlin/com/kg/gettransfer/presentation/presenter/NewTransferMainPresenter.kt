@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.kg.gettransfer.domain.model.GTAddress
 
@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import org.koin.core.inject
 
 @InjectViewState
+@Suppress("TooManyFunctions")
 class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>() {
 
     private val setSelectedField: SetSelectedFieldInteractor by inject()
@@ -93,7 +94,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         }
     }
 
-    override fun setPointAddress(currentAddress: GTAddress) {
+    override suspend fun setPointAddress(currentAddress: GTAddress) {
         super.setPointAddress(currentAddress)
         setAddressInSelectedField(currentAddress.cityPoint.name)
     }
@@ -104,7 +105,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
 
     private fun setAddressInSelectedField(address: String?) {
         worker.main.launch {
-            with (address ?: EMPTY_ADDRESS) {
+            with(address ?: EMPTY_ADDRESS) {
                 when (withContext(worker.bg) { getPreferences().getModel() }.selectedField) {
                     FIELD_FROM -> viewState.setAddressFrom(this)
                     FIELD_TO   -> viewState.setAddressTo(this)
@@ -154,5 +155,14 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
     override fun destroyView(view: NewTransferMainView) {
         geoInteractor.disconnectGoogleApiClient()
         super.destroyView(view)
+    }
+
+    fun switchPointB(checked: Boolean) {
+        orderInteractor.dropfOff = checked
+        viewState.showPointB(checked)
+    }
+
+    fun clearToAddress() {
+        orderInteractor.to = null
     }
 }

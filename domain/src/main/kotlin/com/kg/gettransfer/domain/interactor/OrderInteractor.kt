@@ -5,7 +5,6 @@ import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.RouteInfoRequest
-import com.kg.gettransfer.domain.model.RouteInfoHourlyRequest
 import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.domain.repository.GeoRepository
@@ -13,8 +12,6 @@ import com.kg.gettransfer.domain.repository.RouteRepository
 import com.kg.gettransfer.domain.repository.SessionRepository
 
 import java.util.Date
-
-import kotlin.math.absoluteValue
 
 class OrderInteractor(
     private val geoRepository: GeoRepository,
@@ -28,6 +25,7 @@ class OrderInteractor(
     var duration: Int?         = null
     var orderStartTime: Date?  = null
     var orderReturnTime: Date? = null
+    var dropfOff: Boolean      = false
 
     var offeredPrice: Double? = null
     var passengers: Int = DEFAULT_PASSENGERS
@@ -41,7 +39,7 @@ class OrderInteractor(
 
     var noPointPlaces: List<GTAddress> = emptyList()
 
-    fun clearSelectedFields() {
+    private fun clearSelectedFields() {
         offeredPrice = null
         passengers = DEFAULT_PASSENGERS
         promoCode = ""
@@ -58,6 +56,7 @@ class OrderInteractor(
         duration        = null
         orderStartTime  = null
         orderReturnTime = null
+        dropfOff        = false
 
         clearSelectedFields()
     }
@@ -94,33 +93,17 @@ class OrderInteractor(
     }
 
     suspend fun getRouteInfo(request: RouteInfoRequest): Result<RouteInfo> {
-        val routeInfo = routeRepository.getRouteInfo(request)
-        duration = routeInfo.model.duration
-        return routeInfo
-    }
-
-    suspend fun getRouteInfoHourlyTransfer(request: RouteInfoHourlyRequest): Result<RouteInfo> {
-        val routeInfo = routeRepository.getRouteInfo(request)
+        val routeInfo = routeRepository.getRouteInfo(request, sessionRepository.account.distanceUnit)
         duration = routeInfo.model.duration
         return routeInfo
     }
 
     fun isAddressesValid() = from != null && (to != null || hourlyDuration != null)
 
-    fun isDistanceFine() =
-        from?.cityPoint?.point?.let { fromPoint ->
-            to?.cityPoint?.point?.let { toPoint ->
-                (fromPoint.latitude - toPoint.latitude).absoluteValue > MIN_LAT_DIFF ||
-                (fromPoint.longitude - toPoint.longitude).absoluteValue > MIN_LON_DIFF
-            }
-        } ?: false
-
     fun isCanCreateOrder() =
-        from?.cityPoint != null && (to?.cityPoint != null && isDistanceFine() || hourlyDuration != null)
+        from?.cityPoint != null && (to?.cityPoint != null || hourlyDuration != null)
 
     companion object {
-        const val MIN_LAT_DIFF = 0.002
-        const val MIN_LON_DIFF = 0.003
         const val DEFAULT_PASSENGERS = 2
     }
 }

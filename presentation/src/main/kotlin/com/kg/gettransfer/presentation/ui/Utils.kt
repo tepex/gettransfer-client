@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.*
+import android.graphics.drawable.ColorDrawable
 
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
@@ -22,8 +23,10 @@ import android.text.TextWatcher
 
 import android.util.DisplayMetrics
 import android.util.Patterns
+import android.view.LayoutInflater
 
 import android.view.View
+import android.widget.Button
 
 import android.widget.EditText
 import android.widget.ImageView
@@ -33,7 +36,10 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.FragmentActivity
 
 import com.bumptech.glide.Glide
@@ -51,15 +57,18 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
+import com.kg.gettransfer.extensions.internationalExample
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
 
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.utils.TopRightRoundedCornerTransform
+import com.kg.gettransfer.utilities.CountryCodeManager
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import kotlinx.android.synthetic.main.dialog_cancel_request.view.*
 
 import java.util.Locale
 
@@ -67,6 +76,7 @@ import org.koin.core.inject
 import org.koin.core.KoinComponent
 
 import timber.log.Timber
+import kotlin.math.max
 import android.graphics.PorterDuffXfermode as PorterDuffXfermode1
 
 object Utils : KoinComponent {
@@ -76,6 +86,7 @@ object Utils : KoinComponent {
     const val MAX_BITMAP_SIZE = 4096
 
     internal val phoneUtil: PhoneNumberUtil by inject()
+    internal val countryCodeManager: CountryCodeManager by inject()
 
     private val pointMapper: PointMapper by inject()
 
@@ -107,13 +118,62 @@ object Utils : KoinComponent {
                 }
     }
 
-    fun showAlertCancelRequest(context: Context, listener: (Boolean) -> Unit) {
+    fun showAlertCancelRequest(context: Context, reason: String, listener: (Boolean) -> Unit) {
         getAlertDialogBuilder(context).apply {
-            setTitle(R.string.LNG_CANCEL_CONFIRM)
-            setPositiveButton(R.string.LNG_YES) { _, _ -> listener(true) }
-            setNegativeButton(R.string.LNG_NO)  { _, _ -> listener(false) }
-            show()
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
+            view.title.text = context.getString(R.string.LNG_CANCELATION_REQUEST_AGREEMENT, reason)
+            setView(view)
+            show().apply {
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                view.topButton.setOnClickListener {
+                    listener(false)
+                    dismiss()
+                }
+                view.bottomButton.setOnClickListener {
+                    listener(true)
+                    dismiss()
+                }
+            }
         }
+    }
+
+    fun showAlertRestoreRequest(context: Context, listener: (Boolean) -> Unit) {
+        getAlertDialogBuilder(context).apply {
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
+            view.title.text = context.getString(R.string.LNG_REQUEST_CANCELED)
+            view.subtitle.isVisible = false
+            setButtonStyle(
+                context,
+                view.topButton,
+                R.string.LNG_RESTORE_REQUEST,
+                R.drawable.btn_bg_rounded_green
+            )
+            setButtonStyle(
+                context,
+                view.bottomButton,
+                R.string.LNG_NEXT,
+                R.drawable.btn_bg_rounded_orange,
+                R.color.colorTextBlack
+            )
+            setView(view)
+            show().apply {
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                view.topButton.setOnClickListener {
+                    listener(true)
+                    dismiss()
+                }
+                view.bottomButton.setOnClickListener {
+                    listener(false)
+                    dismiss()
+                }
+            }
+        }
+    }
+
+    private fun setButtonStyle(context: Context, button: Button, textId: Int, backId: Int, textColorId: Int? = null) {
+        button.text = context.getString(textId)
+        button.background = context.getDrawable(backId)
+        textColorId?.let { button.setTextColor(ContextCompat.getColor(context, it)) }
     }
 
     fun showAlertSetNewPassword(context: Context, listener: (Boolean) -> Unit) {
@@ -230,6 +290,11 @@ object Utils : KoinComponent {
         }
     }
 
+    fun getPhoneNumberExample(accountLocale: String): String {
+        val countryCode = countryCodeManager.getCountryCode(accountLocale)
+        return phoneUtil.internationalExample(countryCode)
+    }
+
     fun convertToInternationalPhone(phone: String): String {
         val phoneNumber = phoneUtil.parse(phone, Locale.getDefault().country)
         val internationalPhone = phoneUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL).replace(Regex("\\D"), "")
@@ -344,7 +409,7 @@ object Utils : KoinComponent {
 
     private fun getCarColorTextBackDrawable(context: Context, colorId: Int) = GradientDrawable().apply {
         setColor(ContextCompat.getColor(context, colorId))
-        if (colorId == R.color.color_car_white) {
+        if (colorId == R.color.color_car_white || colorId == R.color.color_car_yellow) {
             setStroke(
                 dpToPxInt(context, 1f),
                 ContextCompat.getColor(context, R.color.color_gtr_light_grey)
@@ -460,6 +525,12 @@ object Utils : KoinComponent {
                 )
         )
         .into(view)
+
+    fun getRoundedBitmap(context: Context, drawableId: Int, bacColorResId: Int?) =
+        AppCompatResources.getDrawable(context, drawableId)?.toBitmap()
+            ?.squareBitmap(bacColorResId?.let { ContextCompat.getColor(context, it) })?.let {
+                RoundedBitmapDrawableFactory.create(context.resources, it).apply { isCircular = true }.toBitmap()
+            }
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {
@@ -536,4 +607,17 @@ fun Path.roundedRect(left: Float, top: Float, right: Float, bottom: Float, rx: F
     rLineTo(0f, -heightMinusCorners)
     close()//Given close, last lineto can be removed.
     return this
+}
+
+fun Bitmap.squareBitmap(backColor: Int?): Bitmap {
+    val size = max(width, height)
+    val resBmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+
+    val canvas = Canvas(resBmp)
+    backColor?.let { canvas.drawColor(it) }
+    val leftPadding = 0f
+    val topPadding = ((size - height) / 2).toFloat()
+    canvas.drawBitmap(this, leftPadding, topPadding, null)
+
+    return resBmp
 }

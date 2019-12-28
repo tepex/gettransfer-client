@@ -45,7 +45,7 @@
         android:id="@+id/imgFreeWiFi"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="@dimen/margin8"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/imgCharge"
         app:layout_constraintEnd_toStartOf="@+id/imgCharge"
@@ -57,7 +57,7 @@
         android:id="@+id/imgCharge"
         android:layout_width="@dimen/activity_transfer_details_transport_conveniences_height"
         android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="@dimen/margin8"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/imgFreeWater"
         app:layout_constraintEnd_toStartOf="@+id/imgFreeWater"
@@ -69,11 +69,35 @@
         android:id="@+id/imgFreeWater"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:layout_marginEnd="@dimen/margin8"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/ivWheelchair"
+        app:layout_constraintEnd_toStartOf="@+id/ivWheelchair"
+        app:layout_constraintTop_toTopOf="@+id/ivWheelchair"
+        app:srcCompat="@drawable/ic_free_water"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/ivWheelchair"
+        android:layout_width="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:layout_marginEnd="@dimen/margin8"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/ivArmor"
+        app:layout_constraintEnd_toStartOf="@+id/ivArmor"
+        app:layout_constraintTop_toTopOf="@+id/ivArmor"
+        app:srcCompat="@drawable/ic_wheelchair"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/ivArmor"
+        android:layout_width="@dimen/activity_transfer_details_transport_conveniences_height"
+        android:layout_height="@dimen/activity_transfer_details_transport_conveniences_height"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/conveniences_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/conveniences_field"
-        app:srcCompat="@drawable/ic_free_water"
+        app:srcCompat="@drawable/ic_armor"
         tools:visibility="visible" />
 
     <View

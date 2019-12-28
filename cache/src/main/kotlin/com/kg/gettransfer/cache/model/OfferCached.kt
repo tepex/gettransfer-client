@@ -14,7 +14,6 @@ data class OfferCached(
     @ColumnInfo(name = OfferEntity.STATUS)             val status: String,
     @ColumnInfo(name = OfferEntity.CURRENCY)           val currency: String,
     @ColumnInfo(name = OfferEntity.WIFI)               val wifi: Boolean,
-    @ColumnInfo(name = OfferEntity.NAME_SIGN_PRESENT)  val isNameSignPresent: Boolean?,
     @ColumnInfo(name = OfferEntity.WITH_NAME_SIGN)     val isWithNameSign: Boolean?,
     @ColumnInfo(name = OfferEntity.REFRESHMENTS)       val refreshments: Boolean,
     @ColumnInfo(name = OfferEntity.CHARGER)            val charger: Boolean,
@@ -25,7 +24,9 @@ data class OfferCached(
     @ColumnInfo(name = OfferEntity.PASSENGER_FEEDBACK) val passengerFeedback: String?,
     @Embedded(prefix = OfferEntity.CARRIER)            val carrier: CarrierCached,
     @Embedded(prefix = OfferEntity.VEHICLE)            val vehicle: VehicleCached,
-    @Embedded(prefix = OfferEntity.DRIVER)             val driver: ProfileCached?
+    @Embedded(prefix = OfferEntity.DRIVER)             val driver: ProfileCached?,
+    @ColumnInfo(name = OfferEntity.WHEELCHAIR)         val wheelchair: Boolean,
+    @ColumnInfo(name = OfferEntity.ARMORED)            val armored: Boolean
 )
 
 fun OfferCached.map() =
@@ -35,7 +36,6 @@ fun OfferCached.map() =
         status,
         currency,
         wifi,
-        isNameSignPresent,
         isWithNameSign,
         refreshments,
         charger,
@@ -46,7 +46,9 @@ fun OfferCached.map() =
         passengerFeedback,
         carrier.map(),
         vehicle.map(),
-        driver?.map()
+        driver?.map(),
+        wheelchair,
+        armored
     )
 
 fun OfferEntity.map() =
@@ -56,7 +58,6 @@ fun OfferEntity.map() =
         status,
         currency,
         wifi,
-        isNameSignPresent,
         isWithNameSign,
         refreshments,
         charger,
@@ -67,5 +68,7 @@ fun OfferEntity.map() =
         passengerFeedback,
         carrier.map(),
         vehicle.map(),
-        driver?.map()
+        driver?.map(),
+        wheelchair,
+        armored
     )

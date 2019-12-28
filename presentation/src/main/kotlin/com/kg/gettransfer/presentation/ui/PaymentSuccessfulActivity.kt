@@ -3,20 +3,21 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import androidx.annotation.CallSuper
 
-import com.arellomobile.mvp.presenter.InjectPresenter
+import moxy.presenter.InjectPresenter
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isInvisible
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter
+import com.kg.gettransfer.presentation.view.Screens.showSupportScreen
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 
-import kotlinx.android.synthetic.main.activity_payment_successful.*
 import kotlinx.android.synthetic.main.content_payment_successful.*
 import kotlinx.android.synthetic.main.view_communication_button.view.*
 
@@ -27,7 +28,8 @@ import pub.devrel.easypermissions.EasyPermissions
 class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
     PaymentSuccessfulView,
     EasyPermissions.PermissionCallbacks,
-    EasyPermissions.RationaleCallbacks {
+    EasyPermissions.RationaleCallbacks,
+    GoToPlayMarketListener {
 
     @InjectPresenter
     internal lateinit var presenter: PaymentSuccessfulPresenter
@@ -39,15 +41,12 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment_successful)
         setStatusBarColor(R.color.black_50)
-        presenter.offerId = intent.getLongExtra(OFFER_ID, 0L)
-        presenter.transferId = intent.getLongExtra(TRANSFER_ID, 0L)
+        presenter.transferId = intent.getLongExtra(PaymentSuccessfulView.EXTRA_TRANSFER_ID, 0L)
+        presenter.offerId = intent.getLongExtra(PaymentSuccessfulView.EXTRA_OFFER_ID, 0L)
         showPaymentDialog(savedInstanceState)
     }
 
     private fun showPaymentDialog(savedInstanceState: Bundle?) {
-
-        contentSuccessPayment.layoutParams.height = getScreenSide(true) - Utils.dpToPxInt(this, 8f)
-
         baseMapView = mapViewRoute
         initMapView(savedInstanceState)
         presenter.setMapRoute()
@@ -61,7 +60,7 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
             tvDownloadVoucher.isInvisible = true
         }
         ivClose.setOnClickListener { finish() }
-        btnSupport.setOnClickListener { presenter.sendEmail(null, presenter.transferId) }
+        btnSupport.setOnClickListener { showSupportScreen(supportFragmentManager, presenter.transferId) }
         tvDownloadVoucher.setOnClickListener { checkPermissionForWrite() }
     }
 
@@ -88,7 +87,12 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
     override fun setRoute(polyline: PolylineModel) = setPolylineWithoutInfo(polyline)
 
     override fun setRemainTime(days: Int, hours: Int, minutes: Int) {
-        val time = "$days${getString(R.string.LNG_D)}:$hours${getString(R.string.LNG_H)}:$minutes${getString(R.string.LNG_M)}"
+        val d = "$days${getString(R.string.LNG_D)}"
+        val h = "$hours${getString(R.string.LNG_H)}"
+        val m = "$minutes${getString(R.string.LNG_M)}"
+
+        val time = "$d:$h:$m"
+
         tvRemainTime.text = time
     }
 
@@ -126,9 +130,11 @@ class PaymentSuccessfulActivity : BaseGoogleMapActivity(),
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
+    override fun onClickGoToDriverApp() {
+        Utils.goToGooglePlay(this, getString(R.string.driver_app_market_package))
+    }
+
     companion object {
-        const val TRANSFER_ID = "transferId"
-        const val OFFER_ID = "offerId"
         private const val RC_WRITE_FILE = 111
     }
 }

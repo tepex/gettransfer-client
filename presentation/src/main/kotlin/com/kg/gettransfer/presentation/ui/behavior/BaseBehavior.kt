@@ -8,20 +8,20 @@ import android.util.TypedValue
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 
-open class BaseBehavior (mContext: Context, attrs: AttributeSet) : CoordinatorLayout.Behavior<View>(mContext, attrs) {
+open class BaseBehavior (context: Context, attrs: AttributeSet) : CoordinatorLayout.Behavior<View>(context, attrs) {
     val screenHeight: Int
     var actionBarHeight: Int = 0
 
     init {
         val displayMetrics = DisplayMetrics()
-        (mContext as Activity).windowManager
+        (context as Activity).windowManager
                 .defaultDisplay
                 .getMetrics(displayMetrics)
         screenHeight = displayMetrics.heightPixels
 
         val tv = TypedValue()
-        actionBarHeight = if (mContext.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            TypedValue.complexToDimensionPixelSize(tv.data, mContext.getResources().displayMetrics)
+        actionBarHeight = if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().displayMetrics)
         } else 0
     }
 

@@ -1,10 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
-
-import com.kg.gettransfer.domain.model.BookNowOffer
-import com.kg.gettransfer.domain.model.Offer
-import com.kg.gettransfer.domain.model.Transfer
+import moxy.InjectViewState
 
 import com.kg.gettransfer.extensions.newChainFromMain
 
@@ -20,25 +16,10 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
     internal var paymentId = 0L
     internal var nonce = ""
     internal var transferId = 0L
-    internal var transfer: Transfer? = null
     internal var offerId = 0L
-    internal var percentage = PaymentRequestModel.FULL_PRICE
-    internal var bookNowTransportId: String? = null
-
-    private var offer: Offer? = null
-    private var bookNowOffer: BookNowOffer? = null
 
     override fun attachView(view: PaypalConnectionView) {
         super.attachView(view)
-        paymentInteractor.selectedTransfer?.let { st ->
-            paymentInteractor.selectedOffer?.let { so ->
-                transfer = st
-                when (so) {
-                    is Offer        -> offer = so
-                    is BookNowOffer -> bookNowOffer = so
-                }
-            }
-        }
         confirmPayment()
     }
 
@@ -56,21 +37,18 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
 
     private suspend fun showFailedPayment() {
         analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
+        paymentInteractor.isFailedPayment = true
         router.exit()
-        router.navigateTo(Screens.PaymentError(transferId))
     }
 
-    private fun showSuccessfulPayment() {
+    private suspend fun showSuccessfulPayment() {
+        analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
         router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
-        utils.launchSuspend {
-            transfer?.let {
-                val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(it.id) }
-                if (offerPaid.model.first) {
-                    transfer = offerPaid.model.second
-                    paymentInteractor.selectedTransfer = transfer
-                    analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
-                    analytics.EcommercePurchase().sendAnalytics()
-                }
+        paymentInteractor.selectedTransfer?.let {
+            val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(it.id) }
+            if (offerPaid.model.first) {
+                paymentInteractor.selectedTransfer = offerPaid.model.second
+                analytics.EcommercePurchase().sendAnalytics()
             }
         }
     }

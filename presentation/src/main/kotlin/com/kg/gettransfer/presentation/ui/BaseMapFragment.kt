@@ -3,12 +3,12 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import android.widget.ImageView
-import com.arellomobile.mvp.MvpAppCompatFragment
+import moxy.MvpAppCompatFragment
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isVisible
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.helpers.MapHelper

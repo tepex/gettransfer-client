@@ -16,10 +16,18 @@ class TransferInteractor(private val repository: TransferRepository) {
 
     suspend fun cancelTransfer(id: Long, reason: String) = repository.cancelTransfer(id, reason)
 
+    suspend fun restoreTransfer(id: Long) = repository.restoreTransfer(id)
+
     suspend fun setOffersUpdatedDate(id: Long) = repository.setOffersUpdateDate(id)
 
-    suspend fun getAllTransfers() = repository.getAllTransfers()
+    suspend fun getAllTransfers(
+        role: String = Transfer.Role.PASSENGER.toString(),
+        page: Int = 1,
+        status: String? = null
+    ) = repository.getAllTransfers(role, page, status)
+
     suspend fun getTransfersActive() = repository.getTransfersActive()
+
     suspend fun getTransfersArchive() = repository.getTransfersArchive()
 
     fun clearTransfersCache(): Result<Unit> {

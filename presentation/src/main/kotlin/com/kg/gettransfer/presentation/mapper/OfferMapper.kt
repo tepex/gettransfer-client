@@ -20,7 +20,6 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
             type.status,
             type.currency,
             type.wifi,
-            type.isNameSignPresent,
             type.isWithNameSign,
             type.refreshments,
             type.charger,
@@ -31,7 +30,9 @@ open class OfferMapper : Mapper<OfferModel, Offer> {
             carrierMapper.toView(type.carrier),
             type.vehicle.map(),
             type.driver?.let { profileMapper.toView(it) },
-            type.phoneToCall
+            type.phoneToCall,
+            type.wheelchair,
+            type.armored
         )
 
     override fun fromView(type: OfferModel): Offer { throw UnsupportedOperationException() }

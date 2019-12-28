@@ -3,7 +3,7 @@
 
     <color name="colorPrimary">#ff6900</color>
     <color name="colorPrimaryDark">#ffffff</color>
-    <color name="colorAccent">#216edd</color>
+    <color name="colorAccent">@color/color_gtr_orange</color>
     <color name="colorGreen">#98b71b</color>
     <color name="book_btn">#31b700</color>
     <color name="book_btn_pressed">#2CA400</color>
@@ -21,6 +21,7 @@
     <color name="colorWhitePressed">#d2d2d2</color>
 
     <color name="colorBtnRed">#FF0000</color>
+    <color name="colorBtnRedPressed">#D70000</color>
     <color name="colorDividerGray">@color/colorDivider</color>
     <color name="create_order_fields_divider">@color/color_gtr_light_grey</color>
 
@@ -30,6 +31,11 @@
     <color name="colorPolyline">#13a2fd</color>
 
     <color name="payment_currency_info_text">#3d3d3d</color>
+
+    <color name="checkoutcom_pay_btn_color">#A1B634</color>
+    <color name="checkoutcom_pay_btn_pressed_color">#96AA30</color>
+    <color name="checkoutcom_hint_color">#808080</color>
+    <color name="checkoutcom_field_error">#A21818</color>
 
     <!--view_trip_info-->
     <color name="colorTransferRequestText">#9b9b9b</color>
@@ -55,7 +61,6 @@
     <color name="color_transfer_details_horizontal_divider">@color/colorDivider</color> <!--TODO remove and replace all gray dividers to sh_divider_gray.xml-->
     <color name="color_transfer_details_horizontal_divider_new">@color/colorDividerLight</color> <!--TODO remove and replace all gray dividers to sh_divider_light_gray.xml-->
     <color name="color_transfer_details_text_gray">#B2B2B2</color>
-    <color name="color_transfer_details_text_red">#ff3b30</color>
 
     <!--Driver mode -->
     <color name="color_driver_mode_divider">#19000000</color>
@@ -68,6 +73,7 @@
     <color name="color_gtr_super_light_grey">#F6F6F6</color>
     <color name="color_gtr_green">#31B700</color>
     <color name="color_gtr_orange">#FF6900</color>
+    <color name="color_gtr_orange_pressed">#F56904</color>
     <color name="color_gtr_red">#FF3B30</color>
 
     <color name="color_car_black">#000000</color>

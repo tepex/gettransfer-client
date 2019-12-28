@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
@@ -23,10 +23,6 @@ import com.kg.gettransfer.utilities.Analytics
 class OffersPresenter : BasePresenter<OffersView>() {
 
     internal var transferId = 0L
-        set(value) {
-            field = value
-            offerInteractor.lastTransferId = value
-        }
 
     private var transfer: Transfer? = null
     private var offers: List<OfferItem> = emptyList()
@@ -99,7 +95,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
             } else {
                 offers = mutableListOf<OfferItem>().apply {
                     addAll(result.model)
-                    notificationManager.clearOffers(result.model.map { offer -> offer.id.toInt() })
+                    notificationManager.clearNotifications(result.model.map { offer -> offer.id.toInt() })
                     addAll(transfer.bookNowOffers)
                 }
             }
@@ -135,9 +131,9 @@ class OffersPresenter : BasePresenter<OffersView>() {
     }
 
     fun onSelectOfferClicked(offerItem: OfferItemModel, isShowingOfferDetails: Boolean) {
-        transfer?.let {
+        transfer?.let { transfer ->
             if (isShowingOfferDetails) {
-                viewState.showBottomSheetOfferDetails(offerItem)
+                viewState.showBottomSheetOfferDetails(offerItem, !transfer.nameSign.isNullOrEmpty())
                 analytics.logSingleEvent(Analytics.OFFER_DETAILS)
             } else {
                 analytics.logSingleEvent(Analytics.OFFER_BOOK)
@@ -233,7 +229,7 @@ class OffersPresenter : BasePresenter<OffersView>() {
                 is Offer        -> offerMapper.toView(offer)
                 is BookNowOffer -> offer.map()
             }
-        })
+        }, !transfer?.nameSign.isNullOrEmpty())
         viewState.setSortType(sortCategory, sortHigherToLower)
     }
 

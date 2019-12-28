@@ -22,7 +22,7 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:overScrollMode="never"
-        app:layout_constraintBottom_toTopOf="@id/btnGetPayment"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
@@ -63,15 +63,17 @@
                 android:layout_marginTop="@dimen/payment_tvPriceInfo_margin_top"
                 android:background="@android:color/white"
                 android:gravity="center"
+                android:paddingStart="@dimen/payment_tvMissingNameSign_horizontal_padding"
+                android:paddingEnd="@dimen/payment_tvMissingNameSign_horizontal_padding"
                 android:paddingBottom="@dimen/payment_tvPriceInfo_padding_bottom"
                 android:text="@string/LNG_MISSING_NAME_SIGN"
-                android:textColor="@color/color_transfer_details_text_red"
+                android:textColor="@color/color_gtr_orange"
+                android:textSize="@dimen/payment_tvMissingNameSign_text_size"
                 android:visibility="gone"
-                tools:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/offer_layout" />
-
+                app:layout_constraintTop_toBottomOf="@+id/offer_layout"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/tvPriceInfo"
@@ -108,17 +110,6 @@
                 tools:visibility="visible" />
 
             <include
-                android:id="@+id/layoutPrices"
-                layout="@layout/layout_prices"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/payment_layout_prices_margin_top"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_currency_converting_info"
-                tools:visibility="gone" />
-
-            <include
                 android:id="@+id/layoutPayments"
                 layout="@layout/layout_payments"
                 android:layout_width="match_parent"
@@ -126,7 +117,7 @@
                 android:layout_marginTop="@dimen/payment_layout_payments_margin_top"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutPrices" />
+                app:layout_constraintTop_toBottomOf="@+id/view_currency_converting_info" />
 
             <include
                 android:id="@+id/ll_auth_container"
@@ -165,39 +156,50 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/LNG_RIDE_PAYMENT_OFFER"
+                    android:text="@string/LNG_RIDE_PAY_OFFERT"
                     android:textSize="@dimen/payment_text_size_12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutPayButtons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/payment_button_pay_horizontal_margin"
+                android:paddingEnd="@dimen/payment_button_pay_horizontal_margin"
+                android:paddingTop="@dimen/payment_button_pay_margin_top"
+                android:paddingBottom="@dimen/payment_button_pay_margin_bottom"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/paymentInfoLayout"
+                android:orientation="vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGetPayment"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/btn_rounded_height"
+
+                    android:fontFamily="@font/sf_pro_text_semibold"
+                    android:gravity="center"
+                    android:text="@string/LNG_PAYMENT_PAY"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/payment_text_size_14sp"
+
+                    app:backgroundTint="@color/color_gtr_green"
+                    app:cornerRadius="@dimen/btn_radius"
+                    app:icon="@drawable/ic_credit_card"
+                    app:iconGravity="textStart"
+                    app:iconPadding="@dimen/payment_button_icon_padding"
+                    app:iconTint="@android:color/white"
+                    android:visibility="visible"/>
+
+                <include
+                    android:id="@+id/btnGetPaymentWithGooglePay"
+                    layout="@layout/buy_with_googlepay_button"
+                    android:visibility="gone"/>
 
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGetPayment"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/btn_rounded_height"
-        android:layout_marginStart="@dimen/payment_button_pay_horizontal_margin"
-        android:layout_marginTop="@dimen/payment_button_pay_margin_top"
-        android:layout_marginEnd="@dimen/payment_button_pay_horizontal_margin"
-        android:layout_marginBottom="@dimen/payment_button_pay_margin_bottom"
-        android:fontFamily="@font/sf_pro_text_semibold"
-        android:gravity="center"
-        android:text="@string/LNG_PAYMENT_PAY"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/payment_text_size_14sp"
-
-        app:backgroundTint="@color/color_gtr_green"
-        app:cornerRadius="@dimen/btn_radius"
-        app:icon="@drawable/ic_credit_card"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/payment_button_icon_padding"
-        app:iconTint="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sv_root"
-        app:layout_constraintVertical_bias="1.0" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

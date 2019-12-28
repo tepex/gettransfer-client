@@ -2,117 +2,148 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/back_top_rounded"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/back_top_rounded"
     android:transitionName="@string/searchTransitionName">
 
     <include
         android:id="@+id/icons_container"
         layout="@layout/a_b_orange_view"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="@dimen/search_marginStart"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp" />
+        android:layout_marginTop="@dimen/margin24"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <com.kg.gettransfer.presentation.ui.SearchAddressReadOnly
-                android:id="@+id/searchFrom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:hint="@string/LNG_FIELD_SOURCE"
-                app:layout_constraintStart_toEndOf="@+id/icons_container"
-                app:layout_constraintEnd_toStartOf="@id/ivSelectFieldFrom"
-                app:layout_constraintTop_toTopOf="parent"
-                app:title="@string/LNG_FIELD_SOURCE_PICKUP" />
+    <com.kg.gettransfer.presentation.ui.SearchAddressReadOnly
+        android:id="@+id/searchFrom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:hint="@string/LNG_FIELD_SOURCE"
+        app:layout_constraintEnd_toStartOf="@id/ivSelectFieldFrom"
+        app:layout_constraintStart_toEndOf="@+id/icons_container"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/LNG_FIELD_SOURCE_PICKUP" />
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/create_transfer_divider_height"
-                android:background="@color/colorDividerGray"
-                app:layout_constraintStart_toEndOf="@+id/icons_container"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchFrom" />
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/create_transfer_divider_height"
+        android:background="@color/colorDividerGray"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/icons_container"
+        app:layout_constraintTop_toBottomOf="@+id/searchFrom" />
 
-            <com.kg.gettransfer.presentation.ui.SearchAddressReadOnly
-                android:id="@+id/searchTo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:hint="@string/LNG_FIELD_DESTINATION_WHERE"
-                app:layout_constraintEnd_toStartOf="@id/ivSelectFieldTo"
-                app:layout_constraintStart_toEndOf="@+id/icons_container"
-                app:layout_constraintTop_toBottomOf="@+id/divider"
-                app:title="@string/LNG_FIELD_DESTINATION" />
+    <RelativeLayout
+        android:id="@+id/rl_hourly"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/ivSelectFieldTo"
+        app:layout_constraintStart_toEndOf="@+id/icons_container"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        tools:visibility="visible">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivSelectFieldFrom"
-                android:layout_width="@dimen/pin_clickable_width"
-                android:layout_height="@dimen/pin_clickable_height"
-                android:layout_marginEnd="@dimen/margin8"
-                android:padding="@dimen/pin_iv_padding"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/searchFrom"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/searchFrom"
-                app:srcCompat="@drawable/btn_pin_location" />
+        <TextView
+            android:id="@+id/hourly_title"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/search_sub_title_height"
+            android:layout_marginTop="@dimen/search_sub_title_marginTop"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:text="@string/LNG_FIELD_PER_HOUSE"
+            android:textSize="@dimen/search_sub_title_textSize" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivSelectFieldTo"
-                android:visibility="gone"
-                android:layout_width="@dimen/pin_clickable_width"
-                android:layout_height="@dimen/pin_clickable_height"
-                android:layout_marginEnd="@dimen/margin8"
-                android:padding="@dimen/pin_iv_padding"
-                app:layout_constraintBottom_toBottomOf="@id/searchTo"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/searchTo"
-                app:srcCompat="@drawable/btn_pin_location" />
+        <TextView
+            android:id="@+id/tvCurrent_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hourly_title"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:paddingBottom="@dimen/search_main_paddingBottom"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="@dimen/search_main_textSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hourly_title"
+            tools:text="2 hours" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/margin20"
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/pin_iv_padding"
+            android:rotation="90"
+            android:src="@drawable/ic_arrow_right"
+            app:layout_constraintBottom_toBottomOf="@id/hourly_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/hourly_title" />
 
-            <RelativeLayout
-                app:layout_constraintTop_toBottomOf="@+id/searchTo"
-                app:layout_constraintStart_toEndOf="@+id/icons_container"
-                android:id="@+id/rl_hourly"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+    </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/hourly_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/search_sub_title_height"
-                    android:layout_marginTop="@dimen/search_sub_title_marginTop"
-                    android:fontFamily="@font/sf_pro_text_regular"
-                    android:text="@string/LNG_FIELD_PER_HOUSE"
-                    android:textSize="@dimen/search_sub_title_textSize" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/switchLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/rl_hourly"
+        app:layout_constraintTop_toBottomOf="@+id/rl_hourly"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-                <TextView
-                    android:id="@+id/tvCurrent_hours"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/hourly_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/hourly_title"
-                    android:fontFamily="@font/sf_pro_text_semibold"
-                    android:paddingBottom="@dimen/search_main_paddingBottom"
-                    android:textColor="@color/colorTextBlack"
-                    android:textSize="@dimen/search_main_textSize"
-                    tools:text="2 hours"/>
+        <Switch
+            android:id="@+id/switchPointB"
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:switchPadding="100dp"
+            android:paddingEnd="@dimen/margin16"
+            android:paddingStart="0dp"
+            android:text="@string/LNG_DROP_OFF_AT_THE_DIFF_LOC"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:theme="@style/SwitchCompatStyle"/>
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin20"
-                    android:rotation="90"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    app:layout_constraintBottom_toBottomOf="@id/hourly_title"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/hourly_title"
-                    android:paddingRight="@dimen/pin_iv_padding"
-                    android:src="@drawable/ic_arrow_right" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </RelativeLayout>
+    <com.kg.gettransfer.presentation.ui.SearchAddressReadOnly
+        android:id="@+id/searchTo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:hint="@string/LNG_FIELD_DESTINATION_WHERE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/icons_container"
+        app:layout_constraintTop_toBottomOf="@+id/switchLayout"
+        app:title="@string/LNG_FIELD_DESTINATION" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivSelectFieldFrom"
+        android:layout_width="@dimen/pin_clickable_width"
+        android:layout_height="@dimen/pin_clickable_height"
+        android:layout_marginEnd="@dimen/margin8"
+        android:padding="@dimen/pin_iv_padding"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/searchFrom"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/searchFrom"
+        app:srcCompat="@drawable/btn_pin_location"
+        tools:visibility="visible"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivSelectFieldTo"
+        android:layout_width="@dimen/pin_clickable_width"
+        android:layout_height="@dimen/pin_clickable_height"
+        android:layout_marginEnd="@dimen/margin8"
+        android:padding="@dimen/pin_iv_padding"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/searchTo"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/searchTo"
+        app:srcCompat="@drawable/btn_pin_location"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

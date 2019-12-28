@@ -32,7 +32,7 @@ class SessionInteractor(
     // because locale from Account.EMPTY is equals Locale.getDefault()
     // and then it'll be always show wrong locale
     var locale: Locale
-        get() = if (account.user == User.EMPTY) Locale(appLanguage, Locale.getDefault().country) else account.locale
+        get() = if (account.user == User.EMPTY) Locale(appLanguage, Account.EMPTY.locale.country) else account.locale
         set(value) {
             account.locale = value
             appLanguage = value.language

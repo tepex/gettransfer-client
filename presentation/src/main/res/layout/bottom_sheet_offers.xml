@@ -36,16 +36,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/ivCarColor"
-                android:layout_width="@dimen/bottom_sheet_offer_details_car_color_width"
-                android:layout_height="@dimen/bottom_sheet_offer_details_car_color_height"
+            <TextView
+                android:id="@+id/carColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/bottom_sheet_offer_details_car_color_margin_top"
-                android:background="@drawable/border_car_color_indicator"
+                android:elevation="@dimen/activity_transfer_details_car_color_elevation"
+                android:fontFamily="@font/sf_pro_text_semibold"
+                android:paddingStart="@dimen/activity_transfer_details_car_color_horizontal_padding"
+                android:paddingTop="@dimen/activity_transfer_details_car_color_top_padding"
+                android:paddingEnd="@dimen/activity_transfer_details_car_color_horizontal_padding"
+                android:paddingBottom="@dimen/activity_transfer_details_car_color_bottom_padding"
+                android:textAllCaps="true"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/activity_transfer_details_car_color_text_size"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/tv_car_model_bs"
                 app:layout_constraintTop_toBottomOf="@+id/tv_car_model_bs"
-                app:srcCompat="@drawable/ic_circle_car_color_indicator"
+                tools:text="@string/LNG_COLOR_BLUE"
                 tools:visibility="visible" />
 
             <LinearLayout
@@ -91,7 +99,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_capacity"
+                app:layout_constraintTop_toBottomOf="@+id/tvMissingNameSign"
                 app:multiple_photos_height="@dimen/bottom_sheet_offer_details_multiple_photos_height"
                 app:multiple_photos_width="@dimen/bottom_sheet_offer_details_multiple_photos_width"
                 app:single_photo_height="@dimen/bottom_sheet_offer_details_single_photo_height" />
@@ -101,13 +109,13 @@
                 layout="@layout/vehicle_items"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_10dp"
                 android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
                 android:layout_marginEnd="@dimen/bottom_sheet_offer_details_margin_16dp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ivCarColor"
+                app:layout_constraintTop_toBottomOf="@+id/carColor"
                 tools:visibility="visible" />
 
             <include
@@ -116,8 +124,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
-                app:layout_constraintStart_toStartOf="@+id/vehicle_conveniences"
+                android:layout_marginStart="@dimen/margin16"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/vehicle_conveniences" />
+
+            <ImageView
+                android:id="@+id/iconNameSign"
+                android:layout_width="@dimen/bottom_sheet_offer_details_name_sign_img_size"
+                android:layout_height="@dimen/bottom_sheet_offer_details_name_sign_img_size"
+                android:layout_marginStart="@dimen/vehicle_items_margin_start"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/view_capacity"
+                app:layout_constraintStart_toEndOf="@+id/view_capacity"
+                app:layout_constraintTop_toTopOf="@+id/view_capacity"
+                app:srcCompat="@drawable/ic_with_name_sign"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tvMissingNameSign"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginTop="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:text="@string/LNG_MISSING_NAME_SIGN"
+                android:textColor="@color/color_gtr_orange"
+                android:textSize="@dimen/bottom_sheet_offer_details_name_sign_text_size"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_capacity"
+                tools:visibility="visible" />
 
             <include
                 android:id="@+id/divider"

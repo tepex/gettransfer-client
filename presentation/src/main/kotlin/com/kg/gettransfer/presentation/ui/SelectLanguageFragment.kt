@@ -1,18 +1,16 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.view.View
 
 import androidx.annotation.CallSuper
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import androidx.core.content.ContextCompat
-
-import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -23,10 +21,12 @@ import com.kg.gettransfer.presentation.adapter.LanguagesListAdapter
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.SelectLanguagePresenter
 import com.kg.gettransfer.presentation.view.SelectLanguageView
+
 import kotlinx.android.synthetic.main.fragment_select_language.*
 import kotlinx.android.synthetic.main.layout_select_language.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
 
+@Suppress("TooManyFunctions")
 open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageView {
 
     override val layout = R.layout.fragment_select_language
@@ -44,15 +44,6 @@ open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageVie
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
-
-        @Suppress("UnsafeCallOnNullableType")
-        val itemDecorator = DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(requireContext(), R.drawable.sh_divider_light_gray)?.let { drawable ->
-            itemDecorator.setDrawable(drawable)
-        }
-        rvAllLanguages.addItemDecoration(itemDecorator)
         setupToolbar()
     }
 

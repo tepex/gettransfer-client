@@ -7,11 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.data.PreferencesListener
 import com.kg.gettransfer.data.model.*
-
-import java.util.Locale
-
-import kotlinx.serialization.list
-import kotlinx.serialization.json.JSON
+import com.kg.gettransfer.domain.model.Account
 
 @Suppress("WildcardImport")
 class PreferencesImpl(
@@ -134,7 +130,7 @@ class PreferencesImpl(
         }
 
     override var appLanguage: String
-        get() = configsPrefs.getString(APP_LANGUAGE, Locale.getDefault().language).toString()
+        get() = configsPrefs.getString(APP_LANGUAGE, Account.EMPTY.locale.language).toString()
         set(value) { configsPrefs.edit().putString(APP_LANGUAGE, value).apply() }
 
     override var isAppLanguageChanged: Boolean

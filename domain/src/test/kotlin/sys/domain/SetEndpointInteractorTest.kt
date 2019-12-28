@@ -59,11 +59,13 @@ class SetEndpointInteractorTest : StringSpec() {
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
                 isNewDriverAppDialogShowed = false,
+                countOfShowNewDriverAppDialog = 0,
                 selectedField = "selected field",
                 addressHistory = emptyList(),
                 favoriteTransports = emptySet(),
                 appEnters = 2,
-                isDebugMenuShowed = false
+                isDebugMenuShowed = false,
+                isPaymentRequestWithoutDelay = false
             )
     }
 }

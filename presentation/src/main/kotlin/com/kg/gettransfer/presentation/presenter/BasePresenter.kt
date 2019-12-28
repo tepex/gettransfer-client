@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.MvpPresenter
-
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.domain.ApiException
@@ -13,6 +11,9 @@ import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.model.ChatBadgeEvent
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.extensions.getOffer
 
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.PushTokenManager
@@ -22,6 +23,7 @@ import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 
+import com.kg.gettransfer.sys.domain.SetFavoriteTransportsInteractor
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
@@ -31,6 +33,8 @@ import com.kg.gettransfer.utilities.GTNotificationManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+import moxy.MvpPresenter
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
@@ -69,7 +73,8 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
 
-    // private var sendingMessagesNow = false
+    private val setFavoriteTransports: SetFavoriteTransportsInteractor by inject()
+
     private var openedLoginScreenForUnauthorizedUser = false
 
     protected val log: Logger by inject { parametersOf("GTR-presenter") }
@@ -133,6 +138,19 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         utils.asyncAwait { reviewInteractor.clearReviewCache() }
 
         countEventsInteractor.clearCountEvents()
+
+        clearChosenTransportTypes()
+    }
+
+    protected fun saveChosenTransportTypes(transportTypes: Set<TransportType.ID>) {
+        worker.main.launch {
+            withContext(worker.bg) { setFavoriteTransports(transportTypes) }
+        }
+    }
+
+    protected fun clearChosenTransportTypes() {
+        orderInteractor.clear()
+        saveChosenTransportTypes(emptySet())
     }
 
     suspend fun saveGeneralSettings() {
@@ -155,26 +173,35 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     // open fun doingSomethingAfterSendingNewMessagesCached() {}
 
-    protected open fun systemInitialized() { }
+    protected open fun systemInitialized() {}
 
     fun networkConnected() = worker.main.launch {
         withContext(worker.bg) { reviewInteractor.checkNotSendedReviews() }
     }
 
-    internal fun sendEmail(emailCarrier: String?, transferId: Long?) {
+    internal fun sendEmail(transferId: Long?, emailCarrier: String? = null) {
         worker.main.launch {
             var transferID: Long? = null
-            if (transferId == null) {
-                val result = withContext(worker.bg) { transferInteractor.getAllTransfers() }
-                if (result.error == null && result.model.isNotEmpty()) {
-                    transferID = result.model.first().id
+            if (transferId == null || transferId == -1L) {
+                val result = withContext(worker.bg) {
+                    transferInteractor.getAllTransfers(getUserRole())
+                }
+                if (result.error == null && result.model.first.isNotEmpty()) {
+                    transferID = result.model.first.first().id
                 }
             } else {
                 transferID = transferId
             }
-            router.navigateTo(Screens.SendEmail(emailCarrier, transferID, accountManager.remoteProfile.email))
+            router.navigateTo(
+                Screens.SendEmail(emailCarrier, transferID, accountManager.remoteProfile.email)
+            )
         }
     }
+
+    fun getUserRole(): String =
+        if (isBusinessAccount()) Transfer.Role.PARTNER.toString() else Transfer.Role.PASSENGER.toString()
+
+    fun isBusinessAccount(): Boolean = accountManager.remoteAccount.isBusinessAccount
 
     internal fun callPhone(phone: String) {
         router.navigateTo(Screens.CallPhone(phone))
@@ -203,7 +230,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     private suspend fun updateOfferEventsCounter(offer: Offer) {
         val result = withContext(worker.bg) { offerInteractor.getOffers(offer.transferId, true) }
         if (result.error == null) {
-            if (result.model.find { offerCached -> offerCached.id == offer.id } != null) {
+            if (result.model.getOffer(offer.id) != null) {
                 countEventsInteractor.mapCountViewedOffers[offer.transferId]?.let { countViewedOffers ->
                     countEventsInteractor.mapCountNewOffers[offer.transferId]?.let { countNewOffers ->
                         if (countNewOffers == countViewedOffers && countViewedOffers > 0) {
@@ -225,8 +252,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
                     increaseEventsMessagesCounter(chatBadgeEvent.transferId, result.model.unreadMessagesCount)
                     notificationManager.showNewMessageNotification(
                         chatBadgeEvent.transferId,
-                        result.model.unreadMessagesCount,
-                        true
+                        result.model.unreadMessagesCount
                     )
                 }
             } else {

@@ -43,9 +43,11 @@ class ApiCore : KoinComponent {
     lateinit var apiUrl: String
     private lateinit var apiKey: String
     private lateinit var ipApiKey: String
+    private lateinit var checkoutcomKey: String
 
     internal lateinit var api: Api
     internal lateinit var ipApi: Api
+    internal lateinit var checkoutcomApi: Api
 
     private val gson = GsonBuilder()
         .setLenient()
@@ -58,20 +60,27 @@ class ApiCore : KoinComponent {
         addInterceptor { chain ->
             val request = chain.request()
             val urlBuilder = request.url().newBuilder()
+
+            val isAccessTokenRequest = request.url().encodedPath() == Api.API_ACCESS_TOKEN
+            val isIpApiRequest = request.url().host() == IP_API_HOST_NAME
+            val isCheckoutcomRequest = request.url().host().contains(CHECKOUTCOM_HOST_NAME)
+
             urlBuilder.apply {
-                if (request.url().host() != IP_API_HOST_NAME) {
+                if (!isIpApiRequest && !isCheckoutcomRequest) {
                     addQueryParameter(PARAM_API_KEY, apiKey)
                     addQueryParameter(PARAM_CURRENCY, sessionRepository.account.currency.code)
                     addQueryParameter(PARAM_LOCALE, sessionRepository.account.locale.language)
-                } else {
+                } else if (isIpApiRequest) {
                     addQueryParameter(PARAM_IP_API_KEY, ipApiKey)
                 }
             }
             val url = urlBuilder.build()
 
             val builder = request.newBuilder().url(url)
-            if (url.encodedPath() != Api.API_ACCESS_TOKEN && url.host() != IP_API_HOST_NAME) {
+            if (!isAccessTokenRequest && !isIpApiRequest && !isCheckoutcomRequest) {
                 builder.addHeader(Api.HEADER_TOKEN, preferences.accessToken)
+            } else if (isCheckoutcomRequest) {
+                builder.addHeader(Api.CHECKOUTCOM_HEADER_TOKEN, checkoutcomKey)
             }
             try {
                 chain.proceed(builder.build())
@@ -86,28 +95,34 @@ class ApiCore : KoinComponent {
     fun changeEndpoint(endpoint: EndpointEntity) {
         apiKey = endpoint.key
         apiUrl = endpoint.url
-        api = Retrofit.Builder().apply {
-            baseUrl(apiUrl)
-            callFactory { okHttpClient.newCall(it) }
-            addConverterFactory(GsonConverterFactory.create(gson))
-        }.build().create(Api::class.java)
+        api = createApi(apiUrl)
     }
 
     fun changeIpApiKey(key: String) {
         ipApiKey = key
-        ipApi = Retrofit.Builder().apply {
-            baseUrl(IP_API_SCHEME + IP_API_HOST_NAME)
+        ipApi = createApi(IP_API_SCHEME + IP_API_HOST_NAME)
+    }
+
+    fun initChickoutcomApi(url: String, key: String) {
+        if (!::checkoutcomApi.isInitialized) {
+            checkoutcomApi = createApi(url.plus("/"))
+        }
+        checkoutcomKey = key
+    }
+
+    private fun createApi(baseUrl: String) =
+        Retrofit.Builder().apply {
+            baseUrl(baseUrl)
             callFactory { okHttpClient.newCall(it) }
             addConverterFactory(GsonConverterFactory.create())
         }.build().create(Api::class.java)
-    }
 
     private suspend fun checkApiInitialization() {
         if (!::api.isInitialized) {
-            changeEndpoint(preferencesRepository.getResult().getModel().endpoint!!.map())
+            preferencesRepository.getResult().getModel().endpoint?.let { changeEndpoint(it.map()) }
         }
         if (!::ipApi.isInitialized) {
-            changeIpApiKey(preferencesRepository.getResult().getModel().ipApiKey!!)
+            preferencesRepository.getResult().getModel().ipApiKey?.let { changeIpApiKey(it) }
         }
     }
 
@@ -185,15 +200,16 @@ class ApiCore : KoinComponent {
             } catch (js: JsonSyntaxException) {
                 null
             }
-            RemoteException(e.code(), msg ?: e.message ?: "", type)
+            RemoteException(e.code(), msg ?: errorBody, true, type)
         }
-        else -> RemoteException(RemoteException.NOT_HTTP, e.message ?: "")
+        else -> RemoteException(RemoteException.NOT_HTTP, e.message ?: "", false)
     }
 
     companion object {
         private const val IP_API_SCHEME = "https://"
         private const val IP_API_HOST_NAME = "ipapi.co"
         private const val PARAM_IP_API_KEY  = "key"
+        private const val CHECKOUTCOM_HOST_NAME = "checkout.com"
 
         private val ERROR_PATTERN = Regex("^<h1>(.+)</h1>$")
 

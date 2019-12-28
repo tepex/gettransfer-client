@@ -1,6 +1,7 @@
 package com.kg.gettransfer.domain.model
 
 import java.util.Date
+import java.util.Locale
 
 /*
 
@@ -56,7 +57,6 @@ data class Transfer(
 /* ================================================== */
     val editableFields: List<String>?, /* not used */
     val airlineCard: String?,
-    val paymentPercentages: List<Int>?,
     val unreadMessagesCount: Int,
     val showOfferInfo: Boolean,
     val lastOffersUpdatedAt: Date?
@@ -86,16 +86,19 @@ data class Transfer(
     }
 
     enum class Role {
-        PASSENGER, PARTNER, CARRIER, MANAGER
+        PASSENGER, PARTNER, CARRIER, MANAGER;
+
+        override fun toString(): String = name.toLowerCase(Locale.US)
     }
 
     fun isCompletedTransfer() = status == Status.NOT_COMPLETED || status == Status.COMPLETED
 
     companion object {
-        const val STATUS_CATEGORY_ACTIVE     = "active_status"
+        const val STATUS_CATEGORY_ACTIVE     = "active"
         const val STATUS_CATEGORY_CONFIRMED  = "confirmed_status"
         const val STATUS_CATEGORY_UNFINISHED = "unfinished_status"
         const val STATUS_CATEGORY_FINISHED   = "finished_status"
+        const val STATUS_CATEGORY_ARCHIVE    = "archive"
 
         val EMPTY = Transfer(
             id              = 0,
@@ -146,7 +149,6 @@ data class Transfer(
 /* ================================================== */
             editableFields      = emptyList<String>(),
             airlineCard         = null,
-            paymentPercentages  = emptyList<Int>(),
             unreadMessagesCount = 0,
             showOfferInfo       = false,
             lastOffersUpdatedAt = null
@@ -162,8 +164,10 @@ data class Transfer(
             it.status == Status.COMPLETED || it.status == Status.NOT_COMPLETED
         }
 
-        fun List<Transfer>.filterArchived() = filter {
-            it.status != Status.COMPLETED || it.status != Status.NOT_COMPLETED
+        fun List<Transfer>.filterPast() = filter { tr ->
+            tr.status != Status.NEW ||
+            tr.status != Status.PERFORMED ||
+            tr.status != Status.PENDING_CONFIRMATION
         }
 
         fun List<Transfer>.filterRateable() =

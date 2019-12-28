@@ -169,7 +169,7 @@ class Analytics(
                         Transfer.Role.PASSENGER
                     }
                     utils.asyncAwait {
-                        transferInteractor.sendAnalytics(transfer.id, role.name.toLowerCase())
+                        transferInteractor.sendAnalytics(transfer.id, role.toString())
                     }
                 }
             }
@@ -180,12 +180,10 @@ class Analytics(
          */
         suspend fun sendAnalytics(transfers: List<Transfer>) {
             transfers.forEach { tr ->
-                utils.launchSuspend {
-                    transfer = tr
-                    transferModel = tr.map(configsManager.getConfigs().transportTypes.map { it.map() })
-                    getOffer(tr)
-                    sendAnalytics(tr)
-                }
+                transfer = tr
+                transferModel = tr.map(configsManager.getConfigs().transportTypes.map { it.map() })
+                getOffer(tr)
+                sendAnalytics(tr)
             }
         }
 
@@ -341,9 +339,12 @@ class Analytics(
         suspend fun sendAnalytics(event: String) {
             super.event = event
             super.paymentType = when (mPaymentType) {
-                PaymentRequestModel.PLATRON -> CARD
-                PaymentRequestModel.PAYPAL  -> PAYPAL
-                else                        -> BALANCE
+                PaymentRequestModel.CARD,
+                PaymentRequestModel.PLATRON,
+                PaymentRequestModel.CHECKOUTCOM -> CARD
+                PaymentRequestModel.PAYPAL      -> PAYPAL
+                PaymentRequestModel.GOOGLE_PAY  -> GOOGLE_PAY
+                else                            -> BALANCE
             }
             getTransferAndOffer()
             prepareData()
@@ -353,7 +354,6 @@ class Analytics(
     }
 
     inner class BeginCheckout(
-        private val share: Int,
         private val promocode: String?,
         private val hours: Int?,
         private var paymentType: String,
@@ -365,9 +365,12 @@ class Analytics(
 
         fun sendAnalytics() {
             paymentType = when (paymentType) {
-                PaymentRequestModel.PLATRON -> CARD
-                PaymentRequestModel.PAYPAL  -> PAYPAL
-                else                        -> BALANCE
+                PaymentRequestModel.CARD,
+                PaymentRequestModel.PLATRON,
+                PaymentRequestModel.CHECKOUTCOM -> CARD
+                PaymentRequestModel.PAYPAL      -> PAYPAL
+                PaymentRequestModel.GOOGLE_PAY  -> GOOGLE_PAY
+                else                            -> BALANCE
             }
             sendToFirebase()
             sendToFacebook()
@@ -377,7 +380,6 @@ class Analytics(
 
         private fun sendToAppsFlyer() {
             val map = mutableMapOf<String, Any?>()
-            map[SHARE] = share
             map[PROMOCODE] = promocode
             hours?.let { map[HOURS] = it }
             map[PAYMENT_TYPE] = paymentType
@@ -390,7 +392,6 @@ class Analytics(
 
         private fun sendToYandex() {
             val map = mutableMapOf<String, Any?>()
-            map[SHARE] = share
             map[PROMOCODE] = promocode
             hours?.let { map[HOURS] = it }
             map[PAYMENT_TYPE] = paymentType
@@ -403,7 +404,6 @@ class Analytics(
 
         private fun sendToFacebook() {
             val bundle = Bundle()
-            bundle.putInt(SHARE, share)
             bundle.putString(PROMOCODE, promocode)
             hours?.let { bundle.putInt(HOURS, it) }
             bundle.putString(PAYMENT_TYPE, paymentType)
@@ -415,7 +415,6 @@ class Analytics(
 
         private fun sendToFirebase() {
             val bundle = Bundle()
-            bundle.putInt(SHARE, share)
             bundle.putString(PROMOCODE, promocode)
             hours?.let { bundle.putInt(HOURS, it) }
             bundle.putString(PAYMENT_TYPE, paymentType)
@@ -521,7 +520,6 @@ class Analytics(
         const val EVENT_APP_REVIEW_REQUESTED = "app_review_requested"
         const val EVENT_IPAPI_REQUEST = "ipapi_request"
 
-        const val EVENT_BECOME_CARRIER = "become_carrier"
         const val EVENT_NEW_CARRIER_APP_DIALOG = "new_carrier_app_dialog"
         const val OPEN_SCREEN = "open_screen"
         const val GO_TO_MARKET = "go_to_market"
@@ -630,6 +628,7 @@ class Analytics(
         const val CARD = "card"
         const val PAYPAL = "paypal"
         const val BALANCE = "balance"
+        const val GOOGLE_PAY = "google_pay"
 
         const val USER_TYPE = "usertype"
         const val DRIVER_TYPE = "driver"

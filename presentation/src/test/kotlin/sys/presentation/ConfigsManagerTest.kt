@@ -241,11 +241,13 @@ class ConfigsManagerTest : StringSpec(), KoinTest {
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
                 isNewDriverAppDialogShowed = false,
+                countOfShowNewDriverAppDialog = 0,
                 selectedField = "selected field",
                 addressHistory = emptyList(),
                 appEnters = 2,
                 isDebugMenuShowed = false,
-                favoriteTransports = emptySet()
+                favoriteTransports = emptySet(),
+                isPaymentRequestWithoutDelay = false
             )
     }
 }

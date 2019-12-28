@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.view.View
 import android.view.animation.AnimationUtils
+import androidx.core.view.isVisible
 import com.kg.gettransfer.R
 
 fun View.visibleFade(value: Boolean, duration: Long = 200) {

@@ -1,9 +1,8 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.kg.gettransfer.presentation.view.AboutView
-import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
@@ -24,10 +23,8 @@ class AboutPresenter : BasePresenter<AboutView>() {
     private val worker: WorkerManager by inject { parametersOf("AboutPresenter") }
     private val getPreferences: GetPreferencesInteractor by inject()
 
-    internal var openMain = false
-
-    fun closeAboutActivity() {
-        if (!openMain) router.newRootScreen(Screens.MainPassenger()) else router.exit()
+    fun closeAbout(openMain: Boolean = false) {
+        if (openMain) viewState.openMain() else viewState.navigateUp()
     }
 
     fun logExitStep(value: Int) = worker.main.launch {
@@ -36,6 +33,10 @@ class AboutPresenter : BasePresenter<AboutView>() {
             withContext(worker.bg) { setFirstLaunch(false) }
             analytics.logEvent(Analytics.EVENT_ONBOARDING, Analytics.EXIT_STEP, value)
         }
+    }
+
+    override fun onBackCommandClick() {
+        viewState.onBackPressed()
     }
 
     override fun onDestroy() {

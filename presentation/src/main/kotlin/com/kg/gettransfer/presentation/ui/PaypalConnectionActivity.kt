@@ -7,10 +7,9 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import android.view.View
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.presenter.PaypalConnectionPresenter
 import com.kg.gettransfer.presentation.view.PaypalConnectionView
 import kotlinx.android.synthetic.main.activity_paypal_connection.*
@@ -25,7 +24,7 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
     @ProvidePresenter
     fun createPaypalConnectionPresenter() = PaypalConnectionPresenter()
 
-    private lateinit var animator: AnimatorSet
+    private var animator: AnimatorSet? = null
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,15 +33,12 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
         presenter.nonce = intent.getStringExtra(PaypalConnectionView.EXTRA_NONCE)
         presenter.transferId = intent.getLongExtra(PaypalConnectionView.EXTRA_TRANSFER_ID, 0L)
         presenter.offerId = intent.getLongExtra(PaypalConnectionView.EXTRA_OFFER_ID, 0L)
-        presenter.percentage = intent.getIntExtra(PaypalConnectionView.EXTRA_PERCENTAGE, PaymentRequestModel.FULL_PRICE)
-        presenter.bookNowTransportId = intent.getStringExtra(PaypalConnectionView.EXTRA_BOOK_NOW_TRANSPORT_ID)
         setContentView(R.layout.activity_paypal_connection)
     }
 
     private fun playAnimation() {
-        animator = AnimatorSet()
 
-        val dx = 3 * ivRec1.width.toFloat()
+        val dx = DX * ivRec1.width.toFloat()
 
         // animation for left rectangles
         val (lftToRgt1, lftToRgt3) = animateLeftToRight13(dx)
@@ -52,73 +48,75 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
         val (rgtToLft2, rgtToLft4) = animateRightToLeft24(dx)
         val (lftToRgt2, lftToRgt4) = animateLeftToRight24()
 
-        animator.play(lftToRgt1).with(lftToRgt3).with(rgtToLft2).with(rgtToLft4)
-        animator.play(rgtToLft1).with(rgtToLft3).with(lftToRgt2).with(lftToRgt4).after(lftToRgt3)
-        animator.start()
-        animator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
-                super.onAnimationEnd(animation)
-                animation?.start()
-            }
-        })
+        animator = AnimatorSet().apply {
+            play(lftToRgt1).with(lftToRgt3).with(rgtToLft2).with(rgtToLft4)
+            play(rgtToLft1).with(rgtToLft3).with(lftToRgt2).with(lftToRgt4).after(lftToRgt3)
+            start()
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    super.onAnimationEnd(animation)
+                    animation?.start()
+                }
+            })
+        }
     }
 
     private fun animateLeftToRight24(): Pair<ObjectAnimator, ObjectAnimator> {
         val lftToRgt2 = ObjectAnimator
                 .ofFloat(ivRec2, View.TRANSLATION_X, -ivRec1.right.toFloat(), 0f)
                 .apply {
-                    duration = 700
-                    startDelay = 400
+                    duration = DURATION_LEFT_TO_RIGHT_24
+                    startDelay = START_DELAY_LFT_TO_RGT_2
                 }
         val lftToRgt4 = ObjectAnimator
                 .ofFloat(ivRec4, View.TRANSLATION_X, -ivRec3.right.toFloat(), 0f)
                 .apply {
-                    duration = 700
-                    startDelay = 600
+                    duration = DURATION_LEFT_TO_RIGHT_24
+                    startDelay = START_DELAY_LFT_TO_RGT_4
                 }
-        return Pair(lftToRgt2, lftToRgt4)
+        return lftToRgt2 to lftToRgt4
     }
 
     private fun animateRightToLeft24(dx: Float): Pair<ObjectAnimator, ObjectAnimator> {
         val rgtToLft2 = ObjectAnimator
                 .ofFloat(ivRec2, View.TRANSLATION_X, 0f, -dx)
                 .apply {
-                    duration = 1000
-                    startDelay = 500
+                    duration = DURATION_1000
+                    startDelay = START_DELAY_RGT_TO_LFT_2
                 }
         val rgtToLft4 = ObjectAnimator
                 .ofFloat(ivRec4, View.TRANSLATION_X, 0f, -dx)
                 .apply {
-                    duration = 1000
-                    startDelay = 300
+                    duration = DURATION_1000
+                    startDelay = START_DELAY_300
                 }
-        return Pair(rgtToLft2, rgtToLft4)
+        return rgtToLft2 to rgtToLft4
     }
 
     private fun animateRightToLeft13(dx: Float): Pair<ObjectAnimator, ObjectAnimator> {
         val rgtToLft1 = ObjectAnimator
                 .ofFloat(ivRec1, View.TRANSLATION_X, dx, 0f)
                 .apply {
-                    duration = 1000
-                    startDelay = 200
+                    duration = DURATION_1000
+                    startDelay = START_DELAY_RGT_TO_LFT_1
                 }
         val rgtToLft3 = ObjectAnimator
                 .ofFloat(ivRec3, View.TRANSLATION_X, dx, 0f)
-                .setDuration(800)
-        return Pair(rgtToLft1, rgtToLft3)
+                .setDuration(DURATION_RGT_TO_LFT_3)
+        return rgtToLft1 to rgtToLft3
     }
 
     private fun animateLeftToRight13(dx: Float): Pair<ObjectAnimator, ObjectAnimator> {
         val lftToRgt1 = ObjectAnimator
                 .ofFloat(ivRec1, View.TRANSLATION_X, 0f, dx)
-                .setDuration(1000)
+                .setDuration(DURATION_1000)
         val lftToRgt3 = ObjectAnimator
                 .ofFloat(ivRec3, View.TRANSLATION_X, 0f, dx)
                 .apply {
-                    duration = 1000
-                    startDelay = 300
+                    duration = DURATION_1000
+                    startDelay = START_DELAY_300
                 }
-        return Pair(lftToRgt1, lftToRgt3)
+        return lftToRgt1 to lftToRgt3
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -129,7 +127,21 @@ class PaypalConnectionActivity : BaseActivity(), PaypalConnectionView {
     }
 
     override fun stopAnimation() {
-        animator.cancel()
-        animator.removeAllListeners()
+        animator?.apply {
+            cancel()
+            removeAllListeners()
+        }
+    }
+
+    companion object {
+        private const val DURATION_LEFT_TO_RIGHT_24 = 700L
+        private const val DURATION_RGT_TO_LFT_3 = 800L
+        private const val DURATION_1000 = 1000L
+        private const val START_DELAY_LFT_TO_RGT_2 = 400L
+        private const val START_DELAY_LFT_TO_RGT_4 = 600L
+        private const val START_DELAY_RGT_TO_LFT_2 = 500L
+        private const val START_DELAY_RGT_TO_LFT_1 = 200L
+        private const val START_DELAY_300 = 300L
+        private const val DX = 3
     }
 }

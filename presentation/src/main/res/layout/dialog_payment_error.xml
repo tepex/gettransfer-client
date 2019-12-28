@@ -4,10 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/payment_error_padding_top"
-    app:behavior_hideable="false"
-    app:behavior_skipCollapsed="true"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    android:paddingTop="@dimen/payment_error_padding_top">
 
     <ImageView
         android:id="@+id/ivClose"
@@ -41,6 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageError">
 
         <TextView
+            android:id="@+id/tvNotPaid"
             style="@style/sf_font_semi_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,6 +78,7 @@
             android:text="@string/LNG_PAYMENT_DECLINED" />
 
         <TextView
+            android:id="@+id/tvPaymentError"
             style="@style/sf_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

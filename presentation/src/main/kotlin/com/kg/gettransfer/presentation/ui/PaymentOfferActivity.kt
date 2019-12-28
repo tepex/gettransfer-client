@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -13,8 +12,8 @@ import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.braintreepayments.api.BraintreeFragment
 import com.braintreepayments.api.PayPal
@@ -26,26 +25,31 @@ import com.braintreepayments.api.interfaces.BraintreeCancelListener
 import com.braintreepayments.api.interfaces.BraintreeErrorListener
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.PaymentMethodNonce
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.wallet.Wallet
+import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.AutoResolveHelper
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.Ratings
 import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.extensions.isGone
-import com.kg.gettransfer.extensions.isVisible
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 
 import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
+import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.LocaleModel
-import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.VehicleModel
 import com.kg.gettransfer.presentation.model.getEmptyImageRes
 import com.kg.gettransfer.presentation.model.getImageRes
 import com.kg.gettransfer.presentation.model.getModelsRes
@@ -56,6 +60,7 @@ import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.PaymentOfferView
+import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.PhoneNumberFormatter
 
@@ -64,7 +69,6 @@ import io.sentry.event.BreadcrumbBuilder
 
 import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.layout_payments.*
-import kotlinx.android.synthetic.main.layout_prices.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
 import kotlinx.android.synthetic.main.payment_refund.*
 import kotlinx.android.synthetic.main.paymet_gtr_bonus.*
@@ -75,6 +79,7 @@ import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
+import org.json.JSONObject
 
 import timber.log.Timber
 
@@ -83,7 +88,8 @@ class PaymentOfferActivity : BaseActivity(),
     PaymentOfferView,
     PaymentMethodNonceCreatedListener,
     BraintreeErrorListener,
-    BraintreeCancelListener {
+    BraintreeCancelListener,
+    GoToPlayMarketListener {
 
     private var errorField: View? = null
 
@@ -95,17 +101,20 @@ class PaymentOfferActivity : BaseActivity(),
     @ProvidePresenter
     fun createPaymentSettingsPresenter() = PaymentOfferPresenter()
 
-    private var selectedPercentage = PaymentRequestModel.FULL_PRICE
-
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // presenter.params =
-        // JSON.parse(PaymentOfferView.Params.serializer(), intent.getStringExtra(PaymentOfferView.EXTRA_PARAMS))
-
         setContentView(R.layout.activity_payment_offer)
         initListeners()
         initToolbar()
+    }
+
+    override fun initGooglePayPaymentsClient(environment: Int) {
+        presenter.googlePayPaymentsClient = Wallet.getPaymentsClient(
+            this,
+            Wallet.WalletOptions.Builder()
+                .setEnvironment(environment)
+                .build())
     }
 
     private fun initToolbar() {
@@ -120,21 +129,28 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun initListeners() {
         tvPaymentAgreement.setOnClickListener { presenter.onAgreementClicked() }
-        btnGetPayment.setOnClickListener {
+        View.OnClickListener {
             clearHighLightErrorField(errorField)
             presenter.onPaymentClicked()
+        }.apply {
+            btnGetPayment.setOnClickListener(this)
+            btnGetPaymentWithGooglePay.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbCard, PaymentRequestModel.PLATRON) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.CARD) }.apply {
             rbCard.setOnClickListener(this)
             layoutCard.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbPaypal, PaymentRequestModel.PAYPAL) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.PAYPAL) }.apply {
             rbPaypal.setOnClickListener(this)
             layoutPaypal.setOnClickListener(this)
         }
-        View.OnClickListener { changePayment(rbBalance, PaymentRequestModel.GROUND) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.GROUND) }.apply {
             rbBalance.setOnClickListener(this)
             layoutBalance.setOnClickListener(this)
+        }
+        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.GOOGLE_PAY) }.apply {
+            rbGooglePay.setOnClickListener(this)
+            layoutGooglePay.setOnClickListener(this)
         }
         addKeyBoardDismissListener { state ->
             Handler().postDelayed({
@@ -216,60 +232,39 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun clearHighLightErrorField(view: View?) = view?.setBackgroundResource(0)
 
-    private fun changePayment(view: View, payment: String) {
-        when (view.id) {
-            R.id.rbCard -> {
-                rbCard.isChecked = true
-                rbPaypal.isChecked = false
-                rbBalance.isChecked = false
-            }
-            R.id.rbPaypal -> {
-                rbPaypal.isChecked = true
-                rbCard.isChecked = false
-                rbBalance.isChecked = false
-            }
-            R.id.rbBalance -> {
-                rbBalance.isChecked = true
-                rbCard.isChecked = false
-                rbPaypal.isChecked = false
-            }
+    override fun selectPaymentType(type: String) {
+        clearPaymentsRadioButtons()
+        when (type) {
+            PaymentRequestModel.CARD       -> rbCard.isChecked = true
+            PaymentRequestModel.PAYPAL     -> rbPaypal.isChecked = true
+            PaymentRequestModel.GOOGLE_PAY -> rbGooglePay.isChecked = true
+            PaymentRequestModel.GROUND     -> rbBalance.isChecked = true
         }
-        presenter.selectedPayment = payment
-        presenter.changePayment(payment)
+        tvCommission.isInvisible = type == PaymentRequestModel.GROUND
+        changePayButton(type == PaymentRequestModel.GOOGLE_PAY)
+    }
+
+    private fun clearPaymentsRadioButtons() {
+        rbCard.isChecked = false
+        rbPaypal.isChecked = false
+        rbBalance.isChecked = false
+        rbGooglePay.isChecked = false
+    }
+
+    private fun changePayButton(isPaymentWithGooglePay: Boolean) {
+        btnGetPayment.isVisible = !isPaymentWithGooglePay
+        btnGetPaymentWithGooglePay.isVisible = isPaymentWithGooglePay
     }
 
     @Suppress("NestedBlockDepth")
-    override fun setOffer(offer: OfferModel, paymentPercentages: List<Int>) {
-        if (paymentPercentages.isNotEmpty()) {
-            if (paymentPercentages.size == 1) {
-                hidePaymentPercentage()
-            } else {
-                paymentPercentages.forEach { percentage ->
-                    when (percentage) {
-                        OfferModel.FULL_PRICE -> {
-                            rbPay100.text = getString(R.string.LNG_PAYMENT_TERM_PAY, OfferModel.FULL_PRICE.toString())
-                            tvFullPrice.text = offer.price.base.preferred.plus(R.string.LNG_PAYMENT_TERM_NOW)
-                            rbPay100.setOnClickListener { changePaymentSettings(it) }
-                        }
-                        OfferModel.PRICE_30 -> {
-                            rbPay30.text = getString(R.string.LNG_PAYMENT_TERM_PAY, OfferModel.PRICE_30.toString())
-                            tvThirdOfPrice.text = offer.price.percentage30.plus(R.string.LNG_PAYMENT_TERM_NOW)
-                            tvLaterPrice.text = getString(R.string.LNG_PAYMENT_TERM_LATER, offer.price.percentage70)
-                            rbPay30.setOnClickListener { changePaymentSettings(it) }
-                        }
-                    }
-                }
-            }
-            selectPaymentPercentage(selectedPercentage)
-        }
-        setCarInfo(offer)
+    override fun setOffer(offer: OfferModel, isNameSignPresent: Boolean) {
+        setCarInfoOffer(offer, isNameSignPresent)
         setPriceInfo(offer.price.base.def, offer.price.base.preferred)
         setCapacity(offer.vehicle.transportType)
     }
 
-    override fun setBookNowOffer(bookNowOffer: BookNowOfferModel) {
-        hidePaymentPercentage()
-        setCarInfo(bookNowOffer)
+    override fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean) {
+        setCarInfoBookNow(bookNowOffer.transportType.id)
         setPriceInfo(bookNowOffer.base.def, bookNowOffer.base.preferred)
         setCapacity(bookNowOffer.transportType)
     }
@@ -290,14 +285,7 @@ class PaymentOfferActivity : BaseActivity(),
         }
     }
 
-    private fun setCarInfo(offer: OfferItemModel?) {
-        when (offer) {
-            is OfferModel -> showCarInfoOffer(offer)
-            is BookNowOfferModel -> showCarInfoBookNow(offer.transportType.id)
-        }
-    }
-
-    private fun showCarInfoBookNow(transportTypeId: TransportType.ID) {
+    private fun setCarInfoBookNow(transportTypeId: TransportType.ID) {
         tvClass.text = getString(transportTypeId.getNameRes())
         tvModel.text = getString(transportTypeId.getModelsRes())
         Utils.bindMainOfferPhoto(ivCarPhoto, content, resource = transportTypeId.getImageRes())
@@ -309,23 +297,9 @@ class PaymentOfferActivity : BaseActivity(),
         )
     }
 
-    private fun showCarInfoOffer(offer: OfferModel) {
+    private fun setCarInfoOffer(offer: OfferModel, isNameSignPresent: Boolean) {
         with(offer.vehicle) {
             tvModel.text = name
-            if (photos.isEmpty()) {
-                color?.let { col ->
-                    ivCarColor.isVisible = true
-                    ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this@PaymentOfferActivity, col))
-                }
-            }
-            photos.firstOrNull().also { photo ->
-                Utils.bindMainOfferPhoto(
-                    ivCarPhoto,
-                    content,
-                    path = photo,
-                    resource = transportType.id.getEmptyImageRes()
-                )
-            }
             tvClass.text = getString(transportType.nameId)
         }
         with(offer.carrier) {
@@ -335,32 +309,39 @@ class PaymentOfferActivity : BaseActivity(),
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW)
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
-        showNameplate(offer)
+        OfferItemBindDelegate.bindNameSignPlate(this, imgNameSign, tvMissingNameSign,
+            isNameSignPresent, offer.isWithNameSign)
     }
 
-    private fun showNameplate(offer: OfferModel) {
-        val isNameSignPresent = offer.isNameSignPresent
-        val isWithNameSign = offer.isWithNameSign
-
-        imgWithNameSign.isVisible = isNameSignPresent && isWithNameSign
-        imgMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
-        tvMissingNameSign.isVisible = isNameSignPresent && !isWithNameSign
-    }
-
-    private fun hidePaymentPercentage() {
-        layoutPrices.isVisible = false
+    override fun setCarPhotoOffer(vehicle: VehicleModel) {
+        with(vehicle) {
+            photos.firstOrNull().also { photo ->
+                ivCarColor.isVisible = false
+                Utils.bindMainOfferPhoto(
+                    ivCarPhoto,
+                    content,
+                    path = photo,
+                    resource = transportType.id.getEmptyImageRes()
+                )
+            } ?: color?.let { col ->
+                ivCarColor.isVisible = true
+                ivCarColor.setImageDrawable(Utils.getCarColorFormRes(this@PaymentOfferActivity, col))
+            } ?: run {
+                ivCarColor.isVisible = false
+            }
+        }
     }
 
     override fun showOfferError() {
         toast(getString(R.string.LNG_RIDE_OFFER_CANCELLED))
     }
 
+    override fun showPaymentInProgressError() {
+        Utils.showError(this, false, getString(R.string.LNG_RIDE_PAYMENT))
+    }
+
     override fun setCommission(paymentCommission: String, dateRefund: String) {
-        getString(R.string.LNG_PAYMENT_COMISSION3, paymentCommission).run {
-            tvCommission.text = this
-            cardsCommission.text = this
-            paypalCommission.text = this
-        }
+        tvCommission.text = getString(R.string.LNG_PAYMENT_SERVICE_FEE, paymentCommission)
         tvRefundDate.text = getString(R.string.LNG_PAYMENT_REFUND, dateRefund)
     }
 
@@ -380,56 +361,62 @@ class PaymentOfferActivity : BaseActivity(),
         )
     }
 
-    private fun changePaymentSettings(view: View?) {
-        when (view?.id) {
-            R.id.rbPay100 -> selectPaymentPercentage(PaymentRequestModel.FULL_PRICE)
-            R.id.rbPay30 -> selectPaymentPercentage(PaymentRequestModel.PRICE_30)
-        }
-    }
-
-    private fun selectPaymentPercentage(selectedPercentage: Int) {
-        when (selectedPercentage) {
-            PaymentRequestModel.FULL_PRICE -> {
-                rbPay100.isChecked = true
-                rbPay30.isChecked = false
-            }
-            PaymentRequestModel.PRICE_30 -> {
-                rbPay100.isChecked = false
-                rbPay30.isChecked = true
-            }
-        }
-        presenter.changePrice(selectedPercentage)
-        this.selectedPercentage = selectedPercentage
-    }
-
-    override fun startPaypal(dropInRequest: DropInRequest, brainteeToken: String) {
+    override fun startPaypal(dropInRequest: DropInRequest, token: String) {
         blockInterface(false)
         when {
-            payPalInstalled()  -> startActivityForResult(dropInRequest.getIntent(this), PAYMENT_REQUEST_CODE)
+            payPalInstalled()  -> startActivityForResult(dropInRequest.getIntent(this), PAYPAL_PAYMENT_REQUEST_CODE)
             browserInstalled() -> {
-                val braintreeFragment = BraintreeFragment.newInstance(this, presenter.braintreeToken)
+                val braintreeFragment = BraintreeFragment.newInstance(this, token)
                 PayPal.requestOneTimePayment(braintreeFragment, dropInRequest.payPalRequest)
             }
             else               -> longToast(getString(R.string.LNG_PAYMENT_INSTALL_PAYPAL))
         }
     }
 
+    override fun startGooglePay(task: Task<PaymentData>) {
+        AutoResolveHelper.resolveTask(task, this, GOOGLE_PAY_PAYMENT_REQUEST_CODE)
+    }
+
     @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PAYMENT_REQUEST_CODE) {
-            when (resultCode) {
-                Activity.RESULT_OK -> {
-                    val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-                    result?.paymentMethodNonce?.nonce?.let { presenter.confirmPayment(it) }
+        when (requestCode) {
+            PAYPAL_PAYMENT_REQUEST_CODE     -> checkPaypalPaymentResult(resultCode, data)
+            GOOGLE_PAY_PAYMENT_REQUEST_CODE -> checkGooglePayPaymentResult(resultCode, data)
+        }
+    }
+
+    private fun checkPaypalPaymentResult(resultCode: Int, data: Intent?) {
+        when (resultCode) {
+            RESULT_OK       -> {
+                val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
+                result?.paymentMethodNonce?.nonce?.let { presenter.confirmPaypalPayment(it) }
+            }
+            RESULT_CANCELED -> presenter.changePaymentType(PaymentRequestModel.PAYPAL)
+            else            -> {
+                val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR)
+                if (error is Exception) {
+                    Timber.e(error)
                 }
-                RESULT_CANCELED    -> presenter.changePayment(PaymentRequestModel.PAYPAL)
-                else               -> {
-                    val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR)
-                    if (error is Exception) {
-                        Timber.e(error)
-                    }
-                }
+            }
+        }
+    }
+
+    private fun checkGooglePayPaymentResult(resultCode: Int, data: Intent?) {
+        when (resultCode) {
+            RESULT_OK       -> {
+                val paymentData = data?.let { PaymentData.getFromIntent(it) }
+                val json = paymentData?.toJson()?.let { JSONObject(it) }
+                val token = json
+                    ?.getJSONObject("paymentMethodData")
+                    ?.getJSONObject("tokenizationData")
+                    ?.getString("token")
+                token?.let { presenter.processGooglePayPayment(it) }
+            }
+            RESULT_CANCELED -> presenter.changePaymentType(PaymentRequestModel.GOOGLE_PAY)
+            AutoResolveHelper.RESULT_ERROR -> {
+                val status = data?.let { AutoResolveHelper.getStatusFromIntent(it) }
+                status?.statusMessage?.let { Timber.e(it) }
             }
         }
     }
@@ -448,7 +435,7 @@ class PaymentOfferActivity : BaseActivity(),
         ) != null
 
     override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce?) {
-        presenter.confirmPayment(paymentMethodNonce?.nonce ?: "")
+        presenter.confirmPaypalPayment(paymentMethodNonce?.nonce ?: "")
         blockInterface(true, true)
     }
 
@@ -468,7 +455,7 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun onCancel(requestCode: Int) {
-        presenter.changePayment(PaymentRequestModel.PAYPAL)
+        presenter.changePaymentType(PaymentRequestModel.PAYPAL)
     }
 
     override fun setToolbarTitle(transferModel: TransferModel) {
@@ -480,27 +467,25 @@ class PaymentOfferActivity : BaseActivity(),
         toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
     }
 
-    override fun setAuthUiVisible(hasAccount: Boolean, profile: ProfileModel, balance: String?) {
-        if (hasAccount && (profile.email.isNullOrEmpty() || profile.phone.isNullOrEmpty())) {
-            ll_auth_container.isVisible = true
-            initEmailTextChangeListeners()
-            initPhoneTextChangeListeners()
-            profile.email?.let { emailLayout.fieldText.setText(it) }
-            profile.phone?.let { phoneLayout.fieldText.setText(it) }
-        } else {
-            ll_auth_container.isVisible = false
-            setBalance(balance)
-        }
+    override fun setAuthUi(hasAccount: Boolean, profile: ProfileModel) {
+        ll_auth_container.isVisible = true
+        initEmailTextChangeListeners()
+        initPhoneTextChangeListeners()
+        profile.email?.let { emailLayout.fieldText.setText(it) }
+        profile.phone?.let { phoneLayout.fieldText.setText(it) }
     }
 
-    private fun setBalance(balance: String?) {
-        balance.isNullOrEmpty().run {
-            layoutBalance.isVisible = !this
-            tvCommission.isVisible = this
-            cardsCommission.isVisible = !this
-            paypalCommission.isVisible = !this
-        }
+    override fun hideAuthUi() {
+        ll_auth_container.isVisible = false
+    }
+
+    override fun setBalance(balance: String) {
+        layoutBalance.isVisible = true
         tvBalance.text = getString(R.string.LNG_PAYMENT_FROM_BALANCE_AVAILABLE, balance)
+    }
+
+    override fun hideBalance() {
+        layoutBalance.isVisible = false
     }
 
     override fun showBadCredentialsInfo(field: Int) {
@@ -518,6 +503,8 @@ class PaymentOfferActivity : BaseActivity(),
         Sentry.capture(e)
         val errorText = when {
             e.isBigPriceError()                  -> getString(R.string.LNG_BIG_PRICE_ERROR)
+            e.isOfferUnavailableError()          -> getString(R.string.LNG_OFFER_NO_LONGER_AVAILABLE)
+            e.isTransferStatusMismatchError()    -> getString(R.string.transfer_status_mismatch_error)
             e.code != ApiException.NETWORK_ERROR -> getString(R.string.LNG_ERROR) + ": " + e.message
             else                                 -> null
         }
@@ -535,8 +522,25 @@ class PaymentOfferActivity : BaseActivity(),
         }
     }
 
+    override fun showGooglePayButton() {
+        layoutGooglePay.isVisible = true
+    }
+
+    override fun hideGooglePayButton() {
+        layoutGooglePay.isVisible = false
+    }
+
+    override fun showPaymentError(transferId: Long, gatewayId: String?) {
+        Screens.PaymentError(supportFragmentManager, transferId, gatewayId).showDialog()
+    }
+
+    override fun onClickGoToDriverApp() {
+        Utils.goToGooglePlay(this, getString(R.string.driver_app_market_package))
+    }
+
     companion object {
-        const val PAYMENT_REQUEST_CODE = 100
+        const val PAYPAL_PAYMENT_REQUEST_CODE = 100
+        const val GOOGLE_PAY_PAYMENT_REQUEST_CODE = 42
         const val PAYPAL_PACKAGE_NAME = "com.paypal.android.p2pmobile"
 
         const val INVALID_EMAIL = 1

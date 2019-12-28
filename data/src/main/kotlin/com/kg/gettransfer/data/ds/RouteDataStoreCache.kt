@@ -6,7 +6,6 @@ import com.kg.gettransfer.data.RouteDataStore
 
 import com.kg.gettransfer.data.model.RouteInfoEntity
 import com.kg.gettransfer.data.model.RouteInfoRequestEntity
-import com.kg.gettransfer.data.model.RouteInfoHourlyRequestEntity
 
 import org.koin.core.inject
 
@@ -16,9 +15,10 @@ import org.koin.core.inject
 open class RouteDataStoreCache : RouteDataStore {
     private val cache: RouteCache by inject()
 
+    @Suppress("UnsafeCallOnNullableType")
     override suspend fun getRouteInfo(request: RouteInfoRequestEntity): RouteInfoEntity? {
         return try {
-            cache.getRouteInfo(request.from, request.to)
+            cache.getRouteInfo(request.from, request.to!!) // request.to can't be null
         } catch (e: CacheException) { throw e }
     }
 
@@ -26,9 +26,5 @@ open class RouteDataStoreCache : RouteDataStore {
         try {
             cache.setRouteInfo(from, to, routeInfo)
         } catch (e: CacheException) { throw e }
-    }
-
-    override suspend fun getRouteInfo(request: RouteInfoHourlyRequestEntity): RouteInfoEntity? {
-        throw UnsupportedOperationException()
     }
 }

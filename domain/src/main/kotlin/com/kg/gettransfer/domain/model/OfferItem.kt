@@ -10,7 +10,6 @@ data class Offer(
     val status: String,
     val currency: String,
     val wifi: Boolean,
-    val isNameSignPresent: Boolean,
     val isWithNameSign: Boolean,
     val refreshments: Boolean,
     val charger: Boolean,
@@ -21,7 +20,9 @@ data class Offer(
     val passengerFeedback: String?,
     val carrier: Carrier,
     val vehicle: Vehicle,
-    val driver: Profile?
+    val driver: Profile?,
+    val wheelchair: Boolean,
+    val armored: Boolean
 ) : OfferItem() {
 
     val phoneToCall = when {

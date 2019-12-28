@@ -10,11 +10,13 @@ data class Preferences(
     val isFirstLaunch: Boolean,
     val isOnboardingShowed: Boolean,
     val isNewDriverAppDialogShowed: Boolean,
+    val countOfShowNewDriverAppDialog: Int,
     val selectedField: String,
     val addressHistory: List<GTAddress>,
     val favoriteTransports: Set<TransportType.ID>,
     val appEnters: Int,
-    val isDebugMenuShowed: Boolean
+    val isDebugMenuShowed: Boolean,
+    val isPaymentRequestWithoutDelay: Boolean
 ) {
 
     companion object {

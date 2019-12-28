@@ -175,20 +175,6 @@
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/etComment" />
-
-		<ProgressBar
-			android:id="@+id/progressBar"
-			android:layout_width="24dp"
-			android:layout_height="24dp"
-			app:layout_constraintBottom_toBottomOf="@+id/btnSend"
-			app:layout_constraintEnd_toEndOf="@+id/btnSend"
-			app:layout_constraintStart_toStartOf="@+id/btnSend"
-			app:layout_constraintTop_toTopOf="@+id/btnSend"
-			android:indeterminate="true"
-			android:indeterminateDrawable="@drawable/progress_rotate"
-			android:indeterminateDuration="1200"
-			android:visibility="gone"/>
-
 	</androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -1,7 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.net.Uri
-import com.arellomobile.mvp.InjectViewState
 
 import com.kg.gettransfer.extensions.createStartChain
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.CHOOSE_OFFER_ID
@@ -22,24 +21,25 @@ import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.TRANSFER
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.VOUCHER
 import com.kg.gettransfer.presentation.view.HandleUrlView
 import com.kg.gettransfer.presentation.view.Screens
+
 import kotlinx.coroutines.launch
 
+import moxy.InjectViewState
+
+/** TODO: refactor to regular expressions */
 @InjectViewState
 class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
 
     lateinit var url: String
 
-    /** TODO: refactor to regular expressions */
     fun handleIntent(appLinkData: Uri) {
         url = appLinkData.toString()
         appLinkData.path?.let { path ->
             when {
-                path == PASSENGER_CABINET || path == PARTNER_CABINET -> {
+                path == PASSENGER_CABINET || path == PARTNER_CABINET ->
                     appLinkData.fragment?.let { checkPassengerCabinetUrl(it) }
-                }
-                path.startsWith(PASSENGER_RATE) || path.startsWith(PARTNER_RATE) -> {
+                path.startsWith(PASSENGER_RATE) || path.startsWith(PARTNER_RATE) ->
                     checkPassengerRateUrl(appLinkData)
-                }
                 path.contains(VOUCHER) -> {
                     transferId = appLinkData.lastPathSegment?.toLongOrNull()
                     transferId?.let { openVoucherLink(it) }
@@ -54,25 +54,13 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
         }
     }
 
-    /** TODO: refactor to regular expressions */
     private fun checkPassengerCabinetUrl(fragment: String) {
         if (fragment.startsWith(TRANSFERS)) {
             if (fragment.contains(CHOOSE_OFFER_ID)) {
-                val transferId =
-                    fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
-                val offerId =
-                    fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length).toLongOrNull()
-                val bookNowTransportId =
-                    if (offerId == null) {
-                        fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length)
-                    } else {
-                        null
-                    }
-                transferId?.let { id -> openOfferLink(id, offerId, bookNowTransportId) }
+                checkChooseOfferIdUrl(fragment)
                 return
             } else if (fragment.contains(OPEN_CHAT)) {
-                val transferId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
-                transferId?.let { openChatLink(it) }
+                checkOpenChatUrl(fragment)
                 return
             }
             val transferId = fragment.substring(fragment.indexOf(SLASH) + 1).toLongOrNull()
@@ -80,6 +68,23 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
         } else {
             showWebView()
         }
+    }
+
+    private fun checkChooseOfferIdUrl(fragment: String) {
+        val transferId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
+        val offerId = fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length).toLongOrNull()
+        val bookNowTransportId =
+            if (offerId == null) {
+                fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length)
+            } else {
+                null
+            }
+        transferId?.let { id -> openOfferLink(id, offerId, bookNowTransportId) }
+    }
+
+    private fun checkOpenChatUrl(fragment: String) {
+        val transferId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
+        transferId?.let { openChatLink(it) }
     }
 
     private fun checkPassengerRateUrl(appLinkData: Uri) {

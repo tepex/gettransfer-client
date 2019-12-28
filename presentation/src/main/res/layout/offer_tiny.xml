@@ -50,6 +50,18 @@
             app:layout_constraintStart_toEndOf="@+id/tv_car_class_tiny"
             android:layout_marginStart="@dimen/offer_tiny_capacity_margin_start"/>
 
+        <ImageView
+            android:id="@+id/imgNameSign"
+            android:layout_width="@dimen/offer_tiny_name_sign_size"
+            android:layout_height="@dimen/offer_tiny_name_sign_size"
+            android:layout_marginStart="@dimen/offer_tiny_name_sign_margin_start"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_car_class_tiny"
+            app:layout_constraintStart_toEndOf="@+id/view_capacity"
+            app:layout_constraintTop_toTopOf="@+id/tv_car_class_tiny"
+            app:srcCompat="@drawable/ic_with_name_sign"
+            tools:visibility="visible" />
+
         <TextView
             android:id="@+id/tv_price_no_discount"
             android:layout_width="wrap_content"
@@ -147,7 +159,7 @@
             android:layout_marginStart="@dimen/view_offer_btn_book_margin_end"
             android:layout_marginEnd="@dimen/view_offer_btn_book_margin_end"
             style="?android:attr/borderlessButtonStyle"
-            android:background="@drawable/btn_bg_rounded"
+            android:background="@drawable/btn_bg_rounded_green"
             android:textColor="@color/colorWhite"
             android:text="@string/LNG_BOOK"
             android:textAllCaps="true"

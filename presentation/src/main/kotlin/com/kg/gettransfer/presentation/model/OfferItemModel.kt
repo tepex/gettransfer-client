@@ -20,7 +20,6 @@ data class OfferModel(
     val status: String,
     val currency: String,
     val wifi: Boolean,
-    val isNameSignPresent: Boolean,
     val isWithNameSign: Boolean,
     val refreshments: Boolean,
     val charger: Boolean,
@@ -31,14 +30,9 @@ data class OfferModel(
     val carrier: CarrierModel,
     val vehicle: VehicleModel,
     val driver: ProfileModel?,
-    val phoneToCall: String?
-) : OfferItemModel() {
-
-    companion object {
-        const val FULL_PRICE = 100
-        const val PRICE_30   = 30
-        const val PRICE_70   = 70
-    }
-}
+    val phoneToCall: String?,
+    val wheelchair: Boolean,
+    val armored: Boolean
+) : OfferItemModel()
 
 fun BookNowOffer.map() = BookNowOfferModel(amount, base, withoutDiscount, transportType.map())

@@ -1,9 +1,8 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.kg.gettransfer.domain.model.RegistrationAccount
-import com.kg.gettransfer.extensions.internationalExample
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LoginHelper
@@ -31,23 +30,25 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
         }
     var termsAccepted = false
 
+    val isEnabledSignUpButton
+        get() = name.isNotEmpty() && phone.isNotEmpty() && email.isNotEmpty() && termsAccepted
+
     fun registration() {
-        if (!checkFieldsIsValid()) {
-            viewState.showValidationErrorDialog(Utils.phoneUtil.internationalExample(sessionInteractor.locale))
-            return
-        }
+        if (!checkFieldsIsValid()) return
 
         utils.launchSuspend {
+            viewState.blockInterface(true, true)
             fetchResult(SHOW_ERROR, checkLoginError = false) {
                 accountManager.register(RegistrationAccount(email, phone, termsAccepted, name))
             }.also { result ->
+                viewState.blockInterface(false)
+
                 result.error?.let { e ->
                     viewState.setError(e)
                     logLoginEvent(Analytics.RESULT_FAIL)
                 }
 
                 result.isSuccess()?.let {
-                    viewState.hideLoading()
                     viewState.showRegisterSuccessDialog()
                     logLoginEvent(Analytics.RESULT_SUCCESS)
                 }
@@ -55,15 +56,13 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
         }
     }
 
-    private fun logLoginEvent(value: String) = analytics.logEvent(Analytics.EVENT_SIGN_UP, Analytics.STATUS, value)
-
-    private fun checkFieldsIsValid() = LoginHelper.phoneIsValid(phone) && LoginHelper.emailIsValid(email)
-
-    fun checkFieldsIsEmpty() = name.isNotEmpty() && phone.isNotEmpty() && email.isNotEmpty() && termsAccepted
-
-    fun showLicenceAgreement() {
-        router.navigateTo(Screens.LicenceAgree)
-        viewState.hideLoading()
+    private fun checkFieldsIsValid(): Boolean {
+        val isValid = LoginHelper.phoneIsValid(phone) && LoginHelper.emailIsValid(email)
+        if (!isValid) {
+            val phoneExample = Utils.getPhoneNumberExample(sessionInteractor.locale.language)
+            viewState.showValidationErrorDialog(phoneExample)
+        }
+        return isValid
     }
 
     fun updateEmailOrPhone(emailOrPhone: String, isPhone: Boolean) {
@@ -77,4 +76,10 @@ class SignUpPresenter : BasePresenter<SignUpView>(), KoinComponent {
     fun onCreateTransferClick() {
         sessionInteractor.notifyCreateTransfer()
     }
+
+    fun showLicenceAgreement() {
+        router.navigateTo(Screens.LicenceAgree)
+    }
+
+    private fun logLoginEvent(value: String) = analytics.logEvent(Analytics.EVENT_SIGN_UP, Analytics.STATUS, value)
 }

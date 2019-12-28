@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -29,7 +29,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
 
     private var idleAndMoveCamera = true
 
-    private lateinit var selectedField: String
+    private var selectedField = FIELD_FROM
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -81,7 +81,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         super.updateCurrentLocationAsync(isFromField)
     }
 
-    override fun setPointAddress(currentAddress: GTAddress) {
+    override suspend fun setPointAddress(currentAddress: GTAddress) {
         super.setPointAddress(currentAddress)
 
         lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)

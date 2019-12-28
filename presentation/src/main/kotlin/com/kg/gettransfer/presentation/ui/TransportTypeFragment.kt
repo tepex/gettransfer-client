@@ -5,8 +5,6 @@ import android.view.View
 
 import androidx.annotation.CallSuper
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
@@ -21,8 +19,8 @@ class TransportTypeFragment : BaseBottomSheetFragment() {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
-        btnOk.setOnClickListener { setBottomSheetState(view, BottomSheetBehavior.STATE_HIDDEN) }
+        showBottomSheet()
+        btnOk.setOnClickListener { hideBottomSheet() }
 
         transportTypeModel?.apply {
             tvTypeTransfer.setText(nameId)

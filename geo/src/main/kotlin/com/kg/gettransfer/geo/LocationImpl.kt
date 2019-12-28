@@ -8,6 +8,8 @@ import android.os.Bundle
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 
 import com.kg.gettransfer.data.Location
@@ -47,10 +49,25 @@ class LocationImpl(private val context: Context) :
                 .build()
         }
         googleApiClient?.connect()
+        setLocationUpdates()
+    }
+
+    private fun setLocationUpdates() {
+        val locationRequest = LocationRequest().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = LOCATION_UPDATE_INTERVAL
+            fastestInterval = LOCATION_UPDATE_FAST_INTERVAL
+        }
+        locationProviderClient.requestLocationUpdates(locationRequest, LocationCallback(), null)
+    }
+
+    private fun removeLocationUpdates() {
+        locationProviderClient.removeLocationUpdates(LocationCallback())
     }
 
     override fun disconnectGoogleApiClient() {
         googleApiClient?.let { googleApiClient?.disconnect() }
+        removeLocationUpdates()
     }
 
     override suspend fun getCurrentLocation(): LocationEntity = suspendCoroutine { cont ->
@@ -59,6 +76,7 @@ class LocationImpl(private val context: Context) :
             // https://developer.android.com/training/location/retrieve-current#last-known
             .addOnSuccessListener { l: android.location.Location? ->
                 l?.let { cont.resume(LocationEntity(it.latitude, it.longitude)) }
+                    ?: cont.resumeWithException(LocationException(LocationException.NOT_FOUND, "Unknown"))
             }
             .addOnFailureListener {
                 cont.resumeWithException(LocationException(LocationException.NOT_FOUND, "Unknown"))
@@ -98,4 +116,9 @@ class LocationImpl(private val context: Context) :
     override fun onConnectionSuspended(p0: Int) {}
 
     override fun onConnectionFailed(p0: ConnectionResult) {}
+
+    companion object {
+        private const val LOCATION_UPDATE_INTERVAL = 4000L
+        private const val LOCATION_UPDATE_FAST_INTERVAL = 1000L
+    }
 }

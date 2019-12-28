@@ -1,4 +1,4 @@
-package com.kg.gettransfer.androidAutoTest
+package com.kg.gettransfer.presentation.androidAutoTest
 
 import android.graphics.Bitmap
 import android.os.Environment.DIRECTORY_PICTURES
@@ -22,7 +22,7 @@ class IDTScreenCaptureProcessor : BasicScreenCaptureProcessor() {
     }
 
     private fun getNewFilename() =
-        getInstrumentation().getTargetContext().getApplicationContext().getExternalFilesDir(DIRECTORY_PICTURES)
+        getInstrumentation().targetContext.applicationContext.getExternalFilesDir(DIRECTORY_PICTURES)
 }
 
 class ScreenshotTestRule : TestWatcher() {

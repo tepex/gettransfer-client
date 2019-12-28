@@ -6,6 +6,7 @@ data class PaymentStatus(
 ) {
 
     val isSuccess = status == Status.SUCCESS
+    val isFailed  = status == Status.FAILED
 
     enum class Status { NEW, PENDING, SUCCESS, FAILED, NOTHING }
 

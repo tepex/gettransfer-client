@@ -1,17 +1,11 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
-import android.os.Bundle
-import android.view.View
 
 import androidx.annotation.CallSuper
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
-
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -44,21 +38,6 @@ open class SelectCurrencyBottomFragment : BaseBottomSheetFragment(), SelectCurre
         if (context is CurrencyChangedListener) {
             listener = context
         }
-    }
-
-    @CallSuper
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setBottomSheetState(view, BottomSheetBehavior.STATE_EXPANDED)
-
-        @Suppress("UnsafeCallOnNullableType")
-        val itemDecorator = DividerItemDecoration(context!!, DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(requireContext(), R.drawable.sh_divider_light_gray)?.let { drawable ->
-            itemDecorator.setDrawable(drawable)
-        }
-        rvAllCurrencies.addItemDecoration(itemDecorator)
-        rvPopularCurrencies.addItemDecoration(itemDecorator)
     }
 
     override fun setCurrencies(all: List<CurrencyModel>, selected: CurrencyModel) {

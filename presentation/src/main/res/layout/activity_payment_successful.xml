@@ -10,8 +10,6 @@
         android:layout_height="match_parent"
         android:background="@color/black_50" />
 
-    <include
-        android:id="@+id/contentSuccessPayment"
-        layout="@layout/content_payment_successful" />
+    <include layout="@layout/content_payment_successful" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

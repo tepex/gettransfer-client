@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import android.os.Handler
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
@@ -25,8 +25,6 @@ import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.COMMUNICATION
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
-
-import com.kg.gettransfer.extensions.finishChainAndBackTo
 
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 
@@ -94,26 +92,20 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             viewState.blockInterface(true, true)
             fetchData { transferInteractor.getTransfer(transferId) }?.let { transfer ->
                 setTransferFields(transfer)
-                setOffer(transfer.id)?.let { found ->
-                    if (transferModel.status.checkOffers) {
-                        offer = found
-                        updateRatingState()
-                    }
-                }
-                viewState.setTransfer(transferModel)
                 setTransferType(transfer)
+                getOffer()
             }
             viewState.blockInterface(false)
         }
     }
 
-    private suspend fun setTransferFields(transfer: Transfer) {
-        transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
-        fromPoint = cityPointMapper.toView(transfer.from)
-        transfer.to?.let { toPoint = cityPointMapper.toView(it) }
-        hourlyDuration = transfer.duration
-
-        transferModel = withContext(worker.bg) { transfer.map(configsManager.getConfigs().transportTypes.map { it.map() }) }
+    private suspend fun getOffer() {
+        setOffer(transferId)?.let { found ->
+            if (transferModel.status.checkOffers) {
+                offer = found
+                updateRatingState()
+            }
+        } ?: run { viewState.setBookNowOfferInfo(transferModel.isBookNow()) }
     }
 
     private suspend fun setOffer(transferId: Long) = fetchData { offerInteractor.getOffers(transferId) }
@@ -124,6 +116,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 reviewInteractor.offerRateID = offer.id
                 if (transferModel.showOfferInfo) {
                     viewState.setOffer(offerModel, transferModel.countChilds)
+                    viewState.setBookNowOfferInfo(false)
                 }
                 offer
             } else {
@@ -131,27 +124,39 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             }
         }
 
+    private suspend fun setTransferFields(transfer: Transfer) {
+        transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
+        fromPoint = cityPointMapper.toView(transfer.from)
+        transfer.to?.let { toPoint = cityPointMapper.toView(it) }
+        hourlyDuration = transfer.duration
+
+        transferModel = transfer.map(configsManager.getConfigs().transportTypes.map { it.map() })
+        viewState.setTransfer(transferModel)
+    }
+
     private suspend fun setTransferType(transfer: Transfer) {
-        if (transfer.to != null) {
-            fetchResult {
-                orderInteractor.getRouteInfo(
-                    @Suppress("UnsafeCallOnNullableType")
-                    RouteInfoRequest(
-                        transfer.from.point!!,
-                        transfer.to!!.point!!,
-                        false,
-                        false,
-                        sessionInteractor.currency.code,
-                        null
-                    )
-                )
-            }.also { result ->
-                result.cacheError?.let { viewState.setError(it) }
-                setRouteTransfer(transfer, result.model)
+        transfer.to?.let { to ->
+            transfer.from.point?.let { fromPoint ->
+                to.point?.let { toPoint ->
+                    fetchResult {
+                        orderInteractor.getRouteInfo(
+                            RouteInfoRequest(
+                                from = fromPoint,
+                                to = toPoint,
+                                hourlyDuration = transfer.duration,
+                                withPrices = false,
+                                returnWay = false,
+                                currency = sessionInteractor.currency.code,
+                                dateTime = null
+                            )
+                        )
+                    }.also { result ->
+                        result.cacheError?.let { viewState.setError(it) }
+                        setRouteTransfer(transfer, result.model)
+                    }
+                }
             }
-        } else if (transfer.duration != null) {
-            setHourlyTransfer(transfer)
-        }
+        } ?: transfer.duration?.let { setHourlyTransfer(transfer) }
     }
 
     override fun detachView(view: TransferDetailsView?) {
@@ -173,7 +178,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun onCancelRequestClicked() {
-        viewState.showAlertCancelRequest()
+        viewState.showCancelationReasonsList()
     }
 
     fun onRepeatTransferClicked() {
@@ -213,21 +218,24 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     @Suppress("UnsafeCallOnNullableType")
     private fun setRouteTransfer(transfer: Transfer, route: RouteInfo) {
         routeModel = routeMapper.getView(
-            transfer.distance,
-            route.polyLines,
             transfer.from.name,
             transfer.to!!.name,
             transfer.from.point!!,
             transfer.to!!.point!!,
-            SystemUtils.formatDateTime(transferModel.dateTime)
+            SystemUtils.formatDateTime(transferModel.dateTime),
+            transfer.distance,
+            transfer.dateReturnLocal != null,
+            route.polyLines
         )
         routeModel?.let { routeModel ->
             polyline = Utils.getPolyline(routeModel)
-            track = polyline!!.track
-            if (polyline!!.isVerticalRoute) {
-                viewState.setMapBottomPadding()
+            polyline?.let { polyline ->
+                track = polyline.track
+                if (polyline.isVerticalRoute) {
+                    viewState.setMapBottomPadding()
+                }
+                viewState.setRoute(polyline, routeModel)
             }
-            viewState.setRoute(polyline!!, routeModel)
         }
     }
 
@@ -246,23 +254,31 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
     }
 
-    fun cancelRequest(isCancel: Boolean) {
-        if (!isCancel) return
+    fun cancelRequest(reason: String) {
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            val result = fetchResultOnly { transferInteractor.cancelTransfer(transferId, "") }
-            if (result.isError()) {
+            fetchResultOnly { transferInteractor.cancelTransfer(transferId, reason) }.also { result ->
                 result.error?.let { viewState.setError(it) }
-            } else {
-                showMainActivity()
+                result.isSuccess()?.let { transfer ->
+                    setTransferFields(transfer)
+                    viewState.showAlertRestoreRequest()
+                }
+                viewState.blockInterface(false)
             }
-            viewState.blockInterface(false)
         }
     }
 
-    private fun showMainActivity() {
-        viewState.showCancelRequestToast()
-        router.finishChainAndBackTo(Screens.MainPassenger())
+    fun restoreRequest() {
+        utils.launchSuspend {
+            viewState.blockInterface(true, true)
+            fetchResultOnly { transferInteractor.restoreTransfer(transferId) }.also { result ->
+                result.error?.let { viewState.setError(it) }
+                result.isSuccess()?.let { transfer ->
+                    setTransferFields(transfer)
+                }
+                viewState.blockInterface(false)
+            }
+        }
     }
 
     fun makeFieldOperation(field: String, operation: String, text: String) {
@@ -270,19 +286,21 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             OPERATION_COPY -> viewState.copyField(text)
             OPERATION_OPEN -> when (field) {
                 FIELD_PHONE -> callPhone(text)
-                FIELD_EMAIL -> sendEmail(text, transferId)
+                FIELD_EMAIL -> sendEmail(transferId, text)
             }
         }
     }
 
     fun rateTrip(rating: Float, isNeedCheckStoreRate: Boolean) {
-        @Suppress("UnsafeCallOnNullableType")
-        reviewInteractor.setOfferReview(offer!!) // In this line offer can't be null
+        offer?.let { reviewInteractor.setOfferReview(it) }
         if (isNeedCheckStoreRate) {
             reviewInteractor.setRates(rating)
             if (rating.toInt() == ReviewInteractor.MAX_RATE) {
                 worker.main.launch {
-                    withContext(worker.bg) { reviewInteractor.sendRates() }
+                    withContext(worker.bg) {
+                        reviewInteractor.sendRates()
+                        viewState.showRateAnimation()
+                    }
                     analytics.logEvent(
                         Analytics.EVENT_REVIEW_AVERAGE,
                         Analytics.REVIEW,

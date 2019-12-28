@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.arellomobile.mvp.InjectViewState
+import moxy.InjectViewState
 
 import com.kg.gettransfer.BuildConfig
 
@@ -11,6 +11,7 @@ import com.kg.gettransfer.domain.eventListeners.AccountChangedListener
 import com.kg.gettransfer.domain.eventListeners.CreateTransferListener
 
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.presentation.model.LocaleModel
 
 import com.kg.gettransfer.presentation.model.map
 
@@ -25,6 +26,8 @@ import com.kg.gettransfer.sys.domain.SetEndpointInteractor
 import com.kg.gettransfer.sys.domain.SetOnboardingShowedInteractor
 import com.kg.gettransfer.sys.domain.SetNewDriverAppDialogShowedInteractor
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
+import com.kg.gettransfer.sys.domain.ClearConfigsInteractor
+import com.kg.gettransfer.sys.domain.ClearMobileConfigsInteractor
 
 import com.kg.gettransfer.sys.presentation.EndpointModel
 import com.kg.gettransfer.sys.presentation.map
@@ -38,6 +41,7 @@ import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
+import sys.domain.SetPaymentRequestWithoutDelayInteractor
 
 @Suppress("TooManyFunctions")
 @InjectViewState
@@ -58,6 +62,10 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
     private val setAccessToken: SetAccessTokenInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
+    private val setPaymentRequestWithoutDelayInteractor: SetPaymentRequestWithoutDelayInteractor by inject()
+
+    private val clearConfigsInteractor: ClearConfigsInteractor by inject()
+    private val clearMobileConfigsInteractor: ClearMobileConfigsInteractor by inject()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -110,12 +118,11 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.initGeneralSettingsLayout()
         viewState.setCurrency(sessionInteractor.currency.map().name)
         val locale = sessionInteractor.locale
-        val localeModel = withContext(worker.bg) {
-            configsManager.getConfigs().availableLocales.filter { Configs.LOCALES_FILTER.contains(it.language) }
-                .map { it.map() }
-                .find { it.delegate.language == locale.language }
-        }
-        viewState.setLocale(localeModel?.name ?: "", locale.language)
+        val localeModel = configsManager.getConfigs().availableLocales
+            .filter { Configs.LOCALES_FILTER.contains(it.language) }
+            .map { it.map() }
+            .find { it.delegate.language == locale.language } ?: LocaleModel(locale)
+        viewState.setLocale(localeModel.name, locale.language)
         viewState.setDistanceUnit(sessionInteractor.distanceUnit == DistanceUnit.MI)
     }
 
@@ -156,11 +163,11 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         }
     }
 
-    private fun showDebugMenu() = worker.main.launch {
+    private suspend fun showDebugMenu() {
         viewState.setEndpoints(endpoints)
-        withContext(worker.bg) { getPreferences().getModel() }.endpoint?.let {
-            viewState.setEndpoint(it.map())
-        }
+        val prefs = withContext(worker.bg) { getPreferences().getModel() }
+        prefs.endpoint?.let { viewState.setEndpoint(it.map()) }
+        viewState.setPaymentRequestWithoutDelay(prefs.isPaymentRequestWithoutDelay)
         viewState.showDebugMenu()
     }
 
@@ -201,7 +208,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     }
 
     private fun switchDebugSettings() {
-        if (BuildConfig.FLAVOR == "prod" || BuildConfig.FLAVOR == "home") {
+        if (BuildConfig.FLAVOR == "prod") {
             worker.main.launch {
                 val isDebugMenuShowed = withContext(worker.bg) { getPreferences().getModel() }.isDebugMenuShowed
                 if (isDebugMenuShowed) {
@@ -220,10 +227,12 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         viewState.setEndpoint(endpoint)
         viewState.blockInterface(true)
         withContext(worker.bg) {
+            clearConfigsInteractor()
+            clearMobileConfigsInteractor()
             endpoint.delegate.run {
                 setEndpoint(this)
             }
-            accountManager.logout()
+            clearAllCachedData()
         }
         configsManager.coldStart(worker.backgroundScope)
         fetchResult { sessionInteractor.coldStart() }
@@ -248,8 +257,12 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
         withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(false) }
     }
 
+    fun onPaymentRequestWithoutDelaySwitched(isChecked: Boolean) = worker.main.launch {
+        withContext(worker.bg) { setPaymentRequestWithoutDelayInteractor(isChecked) }
+    }
+
     fun onCurrencyClicked() {
-        if (!accountManager.remoteAccount.isBusinessAccount) {
+        if (!isBusinessAccount()) {
             viewState.showCurrencyChooser()
         }
     }

@@ -7,31 +7,29 @@ apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
 apply plugin: "kotlin-kapt"
 apply plugin: "kotlinx-serialization"
-apply plugin: "de.felixschulze.gradle.hockeyapp"
 apply plugin: "io.sentry.android.gradle" // for Proguard"s mapping file
 apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: "com.betomorrow.appcenter"
 
 ext {
-    support_version            = "28.0.0"
     multidex_version           = "2.0.1"
     constraint_layout_version  = "2.0.0-beta1" // don't update version until content_payment_successful.xml preview will be work fine
-    moxy_version               = "1.7.0"
+    moxy_version               = "2.0.2"
     cicerone_version           = "5.0.0"
     circle_indicator_version   = "1.2.2"
-    hockey_version             = "5.2.0"
     firebase_core_version      = "16.0.6"
     firebase_iid_version       = "17.0.4"
     firebase_messaging_version = "17.3.4"
     glide_version              = "4.9.0"
     slf4j_timber_version       = "1.0.1"
     socket_io_version          = "1.0.0"
-    libphonenumber_version     = "8.9.14"
+    libphonenumber_version     = "8.11.1"
     appmetrica_version         = "3.6.4"
     facebook_version           = "4.38.1"
     leakcanary_version         = "2.0-beta-2"
     anko_version               = "0.10.8"
     flexbox_layout_version     = "1.0.0"
-    pageindicator_version      = "1.0.2"
+    pageindicator_version      = "1.0.3"
     sentry_version             = "1.7.23"
     appsflyer_version          = "4.8.19"
     installreferrer_version    = "1.0"
@@ -45,6 +43,21 @@ ext {
     play_services              = "16.1.0"
     androidx_transition        = "1.2.0-rc01"
     webkit_version             = "1.0.0"
+    appcompat_version          = "1.1.0"
+    recyclerview_version       = "1.0.0"
+    cardview_version           = "1.0.0"
+    material_version           = "1.1.0-beta01"
+    core_ktx_version           = "1.1.0"
+    fragment_version           = "1.2.0-alpha02"
+    fragment_ktx_version       = "1.2.0-alpha02"
+    lifecycle_runtime_version  = "2.0.0"
+    lifecycle_extensions_ver   = "2.0.0"
+    maps_utils_version         = "0.5"
+    play_services_walet        = "18.0.0"
+    support_appcompat_v7       = "28.0.0"
+    swipe_refresh_version      = "1.1.0-alpha03"
+    checkout_frames_version    = "2.1.0"
+    appcenter_version          = "2.5.0"
 }
 
 android {
@@ -58,6 +71,15 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionName '3.0'
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        disableEmptyStrategyCheck: 'true'
+                ]
+            }
+        }
     }
 
     signingConfigs {
@@ -116,10 +138,9 @@ android {
             signingConfig signingConfigs.config
 
             versionCode getBuildNumber() as Integer
-            versionName System.getenv("VERSION_NAME") ?: "2.0"
+            versionName System.getenv("VERSION_NAME")
 
             manifestPlaceholders = [
-                    hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
                     assetlinks    : "[{ \\\"include\\\": \\\"https://gtrbox.org/.well-known/assetlinks.json\\\" }]"
             ]
 
@@ -135,24 +156,7 @@ android {
             versionName System.getenv("VERSION_NAME")
 
             manifestPlaceholders = [
-                    hockeyAppId   : "62939f09f9e0489c8ada1c25d2f30d9d",
                     assetlinks    : "[{ \\\"include\\\": \\\"https://gettransfer.com/.well-known/assetlinks.json\\\" }]"
-            ]
-
-            dimension "type"
-        }
-
-        /* `prod` emulation for testing */
-        home {
-            applicationId "com.kg.gettransfer"
-
-            signingConfig signingConfigs.config
-
-            versionCode getBuildNumber() as Integer
-            versionName "2.0"
-
-            manifestPlaceholders = [
-                    hockeyAppId   : "1f061f58b7bd42c387ecd8681d30df48",
             ]
 
             dimension "type"
@@ -180,21 +184,22 @@ androidExtensions {
     experimental = true
 }
 
-hockeyapp {
-    apiToken = "7381bebd314d4f69b363cd29d4ce6b41" //api token with owner rights
-    restoreAllowed = true // Enables restoring function for previous versions
-    notes = generateChangeLog() // Generates default notes - feel free to change this
-    buildServerUrl = System.getenv("JOB_URL") ?: "Unknown"
-    repositoryUrl = System.getenv("GIT_URL") ?: "Unknown"
-    variantToApplicationId = [
-            devRelease:  "1f061f58b7bd42c387ecd8681d30df48",
-            prodRelease:  "62939f09f9e0489c8ada1c25d2f30d9d",
-    ]
-    variantToReleaseType = [
-            devRelease:  "2",
-            prodRelease:  "1",
-    ]
-    mappingFileNameRegex="mapping.txt"
+appcenter {
+    apiToken = "23fb501c92886c574b2e165f8befc92224802e4d" // Api Token from AppCenter user profile
+    ownerName = "apps-gettransfer.com"                    // Owner Name from AppCenter Application
+    distributionGroups = ["Collaborators"]                // Name of the AppCenter Distribution Group
+    releaseNotes = generateChangeLog()                    // Can be a file or text
+    notifyTesters = true                                  // Send mail to testers
+    apps {
+        devRelease {                                      // When no dimension is provided, this name match the full variant name
+            appName = "Get-Transfer"                      // Application Name from AppCenter.
+                                                          // ownerName and appName can be found from AppCenter application url
+                                                          // (https://appcenter.ms/users/{ownerName}/apps/{appName})
+        }
+        prodRelease {
+            appName = "Get-Transfer-2"
+        }
+    }
 }
 
 dependencies {
@@ -212,18 +217,18 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    implementation "androidx.appcompat:appcompat:1.0.2"
-    implementation "androidx.recyclerview:recyclerview:1.0.0"
-    implementation "androidx.cardview:cardview:1.0.0"
-    implementation "com.google.android.material:material:1.1.0-alpha09"
-    implementation 'androidx.core:core-ktx:1.0.2'
-    implementation "androidx.fragment:fragment:1.2.0-alpha02"
-    implementation "androidx.fragment:fragment-ktx:1.2.0-alpha02"
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    implementation "androidx.cardview:cardview:$cardview_version"
+    implementation "com.google.android.material:material:$material_version"
+    implementation "androidx.core:core-ktx:$core_ktx_version"
+    implementation "androidx.fragment:fragment:$fragment_version"
+    implementation "androidx.fragment:fragment-ktx:$fragment_ktx_version"
 
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
     implementation "androidx.multidex:multidex:$multidex_version"
-    implementation "androidx.lifecycle:lifecycle-runtime:2.0.0"
-    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_runtime_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_extensions_ver"
     // Navigation
 //    implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
@@ -233,14 +238,14 @@ dependencies {
     implementation libs.psLocation
     implementation libs.psPlaces
     implementation "com.google.android.gms:play-services-maps:$gms_version"
-    implementation 'com.google.maps.android:android-maps-utils:0.5'
+    implementation "com.google.maps.android:android-maps-utils:$maps_utils_version"
     // Gson
     implementation libs.gson
     // Moxy
-    implementation "tech.schoolhelper:moxy-x:$moxy_version"
-    implementation "tech.schoolhelper:moxy-x-androidx:$moxy_version"
-    implementation "tech.schoolhelper:moxy-x-material:$moxy_version"
-    kapt "tech.schoolhelper:moxy-x-compiler:$moxy_version"
+    implementation "com.github.moxy-community:moxy:$moxy_version"
+    implementation "com.github.moxy-community:moxy-androidx:$moxy_version"
+    implementation "com.github.moxy-community:moxy-material:$moxy_version"
+    kapt "com.github.moxy-community:moxy-compiler:$moxy_version"
 
     // Cicerone
     implementation "ru.terrakok.cicerone:cicerone:$cicerone_version"
@@ -248,9 +253,6 @@ dependencies {
     // Logger
     implementation libs.timber
     implementation "at.favre.lib:slf4j-timber:$slf4j_timber_version"
-
-    // Hockey
-    implementation "net.hockeyapp.android:HockeySDK:$hockey_version"
 
     //Firebase
     // https://firebase.google.com/support/release-notes/android
@@ -310,8 +312,22 @@ dependencies {
     // Play services
     implementation "com.google.android.gms:play-services-base:$play_services"
 
+
     // Webkit
     implementation "androidx.webkit:webkit:$webkit_version"
+
+    // SwipeRefreshLayout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_version"
+
+    // GooglePay
+    implementation "com.google.android.gms:play-services-wallet:$play_services_walet"
+    implementation "com.android.support:appcompat-v7:$support_appcompat_v7"
+
+    // Checkout.com
+    implementation "com.github.checkout:frames-android:v$checkout_frames_version"
+
+    //AppCenter
+    implementation "com.microsoft.appcenter:appcenter-crashes:$appcenter_version"
 
     api("androidx.transition:transition:$androidx_transition")
 
@@ -335,14 +351,17 @@ dependencies {
 
     androidTestImplementation libs.androidx_test_runner
     androidTestImplementation libs.androidx_test_rules
+
     //dependencies for ui tests
     androidTestImplementation libs.androidx_text_ext_truth
     androidTestImplementation libs.androidx_text_ext_junit
+
     //dependencies for espresso
     androidTestImplementation libs.espresso_core
 
     //dependencies for Kakao
     androidTestImplementation libs.kakao
+
     // for web
     androidTestImplementation libs.espresso_web
     androidTestImplementation(libs.espresso_contrib) {

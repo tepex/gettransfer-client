@@ -16,8 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
+            layout="@layout/toolbar_nav_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.appbar.AppBarLayout>
@@ -41,13 +40,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:settingsTitlePicker="@string/LNG_MENU_TITLE_ABOUT" />
 
-            <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
-                android:id="@+id/becomeCarrier"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/aboutUs"
-                app:settingsTitlePicker="@string/LNG_RIDE_CREATE_CARRIER" />
-
             <TextView
                 android:id="@+id/tvWeSpeak"
                 style="@style/sf_font_pro_text_semibold_black"
@@ -58,7 +50,7 @@
                 android:text="@string/LNG_CUSTOMER_SUPPORT_SPEAK_YOUR_LANG"
                 android:textSize="@dimen/activity_customer_support_titles_text_size"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/becomeCarrier" />
+                app:layout_constraintTop_toBottomOf="@+id/aboutUs" />
 
             <include
                 android:id="@+id/ourLanguages"

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context=".presentation.ui.CheckoutcomPaymentActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/payButton"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/checkoutcom_pay_button_height"
+                android:layout_marginStart="@dimen/checkoutcom_horizontal_margins_16"
+                android:layout_marginTop="@dimen/checkoutcom_pay_button_margin_top"
+                android:layout_marginEnd="@dimen/checkoutcom_horizontal_margins_16"
+                android:background="@drawable/btn_bg_checkoutcom_pay"
+                android:fontFamily="@font/helvetica_neue"
+                android:text="@string/LNG_CHECKOUT_PAY"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/checkoutcom_texts_size"
+                app:layout_constraintTop_toBottomOf="@+id/cardInfo" />
+
+            <ImageView
+                android:id="@+id/imgLock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/checkoutcom_horizontal_margins_16"
+                android:layout_marginTop="@dimen/checkoutcom_img_lock_margin_top"
+                android:src="@drawable/ic_security"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/checkoutcom_horizontal_margins_16"
+                android:fontFamily="@font/helvetica_neue"
+                android:text="@string/LNG_CHECKOUT_SECURE_LABEL"
+                android:textColor="#808080"
+                android:textSize="@dimen/checkoutcom_secure_payment_text_size"
+                app:layout_constraintBottom_toBottomOf="@+id/imgLock"
+                app:layout_constraintStart_toEndOf="@+id/imgLock"
+                app:layout_constraintTop_toTopOf="@+id/imgLock" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/checkoutcom_currency_warning_margin_top"
+                android:layout_marginBottom="@dimen/checkoutcom_currency_warning_margin_bottom"
+                android:fontFamily="@font/helvetica_neue"
+                android:gravity="center_horizontal"
+                android:text="@string/LNG_CHECKOUT_CURRENCY_WARNING"
+                android:textColor="#808080"
+                android:textSize="@dimen/checkoutcom_texts_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/payButton"
+                app:layout_constraintStart_toStartOf="@+id/payButton"
+                app:layout_constraintTop_toBottomOf="@+id/payButton" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cardInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/checkoutcom_payment_form_margin_top"
+                android:background="@drawable/back_checkoutcom_card_info_view"
+                android:elevation="@dimen/checkoutcom_payment_form_elevation"
+                android:paddingStart="@dimen/checkoutcom_horizontal_margins_16"
+                android:paddingEnd="@dimen/checkoutcom_horizontal_margins_16"
+                android:paddingBottom="@dimen/checkoutcom_payment_form_margin_bottom"
+                app:layout_constraintTop_toBottomOf="@+id/imgLock">
+
+                <ImageView
+                    android:id="@+id/cardTypeIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/checkoutcom_img_card_type_height"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="@+id/paidSum"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/paidSum" />
+
+                <TextView
+                    android:id="@+id/paidSum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/checkoutcom_paid_sum_margin_start"
+                    android:layout_marginTop="@dimen/checkoutcom_paid_sum_margin_top"
+                    android:fontFamily="@font/helvetica_neue"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/checkoutcom_paid_sum_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/payingText"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="€4 950,00" />
+
+                <TextView
+                    android:id="@+id/payingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/checkoutcom_paid_text_margin_start"
+                    android:fontFamily="@font/helvetica_neue"
+                    android:text="@string/LNG_CHECKOUT_PAYING"
+                    android:textColor="@color/colorTextBlack"
+                    android:textSize="@dimen/checkoutcom_texts_size"
+                    app:layout_constraintBottom_toBottomOf="@+id/paidSum"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/paidSum" />
+
+
+                <com.kg.gettransfer.presentation.ui.custom.CheckoutcomCardFieldView
+                    android:id="@+id/cardNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/checkoutcom_card_number_margin_top"
+                    android:digits=" 0123456789"
+                    android:inputType="number"
+                    app:hint="@string/LNG_CHECKOUT_CARD_NUMBER"
+                    app:layout_constraintTop_toBottomOf="@+id/paidSum" />
+
+                <com.kg.gettransfer.presentation.ui.custom.CheckoutcomCardFieldView
+                    android:id="@+id/cardDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/checkoutcom_card_date_margin_top"
+                    android:layout_marginEnd="@dimen/checkoutcom_card_date_and_svs_horizontal_margin"
+                    android:digits="/0123456789"
+                    android:inputType="number"
+                    app:hint="@string/LNG_CHECKOUT_EXPIRATION_DATE"
+                    app:layout_constraintEnd_toStartOf="@+id/cardCVC"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardNumber" />
+
+                <com.kg.gettransfer.presentation.ui.custom.CheckoutcomCardFieldView
+                    android:id="@+id/cardCVC"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/checkoutcom_card_date_and_svs_horizontal_margin"
+                    android:inputType="numberPassword"
+                    app:hint="@string/LNG_CHECKOUT_CVC"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/cardDate"
+                    app:layout_constraintTop_toTopOf="@+id/cardDate" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

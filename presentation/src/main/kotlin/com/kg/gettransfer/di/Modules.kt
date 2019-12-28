@@ -43,6 +43,7 @@ import com.kg.gettransfer.presentation.mapper.CityPointMapper
 
 import com.kg.gettransfer.receiver.NetworkChangeCallback
 
+import com.kg.gettransfer.utilities.CountryCodeManager
 import com.kg.gettransfer.utilities.LocaleManager
 import com.kg.gettransfer.utilities.GTNotificationManager
 import com.kg.gettransfer.utilities.NewTransferState
@@ -68,6 +69,7 @@ import org.slf4j.LoggerFactory
 
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
+import sys.domain.SetPaymentRequestWithoutDelayInteractor
 
 /**
  * Koin main module
@@ -163,6 +165,7 @@ val androidModule = module {
     single { GTDownloadManager(androidApplication().applicationContext) }
     single { NetworkChangeCallback(androidApplication().applicationContext) }
     single { PushTokenManager() }
+    single { CountryCodeManager(androidApplication().applicationContext) }
 }
 
 val testModule = module {
@@ -171,7 +174,9 @@ val testModule = module {
 
 val systemDomain = module {
     single { GetConfigsInteractor(get()) }
+    single { ClearConfigsInteractor(get()) }
     single { GetMobileConfigsInteractor(get()) }
+    single { ClearMobileConfigsInteractor(get()) }
     single { GetPreferencesInteractor(get()) }
     single { IsNeedUpdateAppInteractor(get()) }
     single { IsShouldAskForRateInMarketInteractor(get()) }
@@ -186,6 +191,8 @@ val systemDomain = module {
     single { SetOnboardingShowedInteractor(get()) }
     single { SetSelectedFieldInteractor(get()) }
     single { SetNewDriverAppDialogShowedInteractor(get()) }
+    single { AddCountOfShowNewDriverAppDialogInteractor(get()) }
+    single { SetPaymentRequestWithoutDelayInteractor(get()) }
 }
 
 val systemPresentation = module {
