@@ -48,6 +48,8 @@ class ApiException(
 
     fun isOfferUnavailableError() = code == UNPROCESSABLE && details == DETAILS_OFFER_UNAVAILABLE
 
+    fun isTransferStatusMismatchError() = details.contains(DETAILS_TRANSFER_STATUS_MISMATCH)
+
     companion object {
         const val APP_ERROR         = 0
         const val NETWORK_ERROR     = -1
@@ -65,6 +67,7 @@ class ApiException(
         const val DETAILS_OFFER_UNAVAILABLE = "{offer_id=[blocked]}"
         const val DETAILS_DATE_EARLY = "{date=[is too early]}"
         const val DETAILS_DATE_LATE = "{date=[is too late]}"
+        const val DETAILS_TRANSFER_STATUS_MISMATCH = "transfer_status_mismatch"
 
         const val TYPE_ACCOUNT_EXIST = "account_exists"
         const val TYPE_PHONE_TAKEN = "phone_taken"

@@ -60,6 +60,9 @@
     <string name="text_in_parentheses">%1$s</string>
     <string name="chat_transfer_date_transfer_id_format">%1$s (%2$s)</string>
 
+    <!-- Error strings (needed strings from Crowdin) -->
+    <string name="transfer_status_mismatch_error">Transfer status mismatch</string>
+
     <!--Needed add this strings to remote configs-->
     <string name="email_support" translatable="false">info@gettransfer.com</string>
     <string name="uk_phone" translatable="false">+44 20 3936 8229</string>
