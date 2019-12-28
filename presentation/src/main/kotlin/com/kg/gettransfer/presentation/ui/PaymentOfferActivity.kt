@@ -504,6 +504,7 @@ class PaymentOfferActivity : BaseActivity(),
         val errorText = when {
             e.isBigPriceError()                  -> getString(R.string.LNG_BIG_PRICE_ERROR)
             e.isOfferUnavailableError()          -> getString(R.string.LNG_OFFER_NO_LONGER_AVAILABLE)
+            e.isTransferStatusMismatchError()    -> getString(R.string.transfer_status_mismatch_error)
             e.code != ApiException.NETWORK_ERROR -> getString(R.string.LNG_ERROR) + ": " + e.message
             else                                 -> null
         }
