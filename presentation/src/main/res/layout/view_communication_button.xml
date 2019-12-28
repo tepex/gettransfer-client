@@ -14,6 +14,7 @@
         app:fabCustomSize="@dimen/view_communication_button_img_size"
         app:backgroundTint="@color/colorPrimaryDark"
         app:srcCompat="@drawable/ic_call"
+        app:tint="@null"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
