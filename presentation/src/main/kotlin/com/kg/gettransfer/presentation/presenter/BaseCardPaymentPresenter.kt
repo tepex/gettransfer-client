@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import android.os.Handler
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.ApiException
@@ -13,6 +12,7 @@ import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.utilities.Analytics
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.inject
@@ -48,14 +48,15 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
             } else {
                 false
             }
-        if (isSuccess && !withoutDelay) {
-            Handler().postDelayed({ checkPaymentStatus(isSuccess, failureDescription) }, PAYMENT_STATUS_REQUEST_DELAY)
-        } else {
-            checkPaymentStatus(isSuccess, failureDescription)
-        }
+        checkPaymentStatus(isSuccess, failureDescription, withoutDelay)
     }
 
-    private fun checkPaymentStatus(isSuccess: Boolean, failureDescription: String? = null) = utils.launchSuspend {
+    private fun checkPaymentStatus(
+        isSuccess: Boolean,
+        failureDescription: String?,
+        withoutDelay: Boolean
+    ) = utils.launchSuspend {
+        if (isSuccess && !withoutDelay) delay(PAYMENT_STATUS_REQUEST_DELAY)
         val model = PaymentStatusRequestModel(paymentId, isSuccess, failureDescription)
         val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
         result.error?.let {
@@ -71,11 +72,12 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
 
     private fun waitingPaymentStatus() {
         paymentInteractor.selectedTransfer?.id?.let { transferId ->
-            Handler().postDelayed({ checkTransferStatus(transferId) }, TRANSFER_REQUEST_DELAY)
+            checkTransferStatus(transferId)
         }
     }
 
     private fun checkTransferStatus(transferId: Long) = utils.launchSuspend {
+        delay(TRANSFER_REQUEST_DELAY)
         val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
         result.isSuccess()?.let { transfer ->
             if (transfer.price != null) isPaymentWasSuccessful()
