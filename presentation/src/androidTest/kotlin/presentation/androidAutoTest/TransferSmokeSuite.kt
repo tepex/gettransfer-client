@@ -4,6 +4,7 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 
 import com.agoda.kakao.screen.Screen
+import com.kaspersky.kaspresso.kaspresso.Kaspresso
 
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 
@@ -15,7 +16,11 @@ import org.junit.Test
 import com.kg.gettransfer.presentation.data.Constants
 import com.kg.gettransfer.presentation.screenelements.*
 
-class TransferSmokeSuite : TestCase() {
+class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
+    flakySafetyParams.apply {
+        timeoutMs = Constants.big
+    }
+}) {
 
     @Rule
     @JvmField
@@ -34,31 +39,36 @@ class TransferSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                    val baseFun = BaseFun
-                    baseFun.goTransferLater()
-                }
+                Screen.idle(RegressSuite.DELAY_BIG)
+                BaseFun.goStart()
             }
             step("TakeGeo") {
                 MainScreen {
                     switchHourly { click() }
-                    btnNext { click() }
+                }
+                OrderScreen {
+                    duration { isVisible() }
+                    searchFrom { click() }
+                }
+                SearchForm {
+                    addressFrom {
+                        clearText()
+                        typeText(Constants.TEXT_MOSCOW)
+                    }
+                    Thread.sleep(Constants.small)
+                    mskAddressItem {
+                        click()
+                    }
                 }
             }
             step("CreateTransfer") {
                 TransferDetails {
+                    Screen.idle(DELAY_VERY_BIG)
                     typeCars { swipeUp() }
-                    Screen.idle(DELAY_SMALL)
-                    val baseFun = BaseFun
-                    baseFun.chooseData()
+                    BaseFun.chooseData()
                     getOffers { click() }
-                    baseFun.goTransferType()
-                    baseFun.goSwitchAgreement()
+                    BaseFun.goTransferType()
+                    BaseFun.goSwitchAgreement()
                 }
             }
             step("CheckElements") {
@@ -71,29 +81,17 @@ class TransferSmokeSuite : TestCase() {
         }
     }
 
-    @Suppress("LongMethod")
     @Test
     fun payBalance() {
         before {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
-            }
-            step("GoSettings") {
-                NavBar {
-                    settings { click() }
-                }
+                Screen.idle(RegressSuite.DELAY_BIG)
+                BaseFun.goStart()
             }
             step("GoLogin") {
-                val baseFun = BaseFun
-                baseFun.goPassLogin()
+                BaseFun.goProfilePartner()
             }
             step("TakeGeo") {
                 MainScreen {
@@ -101,11 +99,7 @@ class TransferSmokeSuite : TestCase() {
                 }
             }
             step("Locations") {
-                Locations {
-                    tvSearchTo { typeText(Constants.TEXT_PETERSBURG) }
-                    Screen.idle(DELAY_SMALL)
-                    tvSpdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
-                }
+                BaseFun.inputAddress()
             }
             step("CreateTransfer") {
                 TransferDetails {
@@ -121,7 +115,7 @@ class TransferSmokeSuite : TestCase() {
             }
             step("BookNow") {
                 BookNow {
-                    rvOffers { click() }
+                    tvModelCar { click() }
                     Screen.idle(DELAY_SMALL)
                     btnBook { click() }
                     tvBackground { swipeUp() }
@@ -141,29 +135,20 @@ class TransferSmokeSuite : TestCase() {
         }
     }
 
-    @Suppress("LongMethod")
     @Test
     fun payCard() {
         before {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
+                Screen.idle(RegressSuite.DELAY_BIG)
+                BaseFun.goStart()
             }
-            step("GoSettings") {
-                NavBar {
-                    settings { click() }
-                }
+            step(" Checkout DEMO ") {
+                BaseFun.checkoutDemo()
             }
             step("GoLogin") {
-                val baseFun = BaseFun
-                baseFun.goPassLogin()
+                BaseFun.goProfilePartner()
             }
             step("TakeGeo") {
                 MainScreen {
@@ -171,27 +156,21 @@ class TransferSmokeSuite : TestCase() {
                 }
             }
             step("Locations") {
-                Locations {
-                    tvSearchTo { typeText(Constants.TEXT_PETERSBURG) }
-                    Screen.idle(DELAY_SMALL)
-                    tvSpdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
-                }
+                BaseFun.inputAddress()
             }
             step("CreateTransfer") {
                 TransferDetails {
-                    Screen.idle()
+                    Screen.idle(Constants.medium)
                     typeCars { swipeUp() }
-                    Screen.idle(DELAY_SMALL)
-                    val baseFun = BaseFun
-                    baseFun.chooseData()
+                    BaseFun.chooseData()
                     getOffers { click() }
-                    baseFun.goTransferType()
-                    baseFun.goSwitchAgreement()
+                    BaseFun.goTransferType()
+                    BaseFun.goSwitchAgreement()
                 }
             }
             step("BookNow") {
                 BookNow {
-                    rvOffers { click() }
+                    tvModelCar { click() }
                     Screen.idle(DELAY_SMALL)
                     btnBook { click() }
                     tvBackground { swipeUp() }
@@ -200,8 +179,7 @@ class TransferSmokeSuite : TestCase() {
                 }
             }
             step("PayCard") {
-                val payFun = PayFun
-                payFun.goGoodPayCard()
+                PayFun.goGoodPayCard()
             }
             step("PayCheck") {
                 Screen.idle(DELAY_VERY_BIG)
@@ -224,12 +202,7 @@ class TransferSmokeSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
+                BaseFun.goStart()
             }
             step("GoSettings") {
                 NavBar {
@@ -237,26 +210,36 @@ class TransferSmokeSuite : TestCase() {
                 }
             }
             step("GoLogin") {
-                val baseFun = BaseFun
-                baseFun.goPassLogin()
+                BaseFun.goProfilePartner()
             }
             step("GoTrips") {
                 NavBar {
                     trips { click() }
                 }
             }
-            step("OpenTrips") {
-                Trips {
-                    Screen.idle(DELAY_BIG)
-                    requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
-                    transferDetails { swipeUp() }
-                    Screen.idle(DELAY_SMALL)
-                    bookNowInfo { swipeUp() }
-                    Screen.idle(DELAY_SMALL)
+            step("BookNow") {
+                TripsScreen {
+                    recycler {
+                        isVisible()
+                        firstChild<TripsScreen.Item> {
+                            flakySafely { isVisible() }
+                            click()
+                            compose {
+                                or { content { isVisible() } }
+                                or { TripsScreen.btnInfo { click() } }
+                            }
+                            compose {
+                                or { content { swipeUp() } }
+                                or { TripsScreen.btnInfo { click() } }
+                            }
+                            content { swipeUp() }
+                            content { swipeUp() }
+                        }
+                    }
                 }
             }
             step("CheckTrips") {
-                Trips {
+                TripsScreen {
                     tvDetailsMain { isVisible() }
                     btnCommunication { isVisible() }
                 }
@@ -271,12 +254,7 @@ class TransferSmokeSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
+                BaseFun.goStart()
             }
             step("GoHelp") {
                 NavBar {
@@ -310,12 +288,7 @@ class TransferSmokeSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
+                BaseFun.goStart()
             }
             step("GoSettings") {
                 NavBar {
@@ -340,34 +313,16 @@ class TransferSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
-            }
-            step("GoSettings") {
-                NavBar {
-                    settings { click() }
-                }
+                BaseFun.goStart()
             }
             step("GoLogin") {
-                val baseFun = BaseFun
-                baseFun.goPassLogin()
-            }
-            step("GoTrips") {
-                NavBar {
-                    trips { click() }
-                }
+                BaseFun.goProfilePartner()
             }
             step("OpenPastTrips") {
-                Trips {
-                    Screen.idle(DELAY_BIG)
-                    swRequests { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeLeft() } }
-                    Screen.idle(DELAY_BIG)
-                    requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
+                BaseFun.openPastTrips()
+            }
+            step("CheckPastTrips") {
+                TripsScreen {
                     transferTime { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
                     tvTransfer { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeUp() } }
                     tvTransportTypes { isVisible() }
@@ -383,13 +338,7 @@ class TransferSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
+                BaseFun.goStart()
             }
             step("GoHelp") {
                 NavBar {
@@ -405,13 +354,6 @@ class TransferSmokeSuite : TestCase() {
                     btnNext { click() }
                 }
             }
-            step("CheckBecome") {
-                Help {
-                    tvTitle { isVisible() }
-                    btnContinue { isVisible() }
-//                    ivBack { click() }
-                }
-            }
         }
     }
 
@@ -421,13 +363,7 @@ class TransferSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
+                    BaseFun.goStart()
             }
             step("CheckReadMore") {
                 MainScreen {
@@ -446,13 +382,7 @@ class TransferSmokeSuite : TestCase() {
         }.after {
         }.run {
             step("GoStart") {
-                Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
+                BaseFun.goStart()
             }
             step("TakeGeo") {
                 MainScreen {
@@ -461,8 +391,7 @@ class TransferSmokeSuite : TestCase() {
             }
             step("CheckTips") {
                 Screen.idle(DELAY_MEDIUM)
-                val baseFun = BaseFun
-                baseFun.checkTips()
+                BaseFun.checkTips()
             }
         }
     }

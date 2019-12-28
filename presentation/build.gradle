@@ -403,6 +403,11 @@ dependencies {
         exclude module: "appcompat-v7"
     }
 
+    androidTestImplementation('com.facebook.testing.screenshot:core:0.8.0') {
+        exclude group: 'com.crittercism.dexmaker', module: 'dexmaker'
+        exclude group: 'com.crittercism.dexmaker', module: 'dexmaker-dx'
+    }
+
 }
 
 allure {

@@ -14,6 +14,7 @@ import org.hamcrest.Matcher
 
 object OffersScreen : Screen<OffersScreen>() {
     val btnBack = KButton { withId(R.id.btnBack) }
+    val btnInfo = KButton { withId(R.id.btn_request_info) }
     val recycler: KRecyclerView = KRecyclerView({ withId(R.id.rvOffers) }, itemTypeBuilder = { itemType(::Item) })
 
     class Item(parent: Matcher<View>) : KRecyclerItem<Item>(parent) {

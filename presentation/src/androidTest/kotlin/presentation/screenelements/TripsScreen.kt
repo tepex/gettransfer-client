@@ -18,6 +18,32 @@ import com.kg.gettransfer.R
 import org.hamcrest.Matcher
 
 object TripsScreen  : Screen<TripsScreen>() {
+    val requests = KView { withId(R.id.rvRequests) }
+    val requestStatus = KTextView { withId(R.id.tvTransferRequestStatus) }
+    val swRequests = KSwipeView { withId(R.id.vpRequests) }
+    val transferDetails = KSwipeView { withId(R.id.transfer_details_header) }
+    val bookNowInfo = KSwipeView { withId(R.id.tv_bookNow_info) }
+    val tvDetailsMain = KView { withId(R.id.transfer_details_main) }
+    val btnCommunication = KView { withId(R.id.bottomCommunicationButtons) }
+    val transferTime = KSwipeView { withId(R.id.tvTransferTime) }
+    val tvTransfer = KSwipeView { withId(R.id.transfer_details_main) }
+    val tvTransportTypes = KView { withId(R.id.flexboxTransportTypes) }
+    val topCommunicationButtons = KView { withId(R.id.topCommunicationButtons) }
+    val tvCancel = KView {
+        withId(R.id.btnImg)
+        isDescendantOfA { withId(R.id.btnCancel) }
+        isDisplayed()
+    }
+    val tvRepeat = KView {
+        withId(R.id.btnImg)
+        isDescendantOfA { withId(R.id.btnRepeatTransfer) }
+        isDisplayed()
+    }
+    val tvChat = KView {
+        withId(R.id.btnImg)
+        isDescendantOfA { withId(R.id.btnChat) }
+        isDisplayed()
+    }
     val upcomingTripCell = KView { withId(R.id.requestInfo)
         isDisplayed()
     }
@@ -32,6 +58,7 @@ object TripsScreen  : Screen<TripsScreen>() {
         withId(R.id.btn_back)
         isDisplayed()
     }
+
     val contentList = KSwipeView { withId(R.id.vpRequests) }
     val recycler: KRecyclerView = KRecyclerView({
         withId(R.id.rvRequests)
@@ -41,6 +68,7 @@ object TripsScreen  : Screen<TripsScreen>() {
 
     class Item(parent: Matcher<View>) : KRecyclerItem<Item>(parent) {
         val distance: KTextView = KTextView(parent) { withId(R.id.tvDistance) }
+        val distance1: KTextView = KTextView(parent) { withId(R.id.tvDistance) }
         val distanceOnTransferInfo = KTextView {
             withId(R.id.tv_value)
             isDescendantOfA { withId(R.id.distance_view) }

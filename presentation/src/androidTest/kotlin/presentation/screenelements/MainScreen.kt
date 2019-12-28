@@ -4,6 +4,7 @@ import com.agoda.kakao.common.views.KSwipeView
 import com.agoda.kakao.common.views.KView
 
 import com.agoda.kakao.screen.Screen
+import com.agoda.kakao.switch.KSwitch
 
 import com.agoda.kakao.text.KButton
 import com.agoda.kakao.text.KTextView
@@ -12,7 +13,7 @@ import com.kg.gettransfer.R
 
 object MainScreen : Screen<MainScreen>() {
 
-    val switchHourly = KView { withId(R.id.switch_mode_) }
+    val switchHourly = KSwitch { withId(R.id.switch_mode_) }
     val btnNext = KButton { withId(R.id.btnNextFragment) }
     val subTitle = KTextView {
         withId(R.id.sub_title)

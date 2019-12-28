@@ -1,8 +1,13 @@
 package com.kg.gettransfer.presentation
 
 import androidx.test.rule.ActivityTestRule
+import com.agoda.kakao.screen.Screen
+import com.kaspersky.kaspresso.kaspresso.Kaspresso
 
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
+import com.kg.gettransfer.presentation.androidAutoTest.BaseFun
+
+import com.kg.gettransfer.presentation.data.Constants
 
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
@@ -10,68 +15,41 @@ import org.junit.Rule
 import org.junit.Test
 
 import com.kg.gettransfer.presentation.screenelements.NavBar
-import com.kg.gettransfer.presentation.screenelements.Onboarding
 import com.kg.gettransfer.presentation.screenelements.ProfileScreen
 import com.kg.gettransfer.presentation.screenelements.SettingsScreen
-import org.junit.Ignore
 
-class PassengerLoginWithPhoneTest : TestCase() {
+class PassengerLoginWithPhoneTest : TestCase(Kaspresso.Builder.default().apply {
+    flakySafetyParams.apply {
+        timeoutMs = Constants.big
+    }
+})  {
     @Rule
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
+
     @Test
     fun testPassengerLoginWithPhone() {
         before {
         }.after {
         }.run {
-            step("Open order screen") {
-                Onboarding {
-                    compose {
-                        or(btnNext) { click() }
-                        or(NavBar.orderItem) { click() }
-                    }
-                    compose {
-                        or(btnNext) { click() }
-                        or(NavBar.orderItem) { click() }
-                    }
-                }
+            step("Open Main Screen") {
+                BaseFun.goStart()
             }
-            step("Go to settings ") {
-                NavBar {
-                    settingsItem { click() }
-                }
+            step(" Checkout DEV ") {
+                BaseFun.checkoutDev()
             }
-            step("Go to login screen ") {
+            Screen.idle(Constants.small)
+            BaseFun.unLogin()
+            step("Log in ") {
+                ProfileScreen {
+                    email { typeText(Constants.TEXT_PHONE_PASSENGER) }
+                    tvPwd { typeText(Constants.TEXT_PWD_PASSENGER) }
+                    loginBtn { click() }
+                }
                 SettingsScreen {
                     tvProfileCell {
-                        click()
+                        flakySafely { isVisible() }
                     }
-                }
-            }
-            ProfileScreen {
-                compose {
-                    or(logoutBtn) { click() }
-                    or(email) { typeText("+79992223838") }
-                }
-                compose {
-                    or(tvPwd) { typeText("PassRR11") }
-                    or(SettingsScreen.tvProfileCell) { isVisible() }
-                }
-                compose {
-                    or(loginBtn) { click() }
-                    or(SettingsScreen.tvProfileCell) { click() }
-                }
-                compose {
-                    or(NavBar.settingsItem) { click() }
-                    or(email) { typeText("+79992223838") }
-                }
-                compose {
-                    or(NavBar.settingsItem) { click() }
-                    or(tvPwd) { typeText("PassRR11") }
-                }
-                compose {
-                    or(loginBtn) { click() }
-                    or(NavBar.settingsItem) { click() }
                 }
             }
         }

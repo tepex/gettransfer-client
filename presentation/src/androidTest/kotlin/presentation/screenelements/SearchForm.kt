@@ -5,6 +5,7 @@ import com.agoda.kakao.screen.Screen
 import com.agoda.kakao.text.KTextView
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.data.Constants
 
 object SearchForm : Screen<SearchForm>() {
     val addressFrom = KEditText { withId(R.id.addressField)
@@ -12,7 +13,7 @@ object SearchForm : Screen<SearchForm>() {
     }
     val mskAddressItem = KTextView {
         withId(R.id.addressItem)
-        withText("Moscow, Russia")
+        withText(Constants.TEXT_MOSCOW_SELECT)
         isDisplayed()
     }
     val addressTo = KEditText {
@@ -21,6 +22,6 @@ object SearchForm : Screen<SearchForm>() {
     }
     val spbAddressItem = KTextView {
         withId(R.id.addressItem)
-        withText("Saint Petersburg, Russia")
+        withText(Constants.TEXT_PETERSBURG_SELECT)
         isDisplayed() }
     }
