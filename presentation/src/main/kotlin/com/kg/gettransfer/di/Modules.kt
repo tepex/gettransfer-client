@@ -69,6 +69,7 @@ import org.slf4j.LoggerFactory
 
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
+import sys.domain.SetPaymentRequestWithoutDelayInteractor
 
 /**
  * Koin main module
@@ -191,6 +192,7 @@ val systemDomain = module {
     single { SetSelectedFieldInteractor(get()) }
     single { SetNewDriverAppDialogShowedInteractor(get()) }
     single { AddCountOfShowNewDriverAppDialogInteractor(get()) }
+    single { SetPaymentRequestWithoutDelayInteractor(get()) }
 }
 
 val systemPresentation = module {

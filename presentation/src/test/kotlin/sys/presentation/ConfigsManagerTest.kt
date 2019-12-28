@@ -246,7 +246,8 @@ class ConfigsManagerTest : StringSpec(), KoinTest {
                 addressHistory = emptyList(),
                 appEnters = 2,
                 isDebugMenuShowed = false,
-                favoriteTransports = emptySet()
+                favoriteTransports = emptySet(),
+                isPaymentRequestWithoutDelay = false
             )
     }
 }

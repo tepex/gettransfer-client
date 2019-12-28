@@ -1,6 +1,8 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.Handler
+import com.kg.gettransfer.BuildConfig
+import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.PaymentStatusEventListener
 import com.kg.gettransfer.domain.model.Offer
@@ -9,12 +11,18 @@ import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.utilities.Analytics
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 
 open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), PaymentStatusEventListener {
 
+    private val worker: WorkerManager by inject { parametersOf("SettingsPresenter") }
     private val mapper: PaymentStatusRequestMapper by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
 
     internal var paymentId = 0L
     lateinit var gatewayId: String
@@ -32,9 +40,15 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
         paymentInteractor.eventPaymentReceiver = null
     }
 
-    fun changePaymentStatus(isSuccess: Boolean, failureDescription: String? = null) {
+    fun changePaymentStatus(isSuccess: Boolean, failureDescription: String? = null) = worker.main.launch {
         viewState.blockInterface(true, true)
-        if (isSuccess) {
+        val withoutDelay =
+            if (BuildConfig.FLAVOR == "dev") {
+                withContext(worker.bg) { getPreferences().getModel() }.isPaymentRequestWithoutDelay
+            } else {
+                false
+            }
+        if (isSuccess && !withoutDelay) {
             Handler().postDelayed({ checkPaymentStatus(isSuccess, failureDescription) }, PAYMENT_STATUS_REQUEST_DELAY)
         } else {
             checkPaymentStatus(isSuccess, failureDescription)

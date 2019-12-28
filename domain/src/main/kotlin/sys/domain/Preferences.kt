@@ -15,7 +15,8 @@ data class Preferences(
     val addressHistory: List<GTAddress>,
     val favoriteTransports: Set<TransportType.ID>,
     val appEnters: Int,
-    val isDebugMenuShowed: Boolean
+    val isDebugMenuShowed: Boolean,
+    val isPaymentRequestWithoutDelay: Boolean
 ) {
 
     companion object {

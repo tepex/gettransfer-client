@@ -22,6 +22,7 @@ interface SettingsView : BaseView {
     fun setLocale(locale: String, code: String)
     fun setEndpoint(endpoint: EndpointModel)
     fun setDistanceUnit(inMiles: Boolean)
+    fun setPaymentRequestWithoutDelay(withoutDelay: Boolean)
 
     fun showCurrencyChooser()
     fun showLanguageChooser()
