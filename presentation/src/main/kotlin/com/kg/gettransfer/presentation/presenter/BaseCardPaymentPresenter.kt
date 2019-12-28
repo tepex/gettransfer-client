@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.os.Handler
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.PaymentStatusEventListener
 import com.kg.gettransfer.domain.model.Offer
@@ -31,8 +32,16 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
         paymentInteractor.eventPaymentReceiver = null
     }
 
-    fun changePaymentStatus(isSuccess: Boolean, failureDescription: String? = null) = utils.launchSuspend {
-        viewState.blockInterface(true)
+    fun changePaymentStatus(isSuccess: Boolean, failureDescription: String? = null) {
+        viewState.blockInterface(true, true)
+        if (isSuccess) {
+            Handler().postDelayed({ checkPaymentStatus(isSuccess, failureDescription) }, PAYMENT_STATUS_REQUEST_DELAY)
+        } else {
+            checkPaymentStatus(isSuccess, failureDescription)
+        }
+    }
+
+    private fun checkPaymentStatus(isSuccess: Boolean, failureDescription: String? = null) = utils.launchSuspend {
         val model = PaymentStatusRequestModel(paymentId, isSuccess, failureDescription)
         val result = utils.asyncAwait { paymentInteractor.changeStatusPayment(mapper.fromView(model)) }
         result.error?.let {
@@ -41,8 +50,22 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
             when {
                 status.isSuccess -> isPaymentWasSuccessful()
                 status.isFailed  -> showFailedPayment()
-                else             -> viewState.blockInterface(true, true)
+                else             -> waitingPaymentStatus()
             }
+        }
+    }
+
+    private fun waitingPaymentStatus() {
+        paymentInteractor.selectedTransfer?.id?.let { transferId ->
+            Handler().postDelayed({ checkTransferStatus(transferId) }, TRANSFER_REQUEST_DELAY)
+        }
+    }
+
+    private fun checkTransferStatus(transferId: Long) = utils.launchSuspend {
+        val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
+        result.isSuccess()?.let { transfer ->
+            if (transfer.price != null) isPaymentWasSuccessful()
+            else waitingPaymentStatus()
         }
     }
 
@@ -90,5 +113,8 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
     companion object {
         const val PAYMENT_RESULT_SUCCESSFUL = "/api/payments/successful"
         const val PAYMENT_RESULT_FAILED     = "/api/payments/failed"
+
+        const val PAYMENT_STATUS_REQUEST_DELAY = 2_000L
+        const val TRANSFER_REQUEST_DELAY       = 10_000L
     }
 }
