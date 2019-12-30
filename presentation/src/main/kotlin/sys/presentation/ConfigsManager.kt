@@ -1,5 +1,6 @@
 package com.kg.gettransfer.sys.presentation
 
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.core.domain.Result
 import com.kg.gettransfer.core.presentation.WorkerManager
 
@@ -44,7 +45,11 @@ class ConfigsManager : KoinComponent {
         /* We should await for preferences, cause we need to know endpoint to call network
            getMobileConfigs and getConfigs */
         val preferences = backgroundScope.async { getPreferences() }.await().getModel()
-        val endpoint = endpoints.find { it == preferences.endpoint } ?: defaultEndpoint
+        val endpoint = if (BuildConfig.FLAVOR == "prod") {
+            defaultEndpoint
+        } else {
+            endpoints.find { it == preferences.endpoint } ?: defaultEndpoint
+        }
 
         backgroundScope.async { setEndpoint(endpoint) }.await()
         backgroundScope.async { setIpApiKey(ipApiKey) }.await()
