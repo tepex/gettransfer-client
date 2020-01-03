@@ -9,5 +9,6 @@ data class RouteInfoRequest(
     val withPrices: Boolean,
     val returnWay: Boolean,
     val currency: String,
-    val dateTime: Date?
+    val dateTo: Date?,
+    val dateReturn: Date?
 )

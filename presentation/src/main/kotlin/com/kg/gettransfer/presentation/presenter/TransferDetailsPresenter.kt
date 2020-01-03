@@ -147,7 +147,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                 withPrices = false,
                                 returnWay = false,
                                 currency = sessionInteractor.currency.code,
-                                dateTime = null
+                                dateTo = null,
+                                dateReturn = null
                             )
                         )
                     }.also { result ->

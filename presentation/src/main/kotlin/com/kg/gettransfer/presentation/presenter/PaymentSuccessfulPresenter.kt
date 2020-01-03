@@ -101,7 +101,8 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
                     withPrices = false,
                     returnWay = false,
                     currency = sessionInteractor.currency.code,
-                    dateTime = null
+                    dateTo = null,
+                    dateReturn = null
                 )
             )
         }

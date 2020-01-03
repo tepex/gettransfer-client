@@ -151,7 +151,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     true,
                     if (hourlyDuration != null) false else dateDelegate.returnDate != null,
                     sessionInteractor.currency.code,
-                    orderInteractor.orderStartTime
+                    orderInteractor.orderStartTime,
+                    orderInteractor.orderReturnTime
                 )
             )
         }.model
