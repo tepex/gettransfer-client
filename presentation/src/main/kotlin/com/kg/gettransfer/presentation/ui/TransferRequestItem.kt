@@ -155,16 +155,14 @@ class TransferRequestItem @JvmOverloads constructor(
             item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE
         ) {
             tvEventsCount.isVisible = false
-            btnChat.tvEventsCounter.isVisible = false
+            btnChat.setCounter(0)
         } else {
-            val count = eventsCount.toString()
             if (offerInfoShowed) {
                 tvEventsCount.isVisible = false
-                btnChat.tvEventsCounter.isVisible = true
-                btnChat.tvEventsCounter.text = count
+                btnChat.setCounter(eventsCount)
             } else {
                 tvEventsCount.isVisible = true
-                tvEventsCount.text = count
+                tvEventsCount.text = eventsCount.toString()
             }
         }
     }

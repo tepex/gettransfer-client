@@ -498,12 +498,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
     }
 
-    override fun setOffer(offer: OfferModel, childSeats: Int) {
+    override fun setOffer(offer: OfferModel, childSeats: Int, messagesCount: Int) {
         initAboutDriverView(offer)
         layoutAboutTransport.isVisible = true
         initAboutTransportView(offer, childSeats)
 
-        initChatButton()
+        initChatButton(messagesCount)
 
         initCarMarker(offer)
     }
@@ -512,11 +512,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         tv_bookNow_info.isVisible = isBookNowOffer
     }
 
-    private fun initChatButton() {
-        topCommunicationButtons.btnChat.setOnClickListener { presenter.onChatClick() }
-        bottomCommunicationButtons.btnChat.setOnClickListener { presenter.onChatClick() }
+    private fun initChatButton(messagesCount: Int) {
+        View.OnClickListener { presenter.onChatClick() }.let { onChatClicked ->
+            topCommunicationButtons.btnChat.setOnClickListener(onChatClicked)
+            bottomCommunicationButtons.btnChat.setOnClickListener(onChatClicked)
+        }
         topCommunicationButtons.btnChat.isVisible = true
         bottomCommunicationButtons.btnChat.isVisible = true
+        topCommunicationButtons.btnChat.setCounter(messagesCount)
+        bottomCommunicationButtons.btnChat.setCounter(messagesCount)
     }
 
     private fun initAboutDriverView(offer: OfferModel) {

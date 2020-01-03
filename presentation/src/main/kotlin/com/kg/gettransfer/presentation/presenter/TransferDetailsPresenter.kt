@@ -115,7 +115,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 offerModel = offerMapper.toView(offer)
                 reviewInteractor.offerRateID = offer.id
                 if (transferModel.showOfferInfo) {
-                    viewState.setOffer(offerModel, transferModel.countChilds)
+                    viewState.setOffer(offerModel, transferModel.countChilds, transferModel.unreadMessagesCount)
                     viewState.setBookNowOfferInfo(false)
                 }
                 offer
