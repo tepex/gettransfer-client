@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.mapper
 import com.kg.gettransfer.domain.model.Point
 
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.ui.utils.DistanceUtils
 
 open class RouteMapper {
     fun getView(
@@ -21,7 +22,7 @@ open class RouteMapper {
         fromPoint,
         toPoint,
         dateTime,
-        distance ?: Mapper.checkDistance(fromPoint, toPoint),
+        distance ?: DistanceUtils.getPointToPointDistance(fromPoint, toPoint),
         isRoundTrip,
         polyLines
     )
