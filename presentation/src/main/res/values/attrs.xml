@@ -140,4 +140,8 @@
     <declare-styleable name="NetworkNotAvailableView">
         <attr name="text_no_internet" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="ActivationCodeView">
+        <attr name="code_title" format="string"/>
+    </declare-styleable>
 </resources>

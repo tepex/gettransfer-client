@@ -15,8 +15,6 @@ import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
     private var newEmail: String? = null
-    private var emailCode: String? = null
-    private var smsSent = false
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -30,19 +28,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
     fun setEmail(email: String) {
         newEmail = email.trim()
-        smsSent = false
-        checkBtnVisibility()
-    }
-
-    fun setCode(code: String, correctAmountSymbols: Boolean) {
-        emailCode = code
-        checkBtnVisibility(correctAmountSymbols)
-    }
-
-    private fun checkBtnVisibility(correctAmountSymbols: Boolean = false) {
-        viewState.setEnabledBtnChangeEmail(
-            !newEmail.isNullOrEmpty() && ((!emailCode.isNullOrEmpty() && correctAmountSymbols) || !smsSent)
-        )
+        viewState.setEnabledBtnChangeEmail(!newEmail.isNullOrEmpty())
     }
 
     fun onResendCodeClicked() {
@@ -52,12 +38,22 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
     }
 
     fun onChangeEmailClicked() {
+        if (!Utils.checkEmail(newEmail)) {
+            viewState.setError(false, R.string.LNG_ERROR_EMAIL)
+            return
+        }
         utils.launchSuspend {
-            if (!smsSent && !accountManager.remoteProfile.email.isNullOrEmpty()) {
-                if (Utils.checkEmail(newEmail)) sendEmailCode() else viewState.setError(false, R.string.LNG_ERROR_EMAIL)
+            if (!accountManager.remoteProfile.email.isNullOrEmpty()) {
+                sendEmailCode()
             } else {
-                changeEmail()
+                changeEmail(null)
             }
+        }
+    }
+
+    fun onCodeEntered(code: String) {
+        utils.launchSuspend {
+            changeEmail(code)
         }
     }
 
@@ -67,20 +63,14 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
             if (result.error == null && result.model) {
                 viewState.showCodeLayout()
                 viewState.setTimer(configsManager.getMobileConfigs().smsResendDelay.millis)
-                smsSent = true
-                checkBtnVisibility()
             } else {
                 result.error?.let { checkEmailErrors(it) }
             }
         }
     }
 
-    private suspend fun changeEmail() {
-        if (!Utils.checkEmail(newEmail)) {
-            viewState.setError(false, R.string.LNG_ERROR_EMAIL)
-            return
-        }
-        if (accountManager.remoteProfile.email.isNullOrEmpty()) setEmailInAccount() else changeEmailInAccount()
+    private suspend fun changeEmail(code: String?) {
+        code?.let { changeEmailInAccount(it) } ?: setEmailInAccount()
     }
 
     private suspend fun setEmailInAccount() {
@@ -105,23 +95,16 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
         if (errId != null) viewState.setError(false, errId) else viewState.setError(e)
     }
 
-    private suspend fun changeEmailInAccount() {
-        emailCode?.let { code ->
-            fetchResultOnly { sessionInteractor.changeEmail(newEmail!!, code) }
-                .run {
-                    when {
-                        error?.isBadCodeError() ?: false -> viewState.setWrongCodeError()
-                        error != null -> viewState.setError(error!!)
-                        else -> emailChanged()
-                    }
+    private suspend fun changeEmailInAccount(code: String) {
+        fetchResultOnly { sessionInteractor.changeEmail(newEmail!!, code) }
+            .run {
+                when {
+                    error?.isBadCodeError() ?: false -> viewState.setWrongCodeError()
+                    error != null                    -> viewState.setError(error!!)
+                    else                             -> emailChanged()
                 }
-        }
+            }
     }
 
     private fun emailChanged() { router.exit() }
-
-    companion object {
-        const val SEC_IN_MILLIS = 1_000L
-        const val MAX_CODE_LENGTH = 8
-    }
 }

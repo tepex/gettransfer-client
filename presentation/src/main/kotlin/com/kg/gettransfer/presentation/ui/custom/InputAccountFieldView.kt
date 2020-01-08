@@ -16,10 +16,10 @@ class InputAccountFieldView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
         LinearLayout(context, attrs, defStyleAttr), LayoutContainer {
 
-    override val containerView: View
-    init {
-        containerView = LayoutInflater.from(context).inflate(R.layout.view_input_account_field, this, true)
+    override val containerView: View =
+        LayoutInflater.from(context).inflate(R.layout.view_input_account_field, this, true)
 
+    init {
         if(attrs != null) {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.InputAccountFieldView)
             fieldLayout.hint = ta.getString(R.styleable.InputAccountFieldView_account_field_view_hint)
@@ -29,5 +29,9 @@ class InputAccountFieldView@JvmOverloads constructor(
             fieldText.inputType = ta.getInt(R.styleable.InputAccountFieldView_android_inputType, EditorInfo.TYPE_CLASS_TEXT)
             ta.recycle()
         }
+    }
+
+    fun disableInputField() {
+        fieldText.isEnabled = false
     }
 }
