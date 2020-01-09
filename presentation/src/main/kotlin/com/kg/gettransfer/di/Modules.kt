@@ -205,15 +205,11 @@ val systemPresentation = module {
 
 val endpoints = module {
     single<List<Endpoint>>(named(ENDPOINTS)) {
-        val prodApiKey = if (BuildConfig.DEBUG) {
-            androidContext().getString(R.string.api_key_prod)
-        } else {
-            val properties = Properties()
-            val assetManager = androidContext().assets
-            val inputStream = assetManager.open("apikey.properties")
-            properties.load(inputStream)
-            properties.getProperty("API_KEY_PROD")
-        }
+        val properties = Properties()
+        val assetManager = androidContext().assets
+        val inputStream = assetManager.open("apikey.properties")
+        properties.load(inputStream)
+        val prodApiKey = properties.getProperty("API_KEY_PROD")
 
         listOf(
             Endpoint(
