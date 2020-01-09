@@ -619,24 +619,27 @@
 	<dimen name="profile_settings_btns_text_size">14sp</dimen>
 
 	<!--Change email settings-->
-	<dimen name="change_email_sent_code_text_size">12sp</dimen>
-	<dimen name="change_email_sent_code_text_margin_top">24dp</dimen>
-	<dimen name="change_email_code_text_size">24sp</dimen>
-	<dimen name="change_email_code_text_margin_top">24dp</dimen>
-	<dimen name="change_email_code_text_cursor_width">2dp</dimen>
-	<dimen name="change_email_code_text_height">40dp</dimen>
-	<dimen name="change_email_code_text_item_width">35dp</dimen>
-	<dimen name="change_email_code_text_line_width">1dp</dimen>
-	<dimen name="change_email_btn_resend_code_text_size">12sp</dimen>
-	<dimen name="change_email_btn_resend_code_margin_top">14dp</dimen>
-	<dimen name="change_email_btn_resend_code_padding">10dp</dimen>
 	<dimen name="change_email_field_vertical_padding">16dp</dimen>
-	<dimen name="change_email_layout_code_vertical_padding">16dp</dimen>
 	<dimen name="change_email_bth_change_email_margins">20dp</dimen>
 
 	<!--Change password settings-->
 	<dimen name="change_pass_fields_layout_vertical_padding">16dp</dimen>
 	<dimen name="change_pass_btn_done_margins">20dp</dimen>
+
+	<!--Activation code view-->
+	<dimen name="activation_code_horizontal_padding">16dp</dimen>
+	<dimen name="activation_code_vertical_padding">32dp</dimen>
+	<dimen name="activation_code_text_size">12sp</dimen>
+	<dimen name="activation_code_pin_view_margin_top">24dp</dimen>
+	<dimen name="activation_code_pin_view_item_width">24dp</dimen>
+	<dimen name="activation_code_pin_view_item_spacing">16dp</dimen>
+	<dimen name="activation_code_pin_view_line_width">1dp</dimen>
+	<dimen name="activation_code_pin_view_text_size">24sp</dimen>
+	<dimen name="activation_code_pin_view_cursor_width">2dp</dimen>
+	<dimen name="activation_code_pin_view_item_height">40dp</dimen>
+	<dimen name="activation_code_error_text_margin_top">16dp</dimen>
+	<dimen name="activation_code_btn_done_vertical_margin">12dp</dimen>
+	<dimen name="activation_code_btn_done_margin_bottom">24dp</dimen>
 
 	<!--Settings editable field-->
 	<dimen name="settings_editable_field_min_height">64dp</dimen>

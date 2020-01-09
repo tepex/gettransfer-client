@@ -28,8 +28,11 @@ class SettingsChangeEmailActivity: BaseActivity(), SettingsChangeEmailView, Acti
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_change_email)
 
-        emailLayout.fieldText.onTextChanged { presenter.setEmail(it) }
-        emailLayout.fieldText.requestFocus()
+        emailLayout.fieldText.onTextChanged {
+            presenter.newEmail = it
+            setEnabledBtnChangeEmail(it.isNotEmpty())
+        }
+        emailLayout.requestInputFieldFocus()
 
         btnChangeEmail.setOnClickListener { presenter.onChangeEmailClicked() }
     }
@@ -48,10 +51,6 @@ class SettingsChangeEmailActivity: BaseActivity(), SettingsChangeEmailView, Acti
         setToolbar(toolbar as Toolbar, R.string.LNG_CHANGING_EMAIL, subTitle = email)
     }
 
-    override fun setEnabledBtnChangeEmail(enable: Boolean) {
-        btnChangeEmail.isEnabled = enable
-    }
-
     override fun showCodeLayout() {
         activationCodeView.isVisible = true
         btnChangeEmail.isVisible = false
@@ -63,10 +62,14 @@ class SettingsChangeEmailActivity: BaseActivity(), SettingsChangeEmailView, Acti
         activationCodeView.setTimer(resendDelay)
     }
 
+    override fun setWrongCodeError(details: String) {
+        activationCodeView.setWrongCodeError(details)
+    }
+
     override fun onBackPressed() { presenter.onBackCommandClick() }
 
-    override fun setWrongCodeError() {
-        activationCodeView.setWrongCodeError()
+    private fun setEnabledBtnChangeEmail(enable: Boolean) {
+        btnChangeEmail.isEnabled = enable
     }
 
     override fun onDoneClicked(code: String) {

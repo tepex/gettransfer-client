@@ -142,6 +142,6 @@
     </declare-styleable>
 
     <declare-styleable name="ActivationCodeView">
-        <attr name="code_title" format="string"/>
+        <attr name="activation_code_title" format="string"/>
     </declare-styleable>
 </resources>

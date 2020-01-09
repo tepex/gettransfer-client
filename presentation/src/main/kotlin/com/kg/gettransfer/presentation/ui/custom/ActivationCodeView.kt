@@ -9,6 +9,7 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
+import androidx.core.view.isVisible
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.ui.onTextChanged
 import kotlinx.android.extensions.LayoutContainer
@@ -23,13 +24,15 @@ class ActivationCodeView @JvmOverloads constructor(
     override val containerView: View =
         LayoutInflater.from(context).inflate(R.layout.activation_code_view, this, true)
 
+    private var errorIsShowed = false
+
     private var timerBtnResendCode: CountDownTimer? = null
 
     var listener: OnActivationCodeListener? = null
 
     init {
         context.withStyledAttributes(attributeSet, R.styleable.ActivationCodeView) {
-            title.text = getString(R.styleable.ActivationCodeView_code_title)
+            title.text = getString(R.styleable.ActivationCodeView_activation_code_title)
         }
 
         codeView.filters = arrayOf(InputFilter.AllCaps())
@@ -38,6 +41,11 @@ class ActivationCodeView @JvmOverloads constructor(
                 codeView.setText(it.substring(0, CODE_LENGTH))
             }
             btnDone.isEnabled = codeView.length() == CODE_LENGTH
+            if (errorIsShowed) {
+                codeView.setTextColor(ContextCompat.getColor(context, R.color.color_gtr_green))
+                errorText.isVisible = false
+                errorIsShowed = false
+            }
         }
 
         btnDone.setOnClickListener { listener?.onDoneClicked(codeView.text.toString()) }
@@ -69,8 +77,11 @@ class ActivationCodeView @JvmOverloads constructor(
         timerBtnResendCode?.cancel()
     }
 
-    fun setWrongCodeError() {
+    fun setWrongCodeError(details: String) {
         codeView.setTextColor(ContextCompat.getColor(context, R.color.color_gtr_red))
+        errorText.text = details
+        errorText.isVisible = true
+        errorIsShowed = true
     }
 
     interface OnActivationCodeListener {

@@ -14,7 +14,7 @@ import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 @InjectViewState
 class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
-    private var newEmail: String? = null
+    var newEmail: String = ""
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -26,11 +26,6 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
         super.onDestroy()
     }
 
-    fun setEmail(email: String) {
-        newEmail = email.trim()
-        viewState.setEnabledBtnChangeEmail(!newEmail.isNullOrEmpty())
-    }
-
     fun onResendCodeClicked() {
         utils.launchSuspend {
             sendEmailCode()
@@ -38,10 +33,6 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
     }
 
     fun onChangeEmailClicked() {
-        if (!Utils.checkEmail(newEmail)) {
-            viewState.setError(false, R.string.LNG_ERROR_EMAIL)
-            return
-        }
         utils.launchSuspend {
             if (!accountManager.remoteProfile.email.isNullOrEmpty()) {
                 sendEmailCode()
@@ -58,18 +49,18 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
     }
 
     private suspend fun sendEmailCode() {
-        newEmail?.let {
-            val result = fetchResultOnly { sessionInteractor.getCodeForChangeEmail(it) }
-            if (result.error == null && result.model) {
-                viewState.showCodeLayout()
-                viewState.setTimer(configsManager.getMobileConfigs().smsResendDelay.millis)
-            } else {
-                result.error?.let { checkEmailErrors(it) }
-            }
+        if (!isEmailValid()) return
+        val result = fetchResultOnly { sessionInteractor.getCodeForChangeEmail(newEmail) }
+        if (result.error == null && result.model) {
+            viewState.showCodeLayout()
+            viewState.setTimer(configsManager.getMobileConfigs().smsResendDelay.millis)
+        } else {
+            result.error?.let { checkEmailErrors(it) }
         }
     }
 
     private suspend fun changeEmail(code: String?) {
+        if (!isEmailValid()) return
         code?.let { changeEmailInAccount(it) } ?: setEmailInAccount()
     }
 
@@ -77,34 +68,45 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
         accountManager.tempProfile.email = newEmail
         fetchResultOnly { accountManager.putAccount() }
             .run {
-                if (error != null) checkEmailErrors(error!!) else emailChanged()
+                error?.let { checkEmailErrors(it) } ?: emailChanged()
             }
     }
 
     private fun checkEmailErrors(e: ApiException) =
         showError(e, when {
-            e.isAccountExistError() -> R.string.LNG_EMAIL_TAKEN_ERROR
-            e.isNewEmailInvalid() -> R.string.LNG_ERROR_EMAIL
-            e.isEmailNotChangeableError() -> R.string.LNG_EMAIL_NOT_CHANGEABLE
+            e.isAccountExistError()         -> R.string.LNG_EMAIL_TAKEN_ERROR
+            e.isNewEmailInvalid()           -> R.string.LNG_ERROR_EMAIL
+            e.isEmailNotChangeableError()   -> R.string.LNG_EMAIL_NOT_CHANGEABLE
             e.isNewEmailAlreadyTakenError() -> R.string.LNG_EMAIL_TAKEN_ERROR
-            e.isNewEmailInvalid() -> R.string.LNG_ERROR_EMAIL
-            else -> null
+            e.isNewEmailInvalid()           -> R.string.LNG_ERROR_EMAIL
+            else                            -> null
         })
 
     private fun showError(e: ApiException, @StringRes errId: Int?) {
-        if (errId != null) viewState.setError(false, errId) else viewState.setError(e)
+        errId?.let { viewState.setError(false, it) } ?: viewState.setError(e)
     }
 
     private suspend fun changeEmailInAccount(code: String) {
-        fetchResultOnly { sessionInteractor.changeEmail(newEmail!!, code) }
+        fetchResultOnly { sessionInteractor.changeEmail(newEmail, code) }
             .run {
-                when {
-                    error?.isBadCodeError() ?: false -> viewState.setWrongCodeError()
-                    error != null                    -> viewState.setError(error!!)
-                    else                             -> emailChanged()
-                }
+                error?.let { err ->
+                    if (err.code == ApiException.UNPROCESSABLE) {
+                        viewState.setWrongCodeError(err.details)
+                    } else {
+                        viewState.setError(err)
+                    }
+                } ?: emailChanged()
             }
     }
 
     private fun emailChanged() { router.exit() }
+
+    private fun isEmailValid(): Boolean {
+        return if (newEmail.isEmpty() || !Utils.checkEmail(newEmail)) {
+            viewState.setError(false, R.string.LNG_ERROR_EMAIL)
+            false
+        } else {
+            true
+        }
+    }
 }

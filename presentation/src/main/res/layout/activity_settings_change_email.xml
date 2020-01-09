@@ -27,22 +27,23 @@
         android:id="@+id/emailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:account_field_view_icon="@drawable/ic_email"
-        app:account_field_view_hint="@string/LNG_ENTER_NEW_EMAIL"
-        app:account_field_view_divider_visible="false"
+        android:background="@color/colorWhite"
         android:inputType="textEmailAddress"
         android:paddingStart="@dimen/change_email_field_vertical_padding"
         android:paddingEnd="@dimen/change_email_field_vertical_padding"
-        android:background="@color/colorWhite"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"/>
+        app:account_field_view_divider_visible="false"
+        app:account_field_view_hint="@string/LNG_ENTER_NEW_EMAIL"
+        app:account_field_view_icon="@drawable/ic_email"
+        app:layout_constraintTop_toBottomOf="@+id/appbar" />
 
     <com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
         android:id="@+id/activationCodeView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/emailLayout"
+        android:visibility="gone"
+        app:activation_code_title="@string/LNG_EMAIL_SENT_ACTIVATION_CODE"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@+id/emailLayout" />
 
     <Button
         android:id="@+id/btnChangeEmail"
@@ -52,10 +53,10 @@
         android:layout_marginStart="@dimen/change_email_bth_change_email_margins"
         android:layout_marginEnd="@dimen/change_email_bth_change_email_margins"
         android:layout_marginBottom="@dimen/change_email_bth_change_email_margins"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/btn_bg_rounded_green"
         android:enabled="false"
         android:text="@string/LNG_CHANGE_EMAIL"
-        android:textColor="@color/colorWhite" />
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

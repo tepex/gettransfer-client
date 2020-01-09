@@ -22,8 +22,6 @@ class ApiException(
 
     fun isAccountExistError() = type == TYPE_ACCOUNT_EXIST
 
-    fun isBadCodeError() = checkDetailsText(DETAILS_BAD_CODE_OR_EMAIL)
-
     fun isEmailNotChangeableError() = checkDetailsText(DETAILS_EMAIL_NOT_CHANGEABLE)
 
     fun isNewEmailAlreadyTakenError() = checkDetailsText(DETAILS_NEW_EMAIL_TAKEN)
@@ -82,7 +80,6 @@ class ApiException(
         const val DETAILS_NEW_EMAIL_INVALID_2 = "Email address is invalid"
         const val DETAILS_NEW_EMAIL_TAKEN = "email=[already_taken]"
         const val DETAILS_EMAIL_NOT_CHANGEABLE = "account=[email_not_manually_changeable]"
-        const val DETAILS_BAD_CODE_OR_EMAIL = "bad_code_or_email"
         const val DETAILS_REDIRECT_EMAIL = "email"
         const val DETAILS_REDIRECT_PHONE = "phone"
 
