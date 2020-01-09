@@ -28,7 +28,7 @@ interface SessionRepository {
     suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean>
     suspend fun logout(): Result<Account>
 
-    suspend fun getCodeForChangeEmail(email: String): Result<Boolean>
+    suspend fun getConfirmationCode(email: String?, phone: String?): Result<Boolean>
     suspend fun changeEmail(email: String, code: String): Result<Boolean>
 
     fun addAccountChangedListener(listener: AccountChangedListener)

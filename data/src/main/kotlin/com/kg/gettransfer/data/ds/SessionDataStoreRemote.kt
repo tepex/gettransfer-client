@@ -31,7 +31,7 @@ open class SessionDataStoreRemote : SessionDataStore {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun getCodeForChangeEmail(email: String) = remote.getCodeForChangeEmail(email)
+    override suspend fun getConfirmationCode(email: String?, phone: String?) = remote.getConfirmationCode(email, phone)
 
     override suspend fun changeEmail(email: String, code: String) = remote.changeEmail(email, code)
 }

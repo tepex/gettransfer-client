@@ -22,7 +22,7 @@ interface SessionDataStore : KoinComponent {
 
     suspend fun getVerificationCode(email: String?, phone: String?): Boolean
 
-    suspend fun getCodeForChangeEmail(email: String): Boolean
+    suspend fun getConfirmationCode(email: String?, phone: String?): Boolean
 
     suspend fun changeEmail(email: String, code: String): Boolean
 }

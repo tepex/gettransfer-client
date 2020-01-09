@@ -187,9 +187,9 @@ class SessionRepositoryImpl(
         return Result(account)
     }
 
-    override suspend fun getCodeForChangeEmail(email: String): Result<Boolean> {
+    override suspend fun getConfirmationCode(email: String?, phone: String?): Result<Boolean> {
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().getCodeForChangeEmail(email)
+            factory.retrieveRemoteDataStore().getConfirmationCode(email, phone)
         }
         return Result(result.entity != null && result.entity, result.error?.map())
     }

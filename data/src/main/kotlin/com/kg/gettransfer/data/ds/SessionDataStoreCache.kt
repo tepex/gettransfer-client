@@ -37,7 +37,7 @@ open class SessionDataStoreCache : SessionDataStore {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun getCodeForChangeEmail(email: String): Boolean {
+    override suspend fun getConfirmationCode(email: String?, phone: String?): Boolean {
         throw UnsupportedOperationException()
     }
 
