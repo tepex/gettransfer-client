@@ -74,11 +74,10 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
     private fun checkEmailErrors(e: ApiException) =
         showError(e, when {
-            e.isAccountExistError()         -> R.string.LNG_EMAIL_TAKEN_ERROR
-            e.isNewEmailInvalid()           -> R.string.LNG_ERROR_EMAIL
-            e.isEmailNotChangeableError()   -> R.string.LNG_EMAIL_NOT_CHANGEABLE
+            e.isAccountExistError() ||
             e.isNewEmailAlreadyTakenError() -> R.string.LNG_EMAIL_TAKEN_ERROR
             e.isNewEmailInvalid()           -> R.string.LNG_ERROR_EMAIL
+            e.isEmailNotChangeableError()   -> R.string.LNG_EMAIL_NOT_CHANGEABLE
             else                            -> null
         })
 

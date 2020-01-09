@@ -13,7 +13,9 @@ import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 import kotlinx.android.synthetic.main.activity_settings_change_email.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 
-class SettingsChangeEmailActivity: BaseActivity(), SettingsChangeEmailView, ActivationCodeView.OnActivationCodeListener {
+class SettingsChangeEmailActivity : BaseActivity(),
+    SettingsChangeEmailView,
+    ActivationCodeView.OnActivationCodeListener {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsChangeEmailPresenter
@@ -28,9 +30,9 @@ class SettingsChangeEmailActivity: BaseActivity(), SettingsChangeEmailView, Acti
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_change_email)
 
-        emailLayout.fieldText.onTextChanged {
-            presenter.newEmail = it
-            setEnabledBtnChangeEmail(it.isNotEmpty())
+        emailLayout.fieldText.onTextChanged { email ->
+            presenter.newEmail = email
+            setEnabledBtnChangeEmail(email.isNotEmpty())
         }
         emailLayout.requestInputFieldFocus()
 
@@ -47,6 +49,7 @@ class SettingsChangeEmailActivity: BaseActivity(), SettingsChangeEmailView, Acti
         activationCodeView.cancelTimer()
     }
 
+    @Suppress("UnsafeCast")
     override fun setToolbar(email: String?) {
         setToolbar(toolbar as Toolbar, R.string.LNG_CHANGING_EMAIL, subTitle = email)
     }

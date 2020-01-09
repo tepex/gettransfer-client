@@ -36,9 +36,9 @@ class ActivationCodeView @JvmOverloads constructor(
         }
 
         codeView.filters = arrayOf(InputFilter.AllCaps())
-        codeView.onTextChanged {
+        codeView.onTextChanged { code ->
             if (codeView.length() > CODE_LENGTH) {
-                codeView.setText(it.substring(0, CODE_LENGTH))
+                codeView.setText(code.substring(0, CODE_LENGTH))
             }
             btnDone.isEnabled = codeView.length() == CODE_LENGTH
             if (errorIsShowed) {
