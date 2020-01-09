@@ -57,8 +57,8 @@ class SessionRemoteImpl : SessionRemote {
         return response.error == null
     }
 
-    override suspend fun changeEmail(email: String, code: String): Boolean {
-        val response: ResponseModel<String?> = core.tryTwice { core.api.changeEmail(email, code) }
+    override suspend fun changeContact(email: String?, phone: String?, code: String): Boolean {
+        val response: ResponseModel<String?> = core.tryTwice { core.api.changeContact(email, phone, code) }
         return response.error == null
     }
 }

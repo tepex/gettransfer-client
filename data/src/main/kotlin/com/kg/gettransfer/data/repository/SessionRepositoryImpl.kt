@@ -194,13 +194,19 @@ class SessionRepositoryImpl(
         return Result(result.entity != null && result.entity, result.error?.map())
     }
 
-    override suspend fun changeEmail(email: String, code: String): Result<Boolean> {
+    override suspend fun changeContact(email: String?, phone: String?, code: String): Result<Boolean> {
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().changeEmail(email, code)
+            factory.retrieveRemoteDataStore().changeContact(email, phone, code)
         }
         if (result.error == null) {
-            this.account.user.profile.email = email
-            this.userEmail = email
+            email?.let { newEmail ->
+                this.account.user.profile.email = newEmail
+                this.userEmail = newEmail
+            }
+            phone?.let { newPhone ->
+                this.account.user.profile.phone = newPhone
+                this.userPhone = newPhone
+            }
         }
         return Result(result.entity != null && result.entity, result.error?.map())
     }
