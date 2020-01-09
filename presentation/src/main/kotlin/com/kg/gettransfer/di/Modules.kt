@@ -70,6 +70,7 @@ import org.slf4j.LoggerFactory
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
 import sys.domain.SetPaymentRequestWithoutDelayInteractor
+import java.util.*
 
 /**
  * Koin main module
@@ -203,6 +204,16 @@ val systemPresentation = module {
 
 val endpoints = module {
     single<List<Endpoint>>(named(ENDPOINTS)) {
+        val prodApiKey = if (BuildConfig.DEBUG) {
+            androidContext().getString(R.string.api_key_prod)
+        } else {
+            val properties = Properties()
+            val assetManager = androidContext().assets
+            val inputStream = assetManager.open("apikey.properties")
+            properties.load(inputStream)
+            properties.getProperty("API_KEY_PROD")
+        }
+
         listOf(
             Endpoint(
                 androidContext().getString(R.string.endpoint_demo),
@@ -213,7 +224,7 @@ val endpoints = module {
             ),
             Endpoint(
                 androidContext().getString(R.string.endpoint_prod),
-                androidContext().getString(R.string.api_key_prod),
+                prodApiKey,
                 androidContext().getString(R.string.api_url_prod),
                 false,
                 false
