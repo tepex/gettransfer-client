@@ -70,7 +70,8 @@ import org.slf4j.LoggerFactory
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
 import sys.domain.SetPaymentRequestWithoutDelayInteractor
-import java.util.*
+
+import java.util.Properties
 
 /**
  * Koin main module
