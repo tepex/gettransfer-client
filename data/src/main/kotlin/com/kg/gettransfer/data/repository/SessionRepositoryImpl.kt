@@ -99,6 +99,11 @@ class SessionRepositoryImpl(
         return Result(account, error)
     }
 
+    override suspend fun updateOldToken(): Result<Unit> {
+        retrieveRemoteEntity { factory.retrieveRemoteDataStore().updateOldToken() }
+        return Result(Unit)
+    }
+
     override suspend fun putAccount(newAccount: Account, pass: String?, repeatedPass: String?): Result<Account> {
         val accountEntity =
             if (pass != null && repeatedPass != null) {

@@ -8,6 +8,8 @@ import org.koin.core.KoinComponent
 
 interface SessionDataStore : KoinComponent {
 
+    suspend fun updateOldToken()
+
     suspend fun getAccount(): AccountEntity?
 
     suspend fun setAccount(accountEntity: AccountEntity): AccountEntity

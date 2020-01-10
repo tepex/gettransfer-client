@@ -15,6 +15,10 @@ open class SessionDataStoreCache : SessionDataStore {
 
     private val cache: SessionCache by inject()
 
+    override suspend fun updateOldToken() {
+        throw UnsupportedOperationException()
+    }
+
     override suspend fun getAccount() = cache.getAccount()
 
     override suspend fun setAccount(accountEntity: AccountEntity) = cache.setAccount(accountEntity)
