@@ -86,8 +86,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private var startCoordinate: LatLng? = null
     private var offer: Offer? = null
 
-    override fun attachView(view: TransferDetailsView) {
-        super.attachView(view)
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchData { transferInteractor.getTransfer(transferId) }?.let { transfer ->
@@ -378,6 +378,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun redirectToPlayMarket() = worker.main.launch {
         withContext(worker.bg) { setAppEnters(ReviewInteractor.APP_RATED_IN_MARKET) }
         viewState.goToGooglePlay()
+    }
+
+    fun onSupportClick(transferId: Long) {
+        viewState.showSupportScreen(transferId)
     }
 
     companion object {

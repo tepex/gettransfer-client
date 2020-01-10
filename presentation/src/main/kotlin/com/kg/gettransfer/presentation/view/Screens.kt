@@ -372,7 +372,7 @@ object Screens {
             fragmentManager,
             fragment = SupportFragment.newInstance(transferId, true),
             containerViewId = android.R.id.content,
-            tag = null,
+            tag = SupportFragment.TAG,
             addToBackStack = true)
     }
 

@@ -119,7 +119,7 @@ class SupportFragment : BaseFragment(), SupportView {
         if (activity is MainNavigateActivity) {
             findNavController().navigate(SupportFragmentDirections.goToBecomeCarrier())
         } else {
-            fragmentManager?.let { fm ->
+            parentFragmentManager?.let { fm ->
                 FragmentUtils.replaceFragment(
                     fm,
                     BecomeCarrierFragment(),
@@ -134,7 +134,7 @@ class SupportFragment : BaseFragment(), SupportView {
         if (activity is MainNavigateActivity) {
             findNavController().navigate(SupportFragmentDirections.goToAbout())
         } else {
-            fragmentManager?.let { Screens.showAboutScreen(it) }
+            parentFragmentManager.let { Screens.showAboutScreen(it) }
         }
     }
 
@@ -147,6 +147,8 @@ class SupportFragment : BaseFragment(), SupportView {
 
         private const val TRANSFER_ID = "transferId"
         private const val SHOW_BACK_ARROW = "showBackArrow"
+
+        const val TAG = "Support"
 
         fun newInstance(transferId: Long?, showBackArrow: Boolean = true): Fragment {
             return SupportFragment().apply {
