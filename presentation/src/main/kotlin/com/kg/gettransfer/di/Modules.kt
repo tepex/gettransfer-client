@@ -207,7 +207,7 @@ val endpoints = module {
     single<List<Endpoint>>(named(ENDPOINTS)) {
         val properties = Properties()
         val assetManager = androidContext().assets
-        val inputStream = assetManager.open("apikey.properties")
+        val inputStream = assetManager.open("gettransfer_apikey.properties")
         properties.load(inputStream)
         val prodApiKey = properties.getProperty("API_KEY_PROD")
 
