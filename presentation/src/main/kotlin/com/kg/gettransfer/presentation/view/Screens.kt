@@ -109,6 +109,11 @@ object Screens {
         override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangeEmailActivity::class.java)
     }
 
+    open class ChangePhone : SupportAppScreen() {
+
+        override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangePhoneActivity::class.java)
+    }
+
     open class ChangePassword : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangePasswordActivity::class.java)

@@ -195,8 +195,7 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun setPhoneCode() {
         with(phoneLayout.fieldText) {
-            val phone = text?.trim()
-            if (phone != null && phone.isEmpty()) {
+            if (text.toString().isEmpty()) {
                 val phoneCode = Utils.getPhoneCodeByCountryIso(context)
                 setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
             }

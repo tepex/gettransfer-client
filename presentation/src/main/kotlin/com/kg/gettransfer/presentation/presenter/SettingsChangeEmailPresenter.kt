@@ -86,7 +86,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
     }
 
     private suspend fun changeEmailInAccount(code: String) {
-        fetchResultOnly { sessionInteractor.changeContact(email = newEmail, code = code) }
+        fetchResultOnly { sessionInteractor.changeContact(code = code, email = newEmail) }
             .run {
                 error?.let { err ->
                     if (err.code == ApiException.UNPROCESSABLE) {

@@ -99,15 +99,11 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
             addTextChangedListener(PhoneNumberFormatter())
             setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    phoneLayout.fieldText.text.toString().let { phone ->
-                        context?.let { context ->
-                            if (phone.isEmpty()) {
-                                val phoneCode = Utils.getPhoneCodeByCountryIso(context)
-                                setText(if (phoneCode > 0) "+$phoneCode" else "+")
-                            }
-                        }
-                        post { setSelection(this.text.toString().length) }
+                    if (text.toString().isEmpty()) {
+                        val phoneCode = Utils.getPhoneCodeByCountryIso(context)
+                        setText(if (phoneCode > 0) "+$phoneCode" else "+")
                     }
+                    post { setSelection(this.text.toString().length) }
                 }
             }
         }

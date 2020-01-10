@@ -94,6 +94,11 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".presentation.ui.SettingsChangePhoneActivity"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".presentation.ui.OffersActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait">
