@@ -13,7 +13,7 @@ import androidx.core.view.isVisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 
-class InputAccountFieldView @JvmOverloads constructor(
+open class InputAccountFieldView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

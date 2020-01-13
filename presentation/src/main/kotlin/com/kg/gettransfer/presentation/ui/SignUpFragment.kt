@@ -22,8 +22,6 @@ import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.SignUpPresenter
 import com.kg.gettransfer.presentation.view.SignUpView
 
-import com.kg.gettransfer.utilities.PhoneNumberFormatter
-
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
@@ -87,25 +85,10 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
         }
     }
 
-    @Suppress("ComplexMethod")
     private fun initPhoneTextChangeListeners() {
-        with(phoneLayout.fieldText) {
-            onTextChanged { text ->
-                if (text.isEmpty() && isFocused) {
-                    setText("+")
-                    setSelection(1)
-                }
-            }
-            addTextChangedListener(PhoneNumberFormatter())
-            setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    if (text.toString().isEmpty()) {
-                        val phoneCode = Utils.getPhoneCodeByCountryIso(context)
-                        setText(if (phoneCode > 0) "+$phoneCode" else "+")
-                    }
-                    post { setSelection(this.text.toString().length) }
-                }
-            }
+        with(phoneLayout) {
+            setOnTextChanged()
+            setOnFocusChangeListener()
         }
     }
 

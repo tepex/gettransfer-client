@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.widget.EditText
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
@@ -61,8 +60,6 @@ import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
-
-import com.kg.gettransfer.utilities.PhoneNumberFormatter
 
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
@@ -169,47 +166,20 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     private fun initPhoneTextChangeListeners() {
-        with(phoneLayout.fieldText) {
-            onTextChanged { text ->
+        with(phoneLayout) {
+            setOnTextChanged { text ->
                 clearHighLightErrorField(phoneLayout)
-                if (text.isEmpty() && isFocused) {
-                    setText("+")
-                    setSelection(1)
-                }
                 presenter.setPhone("+".plus(text.replace(Regex("\\D"), "")))
             }
-            addTextChangedListener(PhoneNumberFormatter())
-            setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    setPhoneCode()
-                } else {
-                    val phone = text?.trim()
+            setOnFocusChangeListener { hasFocus ->
+                if (!hasFocus) {
+                    val phone = fieldText.text?.trim()
                     if (phone != null && phone.length == 1) {
-                        text?.clear()
+                        fieldText.text?.clear()
                         presenter.setPhone("")
                     }
                 }
             }
-        }
-    }
-
-    private fun setPhoneCode() {
-        with(phoneLayout.fieldText) {
-            if (text.toString().isEmpty()) {
-                val phoneCode = Utils.getPhoneCodeByCountryIso(context)
-                setText(if (phoneCode > 0) "+".plus(phoneCode) else "+")
-            }
-            fieldTouched(this)
-        }
-    }
-
-    private fun fieldTouched(viewForFocus: EditText) {
-        if (!isKeyBoardOpened) {
-            showKeyboard()
-        }
-        viewForFocus.apply {
-            requestFocus()
-            post { setSelection(text.length) }
         }
     }
 

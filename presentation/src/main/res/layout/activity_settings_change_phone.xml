@@ -23,7 +23,7 @@
             android:minHeight="?android:attr/actionBarSize" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
+    <com.kg.gettransfer.presentation.ui.custom.InputAccountPhoneFieldView
         android:id="@+id/phoneLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
