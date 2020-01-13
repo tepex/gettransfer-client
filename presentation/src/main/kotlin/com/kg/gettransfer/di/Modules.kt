@@ -131,7 +131,7 @@ val domainModule = module {
     single { CoordinateInteractor(get()) }
     single { CountEventsInteractor(get()) }
     single { GeoInteractor(get(), get()) }
-    single { PushTokenInteractor(get()) }
+    single { OnesignalInteractor(get()) }
     single { SocketInteractor(get()) }
     single { SessionInteractor(get(), get()) }
 }

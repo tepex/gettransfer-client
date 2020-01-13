@@ -6,36 +6,38 @@ buildscript {
     }
 
     ext {
-        kotlin_version        = "1.3.41"
-        coroutines_version    = "1.3.0-RC"
-        serialization_version = "0.9.1"
-        gradle_version        = '3.4.0'
-        koin_version          = "2.0.1"
-        gms_version           = "16.0.0"
-        gs_version            = "4.2.0"
+        kotlin_version        = "1.3.61"
+        coroutines_version    = "1.3.3"
+        serialization_version = "0.14.0-1.3.60-eap-76"
+        // last version (4.0.0-alpha07) is not working now (25/XII-2019):
+        // https://github.com/oliviergauthier/gradle-appcenter-plugin/issues/41
+        gradle_version        = "3.5.3"
+        koin_version          = "2.1.0-alpha-8"
+        gms_version           = "17.0.0"
+        gs_version            = "4.3.3"
         jsr250_version        = "1.0"
         timber_version        = "4.7.1"
         slf4j_version         = "1.7.25"
-        kotlintest_version    = "3.4.0"
+        kotlintest_version    = "3.4.2"
         mockk_version         = "1.9.3"
-        gson_version          = "2.8.5"
-        room_version          = "2.2.0-alpha02"
-        dexcount_version      = "0.8.4"
+        gson_version          = "2.8.6"
+        room_version          = "2.2.3"
+        dexcount_version      = "1.0.2"
         detekt_version        = "1.3.0"
-        sentry_version        = "1.7.23"
-        nav_version           = "2.2.0-rc03"
-        appcenter_plugin_ver  = "1.1.16"
+        sentry_version        = "1.7.29"
+        nav_version           = "2.2.0-rc04"
+        appcenter_plugin_ver  = "1.1.18"
 
         core_testing_version            = "2.1.0"
-        androidx_test_runner_version    = "1.2.0"
-        androidx_test_rules_version     = "1.2.0"
-        androidx_test_ext_truth_version = "1.2.0"
-        androidx_test_ext_junit_version = "1.1.2-alpha02"
-        espresso_version                = "3.3.0-alpha02"
-        espresso_contrib_version        = "2.2.2"
-        jupiter_version                 = "5.5.2"
-        kakao_version                   = "2.1.0"
-        kaspresso_version               = "1.0.1"
+        androidx_test_runner_version    = "1.3.0-alpha03"
+        androidx_test_rules_version     = "1.3.0-alpha03"
+        androidx_test_ext_truth_version = "1.3.0-alpha03"
+        androidx_test_ext_junit_version = "1.1.2-alpha03"
+        espresso_version                = "3.3.0-alpha03"
+        espresso_contrib_version        = "3.0.2"
+        jupiter_version                 = "5.6.0-M1"
+        kakao_version                   = "2.2.0"
+        kaspresso_version               = "1.0.2-alpha2"
         uiautomator_version             = "2.2.0"
 
         libs = [
@@ -94,10 +96,10 @@ plugins {
     https://github.com/ben-manes/gradle-versions-plugin
     $./gradlew dependencyUpdates
     */
-    id 'com.github.ben-manes.versions' version '0.20.0'
-    id 'com.gladed.androidgitversion'  version '0.4.5'
+    id "com.github.ben-manes.versions" version "0.27.0"
+    id "com.gladed.androidgitversion"  version "0.4.11"
     /* code analysis tool  */
-    id 'io.gitlab.arturbosch.detekt' version '1.0.0-RC15'
+    id "io.gitlab.arturbosch.detekt" version "$detekt_version"
     id "io.kotlintest" version "1.1.1"
 }
 
@@ -121,12 +123,11 @@ allprojects {
 }
 
 dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.0.0-RC15"
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version"
 }
 
 detekt {
-    toolVersion = "1.0.0-RC15"
-    filters = ".*build.*,.*/resources/.*,.*/tmp/.*"
+    toolVersion = "$detekt_version"
     input = files(
         "cache/src",
         "data/src",
@@ -331,6 +332,12 @@ detekt {
         "presentation/src/main/kotlin/sys/presentation/ConfigsManager.kt"
     )
     config = files("detekt-config.yml")
+}
+
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt) {
+    exclude("resources/")
+    exclude("build/")
+    exclude("tmp/")
 }
 
 task clean(type: Delete) {

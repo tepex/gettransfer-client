@@ -130,7 +130,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     protected suspend fun clearAllCachedData() {
         if (accountManager.remoteAccount.partner?.defaultPromoCode != null) orderInteractor.promoCode = ""
-        utils.asyncAwait { pushTokenManager.unregisterPushToken() }
         utils.asyncAwait { accountManager.logout() }
 
         utils.asyncAwait { transferInteractor.clearTransfersCache() }

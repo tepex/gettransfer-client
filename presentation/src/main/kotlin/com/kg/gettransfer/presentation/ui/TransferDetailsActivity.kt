@@ -50,7 +50,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
-import com.kg.gettransfer.presentation.view.Screens.showSupportScreen
+import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import java.util.Date
@@ -236,12 +236,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     override fun setTransfer(transfer: TransferModel) {
         initInfoView(transfer)
         initAboutRequestView(transfer)
-        topCommunicationButtons.btnSupport.setOnClickListener {
-            showSupportScreen(supportFragmentManager, transfer.id)
-        }
-        bottomCommunicationButtons.btnSupport.setOnClickListener {
-            showSupportScreen(supportFragmentManager, transfer.id)
-        }
+        topCommunicationButtons.btnSupport.setOnClickListener { presenter.onSupportClick(transfer.id) }
+        bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.onSupportClick(transfer.id) }
         setBookingInfo(transfer)
 
         if (transfer.status == Transfer.Status.REJECTED) {
@@ -782,6 +778,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED -> hideSecondaryBottomSheet()
             else                                                         -> presenter.onBackCommandClick()
         }
+    }
+
+    override fun showSupportScreen(transferId: Long) {
+        Screens.showSupportScreen(supportFragmentManager, transferId)
     }
 
     private fun collapseDetailsBottomSheet() {
