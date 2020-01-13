@@ -618,13 +618,9 @@
 	<dimen name="profile_settings_btns_margin_top">24dp</dimen>
 	<dimen name="profile_settings_btns_text_size">14sp</dimen>
 
-	<!--Change email settings-->
-	<dimen name="change_email_field_vertical_padding">16dp</dimen>
-	<dimen name="change_email_bth_change_email_margins">20dp</dimen>
-
-	<!--Change password settings-->
-	<dimen name="change_pass_fields_layout_vertical_padding">16dp</dimen>
-	<dimen name="change_pass_btn_done_margins">20dp</dimen>
+	<!--Change account contact field screens-->
+	<dimen name="change_contact_screen_fields_vertical_padding">16dp</dimen>
+	<dimen name="change_contact_screen_btn_done_margins">20dp</dimen>
 
 	<!--Activation code view-->
 	<dimen name="activation_code_horizontal_padding">16dp</dimen>
