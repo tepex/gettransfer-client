@@ -54,14 +54,12 @@ class SettingsChangeEmailActivity : BaseActivity(),
         setToolbar(toolbar as Toolbar, R.string.LNG_CHANGING_EMAIL, subTitle = email)
     }
 
-    override fun showCodeLayout() {
+    override fun showCodeLayout(resendDelay: Long) {
         activationCodeView.isVisible = true
         btnChangeEmail.isVisible = false
         activationCodeView.setFocus()
         emailLayout.disableInputField()
-    }
 
-    override fun setTimer(resendDelay: Long) {
         activationCodeView.setTimer(resendDelay)
     }
 

@@ -62,14 +62,12 @@ class SettingsChangePhoneActivity : BaseActivity(),
         setToolbar(toolbar as Toolbar, R.string.LNG_CHANGING_PHONE, subTitle = phone)
     }
 
-    override fun showCodeLayout() {
+    override fun showCodeLayout(resendDelay: Long) {
         activationCodeView.isVisible = true
         btnChangePhone.isVisible = false
         activationCodeView.setFocus()
         phoneLayout.disableInputField()
-    }
 
-    override fun setTimer(resendDelay: Long) {
         activationCodeView.setTimer(resendDelay)
     }
 
