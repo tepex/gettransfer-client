@@ -51,7 +51,8 @@ abstract class BaseMapDialogPresenter<BV : BaseMapDialogView> : BasePresenter<BV
                         withPrices = false,
                         returnWay = false,
                         currency = sessionInteractor.currency.code,
-                        dateTime = null
+                        dateTo = null,
+                        dateReturn = null
                     )
                 ).model
             }

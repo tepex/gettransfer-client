@@ -97,7 +97,8 @@ interface Api {
         @Query("with_prices") withPrices: Boolean,
         @Query("return_way") returnWay: Boolean,
         @Query("currency") currency: String,
-        @Query("date_to") dateTime: String?
+        @Query("date_to") dateTo: String?,
+        @Query("date_return") dateReturn: String?
     ): ResponseModel<RouteInfoModel>
 
     @GET("$API_TRANSFERS/{id}/offers")
