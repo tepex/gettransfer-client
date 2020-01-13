@@ -322,6 +322,7 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CardDateFormatter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CommunicationManager.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CountryCodeManager.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/EndlessRecyclerViewScrollListener.kt",

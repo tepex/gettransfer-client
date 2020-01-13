@@ -51,8 +51,8 @@ import com.kg.gettransfer.utilities.GTDownloadManager
 
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 import com.kg.gettransfer.sys.domain.*
-
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.CommunicationManager
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
@@ -167,6 +167,7 @@ val androidModule = module {
     single { GTDownloadManager(androidApplication().applicationContext) }
     single { NetworkChangeCallback(androidApplication().applicationContext) }
     single { PushTokenManager() }
+    single { CommunicationManager() }
     single { CountryCodeManager(androidApplication().applicationContext) }
 }
 

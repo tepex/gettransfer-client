@@ -51,6 +51,7 @@ import com.kg.gettransfer.sys.domain.Preferences
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.CommunicationManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -65,6 +66,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private val getPreferences: GetPreferencesInteractor by inject()
     private val worker: WorkerManager by inject { parametersOf("TransferDetailsPresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
+    private val communicationManager: CommunicationManager by inject()
 
     private val routeMapper: RouteMapper by inject()
     private val cityPointMapper: CityPointMapper by inject()
@@ -291,6 +293,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             }
         }
     }
+
+    fun callPhone(phone: String) = communicationManager.callPhone(phone)
+
+    private fun sendEmail(transferId: Long?, emailCarrier: String?) =
+        communicationManager.sendEmail(transferId, emailCarrier)
 
     fun rateTrip(rating: Float, isNeedCheckStoreRate: Boolean) {
         offer?.let { reviewInteractor.setOfferReview(it) }
