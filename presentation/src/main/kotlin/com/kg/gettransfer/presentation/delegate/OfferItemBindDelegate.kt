@@ -45,7 +45,7 @@ object OfferItemBindDelegate {
     }
 
     @SuppressLint("SetTextI18n")
-    @Suppress("NestedBlockDepth")
+    @Suppress("NestedBlockDepth", "ComplexMethod")
     private fun bindOfferModelTiny(view: View, offer: OfferModel, isNameSignPresent: Boolean) = with(view) {
         with(offer.vehicle) {
             tv_car_model_tiny.text = "$model $year"

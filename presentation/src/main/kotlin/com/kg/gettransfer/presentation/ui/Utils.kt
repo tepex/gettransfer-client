@@ -5,7 +5,13 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.PorterDuff
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 
 import android.graphics.drawable.Drawable
@@ -79,14 +85,20 @@ import timber.log.Timber
 import kotlin.math.max
 import android.graphics.PorterDuffXfermode as PorterDuffXfermode1
 
+@Suppress("TooManyFunctions")
 object Utils : KoinComponent {
-    //private val PHONE_PATTERN = Pattern.compile("^\\+\\d{11,13}$")
     private val EMAIL_PATTERN = Patterns.EMAIL_ADDRESS
 
-    const val MAX_BITMAP_SIZE = 4096
+    private const val MAX_BITMAP_SIZE = 4096
+    // space (in px) to leave between the bounding box edges and the view edges.
+    // This value is applied to all four sides of the bounding box.
+    private const val CAMERA_PADDING = 150
+
+    private const val HOURS_ID_DAY = 24
+    private const val MINUTES_IN_HOUR = 60
 
     internal val phoneUtil: PhoneNumberUtil by inject()
-    internal val countryCodeManager: CountryCodeManager by inject()
+    private val countryCodeManager: CountryCodeManager by inject()
 
     private val pointMapper: PointMapper by inject()
 
@@ -106,16 +118,6 @@ object Utils : KoinComponent {
             setIcon(android.R.drawable.ic_dialog_alert)
             show()
         }
-    }
-
-    fun showLoginDialog(context: Context, message: String, title: String) {
-        getAlertDialogBuilder(context)
-                .apply {
-                    setTitle(title)
-                    setMessage(message)
-                    setPositiveButton(R.string.LNG_OK) { dialog,_ -> dialog.dismiss() }
-                    show()
-                }
     }
 
     fun showAlertCancelRequest(context: Context, reason: String, listener: (Boolean) -> Unit) {
@@ -206,10 +208,10 @@ object Utils : KoinComponent {
     ) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
 
     fun setOfferFilterDialogListener(
-            context: Context,
-            view: View,
-            items: List<CharSequence>,
-            listener: (Int) -> Unit
+        context: Context,
+        view: View,
+        items: List<CharSequence>,
+        listener: (Int) -> Unit
     ) { setModelsDialogListener(context, view, R.string.LNG_SORT, items, listener) }
 
     fun setEndpointsDialogListener(
@@ -277,16 +279,13 @@ object Utils : KoinComponent {
     }
 
     fun checkEmail(email: String?) = EMAIL_PATTERN.matcher(email ?: "").matches()
-        //fun checkPhone(phone: String?) = PHONE_PATTERN.matcher(phone?.trim() ?: "").matches()
 
     fun checkPhone(phone: String?): Boolean {
-        try {
-            /*return if(!PHONE_PATTERN.matcher(phone.trim()).matches()) false
-            else phoneUtil.isValidNumber(phoneUtil.parse(phone, null))*/
-            return phoneUtil.isValidNumber(phoneUtil.parse(phone, Locale.getDefault().country))
-        } catch (e: Exception) {
+        return try {
+            phoneUtil.isValidNumber(phoneUtil.parse(phone, Locale.getDefault().country))
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             Timber.w(e, "phone parse error: $phone")
-            return false
+            false
         }
     }
 
@@ -297,7 +296,11 @@ object Utils : KoinComponent {
 
     fun convertToInternationalPhone(phone: String): String {
         val phoneNumber = phoneUtil.parse(phone, Locale.getDefault().country)
-        val internationalPhone = phoneUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL).replace(Regex("\\D"), "")
+        val internationalPhone =
+            phoneUtil.format(
+                phoneNumber,
+                PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
+                .replace(Regex("\\D"), "")
         return "+".plus(internationalPhone)
     }
 
@@ -309,9 +312,6 @@ object Utils : KoinComponent {
 
         if (routeModel.polyLines != null && routeModel.polyLines.isNotEmpty()) {
             for (item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
-
-            // Для построения упрощённого маршрута (меньше точек)
-            //val mPoints = PolyUtil.decode(routeInfo.overviewPolyline)
 
             line = PolylineOptions()
 
@@ -333,36 +333,26 @@ object Utils : KoinComponent {
         val southwest = build.southwest
         val isVerticalRoute = northeast.latitude - southwest.latitude >= northeast.longitude - southwest.longitude
 
-        track = try { CameraUpdateFactory.newLatLngBounds(build, 150) }
-        catch (e: Exception) {
+        track = try {
+            CameraUpdateFactory.newLatLngBounds(build, CAMERA_PADDING)
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             Timber.w(e, "Create order error: $latLngBuilder")
             null
         }
         return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track, isVerticalRoute)
     }
 
-    fun getCameraUpdate(list: List<LatLng>) = LatLngBounds.Builder()
-        .also { b -> list.forEach { b.include(it) } }
-        .build()
-        .run { CameraUpdateFactory.newLatLngBounds(this, 150) }
+    fun getCameraUpdate(list: List<LatLng>) =
+        LatLngBounds.Builder().also { b ->
+            list.forEach { b.include(it) }
+        }.build().run { CameraUpdateFactory.newLatLngBounds(this, CAMERA_PADDING) }
 
     fun getCameraUpdateForPin(point: LatLng) =
         CameraUpdateFactory.newLatLngZoom(point, BaseGoogleMapActivity.MAP_MIN_ZOOM)
 
     fun convertDuration(min: Int): Triple<Int, Int, Int> {
-        val hours = min / 60
-        return Triple(hours / 24, hours % 24, min % 60)
-    }
-
-    fun convertHoursToMinutes(hours: Int) = hours * 60
-
-    fun formatDuration(context: Context, duration: Int): String {
-        val days = duration / 24
-        return if (days > 0) {
-            "$days ".plus(context.getString(R.string.LNG_DAYS))
-        } else {
-            "$duration ".plus(context.getString(R.string.LNG_HOURS))
-        }
+        val hours = min / MINUTES_IN_HOUR
+        return Triple(hours / HOURS_ID_DAY, hours % HOURS_ID_DAY, min % MINUTES_IN_HOUR)
     }
 
     fun durationToString(context: Context, duration: Triple<Int, Int, Int>) = buildString {
@@ -372,9 +362,9 @@ object Utils : KoinComponent {
             append(" $days")
             append(context.getString(R.string.LNG_D))
         }
-        append(" ${hours % 24}")
+        append(" ${hours % HOURS_ID_DAY}")
         append(context.getString(R.string.LNG_H))
-        append(" ${minutes % 60}")
+        append(" ${minutes % MINUTES_IN_HOUR}")
         append(context.getString(R.string.LNG_M))
     }
 
@@ -388,49 +378,55 @@ object Utils : KoinComponent {
 
     @DrawableRes
     fun getLanguageImage(code: String): Int {
-        val imageRes = R.drawable::class.members.find( { it.name == "ic_language_$code" } )
-        return (imageRes?.call() as Int?) ?: R.drawable.ic_language_unknown
+        val imageRes = R.drawable::class.members.find({ it.name == "ic_language_$code" })
+        return imageRes?.call() as Int? ?: R.drawable.ic_language_unknown
     }
 
     @StringRes
     fun getCarColorTextRes(color: String): Int {
         val colorRes = R.string::class.members.find({ it.name == "LNG_COLOR_${color.toUpperCase(Locale.US)}" })
-        return (colorRes?.call() as Int?) ?: R.string.LNG_COLOR_WHITE
+        return colorRes?.call() as Int? ?: R.string.LNG_COLOR_WHITE
     }
 
     @ColorRes
     private fun getCarColorResId(color: String): Int {
         val colorRes = R.color::class.members.find({ it.name == "color_car_$color" })
-        return (colorRes?.call() as Int?) ?: R.color.color_car_white
+        return colorRes?.call() as Int? ?: R.color.color_car_white
     }
 
-    fun getCarColorTextBackFormRes(context: Context, color: String) =
+    private fun getCarColorTextBackFormRes(context: Context, color: String) =
         getCarColorTextBackDrawable(context, getCarColorResId(color))
 
-    private fun getCarColorTextBackDrawable(context: Context, colorId: Int) = GradientDrawable().apply {
-        setColor(ContextCompat.getColor(context, colorId))
-        if (colorId == R.color.color_car_white || colorId == R.color.color_car_yellow) {
-            setStroke(
-                dpToPxInt(context, 1f),
-                ContextCompat.getColor(context, R.color.color_gtr_light_grey)
-            )
+    private fun getCarColorTextBackDrawable(context: Context, colorId: Int): GradientDrawable {
+        val radius = 24.0f
+        return GradientDrawable().apply {
+            setColor(ContextCompat.getColor(context, colorId))
+            if (colorId == R.color.color_car_white || colorId == R.color.color_car_yellow) {
+                setStroke(
+                    dpToPxInt(context, 1f),
+                    ContextCompat.getColor(context, R.color.color_gtr_light_grey)
+                )
+            }
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = convertDpToPixels(context, radius)
         }
-        shape = GradientDrawable.RECTANGLE
-        cornerRadius = convertDpToPixels(context, 24.0f)
     }
 
     fun getCarColorFormRes(context: Context, color: String) = getCarColorDrawable(context, getCarColorResId(color))
 
-    private fun getCarColorDrawable(context: Context, colorId: Int) = GradientDrawable().apply {
-        setColor(ContextCompat.getColor(context, colorId))
-        if (colorId == R.color.color_car_white) {
-            setStroke(
-                dpToPxInt(context, 1f),
-                ContextCompat.getColor(context, R.color.color_gtr_light_grey)
-            )
+    private fun getCarColorDrawable(context: Context, colorId: Int): GradientDrawable {
+        val radius = 5.0f
+        return GradientDrawable().apply {
+            setColor(ContextCompat.getColor(context, colorId))
+            if (colorId == R.color.color_car_white) {
+                setStroke(
+                    dpToPxInt(context, 1f),
+                    ContextCompat.getColor(context, R.color.color_gtr_light_grey)
+                )
+            }
+            shape = GradientDrawable.OVAL
+            cornerRadius = radius
         }
-        shape = GradientDrawable.OVAL
-        cornerRadius = 5.0f
     }
 
     fun setCarColorInTextView(context: Context, textView: TextView, color: String) {
@@ -472,43 +468,38 @@ object Utils : KoinComponent {
 
     fun dpToPxInt(context: Context, dp: Float) = convertDpToPixels(context, dp).toInt()
 
-/*
-        fun isConnectedToInternet(context: Context?): Boolean {
-            try {
-                if (context != null) {
-                    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                    val networkInfo = connectivityManager.activeNetworkInfo
-                    return networkInfo != null && networkInfo.isConnected
-                }
-                return false
-            } catch (e: Exception) {
-                return false
-            }
-        }
-        */
-    fun isValidBitmap(bitmap: Bitmap) = bitmap.width <= MAX_BITMAP_SIZE && bitmap.height <= MAX_BITMAP_SIZE
+    fun isValidBitmap(bitmap: Bitmap) =
+        bitmap.width <= MAX_BITMAP_SIZE && bitmap.height <= MAX_BITMAP_SIZE
 
-    fun setDrawables(textView: TextView,
-                     @DrawableRes start: Int,
-                     @DrawableRes top: Int,
-                     @DrawableRes end: Int,
-                     @DrawableRes bottom: Int) =
-            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
+    fun setDrawables(
+        textView: TextView,
+        @DrawableRes start: Int,
+        @DrawableRes top: Int,
+        @DrawableRes end: Int,
+        @DrawableRes bottom: Int
+    ) {
+        textView.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
+    }
 
-    fun setDrawables(textView: TextView, start: Drawable?,
-                     top: Drawable?, end: Drawable?,
-                     bottom: Drawable?) =
-            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
+    fun setDrawables(
+        textView: TextView,
+        start: Drawable?,
+        top: Drawable?,
+        end: Drawable?,
+        bottom: Drawable?
+    ) {
+        textView.setCompoundDrawablesRelativeWithIntrinsicBounds(start, top, end, bottom)
+    }
 
     fun bindMainOfferPhoto(
         view: ImageView,
         parent: View,
         path: String? = null,
         @DrawableRes resource: Int = 0
-    ) = Glide
-        .with(parent).let {
-            if (path != null) it.load(path)
-            else {
+    ) = Glide.with(parent).let {
+            if (path != null) {
+                it.load(path)
+            } else {
                 view.setBackgroundResource(R.drawable.bg_rounded_bn_photo)
                 it.load(resource)
             }
@@ -529,16 +520,16 @@ object Utils : KoinComponent {
         .into(view)
 
     fun getRoundedBitmap(context: Context, drawableId: Int, bacColorResId: Int?) =
-        AppCompatResources.getDrawable(context, drawableId)?.toBitmap()
-            ?.squareBitmap(bacColorResId?.let { ContextCompat.getColor(context, it) })?.let {
-                RoundedBitmapDrawableFactory.create(context.resources, it).apply { isCircular = true }.toBitmap()
-            }
+        AppCompatResources
+            .getDrawable(context, drawableId)?.toBitmap()
+            ?.squareBitmap(bacColorResId?.let { ContextCompat.getColor(context, it) })
+            ?.let { RoundedBitmapDrawableFactory.create(context.resources, it).apply { isCircular = true }.toBitmap() }
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {
     this.addTextChangedListener(object: TextWatcher {
-        override fun afterTextChanged(s: Editable?) {}
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun afterTextChanged(s: Editable?) { }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = cb(s.toString())
     })
 }
@@ -546,16 +537,18 @@ fun EditText.onTextChanged(cb: (String) -> Unit) {
 fun EditText.afterTextChanged(cb: (String) -> Unit) {
     this.addTextChangedListener(object: TextWatcher {
         override fun afterTextChanged(s: Editable?) = cb(s.toString())
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
     })
 }
 
-fun Bitmap.roundedSquareBitmap(dimensionPixelSize: Int,
-                               topLeft: Boolean,
-                               topRight: Boolean,
-                               bottomRight: Boolean,
-                               bottomLeft: Boolean): Bitmap {
+fun Bitmap.roundedSquareBitmap(
+    dimensionPixelSize: Int,
+    topLeft: Boolean,
+    topRight: Boolean,
+    bottomRight: Boolean,
+    bottomLeft: Boolean
+): Bitmap {
     val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(output)
 
@@ -566,52 +559,74 @@ fun Bitmap.roundedSquareBitmap(dimensionPixelSize: Int,
     canvas.drawARGB(0, 0, 0, 0)
     paint.color = Color.WHITE
 
-    canvas.drawPath(Path().roundedRect(0f, 0f, width.toFloat(), height.toFloat(),
-            dimensionPixelSize.toFloat(), dimensionPixelSize.toFloat(), topLeft, topRight, bottomRight, bottomLeft), paint)
+    canvas.drawPath(
+        Path().roundedRect(
+            left = 0f,
+            top = 0f,
+            right = width.toFloat(),
+            bottom = height.toFloat(),
+            dx = dimensionPixelSize.toFloat(),
+            dy = dimensionPixelSize.toFloat(),
+            topLeft = topLeft,
+            topRight = topRight,
+            bottomRight = bottomRight,
+            bottomLeft = bottomLeft),
+        paint)
     paint.xfermode = PorterDuffXfermode1(PorterDuff.Mode.SRC_IN)
     canvas.drawBitmap(this, rect, rect, paint)
     return output
 }
 
-fun Path.roundedRect(left: Float, top: Float, right: Float, bottom: Float, rx: Float, ry: Float,
-                     tl: Boolean, tr: Boolean, br: Boolean, bl: Boolean): Path {
+@Suppress("LongParameterList")
+fun Path.roundedRect(
+    left: Float,
+    top: Float,
+    right: Float,
+    bottom: Float,
+    dx: Float,
+    dy: Float,
+    topLeft: Boolean,
+    topRight: Boolean,
+    bottomRight: Boolean,
+    bottomLeft: Boolean
+): Path {
     val width = right - left
     val height = bottom - top
-    val widthMinusCorners = (width - (2 * rx))
-    val heightMinusCorners = (height - (2 * ry))
+    val widthMinusCorners = width - 2 * dx
+    val heightMinusCorners = height - 2 * dy
 
-    moveTo(right, top + ry)
-    if (tr)
-        rQuadTo(0f, -ry, -rx, -ry)//top-right corner
-    else {
-        rLineTo(0f, -ry)
-        rLineTo(-rx, 0f)
+    moveTo(right, top + dy)
+    if (topRight) {
+        rQuadTo(0f, -dy, -dx, -dy) // top-right corner
+    } else {
+        rLineTo(0f, -dy)
+        rLineTo(-dx, 0f)
     }
     rLineTo(-widthMinusCorners, 0f)
-    if (tl)
-        rQuadTo(-rx, 0f, -rx, ry) //top-left corner
-    else {
-        rLineTo(-rx, 0f)
-        rLineTo(0f, ry)
+    if (topLeft) {
+        rQuadTo(-dx, 0f, -dx, dy)  // top-left corner
+    } else {
+        rLineTo(-dx, 0f)
+        rLineTo(0f, dy)
     }
     rLineTo(0f, heightMinusCorners)
 
-    if (bl)
-        rQuadTo(0f, ry, rx, ry)//bottom-left corner
-    else {
-        rLineTo(0f, ry)
-        rLineTo(rx, 0f)
+    if (bottomLeft) {
+        rQuadTo(0f, dy, dx, dy) // bottom-left corner
+    } else {
+        rLineTo(0f, dy)
+        rLineTo(dx, 0f)
     }
 
     rLineTo(widthMinusCorners, 0f)
-    if (br)
-        rQuadTo(rx, 0f, rx, -ry) //bottom-right corner
-    else {
-        rLineTo(rx, 0f)
-        rLineTo(0f, -ry)
+    if (bottomRight) {
+        rQuadTo(dx, 0f, dx, -dy) // bottom-right corner
+    } else {
+        rLineTo(dx, 0f)
+        rLineTo(0f, -dy)
     }
     rLineTo(0f, -heightMinusCorners)
-    close()//Given close, last lineto can be removed.
+    close() // Given close, last line to can be removed.
     return this
 }
 
