@@ -3,7 +3,6 @@ package com.kg.gettransfer.presentation.ui
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.widget.Toolbar
-import android.view.View
 
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -39,18 +38,8 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
     }
 
     private fun initClickListeners() {
-        View.OnClickListener { presenter.onChangeEmailClicked() }.also { listener ->
-            with(emailField) {
-                setOnClickListener(listener)
-                field_input.setOnClickListener(listener)
-            }
-        }
-        View.OnClickListener { presenter.onChangePhoneClicked() }.also { listener ->
-            with(phoneField) {
-                setOnClickListener(listener)
-                field_input.setOnClickListener(listener)
-            }
-        }
+        emailField.setOnClickListener { presenter.onChangeEmailClicked() }
+        phoneField.setOnClickListener { presenter.onChangePhoneClicked() }
         passwordField.setOnClickListener { presenter.onChangePasswordClicked() }
         btnLogout.setOnClickListener { presenter.onLogout() }
         btnSave.setOnClickListener { presenter.onSaveBtnClicked() }
@@ -58,13 +47,9 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
 
     override fun initFields(profile: ProfileModel) {
         with(profile) {
-            nameField.field_input.setText(name)
-            if (!email.isNullOrEmpty()) {
-                emailField.field_input.setText(email)
-            }
-            if (!phone.isNullOrEmpty()) {
-                phoneField.field_input.setText((phone))
-            }
+            name?.let { nameField.setText(it) }
+            email?.let { emailField.setText(it) }
+            phone?.let { phoneField.setText(it) }
         }
     }
 
