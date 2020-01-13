@@ -20,6 +20,7 @@ interface SessionRepository {
     var isAppLanguageChanged: Boolean
 
     suspend fun coldStart(): Result<Account>
+    suspend fun updateOldToken(): Result<Unit>
     suspend fun putAccount(newAccount: Account, pass: String? = null, repeatedPass: String? = null): Result<Account>
     suspend fun putNoAccount(newAccount: Account): Result<Account>
     suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean): Result<Account>

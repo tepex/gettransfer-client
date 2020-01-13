@@ -1,10 +1,12 @@
 package com.kg.gettransfer.sys.presentation
 
+import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.core.domain.Result
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.di.ENDPOINTS
 import com.kg.gettransfer.di.IP_API_KEY
+import com.kg.gettransfer.domain.interactor.SessionInteractor
 
 import com.kg.gettransfer.sys.domain.*
 import kotlinx.coroutines.CoroutineScope
@@ -13,6 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 import org.koin.core.KoinComponent
+import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -34,6 +37,7 @@ class ConfigsManager : KoinComponent {
     private val getMobileConfigsInteractor: GetMobileConfigsInteractor by inject()
     private val setEndpoint: SetEndpointInteractor by inject()
     private val setIpApiKey: SetIpApiKeyInteractor by inject()
+    private val sessionInteractor: SessionInteractor = get()
 
     suspend fun getConfigs() = withContext(worker.bg) { getConfigsInteractor().getModel() }
 
@@ -44,10 +48,16 @@ class ConfigsManager : KoinComponent {
         /* We should await for preferences, cause we need to know endpoint to call network
            getMobileConfigs and getConfigs */
         val preferences = backgroundScope.async { getPreferences() }.await().getModel()
-        val endpoint = endpoints.find { it == preferences.endpoint } ?: defaultEndpoint
+        val endpoint = if (BuildConfig.FLAVOR == "prod") {
+            defaultEndpoint
+        } else {
+            endpoints.find { it == preferences.endpoint } ?: defaultEndpoint
+        }
 
         backgroundScope.async { setEndpoint(endpoint) }.await()
         backgroundScope.async { setIpApiKey(ipApiKey) }.await()
+
+        backgroundScope.async { sessionInteractor.updateOldToken() }.await()
 
         val mobileResult  = backgroundScope.async { getMobileConfigsInteractor() }.await()
         val configsResult = backgroundScope.async { getConfigsInteractor() }.await()
