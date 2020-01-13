@@ -12,7 +12,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun setTransfer(transfer: TransferModel)
-    fun setOffer(offer: OfferModel, childSeats: Int)
+    fun setOffer(offer: OfferModel, childSeats: Int, messagesCount: Int)
     fun setBookNowOfferInfo(isBookNowOffer: Boolean)
     fun showCancelationReasonsList()
     fun showAlertRestoreRequest()
