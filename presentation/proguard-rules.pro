@@ -148,3 +148,7 @@
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
+
+# Fix for crash in appcenter library
+# https://github.com/microsoft/appcenter-sdk-android/issues/1340
+-keep class org.json.** {*;}
