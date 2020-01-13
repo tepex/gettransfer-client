@@ -3,15 +3,11 @@ package com.kg.gettransfer.presentation.presenter
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.BaseMapDialogView
-import org.koin.core.inject
 
 abstract class BaseMapDialogPresenter<BV : BaseMapDialogView> : BasePresenter<BV>() {
-
-    private val routeMapper: RouteMapper by inject()
 
     private var mapIsReady = false
     var transfer: Transfer? = null
@@ -61,7 +57,7 @@ abstract class BaseMapDialogPresenter<BV : BaseMapDialogView> : BasePresenter<BV
         return transfer.from.point?.let { fromPoint ->
             transfer.to?.point?.let { toPoint ->
                 val isRoundTrip = transfer.dateReturnLocal != null
-                routeMapper.getView(
+                RouteModel(
                     transfer.from.name,
                     transfer.to?.name,
                     fromPoint,

@@ -27,7 +27,6 @@ import com.kg.gettransfer.extensions.simpleFormat
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
-import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.UserMapper
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -61,7 +60,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val dateDelegate: DateTimeDelegate by inject()
     private val childSeatsDelegate: PassengersDelegate by inject()
 
-    private val routeMapper: RouteMapper by inject()
     private val userMapper: UserMapper by inject()
 
     private val nState: NewTransferState by inject()
@@ -179,7 +177,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         from.point?.let { fromPoint ->
             to.point?.let { toPoint ->
                 val isRoundTrip = dateDelegate.returnDate != null
-                routeModel = routeMapper.getView(
+                routeModel = RouteModel(
                     from.name,
                     to.name,
                     fromPoint,
