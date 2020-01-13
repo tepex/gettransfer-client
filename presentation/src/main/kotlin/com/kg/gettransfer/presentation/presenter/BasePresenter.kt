@@ -308,7 +308,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         map: Map<Long, Int>,
         count: Int? = null,
         plussedCount: Int? = null
-    ) = map.toMutableMap().apply { put(transferId, count ?: map[transferId]?.plus(plussedCount ?: 1) ?: 1) }
+    ) = map.toMutableMap().apply { put(transferId, count ?: (map[transferId] ?: 0).plus(plussedCount ?: 1)) }
 
     private fun decreaseMapCounter(transferId: Long, map: Map<Long, Int>) = map.toMutableMap().apply {
         if (this[transferId] != null) {
