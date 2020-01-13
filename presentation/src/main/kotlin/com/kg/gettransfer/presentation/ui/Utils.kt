@@ -64,7 +64,7 @@ import com.kg.gettransfer.presentation.mapper.PointMapper
 
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
-import com.kg.gettransfer.presentation.ui.utils.TopRightRoundedCornerTransform
+import com.kg.gettransfer.presentation.ui.utils.TopBottomRightRoundedCornerTransform
 import com.kg.gettransfer.utilities.CountryCodeManager
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
@@ -520,7 +520,9 @@ object Utils : KoinComponent {
                 .transform(
                     *arrayOf<Transformation<Bitmap>>(
                         path?.let { CenterCrop() } ?: FitCenter(),
-                        TopRightRoundedCornerTransform(parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner))
+                        TopBottomRightRoundedCornerTransform(
+                            parent.context.resources.getDimensionPixelSize(R.dimen.view_offer_photo_corner)
+                        )
                     )
                 )
         )
@@ -549,7 +551,11 @@ fun EditText.afterTextChanged(cb: (String) -> Unit) {
     })
 }
 
-fun Bitmap.roundedSquareBitmap(dimensionPixelSize: Int, tl: Boolean, tr: Boolean, br: Boolean, bl: Boolean): Bitmap {
+fun Bitmap.roundedSquareBitmap(dimensionPixelSize: Int,
+                               topLeft: Boolean,
+                               topRight: Boolean,
+                               bottomRight: Boolean,
+                               bottomLeft: Boolean): Bitmap {
     val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(output)
 
@@ -561,7 +567,7 @@ fun Bitmap.roundedSquareBitmap(dimensionPixelSize: Int, tl: Boolean, tr: Boolean
     paint.color = Color.WHITE
 
     canvas.drawPath(Path().roundedRect(0f, 0f, width.toFloat(), height.toFloat(),
-            dimensionPixelSize.toFloat(), dimensionPixelSize.toFloat(), tl, tr, br, bl), paint)
+            dimensionPixelSize.toFloat(), dimensionPixelSize.toFloat(), topLeft, topRight, bottomRight, bottomLeft), paint)
     paint.xfermode = PorterDuffXfermode1(PorterDuff.Mode.SRC_IN)
     canvas.drawBitmap(this, rect, rect, paint)
     return output

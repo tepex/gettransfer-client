@@ -57,11 +57,11 @@
             android:layout_marginStart="@dimen/offer_tiny_name_sign_margin_start"
             android:layout_marginEnd="@dimen/view_offer_car_model_margin_end"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_car_class_tiny"
+            app:layout_constraintBottom_toBottomOf="@+id/view_capacity"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/view_capacity"
-            app:layout_constraintTop_toTopOf="@+id/tv_car_class_tiny"
+            app:layout_constraintTop_toTopOf="@+id/view_capacity"
             app:srcCompat="@drawable/ic_with_name_sign"
             tools:visibility="visible" />
 
@@ -147,8 +147,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/view_offer_car_model_margin_end"
             android:textSize="@dimen/offer_tiny_final_price_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/vehicle_conveniences"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_price_no_discount"
+            app:layout_constraintTop_toTopOf="@+id/vehicle_conveniences"
             tools:text="420420.00₽" />
 
         <TextView

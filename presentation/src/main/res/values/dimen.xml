@@ -307,7 +307,7 @@
     <dimen name="view_offer_car_model_margin_start">12dp</dimen>
     <dimen name="view_offer_car_model_margin_end">10dp</dimen>
     <dimen name="view_offer_car_img_width">112dp</dimen>
-    <dimen name="view_offer_car_img_height">94dp</dimen>
+    <dimen name="view_offer_car_img_height">100dp</dimen>
     <dimen name="view_offer_car_img_margin_top">4dp</dimen>
     <dimen name="view_offer_btn_book_height">32dp</dimen>
 	<dimen name="view_offer_btn_book_margin_end">8dp</dimen>
