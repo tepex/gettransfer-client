@@ -178,41 +178,10 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         withContext(worker.bg) { reviewInteractor.checkNotSendedReviews() }
     }
 
-    internal fun sendEmail(transferId: Long?, emailCarrier: String? = null) {
-        worker.main.launch {
-            var transferID: Long? = null
-            if (transferId == null || transferId == -1L) {
-                val result = withContext(worker.bg) {
-                    transferInteractor.getAllTransfers(getUserRole())
-                }
-                if (result.error == null && result.model.first.isNotEmpty()) {
-                    transferID = result.model.first.first().id
-                }
-            } else {
-                transferID = transferId
-            }
-            router.navigateTo(
-                Screens.SendEmail(emailCarrier, transferID, accountManager.remoteProfile.email)
-            )
-        }
-    }
-
     fun getUserRole(): String =
         if (isBusinessAccount()) Transfer.Role.PARTNER.toString() else Transfer.Role.PASSENGER.toString()
 
     fun isBusinessAccount(): Boolean = accountManager.remoteAccount.isBusinessAccount
-
-    internal fun callPhone(phone: String) {
-        router.navigateTo(Screens.CallPhone(phone))
-    }
-
-//    fun onOfferJsonReceived(jsonOffer: String, transferId: Long) =
-//            JSON.nonstrict.parse(OfferEntity.serializer(), jsonOffer)
-//                    .also { it.transferId = transferId }
-//                    .let  { offerEntityMapper.fromEntity(it) }
-//                    .also { it.vehicle.photos = it.vehicle.photos
-//                            .map { photo -> systemInteractor.endpoint.url.plus(photo) } }
-//                    .also { onNewOffer(it) }
 
     open suspend fun onNewOffer(offer: Offer): OfferModel {
         withContext(worker.bg) { offerInteractor.newOffer(offer) }

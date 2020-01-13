@@ -19,6 +19,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.CommunicationManager
 
 import org.koin.core.inject
 
@@ -26,6 +27,7 @@ import org.koin.core.inject
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
 
     private val routeMapper: RouteMapper by inject()
+    private val communicationManager: CommunicationManager by inject()
 
     internal var offerId = 0L
     internal var transferId = 0L
@@ -108,7 +110,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         }
 
     fun onCallClick() {
-        phoneToCall?.let { callPhone(it) }
+        phoneToCall?.let { communicationManager.callPhone(it) }
     }
 
     fun onChatClick() {
