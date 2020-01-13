@@ -266,13 +266,14 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         presenter.setAgreeLicence(value)
     }
 
-    override fun onTransportTypeChanged(type: TransportTypeModel, value: Boolean) {
-        presenter.setPassengersCountForSelectedTransportTypes()
-        if (value) {
+    override fun onTransportTypeClicked(type: TransportTypeModel, showInfo: Boolean) {
+        if (showInfo) {
             val fragment = TransportTypeFragment()
             fragment.transportTypeModel = type
             FragmentUtils.replaceFragment(supportFragmentManager, fragment, R.id.secondary_bottom_sheet)
             presenter.onTransportTypeClicked()
+        } else {
+            presenter.onSelectedTransportTypesChanged()
         }
     }
 

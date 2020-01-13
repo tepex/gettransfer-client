@@ -79,7 +79,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var isTimeSetByUser = false
 
     fun init() {
-        updateRouteInfo(true, saveSelectedTransportTypes = false)
+        updateRouteInfo(true)
         worker.main.launch {
             currencies = configsManager.getConfigs().supportedCurrencies.map { it.map() }
             setCurrency(sessionInteractor.currency.map())
@@ -105,10 +105,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun updateRouteInfo(
         updateMap: Boolean,
-        saveSelectedTransportTypes: Boolean = true,
         isDateOrDistanceChanged: Boolean = false
     ) {
-        if (saveSelectedTransportTypes) saveSelectedTransportTypes()
         val from = orderInteractor.from?.cityPoint
         val to = orderInteractor.to?.cityPoint
         val hourlyDuration = orderInteractor.hourlyDuration
@@ -451,7 +449,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         return false
     }
 
-    fun setPassengersCountForSelectedTransportTypes(setSavedPax: Boolean = false) {
+    fun onSelectedTransportTypesChanged() {
+        saveSelectedTransportTypes()
+        setPassengersCountForSelectedTransportTypes()
+    }
+
+    private fun setPassengersCountForSelectedTransportTypes(setSavedPax: Boolean = false) {
         if (setSavedPax) {
             viewState.setPassengers(orderInteractor.passengers)
             return
@@ -512,7 +515,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun onBackClick() = onBackCommandClick()
 
     override fun onBackCommandClick() {
-        saveSelectedTransportTypes()
         router.exit()
         analytics.logSingleEvent(Analytics.BACK_TO_MAP)
     }
