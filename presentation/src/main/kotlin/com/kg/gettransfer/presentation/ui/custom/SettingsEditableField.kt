@@ -13,8 +13,11 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_settings_editable_field.view.*
 
 class SettingsEditableField @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-        ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ConstraintLayout(context, attrs, defStyleAttr), LayoutContainer {
+
     override val containerView: View =
         LayoutInflater.from(context).inflate(R.layout.view_settings_editable_field, this, true)
 
@@ -26,7 +29,8 @@ class SettingsEditableField @JvmOverloads constructor(
                 field_input.isFocusable = enabled
                 if (!enabled) field_input.isClickable = true
             }
-            field_input.inputType = getInt(R.styleable.SettingsEditableField_android_inputType, EditorInfo.TYPE_CLASS_TEXT)
+            field_input.inputType =
+                getInt(R.styleable.SettingsEditableField_android_inputType, EditorInfo.TYPE_CLASS_TEXT)
         }
     }
 

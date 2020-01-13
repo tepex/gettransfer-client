@@ -80,8 +80,7 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
         delay(TRANSFER_REQUEST_DELAY)
         val result = utils.asyncAwait { transferInteractor.getTransfer(transferId) }
         result.isSuccess()?.let { transfer ->
-            if (transfer.price != null) isPaymentWasSuccessful()
-            else waitingPaymentStatus()
+            if (transfer.price != null) isPaymentWasSuccessful() else waitingPaymentStatus()
         }
     }
 

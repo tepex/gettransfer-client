@@ -27,7 +27,7 @@ class ProfileSettingsPresenter : BasePresenter<ProfileSettingsView>() {
     }
 
     fun setName(name: String) {
-        with (accountManager) {
+        with(accountManager) {
             tempProfile.fullName = name.trim()
             viewState.setEnabledBtnSave(remoteProfile.fullName != tempProfile.fullName)
         }

@@ -8,9 +8,9 @@ import com.kg.gettransfer.utilities.PhoneNumberFormatter
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 
 class InputAccountPhoneFieldView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : InputAccountFieldView(context, attrs, defStyleAttr) {
 
     init {
@@ -30,7 +30,7 @@ class InputAccountPhoneFieldView @JvmOverloads constructor(
     }
 
     fun setOnFocusChangeListener(onFocusChanged: ((hasFocus: Boolean) -> Unit)? = null) {
-        with (fieldText) {
+        with(fieldText) {
             setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     if (text.toString().isEmpty()) {

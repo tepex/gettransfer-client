@@ -33,5 +33,6 @@ open class SessionDataStoreRemote : SessionDataStore {
 
     override suspend fun getConfirmationCode(email: String?, phone: String?) = remote.getConfirmationCode(email, phone)
 
-    override suspend fun changeContact(email: String?, phone: String?, code: String) = remote.changeContact(email, phone, code)
+    override suspend fun changeContact(email: String?, phone: String?, code: String) =
+        remote.changeContact(email, phone, code)
 }
