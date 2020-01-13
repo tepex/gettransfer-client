@@ -307,7 +307,7 @@
     <dimen name="view_offer_car_model_margin_start">12dp</dimen>
     <dimen name="view_offer_car_model_margin_end">10dp</dimen>
     <dimen name="view_offer_car_img_width">112dp</dimen>
-    <dimen name="view_offer_car_img_height">80dp</dimen>
+    <dimen name="view_offer_car_img_height">94dp</dimen>
     <dimen name="view_offer_car_img_margin_top">4dp</dimen>
     <dimen name="view_offer_btn_book_height">32dp</dimen>
 	<dimen name="view_offer_btn_book_margin_end">8dp</dimen>
@@ -359,7 +359,7 @@
 	<dimen name="bottom_sheet_offer_details_text_size_11sp">11sp</dimen>
 	<dimen name="bottom_sheet_offer_details_vehicle_name_margin_top">22dp</dimen>
 	<dimen name="bottom_sheet_offer_details_vehicle_icons_margin_top">16dp</dimen>
-	<dimen name="bottom_sheet_offer_details_margin_10dp">10dp</dimen>
+	<dimen name="bottom_sheet_offer_details_margin_10dp">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_margin_16dp">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_name_sign_img_size">24dp</dimen>
 	<dimen name="bottom_sheet_offer_details_name_sign_text_size">12sp</dimen>
@@ -463,6 +463,7 @@
 	<dimen name="margin32">32dp</dimen>
 	<dimen name="margin0">0dp</dimen>
 	<dimen name="margin8">8dp</dimen>
+	<dimen name="margin5">5dp</dimen>
 	<dimen name="margin104">104dp</dimen>
 
 	<!--new settings-->
@@ -568,12 +569,13 @@
 	<dimen name="offer_tiny_final_price_text_size">18sp</dimen>
 	<dimen name="offer_tiny_co2_text_size">14sp</dimen>
 	<dimen name="offer_tiny_rating_margin_bottom">6dp</dimen>
+	<dimen name="offer_tiny_rating_margin_top">10dp</dimen>
 	<dimen name="offer_tiny_languages_min_height">12dp</dimen>
 	<dimen name="offer_tiny_car_class_margin_top">7dp</dimen>
 	<dimen name="offer_tiny_capacity_margin_start">8dp</dimen>
 	<dimen name="offer_tiny_car_color_width">16dp</dimen>
 	<dimen name="offer_tiny_car_color_height">16dp</dimen>
-	<dimen name="offer_tiny_name_sign_size">16dp</dimen>
+	<dimen name="offer_tiny_name_sign_size">24dp</dimen>
 	<dimen name="offer_tiny_name_sign_margin_start">6dp</dimen>
 
 	<dimen name="payment_dialog_corner_radius">16dp</dimen>
