@@ -88,12 +88,13 @@ class BraintreeParams(
 class GooglePayParams(
     amount: Float,
     currency: String,
+    val countryCode: String,
     val paymentId: Long,
     val gateway: String,
     val gatewayMerchantId: String
 ) : Params(amount, currency) {
 
     companion object {
-        val EMPTY = GooglePayParams(0F, "", 0L, "", "")
+        val EMPTY = GooglePayParams(0F, "", "", 0L, "", "")
     }
 }

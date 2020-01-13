@@ -71,6 +71,8 @@ class SessionInteractor(
 
     suspend fun coldStart() = sessionRepository.coldStart()
 
+    suspend fun updateOldToken() = sessionRepository.updateOldToken()
+
     suspend fun logout() = sessionRepository.logout()
     suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean) =
         sessionRepository.login(email, phone, password, withSmsCode)

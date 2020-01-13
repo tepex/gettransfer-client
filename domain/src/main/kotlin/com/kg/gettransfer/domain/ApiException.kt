@@ -41,10 +41,14 @@ class ApiException(
 
     fun isEarlyDateError() = details == DETAILS_DATE_EARLY
 
+    fun isLateDateError() = details == DETAILS_DATE_LATE
+
     /* PAYMENT ERRORS */
     fun isBigPriceError() = code == UNPROCESSABLE && details == DETAILS_BIG_PRICE
 
     fun isOfferUnavailableError() = code == UNPROCESSABLE && details == DETAILS_OFFER_UNAVAILABLE
+
+    fun isTransferStatusMismatchError() = details.contains(DETAILS_TRANSFER_STATUS_MISMATCH)
 
     companion object {
         const val APP_ERROR         = 0
@@ -62,6 +66,8 @@ class ApiException(
         const val DETAILS_BIG_PRICE = "{price=[is_too_big]}"
         const val DETAILS_OFFER_UNAVAILABLE = "{offer_id=[blocked]}"
         const val DETAILS_DATE_EARLY = "{date=[is too early]}"
+        const val DETAILS_DATE_LATE = "{date=[is too late]}"
+        const val DETAILS_TRANSFER_STATUS_MISMATCH = "transfer_status_mismatch"
 
         const val TYPE_ACCOUNT_EXIST = "account_exists"
         const val TYPE_PHONE_TAKEN = "phone_taken"

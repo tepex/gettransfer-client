@@ -163,6 +163,12 @@
                     android:layout_height="wrap_content"
                     app:settingsTitlePicker="@string/reset_new_driver_app_dialog" />
 
+                <com.kg.gettransfer.presentation.ui.custom.SettingsFieldSwitch
+                    android:id="@+id/settingsPaymentRequestWithoutDelay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:settingsTitleSwitch="@string/payment_request_without_delay"/>
+
                 <com.kg.gettransfer.presentation.ui.custom.SettingsFieldHorizontalPicker
                     android:id="@+id/forceCrash"
                     android:layout_width="match_parent"

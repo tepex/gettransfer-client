@@ -23,6 +23,7 @@ data class PreferencesModel(
     @ColumnInfo(name = PreferencesEntity.FAVORITE_TRANSPORTS) val favoriteTransports: FavoriteTransportsList,
     @ColumnInfo(name = PreferencesEntity.APP_ENTERS) val appEnters: Int,
     @ColumnInfo(name = PreferencesEntity.IS_DEBUG_MENU_SHOWED) val isDebugMenuShowed: Boolean,
+    @ColumnInfo(name = PreferencesEntity.IS_PAYMENT_REQUEST_WITHOUT_DELAY) val isPaymentRequestWithoutDelay: Boolean,
 
     @PrimaryKey(autoGenerate = true) val id: Long = 15
 )
@@ -43,7 +44,8 @@ fun PreferencesModel.map() =
         addressHistory = addressHistory.list.map { it.map() },
         favoriteTransports = favoriteTransports.list.toSet(),
         appEnters = appEnters,
-        isDebugMenuShowed = isDebugMenuShowed
+        isDebugMenuShowed = isDebugMenuShowed,
+        isPaymentRequestWithoutDelay = isPaymentRequestWithoutDelay
     )
 
 fun PreferencesEntity.map() =
@@ -59,5 +61,6 @@ fun PreferencesEntity.map() =
         addressHistory = AddressHistoryList(addressHistory.map { it.map() }),
         favoriteTransports = FavoriteTransportsList(favoriteTransports.toList()),
         appEnters = appEnters,
-        isDebugMenuShowed = isDebugMenuShowed
+        isDebugMenuShowed = isDebugMenuShowed,
+        isPaymentRequestWithoutDelay = isPaymentRequestWithoutDelay
     )

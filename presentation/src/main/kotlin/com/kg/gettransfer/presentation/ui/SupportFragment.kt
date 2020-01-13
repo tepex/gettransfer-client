@@ -73,7 +73,6 @@ class SupportFragment : BaseFragment(), SupportView {
 
     private fun initClickListeners() {
         aboutUs.setOnClickListener { presenter.onAboutUsClick() }
-        becomeCarrier.setOnClickListener { presenter.onBecomeCarrierClick() }
         fabFacebook.setOnClickListener { facebookClick() }
         fabViber.setOnClickListener { viberClick() }
         fabTelegram.setOnClickListener { telegramClick() }
@@ -112,21 +111,6 @@ class SupportFragment : BaseFragment(), SupportView {
 
     override fun showEmail(email: String) {
         tvEmail.text = email
-    }
-
-    override fun openBecomeCarrier() {
-        // TODO fix it after support single activity in whole app
-        if (activity is MainNavigateActivity) {
-            findNavController().navigate(SupportFragmentDirections.goToBecomeCarrier())
-        } else {
-            parentFragmentManager?.let { fm ->
-                FragmentUtils.replaceFragment(
-                    fm,
-                    BecomeCarrierFragment(),
-                    android.R.id.content,
-                    null, true)
-            }
-        }
     }
 
     override fun showAboutUs() {

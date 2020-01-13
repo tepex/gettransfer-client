@@ -13,19 +13,9 @@
         tools:layout="@layout/fragment_support">
 
         <action
-            android:id="@+id/go_to_become_carrier"
-            app:destination="@id/showBecomeCarrier"/>
-
-        <action
             android:id="@+id/go_to_about"
             app:destination="@+id/showAboutUs"/>
     </fragment>
-
-    <fragment
-        android:id="@+id/showBecomeCarrier"
-        android:name="com.kg.gettransfer.presentation.ui.BecomeCarrierFragment"
-        android:label="becomeCarrier"
-        tools:layout="@layout/fragment_become_carrier"/>
 
     <fragment
         android:id="@+id/showAboutUs"

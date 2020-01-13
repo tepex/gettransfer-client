@@ -13,11 +13,10 @@ object GooglePayRequestsHelper : KoinComponent {
     private val configsManager: ConfigsManager by inject()
 
     suspend fun getEnvironment(): Int? {
-        val configsEnvironment = configsManager.getConfigs().googlePayCredentials.environment
-        if (configsEnvironment.isEmpty()) return null
-        return when (configsEnvironment) {
-            GooglePayCredentials.ENVIRONMENT_PRODUCTION -> WalletConstants.ENVIRONMENT_PRODUCTION
-            else                                        -> WalletConstants.ENVIRONMENT_TEST
+        return when (configsManager.getConfigs().googlePayCredentials.environment) {
+            GooglePayCredentials.ENVIRONMENT.PRODUCTION -> WalletConstants.ENVIRONMENT_PRODUCTION
+            GooglePayCredentials.ENVIRONMENT.TEST       -> WalletConstants.ENVIRONMENT_TEST
+            else                                        -> null
         }
     }
 
@@ -73,11 +72,12 @@ object GooglePayRequestsHelper : KoinComponent {
             put("existingPaymentMethodRequired", true)
         }
 
-    private fun getTransactionInfo(price: Float, currency: String) =
+    private fun getTransactionInfo(price: Float, currency: String, countryCode: String) =
         JSONObject().apply {
             put("totalPrice", price.toString())
             put("totalPriceStatus", "FINAL")
             put("currencyCode", currency)
+            put("countryCode", countryCode)
         }
 
     private suspend fun getMerchantInfo() =
@@ -86,15 +86,20 @@ object GooglePayRequestsHelper : KoinComponent {
             put("merchantName", configsManager.getConfigs().googlePayCredentials.merchantName)
         }
 
-    suspend fun getPaymentDataRequest(price: Float, currency: String, gateway: String, gatewayMerchantId: String) =
-        getBaseRequest().apply {
-            put(
-                "allowedPaymentMethods",
-                JSONArray().apply {
-                    put(getCardPaymentMethod(gateway, gatewayMerchantId))
-                }
-            )
-            put("transactionInfo", getTransactionInfo(price, currency))
-            put("merchantInfo", getMerchantInfo())
-        }
+    suspend fun getPaymentDataRequest(
+        price: Float,
+        currency: String,
+        countryCode: String,
+        gateway: String,
+        gatewayMerchantId: String
+    ) = getBaseRequest().apply {
+        put(
+            "allowedPaymentMethods",
+            JSONArray().apply {
+                put(getCardPaymentMethod(gateway, gatewayMerchantId))
+            }
+        )
+        put("transactionInfo", getTransactionInfo(price, currency, countryCode))
+        put("merchantInfo", getMerchantInfo())
+    }
 }

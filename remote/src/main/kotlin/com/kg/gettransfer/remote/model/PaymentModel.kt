@@ -51,10 +51,11 @@ data class BraintreeParams(
 )
 
 data class GooglePayParams(
-    @SerializedName(ParamsEntity.AMOUNT)     @Expose val amount: Float,
-    @SerializedName(ParamsEntity.CURRENCY)   @Expose val currency: String,
-    @SerializedName(ParamsEntity.PAYMENT_ID) @Expose val paymentId: Long,
-    @SerializedName(ParamsEntity.GATEWAY)    @Expose val gateway: String,
+    @SerializedName(ParamsEntity.AMOUNT)       @Expose val amount: Float,
+    @SerializedName(ParamsEntity.CURRENCY)     @Expose val currency: String,
+    @SerializedName(ParamsEntity.COUNTRY_CODE) @Expose val countryCode: String,
+    @SerializedName(ParamsEntity.PAYMENT_ID)   @Expose val paymentId: Long,
+    @SerializedName(ParamsEntity.GATEWAY)      @Expose val gateway: String,
     @SerializedName(ParamsEntity.GATEWAY_MERCHANT_ID) @Expose val gatewayMerchantId: String
 )
 
@@ -107,6 +108,7 @@ fun GooglePayParams.map() =
     GooglePayParamsEntity(
         amount,
         currency,
+        countryCode,
         paymentId,
         gateway,
         gatewayMerchantId

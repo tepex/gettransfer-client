@@ -72,4 +72,3 @@ log.sh
 .kotlintest/
 
 keystore.properties
-keystore-prod.properties

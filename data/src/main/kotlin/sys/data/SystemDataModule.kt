@@ -47,7 +47,7 @@ val systemData = module {
                 ),
             googlePayCredentials =
                 GooglePayCredentials(
-                    "TEST",
+                    GooglePayCredentials.ENVIRONMENT.UNKNOWN,
                     "",
                     "",
                     listOf("AMEX", "JCB", "MASTERCARD", "VISA"),
@@ -83,7 +83,8 @@ val systemData = module {
             addressHistory                = emptyList(),
             favoriteTransports            = emptySet(),
             appEnters                     = 0,
-            isDebugMenuShowed             = false
+            isDebugMenuShowed             = false,
+            isPaymentRequestWithoutDelay  = false
         )
     }
 

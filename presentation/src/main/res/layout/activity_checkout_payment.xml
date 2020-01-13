@@ -163,7 +163,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/checkoutcom_card_date_and_svs_horizontal_margin"
-                    android:inputType="number"
+                    android:inputType="numberPassword"
                     app:hint="@string/LNG_CHECKOUT_CVC"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/cardDate"

@@ -147,10 +147,15 @@ class PlatronPaymentActivity : BaseActivity(), PlatronPaymentView {
     }
 
     private fun changePaymentStatus(uri: Uri?, success: Boolean) {
+        hidePaymentForm()
         uri?.getQueryParameter(PG_ORDER_ID)?.toLong()?.let { paymentId ->
             presenter.paymentId = paymentId
             presenter.changePaymentStatus(success, uri.getQueryParameter(PG_FAILURE_DESCRIPTION))
         }
+    }
+
+    private fun hidePaymentForm() {
+        webView.isVisible = false
     }
 
     companion object {

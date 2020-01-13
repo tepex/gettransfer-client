@@ -34,6 +34,7 @@
             android:layout_height="@dimen/general_button_height"
             android:layout_marginTop="@dimen/fragment_log_in_btn_with_code_margin_top"
             android:background="@drawable/btn_bg_rounded_green"
+            android:enabled="false"
             android:text="@string/LNG_LOGIN_CODE"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"

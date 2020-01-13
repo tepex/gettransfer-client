@@ -41,7 +41,9 @@ interface Api {
     }
 
     @GET(API_ACCESS_TOKEN)
-    suspend fun accessToken(): ResponseModel<TokenModel>
+    suspend fun accessToken(
+        @Header(HEADER_TOKEN) token: String?
+    ): ResponseModel<TokenModel>
 
     @GET(API_ACCOUNT)
     suspend fun getAccount(): ResponseModel<AccountModelWrapper>

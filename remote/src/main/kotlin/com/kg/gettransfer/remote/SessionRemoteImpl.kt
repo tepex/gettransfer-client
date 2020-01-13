@@ -16,6 +16,10 @@ class SessionRemoteImpl : SessionRemote {
 
     private val core = get<ApiCore>()
 
+    override suspend fun updateOldToken() {
+        core.updateOldAccessToken()
+    }
+
     override suspend fun getAccount(): AccountEntity? {
         val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.getAccount() }
         @Suppress("UnsafeCallOnNullableType")

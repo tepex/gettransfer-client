@@ -58,10 +58,11 @@ open class ParamsEntity(
 ) {
 
     companion object {
-        const val AMOUNT     = "amount"
-        const val CURRENCY   = "currency"
-        const val PAYMENT_ID = "payment_id"
-        const val GATEWAY    = "gateway"
+        const val AMOUNT       = "amount"
+        const val CURRENCY     = "currency"
+        const val COUNTRY_CODE = "country_code"
+        const val PAYMENT_ID   = "payment_id"
+        const val GATEWAY      = "gateway"
         const val GATEWAY_MERCHANT_ID = "gateway_merchant_id"
     }
 }
@@ -75,6 +76,7 @@ class BraintreeParamsEntity(
 class GooglePayParamsEntity(
     amount: Float,
     currency: String,
+    val countryCode: String,
     val paymentId: Long,
     val gateway: String,
     val gatewayMerchantId: String
@@ -129,6 +131,7 @@ fun GooglePayParamsEntity.map() =
     GooglePayParams(
         amount,
         currency,
+        countryCode,
         paymentId,
         gateway,
         gatewayMerchantId

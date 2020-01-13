@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import com.kg.gettransfer.extensions.internationalExample
 import moxy.InjectViewState
 
 import com.kg.gettransfer.presentation.ui.MainLoginActivity
@@ -125,7 +124,7 @@ class LogInPresenter : BaseLogInPresenter<LogInView>(), KoinComponent {
         }
 
     private fun showValidationError(errorType: Int) {
-        viewState.showValidationError(errorType, Utils.phoneUtil.internationalExample(sessionInteractor.locale))
+        viewState.showValidationError(errorType, Utils.getPhoneNumberExample(sessionInteractor.locale.language))
     }
 
     override fun onBackCommandClick() {

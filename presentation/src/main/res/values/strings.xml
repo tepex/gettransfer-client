@@ -24,6 +24,7 @@
     <string name="LNG_UNPROCESSABLE_ERROR">Unprocessable</string>
     <string name="LNG_PHONE_TAKEN_ERROR">Phone number already taken</string>
     <string name="LNG_DATE_EARLY_ERROR">Date is too early</string>
+    <string name="LNG_DATE_LATE_ERROR">Date is too late</string>
     <string name="LNG_M">m</string>
     <string name="LNG_D">d</string>
     <string name="LNG_H">h</string>
@@ -353,9 +354,6 @@
     <string name="LNG_RIDE_PAY_CHARGE2"><b>You will be charged %s</b></string>
     <string name="LNG_TRANSFER_CANCELED">Transfer canceled</string>
     <string name="LNG_LOGIN_LOGIN_TITLE">Log in &amp; Sign up</string>
-    <string name="LNG_LOGIN_CARRIER_SIGNUP_TITLE">Begin to earn more with GetTransfer.com!</string>
-    <string name="LNG_LOGIN_CARRIER_SIGNUP_HINT">Carrier registration is available on our web site gettransfer.com</string>
-    <string name="LNG_LOGIN_CARRIER_SIGNUP_BUTTON">Sign up on gettransfer.com</string>
     <string name="LNG_SIGNUP">Sign up</string>
     <string name="LNG_SEND_EMAIL">Send email...</string>
     <string name="LNG_NO_EMAIL_APPS">There are no email apps installed.</string>
@@ -371,8 +369,6 @@
     <string name="LNG_ABOUT_DRIVE_APP_ANDROID_CONTINUE">Open in Google Play</string>
     <string name="LNG_ABOUT_DRIVE_APP_NOT_NOW">Thanks, not now!</string>
     <string name="LNG_ABOUT_DRIVE_APP_CONTINUE_PAX">Continue as passenger</string>
-    <string name="LNG_BECOME_A_CARRIER_INFO">Try a individual application for drivers. Now it will be more convenient to find applications and plan trips.</string>
-    <string name="LNG_BECOME_A_CARRIER_ANDROID_CONTINUE">Get in on Google Play</string>
     <string name="LNG_ERROR_RATE_LIMIT">Too many requests</string>
     <string name="LNG_ACCOUNT_EXISTS_ERROR">Account already exists</string>
     <string name="LNG_LOGIN_REQUIRED">Please log in to continue</string>

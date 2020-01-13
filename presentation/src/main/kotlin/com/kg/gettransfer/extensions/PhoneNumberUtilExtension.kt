@@ -3,17 +3,18 @@ package com.kg.gettransfer.extensions
 import com.kg.gettransfer.presentation.ui.Utils
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import io.michaelrocks.libphonenumber.android.Phonenumber
-import java.util.*
+import java.util.Locale
 
-fun PhoneNumberUtil.internationalExample(country: Locale): String =
-        Utils.phoneUtil.format(getNumber(country),
-                PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
+fun PhoneNumberUtil.internationalExample(countryCode: String): String =
+    Utils.phoneUtil.format(getNumber(countryCode.toUpperCase(Locale.US)),
+        PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
 
-fun getNumber(country: Locale): Phonenumber.PhoneNumber =
-        Utils.phoneUtil.getExampleNumber(country.country)
-                ?: Utils.phoneUtil.getExampleNumberForNonGeoEntity(
-                        getCountryCode(country)
-                )
+fun getNumber(countryCode: String): Phonenumber.PhoneNumber {
+    return Utils.phoneUtil.getExampleNumber(countryCode)
+        ?: Utils.phoneUtil.getExampleNumberForNonGeoEntity(
+            getCountryCode(countryCode)
+        )
+}
 
-fun getCountryCode(locale: Locale) =
-        Utils.phoneUtil.getCountryCodeForRegion(locale.country)
+fun getCountryCode(countryCode: String) =
+    Utils.phoneUtil.getCountryCodeForRegion(countryCode)

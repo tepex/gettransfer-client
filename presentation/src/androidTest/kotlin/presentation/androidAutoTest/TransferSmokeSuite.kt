@@ -290,7 +290,6 @@ class TransferSmokeSuite : TestCase() {
                 Help {
                     tvWeSpeak { isVisible() }
                     tvAboutUs { isVisible() }
-                    tvBecomeCarrier { isVisible() }
                     tvMessageUs { isVisible() }
                     tvLanguages { isVisible() }
                     tvSocialNetwork { isVisible() }
@@ -411,7 +410,6 @@ class TransferSmokeSuite : TestCase() {
             }
             step("CheckBecome") {
                 Help {
-                    tvBecomeCarrier { click() }
                     tvTitle { isVisible() }
                     btnContinue { isVisible() }
                     ivBack { click() }

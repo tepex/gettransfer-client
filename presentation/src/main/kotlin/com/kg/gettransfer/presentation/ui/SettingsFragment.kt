@@ -143,6 +143,14 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
         settingsResetRate.setOnClickListener { presenter.onResetRateClicked() }
         settingsClearAccessToken.setOnClickListener { presenter.onClearAccessTokenClicked() }
         settingsResetNewDriverAppDialog.setOnClickListener { presenter.onResetNewDriverAppDialogClicked() }
+        with(settingsPaymentRequestWithoutDelay) {
+            setOnClickListener { view ->
+                with(view.switch_button) {
+                    isChecked = !isChecked
+                    presenter.onPaymentRequestWithoutDelaySwitched(isChecked)
+                }
+            }
+        }
         forceCrash.setOnClickListener { presenter.onForceCrashClick() }
     }
 
@@ -180,6 +188,10 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
 
     override fun setDistanceUnit(inMiles: Boolean) {
         settingsDistanceUnit.switch_button.isChecked = inMiles
+    }
+
+    override fun setPaymentRequestWithoutDelay(withoutDelay: Boolean) {
+        settingsPaymentRequestWithoutDelay.switch_button.isChecked = withoutDelay
     }
 
     override fun hideSomeDividers() {

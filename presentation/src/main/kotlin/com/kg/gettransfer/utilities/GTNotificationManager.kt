@@ -148,9 +148,10 @@ class GTNotificationManager(val context: Context) : ContextWrapper(context), Koi
 
     private fun createChatPendingIntent(transferId: Long): PendingIntent {
         val intent = Intent(context, ChatActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             putExtra(ChatView.EXTRA_TRANSFER_ID, transferId)
         }
-        return PendingIntent.getActivity(context, transferId.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     fun clearNotifications(notificationsIds: List<Int>) = notificationsIds.forEach { clearNotification(it) }

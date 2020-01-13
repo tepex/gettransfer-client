@@ -43,6 +43,7 @@ import com.kg.gettransfer.presentation.mapper.CityPointMapper
 
 import com.kg.gettransfer.receiver.NetworkChangeCallback
 
+import com.kg.gettransfer.utilities.CountryCodeManager
 import com.kg.gettransfer.utilities.LocaleManager
 import com.kg.gettransfer.utilities.GTNotificationManager
 import com.kg.gettransfer.utilities.NewTransferState
@@ -68,6 +69,9 @@ import org.slf4j.LoggerFactory
 
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
+import sys.domain.SetPaymentRequestWithoutDelayInteractor
+
+import java.util.Properties
 
 /**
  * Koin main module
@@ -163,6 +167,7 @@ val androidModule = module {
     single { GTDownloadManager(androidApplication().applicationContext) }
     single { NetworkChangeCallback(androidApplication().applicationContext) }
     single { PushTokenManager() }
+    single { CountryCodeManager(androidApplication().applicationContext) }
 }
 
 val testModule = module {
@@ -189,6 +194,7 @@ val systemDomain = module {
     single { SetSelectedFieldInteractor(get()) }
     single { SetNewDriverAppDialogShowedInteractor(get()) }
     single { AddCountOfShowNewDriverAppDialogInteractor(get()) }
+    single { SetPaymentRequestWithoutDelayInteractor(get()) }
 }
 
 val systemPresentation = module {
@@ -199,6 +205,12 @@ val systemPresentation = module {
 
 val endpoints = module {
     single<List<Endpoint>>(named(ENDPOINTS)) {
+        val properties = Properties()
+        val assetManager = androidContext().assets
+        val inputStream = assetManager.open("gettransfer_apikey.properties")
+        properties.load(inputStream)
+        val prodApiKey = properties.getProperty("API_KEY_PROD")
+
         listOf(
             Endpoint(
                 androidContext().getString(R.string.endpoint_demo),
@@ -209,7 +221,7 @@ val endpoints = module {
             ),
             Endpoint(
                 androidContext().getString(R.string.endpoint_prod),
-                androidContext().getString(R.string.api_key_prod),
+                prodApiKey,
                 androidContext().getString(R.string.api_url_prod),
                 false,
                 false

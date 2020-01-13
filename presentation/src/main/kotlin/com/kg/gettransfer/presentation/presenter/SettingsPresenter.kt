@@ -41,6 +41,7 @@ import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
+import sys.domain.SetPaymentRequestWithoutDelayInteractor
 
 @Suppress("TooManyFunctions")
 @InjectViewState
@@ -61,6 +62,7 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     private val setOnboardingShowed: SetOnboardingShowedInteractor by inject()
     private val setAccessToken: SetAccessTokenInteractor by inject()
     private val setNewDriverAppDialogShowedInteractor: SetNewDriverAppDialogShowedInteractor by inject()
+    private val setPaymentRequestWithoutDelayInteractor: SetPaymentRequestWithoutDelayInteractor by inject()
 
     private val clearConfigsInteractor: ClearConfigsInteractor by inject()
     private val clearMobileConfigsInteractor: ClearMobileConfigsInteractor by inject()
@@ -163,9 +165,9 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
 
     private suspend fun showDebugMenu() {
         viewState.setEndpoints(endpoints)
-        withContext(worker.bg) { getPreferences().getModel() }.endpoint?.let {
-            viewState.setEndpoint(it.map())
-        }
+        val prefs = withContext(worker.bg) { getPreferences().getModel() }
+        prefs.endpoint?.let { viewState.setEndpoint(it.map()) }
+        viewState.setPaymentRequestWithoutDelay(prefs.isPaymentRequestWithoutDelay)
         viewState.showDebugMenu()
     }
 
@@ -253,6 +255,10 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
 
     fun onResetNewDriverAppDialogClicked() = worker.main.launch {
         withContext(worker.bg) { setNewDriverAppDialogShowedInteractor(false) }
+    }
+
+    fun onPaymentRequestWithoutDelaySwitched(isChecked: Boolean) = worker.main.launch {
+        withContext(worker.bg) { setPaymentRequestWithoutDelayInteractor(isChecked) }
     }
 
     fun onCurrencyClicked() {
