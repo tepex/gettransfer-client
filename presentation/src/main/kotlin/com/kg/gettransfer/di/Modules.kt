@@ -34,7 +34,6 @@ import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
-import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.UserMapper
 import com.kg.gettransfer.presentation.mapper.MessageMapper
 import com.kg.gettransfer.presentation.mapper.ChatAccountMapper
@@ -143,7 +142,6 @@ val mappersModule = module {
     single { PaymentStatusRequestMapper() }
     single { PointMapper() }
     single { ProfileMapper() }
-    single { RouteMapper() }
     single { UserMapper() }
     single { MessageMapper() }
     single { ChatAccountMapper() }

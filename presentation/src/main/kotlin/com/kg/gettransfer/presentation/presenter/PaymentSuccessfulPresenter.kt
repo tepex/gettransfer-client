@@ -11,7 +11,7 @@ import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.getOffer
 
-import com.kg.gettransfer.presentation.mapper.RouteMapper
+import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
@@ -21,12 +21,9 @@ import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.CommunicationManager
 
-import org.koin.core.inject
-
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
 
-    private val routeMapper: RouteMapper by inject()
     private val communicationManager: CommunicationManager by inject()
 
     internal var offerId = 0L
@@ -73,7 +70,7 @@ class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
         val r = getRouteInfo(fromPoint, toPoint, transfer.duration)
         r.cacheError?.let { viewState.setError(it) }
         if (r.error == null || r.error != null && r.fromCache) {
-            val routeModel = routeMapper.getView(
+            val routeModel = RouteModel(
                 transfer.from.name,
                 transfer.to?.name,
                 fromPoint,

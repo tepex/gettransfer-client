@@ -30,7 +30,6 @@ import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 
 import com.kg.gettransfer.presentation.mapper.CityPointMapper
 import com.kg.gettransfer.presentation.mapper.PointMapper
-import com.kg.gettransfer.presentation.mapper.RouteMapper
 
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -68,7 +67,6 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val communicationManager: CommunicationManager by inject()
 
-    private val routeMapper: RouteMapper by inject()
     private val cityPointMapper: CityPointMapper by inject()
     private val pointMapper: PointMapper by inject()
 
@@ -220,7 +218,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     @Suppress("UnsafeCallOnNullableType")
     private fun setRouteTransfer(transfer: Transfer, route: RouteInfo) {
-        routeModel = routeMapper.getView(
+        routeModel = RouteModel(
             transfer.from.name,
             transfer.to!!.name,
             transfer.from.point!!,
