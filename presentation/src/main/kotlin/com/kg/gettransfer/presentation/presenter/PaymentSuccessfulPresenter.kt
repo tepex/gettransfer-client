@@ -21,6 +21,8 @@ import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.CommunicationManager
 
+import org.koin.core.inject
+
 @InjectViewState
 class PaymentSuccessfulPresenter : BasePresenter<PaymentSuccessfulView>() {
 
