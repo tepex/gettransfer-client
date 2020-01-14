@@ -21,8 +21,16 @@ class SettingsChangePasswordPresenter : BasePresenter<SettingsChangePasswordView
         if (isFieldsEquals()) {
             utils.launchSuspend {
                 viewState.blockInterface(true)
-                val result = utils.asyncAwait { sessionInteractor.changePassword(newPassword!!, repeatedNewPassword!!) }
-                result.error?.let { viewState.setError(it) }
+                val result = utils.asyncAwait {
+                    sessionInteractor.changePassword(newPassword!!, repeatedNewPassword!!)
+                }
+                result.error?.let { error ->
+                    if (error.isPasswordError()) {
+                        viewState.setError(false, R.string.LNG_NEW_PASSWORD_NOT_STRONG)
+                    } else {
+                        viewState.setError(error)
+                    }
+                }
                 if (result.error == null) router.exit()
                 viewState.blockInterface(false)
             }

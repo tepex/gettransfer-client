@@ -316,7 +316,8 @@
     <string name="LNG_LOGIN_RESEND_ALLOW">Didn\'t receive code? <a href='#'>Try again</a></string>
     <string name="LNG_NEW_PASSWORD">Enter new password</string>
     <string name="LNG_NEW_PASSWORD_CONFIRM">Repeat new password</string>
-    <string name="LNG_NEW_PASSWORD_FAIL">Password doesn\'t match confirmation</string>
+    <string name="LNG_NEW_PASSWORD_FAIL">Passwords don\'t match</string>
+    <string name="LNG_NEW_PASSWORD_NOT_STRONG">Your password must be minimum 8 characters with at least one number and one letter in upper and lower case. Your password can contain only Latin letter</string>
     <string name="LNG_AUTHORIZED">Successful authorization</string>
     <string name="LNG_PASSWORD_CREATE_HINT">You can create a new password in the application settings</string>
     <string name="LNG_TRANSFER_NOT_FOUND">Sorry, but transfer #%s not found</string>
