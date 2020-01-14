@@ -2,7 +2,6 @@ package com.kg.gettransfer.extensions
 
 import android.app.Activity
 import android.content.Context
-import android.os.SystemClock
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
