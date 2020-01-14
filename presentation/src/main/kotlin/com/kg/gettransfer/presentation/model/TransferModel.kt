@@ -93,9 +93,9 @@ fun Transfer.map(transportTypesModels: List<TransportTypeModel>) =
         createdAt,
         duration,
         distance ?: to?.point?.let { toPoint ->
-             from.point?.let { fromPoint ->
-                 DistanceUtils.getPointToPointDistance(fromPoint, toPoint)
-             }
+            from.point?.let { fromPoint ->
+                DistanceUtils.getPointToPointDistance(fromPoint, toPoint)
+            }
         },
         status,
         R.string::class.members.find { it.name == "LNG_RIDE_STATUS_${status.name}" }?.call() as? Int,

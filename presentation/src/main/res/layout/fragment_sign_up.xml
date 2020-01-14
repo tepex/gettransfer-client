@@ -53,7 +53,7 @@
             app:account_field_view_icon="@drawable/wrapped_ic_account_wrapper"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
+        <com.kg.gettransfer.presentation.ui.custom.InputAccountPhoneFieldView
             android:id="@+id/phoneLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

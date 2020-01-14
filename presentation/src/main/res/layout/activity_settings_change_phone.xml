@@ -23,17 +23,17 @@
             android:minHeight="?android:attr/actionBarSize" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.kg.gettransfer.presentation.ui.custom.InputAccountFieldView
-        android:id="@+id/emailLayout"
+    <com.kg.gettransfer.presentation.ui.custom.InputAccountPhoneFieldView
+        android:id="@+id/phoneLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
-        android:inputType="textEmailAddress"
+        android:inputType="phone"
         android:paddingStart="@dimen/change_contact_screen_fields_vertical_padding"
         android:paddingEnd="@dimen/change_contact_screen_fields_vertical_padding"
         app:account_field_view_divider_visible="false"
-        app:account_field_view_hint="@string/LNG_ENTER_NEW_EMAIL"
-        app:account_field_view_icon="@drawable/ic_email"
+        app:account_field_view_hint="@string/LNG_ENTER_NEW_PHONE"
+        app:account_field_view_icon="@drawable/ic_phone"
         app:layout_constraintTop_toBottomOf="@+id/appbar" />
 
     <com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
@@ -41,12 +41,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:activation_code_title="@string/LNG_EMAIL_SENT_ACTIVATION_CODE"
+        app:activation_code_title="@string/LNG_PHONE_SENT_ACTIVATION_CODE"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/phoneLayout" />
 
     <Button
-        android:id="@+id/btnChangeEmail"
+        android:id="@+id/btnChangePhone"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="@dimen/general_button_height"
@@ -55,7 +55,7 @@
         android:layout_marginBottom="@dimen/change_contact_screen_btn_done_margins"
         android:background="@drawable/btn_bg_rounded_green"
         android:enabled="false"
-        android:text="@string/LNG_CHANGE_EMAIL"
+        android:text="@string/LNG_CHANGE_PHONE"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent" />
 

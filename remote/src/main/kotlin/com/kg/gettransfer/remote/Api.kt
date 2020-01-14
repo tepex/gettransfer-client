@@ -16,8 +16,8 @@ interface Api {
         const val API_ACCOUNT = "/api/account"
         const val API_LOGIN = "/api/login"
         const val API_VERIFICATION_CODE = "/api/account/request_verification_code"
-        const val API_CODE_FOR_CHANGE_EMAIL = "/api/account/email_code"
-        const val API_CHANGE_EMAIL = "/api/account/change_email"
+        const val API_CONFIRMATION_CODE = "/api/account/request_confirmation_code"
+        const val API_CHANGE_CONTACT = "/api/account/change_contact"
         const val API_ACCOUNT_LOGIN = "/api/account/login"
         const val API_ACCOUNT_REGISTER = "/api/account"
         const val API_ROUTE_INFO = "/api/route_info"
@@ -78,14 +78,16 @@ interface Api {
         @Field("phone") phone: String?
     ): ResponseModel<String?>
 
-    @POST(API_CODE_FOR_CHANGE_EMAIL)
-    suspend fun getCodeForChangeEmail(
-        @Query("new_email") email: String
+    @POST(API_CONFIRMATION_CODE)
+    suspend fun getConfirmationCode(
+        @Query("new_email") email: String?,
+        @Query("new_phone") phone: String?
     ): ResponseModel<String?>
 
-    @POST(API_CHANGE_EMAIL)
-    suspend fun changeEmail(
-        @Query("new_email") email: String,
+    @POST(API_CHANGE_CONTACT)
+    suspend fun changeContact(
+        @Query("new_email") email: String?,
+        @Query("new_phone") phone: String?,
         @Query("code") code: String
     ): ResponseModel<String?>
 

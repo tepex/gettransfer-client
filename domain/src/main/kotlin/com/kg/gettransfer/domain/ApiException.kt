@@ -22,14 +22,17 @@ class ApiException(
 
     fun isAccountExistError() = type == TYPE_ACCOUNT_EXIST
 
-    fun isBadCodeError() = checkDetailsText(DETAILS_BAD_CODE_OR_EMAIL)
-
     fun isEmailNotChangeableError() = checkDetailsText(DETAILS_EMAIL_NOT_CHANGEABLE)
+
+    fun isPhoneNotChangeableError() = checkDetailsText(DETAILS_PHONE_NOT_CHANGEABLE)
 
     fun isNewEmailAlreadyTakenError() = checkDetailsText(DETAILS_NEW_EMAIL_TAKEN)
 
-    fun isNewEmailInvalid() =
-        checkDetailsText(DETAILS_NEW_EMAIL_INVALID_1) || checkDetailsText(DETAILS_NEW_EMAIL_INVALID_2)
+    fun isNewPhoneAlreadyTakenError() = checkDetailsText(DETAILS_NEW_PHONE_TAKEN)
+
+    fun isNewEmailInvalid() = checkDetailsText(DETAILS_NEW_EMAIL_INVALID)
+
+    fun isNewPhoneInvalid() = checkDetailsText(DETAILS_NEW_PHONE_INVALID)
 
     fun checkExistedAccountField() = when {
         checkDetailsText(DETAILS_REDIRECT_PHONE) -> PHONE_EXISTED
@@ -78,11 +81,12 @@ class ApiException(
         const val TYPE_PHONE_INVALID = "phone_invalid"
         const val TYPE_PHONE_UNPROCESSABLE = "unprocessable"
 
-        const val DETAILS_NEW_EMAIL_INVALID_1 = "email=[invalid]"
-        const val DETAILS_NEW_EMAIL_INVALID_2 = "Email address is invalid"
+        const val DETAILS_NEW_EMAIL_INVALID = "email=[invalid]"
+        const val DETAILS_NEW_PHONE_INVALID = "phone=[invalid]"
         const val DETAILS_NEW_EMAIL_TAKEN = "email=[already_taken]"
+        const val DETAILS_NEW_PHONE_TAKEN = "phone=[already_taken]"
         const val DETAILS_EMAIL_NOT_CHANGEABLE = "account=[email_not_manually_changeable]"
-        const val DETAILS_BAD_CODE_OR_EMAIL = "bad_code_or_email"
+        const val DETAILS_PHONE_NOT_CHANGEABLE = "account=[phone_not_manually_changeable]"
         const val DETAILS_REDIRECT_EMAIL = "email"
         const val DETAILS_REDIRECT_PHONE = "phone"
 

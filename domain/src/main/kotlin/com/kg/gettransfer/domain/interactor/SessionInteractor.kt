@@ -88,8 +88,10 @@ class SessionInteractor(
     suspend fun changePassword(pass: String, repeatedPass: String) =
         sessionRepository.putAccount(account, pass, repeatedPass)
 
-    suspend fun getCodeForChangeEmail(email: String) = sessionRepository.getCodeForChangeEmail(email)
-    suspend fun changeEmail(email: String, code: String) = sessionRepository.changeEmail(email, code)
+    suspend fun getConfirmationCode(email: String? = null, phone: String? = null) =
+        sessionRepository.getConfirmationCode(email, phone)
+    suspend fun changeContact(code: String, email: String? = null, phone: String? = null) =
+        sessionRepository.changeContact(email, phone, code)
 
     fun addAccountChangedListener(listener: AccountChangedListener) {
         sessionRepository.addAccountChangedListener(listener)

@@ -323,12 +323,17 @@
     <string name="LNG_TRANSFER_NOT_FOUND">Sorry, but transfer #%s not found</string>
     <string name="LNG_BIG_PRICE_ERROR">Price is too big</string>
     <string name="LNG_EMAIL_NOT_CHANGEABLE">Email not changeable</string>
+    <string name="LNG_PHONE_NOT_CHANGEABLE">Phone not changeable</string>
     <string name="LNG_EMAIL_TAKEN_ERROR">Email already taken</string>
     <string name="LNG_EMAIL_SENT_ACTIVATION_CODE">An activation code has been sent to \nyour email.</string>
+    <string name="LNG_PHONE_SENT_ACTIVATION_CODE">An activation code has been sent to \nyour phone.</string>
     <string name="LNG_ENTER_NEW_EMAIL">Enter new e-mail</string>
+    <string name="LNG_ENTER_NEW_PHONE">Enter new phone</string>
     <string name="LNG_PROFILE">Profile</string>
     <string name="LNG_CHANGE_EMAIL">Change e-mail</string>
+    <string name="LNG_CHANGE_PHONE">Change phone</string>
     <string name="LNG_CHANGING_EMAIL">Changing e-mail</string>
+    <string name="LNG_CHANGING_PHONE">Changing phone</string>
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
     <string name="LNG_RIDE_DATE_RETURN">Return date and time</string>
     <string name="LNG_OFFERS_SUPPORT">GetTransfer Support</string>
