@@ -2,6 +2,7 @@ package com.kg.gettransfer.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.os.SystemClock
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
@@ -40,7 +41,7 @@ fun WebView.setUserAgent() {
 
 private var lastClickTimestamp = 0L
 
-fun View.setThrottledClickListener(delay: Long = 400L, clickListener: ((View) -> Unit)?) {
+fun View.setThrottledClickListener(delay: Long = 500L, clickListener: ((View) -> Unit)?) {
     clickListener?.let { listener ->
         setOnClickListener {
             val currentTimestamp = System.currentTimeMillis()

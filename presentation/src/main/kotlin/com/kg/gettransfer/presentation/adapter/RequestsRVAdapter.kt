@@ -77,6 +77,7 @@ class RequestsRVAdapter(
                 if (firstInit) {
                     setStyle(requestType)
                     firstInit = false
+                    containerView.isEnabled = true
                 }
                 setInfo(item, requestType)
                 showOfferInfo(
@@ -88,7 +89,10 @@ class RequestsRVAdapter(
                 )
                 showEvents(item, item.matchedOffer != null, eventsCount)
             }
-            setThrottledClickListener { onItemClick(item) }
+            setOnClickListener {
+                containerView.isEnabled = false
+                onItemClick(item)
+            }
         }
     }
 

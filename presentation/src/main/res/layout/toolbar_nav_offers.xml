@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.kg.gettransfer.presentation.ui.custom.SingleClickButton
             android:id="@+id/btn_request_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,7 +21,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/btn_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/btn_back"
-            app:srcCompat="@drawable/ic_info" />
+            app:srcCompat="@drawable/ic_info"
+            style="@style/BorderlessBackground"/>
 
         <TextView
             android:id="@+id/tv_subtitle"
