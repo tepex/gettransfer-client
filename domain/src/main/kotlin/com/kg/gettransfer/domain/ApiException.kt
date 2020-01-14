@@ -50,6 +50,8 @@ class ApiException(
 
     fun isTransferStatusMismatchError() = details.contains(DETAILS_TRANSFER_STATUS_MISMATCH)
 
+    fun isPasswordError() = code == UNPROCESSABLE && details.startsWith(PASSWORD_ERROR)
+
     companion object {
         const val APP_ERROR         = 0
         const val NETWORK_ERROR     = -1
@@ -86,5 +88,7 @@ class ApiException(
 
         const val EMAIL_EXISTED = "email_existed"
         const val PHONE_EXISTED = "phone_existed"
+
+        const val PASSWORD_ERROR = "{password="
     }
 }

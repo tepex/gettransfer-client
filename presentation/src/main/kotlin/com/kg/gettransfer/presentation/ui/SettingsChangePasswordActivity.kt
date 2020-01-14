@@ -6,13 +6,14 @@ import androidx.appcompat.widget.Toolbar
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.presenter.SettingsChangePasswordPresenter
 import com.kg.gettransfer.presentation.view.SettingsChangePasswordView
 import kotlinx.android.synthetic.main.activity_settings_change_password.*
 import kotlinx.android.synthetic.main.activity_settings_change_password.btnSave
 import kotlinx.android.synthetic.main.view_input_password.view.*
 
-class SettingsChangePasswordActivity: BaseActivity(), SettingsChangePasswordView {
+class SettingsChangePasswordActivity : BaseActivity(), SettingsChangePasswordView {
 
     @InjectPresenter
     internal lateinit var presenter: SettingsChangePasswordPresenter
@@ -33,6 +34,17 @@ class SettingsChangePasswordActivity: BaseActivity(), SettingsChangePasswordView
         repeatNewPasswordLayout.etPassword.onTextChanged { presenter.setPassword(it, true) }
 
         btnSave.setOnClickListener { presenter.onSaveClick() }
+    }
+
+    override fun setError(finish: Boolean, errId: Int, vararg args: String?) {
+        showDialog(getString(errId))
+    }
+
+    private fun showDialog(error: String) {
+        BottomSheetDialog.newInstance().apply {
+            title = error
+            imageId = R.drawable.ic_warning
+        }.show(supportFragmentManager)
     }
 
     override fun enableBtnSave(enable: Boolean) { btnSave.isEnabled = enable }
