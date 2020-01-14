@@ -220,8 +220,8 @@ class ApiCore : KoinComponent {
 
     companion object {
         private const val IP_API_SCHEME = "https://"
-        private const val IP_API_HOST_NAME = "ipapi.co"
-        private const val PARAM_IP_API_KEY  = "key"
+        private const val IP_API_HOST_NAME = "ip-service.gtrbox.org"
+        private const val PARAM_IP_API_KEY  = "api_key"
         private const val CHECKOUTCOM_HOST_NAME = "checkout.com"
 
         private val ERROR_PATTERN = Regex("^<h1>(.+)</h1>$")

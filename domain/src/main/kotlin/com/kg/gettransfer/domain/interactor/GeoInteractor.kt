@@ -19,7 +19,7 @@ class GeoInteractor(
     fun disconnectGoogleApiClient() = geoRepository.disconnectGoogleApiClient()
 
     suspend fun getCurrentLocation() = geoRepository.getCurrentLocation()
-    suspend fun getMyLocationByIp() = geoRepository.getMyLocationByIp()
+    suspend fun getMyLocationByIp(ipAddress: String) = geoRepository.getMyLocationByIp(ipAddress)
     suspend fun getAddressByLocation(point: Point) =
         geoRepository.getAddressByLocation(point, sessionRepository.account.locale.language)
 }

@@ -13,7 +13,7 @@ interface GeoRepository {
     fun disconnectGoogleApiClient()
 
     suspend fun getCurrentLocation(): Result<Point>
-    suspend fun getMyLocationByIp(): Result<Point>
+    suspend fun getMyLocationByIp(ipAddress: String): Result<Point>
     suspend fun getAddressByLocation(point: Point, lang: String): Result<GTAddress>
 
     suspend fun getAutocompletePredictions(query: String, lang: String): Result<List<GTAddress>>

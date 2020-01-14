@@ -31,9 +31,9 @@ class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository
         }
     }
 
-    override suspend fun getMyLocationByIp(): Result<Point> {
+    override suspend fun getMyLocationByIp(ipAddress: String): Result<Point> {
         return try {
-            val locationEntity = geoDataStore.getMyLocationByIp()
+            val locationEntity = geoDataStore.getMyLocationByIp(ipAddress)
             Result(locationEntity.map())
         } catch (e: RemoteException) {
             Result(Point.EMPTY, e.map())
