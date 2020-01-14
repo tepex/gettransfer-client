@@ -17,7 +17,7 @@ open class GeoDataStore : KoinComponent {
     fun disconnectGoogleApiClient() = location.disconnectGoogleApiClient()
 
     suspend fun getCurrentLocation() = location.getCurrentLocation()
-    suspend fun getMyLocationByIp(ipAddress: String) = remote.getMyLocationByIp(ipAddress)
+    suspend fun getMyLocationByIp() = remote.getMyLocationByIp()
     fun getAddressByLocation(point: LocationEntity) = location.getAddressByLocation(point)
 
     suspend fun getAutocompletePredictions(query: String, lang: String) = remote.getAutocompletePredictions(query, lang)

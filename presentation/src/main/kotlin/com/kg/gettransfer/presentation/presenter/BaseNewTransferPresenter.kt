@@ -23,7 +23,6 @@ import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
 
 import com.kg.gettransfer.utilities.Analytics
-import com.kg.gettransfer.utilities.IpAddressManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -43,8 +42,6 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
     protected val geoInteractor: GeoInteractor by inject()
     protected val orderInteractor: OrderInteractor by inject()
     protected val sessionInteractor: SessionInteractor by inject()
-
-    private val ipAddressManager: IpAddressManager by inject()
 
     protected val pointMapper: PointMapper by inject()
 
@@ -93,14 +90,12 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
     }
 
     private suspend fun getLocationFromIpApi(isFromField: Boolean) {
-        ipAddressManager.getIpAddress()?.let { ipAddress ->
-            val result = geoInteractor.getMyLocationByIp(ipAddress)
-            logAddressByIpRequest()
-            if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
-                withContext(worker.main.coroutineContext) { setLocation(isFromField, result.model) }
-            } else {
-                withContext(worker.main.coroutineContext) { setEmptyAddress() }
-            }
+        val result = geoInteractor.getMyLocationByIp()
+        logAddressByIpRequest()
+        if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
+            withContext(worker.main.coroutineContext) { setLocation(isFromField, result.model) }
+        } else {
+            withContext(worker.main.coroutineContext) { setEmptyAddress() }
         }
     }
 

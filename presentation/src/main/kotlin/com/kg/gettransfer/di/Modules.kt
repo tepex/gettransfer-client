@@ -47,7 +47,6 @@ import com.kg.gettransfer.utilities.LocaleManager
 import com.kg.gettransfer.utilities.GTNotificationManager
 import com.kg.gettransfer.utilities.NewTransferState
 import com.kg.gettransfer.utilities.GTDownloadManager
-import com.kg.gettransfer.utilities.IpAddressManager
 
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 import com.kg.gettransfer.sys.domain.*
@@ -168,7 +167,6 @@ val androidModule = module {
     single { PushTokenManager() }
     single { CommunicationManager() }
     single { CountryCodeManager(androidApplication().applicationContext) }
-    single { IpAddressManager() }
 }
 
 val testModule = module {

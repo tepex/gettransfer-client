@@ -14,8 +14,8 @@ class GeoRemoteImpl : GeoRemote {
 
     private val core = get<ApiCore>()
 
-    override suspend fun getMyLocationByIp(ipAddress: String): LocationEntity {
-        val response: LocationModel = core.tryTwice { core.ipApi.getMyLocation(ipAddress) }
+    override suspend fun getMyLocationByIp(): LocationEntity {
+        val response: LocationModel = core.tryTwice { core.ipApi.getMyLocation() }
         return response.map()
     }
 

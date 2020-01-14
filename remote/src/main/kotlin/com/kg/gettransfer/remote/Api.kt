@@ -227,9 +227,7 @@ interface Api {
     ): ResponseModel<MessageWrapperModel>
 
     @GET(".")
-    suspend fun getMyLocation(
-        @Query("ip") ipAddress: String
-    ): LocationModel
+    suspend fun getMyLocation(): LocationModel
 
     @GET(API_BRAINTREE_TOKEN)
     suspend fun getBraintreeToken(): ResponseModel<BraintreeTokenModel>
