@@ -77,8 +77,8 @@ class RequestsRVAdapter(
                 if (firstInit) {
                     setStyle(requestType)
                     firstInit = false
-                    containerView.isEnabled = true
                 }
+                containerView.isEnabled = true
                 setInfo(item, requestType)
                 showOfferInfo(
                     item.matchedOffer,
