@@ -12,7 +12,9 @@ import com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
 import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 import kotlinx.android.synthetic.main.activity_settings_change_email.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 class SettingsChangeEmailActivity : BaseActivity(),
     SettingsChangeEmailView,
     ActivationCodeView.OnActivationCodeListener {

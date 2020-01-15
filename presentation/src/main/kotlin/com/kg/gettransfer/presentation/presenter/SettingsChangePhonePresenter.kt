@@ -6,7 +6,9 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.SettingsChangePhoneView
 import moxy.InjectViewState
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 @InjectViewState
 class SettingsChangePhonePresenter : BasePresenter<SettingsChangePhoneView>() {
 
@@ -48,7 +50,8 @@ class SettingsChangePhonePresenter : BasePresenter<SettingsChangePhoneView>() {
         if (!isPhoneValid()) return
         val result = fetchResultOnly { sessionInteractor.getConfirmationCode(phone = newPhone) }
         if (result.error == null && result.model) {
-            viewState.showCodeLayout(configsManager.getMobileConfigs().smsResendDelay.millis)
+            val resendDelay = configsManager.getMobileConfigs().smsResendDelaySec.toLongMilliseconds()
+            viewState.showCodeLayout(resendDelay)
         } else {
             result.error?.let { checkPhoneErrors(it) }
         }

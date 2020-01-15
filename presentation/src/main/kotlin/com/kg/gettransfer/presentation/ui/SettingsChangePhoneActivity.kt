@@ -13,7 +13,9 @@ import kotlinx.android.synthetic.main.activity_settings_change_phone.toolbar
 import kotlinx.android.synthetic.main.view_input_account_field.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 class SettingsChangePhoneActivity : BaseActivity(),
     SettingsChangePhoneView,
     ActivationCodeView.OnActivationCodeListener {

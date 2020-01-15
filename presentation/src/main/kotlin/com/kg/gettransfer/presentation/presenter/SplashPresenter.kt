@@ -25,7 +25,9 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 import ru.terrakok.cicerone.Router
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 @InjectViewState
 class SplashPresenter : MvpPresenter<SplashView>(), KoinComponent {
 

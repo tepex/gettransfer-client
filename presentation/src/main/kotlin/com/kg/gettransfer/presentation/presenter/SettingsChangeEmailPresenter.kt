@@ -10,7 +10,9 @@ import com.kg.gettransfer.domain.ApiException
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 @InjectViewState
 class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
@@ -52,7 +54,8 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
         if (!isEmailValid()) return
         val result = fetchResultOnly { sessionInteractor.getConfirmationCode(email = newEmail) }
         if (result.error == null && result.model) {
-            viewState.showCodeLayout(configsManager.getMobileConfigs().smsResendDelay.millis)
+            val smsDelay = configsManager.getMobileConfigs().smsResendDelaySec.toLongMilliseconds()
+            viewState.showCodeLayout(smsDelay)
         } else {
             result.error?.let { checkEmailErrors(it) }
         }

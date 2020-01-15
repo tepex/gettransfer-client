@@ -1,10 +1,14 @@
 package com.kg.gettransfer.sys.domain
 
+import kotlin.time.ExperimentalTime
+
+@ExperimentalTime
 class IsNeedUpdateAppInteractor(
     private val getMobileConfigs: GetMobileConfigsInteractor
 ) {
 
     /* TODO Какая-то черная магия! Нужно отрефакторить.*/
+    @ExperimentalTime
     @Suppress("ComplexMethod", "NestedBlockDepth")
     suspend operator fun invoke(field: String, appVersion: Int): Boolean {
         val buildsConfigs = getMobileConfigs().getModel().buildsConfigs

@@ -1,29 +1,32 @@
 package com.kg.gettransfer.sys.domain
 
-import com.kg.gettransfer.core.domain.Hour
-import com.kg.gettransfer.core.domain.Minute
-import com.kg.gettransfer.core.domain.Second
 
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.minutes
+import kotlin.time.seconds
+
+@ExperimentalTime
 data class MobileConfigs(
     /*
     val pushShowDelay: Int,*/
-    val orderMinimum: Minute,
+    val orderMinimumMinutes: Duration,
     val termsUrl: String,
-    val smsResendDelay: Second,
+    val smsResendDelaySec: Duration,
     val isDriverAppNotify: Boolean,
     val isDriverModeBlock: Boolean,
     val buildsConfigs: Map<String, BuildsConfigs>
 ) {
 
     companion object {
-        val SMS_RESEND_DELAY_SEC_DEFAULT = Second(90)
+        val SMS_RESEND_DELAY_SEC_DEFAULT = 90.seconds
 
         val EMPTY = MobileConfigs(
             /*
             pushShowDelay = 5,*/
-            orderMinimum = Hour(2).minutes,
+            orderMinimumMinutes = 120.minutes,
             termsUrl = "terms_of_use",
-            smsResendDelay = SMS_RESEND_DELAY_SEC_DEFAULT,
+            smsResendDelaySec = SMS_RESEND_DELAY_SEC_DEFAULT,
             isDriverAppNotify = false,
             isDriverModeBlock = false,
             buildsConfigs = emptyMap()
