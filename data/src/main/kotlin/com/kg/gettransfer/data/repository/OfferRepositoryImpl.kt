@@ -39,12 +39,6 @@ class OfferRepositoryImpl(
     private val offerReceiver: OfferInteractor by inject()
     private val preferencesCache: PreferencesCache by inject()
 
-    override fun newOffer(offer: Offer): Result<Offer> {
-        log.debug("OfferRepository.newOffer: $offer")
-        factory.retrieveCacheDataStore().setOffer(offer.map(dateFormat.get()))
-        return Result(offer)
-    }
-
     override suspend fun getOffers(id: Long): Result<List<Offer>> {
         val result: ResultEntity<List<OfferEntity>?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getOffers(id)
@@ -121,6 +115,7 @@ class OfferRepositoryImpl(
     override fun clearOffersCache() { factory.retrieveCacheDataStore().clearOffersCache() }
 
     internal fun onNewOfferEvent(offer: OfferEntity) {
+        factory.retrieveCacheDataStore().setOffer(offer)
         offerReceiver.onNewOfferEvent(offer.map(dateFormat.get(), preferencesCache.endpointUrl))
     }
 }
