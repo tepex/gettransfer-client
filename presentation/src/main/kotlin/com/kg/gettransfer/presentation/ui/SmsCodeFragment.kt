@@ -62,6 +62,7 @@ class SmsCodeFragment : BaseLogInFragment(), SmsCodeView {
 
         btnResendCode.setOnClickListener { v ->
             v.hideKeyboard()
+            pinView.setText("")
             presenter.sendVerificationCode()
         }
 
