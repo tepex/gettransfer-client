@@ -15,7 +15,7 @@ open class SessionDataStoreRemote : SessionDataStore {
 
     private val remote: SessionRemote by inject()
 
-    override suspend fun updateOldToken() = remote.updateOldToken()
+    override suspend fun updateOldToken(authKey: String?) = remote.updateOldToken(authKey)
 
     override suspend fun getAccount() = remote.getAccount()
 

@@ -13,6 +13,8 @@ interface BaseHandleUrlView : BaseView {
         const val PARTNER_RATE = "/partner/rate"
         const val CARRIER_CABINET = "/carrier/cabinet"
         const val VOUCHER = "/transfers/voucher"
+        const val NEW_TRANSFER = "/transfers/new"
+        const val NEW_PASSWORD = "/new_password"
         const val CHOOSE_OFFER_ID = "choose_offer_id"
         const val OPEN_CHAT = "open_chat"
         const val TRANSFERS = "transfers"
@@ -21,9 +23,10 @@ interface BaseHandleUrlView : BaseView {
         const val QUESTION = "?"
         const val RATE = "rate_val"
 
-        const val NEW_TRANSFER = "/transfers/new"
+        // Params
         const val FROM_PLACE_ID = "from_place_id"
         const val TO_PLACE_ID = "to_place_id"
         const val PROMO_CODE = "promo_code"
+        const val AUTH_KEY = "auth_key"
     }
 }

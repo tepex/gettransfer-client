@@ -16,8 +16,8 @@ class SessionRemoteImpl : SessionRemote {
 
     private val core = get<ApiCore>()
 
-    override suspend fun updateOldToken() {
-        core.updateOldAccessToken()
+    override suspend fun updateOldToken(authKey: String?) {
+        core.updateOldAccessToken(authKey)
     }
 
     override suspend fun getAccount(): AccountEntity? {
