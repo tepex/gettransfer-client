@@ -49,7 +49,10 @@ class ActivationCodeView @JvmOverloads constructor(
         }
 
         btnDone.setOnClickListener { listener?.onDoneClicked(codeView.text.toString()) }
-        btnResendCode.setOnClickListener { listener?.onResendCodeClicked() }
+        btnResendCode.setOnClickListener {
+            codeView.setText("")
+            listener?.onResendCodeClicked()
+        }
     }
 
     fun setFocus() {
