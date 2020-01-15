@@ -23,7 +23,6 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Money
 
 import androidx.core.view.isVisible
-import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.strikeText
 import com.kg.gettransfer.extensions.toHalfEvenRoundedFloat
 
@@ -56,6 +55,7 @@ import kotlinx.android.synthetic.main.bottom_sheet_offers.*
 import kotlinx.android.synthetic.main.bottom_sheet_offers.view.*
 import kotlinx.android.synthetic.main.card_empty_offers.*
 import kotlinx.android.synthetic.main.drivers_count.*
+import kotlinx.android.synthetic.main.toolbar_nav_offers.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.view.*
 import kotlinx.android.synthetic.main.vehicle_items.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
@@ -97,12 +97,17 @@ class OffersActivity : BaseActivity(), OffersView {
         intent.getStringExtra(OffersView.EXTRA_ORIGIN)?.let { presenter.isViewRoot = true }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        btn_request_info.reset()
+    }
+
     private fun initToolBar() =
         with(toolbar) {
             @Suppress("UnsafeCast")
             setSupportActionBar(this as Toolbar)
             btn_back.setOnClickListener { navigateBackWithTransition() }
-            btn_request_info.setThrottledClickListener { presenter.onRequestInfoClicked() }
+            btn_request_info.setOnClickListener { presenter.onRequestInfoClicked() }
             tv_title.isSelected = true
         }
 
