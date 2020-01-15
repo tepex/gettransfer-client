@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:gravity="center_horizontal"
     android:background="@drawable/back_top_rounded"
-    android:padding="@dimen/rate_container_dialog_padding"
+    android:padding="@dimen/margin32"
     android:layout_height="wrap_content">
 
     <ImageView
@@ -26,10 +27,8 @@
         android:id="@+id/bottomSheetDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="@dimen/margin32"
+        android:layout_marginBottom="@dimen/margin32"
         android:gravity="center"
         android:textColor="@color/colorTextBlack"
         android:fontFamily="@font/sf_pro_text_semibold"
@@ -40,8 +39,7 @@
         android:id="@+id/bottomSheetDialogDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="@dimen/margin32"
         android:textColor="@color/color_transfer_details_text_gray"
         android:fontFamily="@font/sf_pro_text_semibold"
         android:textSize="17sp"
@@ -50,9 +48,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bottomSheetDialogOkButton"
-        android:layout_width="320dp"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/btn_rounded_height"
-        android:layout_marginTop="48dp"
         android:text="@string/LNG_OK"
         android:textSize="12sp"
         android:fontFamily="@font/sf_pro_text_semibold"
@@ -64,14 +61,15 @@
 
     <TextView
         android:id="@+id/bottomSheetDialogCancelButton"
-        android:layout_width="320dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_rounded_height"
+        android:layout_marginTop="@dimen/margin32"
         android:text="@string/LNG_CANCEL"
         android:gravity="center"
         android:fontFamily="@font/sf_pro_text_regular"
         android:textSize="12sp"
-        android:textColor="@color/colorTextBlack" />
+        android:textColor="@color/colorTextBlack"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </LinearLayout>
