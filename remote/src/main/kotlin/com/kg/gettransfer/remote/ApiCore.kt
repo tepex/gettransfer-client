@@ -175,26 +175,25 @@ class ApiCore : KoinComponent {
     }
     */
 
-    @Suppress("ThrowsCount")
-    internal suspend fun updateOldAccessToken() =
+    internal suspend fun updateOldAccessToken(authKey: String?) =
         try {
             val oldToken = preferences.accessToken
             val updatedToken = if (oldToken.isNotEmpty() && oldToken != INVALID_TOKEN) oldToken  else null
-            getAccessToken(updatedToken)
+            getAccessToken(updatedToken, authKey)
         } catch (e: Exception) {
             throw remoteException(e)
         }
 
     private suspend fun updateAccessToken() {
-        getAccessToken(null)
+        getAccessToken(null, null)
         val email = preferences.userEmail
         val phone = preferences.userPhone
         val password = preferences.userPassword
         if (email != null || phone != null) api.login(email, phone, password)
     }
 
-    private suspend fun getAccessToken(token: String?) {
-        val response: ResponseModel<TokenModel> = api.accessToken(token)
+    private suspend fun getAccessToken(token: String?, authKey: String?) {
+        val response: ResponseModel<TokenModel> = api.accessToken(token, authKey)
         @Suppress("UnsafeCallOnNullableType")
         preferences.accessToken = response.data!!.token
     }

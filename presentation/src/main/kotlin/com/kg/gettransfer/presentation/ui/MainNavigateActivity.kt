@@ -32,6 +32,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment
 import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment
 import com.kg.gettransfer.presentation.view.MainNavigateView
+import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_ERROR_RES_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.SHOW_ABOUT
@@ -101,9 +102,16 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
 
     private fun getIntents(intent: Intent?) {
         intent?.let { arguments ->
+            val errorResId = arguments.getIntExtra(EXTRA_ERROR_RES_ID, 0)
+            if (errorResId != 0) {
+                showError(errorResId)
+                return
+            }
+
             val transferId = arguments.getLongExtra(EXTRA_RATE_TRANSFER_ID, 0L)
             val rate = arguments.getIntExtra(EXTRA_RATE_VALUE, 0)
             rateTransfer(transferId, rate)
+
         }
     }
 
@@ -245,6 +253,16 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
 
     override fun onSupportNavigateUp(): Boolean {
         return currentNavController?.value?.navigateUp() ?: false
+    }
+
+    private fun showError(errorResId: Int) {
+        BottomSheetDialog
+            .newInstance()
+            .apply {
+                title = this@MainNavigateActivity.getString(R.string.LNG_ERROR)
+                text = this@MainNavigateActivity.getString(errorResId)
+            }
+            .show(supportFragmentManager)
     }
 
     companion object {

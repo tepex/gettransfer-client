@@ -11,6 +11,7 @@ interface Api {
     companion object {
         const val HEADER_TOKEN = "X-ACCESS-TOKEN"
         const val CHECKOUTCOM_HEADER_TOKEN = "Authorization"
+        const val AUTH_KEY = "auth_key"
 
         const val API_ACCESS_TOKEN = "/api/access_token"
         const val API_ACCOUNT = "/api/account"
@@ -42,7 +43,8 @@ interface Api {
 
     @GET(API_ACCESS_TOKEN)
     suspend fun accessToken(
-        @Header(HEADER_TOKEN) token: String?
+        @Header(HEADER_TOKEN) token: String?,
+        @Query(AUTH_KEY) authKey: String?
     ): ResponseModel<TokenModel>
 
     @GET(API_ACCOUNT)
