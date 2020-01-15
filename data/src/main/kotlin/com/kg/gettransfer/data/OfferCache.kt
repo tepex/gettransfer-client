@@ -7,7 +7,7 @@ interface OfferCache : KoinComponent {
 
     fun setOffer(offer: OfferEntity)
 
-    fun setOffers(offers: List<OfferEntity>)
+    fun setOffers(transferId: Long, offers: List<OfferEntity>)
 
     fun getOffers(id: Long): List<OfferEntity>
 

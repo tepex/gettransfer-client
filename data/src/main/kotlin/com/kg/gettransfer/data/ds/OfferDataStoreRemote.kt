@@ -11,7 +11,7 @@ open class OfferDataStoreRemote : OfferDataStore {
 
     override fun setOffer(offer: OfferEntity) { throw UnsupportedOperationException() }
 
-    override fun setOffers(offers: List<OfferEntity>) { throw UnsupportedOperationException() }
+    override fun setOffers(transferId: Long, offers: List<OfferEntity>) { throw UnsupportedOperationException() }
 
     override suspend fun getOffers(id: Long) = remote.getOffers(id)
 

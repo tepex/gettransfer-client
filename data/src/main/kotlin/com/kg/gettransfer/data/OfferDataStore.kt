@@ -5,7 +5,7 @@ import org.koin.core.KoinComponent
 
 interface OfferDataStore : KoinComponent {
 
-    fun setOffers(offers: List<OfferEntity>)
+    fun setOffers(transferId: Long, offers: List<OfferEntity>)
 
     fun setOffer(offer: OfferEntity)
 
