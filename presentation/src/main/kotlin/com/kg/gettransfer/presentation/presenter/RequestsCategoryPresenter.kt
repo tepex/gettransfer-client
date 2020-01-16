@@ -23,6 +23,7 @@ import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.CommunicationManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,6 +47,7 @@ class RequestsCategoryPresenter(
 
     private val worker: WorkerManager by inject { parametersOf("RequestsCategoryPresenter") }
     private val coordinateInteractor: CoordinateInteractor by inject()
+    private val communicationManager: CommunicationManager by inject()
 
     @RequestsView.TransferTypeAnnotation
     var transferType = tt
@@ -237,6 +239,8 @@ class RequestsCategoryPresenter(
     override fun accountChanged() {
         getTransfers()
     }
+
+    fun callPhone(phone: String) = communicationManager.callPhone(phone)
 
     companion object {
         const val HOURS_BEFORE_TRIP_FOR_SHOWING_OFFER = -24

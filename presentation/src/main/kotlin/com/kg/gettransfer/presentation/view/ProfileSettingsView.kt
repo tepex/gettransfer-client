@@ -8,5 +8,4 @@ import com.kg.gettransfer.presentation.model.ProfileModel
 interface ProfileSettingsView : BaseView {
     fun initFields(profile: ProfileModel)
     fun setEnabledBtnSave(enabled: Boolean)
-    fun setEnabledPhoneField(enabled: Boolean)
 }

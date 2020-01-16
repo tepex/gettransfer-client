@@ -94,6 +94,11 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".presentation.ui.SettingsChangePhoneActivity"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize"
+            android:resizeableActivity="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".presentation.ui.OffersActivity"
             android:resizeableActivity="false"
             android:screenOrientation="portrait">
@@ -174,6 +179,10 @@
                     android:host="gettransfer.com"
                     android:pathPattern="/transfers/new"
                     android:scheme="https" />
+                <data
+                    android:host="gettransfer.com"
+                    android:pathPrefix="/new_password"
+                    android:scheme="https" />
 
                 <data
                     android:host="gtrbox.org"
@@ -199,6 +208,10 @@
                     android:host="gtrbox.org"
                     android:pathPattern="/transfers/new"
                     android:scheme="https" />
+                <data
+                    android:host="gtrbox.org"
+                    android:pathPrefix="/new_password"
+                    android:scheme="https" />
 
                 <data
                     android:host="development.gtrbox.org"
@@ -223,6 +236,10 @@
                 <data
                     android:host="development.gtrbox.org"
                     android:pathPattern="/transfers/new"
+                    android:scheme="https" />
+                <data
+                    android:host="development.gtrbox.org"
+                    android:pathPrefix="/new_password"
                     android:scheme="https" />
             </intent-filter>
         </activity>

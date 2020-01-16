@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/activation_code_horizontal_padding"
+    android:paddingTop="@dimen/activation_code_vertical_padding"
+    android:paddingEnd="@dimen/activation_code_horizontal_padding"
+    android:paddingBottom="@dimen/activation_code_vertical_padding">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="center"
+        android:textColor="@color/color_gtr_grey"
+        android:textSize="@dimen/activation_code_text_size"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.chaos.view.PinView
+        android:id="@+id/codeView"
+        style="@style/PinWidget.PinView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activation_code_pin_view_margin_top"
+        android:cursorVisible="true"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:inputType="text"
+        android:textColor="@color/color_gtr_green"
+        android:textSize="@dimen/activation_code_pin_view_text_size"
+        app:cursorColor="@color/color_gtr_green"
+        app:cursorWidth="@dimen/activation_code_pin_view_cursor_width"
+        app:itemCount="8"
+        app:itemHeight="@dimen/activation_code_pin_view_item_height"
+        app:itemSpacing="@dimen/activation_code_pin_view_item_spacing"
+        app:itemWidth="@dimen/activation_code_pin_view_item_width"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:lineColor="@color/color_gtr_grey"
+        app:lineWidth="@dimen/activation_code_pin_view_line_width"
+        app:viewType="line" />
+
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activation_code_error_text_margin_top"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="center"
+        android:textColor="@color/color_gtr_red"
+        android:textSize="@dimen/activation_code_text_size"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/codeView" />
+
+    <Button
+        android:id="@+id/btnDone"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/general_button_height"
+        android:layout_marginStart="@dimen/activation_code_btn_done_vertical_margin"
+        android:layout_marginEnd="@dimen/activation_code_btn_done_vertical_margin"
+        android:layout_marginBottom="@dimen/activation_code_btn_done_margin_bottom"
+        android:background="@drawable/btn_bg_rounded_green"
+        android:enabled="false"
+        android:text="@string/LNG_DONE"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toTopOf="@+id/btnResendCode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/btnResendCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_text_regular"
+        android:gravity="center"
+        android:textColor="@color/black_a30"
+        android:textColorLink="@color/color_gtr_green"
+        android:textSize="@dimen/activation_code_text_size"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

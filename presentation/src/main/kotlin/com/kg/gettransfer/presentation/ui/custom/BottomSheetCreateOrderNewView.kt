@@ -181,7 +181,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         rvTransferType.isNestedScrollingEnabled = false
         adapter = TransferTypeAdapter() { transportType, showInfo ->
             checkErrorField(rvTransferType)
-            listener?.onTransportTypeChanged(transportType, showInfo)
+            listener?.onTransportTypeClicked(transportType, showInfo)
         }
         rvTransferType.adapter = adapter
     }
@@ -359,7 +359,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         fun onCommentClick(value: String)
         fun onAgreementClick()
         fun onAgreementChecked(value: Boolean)
-        fun onTransportTypeChanged(type: TransportTypeModel, value: Boolean)
+        fun onTransportTypeClicked(type: TransportTypeModel, showInfo: Boolean)
 
         fun onGetOffersClick()
     }

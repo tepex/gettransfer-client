@@ -20,7 +20,8 @@ class RouteRemoteImpl : RouteRemote {
                 request.withPrices,
                 request.returnWay,
                 request.currency,
-                request.dateTime
+                request.dateTo,
+                request.dateReturn
             )
         }
         @Suppress("UnsafeCallOnNullableType")

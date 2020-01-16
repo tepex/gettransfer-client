@@ -34,7 +34,6 @@ import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
-import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.UserMapper
 import com.kg.gettransfer.presentation.mapper.MessageMapper
 import com.kg.gettransfer.presentation.mapper.ChatAccountMapper
@@ -51,8 +50,8 @@ import com.kg.gettransfer.utilities.GTDownloadManager
 
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 import com.kg.gettransfer.sys.domain.*
-
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.CommunicationManager
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
@@ -131,7 +130,7 @@ val domainModule = module {
     single { CoordinateInteractor(get()) }
     single { CountEventsInteractor(get()) }
     single { GeoInteractor(get(), get()) }
-    single { PushTokenInteractor(get()) }
+    single { OnesignalInteractor(get()) }
     single { SocketInteractor(get()) }
     single { SessionInteractor(get(), get()) }
 }
@@ -143,7 +142,6 @@ val mappersModule = module {
     single { PaymentStatusRequestMapper() }
     single { PointMapper() }
     single { ProfileMapper() }
-    single { RouteMapper() }
     single { UserMapper() }
     single { MessageMapper() }
     single { ChatAccountMapper() }
@@ -167,6 +165,7 @@ val androidModule = module {
     single { GTDownloadManager(androidApplication().applicationContext) }
     single { NetworkChangeCallback(androidApplication().applicationContext) }
     single { PushTokenManager() }
+    single { CommunicationManager() }
     single { CountryCodeManager(androidApplication().applicationContext) }
 }
 

@@ -14,6 +14,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.ui.*
 import com.kg.gettransfer.presentation.ui.dialogs.PaymentErrorDialog
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
+import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_ERROR_RES_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.SHOW_ABOUT
@@ -63,6 +64,15 @@ object Screens {
         }
     }
 
+    data class MainWithError(
+        val errorResId: Int
+    ) : SupportAppScreen() {
+
+        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java).apply {
+            putExtra(EXTRA_ERROR_RES_ID, errorResId)
+        }
+    }
+
     object Requests : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) = Intent(context, RequestsPagerActivity::class.java)
@@ -107,6 +117,11 @@ object Screens {
     open class ChangeEmail : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangeEmailActivity::class.java)
+    }
+
+    open class ChangePhone : SupportAppScreen() {
+
+        override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangePhoneActivity::class.java)
     }
 
     open class ChangePassword : SupportAppScreen() {
@@ -372,7 +387,7 @@ object Screens {
             fragmentManager,
             fragment = SupportFragment.newInstance(transferId, true),
             containerViewId = android.R.id.content,
-            tag = null,
+            tag = SupportFragment.TAG,
             addToBackStack = true)
     }
 

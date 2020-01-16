@@ -15,7 +15,7 @@ open class SessionDataStoreRemote : SessionDataStore {
 
     private val remote: SessionRemote by inject()
 
-    override suspend fun updateOldToken() = remote.updateOldToken()
+    override suspend fun updateOldToken(authKey: String?) = remote.updateOldToken(authKey)
 
     override suspend fun getAccount() = remote.getAccount()
 
@@ -31,7 +31,8 @@ open class SessionDataStoreRemote : SessionDataStore {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun getCodeForChangeEmail(email: String) = remote.getCodeForChangeEmail(email)
+    override suspend fun getConfirmationCode(email: String?, phone: String?) = remote.getConfirmationCode(email, phone)
 
-    override suspend fun changeEmail(email: String, code: String) = remote.changeEmail(email, code)
+    override suspend fun changeContact(email: String?, phone: String?, code: String) =
+        remote.changeContact(email, phone, code)
 }

@@ -307,11 +307,11 @@
     <dimen name="view_offer_car_model_margin_start">12dp</dimen>
     <dimen name="view_offer_car_model_margin_end">10dp</dimen>
     <dimen name="view_offer_car_img_width">112dp</dimen>
-    <dimen name="view_offer_car_img_height">80dp</dimen>
+    <dimen name="view_offer_car_img_height">100dp</dimen>
     <dimen name="view_offer_car_img_margin_top">4dp</dimen>
     <dimen name="view_offer_btn_book_height">32dp</dimen>
 	<dimen name="view_offer_btn_book_margin_end">8dp</dimen>
-    <dimen name="view_offer_languages_container_margin_start">8dp</dimen>
+    <dimen name="view_offer_languages_container_margin_start">16dp</dimen>
     <dimen name="view_offer_btn_book_text_size">13sp</dimen>
 	<dimen name="view_offer_language_icon_width">18dp</dimen>
 	<dimen name="view_offer_language_icon_height">12dp</dimen>
@@ -359,7 +359,7 @@
 	<dimen name="bottom_sheet_offer_details_text_size_11sp">11sp</dimen>
 	<dimen name="bottom_sheet_offer_details_vehicle_name_margin_top">22dp</dimen>
 	<dimen name="bottom_sheet_offer_details_vehicle_icons_margin_top">16dp</dimen>
-	<dimen name="bottom_sheet_offer_details_margin_10dp">10dp</dimen>
+	<dimen name="bottom_sheet_offer_details_margin_10dp">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_margin_16dp">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_name_sign_img_size">24dp</dimen>
 	<dimen name="bottom_sheet_offer_details_name_sign_text_size">12sp</dimen>
@@ -454,15 +454,17 @@
 
 	<dimen name="activity_transfer_details_top_buttons_margin_bottom">8dp</dimen>
 
+	<dimen name="margin0">0dp</dimen>
 	<dimen name="margin1">1dp</dimen>
 	<dimen name="margin4">4dp</dimen>
+	<dimen name="margin5">5dp</dimen>
+	<dimen name="margin8">8dp</dimen>
+	<dimen name="margin10">10dp</dimen>
 	<dimen name="margin44">44dp</dimen>
 	<dimen name="margin16">16dp</dimen>
 	<dimen name="margin20">20dp</dimen>
 	<dimen name="margin24">24dp</dimen>
 	<dimen name="margin32">32dp</dimen>
-	<dimen name="margin0">0dp</dimen>
-	<dimen name="margin8">8dp</dimen>
 	<dimen name="margin104">104dp</dimen>
 
 	<!--new settings-->
@@ -568,12 +570,13 @@
 	<dimen name="offer_tiny_final_price_text_size">18sp</dimen>
 	<dimen name="offer_tiny_co2_text_size">14sp</dimen>
 	<dimen name="offer_tiny_rating_margin_bottom">6dp</dimen>
+	<dimen name="offer_tiny_rating_margin_top">12dp</dimen>
 	<dimen name="offer_tiny_languages_min_height">12dp</dimen>
 	<dimen name="offer_tiny_car_class_margin_top">7dp</dimen>
 	<dimen name="offer_tiny_capacity_margin_start">8dp</dimen>
 	<dimen name="offer_tiny_car_color_width">16dp</dimen>
 	<dimen name="offer_tiny_car_color_height">16dp</dimen>
-	<dimen name="offer_tiny_name_sign_size">16dp</dimen>
+	<dimen name="offer_tiny_name_sign_size">24dp</dimen>
 	<dimen name="offer_tiny_name_sign_margin_start">6dp</dimen>
 
 	<dimen name="payment_dialog_corner_radius">16dp</dimen>
@@ -616,25 +619,24 @@
 	<dimen name="profile_settings_btns_margin_top">24dp</dimen>
 	<dimen name="profile_settings_btns_text_size">14sp</dimen>
 
-	<!--Change email settings-->
-	<dimen name="change_email_sent_code_text_size">12sp</dimen>
-	<dimen name="change_email_sent_code_text_margin_top">24dp</dimen>
-	<dimen name="change_email_code_text_size">24sp</dimen>
-	<dimen name="change_email_code_text_margin_top">24dp</dimen>
-	<dimen name="change_email_code_text_cursor_width">2dp</dimen>
-	<dimen name="change_email_code_text_height">40dp</dimen>
-	<dimen name="change_email_code_text_item_width">35dp</dimen>
-	<dimen name="change_email_code_text_line_width">1dp</dimen>
-	<dimen name="change_email_btn_resend_code_text_size">12sp</dimen>
-	<dimen name="change_email_btn_resend_code_margin_top">14dp</dimen>
-	<dimen name="change_email_btn_resend_code_padding">10dp</dimen>
-	<dimen name="change_email_field_vertical_padding">16dp</dimen>
-	<dimen name="change_email_layout_code_vertical_padding">16dp</dimen>
-	<dimen name="change_email_bth_change_email_margins">20dp</dimen>
+	<!--Change account contact field screens-->
+	<dimen name="change_contact_screen_fields_vertical_padding">16dp</dimen>
+	<dimen name="change_contact_screen_btn_done_margins">20dp</dimen>
 
-	<!--Change password settings-->
-	<dimen name="change_pass_fields_layout_vertical_padding">16dp</dimen>
-	<dimen name="change_pass_btn_done_margins">20dp</dimen>
+	<!--Activation code view-->
+	<dimen name="activation_code_horizontal_padding">16dp</dimen>
+	<dimen name="activation_code_vertical_padding">32dp</dimen>
+	<dimen name="activation_code_text_size">12sp</dimen>
+	<dimen name="activation_code_pin_view_margin_top">24dp</dimen>
+	<dimen name="activation_code_pin_view_item_width">24dp</dimen>
+	<dimen name="activation_code_pin_view_item_spacing">16dp</dimen>
+	<dimen name="activation_code_pin_view_line_width">1dp</dimen>
+	<dimen name="activation_code_pin_view_text_size">24sp</dimen>
+	<dimen name="activation_code_pin_view_cursor_width">2dp</dimen>
+	<dimen name="activation_code_pin_view_item_height">40dp</dimen>
+	<dimen name="activation_code_error_text_margin_top">16dp</dimen>
+	<dimen name="activation_code_btn_done_vertical_margin">12dp</dimen>
+	<dimen name="activation_code_btn_done_margin_bottom">24dp</dimen>
 
 	<!--Settings editable field-->
 	<dimen name="settings_editable_field_min_height">64dp</dimen>

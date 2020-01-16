@@ -27,7 +27,6 @@ import com.kg.gettransfer.extensions.simpleFormat
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
-import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.UserMapper
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -61,7 +60,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val dateDelegate: DateTimeDelegate by inject()
     private val childSeatsDelegate: PassengersDelegate by inject()
 
-    private val routeMapper: RouteMapper by inject()
     private val userMapper: UserMapper by inject()
 
     private val nState: NewTransferState by inject()
@@ -79,7 +77,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var isTimeSetByUser = false
 
     fun init() {
-        updateRouteInfo(true, saveSelectedTransportTypes = false)
+        updateRouteInfo(true)
         worker.main.launch {
             currencies = configsManager.getConfigs().supportedCurrencies.map { it.map() }
             setCurrency(sessionInteractor.currency.map())
@@ -105,10 +103,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun updateRouteInfo(
         updateMap: Boolean,
-        saveSelectedTransportTypes: Boolean = true,
         isDateOrDistanceChanged: Boolean = false
     ) {
-        if (saveSelectedTransportTypes) saveSelectedTransportTypes()
         val from = orderInteractor.from?.cityPoint
         val to = orderInteractor.to?.cityPoint
         val hourlyDuration = orderInteractor.hourlyDuration
@@ -151,7 +147,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     true,
                     if (hourlyDuration != null) false else dateDelegate.returnDate != null,
                     sessionInteractor.currency.code,
-                    orderInteractor.orderStartTime
+                    orderInteractor.orderStartTime,
+                    orderInteractor.orderReturnTime
                 )
             )
         }.model
@@ -180,7 +177,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         from.point?.let { fromPoint ->
             to.point?.let { toPoint ->
                 val isRoundTrip = dateDelegate.returnDate != null
-                routeModel = routeMapper.getView(
+                routeModel = RouteModel(
                     from.name,
                     to.name,
                     fromPoint,
@@ -451,7 +448,12 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         return false
     }
 
-    fun setPassengersCountForSelectedTransportTypes(setSavedPax: Boolean = false) {
+    fun onSelectedTransportTypesChanged() {
+        saveSelectedTransportTypes()
+        setPassengersCountForSelectedTransportTypes()
+    }
+
+    private fun setPassengersCountForSelectedTransportTypes(setSavedPax: Boolean = false) {
         if (setSavedPax) {
             viewState.setPassengers(orderInteractor.passengers)
             return
@@ -512,7 +514,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun onBackClick() = onBackCommandClick()
 
     override fun onBackCommandClick() {
-        saveSelectedTransportTypes()
         router.exit()
         analytics.logSingleEvent(Analytics.BACK_TO_MAP)
     }

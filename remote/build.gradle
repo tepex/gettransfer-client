@@ -3,7 +3,7 @@ apply plugin: 'kotlin'
 apply plugin: 'kotlinx-serialization'
 
 ext {
-    retrofit_version  = "2.6.1"
+    retrofit_version  = "2.7.0"
     okhttp3_version   = "3.12.0"
     s_o_l_i_version   = "1.0.1"
     socket_io_version = "1.0.0"

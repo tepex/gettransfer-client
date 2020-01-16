@@ -6,11 +6,11 @@ import com.kg.gettransfer.data.ds.DataStoreFactory
 import com.kg.gettransfer.data.ds.GeoDataStore
 import com.kg.gettransfer.data.ds.OfferDataStoreCache
 import com.kg.gettransfer.data.ds.OfferDataStoreRemote
+import com.kg.gettransfer.data.ds.OnesignalDataStoreRemote
 import com.kg.gettransfer.data.ds.PaymentDataStoreCache
 import com.kg.gettransfer.data.ds.PaymentDataStoreRemote
 import com.kg.gettransfer.data.ds.PromoDataStoreCache
 import com.kg.gettransfer.data.ds.PromoDataStoreRemote
-import com.kg.gettransfer.data.ds.PushTokenDataStoreRemote
 import com.kg.gettransfer.data.ds.ReviewDataStoreCache
 import com.kg.gettransfer.data.ds.ReviewDataStoreRemote
 import com.kg.gettransfer.data.ds.RouteDataStoreCache
@@ -34,9 +34,9 @@ import com.kg.gettransfer.data.repository.CoordinateRepositoryImpl
 import com.kg.gettransfer.data.repository.CountEventsRepositoryImpl
 import com.kg.gettransfer.data.repository.GeoRepositoryImpl
 import com.kg.gettransfer.data.repository.OfferRepositoryImpl
+import com.kg.gettransfer.data.repository.OnesignalRepositoryImpl
 import com.kg.gettransfer.data.repository.PaymentRepositoryImpl
 import com.kg.gettransfer.data.repository.PromoRepositoryImpl
-import com.kg.gettransfer.data.repository.PushTokenRepositoryImpl
 import com.kg.gettransfer.data.repository.ReviewRepositoryImpl
 import com.kg.gettransfer.data.repository.RouteRepositoryImpl
 import com.kg.gettransfer.data.repository.SessionRepositoryImpl
@@ -54,9 +54,9 @@ import com.kg.gettransfer.domain.repository.CoordinateRepository
 import com.kg.gettransfer.domain.repository.CountEventsRepository
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.OfferRepository
+import com.kg.gettransfer.domain.repository.OnesignalRepository
 import com.kg.gettransfer.domain.repository.PaymentRepository
 import com.kg.gettransfer.domain.repository.PromoRepository
-import com.kg.gettransfer.domain.repository.PushTokenRepository
 import com.kg.gettransfer.domain.repository.ReviewRepository
 import com.kg.gettransfer.domain.repository.RouteRepository
 import com.kg.gettransfer.domain.repository.SessionRepository
@@ -111,8 +111,8 @@ val dataModule = module {
     single { GeoDataStore() }
     single <GeoRepository> { GeoRepositoryImpl(get()) }
 
-    single { PushTokenDataStoreRemote() }
-    single { PushTokenRepositoryImpl(get()) } bind PushTokenRepository::class
+    single { OnesignalDataStoreRemote() }
+    single { OnesignalRepositoryImpl(get()) } bind OnesignalRepository::class
 
     single { SocketRepositoryImpl(get()) } bind SocketRepository::class
 

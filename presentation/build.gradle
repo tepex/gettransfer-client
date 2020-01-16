@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/"}
+    }
+    dependencies {
+        classpath "gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.4, 0.99.99]"
+    }
+}
+
 plugins {
     id "io.qameta.allure" version "2.5" // Latest Plugin Version
 }
@@ -10,6 +19,11 @@ apply plugin: "kotlinx-serialization"
 apply plugin: "io.sentry.android.gradle" // for Proguard"s mapping file
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: "com.betomorrow.appcenter"
+apply plugin: "com.onesignal.androidsdk.onesignal-gradle-plugin"
+
+repositories {
+    maven { url 'https://maven.google.com' }
+}
 
 ext {
     multidex_version           = "2.0.1"
@@ -17,47 +31,48 @@ ext {
     moxy_version               = "2.0.2"
     cicerone_version           = "5.0.0"
     circle_indicator_version   = "1.2.2"
-    firebase_core_version      = "16.0.6"
+    firebase_core_version      = "17.2.1"
     firebase_iid_version       = "17.0.4"
-    firebase_messaging_version = "17.3.4"
-    glide_version              = "4.9.0"
+    firebase_messaging_version = "20.1.0"
+    glide_version              = "4.10.0"
     slf4j_timber_version       = "1.0.1"
     socket_io_version          = "1.0.0"
     libphonenumber_version     = "8.11.1"
-    appmetrica_version         = "3.6.4"
-    facebook_version           = "4.38.1"
+    appmetrica_version         = "3.8.0"
+    facebook_version           = "5.13.0"
     leakcanary_version         = "2.0-beta-2"
     anko_version               = "0.10.8"
-    flexbox_layout_version     = "1.0.0"
+    flexbox_layout_version     = "2.0.0"
     pageindicator_version      = "1.0.3"
-    sentry_version             = "1.7.23"
+//    sentry_version             = "2.0.0-beta02"
+    sentry_version             = "1.7.29"
     appsflyer_version          = "4.8.19"
-    installreferrer_version    = "1.0"
+    installreferrer_version    = "1.1"
     life_cycle_version         = "1.1.1"
-    easy_permissions_version   = "2.0.1"
+    easy_permissions_version   = "3.0.0"
     braintree_version          = "2.22.0" //don't update until migration to AndroidX
     drop_in_version            = "3.7.1"  //don't update until migration to AndroidX
-    pinview_version            = "1.4.2"
-    fb_shimmer_version         = "0.4.0"
-    appmetrica_push            = "1.4.1"
-    play_services              = "16.1.0"
-    androidx_transition        = "1.2.0-rc01"
-    webkit_version             = "1.0.0"
-    appcompat_version          = "1.1.0"
-    recyclerview_version       = "1.0.0"
+    pinview_version            = "1.4.3"
+    fb_shimmer_version         = "0.5.0"
+    appmetrica_push            = "1.5.1"
+    play_services              = "17.1.0"
+    androidx_transition        = "1.3.0-rc02"
+    appcompat_version          = "1.2.0-alpha01"
     cardview_version           = "1.0.0"
-    material_version           = "1.1.0-beta01"
-    core_ktx_version           = "1.1.0"
-    fragment_version           = "1.2.0-alpha02"
-    fragment_ktx_version       = "1.2.0-alpha02"
-    lifecycle_runtime_version  = "2.0.0"
-    lifecycle_extensions_ver   = "2.0.0"
-    maps_utils_version         = "0.5"
+    material_version           = "1.1.0-rc01" // не обновлять на версии 1.2.х пока не появятся стабильные,
+                                              // есть проблемы с отображение кастомных вьюх.
+                                              // с версией 1.1.х при обновлении на не стабтльную тоже надо быть аккуратнее,
+                                              // но пока проблем не было
+    core_ktx_version           = "1.2.0-rc01"
+    fragment_version           = "1.2.0-rc04"
+    lifecycle_version          = "2.2.0-rc03"
+    maps_utils_version         = "0.6.2"
     play_services_walet        = "18.0.0"
     support_appcompat_v7       = "28.0.0"
     swipe_refresh_version      = "1.1.0-alpha03"
-    checkout_frames_version    = "2.1.0"
+    checkout_frames_version    = "2.1.1"
     appcenter_version          = "2.5.1"
+    onesignal_version          = "[3.11.2, 3.99.99]"
 }
 
 android {
@@ -80,6 +95,12 @@ android {
                 ]
             }
         }
+
+        manifestPlaceholders = [
+            onesignal_app_id: "9f8efc07-f660-44f7-bcac-24bb600dc5c3",
+            // Project number pulled from dashboard, local value is ignored.
+            onesignal_google_project_number: "REMOTE"
+        ]
     }
 
     signingConfigs {
@@ -173,6 +194,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 configurations {
@@ -218,17 +243,17 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    implementation "androidx.recyclerview:recyclerview:$appcompat_version"
     implementation "androidx.cardview:cardview:$cardview_version"
     implementation "com.google.android.material:material:$material_version"
     implementation "androidx.core:core-ktx:$core_ktx_version"
     implementation "androidx.fragment:fragment:$fragment_version"
-    implementation "androidx.fragment:fragment-ktx:$fragment_ktx_version"
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
     implementation "androidx.multidex:multidex:$multidex_version"
-    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_runtime_version"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_extensions_ver"
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     // Navigation
 //    implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
@@ -314,7 +339,7 @@ dependencies {
 
 
     // Webkit
-    implementation "androidx.webkit:webkit:$webkit_version"
+    implementation "androidx.webkit:webkit:$appcompat_version"
 
     // SwipeRefreshLayout
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_version"
@@ -326,8 +351,11 @@ dependencies {
     // Checkout.com
     implementation "com.github.checkout:frames-android:v$checkout_frames_version"
 
-    //AppCenter
+    // AppCenter
     implementation "com.microsoft.appcenter:appcenter-crashes:$appcenter_version"
+
+    // OneSignal
+    implementation "com.onesignal:OneSignal:$onesignal_version"
 
     api("androidx.transition:transition:$androidx_transition")
 
@@ -377,10 +405,10 @@ dependencies {
 
 allure {
     autoconfigure = true
-    version = '2.7.0'  // Latest Allure Version
+    version = '2.13.1'  // Latest Allure Version
 
     useJUnit5 {
-        version = '2.7.0' // Latest Allure Version
+        version = '2.13.1' // Latest Allure Version
     }
 }
 
