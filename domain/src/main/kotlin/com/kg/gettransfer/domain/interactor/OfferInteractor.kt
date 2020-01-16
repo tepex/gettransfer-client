@@ -18,5 +18,7 @@ class OfferInteractor(private val repository: OfferRepository) {
         return Result(Unit)
     }
 
+    fun newOffer(offer: Offer) = repository.newOffer(offer)
+
     fun onNewOfferEvent(offer: Offer) = eventReceiver?.onNewOfferEvent(offer)
 }
