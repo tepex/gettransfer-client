@@ -43,7 +43,7 @@ class OfferRepositoryImpl(
         val result: ResultEntity<List<OfferEntity>?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getOffers(id)
         }
-        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().setOffers(it) }
+        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().setOffers(id, it) }
         return Result(
             result.entity?.let {
                 checkCachedReview(it)
