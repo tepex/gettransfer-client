@@ -173,7 +173,6 @@ val testModule = module {
     single { CoroutineContexts(Dispatchers.IO, Dispatchers.IO) }
 }
 
-
 val systemDomain = module {
     single { GetConfigsInteractor(get()) }
     single { ClearConfigsInteractor(get()) }
@@ -197,7 +196,6 @@ val systemDomain = module {
     single { SetPaymentRequestWithoutDelayInteractor(get()) }
 }
 
-@UseExperimental(ExperimentalTime::class)
 val systemPresentation = module {
     factory { (name: String) -> WorkerManager(name) }
     factory { (tag: String) -> LoggerFactory.getLogger(tag) }

@@ -6,7 +6,6 @@ import com.kg.gettransfer.core.domain.Result
 import com.kg.gettransfer.sys.domain.MobileConfigs
 import com.kg.gettransfer.sys.domain.MobileConfigsRepository
 
-
 class MobileConfigsRepositoryImpl(
     private val cacheStrategy: CacheStrategy<MobileConfigsEntity, MobileConfigs>,
     private val empty: MobileConfigs,
