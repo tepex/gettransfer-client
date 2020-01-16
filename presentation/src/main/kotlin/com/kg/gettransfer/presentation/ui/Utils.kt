@@ -67,6 +67,7 @@ import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.internationalExample
 
 import com.kg.gettransfer.presentation.mapper.PointMapper
+import com.kg.gettransfer.presentation.model.OfferModel
 
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -75,6 +76,7 @@ import com.kg.gettransfer.utilities.CountryCodeManager
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import kotlinx.android.synthetic.main.dialog_cancel_request.view.*
+import kotlinx.android.synthetic.main.vehicle_items.view.*
 
 import java.util.Locale
 
@@ -524,6 +526,22 @@ object Utils : KoinComponent {
             .getDrawable(context, drawableId)?.toBitmap()
             ?.squareBitmap(bacColorResId?.let { ContextCompat.getColor(context, it) })
             ?.let { RoundedBitmapDrawableFactory.create(context.resources, it).apply { isCircular = true }.toBitmap() }
+
+    /**
+     * @param viewConveniences layout for vehicle conveniences
+     */
+    fun setVehicleConveniences(offer: OfferModel, viewConveniences: View) {
+        with(viewConveniences) {
+            imgFreeWater.isVisible = offer.refreshments
+            imgFreeWiFi.isVisible = offer.wifi
+            imgCharge.isVisible = offer.charger
+            ivWheelchair.isVisible = offer.wheelchair
+            ivArmor.isVisible = offer.armored
+            isVisible = offer.refreshments || offer.wifi
+                || offer.charger || offer.wheelchair || offer.armored
+        }
+    }
+
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {
