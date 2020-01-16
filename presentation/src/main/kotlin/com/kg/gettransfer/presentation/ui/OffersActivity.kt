@@ -57,6 +57,7 @@ import kotlinx.android.synthetic.main.card_empty_offers.*
 import kotlinx.android.synthetic.main.drivers_count.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.view.*
+import kotlinx.android.synthetic.main.vehicle_items.* // don't remove
 import kotlinx.android.synthetic.main.vehicle_items.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 import kotlinx.android.synthetic.main.view_offer_rating_details.*
@@ -234,22 +235,10 @@ class OffersActivity : BaseActivity(), OffersView {
                 setCapacity(offer.vehicle.transportType)
                 OfferItemBindDelegate.bindNameSignPlate(this, iconNameSign,
                     tvMissingNameSign, isNameSignPresent, offer.isWithNameSign)
-                with(vehicle_conveniences) {
-                    imgFreeWater.isVisible = offer.refreshments
-                    imgFreeWiFi.isVisible = offer.wifi
-                    imgCharge.isVisible = offer.charger
-                    ivWheelchair.isVisible = offer.wheelchair
-                    ivArmor.isVisible = offer.armored
-                    isVisible = offer.refreshments || offer.wifi || offer.charger ||
-                        offer.wheelchair || offer.armored
-                }
+                setVehicleConveniences(offer)
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)
-                if (offer.vehicle.photos.isNotEmpty()) {
-                    vehiclePhotosView.setPhotos(offer.vehicle.transportType.imageId, offer.vehicle.photos)
-                } else {
-                    vehiclePhotosView.hidePhotos()
-                }
+                setOfferPhoto(offer)
                 setRating(offer.carrier)
             }
             is BookNowOfferModel -> {
@@ -274,6 +263,26 @@ class OffersActivity : BaseActivity(), OffersView {
             hideSheetOfferDetails()
         }
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun setOfferPhoto(offer: OfferModel) {
+        if (offer.vehicle.photos.isNotEmpty()) {
+            vehiclePhotosView.setPhotos(offer.vehicle.transportType.imageId, offer.vehicle.photos)
+        } else {
+            vehiclePhotosView.hidePhotos()
+        }
+    }
+
+    private fun setVehicleConveniences(offer: OfferModel) {
+        with(sheetOfferDetails.vehicle_conveniences) {
+            imgFreeWater.isVisible = offer.refreshments
+            imgFreeWiFi.isVisible = offer.wifi
+            imgCharge.isVisible = offer.charger
+            ivWheelchair.isVisible = offer.wheelchair
+            ivArmor.isVisible = offer.armored
+            isVisible = offer.refreshments || offer.wifi
+                || offer.charger || offer.wheelchair || offer.armored
+        }
     }
 
     private fun setWithoutDiscount(withoutDiscount: Money?) {

@@ -496,6 +496,7 @@
 	<dimen name="vehicle_items_icons_size">16dp</dimen>
 	<dimen name="vehicle_items_wifi_icon_width">24dp</dimen>
 	<dimen name="vehicle_items_margin_start">6dp</dimen>
+	<dimen name="vehicle_items_margin_end">6dp</dimen>
 
 	<!--offer_rating-->
 	<dimen name="offer_rating_padding">5dp</dimen>
