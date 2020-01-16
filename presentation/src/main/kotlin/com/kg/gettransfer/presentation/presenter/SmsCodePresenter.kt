@@ -12,9 +12,7 @@ import com.kg.gettransfer.utilities.Analytics
 import kotlinx.coroutines.launch
 
 import kotlinx.serialization.json.JSON
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 @InjectViewState
 class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
 

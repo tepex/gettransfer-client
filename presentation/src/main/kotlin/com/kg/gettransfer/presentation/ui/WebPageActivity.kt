@@ -38,9 +38,7 @@ import org.koin.core.parameter.parametersOf
 
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 class WebPageActivity : MvpAppCompatActivity(), WebPageView {
     var navigator = SupportAppNavigator(this, Screens.NOT_USED)
     val navigatorHolder: NavigatorHolder by inject()

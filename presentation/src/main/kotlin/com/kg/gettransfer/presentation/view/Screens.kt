@@ -24,9 +24,7 @@ import kotlinx.serialization.json.JSON
 import org.jetbrains.anko.toast
 
 import ru.terrakok.cicerone.android.support.SupportAppScreen
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 object Screens {
     const val NOT_USED = -1
 

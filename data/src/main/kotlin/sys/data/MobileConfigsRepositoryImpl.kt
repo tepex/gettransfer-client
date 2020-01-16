@@ -5,9 +5,8 @@ import com.kg.gettransfer.core.domain.Result
 
 import com.kg.gettransfer.sys.domain.MobileConfigs
 import com.kg.gettransfer.sys.domain.MobileConfigsRepository
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
+
 class MobileConfigsRepositoryImpl(
     private val cacheStrategy: CacheStrategy<MobileConfigsEntity, MobileConfigs>,
     private val empty: MobileConfigs,

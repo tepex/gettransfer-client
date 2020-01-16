@@ -26,11 +26,10 @@ import org.koin.dsl.module
 
 import org.koin.test.KoinTest
 import org.koin.test.get
-import kotlin.time.ExperimentalTime
+
 import kotlin.time.minutes
 import kotlin.time.seconds
 
-@ExperimentalTime
 class MobileConfigsRepositoryTest : StringSpec(), KoinTest {
     @MockK
     lateinit var cache: MobileConfigsCacheDataSource

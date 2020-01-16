@@ -21,9 +21,7 @@ import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.serialization.json.JSON
 // import leakcanary.AppWatcher
 import timber.log.Timber
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 @Suppress("TooManyFunctions")
 class SmsCodeFragment : BaseLogInFragment(), SmsCodeView {
 

@@ -13,11 +13,10 @@ import java.util.Locale
 import org.koin.dsl.module
 import sys.domain.CheckoutcomCredentials
 import sys.domain.GooglePayCredentials
-import kotlin.time.ExperimentalTime
+
 import kotlin.time.minutes
 import kotlin.time.seconds
 
-@ExperimentalTime
 val systemData = module {
     /* Default models */
     single {

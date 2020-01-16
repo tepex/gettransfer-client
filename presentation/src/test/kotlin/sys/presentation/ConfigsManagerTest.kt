@@ -53,12 +53,11 @@ import org.koin.test.KoinTest
 import org.koin.test.get
 
 import org.slf4j.Logger
-import kotlin.time.ExperimentalTime
+
 import kotlin.time.minutes
 import kotlin.time.seconds
 
 @ExperimentalCoroutinesApi
-@ExperimentalTime
 class ConfigsManagerTest : StringSpec(), KoinTest {
     @MockK
     lateinit var configsRepository: ConfigsRepository

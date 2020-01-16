@@ -21,9 +21,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 
 import org.slf4j.Logger
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 class ConfigsManager : KoinComponent {
 
     private val worker: WorkerManager by inject { parametersOf("ConfigsManager") }

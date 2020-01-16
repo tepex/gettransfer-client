@@ -42,9 +42,7 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import sys.domain.SetPaymentRequestWithoutDelayInteractor
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 @Suppress("TooManyFunctions")
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener, CreateTransferListener {
