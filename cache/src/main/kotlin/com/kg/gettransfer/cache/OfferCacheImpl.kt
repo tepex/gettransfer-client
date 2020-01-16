@@ -10,8 +10,8 @@ class OfferCacheImpl : OfferCache, KoinComponent {
 
     private val db: CacheDatabase by inject()
 
-    override fun setOffers(offers: List<OfferEntity>) =
-        db.offersCacheDao().updateOffersForTransfer(offers.map { it.map() })
+    override fun setOffers(transferId: Long, offers: List<OfferEntity>) =
+        db.offersCacheDao().updateOffersForTransfer(transferId, offers.map { it.map() })
 
     override fun setOffer(offer: OfferEntity) = db.offersCacheDao().insertOffer(offer.map())
 

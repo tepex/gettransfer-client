@@ -184,7 +184,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     fun isBusinessAccount(): Boolean = accountManager.remoteAccount.isBusinessAccount
 
     open suspend fun onNewOffer(offer: Offer): OfferModel {
-        withContext(worker.bg) { offerInteractor.newOffer(offer) }
         return offerMapper.toView(offer).also { notificationManager.showOfferNotification(it) }
     }
 
