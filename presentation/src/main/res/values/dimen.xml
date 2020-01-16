@@ -560,6 +560,7 @@
 	<dimen name="payment_offer_tiny_tvClass_margin_top">8dp</dimen>
 	<dimen name="payment_offer_tiny_rating_margin_top">6dp</dimen>
 	<dimen name="payment_offer_tiny_languages_margin_bottom">12dp</dimen>
+	<dimen name="payment_offer_tiny_languages_margin_top">8dp</dimen>
 	<dimen name="payment_offer_tiny_language_width">15dp</dimen>
 	<dimen name="payment_offer_tiny_language_height">9dp</dimen>
 	<dimen name="payment_offer_tiny_language_vertical_margins">0dp</dimen>

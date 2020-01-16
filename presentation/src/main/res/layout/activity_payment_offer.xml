@@ -34,7 +34,7 @@
             android:paddingBottom="@dimen/payment_layout_padding_bottom">
 
             <include
-                android:id="@+id/offer_layout"
+                android:id="@+id/offerLayout"
                 layout="@layout/offer_tiny_payment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/offer_layout"
+                app:layout_constraintTop_toBottomOf="@+id/offerLayout"
                 tools:visibility="visible" />
 
             <TextView

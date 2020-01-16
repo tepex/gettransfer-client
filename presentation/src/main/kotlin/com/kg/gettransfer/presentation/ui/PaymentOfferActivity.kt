@@ -67,9 +67,11 @@ import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.layout_payments.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
+import kotlinx.android.synthetic.main.offer_tiny_payment.view.*
 import kotlinx.android.synthetic.main.payment_refund.*
 import kotlinx.android.synthetic.main.paymet_gtr_bonus.*
 import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
+import kotlinx.android.synthetic.main.vehicle_items.view.*
 import kotlinx.android.synthetic.main.view_currency_converting_info.view.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
@@ -230,6 +232,19 @@ class PaymentOfferActivity : BaseActivity(),
         setCarInfoOffer(offer, isNameSignPresent)
         setPriceInfo(offer.price.base.def, offer.price.base.preferred)
         setCapacity(offer.vehicle.transportType)
+        setVehicleConveniences(offer)
+    }
+
+    private fun setVehicleConveniences(offer: OfferModel) {
+        with(offerLayout.vehicleConveniences) {
+            imgFreeWater.isVisible = offer.refreshments
+            imgFreeWiFi.isVisible = offer.wifi
+            imgCharge.isVisible = offer.charger
+            ivWheelchair.isVisible = offer.wheelchair
+            ivArmor.isVisible = offer.armored
+            isVisible = offer.refreshments || offer.wifi
+                || offer.charger || offer.wheelchair || offer.armored
+        }
     }
 
     override fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean) {

@@ -25,6 +25,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvModel"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ic_empty_car_economy" />
 
         <ImageView
@@ -56,10 +57,15 @@
             android:id="@+id/languages_container_tiny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/payment_offer_tiny_languages_margin_top"
             android:layout_marginBottom="@dimen/payment_offer_tiny_languages_margin_bottom"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tvClass" />
+            app:layout_constraintStart_toStartOf="@+id/tvClass"
+            app:layout_constraintTop_toBottomOf="@+id/layoutRating"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_height="10dp"
+            tools:layout_width="150dp" />
 
         <TextView
             android:id="@+id/tvClass"
@@ -67,7 +73,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/payment_offer_tiny_tvClass_margin_start"
-            android:layout_marginTop="@dimen/payment_offer_tiny_tvClass_margin_top"
             android:textSize="@dimen/payment_car_name_max_size"
             app:layout_constraintStart_toEndOf="@+id/ivCarPhoto"
             app:layout_constraintTop_toTopOf="@+id/ivCarPhoto"
@@ -93,13 +98,24 @@
             tools:text="Mercedes-Benz E-Class" />
 
         <include
+            android:id="@+id/vehicleConveniences"
+            layout="@layout/vehicle_items"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin8"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tvClass"
+            app:layout_constraintTop_toBottomOf="@+id/tvClass"
+            tools:visibility="visible" />
+
+        <include
             android:id="@+id/layoutRating"
             layout="@layout/view_offer_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/payment_offer_tiny_rating_margin_top"
             app:layout_constraintStart_toStartOf="@+id/tvClass"
-            app:layout_constraintTop_toBottomOf="@+id/tvClass" />
+            app:layout_constraintTop_toBottomOf="@+id/vehicleConveniences" />
 
         <include
             android:id="@+id/view_capacity"
