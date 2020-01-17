@@ -446,6 +446,8 @@
     <string name="LNG_CHECKOUT_PAY">Pay</string>
     <string name="LNG_CHECKOUT_CURRENCY_WARNING">The amount may be debited from your account in different currency upon the request of the acquirer bank</string>
     <string name="LNG_ERROR_PASSWORD_LINK">Invalid password link</string>
+    <string name="LNG_ERROR_OFFERED_PRICE_MIN">Value must be greater than or equal to 1</string>
+    <string name="LNG_ERROR_OFFERED_PRICE_MAX">Value must be less than or equal to 99999999</string>
 
     <string name="LNG_KM">km</string>
     <string name="LNG_MI">miles</string>

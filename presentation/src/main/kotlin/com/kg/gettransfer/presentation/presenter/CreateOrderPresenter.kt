@@ -434,19 +434,30 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        var errorField = when {
-            !isTimeSetByUser -> FieldError.TIME_NOT_SELECTED
-            !dateDelegate.validate() -> FieldError.RETURN_TIME
-            transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
-            else -> null
-        }
-        if (errorField == null) errorField = accountManager.isValidProfileForCreateOrder()
-        if (errorField == null) return true
-        logCreateTransfer(errorField.value)
-        viewState.showEmptyFieldError(errorField.stringId)
-        viewState.highLightErrorField(errorField)
-        return false
+        return getErrorField()?.let { errorField ->
+            errorField.value?.let { logCreateTransfer(it) }
+            viewState.showEmptyFieldError(errorField.stringId)
+            viewState.highLightErrorField(errorField)
+            false
+        } ?: true
     }
+
+    private fun getErrorField() =
+        when {
+            !isTimeSetByUser                            -> FieldError.TIME_NOT_SELECTED
+            !dateDelegate.validate()                    -> FieldError.RETURN_TIME
+            transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
+            else -> isValidOfferedPrice() ?: accountManager.isValidProfileForCreateOrder()
+        }
+
+    private fun isValidOfferedPrice() =
+        orderInteractor.offeredPrice?.let { offeredPrice ->
+            when {
+                offeredPrice < MIN_OFFERED_PRICE -> FieldError.OFFERED_PRICE_MIN
+                offeredPrice > MAX_OFFERED_PRICE -> FieldError.OFFERED_PRICE_MAX
+                else -> null
+            }
+        }
 
     fun onSelectedTransportTypesChanged() {
         saveSelectedTransportTypes()
@@ -606,5 +617,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         private const val DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT = 2
         private const val DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT = 4
         private const val CENTS = 100
+
+        private const val MIN_OFFERED_PRICE = 1
+        private const val MAX_OFFERED_PRICE = 99_999_999
     }
 }

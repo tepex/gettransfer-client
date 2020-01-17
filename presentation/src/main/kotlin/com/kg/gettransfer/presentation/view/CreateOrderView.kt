@@ -34,7 +34,7 @@ interface CreateOrderView : BaseView, RouteView {
     fun showCommentDialog(comment: String, hintsToComments: List<String>?)
     fun showCurrencies()
 
-    enum class FieldError(val value: String, @StringRes val stringId: Int) {
+    enum class FieldError(val value: String?, @StringRes val stringId: Int) {
         EMAIL_FIELD(Analytics.INVALID_EMAIL, R.string.LNG_RIDE_EMAIL),
         PHONE_FIELD(Analytics.INVALID_PHONE, R.string.LNG_RIDE_PHONE),
         INVALID_EMAIL(Analytics.INVALID_EMAIL, R.string.LNG_ERROR_EMAIL),
@@ -44,6 +44,8 @@ interface CreateOrderView : BaseView, RouteView {
         PASSENGERS_COUNT(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_PASSENGERS),
         TIME_NOT_SELECTED(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_DATE),
         RETURN_TIME(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_RETURN_DATE),
+        OFFERED_PRICE_MIN(null, R.string.LNG_ERROR_OFFERED_PRICE_MIN),
+        OFFERED_PRICE_MAX(null, R.string.LNG_ERROR_OFFERED_PRICE_MAX),
         UNKNOWN("no_param", R.string.LNG_RIDE_CANT_CREATE);
     }
 
