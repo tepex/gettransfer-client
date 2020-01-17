@@ -99,7 +99,11 @@ class TransferRequestItem @JvmOverloads constructor(
                 Transfer.Status.PERFORMED -> R.color.color_gtr_green
                 Transfer.Status.COMPLETED -> R.color.colorTextBlack
                 Transfer.Status.NEW       ->
-                    if (item.isBookNow()) R.color.color_gtr_green else R.color.colorTransferRequestText
+                    if (item.isBookNow() || item.isPaymentInProgress()) {
+                        R.color.color_gtr_green
+                    } else {
+                        R.color.colorTransferRequestText
+                    }
                 else                      -> R.color.colorTransferRequestText
             }))
         ContextCompat.getColor(
@@ -151,8 +155,8 @@ class TransferRequestItem @JvmOverloads constructor(
     fun showEvents(item: TransferModel, offerInfoShowed: Boolean, eventsCount: Int) {
         @Suppress("ComplexCondition")
         if (eventsCount == 0 ||
-            !item.showOfferInfo &&
-            item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE
+            !item.showOfferInfo && item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE ||
+            item.isPaymentInProgress()
         ) {
             tvEventsCount.isVisible = false
             btnChat.setCounter(0)

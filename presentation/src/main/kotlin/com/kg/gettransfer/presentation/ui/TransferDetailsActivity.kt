@@ -254,7 +254,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             initTableLayoutTransportTypes(transfer.transportTypes)
         }
 
-        (status == Transfer.STATUS_CATEGORY_ACTIVE && !transfer.isBookNow()).let { showBtnCancel ->
+        (status == Transfer.STATUS_CATEGORY_ACTIVE &&
+            !transfer.isBookNow() && !transfer.isPaymentInProgress()).let { showBtnCancel ->
             topCommunicationButtons.btnCancel.isVisible = showBtnCancel
             bottomCommunicationButtons.btnCancel.isVisible = showBtnCancel
         }
