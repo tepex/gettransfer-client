@@ -36,6 +36,7 @@ class OrderInteractor(
     var selectedTransports: Set<TransportType.ID>? = null
     var nameSign: String? = null
     var isLoggedIn = false
+    var isAutoChangePassengers = true
 
     var noPointPlaces: List<GTAddress> = emptyList()
 
@@ -48,6 +49,7 @@ class OrderInteractor(
         comment = null
         selectedTransports = null
         nameSign = null
+        isAutoChangePassengers = true
     }
 
     fun clear() {
