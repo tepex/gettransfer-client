@@ -290,6 +290,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun changePassengers(count: Int) {
         with(orderInteractor) {
+            if (isAutoChangePassengers) isAutoChangePassengers = false
             passengers += count
             if (passengers < MIN_PASSENGERS) passengers = MIN_PASSENGERS
             viewState.setPassengers(passengers)
@@ -458,18 +459,20 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
             viewState.setPassengers(orderInteractor.passengers)
             return
         }
-        transportTypes?.let { list ->
-            list.filter { it.checked }.map { it.id }.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 }
-                .also { isBigTransport ->
-                    val pax = if (isBigTransport) {
-                        DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT
-                    } else {
-                        DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT
+        if (orderInteractor.isAutoChangePassengers) {
+            transportTypes?.let { list ->
+                list.filter { it.checked }.map { it.id }.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 }
+                    .also { isBigTransport ->
+                        val pax = if (isBigTransport) {
+                            DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT
+                        } else {
+                            DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT
+                        }
+                        orderInteractor.passengers = pax
+                        viewState.setPassengers(pax)
                     }
-                    orderInteractor.passengers = pax
-                    viewState.setPassengers(pax)
-                }
             }
+        }
     }
 
     fun onCenterRouteClick() {

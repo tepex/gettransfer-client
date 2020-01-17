@@ -36,7 +36,7 @@ class TransferTypeAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_transfer_type, parent, false))
 
-    override fun onBindViewHolder(holder: ViewHolder, pos: Int) { holder.bind(list.get(pos), listener) }
+    override fun onBindViewHolder(holder: ViewHolder, pos: Int) { holder.bind(list[pos], listener) }
 
     class ViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView),
