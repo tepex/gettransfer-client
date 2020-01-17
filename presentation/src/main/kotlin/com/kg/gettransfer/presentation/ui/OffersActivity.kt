@@ -233,7 +233,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 setCapacity(offer.vehicle.transportType)
                 OfferItemBindDelegate.bindNameSignPlate(this, iconNameSign,
                     tvMissingNameSign, isNameSignPresent, offer.isWithNameSign)
-                Utils.setVehicleConveniences(offer, sheetOfferDetails.vehicle_conveniences)
+                OfferItemBindDelegate.setVehicleConveniences(offer, sheetOfferDetails.vehicle_conveniences)
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)
                 setOfferPhoto(offer)

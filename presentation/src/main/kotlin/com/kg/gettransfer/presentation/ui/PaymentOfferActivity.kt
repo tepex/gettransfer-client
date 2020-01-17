@@ -231,7 +231,7 @@ class PaymentOfferActivity : BaseActivity(),
         setCarInfoOffer(offer, isNameSignPresent)
         setPriceInfo(offer.price.base.def, offer.price.base.preferred)
         setCapacity(offer.vehicle.transportType)
-        Utils.setVehicleConveniences(offer, offerLayout.vehicleConveniences)
+        OfferItemBindDelegate.setVehicleConveniences(offer, offerLayout.vehicleConveniences)
     }
 
     override fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean) {

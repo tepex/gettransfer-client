@@ -30,6 +30,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 
 import kotlinx.android.synthetic.main.offer_tiny.view.*
+import kotlinx.android.synthetic.main.vehicle_items.view.*
 import kotlinx.android.synthetic.main.view_offer_rating.view.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
 
@@ -82,7 +83,7 @@ object OfferItemBindDelegate {
         }
         bindNameSignPlate(context, imgNameSign, null, isNameSignPresent, offer.isWithNameSign)
 
-        Utils.setVehicleConveniences(offer, vehicle_conveniences)
+        OfferItemBindDelegate.setVehicleConveniences(offer, vehicle_conveniences)
     }
 
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) = with(view) {
@@ -153,6 +154,22 @@ object OfferItemBindDelegate {
         } else false
         textMissingNameSign?.isVisible = isNameSignPresent && !isWithNameSign
     }
+
+    /**
+     * @param viewConveniences layout for vehicle conveniences
+     */
+    internal fun setVehicleConveniences(offer: OfferModel, viewConveniences: View) {
+        with(viewConveniences) {
+            imgFreeWater.isVisible = offer.refreshments
+            imgFreeWiFi.isVisible = offer.wifi
+            imgCharge.isVisible = offer.charger
+            ivWheelchair.isVisible = offer.wheelchair
+            ivArmor.isVisible = offer.armored
+            isVisible = offer.refreshments || offer.wifi
+                || offer.charger || offer.wheelchair || offer.armored
+        }
+    }
+
 }
 
 sealed class Either {
