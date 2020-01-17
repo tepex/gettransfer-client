@@ -83,7 +83,7 @@ object OfferItemBindDelegate {
         }
         bindNameSignPlate(context, imgNameSign, null, isNameSignPresent, offer.isWithNameSign)
 
-        OfferItemBindDelegate.setVehicleConveniences(offer, vehicle_conveniences)
+        setVehicleConveniences(offer, vehicle_conveniences)
     }
 
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) = with(view) {
