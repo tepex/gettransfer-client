@@ -351,9 +351,9 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
 
     override fun centerRoute(cameraUpdate: CameraUpdate) = showTrack(cameraUpdate)
 
-    override fun showEmptyFieldError(@StringRes stringId: Int) {
+    override fun showEmptyFieldError(@StringRes stringId: Int, formatArg: String?) {
         Utils.getAlertDialogBuilder(this).apply {
-            setTitle(getString(stringId))
+            setTitle(getString(stringId, formatArg))
             setPositiveButton(R.string.LNG_OK) { dialog, _ -> dialog.dismiss() }
             show()
         }

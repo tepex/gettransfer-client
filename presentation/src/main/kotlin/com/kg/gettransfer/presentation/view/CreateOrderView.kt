@@ -28,13 +28,13 @@ interface CreateOrderView : BaseView, RouteView {
     fun disablePromoCodeField()
     fun setPromoResult(discountInfo: String?)
     fun resetPromoView()
-    fun showEmptyFieldError(@StringRes stringId: Int)
+    fun showEmptyFieldError(@StringRes stringId: Int, formatArg: String?)
     fun showNotLoggedAlert(withOfferId: Long)
     fun highLightErrorField(errorField: FieldError)
     fun showCommentDialog(comment: String, hintsToComments: List<String>?)
     fun showCurrencies()
 
-    enum class FieldError(val value: String, @StringRes val stringId: Int) {
+    enum class FieldError(val value: String?, @StringRes val stringId: Int, val formatArg: String? = null) {
         EMAIL_FIELD(Analytics.INVALID_EMAIL, R.string.LNG_RIDE_EMAIL),
         PHONE_FIELD(Analytics.INVALID_PHONE, R.string.LNG_RIDE_PHONE),
         INVALID_EMAIL(Analytics.INVALID_EMAIL, R.string.LNG_ERROR_EMAIL),
@@ -44,6 +44,8 @@ interface CreateOrderView : BaseView, RouteView {
         PASSENGERS_COUNT(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_PASSENGERS),
         TIME_NOT_SELECTED(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_DATE),
         RETURN_TIME(Analytics.PASSENGERS_NOT_CHOSEN, R.string.LNG_ERROR_RETURN_DATE),
+        OFFERED_PRICE_MIN(null, R.string.LNG_ERROR_OFFERED_PRICE_MIN, MIN_OFFERED_PRICE.toString()),
+        OFFERED_PRICE_MAX(null, R.string.LNG_ERROR_OFFERED_PRICE_MAX, MAX_OFFERED_PRICE.toString()),
         UNKNOWN("no_param", R.string.LNG_RIDE_CANT_CREATE);
     }
 
@@ -51,5 +53,10 @@ interface CreateOrderView : BaseView, RouteView {
         INFANT(0, R.string.LNG_SEAT_INFANT_SHORT),
         CONVERTIBLE(0, R.string.LNG_SEAT_CONVERTIBLE_SHORT),
         BOOSTER(0, R.string.LNG_SEAT_BOOSTER_SHORT)
+    }
+
+    companion object {
+        const val MIN_OFFERED_PRICE = 1
+        const val MAX_OFFERED_PRICE = 99_999_999
     }
 }

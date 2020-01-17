@@ -38,6 +38,8 @@ import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
+import com.kg.gettransfer.presentation.view.CreateOrderView.Companion.MAX_OFFERED_PRICE
+import com.kg.gettransfer.presentation.view.CreateOrderView.Companion.MIN_OFFERED_PRICE
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
@@ -434,19 +436,30 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        var errorField = when {
-            !isTimeSetByUser -> FieldError.TIME_NOT_SELECTED
-            !dateDelegate.validate() -> FieldError.RETURN_TIME
-            transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
-            else -> null
-        }
-        if (errorField == null) errorField = accountManager.isValidProfileForCreateOrder()
-        if (errorField == null) return true
-        logCreateTransfer(errorField.value)
-        viewState.showEmptyFieldError(errorField.stringId)
-        viewState.highLightErrorField(errorField)
-        return false
+        return getErrorField()?.let { errorField ->
+            errorField.value?.let { logCreateTransfer(it) }
+            viewState.showEmptyFieldError(errorField.stringId, errorField.formatArg)
+            viewState.highLightErrorField(errorField)
+            false
+        } ?: true
     }
+
+    private fun getErrorField() =
+        when {
+            !isTimeSetByUser                            -> FieldError.TIME_NOT_SELECTED
+            !dateDelegate.validate()                    -> FieldError.RETURN_TIME
+            transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
+            else -> isValidOfferedPrice() ?: accountManager.isValidProfileForCreateOrder()
+        }
+
+    private fun isValidOfferedPrice() =
+        orderInteractor.offeredPrice?.let { offeredPrice ->
+            when {
+                offeredPrice < MIN_OFFERED_PRICE -> FieldError.OFFERED_PRICE_MIN
+                offeredPrice > MAX_OFFERED_PRICE -> FieldError.OFFERED_PRICE_MAX
+                else -> null
+            }
+        }
 
     fun onSelectedTransportTypesChanged() {
         saveSelectedTransportTypes()
