@@ -83,15 +83,7 @@ object OfferItemBindDelegate {
         }
         bindNameSignPlate(context, imgNameSign, null, isNameSignPresent, offer.isWithNameSign)
 
-        with(vehicle_conveniences) {
-            imgFreeWater.isVisible = offer.refreshments
-            imgFreeWiFi.isVisible = offer.wifi
-            imgCharge.isVisible = offer.charger
-            ivWheelchair.isVisible = offer.wheelchair
-            ivArmor.isVisible = offer.armored
-            isVisible = offer.refreshments || offer.wifi || offer.charger ||
-                offer.wheelchair || offer.armored
-        }
+        setVehicleConveniences(offer, vehicle_conveniences)
     }
 
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) = with(view) {
@@ -162,6 +154,22 @@ object OfferItemBindDelegate {
         } else false
         textMissingNameSign?.isVisible = isNameSignPresent && !isWithNameSign
     }
+
+    /**
+     * @param viewConveniences layout for vehicle conveniences
+     */
+    internal fun setVehicleConveniences(offer: OfferModel, viewConveniences: View) {
+        with(viewConveniences) {
+            imgFreeWater.isVisible = offer.refreshments
+            imgFreeWiFi.isVisible = offer.wifi
+            imgCharge.isVisible = offer.charger
+            ivWheelchair.isVisible = offer.wheelchair
+            ivArmor.isVisible = offer.armored
+            isVisible = offer.refreshments || offer.wifi
+                || offer.charger || offer.wheelchair || offer.armored
+        }
+    }
+
 }
 
 sealed class Either {

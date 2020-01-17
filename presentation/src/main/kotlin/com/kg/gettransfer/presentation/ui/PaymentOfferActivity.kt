@@ -67,6 +67,7 @@ import io.sentry.event.BreadcrumbBuilder
 import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.layout_payments.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*
+import kotlinx.android.synthetic.main.offer_tiny_payment.view.*
 import kotlinx.android.synthetic.main.payment_refund.*
 import kotlinx.android.synthetic.main.paymet_gtr_bonus.*
 import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
@@ -230,6 +231,7 @@ class PaymentOfferActivity : BaseActivity(),
         setCarInfoOffer(offer, isNameSignPresent)
         setPriceInfo(offer.price.base.def, offer.price.base.preferred)
         setCapacity(offer.vehicle.transportType)
+        OfferItemBindDelegate.setVehicleConveniences(offer, offerLayout.vehicleConveniences)
     }
 
     override fun setBookNowOffer(bookNowOffer: BookNowOfferModel, isNameSignPresent: Boolean) {
