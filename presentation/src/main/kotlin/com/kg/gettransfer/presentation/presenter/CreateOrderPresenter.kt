@@ -38,6 +38,8 @@ import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
+import com.kg.gettransfer.presentation.view.CreateOrderView.Companion.MAX_OFFERED_PRICE
+import com.kg.gettransfer.presentation.view.CreateOrderView.Companion.MIN_OFFERED_PRICE
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
@@ -436,7 +438,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private fun checkFieldsForRequest(): Boolean {
         return getErrorField()?.let { errorField ->
             errorField.value?.let { logCreateTransfer(it) }
-            viewState.showEmptyFieldError(errorField.stringId)
+            viewState.showEmptyFieldError(errorField.stringId, errorField.formatArg)
             viewState.highLightErrorField(errorField)
             false
         } ?: true
@@ -617,8 +619,5 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         private const val DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT = 2
         private const val DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT = 4
         private const val CENTS = 100
-
-        private const val MIN_OFFERED_PRICE = 1
-        private const val MAX_OFFERED_PRICE = 99_999_999
     }
 }
