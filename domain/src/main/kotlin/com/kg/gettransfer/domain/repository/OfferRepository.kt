@@ -7,4 +7,5 @@ interface OfferRepository {
     suspend fun getOffers(id: Long): Result<List<Offer>>
     suspend fun getOffersCached(id: Long): Result<List<Offer>>
     fun clearOffersCache()
+    fun newOffer(offer: Offer)
 }

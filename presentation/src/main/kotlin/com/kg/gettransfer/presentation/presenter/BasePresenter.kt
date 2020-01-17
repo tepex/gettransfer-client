@@ -189,7 +189,9 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     override fun onNewOfferEvent(offer: Offer) {
         worker.main.launch {
-            onNewOffer(offer.also { updateOfferEventsCounter(it) })
+            updateOfferEventsCounter(offer)
+            withContext(worker.bg) { offerInteractor.newOffer(offer) }
+            onNewOffer(offer)
         }
     }
 
