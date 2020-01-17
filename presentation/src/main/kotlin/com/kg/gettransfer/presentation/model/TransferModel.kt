@@ -77,6 +77,8 @@ data class TransferModel(
 ) {
     fun isBookNow() = paidPercentage != 0 && bookNow != null
 
+    fun isPaymentInProgress() = pendingPaymentId != null
+
     fun getChildrenCount() = childSeatsInfant + childSeatsBooster + childSeatsConvertible
 
     companion object {

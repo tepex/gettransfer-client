@@ -80,7 +80,7 @@ class RequestsFragment : MvpAppCompatFragment(), RequestsFragmentView {
     }
 
     private val onItemClickListener: ItemClickListener = {
-        presenter.openTransferDetails(it.id, it.status, it.paidPercentage, it.pendingPaymentId)
+        presenter.openTransferDetails(it.id, it.status, it.paidPercentage, it.isPaymentInProgress())
     }
 
     private val onCallClickListener: BtnCallClickListener = { presenter.callPhone(it) }

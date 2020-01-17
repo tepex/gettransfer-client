@@ -215,9 +215,9 @@ class RequestsCategoryPresenter(
         coordinate.transferId?.let { viewState.updateCardWithDriverCoordinates(it) }
     }
 
-    fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int, pendingPaymentId: Int?) {
+    fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int, isPaymentInProgress: Boolean) {
         log.debug("Open Transfer details. id: $id")
-        if (status == Transfer.Status.NEW && paidPercentage == 0 && pendingPaymentId == null) {
+        if (status == Transfer.Status.NEW && paidPercentage == 0 && !isPaymentInProgress) {
             router.navigateTo(Screens.Offers(id))
         } else {
             router.navigateTo(Screens.Details(id))
