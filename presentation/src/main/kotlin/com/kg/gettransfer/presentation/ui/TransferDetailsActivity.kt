@@ -275,7 +275,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 Transfer.Status.NEW ->
                     when {
                         transfer.isBookNow() ||
-                        transfer.pendingPaymentId != null   -> getMatchedTransferStatusText(transfer.timeToTransfer)
+                        transfer.isPaymentInProgress()      -> getMatchedTransferStatusText(transfer.timeToTransfer)
                         transfer.offersCount > 0 ||
                         transfer.bookNowOffers.isNotEmpty() -> getString(R.string.LNG_BOOK_OFFER)
                         else                                -> getString(R.string.LNG_WAIT_FOR_OFFERS)
@@ -362,7 +362,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             transfer.let { setPricesForPaidTransfer(it.remainsToPay, it.price, it.paidPercentage) }
         } else {
             transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) }
-            transfer.pendingPaymentId?.let {
+            if (transfer.isPaymentInProgress()) {
                 transfer_details_main.apply {
                     price_view.setValue(getString(R.string.LNG_RIDE_PAYMENT))
                     price_view.hideTitle()

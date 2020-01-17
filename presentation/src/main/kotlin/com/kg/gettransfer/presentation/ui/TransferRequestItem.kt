@@ -76,7 +76,7 @@ class TransferRequestItem @JvmOverloads constructor(
         tvTransferRequestStatus.text = when (item.status) {
             Transfer.Status.NEW -> when {
                 item.isBookNow() ||
-                item.pendingPaymentId != null   -> getMatchedTransferStatusText(item.timeToTransfer)
+                item.isPaymentInProgress()      -> getMatchedTransferStatusText(item.timeToTransfer)
                 item.offersCount > 0 ||
                 item.bookNowOffers.isNotEmpty() -> context.getString(R.string.LNG_BOOK_OFFER)
                 else                            -> context.getString(R.string.LNG_WAIT_FOR_OFFERS)
