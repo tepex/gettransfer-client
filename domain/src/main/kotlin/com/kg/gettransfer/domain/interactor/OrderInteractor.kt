@@ -1,5 +1,6 @@
 package com.kg.gettransfer.domain.interactor
 
+import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 import com.kg.gettransfer.domain.model.Result
@@ -103,7 +104,9 @@ class OrderInteractor(
     fun isAddressesValid() = from != null && (to != null || hourlyDuration != null)
 
     fun isCanCreateOrder() =
-        from?.cityPoint != null && (to?.cityPoint != null || hourlyDuration != null)
+        from?.cityPoint != null &&
+        from?.cityPoint != CityPoint.EMPTY &&
+        (to?.cityPoint != null && to?.cityPoint != CityPoint.EMPTY || hourlyDuration != null)
 
     companion object {
         const val DEFAULT_PASSENGERS = 2
