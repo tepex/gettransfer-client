@@ -34,8 +34,6 @@ interface Api {
         const val API_VOUCHER = "/api/transfers/voucher/"
         const val API_ONESIGNAL = "/api/account/onesignal_token"
 
-        const val API_LOCATION = "/json"
-
         /*Autocomplete & place*/
         const val API_AUTOCOMPLETE  = "/api/address-lookup"
         const val API_PLACE_DETAILS = "/api/place"
@@ -228,7 +226,7 @@ interface Api {
         @Path("id") messageId: Long
     ): ResponseModel<MessageWrapperModel>
 
-    @GET(API_LOCATION)
+    @GET(".")
     suspend fun getMyLocation(): LocationModel
 
     @GET(API_BRAINTREE_TOKEN)
