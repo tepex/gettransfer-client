@@ -77,7 +77,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
     @SuppressLint("SetTextI18n")
     override fun setCreditLimit(limit: String?) {
         settingsProfile.tvCreditLimit.isVisible = true
-        settingsProfile.tvCreditLimit.text = "${getString(R.string.LNG_PAYMENT_LIMIT, limit)} $limit"
+        settingsProfile.tvCreditLimit.text = "${getString(R.string.LNG_PAYMENT_LIMIT)} $limit"
     }
 
     override fun hideCreditLimit() {
