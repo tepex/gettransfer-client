@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="@+id/tvYourMark"
         android:numStars="@integer/stars_number"
         android:rating="@integer/stars_minimum"
-        android:stepSize="1"
+        android:stepSize="0.1"
         android:isIndicator="false"
         style="@style/CustomRatingBar"/>
 

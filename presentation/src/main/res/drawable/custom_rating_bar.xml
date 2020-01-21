@@ -2,8 +2,11 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@android:id/background"
-        android:drawable="@drawable/custom_ratingbar_empty"/>
+        android:drawable="@drawable/custom_ratingbar_empty" />
     <item
         android:id="@android:id/progress"
-        android:drawable="@drawable/custom_ratingbar_filled"/>
+        android:drawable="@drawable/custom_ratingbar_filled" />
+    <item
+        android:id="@android:id/secondaryProgress"
+        android:drawable="@drawable/custom_ratingbar_filled" />
 </layer-list>
