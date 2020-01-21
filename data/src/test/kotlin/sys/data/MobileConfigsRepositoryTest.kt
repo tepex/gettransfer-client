@@ -2,9 +2,7 @@ package com.kg.gettransfer.sys.data
 
 import com.kg.gettransfer.core.data.ResultData
 
-import com.kg.gettransfer.core.domain.Hour
 import com.kg.gettransfer.core.domain.Result
-import com.kg.gettransfer.core.domain.Second
 
 import com.kg.gettransfer.sys.domain.MobileConfigs
 import com.kg.gettransfer.sys.domain.MobileConfigsRepository
@@ -15,7 +13,6 @@ import io.kotlintest.TestCaseOrder
 import io.kotlintest.TestResult
 import io.kotlintest.shouldBe
 import io.kotlintest.extensions.TopLevelTest
-import io.kotlintest.koin.KoinListener
 import io.kotlintest.specs.StringSpec
 
 import io.mockk.*
@@ -29,6 +26,9 @@ import org.koin.dsl.module
 
 import org.koin.test.KoinTest
 import org.koin.test.get
+
+import kotlin.time.minutes
+import kotlin.time.seconds
 
 class MobileConfigsRepositoryTest : StringSpec(), KoinTest {
     @MockK
@@ -159,13 +159,14 @@ class MobileConfigsRepositoryTest : StringSpec(), KoinTest {
 
     override fun testCaseOrder(): TestCaseOrder? = TestCaseOrder.Sequential
 
+
     companion object {
         val MOBILE_CONFIGS =
             MobileConfigs(
                 /* pushShowDelay = 5, */
-                orderMinimum = Hour(1).minutes,
+                orderMinimumMinutes = 60.minutes,
                 termsUrl = "terms_of_use",
-                smsResendDelay = Second(90),
+                smsResendDelaySec = 90.seconds,
                 isDriverAppNotify = false,
                 isDriverModeBlock = false,
                 buildsConfigs = emptyMap()

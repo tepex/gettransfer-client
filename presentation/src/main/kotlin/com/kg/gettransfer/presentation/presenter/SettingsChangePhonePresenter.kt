@@ -48,7 +48,8 @@ class SettingsChangePhonePresenter : BasePresenter<SettingsChangePhoneView>() {
         if (!isPhoneValid()) return
         val result = fetchResultOnly { sessionInteractor.getConfirmationCode(phone = newPhone) }
         if (result.error == null && result.model) {
-            viewState.showCodeLayout(configsManager.getMobileConfigs().smsResendDelay.millis)
+            val resendDelay = configsManager.getMobileConfigs().smsResendDelaySec.toLongMilliseconds()
+            viewState.showCodeLayout(resendDelay)
         } else {
             result.error?.let { checkPhoneErrors(it) }
         }

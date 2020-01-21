@@ -4,8 +4,6 @@ import android.os.CountDownTimer
 
 import moxy.InjectViewState
 
-import com.kg.gettransfer.core.domain.Second
-
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.SmsCodeView
@@ -25,22 +23,21 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
     val isEnabledButtonDone
         get() = pinCode.length == pinItemsCount
 
-    private var smsResendDelay = Second(RESENT_DELAY).millis
     private lateinit var timerBtnResendCode: CountDownTimer
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         worker.main.launch {
-            smsResendDelay = configsManager.getMobileConfigs().smsResendDelay.millis
             initTimer()
             setTimer()
         }
     }
 
-    private fun initTimer() {
-        timerBtnResendCode = object : CountDownTimer(smsResendDelay, Second.MILLIS_PER_SECOND) {
+    private suspend fun initTimer() {
+        val smsDelay = configsManager.getMobileConfigs().smsResendDelaySec.toLongMilliseconds()
+        timerBtnResendCode = object : CountDownTimer(smsDelay, MILLIS_PER_SECOND) {
             override fun onTick(millisUntilFinished: Long) {
-                viewState.tickTimer(millisUntilFinished, Second.MILLIS_PER_SECOND)
+                viewState.tickTimer(millisUntilFinished, MILLIS_PER_SECOND)
             }
 
             override fun onFinish() {
@@ -121,6 +118,6 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
 
     companion object {
         const val PIN_ITEMS_COUNT = 4
-        private const val RESENT_DELAY = 90
+        const val MILLIS_PER_SECOND = 1_000L
     }
 }

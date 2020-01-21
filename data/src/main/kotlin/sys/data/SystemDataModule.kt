@@ -2,9 +2,6 @@ package com.kg.gettransfer.sys.data
 
 import com.kg.gettransfer.core.data.SimpleCacheStrategy
 
-import com.kg.gettransfer.core.domain.Hour
-import com.kg.gettransfer.core.domain.Second
-
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.TransportType
@@ -16,6 +13,9 @@ import java.util.Locale
 import org.koin.dsl.module
 import sys.domain.CheckoutcomCredentials
 import sys.domain.GooglePayCredentials
+
+import kotlin.time.minutes
+import kotlin.time.seconds
 
 val systemData = module {
     /* Default models */
@@ -61,9 +61,9 @@ val systemData = module {
         MobileConfigs(
             /*
             pushShowDelay = 5,*/
-            orderMinimum = Hour(2).minutes,
+            orderMinimumMinutes = 120.minutes,
             termsUrl = "terms_of_use",
-            smsResendDelay = Second(90),
+            smsResendDelaySec = 90.seconds,
             isDriverAppNotify = false,
             isDriverModeBlock = false,
             buildsConfigs = emptyMap()

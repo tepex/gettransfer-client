@@ -1,10 +1,10 @@
 package com.kg.gettransfer.sys.data
 
-import com.kg.gettransfer.core.domain.Minute
-import com.kg.gettransfer.core.domain.Second
-
 import com.kg.gettransfer.sys.domain.BuildsConfigs
 import com.kg.gettransfer.sys.domain.MobileConfigs
+
+import kotlin.time.minutes
+import kotlin.time.seconds
 
 data class MobileConfigsEntity(
     val pushShowDelay: Int,
@@ -43,9 +43,9 @@ fun MobileConfigsEntity.map() =
     MobileConfigs(
         /* Not used now
         pushShowDelay,*/
-        Minute(orderMinimumMinutes),
+        orderMinimumMinutes.minutes,
         termsUrl,
-        smsResendDelaySec?.let { Second(it) } ?: MobileConfigs.SMS_RESEND_DELAY_SEC_DEFAULT,
+        smsResendDelaySec?.seconds ?: MobileConfigs.SMS_RESEND_DELAY_SEC_DEFAULT,
         isDriverAppNotify,
         isDriverModeBlock,
         buildsConfigs?.mapValues { it.value.map() } ?: emptyMap()

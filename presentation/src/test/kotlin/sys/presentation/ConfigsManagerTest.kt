@@ -1,8 +1,6 @@
 package com.kg.gettransfer.sys.presentation
 
-import com.kg.gettransfer.core.domain.Hour
 import com.kg.gettransfer.core.domain.Result
-import com.kg.gettransfer.core.domain.Second
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 
@@ -55,6 +53,9 @@ import org.koin.test.KoinTest
 import org.koin.test.get
 
 import org.slf4j.Logger
+
+import kotlin.time.minutes
+import kotlin.time.seconds
 
 @ExperimentalCoroutinesApi
 class ConfigsManagerTest : StringSpec(), KoinTest {
@@ -227,9 +228,9 @@ class ConfigsManagerTest : StringSpec(), KoinTest {
 
         val MOBILE_CONFIGS =
             MobileConfigs(
-                orderMinimum = Hour(1).minutes,
+                orderMinimumMinutes = 60.minutes,
                 termsUrl = "terms_of_use",
-                smsResendDelay = Second(90),
+                smsResendDelaySec = 90.seconds,
                 isDriverAppNotify = false,
                 isDriverModeBlock = false,
                 buildsConfigs = emptyMap()

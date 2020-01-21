@@ -52,7 +52,8 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
         if (!isEmailValid()) return
         val result = fetchResultOnly { sessionInteractor.getConfirmationCode(email = newEmail) }
         if (result.error == null && result.model) {
-            viewState.showCodeLayout(configsManager.getMobileConfigs().smsResendDelay.millis)
+            val smsDelay = configsManager.getMobileConfigs().smsResendDelaySec.toLongMilliseconds()
+            viewState.showCodeLayout(smsDelay)
         } else {
             result.error?.let { checkEmailErrors(it) }
         }
