@@ -44,7 +44,6 @@ ext {
     anko_version               = "0.10.8"
     flexbox_layout_version     = "2.0.0"
     pageindicator_version      = "1.0.3"
-//    sentry_version             = "2.0.0-beta02"
     sentry_version             = "1.7.29"
     appsflyer_version          = "4.8.19"
     installreferrer_version    = "1.1"

@@ -102,7 +102,13 @@ class GTApplication : MultiDexApplication() {
     }
 
     private fun setupAppCenter() {
-        AppCenter.start(this, getString(R.string.appCenterKey), Crashes::class.java)
+        // don't put App Secret to resources. see this task https://gettransfercom.atlassian.net/browse/GAA-2327
+        val appSecret = if (BuildConfig.FLAVOR == "dev") {
+            "1f061f58-b7bd-42c3-87ec-d8681d30df48"
+        } else {
+            "62939f09-f9e0-489c-8ada-1c25d2f30d9d"
+        }
+        AppCenter.start(this, appSecret, Crashes::class.java)
     }
 
     private fun setupPushSdk() {
