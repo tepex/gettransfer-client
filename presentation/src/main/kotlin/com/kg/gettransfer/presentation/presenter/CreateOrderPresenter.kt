@@ -27,7 +27,6 @@ import com.kg.gettransfer.extensions.simpleFormat
 
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
 import com.kg.gettransfer.presentation.delegate.PassengersDelegate
-import com.kg.gettransfer.presentation.mapper.RouteMapper
 import com.kg.gettransfer.presentation.mapper.UserMapper
 
 import com.kg.gettransfer.presentation.model.CurrencyModel
@@ -39,6 +38,8 @@ import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.presentation.view.CreateOrderView
+import com.kg.gettransfer.presentation.view.CreateOrderView.Companion.MAX_OFFERED_PRICE
+import com.kg.gettransfer.presentation.view.CreateOrderView.Companion.MIN_OFFERED_PRICE
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
@@ -61,7 +62,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private val dateDelegate: DateTimeDelegate by inject()
     private val childSeatsDelegate: PassengersDelegate by inject()
 
-    private val routeMapper: RouteMapper by inject()
     private val userMapper: UserMapper by inject()
 
     private val nState: NewTransferState by inject()
@@ -79,7 +79,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var isTimeSetByUser = false
 
     fun init() {
-        updateRouteInfo(true, saveSelectedTransportTypes = false)
+        updateRouteInfo(true)
         worker.main.launch {
             currencies = configsManager.getConfigs().supportedCurrencies.map { it.map() }
             setCurrency(sessionInteractor.currency.map())
@@ -105,10 +105,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     private fun updateRouteInfo(
         updateMap: Boolean,
-        saveSelectedTransportTypes: Boolean = true,
         isDateOrDistanceChanged: Boolean = false
     ) {
-        if (saveSelectedTransportTypes) saveSelectedTransportTypes()
         val from = orderInteractor.from?.cityPoint
         val to = orderInteractor.to?.cityPoint
         val hourlyDuration = orderInteractor.hourlyDuration
@@ -151,7 +149,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
                     true,
                     if (hourlyDuration != null) false else dateDelegate.returnDate != null,
                     sessionInteractor.currency.code,
-                    orderInteractor.orderStartTime
+                    orderInteractor.orderStartTime,
+                    orderInteractor.orderReturnTime
                 )
             )
         }.model
@@ -180,7 +179,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         from.point?.let { fromPoint ->
             to.point?.let { toPoint ->
                 val isRoundTrip = dateDelegate.returnDate != null
-                routeModel = routeMapper.getView(
+                routeModel = RouteModel(
                     from.name,
                     to.name,
                     fromPoint,
@@ -293,6 +292,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
 
     fun changePassengers(count: Int) {
         with(orderInteractor) {
+            if (isAutoChangePassengers) isAutoChangePassengers = false
             passengers += count
             if (passengers < MIN_PASSENGERS) passengers = MIN_PASSENGERS
             viewState.setPassengers(passengers)
@@ -437,37 +437,55 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     }
 
     private fun checkFieldsForRequest(): Boolean {
-        var errorField = when {
-            !isTimeSetByUser -> FieldError.TIME_NOT_SELECTED
-            !dateDelegate.validate() -> FieldError.RETURN_TIME
-            transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
-            else -> null
-        }
-        if (errorField == null) errorField = accountManager.isValidProfileForCreateOrder()
-        if (errorField == null) return true
-        logCreateTransfer(errorField.value)
-        viewState.showEmptyFieldError(errorField.stringId)
-        viewState.highLightErrorField(errorField)
-        return false
+        return getErrorField()?.let { errorField ->
+            errorField.value?.let { logCreateTransfer(it) }
+            viewState.showEmptyFieldError(errorField.stringId, errorField.formatArg)
+            viewState.highLightErrorField(errorField)
+            false
+        } ?: true
     }
 
-    fun setPassengersCountForSelectedTransportTypes(setSavedPax: Boolean = false) {
+    private fun getErrorField() =
+        when {
+            !isTimeSetByUser                            -> FieldError.TIME_NOT_SELECTED
+            !dateDelegate.validate()                    -> FieldError.RETURN_TIME
+            transportTypes?.none { it.checked } == true -> FieldError.TRANSPORT_FIELD
+            else -> isValidOfferedPrice() ?: accountManager.isValidProfileForCreateOrder()
+        }
+
+    private fun isValidOfferedPrice() =
+        orderInteractor.offeredPrice?.let { offeredPrice ->
+            when {
+                offeredPrice < MIN_OFFERED_PRICE -> FieldError.OFFERED_PRICE_MIN
+                offeredPrice > MAX_OFFERED_PRICE -> FieldError.OFFERED_PRICE_MAX
+                else -> null
+            }
+        }
+
+    fun onSelectedTransportTypesChanged() {
+        saveSelectedTransportTypes()
+        setPassengersCountForSelectedTransportTypes()
+    }
+
+    private fun setPassengersCountForSelectedTransportTypes(setSavedPax: Boolean = false) {
         if (setSavedPax) {
             viewState.setPassengers(orderInteractor.passengers)
             return
         }
-        transportTypes?.let { list ->
-            list.filter { it.checked }.map { it.id }.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 }
-                .also { isBigTransport ->
-                    val pax = if (isBigTransport) {
-                        DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT
-                    } else {
-                        DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT
+        if (orderInteractor.isAutoChangePassengers) {
+            transportTypes?.let { list ->
+                list.filter { it.checked }.map { it.id }.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 }
+                    .also { isBigTransport ->
+                        val pax = if (isBigTransport) {
+                            DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT
+                        } else {
+                            DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT
+                        }
+                        orderInteractor.passengers = pax
+                        viewState.setPassengers(pax)
                     }
-                    orderInteractor.passengers = pax
-                    viewState.setPassengers(pax)
-                }
             }
+        }
     }
 
     fun onCenterRouteClick() {
@@ -512,7 +530,6 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     fun onBackClick() = onBackCommandClick()
 
     override fun onBackCommandClick() {
-        saveSelectedTransportTypes()
         router.exit()
         analytics.logSingleEvent(Analytics.BACK_TO_MAP)
     }

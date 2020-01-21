@@ -212,6 +212,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
 
     override fun onNetworkWarning(available: Boolean) {
         layoutTextNetworkNotAvailable.changeViewVisibility(!available)
+        btnNext.isEnabled = available
     }
 
     override fun goToSearchAddress(isClickTo: Boolean) {

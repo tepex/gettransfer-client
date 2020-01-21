@@ -94,6 +94,8 @@ open class OpenDeepLinkScreenPresenter<BV : OpenDeepLinkScreenView> : BaseHandle
 
     fun openMainScreen() = router.replaceScreen(Screens.MainPassenger())
 
+    fun openMainWithError(error: Int) = router.replaceScreen(Screens.MainWithError(error))
+
     companion object {
         const val DEFAULT_ID = 0L
     }

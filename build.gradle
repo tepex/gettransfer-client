@@ -6,36 +6,38 @@ buildscript {
     }
 
     ext {
-        kotlin_version        = "1.3.41"
-        coroutines_version    = "1.3.0-RC"
-        serialization_version = "0.9.1"
-        gradle_version        = '3.4.0'
-        koin_version          = "2.0.1"
-        gms_version           = "16.0.0"
-        gs_version            = "4.2.0"
+        kotlin_version        = "1.3.61"
+        coroutines_version    = "1.3.3"
+        serialization_version = "0.14.0-1.3.60-eap-76"
+        // last version (4.0.0-alpha07) is not working now (25/XII-2019):
+        // https://github.com/oliviergauthier/gradle-appcenter-plugin/issues/41
+        gradle_version        = "3.5.3"
+        koin_version          = "2.1.0-alpha-8"
+        gms_version           = "17.0.0"
+        gs_version            = "4.3.3"
         jsr250_version        = "1.0"
         timber_version        = "4.7.1"
         slf4j_version         = "1.7.25"
-        kotlintest_version    = "3.4.0"
+        kotlintest_version    = "3.4.2"
         mockk_version         = "1.9.3"
-        gson_version          = "2.8.5"
-        room_version          = "2.2.0-alpha02"
-        dexcount_version      = "0.8.4"
+        gson_version          = "2.8.6"
+        room_version          = "2.2.3"
+        dexcount_version      = "1.0.2"
         detekt_version        = "1.3.0"
-        sentry_version        = "1.7.23"
-        nav_version           = "2.2.0-rc03"
-        appcenter_plugin_ver  = "1.1.16"
+        sentry_version        = "1.7.29"
+        nav_version           = "2.2.0-rc04"
+        appcenter_plugin_ver  = "1.1.18"
 
         core_testing_version            = "2.1.0"
-        androidx_test_runner_version    = "1.2.0"
-        androidx_test_rules_version     = "1.2.0"
-        androidx_test_ext_truth_version = "1.2.0"
-        androidx_test_ext_junit_version = "1.1.2-alpha02"
-        espresso_version                = "3.3.0-alpha02"
-        espresso_contrib_version        = "2.2.2"
-        jupiter_version                 = "5.5.2"
-        kakao_version                   = "2.1.0"
-        kaspresso_version               = "1.0.1"
+        androidx_test_runner_version    = "1.3.0-alpha03"
+        androidx_test_rules_version     = "1.3.0-alpha03"
+        androidx_test_ext_truth_version = "1.3.0-alpha03"
+        androidx_test_ext_junit_version = "1.1.2-alpha03"
+        espresso_version                = "3.3.0-alpha03"
+        espresso_contrib_version        = "3.0.2"
+        jupiter_version                 = "5.6.0-M1"
+        kakao_version                   = "2.2.0"
+        kaspresso_version               = "1.0.2-alpha2"
         uiautomator_version             = "2.2.0"
 
         libs = [
@@ -94,10 +96,10 @@ plugins {
     https://github.com/ben-manes/gradle-versions-plugin
     $./gradlew dependencyUpdates
     */
-    id 'com.github.ben-manes.versions' version '0.20.0'
-    id 'com.gladed.androidgitversion'  version '0.4.5'
+    id "com.github.ben-manes.versions" version "0.27.0"
+    id "com.gladed.androidgitversion"  version "0.4.11"
     /* code analysis tool  */
-    id 'io.gitlab.arturbosch.detekt' version '1.0.0-RC15'
+    id "io.gitlab.arturbosch.detekt" version "$detekt_version"
     id "io.kotlintest" version "1.1.1"
 }
 
@@ -121,12 +123,11 @@ allprojects {
 }
 
 dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.0.0-RC15"
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version"
 }
 
 detekt {
-    toolVersion = "1.0.0-RC15"
-    filters = ".*build.*,.*/resources/.*,.*/tmp/.*"
+    toolVersion = "$detekt_version"
     input = files(
         "cache/src",
         "data/src",
@@ -191,6 +192,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PlatronPaymentPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaymentSuccessfulPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/PaypalConnectionPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/ProfileSettingsPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/RatingDetailPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/RatingLastTripPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/RequestsCategoryPresenter.kt",
@@ -198,6 +200,9 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectCancelationReasonPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectCurrencyPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SelectLanguagePresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SettingsChangeEmailPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SettingsChangePasswordPresenter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SettingsChangePhonePresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SettingsPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SignUpPresenter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/presenter/SmsCodePresenter.kt",
@@ -246,6 +251,9 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectCurrencyFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SelectLanguageFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsChangeEmailActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsChangePasswordActivity.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsChangePhoneActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SettingsFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SignUpFragment.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/SmsCodeFragment.kt",
@@ -255,16 +263,21 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferDetailsActivity.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransferRequestItem.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/TransportTypeFragment.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/Utils.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/ActivationCodeView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/BottomSheetCreateOrderNewView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CheckoutcomCardFieldView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CommunicationButton.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/CreateOrderField.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/InputAccountPhoneFieldView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/InputAccountFieldView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/NetworkNotAvailableView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RateField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/RatingFieldView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SearchFormMainView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SearchFormView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SettingsEditableField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/SingleClickButton.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsField.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/custom/TransferDetailsCarrierInfoField.kt",
@@ -285,6 +298,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/newtransfer/NewTransferMainFragment.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/utils/FragmentUtils.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/ui/utils/TopBottomRightRoundedCornerTransform.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/AboutView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseBottomSheetView.kt",
@@ -304,6 +318,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/PaymentSuccessfulView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/PlatronPaymentView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/PaypalConnectionView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/ProfileSettingsView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/RatingDetailView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/RatingLastTripView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SearchView.kt",
@@ -311,6 +326,8 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SelectCancelationReasonView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SelectCurrencyView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SelectLanguageView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SettingsChangeEmailView.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SettingsChangePhoneView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SettingsView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SignUpView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/SmsCodeView.kt",
@@ -321,6 +338,7 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CardDateFormatter.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CommunicationManager.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CountryCodeManager.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/EndlessRecyclerViewScrollListener.kt",
@@ -331,6 +349,12 @@ detekt {
         "presentation/src/main/kotlin/sys/presentation/ConfigsManager.kt"
     )
     config = files("detekt-config.yml")
+}
+
+tasks.withType(io.gitlab.arturbosch.detekt.Detekt) {
+    exclude("resources/")
+    exclude("build/")
+    exclude("tmp/")
 }
 
 task clean(type: Delete) {

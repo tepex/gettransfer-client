@@ -76,7 +76,7 @@ class TransferRequestItem @JvmOverloads constructor(
         tvTransferRequestStatus.text = when (item.status) {
             Transfer.Status.NEW -> when {
                 item.isBookNow() ||
-                item.pendingPaymentId != null   -> getMatchedTransferStatusText(item.timeToTransfer)
+                item.isPaymentInProgress()      -> getMatchedTransferStatusText(item.timeToTransfer)
                 item.offersCount > 0 ||
                 item.bookNowOffers.isNotEmpty() -> context.getString(R.string.LNG_BOOK_OFFER)
                 else                            -> context.getString(R.string.LNG_WAIT_FOR_OFFERS)
@@ -99,7 +99,11 @@ class TransferRequestItem @JvmOverloads constructor(
                 Transfer.Status.PERFORMED -> R.color.color_gtr_green
                 Transfer.Status.COMPLETED -> R.color.colorTextBlack
                 Transfer.Status.NEW       ->
-                    if (item.isBookNow()) R.color.color_gtr_green else R.color.colorTransferRequestText
+                    if (item.isBookNow() || item.isPaymentInProgress()) {
+                        R.color.color_gtr_green
+                    } else {
+                        R.color.colorTransferRequestText
+                    }
                 else                      -> R.color.colorTransferRequestText
             }))
         ContextCompat.getColor(
@@ -151,20 +155,18 @@ class TransferRequestItem @JvmOverloads constructor(
     fun showEvents(item: TransferModel, offerInfoShowed: Boolean, eventsCount: Int) {
         @Suppress("ComplexCondition")
         if (eventsCount == 0 ||
-            !item.showOfferInfo &&
-            item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE
+            !item.showOfferInfo && item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE ||
+            item.isPaymentInProgress()
         ) {
             tvEventsCount.isVisible = false
-            btnChat.tvEventsCounter.isVisible = false
+            btnChat.setCounter(0)
         } else {
-            val count = eventsCount.toString()
             if (offerInfoShowed) {
                 tvEventsCount.isVisible = false
-                btnChat.tvEventsCounter.isVisible = true
-                btnChat.tvEventsCounter.text = count
+                btnChat.setCounter(eventsCount)
             } else {
                 tvEventsCount.isVisible = true
-                tvEventsCount.text = count
+                tvEventsCount.text = eventsCount.toString()
             }
         }
     }

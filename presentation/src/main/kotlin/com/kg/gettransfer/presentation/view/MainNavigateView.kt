@@ -17,5 +17,6 @@ interface MainNavigateView : BaseView, GooglePlayView {
         val EXTRA_RATE_TRANSFER_ID = "${NewTransferMapView::class.java.name}.rate_transfer_id"
         val EXTRA_RATE_VALUE = "${NewTransferMapView::class.java.name}.rate_value"
         val SHOW_ABOUT = "${NewTransferMapView::class.java.name}.show_about"
+        val EXTRA_ERROR_RES_ID = "${NewTransferMapView::class.java.name}.error_id"
     }
 }

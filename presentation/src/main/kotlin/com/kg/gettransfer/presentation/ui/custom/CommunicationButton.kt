@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 
 import com.kg.gettransfer.R
 
@@ -31,6 +32,15 @@ class CommunicationButton @JvmOverloads constructor(
             btnImg.backgroundTintList = ta.getColorStateList(R.styleable.CommunicationButton_btn_color)
                 ?: ContextCompat.getColorStateList(context, R.color.colorWhite)
             ta.recycle()
+        }
+    }
+
+    fun setCounter(count: Int) {
+        if (count > 0) {
+            tvEventsCounter.text = count.toString()
+            tvEventsCounter.isVisible = true
+        } else {
+            tvEventsCounter.isVisible = false
         }
     }
 }

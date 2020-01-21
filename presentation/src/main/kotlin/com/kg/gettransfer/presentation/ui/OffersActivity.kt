@@ -23,7 +23,6 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Money
 
 import androidx.core.view.isVisible
-import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.extensions.strikeText
 import com.kg.gettransfer.extensions.toHalfEvenRoundedFloat
 
@@ -56,8 +55,8 @@ import kotlinx.android.synthetic.main.bottom_sheet_offers.*
 import kotlinx.android.synthetic.main.bottom_sheet_offers.view.*
 import kotlinx.android.synthetic.main.card_empty_offers.*
 import kotlinx.android.synthetic.main.drivers_count.*
+import kotlinx.android.synthetic.main.toolbar_nav_offers.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.view.*
-import kotlinx.android.synthetic.main.vehicle_items.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 import kotlinx.android.synthetic.main.view_offer_rating_details.*
 import kotlinx.android.synthetic.main.view_offer_rating_field.*
@@ -97,12 +96,17 @@ class OffersActivity : BaseActivity(), OffersView {
         intent.getStringExtra(OffersView.EXTRA_ORIGIN)?.let { presenter.isViewRoot = true }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        btn_request_info.reset()
+    }
+
     private fun initToolBar() =
         with(toolbar) {
             @Suppress("UnsafeCast")
             setSupportActionBar(this as Toolbar)
             btn_back.setOnClickListener { navigateBackWithTransition() }
-            btn_request_info.setThrottledClickListener { presenter.onRequestInfoClicked() }
+            btn_request_info.setOnClickListener { presenter.onRequestInfoClicked() }
             tv_title.isSelected = true
         }
 
@@ -229,22 +233,10 @@ class OffersActivity : BaseActivity(), OffersView {
                 setCapacity(offer.vehicle.transportType)
                 OfferItemBindDelegate.bindNameSignPlate(this, iconNameSign,
                     tvMissingNameSign, isNameSignPresent, offer.isWithNameSign)
-                with(vehicle_conveniences) {
-                    imgFreeWater.isVisible = offer.refreshments
-                    imgFreeWiFi.isVisible = offer.wifi
-                    imgCharge.isVisible = offer.charger
-                    ivWheelchair.isVisible = offer.wheelchair
-                    ivArmor.isVisible = offer.armored
-                    isVisible = offer.refreshments || offer.wifi || offer.charger ||
-                        offer.wheelchair || offer.armored
-                }
+                OfferItemBindDelegate.setVehicleConveniences(offer, sheetOfferDetails.vehicle_conveniences)
                 setWithoutDiscount(offer.price.withoutDiscount)
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)
-                if (offer.vehicle.photos.isNotEmpty()) {
-                    vehiclePhotosView.setPhotos(offer.vehicle.transportType.imageId, offer.vehicle.photos)
-                } else {
-                    vehiclePhotosView.hidePhotos()
-                }
+                setOfferPhoto(offer)
                 setRating(offer.carrier)
             }
             is BookNowOfferModel -> {
@@ -269,6 +261,14 @@ class OffersActivity : BaseActivity(), OffersView {
             hideSheetOfferDetails()
         }
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun setOfferPhoto(offer: OfferModel) {
+        if (offer.vehicle.photos.isNotEmpty()) {
+            vehiclePhotosView.setPhotos(offer.vehicle.transportType.imageId, offer.vehicle.photos)
+        } else {
+            vehiclePhotosView.hidePhotos()
+        }
     }
 
     private fun setWithoutDiscount(withoutDiscount: Money?) {

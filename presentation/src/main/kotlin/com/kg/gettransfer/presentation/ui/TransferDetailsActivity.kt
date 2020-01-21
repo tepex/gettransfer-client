@@ -50,7 +50,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
-import com.kg.gettransfer.presentation.view.Screens.showSupportScreen
+import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.TransferDetailsView
 
 import java.util.Date
@@ -236,12 +236,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     override fun setTransfer(transfer: TransferModel) {
         initInfoView(transfer)
         initAboutRequestView(transfer)
-        topCommunicationButtons.btnSupport.setOnClickListener {
-            showSupportScreen(supportFragmentManager, transfer.id)
-        }
-        bottomCommunicationButtons.btnSupport.setOnClickListener {
-            showSupportScreen(supportFragmentManager, transfer.id)
-        }
+        topCommunicationButtons.btnSupport.setOnClickListener { presenter.onSupportClick(transfer.id) }
+        bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.onSupportClick(transfer.id) }
         setBookingInfo(transfer)
 
         if (transfer.status == Transfer.Status.REJECTED) {
@@ -258,7 +254,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             initTableLayoutTransportTypes(transfer.transportTypes)
         }
 
-        (status == Transfer.STATUS_CATEGORY_ACTIVE && !transfer.isBookNow()).let { showBtnCancel ->
+        (status == Transfer.STATUS_CATEGORY_ACTIVE &&
+            !transfer.isBookNow() && !transfer.isPaymentInProgress()).let { showBtnCancel ->
             topCommunicationButtons.btnCancel.isVisible = showBtnCancel
             bottomCommunicationButtons.btnCancel.isVisible = showBtnCancel
         }
@@ -279,7 +276,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
                 Transfer.Status.NEW ->
                     when {
                         transfer.isBookNow() ||
-                        transfer.pendingPaymentId != null   -> getMatchedTransferStatusText(transfer.timeToTransfer)
+                        transfer.isPaymentInProgress()      -> getMatchedTransferStatusText(transfer.timeToTransfer)
                         transfer.offersCount > 0 ||
                         transfer.bookNowOffers.isNotEmpty() -> getString(R.string.LNG_BOOK_OFFER)
                         else                                -> getString(R.string.LNG_WAIT_FOR_OFFERS)
@@ -366,7 +363,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             transfer.let { setPricesForPaidTransfer(it.remainsToPay, it.price, it.paidPercentage) }
         } else {
             transfer.passengerOfferedPrice?.let { setPassengerOfferedPrice(it) }
-            transfer.pendingPaymentId?.let {
+            if (transfer.isPaymentInProgress()) {
                 transfer_details_main.apply {
                     price_view.setValue(getString(R.string.LNG_RIDE_PAYMENT))
                     price_view.hideTitle()
@@ -502,12 +499,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
     }
 
-    override fun setOffer(offer: OfferModel, childSeats: Int) {
+    override fun setOffer(offer: OfferModel, childSeats: Int, messagesCount: Int) {
         initAboutDriverView(offer)
         layoutAboutTransport.isVisible = true
         initAboutTransportView(offer, childSeats)
 
-        initChatButton()
+        initChatButton(messagesCount)
 
         initCarMarker(offer)
     }
@@ -516,11 +513,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         tv_bookNow_info.isVisible = isBookNowOffer
     }
 
-    private fun initChatButton() {
-        topCommunicationButtons.btnChat.setOnClickListener { presenter.onChatClick() }
-        bottomCommunicationButtons.btnChat.setOnClickListener { presenter.onChatClick() }
+    private fun initChatButton(messagesCount: Int) {
+        View.OnClickListener { presenter.onChatClick() }.let { onChatClicked ->
+            topCommunicationButtons.btnChat.setOnClickListener(onChatClicked)
+            bottomCommunicationButtons.btnChat.setOnClickListener(onChatClicked)
+        }
         topCommunicationButtons.btnChat.isVisible = true
         bottomCommunicationButtons.btnChat.isVisible = true
+        topCommunicationButtons.btnChat.setCounter(messagesCount)
+        bottomCommunicationButtons.btnChat.setCounter(messagesCount)
     }
 
     private fun initAboutDriverView(offer: OfferModel) {
@@ -782,6 +783,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             bsSecondarySheet.state == BottomSheetBehavior.STATE_EXPANDED -> hideSecondaryBottomSheet()
             else                                                         -> presenter.onBackCommandClick()
         }
+    }
+
+    override fun showSupportScreen(transferId: Long) {
+        Screens.showSupportScreen(supportFragmentManager, transferId)
     }
 
     private fun collapseDetailsBottomSheet() {

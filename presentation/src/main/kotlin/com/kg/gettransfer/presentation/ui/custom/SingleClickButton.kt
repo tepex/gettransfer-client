@@ -13,4 +13,8 @@ class SingleClickButton(context: Context, attrs: AttributeSet) : AppCompatImageB
             l?.onClick(view)
         }
     }
+
+    fun reset() {
+        isEnabled = true
+    }
 }

@@ -1,11 +1,14 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.net.Uri
+import com.kg.gettransfer.R
 
 import com.kg.gettransfer.extensions.createStartChain
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.AUTH_KEY
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.CHOOSE_OFFER_ID
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.EQUAL
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.FROM_PLACE_ID
+import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.NEW_PASSWORD
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.NEW_TRANSFER
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.OPEN_CHAT
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PARTNER_CABINET
@@ -49,6 +52,8 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
                     appLinkData.getQueryParameter(TO_PLACE_ID),
                     appLinkData.getQueryParameter(PROMO_CODE)
                 )
+                path.startsWith(NEW_PASSWORD) ->
+                    openNewPasswordLink(appLinkData.getQueryParameter(AUTH_KEY))
                 else -> showWebView()
             }
         }
@@ -138,6 +143,27 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
         } else {
             openVoucher(transferId)
         }
+    }
+
+    private fun openNewPasswordLink(authKey: String?) = worker.main.launch {
+        checkInitialization()
+        if (accountManager.isLoggedIn) {
+            openProfileSettings()
+            return@launch
+        }
+        authKey?.let { key ->
+            fetchResultOnly { sessionInteractor.updateOldToken(key) }
+            fetchResultOnly { sessionInteractor.coldStart() }
+            if (accountManager.isLoggedIn) {
+                openProfileSettings()
+            } else {
+                openMainWithError(R.string.LNG_ERROR_PASSWORD_LINK)
+            }
+        } ?: openMainWithError(R.string.LNG_ERROR_PASSWORD_LINK)
+    }
+
+    private fun openProfileSettings() {
+        router.createStartChain(Screens.ProfileSettings())
     }
 
     private fun showWebView() {

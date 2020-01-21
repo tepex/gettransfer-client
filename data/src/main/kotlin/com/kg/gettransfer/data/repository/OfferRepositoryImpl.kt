@@ -39,17 +39,11 @@ class OfferRepositoryImpl(
     private val offerReceiver: OfferInteractor by inject()
     private val preferencesCache: PreferencesCache by inject()
 
-    override fun newOffer(offer: Offer): Result<Offer> {
-        log.debug("OfferRepository.newOffer: $offer")
-        factory.retrieveCacheDataStore().setOffer(offer.map(dateFormat.get()))
-        return Result(offer)
-    }
-
     override suspend fun getOffers(id: Long): Result<List<Offer>> {
         val result: ResultEntity<List<OfferEntity>?> = retrieveEntity { fromRemote ->
             factory.retrieveDataStore(fromRemote).getOffers(id)
         }
-        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().setOffers(result.entity) }
+        result.entity?.let { if (result.error == null) factory.retrieveCacheDataStore().setOffers(id, it) }
         return Result(
             result.entity?.let {
                 checkCachedReview(it)
@@ -120,7 +114,12 @@ class OfferRepositoryImpl(
 
     override fun clearOffersCache() { factory.retrieveCacheDataStore().clearOffersCache() }
 
-    internal fun onNewOfferEvent(offer: OfferEntity) {
-        offerReceiver.onNewOfferEvent(offer.map(dateFormat.get(), preferencesCache.endpointUrl))
+    override fun newOffer(offer: Offer) {
+        log.debug("OfferRepository.newOffer: $offer")
+        factory.retrieveCacheDataStore().setOffer(offer.map(dateFormat.get()))
+    }
+
+    internal fun onNewOfferEvent(newOffer: OfferEntity) {
+        offerReceiver.onNewOfferEvent(newOffer.map(dateFormat.get(), preferencesCache.endpointUrl))
     }
 }

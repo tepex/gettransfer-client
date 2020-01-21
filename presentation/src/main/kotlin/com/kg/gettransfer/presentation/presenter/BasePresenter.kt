@@ -130,7 +130,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     protected suspend fun clearAllCachedData() {
         if (accountManager.remoteAccount.partner?.defaultPromoCode != null) orderInteractor.promoCode = ""
-        utils.asyncAwait { pushTokenManager.unregisterPushToken() }
         utils.asyncAwait { accountManager.logout() }
 
         utils.asyncAwait { transferInteractor.clearTransfersCache() }
@@ -179,50 +178,20 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         withContext(worker.bg) { reviewInteractor.checkNotSendedReviews() }
     }
 
-    internal fun sendEmail(transferId: Long?, emailCarrier: String? = null) {
-        worker.main.launch {
-            var transferID: Long? = null
-            if (transferId == null || transferId == -1L) {
-                val result = withContext(worker.bg) {
-                    transferInteractor.getAllTransfers(getUserRole())
-                }
-                if (result.error == null && result.model.first.isNotEmpty()) {
-                    transferID = result.model.first.first().id
-                }
-            } else {
-                transferID = transferId
-            }
-            router.navigateTo(
-                Screens.SendEmail(emailCarrier, transferID, accountManager.remoteProfile.email)
-            )
-        }
-    }
-
     fun getUserRole(): String =
         if (isBusinessAccount()) Transfer.Role.PARTNER.toString() else Transfer.Role.PASSENGER.toString()
 
     fun isBusinessAccount(): Boolean = accountManager.remoteAccount.isBusinessAccount
 
-    internal fun callPhone(phone: String) {
-        router.navigateTo(Screens.CallPhone(phone))
-    }
-
-//    fun onOfferJsonReceived(jsonOffer: String, transferId: Long) =
-//            JSON.nonstrict.parse(OfferEntity.serializer(), jsonOffer)
-//                    .also { it.transferId = transferId }
-//                    .let  { offerEntityMapper.fromEntity(it) }
-//                    .also { it.vehicle.photos = it.vehicle.photos
-//                            .map { photo -> systemInteractor.endpoint.url.plus(photo) } }
-//                    .also { onNewOffer(it) }
-
     open suspend fun onNewOffer(offer: Offer): OfferModel {
-        withContext(worker.bg) { offerInteractor.newOffer(offer) }
         return offerMapper.toView(offer).also { notificationManager.showOfferNotification(it) }
     }
 
     override fun onNewOfferEvent(offer: Offer) {
         worker.main.launch {
-            onNewOffer(offer.also { updateOfferEventsCounter(it) })
+            updateOfferEventsCounter(offer)
+            withContext(worker.bg) { offerInteractor.newOffer(offer) }
+            onNewOffer(offer)
         }
     }
 
@@ -309,7 +278,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         map: Map<Long, Int>,
         count: Int? = null,
         plussedCount: Int? = null
-    ) = map.toMutableMap().apply { put(transferId, count ?: map[transferId]?.plus(plussedCount ?: 1) ?: 1) }
+    ) = map.toMutableMap().apply { put(transferId, count ?: (map[transferId] ?: 0).plus(plussedCount ?: 1)) }
 
     private fun decreaseMapCounter(transferId: Long, map: Map<Long, Int>) = map.toMutableMap().apply {
         if (this[transferId] != null) {

@@ -23,6 +23,7 @@ import com.kg.gettransfer.presentation.view.RequestsView
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ACTIVE
 import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.Companion.TRANSFER_ARCHIVE
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.CommunicationManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,6 +47,7 @@ class RequestsCategoryPresenter(
 
     private val worker: WorkerManager by inject { parametersOf("RequestsCategoryPresenter") }
     private val coordinateInteractor: CoordinateInteractor by inject()
+    private val communicationManager: CommunicationManager by inject()
 
     @RequestsView.TransferTypeAnnotation
     var transferType = tt
@@ -213,9 +215,9 @@ class RequestsCategoryPresenter(
         coordinate.transferId?.let { viewState.updateCardWithDriverCoordinates(it) }
     }
 
-    fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int, pendingPaymentId: Int?) {
+    fun openTransferDetails(id: Long, status: Transfer.Status, paidPercentage: Int, isPaymentInProgress: Boolean) {
         log.debug("Open Transfer details. id: $id")
-        if (status == Transfer.Status.NEW && paidPercentage == 0 && pendingPaymentId == null) {
+        if (status == Transfer.Status.NEW && paidPercentage == 0 && !isPaymentInProgress) {
             router.navigateTo(Screens.Offers(id))
         } else {
             router.navigateTo(Screens.Details(id))
@@ -237,6 +239,8 @@ class RequestsCategoryPresenter(
     override fun accountChanged() {
         getTransfers()
     }
+
+    fun callPhone(phone: String) = communicationManager.callPhone(phone)
 
     companion object {
         const val HOURS_BEFORE_TRIP_FOR_SHOWING_OFFER = -24

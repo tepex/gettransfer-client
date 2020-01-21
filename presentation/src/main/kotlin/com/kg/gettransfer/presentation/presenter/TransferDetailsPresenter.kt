@@ -30,7 +30,6 @@ import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 
 import com.kg.gettransfer.presentation.mapper.CityPointMapper
 import com.kg.gettransfer.presentation.mapper.PointMapper
-import com.kg.gettransfer.presentation.mapper.RouteMapper
 
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -51,6 +50,7 @@ import com.kg.gettransfer.sys.domain.Preferences
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.CommunicationManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -65,8 +65,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private val getPreferences: GetPreferencesInteractor by inject()
     private val worker: WorkerManager by inject { parametersOf("TransferDetailsPresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
+    private val communicationManager: CommunicationManager by inject()
 
-    private val routeMapper: RouteMapper by inject()
     private val cityPointMapper: CityPointMapper by inject()
     private val pointMapper: PointMapper by inject()
 
@@ -86,8 +86,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private var startCoordinate: LatLng? = null
     private var offer: Offer? = null
 
-    override fun attachView(view: TransferDetailsView) {
-        super.attachView(view)
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
         utils.launchSuspend {
             viewState.blockInterface(true, true)
             fetchData { transferInteractor.getTransfer(transferId) }?.let { transfer ->
@@ -115,7 +115,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 offerModel = offerMapper.toView(offer)
                 reviewInteractor.offerRateID = offer.id
                 if (transferModel.showOfferInfo) {
-                    viewState.setOffer(offerModel, transferModel.countChilds)
+                    viewState.setOffer(offerModel, transferModel.countChilds, transferModel.unreadMessagesCount)
                     viewState.setBookNowOfferInfo(false)
                 }
                 offer
@@ -147,7 +147,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                                 withPrices = false,
                                 returnWay = false,
                                 currency = sessionInteractor.currency.code,
-                                dateTime = null
+                                dateTo = null,
+                                dateReturn = null
                             )
                         )
                     }.also { result ->
@@ -217,7 +218,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     @Suppress("UnsafeCallOnNullableType")
     private fun setRouteTransfer(transfer: Transfer, route: RouteInfo) {
-        routeModel = routeMapper.getView(
+        routeModel = RouteModel(
             transfer.from.name,
             transfer.to!!.name,
             transfer.from.point!!,
@@ -290,6 +291,11 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
             }
         }
     }
+
+    fun callPhone(phone: String) = communicationManager.callPhone(phone)
+
+    private fun sendEmail(transferId: Long?, emailCarrier: String?) =
+        communicationManager.sendEmail(transferId, emailCarrier)
 
     fun rateTrip(rating: Float, isNeedCheckStoreRate: Boolean) {
         offer?.let { reviewInteractor.setOfferReview(it) }
@@ -378,6 +384,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun redirectToPlayMarket() = worker.main.launch {
         withContext(worker.bg) { setAppEnters(ReviewInteractor.APP_RATED_IN_MARKET) }
         viewState.goToGooglePlay()
+    }
+
+    fun onSupportClick(transferId: Long) {
+        viewState.showSupportScreen(transferId)
     }
 
     companion object {

@@ -12,7 +12,7 @@ import com.kg.gettransfer.presentation.model.TransferModel
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun setTransfer(transfer: TransferModel)
-    fun setOffer(offer: OfferModel, childSeats: Int)
+    fun setOffer(offer: OfferModel, childSeats: Int, messagesCount: Int)
     fun setBookNowOfferInfo(isBookNowOffer: Boolean)
     fun showCancelationReasonsList()
     fun showAlertRestoreRequest()
@@ -28,6 +28,7 @@ interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean)
     fun updateCamera(latLngList: List<LatLng>)
     fun showRateAnimation()
+    fun showSupportScreen(transferId: Long)
 
     companion object {
         val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"

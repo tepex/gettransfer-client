@@ -21,6 +21,7 @@ import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.ChatView
 
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.CommunicationManager
 
 import java.util.Calendar
 
@@ -36,6 +37,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     private val chatMapper: ChatMapper by inject()
     private val messageMapper: MessageMapper by inject()
     private val worker: WorkerManager by inject { parametersOf("ChatPresenter") }
+    private val communicationManager: CommunicationManager by inject()
 
     private var chatModel: ChatModel? = null
     private var transferModel: TransferModel? = null
@@ -148,6 +150,8 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         worker.cancel()
         super.onDestroy()
     }
+
+    fun callPhone(phone: String) = communicationManager.callPhone(phone)
 
     companion object {
         const val NO_ID = 0L

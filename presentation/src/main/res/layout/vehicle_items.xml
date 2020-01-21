@@ -2,19 +2,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout3"
-    android:layout_width="match_parent"
+    android:id="@+id/conveniences"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/imgFreeWater"
         android:layout_width="@dimen/vehicle_items_icons_size"
         android:layout_height="@dimen/vehicle_items_icons_size"
-        android:layout_marginStart="@dimen/vehicle_items_margin_start"
+        android:layout_marginEnd="@dimen/vehicle_items_margin_end"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/imgFreeWiFi"
+        app:layout_constraintEnd_toStartOf="@+id/imgFreeWiFi"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imgFreeWiFi"
         app:srcCompat="@drawable/ic_free_water"
         tools:visibility="visible" />
 
@@ -22,11 +23,11 @@
         android:id="@+id/imgFreeWiFi"
         android:layout_width="@dimen/vehicle_items_wifi_icon_width"
         android:layout_height="@dimen/vehicle_items_icons_size"
-        android:layout_marginStart="@dimen/vehicle_items_margin_start"
+        android:layout_marginEnd="@dimen/vehicle_items_margin_end"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/imgFreeWater"
-        app:layout_constraintStart_toEndOf="@+id/imgFreeWater"
-        app:layout_constraintTop_toTopOf="@+id/imgFreeWater"
+        app:layout_constraintBottom_toBottomOf="@+id/imgCharge"
+        app:layout_constraintEnd_toStartOf="@+id/imgCharge"
+        app:layout_constraintTop_toTopOf="@+id/imgCharge"
         app:srcCompat="@drawable/ic_wifi"
         tools:visibility="visible" />
 
@@ -34,35 +35,23 @@
         android:id="@+id/imgCharge"
         android:layout_width="@dimen/vehicle_items_icons_size"
         android:layout_height="@dimen/vehicle_items_icons_size"
-        android:layout_marginStart="@dimen/vehicle_items_margin_start"
+        android:layout_marginEnd="@dimen/vehicle_items_margin_end"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/imgFreeWiFi"
-        app:layout_constraintStart_toEndOf="@+id/imgFreeWiFi"
-        app:layout_constraintTop_toTopOf="@+id/imgFreeWiFi"
+        app:layout_constraintBottom_toBottomOf="@+id/ivWheelchair"
+        app:layout_constraintEnd_toStartOf="@+id/ivWheelchair"
+        app:layout_constraintTop_toTopOf="@+id/ivWheelchair"
         app:srcCompat="@drawable/ic_charge"
-        tools:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/imgGreen"
-        android:layout_width="@dimen/vehicle_items_icons_size"
-        android:layout_height="@dimen/vehicle_items_icons_size"
-        android:layout_marginStart="@dimen/vehicle_items_margin_start"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/imgCharge"
-        app:layout_constraintStart_toEndOf="@+id/imgCharge"
-        app:layout_constraintTop_toTopOf="@+id/imgCharge"
-        app:srcCompat="@drawable/ic_leaf"
         tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/ivWheelchair"
         android:layout_width="@dimen/vehicle_items_icons_size"
         android:layout_height="@dimen/vehicle_items_icons_size"
-        android:layout_marginStart="@dimen/vehicle_items_margin_start"
+        android:layout_marginEnd="@dimen/vehicle_items_margin_end"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/imgGreen"
-        app:layout_constraintStart_toEndOf="@+id/imgGreen"
-        app:layout_constraintTop_toTopOf="@+id/imgGreen"
+        app:layout_constraintBottom_toBottomOf="@+id/ivArmor"
+        app:layout_constraintEnd_toStartOf="@+id/ivArmor"
+        app:layout_constraintTop_toTopOf="@+id/ivArmor"
         app:srcCompat="@drawable/ic_wheelchair"
         tools:visibility="visible" />
 
@@ -70,11 +59,10 @@
         android:id="@+id/ivArmor"
         android:layout_width="@dimen/vehicle_items_icons_size"
         android:layout_height="@dimen/vehicle_items_icons_size"
-        android:layout_marginStart="@dimen/vehicle_items_margin_start"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/ivWheelchair"
-        app:layout_constraintStart_toEndOf="@+id/ivWheelchair"
-        app:layout_constraintTop_toTopOf="@+id/ivWheelchair"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_armor"
         tools:visibility="visible" />
 

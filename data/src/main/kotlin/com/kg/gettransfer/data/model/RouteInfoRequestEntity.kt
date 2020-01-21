@@ -10,7 +10,8 @@ data class RouteInfoRequestEntity(
     val withPrices: Boolean,
     val returnWay: Boolean,
     val currency: String,
-    val dateTime: String?
+    val dateTo: String?,
+    val dateReturn: String?
 )
 
 fun RouteInfoRequest.map(dateFormat: DateFormat) =
@@ -21,5 +22,6 @@ fun RouteInfoRequest.map(dateFormat: DateFormat) =
         withPrices,
         returnWay,
         currency,
-        dateTime?.let { dateFormat.format(it) }
+        dateTo?.let { dateFormat.format(it) },
+        dateReturn?.let { dateFormat.format(it) }
     )

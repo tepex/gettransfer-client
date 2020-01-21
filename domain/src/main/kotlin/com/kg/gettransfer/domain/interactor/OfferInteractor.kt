@@ -13,12 +13,12 @@ class OfferInteractor(private val repository: OfferRepository) {
     suspend fun getOffers(transferId: Long, fromCache: Boolean = false) =
         if (fromCache) repository.getOffersCached(transferId) else repository.getOffers(transferId)
 
-    fun newOffer(offer: Offer) = repository.newOffer(offer)
-
     fun clearOffersCache(): Result<Unit> {
         repository.clearOffersCache()
         return Result(Unit)
     }
+
+    fun newOffer(offer: Offer) = repository.newOffer(offer)
 
     fun onNewOfferEvent(offer: Offer) = eventReceiver?.onNewOfferEvent(offer)
 }

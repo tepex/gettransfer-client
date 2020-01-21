@@ -49,7 +49,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
     protected override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
+        // Workaround for old Android bug: https://issuetracker.google.com/issues/36907463
         if (checkIsTaskRoot()) {
             return
         }

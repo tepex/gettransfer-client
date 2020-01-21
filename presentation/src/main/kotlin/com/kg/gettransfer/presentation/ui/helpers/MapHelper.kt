@@ -16,6 +16,7 @@ import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.ui.utils.DistanceUtils
 import kotlinx.android.synthetic.main.view_maps_pin.view.*
 import timber.log.Timber
 
@@ -60,9 +61,12 @@ object MapHelper {
         val aBitmap = R.drawable.ic_map_label_a
         val bBitmap = R.drawable.ic_map_label_b
 
+        val distance = routeModel.distance
+            ?: DistanceUtils.getPointToPointDistance(routeModel.fromPoint, routeModel.toPoint)
+
         val bmPinA = getPinBitmap(layoutInflater, routeModel.from, routeModel.dateTime, aBitmap)
         val bmPinB = getPinBitmap(layoutInflater, routeModel.to!!,
-                SystemUtils.formatDistance(context, routeModel.distance, routeModel.isRoundTrip, true), bBitmap)
+            SystemUtils.formatDistance(context, distance, routeModel.isRoundTrip, true), bBitmap)
 
         if (Utils.isValidBitmap(bmPinA) && Utils.isValidBitmap(bmPinB)) {
             val startMakerOptions = polyline.startPoint?.let { createStartMarker(it, bmPinA) }

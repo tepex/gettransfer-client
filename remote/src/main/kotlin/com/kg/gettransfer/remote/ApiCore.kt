@@ -175,26 +175,25 @@ class ApiCore : KoinComponent {
     }
     */
 
-    @Suppress("ThrowsCount")
-    internal suspend fun updateOldAccessToken() =
+    internal suspend fun updateOldAccessToken(authKey: String?) =
         try {
             val oldToken = preferences.accessToken
             val updatedToken = if (oldToken.isNotEmpty() && oldToken != INVALID_TOKEN) oldToken  else null
-            getAccessToken(updatedToken)
+            getAccessToken(updatedToken, authKey)
         } catch (e: Exception) {
             throw remoteException(e)
         }
 
     private suspend fun updateAccessToken() {
-        getAccessToken(null)
+        getAccessToken(null, null)
         val email = preferences.userEmail
         val phone = preferences.userPhone
         val password = preferences.userPassword
         if (email != null || phone != null) api.login(email, phone, password)
     }
 
-    private suspend fun getAccessToken(token: String?) {
-        val response: ResponseModel<TokenModel> = api.accessToken(token)
+    private suspend fun getAccessToken(token: String?, authKey: String?) {
+        val response: ResponseModel<TokenModel> = api.accessToken(token, authKey)
         @Suppress("UnsafeCallOnNullableType")
         preferences.accessToken = response.data!!.token
     }
@@ -221,8 +220,8 @@ class ApiCore : KoinComponent {
 
     companion object {
         private const val IP_API_SCHEME = "https://"
-        private const val IP_API_HOST_NAME = "ipapi.co"
-        private const val PARAM_IP_API_KEY  = "key"
+        private const val IP_API_HOST_NAME = "ip-service.gtrbox.org"
+        private const val PARAM_IP_API_KEY  = "api_key"
         private const val CHECKOUTCOM_HOST_NAME = "checkout.com"
 
         private val ERROR_PATTERN = Regex("^<h1>(.+)</h1>$")
