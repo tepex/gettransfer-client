@@ -32,6 +32,7 @@ import android.widget.PopupWindow
 
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
@@ -53,7 +54,6 @@ import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.extensions.hideKeyboard
 import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.showKeyboard
-import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
@@ -66,7 +66,6 @@ import com.kg.gettransfer.utilities.LocaleManager
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
 
-import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 import org.koin.android.ext.android.inject
@@ -192,29 +191,36 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun setToolbar(
         toolbar: Toolbar,
-        @StringRes titleId: Int = TOOLBAR_NO_TITLE,
-        hasBackAction: Boolean = true,
-        firstLetterToUpperCase: Boolean = false,
+        @StringRes titleId: Int? = null,
+        titleText: String? = null,
         subTitle: String? = null
-    ) {
-        setSupportActionBar(toolbar)
+    ) = with(toolbar) {
+        setSupportActionBar(this)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
-            if (hasBackAction) setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
-        if (titleId != TOOLBAR_NO_TITLE) {
-            val title = getString(titleId)
-            toolbar.toolbar_title.text =
-                if (!firstLetterToUpperCase) title else title.substring(0, 1).toUpperCase().plus(title.substring(1))
-            subTitle?.let { st ->
-                with(toolbar_subtitle) {
-                    isVisible = true
-                    text = st
-                }
+        toolbar_title.text = titleText ?: titleId?.let { getString(it) }
+        subTitle?.let { st ->
+            with(toolbar_subtitle) {
+                isVisible = true
+                text = st
             }
         }
-        if (hasBackAction) toolbar.setNavigationOnClickListener { getPresenter().onBackCommandClick() }
+        with(toolbar_btnBack) {
+            isVisible = true
+            setOnClickListener { getPresenter().onBackCommandClick() }
+        }
+    }
+
+    protected fun setToolbarRightButton(
+        toolbar: Toolbar,
+        @DrawableRes imgId: Int,
+        click: () -> Unit
+    ) = with(toolbar.toolbar_btnRight) {
+        isVisible = true
+        setImageDrawable(ContextCompat.getDrawable(context, imgId))
+        setOnClickListener { click.invoke() }
     }
 
     /********************************************************************************************************/

@@ -22,7 +22,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.GTAddress
 import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.hideKeyboard
-import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
@@ -36,7 +35,7 @@ import com.kg.gettransfer.presentation.view.SearchView
 
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.search_form.*
-import kotlinx.android.synthetic.main.toolbar_search.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 @Suppress("TooManyFunctions")
 class SearchFragment : BaseFragment(), SearchView {
@@ -103,7 +102,9 @@ class SearchFragment : BaseFragment(), SearchView {
     }
 
     private fun setupToolbar() {
-        toolbarLayout.ivBack.setThrottledClickListener {
+        toolbar_title.text = getString(R.string.LNG_SEARCH)
+        toolbar_btnBack.isVisible = true
+        toolbar_btnBack.setOnClickListener {
             view?.hideKeyboard()
             goToBack()
         }

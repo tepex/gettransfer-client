@@ -10,7 +10,6 @@ import android.view.View
 import android.view.WindowManager
 
 import androidx.annotation.CallSuper
-import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 
@@ -61,11 +60,9 @@ import kotlinx.android.synthetic.main.activity_transfer_details.btnCenterRoute
 import kotlinx.android.synthetic.main.activity_transfer_details.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
 import kotlinx.android.synthetic.main.layout_passengers_seats.view.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
 import kotlinx.android.synthetic.main.transfer_details_header.view.*
-import kotlinx.android.synthetic.main.view_communication_button.*
 import kotlinx.android.synthetic.main.view_communication_buttons.view.*
 
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.*
@@ -121,6 +118,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         presenter.transferId = intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0)
         setContentView(R.layout.activity_transfer_details)
         setupStatusBar()
+        setToolbar(toolbar, R.string.LNG_TRIP_DETAILS)
 
         @Suppress("UnsafeCast")
         mapCollapseBehavior = (mapView.layoutParams as CoordinatorLayout.LayoutParams).behavior as MapCollapseBehavior
@@ -130,7 +128,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         initBottomSheets()
         setClickListeners()
         initMapView(savedInstanceState)
-        setupToolbar()
         setClickListeners()
     }
 
@@ -151,14 +148,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
         }
-    }
-
-    private fun setupToolbar() {
-        @Suppress("UnsafeCast")
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
-        toolbar.toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS)
     }
 
     @CallSuper

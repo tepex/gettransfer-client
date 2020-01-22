@@ -9,7 +9,6 @@ import android.view.View
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
-import androidx.appcompat.widget.Toolbar
 
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -70,6 +69,7 @@ import kotlinx.android.synthetic.main.offer_tiny_payment.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.view.*
 import kotlinx.android.synthetic.main.payment_refund.*
 import kotlinx.android.synthetic.main.paymet_gtr_bonus.*
+import kotlinx.android.synthetic.main.toolbar_nav_offers.*
 import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
 import kotlinx.android.synthetic.main.view_currency_converting_info.view.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
@@ -115,14 +115,11 @@ class PaymentOfferActivity : BaseActivity(),
                 .build())
     }
 
-    private fun initToolbar() {
-        val tb = toolbar
-        if (tb is Toolbar) {
-            setSupportActionBar(tb)
-            tb.tvTitle.text = getString(R.string.LNG_PAYMENT_SETTINGS)
-            tb.btnBack.setOnClickListener { presenter.onBackCommandClick() }
-            tb.tvSubTitle.isSelected = true
-        }
+    private fun initToolbar() = with(toolbar) {
+        setSupportActionBar(this)
+        tvTitle.text = getString(R.string.LNG_PAYMENT_SETTINGS)
+        btnBack.setOnClickListener { presenter.onBackCommandClick() }
+        tvSubTitle.isSelected = true
     }
 
     private fun initListeners() {
@@ -429,13 +426,13 @@ class PaymentOfferActivity : BaseActivity(),
         presenter.changePaymentType(PaymentRequestModel.PAYPAL)
     }
 
-    override fun setToolbarTitle(transferModel: TransferModel) {
-        toolbar.tvSubTitle.text = transferModel.from.let { from ->
+    override fun setToolbarTitle(transferModel: TransferModel) = with(toolbar) {
+        tvSubTitle.text = transferModel.from.let { from ->
             transferModel.to?.let { from.plus(" - ").plus(it) } ?: transferModel.duration?.let { duration ->
-                from.plus(" - ").plus(HourlyValuesHelper.getValue(duration, this))
+                from.plus(" - ").plus(HourlyValuesHelper.getValue(duration, this@PaymentOfferActivity))
             } ?: from
         }
-        toolbar.tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
+        tvSubTitle2.text = SystemUtils.formatDateTimeNoYearShortMonth(transferModel.dateTime)
     }
 
     override fun setAuthUi(hasAccount: Boolean, profile: ProfileModel) {

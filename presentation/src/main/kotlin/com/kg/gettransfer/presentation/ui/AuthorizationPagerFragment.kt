@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isVisible
 
 import moxy.MvpAppCompatFragment
 import com.google.android.material.tabs.TabLayout
@@ -19,6 +20,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.view.LogInView
 
 import kotlinx.android.synthetic.main.fragment_pager_authorization.*
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.serialization.json.JSON
 // import leakcanary.AppWatcher
 
@@ -65,12 +67,18 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
         })
         fragmentManager?.let { loginPager.adapter = LoginPagerAdapter(it) }
 
-        loginBackButton.setOnClickListener { router.exit() }
+        setToolbar()
 
         arguments?.let { args ->
             params = args.getString(LogInView.EXTRA_PARAMS) ?: ""
             JSON.parse(LogInView.Params.serializer(), params).let { nextScreen = it.nextScreen }
         }
+    }
+
+    private fun setToolbar() {
+        toolbar_title.text = getString(R.string.LNG_LOGIN_LOGIN_TITLE)
+        toolbar_btnBack.isVisible = true
+        toolbar_btnBack.setOnClickListener { router.exit() }
     }
 
     @Suppress("NestedBlockDepth")

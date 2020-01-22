@@ -9,7 +9,6 @@ import android.view.MotionEvent
 import android.view.View
 
 import androidx.annotation.CallSuper
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -101,14 +100,12 @@ class OffersActivity : BaseActivity(), OffersView {
         btn_request_info.reset()
     }
 
-    private fun initToolBar() =
-        with(toolbar) {
-            @Suppress("UnsafeCast")
-            setSupportActionBar(this as Toolbar)
-            btn_back.setOnClickListener { navigateBackWithTransition() }
-            btn_request_info.setOnClickListener { presenter.onRequestInfoClicked() }
-            tv_title.isSelected = true
-        }
+    private fun initToolBar() = with(toolbar) {
+        setSupportActionBar(this)
+        btn_back.setOnClickListener { navigateBackWithTransition() }
+        btn_request_info.setOnClickListener { presenter.onRequestInfoClicked() }
+        tv_title.isSelected = true
+    }
 
     private fun initBottomSheet() {
         bsOfferDetails = BottomSheetBehavior.from(sheetOfferDetails)
@@ -138,12 +135,14 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     override fun setTransfer(transferModel: TransferModel) {
-        toolbar.tv_title.text = transferModel.from.let { from ->
-            transferModel.to?.let { "$from - $it" } ?: transferModel.duration?.let { duration ->
-                "$from - ${HourlyValuesHelper.getValue(duration, this)}"
-            } ?: from
+        with(toolbar) {
+            tv_title.text = transferModel.from.let { from ->
+                transferModel.to?.let { "$from - $it" } ?: transferModel.duration?.let { duration ->
+                    "$from - ${HourlyValuesHelper.getValue(duration, this@OffersActivity)}"
+                } ?: from
+            }
+            tv_subtitle.text = SystemUtils.formatDateTime(transferModel.dateTime)
         }
-        toolbar.tv_subtitle.text = SystemUtils.formatDateTime(transferModel.dateTime)
         fl_drivers_count_text.apply {
             tv_drivers_count.text =
                 if (transferModel.relevantCarriersCount ?: 0 > MIN_CARRIERS_COUNT) {

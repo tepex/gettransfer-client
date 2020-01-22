@@ -6,7 +6,6 @@ import android.os.Bundle
 
 import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.appcompat.widget.Toolbar
 
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -25,7 +24,7 @@ import com.kg.gettransfer.presentation.view.ChatView
 import java.util.Date
 
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.toolbar.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 import org.jetbrains.anko.toast
 
@@ -73,17 +72,10 @@ class ChatActivity : BaseActivity(), ChatView {
         }
     }
 
-    private fun initToolbar(userName: String?, userPhone: String?) {
-        val tb = toolbar
-        if (tb is Toolbar) {
-            tb.layoutChatTitle.isVisible = true
-            tb.chatTitleButtonBack.setOnClickListener { presenter.onBackCommandClick() }
-            userName?.let { tb.textDriverName.text = getString(R.string.LNG_CHAT_WITH).plus(" ").plus(it) }
-            userPhone?.let { phone ->
-                tb.titleBtnCall.isVisible = true
-                tb.titleBtnCall.setOnClickListener { presenter.callPhone(phone) }
-            }
-        }
+    private fun initToolbar(userName: String?, userPhone: String?) = with(toolbar) {
+        val titleText = userName?.let { getString(R.string.LNG_CHAT_WITH).plus(" ").plus(it) }
+        setToolbar(this, R.string.LNG_PAYMENT_CHAT, titleText)
+        userPhone?.let { setToolbarRightButton(this, R.drawable.ic_phone_title) { presenter.callPhone(it) } }
     }
 
     private fun initTransferInfoLayout(

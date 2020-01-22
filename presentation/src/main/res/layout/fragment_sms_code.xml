@@ -7,14 +7,14 @@
     android:focusable="true"
     android:background="@color/colorWhite">
 
-    <ImageView
+    <com.kg.gettransfer.presentation.ui.custom.SingleClickButton
         android:id="@+id/loginBackButton"
+        style="@style/BorderlessBackground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/fragment_sms_back_btn_padding"
-        app:srcCompat="@drawable/ic_button_back_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_back" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

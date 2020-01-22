@@ -2,15 +2,14 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
-import androidx.appcompat.widget.Toolbar
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.presenter.SettingsChangePasswordPresenter
 import com.kg.gettransfer.presentation.view.SettingsChangePasswordView
 import kotlinx.android.synthetic.main.activity_settings_change_password.*
 import kotlinx.android.synthetic.main.activity_settings_change_password.btnSave
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.view_input_password.view.*
 
 class SettingsChangePasswordActivity : BaseActivity(), SettingsChangePasswordView {
@@ -27,7 +26,7 @@ class SettingsChangePasswordActivity : BaseActivity(), SettingsChangePasswordVie
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_change_password)
-        setToolbar(toolbar as Toolbar, R.string.LNG_LOGIN_PASSWORD_SECTION)
+        setToolbar(toolbar, R.string.LNG_LOGIN_PASSWORD_SECTION)
         newPasswordLayout.etPassword.requestFocus()
 
         newPasswordLayout.etPassword.onTextChanged { presenter.setPassword(it, false) }

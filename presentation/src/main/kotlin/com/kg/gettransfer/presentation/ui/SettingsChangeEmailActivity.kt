@@ -2,7 +2,6 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
-import androidx.appcompat.widget.Toolbar
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
@@ -11,6 +10,7 @@ import com.kg.gettransfer.presentation.presenter.SettingsChangeEmailPresenter
 import com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
 import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 import kotlinx.android.synthetic.main.activity_settings_change_email.*
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 
 class SettingsChangeEmailActivity : BaseActivity(),
@@ -49,9 +49,8 @@ class SettingsChangeEmailActivity : BaseActivity(),
         activationCodeView.cancelTimer()
     }
 
-    @Suppress("UnsafeCast")
     override fun setToolbar(email: String?) {
-        setToolbar(toolbar as Toolbar, R.string.LNG_CHANGING_EMAIL, subTitle = email)
+        setToolbar(toolbar, R.string.LNG_CHANGING_EMAIL, subTitle = email)
     }
 
     override fun showCodeLayout(resendDelay: Long) {

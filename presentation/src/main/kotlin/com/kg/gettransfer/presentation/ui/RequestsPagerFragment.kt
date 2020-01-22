@@ -25,8 +25,7 @@ import com.kg.gettransfer.presentation.view.RequestsView.TransferTypeAnnotation.
 import com.kg.gettransfer.utilities.NetworkLifeCycleObserver
 import kotlinx.android.synthetic.main.fragment_requests_pager.*
 import kotlinx.android.synthetic.main.fragment_requests_pager.layoutTextNetworkNotAvailable
-import kotlinx.android.synthetic.main.fragment_requests_pager.toolbar
-import kotlinx.android.synthetic.main.toolbar.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 class RequestsPagerFragment : BaseFragment(), RequestsView, BaseNetworkWarning {
 
@@ -66,7 +65,7 @@ class RequestsPagerFragment : BaseFragment(), RequestsView, BaseNetworkWarning {
     }
 
     private fun setTitleText() {
-        toolbar.toolbar_title.text = getString(R.string.LNG_MENU_TITLE_RIDES)
+        toolbar_title.text = getString(R.string.LNG_MENU_TITLE_RIDES)
     }
 
     private fun setListenersForLog() {

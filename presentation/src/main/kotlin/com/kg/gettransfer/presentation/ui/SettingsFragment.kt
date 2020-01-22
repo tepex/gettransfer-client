@@ -17,8 +17,6 @@ import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.Profile
 import androidx.core.view.isVisible
-import com.kg.gettransfer.presentation.model.CurrencyModel
-import com.kg.gettransfer.presentation.presenter.CurrencyChangedListener
 
 import com.kg.gettransfer.presentation.presenter.SettingsPresenter
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
@@ -30,7 +28,7 @@ import java.util.Locale
 
 import kotlinx.android.synthetic.main.activity_main_navigate.*
 import kotlinx.android.synthetic.main.fragment_settings.*
-import kotlinx.android.synthetic.main.toolbar.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.view_settings_field_horizontal_picker.view.field_text
 import kotlinx.android.synthetic.main.view_settings_field_switch.view.switch_button
 import kotlinx.android.synthetic.main.view_settings_field_vertical_picker.*
@@ -58,7 +56,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
     }
 
     private fun setTitleText() {
-        toolbar.toolbar_title.text = getString(R.string.LNG_MENU_TITLE_SETTINGS)
+        toolbar_title.text = getString(R.string.LNG_MENU_TITLE_SETTINGS)
     }
 
     override fun recreate() {

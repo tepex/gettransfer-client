@@ -1,143 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/toolbar"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:fitsSystemWindows="true"
-	android:minHeight="?android:attr/actionBarSize"
-	android:background="@color/colorWhite"
-	tools:ignore="Overdraw" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:fitsSystemWindows="true"
+    android:minHeight="?android:attr/actionBarSize"
+    app:contentInsetStart="0dp"
+    tools:ignore="Overdraw">
 
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-		android:gravity="center"
-		android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/toolbar_title"
-			android:textSize="@dimen/toolbar_title_text_size"
-			android:fontFamily="@font/sf_pro_text_semibold"
-			android:textColor="@android:color/black"/>
+        <com.kg.gettransfer.presentation.ui.custom.SingleClickButton
+            android:id="@+id/toolbar_btnBack"
+            style="@style/BorderlessBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_back"
+            tools:visibility="visible" />
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/toolbar_subtitle"
-			android:textSize="@dimen/toolbar_subtitle_text_size"
-			android:textColor="@color/color_gtr_grey"
-			android:fontFamily="@font/sf_pro_text_regular"
-			android:visibility="gone"/>
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_text_semibold"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/toolbar_title_text_size"
+            app:layout_constraintBottom_toTopOf="@+id/toolbar_subtitle"
+            app:layout_constraintEnd_toStartOf="@+id/toolbar_btnRight"
+            app:layout_constraintStart_toEndOf="@+id/toolbar_btnBack"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Toolbar" />
 
-	</LinearLayout>
+        <TextView
+            android:id="@+id/toolbar_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:breakStrategy="balanced"
+            android:fontFamily="@font/sf_pro_text_regular"
+            android:gravity="center"
+            android:textColor="@color/color_gtr_grey"
+            android:textSize="@dimen/toolbar_subtitle_text_size"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/toolbar_btnRight"
+            app:layout_constraintStart_toEndOf="@+id/toolbar_btnBack"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_title"
+            tools:text="Subtitle"
+            tools:visibility="visible" />
 
-	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id="@+id/layoutChatTitle"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_marginEnd="@dimen/toolbar_chat_title_margin_end"
-		android:orientation="vertical"
-		android:layout_gravity="center"
-		android:visibility="gone">
+        <com.kg.gettransfer.presentation.ui.custom.SingleClickButton
+            android:id="@+id/toolbar_btnRight"
+            style="@style/BorderlessBackground"
+            android:layout_width="@dimen/title_buttons_size"
+            android:layout_height="@dimen/title_buttons_size"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/toolbar_title"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
-		<com.kg.gettransfer.presentation.ui.custom.SingleClickButton
-			android:id="@+id/chatTitleButtonBack"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			app:srcCompat="@drawable/ic_button_back_title"
-			style="@style/BorderlessBackground"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintStart_toStartOf="parent"/>
-
-		<TextView
-			android:id="@+id/textDriverName"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintStart_toEndOf="@+id/chatTitleButtonBack"
-			app:layout_constraintEnd_toStartOf="@+id/titleBtnCall"
-			android:layout_marginStart="@dimen/toolbar_chat_driver_name_margin_start_end"
-			android:layout_marginEnd="@dimen/toolbar_chat_driver_name_margin_start_end"
-			android:gravity="center"
-			android:textSize="@dimen/toolbar_chat_driver_name_text_size"
-			android:fontFamily="@font/sf_pro_text_semibold"
-			android:textColor="@color/color_gtr_black"
-			android:lines="1"
-			android:ellipsize="end"/>
-
-		<ImageView
-			android:id="@+id/titleBtnCall"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:srcCompat="@drawable/ic_phone_title"
-			android:visibility="invisible"/>
-
-	</androidx.constraintlayout.widget.ConstraintLayout>
-
-	<LinearLayout
-		android:id="@+id/layoutLogs"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:orientation="horizontal"
-		android:layout_gravity="end"
-		android:layout_marginEnd="@dimen/toolbar_buttons_margin_end"
-		android:visibility="gone">
-
-		<TextView
-			android:id="@+id/btnClear"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:text="@string/LNG_CLEAR"
-			android:textSize="@dimen/toolbar_buttons_text_size"
-			android:fontFamily="@font/sf_pro_text_regular"
-			android:textColor="@android:color/black"
-			android:layout_marginEnd="@dimen/toolbar_buttons_margin_end"/>
-
-		<TextView
-			android:id="@+id/btnShare"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:text="@string/share"
-			android:textSize="@dimen/toolbar_buttons_text_size"
-			android:fontFamily="@font/sf_pro_text_regular"
-			android:textColor="@android:color/black" />
-
-	</LinearLayout>
-
-	<LinearLayout
-		android:id="@+id/carrierTripsChangingTypeViewButtons"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:orientation="horizontal"
-		android:layout_gravity="end"
-		android:gravity="center_vertical"
-		android:layout_marginEnd="@dimen/toolbar_buttons_margin_end"
-		android:visibility="gone">
-
-		<ImageView
-			android:id="@+id/buttonListView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			app:srcCompat="@drawable/ic_list"
-			android:visibility="gone"/>
-
-		<ImageView
-			android:id="@+id/buttonCalendarView"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			app:srcCompat="@drawable/ic_calendar"
-			android:visibility="gone"/>
-
-	</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.Toolbar>

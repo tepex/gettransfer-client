@@ -14,8 +14,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
 import android.webkit.WebView
 
-import androidx.appcompat.widget.Toolbar
-
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 
@@ -33,6 +31,7 @@ import com.kg.gettransfer.presentation.view.PlatronPaymentView
 
 import kotlinx.android.synthetic.main.activity_platron_payment.*
 import kotlinx.android.synthetic.main.activity_platron_payment.spinner
+import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.toast
 import timber.log.Timber
 
@@ -48,15 +47,16 @@ class PlatronPaymentActivity : BaseActivity(), PlatronPaymentView {
     @ProvidePresenter
     fun createPaymentPresenter() = PlatronPaymentPresenter()
 
-    @Suppress("UnsafeCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_platron_payment)
+        setToolbar(toolbar, R.string.LNG_PAYMENT)
 
         hideKeyboard()
+        initWebView()
+    }
 
-        setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT)
+    private fun initWebView() {
         webView.settings.javaScriptEnabled = true
         webView.setUserAgent()
         webView.webViewClient = object : WebViewClient() {
@@ -83,7 +83,7 @@ class PlatronPaymentActivity : BaseActivity(), PlatronPaymentView {
                 // The "true" argument indicates that your app reports incidents like
                 // this one to Safe Browsing.
                 if (WebViewFeature.isFeatureSupported(
-                        WebViewFeature.SAFE_BROWSING_RESPONSE_BACK_TO_SAFETY)) {
+                    WebViewFeature.SAFE_BROWSING_RESPONSE_BACK_TO_SAFETY)) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
                         callback?.backToSafety(true)
                         toast("Unsafe web page blocked.")

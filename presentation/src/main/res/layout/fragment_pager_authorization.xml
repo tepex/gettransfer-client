@@ -4,35 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/toolbarLogin"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/fragment_auth_title_height"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/colorWhite">
-
-        <ImageView
-            android:id="@+id/loginBackButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/fragment_auth_back_btn_padding"
-            app:srcCompat="@drawable/ic_button_back_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <TextView
-            android:id="@+id/loginTitleText"
-            style="@style/sf_font_semi_bold_17_sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/LNG_LOGIN_LOGIN_TITLE"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include
+        layout="@layout/toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/loginTitleTabs"
@@ -40,7 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/colorWhite"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarLogin"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:tabTextAppearance="@style/tabs_text_style"
         app:tabMode="fixed"
         app:tabGravity="fill"

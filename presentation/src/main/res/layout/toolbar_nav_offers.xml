@@ -2,11 +2,13 @@
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
     android:minHeight="?android:attr/actionBarSize"
+    app:contentInsetEnd="0dp"
     app:contentInsetStart="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,14 +17,13 @@
 
         <com.kg.gettransfer.presentation.ui.custom.SingleClickButton
             android:id="@+id/btn_request_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin8"
+            style="@style/BorderlessBackground"
+            android:layout_width="@dimen/title_buttons_size"
+            android:layout_height="@dimen/title_buttons_size"
             app:layout_constraintBottom_toBottomOf="@+id/btn_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/btn_back"
-            app:srcCompat="@drawable/ic_info"
-            style="@style/BorderlessBackground"/>
+            app:srcCompat="@drawable/ic_info" />
 
         <TextView
             android:id="@+id/tv_subtitle"

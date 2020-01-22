@@ -19,7 +19,6 @@ import com.checkout.android_sdk.Utils.AfterTextChangedListener
 import com.kg.gettransfer.presentation.presenter.BaseCardPaymentPresenter
 import kotlinx.android.synthetic.main.activity_checkout_payment.*
 import kotlinx.android.synthetic.main.view_checkoutcom_card_field.*
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import com.checkout.android_sdk.Utils.CardUtils
@@ -31,6 +30,7 @@ import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter.Com
 import com.kg.gettransfer.utilities.CardDateFormatter
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
+import kotlinx.android.synthetic.main.toolbar.*
 import timber.log.Timber
 
 class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
@@ -43,13 +43,12 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
     @ProvidePresenter
     fun createPaymentPresenter() = CheckoutcomPaymentPresenter()
 
-    @Suppress("UnsafeCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_checkout_payment)
         presenter.paymentId = intent.getLongExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, 0L)
 
-        setToolbar(toolbar as Toolbar, R.string.LNG_PAYMENT)
+        setToolbar(toolbar, R.string.LNG_PAYMENT)
         setPrice(intent.getStringExtra(CheckoutcomPaymentView.EXTRA_AMOUNT_FORMATTED) ?: "")
         cardDate.setMaxLength(CARD_DATE_LENGTH)
         initTextChangedListeners()
