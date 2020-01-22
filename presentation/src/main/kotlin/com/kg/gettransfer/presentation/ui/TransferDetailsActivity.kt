@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -60,6 +62,10 @@ import kotlinx.android.synthetic.main.activity_transfer_details.btnBack
 import kotlinx.android.synthetic.main.activity_transfer_details.btnCenterRoute
 import kotlinx.android.synthetic.main.activity_transfer_details.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
+import kotlinx.android.synthetic.main.dialog_cancel_request.view.*
+import kotlinx.android.synthetic.main.dialog_cancel_request.view.btnBack
+import kotlinx.android.synthetic.main.dialog_cancel_request.view.title
+import kotlinx.android.synthetic.main.dialog_restore_request.view.*
 import kotlinx.android.synthetic.main.layout_passengers_seats.view.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.*
 import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
@@ -643,11 +649,39 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun onCancelationReasonSelected(reason: String) {
-        Utils.showAlertCancelRequest(this, reason) { if (it) presenter.cancelRequest(reason) }
+        Utils.getAlertDialogBuilder(this).apply {
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
+            view.title.text = context.getString(R.string.LNG_CANCELATION_REQUEST_AGREEMENT, reason)
+            setView(view)
+            show().apply {
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                view.btnBack.setOnClickListener {
+                    showCancelationReasonsList()
+                    dismiss()
+                }
+                view.btnCancelRequest.setOnClickListener {
+                    presenter.cancelRequest(reason)
+                    dismiss()
+                }
+            }
+        }
     }
 
     override fun showAlertRestoreRequest() {
-        Utils.showAlertRestoreRequest(this) { if (it) presenter.restoreRequest() }
+        Utils.getAlertDialogBuilder(this).apply {
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_restore_request, null)
+            setView(view)
+            show().apply {
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                view.bntRestore.setOnClickListener {
+                    presenter.restoreRequest()
+                    dismiss()
+                }
+                view.ivClose.setOnClickListener {
+                    dismiss()
+                }
+            }
+        }
     }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) {

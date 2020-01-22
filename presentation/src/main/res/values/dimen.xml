@@ -778,8 +778,6 @@
 	<dimen name="cancelation_request_dialog_vertical_padding">20dp</dimen>
 	<dimen name="cancelation_request_dialog_horizontal_padding">28dp</dimen>
 	<dimen name="cancelation_request_dialog_text_size">16sp</dimen>
-	<dimen name="cancelation_request_dialog_buttons_text_size">12sp</dimen>
-	<dimen name="cancelation_request_dialog_buttons_height">40dp</dimen>
 	<dimen name="cancelation_request_dialog_button_cancel_margin_top">20dp</dimen>
 	<dimen name="cancelation_request_dialog_button_agree_margin_top">10dp</dimen>
 

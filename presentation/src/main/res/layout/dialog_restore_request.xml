@@ -11,6 +11,14 @@
     android:paddingEnd="@dimen/cancelation_request_dialog_horizontal_padding"
     android:paddingBottom="@dimen/cancelation_request_dialog_vertical_padding">
 
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin16"
+        android:layout_gravity="end"
+        app:srcCompat="@drawable/ic_close_x"/>
+
     <TextView
         android:id="@+id/title"
         style="@style/sf_font_pro_text_semibold_black"
@@ -18,31 +26,14 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="@dimen/cancelation_request_dialog_text_size"
-        tools:text="Согласны ли вы отменить заявку по причине “Изменились требования”?" />
-
-    <TextView
-        android:id="@+id/subtitle"
-        style="@style/sf_font_pro_text_regular_black"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/LNG_OFFERS_FOR_REQUEST_WILL_BE_LOST"
-        android:textSize="@dimen/cancelation_request_dialog_text_size" />
+        android:text="@string/LNG_REQUEST_CANCELED" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnBack"
+        android:id="@+id/bntRestore"
         style="@style/LargeRoundButtonWithText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/cancelation_request_dialog_button_cancel_margin_top"
-        android:text="@string/LNG_BACKTRIP" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnCancelRequest"
-        style="@style/LargeRoundButtonWithText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/cancelation_request_dialog_button_agree_margin_top"
-        android:text="@string/LNG_CANCEL"
-        app:backgroundTint="@color/color_gtr_red" />
+        android:text="@string/LNG_RESTORE_REQUEST"
+        app:backgroundTint="@color/color_gtr_green"/>
 </LinearLayout>

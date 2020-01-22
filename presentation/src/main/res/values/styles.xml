@@ -263,4 +263,11 @@
         <item name="colorControlNormal">@color/color_gtr_grey</item>
         <item name="fontFamily">@font/sf_pro_text_regular</item>
     </style>
+
+    <style name="LargeRoundButtonWithText" parent="@style/Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="cornerRadius">@dimen/btn_radius</item>
+        <item name="android:height">@dimen/btn_rounded_height</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>
