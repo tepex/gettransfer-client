@@ -14,25 +14,26 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebViewClient
 import android.webkit.WebView
 
+import androidx.core.view.isVisible
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
 
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
-
 import com.kg.gettransfer.R
-import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.setUserAgent
+import com.kg.gettransfer.presentation.model.TitleModel
 import com.kg.gettransfer.presentation.presenter.BaseCardPaymentPresenter
-
 import com.kg.gettransfer.presentation.presenter.PlatronPaymentPresenter
-
 import com.kg.gettransfer.presentation.view.PlatronPaymentView
 
 import kotlinx.android.synthetic.main.activity_platron_payment.*
 import kotlinx.android.synthetic.main.activity_platron_payment.spinner
 import kotlinx.android.synthetic.main.toolbar.*
+
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
+
 import org.jetbrains.anko.toast
+
 import timber.log.Timber
 
 class PlatronPaymentActivity : BaseActivity(), PlatronPaymentView {
@@ -50,7 +51,7 @@ class PlatronPaymentActivity : BaseActivity(), PlatronPaymentView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_platron_payment)
-        setToolbar(toolbar, R.string.LNG_PAYMENT)
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_PAYMENT))
 
         hideKeyboard()
         initWebView()

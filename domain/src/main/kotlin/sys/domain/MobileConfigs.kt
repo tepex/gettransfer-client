@@ -1,6 +1,5 @@
 package com.kg.gettransfer.sys.domain
 
-
 import kotlin.time.Duration
 import kotlin.time.minutes
 import kotlin.time.seconds

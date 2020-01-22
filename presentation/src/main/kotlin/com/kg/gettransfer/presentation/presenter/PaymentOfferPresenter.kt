@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.presenter
 
-import moxy.InjectViewState
-
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.exceptions.InvalidArgumentException
 import com.braintreepayments.api.models.PayPalRequest
@@ -9,6 +7,7 @@ import com.braintreepayments.api.models.PayPalRequest
 import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.android.gms.wallet.PaymentsClient
+
 import com.google.gson.JsonParser
 
 import com.kg.gettransfer.domain.ApiException
@@ -26,8 +25,8 @@ import com.kg.gettransfer.domain.model.PaymentProcess
 import com.kg.gettransfer.domain.model.PaymentProcessRequest
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.Token
-import com.kg.gettransfer.extensions.getOffer
 
+import com.kg.gettransfer.extensions.getOffer
 import com.kg.gettransfer.extensions.newChainFromMain
 
 import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
@@ -37,14 +36,16 @@ import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.helpers.GooglePayRequestsHelper
-
 import com.kg.gettransfer.presentation.ui.SystemUtils
+
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
 import io.sentry.Sentry
+
+import moxy.InjectViewState
 
 import org.koin.core.inject
 
@@ -277,6 +278,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         accountManager.tempProfile.phone = phone.trim()
     }
 
+    @Suppress("ComplexMethod")
     private fun getPayment() {
         if (transfer == null || offer == null) {
             viewState.blockInterface(false)
@@ -437,9 +439,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             val jsonToken = JsonParser().parse(token).asJsonObject
             val paymentProcess = PaymentProcessRequest(paymentId, Token.JsonToken(jsonToken))
             val processResult = getProcessGooglePayPaymentResult(paymentProcess)
-            processResult.error?.let {
-                paymentError(it)
-            } ?: processResult.model.payment.isSuccess.let {
+            processResult.error?.let { paymentError(it) } ?: processResult.model.payment.isSuccess.let {
                 if (it) paymentSuccess() else paymentError()
             }
             viewState.blockInterface(false)
@@ -453,10 +453,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     }
 
     private suspend fun payByBalance(paymentModel: PaymentRequestModel) {
-        val paymentResult = getGroundPaymentResult(paymentModel)
-        paymentResult.error?.let {
-            paymentError(it)
-        } ?: paymentSuccess()
+        getGroundPaymentResult(paymentModel).error?.let { paymentError(it) } ?: paymentSuccess()
         viewState.blockInterface(false)
     }
 

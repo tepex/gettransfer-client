@@ -4,14 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.widget.ImageView
-
 import android.widget.LinearLayout
 import android.widget.TextView
+
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 
 import com.kg.gettransfer.R
 
-import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.strikeText
 
 import com.kg.gettransfer.domain.model.Ratings
@@ -165,11 +165,9 @@ object OfferItemBindDelegate {
             imgCharge.isVisible = offer.charger
             ivWheelchair.isVisible = offer.wheelchair
             ivArmor.isVisible = offer.armored
-            isVisible = offer.refreshments || offer.wifi
-                || offer.charger || offer.wheelchair || offer.armored
+            isVisible = offer.refreshments || offer.wifi || offer.charger || offer.wheelchair || offer.armored
         }
     }
-
 }
 
 sealed class Either {

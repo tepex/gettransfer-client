@@ -12,9 +12,7 @@ import android.view.WindowManager
 import androidx.annotation.CallSuper
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
-
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import androidx.core.view.isVisible
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
@@ -26,7 +24,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.model.Transfer
 
-import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.isNonZero
 
 import com.kg.gettransfer.presentation.delegate.Either
@@ -37,6 +34,7 @@ import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TitleModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
@@ -81,6 +79,9 @@ import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
 
 import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
 
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
+
 import org.jetbrains.anko.longToast
 
 import pub.devrel.easypermissions.EasyPermissions
@@ -118,7 +119,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         presenter.transferId = intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0)
         setContentView(R.layout.activity_transfer_details)
         setupStatusBar()
-        setToolbar(toolbar, R.string.LNG_TRIP_DETAILS)
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_TRIP_DETAILS))
 
         @Suppress("UnsafeCast")
         mapCollapseBehavior = (mapView.layoutParams as CoordinatorLayout.LayoutParams).behavior as MapCollapseBehavior
@@ -222,6 +223,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         yourRateMark.setOnClickListener { presenter.rateTrip(yourRateMark.rbYourRateMark.rating, false) }
     }
 
+    @Suppress("ComplexMethod")
     override fun setTransfer(transfer: TransferModel) {
         initInfoView(transfer)
         initAboutRequestView(transfer)

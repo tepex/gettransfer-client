@@ -1,17 +1,22 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import androidx.annotation.CallSuper
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
-import com.kg.gettransfer.R
 import androidx.core.view.isVisible
+
+import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.model.TitleModel
 import com.kg.gettransfer.presentation.presenter.SettingsChangeEmailPresenter
 import com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
 import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
+
 import kotlinx.android.synthetic.main.activity_settings_change_email.*
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
+
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class SettingsChangeEmailActivity : BaseActivity(),
     SettingsChangeEmailView,
@@ -39,18 +44,20 @@ class SettingsChangeEmailActivity : BaseActivity(),
         btnChangeEmail.setOnClickListener { presenter.onChangeEmailClicked() }
     }
 
+    @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         activationCodeView.listener = this
     }
 
+    @CallSuper
     override fun onDestroy() {
         super.onDestroy()
         activationCodeView.cancelTimer()
     }
 
     override fun setToolbar(email: String?) {
-        setToolbar(toolbar, R.string.LNG_CHANGING_EMAIL, subTitle = email)
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_EMAIL), subTitle = email)
     }
 
     override fun showCodeLayout(resendDelay: Long) {

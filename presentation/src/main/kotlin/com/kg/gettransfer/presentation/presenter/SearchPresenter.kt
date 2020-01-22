@@ -1,30 +1,28 @@
 package com.kg.gettransfer.presentation.presenter
 
-import moxy.InjectViewState
-import moxy.MvpPresenter
-
 import com.kg.gettransfer.R
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.domain.model.GTAddress
-
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 
 import com.kg.gettransfer.presentation.model.PopularPlace
-
 import com.kg.gettransfer.presentation.view.SearchView
+
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
-
-import com.kg.gettransfer.utilities.Analytics
-
 import com.kg.gettransfer.sys.domain.SetAddressHistoryInteractor
 import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
 
+import com.kg.gettransfer.utilities.Analytics
+
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.core.KoinComponent
 
+import moxy.InjectViewState
+import moxy.MvpPresenter
+
+import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
@@ -148,6 +146,7 @@ class SearchPresenter : MvpPresenter<SearchView>(), KoinComponent {
         }
     }
 
+    @Suppress("ComplexMethod")
     private fun pointReady(notZeroPoint: Boolean, isDoubleClickOnRoute: Boolean, isSuitableType: Boolean) {
         if (!notZeroPoint) return
         if (isSuitableType || isDoubleClickOnRoute) {

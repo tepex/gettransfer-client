@@ -8,6 +8,7 @@ import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.ProfileModel
+import com.kg.gettransfer.presentation.model.TitleModel
 import com.kg.gettransfer.presentation.presenter.ProfileSettingsPresenter
 import com.kg.gettransfer.presentation.view.ProfileSettingsView
 
@@ -29,7 +30,7 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_settings)
-        setToolbar(toolbar, R.string.LNG_PROFILE)
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_PROFILE))
 
         nameField.field_input.onTextChanged { presenter.setName(it) }
         initClickListeners()

@@ -37,9 +37,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-
 import androidx.fragment.app.FragmentActivity
-
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 import moxy.MvpAppCompatActivity
@@ -55,6 +53,8 @@ import com.kg.gettransfer.extensions.hideKeyboard
 import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.showKeyboard
 
+import com.kg.gettransfer.presentation.model.TitleModel
+import com.kg.gettransfer.presentation.model.getTitleString
 import com.kg.gettransfer.presentation.presenter.BasePresenter
 import com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
 import com.kg.gettransfer.presentation.view.BaseView
@@ -191,8 +191,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     protected fun setToolbar(
         toolbar: Toolbar,
-        @StringRes titleId: Int? = null,
-        titleText: String? = null,
+        titleModel: TitleModel,
         subTitle: String? = null
     ) = with(toolbar) {
         setSupportActionBar(this)
@@ -200,7 +199,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
             setDisplayShowTitleEnabled(false)
             setDisplayShowHomeEnabled(true)
         }
-        toolbar_title.text = titleText ?: titleId?.let { getString(it) }
+        toolbar_title.text = getTitleString(this@BaseActivity, titleModel)
         subTitle?.let { st ->
             with(toolbar_subtitle) {
                 isVisible = true

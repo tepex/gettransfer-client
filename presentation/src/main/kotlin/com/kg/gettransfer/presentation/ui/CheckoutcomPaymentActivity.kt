@@ -9,28 +9,36 @@ import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+
 import androidx.core.content.ContextCompat
-import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter
-import com.kg.gettransfer.presentation.view.CheckoutcomPaymentView
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
-import com.checkout.android_sdk.Utils.AfterTextChangedListener
-import com.kg.gettransfer.presentation.presenter.BaseCardPaymentPresenter
-import kotlinx.android.synthetic.main.activity_checkout_payment.*
-import kotlinx.android.synthetic.main.view_checkoutcom_card_field.*
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+
+import com.checkout.android_sdk.Utils.AfterTextChangedListener
 import com.checkout.android_sdk.Utils.CardUtils
+
+import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.presentation.model.TitleModel
+import com.kg.gettransfer.presentation.presenter.BaseCardPaymentPresenter
+import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter
 import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter.Companion.CARD_CVC_ERROR
 import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter.Companion.CARD_DATE_ERROR
 import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter.Companion.CARD_DATE_LENGTH
 import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter.Companion.CARD_NUMBER_ERROR
+import com.kg.gettransfer.presentation.view.CheckoutcomPaymentView
 import com.kg.gettransfer.utilities.CardDateFormatter
+
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
+
+import kotlinx.android.synthetic.main.activity_checkout_payment.*
 import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.view_checkoutcom_card_field.*
+
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
+
 import timber.log.Timber
 
 class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
@@ -48,7 +56,7 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
         setContentView(R.layout.activity_checkout_payment)
         presenter.paymentId = intent.getLongExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, 0L)
 
-        setToolbar(toolbar, R.string.LNG_PAYMENT)
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_PAYMENT))
         setPrice(intent.getStringExtra(CheckoutcomPaymentView.EXTRA_AMOUNT_FORMATTED) ?: "")
         cardDate.setMaxLength(CARD_DATE_LENGTH)
         initTextChangedListeners()

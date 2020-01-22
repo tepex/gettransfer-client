@@ -17,6 +17,7 @@ import com.kg.gettransfer.presentation.adapter.CopyMessageListener
 import com.kg.gettransfer.presentation.adapter.MessageReadListener
 import com.kg.gettransfer.presentation.model.ChatModel
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.TitleModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.presenter.ChatPresenter
 import com.kg.gettransfer.presentation.view.ChatView
@@ -74,7 +75,7 @@ class ChatActivity : BaseActivity(), ChatView {
 
     private fun initToolbar(userName: String?, userPhone: String?) = with(toolbar) {
         val titleText = userName?.let { getString(R.string.LNG_CHAT_WITH).plus(" ").plus(it) }
-        setToolbar(this, R.string.LNG_PAYMENT_CHAT, titleText)
+        setToolbar(this, TitleModel.Id(R.string.LNG_PAYMENT_CHAT), titleText)
         userPhone?.let { setToolbarRightButton(this, R.drawable.ic_phone_title) { presenter.callPhone(it) } }
     }
 

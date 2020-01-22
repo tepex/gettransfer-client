@@ -159,7 +159,6 @@ class MobileConfigsRepositoryTest : StringSpec(), KoinTest {
 
     override fun testCaseOrder(): TestCaseOrder? = TestCaseOrder.Sequential
 
-
     companion object {
         val MOBILE_CONFIGS =
             MobileConfigs(

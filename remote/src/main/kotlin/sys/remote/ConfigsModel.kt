@@ -20,7 +20,6 @@ data class ConfigsModel(
     @SerializedName(ConfigsEntity.SUPPORTED_CURRENCIES)     @Expose val supportedCurrencies: List<CurrencyModel>,
     @SerializedName(ConfigsEntity.SUPPORTED_DISTANCE_UNITS) @Expose val supportedDistanceUnits: List<String>,
     @SerializedName(ConfigsEntity.CONTACT_EMAILS)           @Expose val contactEmails: ContactEmailsWrapperModel,
-    @Suppress("MaximumLineLength", "MaxLineLength")
     @SerializedName(ConfigsEntity.CHECKOUTCOM_CREDENTIALS)  @Expose val checkoutcomCredentials: CheckoutcomCredentialsModel,
     @SerializedName(ConfigsEntity.GOOGLEPAY_CREDENTIALS)    @Expose val googlePayCredentials: GooglePayCredentialsModel,
     @SerializedName(ConfigsEntity.DEFAULT_CARD_GATEWAY)     @Expose val defaultCardGateway: String
