@@ -241,7 +241,10 @@
 
     <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/custom_rating_bar</item>
+        <item name="android:indeterminateDrawable">@drawable/custom_rating_bar</item>
         <item name="android:minHeight">16dp</item>
+        <item name="android:maxHeight">16dp</item>
+        <item name="android:secondaryProgressTint">#00000000</item>
     </style>
 
     <style name="ChipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
