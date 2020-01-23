@@ -45,8 +45,8 @@ import com.kg.gettransfer.presentation.ui.icons.transport.CarIconResourceProvide
 
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.TransferDetailsView
-import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.sys.domain.Preferences
 import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 
@@ -124,7 +124,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         ?.let { list ->
             if (list.size == 1) {
                 val offer = list.first()
-                offerModel = offerMapper.toView(offer)
+                val url = getPreferences().getModel().endpoint?.url!!
+                offerModel = offer.map(url)
                 reviewInteractor.offerRateID = offer.id
                 if (transferModel.showOfferInfo) {
                     viewState.setOffer(offerModel, transferModel.countChilds, transferModel.unreadMessagesCount)

@@ -41,6 +41,8 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
 
+import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
+
 import com.kg.gettransfer.utilities.Analytics
 
 import io.sentry.Sentry
@@ -55,6 +57,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private val paymentRequestMapper: PaymentRequestMapper by inject()
     private val profileMapper: ProfileMapper by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
 
     lateinit var googlePayPaymentsClient: PaymentsClient
 
@@ -246,13 +249,14 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
         infoUpdated()
     }
 
-    private fun setPaymentOptions(transfer: Transfer) {
+    private suspend fun setPaymentOptions(transfer: Transfer) {
         offer?.let { offer ->
             val nameSignPresent = !transfer.nameSign.isNullOrEmpty()
+            val url = getPreferences().getModel().endpoint?.url!!
             when (offer) {
                 is BookNowOffer -> viewState.setBookNowOffer(offer.map(), nameSignPresent)
                 is Offer        -> {
-                    viewState.setOffer(offerMapper.toView(offer), nameSignPresent)
+                    viewState.setOffer(offer.map(url), nameSignPresent)
                     if (isCarPhotoChanged) viewState.setCarPhotoOffer(offer.vehicle.map())
                 }
             }
