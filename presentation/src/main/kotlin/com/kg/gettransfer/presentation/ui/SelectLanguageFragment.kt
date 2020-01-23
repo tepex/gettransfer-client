@@ -5,26 +5,23 @@ import android.view.View
 
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
-import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.adapter.LanguagesListAdapter
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.presenter.SelectLanguagePresenter
 import com.kg.gettransfer.presentation.view.SelectLanguageView
 
-import kotlinx.android.synthetic.main.fragment_select_language.*
 import kotlinx.android.synthetic.main.layout_select_language.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 @Suppress("TooManyFunctions")
 open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageView {
@@ -48,8 +45,9 @@ open class SelectLanguageFragment : BaseBottomSheetFragment(), SelectLanguageVie
     }
 
     private fun setupToolbar() {
-        toolBar.toolbar.ivBack.setThrottledClickListener { findNavController().navigateUp() }
-        toolBar.toolbar.toolbar_title.text = getString(R.string.LNG_LANGUAGES)
+        toolbar_title.text = getString(R.string.LNG_LANGUAGES)
+        toolbar_btnBack.isVisible = true
+        toolbar_btnBack.setOnClickListener { findNavController().navigateUp() }
     }
 
     override fun setLanguages(all: List<LocaleModel>, selected: LocaleModel) {

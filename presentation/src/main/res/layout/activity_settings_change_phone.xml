@@ -15,12 +15,7 @@
         android:fitsSystemWindows="true"
         app:layout_constraintTop_toTopOf="parent">
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:attr/actionBarSize" />
+        <include layout="@layout/toolbar" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.kg.gettransfer.presentation.ui.custom.InputAccountPhoneFieldView

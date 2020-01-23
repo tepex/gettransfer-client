@@ -1,7 +1,5 @@
 package com.kg.gettransfer.presentation.view
 
-import androidx.annotation.StringRes
-
 import moxy.MvpView
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
@@ -17,7 +15,4 @@ interface WebPageView: MvpView {
         const val SCREEN_RESTORE_PASS  = "restore_password"
         const val SCREEN_TRANSFERS     = "carrier_transfers"
     }
-
-    fun initActivity(@StringRes title: Int?, strUrl: String, stringTitle: String? = null)
-    fun finish()
 }

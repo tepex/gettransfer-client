@@ -10,12 +10,9 @@ import android.view.View
 import android.view.WindowManager
 
 import androidx.annotation.CallSuper
-import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
-
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import androidx.core.view.isVisible
 
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
@@ -27,7 +24,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.model.Transfer
 
-import androidx.core.view.isVisible
 import com.kg.gettransfer.extensions.isNonZero
 
 import com.kg.gettransfer.presentation.delegate.Either
@@ -38,6 +34,7 @@ import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
+import com.kg.gettransfer.presentation.model.TitleModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
 
@@ -61,11 +58,9 @@ import kotlinx.android.synthetic.main.activity_transfer_details.btnCenterRoute
 import kotlinx.android.synthetic.main.activity_transfer_details.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
 import kotlinx.android.synthetic.main.layout_passengers_seats.view.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
 import kotlinx.android.synthetic.main.transfer_details_header.view.*
-import kotlinx.android.synthetic.main.view_communication_button.*
 import kotlinx.android.synthetic.main.view_communication_buttons.view.*
 
 import kotlinx.android.synthetic.main.view_transfer_details_about_driver.*
@@ -83,6 +78,9 @@ import kotlinx.android.synthetic.main.view_transfer_main_info.view.*
 import kotlinx.android.synthetic.main.view_transport_conveniences.view.*
 
 import kotlinx.android.synthetic.main.view_your_rate_mark.view.rbYourRateMark
+
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import org.jetbrains.anko.longToast
 
@@ -121,6 +119,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         presenter.transferId = intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0)
         setContentView(R.layout.activity_transfer_details)
         setupStatusBar()
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_TRIP_DETAILS))
 
         @Suppress("UnsafeCast")
         mapCollapseBehavior = (mapView.layoutParams as CoordinatorLayout.LayoutParams).behavior as MapCollapseBehavior
@@ -130,7 +129,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         initBottomSheets()
         setClickListeners()
         initMapView(savedInstanceState)
-        setupToolbar()
         setClickListeners()
     }
 
@@ -151,14 +149,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
         }
-    }
-
-    private fun setupToolbar() {
-        @Suppress("UnsafeCast")
-        setSupportActionBar(toolbar as Toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.ivBack.setOnClickListener { presenter.onBackCommandClick() }
-        toolbar.toolbar_title.text = getString(R.string.LNG_TRIP_DETAILS)
     }
 
     @CallSuper
@@ -233,6 +223,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         yourRateMark.setOnClickListener { presenter.rateTrip(yourRateMark.rbYourRateMark.rating, false) }
     }
 
+    @Suppress("ComplexMethod")
     override fun setTransfer(transfer: TransferModel) {
         initInfoView(transfer)
         initAboutRequestView(transfer)

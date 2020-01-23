@@ -2,12 +2,11 @@ package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.model.CurrencyModel
-import kotlinx.android.synthetic.main.fragment_select_currency.*
-import kotlinx.android.synthetic.main.toolbar_nav_back.view.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 class SelectCurrencyFragment : SelectCurrencyBottomFragment() {
 
@@ -20,8 +19,9 @@ class SelectCurrencyFragment : SelectCurrencyBottomFragment() {
     }
 
     private fun setupToolbar() {
-        toolbar.ivBack.setThrottledClickListener { findNavController().navigateUp() }
-        toolbar.toolbar_title.text = getString(R.string.LNG_CURRENCIES_CHOOSE)
+        toolbar_title.text = getString(R.string.LNG_CURRENCIES_CHOOSE)
+        toolbar_btnBack.isVisible = true
+        toolbar_btnBack.setOnClickListener { findNavController().navigateUp() }
     }
 
     override fun currencyChanged(currency: CurrencyModel) {

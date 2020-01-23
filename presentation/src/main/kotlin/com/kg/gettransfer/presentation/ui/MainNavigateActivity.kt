@@ -6,28 +6,23 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-
-import androidx.annotation.CallSuper
-
 import android.view.WindowManager
 
+import androidx.annotation.CallSuper
+import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigator
 
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
-import androidx.core.view.isVisible
 
 import com.kg.gettransfer.extensions.setupWithNavController
-import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 
+import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 import com.kg.gettransfer.presentation.presenter.MainNavigatePresenter
 import com.kg.gettransfer.presentation.ui.dialogs.AboutNewDriverAppDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
-
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment
 import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment
@@ -37,8 +32,13 @@ import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RAT
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_VALUE
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.SHOW_ABOUT
 import com.kg.gettransfer.presentation.view.Screens
+
 import kotlinx.android.synthetic.main.activity_main_navigate.*
 import kotlinx.android.synthetic.main.notification_badge_view.view.*
+
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
+
 import org.jetbrains.anko.find
 
 import pub.devrel.easypermissions.EasyPermissions
@@ -111,7 +111,6 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
             val transferId = arguments.getLongExtra(EXTRA_RATE_TRANSFER_ID, 0L)
             val rate = arguments.getIntExtra(EXTRA_RATE_VALUE, 0)
             rateTransfer(transferId, rate)
-
         }
     }
 

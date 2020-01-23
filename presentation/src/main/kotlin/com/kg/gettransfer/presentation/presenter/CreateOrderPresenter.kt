@@ -395,6 +395,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
     }
 
+    @Suppress("ComplexMethod")
     private fun getTransfer(): TransferNew? {
         val hourlyDuration = orderInteractor.hourlyDuration
         val toPoint: Dest<CityPoint, Int>? = orderInteractor.to?.let { to ->

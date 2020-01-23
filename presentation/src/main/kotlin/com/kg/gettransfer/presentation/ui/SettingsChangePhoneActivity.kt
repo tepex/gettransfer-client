@@ -1,16 +1,20 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+
 import androidx.annotation.CallSuper
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
+
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.model.TitleModel
 import com.kg.gettransfer.presentation.presenter.SettingsChangePhonePresenter
 import com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
 import com.kg.gettransfer.presentation.view.SettingsChangePhoneView
+
 import kotlinx.android.synthetic.main.activity_settings_change_phone.*
-import kotlinx.android.synthetic.main.activity_settings_change_phone.toolbar
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.view_input_account_field.*
+
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -37,11 +41,13 @@ class SettingsChangePhoneActivity : BaseActivity(),
         btnChangePhone.setOnClickListener { presenter.onChangePhoneClicked() }
     }
 
+    @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         activationCodeView.listener = this
     }
 
+    @CallSuper
     override fun onDestroy() {
         super.onDestroy()
         activationCodeView.cancelTimer()
@@ -57,9 +63,8 @@ class SettingsChangePhoneActivity : BaseActivity(),
         }
     }
 
-    @Suppress("UnsafeCast")
     override fun setToolbar(phone: String?) {
-        setToolbar(toolbar as Toolbar, R.string.LNG_CHANGING_PHONE, subTitle = phone)
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_PHONE), phone)
     }
 
     override fun showCodeLayout(resendDelay: Long) {

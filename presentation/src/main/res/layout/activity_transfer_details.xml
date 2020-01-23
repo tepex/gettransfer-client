@@ -56,11 +56,7 @@
         android:layout_height="wrap_content"
         app:layout_behavior="com.kg.gettransfer.presentation.ui.behavior.TitleBarBehavior">
 
-        <include
-            android:id="@+id/toolbarLayout"
-            layout="@layout/toolbar_nav_back"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <include layout="@layout/toolbar" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout

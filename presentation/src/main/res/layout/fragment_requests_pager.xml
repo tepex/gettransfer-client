@@ -6,14 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <include
-        android:id="@+id/toolbar"
         layout="@layout/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/margin44"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/layoutTextNetworkNotAvailable"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.kg.gettransfer.presentation.ui.custom.NetworkNotAvailableView
         android:id="@+id/layoutTextNetworkNotAvailable"

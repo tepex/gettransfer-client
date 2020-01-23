@@ -25,6 +25,8 @@
 	<dimen name="transfer_start_end_sign_marker_text_size">14sp</dimen>
 	<dimen name="activity_main_gradient_layout_height">48dp</dimen>
 
+	<dimen name="title_buttons_size">48dp</dimen>
+
 	<!--Hourly picker and switcher-->
 	<dimen name="hourly_bottom_sheet_height">250dp</dimen>
 	<dimen name="divider_height">0.5dp</dimen>
@@ -344,11 +346,6 @@
 	<dimen name="toolbar_title_text_size">18sp</dimen>
 	<dimen name="toolbar_subtitle_text_size">12sp</dimen>
 	<dimen name="toolbar_nav_title_text_size">15sp</dimen>
-	<dimen name="toolbar_chat_driver_name_text_size">17sp</dimen>
-	<dimen name="toolbar_buttons_text_size">18sp</dimen>
-	<dimen name="toolbar_buttons_margin_end">12dp</dimen>
-	<dimen name="toolbar_chat_title_margin_end">16dp</dimen>
-    <dimen name="toolbar_chat_driver_name_margin_start_end">16dp</dimen>
 
 	<!--bottom_sheet_offer_details-->
 	<dimen name="bottom_sheet_offer_details_top_view_width">100dp</dimen>
@@ -649,8 +646,6 @@
 	<dimen name="settings_editable_field_divider_height">1dp</dimen>
 
 	<!--Fragment authorization-->
-	<dimen name="fragment_auth_title_height">44dp</dimen>
-	<dimen name="fragment_auth_back_btn_padding">8dp</dimen>
 	<dimen name="fragment_auth_tabs_elevation">2dp</dimen>
 
 	<!--Fragment log in-->
@@ -675,7 +670,6 @@
 	<dimen name="fragment_sms_text_size_12sp">12sp</dimen>
 	<dimen name="fragment_sms_btn_done_margin_bottom">10dp</dimen>
 	<dimen name="fragment_sms_btn_done_vertical_margin">16dp</dimen>
-	<dimen name="fragment_sms_back_btn_padding">8dp</dimen>
 	<dimen name="fragment_sms_title_margin_top">8dp</dimen>
 	<dimen name="fragment_sms_subtitle_margin_top">24dp</dimen>
 	<dimen name="fragment_sms_code_error_margin_top">8dp</dimen>

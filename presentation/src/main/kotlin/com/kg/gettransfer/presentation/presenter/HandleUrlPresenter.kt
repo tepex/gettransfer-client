@@ -1,8 +1,8 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.net.Uri
-import com.kg.gettransfer.R
 
+import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.createStartChain
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.AUTH_KEY
 import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.CHOOSE_OFFER_ID
@@ -35,6 +35,7 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
 
     lateinit var url: String
 
+    @Suppress("ComplexMethod")
     fun handleIntent(appLinkData: Uri) {
         url = appLinkData.toString()
         appLinkData.path?.let { path ->
