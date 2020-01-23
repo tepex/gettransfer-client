@@ -83,7 +83,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val downloadManager: GTDownloadManager by inject()
 
     private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
-    protected val getPreferences: GetPreferencesInteractor by inject()
+    private val getPreferences: GetPreferencesInteractor by inject()
 
     private val setFavoriteTransports: SetFavoriteTransportsInteractor by inject()
 
