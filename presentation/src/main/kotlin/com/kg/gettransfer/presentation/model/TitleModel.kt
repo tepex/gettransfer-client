@@ -13,5 +13,5 @@ sealed class TitleModel {
 fun getTitleString(context: Context, title: TitleModel) = when (title) {
     is TitleModel.Str -> title.str
     is TitleModel.Id  -> context.getString(title.id)
-    TitleModel.Empty             -> ""
+    TitleModel.Empty  -> ""
 }

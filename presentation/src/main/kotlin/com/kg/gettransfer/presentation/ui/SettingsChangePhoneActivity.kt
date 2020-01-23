@@ -64,7 +64,7 @@ class SettingsChangePhoneActivity : BaseActivity(),
     }
 
     override fun setToolbar(phone: String?) {
-        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_PHONE), subTitle = phone)
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_PHONE), phone)
     }
 
     override fun showCodeLayout(resendDelay: Long) {

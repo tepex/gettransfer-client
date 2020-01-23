@@ -57,7 +57,7 @@ class SettingsChangeEmailActivity : BaseActivity(),
     }
 
     override fun setToolbar(email: String?) {
-        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_EMAIL), subTitle = email)
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_EMAIL), email)
     }
 
     override fun showCodeLayout(resendDelay: Long) {

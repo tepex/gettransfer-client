@@ -75,7 +75,7 @@ class ChatActivity : BaseActivity(), ChatView {
 
     private fun initToolbar(userName: String?, userPhone: String?) = with(toolbar) {
         val titleText = userName?.let { getString(R.string.LNG_CHAT_WITH).plus(" ").plus(it) }
-        setToolbar(this, TitleModel.Id(R.string.LNG_PAYMENT_CHAT), titleText)
+        setToolbar(this, titleText?.let { TitleModel.Str(titleText) } ?: TitleModel.Id(R.string.LNG_PAYMENT_CHAT))
         userPhone?.let { setToolbarRightButton(this, R.drawable.ic_phone_title) { presenter.callPhone(it) } }
     }
 
