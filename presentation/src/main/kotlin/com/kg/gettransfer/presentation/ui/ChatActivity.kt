@@ -65,7 +65,7 @@ class ChatActivity : BaseActivity(), ChatView {
     }
 
     override fun setToolbar(transfer: TransferModel, offer: OfferModel?) {
-        offer?.let { initToolbar(it.driver?.name ?: it.carrier.profile?.name, it.phoneToCall) }
+        offer?.let { initToolbar(it.driver?.fullName ?: it.carrier.profile?.fullName, it.phoneToCall) }
         with(transfer) {
             if (id != ChatPresenter.NO_ID) {
                 initTransferInfoLayout(from, dateTime, id)

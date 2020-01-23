@@ -52,6 +52,7 @@ import com.kg.gettransfer.presentation.model.getEmptyImageRes
 import com.kg.gettransfer.presentation.model.getImageRes
 import com.kg.gettransfer.presentation.model.getModelsRes
 import com.kg.gettransfer.presentation.model.getNameRes
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.presenter.PaymentOfferPresenter
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
@@ -273,12 +274,17 @@ class PaymentOfferActivity : BaseActivity(),
         with(offer.carrier) {
             OfferItemBindDelegate.bindLanguages(
                 Either.Single(languages_container_tiny),
-                languages,
+                languages.map { it.map() },
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_PAYMENT_VIEW)
             OfferItemBindDelegate.bindRating(layoutRating, ratings, approved)
         }
-        OfferItemBindDelegate.bindNameSignPlate(this, imgNameSign, tvMissingNameSign,
-            isNameSignPresent, offer.isWithNameSign)
+        OfferItemBindDelegate.bindNameSignPlate(
+            this,
+            imgNameSign,
+            tvMissingNameSign,
+            isNameSignPresent,
+            offer.isWithNameSign
+        )
     }
 
     override fun setCarPhotoOffer(vehicle: VehicleModel) {

@@ -7,6 +7,7 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Price
 import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.Ratings
+
 import com.kg.gettransfer.presentation.ui.SystemUtils
 
 sealed class OfferItemModel
