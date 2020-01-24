@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/transferDetailsParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -29,10 +30,20 @@
             android:clickable="true"
             android:elevation="2dp"
             android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_circle_back" />
+
+        <ImageView
+            android:id="@+id/btnLocation"
+            android:layout_width="@dimen/activity_main_buttons_size"
+            android:layout_height="@dimen/activity_main_buttons_size"
+            android:layout_margin="@dimen/activity_main_buttons_padding_for_shadow"
+            android:background="@drawable/back_circle_white_buttons"
+            android:elevation="2dp"
+            app:srcCompat="@drawable/ic_my_location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
             android:id="@+id/btnCenterRoute"
@@ -43,10 +54,12 @@
             android:clickable="true"
             android:elevation="2dp"
             android:focusable="true"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_change_route" />
+            app:layout_constraintTop_toBottomOf="@+id/btnLocation"
+            app:srcCompat="@drawable/ic_change_route"
+            tools:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

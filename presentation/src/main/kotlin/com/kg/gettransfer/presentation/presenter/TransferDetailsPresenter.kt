@@ -390,6 +390,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         viewState.showSupportScreen(transferId)
     }
 
+    fun onLocationClick() {
+
+    }
+
     companion object {
         const val FIELD_EMAIL = "field_email"
         const val FIELD_PHONE = "field_phone"

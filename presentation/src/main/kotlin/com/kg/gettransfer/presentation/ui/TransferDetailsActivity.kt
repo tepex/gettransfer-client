@@ -219,8 +219,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun setClickListeners() {
-        btnBack.setOnClickListener          { presenter.onBackCommandClick() }
-        btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
+        btnBack.setOnClickListener { presenter.onBackCommandClick() }
+        btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
+        btnLocation.setOnClickListener { presenter.onLocationClick() }
         tripRate.setOnRatingBarChangeListener { _, rating, _ -> presenter.rateTrip(rating, true) }
         topCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         bottomCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
