@@ -29,6 +29,10 @@ open class SessionDataStoreCache : SessionDataStore {
         throw UnsupportedOperationException()
     }
 
+    override suspend fun signOut(): Boolean {
+        throw UnsupportedOperationException()
+    }
+
     override suspend fun register(account: RegistrationAccountEntity): AccountEntity {
         throw UnsupportedOperationException()
     }

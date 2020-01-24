@@ -183,6 +183,7 @@ class SessionRepositoryImpl(
         account.user = User.EMPTY.copy()
         account.partner = null
         factory.retrieveCacheDataStore().clearAccount()
+        factory.retrieveRemoteDataStore().signOut()
         preferencesCache.logout()
         return Result(account)
     }

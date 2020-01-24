@@ -33,6 +33,7 @@ interface Api {
         const val API_BRAINTREE_CONFIRM = "/payments/braintree/confirm"
         const val API_VOUCHER = "/api/transfers/voucher/"
         const val API_ONESIGNAL = "/api/account/onesignal_token"
+        const val API_SIGN_OUT = "/api/account/sign_out"
 
         /*Autocomplete & place*/
         const val API_AUTOCOMPLETE  = "/api/address-lookup"
@@ -65,6 +66,9 @@ interface Api {
         @Field("phone") phone: String?,
         @Field("password") password: String
     ): ResponseModel<AccountModelWrapper>
+
+    @POST(API_SIGN_OUT)
+    suspend fun signOut(): ResponseModel<String>
 
     @POST(API_ACCOUNT_REGISTER)
     suspend fun register(

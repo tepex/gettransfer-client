@@ -23,6 +23,8 @@ open class SessionDataStoreRemote : SessionDataStore {
 
     override suspend fun login(email: String?, phone: String?, password: String) = remote.login(email, phone, password)
 
+    override suspend fun signOut() = remote.signOut()
+
     override suspend fun register(account: RegistrationAccountEntity) = remote.register(account)
 
     override suspend fun getVerificationCode(email: String?, phone: String?) = remote.getVerificationCode(email, phone)
