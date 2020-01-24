@@ -74,7 +74,6 @@ import com.kg.gettransfer.presentation.ui.utils.TopBottomRightRoundedCornerTrans
 import com.kg.gettransfer.utilities.CountryCodeManager
 
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import kotlinx.android.synthetic.main.dialog_cancel_request.view.*
 
 import java.util.Locale
 
@@ -120,75 +119,6 @@ object Utils : KoinComponent {
         }
     }
 
-    fun showAlertCancelRequest(context: Context, reason: String, listener: (Boolean) -> Unit) {
-        getAlertDialogBuilder(context).apply {
-            val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
-            view.title.text = context.getString(R.string.LNG_CANCELATION_REQUEST_AGREEMENT, reason)
-            setView(view)
-            show().apply {
-                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                view.topButton.setOnClickListener {
-                    listener(false)
-                    dismiss()
-                }
-                view.bottomButton.setOnClickListener {
-                    listener(true)
-                    dismiss()
-                }
-            }
-        }
-    }
-
-    fun showAlertRestoreRequest(context: Context, listener: (Boolean) -> Unit) {
-        getAlertDialogBuilder(context).apply {
-            val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
-            view.title.text = context.getString(R.string.LNG_REQUEST_CANCELED)
-            view.subtitle.isVisible = false
-            setButtonStyle(
-                context,
-                view.topButton,
-                R.string.LNG_RESTORE_REQUEST,
-                R.drawable.btn_bg_rounded_green
-            )
-            setButtonStyle(
-                context,
-                view.bottomButton,
-                R.string.LNG_NEXT,
-                R.drawable.btn_bg_rounded_orange,
-                R.color.colorTextBlack
-            )
-            setView(view)
-            show().apply {
-                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                view.topButton.setOnClickListener {
-                    listener(true)
-                    dismiss()
-                }
-                view.bottomButton.setOnClickListener {
-                    listener(false)
-                    dismiss()
-                }
-            }
-        }
-    }
-
-    private fun setButtonStyle(context: Context, button: Button, textId: Int, backId: Int, textColorId: Int? = null) {
-        button.text = context.getString(textId)
-        button.background = context.getDrawable(backId)
-        textColorId?.let { button.setTextColor(ContextCompat.getColor(context, it)) }
-    }
-
-    fun showAlertSetNewPassword(context: Context, listener: (Boolean) -> Unit) {
-        getAlertDialogBuilder(context).apply {
-            setTitle(R.string.LNG_AUTHORIZED)
-            setMessage(R.string.LNG_PASSWORD_CREATE_HINT)
-            setPositiveButton(R.string.LNG_MENU_TITLE_SETTINGS) { _, _ -> listener(true) }
-            setNegativeButton(R.string.LNG_REVIEW_REQUEST_LATER)  { _, _ -> listener(false) }
-            setOnCancelListener { listener(false) }
-            show()
-        }
-    }
-
     fun showScreenRedirectingAlert(context: Context, title: String, navigate: () -> Unit) {
         getAlertDialogBuilder(context).apply {
             setTitle(title)
@@ -199,13 +129,6 @@ object Utils : KoinComponent {
             show()
         }
     }
-
-    fun setLocalesDialogListener(
-        context: Context,
-        view: View,
-        items: List<CharSequence>,
-        listener: (Int) -> Unit
-    ) { setModelsDialogListener(context, view, R.string.LNG_LANGUAGE, items, listener) }
 
     fun setOfferFilterDialogListener(
         context: Context,
@@ -457,9 +380,6 @@ object Utils : KoinComponent {
 
     fun formatPersons(context: Context, persons: Int) = context.getString(R.string.count_persons_and_baggage, persons)
     fun formatLuggage(context: Context, luggage: Int) = context.getString(R.string.count_persons_and_baggage, luggage)
-
-    @Suppress("UNUSED_PARAMETER")
-    fun formatPrice(context: Context, price: String) = "($price)"
 
     private fun displayMetrics(context: Context) = context.resources.displayMetrics
 

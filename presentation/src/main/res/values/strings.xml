@@ -430,7 +430,6 @@
     <string name="LNG_CANCELATION_REASON_ANOTHER_REASON">Another reason</string>
     <string name="LNG_CANCELATION_REQUEST_AGREEMENT">Do you agree to cancel the request due to \“%s\”?</string>
     <string name="LNG_OFFERS_FOR_REQUEST_WILL_BE_LOST">All offers for this request will be lost!</string>
-    <string name="LNG_I_AGREE">I agree</string>
     <string name="LNG_REQUEST_CANCELED">Your application has been successfully canceled!</string>
     <string name="LNG_RESTORE_REQUEST">Restore request</string>
     <string name="LNG_REVIEW_SENT">Your review has been sent, thanks!</string>

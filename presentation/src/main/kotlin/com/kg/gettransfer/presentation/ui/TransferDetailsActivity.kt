@@ -1,5 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -57,6 +59,10 @@ import kotlinx.android.synthetic.main.activity_transfer_details.btnBack
 import kotlinx.android.synthetic.main.activity_transfer_details.btnCenterRoute
 import kotlinx.android.synthetic.main.activity_transfer_details.mapView
 import kotlinx.android.synthetic.main.bottom_sheet_transfer_details.*
+import kotlinx.android.synthetic.main.dialog_cancel_request.view.*
+import kotlinx.android.synthetic.main.dialog_cancel_request.view.btnBack
+import kotlinx.android.synthetic.main.dialog_cancel_request.view.title
+import kotlinx.android.synthetic.main.dialog_restore_request.view.*
 import kotlinx.android.synthetic.main.layout_passengers_seats.view.*
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.transfer_details_header.*
@@ -230,13 +236,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         topCommunicationButtons.btnSupport.setOnClickListener { presenter.onSupportClick(transfer.id) }
         bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.onSupportClick(transfer.id) }
         setBookingInfo(transfer)
-
-        if (transfer.status == Transfer.Status.REJECTED) {
-            transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(
-                this@TransferDetailsActivity,
-                R.color.color_gtr_red
-            ))
-        }
+        setRejectedStatus(transfer)
 
         val status = transfer.statusCategory
         if (status == Transfer.STATUS_CATEGORY_ACTIVE ||
@@ -245,16 +245,32 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             initTableLayoutTransportTypes(transfer.transportTypes)
         }
 
+        setCancelButton(status, transfer)
+        setRepeatButton(status)
+    }
+
+    private fun setRepeatButton(status: String) {
+        (status == Transfer.STATUS_CATEGORY_FINISHED ||
+            status == Transfer.STATUS_CATEGORY_UNFINISHED).let { showBtnRepeatTransfer ->
+            topCommunicationButtons.btnRepeatTransfer.isVisible = showBtnRepeatTransfer
+            bottomCommunicationButtons.btnRepeatTransfer.isVisible = showBtnRepeatTransfer
+        }
+    }
+
+    private fun setCancelButton(status: String, transfer: TransferModel) {
         (status == Transfer.STATUS_CATEGORY_ACTIVE &&
             !transfer.isBookNow() && !transfer.isPaymentInProgress()).let { showBtnCancel ->
             topCommunicationButtons.btnCancel.isVisible = showBtnCancel
             bottomCommunicationButtons.btnCancel.isVisible = showBtnCancel
         }
+    }
 
-        (status == Transfer.STATUS_CATEGORY_FINISHED ||
-            status == Transfer.STATUS_CATEGORY_UNFINISHED).let { showBtnRepeatTransfer ->
-            topCommunicationButtons.btnRepeatTransfer.isVisible = showBtnRepeatTransfer
-            bottomCommunicationButtons.btnRepeatTransfer.isVisible = showBtnRepeatTransfer
+    private fun setRejectedStatus(transfer: TransferModel) {
+        if (transfer.status == Transfer.Status.REJECTED) {
+            transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(
+                this@TransferDetailsActivity,
+                R.color.color_gtr_red
+            ))
         }
     }
 
@@ -634,11 +650,39 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun onCancelationReasonSelected(reason: String) {
-        Utils.showAlertCancelRequest(this, reason) { if (it) presenter.cancelRequest(reason) }
+        Utils.getAlertDialogBuilder(this).apply {
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_cancel_request, null)
+            view.title.text = context.getString(R.string.LNG_CANCELATION_REQUEST_AGREEMENT, reason)
+            setView(view)
+            show().apply {
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                view.btnBack.setOnClickListener {
+                    showCancelationReasonsList()
+                    dismiss()
+                }
+                view.btnCancelRequest.setOnClickListener {
+                    presenter.cancelRequest(reason)
+                    dismiss()
+                }
+            }
+        }
     }
 
     override fun showAlertRestoreRequest() {
-        Utils.showAlertRestoreRequest(this) { if (it) presenter.restoreRequest() }
+        Utils.getAlertDialogBuilder(this).apply {
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_restore_request, null)
+            setView(view)
+            show().apply {
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                view.bntRestore.setOnClickListener {
+                    presenter.restoreRequest()
+                    dismiss()
+                }
+                view.ivClose.setOnClickListener {
+                    dismiss()
+                }
+            }
+        }
     }
 
     override fun centerRoute(cameraUpdate: CameraUpdate) {
