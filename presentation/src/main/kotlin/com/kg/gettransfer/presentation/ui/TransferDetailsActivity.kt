@@ -245,13 +245,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         topCommunicationButtons.btnSupport.setOnClickListener { presenter.onSupportClick(transfer.id) }
         bottomCommunicationButtons.btnSupport.setOnClickListener { presenter.onSupportClick(transfer.id) }
         setBookingInfo(transfer)
-
-        if (transfer.status == Transfer.Status.REJECTED) {
-            transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(
-                this@TransferDetailsActivity,
-                R.color.color_gtr_red
-            ))
-        }
+        setRejectedStatus(transfer)
 
         val status = transfer.statusCategory
         if (status == Transfer.STATUS_CATEGORY_ACTIVE ||
@@ -260,16 +254,32 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             initTableLayoutTransportTypes(transfer.transportTypes)
         }
 
+        setCancelButton(status, transfer)
+        setRepeatButton(status)
+    }
+
+    private fun setRepeatButton(status: String) {
+        (status == Transfer.STATUS_CATEGORY_FINISHED ||
+            status == Transfer.STATUS_CATEGORY_UNFINISHED).let { showBtnRepeatTransfer ->
+            topCommunicationButtons.btnRepeatTransfer.isVisible = showBtnRepeatTransfer
+            bottomCommunicationButtons.btnRepeatTransfer.isVisible = showBtnRepeatTransfer
+        }
+    }
+
+    private fun setCancelButton(status: String, transfer: TransferModel) {
         (status == Transfer.STATUS_CATEGORY_ACTIVE &&
             !transfer.isBookNow() && !transfer.isPaymentInProgress()).let { showBtnCancel ->
             topCommunicationButtons.btnCancel.isVisible = showBtnCancel
             bottomCommunicationButtons.btnCancel.isVisible = showBtnCancel
         }
+    }
 
-        (status == Transfer.STATUS_CATEGORY_FINISHED ||
-            status == Transfer.STATUS_CATEGORY_UNFINISHED).let { showBtnRepeatTransfer ->
-            topCommunicationButtons.btnRepeatTransfer.isVisible = showBtnRepeatTransfer
-            bottomCommunicationButtons.btnRepeatTransfer.isVisible = showBtnRepeatTransfer
+    private fun setRejectedStatus(transfer: TransferModel) {
+        if (transfer.status == Transfer.Status.REJECTED) {
+            transfer_details_header.booking_info.setTextColor(ContextCompat.getColor(
+                this@TransferDetailsActivity,
+                R.color.color_gtr_red
+            ))
         }
     }
 
