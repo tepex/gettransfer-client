@@ -152,3 +152,10 @@
 # Fix for crash in appcenter library
 # https://github.com/microsoft/appcenter-sdk-android/issues/1340
 -keep class org.json.** {*;}
+
+# AppsFlyer
+-dontwarn com.android.installreferrer.com.android.installreferrer
+-dontwarn com.appsflyer.**
+-keep public class com.google.firebase.iid.FirebaseInstanceId {
+  public *;
+}
