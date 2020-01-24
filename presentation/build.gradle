@@ -318,7 +318,7 @@ dependencies {
     implementation "io.sentry:sentry-android:$sentry_version"
 
     //appsflyer
-    implementation "com.appsflyer:af-android-sdk:$appsflyer_version"
+    implementation "com.appsflyer:af-android-sdk:$appsflyer_version@aar"
     implementation "com.android.installreferrer:installreferrer:$installreferrer_version"
 
     //EasyPermissions
