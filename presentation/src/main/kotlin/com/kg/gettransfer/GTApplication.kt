@@ -129,12 +129,11 @@ class GTApplication : MultiDexApplication() {
 
             override fun onAttributionFailure(p0: String?) {}
 
-            override fun onInstallConversionDataLoaded(p0: MutableMap<String, String>?) {}
+            override fun onConversionDataSuccess(p0: MutableMap<String, Any>?) {}
 
-            override fun onInstallConversionFailure(p0: String?) {}
+            override fun onConversionDataFail(p0: String?) {}
         }
         AppsFlyerLib.getInstance().init(getString(R.string.appsflyer_api_key), conversionListener, applicationContext)
-        AppsFlyerLib.getInstance().enableUninstallTracking(getString(R.string.sender_id))
         AppsFlyerLib.getInstance().startTracking(this)
     }
 

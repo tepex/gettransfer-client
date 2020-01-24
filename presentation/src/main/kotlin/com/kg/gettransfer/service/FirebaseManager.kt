@@ -10,8 +10,7 @@ import org.koin.core.KoinComponent
 
 import timber.log.Timber
 
-class OffersPushService : KoinComponent, FirebaseMessagingService() {
-    // [START on_new_token]
+class FirebaseManager : KoinComponent, FirebaseMessagingService() {
     /**
      * Called if InstanceID token is updated. This may occur if the security of
      * the previous token had been compromised. Note that this is called when the InstanceID token
@@ -20,20 +19,5 @@ class OffersPushService : KoinComponent, FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         Timber.d("Refreshed token: $token")
         AppsFlyerLib.getInstance().updateServerUninstallToken(applicationContext, token)
-        /*
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
-            if (it.isSuccessful) {
-                it.result?.token?.let {
-                    Timber.d("[FCM token]: $it")
-                    utils.runAlien { systemInteractor.registerPushToken(it) }
-                }
-            } else Timber.w("getInstanceId failed", it.exception)
-        })
-        */
-    }
-    // [END on_new_token]
-
-    override fun onMessageReceived(message: RemoteMessage) {
-        MetricaMessagingService().processPush(this, message)
     }
 }
