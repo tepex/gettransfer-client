@@ -15,7 +15,7 @@
         android:id="@+id/ivClose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin16"
+        android:layout_marginBottom="@dimen/margin8"
         android:layout_gravity="end"
         app:srcCompat="@drawable/ic_close_x"/>
 
@@ -30,10 +30,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bntRestore"
-        style="@style/LargeRoundButtonWithText"
+        style="@style/LargeRoundButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/cancelation_request_dialog_button_cancel_margin_top"
+        android:layout_marginTop="@dimen/cancelation_request_dialog_button_restore_margin_top"
         android:text="@string/LNG_RESTORE_REQUEST"
         app:backgroundTint="@color/color_gtr_green"/>
 </LinearLayout>

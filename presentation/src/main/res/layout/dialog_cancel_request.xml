@@ -31,18 +31,17 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnBack"
-        style="@style/LargeRoundButtonWithText"
+        style="@style/LargeRoundButtonOutlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/cancelation_request_dialog_button_cancel_margin_top"
+        android:layout_marginTop="@dimen/cancelation_request_dialog_button_back_margin_top"
         android:text="@string/LNG_BACKTRIP" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancelRequest"
-        style="@style/LargeRoundButtonWithText"
+        style="@style/LargeRoundButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/cancelation_request_dialog_button_agree_margin_top"
         android:text="@string/LNG_CANCEL"
         app:backgroundTint="@color/color_gtr_red" />
 </LinearLayout>

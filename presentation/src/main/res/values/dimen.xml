@@ -778,8 +778,8 @@
 	<dimen name="cancelation_request_dialog_vertical_padding">20dp</dimen>
 	<dimen name="cancelation_request_dialog_horizontal_padding">28dp</dimen>
 	<dimen name="cancelation_request_dialog_text_size">16sp</dimen>
-	<dimen name="cancelation_request_dialog_button_cancel_margin_top">20dp</dimen>
-	<dimen name="cancelation_request_dialog_button_agree_margin_top">10dp</dimen>
+	<dimen name="cancelation_request_dialog_button_back_margin_top">15dp</dimen>
+	<dimen name="cancelation_request_dialog_button_restore_margin_top">10dp</dimen>
 
 	<!-- Checkoutcom paying screen -->
 	<dimen name="checkoutcom_secure_payment_text_size">16sp</dimen>
