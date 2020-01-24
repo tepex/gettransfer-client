@@ -36,13 +36,13 @@ class AppsFlyerHandleDeepLinkActivity : BaseActivity(), BaseHandleUrlView {
         AppsFlyerLib.getInstance().registerConversionListener(this, object : AppsFlyerConversionListener {
 
             /* Returns the attribution data. Note - the same conversion data is returned every time per install */
-            override fun onInstallConversionDataLoaded(conversionData: Map<String, String>) {
+            override fun onConversionDataSuccess(conversionData: MutableMap<String, Any>) {
                 for (attrName in conversionData.keys) {
                     Timber.d("attribute: $attrName = ${conversionData[attrName]}")
                 }
             }
 
-            override fun onInstallConversionFailure(errorMessage: String) {
+            override fun onConversionDataFail(errorMessage: String) {
                 Timber.d("error onInstallConversionFailure : $errorMessage")
             }
 
