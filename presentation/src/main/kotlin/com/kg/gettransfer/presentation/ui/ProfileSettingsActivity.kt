@@ -7,6 +7,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.TitleModel
 import com.kg.gettransfer.presentation.presenter.ProfileSettingsPresenter
@@ -58,5 +59,13 @@ class ProfileSettingsActivity : BaseActivity(), ProfileSettingsView {
 
     override fun onBackPressed() {
         presenter.onBackCommandClick()
+    }
+
+    override fun setError(e: ApiException) {
+        if (e.code == ApiException.NETWORK_ERROR) {
+            setError(false, R.string.LNG_NETWORK_ERROR)
+        } else {
+            super.setError(e)
+        }
     }
 }
