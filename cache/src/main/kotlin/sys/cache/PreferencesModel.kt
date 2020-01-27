@@ -11,7 +11,6 @@ import kotlinx.serialization.Serializable
 
 @Entity(tableName = PreferencesEntity.ENTITY_NAME)
 data class PreferencesModel(
-    @ColumnInfo(name = PreferencesEntity.ACCESS_TOKEN) val accessToken: String,
     @Embedded(prefix = PreferencesEntity.ENDPOINT) val endpoint: EndpointModel?,
     @ColumnInfo(name = PreferencesEntity.IP_API_KEY) val ipApiKey: String?,
     @ColumnInfo(name = PreferencesEntity.IS_FIRST_LAUNCH) val isFirstLaunch: Boolean,
@@ -33,7 +32,6 @@ data class FavoriteTransportsList(val list: List<String>)
 
 fun PreferencesModel.map() =
     PreferencesEntity(
-        accessToken = accessToken,
         endpoint = endpoint?.map(),
         ipApiKey = ipApiKey,
         isFirstLaunch = isFirstLaunch,
@@ -50,7 +48,6 @@ fun PreferencesModel.map() =
 
 fun PreferencesEntity.map() =
     PreferencesModel(
-        accessToken = accessToken,
         endpoint = endpoint?.map(),
         ipApiKey = ipApiKey,
         isFirstLaunch = isFirstLaunch,

@@ -1,12 +1,12 @@
 package com.kg.gettransfer.sys.domain
 
+import sys.domain.AccessTokenRepository
+
 class SetAccessTokenInteractor(
-    private val repository: PreferencesRepository
+    private val accessTokenRepository: AccessTokenRepository
 ) {
 
     suspend operator fun invoke(value: String) {
-        repository.getResult().getModel().copy(accessToken = value).also { newPreferences ->
-            repository.put(newPreferences)
-        }
+        accessTokenRepository.put(value)
     }
 }

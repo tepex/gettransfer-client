@@ -237,7 +237,6 @@ class ConfigsManagerTest : StringSpec(), KoinTest {
             )
         val PREFERENCES =
             Preferences(
-                accessToken = "access token",
                 endpoint = Endpoint("test3", "key3", "url3", false, true),
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
