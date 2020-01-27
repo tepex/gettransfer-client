@@ -22,9 +22,9 @@ class PushTokenManager : KoinComponent {
     private val onesignalInteractor: OnesignalInteractor by inject()
 
     fun registerPushToken() {
-        val playerId = OneSignal.getPermissionSubscriptionState().getSubscriptionStatus().getUserId()
-        log.debug("OneSignal player_id: $playerId")
-        playerId?.let { playerId ->
+        val userId = OneSignal.getPermissionSubscriptionState().subscriptionStatus.userId
+        log.debug("OneSignal player_id: $userId")
+        userId?.let { playerId ->
             worker.main.launch {
                 withContext(worker.bg) { onesignalInteractor.associatePlayerId(playerId) }
             }

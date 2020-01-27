@@ -267,7 +267,7 @@ interface Api {
         @Body role: RoleModel
     ): ResponseModel<String>
 
-    @PUT("$API_ONESIGNAL")
+    @PUT(API_ONESIGNAL)
     suspend fun associatePlayerId(
         @Body params: PlayerIdModel
     ): ResponseModel<String>
