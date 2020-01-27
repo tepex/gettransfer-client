@@ -25,5 +25,5 @@ object Help : Screen<Help>() {
     val btnNext = KButton { withId(R.id.btnNext) }
     val btnContinue = KButton { withId(R.id.btn_continue) }
     val tvTitle = KView { withId(R.id.tv_title) }
-    val ivBack = KView { withId(R.id.ivBack) }
+//    val ivBack = KView { withId(R.id.ivBack) }
 }

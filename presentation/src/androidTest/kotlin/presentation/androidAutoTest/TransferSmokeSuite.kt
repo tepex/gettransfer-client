@@ -14,6 +14,7 @@ import org.junit.Test
 
 import com.kg.gettransfer.presentation.data.Constants
 import com.kg.gettransfer.presentation.screenelements.*
+import org.junit.Ignore
 
 class TransferSmokeSuite : TestCase() {
 
@@ -21,8 +22,6 @@ class TransferSmokeSuite : TestCase() {
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
 
-    @get:Rule
-    val screenshotTestRule = ScreenshotTestRule()
 
     @Rule
     @JvmField
@@ -412,7 +411,7 @@ class TransferSmokeSuite : TestCase() {
                 Help {
                     tvTitle { isVisible() }
                     btnContinue { isVisible() }
-                    ivBack { click() }
+//                    ivBack { click() }
                 }
             }
         }

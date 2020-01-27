@@ -14,6 +14,7 @@ import org.junit.Test
 import com.kg.gettransfer.presentation.data.Constants
 
 import com.kg.gettransfer.presentation.screenelements.*
+import org.junit.Ignore
 
 @Suppress("LongMethod")
 class RegressSuite : TestCase() {
@@ -22,8 +23,8 @@ class RegressSuite : TestCase() {
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
 
-    @get:Rule
-    val screenshotTestRule = ScreenshotTestRule()
+//    @get:Rule
+//    val screenshotTestRule = ScreenshotTestRule()
 
     @Rule
     @JvmField
