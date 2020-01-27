@@ -14,6 +14,4 @@ interface PreferencesCache {
     var isAppLanguageChanged: Boolean
 
     fun logout()
-    fun addListener(listener: PreferencesListener)
-    fun removeListener(listener: PreferencesListener)
 }

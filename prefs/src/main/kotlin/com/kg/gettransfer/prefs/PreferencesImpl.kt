@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 import com.kg.gettransfer.data.PreferencesCache
-import com.kg.gettransfer.data.PreferencesListener
 import com.kg.gettransfer.data.model.*
 import com.kg.gettransfer.domain.model.Account
 
@@ -15,8 +14,6 @@ class PreferencesImpl(
     private val defaultUrl: String,
     private val encryptPass: EncryptPass
 ) : PreferencesCache {
-
-    private val listeners = mutableSetOf<PreferencesListener>()
 
     private val configsPrefs  = context.getSharedPreferences("configs", Context.MODE_PRIVATE)
     private val accountPrefs  = context.getSharedPreferences(AccountEntity.ENTITY_NAME, Context.MODE_PRIVATE)
@@ -57,7 +54,6 @@ class PreferencesImpl(
         set(value) {
             _accessToken = value
             configsPrefs.edit().putString(ACCESS_TOKEN, value).apply()
-            listeners.forEach { it.accessTokenChanged(value) }
         }
 
     override var userEmail: String?
@@ -165,14 +161,6 @@ class PreferencesImpl(
             remove(USER_PASSWORD)
             apply()
         }
-    }
-
-    override fun addListener(listener: PreferencesListener) {
-        listeners.add(listener)
-    }
-
-    override fun removeListener(listener: PreferencesListener) {
-        listeners.remove(listener)
     }
 
     companion object {
