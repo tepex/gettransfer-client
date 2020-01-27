@@ -28,6 +28,9 @@ class LocationManager(val context: Context): KoinComponent {
     private val geoInteractor: GeoInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
 
+    internal var addressListener: OnGetAddressListener? = null
+    internal var emptyAddressListener: OnGetEmptyAddressListener? = null
+
     var lastCurrentLocation: LatLng? = null
 
     fun getCurrentLocation(isFromField: Boolean) {
@@ -63,6 +66,7 @@ class LocationManager(val context: Context): KoinComponent {
             SearchPresenter.FIELD_FROM -> orderInteractor.from = currentAddress
             SearchPresenter.FIELD_TO -> orderInteractor.to   = currentAddress
         }
+        addressListener?.onGetAddress(currentAddress)
     }
 
     private suspend fun getLocationFromIpApi(isFromField: Boolean) {
@@ -87,7 +91,7 @@ class LocationManager(val context: Context): KoinComponent {
     }
 
     private fun setEmptyAddress() {
-
+        emptyAddressListener?.onGetEmptyAddress()
     }
 
     private fun logAddressByIpRequest() = analytics.logSingleEvent(Analytics.EVENT_IPAPI_REQUEST)
@@ -96,5 +100,13 @@ class LocationManager(val context: Context): KoinComponent {
 
     companion object {
         val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+    }
+
+    interface OnGetAddressListener {
+        fun onGetAddress(currentAddress: GTAddress)
+    }
+
+    interface OnGetEmptyAddressListener {
+        fun onGetEmptyAddress()
     }
 }

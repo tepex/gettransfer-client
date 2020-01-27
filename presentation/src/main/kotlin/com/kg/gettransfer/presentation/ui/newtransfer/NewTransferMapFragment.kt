@@ -40,7 +40,6 @@ import kotlinx.android.synthetic.main.search_form_map.*
 //import leakcanary.AppWatcher
 
 import pub.devrel.easypermissions.EasyPermissions
-import java.lang.UnsupportedOperationException
 
 @Suppress("TooManyFunctions")
 class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
@@ -202,9 +201,9 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     override fun initUIForSelectedField(field: String) {
         mMarker.setImageDrawable(ContextCompat.getDrawable(requireContext(),
             when (field) {
-                FIELD_FROM -> R.drawable.point_orange
+                FIELD_FROM -> R.drawable.ic_map_label_a
                 FIELD_TO   -> R.drawable.ic_map_label_b
-                else       -> throw UnsupportedOperationException()
+                else       -> R.drawable.point_orange
             }
         ))
         search_panel.setFieldMode(field == FIELD_TO)

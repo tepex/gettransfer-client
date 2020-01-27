@@ -12,6 +12,7 @@ import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.EMPTY_ADDRESS
 
 import com.kg.gettransfer.presentation.view.NewTransferMapView
+import com.kg.gettransfer.utilities.LocationManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,6 +37,27 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         if (sessionInteractor.isAppLanguageChanged) {
            viewState.showRestartDialog()
         }
+        initAddressListiner()
+        initEmptyAddressListener()
+    }
+
+    private fun initEmptyAddressListener() {
+        locationManager.emptyAddressListener = object : LocationManager.OnGetEmptyAddressListener {
+            override fun onGetEmptyAddress() {
+                viewState.setAddress(EMPTY_ADDRESS)
+            }
+        }
+    }
+
+    private fun initAddressListiner() {
+        locationManager.addressListener = object : LocationManager.OnGetAddressListener {
+            override fun onGetAddress(currentAddress: GTAddress) {
+                lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
+                onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
+                viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation(lastAddressPoint))
+                viewState.setAddress(currentAddress.cityPoint.name)
+            }
+        }
     }
 
     override fun updateView() {
@@ -48,7 +70,8 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
             viewState.initUIForSelectedField(selectedField)
             initAddressFieldAndMarker(selectedField)
             if (fillAddressFieldsCheckIsEmpty()) {
-                updateCurrentLocation(isFromFieldSelected())
+                viewState.blockAddressField()
+                locationManager.getCurrentLocation(isFromFieldSelected())
             }
         }
     }
@@ -76,25 +99,8 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         }
     }
 
-    override fun updateCurrentLocationAsync(isFromField: Boolean) {
-        viewState.blockAddressField()
-        super.updateCurrentLocationAsync(isFromField)
-    }
-
-    override suspend fun setPointAddress(currentAddress: GTAddress) {
-        super.setPointAddress(currentAddress)
-
-        lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
-        onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
-        viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation(lastAddressPoint))
-        viewState.setAddress(currentAddress.cityPoint.name)
-    }
-
-    override fun setEmptyAddress() {
-        viewState.setAddress(EMPTY_ADDRESS)
-    }
-
-    private fun showBtnMyLocation(point: LatLng) = lastCurrentLocation == null || point != lastCurrentLocation
+    private fun showBtnMyLocation(point: LatLng) =
+        locationManager.lastCurrentLocation == null || point != locationManager.lastCurrentLocation
 
     fun onCameraMove(lastPoint: LatLng, animateMarker: Boolean) {
         if (idleAndMoveCamera) {
@@ -157,7 +163,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
     }
 
     fun updateLocation() {
-        updateCurrentLocation(isFromFieldSelected())
+        locationManager.getCurrentLocation(isFromFieldSelected())
     }
 
     private fun isFromFieldSelected() = selectedField == FIELD_FROM

@@ -186,7 +186,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     }
 
     override fun showReadMoreDialog() {
-        ReadMoreFragment().show(requireFragmentManager(), getString(R.string.tag_read_more))
+        ReadMoreFragment().show(parentFragmentManager, getString(R.string.tag_read_more))
     }
 
     @CallSuper
