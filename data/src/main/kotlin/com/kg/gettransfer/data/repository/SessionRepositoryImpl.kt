@@ -179,11 +179,13 @@ class SessionRepositoryImpl(
     }
 
     override suspend fun logout(): Result<Account> {
+        retrieveRemoteEntity {
+            factory.retrieveRemoteDataStore().signOut()
+        }.error?.let { return Result(account, it.map()) }
         tempUser = User.EMPTY.copy()
         account.user = User.EMPTY.copy()
         account.partner = null
         factory.retrieveCacheDataStore().clearAccount()
-        factory.retrieveRemoteDataStore().signOut()
         preferencesCache.logout()
         return Result(account)
     }

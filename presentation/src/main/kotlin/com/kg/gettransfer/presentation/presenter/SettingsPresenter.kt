@@ -223,22 +223,23 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     }
 
     fun changeEndpoint(selected: Int) = worker.main.launch {
-        val endpoint = endpoints[selected]
-        viewState.setEndpoint(endpoint)
-        viewState.blockInterface(true)
-        withContext(worker.bg) {
-            clearConfigsInteractor()
-            clearMobileConfigsInteractor()
-            endpoint.delegate.run {
-                setEndpoint(this)
+        withContext(worker.bg) { accountManager.logout() }.isSuccess()?.let {
+            val endpoint = endpoints[selected]
+            viewState.setEndpoint(endpoint)
+            viewState.blockInterface(true)
+            withContext(worker.bg) {
+                clearConfigsInteractor()
+                clearMobileConfigsInteractor()
+                endpoint.delegate.run {
+                    setEndpoint(this)
+                }
             }
-            clearAllCachedData()
+            configsManager.coldStart(worker.backgroundScope)
+            fetchResult { sessionInteractor.coldStart() }
+            viewState.blockInterface(false)
+            restart = true
+            router.exit() // Without restarting app
         }
-        configsManager.coldStart(worker.backgroundScope)
-        fetchResult { sessionInteractor.coldStart() }
-        viewState.blockInterface(false)
-        restart = true
-        router.exit() // Without restarting app
     }
 
     fun onResetOnboardingClicked() {
