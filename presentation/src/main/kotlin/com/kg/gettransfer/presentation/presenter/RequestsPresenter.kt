@@ -10,4 +10,9 @@ import com.kg.gettransfer.utilities.Analytics
 class RequestsPresenter : BasePresenter<RequestsView>() {
 
     fun logEvent(value: String) = analytics.logEvent(Analytics.EVENT_TRANSFERS, Analytics.PARAM_KEY_FILTER, value)
+
+    override fun onFirstViewAttach() {
+        // super.onFirstViewAttach()
+        // Session initialized in MainNavigationPresenter
+    }
 }

@@ -20,6 +20,11 @@ class SupportPresenter : BasePresenter<SupportView>() {
     private val worker: WorkerManager by inject { parametersOf("SupportPresenter") }
     private val communicationManager: CommunicationManager by inject()
 
+    override fun onFirstViewAttach() {
+        // super.onFirstViewAttach()
+        // Session initialized in MainNavigationPresenter
+    }
+
     override fun attachView(view: SupportView) {
         super.attachView(view)
         worker.main.launch {

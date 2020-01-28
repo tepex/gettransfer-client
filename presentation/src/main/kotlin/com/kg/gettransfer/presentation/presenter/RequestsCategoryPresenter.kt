@@ -56,6 +56,11 @@ class RequestsCategoryPresenter(
     private var driverCoordinate: DriverCoordinate? = null
     // private var pagesCount: Int? = null // for pagination
 
+    override fun onFirstViewAttach() {
+        // super.onFirstViewAttach()
+        // Session initialized in MainNavigationPresenter
+    }
+
     override fun attachView(view: RequestsFragmentView) {
         super.attachView(view)
         countEventsInteractor.addCounterListener(this)
