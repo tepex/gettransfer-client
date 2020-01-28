@@ -144,7 +144,7 @@ class ApiCore : KoinComponent {
             }
 
             try {
-                updateAccessToken()
+                getAccessToken()
             } catch (e1: Exception) { throw remoteException(e1) }
             try {
                 apiCall()
@@ -162,7 +162,7 @@ class ApiCore : KoinComponent {
             if (!ae.isInvalidToken()) throw ae
 
             try {
-                updateAccessToken()
+                getAccessToken()
             } catch (e1: Exception) { throw remoteException(e1) }
             try {
                 apiCall(id)
@@ -178,24 +178,25 @@ class ApiCore : KoinComponent {
     internal suspend fun updateOldAccessToken(authKey: String?) =
         try {
             val oldToken = preferences.accessToken
-            val updatedToken = if (oldToken.isNotEmpty() && oldToken != INVALID_TOKEN) oldToken  else null
+            val updatedToken = if (oldToken.isNotEmpty()) oldToken  else null
             getAccessToken(updatedToken, authKey)
         } catch (e: Exception) {
             throw remoteException(e)
         }
 
-    private suspend fun updateAccessToken() {
-        getAccessToken(null, null)
+    private suspend fun getAccessToken(token: String? = null, authKey: String? = null) {
+        val response: ResponseModel<TokenModel> = api.accessToken(token, authKey)
+        @Suppress("UnsafeCallOnNullableType")
+        preferences.accessToken = response.data!!.token
+
+        if (authKey == null) loginOldUser()
+    }
+
+    private suspend fun loginOldUser() {
         val email = preferences.userEmail
         val phone = preferences.userPhone
         val password = preferences.userPassword
         if (email != null || phone != null) api.login(email, phone, password)
-    }
-
-    private suspend fun getAccessToken(token: String?, authKey: String?) {
-        val response: ResponseModel<TokenModel> = api.accessToken(token, authKey)
-        @Suppress("UnsafeCallOnNullableType")
-        preferences.accessToken = response.data!!.token
     }
 
     internal fun remoteException(e: Exception): RemoteException = when (e) {
@@ -229,7 +230,5 @@ class ApiCore : KoinComponent {
         const val PARAM_API_KEY  = "api_key"
         private const val PARAM_LOCALE   = "locale"
         private const val PARAM_CURRENCY = "currency"
-
-        private const val INVALID_TOKEN = "invalid_token"
     }
 }
