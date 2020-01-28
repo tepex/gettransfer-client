@@ -2,6 +2,11 @@ package com.kg.gettransfer.presentation.delegate
 
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.interactor.SocketInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.interactor.OfferInteractor
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.domain.interactor.CountEventsInteractor
 
 import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.Profile
@@ -13,6 +18,7 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.CreateOrderView.FieldError
 import com.kg.gettransfer.sys.domain.ClearConfigsInteractor
 import com.kg.gettransfer.sys.domain.GetConfigsInteractor
+import com.kg.gettransfer.sys.domain.SetFavoriteTransportsInteractor
 
 import org.koin.core.KoinComponent
 import org.koin.core.get
@@ -23,6 +29,13 @@ class AccountManager : KoinComponent {
     private val pushTokenManager: PushTokenManager = get()
     private val clearConfigsInteractor: ClearConfigsInteractor = get()
     private val getConfigsInteractor: GetConfigsInteractor = get()
+
+    private val transferInteractor: TransferInteractor = get()
+    private val offerInteractor: OfferInteractor = get()
+    private val reviewInteractor: ReviewInteractor = get()
+    private val orderInteractor: OrderInteractor = get()
+    private val countEventsInteractor: CountEventsInteractor = get()
+    private val setFavoriteTransports: SetFavoriteTransportsInteractor = get()
 
     /* REMOTE ACCOUNT */
 
@@ -104,10 +117,25 @@ class AccountManager : KoinComponent {
         updateConfigs()
     }
 
-    suspend fun logout(): Result<Account> {
-        tempUser.profile = Profile.EMPTY.copy()
-        socketInteractor.closeSocketConnection()
-        return sessionInteractor.logout()
+    suspend fun logout() =
+        sessionInteractor.logout().also {
+            if (!it.isError()) {
+                tempUser.profile = Profile.EMPTY.copy()
+                socketInteractor.closeSocketConnection()
+                clearAccountData()
+            }
+        }
+
+    private suspend fun clearAccountData() {
+        if (remoteAccount.partner?.defaultPromoCode != null) orderInteractor.promoCode = ""
+        transferInteractor.clearTransfersCache()
+        offerInteractor.clearOffersCache()
+        reviewInteractor.clearReviewCache()
+
+        countEventsInteractor.clearCountEvents()
+
+        orderInteractor.clear()
+        setFavoriteTransports(emptySet())
     }
 
     suspend fun putAccount(

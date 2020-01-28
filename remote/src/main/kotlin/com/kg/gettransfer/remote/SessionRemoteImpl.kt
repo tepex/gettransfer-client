@@ -39,6 +39,11 @@ class SessionRemoteImpl : SessionRemote {
         return response.data?.account!!.map()
     }
 
+    override suspend fun signOut(): Boolean {
+        val response: ResponseModel<String?> = core.tryTwice { core.api.signOut() }
+        return response.error == null
+    }
+
     override suspend fun register(account: RegistrationAccountEntity): AccountEntity {
         val response: ResponseModel<AccountModelWrapper> = core.tryTwice {
             core.api.register(RegistrationAccountEntityWrapper(account.map()))

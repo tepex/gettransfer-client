@@ -7,12 +7,23 @@ import com.kg.gettransfer.domain.AsyncUtils
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.eventListeners.ChatBadgeEventListener
 import com.kg.gettransfer.domain.eventListeners.OfferEventListener
-import com.kg.gettransfer.domain.interactor.*
-import com.kg.gettransfer.domain.model.ChatBadgeEvent
-import com.kg.gettransfer.domain.model.Offer
+
+import com.kg.gettransfer.domain.interactor.OfferInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.interactor.ChatInteractor
+import com.kg.gettransfer.domain.interactor.CountEventsInteractor
+import com.kg.gettransfer.domain.interactor.ReviewInteractor
+import com.kg.gettransfer.domain.interactor.PaymentInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.domain.interactor.SocketInteractor
+import com.kg.gettransfer.domain.interactor.SessionInteractor
+
 import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransportType
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.ChatBadgeEvent
+
 import com.kg.gettransfer.extensions.getOffer
 
 import com.kg.gettransfer.presentation.delegate.AccountManager
@@ -86,8 +97,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         router.exit()
     }
 
-    protected fun login(nextScreen: String, email: String?) = router.navigateTo(Screens.MainLogin(nextScreen, email))
-
     override fun onFirstViewAttach() {
         worker.main.launch {
             withContext(worker.bg) {
@@ -111,34 +120,20 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     return false if error handled, true otherwise
      */
 
-    private fun checkResultError(error: ApiException) =
+    private fun checkAuthorizationError(error: ApiException) =
         if (!openedLoginScreenForUnauthorizedUser && (error.isNotLoggedIn() || error.isNoUser())) {
             openedLoginScreenForUnauthorizedUser = true
-            login(Screens.CLOSE_AFTER_LOGIN, accountManager.remoteProfile.email)
+            router.navigateTo(Screens.MainLogin(Screens.CLOSE_AFTER_LOGIN, accountManager.remoteProfile.email))
             false
         } else if (openedLoginScreenForUnauthorizedUser) {
-            logout()
+            isAuthorizationError()
             false
         } else true
 
-    private fun logout() {
-        utils.launchSuspend {
-            clearAllCachedData()
+    private fun isAuthorizationError() = utils.launchSuspend {
+        utils.asyncAwait { accountManager.logout() }.isSuccess()?.let {
             router.backTo(Screens.MainPassenger())
         }
-    }
-
-    protected suspend fun clearAllCachedData() {
-        if (accountManager.remoteAccount.partner?.defaultPromoCode != null) orderInteractor.promoCode = ""
-        utils.asyncAwait { accountManager.logout() }
-
-        utils.asyncAwait { transferInteractor.clearTransfersCache() }
-        utils.asyncAwait { offerInteractor.clearOffersCache() }
-        utils.asyncAwait { reviewInteractor.clearReviewCache() }
-
-        countEventsInteractor.clearCountEvents()
-
-        clearChosenTransportTypes()
     }
 
     protected fun saveChosenTransportTypes(transportTypes: Set<TransportType.ID>) {
@@ -306,7 +301,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         checkLoginError: Boolean = true,
         block: suspend () -> Result<M>
     ) = utils.asyncAwait { block() }.also { result ->
-        result.error?.let { e -> if (checkLoginError) checkResultError(e) else true }
+        result.error?.let { e -> if (checkLoginError) checkAuthorizationError(e) else true }
             ?.let { handle ->
                 if (!handle) return@also
                 if (withCacheCheck) !result.fromCache else true

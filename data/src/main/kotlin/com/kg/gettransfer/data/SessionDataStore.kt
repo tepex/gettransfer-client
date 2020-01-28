@@ -18,6 +18,8 @@ interface SessionDataStore : KoinComponent {
 
     suspend fun login(email: String?, phone: String?, password: String): AccountEntity
 
+    suspend fun signOut(): Boolean
+
     suspend fun register(account: RegistrationAccountEntity): AccountEntity
 
     suspend fun getVerificationCode(email: String?, phone: String?): Boolean

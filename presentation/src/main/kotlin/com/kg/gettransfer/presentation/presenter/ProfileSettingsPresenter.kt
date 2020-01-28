@@ -47,8 +47,9 @@ class ProfileSettingsPresenter : BasePresenter<ProfileSettingsView>() {
 
     fun onLogout() {
         utils.launchSuspend {
-            clearAllCachedData()
-            router.exit()
+            fetchResultOnly { accountManager.logout() }.run {
+                error?.let { viewState.setError(it) } ?: router.exit()
+            }
         }
         analytics.logEvent(Analytics.EVENT_SETTINGS, Analytics.LOG_OUT_PARAM, Analytics.EMPTY_VALUE)
     }
