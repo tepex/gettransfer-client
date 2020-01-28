@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="geoapikey" translatable="false">AIzaSyAZXhfW8DCix33iyFU3An8ovidJjwpHFFg</string>
-    <string name="sentryDsn" translatable="false">https://d864104b10b94181a03cef30a4b0033d:25bcc05cc8df449296b266f195fcd665@sentry.gtrint.org/14</string>
 </resources>
