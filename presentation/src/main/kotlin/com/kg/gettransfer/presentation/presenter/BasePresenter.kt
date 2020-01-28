@@ -132,7 +132,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     private fun isAuthorizationError() = utils.launchSuspend {
         utils.asyncAwait { accountManager.logout() }.isSuccess()?.let {
-            router.backTo(Screens.MainPassenger())
+            router.newRootScreen(Screens.MainPassenger())
         }
     }
 
