@@ -4,7 +4,11 @@ import com.kg.gettransfer.prefs.EncryptPass
 
 class EncryptPassImpl : EncryptPass {
 
-    override fun encryptDecrypt(input: String): String {
+    override fun encrypt(input: String) = encryptDecrypt(input)
+
+    override fun decrypt(input: String) = encryptDecrypt(input)
+
+    private fun encryptDecrypt(input: String): String {
         // Can be any chars, and any length array
         val key = charArrayOf('G', 'T', 'R')
         val output = StringBuilder()
