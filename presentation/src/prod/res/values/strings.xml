@@ -7,4 +7,5 @@
 	<string name="appmetrica_api_key" translatable="false">92343e03-0fb3-4acd-96c4-37e6559cca84</string>
 	<string name="facebook_app_id" translatable="false">1936584423312748</string>
 	<string name="appsflyer_api_key" translatable="false">hJyRc3M35GUMZELe3hzds4</string>
+	<string name="sentryDsn" translatable="false">https://c667d027578f400f87075a40a885ef87@sentry.gtrint.org/21</string>
 </resources>
