@@ -61,7 +61,7 @@ class SessionRepositoryImpl(
             preferencesCache.userPhone = value
         }
 
-    override var userPassword: String
+    override var userPassword: String?
         get() = preferencesCache.userPassword
         set(value) {
             preferencesCache.userPassword = value

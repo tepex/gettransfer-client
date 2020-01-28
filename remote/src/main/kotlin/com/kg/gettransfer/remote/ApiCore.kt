@@ -193,10 +193,11 @@ class ApiCore : KoinComponent {
     }
 
     private suspend fun loginOldUser() {
-        val email = preferences.userEmail
-        val phone = preferences.userPhone
-        val password = preferences.userPassword
-        if (email != null || phone != null) api.login(email, phone, password)
+        preferences.userPassword?.let { password ->
+            val email = preferences.userEmail
+            val phone = preferences.userPhone
+            if (email != null || phone != null) api.login(email, phone, password)
+        }
     }
 
     internal fun remoteException(e: Exception): RemoteException = when (e) {

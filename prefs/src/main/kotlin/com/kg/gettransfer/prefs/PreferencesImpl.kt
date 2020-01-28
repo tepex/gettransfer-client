@@ -63,7 +63,7 @@ class PreferencesImpl(
         set(value) {
             _userEmail = value
             with(configsPrefs.edit()) {
-                if (value == null) remove(USER_EMAIL) else putString(USER_EMAIL, value)
+                value?.let { putString(USER_EMAIL, it) } ?: remove(USER_EMAIL)
                 apply()
             }
         }
@@ -79,23 +79,26 @@ class PreferencesImpl(
         set(value) {
             _userPhone = value
             with(configsPrefs.edit()) {
-                if (value == null) remove(USER_PHONE) else putString(USER_PHONE, value)
+                value?.let { putString(USER_PHONE, it) } ?: remove(USER_PHONE)
                 apply()
             }
         }
 
-    override var userPassword: String
+    override var userPassword: String?
         get() {
             if (_userPassword.isNullOrEmpty()) {
                 val prefsPass = configsPrefs.getString(USER_PASSWORD, EMPTY)
                 _userPassword = if (!prefsPass.isNullOrEmpty()) prefsPass else null
             }
-            return _userPassword?.let { encryptPass.decrypt(it) } ?: EMPTY
+            return _userPassword?.let { encryptPass.decrypt(it) }
         }
         set(value) {
-            val encryptedPass = encryptPass.encrypt(value)
-            _userPassword = encryptedPass
-            configsPrefs.edit().putString(USER_PASSWORD, encryptedPass).apply()
+            with(configsPrefs.edit()) {
+                val encryptedPass = value?.let { encryptPass.encrypt(it) }
+                _userPassword = encryptedPass
+                encryptedPass?.let { putString(USER_PASSWORD, it) } ?: remove(USER_PASSWORD)
+                apply()
+            }
         }
 
     override var mapCountNewOffers: Map<Long, Int>
