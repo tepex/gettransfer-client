@@ -51,6 +51,7 @@ import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.CommunicationManager
+import com.kg.gettransfer.utilities.LocationManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -66,6 +67,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private val worker: WorkerManager by inject { parametersOf("TransferDetailsPresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val communicationManager: CommunicationManager by inject()
+    private val locationManager: LocationManager by inject()
 
     private val cityPointMapper: CityPointMapper by inject()
     private val pointMapper: PointMapper by inject()
@@ -96,6 +98,15 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 getOffer()
             }
             viewState.blockInterface(false)
+        }
+        initAddressListener()
+    }
+
+    private fun initAddressListener() {
+        locationManager.addressListener = object : LocationManager.OnGetAddressListener {
+            override fun onGetAddress(currentAddress: GTAddress) {
+                viewState.moveLocationMarker(currentAddress)
+            }
         }
     }
 
@@ -391,7 +402,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun onLocationClick() {
-
+        locationManager.getCurrentLocation(true)
     }
 
     companion object {

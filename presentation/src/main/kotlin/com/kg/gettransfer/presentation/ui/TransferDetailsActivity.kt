@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.model.Transfer
 
@@ -135,7 +136,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         initBottomSheets()
         setClickListeners()
         initMapView(savedInstanceState)
-        setClickListeners()
     }
 
     @CallSuper
@@ -823,6 +823,12 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     override fun showSupportScreen(transferId: Long) {
         Screens.showSupportScreen(supportFragmentManager, transferId)
+    }
+
+    override fun moveLocationMarker(currentAddress: GTAddress) {
+        processGoogleMap(false) { map ->
+
+        }
     }
 
     private fun collapseDetailsBottomSheet() {
