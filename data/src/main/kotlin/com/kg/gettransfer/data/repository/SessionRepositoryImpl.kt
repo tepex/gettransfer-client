@@ -99,8 +99,8 @@ class SessionRepositoryImpl(
         return Result(account, error)
     }
 
-    override suspend fun updateOldToken(authKey: String?): Result<Unit> {
-        retrieveRemoteEntity { factory.retrieveRemoteDataStore().updateOldToken(authKey) }
+    override suspend fun authOldToken(authKey: String): Result<Unit> {
+        retrieveRemoteEntity { factory.retrieveRemoteDataStore().authOldToken(authKey) }
         return Result(Unit)
     }
 

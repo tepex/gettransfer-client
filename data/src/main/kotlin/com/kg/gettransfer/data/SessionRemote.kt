@@ -7,7 +7,7 @@ import org.koin.core.KoinComponent
 
 interface SessionRemote : KoinComponent {
 
-    suspend fun updateOldToken(authKey: String?)
+    suspend fun authOldToken(authKey: String)
 
     suspend fun getAccount(): AccountEntity?
 

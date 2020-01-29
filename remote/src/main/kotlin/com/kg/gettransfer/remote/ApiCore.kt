@@ -175,7 +175,7 @@ class ApiCore : KoinComponent {
     }
     */
 
-    internal suspend fun updateOldAccessToken(authKey: String?) =
+    internal suspend fun authOldAccessToken(authKey: String) =
         try {
             val oldToken = preferences.accessToken
             val updatedToken = if (oldToken.isNotEmpty()) oldToken  else null

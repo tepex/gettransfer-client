@@ -15,7 +15,7 @@ open class SessionDataStoreCache : SessionDataStore {
 
     private val cache: SessionCache by inject()
 
-    override suspend fun updateOldToken(authKey: String?) {
+    override suspend fun authOldToken(authKey: String) {
         throw UnsupportedOperationException()
     }
 
