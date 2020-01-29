@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GetTransfer (dev)</string>
+    <string name="app_name" translatable="false">GetTransfer (dev)</string>
 
-    <string name="file_provider_authority">com.kg.gettransfer.fileprovider</string>
+    <string name="file_provider_authority" translatable="false">com.kg.gettransfer.fileprovider</string>
 
     <string name="appmetrica_api_key" translatable="false">4de7177a-de34-42ae-9c2e-8bad5c7955eb</string>
     <string name="facebook_app_id" translatable="false">466831170587153</string>
     <string name="appsflyer_api_key" translatable="false">hJyRc3M35GUMZELe3hzds4</string>
-    <string name="sentryDsn" translatable="false">https://d864104b10b94181a03cef30a4b0033d@sentry.gtrint.org/14</string>
+    <string name="sentryDsn" translatable="false">https://24edc8f02cbf4af29970e8857ddd42ac@sentry.gtrint.org/22</string>
 </resources>
