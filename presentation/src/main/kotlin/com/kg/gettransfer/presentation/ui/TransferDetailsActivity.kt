@@ -17,13 +17,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 
 import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.model.Transfer
 
@@ -49,6 +48,7 @@ import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
+import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.TransferDetailsView
@@ -825,9 +825,11 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         Screens.showSupportScreen(supportFragmentManager, transferId)
     }
 
-    override fun moveLocationMarker(currentAddress: GTAddress) {
+    override fun moveLocationMarker(currentAddress: LatLng?) {
         processGoogleMap(false) { map ->
-
+            currentAddress?.let {
+                MapHelper.animateCameraToMarker(this, map, it, R.drawable.ic_map_label_empty)
+            }
         }
     }
 

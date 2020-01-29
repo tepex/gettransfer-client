@@ -203,7 +203,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
             when (field) {
                 FIELD_FROM -> R.drawable.ic_map_label_a
                 FIELD_TO   -> R.drawable.ic_map_label_b
-                else       -> R.drawable.point_orange
+                else       -> R.drawable.ic_map_label_empty
             }
         ))
         search_panel.setFieldMode(field == FIELD_TO)

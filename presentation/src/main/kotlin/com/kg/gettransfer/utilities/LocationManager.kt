@@ -83,8 +83,11 @@ class LocationManager(val context: Context): KoinComponent {
         val result = withContext(worker.bg) {
             orderInteractor.getAddressByLocation(isFromField, point)
         }
-        if (result.error == null && result.model.cityPoint.point != null) {
-            setPointAddress(result.model)
+        if (result.error == null) {
+            result.model.cityPoint.point?.let {
+                lastCurrentLocation = pointMapper.toLatLng(it)
+                setPointAddress(result.model)
+            }
         } else {
             setEmptyAddress()
         }

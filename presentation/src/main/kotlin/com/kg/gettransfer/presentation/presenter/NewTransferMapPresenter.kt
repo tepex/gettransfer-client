@@ -37,7 +37,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         if (sessionInteractor.isAppLanguageChanged) {
            viewState.showRestartDialog()
         }
-        initAddressListiner()
+        initAddressListener()
         initEmptyAddressListener()
     }
 
@@ -49,7 +49,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         }
     }
 
-    private fun initAddressListiner() {
+    private fun initAddressListener() {
         locationManager.addressListener = object : LocationManager.OnGetAddressListener {
             override fun onGetAddress(currentAddress: GTAddress) {
                 lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)

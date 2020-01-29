@@ -105,7 +105,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private fun initAddressListener() {
         locationManager.addressListener = object : LocationManager.OnGetAddressListener {
             override fun onGetAddress(currentAddress: GTAddress) {
-                viewState.moveLocationMarker(currentAddress)
+                viewState.moveLocationMarker(locationManager.lastCurrentLocation)
             }
         }
     }

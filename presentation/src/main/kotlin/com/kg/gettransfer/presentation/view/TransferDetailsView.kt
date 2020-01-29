@@ -4,7 +4,6 @@ import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 import com.google.android.gms.maps.model.LatLng
-import com.kg.gettransfer.domain.model.GTAddress
 
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -30,7 +29,7 @@ interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun updateCamera(latLngList: List<LatLng>)
     fun showRateAnimation()
     fun showSupportScreen(transferId: Long)
-    fun moveLocationMarker(currentAddress: GTAddress)
+    fun moveLocationMarker(currentAddress: LatLng?)
 
     companion object {
         val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"
