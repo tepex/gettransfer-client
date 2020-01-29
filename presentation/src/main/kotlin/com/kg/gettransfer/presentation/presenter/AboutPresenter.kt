@@ -23,6 +23,11 @@ class AboutPresenter : BasePresenter<AboutView>() {
     private val worker: WorkerManager by inject { parametersOf("AboutPresenter") }
     private val getPreferences: GetPreferencesInteractor by inject()
 
+    override fun onFirstViewAttach() {
+        // super.onFirstViewAttach()
+        // Session initialized in MainNavigationPresenter
+    }
+
     fun closeAbout(openMain: Boolean = false) {
         if (openMain) viewState.openMain() else viewState.navigateUp()
     }
