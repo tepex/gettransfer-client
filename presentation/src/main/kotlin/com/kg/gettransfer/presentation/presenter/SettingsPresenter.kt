@@ -68,7 +68,8 @@ class SettingsPresenter : BasePresenter<SettingsView>(), AccountChangedListener,
     private val clearMobileConfigsInteractor: ClearMobileConfigsInteractor by inject()
 
     override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
+        // super.onFirstViewAttach()
+        // Session initialized in MainNavigationPresenter
         sessionInteractor.addCreateTransferListener(this)
     }
 
