@@ -6,7 +6,6 @@ import com.kg.gettransfer.data.model.map
 import com.kg.gettransfer.sys.domain.Preferences
 
 data class PreferencesEntity(
-    val accessToken: String,
     val endpoint: EndpointEntity?,
     val ipApiKey: String?,
     val isFirstLaunch: Boolean,
@@ -23,7 +22,6 @@ data class PreferencesEntity(
 
     companion object {
         const val ENTITY_NAME                      = "preferences"
-        const val ACCESS_TOKEN                     = "access_token"
         const val ENDPOINT                         = "endpoint"
         const val IP_API_KEY                       = "ip_api_key"
         const val IS_FIRST_LAUNCH                  = "is_first_launch"
@@ -41,7 +39,6 @@ data class PreferencesEntity(
 
 fun PreferencesEntity.map() =
     Preferences(
-        accessToken,
         endpoint?.map(),
         ipApiKey,
         isFirstLaunch,
@@ -58,7 +55,6 @@ fun PreferencesEntity.map() =
 
 fun Preferences.map() =
     PreferencesEntity(
-        accessToken,
         endpoint?.map(),
         ipApiKey,
         isFirstLaunch,

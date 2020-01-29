@@ -15,7 +15,7 @@ interface SessionRepository {
     val tempUser: User
     var userEmail: String?
     var userPhone: String?
-    var userPassword: String
+    var userPassword: String?
     var appLanguage: String
     var isAppLanguageChanged: Boolean
 

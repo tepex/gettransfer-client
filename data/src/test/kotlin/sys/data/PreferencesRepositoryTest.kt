@@ -122,7 +122,6 @@ class PreferencesRepositoryTest : StringSpec(), KoinTest {
     companion object {
         val PREFERENCES =
             Preferences(
-                accessToken = "access token",
                 endpoint = "endpoint",
                 isFirstLaunch = false,
                 isOnboardingShowed = false,
@@ -137,7 +136,6 @@ class PreferencesRepositoryTest : StringSpec(), KoinTest {
             )
         val PREFERENCES_ENTITY =
             PreferencesEntity(
-                accessToken = "access token",
                 endpoint = "endpoint",
                 isFirstLaunch = false,
                 isOnboardingShowed = false,

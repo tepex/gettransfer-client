@@ -11,6 +11,8 @@ import com.kg.gettransfer.sys.domain.*
 import java.util.Locale
 
 import org.koin.dsl.module
+import sys.data.AccessTokenRepositoryImpl
+import sys.domain.AccessTokenRepository
 import sys.domain.CheckoutcomCredentials
 import sys.domain.GooglePayCredentials
 
@@ -72,7 +74,6 @@ val systemData = module {
 
     single {
         Preferences(
-            accessToken                   = "invalid token",
             endpoint                      = null,
             ipApiKey                      = null,
             isFirstLaunch                 = true,
@@ -117,4 +118,5 @@ val systemData = module {
     }
     single<EndpointRepository> { EndpointRepositoryImpl(get<EndpointRemoteDataSource>()) }
     single<IpApiKeyRepository> { IpApiKeyRepositoryImpl(get<IpApiRemoteDataSource>()) }
+    single<AccessTokenRepository> { AccessTokenRepositoryImpl() }
 }

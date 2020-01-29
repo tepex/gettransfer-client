@@ -5,7 +5,7 @@ interface PreferencesCache {
     var accessToken: String
     var userEmail: String?
     var userPhone: String?
-    var userPassword: String
+    var userPassword: String?
     var mapCountNewOffers: Map<Long, Int>
     var mapCountNewMessages: Map<Long, Int>
     var mapCountViewedOffers: Map<Long, Int>
@@ -14,6 +14,4 @@ interface PreferencesCache {
     var isAppLanguageChanged: Boolean
 
     fun logout()
-    fun addListener(listener: PreferencesListener)
-    fun removeListener(listener: PreferencesListener)
 }

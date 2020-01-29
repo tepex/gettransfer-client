@@ -54,7 +54,6 @@ class SetEndpointInteractorTest : StringSpec() {
 
         val PREFERENCES =
             Preferences(
-                accessToken = "access token",
                 endpoint = "key3",
                 isFirstLaunch = false,
                 isOnboardingShowed = false,

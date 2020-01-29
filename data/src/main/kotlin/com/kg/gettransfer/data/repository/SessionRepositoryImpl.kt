@@ -61,7 +61,7 @@ class SessionRepositoryImpl(
             preferencesCache.userPhone = value
         }
 
-    override var userPassword: String
+    override var userPassword: String?
         get() = preferencesCache.userPassword
         set(value) {
             preferencesCache.userPassword = value
@@ -123,7 +123,11 @@ class SessionRepositoryImpl(
                 factory.retrieveCacheDataStore().setAccount(entity)
                 account = entity.map(configsRepository.getResult().getModel())
             }
-            if (pass != null && repeatedPass != null) this.userPassword = pass
+            with(account.user.profile) {
+                userEmail = email
+                userPhone = phone
+            }
+            if (pass != null && repeatedPass != null) userPassword = pass
         }
         return Result(account, result.error?.map())
     }
@@ -148,9 +152,9 @@ class SessionRepositoryImpl(
                 account = entity.map(configsRepository.getResult().getModel())
             }
             if (!withSmsCode) {
-                this.userEmail = email
-                this.userPhone = phone
-                this.userPassword = password
+                userEmail = email
+                userPhone = phone
+                userPassword = password
             }
         }
         return Result(account, result.error?.map())
@@ -203,12 +207,12 @@ class SessionRepositoryImpl(
         }
         if (result.error == null) {
             email?.let { newEmail ->
-                this.account.user.profile.email = newEmail
-                this.userEmail = newEmail
+                account.user.profile.email = newEmail
+                userEmail = newEmail
             }
             phone?.let { newPhone ->
-                this.account.user.profile.phone = newPhone
-                this.userPhone = newPhone
+                account.user.profile.phone = newPhone
+                userPhone = newPhone
             }
         }
         return Result(result.entity != null && result.entity, result.error?.map())
