@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 
 import com.google.android.gms.maps.CameraUpdate
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -113,11 +112,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private val rateAnimation by lazy { RateTripAnimationFragment() }
 
+    private var carMarker: Marker? = null
+    private var myLocationMarker: Marker? = null
+
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
 
     override fun getPresenter(): TransferDetailsPresenter = presenter
-    private var mCarMarker: Marker? = null
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -173,7 +174,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     @CallSuper
     override fun onStop() {
-        clearMarker()
+        removeCarMarker()
         super.onStop()
     }
 
@@ -732,13 +733,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private fun initCarMarker(offer: OfferModel) {
         processGoogleMap(false) {
-            mCarMarker = addCarToMap(presenter.getMarkerIcon(offer))
+            carMarker = addCarToMap(presenter.getMarkerIcon(offer))
             presenter.initCoordinates()
         }
     }
 
     override fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean) {
-        mCarMarker?.apply {
+        carMarker?.apply {
             position = latLon
             rotation = bearing
             isVisible = show
@@ -785,8 +786,8 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         Utils.goToGooglePlay(this, getString(R.string.app_market_package), PLAY_MARKET_RATE)
     }
 
-    private fun clearMarker() {
-        mCarMarker?.remove()
+    private fun removeCarMarker() {
+        carMarker?.remove()
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
@@ -827,8 +828,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     override fun moveLocationMarker(currentAddress: LatLng?) {
         processGoogleMap(false) { map ->
-            currentAddress?.let {
-                MapHelper.animateCameraToMarker(this, map, it, R.drawable.ic_map_label_empty)
+            currentAddress?.let { address ->
+                myLocationMarker?.remove()
+                myLocationMarker = MapHelper.addMarker(this, map, address, R.drawable.ic_map_label_empty)
+                MapHelper.animateCamera(this, map, address)
             }
         }
     }

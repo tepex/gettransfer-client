@@ -14,6 +14,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.PolylineModel
@@ -113,15 +114,29 @@ object MapHelper {
     private fun createBitmapFromDrawable(context: Context, @DrawableRes drawableId: Int): Bitmap? =
         AppCompatResources.getDrawable(context, drawableId)?.toBitmap()
 
-    fun animateCameraToMarker(
+    /**
+     * Adds a marker to this map
+     *
+     * @param location where we need to add marker
+     * @param drawableId drawable resource reference to marker
+     *
+     * @return Marker that was added to the map
+     */
+    fun addMarker(
         context: Context,
         map: GoogleMap,
         location: LatLng,
         @DrawableRes drawableId: Int
-    ) {
+    ): Marker? {
+        val markerBitmap = createBitmapFromDrawable(context, drawableId)
+        return markerBitmap?.let { map.addMarker(createMarker(location, markerBitmap)) }
+    }
+
+    /**
+     * Animates the movement of the camera to the position defined in the location
+     */
+    fun animateCamera(context: Context, map: GoogleMap, location: LatLng) {
         val zoom = context.resources.getInteger(R.integer.map_min_zoom).toFloat()
-        val marker = createBitmapFromDrawable(context, drawableId)
-        marker?.let { map.addMarker(createMarker(location, marker)) }
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
     }
 }
