@@ -6,7 +6,6 @@ import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.di.ENDPOINTS
 import com.kg.gettransfer.di.IP_API_KEY
-import com.kg.gettransfer.domain.interactor.SessionInteractor
 
 import com.kg.gettransfer.sys.domain.*
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 import org.koin.core.KoinComponent
-import org.koin.core.get
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -37,7 +35,6 @@ class ConfigsManager : KoinComponent {
     private val getMobileConfigsInteractor: GetMobileConfigsInteractor by inject()
     private val setEndpoint: SetEndpointInteractor by inject()
     private val setIpApiKey: SetIpApiKeyInteractor by inject()
-    private val sessionInteractor: SessionInteractor = get()
 
     suspend fun getConfigs() = withContext(worker.bg) { getConfigsInteractor().getModel() }
 
@@ -56,8 +53,6 @@ class ConfigsManager : KoinComponent {
 
         backgroundScope.async { setEndpoint(endpoint) }.await()
         backgroundScope.async { setIpApiKey(ipApiKey) }.await()
-
-        backgroundScope.async { sessionInteractor.updateOldToken() }.await()
 
         val mobileResult  = backgroundScope.async { getMobileConfigsInteractor() }.await()
         val configsResult = backgroundScope.async { getConfigsInteractor() }.await()

@@ -153,7 +153,7 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
             return@launch
         }
         authKey?.let { key ->
-            fetchResultOnly { sessionInteractor.updateOldToken(key) }
+            fetchResultOnly { sessionInteractor.authOldToken(key) }
             fetchResultOnly { sessionInteractor.coldStart() }
             if (accountManager.isLoggedIn) {
                 openProfileSettings()

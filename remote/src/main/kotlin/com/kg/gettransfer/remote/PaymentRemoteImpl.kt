@@ -53,7 +53,7 @@ class PaymentRemoteImpl : PaymentRemote {
         url: String,
         key: String
     ): CheckoutcomTokenEntity {
-        core.initChickoutcomApi(url, key)
+        core.initCheckoutcomApi(url, key)
         val response: CheckoutcomTokenModel = core.tryTwice {
             core.checkoutcomApi.getCheckoutcomToken(tokenRequest.map())
         }

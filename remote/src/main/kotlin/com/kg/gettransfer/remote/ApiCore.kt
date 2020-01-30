@@ -103,7 +103,7 @@ class ApiCore : KoinComponent {
         ipApi = createApi(IP_API_SCHEME + IP_API_HOST_NAME)
     }
 
-    fun initChickoutcomApi(url: String, key: String) {
+    fun initCheckoutcomApi(url: String, key: String) {
         if (!::checkoutcomApi.isInitialized) {
             checkoutcomApi = createApi(url.plus("/"))
         }
@@ -175,7 +175,7 @@ class ApiCore : KoinComponent {
     }
     */
 
-    internal suspend fun updateOldAccessToken(authKey: String?) =
+    internal suspend fun authOldAccessToken(authKey: String) =
         try {
             val oldToken = preferences.accessToken
             val updatedToken = if (oldToken.isNotEmpty()) oldToken  else null
