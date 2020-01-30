@@ -18,7 +18,10 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 import pub.devrel.easypermissions.EasyPermissions
 
-class LocationManager(val context: Context): KoinComponent {
+/**
+ * Get current location through GPS or IP address
+ */
+class LocationManager(val context: Context) : KoinComponent {
 
     private val worker: WorkerManager by inject { parametersOf(LocationManager::class.simpleName) }
     private val analytics: Analytics by inject()
@@ -105,10 +108,16 @@ class LocationManager(val context: Context): KoinComponent {
         val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
+    /**
+     * Interface definition for a callback to be invoked when a location is received
+     */
     interface OnGetAddressListener {
         fun onGetAddress(currentAddress: GTAddress)
     }
 
+    /**
+     * Interface definition for a callback to be invoked when a location is empty
+     */
     interface OnGetEmptyAddressListener {
         fun onGetEmptyAddress()
     }

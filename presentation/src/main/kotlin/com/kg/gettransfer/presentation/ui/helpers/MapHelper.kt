@@ -60,8 +60,13 @@ object MapHelper {
         return false
     }
 
-    fun setPolyline(context: Context, layoutInflater: LayoutInflater, map: GoogleMap,
-                    polyline: PolylineModel, routeModel: RouteModel) {
+    fun setPolyline(
+        context: Context,
+        layoutInflater: LayoutInflater,
+        map: GoogleMap,
+        polyline: PolylineModel,
+        routeModel: RouteModel
+    ) {
 
         val aBitmap = R.drawable.ic_map_label_a
         val bBitmap = R.drawable.ic_map_label_b
@@ -85,7 +90,7 @@ object MapHelper {
     fun moveCamera(map: GoogleMap, polyline: PolylineModel) {
         try {
             polyline.track?.let { map.moveCamera(it) }
-        } catch (e: Exception) {
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
             Timber.e(e)
         }
     }
@@ -96,11 +101,10 @@ object MapHelper {
     }
 
     fun addPolyline(context: Context, map: GoogleMap, polyline: PolylineModel) =
-        polyline.line?.let {
-            it.width(10f).color(ContextCompat.getColor(context, R.color.colorPolyline))
-            map.addPolyline(it)
+        polyline.line?.let { polylineOpt ->
+            polylineOpt.width(POLYLINE_WIDTH).color(ContextCompat.getColor(context, R.color.colorPolyline))
+            map.addPolyline(polylineOpt)
         }
-
 
     fun createEndMarker(finishPoint: LatLng, bmPinB: Bitmap): MarkerOptions? =
         createMarker(finishPoint, bmPinB)
@@ -145,8 +149,10 @@ object MapHelper {
      */
     fun addShadow(context: Context, map: GoogleMap, location: LatLng): Marker? {
         return addMarker(context, map, location, R.drawable.default_position_shadow)?.apply {
-            val anchorUV = 0.5f // needs in order to the marker shadow won't overlap the upper marker
-            setAnchor(anchorUV, anchorUV)
+            setAnchor(SHADOW_ANCHOR_UV, SHADOW_ANCHOR_UV)
         }
     }
+
+    private const val POLYLINE_WIDTH = 10f
+    private const val SHADOW_ANCHOR_UV = 0.5f // needs in order to the marker shadow won't overlap the upper marker
 }
