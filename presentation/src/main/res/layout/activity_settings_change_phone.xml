@@ -18,40 +18,55 @@
         <include layout="@layout/toolbar" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.kg.gettransfer.presentation.ui.custom.InputAccountPhoneFieldView
-        android:id="@+id/phoneLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        android:inputType="phone"
-        android:paddingStart="@dimen/change_contact_screen_fields_vertical_padding"
-        android:paddingEnd="@dimen/change_contact_screen_fields_vertical_padding"
-        app:account_field_view_divider_visible="false"
-        app:account_field_view_hint="@string/LNG_ENTER_NEW_PHONE"
-        app:account_field_view_icon="@drawable/ic_phone"
-        app:layout_constraintTop_toBottomOf="@+id/appbar" />
-
-    <com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
-        android:id="@+id/activationCodeView"
+    <ScrollView
+        android:id="@+id/scrollContent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
-        app:activation_code_title="@string/LNG_PHONE_SENT_ACTIVATION_CODE"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/appbar">
 
-    <Button
-        android:id="@+id/btnChangePhone"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/general_button_height"
-        android:layout_marginStart="@dimen/change_contact_screen_btn_done_margins"
-        android:layout_marginEnd="@dimen/change_contact_screen_btn_done_margins"
-        android:layout_marginBottom="@dimen/change_contact_screen_btn_done_margins"
-        android:background="@drawable/btn_bg_rounded_green"
-        android:enabled="false"
-        android:text="@string/LNG_CHANGE_PHONE"
-        android:textColor="@color/colorWhite"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.kg.gettransfer.presentation.ui.custom.InputAccountPhoneFieldView
+                android:id="@+id/phoneLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:background="@color/colorWhite"
+                android:inputType="phone"
+                android:paddingStart="@dimen/change_contact_screen_fields_vertical_padding"
+                android:paddingEnd="@dimen/change_contact_screen_fields_vertical_padding"
+                app:account_field_view_divider_visible="false"
+                app:account_field_view_hint="@string/LNG_ENTER_NEW_PHONE"
+                app:account_field_view_icon="@drawable/ic_phone" />
+
+            <com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
+                android:id="@+id/activationCodeView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/phoneLayout"
+                android:visibility="gone"
+                app:activation_code_title="@string/LNG_PHONE_SENT_ACTIVATION_CODE" />
+
+            <Button
+                android:id="@+id/btnChangePhone"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/general_button_height"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="@dimen/change_contact_screen_btn_done_margins"
+                android:layout_marginEnd="@dimen/change_contact_screen_btn_done_margins"
+                android:layout_marginBottom="@dimen/change_contact_screen_btn_done_margins"
+                android:background="@drawable/btn_bg_rounded_green"
+                android:enabled="false"
+                android:text="@string/LNG_CHANGE_PHONE"
+                android:textColor="@color/colorWhite" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

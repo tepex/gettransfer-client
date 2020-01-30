@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.os.Bundle
+import android.view.View
 
 import androidx.annotation.CallSuper
 import androidx.core.view.isVisible
@@ -71,6 +72,8 @@ class SettingsChangePhoneActivity : BaseActivity(),
         activationCodeView.isVisible = true
         btnChangePhone.isVisible = false
         activationCodeView.setFocus()
+
+        scrollContent.post { scrollContent.fullScroll(View.FOCUS_DOWN) }
 
         activationCodeView.setTimer(resendDelay)
     }
