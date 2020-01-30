@@ -14,7 +14,16 @@ import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
 @InjectViewState
 class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
 
+    private var isCodeLayoutShowed = false
+
     var newEmail = ""
+        set(value) {
+            field = value
+            if (isCodeLayoutShowed) {
+                isCodeLayoutShowed = false
+                viewState.hideCodeLayout()
+            }
+        }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -53,6 +62,7 @@ class SettingsChangeEmailPresenter : BasePresenter<SettingsChangeEmailView>() {
         val result = fetchResultOnly { sessionInteractor.getConfirmationCode(email = newEmail) }
         if (result.error == null && result.model) {
             val smsDelay = configsManager.getMobileConfigs().smsResendDelaySec.toLongMilliseconds()
+            isCodeLayoutShowed = true
             viewState.showCodeLayout(smsDelay)
         } else {
             result.error?.let { checkEmailErrors(it) }

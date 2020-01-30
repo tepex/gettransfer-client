@@ -38,8 +38,4 @@ open class InputAccountFieldView @JvmOverloads constructor(
     fun requestInputFieldFocus() {
         fieldText.requestFocus()
     }
-
-    fun disableInputField() {
-        fieldText.isEnabled = false
-    }
 }

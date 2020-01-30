@@ -71,9 +71,15 @@ class SettingsChangePhoneActivity : BaseActivity(),
         activationCodeView.isVisible = true
         btnChangePhone.isVisible = false
         activationCodeView.setFocus()
-        phoneLayout.disableInputField()
 
         activationCodeView.setTimer(resendDelay)
+    }
+
+    override fun hideCodeLayout() {
+        activationCodeView.isVisible = false
+        btnChangePhone.isVisible = true
+
+        activationCodeView.cancelTimer()
     }
 
     override fun setWrongCodeError(details: String) {

@@ -10,7 +10,16 @@ import moxy.InjectViewState
 @InjectViewState
 class SettingsChangePhonePresenter : BasePresenter<SettingsChangePhoneView>() {
 
+    private var isCodeLayoutShowed = false
+
     var newPhone = ""
+        set(value) {
+            field = value
+            if (isCodeLayoutShowed) {
+                isCodeLayoutShowed = false
+                viewState.hideCodeLayout()
+            }
+        }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -49,6 +58,7 @@ class SettingsChangePhonePresenter : BasePresenter<SettingsChangePhoneView>() {
         val result = fetchResultOnly { sessionInteractor.getConfirmationCode(phone = newPhone) }
         if (result.error == null && result.model) {
             val resendDelay = configsManager.getMobileConfigs().smsResendDelaySec.toLongMilliseconds()
+            isCodeLayoutShowed = true
             viewState.showCodeLayout(resendDelay)
         } else {
             result.error?.let { checkPhoneErrors(it) }

@@ -7,5 +7,6 @@ import moxy.viewstate.strategy.StateStrategyType
 interface SettingsChangePhoneView : BaseView {
     fun setToolbar(phone: String?)
     fun showCodeLayout(resendDelay: Long)
+    fun hideCodeLayout()
     fun setWrongCodeError(details: String)
 }

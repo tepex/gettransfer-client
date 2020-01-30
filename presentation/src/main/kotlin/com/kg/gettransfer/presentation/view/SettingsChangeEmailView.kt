@@ -7,5 +7,6 @@ import moxy.viewstate.strategy.StateStrategyType
 interface SettingsChangeEmailView : BaseView {
     fun setToolbar(email: String?)
     fun showCodeLayout(resendDelay: Long)
+    fun hideCodeLayout()
     fun setWrongCodeError(details: String)
 }

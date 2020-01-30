@@ -64,9 +64,15 @@ class SettingsChangeEmailActivity : BaseActivity(),
         activationCodeView.isVisible = true
         btnChangeEmail.isVisible = false
         activationCodeView.setFocus()
-        emailLayout.disableInputField()
 
         activationCodeView.setTimer(resendDelay)
+    }
+
+    override fun hideCodeLayout() {
+        activationCodeView.isVisible = false
+        btnChangeEmail.isVisible = true
+
+        activationCodeView.cancelTimer()
     }
 
     override fun setWrongCodeError(details: String) {
