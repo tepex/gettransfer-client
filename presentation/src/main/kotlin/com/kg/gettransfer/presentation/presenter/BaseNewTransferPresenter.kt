@@ -71,8 +71,7 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
 
     override fun onDestroy() {
         worker.cancel()
-        locationManager.addressListener = null
-        locationManager.emptyAddressListener = null
+        locationManager.removeAddressListeners()
         super.onDestroy()
     }
 

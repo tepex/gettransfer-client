@@ -104,6 +104,11 @@ class LocationManager(val context: Context) : KoinComponent {
 
     private fun isGpsEnabled() = EasyPermissions.hasPermissions(context, *PERMISSIONS)
 
+    fun removeAddressListeners() {
+        if (addressListener != null) addressListener = null
+        if (emptyAddressListener != null) emptyAddressListener = null
+    }
+
     companion object {
         val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     }

@@ -182,6 +182,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         worker.cancel()
         reviewInteractor.releaseReviewData()
         coordinateInteractor.removeCoordinateListener(this)
+        locationManager.removeAddressListeners()
         super.onDestroy()
     }
 
