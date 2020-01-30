@@ -34,13 +34,13 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
                 setSelectedField(FIELD_FROM)
             }
         }
-        initAddressListiner()
-        initEmptyAddressListiner()
+        initAddressListener()
+        initEmptyAddressListener()
         // TODO Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
     }
 
-    private fun initEmptyAddressListiner() {
+    private fun initEmptyAddressListener() {
         locationManager.emptyAddressListener = object : LocationManager.OnGetEmptyAddressListener {
             override fun onGetEmptyAddress() {
                 setAddressInSelectedField(null)
@@ -48,7 +48,7 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         }
     }
 
-    private fun initAddressListiner() {
+    private fun initAddressListener() {
         locationManager.addressListener = object : LocationManager.OnGetAddressListener {
             override fun onGetAddress(currentAddress: GTAddress) {
                 setAddressInSelectedField(currentAddress.cityPoint.name)

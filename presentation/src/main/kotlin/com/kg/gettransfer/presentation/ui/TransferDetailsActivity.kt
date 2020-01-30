@@ -827,7 +827,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         Screens.showSupportScreen(supportFragmentManager, transferId)
     }
 
-    override fun moveLocationMarker(currentAddress: LatLng?) {
+    override fun moveToLocationMarker(currentAddress: LatLng?) {
         processGoogleMap(false) { map ->
             currentAddress?.let { address ->
                 myLocationMarker?.remove()

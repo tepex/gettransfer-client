@@ -51,9 +51,6 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
         locationManager.getCurrentLocation(isFromField)
     }
 
-    private fun showBtnMyLocation(point: LatLng) =
-        locationManager.lastCurrentLocation == null || point != locationManager.lastCurrentLocation
-
     fun navigateToFindAddress(isClickTo: Boolean = false) {
         viewState.goToSearchAddress(isClickTo)
     }
