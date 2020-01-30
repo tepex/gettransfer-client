@@ -114,6 +114,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private var carMarker: Marker? = null
     private var myLocationMarker: Marker? = null
+    private var shadowMarker: Marker? = null
 
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
@@ -830,8 +831,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         processGoogleMap(false) { map ->
             currentAddress?.let { address ->
                 myLocationMarker?.remove()
+                shadowMarker?.remove()
                 myLocationMarker = MapHelper.addMarker(this, map, address, R.drawable.ic_map_label_empty)
                 MapHelper.animateCamera(this, map, address)
+                shadowMarker = MapHelper.addShadow(this, map, address)
             }
         }
     }

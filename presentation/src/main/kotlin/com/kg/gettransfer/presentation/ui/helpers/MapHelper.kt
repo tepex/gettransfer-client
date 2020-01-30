@@ -139,4 +139,14 @@ object MapHelper {
         val zoom = context.resources.getInteger(R.integer.map_min_zoom).toFloat()
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
     }
+
+    /**
+     * Adds shadow(marker)
+     */
+    fun addShadow(context: Context, map: GoogleMap, location: LatLng): Marker? {
+        return addMarker(context, map, location, R.drawable.default_position_shadow)?.apply {
+            val anchorUV = 0.5f // needs in order to the marker shadow won't overlap the upper marker
+            setAnchor(anchorUV, anchorUV)
+        }
+    }
 }
