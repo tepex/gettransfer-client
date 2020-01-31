@@ -404,12 +404,10 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     }
 
     fun getCurrentLocation() {
-        locationManager.getCurrentLocation(true)
+        locationManager.getCurrentLocation(null, true)
     }
 
-    fun checkLocationPermission(activity: Activity) {
-        locationManager.checkPermission(activity)
-    }
+    fun checkLocationPermission(activity: Activity) = locationManager.checkPermission(activity)
 
     companion object {
         const val FIELD_EMAIL = "field_email"

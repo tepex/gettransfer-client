@@ -39,19 +39,19 @@ class LocationManager(val context: Context) : KoinComponent {
 
     var lastCurrentLocation: LatLng? = null
 
-    fun getCurrentLocation(isFromField: Boolean) {
+    fun getCurrentLocation(isFromField: Boolean?, useOnlyGps: Boolean = false) {
         worker.main.launch {
             withContext(worker.bg) {
                 if (geoInteractor.isGpsEnabled && isGpsEnabled()) {
                     getLocationFromGPS(isFromField)
                 } else {
-                    getLocationFromIpApi(isFromField)
+                    if (!useOnlyGps) getLocationFromIpApi(isFromField)
                 }
             }
         }
     }
 
-    private suspend fun getLocationFromGPS(isFromField: Boolean) {
+    private suspend fun getLocationFromGPS(isFromField: Boolean?) {
         val locationResult = geoInteractor.getCurrentLocation()
         val currentLocation = locationResult.isSuccess()
         if (currentLocation != null && !locationResult.isGeoError()) {
@@ -75,7 +75,7 @@ class LocationManager(val context: Context) : KoinComponent {
         addressListener?.onGetAddress(currentAddress)
     }
 
-    private suspend fun getLocationFromIpApi(isFromField: Boolean) {
+    private suspend fun getLocationFromIpApi(isFromField: Boolean?) {
         val result = geoInteractor.getMyLocationByIp()
         logAddressByIpRequest()
         if (result.error == null && result.model.latitude != 0.0 && result.model.longitude != 0.0) {
@@ -85,7 +85,7 @@ class LocationManager(val context: Context) : KoinComponent {
         }
     }
 
-    private suspend fun setLocation(isFromField: Boolean, point: Point) = worker.main.launch {
+    private suspend fun setLocation(isFromField: Boolean?, point: Point) = worker.main.launch {
         val result = withContext(worker.bg) {
             orderInteractor.getAddressByLocation(isFromField, point)
         }
@@ -112,24 +112,28 @@ class LocationManager(val context: Context) : KoinComponent {
         emptyAddressListener?.let { emptyAddressListener == null }
     }
 
-    fun checkPermission(activity: Activity) {
-        if (!EasyPermissions.hasPermissions(context, *PERMISSIONS)) {
+    fun checkPermission(activity: Activity): Boolean {
+        val hasPermission = EasyPermissions.hasPermissions(context, *PERMISSIONS)
+        if (!hasPermission) {
             EasyPermissions.requestPermissions(
                 activity,
                 context.getString(R.string.LNG_LOCATION_ACCESS),
                 RC_LOCATION, *PERMISSIONS
             )
         }
+        return hasPermission
     }
 
-    fun checkPermission(fragment: Fragment) {
-        if (!EasyPermissions.hasPermissions(context, *PERMISSIONS)) {
+    fun checkPermission(fragment: Fragment): Boolean {
+        val hasPermission = EasyPermissions.hasPermissions(context, *PERMISSIONS)
+        if (!hasPermission) {
             EasyPermissions.requestPermissions(
                 fragment,
                 context.getString(R.string.LNG_LOCATION_ACCESS),
                 RC_LOCATION, *PERMISSIONS
             )
         }
+        return hasPermission
     }
 
     companion object {

@@ -225,8 +225,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         btnBack.setOnClickListener { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
         btnLocation.setOnClickListener {
-            presenter.checkLocationPermission(this)
-            presenter.getCurrentLocation()
+            if (presenter.checkLocationPermission(this)) {
+                presenter.getCurrentLocation()
+            }
         }
         tripRate.setOnRatingBarChangeListener { _, rating, _ -> presenter.rateTrip(rating, true) }
         topCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }

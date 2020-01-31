@@ -64,11 +64,11 @@ class OrderInteractor(
         clearSelectedFields()
     }
 
-    suspend fun getAddressByLocation(isFrom: Boolean, point: Point): Result<GTAddress> {
+    suspend fun getAddressByLocation(isFrom: Boolean?, point: Point): Result<GTAddress> {
         val gtAddress = geoRepository.getAddressByLocation(point, sessionRepository.account.locale.language)
 
         if (gtAddress.error != null) return gtAddress
-        if (isFrom) from = gtAddress.model else to = gtAddress.model
+        isFrom?.let { if (it) from = gtAddress.model else to = gtAddress.model }
         return gtAddress
     }
 
