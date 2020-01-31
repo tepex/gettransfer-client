@@ -188,16 +188,6 @@ class ApiCore : KoinComponent {
         val response: ResponseModel<TokenModel> = api.accessToken(token, authKey)
         @Suppress("UnsafeCallOnNullableType")
         preferences.accessToken = response.data!!.token
-
-        if (authKey == null) loginOldUser()
-    }
-
-    private suspend fun loginOldUser() {
-        preferences.userPassword?.let { password ->
-            val email = preferences.userEmail
-            val phone = preferences.userPhone
-            if (email != null || phone != null) api.login(email, phone, password)
-        }
     }
 
     internal fun remoteException(e: Exception): RemoteException = when (e) {

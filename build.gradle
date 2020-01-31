@@ -134,7 +134,6 @@ detekt {
         "cache/src",
         "data/src",
         "domain/src",
-        "encrypt/src",
         "geo/src",
         "logging/src",
         "prefs/src",

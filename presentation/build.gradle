@@ -236,7 +236,6 @@ dependencies {
     implementation project(":prefs")
     implementation project(":remote")
     implementation project(":cache")
-    implementation project(":encrypt")
     implementation libs.kotlin
     implementation libs.coroutines
     implementation libs.serialization

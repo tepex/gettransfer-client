@@ -17,11 +17,8 @@ import com.kg.gettransfer.data.PreferencesCache
 import com.kg.gettransfer.domain.CoroutineContexts
 import com.kg.gettransfer.domain.interactor.*
 
-import com.kg.gettransfer.prefs.EncryptPass
-
 import com.kg.gettransfer.prefs.PreferencesImpl
 
-import com.kg.gettransfer.encrypt.EncryptPassImpl
 import com.kg.gettransfer.geo.LocationImpl
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.DateTimeDelegate
@@ -83,10 +80,6 @@ val geoModule = module {
     single<Location> { LocationImpl(androidContext()) }
 }
 
-val encryptModule = module {
-    single<EncryptPass> { EncryptPassImpl() }
-}
-
 val prefsModule = module {
     single<PreferencesCache> {
         /*
@@ -113,7 +106,7 @@ val prefsModule = module {
         var defaultEndpointName = prodEndpointName
         if (BuildConfig.FLAVOR == "dev") defaultEndpointName = demoEndpointName
 */
-        PreferencesImpl(androidContext(), get<Endpoint>().url, get())
+        PreferencesImpl(androidContext(), get<Endpoint>().url)
     }
 }
 

@@ -10,15 +10,11 @@ import com.kg.gettransfer.domain.model.Account
 @Suppress("WildcardImport")
 class PreferencesImpl(
     context: Context,
-    private val defaultUrl: String,
-    private val encryptPass: EncryptPass
+    private val defaultUrl: String
 ) : PreferencesCache {
 
     private val configsPrefs  = context.getSharedPreferences("configs", Context.MODE_PRIVATE)
     private var _accessToken: String? = null
-    private var _userEmail: String? = null
-    private var _userPhone: String? = null
-    private var _userPassword: String? = null
 
     private var _endpointUrl: String? = null
 
@@ -50,55 +46,6 @@ class PreferencesImpl(
         set(value) {
             _accessToken = value
             configsPrefs.edit().putString(ACCESS_TOKEN, value).apply()
-        }
-
-    override var userEmail: String?
-        get() {
-            if (_userEmail.isNullOrEmpty()) {
-                val prefsEmail = configsPrefs.getString(USER_EMAIL, EMPTY)
-                _userEmail = if (!prefsEmail.isNullOrEmpty()) prefsEmail else null
-            }
-            return _userEmail
-        }
-        set(value) {
-            _userEmail = value
-            with(configsPrefs.edit()) {
-                value?.let { putString(USER_EMAIL, it) } ?: remove(USER_EMAIL)
-                apply()
-            }
-        }
-
-    override var userPhone: String?
-        get() {
-            if (_userPhone.isNullOrEmpty()) {
-                val prefsPhone = configsPrefs.getString(USER_PHONE, EMPTY)
-                _userPhone = if (!prefsPhone.isNullOrEmpty()) prefsPhone else null
-            }
-            return _userPhone
-        }
-        set(value) {
-            _userPhone = value
-            with(configsPrefs.edit()) {
-                value?.let { putString(USER_PHONE, it) } ?: remove(USER_PHONE)
-                apply()
-            }
-        }
-
-    override var userPassword: String?
-        get() {
-            if (_userPassword.isNullOrEmpty()) {
-                val prefsPass = configsPrefs.getString(USER_PASSWORD, EMPTY)
-                _userPassword = if (!prefsPass.isNullOrEmpty()) prefsPass else null
-            }
-            return _userPassword?.let { encryptPass.decrypt(it) }
-        }
-        set(value) {
-            with(configsPrefs.edit()) {
-                val encryptedPass = value?.let { encryptPass.encrypt(it) }
-                _userPassword = encryptedPass
-                encryptedPass?.let { putString(USER_PASSWORD, it) } ?: remove(USER_PASSWORD)
-                apply()
-            }
         }
 
     override var mapCountNewOffers: Map<Long, Int>
@@ -151,23 +98,14 @@ class PreferencesImpl(
 
     override fun logout() {
         _accessToken  = null
-        _userEmail    = null
-        _userPhone    = null
-        _userPassword = null
         with(configsPrefs.edit()) {
             remove(ACCESS_TOKEN)
-            remove(USER_EMAIL)
-            remove(USER_PHONE)
-            remove(USER_PASSWORD)
             apply()
         }
     }
 
     companion object {
         const val ACCESS_TOKEN        = "token"
-        const val USER_EMAIL          = "user_email"
-        const val USER_PHONE          = "user_phone"
-        const val USER_PASSWORD       = "user_password"
         const val ENDPOINT_URL        = "endpoint"
         const val APP_LANGUAGE        = "app_language"
         const val APP_LANGUAGE_CHANGED = "app_language_changed"
