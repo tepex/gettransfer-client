@@ -1,8 +1,11 @@
 package com.kg.gettransfer.utilities
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.model.LatLng
+import com.kg.gettransfer.R
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
@@ -105,12 +108,33 @@ class LocationManager(val context: Context) : KoinComponent {
     private fun isGpsEnabled() = EasyPermissions.hasPermissions(context, *PERMISSIONS)
 
     fun removeAddressListeners() {
-        if (addressListener != null) addressListener = null
-        if (emptyAddressListener != null) emptyAddressListener = null
+        addressListener?.let { addressListener == null }
+        emptyAddressListener?.let { emptyAddressListener == null }
+    }
+
+    fun checkPermission(activity: Activity) {
+        if (!EasyPermissions.hasPermissions(context, *PERMISSIONS)) {
+            EasyPermissions.requestPermissions(
+                activity,
+                context.getString(R.string.LNG_LOCATION_ACCESS),
+                RC_LOCATION, *PERMISSIONS
+            )
+        }
+    }
+
+    fun checkPermission(fragment: Fragment) {
+        if (!EasyPermissions.hasPermissions(context, *PERMISSIONS)) {
+            EasyPermissions.requestPermissions(
+                fragment,
+                context.getString(R.string.LNG_LOCATION_ACCESS),
+                RC_LOCATION, *PERMISSIONS
+            )
+        }
     }
 
     companion object {
         val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        const val RC_LOCATION = 2222
     }
 
     /**

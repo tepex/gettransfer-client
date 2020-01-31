@@ -51,6 +51,7 @@ import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.TransferDetailsView
+import com.kg.gettransfer.utilities.LocationManager
 
 import java.util.Date
 
@@ -223,7 +224,10 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private fun setClickListeners() {
         btnBack.setOnClickListener { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
-        btnLocation.setOnClickListener { presenter.onLocationClick() }
+        btnLocation.setOnClickListener {
+            presenter.checkLocationPermission(this)
+            presenter.getCurrentLocation()
+        }
         tripRate.setOnRatingBarChangeListener { _, rating, _ -> presenter.rateTrip(rating, true) }
         topCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         bottomCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
@@ -792,15 +796,25 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+        onPermissionsDenied(requestCode)
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        presenter.onDownloadVoucherClick()
+        when(requestCode) {
+            RC_WRITE_FILE -> presenter.onDownloadVoucherClick()
+            LocationManager.RC_LOCATION -> presenter.getCurrentLocation()
+        }
     }
 
     override fun onRationaleDenied(requestCode: Int) {
-        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+        onPermissionsDenied(requestCode)
+    }
+
+    private fun onPermissionsDenied(requestCode: Int) {
+        when (requestCode) {
+            RC_WRITE_FILE -> longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+            LocationManager.RC_LOCATION -> longToast(getString(R.string.LNG_LOCATION_ACCESS))
+        }
     }
 
     override fun onRationaleAccepted(requestCode: Int) {}

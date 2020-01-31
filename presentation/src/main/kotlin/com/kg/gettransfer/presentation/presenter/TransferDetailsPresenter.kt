@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.app.Activity
 import android.os.Handler
 
 import moxy.InjectViewState
@@ -402,8 +403,12 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         viewState.showSupportScreen(transferId)
     }
 
-    fun onLocationClick() {
+    fun getCurrentLocation() {
         locationManager.getCurrentLocation(true)
+    }
+
+    fun checkLocationPermission(activity: Activity) {
+        locationManager.checkPermission(activity)
     }
 
     companion object {

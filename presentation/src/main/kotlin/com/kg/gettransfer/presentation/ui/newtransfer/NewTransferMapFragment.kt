@@ -121,17 +121,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     }
 
     private fun checkPermission() {
-        if (!EasyPermissions.hasPermissions(requireContext(), *PERMISSIONS)) {
-            EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.LNG_LOCATION_ACCESS),
-                PERMISSION_REQUEST, *PERMISSIONS
-            )
-        }
-    }
-
-    override fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit) {
-        block(EasyPermissions.hasPermissions(requireContext(), *PERMISSIONS))
+        presenter.checkPermission(this)
     }
 
     @CallSuper
@@ -253,11 +243,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     }
 
     companion object {
-        @JvmField
-        val PERMISSIONS =
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        const val PERMISSION_REQUEST = 2211
-
         const val MAX_INIT_ZOOM = 2.0f
         const val MAGIC_DURATION = 150L
         const val MARKER_ELEVATION = 5f

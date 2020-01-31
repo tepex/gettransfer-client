@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import androidx.fragment.app.Fragment
 import moxy.InjectViewState
 
 import com.google.android.gms.maps.model.LatLng
@@ -184,5 +185,9 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
     fun onOkClickResetDialog() {
         sessionInteractor.isAppLanguageChanged = false
         viewState.restartApp()
+    }
+
+    fun checkPermission(fragment: Fragment) {
+        locationManager.checkPermission(fragment)
     }
 }
