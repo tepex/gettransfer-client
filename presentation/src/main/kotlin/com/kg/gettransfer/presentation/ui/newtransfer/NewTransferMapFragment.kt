@@ -83,7 +83,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         }
         btnNext.setThrottledClickListener { presenter.onNextClick() }
         btnBack.setOnClickListener { navigateBack() }
-        btnMyLocation.setOnClickListener {
+        btnMyLocation.setThrottledClickListener {
             checkPermission()
             presenter.updateLocation()
         }

@@ -42,7 +42,7 @@ class LocationManager(val context: Context) : KoinComponent {
     fun getCurrentLocation(isFromField: Boolean?, useOnlyGps: Boolean = false) {
         worker.main.launch {
             withContext(worker.bg) {
-                if (geoInteractor.isGpsEnabled && isGpsEnabled()) {
+                if (geoInteractor.isGpsEnabled && hasPermission()) {
                     getLocationFromGPS(isFromField)
                 } else {
                     if (!useOnlyGps) getLocationFromIpApi(isFromField)
@@ -105,7 +105,7 @@ class LocationManager(val context: Context) : KoinComponent {
 
     private fun logAddressByIpRequest() = analytics.logSingleEvent(Analytics.EVENT_IPAPI_REQUEST)
 
-    private fun isGpsEnabled() = EasyPermissions.hasPermissions(context, *PERMISSIONS)
+    private fun hasPermission() = EasyPermissions.hasPermissions(context, *PERMISSIONS)
 
     fun removeAddressListeners() {
         addressListener?.let { addressListener == null }

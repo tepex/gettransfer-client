@@ -26,6 +26,7 @@ import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.extensions.isNonZero
+import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
@@ -224,7 +225,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     private fun setClickListeners() {
         btnBack.setOnClickListener { presenter.onBackCommandClick() }
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
-        btnLocation.setOnClickListener {
+        btnLocation.setThrottledClickListener {
             if (presenter.checkLocationPermission(this)) {
                 presenter.getCurrentLocation()
             }

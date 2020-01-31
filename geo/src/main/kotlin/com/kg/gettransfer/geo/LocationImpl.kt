@@ -11,6 +11,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 
 import com.kg.gettransfer.data.Location
 import com.kg.gettransfer.data.LocationException
@@ -58,6 +59,10 @@ class LocationImpl(private val context: Context) :
             interval = LOCATION_UPDATE_INTERVAL
             fastestInterval = LOCATION_UPDATE_FAST_INTERVAL
         }
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+        val client = LocationServices.getSettingsClient(context)
+        val task = client.checkLocationSettings(builder.build())
         locationProviderClient.requestLocationUpdates(locationRequest, LocationCallback(), null)
     }
 
