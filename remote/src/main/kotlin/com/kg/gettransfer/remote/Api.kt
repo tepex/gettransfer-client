@@ -15,7 +15,6 @@ interface Api {
 
         const val API_ACCESS_TOKEN = "/api/access_token"
         const val API_ACCOUNT = "/api/account"
-        const val API_LOGIN = "/api/login"
         const val API_VERIFICATION_CODE = "/api/account/request_verification_code"
         const val API_CONFIRMATION_CODE = "/api/account/request_confirmation_code"
         const val API_CHANGE_CONTACT = "/api/account/change_contact"
