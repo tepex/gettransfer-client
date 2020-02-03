@@ -15,7 +15,9 @@ import com.google.android.gms.location.LocationSettingsRequest
 
 import com.kg.gettransfer.data.Location
 import com.kg.gettransfer.data.LocationException
+import com.kg.gettransfer.data.model.GTLocationSettingsResponse
 import com.kg.gettransfer.data.model.LocationEntity
+import kotlinx.coroutines.tasks.asDeferred
 
 import java.util.Locale
 
@@ -31,6 +33,7 @@ class LocationImpl(private val context: Context) :
     private lateinit var geocoder: Geocoder
     private val locationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     private var googleApiClient: GoogleApiClient? = null
+    private lateinit var locationRequest: LocationRequest
 
     override val isGpsEnabled: Boolean
         @Suppress("UnsafeCast")
@@ -54,20 +57,22 @@ class LocationImpl(private val context: Context) :
     }
 
     private fun setLocationUpdates() {
-        val locationRequest = LocationRequest().apply {
+        locationRequest = LocationRequest().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             interval = LOCATION_UPDATE_INTERVAL
             fastestInterval = LOCATION_UPDATE_FAST_INTERVAL
         }
-        val builder = LocationSettingsRequest.Builder()
-            .addLocationRequest(locationRequest)
-        val client = LocationServices.getSettingsClient(context)
-        val task = client.checkLocationSettings(builder.build())
         locationProviderClient.requestLocationUpdates(locationRequest, LocationCallback(), null)
     }
 
     private fun removeLocationUpdates() {
         locationProviderClient.removeLocationUpdates(LocationCallback())
+    }
+
+    override suspend fun checkDeviceLocationSettings(resolve: Boolean): GTLocationSettingsResponse {
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val settingsClient = LocationServices.getSettingsClient(context)
+        settingsClient.checkLocationSettings(builder.build()).asDeferred()
     }
 
     override fun disconnectGoogleApiClient() {

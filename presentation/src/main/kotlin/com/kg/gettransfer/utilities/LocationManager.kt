@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import androidx.fragment.app.Fragment
+import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
 import com.kg.gettransfer.core.presentation.WorkerManager
@@ -134,6 +135,14 @@ class LocationManager(val context: Context) : KoinComponent {
             )
         }
         return hasPermission
+    }
+
+    private fun checkDeviceSettingLocation(
+        activity: Activity,
+        builder: LocationSettingsRequest.Builder,
+        resolve: Boolean = true
+    ) {
+
     }
 
     companion object {
