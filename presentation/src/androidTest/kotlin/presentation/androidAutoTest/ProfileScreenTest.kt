@@ -19,16 +19,16 @@ import com.kg.gettransfer.presentation.screenelements.NavBar
 import com.kg.gettransfer.presentation.screenelements.Onboarding
 import com.kg.gettransfer.presentation.screenelements.ProfileScreen
 import com.kg.gettransfer.presentation.screenelements.SettingsScreen
-import org.junit.Ignore
 
 import presentation.androidAutoTest.NetworkRequests
 
 @Suppress("LongMethod")
-class ProfileScreenTest : TestCase(Kaspresso.Builder.default().apply {
-     flakySafetyParams.apply {
-        timeoutMs = Constants.big
-    }
-})  {
+class ProfileScreenTest : TestCase(
+    Kaspresso.Builder.default().apply {
+        flakySafetyParams.apply {
+            timeoutMs = Constants.big
+        }
+    }) {
 
     @Rule
     @JvmField
