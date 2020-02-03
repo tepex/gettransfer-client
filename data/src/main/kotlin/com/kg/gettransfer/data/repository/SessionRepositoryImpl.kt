@@ -148,7 +148,7 @@ class SessionRepositoryImpl(
                 account = entity.map(configsRepository.getResult().getModel())
             }
             if (!withSmsCode) {
-                when(contact) {
+                when (contact) {
                     is Contact.EmailContact -> {
                         userEmail = contact.email
                         userPhone = null
@@ -210,7 +210,7 @@ class SessionRepositoryImpl(
             factory.retrieveRemoteDataStore().changeContact(contact.map(), code)
         }
         if (result.error == null) {
-            when(contact) {
+            when (contact) {
                 is Contact.EmailContact -> {
                     account.user.profile.email = contact.email
                     userEmail = contact.email

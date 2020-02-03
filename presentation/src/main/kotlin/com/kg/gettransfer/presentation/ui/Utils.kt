@@ -320,6 +320,7 @@ object Utils : KoinComponent {
     private fun getCarColorTextBackFormRes(context: Context, color: String) =
         getCarColorTextBackDrawable(context, getCarColorResId(color))
 
+    @Suppress("MagicNumber")
     private fun getCarColorTextBackDrawable(context: Context, colorId: Int): GradientDrawable {
         val radius = 24.0f
         return GradientDrawable().apply {
@@ -337,6 +338,7 @@ object Utils : KoinComponent {
 
     fun getCarColorFormRes(context: Context, color: String) = getCarColorDrawable(context, getCarColorResId(color))
 
+    @Suppress("MagicNumber")
     private fun getCarColorDrawable(context: Context, colorId: Int): GradientDrawable {
         val radius = 5.0f
         return GradientDrawable().apply {

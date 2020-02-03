@@ -22,13 +22,15 @@ open class SessionDataStoreRemote : SessionDataStore {
 
     override suspend fun setAccount(accountEntity: AccountEntity) = remote.setAccount(accountEntity)
 
-    override suspend fun login(contactEntity: ContactEntity<String>, password: String) = remote.login(contactEntity, password)
+    override suspend fun login(contactEntity: ContactEntity<String>, password: String) =
+        remote.login(contactEntity, password)
 
     override suspend fun signOut() = remote.signOut()
 
     override suspend fun register(account: RegistrationAccountEntity) = remote.register(account)
 
-    override suspend fun getVerificationCode(contactEntity: ContactEntity<String>) = remote.getVerificationCode(contactEntity)
+    override suspend fun getVerificationCode(contactEntity: ContactEntity<String>) =
+        remote.getVerificationCode(contactEntity)
 
     override suspend fun clearAccount() {
         throw UnsupportedOperationException()

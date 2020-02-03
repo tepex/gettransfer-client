@@ -38,7 +38,7 @@ class SessionRemoteImpl : SessionRemote {
 
     override suspend fun login(contactEntity: ContactEntity<String>, password: String): AccountEntity {
         val response: ResponseModel<AccountModelWrapper> = core.tryTwice {
-            when(contactEntity) {
+            when (contactEntity) {
                 is EmailContactEntity -> core.api.login(email = contactEntity.email, password = password)
                 is PhoneContactEntity -> core.api.login(phone = contactEntity.phone, password = password)
             }
@@ -62,7 +62,7 @@ class SessionRemoteImpl : SessionRemote {
 
     override suspend fun getVerificationCode(contactEntity: ContactEntity<String>): Boolean {
         val response: ResponseModel<String?> = core.tryTwice {
-            when(contactEntity) {
+            when (contactEntity) {
                 is EmailContactEntity -> core.api.getVerificationCode(email = contactEntity.email)
                 is PhoneContactEntity -> core.api.getVerificationCode(phone = contactEntity.phone)
             }
@@ -72,7 +72,7 @@ class SessionRemoteImpl : SessionRemote {
 
     override suspend fun getConfirmationCode(contactEntity: ContactEntity<String>): Boolean {
         val response: ResponseModel<String?> = core.tryTwice {
-            when(contactEntity) {
+            when (contactEntity) {
                 is EmailContactEntity -> core.api.getConfirmationCode(email = contactEntity.email)
                 is PhoneContactEntity -> core.api.getConfirmationCode(phone = contactEntity.phone)
             }
@@ -82,7 +82,7 @@ class SessionRemoteImpl : SessionRemote {
 
     override suspend fun changeContact(contactEntity: ContactEntity<String>, code: String): Boolean {
         val response: ResponseModel<String?> = core.tryTwice {
-            when(contactEntity) {
+            when (contactEntity) {
                 is EmailContactEntity -> core.api.changeContact(email = contactEntity.email, code = code)
                 is PhoneContactEntity -> core.api.changeContact(phone = contactEntity.phone, code = code)
             }

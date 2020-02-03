@@ -39,14 +39,12 @@ class SettingsChangeContactPresenter(
 
     fun onChangeContactClicked() {
         utils.launchSuspend {
-            with(accountManager.remoteProfile) {
-                if (isChangingEmail && !email.isNullOrEmpty() ||
-                    !isChangingEmail && !phone.isNullOrEmpty()) {
-                    sendCode()
-                } else {
-                    changeContact(null)
-                }
+            val profile = accountManager.remoteProfile
+            val changingWithCode = when (isChangingEmail) {
+                true  -> !profile.email.isNullOrEmpty()
+                false -> !profile.phone.isNullOrEmpty()
             }
+            if (changingWithCode) sendCode() else changeContact(null)
         }
     }
 
@@ -114,9 +112,9 @@ class SettingsChangeContactPresenter(
             true
         }
 
-    private fun checkErrors(e: ApiException) =
-        showError(e, if (isChangingEmail) checkEmailErrors(e) else checkPhoneErrors(e) )
-
+    private fun checkErrors(e: ApiException) {
+        showError(e, if (isChangingEmail) checkEmailErrors(e) else checkPhoneErrors(e))
+    }
 
     private fun checkEmailErrors(e: ApiException) =
         when {

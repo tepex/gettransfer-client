@@ -52,7 +52,7 @@ class SystemApiWrapper : KoinComponent {
 
             try {
                 chain.proceed(builder.build())
-            } catch (e: Exception) {
+            } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
                 log.error("Maybe DNS Exception", e)
                 throw IOException(e)
             }
