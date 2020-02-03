@@ -1,6 +1,7 @@
 package com.kg.gettransfer.presentation.presenter
 
 import android.os.CountDownTimer
+import com.kg.gettransfer.domain.model.Contact
 
 import moxy.InjectViewState
 
@@ -51,11 +52,12 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
+            val contact = when (isPhone) {
+                true -> Contact.PhoneContact(params.emailOrPhone)
+                false -> Contact.EmailContact(params.emailOrPhone)
+            }
             fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when (isPhone) {
-                    true -> accountManager.login(null, params.emailOrPhone, pinCode, true)
-                    false -> accountManager.login(params.emailOrPhone, null, pinCode, true)
-                }
+                accountManager.login(contact, pinCode, true)
             }.also { result ->
                 viewState.blockInterface(false)
 
@@ -77,11 +79,12 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
+            val contact = when (isPhone) {
+                true  -> Contact.PhoneContact(params.emailOrPhone)
+                false -> Contact.EmailContact(params.emailOrPhone)
+            }
             fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when (isPhone) {
-                    true -> sessionInteractor.getVerificationCode(null, params.emailOrPhone)
-                    false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
-                }
+                sessionInteractor.getVerificationCode(contact)
             }.also { result ->
                 viewState.blockInterface(false)
 
