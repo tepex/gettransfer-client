@@ -6,6 +6,7 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.User
+import com.kg.gettransfer.domain.model.Contact
 
 @Suppress("TooManyFunctions")
 interface SessionRepository {
@@ -28,8 +29,8 @@ interface SessionRepository {
     suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean>
     suspend fun logout(): Result<Account>
 
-    suspend fun getConfirmationCode(email: String?, phone: String?): Result<Boolean>
-    suspend fun changeContact(email: String?, phone: String?, code: String): Result<Boolean>
+    suspend fun getConfirmationCode(contact: Contact<String>): Result<Boolean>
+    suspend fun changeContact(contact: Contact<String>, code: String): Result<Boolean>
 
     fun addAccountChangedListener(listener: AccountChangedListener)
     fun removeAccountChangedListener(listener: AccountChangedListener)

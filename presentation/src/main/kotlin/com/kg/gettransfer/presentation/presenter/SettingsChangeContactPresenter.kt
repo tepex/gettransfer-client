@@ -3,6 +3,7 @@ package com.kg.gettransfer.presentation.presenter
 import androidx.annotation.StringRes
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.model.Contact
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.SettingsChangeContactView
 import moxy.InjectViewState
@@ -56,13 +57,7 @@ class SettingsChangeContactPresenter(
 
     private suspend fun sendCode() {
         if (!isDataValid()) return
-        val result = fetchResultOnly {
-            if (isChangingEmail) {
-                sessionInteractor.getConfirmationCode(email = newContact)
-            } else {
-                sessionInteractor.getConfirmationCode(phone = newContact)
-            }
-        }
+        val result = fetchResultOnly { sessionInteractor.getConfirmationCode(getContact()) }
         if (result.error == null && result.model) {
             val smsDelay = configsManager.getMobileConfigs().smsResendDelaySec.toLongMilliseconds()
             isCodeLayoutShowed = true
@@ -84,13 +79,7 @@ class SettingsChangeContactPresenter(
     }
 
     private suspend fun changeContactInAccount(code: String) {
-        fetchResultOnly {
-            if (isChangingEmail) {
-                sessionInteractor.changeContact(code = code, email = newContact)
-            } else {
-                sessionInteractor.changeContact(code = code, phone = newContact)
-            }
-        }.run {
+        fetchResultOnly { sessionInteractor.changeContact(getContact(), code) }.run {
             error?.let { err ->
                 if (err.code == ApiException.UNPROCESSABLE) {
                     viewState.setWrongCodeError(err.details)
@@ -151,4 +140,7 @@ class SettingsChangeContactPresenter(
     }
 
     private fun contactChanged() { router.exit() }
+
+    private fun getContact() =
+        if (isChangingEmail) Contact.EmailContact(newContact) else Contact.PhoneContact(newContact)
 }

@@ -4,6 +4,9 @@ import com.kg.gettransfer.data.SessionRemote
 
 import com.kg.gettransfer.data.model.AccountEntity
 import com.kg.gettransfer.data.model.RegistrationAccountEntity
+import com.kg.gettransfer.data.model.ContactEntity
+import com.kg.gettransfer.data.model.EmailContactEntity
+import com.kg.gettransfer.data.model.PhoneContactEntity
 
 import com.kg.gettransfer.remote.model.AccountModelWrapper
 import com.kg.gettransfer.remote.model.RegistrationAccountEntityWrapper
@@ -57,13 +60,23 @@ class SessionRemoteImpl : SessionRemote {
         return response.error == null
     }
 
-    override suspend fun getConfirmationCode(email: String?, phone: String?): Boolean {
-        val response: ResponseModel<String?> = core.tryTwice { core.api.getConfirmationCode(email, phone) }
+    override suspend fun getConfirmationCode(contactEntity: ContactEntity<String>): Boolean {
+        val response: ResponseModel<String?> = core.tryTwice {
+            when(contactEntity) {
+                is EmailContactEntity -> core.api.getConfirmationCode(email = contactEntity.email)
+                is PhoneContactEntity -> core.api.getConfirmationCode(phone = contactEntity.phone)
+            }
+        }
         return response.error == null
     }
 
-    override suspend fun changeContact(email: String?, phone: String?, code: String): Boolean {
-        val response: ResponseModel<String?> = core.tryTwice { core.api.changeContact(email, phone, code) }
+    override suspend fun changeContact(contactEntity: ContactEntity<String>, code: String): Boolean {
+        val response: ResponseModel<String?> = core.tryTwice {
+            when(contactEntity) {
+                is EmailContactEntity -> core.api.changeContact(email = contactEntity.email, code = code)
+                is PhoneContactEntity -> core.api.changeContact(phone = contactEntity.phone, code = code)
+            }
+        }
         return response.error == null
     }
 }

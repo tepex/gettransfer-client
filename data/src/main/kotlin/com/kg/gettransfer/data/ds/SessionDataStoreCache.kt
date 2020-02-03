@@ -4,6 +4,7 @@ import com.kg.gettransfer.data.SessionCache
 import com.kg.gettransfer.data.SessionDataStore
 
 import com.kg.gettransfer.data.model.AccountEntity
+import com.kg.gettransfer.data.model.ContactEntity
 import com.kg.gettransfer.data.model.RegistrationAccountEntity
 
 import org.koin.core.inject
@@ -41,11 +42,11 @@ open class SessionDataStoreCache : SessionDataStore {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun getConfirmationCode(email: String?, phone: String?): Boolean {
+    override suspend fun getConfirmationCode(contactEntity: ContactEntity<String>): Boolean {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun changeContact(email: String?, phone: String?, code: String): Boolean {
+    override suspend fun changeContact(contactEntity: ContactEntity<String>, code: String): Boolean {
         throw UnsupportedOperationException()
     }
 }
