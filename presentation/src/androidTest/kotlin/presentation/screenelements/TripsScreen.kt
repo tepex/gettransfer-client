@@ -41,7 +41,10 @@ object TripsScreen  : Screen<TripsScreen>() {
 
     class Item(parent: Matcher<View>) : KRecyclerItem<Item>(parent) {
         val distance: KTextView = KTextView(parent) { withId(R.id.tvDistance) }
-        val distanceOnTransferInfo = KTextView { withId(R.id.tv_distance) }
+        val distanceOnTransferInfo = KTextView {
+            withId(R.id.tv_value)
+            isDescendantOfA {  withId(R.id.distance_view ) }
+        }
         val content = KSwipeView { withId(R.id.transfer_details_header) }
         val btnBack = KButton {
             withId(R.id.btnBack)

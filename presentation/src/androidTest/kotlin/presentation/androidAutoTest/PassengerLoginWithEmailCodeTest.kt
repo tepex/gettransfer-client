@@ -20,9 +20,10 @@ import com.kg.gettransfer.presentation.screenelements.Onboarding
 import com.kg.gettransfer.presentation.screenelements.ProfileScreen
 import com.kg.gettransfer.presentation.screenelements.SettingsScreen
 import com.kg.gettransfer.presentation.screenelements.SmsScreen
+import org.junit.Ignore
 
 class PassengerLoginWithEmailCodeTest  : TestCase(Kaspresso.Builder.default().apply {
-    flakySafetyParams = flakySafetyParams.apply {
+    flakySafetyParams.apply {
         timeoutMs = Constants.big
     }
 })  {

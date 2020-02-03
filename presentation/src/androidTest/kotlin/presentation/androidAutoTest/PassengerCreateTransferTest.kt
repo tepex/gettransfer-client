@@ -23,6 +23,7 @@ import com.kg.gettransfer.presentation.screenelements.OrdersDetails
 import com.kg.gettransfer.presentation.screenelements.ProfileScreen
 import com.kg.gettransfer.presentation.screenelements.SearchForm
 import com.kg.gettransfer.presentation.screenelements.SettingsScreen
+import org.junit.Ignore
 
 class PassengerCreateTransferTest : TestCase() {
     @Rule

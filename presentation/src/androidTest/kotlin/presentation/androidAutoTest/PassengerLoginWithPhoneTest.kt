@@ -13,6 +13,7 @@ import com.kg.gettransfer.presentation.screenelements.NavBar
 import com.kg.gettransfer.presentation.screenelements.Onboarding
 import com.kg.gettransfer.presentation.screenelements.ProfileScreen
 import com.kg.gettransfer.presentation.screenelements.SettingsScreen
+import org.junit.Ignore
 
 class PassengerLoginWithPhoneTest : TestCase() {
     @Rule

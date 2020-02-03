@@ -8,5 +8,6 @@ import com.kg.gettransfer.R
 object ChangingEmailScreen : Screen<ChangingEmailScreen>() {
     val emailField = KEditText { withId(R.id.fieldText) }
     val changeBtn = KButton { withId(R.id.btnChangeEmail) }
-    val emailCode = KEditText { withId(R.id.emailCodeView) }
+    val doneBtn = KButton { withId(R.id.btnDone) }
+    val emailCode = KEditText { withId(R.id.codeView) }
 }

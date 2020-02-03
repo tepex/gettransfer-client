@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath "gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.4, 0.99.99]"
+        classpath 'com.karumi:shot:3.1.0'
     }
 }
 
@@ -81,10 +82,8 @@ android {
         minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
         targetSdkVersion project.ANDROID_BUILD_SDK_VERSION
         testInstrumentationRunner project.ANDROID_TEST_INSTRUMENTATION_RUNNER
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         versionName '3.0'
 
         javaCompileOptions {
@@ -435,3 +434,9 @@ def generateChangeLog() {
 
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'shot'
+
+shot {
+    appId = 'com.kg.gettransfer'
+    instrumentationTestTask = 'connectedDevDebugAndroidTest'
+}
