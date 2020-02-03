@@ -18,6 +18,7 @@ class SettingsChangeContactPresenter(
     var newContact = ""
         set(value) {
             field = value
+            viewState.setEnabledBtnChangeContact(value.isNotEmpty())
             if (isCodeLayoutShowed) {
                 isCodeLayoutShowed = false
                 viewState.hideCodeLayout()

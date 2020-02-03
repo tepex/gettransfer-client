@@ -8,5 +8,6 @@ interface SettingsChangeContactView : BaseView {
     fun setToolbar(text: String?)
     fun showCodeLayout(resendDelay: Long)
     fun hideCodeLayout()
+    fun setEnabledBtnChangeContact(enable: Boolean)
     fun setWrongCodeError(details: String)
 }
