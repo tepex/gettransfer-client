@@ -8,9 +8,9 @@ import androidx.core.view.isVisible
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TitleModel
-import com.kg.gettransfer.presentation.presenter.SettingsChangePhonePresenter
+import com.kg.gettransfer.presentation.presenter.SettingsChangeContactPresenter
 import com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
-import com.kg.gettransfer.presentation.view.SettingsChangePhoneView
+import com.kg.gettransfer.presentation.view.SettingsChangeContactView
 
 import kotlinx.android.synthetic.main.activity_settings_change_phone.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -20,16 +20,16 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 class SettingsChangePhoneActivity : BaseActivity(),
-    SettingsChangePhoneView,
+    SettingsChangeContactView,
     ActivationCodeView.OnActivationCodeListener {
 
     @InjectPresenter
-    internal lateinit var presenter: SettingsChangePhonePresenter
+    internal lateinit var presenter: SettingsChangeContactPresenter
 
     @ProvidePresenter
-    fun createSettingsChangeEmailPresenter() = SettingsChangePhonePresenter()
+    fun createSettingsChangeContactPresenter() = SettingsChangeContactPresenter(false)
 
-    override fun getPresenter(): SettingsChangePhonePresenter = presenter
+    override fun getPresenter(): SettingsChangeContactPresenter = presenter
 
     private val phone
         get() = phoneLayout.fieldText.text.toString().trim().replace(" ", "")
@@ -39,7 +39,7 @@ class SettingsChangePhoneActivity : BaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_change_phone)
         initPhoneTextChangeListeners()
-        btnChangePhone.setOnClickListener { presenter.onChangePhoneClicked() }
+        btnChangePhone.setOnClickListener { presenter.onChangeContactClicked() }
     }
 
     @CallSuper
@@ -57,15 +57,15 @@ class SettingsChangePhoneActivity : BaseActivity(),
     private fun initPhoneTextChangeListeners() {
         with(phoneLayout) {
             setOnTextChanged {
-                presenter.newPhone = phone
+                presenter.newContact = phone
                 setEnabledBtnChangePhone(phone.isNotEmpty())
             }
             setOnFocusChangeListener()
         }
     }
 
-    override fun setToolbar(phone: String?) {
-        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_PHONE), phone)
+    override fun setToolbar(text: String?) {
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_PHONE), text)
     }
 
     override fun showCodeLayout(resendDelay: Long) {

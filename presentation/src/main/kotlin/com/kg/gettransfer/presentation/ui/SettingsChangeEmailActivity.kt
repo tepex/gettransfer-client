@@ -8,9 +8,9 @@ import androidx.core.view.isVisible
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TitleModel
-import com.kg.gettransfer.presentation.presenter.SettingsChangeEmailPresenter
+import com.kg.gettransfer.presentation.presenter.SettingsChangeContactPresenter
 import com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
-import com.kg.gettransfer.presentation.view.SettingsChangeEmailView
+import com.kg.gettransfer.presentation.view.SettingsChangeContactView
 
 import kotlinx.android.synthetic.main.activity_settings_change_email.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -20,16 +20,16 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 class SettingsChangeEmailActivity : BaseActivity(),
-    SettingsChangeEmailView,
+    SettingsChangeContactView,
     ActivationCodeView.OnActivationCodeListener {
 
     @InjectPresenter
-    internal lateinit var presenter: SettingsChangeEmailPresenter
+    internal lateinit var presenter: SettingsChangeContactPresenter
 
     @ProvidePresenter
-    fun createSettingsChangeEmailPresenter() = SettingsChangeEmailPresenter()
+    fun createSettingsChangeContactPresenter() = SettingsChangeContactPresenter(true)
 
-    override fun getPresenter(): SettingsChangeEmailPresenter = presenter
+    override fun getPresenter(): SettingsChangeContactPresenter = presenter
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +37,12 @@ class SettingsChangeEmailActivity : BaseActivity(),
         setContentView(R.layout.activity_settings_change_email)
 
         emailLayout.fieldText.onTextChanged { email ->
-            presenter.newEmail = email
+            presenter.newContact = email
             setEnabledBtnChangeEmail(email.isNotEmpty())
         }
         emailLayout.requestInputFieldFocus()
 
-        btnChangeEmail.setOnClickListener { presenter.onChangeEmailClicked() }
+        btnChangeEmail.setOnClickListener { presenter.onChangeContactClicked() }
     }
 
     @CallSuper
@@ -57,8 +57,8 @@ class SettingsChangeEmailActivity : BaseActivity(),
         activationCodeView.cancelTimer()
     }
 
-    override fun setToolbar(email: String?) {
-        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_EMAIL), email)
+    override fun setToolbar(text: String?) {
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_EMAIL), text)
     }
 
     override fun showCodeLayout(resendDelay: Long) {

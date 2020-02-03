@@ -4,8 +4,8 @@ import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(OneExecutionStateStrategy::class)
-interface SettingsChangeEmailView : BaseView {
-    fun setToolbar(email: String?)
+interface SettingsChangeContactView : BaseView {
+    fun setToolbar(text: String?)
     fun showCodeLayout(resendDelay: Long)
     fun hideCodeLayout()
     fun setWrongCodeError(details: String)
