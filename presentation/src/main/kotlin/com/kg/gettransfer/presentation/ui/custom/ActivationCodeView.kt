@@ -50,7 +50,7 @@ class ActivationCodeView @JvmOverloads constructor(
 
         btnDone.setOnClickListener { listener?.onDoneClicked(codeView.text.toString()) }
         btnResendCode.setOnClickListener {
-            codeView.setText("")
+            clearCode()
             listener?.onResendCodeClicked()
         }
     }
@@ -85,6 +85,10 @@ class ActivationCodeView @JvmOverloads constructor(
         errorText.text = details
         errorText.isVisible = true
         errorIsShowed = true
+    }
+
+    fun clearCode() {
+        codeView.setText("")
     }
 
     interface OnActivationCodeListener {

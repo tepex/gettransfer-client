@@ -62,6 +62,7 @@ abstract class SettingsChangeContactBaseActivity : BaseActivity(),
         activationCodeView.isVisible = false
         btnChangeContact.isVisible = true
 
+        activationCodeView.clearCode()
         activationCodeView.cancelTimer()
     }
 
