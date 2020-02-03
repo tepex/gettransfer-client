@@ -17,13 +17,13 @@ interface SessionDataStore : KoinComponent {
 
     suspend fun clearAccount()
 
-    suspend fun login(email: String?, phone: String?, password: String): AccountEntity
+    suspend fun login(contactEntity: ContactEntity<String>, password: String): AccountEntity
 
     suspend fun signOut(): Boolean
 
     suspend fun register(account: RegistrationAccountEntity): AccountEntity
 
-    suspend fun getVerificationCode(email: String?, phone: String?): Boolean
+    suspend fun getVerificationCode(contactEntity: ContactEntity<String>): Boolean
 
     suspend fun getConfirmationCode(contactEntity: ContactEntity<String>): Boolean
 

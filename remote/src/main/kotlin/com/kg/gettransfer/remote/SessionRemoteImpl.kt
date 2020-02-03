@@ -36,8 +36,13 @@ class SessionRemoteImpl : SessionRemote {
         return response.data?.account!!.map()
     }
 
-    override suspend fun login(email: String?, phone: String?, password: String): AccountEntity {
-        val response: ResponseModel<AccountModelWrapper> = core.tryTwice { core.api.login(email, phone, password) }
+    override suspend fun login(contactEntity: ContactEntity<String>, password: String): AccountEntity {
+        val response: ResponseModel<AccountModelWrapper> = core.tryTwice {
+            when(contactEntity) {
+                is EmailContactEntity -> core.api.login(email = contactEntity.email, password = password)
+                is PhoneContactEntity -> core.api.login(phone = contactEntity.phone, password = password)
+            }
+        }
         @Suppress("UnsafeCallOnNullableType")
         return response.data?.account!!.map()
     }
@@ -55,8 +60,13 @@ class SessionRemoteImpl : SessionRemote {
         return response.data?.account!!.map()
     }
 
-    override suspend fun getVerificationCode(email: String?, phone: String?): Boolean {
-        val response: ResponseModel<String?> = core.tryTwice { core.api.getVerificationCode(email, phone) }
+    override suspend fun getVerificationCode(contactEntity: ContactEntity<String>): Boolean {
+        val response: ResponseModel<String?> = core.tryTwice {
+            when(contactEntity) {
+                is EmailContactEntity -> core.api.getVerificationCode(email = contactEntity.email)
+                is PhoneContactEntity -> core.api.getVerificationCode(phone = contactEntity.phone)
+            }
+        }
         return response.error == null
     }
 

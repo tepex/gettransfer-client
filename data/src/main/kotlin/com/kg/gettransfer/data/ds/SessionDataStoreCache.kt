@@ -26,7 +26,7 @@ open class SessionDataStoreCache : SessionDataStore {
 
     override suspend fun clearAccount() = cache.clearAccount()
 
-    override suspend fun login(email: String?, phone: String?, password: String): AccountEntity {
+    override suspend fun login(contactEntity: ContactEntity<String>, password: String): AccountEntity {
         throw UnsupportedOperationException()
     }
 
@@ -38,7 +38,7 @@ open class SessionDataStoreCache : SessionDataStore {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun getVerificationCode(email: String?, phone: String?): Boolean {
+    override suspend fun getVerificationCode(contactEntity: ContactEntity<String>): Boolean {
         throw UnsupportedOperationException()
     }
 

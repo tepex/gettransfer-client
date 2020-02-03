@@ -62,8 +62,8 @@ interface Api {
     @POST(API_ACCOUNT_LOGIN)
     @FormUrlEncoded
     suspend fun login(
-        @Field("email") email: String?,
-        @Field("phone") phone: String?,
+        @Field("email") email: String? = null,
+        @Field("phone") phone: String? = null,
         @Field("password") password: String
     ): ResponseModel<AccountModelWrapper>
 
@@ -78,8 +78,8 @@ interface Api {
     @POST(API_VERIFICATION_CODE)
     @FormUrlEncoded
     suspend fun getVerificationCode(
-        @Field("email") email: String?,
-        @Field("phone") phone: String?
+        @Field("email") email: String? = null,
+        @Field("phone") phone: String? = null
     ): ResponseModel<String?>
 
     @POST(API_CONFIRMATION_CODE)

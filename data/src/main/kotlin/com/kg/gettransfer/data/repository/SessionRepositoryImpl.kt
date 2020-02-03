@@ -138,14 +138,9 @@ class SessionRepositoryImpl(
         return Result(newAccount)
     }
 
-    override suspend fun login(
-        email: String?,
-        phone: String?,
-        password: String,
-        withSmsCode: Boolean
-    ): Result<Account> {
+    override suspend fun login(contact: Contact<String>, password: String, withSmsCode: Boolean): Result<Account> {
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().login(email, phone, password)
+            factory.retrieveRemoteDataStore().login(contact.map(), password)
         }
         if (result.error == null) {
             result.entity?.let { entity ->
@@ -153,8 +148,16 @@ class SessionRepositoryImpl(
                 account = entity.map(configsRepository.getResult().getModel())
             }
             if (!withSmsCode) {
-                userEmail = email
-                userPhone = phone
+                when(contact) {
+                    is Contact.EmailContact -> {
+                        userEmail = contact.email
+                        userPhone = null
+                    }
+                    is Contact.PhoneContact -> {
+                        userEmail = null
+                        userPhone = contact.phone
+                    }
+                }
                 userPassword = password
             }
         }
@@ -176,9 +179,9 @@ class SessionRepositoryImpl(
         return Result(account, result.error?.map())
     }
 
-    override suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean> {
+    override suspend fun getVerificationCode(contact: Contact<String>): Result<Boolean> {
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().getVerificationCode(email, phone)
+            factory.retrieveRemoteDataStore().getVerificationCode(contact.map())
         }
         return Result(result.entity != null && result.entity, result.error?.map())
     }

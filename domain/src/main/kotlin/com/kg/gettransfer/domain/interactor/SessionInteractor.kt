@@ -75,14 +75,14 @@ class SessionInteractor(
     suspend fun authOldToken(authKey: String) = sessionRepository.authOldToken(authKey)
 
     suspend fun logout() = sessionRepository.logout()
-    suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean) =
-        sessionRepository.login(email, phone, password, withSmsCode)
+    suspend fun login(contact: Contact<String>, password: String, withSmsCode: Boolean) =
+        sessionRepository.login(contact, password, withSmsCode)
 
     suspend fun register(registrationAccount: RegistrationAccount) =
         sessionRepository.register(registrationAccount)
 
-    suspend fun getVerificationCode(email: String?, phone: String?) =
-        sessionRepository.getVerificationCode(email, phone)
+    suspend fun getVerificationCode(contact: Contact<String>) =
+        sessionRepository.getVerificationCode(contact)
 
     suspend fun putAccount(account: Account? = null) = sessionRepository.putAccount(account ?: this.account)
     suspend fun putNoAccount() = sessionRepository.putNoAccount(account)
