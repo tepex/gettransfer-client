@@ -3,7 +3,11 @@ package com.kg.gettransfer.utilities
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.IntentSender
 import androidx.fragment.app.Fragment
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
@@ -21,6 +25,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 import pub.devrel.easypermissions.EasyPermissions
+import timber.log.Timber
 
 /**
  * Get current location through GPS or IP address
@@ -137,17 +142,40 @@ class LocationManager(val context: Context) : KoinComponent {
         return hasPermission
     }
 
-    private fun checkDeviceSettingLocation(
-        activity: Activity,
-        builder: LocationSettingsRequest.Builder,
-        resolve: Boolean = true
-    ) {
+    fun checkDeviceSettingLocation(activity: Activity, resolve: Boolean = true) {
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
 
+        val settingsClient = LocationServices.getSettingsClient(context)
+        val locationSettingsResponseTask =
+            settingsClient.checkLocationSettings(builder.build())
+
+        locationSettingsResponseTask.addOnFailureListener { exception ->
+            if (exception is ResolvableApiException && resolve) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    exception.startResolutionForResult(activity, REQUEST_TURN_DEVICE_LOCATION_ON)
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Timber.d("Error getting location settings resolution: $sendEx.message")
+                }
+            }
+        }
+        locationSettingsResponseTask.addOnCompleteListener {
+            if (it.isSuccessful) {
+                getCurrentLocation(null, true)
+            }
+        }
     }
 
     companion object {
         val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         const val RC_LOCATION = 2222
+        const val REQUEST_TURN_DEVICE_LOCATION_ON = 22
     }
 
     /**

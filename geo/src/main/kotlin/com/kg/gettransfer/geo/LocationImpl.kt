@@ -11,13 +11,10 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
 
 import com.kg.gettransfer.data.Location
 import com.kg.gettransfer.data.LocationException
-import com.kg.gettransfer.data.model.GTLocationSettingsResponse
 import com.kg.gettransfer.data.model.LocationEntity
-import kotlinx.coroutines.tasks.asDeferred
 
 import java.util.Locale
 
@@ -67,12 +64,6 @@ class LocationImpl(private val context: Context) :
 
     private fun removeLocationUpdates() {
         locationProviderClient.removeLocationUpdates(LocationCallback())
-    }
-
-    override suspend fun checkDeviceLocationSettings(resolve: Boolean): GTLocationSettingsResponse {
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        val settingsClient = LocationServices.getSettingsClient(context)
-        settingsClient.checkLocationSettings(builder.build()).asDeferred()
     }
 
     override fun disconnectGoogleApiClient() {

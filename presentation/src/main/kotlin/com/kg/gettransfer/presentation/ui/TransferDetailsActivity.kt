@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -227,7 +228,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
         btnLocation.setThrottledClickListener {
             if (presenter.checkLocationPermission(this)) {
-                presenter.getCurrentLocation()
+                presenter.getCurrentLocation(this)
             }
         }
         tripRate.setOnRatingBarChangeListener { _, rating, _ -> presenter.rateTrip(rating, true) }
@@ -619,6 +620,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         vehiclePhotosView.setPhotos(offerModel.vehicle.transportType.imageId, offerModel.vehicle.photos)
     }
 
+    private fun collapseDetailsBottomSheet() {
+        scrollContent.post { scrollContent.fullScroll(View.FOCUS_UP) }
+        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+    }
+
+    private fun hideSecondaryBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
+
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateOrDistanceChanged: Boolean) {
         setPolyline(polyline, routeModel)
         btnCenterRoute.isVisible = false
@@ -802,9 +810,9 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        when(requestCode) {
+        when (requestCode) {
             RC_WRITE_FILE -> presenter.onDownloadVoucherClick()
-            LocationManager.RC_LOCATION -> presenter.getCurrentLocation()
+            LocationManager.RC_LOCATION -> presenter.getCurrentLocation(this)
         }
     }
 
@@ -855,12 +863,15 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
     }
 
-    private fun collapseDetailsBottomSheet() {
-        scrollContent.post { scrollContent.fullScroll(View.FOCUS_UP) }
-        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // When we get the result from asking the user to turn on device location,
+        // we call checkDeviceLocationSettings again to make sure it's actually on,
+        // but we don't resolve the check to keep the user from seeing an endless loop.
+        if (requestCode == LocationManager.REQUEST_TURN_DEVICE_LOCATION_ON) {
+            presenter.getCurrentLocation(this, false)
+        }
     }
-
-    private fun hideSecondaryBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
 
     companion object {
         const val THANKS_DELAY = 3000L

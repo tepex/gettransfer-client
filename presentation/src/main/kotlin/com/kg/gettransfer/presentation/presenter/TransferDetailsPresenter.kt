@@ -403,8 +403,8 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         viewState.showSupportScreen(transferId)
     }
 
-    fun getCurrentLocation() {
-        locationManager.getCurrentLocation(null, true)
+    fun getCurrentLocation(activity: Activity, resolve: Boolean = true) {
+        locationManager.checkDeviceSettingLocation(activity, resolve)
     }
 
     fun checkLocationPermission(activity: Activity) = locationManager.checkPermission(activity)

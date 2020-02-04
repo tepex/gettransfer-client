@@ -43,7 +43,6 @@ buildscript {
         libs = [
             kotlin          : ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"),
             coroutines      : ("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"),
-            coroutines_play_services : ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"),
             serialization   : ("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"),
             koin_core       : ("org.koin:koin-core:$koin_version"),
             koin_core_ext   : ("org.koin:koin-core-ext:$koin_version"),

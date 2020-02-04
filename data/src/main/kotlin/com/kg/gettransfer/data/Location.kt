@@ -1,6 +1,5 @@
 package com.kg.gettransfer.data
 
-import com.kg.gettransfer.data.model.GTLocationSettingsResponse
 import com.kg.gettransfer.data.model.LocationEntity
 import java.util.Locale
 
@@ -17,6 +16,4 @@ interface Location {
     suspend fun getCurrentLocation(): LocationEntity
 
     fun getAddressByLocation(point: LocationEntity): String
-
-    suspend fun checkDeviceLocationSettings(resolve: Boolean): GTLocationSettingsResponse
 }
