@@ -49,7 +49,7 @@ class LocationManager(val context: Context) : KoinComponent {
         worker.main.launch {
             withContext(worker.bg) {
                 if (geoInteractor.isGpsEnabled && hasPermission()) {
-                    getLocationFromGPS(isFromField)
+                    getLocationFromGPS(isFromField, useOnlyGps)
                 } else {
                     if (!useOnlyGps) getLocationFromIpApi(isFromField)
                 }
@@ -57,26 +57,28 @@ class LocationManager(val context: Context) : KoinComponent {
         }
     }
 
-    private suspend fun getLocationFromGPS(isFromField: Boolean?) {
+    private suspend fun getLocationFromGPS(isFromField: Boolean?, useOnlyGps: Boolean) {
         val locationResult = geoInteractor.getCurrentLocation()
         val currentLocation = locationResult.isSuccess()
         if (currentLocation != null && !locationResult.isGeoError()) {
             lastCurrentLocation = pointMapper.toLatLng(currentLocation)
             val address = geoInteractor.getAddressByLocation(currentLocation).isSuccess()
             if (address?.cityPoint?.point != null) {
-                withContext(worker.main.coroutineContext) { setPointAddress(address) }
+                withContext(worker.main.coroutineContext) { setPointAddress(isFromField, address) }
             } else {
-                getLocationFromIpApi(isFromField)
+                if (!useOnlyGps) getLocationFromIpApi(isFromField)
             }
         } else {
-            getLocationFromIpApi(isFromField)
+            if (!useOnlyGps) getLocationFromIpApi(isFromField)
         }
     }
 
-    private suspend fun setPointAddress(currentAddress: GTAddress) {
-        when (withContext(worker.bg) { getPreferences().getModel() }.selectedField) {
-            SearchPresenter.FIELD_FROM -> orderInteractor.from = currentAddress
-            SearchPresenter.FIELD_TO -> orderInteractor.to   = currentAddress
+    private suspend fun setPointAddress(isFromField: Boolean?, currentAddress: GTAddress) {
+        isFromField?.let {
+            when (withContext(worker.bg) { getPreferences().getModel() }.selectedField) {
+                SearchPresenter.FIELD_FROM -> orderInteractor.from = currentAddress
+                SearchPresenter.FIELD_TO -> orderInteractor.to = currentAddress
+            }
         }
         addressListener?.onGetAddress(currentAddress)
     }
@@ -98,7 +100,7 @@ class LocationManager(val context: Context) : KoinComponent {
         if (result.error == null) {
             result.model.cityPoint.point?.let {
                 lastCurrentLocation = pointMapper.toLatLng(it)
-                setPointAddress(result.model)
+                setPointAddress(isFromField, result.model)
             }
         } else {
             setEmptyAddress()
