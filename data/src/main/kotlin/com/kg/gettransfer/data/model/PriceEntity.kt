@@ -1,14 +1,14 @@
 package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.Price
-import kotlinx.serialization.Optional
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class PriceEntity(
     @SerialName(BASE) val base: MoneyEntity,
-    @Optional @SerialName(NO_DISCOUNT) val withoutDiscount: MoneyEntity? = null,
+    @SerialName(NO_DISCOUNT) val withoutDiscount: MoneyEntity? = null,
     @SerialName(AMOUNT) val amount: Double
 ) {
 

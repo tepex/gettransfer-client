@@ -1,19 +1,18 @@
 package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.Carrier
-import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class CarrierEntity(
     @SerialName(ID) val id: Long,
-    @Optional @SerialName(PROFILE) val profile: ProfileEntity? = null,
+    @SerialName(PROFILE) val profile: ProfileEntity? = null,
     @SerialName(APPROVED) val approved: Boolean,
     @SerialName(COMPLETED_TRANSFERS) val completedTransfers: Int,
     @SerialName(LANGUAGES) val languages: List<LocaleEntity>,
     @SerialName(RATINGS) val ratings: RatingsEntity,
-    @Optional @SerialName(CAN_UPDATE_OFFERS) val canUpdateOffers: Boolean? = false
+    @SerialName(CAN_UPDATE_OFFERS) val canUpdateOffers: Boolean? = false
 ) {
 
     companion object {

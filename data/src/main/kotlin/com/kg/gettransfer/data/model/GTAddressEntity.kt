@@ -4,7 +4,6 @@ import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Point
 
-import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,7 +12,6 @@ data class GTAddressEntity(
     val lon: Double?,
     val address: String,
     val placeTypes: List<String>,
-    @Optional
     val variants: Pair<String?, String?>? = null
 ) {
 
