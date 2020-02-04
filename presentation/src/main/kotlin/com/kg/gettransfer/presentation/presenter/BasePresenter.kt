@@ -18,11 +18,11 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.SocketInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.ChatBadgeEvent
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.extensions.getOffer
 

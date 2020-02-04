@@ -5,7 +5,7 @@ import android.view.View
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.domain.model.PaymentRequest
 import com.kg.gettransfer.presentation.view.Screens.showSupportScreen
 
 import kotlinx.android.synthetic.main.dialog_payment_error.*
@@ -38,7 +38,7 @@ class PaymentErrorDialog : BaseBottomSheetDialogFragment() {
 
     private fun setErrorInfo() {
         gatewayId?.let { gateway ->
-            if (gateway == PaymentRequestModel.GROUND) {
+            if (gateway == PaymentRequest.Gateway.GROUND.toString()) {
                 tvPaymentError.text = getString(R.string.LNG_PAYMENT_BALANCE_ERROR)
             }
         }

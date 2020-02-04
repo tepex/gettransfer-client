@@ -17,7 +17,6 @@ import com.kg.gettransfer.domain.interactor.*
 import com.kg.gettransfer.domain.model.*
 import com.kg.gettransfer.presentation.delegate.AccountManager
 
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.sys.presentation.ConfigsManager
@@ -334,17 +333,17 @@ class Analytics(
      * This class is child class of EcommercePurchase because it has almost the same parameters
      * for analytics
      */
-    inner class PaymentStatus(private var mPaymentType: String) : EcommercePurchase() {
+    inner class PaymentStatus(private var gateway: PaymentRequest.Gateway) : EcommercePurchase() {
 
         suspend fun sendAnalytics(event: String) {
             super.event = event
-            super.paymentType = when (mPaymentType) {
-                PaymentRequestModel.CARD,
-                PaymentRequestModel.PLATRON,
-                PaymentRequestModel.CHECKOUTCOM -> CARD
-                PaymentRequestModel.PAYPAL      -> PAYPAL
-                PaymentRequestModel.GOOGLE_PAY  -> GOOGLE_PAY
-                else                            -> BALANCE
+            super.paymentType = when (gateway) {
+                PaymentRequest.Gateway.CARD,
+                PaymentRequest.Gateway.PLATRON,
+                PaymentRequest.Gateway.CHECKOUTCOM -> CARD
+                PaymentRequest.Gateway.BRAINTREE   -> PAYPAL
+                PaymentRequest.Gateway.GOOGLEPAY   -> GOOGLE_PAY
+                else                               -> BALANCE
             }
             getTransferAndOffer()
             prepareData()
@@ -356,21 +355,23 @@ class Analytics(
     inner class BeginCheckout(
         private val promocode: String?,
         private val hours: Int?,
-        private var paymentType: String,
+        private var gateway: PaymentRequest.Gateway,
         private val offerType: String,
         private val requestType: String,
         private val currencyCode: String,
         private val price: Double
     ) {
 
+        private lateinit var paymentType: String
+
         fun sendAnalytics() {
-            paymentType = when (paymentType) {
-                PaymentRequestModel.CARD,
-                PaymentRequestModel.PLATRON,
-                PaymentRequestModel.CHECKOUTCOM -> CARD
-                PaymentRequestModel.PAYPAL      -> PAYPAL
-                PaymentRequestModel.GOOGLE_PAY  -> GOOGLE_PAY
-                else                            -> BALANCE
+            paymentType = when (gateway) {
+                PaymentRequest.Gateway.CARD,
+                PaymentRequest.Gateway.PLATRON,
+                PaymentRequest.Gateway.CHECKOUTCOM -> CARD
+                PaymentRequest.Gateway.BRAINTREE   -> PAYPAL
+                PaymentRequest.Gateway.GOOGLEPAY   -> GOOGLE_PAY
+                else                               -> BALANCE
             }
             sendToFirebase()
             sendToFacebook()

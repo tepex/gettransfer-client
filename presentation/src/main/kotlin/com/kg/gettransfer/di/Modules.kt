@@ -29,7 +29,6 @@ import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 import com.kg.gettransfer.presentation.delegate.PushTokenManager
 
 import com.kg.gettransfer.presentation.mapper.CarrierMapper
-import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
@@ -137,7 +136,6 @@ val domainModule = module {
 
 val mappersModule = module {
     single { CarrierMapper() }
-    single { PaymentRequestMapper() }
     single { PaymentStatusRequestMapper() }
     single { PointMapper() }
     single { ProfileMapper() }

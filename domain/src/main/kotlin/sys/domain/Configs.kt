@@ -2,7 +2,9 @@ package com.kg.gettransfer.sys.domain
 
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.PaymentRequest
 import com.kg.gettransfer.domain.model.TransportType
+
 import sys.domain.CheckoutcomCredentials
 import sys.domain.GooglePayCredentials
 
@@ -17,7 +19,7 @@ data class Configs(
     val contactEmails: List<ContactEmail>,
     val checkoutcomCredentials: CheckoutcomCredentials,
     val googlePayCredentials: GooglePayCredentials,
-    val defaultCardGateway: String
+    val defaultCardGateway: PaymentRequest.Gateway
 ) {
 
     companion object {

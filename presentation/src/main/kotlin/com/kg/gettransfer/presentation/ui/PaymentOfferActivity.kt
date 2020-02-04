@@ -9,9 +9,8 @@ import android.view.View
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
-
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 
 import com.braintreepayments.api.BraintreeFragment
 import com.braintreepayments.api.PayPal
@@ -23,6 +22,7 @@ import com.braintreepayments.api.interfaces.BraintreeCancelListener
 import com.braintreepayments.api.interfaces.BraintreeErrorListener
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.PaymentMethodNonce
+
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.PaymentData
@@ -31,10 +31,9 @@ import com.google.android.gms.wallet.AutoResolveHelper
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.model.Currency
+import com.kg.gettransfer.domain.model.PaymentRequest
 import com.kg.gettransfer.domain.model.Ratings
 import com.kg.gettransfer.domain.model.TransportType
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 
 import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
@@ -43,7 +42,6 @@ import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.model.ProfileModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
@@ -75,6 +73,9 @@ import kotlinx.android.synthetic.main.toolbar_nav_payment.view.*
 import kotlinx.android.synthetic.main.view_currency_converting_info.view.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 import kotlinx.android.synthetic.main.view_transport_capacity.view.*
+
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
@@ -132,19 +133,19 @@ class PaymentOfferActivity : BaseActivity(),
             btnGetPayment.setOnClickListener(this)
             btnGetPaymentWithGooglePay.setOnClickListener(this)
         }
-        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.CARD) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequest.Gateway.CARD) }.apply {
             rbCard.setOnClickListener(this)
             layoutCard.setOnClickListener(this)
         }
-        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.PAYPAL) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequest.Gateway.BRAINTREE) }.apply {
             rbPaypal.setOnClickListener(this)
             layoutPaypal.setOnClickListener(this)
         }
-        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.GROUND) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequest.Gateway.GROUND) }.apply {
             rbBalance.setOnClickListener(this)
             layoutBalance.setOnClickListener(this)
         }
-        View.OnClickListener { presenter.changePaymentType(PaymentRequestModel.GOOGLE_PAY) }.apply {
+        View.OnClickListener { presenter.changePaymentType(PaymentRequest.Gateway.GOOGLEPAY) }.apply {
             rbGooglePay.setOnClickListener(this)
             layoutGooglePay.setOnClickListener(this)
         }
@@ -200,16 +201,16 @@ class PaymentOfferActivity : BaseActivity(),
 
     private fun clearHighLightErrorField(view: View?) = view?.setBackgroundResource(0)
 
-    override fun selectPaymentType(type: String) {
+    override fun selectPaymentGateway(gateway: PaymentRequest.Gateway) {
         clearPaymentsRadioButtons()
-        when (type) {
-            PaymentRequestModel.CARD       -> rbCard.isChecked = true
-            PaymentRequestModel.PAYPAL     -> rbPaypal.isChecked = true
-            PaymentRequestModel.GOOGLE_PAY -> rbGooglePay.isChecked = true
-            PaymentRequestModel.GROUND     -> rbBalance.isChecked = true
+        when (gateway) {
+            PaymentRequest.Gateway.CARD      -> rbCard.isChecked = true
+            PaymentRequest.Gateway.BRAINTREE -> rbPaypal.isChecked = true
+            PaymentRequest.Gateway.GOOGLEPAY -> rbGooglePay.isChecked = true
+            PaymentRequest.Gateway.GROUND    -> rbBalance.isChecked = true
         }
-        tvCommission.isInvisible = type == PaymentRequestModel.GROUND
-        changePayButton(type == PaymentRequestModel.GOOGLE_PAY)
+        tvCommission.isInvisible = gateway == PaymentRequest.Gateway.GROUND
+        changePayButton(gateway == PaymentRequest.Gateway.GOOGLEPAY)
     }
 
     private fun clearPaymentsRadioButtons() {
@@ -366,7 +367,7 @@ class PaymentOfferActivity : BaseActivity(),
                 val result: DropInResult? = data?.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
                 result?.paymentMethodNonce?.nonce?.let { presenter.confirmPaypalPayment(it) }
             }
-            RESULT_CANCELED -> presenter.changePaymentType(PaymentRequestModel.PAYPAL)
+            RESULT_CANCELED -> presenter.changePaymentType(PaymentRequest.Gateway.BRAINTREE)
             else            -> {
                 val error = data?.getSerializableExtra(DropInActivity.EXTRA_ERROR)
                 if (error is Exception) {
@@ -387,7 +388,7 @@ class PaymentOfferActivity : BaseActivity(),
                     ?.getString("token")
                 token?.let { presenter.processGooglePayPayment(it) }
             }
-            RESULT_CANCELED -> presenter.changePaymentType(PaymentRequestModel.GOOGLE_PAY)
+            RESULT_CANCELED -> presenter.changePaymentType(PaymentRequest.Gateway.GOOGLEPAY)
             AutoResolveHelper.RESULT_ERROR -> {
                 val status = data?.let { AutoResolveHelper.getStatusFromIntent(it) }
                 status?.statusMessage?.let { Timber.e(it) }
@@ -429,7 +430,7 @@ class PaymentOfferActivity : BaseActivity(),
     }
 
     override fun onCancel(requestCode: Int) {
-        presenter.changePaymentType(PaymentRequestModel.PAYPAL)
+        presenter.changePaymentType(PaymentRequest.Gateway.BRAINTREE)
     }
 
     override fun setToolbarTitle(transferModel: TransferModel) = with(toolbar) {

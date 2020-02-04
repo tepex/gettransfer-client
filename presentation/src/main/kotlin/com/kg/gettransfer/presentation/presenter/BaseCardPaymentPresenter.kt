@@ -2,19 +2,28 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.kg.gettransfer.BuildConfig
 import com.kg.gettransfer.core.presentation.WorkerManager
+
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.eventListeners.PaymentStatusEventListener
+
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.PaymentRequest
+
 import com.kg.gettransfer.extensions.newChainFromMain
+
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
 import com.kg.gettransfer.presentation.model.PaymentStatusRequestModel
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
+
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
+
 import com.kg.gettransfer.utilities.Analytics
+
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
@@ -25,7 +34,7 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
     private val getPreferences: GetPreferencesInteractor by inject()
 
     internal var paymentId = 0L
-    lateinit var gatewayId: String
+    lateinit var gateway: PaymentRequest.Gateway
 
     private var showSuccessPayment = false
     private var showFailedPayment = false
@@ -104,7 +113,7 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
         if (!showSuccessPayment) {
             showSuccessPayment = true
             viewState.blockInterface(false)
-            analytics.PaymentStatus(gatewayId).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
+            analytics.PaymentStatus(gateway).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
             val offerId = (paymentInteractor.selectedOffer as? Offer)?.id
             router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
             analytics.EcommercePurchase().sendAnalytics()
@@ -116,10 +125,10 @@ open class BaseCardPaymentPresenter<BV : BaseView> : BasePresenter<BV>(), Paymen
             showFailedPayment = true
             viewState.blockInterface(false)
             err?.let { e ->
-                log.error("get by $gatewayId payment error", e)
+                log.error("get by $gateway payment error", e)
                 viewState.setError(e)
             }
-            analytics.PaymentStatus(gatewayId).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
+            analytics.PaymentStatus(gateway).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
             paymentInteractor.isFailedPayment = true
             router.exit()
         }

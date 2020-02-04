@@ -2,17 +2,22 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.checkout.android_sdk.Utils.CardUtils
 import com.checkout.android_sdk.Utils.Environment
-import com.kg.gettransfer.domain.model.PaymentProcessRequest
-import com.kg.gettransfer.domain.model.Token
-import com.kg.gettransfer.domain.model.PaymentProcess
+
 import com.kg.gettransfer.domain.model.CheckoutcomTokenRequest
+import com.kg.gettransfer.domain.model.PaymentProcess
+import com.kg.gettransfer.domain.model.PaymentProcessRequest
+import com.kg.gettransfer.domain.model.PaymentRequest
 import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.domain.model.Token
+
 import com.kg.gettransfer.presentation.view.CheckoutcomPaymentView
 import com.kg.gettransfer.utilities.CardDateFormatter
-import moxy.InjectViewState
-import sys.domain.CheckoutcomCredentials
+
 import java.util.Calendar
+
+import moxy.InjectViewState
+
+import sys.domain.CheckoutcomCredentials
 
 @InjectViewState
 class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentView>() {
@@ -37,7 +42,7 @@ class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentV
 
     override fun attachView(view: CheckoutcomPaymentView) {
         super.attachView(view)
-        gatewayId = PaymentRequestModel.CHECKOUTCOM
+        gateway = PaymentRequest.Gateway.CHECKOUTCOM
 
         viewState.setCVCLength(maxCVCLength)
     }

@@ -2,7 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import moxy.InjectViewState
 
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
+import com.kg.gettransfer.domain.model.PaymentRequest
 
 import com.kg.gettransfer.presentation.view.PlatronPaymentView
 
@@ -11,6 +11,6 @@ class PlatronPaymentPresenter : BaseCardPaymentPresenter<PlatronPaymentView>() {
 
     override fun attachView(view: PlatronPaymentView) {
         super.attachView(view)
-        gatewayId = PaymentRequestModel.PLATRON
+        gateway = PaymentRequest.Gateway.PLATRON
     }
 }

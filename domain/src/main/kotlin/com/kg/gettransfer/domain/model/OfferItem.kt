@@ -48,3 +48,5 @@ data class BookNowOffer(
     val withoutDiscount: Money?,
     val transportType: TransportType
 ) : OfferItem()
+
+fun OfferItem.getOfferId(): Long? = if (this is Offer) id else null
