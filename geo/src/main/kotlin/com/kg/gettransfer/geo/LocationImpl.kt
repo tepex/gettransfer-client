@@ -30,7 +30,6 @@ class LocationImpl(private val context: Context) :
     private lateinit var geocoder: Geocoder
     private val locationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     private var googleApiClient: GoogleApiClient? = null
-    private lateinit var locationRequest: LocationRequest
 
     override val isGpsEnabled: Boolean
         @Suppress("UnsafeCast")
@@ -54,7 +53,7 @@ class LocationImpl(private val context: Context) :
     }
 
     private fun setLocationUpdates() {
-        locationRequest = LocationRequest().apply {
+        val locationRequest = LocationRequest().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             interval = LOCATION_UPDATE_INTERVAL
             fastestInterval = LOCATION_UPDATE_FAST_INTERVAL
