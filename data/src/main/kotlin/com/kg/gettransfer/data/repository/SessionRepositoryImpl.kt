@@ -20,6 +20,7 @@ import com.kg.gettransfer.domain.model.Account
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.User
+import com.kg.gettransfer.domain.model.Contact
 
 import com.kg.gettransfer.domain.repository.SessionRepository
 
@@ -137,14 +138,9 @@ class SessionRepositoryImpl(
         return Result(newAccount)
     }
 
-    override suspend fun login(
-        email: String?,
-        phone: String?,
-        password: String,
-        withSmsCode: Boolean
-    ): Result<Account> {
+    override suspend fun login(contact: Contact<String>, password: String, withSmsCode: Boolean): Result<Account> {
         val result: ResultEntity<AccountEntity?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().login(email, phone, password)
+            factory.retrieveRemoteDataStore().login(contact.map(), password)
         }
         if (result.error == null) {
             result.entity?.let { entity ->
@@ -152,8 +148,16 @@ class SessionRepositoryImpl(
                 account = entity.map(configsRepository.getResult().getModel())
             }
             if (!withSmsCode) {
-                userEmail = email
-                userPhone = phone
+                when (contact) {
+                    is Contact.EmailContact -> {
+                        userEmail = contact.email
+                        userPhone = null
+                    }
+                    is Contact.PhoneContact -> {
+                        userEmail = null
+                        userPhone = contact.phone
+                    }
+                }
                 userPassword = password
             }
         }
@@ -175,9 +179,9 @@ class SessionRepositoryImpl(
         return Result(account, result.error?.map())
     }
 
-    override suspend fun getVerificationCode(email: String?, phone: String?): Result<Boolean> {
+    override suspend fun getVerificationCode(contact: Contact<String>): Result<Boolean> {
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().getVerificationCode(email, phone)
+            factory.retrieveRemoteDataStore().getVerificationCode(contact.map())
         }
         return Result(result.entity != null && result.entity, result.error?.map())
     }
@@ -194,25 +198,27 @@ class SessionRepositoryImpl(
         return Result(account)
     }
 
-    override suspend fun getConfirmationCode(email: String?, phone: String?): Result<Boolean> {
+    override suspend fun getConfirmationCode(contact: Contact<String>): Result<Boolean> {
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().getConfirmationCode(email, phone)
+            factory.retrieveRemoteDataStore().getConfirmationCode(contact.map())
         }
         return Result(result.entity != null && result.entity, result.error?.map())
     }
 
-    override suspend fun changeContact(email: String?, phone: String?, code: String): Result<Boolean> {
+    override suspend fun changeContact(contact: Contact<String>, code: String): Result<Boolean> {
         val result: ResultEntity<Boolean?> = retrieveRemoteEntity {
-            factory.retrieveRemoteDataStore().changeContact(email, phone, code)
+            factory.retrieveRemoteDataStore().changeContact(contact.map(), code)
         }
         if (result.error == null) {
-            email?.let { newEmail ->
-                account.user.profile.email = newEmail
-                userEmail = newEmail
-            }
-            phone?.let { newPhone ->
-                account.user.profile.phone = newPhone
-                userPhone = newPhone
+            when (contact) {
+                is Contact.EmailContact -> {
+                    account.user.profile.email = contact.email
+                    userEmail = contact.email
+                }
+                is Contact.PhoneContact -> {
+                    account.user.profile.phone = contact.phone
+                    userPhone = contact.phone
+                }
             }
         }
         return Result(result.entity != null && result.entity, result.error?.map())

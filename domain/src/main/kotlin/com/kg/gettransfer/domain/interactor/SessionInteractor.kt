@@ -7,6 +7,7 @@ import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
 import com.kg.gettransfer.domain.model.RegistrationAccount
 import com.kg.gettransfer.domain.model.User
+import com.kg.gettransfer.domain.model.Contact
 
 import com.kg.gettransfer.domain.repository.GeoRepository
 import com.kg.gettransfer.domain.repository.SessionRepository
@@ -74,24 +75,24 @@ class SessionInteractor(
     suspend fun authOldToken(authKey: String) = sessionRepository.authOldToken(authKey)
 
     suspend fun logout() = sessionRepository.logout()
-    suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean) =
-        sessionRepository.login(email, phone, password, withSmsCode)
+    suspend fun login(contact: Contact<String>, password: String, withSmsCode: Boolean) =
+        sessionRepository.login(contact, password, withSmsCode)
 
     suspend fun register(registrationAccount: RegistrationAccount) =
         sessionRepository.register(registrationAccount)
 
-    suspend fun getVerificationCode(email: String?, phone: String?) =
-        sessionRepository.getVerificationCode(email, phone)
+    suspend fun getVerificationCode(contact: Contact<String>) =
+        sessionRepository.getVerificationCode(contact)
 
     suspend fun putAccount(account: Account? = null) = sessionRepository.putAccount(account ?: this.account)
     suspend fun putNoAccount() = sessionRepository.putNoAccount(account)
     suspend fun changePassword(pass: String, repeatedPass: String) =
         sessionRepository.putAccount(account, pass, repeatedPass)
 
-    suspend fun getConfirmationCode(email: String? = null, phone: String? = null) =
-        sessionRepository.getConfirmationCode(email, phone)
-    suspend fun changeContact(code: String, email: String? = null, phone: String? = null) =
-        sessionRepository.changeContact(email, phone, code)
+    suspend fun getConfirmationCode(contact: Contact<String>) =
+        sessionRepository.getConfirmationCode(contact)
+    suspend fun changeContact(contact: Contact<String>, code: String) =
+        sessionRepository.changeContact(contact, code)
 
     fun addAccountChangedListener(listener: AccountChangedListener) {
         sessionRepository.addAccountChangedListener(listener)

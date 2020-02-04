@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:paddingStart="@dimen/activation_code_horizontal_padding"
-    android:paddingTop="@dimen/activation_code_vertical_padding"
+    android:paddingTop="@dimen/activation_code_padding_top"
     android:paddingEnd="@dimen/activation_code_horizontal_padding"
-    android:paddingBottom="@dimen/activation_code_vertical_padding">
+    android:paddingBottom="@dimen/activation_code_padding_bottom">
 
     <TextView
         android:id="@+id/title"
@@ -60,8 +60,9 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="@dimen/general_button_height"
-        android:layout_marginStart="@dimen/activation_code_btn_done_vertical_margin"
-        android:layout_marginEnd="@dimen/activation_code_btn_done_vertical_margin"
+        android:layout_marginStart="@dimen/activation_code_btn_done_horizontal_margin"
+        android:layout_marginTop="@dimen/activation_code_btn_done_margin_top"
+        android:layout_marginEnd="@dimen/activation_code_btn_done_horizontal_margin"
         android:layout_marginBottom="@dimen/activation_code_btn_done_margin_bottom"
         android:background="@drawable/btn_bg_rounded_green"
         android:enabled="false"
@@ -69,7 +70,9 @@
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toTopOf="@+id/btnResendCode"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/errorText"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/btnResendCode"
@@ -77,6 +80,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/sf_pro_text_regular"
         android:gravity="center"
+        android:padding="@dimen/activation_code_btn_resend_code_padding"
         android:textColor="@color/black_a30"
         android:textColorLink="@color/color_gtr_green"
         android:textSize="@dimen/activation_code_text_size"

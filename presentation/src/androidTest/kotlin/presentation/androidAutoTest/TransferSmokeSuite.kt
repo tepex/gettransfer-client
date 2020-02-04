@@ -14,14 +14,12 @@ import org.junit.Test
 
 import com.kg.gettransfer.presentation.data.Constants
 import com.kg.gettransfer.presentation.screenelements.*
-import org.junit.Ignore
 
 class TransferSmokeSuite : TestCase() {
 
     @Rule
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
-
 
     @Rule
     @JvmField

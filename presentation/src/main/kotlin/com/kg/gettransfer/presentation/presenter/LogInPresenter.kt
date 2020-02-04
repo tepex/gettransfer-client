@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import com.kg.gettransfer.domain.model.Contact
 import moxy.InjectViewState
 
 import com.kg.gettransfer.presentation.ui.MainLoginActivity
@@ -42,11 +43,12 @@ class LogInPresenter : BaseLogInPresenter<LogInView>(), KoinComponent {
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
+            val contact = when (isPhone) {
+                true  -> Contact.PhoneContact(getInternationalNumber(params.emailOrPhone))
+                false -> Contact.EmailContact(params.emailOrPhone)
+            }
             fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when (isPhone) {
-                    true -> accountManager.login(null, getInternationalNumber(params.emailOrPhone), password, false)
-                    false -> accountManager.login(params.emailOrPhone, null, password, false)
-                }
+                accountManager.login(contact, password, false)
             }.also { result ->
                 viewState.blockInterface(false)
 
@@ -71,14 +73,15 @@ class LogInPresenter : BaseLogInPresenter<LogInView>(), KoinComponent {
 
         utils.launchSuspend {
             viewState.blockInterface(true, true)
-            fetchResult(SHOW_ERROR, checkLoginError = false) {
-                when (isPhone) {
-                    true -> {
-                        params.emailOrPhone = getInternationalNumber(params.emailOrPhone)
-                        sessionInteractor.getVerificationCode(null, params.emailOrPhone)
-                    }
-                    false -> sessionInteractor.getVerificationCode(params.emailOrPhone, null)
+            val contact = when (isPhone) {
+                true  -> {
+                    params.emailOrPhone = getInternationalNumber(params.emailOrPhone)
+                    Contact.PhoneContact(params.emailOrPhone)
                 }
+                false -> Contact.EmailContact(params.emailOrPhone)
+            }
+            fetchResult(SHOW_ERROR, checkLoginError = false) {
+                sessionInteractor.getVerificationCode(contact)
             }.also { result ->
                 viewState.blockInterface(false)
 

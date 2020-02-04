@@ -625,7 +625,8 @@
 
 	<!--Activation code view-->
 	<dimen name="activation_code_horizontal_padding">16dp</dimen>
-	<dimen name="activation_code_vertical_padding">32dp</dimen>
+	<dimen name="activation_code_padding_top">32dp</dimen>
+	<dimen name="activation_code_padding_bottom">10dp</dimen>
 	<dimen name="activation_code_text_size">12sp</dimen>
 	<dimen name="activation_code_pin_view_margin_top">24dp</dimen>
 	<dimen name="activation_code_pin_view_item_width">24dp</dimen>
@@ -635,8 +636,10 @@
 	<dimen name="activation_code_pin_view_cursor_width">2dp</dimen>
 	<dimen name="activation_code_pin_view_item_height">40dp</dimen>
 	<dimen name="activation_code_error_text_margin_top">16dp</dimen>
-	<dimen name="activation_code_btn_done_vertical_margin">12dp</dimen>
-	<dimen name="activation_code_btn_done_margin_bottom">24dp</dimen>
+	<dimen name="activation_code_btn_done_horizontal_margin">12dp</dimen>
+	<dimen name="activation_code_btn_done_margin_bottom">10dp</dimen>
+	<dimen name="activation_code_btn_done_margin_top">16dp</dimen>
+	<dimen name="activation_code_btn_resend_code_padding">8dp</dimen>
 
 	<!--Settings editable field-->
 	<dimen name="settings_editable_field_min_height">64dp</dimen>

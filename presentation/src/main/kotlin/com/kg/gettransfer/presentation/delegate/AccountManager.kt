@@ -9,6 +9,7 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.CountEventsInteractor
 
 import com.kg.gettransfer.domain.model.Account
+import com.kg.gettransfer.domain.model.Contact
 import com.kg.gettransfer.domain.model.Profile
 import com.kg.gettransfer.domain.model.User
 import com.kg.gettransfer.domain.model.RegistrationAccount
@@ -98,8 +99,8 @@ class AccountManager : KoinComponent {
 
     /* METHODS */
 
-    suspend fun login(email: String?, phone: String?, password: String, withSmsCode: Boolean): Result<Account> {
-        val result = sessionInteractor.login(email, phone, password, withSmsCode)
+    suspend fun login(contact: Contact<String>, password: String, withSmsCode: Boolean): Result<Account> {
+        val result = sessionInteractor.login(contact, password, withSmsCode)
         if (result.error == null) successAuthorization(result.model.user)
         return result
     }
