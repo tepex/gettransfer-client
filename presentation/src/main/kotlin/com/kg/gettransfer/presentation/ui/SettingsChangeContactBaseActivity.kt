@@ -9,8 +9,6 @@ import androidx.core.view.isVisible
 import com.kg.gettransfer.presentation.presenter.SettingsChangeContactPresenter
 import com.kg.gettransfer.presentation.ui.custom.ActivationCodeView
 import com.kg.gettransfer.presentation.view.SettingsChangeContactView
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
 
 abstract class SettingsChangeContactBaseActivity : BaseActivity(),
     SettingsChangeContactView,
@@ -20,20 +18,14 @@ abstract class SettingsChangeContactBaseActivity : BaseActivity(),
     private lateinit var btnChangeContact: Button
     private lateinit var scrollContent: ScrollView
 
-    @InjectPresenter
-    internal lateinit var presenter: SettingsChangeContactPresenter
-
-    @ProvidePresenter
-    fun createSettingsChangeContactPresenter() = SettingsChangeContactPresenter(true)
-
-    override fun getPresenter(): SettingsChangeContactPresenter = presenter
+    abstract override fun getPresenter(): SettingsChangeContactPresenter
 
     protected fun initFields(codeView: ActivationCodeView, button: Button, scrollView: ScrollView) {
         activationCodeView = codeView
         btnChangeContact = button
         scrollContent = scrollView
 
-        btnChangeContact.setOnClickListener { presenter.onChangeContactClicked() }
+        btnChangeContact.setOnClickListener { getPresenter().onChangeContactClicked() }
     }
 
     @CallSuper
@@ -75,12 +67,12 @@ abstract class SettingsChangeContactBaseActivity : BaseActivity(),
     }
 
     override fun onDoneClicked(code: String) {
-        presenter.onCodeEntered(code)
+        getPresenter().onCodeEntered(code)
     }
 
     override fun onResendCodeClicked() {
-        presenter.onResendCodeClicked()
+        getPresenter().onResendCodeClicked()
     }
 
-    override fun onBackPressed() { presenter.onBackCommandClick() }
+    override fun onBackPressed() { getPresenter().onBackCommandClick() }
 }
