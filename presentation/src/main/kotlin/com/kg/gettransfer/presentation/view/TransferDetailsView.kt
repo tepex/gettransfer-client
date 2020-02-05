@@ -29,6 +29,7 @@ interface TransferDetailsView : BaseView, RouteView, GooglePlayView {
     fun updateCamera(latLngList: List<LatLng>)
     fun showRateAnimation()
     fun showSupportScreen(transferId: Long)
+    fun moveToLocationMarker(currentAddress: LatLng?)
 
     companion object {
         val EXTRA_TRANSFER_ID = "${TransferDetailsView::class.java.name}.transferId"

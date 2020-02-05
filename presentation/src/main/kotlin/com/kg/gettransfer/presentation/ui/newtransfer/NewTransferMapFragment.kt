@@ -40,7 +40,6 @@ import kotlinx.android.synthetic.main.search_form_map.*
 //import leakcanary.AppWatcher
 
 import pub.devrel.easypermissions.EasyPermissions
-import java.lang.UnsupportedOperationException
 
 @Suppress("TooManyFunctions")
 class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
@@ -84,7 +83,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         }
         btnNext.setThrottledClickListener { presenter.onNextClick() }
         btnBack.setOnClickListener { navigateBack() }
-        btnMyLocation.setOnClickListener {
+        btnMyLocation.setThrottledClickListener {
             checkPermission()
             presenter.updateLocation()
         }
@@ -122,17 +121,7 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     }
 
     private fun checkPermission() {
-        if (!EasyPermissions.hasPermissions(requireContext(), *PERMISSIONS)) {
-            EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.LNG_LOCATION_ACCESS),
-                PERMISSION_REQUEST, *PERMISSIONS
-            )
-        }
-    }
-
-    override fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit) {
-        block(EasyPermissions.hasPermissions(requireContext(), *PERMISSIONS))
+        presenter.checkPermission(this)
     }
 
     @CallSuper
@@ -202,9 +191,9 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     override fun initUIForSelectedField(field: String) {
         mMarker.setImageDrawable(ContextCompat.getDrawable(requireContext(),
             when (field) {
-                FIELD_FROM -> R.drawable.point_orange
+                FIELD_FROM -> R.drawable.ic_map_label_a
                 FIELD_TO   -> R.drawable.ic_map_label_b
-                else       -> throw UnsupportedOperationException()
+                else       -> R.drawable.ic_map_label_empty
             }
         ))
         search_panel.setFieldMode(field == FIELD_TO)
@@ -254,11 +243,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
     }
 
     companion object {
-        @JvmField
-        val PERMISSIONS =
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-        const val PERMISSION_REQUEST = 2211
-
         const val MAX_INIT_ZOOM = 2.0f
         const val MAGIC_DURATION = 150L
         const val MARKER_ELEVATION = 5f

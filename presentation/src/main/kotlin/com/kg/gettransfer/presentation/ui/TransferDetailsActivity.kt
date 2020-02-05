@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -27,6 +28,7 @@ import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.model.Transfer
 
 import com.kg.gettransfer.extensions.isNonZero
+import com.kg.gettransfer.extensions.setThrottledClickListener
 
 import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
@@ -48,9 +50,11 @@ import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
+import com.kg.gettransfer.presentation.ui.helpers.MapHelper
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.presentation.view.TransferDetailsView
+import com.kg.gettransfer.utilities.LocationManager
 
 import java.util.Date
 
@@ -112,11 +116,14 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private val rateAnimation by lazy { RateTripAnimationFragment() }
 
+    private var carMarker: Marker? = null
+    private var myLocationMarker: Marker? = null
+    private var shadowMarker: Marker? = null
+
     @ProvidePresenter
     fun createTransferDetailsPresenter() = TransferDetailsPresenter()
 
     override fun getPresenter(): TransferDetailsPresenter = presenter
-    private var mCarMarker: Marker? = null
 
     @CallSuper
     protected override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,7 +142,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         initBottomSheets()
         setClickListeners()
         initMapView(savedInstanceState)
-        setClickListeners()
     }
 
     @CallSuper
@@ -173,7 +179,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     @CallSuper
     override fun onStop() {
-        clearMarker()
+        removeCarMarker()
         super.onStop()
     }
 
@@ -219,8 +225,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
     }
 
     private fun setClickListeners() {
-        btnBack.setOnClickListener          { presenter.onBackCommandClick() }
-        btnCenterRoute.setOnClickListener   { presenter.onCenterRouteClick() }
+        btnBack.setOnClickListener { presenter.onBackCommandClick() }
+        btnCenterRoute.setOnClickListener { presenter.onCenterRouteClick() }
+        btnLocation.setThrottledClickListener {
+            if (presenter.checkLocationPermission(this)) {
+                presenter.getCurrentLocation(this)
+            }
+        }
         tripRate.setOnRatingBarChangeListener { _, rating, _ -> presenter.rateTrip(rating, true) }
         topCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
         bottomCommunicationButtons.btnCancel.setOnClickListener { presenter.onCancelRequestClicked() }
@@ -610,6 +621,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         vehiclePhotosView.setPhotos(offerModel.vehicle.transportType.imageId, offerModel.vehicle.photos)
     }
 
+    private fun collapseDetailsBottomSheet() {
+        scrollContent.post { scrollContent.fullScroll(View.FOCUS_UP) }
+        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+    }
+
+    private fun hideSecondaryBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
+
     override fun setRoute(polyline: PolylineModel, routeModel: RouteModel, isDateOrDistanceChanged: Boolean) {
         setPolyline(polyline, routeModel)
         btnCenterRoute.isVisible = false
@@ -731,13 +749,13 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
     private fun initCarMarker(offer: OfferModel) {
         processGoogleMap(false) {
-            mCarMarker = addCarToMap(presenter.getMarkerIcon(offer))
+            carMarker = addCarToMap(presenter.getMarkerIcon(offer))
             presenter.initCoordinates()
         }
     }
 
     override fun moveCarMarker(bearing: Float, latLon: LatLng, show: Boolean) {
-        mCarMarker?.apply {
+        carMarker?.apply {
             position = latLon
             rotation = bearing
             isVisible = show
@@ -784,20 +802,30 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         Utils.goToGooglePlay(this, getString(R.string.app_market_package), PLAY_MARKET_RATE)
     }
 
-    private fun clearMarker() {
-        mCarMarker?.remove()
+    private fun removeCarMarker() {
+        carMarker?.remove()
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+        onPermissionsDenied(requestCode)
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        presenter.onDownloadVoucherClick()
+        when (requestCode) {
+            RC_WRITE_FILE -> presenter.onDownloadVoucherClick()
+            LocationManager.RC_LOCATION -> presenter.getCurrentLocation(this)
+        }
     }
 
     override fun onRationaleDenied(requestCode: Int) {
-        longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+        onPermissionsDenied(requestCode)
+    }
+
+    private fun onPermissionsDenied(requestCode: Int) {
+        when (requestCode) {
+            RC_WRITE_FILE -> longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
+            LocationManager.RC_LOCATION -> longToast(getString(R.string.LNG_LOCATION_ACCESS))
+        }
     }
 
     override fun onRationaleAccepted(requestCode: Int) {}
@@ -824,12 +852,27 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         Screens.showSupportScreen(supportFragmentManager, transferId)
     }
 
-    private fun collapseDetailsBottomSheet() {
-        scrollContent.post { scrollContent.fullScroll(View.FOCUS_UP) }
-        bsTransferDetails.state = BottomSheetTripleStatesBehavior.STATE_COLLAPSED
+    override fun moveToLocationMarker(currentAddress: LatLng?) {
+        processGoogleMap(false) { map ->
+            currentAddress?.let { address ->
+                myLocationMarker?.remove()
+                shadowMarker?.remove()
+                myLocationMarker = MapHelper.addMarker(this, map, address, R.drawable.ic_map_label_empty)
+                MapHelper.animateCamera(this, map, address)
+                shadowMarker = MapHelper.addShadow(this, map, address)
+            }
+        }
     }
 
-    private fun hideSecondaryBottomSheet() { bsSecondarySheet.state = BottomSheetBehavior.STATE_HIDDEN }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // When we get the result from asking the user to turn on device location,
+        // we call checkDeviceLocationSettings again to make sure it's actually on,
+        // but we don't resolve the check to keep the user from seeing an endless loop.
+        if (requestCode == LocationManager.REQUEST_TURN_DEVICE_LOCATION_ON) {
+            presenter.getCurrentLocation(this, false)
+        }
+    }
 
     companion object {
         const val THANKS_DELAY = 3000L

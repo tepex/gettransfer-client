@@ -11,6 +11,7 @@ import com.kg.gettransfer.presentation.view.NewTransferMainView
 import com.kg.gettransfer.utilities.Analytics
 
 import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
+import com.kg.gettransfer.utilities.LocationManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,9 +34,26 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
                 setSelectedField(FIELD_FROM)
             }
         }
-
-        // Создать листенер для обновления текущей локации
+        initAddressListener()
+        initEmptyAddressListener()
+        // TODO Создать листенер для обновления текущей локации
         // https://developer.android.com/training/location/receive-location-updates
+    }
+
+    private fun initEmptyAddressListener() {
+        locationManager.emptyAddressListener = object : LocationManager.OnGetEmptyAddressListener {
+            override fun onGetEmptyAddress() {
+                setAddressInSelectedField(null)
+            }
+        }
+    }
+
+    private fun initAddressListener() {
+        locationManager.addressListener = object : LocationManager.OnGetAddressListener {
+            override fun onGetAddress(currentAddress: GTAddress) {
+                setAddressInSelectedField(currentAddress.cityPoint.name)
+            }
+        }
     }
 
     override fun updateView() {
@@ -56,9 +74,11 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         }
 
         if (fillAddressFieldsCheckIsEmpty()) {
-            updateCurrentLocation(true)
+            worker.main.launch {
+                blockSelectedField(withContext(worker.bg) { getPreferences().getModel() }.selectedField)
+            }
+            locationManager.getCurrentLocation(true)
         }
-
         viewState.setHourlyDuration(orderInteractor.hourlyDuration)
         viewState.updateTripView(isHourly())
     }
@@ -80,27 +100,11 @@ class NewTransferMainPresenter : BaseNewTransferPresenter<NewTransferMainView>()
         }
     }
 
-    override fun updateCurrentLocationAsync(isFromField: Boolean) {
-        worker.main.launch {
-            blockSelectedField(withContext(worker.bg) { getPreferences().getModel() }.selectedField)
-        }
-        super.updateCurrentLocationAsync(isFromField)
-    }
-
     private fun blockSelectedField(field: String) {
         when (field) {
             FIELD_FROM -> viewState.blockFromField()
             FIELD_TO   -> viewState.blockToField()
         }
-    }
-
-    override suspend fun setPointAddress(currentAddress: GTAddress) {
-        super.setPointAddress(currentAddress)
-        setAddressInSelectedField(currentAddress.cityPoint.name)
-    }
-
-    override fun setEmptyAddress() {
-        setAddressInSelectedField(null)
     }
 
     private fun setAddressInSelectedField(address: String?) {

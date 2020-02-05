@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui.newtransfer
 
-import android.Manifest
 import android.animation.Animator
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -181,12 +180,8 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         request_search_panel.selectSearchTo()
     }
 
-    override fun defineAddressRetrieving(block: (withGps: Boolean) -> Unit) {
-        block(EasyPermissions.hasPermissions(requireContext(), *PERMISSIONS))
-    }
-
     override fun showReadMoreDialog() {
-        ReadMoreFragment().show(requireFragmentManager(), getString(R.string.tag_read_more))
+        ReadMoreFragment().show(parentFragmentManager, getString(R.string.tag_read_more))
     }
 
     @CallSuper
@@ -228,9 +223,6 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     }
 
     companion object {
-        @JvmField val PERMISSIONS =
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-
         private const val THROTTLED_DELAY = 1500L
     }
 }

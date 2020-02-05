@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.presenter
 
+import android.app.Activity
 import android.os.Handler
 
 import moxy.InjectViewState
@@ -51,6 +52,7 @@ import com.kg.gettransfer.sys.domain.SetAppEntersInteractor
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.CommunicationManager
+import com.kg.gettransfer.utilities.LocationManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -66,6 +68,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private val worker: WorkerManager by inject { parametersOf("TransferDetailsPresenter") }
     private val setAppEnters: SetAppEntersInteractor by inject()
     private val communicationManager: CommunicationManager by inject()
+    private val locationManager: LocationManager by inject()
 
     private val cityPointMapper: CityPointMapper by inject()
     private val pointMapper: PointMapper by inject()
@@ -96,6 +99,15 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
                 getOffer()
             }
             viewState.blockInterface(false)
+        }
+        initAddressListener()
+    }
+
+    private fun initAddressListener() {
+        locationManager.addressListener = object : LocationManager.OnGetAddressListener {
+            override fun onGetAddress(currentAddress: GTAddress) {
+                viewState.moveToLocationMarker(locationManager.lastCurrentLocation)
+            }
         }
     }
 
@@ -171,6 +183,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         worker.cancel()
         reviewInteractor.releaseReviewData()
         coordinateInteractor.removeCoordinateListener(this)
+        locationManager.removeAddressListeners()
         super.onDestroy()
     }
 
@@ -389,6 +402,12 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun onSupportClick(transferId: Long) {
         viewState.showSupportScreen(transferId)
     }
+
+    fun getCurrentLocation(activity: Activity, resolve: Boolean = true) {
+        locationManager.checkDeviceSettingLocation(activity, resolve)
+    }
+
+    fun checkLocationPermission(activity: Activity) = locationManager.checkPermission(activity)
 
     companion object {
         const val FIELD_EMAIL = "field_email"
