@@ -4,8 +4,6 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.kg.gettransfer.data.model.MessageEntity
 
-class MessageWrapperModel(@SerializedName(MessageEntity.ENTITY_NAME) @Expose val message: MessageModel)
-
 class MessageModel(
     @SerializedName(MessageEntity.ID)          @Expose val id: Long,
     @SerializedName(MessageEntity.ACCOUNT_ID)  @Expose val accountId: Long,

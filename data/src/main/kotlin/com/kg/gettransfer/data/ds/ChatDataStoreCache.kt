@@ -25,12 +25,4 @@ class ChatDataStoreCache : ChatDataStore {
     override fun newMessageToCache(message: MessageEntity) = cache.setNewMessage(message)
 
     override fun deleteNewMessageFromCache(messageId: Long) = cache.deleteNewMessage(messageId)
-
-    override suspend fun newMessage(transferId: Long, text: String): MessageEntity {
-        throw UnsupportedOperationException()
-    }
-
-    override suspend fun readMessage(messageId: Long): Boolean {
-        throw UnsupportedOperationException()
-    }
 }

@@ -10,10 +10,6 @@ interface ChatDataStore : KoinComponent {
 
     fun getMessage(messageId: Long): MessageEntity?
 
-    suspend fun newMessage(transferId: Long, text: String): MessageEntity
-
-    suspend fun readMessage(messageId: Long): Boolean
-
     fun addChat(transferId: Long, chat: ChatEntity)
 
     fun addMessage(message: MessageEntity)

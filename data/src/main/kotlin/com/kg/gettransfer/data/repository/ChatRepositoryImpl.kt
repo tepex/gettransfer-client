@@ -41,18 +41,6 @@ class ChatRepositoryImpl(
         resultNewMessages.entity?.let {
             result.entity?.messages?.addAll(it)
         }
-
-        /*
-        val chat = result.entity?.let { chatMapper.fromEntity(it) } ?: DEFAULT_CHAT
-        resultNewMessages.entity?.map {
-            val newMessage = messageMapper.fromEntity(it)
-
-            if (newMessage.accountId == DEFAULT_CHAT.accountId && chat.accountId != DEFAULT_CHAT.accountId) {
-                newMessage.accountId = chat.accountId
-            }
-            chat.messages = chat.messages.plus(newMessage)
-        }
-        */
         return Result(
             result.entity?.map(dateFormat.get()) ?: Chat.EMPTY,
             result.error?.map()
@@ -71,36 +59,9 @@ class ChatRepositoryImpl(
         )
     }
 
-    override suspend fun newMessage(message: Message): Result<Chat> {
-        factory.retrieveCacheDataStore().newMessageToCache(message.map(dateFormat.get()))
-        sendAllNewMessages(message.transferId)
-        return getChatCached(message.transferId)
-    }
-
-    override suspend fun sendAllNewMessages(transferId: Long?): Result<Int> {
-        val newMessages = if (transferId != null) {
-            factory.retrieveCacheDataStore().getNewMessagesForTransfer(transferId)
-        } else {
-            factory.retrieveCacheDataStore().getAllNewMessages()
-        }
-        var sendedMessagesCount = 0
-        for (i in 0 until newMessages.size) {
-            val result: ResultEntity<MessageEntity?> = retrieveRemoteEntity {
-                factory.retrieveRemoteDataStore().newMessage(newMessages[i].transferId, newMessages[i].text)
-            }
-            if (result.error == null) {
-                sendedMessagesCount++
-                result.entity?.let { factory.retrieveCacheDataStore().addMessage(result.entity) }
-                factory.retrieveCacheDataStore().deleteNewMessageFromCache(newMessages[i].id)
-            } else {
-                return Result(sendedMessagesCount)
-            }
-        }
-        return Result(sendedMessagesCount)
-    }
-
-    override fun sendMessageFromQueue(transferId: Long): Result<Unit> {
+    private fun sendMessageFromQueue(transferId: Long): Result<Unit> {
         val newMessages = factory.retrieveCacheDataStore().getNewMessagesForTransfer(transferId)
+        //factory.retrieveCacheDataStore().getAllNewMessages()
         newMessages.firstOrNull()?.let { chatDataStoreIO.onSendMessageEmit(it.transferId, it.text) }
         return Result(Unit)
     }
