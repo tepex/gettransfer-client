@@ -1,37 +1,33 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
 
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
-
 import androidx.constraintlayout.widget.ConstraintLayout
-
-import android.text.Editable
-import android.text.TextWatcher
-
-import android.util.AttributeSet
-
-import android.view.LayoutInflater
-import android.view.View
 import androidx.core.content.withStyledAttributes
-
-import moxy.MvpDelegate
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
-
-import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.ApiException
-import com.kg.gettransfer.domain.DatabaseException
-import com.kg.gettransfer.domain.model.GTAddress
 import androidx.core.view.isVisible
 import androidx.core.view.isInvisible
+
+import com.kg.gettransfer.R
+import com.kg.gettransfer.core.domain.GTAddress
+import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.DatabaseException
 
 import com.kg.gettransfer.presentation.presenter.SearchAddressPresenter
 import com.kg.gettransfer.presentation.view.SearchAddressView
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.search_address.*
+
+import moxy.MvpDelegate
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 /**
  * https://github.com/Arello-Mobile/Moxy/wiki/CustomView-as-MvpView

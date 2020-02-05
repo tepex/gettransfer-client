@@ -1,10 +1,11 @@
 package com.kg.gettransfer.presentation.view
 
 import androidx.annotation.StringRes
+
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
-import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.core.domain.GTAddress
 
 @StateStrategyType(OneExecutionStateStrategy::class)
 interface SearchView : BaseView {

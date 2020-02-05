@@ -1,4 +1,4 @@
-package com.kg.gettransfer.domain.model
+package com.kg.gettransfer.core.domain
 
 data class Point(
     val latitude: Double = 0.0,

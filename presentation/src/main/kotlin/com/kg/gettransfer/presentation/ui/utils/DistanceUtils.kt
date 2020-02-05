@@ -1,9 +1,11 @@
 package com.kg.gettransfer.presentation.ui.utils
 
 import android.location.Location
+
+import com.kg.gettransfer.core.domain.Point
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.domain.model.DistanceUnit
-import com.kg.gettransfer.domain.model.Point
+
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

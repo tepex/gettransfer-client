@@ -1,22 +1,25 @@
 package com.kg.gettransfer.presentation.presenter
 
 import androidx.fragment.app.Fragment
-import moxy.InjectViewState
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.core.domain.GTAddress
+import com.kg.gettransfer.core.domain.Point
+
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.EMPTY_ADDRESS
 
+import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.NewTransferMapView
 import com.kg.gettransfer.utilities.LocationManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+import moxy.InjectViewState
 
 @InjectViewState
 class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
@@ -53,7 +56,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
     private fun initAddressListener() {
         locationManager.addressListener = object : LocationManager.OnGetAddressListener {
             override fun onGetAddress(currentAddress: GTAddress) {
-                lastAddressPoint = pointMapper.toLatLng(currentAddress.cityPoint.point!!)
+                lastAddressPoint = Utils.toLatLng(currentAddress.cityPoint.point!!)
                 onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
                 viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation(lastAddressPoint))
                 viewState.setAddress(currentAddress.cityPoint.name)
@@ -134,7 +137,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
                 withContext(worker.bg) {
                     orderInteractor.getAddressByLocation(
                         getPreferences().getModel().selectedField == FIELD_FROM,
-                        pointMapper.fromLatLng(lastPoint!!)
+                        Utils.fromLatLng(lastPoint!!)
                     )
                 }.isSuccess()?.let { addr ->
                     currentLocation = addr.cityPoint.name
@@ -187,6 +190,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
         viewState.restartApp()
     }
 
+    /* TODO: убрать андроид-зависимость */
     fun checkPermission(fragment: Fragment) {
         locationManager.checkPermission(fragment)
     }

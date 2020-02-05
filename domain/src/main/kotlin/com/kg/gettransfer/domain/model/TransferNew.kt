@@ -1,5 +1,7 @@
 package com.kg.gettransfer.domain.model
 
+import com.kg.gettransfer.core.domain.CityPoint
+
 import java.util.Date
 
 data class TransferNew(

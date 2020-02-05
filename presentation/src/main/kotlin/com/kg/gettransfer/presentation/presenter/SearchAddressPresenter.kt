@@ -4,7 +4,7 @@ import moxy.InjectViewState
 
 import com.google.android.gms.maps.model.LatLngBounds
 
-import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.core.domain.GTAddress
 
 import com.kg.gettransfer.presentation.view.SearchAddressView
 

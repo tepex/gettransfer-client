@@ -1,14 +1,17 @@
 package com.kg.gettransfer.data.repository
 
+import com.kg.gettransfer.core.domain.CityPoint
+import com.kg.gettransfer.core.domain.GTAddress
+import com.kg.gettransfer.core.domain.Point
+
 import com.kg.gettransfer.data.LocationException
 import com.kg.gettransfer.data.RemoteException
 import com.kg.gettransfer.data.ds.GeoDataStore
 import com.kg.gettransfer.data.model.map
-import com.kg.gettransfer.domain.model.CityPoint
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Point
+
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.repository.GeoRepository
+
 import java.util.Locale
 
 class GeoRepositoryImpl(private val geoDataStore: GeoDataStore) : BaseRepository(), GeoRepository {

@@ -1,5 +1,8 @@
 package com.kg.gettransfer.data.model
 
+import com.kg.gettransfer.core.data.CityPointEntity
+import com.kg.gettransfer.core.data.map
+
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.TransportType
 

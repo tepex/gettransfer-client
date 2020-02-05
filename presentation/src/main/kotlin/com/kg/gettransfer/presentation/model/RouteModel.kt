@@ -1,6 +1,6 @@
 package com.kg.gettransfer.presentation.model
 
-import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.core.domain.Point
 
 data class RouteModel(
     val from: String,

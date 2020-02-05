@@ -8,6 +8,8 @@ import moxy.InjectViewState
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
+import com.kg.gettransfer.core.domain.CityPoint
+import com.kg.gettransfer.core.domain.GTAddress
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.domain.eventListeners.CoordinateEventListener
@@ -16,12 +18,11 @@ import com.kg.gettransfer.domain.interactor.CoordinateInteractor
 import com.kg.gettransfer.domain.interactor.ReviewInteractor
 
 import com.kg.gettransfer.domain.model.Coordinate
-import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.ReviewRate
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.ReviewRate
 
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.COMMUNICATION
@@ -29,14 +30,10 @@ import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
 
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 
-import com.kg.gettransfer.presentation.mapper.CityPointMapper
-import com.kg.gettransfer.presentation.mapper.PointMapper
-
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.PolylineModel
-import com.kg.gettransfer.presentation.model.CityPointModel
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.SystemUtils
@@ -70,17 +67,14 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     private val communicationManager: CommunicationManager by inject()
     private val locationManager: LocationManager by inject()
 
-    private val cityPointMapper: CityPointMapper by inject()
-    private val pointMapper: PointMapper by inject()
-
     private lateinit var transferModel: TransferModel
     private lateinit var offerModel: OfferModel
     private var routeModel: RouteModel? = null
     private var polyline: PolylineModel? = null
     private var track: CameraUpdate? = null
 
-    private var fromPoint: CityPointModel? = null
-    private var toPoint: CityPointModel? = null
+    private var fromPoint: CityPoint? = null
+    private var toPoint: CityPoint? = null
     private var hourlyDuration: Int? = null
 
     internal var transferId = 0L
@@ -138,9 +132,9 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
 
     private suspend fun setTransferFields(transfer: Transfer) {
-        transfer.from.point?.let { startCoordinate = pointMapper.toLatLng(it) }
-        fromPoint = cityPointMapper.toView(transfer.from)
-        transfer.to?.let { toPoint = cityPointMapper.toView(it) }
+        transfer.from.point?.let { startCoordinate = Utils.toLatLng(it) }
+        fromPoint = transfer.from
+        toPoint = transfer.to
         hourlyDuration = transfer.duration
 
         transferModel = transfer.map(configsManager.getConfigs().transportTypes.map { it.map() })
@@ -199,7 +193,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
     fun onRepeatTransferClicked() {
         fromPoint?.let { fromPoint ->
             orderInteractor.from = GTAddress(
-                cityPointMapper.fromView(fromPoint),
+                fromPoint,
                 emptyList<String>(),
                 transferModel.from,
                 GTAddress.parseAddress(transferModel.from)
@@ -208,7 +202,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
         toPoint?.let { to ->
             orderInteractor.to = GTAddress(
-                cityPointMapper.fromView(to),
+                to,
                 emptyList<String>(),
                 transferModel.to,
                 transferModel.to?.let { GTAddress.parseAddress(it) }

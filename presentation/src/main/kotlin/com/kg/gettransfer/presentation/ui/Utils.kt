@@ -5,21 +5,22 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode as PorterDuffXfermode1
 import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+
 import android.net.Uri
-
 import android.os.Build
-
 import android.telephony.TelephonyManager
 
 import android.text.Html
@@ -29,8 +30,8 @@ import android.text.TextWatcher
 
 import android.util.DisplayMetrics
 import android.util.Patterns
-import android.view.LayoutInflater
 
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 
@@ -46,6 +47,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 
 import com.bumptech.glide.Glide
@@ -63,10 +65,11 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 
 import com.kg.gettransfer.R
-import androidx.core.view.isVisible
-import com.kg.gettransfer.extensions.internationalExample
 
-import com.kg.gettransfer.presentation.mapper.PointMapper
+import com.kg.gettransfer.core.domain.Point
+
+import com.kg.gettransfer.extensions.internationalExample
+import com.kg.gettransfer.extensions.map
 
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -77,12 +80,12 @@ import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
 import java.util.Locale
 
-import org.koin.core.inject
+import kotlin.math.max
+
 import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 import timber.log.Timber
-import kotlin.math.max
-import android.graphics.PorterDuffXfermode as PorterDuffXfermode1
 
 @Suppress("TooManyFunctions")
 object Utils : KoinComponent {
@@ -98,8 +101,6 @@ object Utils : KoinComponent {
 
     internal val phoneUtil: PhoneNumberUtil by inject()
     private val countryCodeManager: CountryCodeManager by inject()
-
-    private val pointMapper: PointMapper by inject()
 
     fun getAlertDialogBuilder(context: Context): AlertDialog.Builder {
         return AlertDialog.Builder(context)
@@ -228,25 +229,25 @@ object Utils : KoinComponent {
     }
 
     fun getPolyline(routeModel: RouteModel): PolylineModel {
-        val mPoints = mutableListOf<LatLng>()
+        val points = mutableListOf<LatLng>()
         var line: PolylineOptions? = null
         val latLngBuilder = LatLngBounds.Builder()
         val track: CameraUpdate?
 
         if (routeModel.polyLines != null && routeModel.polyLines.isNotEmpty()) {
-            for (item in routeModel.polyLines) mPoints.addAll(PolyUtil.decode(item))
+            for (item in routeModel.polyLines) points.addAll(PolyUtil.decode(item))
 
             line = PolylineOptions()
 
-            for (i in mPoints.indices) {
-                line.add(mPoints.get(i))
-                latLngBuilder.include(mPoints.get(i))
+            for (i in points.indices) {
+                line.add(points.get(i))
+                latLngBuilder.include(points.get(i))
             }
         } else {
-            mPoints.add(pointMapper.toLatLng(routeModel.fromPoint))
-            mPoints.add(pointMapper.toLatLng(routeModel.toPoint))
+            points.add(routeModel.fromPoint.map())
+            points.add(routeModel.toPoint.map())
 
-            for (i in mPoints.indices) latLngBuilder.include(mPoints.get(i))
+            for (i in points.indices) latLngBuilder.include(points.get(i))
         }
 
         Timber.d("latLngBuilder: $latLngBuilder")
@@ -262,7 +263,7 @@ object Utils : KoinComponent {
             Timber.w(e, "Create order error: $latLngBuilder")
             null
         }
-        return PolylineModel(mPoints.firstOrNull(), mPoints.getOrNull(mPoints.size - 1), line, track, isVerticalRoute)
+        return PolylineModel(points.firstOrNull(), points.getOrNull(points.size - 1), line, track, isVerticalRoute)
     }
 
     fun getCameraUpdate(list: List<LatLng>) =
@@ -446,6 +447,9 @@ object Utils : KoinComponent {
             .getDrawable(context, drawableId)?.toBitmap()
             ?.squareBitmap(bacColorResId?.let { ContextCompat.getColor(context, it) })
             ?.let { RoundedBitmapDrawableFactory.create(context.resources, it).apply { isCircular = true }.toBitmap() }
+
+    fun toLatLng(type: Point) = LatLng(type.latitude, type.longitude)
+    fun fromLatLng(type: LatLng) = Point(type.latitude, type.longitude)
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

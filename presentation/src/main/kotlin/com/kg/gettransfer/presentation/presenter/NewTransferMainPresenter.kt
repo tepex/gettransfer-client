@@ -1,20 +1,21 @@
 package com.kg.gettransfer.presentation.presenter
 
-import moxy.InjectViewState
-
-import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.core.domain.GTAddress
 
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.EMPTY_ADDRESS
 import com.kg.gettransfer.presentation.view.NewTransferMainView
-import com.kg.gettransfer.utilities.Analytics
 
 import com.kg.gettransfer.sys.domain.SetSelectedFieldInteractor
+import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.LocationManager
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+import moxy.InjectViewState
+
 import org.koin.core.inject
 
 @InjectViewState

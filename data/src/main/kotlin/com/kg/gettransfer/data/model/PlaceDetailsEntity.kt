@@ -1,6 +1,7 @@
 package com.kg.gettransfer.data.model
 
-import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.core.domain.Point
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
