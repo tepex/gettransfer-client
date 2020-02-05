@@ -44,7 +44,7 @@ import org.jetbrains.anko.find
 import pub.devrel.easypermissions.EasyPermissions
 
 @Suppress("TooManyFunctions")
-class MainNavigateActivity: BaseActivity(), MainNavigateView,
+class MainNavigateActivity : BaseActivity(), MainNavigateView,
         StoreDialogFragment.OnStoreListener, GoToPlayMarketListener {
 
     @InjectPresenter
@@ -182,7 +182,7 @@ class MainNavigateActivity: BaseActivity(), MainNavigateView,
 
     private fun setEventsCounterStyle(isShow: Boolean, isNavTripsSelected: Boolean, view: View) {
         if (isShow) {
-            if (isNavTripsSelected ) {
+            if (isNavTripsSelected) {
                 setNotificationItemsVisibility(view, showIcon = true, showBadge = false)
             } else {
                 setNotificationItemsVisibility(view, showIcon = false, showBadge = true)
@@ -215,7 +215,7 @@ class MainNavigateActivity: BaseActivity(), MainNavigateView,
                 RequestsPagerFragment::class.java.name,
                 SettingsFragment::class.java.name,
                 SupportFragment::class.java.name ->
-                    Handler().postDelayed({ bottomNavSliding(true) }, 100L)
+                    Handler().postDelayed({ bottomNavSliding(true) }, DELAY)
                 // not visible bottom menu
                 else -> bottomNavSliding(false)
             }
@@ -237,12 +237,16 @@ class MainNavigateActivity: BaseActivity(), MainNavigateView,
         val navGraphIds = listOf(R.navigation.order, R.navigation.trips, R.navigation.help, R.navigation.settings)
 
         // Setup the bottom navigation view with a list of navigation graphs
-        val controller = bottom_nav.setupWithNavController(navGraphIds = navGraphIds, fragmentManager = supportFragmentManager, containerId = R.id.nav_host_container, intent = intent
+        val controller = bottom_nav.setupWithNavController(
+            navGraphIds = navGraphIds,
+            fragmentManager = supportFragmentManager,
+            containerId = R.id.nav_host_container,
+            intent = intent
         )
         currentNavController = controller
-        currentNavController?.observe(this, Observer { it ->
-            it.removeOnDestinationChangedListener(listener)
-            it.addOnDestinationChangedListener(listener)
+        currentNavController?.observe(this, Observer { navController ->
+            navController.removeOnDestinationChangedListener(listener)
+            navController.addOnDestinationChangedListener(listener)
         })
     }
 
