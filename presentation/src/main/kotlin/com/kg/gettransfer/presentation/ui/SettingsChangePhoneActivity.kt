@@ -6,11 +6,22 @@ import androidx.annotation.CallSuper
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.model.TitleModel
+import com.kg.gettransfer.presentation.presenter.SettingsChangeContactPresenter
 
 import kotlinx.android.synthetic.main.activity_settings_change_phone.*
 import kotlinx.android.synthetic.main.toolbar.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class SettingsChangePhoneActivity : SettingsChangeContactBaseActivity() {
+
+    @InjectPresenter
+    internal lateinit var presenter: SettingsChangeContactPresenter
+
+    @ProvidePresenter
+    fun createSettingsChangeContactPresenter() = SettingsChangeContactPresenter(false)
+
+    override fun getPresenter(): SettingsChangeContactPresenter = presenter
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
