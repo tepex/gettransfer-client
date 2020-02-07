@@ -120,8 +120,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         ?.let { list ->
             if (list.size == 1) {
                 val offer = list.first()
-                val url = getPreferences().getModel().endpoint?.url!!
-                offerModel = offer.map(url)
+                offerModel = offer.map()
                 reviewInteractor.offerRateID = offer.id
                 if (transferModel.showOfferInfo) {
                     viewState.setOffer(offerModel, transferModel.countChilds, transferModel.unreadMessagesCount)

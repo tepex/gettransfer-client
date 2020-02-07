@@ -20,8 +20,6 @@ import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.ChatView
 
-import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
-
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.CommunicationManager
 
@@ -40,7 +38,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     private val messageMapper: MessageMapper by inject()
     private val worker: WorkerManager by inject { parametersOf("ChatPresenter") }
     private val communicationManager: CommunicationManager by inject()
-    private val getPreferences: GetPreferencesInteractor by inject()
 
     private var chatModel: ChatModel? = null
     private var transferModel: TransferModel? = null
@@ -63,10 +60,9 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
             getChatFromRemote()
 
-            val url = getPreferences().getModel().endpoint?.url!!
             offerModel = fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) {
                 offerInteractor.getOffers(transferId)
-            }.model.firstOrNull()?.let { it.map(url) }
+            }.model.firstOrNull()?.let { it.map() }
 
             transferModel?.let { viewState.setToolbar(it, offerModel) }
         }

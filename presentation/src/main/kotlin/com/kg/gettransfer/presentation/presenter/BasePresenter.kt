@@ -34,7 +34,6 @@ import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 import com.kg.gettransfer.sys.domain.SetFavoriteTransportsInteractor
 import com.kg.gettransfer.sys.presentation.ConfigsManager
 
@@ -83,7 +82,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val downloadManager: GTDownloadManager by inject()
 
     private val worker: WorkerManager by inject { parametersOf("BasePresenter") }
-    private val getPreferences: GetPreferencesInteractor by inject()
 
     private val setFavoriteTransports: SetFavoriteTransportsInteractor by inject()
 
@@ -180,8 +178,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     fun isBusinessAccount(): Boolean = accountManager.remoteAccount.isBusinessAccount
 
     open suspend fun onNewOffer(offer: Offer): OfferModel {
-        val url = getPreferences().getModel().endpoint?.url!!
-        return offer.map(url).also(notificationManager::showOfferNotification)
+        return offer.map().also(notificationManager::showOfferNotification)
     }
 
     override fun onNewOfferEvent(offer: Offer) {

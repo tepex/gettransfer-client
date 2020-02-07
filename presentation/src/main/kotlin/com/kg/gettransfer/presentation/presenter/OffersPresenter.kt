@@ -18,8 +18,6 @@ import com.kg.gettransfer.presentation.view.OffersView
 import com.kg.gettransfer.presentation.view.OffersView.Sort
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
-
 import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.coroutines.launch
@@ -42,7 +40,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
     var isViewRoot: Boolean = false
 
     private val worker: WorkerManager by inject { parametersOf("OffersPresenter") }
-    private val getPreferences: GetPreferencesInteractor by inject()
 
     override fun attachView(view: OffersView) {
         super.attachView(view)
@@ -238,9 +235,8 @@ class OffersPresenter : BasePresenter<OffersView>() {
 
     private fun setOffers() = worker.main.launch {
         viewState.setOffers(offers.map { offer ->
-            val url = getPreferences().getModel().endpoint?.url!!
             when (offer) {
-                is Offer        -> offer.map(url)
+                is Offer        -> offer.map()
                 is BookNowOffer -> offer.map()
             }
         }, !transfer?.nameSign.isNullOrEmpty())

@@ -43,7 +43,7 @@ data class OfferModel(
 
 fun BookNowOffer.map() = BookNowOfferModel(amount, base, withoutDiscount, transportType.map())
 
-fun Offer.map(url: String) = OfferModel(
+fun Offer.map() = OfferModel(
     id = id,
     transferId = transferId,
     status = status,

@@ -43,8 +43,6 @@ import com.kg.gettransfer.presentation.ui.SystemUtils
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
 
-import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
-
 import com.kg.gettransfer.utilities.Analytics
 
 import io.sentry.Sentry
@@ -58,7 +56,6 @@ import org.koin.core.inject
 class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
 
     private val profileMapper: ProfileMapper by inject()
-    private val getPreferences: GetPreferencesInteractor by inject()
 
     lateinit var googlePayPaymentsClient: PaymentsClient
 
@@ -253,11 +250,10 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
     private suspend fun setPaymentOptions(transfer: Transfer) {
         offer?.let { offer ->
             val nameSignPresent = !transfer.nameSign.isNullOrEmpty()
-            val url = getPreferences().getModel().endpoint?.url!!
             when (offer) {
                 is BookNowOffer -> viewState.setBookNowOffer(offer.map(), nameSignPresent)
                 is Offer        -> {
-                    viewState.setOffer(offer.map(url), nameSignPresent)
+                    viewState.setOffer(offer.map(), nameSignPresent)
                     if (isCarPhotoChanged) viewState.setCarPhotoOffer(offer.vehicle.map())
                 }
             }
