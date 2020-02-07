@@ -219,17 +219,6 @@ interface Api {
         @Path("id") transferId: Long
     ): ResponseModel<ChatModel>
 
-    @POST("$API_MESSAGES/{id}")
-    suspend fun newMessage(
-        @Path("id") transferId: Long,
-        @Body message: MessageNewWrapperModel
-    ): ResponseModel<MessageWrapperModel>
-
-    @POST("$API_MESSAGES/read/{id}")
-    suspend fun readMessage(
-        @Path("id") messageId: Long
-    ): ResponseModel<MessageWrapperModel>
-
     @GET(".")
     suspend fun getMyLocation(): LocationModel
 

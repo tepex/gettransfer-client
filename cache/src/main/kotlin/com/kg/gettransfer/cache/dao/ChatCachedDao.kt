@@ -34,9 +34,6 @@ interface ChatCachedDao {
     @Query("""SELECT * FROM ${MessageEntity.NEW_MESSAGE} WHERE ${MessageEntity.TRANSFER_ID} = :transferId""")
     fun getNewMessagesForTransfer(transferId: Long): List<NewMessageCached>?
 
-    @Query("""SELECT * FROM ${MessageEntity.NEW_MESSAGE}""")
-    fun getAllNewMessages(): List<NewMessageCached>?
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertNewMessage(newMessage: NewMessageCached)
 

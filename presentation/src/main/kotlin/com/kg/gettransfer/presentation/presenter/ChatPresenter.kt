@@ -62,7 +62,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
             offerModel = fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) {
                 offerInteractor.getOffers(transferId)
-            }.model.firstOrNull()?.let { it.map() }
+            }.model.firstOrNull()?.map()
 
             transferModel?.let { viewState.setToolbar(it, offerModel) }
         }
@@ -71,8 +71,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
     private fun onJoinRoom() {
         chatInteractor.eventChatReceiver = this
-        chatInteractor.onJoinRoom(transferId)
-        utils.launchSuspend { utils.asyncAwait { chatInteractor.sendMessageFromQueue(transferId) } }
+        utils.launchSuspend { utils.asyncAwait { chatInteractor.onJoinRoom(transferId) } }
     }
 
     fun onLeaveRoom() {
@@ -80,10 +79,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         chatInteractor.eventChatReceiver = null
         socketInteractor.removeSocketListener(this)
     }
-
-    /*override fun doingSomethingAfterSendingNewMessagesCached() {
-        getChatFromRemote()
-    }*/
 
     private fun getChatFromRemote() {
         utils.launchSuspend {
@@ -115,7 +110,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         val newMessage = MessageModel(0, chatModel?.accountId ?: NO_ID, transferId, time, null, text, time.time)
         chatModel?.apply { messages = messages.plus(newMessage) }
         viewState.scrollToEnd()
-        utils.launchSuspend { fetchResult { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
+        utils.launchSuspend { utils.asyncAwait { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
         analytics.logSingleEvent(Analytics.MESSAGE_OUT)
     }
 

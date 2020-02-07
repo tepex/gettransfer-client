@@ -12,10 +12,6 @@ class ChatDataStoreRemote : ChatDataStore {
 
     override suspend fun getChat(transferId: Long) = remote.getChat(transferId)
 
-    override suspend fun newMessage(transferId: Long, text: String) = remote.newMessage(transferId, text)
-
-    override suspend fun readMessage(messageId: Long) = remote.readMessage(messageId)
-
     override fun addChat(transferId: Long, chat: ChatEntity) {
         throw UnsupportedOperationException()
     }
@@ -25,10 +21,6 @@ class ChatDataStoreRemote : ChatDataStore {
     }
 
     override fun getNewMessagesForTransfer(transferId: Long): List<MessageEntity> {
-        throw UnsupportedOperationException()
-    }
-
-    override fun getAllNewMessages(): List<MessageEntity> {
         throw UnsupportedOperationException()
     }
 

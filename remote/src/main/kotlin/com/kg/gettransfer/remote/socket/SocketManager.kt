@@ -6,7 +6,6 @@ import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.model.MessageEntity
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.data.model.PaymentStatusEventEntity
-import com.kg.gettransfer.sys.domain.PreferencesRepository
 
 import io.socket.client.IO
 import io.socket.client.Manager
@@ -47,12 +46,11 @@ class SocketManager : KoinComponent {
 
     @Suppress("MagicNumber")
     private val options = IO.Options().apply {
-        path        = "/api/socket"
-        forceNew    = true
-        transports  = arrayOf(WebSocket.NAME)
-        timeout     = 2000
-        reconnectionAttempts = 5
-        reconnectionDelay    = 2000
+        path       = "/api/socket"
+        forceNew   = true
+        transports = arrayOf(WebSocket.NAME)
+        timeout    = 2000
+        reconnectionDelay = 2000
     }
 
     fun changeEndpoint(url: String) {
@@ -60,16 +58,8 @@ class SocketManager : KoinComponent {
     }
 
     fun startConnection() {
-        prepareSocket(statusOpened)
-    }
-
-    fun changeConnection() {
-        if (statusOpened) prepareSocket(true)
-    }
-
-    private fun prepareSocket(withReconnect: Boolean) {
         this.accessToken = preferences.accessToken
-        if (withReconnect) disconnect(true) else openSocket()
+        if (statusOpened) disconnect(true) else openSocket()
     }
 
     private fun openSocket() {
@@ -87,6 +77,7 @@ class SocketManager : KoinComponent {
             s.off()
             s.close()
         }
+        socket = null
     }
 
     @Suppress("LongMethod", "ComplexMethod")

@@ -231,14 +231,12 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
         }
     }
 
-    fun onAppStateChanged(isForeGround: Boolean) = worker.main.launch {
+    fun onAppStateChanged(isForeGround: Boolean) {
         with(socketInteractor) {
-            withContext(worker.bg) {
-                if (isForeGround && accountManager.hasAccount) {
-                    openSocketConnection()
-                } else {
-                    closeSocketConnection()
-                }
+            if (isForeGround && accountManager.hasAccount) {
+                openSocketConnection()
+            } else {
+                closeSocketConnection()
             }
         }
     }

@@ -18,8 +18,6 @@ interface ChatCache : KoinComponent {
 
     fun getNewMessagesForTransfer(transferId: Long): List<MessageEntity>
 
-    fun getAllNewMessages(): List<MessageEntity>
-
     fun setNewMessage(newMessage: MessageEntity)
 
     fun deleteNewMessage(messageId: Long)
