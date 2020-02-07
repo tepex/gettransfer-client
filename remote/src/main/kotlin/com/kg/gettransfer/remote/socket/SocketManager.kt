@@ -46,11 +46,11 @@ class SocketManager : KoinComponent {
 
     @Suppress("MagicNumber")
     private val options = IO.Options().apply {
-        path        = "/api/socket"
-        forceNew    = true
-        transports  = arrayOf(WebSocket.NAME)
-        timeout     = 2000
-        reconnectionDelay    = 2000
+        path       = "/api/socket"
+        forceNew   = true
+        transports = arrayOf(WebSocket.NAME)
+        timeout    = 2000
+        reconnectionDelay = 2000
     }
 
     fun changeEndpoint(url: String) {
@@ -58,12 +58,8 @@ class SocketManager : KoinComponent {
     }
 
     fun startConnection() {
-        prepareSocket(statusOpened)
-    }
-
-    private fun prepareSocket(withReconnect: Boolean) {
         this.accessToken = preferences.accessToken
-        if (withReconnect) disconnect(true) else openSocket()
+        if (statusOpened) disconnect(true) else openSocket()
     }
 
     private fun openSocket() {
@@ -81,6 +77,7 @@ class SocketManager : KoinComponent {
             s.off()
             s.close()
         }
+        socket = null
     }
 
     @Suppress("LongMethod", "ComplexMethod")
