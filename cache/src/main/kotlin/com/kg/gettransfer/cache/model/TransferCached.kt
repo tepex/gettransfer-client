@@ -5,6 +5,9 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+import com.kg.gettransfer.core.cache.CityPointModel
+import com.kg.gettransfer.core.cache.map
+
 import com.kg.gettransfer.data.model.TransferEntity
 
 @Entity(tableName = TransferEntity.ENTITY_NAME)
@@ -14,8 +17,8 @@ data class TransferCached(
     @ColumnInfo(name = TransferEntity.DURATION)                val duration: Int?,
     @ColumnInfo(name = TransferEntity.DISTANCE)                val distance: Int?,
     @ColumnInfo(name = TransferEntity.STATUS)                  val status: String,
-    @Embedded(prefix = TransferEntity.FROM)                    val from: CityPointCached,
-    @Embedded(prefix = TransferEntity.TO)                      val to: CityPointCached?,
+    @Embedded(prefix = TransferEntity.FROM)                    val from: CityPointModel,
+    @Embedded(prefix = TransferEntity.TO)                      val to: CityPointModel?,
     @ColumnInfo(name = TransferEntity.DATE_TO_LOCAL)           val dateToLocal: String,
     @ColumnInfo(name = TransferEntity.DATE_RETURN_LOCAL)       val dateReturnLocal: String?,
     @ColumnInfo(name = TransferEntity.FLIGHT_NUMBER)           val flightNumber: String?,

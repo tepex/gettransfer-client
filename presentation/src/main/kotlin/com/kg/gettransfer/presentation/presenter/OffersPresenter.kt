@@ -2,6 +2,8 @@ package com.kg.gettransfer.presentation.presenter
 
 import moxy.InjectViewState
 
+import com.kg.gettransfer.core.presentation.WorkerManager
+
 import com.kg.gettransfer.domain.model.BookNowOffer
 import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.OfferItem
@@ -18,6 +20,12 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
+
 @Suppress("TooManyFunctions")
 @InjectViewState
 class OffersPresenter : BasePresenter<OffersView>() {
@@ -30,6 +38,8 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
     var isViewRoot: Boolean = false
+
+    private val worker: WorkerManager by inject { parametersOf("OffersPresenter") }
 
     override fun attachView(view: OffersView) {
         super.attachView(view)
@@ -223,10 +233,10 @@ class OffersPresenter : BasePresenter<OffersView>() {
         }
     }
 
-    private fun setOffers() {
+    private fun setOffers() = worker.main.launch {
         viewState.setOffers(offers.map { offer ->
             when (offer) {
-                is Offer        -> offerMapper.toView(offer)
+                is Offer        -> offer.map()
                 is BookNowOffer -> offer.map()
             }
         }, !transfer?.nameSign.isNullOrEmpty())

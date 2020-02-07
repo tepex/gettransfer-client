@@ -4,15 +4,17 @@ import com.kg.gettransfer.data.model.CurrencyEntity
 import com.kg.gettransfer.data.model.LocaleEntity
 import com.kg.gettransfer.data.model.TransportTypeEntity
 import com.kg.gettransfer.data.model.map
-import sys.data.CheckoutcomCredentialsEntity
-import sys.data.GooglePayCredentialsEntity
-import sys.data.map
 
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.PaymentRequest
 
 import com.kg.gettransfer.sys.domain.Configs
 
 import java.util.Locale
+
+import sys.data.CheckoutcomCredentialsEntity
+import sys.data.GooglePayCredentialsEntity
+import sys.data.map
 
 /**
  * Representation for a [ConfigsEntity] fetched from an external layer data source
@@ -54,5 +56,8 @@ fun ConfigsEntity.map() =
         contactEmails.map { it.map() },
         checkoutcomCredentials.map(),
         googlePayCredentials.map(),
-        defaultCardGateway
+        defaultCardGateway.mapGateway()
     )
+
+
+fun String.mapGateway(): PaymentRequest.Gateway = enumValueOf<PaymentRequest.Gateway>(toUpperCase(Locale.US))

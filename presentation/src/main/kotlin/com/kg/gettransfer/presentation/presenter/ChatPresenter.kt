@@ -62,7 +62,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
             offerModel = fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) {
                 offerInteractor.getOffers(transferId)
-            }.model.firstOrNull()?.let { offerMapper.toView(it) }
+            }.model.firstOrNull()?.let { it.map() }
 
             transferModel?.let { viewState.setToolbar(it, offerModel) }
         }

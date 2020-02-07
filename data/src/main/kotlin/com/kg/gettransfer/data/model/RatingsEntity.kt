@@ -2,16 +2,15 @@ package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.Ratings
 
-import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 @Serializable
 data class RatingsEntity(
-    @Optional@SerialName(AVERAGE) val average:             Double? = null,
-    @Optional@SerialName(VEHICLE) val vehicle:             Double? = null,
-    @Optional@SerialName(DRIVER) val driver:               Double? = null,
-    @Optional@SerialName(COMMUNICATION) val communication: Double? = null
+    @SerialName(AVERAGE) val average:             Double? = null,
+    @SerialName(VEHICLE) val vehicle:             Double? = null,
+    @SerialName(DRIVER) val driver:               Double? = null,
+    @SerialName(COMMUNICATION) val communication: Double? = null
 ) {
 
     companion object {

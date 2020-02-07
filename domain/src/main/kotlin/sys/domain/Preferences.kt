@@ -1,6 +1,6 @@
 package com.kg.gettransfer.sys.domain
 
-import com.kg.gettransfer.domain.model.GTAddress
+import com.kg.gettransfer.core.domain.GTAddress
 import com.kg.gettransfer.domain.model.TransportType
 
 data class Preferences(

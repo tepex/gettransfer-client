@@ -1,8 +1,9 @@
-package com.kg.gettransfer.remote.model
+package com.kg.gettransfer.core.remote
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.kg.gettransfer.data.model.CityPointEntity
+
+import com.kg.gettransfer.core.data.CityPointEntity
 
 data class CityPointModel(
     @SerializedName(CityPointEntity.NAME) @Expose val name: String,

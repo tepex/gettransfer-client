@@ -41,6 +41,7 @@ import com.kg.gettransfer.presentation.model.RouteModel
 import com.kg.gettransfer.presentation.model.TitleModel
 import com.kg.gettransfer.presentation.model.TransferModel
 import com.kg.gettransfer.presentation.model.TransportTypeModel
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.presenter.TransferDetailsPresenter
 import com.kg.gettransfer.presentation.ui.behavior.BottomSheetTripleStatesBehavior
@@ -573,7 +574,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         }
 
         offer.carrier.let { carrier ->
-            carrier.profile?.name?.let { name ->
+            carrier.profile?.fullName?.let { name ->
                 carrier_name.field_text.text = name
                 carrier_name.isVisible = true
             }
@@ -592,7 +593,7 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
 
             OfferItemBindDelegate.bindLanguages(
                 Either.Single(layoutAboutDriver.view_driver_languages.layoutCarrierLanguages),
-                carrier.languages,
+                carrier.languages.map { it.map() },
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.TRANSFER_DETAILS
             )
         }

@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.Embedded
 import androidx.room.PrimaryKey
 
+import com.kg.gettransfer.core.cache.AddressHistoryList
+import com.kg.gettransfer.core.cache.map
+
 import com.kg.gettransfer.sys.data.PreferencesEntity
 
 import kotlinx.serialization.Serializable

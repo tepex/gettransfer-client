@@ -2,9 +2,10 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.core.domain.GTAddress
+
 import com.kg.gettransfer.core.presentation.WorkerManager
 
-import com.kg.gettransfer.domain.model.GTAddress
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 
 import com.kg.gettransfer.presentation.model.PopularPlace

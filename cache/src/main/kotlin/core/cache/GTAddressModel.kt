@@ -1,8 +1,8 @@
-package com.kg.gettransfer.sys.cache
+package com.kg.gettransfer.core.cache
 
 import androidx.room.ColumnInfo
 
-import com.kg.gettransfer.data.model.GTAddressEntity
+import com.kg.gettransfer.core.data.GTAddressEntity
 
 import kotlinx.serialization.Serializable
 

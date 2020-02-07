@@ -1,6 +1,6 @@
 package com.kg.gettransfer.data.model
 
-import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.core.domain.Point
 
 data class LocationEntity(
     val latitude: Double = 0.0,
@@ -14,4 +14,5 @@ data class LocationEntity(
 }
 
 fun LocationEntity.map() = Point(latitude, longitude)
+
 fun Point.map() = LocationEntity(latitude, longitude)

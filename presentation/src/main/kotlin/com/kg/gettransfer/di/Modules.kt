@@ -29,16 +29,12 @@ import com.kg.gettransfer.presentation.delegate.PassengersDelegate
 import com.kg.gettransfer.presentation.delegate.PushTokenManager
 
 import com.kg.gettransfer.presentation.mapper.CarrierMapper
-import com.kg.gettransfer.presentation.mapper.OfferMapper
-import com.kg.gettransfer.presentation.mapper.PaymentRequestMapper
 import com.kg.gettransfer.presentation.mapper.PaymentStatusRequestMapper
-import com.kg.gettransfer.presentation.mapper.PointMapper
 import com.kg.gettransfer.presentation.mapper.ProfileMapper
 import com.kg.gettransfer.presentation.mapper.UserMapper
 import com.kg.gettransfer.presentation.mapper.MessageMapper
 import com.kg.gettransfer.presentation.mapper.ChatAccountMapper
 import com.kg.gettransfer.presentation.mapper.ChatMapper
-import com.kg.gettransfer.presentation.mapper.CityPointMapper
 
 import com.kg.gettransfer.receiver.NetworkChangeCallback
 
@@ -138,16 +134,12 @@ val domainModule = module {
 
 val mappersModule = module {
     single { CarrierMapper() }
-    single { OfferMapper() }
-    single { PaymentRequestMapper() }
     single { PaymentStatusRequestMapper() }
-    single { PointMapper() }
     single { ProfileMapper() }
     single { UserMapper() }
     single { MessageMapper() }
     single { ChatAccountMapper() }
     single { ChatMapper() }
-    single { CityPointMapper() }
 }
 
 val androidModule = module {

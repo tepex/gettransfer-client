@@ -16,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.domain.model.Carrier
 import com.kg.gettransfer.domain.model.Money
 
 import com.kg.gettransfer.extensions.strikeText
@@ -26,7 +27,6 @@ import com.kg.gettransfer.presentation.delegate.Either
 import com.kg.gettransfer.presentation.delegate.OfferItemBindDelegate
 
 import com.kg.gettransfer.presentation.model.BookNowOfferModel
-import com.kg.gettransfer.presentation.model.CarrierModel
 import com.kg.gettransfer.presentation.model.LocaleModel
 import com.kg.gettransfer.presentation.model.OfferItemModel
 import com.kg.gettransfer.presentation.model.OfferModel
@@ -35,6 +35,7 @@ import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.VehicleModel
 import com.kg.gettransfer.presentation.model.getImageRes
 import com.kg.gettransfer.presentation.model.getModelsRes
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.presenter.OffersPresenter
 
@@ -226,7 +227,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 setVehicleNameAndColor(vehicle = offer.vehicle)
                 OfferItemBindDelegate.bindLanguages(
                     Either.Single(languages_container_bs),
-                    offer.carrier.languages,
+                    offer.carrier.languages.map { it.map() },
                     layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_DETAILS
                 )
                 setCapacity(offer.vehicle.transportType)
@@ -297,13 +298,13 @@ class OffersActivity : BaseActivity(), OffersView {
         } ?: false
     }
 
-    private fun setRating(carrier: CarrierModel) {
+    private fun setRating(carrier: Carrier) {
         view_offer_rating_bs.isVisible = true
         offer_ratingDivider_bs.isVisible = true
-        carrier.ratings.let { ratings ->
-            setRating(ratings.driver, ratingDriver)
-            setRating(ratings.communication, ratingPunctuality)
-            setRating(ratings.vehicle, ratingVehicle)
+        with(carrier.ratings) {
+            setRating(driver, ratingDriver)
+            setRating(communication, ratingPunctuality)
+            setRating(vehicle, ratingVehicle)
         }
         groupTopSelection.isVisible = carrier.approved
     }

@@ -1,5 +1,7 @@
 package com.kg.gettransfer.domain.model
 
+import com.kg.gettransfer.core.domain.CityPoint
+
 sealed class Dest<CityPoint, Int> {
 
     class Point(val to: CityPoint) : Dest<CityPoint, Int>()

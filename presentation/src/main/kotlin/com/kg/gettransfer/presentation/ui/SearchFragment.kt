@@ -2,30 +2,25 @@ package com.kg.gettransfer.presentation.ui
 
 import android.animation.Animator
 import android.os.Bundle
-
-import androidx.annotation.CallSuper
-import androidx.annotation.StringRes
-
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
+import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 
 import com.kg.gettransfer.R
 
-import com.kg.gettransfer.domain.model.GTAddress
-import androidx.core.view.isVisible
+import com.kg.gettransfer.core.domain.GTAddress
+
 import com.kg.gettransfer.extensions.hideKeyboard
 
 import com.kg.gettransfer.presentation.adapter.AddressAdapter
 import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
-
 import com.kg.gettransfer.presentation.model.PopularPlace
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
 import com.kg.gettransfer.presentation.ui.utils.FragmentUtils
@@ -36,6 +31,9 @@ import com.kg.gettransfer.presentation.view.SearchView
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.search_form.*
 import kotlinx.android.synthetic.main.toolbar.*
+
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 @Suppress("TooManyFunctions")
 class SearchFragment : BaseFragment(), SearchView {

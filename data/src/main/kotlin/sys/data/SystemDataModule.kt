@@ -4,6 +4,7 @@ import com.kg.gettransfer.core.data.SimpleCacheStrategy
 
 import com.kg.gettransfer.domain.model.Currency
 import com.kg.gettransfer.domain.model.DistanceUnit
+import com.kg.gettransfer.domain.model.PaymentRequest
 import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.sys.domain.*
@@ -11,7 +12,9 @@ import com.kg.gettransfer.sys.domain.*
 import java.util.Locale
 
 import org.koin.dsl.module
+
 import sys.data.AccessTokenRepositoryImpl
+
 import sys.domain.AccessTokenRepository
 import sys.domain.CheckoutcomCredentials
 import sys.domain.GooglePayCredentials
@@ -55,7 +58,7 @@ val systemData = module {
                     listOf("AMEX", "JCB", "MASTERCARD", "VISA"),
                     listOf("CRYPTOGRAM_3DS")
                 ),
-            defaultCardGateway = "checkoutcom"
+            defaultCardGateway = PaymentRequest.Gateway.CHECKOUTCOM
         )
     }
     single {

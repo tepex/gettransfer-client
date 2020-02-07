@@ -3,11 +3,11 @@ package com.kg.gettransfer.presentation.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.domain.model.GTAddress
-import androidx.core.view.isVisible
+import com.kg.gettransfer.core.domain.GTAddress
 
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.address_list_item.*

@@ -18,18 +18,18 @@ import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.SocketInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 
-import com.kg.gettransfer.domain.model.Result
-import com.kg.gettransfer.domain.model.TransportType
-import com.kg.gettransfer.domain.model.Transfer
-import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.ChatBadgeEvent
+import com.kg.gettransfer.domain.model.Offer
+import com.kg.gettransfer.domain.model.Result
+import com.kg.gettransfer.domain.model.Transfer
+import com.kg.gettransfer.domain.model.TransportType
 
 import com.kg.gettransfer.extensions.getOffer
 
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.PushTokenManager
-import com.kg.gettransfer.presentation.mapper.OfferMapper
 import com.kg.gettransfer.presentation.model.OfferModel
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
@@ -66,7 +66,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
-    protected val offerMapper: OfferMapper by inject()
     protected val notificationManager: GTNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()
@@ -179,7 +178,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     fun isBusinessAccount(): Boolean = accountManager.remoteAccount.isBusinessAccount
 
     open suspend fun onNewOffer(offer: Offer): OfferModel {
-        return offerMapper.toView(offer).also { notificationManager.showOfferNotification(it) }
+        return offer.map().also(notificationManager::showOfferNotification)
     }
 
     override fun onNewOfferEvent(offer: Offer) {

@@ -1,12 +1,11 @@
 package com.kg.gettransfer.domain.model
 
+import com.kg.gettransfer.core.domain.CityPoint
+
 import java.util.Date
 import java.util.Locale
 
 /*
-
-
-
  Align to line:9 */
 data class Transfer(
     override val id: Long,
@@ -113,7 +112,7 @@ data class Transfer(
             dateReturnLocal = null,
             dateReturnTZ    = null,
             flightNumber    = null,
-/* ================================================== */
+
             flightNumberReturn    = null,
             transportTypeIds      = emptyList<TransportType.ID>(),
             pax                   = 0,
@@ -124,7 +123,7 @@ data class Transfer(
             childSeats            = 0,
             childSeatsInfant      = 0,
             childSeatsConvertible = 0,
-/* ================================================== */
+
             childSeatsBooster     = 0,
             promoCode             = null,
             passengerOfferedPrice = null,
@@ -135,7 +134,7 @@ data class Transfer(
             watertaxi             = false,
             bookNowOffers         = emptyList<BookNowOffer>(),
             offersCount           = 0,
-/* ================================================== */
+
             relevantCarriersCount = 0,
             offersUpdatedAt       = null,
             dateRefund            = null,
@@ -146,7 +145,7 @@ data class Transfer(
             rubPrice              = null,
             refundedPrice         = null,
             campaign              = null,
-/* ================================================== */
+
             editableFields      = emptyList<String>(),
             airlineCard         = null,
             unreadMessagesCount = 0,

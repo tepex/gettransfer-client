@@ -1,8 +1,9 @@
 package com.kg.gettransfer.domain.interactor
 
-import com.kg.gettransfer.domain.model.CityPoint
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.core.domain.CityPoint
+import com.kg.gettransfer.core.domain.GTAddress
+import com.kg.gettransfer.core.domain.Point
+
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.RouteInfo
 import com.kg.gettransfer.domain.model.RouteInfoRequest

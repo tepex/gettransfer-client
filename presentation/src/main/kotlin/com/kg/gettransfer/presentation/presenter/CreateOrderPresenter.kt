@@ -1,17 +1,15 @@
 package com.kg.gettransfer.presentation.presenter
 
-import moxy.InjectViewState
-
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.model.LatLng
 
 import com.kg.gettransfer.R
 
+import com.kg.gettransfer.core.domain.CityPoint
 import com.kg.gettransfer.core.presentation.WorkerManager
 
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.interactor.PromoInteractor
-import com.kg.gettransfer.domain.model.CityPoint
 import com.kg.gettransfer.domain.model.Dest
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.RouteInfoRequest
@@ -49,6 +47,8 @@ import com.kg.gettransfer.utilities.NewTransferState
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+import moxy.InjectViewState
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf

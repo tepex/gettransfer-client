@@ -1,14 +1,14 @@
 package com.kg.gettransfer.presentation.presenter
 
-import moxy.InjectViewState
-
 import com.google.android.gms.maps.model.LatLng
-import com.kg.gettransfer.domain.model.Point
+
+import com.kg.gettransfer.core.domain.Point
+
 import com.kg.gettransfer.domain.model.Result
 import com.kg.gettransfer.domain.model.RouteInfo
-
 import com.kg.gettransfer.domain.model.RouteInfoRequest
 import com.kg.gettransfer.domain.model.Transfer
+
 import com.kg.gettransfer.extensions.getOffer
 
 import com.kg.gettransfer.presentation.model.RouteModel
@@ -20,6 +20,8 @@ import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.PaymentSuccessfulView
 import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.CommunicationManager
+
+import moxy.InjectViewState
 
 import org.koin.core.inject
 

@@ -6,6 +6,8 @@ import com.kg.gettransfer.cache.model.CurrencyCachedList
 import com.kg.gettransfer.cache.model.LocaleCachedList
 import com.kg.gettransfer.cache.model.TransportTypesCachedList
 
+import com.kg.gettransfer.core.cache.AddressHistoryList
+
 import kotlinx.serialization.json.JSON
 
 @Suppress("TooManyFunctions")

@@ -1,8 +1,9 @@
 package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.Message
+
 import java.text.DateFormat
-import kotlinx.serialization.Optional
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -14,7 +15,7 @@ data class MessageEntity(
     @SerialName(CREATED_AT)        val createdAt: String,
     @SerialName(READ_AT)           val readAt: String?,
     @SerialName(TEXT)              val text: String,
-    @Optional @SerialName(SEND_AT) val sendAt: Long? = null // for undelivered messages
+    @SerialName(SEND_AT) val sendAt: Long? = null // for undelivered messages
 ) {
     companion object {
         const val ENTITY_NAME = "message"

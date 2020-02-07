@@ -25,6 +25,7 @@ import com.kg.gettransfer.presentation.model.TransportTypeModel
 import com.kg.gettransfer.presentation.model.getEmptyImageRes
 import com.kg.gettransfer.presentation.model.getImageRes
 import com.kg.gettransfer.presentation.model.getModelsRes
+import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
@@ -73,7 +74,9 @@ object OfferItemBindDelegate {
 
         with(offer.carrier) {
             bindRating(view_rating_tiny, ratings, approved)
-            bindLanguages(Either.Single(languages_container_tiny), languages,
+            bindLanguages(
+                Either.Single(languages_container_tiny),
+                languages.map { it.map() },
                 layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_ITEM)
         }
 

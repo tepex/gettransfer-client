@@ -2,9 +2,10 @@ package com.kg.gettransfer.presentation.presenter
 
 import moxy.InjectViewState
 
+import com.kg.gettransfer.domain.model.PaymentRequest
+
 import com.kg.gettransfer.extensions.newChainFromMain
 
-import com.kg.gettransfer.presentation.model.PaymentRequestModel
 import com.kg.gettransfer.presentation.view.PaypalConnectionView
 import com.kg.gettransfer.presentation.view.Screens
 
@@ -36,13 +37,13 @@ class PaypalConnectionPresenter : BasePresenter<PaypalConnectionView>() {
     }
 
     private suspend fun showFailedPayment() {
-        analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
+        analytics.PaymentStatus(PaymentRequest.Gateway.BRAINTREE).sendAnalytics(Analytics.EVENT_PAYMENT_FAILED)
         paymentInteractor.isFailedPayment = true
         router.exit()
     }
 
     private suspend fun showSuccessfulPayment() {
-        analytics.PaymentStatus(PaymentRequestModel.PAYPAL).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
+        analytics.PaymentStatus(PaymentRequest.Gateway.BRAINTREE).sendAnalytics(Analytics.EVENT_PAYMENT_DONE)
         router.newChainFromMain(Screens.PaymentSuccess(transferId, offerId))
         paymentInteractor.selectedTransfer?.let {
             val offerPaid = utils.asyncAwait { transferInteractor.isOfferPaid(it.id) }

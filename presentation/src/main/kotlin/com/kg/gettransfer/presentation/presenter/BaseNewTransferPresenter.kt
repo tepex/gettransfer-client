@@ -10,8 +10,6 @@ import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 
-import com.kg.gettransfer.presentation.mapper.PointMapper
-
 import com.kg.gettransfer.presentation.view.BaseNewTransferView
 
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
@@ -36,8 +34,6 @@ abstract class BaseNewTransferPresenter<BV : BaseNewTransferView> : MvpPresenter
     protected val sessionInteractor: SessionInteractor by inject()
 
     protected val locationManager: LocationManager by inject()
-
-    protected val pointMapper: PointMapper by inject()
 
     abstract fun updateView()
 

@@ -1,6 +1,7 @@
 package com.kg.gettransfer.sys.data
 
-import com.kg.gettransfer.data.model.GTAddressEntity
+import com.kg.gettransfer.core.data.GTAddressEntity
+import com.kg.gettransfer.core.data.map
 import com.kg.gettransfer.data.model.map
 
 import com.kg.gettransfer.sys.domain.Preferences

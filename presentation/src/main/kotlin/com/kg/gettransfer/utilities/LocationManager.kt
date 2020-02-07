@@ -4,27 +4,35 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.IntentSender
+
 import androidx.fragment.app.Fragment
+
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.maps.model.LatLng
+
 import com.kg.gettransfer.R
+import com.kg.gettransfer.core.domain.GTAddress
+import com.kg.gettransfer.core.domain.Point
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
-import com.kg.gettransfer.domain.model.GTAddress
-import com.kg.gettransfer.domain.model.Point
-import com.kg.gettransfer.presentation.mapper.PointMapper
+import com.kg.gettransfer.extensions.map
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
+
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
+
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
+
 import pub.devrel.easypermissions.EasyPermissions
+
 import timber.log.Timber
 
 /**
@@ -36,7 +44,6 @@ class LocationManager(val context: Context) : KoinComponent {
     private val analytics: Analytics by inject()
     private val getPreferences: GetPreferencesInteractor by inject()
 
-    private val pointMapper: PointMapper by inject()
     private val geoInteractor: GeoInteractor by inject()
     private val orderInteractor: OrderInteractor by inject()
 
@@ -61,7 +68,7 @@ class LocationManager(val context: Context) : KoinComponent {
         val locationResult = geoInteractor.getCurrentLocation()
         val currentLocation = locationResult.isSuccess()
         if (currentLocation != null && !locationResult.isGeoError()) {
-            lastCurrentLocation = pointMapper.toLatLng(currentLocation)
+            lastCurrentLocation = currentLocation.map()
             val address = geoInteractor.getAddressByLocation(currentLocation).isSuccess()
             if (address?.cityPoint?.point != null) {
                 withContext(worker.main.coroutineContext) { setPointAddress(isFromField, address) }
@@ -99,7 +106,7 @@ class LocationManager(val context: Context) : KoinComponent {
         }
         if (result.error == null) {
             result.model.cityPoint.point?.let {
-                lastCurrentLocation = pointMapper.toLatLng(it)
+                lastCurrentLocation = it.map()
                 setPointAddress(isFromField, result.model)
             }
         } else {

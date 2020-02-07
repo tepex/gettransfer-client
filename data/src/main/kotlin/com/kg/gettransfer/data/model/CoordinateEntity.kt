@@ -2,13 +2,12 @@ package com.kg.gettransfer.data.model
 
 import com.kg.gettransfer.domain.model.Coordinate
 
-import kotlinx.serialization.Optional
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class CoordinateEntity(
-    @Optional var transferId: Long? = null,
+    var transferId: Long? = null,
     @SerialName(LATITUDE) val lat: String,
     @SerialName(LONGITUDE) val lon: String
 ) {

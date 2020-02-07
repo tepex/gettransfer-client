@@ -1,7 +1,8 @@
-package com.kg.gettransfer.data.model
+package com.kg.gettransfer.core.data
 
-import com.kg.gettransfer.domain.model.CityPoint
-import com.kg.gettransfer.domain.model.Point
+import com.kg.gettransfer.core.domain.CityPoint
+import com.kg.gettransfer.core.domain.Point
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -26,4 +27,5 @@ data class CityPointEntity(
 }
 
 fun CityPoint.map() = CityPointEntity(name, point?.toString(), placeId)
+
 fun CityPointEntity.map() = CityPoint(name ?: "", mapPoint(), placeId ?: "")
