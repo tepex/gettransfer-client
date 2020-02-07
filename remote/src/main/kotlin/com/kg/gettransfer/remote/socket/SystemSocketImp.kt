@@ -14,8 +14,6 @@ class SystemSocketImp : SystemEventEmitter, KoinComponent {
 
     override fun connectSocket() = socketManager.startConnection()
 
-    override fun changeConnection() = socketManager.changeConnection()
-
     override fun disconnectSocket() = socketManager.disconnect(false)
 
     fun onConnected() = eventReceiver.socketConnected()

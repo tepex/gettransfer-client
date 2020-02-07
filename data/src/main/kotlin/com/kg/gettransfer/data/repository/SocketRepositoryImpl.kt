@@ -16,10 +16,7 @@ class SocketRepositoryImpl(
     override fun addSocketListener(listener: SocketEventListener)    { socketListeners.add(listener) }
     override fun removeSocketListener(listener: SocketEventListener) { socketListeners.remove(listener) }
 
-    override fun connectSocket() =
-        socketDataStore.connectSocket()
-    override fun connectionChanged() =
-        socketDataStore.changeConnection()
+    override fun connectSocket() = socketDataStore.connectSocket()
     override fun disconnectSocket() = socketDataStore.disconnectSocket()
 
     fun notifyAboutConnection()    = socketListeners.forEach { it.onSocketConnected() }

@@ -6,7 +6,5 @@ class SystemSocketDataStoreOutput(private val emitter: SystemEventEmitter) {
 
     fun connectSocket() = emitter.connectSocket()
 
-    fun changeConnection() = emitter.changeConnection()
-
     fun disconnectSocket() = emitter.disconnectSocket()
 }

@@ -6,7 +6,6 @@ import com.kg.gettransfer.data.model.CoordinateEntity
 import com.kg.gettransfer.data.model.MessageEntity
 import com.kg.gettransfer.data.model.OfferEntity
 import com.kg.gettransfer.data.model.PaymentStatusEventEntity
-import com.kg.gettransfer.sys.domain.PreferencesRepository
 
 import io.socket.client.IO
 import io.socket.client.Manager
@@ -61,10 +60,6 @@ class SocketManager : KoinComponent {
 
     fun startConnection() {
         prepareSocket(statusOpened)
-    }
-
-    fun changeConnection() {
-        if (statusOpened) prepareSocket(true)
     }
 
     private fun prepareSocket(withReconnect: Boolean) {

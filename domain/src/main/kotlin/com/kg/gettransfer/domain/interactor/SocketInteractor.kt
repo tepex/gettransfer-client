@@ -6,8 +6,7 @@ import com.kg.gettransfer.domain.repository.SocketRepository
 class SocketInteractor(
     private val socketRepository: SocketRepository
 ) {
-    suspend fun openSocketConnection() { socketRepository.connectSocket() }
-
+    fun openSocketConnection() = socketRepository.connectSocket()
     fun closeSocketConnection() = socketRepository.disconnectSocket()
 
     fun addSocketListener(listener: SocketEventListener)    { socketRepository.addSocketListener(listener) }
