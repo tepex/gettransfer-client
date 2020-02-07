@@ -20,8 +20,6 @@ class ChatDataStoreCache : ChatDataStore {
 
     override fun getNewMessagesForTransfer(transferId: Long) = cache.getNewMessagesForTransfer(transferId)
 
-    override fun getAllNewMessages() = cache.getAllNewMessages()
-
     override fun newMessageToCache(message: MessageEntity) = cache.setNewMessage(message)
 
     override fun deleteNewMessageFromCache(messageId: Long) = cache.deleteNewMessage(messageId)

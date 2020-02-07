@@ -24,10 +24,6 @@ class ChatDataStoreRemote : ChatDataStore {
         throw UnsupportedOperationException()
     }
 
-    override fun getAllNewMessages(): List<MessageEntity> {
-        throw UnsupportedOperationException()
-    }
-
     override fun newMessageToCache(message: MessageEntity) {
         throw UnsupportedOperationException()
     }

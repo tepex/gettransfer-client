@@ -34,8 +34,6 @@ class ChatCacheImpl : ChatCache, KoinComponent {
     override fun getNewMessagesForTransfer(transferId: Long) =
         db.chatCacheDao().getNewMessagesForTransfer(transferId)?.map { it.map() } ?: emptyList()
 
-    override fun getAllNewMessages() = db.chatCacheDao().getAllNewMessages()?.map { it.map() } ?: emptyList()
-
     override fun setNewMessage(newMessage: MessageEntity) = db.chatCacheDao().insertNewMessage(newMessage.mapNew())
 
     override fun deleteNewMessage(messageId: Long) = db.chatCacheDao().deleteNewMessage(messageId)

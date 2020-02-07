@@ -16,8 +16,6 @@ interface ChatDataStore : KoinComponent {
 
     fun getNewMessagesForTransfer(transferId: Long): List<MessageEntity>
 
-    fun getAllNewMessages(): List<MessageEntity>
-
     fun newMessageToCache(message: MessageEntity)
 
     fun deleteNewMessageFromCache(messageId: Long)
