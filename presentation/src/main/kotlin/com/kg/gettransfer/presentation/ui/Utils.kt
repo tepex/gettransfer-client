@@ -447,9 +447,6 @@ object Utils : KoinComponent {
             .getDrawable(context, drawableId)?.toBitmap()
             ?.squareBitmap(bacColorResId?.let { ContextCompat.getColor(context, it) })
             ?.let { RoundedBitmapDrawableFactory.create(context.resources, it).apply { isCircular = true }.toBitmap() }
-
-    fun toLatLng(type: Point) = LatLng(type.latitude, type.longitude)
-    fun fromLatLng(type: LatLng) = Point(type.latitude, type.longitude)
 }
 
 fun EditText.onTextChanged(cb: (String) -> Unit) {

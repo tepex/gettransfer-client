@@ -28,6 +28,8 @@ import com.kg.gettransfer.domain.model.ReviewRate.RateType.DRIVER
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.COMMUNICATION
 import com.kg.gettransfer.domain.model.ReviewRate.RateType.VEHICLE
 
+import com.kg.gettransfer.extensions.map
+
 import com.kg.gettransfer.presentation.delegate.DriverCoordinate
 
 import com.kg.gettransfer.presentation.model.TransferModel
@@ -132,7 +134,7 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
         }
 
     private suspend fun setTransferFields(transfer: Transfer) {
-        transfer.from.point?.let { startCoordinate = Utils.toLatLng(it) }
+        transfer.from.point?.let { startCoordinate = it.map() }
         fromPoint = transfer.from
         toPoint = transfer.to
         hourlyDuration = transfer.duration

@@ -8,11 +8,12 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.kg.gettransfer.core.domain.GTAddress
 import com.kg.gettransfer.core.domain.Point
 
+import com.kg.gettransfer.extensions.map
+
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_FROM
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.FIELD_TO
 import com.kg.gettransfer.presentation.presenter.SearchPresenter.Companion.EMPTY_ADDRESS
 
-import com.kg.gettransfer.presentation.ui.Utils
 import com.kg.gettransfer.presentation.view.NewTransferMapView
 import com.kg.gettransfer.utilities.LocationManager
 
@@ -56,7 +57,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
     private fun initAddressListener() {
         locationManager.addressListener = object : LocationManager.OnGetAddressListener {
             override fun onGetAddress(currentAddress: GTAddress) {
-                lastAddressPoint = Utils.toLatLng(currentAddress.cityPoint.point!!)
+                lastAddressPoint = currentAddress.cityPoint.point!!.map()
                 onCameraMove(lastAddressPoint, !comparePointsWithRounding(lastAddressPoint, lastPoint))
                 viewState.setMapPoint(lastAddressPoint, true, showBtnMyLocation(lastAddressPoint))
                 viewState.setAddress(currentAddress.cityPoint.name)
@@ -137,7 +138,7 @@ class NewTransferMapPresenter : BaseNewTransferPresenter<NewTransferMapView>() {
                 withContext(worker.bg) {
                     orderInteractor.getAddressByLocation(
                         getPreferences().getModel().selectedField == FIELD_FROM,
-                        Utils.fromLatLng(lastPoint!!)
+                        lastPoint!!.map()
                     )
                 }.isSuccess()?.let { addr ->
                     currentLocation = addr.cityPoint.name

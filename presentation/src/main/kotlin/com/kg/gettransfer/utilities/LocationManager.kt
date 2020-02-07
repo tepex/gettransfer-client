@@ -19,8 +19,8 @@ import com.kg.gettransfer.core.domain.Point
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.domain.interactor.GeoInteractor
 import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.extensions.map
 import com.kg.gettransfer.presentation.presenter.SearchPresenter
-import com.kg.gettransfer.presentation.ui.Utils
 
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
 
@@ -68,7 +68,7 @@ class LocationManager(val context: Context) : KoinComponent {
         val locationResult = geoInteractor.getCurrentLocation()
         val currentLocation = locationResult.isSuccess()
         if (currentLocation != null && !locationResult.isGeoError()) {
-            lastCurrentLocation = Utils.toLatLng(currentLocation)
+            lastCurrentLocation = currentLocation.map()
             val address = geoInteractor.getAddressByLocation(currentLocation).isSuccess()
             if (address?.cityPoint?.point != null) {
                 withContext(worker.main.coroutineContext) { setPointAddress(isFromField, address) }
@@ -106,7 +106,7 @@ class LocationManager(val context: Context) : KoinComponent {
         }
         if (result.error == null) {
             result.model.cityPoint.point?.let {
-                lastCurrentLocation = Utils.toLatLng(it)
+                lastCurrentLocation = it.map()
                 setPointAddress(isFromField, result.model)
             }
         } else {
