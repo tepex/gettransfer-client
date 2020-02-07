@@ -71,7 +71,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
     private fun onJoinRoom() {
         chatInteractor.eventChatReceiver = this
-        chatInteractor.onJoinRoom(transferId)
+        utils.launchSuspend { utils.asyncAwait { chatInteractor.onJoinRoom(transferId) } }
     }
 
     fun onLeaveRoom() {
@@ -114,7 +114,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         val newMessage = MessageModel(0, chatModel?.accountId ?: NO_ID, transferId, time, null, text, time.time)
         chatModel?.apply { messages = messages.plus(newMessage) }
         viewState.scrollToEnd()
-        chatInteractor.newMessage(messageMapper.fromView(newMessage))
+        utils.launchSuspend { utils.asyncAwait { chatInteractor.newMessage(messageMapper.fromView(newMessage)) } }
         analytics.logSingleEvent(Analytics.MESSAGE_OUT)
     }
 

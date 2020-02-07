@@ -59,14 +59,11 @@ class ChatRepositoryImpl(
         )
     }
 
-    private fun sendMessageFromQueue(transferId: Long): Result<Unit> {
-        val newMessages = factory.retrieveCacheDataStore().getNewMessagesForTransfer(transferId)
-        //factory.retrieveCacheDataStore().getAllNewMessages()
-        newMessages.firstOrNull()?.let { chatDataStoreIO.onSendMessageEmit(it.transferId, it.text) }
+    override fun onJoinRoom(transferId: Long): Result<Unit> {
+        chatDataStoreIO.onJoinRoomEmit(transferId)
+        sendMessageFromQueue(transferId)
         return Result(Unit)
     }
-
-    override fun onJoinRoom(transferId: Long) = chatDataStoreIO.onJoinRoomEmit(transferId)
 
     override fun onLeaveRoom(transferId: Long) = chatDataStoreIO.onLeaveRoomEmit(transferId)
 
@@ -78,6 +75,12 @@ class ChatRepositoryImpl(
 
     override fun onReadMessage(transferId: Long, messageId: Long) =
         chatDataStoreIO.onReadMessageEmit(transferId, messageId)
+
+    private fun sendMessageFromQueue(transferId: Long): Result<Unit> {
+        val newMessages = factory.retrieveCacheDataStore().getNewMessagesForTransfer(transferId)
+        newMessages.firstOrNull()?.let { chatDataStoreIO.onSendMessageEmit(it.transferId, it.text) }
+        return Result(Unit)
+    }
 
     internal fun onNewMessageEvent(message: MessageEntity) {
         factory.retrieveCacheDataStore().addMessage(message)
@@ -91,10 +94,10 @@ class ChatRepositoryImpl(
     }
 
     internal fun onMessageReadEvent(messageId: Long) {
-        factory.retrieveCacheDataStore().getMessage(messageId)?.map(dateFormat.get())?.let { msg ->
-            val message = msg.copy(readAt = Calendar.getInstance().time)
-            factory.retrieveCacheDataStore().addMessage(message.map(dateFormat.get()))
-            chatReceiver.onMessageReadEvent(message)
+        factory.retrieveCacheDataStore().getMessage(messageId)?.let { msg ->
+            val message = msg.copy(readAt = dateFormat.get().format(Calendar.getInstance().time))
+            factory.retrieveCacheDataStore().addMessage(message)
+            chatReceiver.onMessageReadEvent(message.map(dateFormat.get()))
         }
     }
 
