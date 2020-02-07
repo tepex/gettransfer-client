@@ -40,7 +40,6 @@ data class OfferModel(
     val armored: Boolean
 ) : OfferItemModel()
 
-
 fun BookNowOffer.map() = BookNowOfferModel(amount, base, withoutDiscount, transportType.map())
 
 fun Offer.map() = OfferModel(

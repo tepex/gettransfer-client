@@ -62,7 +62,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
 
             offerModel = fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) {
                 offerInteractor.getOffers(transferId)
-            }.model.firstOrNull()?.let { it.map() }
+            }.model.firstOrNull()?.map()
 
             transferModel?.let { viewState.setToolbar(it, offerModel) }
         }
@@ -79,10 +79,6 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
         chatInteractor.eventChatReceiver = null
         socketInteractor.removeSocketListener(this)
     }
-
-    /*override fun doingSomethingAfterSendingNewMessagesCached() {
-        getChatFromRemote()
-    }*/
 
     private fun getChatFromRemote() {
         utils.launchSuspend {

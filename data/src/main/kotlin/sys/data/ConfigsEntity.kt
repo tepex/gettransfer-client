@@ -59,5 +59,4 @@ fun ConfigsEntity.map() =
         defaultCardGateway.mapGateway()
     )
 
-
 fun String.mapGateway(): PaymentRequest.Gateway = enumValueOf<PaymentRequest.Gateway>(toUpperCase(Locale.US))
