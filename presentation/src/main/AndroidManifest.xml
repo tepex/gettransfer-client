@@ -30,6 +30,10 @@
             android:name="asset_statements"
             android:value="${assetlinks}" />
 
+        <meta-data
+            android:name="com.onesignal.NotificationOpened.DEFAULT"
+            android:value="DISABLE" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />

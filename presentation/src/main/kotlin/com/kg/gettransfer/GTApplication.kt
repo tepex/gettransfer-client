@@ -22,6 +22,7 @@ import com.kg.gettransfer.di.*
 
 import com.kg.gettransfer.remote.remoteModule
 import com.kg.gettransfer.remote.socketModule
+import com.kg.gettransfer.service.OneSignalNotificationOpenedHandler
 
 import com.kg.gettransfer.sys.cache.systemCache
 import com.kg.gettransfer.sys.data.systemData
@@ -118,7 +119,8 @@ class GTApplication : MultiDexApplication() {
         }
         // OneSignal Initialization
         OneSignal.startInit(this)
-            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+            .setNotificationOpenedHandler(OneSignalNotificationOpenedHandler(this))
+            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
             .unsubscribeWhenNotificationsAreDisabled(true)
             .init()
     }
