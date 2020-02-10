@@ -86,7 +86,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
                 chatInteractor.getChat(transferId)
             }?.let { chat ->
                 initChatModel(chat)
-                notificationManager.clearNotification(transferId.toInt())
+                notificationManager.clearChatNotifications(transferId)
             }
         }
     }

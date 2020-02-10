@@ -28,8 +28,6 @@ import com.kg.gettransfer.extensions.getOffer
 
 import com.kg.gettransfer.presentation.delegate.AccountManager
 import com.kg.gettransfer.presentation.delegate.PushTokenManager
-import com.kg.gettransfer.presentation.model.OfferModel
-import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
@@ -39,7 +37,7 @@ import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
-import com.kg.gettransfer.utilities.GTNotificationManager
+import com.kg.gettransfer.utilities.OneSignalNotificationManager
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -66,7 +64,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
-    protected val notificationManager: GTNotificationManager by inject()
+    protected val notificationManager: OneSignalNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()
     protected val chatInteractor: ChatInteractor by inject()
@@ -177,9 +175,7 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
 
     fun isBusinessAccount(): Boolean = accountManager.remoteAccount.isBusinessAccount
 
-    open suspend fun onNewOffer(offer: Offer): OfferModel {
-        return offer.map().also(notificationManager::showOfferNotification)
-    }
+    open suspend fun onNewOffer(offer: Offer) {  }
 
     override fun onNewOfferEvent(offer: Offer) {
         worker.main.launch {

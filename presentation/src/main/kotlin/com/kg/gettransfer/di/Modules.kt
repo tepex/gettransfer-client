@@ -40,7 +40,7 @@ import com.kg.gettransfer.receiver.NetworkChangeCallback
 
 import com.kg.gettransfer.utilities.CountryCodeManager
 import com.kg.gettransfer.utilities.GTDownloadManager
-import com.kg.gettransfer.utilities.GTNotificationManager
+import com.kg.gettransfer.utilities.OneSignalNotificationManager
 import com.kg.gettransfer.utilities.LocaleManager
 import com.kg.gettransfer.utilities.LocationManager
 import com.kg.gettransfer.utilities.NewTransferState
@@ -150,7 +150,7 @@ val androidModule = module {
     single { AppEventsLogger.newLogger(androidApplication().applicationContext) }
     single { Analytics(androidApplication().applicationContext, get(), get()) }
     single { PhoneNumberUtil.createInstance(get<Context>()) }
-    single { GTNotificationManager(androidApplication().applicationContext) }
+    single { OneSignalNotificationManager(androidApplication().applicationContext) }
     single { DateTimeDelegate() }
     single { PassengersDelegate() }
     single { NewTransferState() }

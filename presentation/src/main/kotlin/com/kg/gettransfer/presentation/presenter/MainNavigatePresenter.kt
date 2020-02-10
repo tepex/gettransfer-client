@@ -104,9 +104,8 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         }
     }
 
-    override suspend fun onNewOffer(offer: Offer): OfferModel {
+    override suspend fun onNewOffer(offer: Offer) {
         viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
-        return super.onNewOffer(offer)
     }
 
     private suspend fun checkReview(transfers: List<Transfer>) =

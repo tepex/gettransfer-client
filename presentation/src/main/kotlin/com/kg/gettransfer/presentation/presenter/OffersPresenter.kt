@@ -21,7 +21,6 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.Analytics
 
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
@@ -97,32 +96,28 @@ class OffersPresenter : BasePresenter<OffersView>() {
         fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) {
             offerInteractor.getOffers(transfer.id)
         }.also { result ->
-            if (result.error == null && transfer.offersUpdatedAt != null) {
-                fetchResultOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
-            }
-            if (result.error != null && !result.fromCache) {
-                offers = emptyList()
-            } else {
-                offers = mutableListOf<OfferItem>().apply {
-                    addAll(result.model)
-                    notificationManager.clearNotifications(result.model.map { offer -> offer.id.toInt() })
-                    addAll(transfer.bookNowOffers)
+            if (result.error == null) {
+                notificationManager.clearOfferNotifications(transferId)
+                if (transfer.offersUpdatedAt != null) {
+                    fetchResultOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
                 }
             }
+            offers = result.hasData()?.let { offers ->
+                mutableListOf<OfferItem>().apply {
+                    addAll(offers)
+                    addAll(transfer.bookNowOffers)
+                }
+            } ?: emptyList()
         }
         processOffers()
     }
 
-    override suspend fun onNewOffer(offer: Offer): OfferModel {
-        val offerModel = super.onNewOffer(offer)
-        if (transferId != offer.transferId) {
-            return offerModel
-        }
+    override suspend fun onNewOffer(offer: Offer) {
+        if (transferId != offer.transferId) return
         if (!checkDuplicated(offer)) {
             offers = offers.toMutableList().apply { add(offer) }
         }
         processOffers()
-        return offerModel
     }
 
     private fun checkDuplicated(offer: Offer): Boolean {
