@@ -105,6 +105,15 @@
             app:layout_constraintEnd_toEndOf="@+id/img_car_photo_tiny"
             app:layout_constraintTop_toTopOf="@+id/img_car_photo_tiny" />
 
+        <com.kg.gettransfer.presentation.ui.custom.LimitedTimeOfferView
+            android:id="@+id/limitTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin5"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/img_car_photo_tiny"
+            app:layout_constraintTop_toTopOf="@+id/img_car_photo_tiny" />
+
         <include
             android:id="@+id/view_rating_tiny"
             layout="@layout/view_offer_rating"

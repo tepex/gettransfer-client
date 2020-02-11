@@ -36,6 +36,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <com.kg.gettransfer.presentation.ui.custom.LimitedTimeOfferView
+                android:id="@+id/limitTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:text_limit="@string/LNG_OFFER_AVAILABLE_UNTIL" />
+
             <TextView
                 android:id="@+id/carColor"
                 android:layout_width="wrap_content"
@@ -73,13 +82,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
                 android:layout_marginTop="@dimen/bottom_sheet_offer_details_vehicle_name_margin_top"
-                android:layout_marginEnd="@dimen/bottom_sheet_offer_details_margin_16dp"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:textSize="@dimen/bottom_sheet_offer_details_text_size_15sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/limitTime"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constrainedWidth="true"
                 tools:text="Ma best Mercedes" />
 
             <TextView

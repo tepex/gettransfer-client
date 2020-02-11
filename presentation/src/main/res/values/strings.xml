@@ -451,4 +451,7 @@
     <string name="LNG_MI">miles</string>
     <string name="LNG_MI_ONE">mile</string>
     <string name="LNG_MI_FEW">miles</string>
+
+    <string name="LNG_LIMITED_TIME_OFFER">LIMITED TIME OFFER</string>
+    <string name="LNG_OFFER_AVAILABLE_UNTIL">Offer is available until %s</string>
 </resources>
