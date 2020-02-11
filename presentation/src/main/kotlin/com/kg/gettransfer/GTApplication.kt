@@ -112,7 +112,7 @@ class GTApplication : MultiDexApplication() {
         // OneSignal Initialization
         OneSignal.startInit(this)
             .setNotificationOpenedHandler(OneSignalNotificationOpenedHandler(this))
-            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
+            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
             .unsubscribeWhenNotificationsAreDisabled(true)
             .init()
     }
