@@ -209,10 +209,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
                 val result = withContext(worker.bg) { transferInteractor.getTransfer(chatBadgeEvent.transferId) }
                 if (result.error == null) {
                     increaseEventsMessagesCounter(chatBadgeEvent.transferId, result.model.unreadMessagesCount)
-                    notificationManager.showNewMessageNotification(
-                        chatBadgeEvent.transferId,
-                        result.model.unreadMessagesCount
-                    )
                 }
             } else {
                 with(countEventsInteractor) {
