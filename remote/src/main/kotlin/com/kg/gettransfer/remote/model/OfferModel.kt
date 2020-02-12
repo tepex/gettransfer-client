@@ -48,5 +48,5 @@ fun OfferModel.map(transferId: Long) =
         driver?.map(),
         wheelchair,
         armored,
-        createdAt
+        availableUntil
     )
