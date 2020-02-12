@@ -34,6 +34,10 @@
             android:name="com.onesignal.NotificationOpened.DEFAULT"
             android:value="DISABLE" />
 
+        <meta-data
+            android:name="com.onesignal.NotificationAccentColor.DEFAULT"
+            android:value="FFFF6900" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
