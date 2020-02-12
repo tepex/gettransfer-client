@@ -111,6 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin5"
             android:visibility="gone"
+            app:text_limit="@string/LNG_LIMITED_TIME_OFFER"
             app:layout_constraintStart_toStartOf="@+id/img_car_photo_tiny"
             app:layout_constraintTop_toTopOf="@+id/img_car_photo_tiny" />
 

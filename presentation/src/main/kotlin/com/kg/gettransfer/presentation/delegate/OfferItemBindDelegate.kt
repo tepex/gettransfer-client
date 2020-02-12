@@ -28,6 +28,7 @@ import com.kg.gettransfer.presentation.model.getModelsRes
 import com.kg.gettransfer.presentation.model.map
 
 import com.kg.gettransfer.presentation.ui.Utils
+import com.kg.gettransfer.presentation.ui.custom.LimitedTimeOfferView
 import com.kg.gettransfer.presentation.ui.helpers.LanguageDrawer
 
 import kotlinx.android.synthetic.main.offer_tiny.view.*
@@ -46,8 +47,38 @@ object OfferItemBindDelegate {
     }
 
     @SuppressLint("SetTextI18n")
-    @Suppress("NestedBlockDepth", "ComplexMethod")
     private fun bindOfferModelTiny(view: View, offer: OfferModel, isNameSignPresent: Boolean) = with(view) {
+        setVehicleInfo(offer, view)
+        setCarrierInfo(offer)
+        setOfferPrice(offer)
+        bindNameSignPlate(context, imgNameSign, null, isNameSignPresent, offer.isWithNameSign)
+        setVehicleConveniences(offer, vehicle_conveniences)
+        setLimitedTimeInfo(limitTime, offer.availableUntil)
+    }
+
+    private fun setLimitedTimeInfo(limitView: LimitedTimeOfferView, limit: String?) {
+        limit?.let { limitView.limitTime.isVisible = true }
+    }
+
+    private fun View.setOfferPrice(offer: OfferModel) {
+        with(offer.price) {
+            setStrikePriceText(tv_price_no_discount, withoutDiscount?.preferred
+                ?: withoutDiscount?.def)
+            tv_price_final.text = base.preferred ?: base.def
+        }
+    }
+
+    private fun View.setCarrierInfo(offer: OfferModel) {
+        with(offer.carrier) {
+            bindRating(view_rating_tiny, ratings, approved)
+            bindLanguages(
+                Either.Single(languages_container_tiny),
+                languages.map { it.map() },
+                layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_ITEM)
+        }
+    }
+
+    private fun View.setVehicleInfo(offer: OfferModel, view: View) {
         with(offer.vehicle) {
             tv_car_model_tiny.text = "$model $year"
             tv_car_class_tiny.text = context.getString(transportType.nameId)
@@ -71,22 +102,6 @@ object OfferItemBindDelegate {
                 )
             }
         }
-
-        with(offer.carrier) {
-            bindRating(view_rating_tiny, ratings, approved)
-            bindLanguages(
-                Either.Single(languages_container_tiny),
-                languages.map { it.map() },
-                layoutParamsRes = LanguageDrawer.LanguageLayoutParamsRes.OFFER_ITEM)
-        }
-
-        with(offer.price) {
-            setStrikePriceText(tv_price_no_discount, withoutDiscount?.preferred ?: withoutDiscount?.def)
-            tv_price_final.text = base.preferred ?: base.def
-        }
-        bindNameSignPlate(context, imgNameSign, null, isNameSignPresent, offer.isWithNameSign)
-
-        setVehicleConveniences(offer, vehicle_conveniences)
     }
 
     private fun bindBookNowTiny(view: View, offer: BookNowOfferModel) = with(view) {

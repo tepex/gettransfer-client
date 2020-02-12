@@ -50,9 +50,11 @@ import kotlinx.android.synthetic.main.activity_offers.*
 import kotlinx.android.synthetic.main.bottom_sheet_offers.*
 import kotlinx.android.synthetic.main.bottom_sheet_offers.view.*
 import kotlinx.android.synthetic.main.card_empty_offers.*
+import kotlinx.android.synthetic.main.card_empty_offers.ivClock
 import kotlinx.android.synthetic.main.drivers_count.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.view.*
+import kotlinx.android.synthetic.main.view_limited_time_offer.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 import kotlinx.android.synthetic.main.view_offer_rating_details.*
 import kotlinx.android.synthetic.main.view_offer_rating_field.*
@@ -238,6 +240,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 setPrice(offer.price.base.preferred ?: offer.price.base.def)
                 setOfferPhoto(offer)
                 setRating(offer.carrier)
+                setLimitedTimeInfo(offer.availableUntil)
             }
             is BookNowOfferModel -> {
                 setVehicleNameAndColor(nameById = getString(offer.transportType.id.getModelsRes()))
@@ -261,6 +264,13 @@ class OffersActivity : BaseActivity(), OffersView {
             hideSheetOfferDetails()
         }
         bsOfferDetails.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun setLimitedTimeInfo(limit: String?) {
+        limit?.let {
+            limitTime.isVisible = true
+            limitTime.tvLimitOffer.text = getString(R.string.LNG_OFFER_AVAILABLE_UNTIL, limit)
+        }
     }
 
     private fun setOfferPhoto(offer: OfferModel) {
@@ -290,7 +300,7 @@ class OffersActivity : BaseActivity(), OffersView {
     }
 
     private fun setVehicleNameAndColor(nameById: String? = null, vehicle: VehicleModel? = null) {
-        if (nameById == null && vehicle == null) throw IllegalArgumentException()
+        require(!(nameById == null && vehicle == null))
         tv_car_model_bs.text = vehicle?.name ?: nameById
         carColor.isVisible = vehicle?.color?.let { color ->
             Utils.setCarColorInTextView(this@OffersActivity, carColor, color)
