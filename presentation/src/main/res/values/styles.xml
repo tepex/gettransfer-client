@@ -117,7 +117,7 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
     <style name="helvetica_bold_white_small" parent="helvetica_bold_white">
-        <item name="android:textSize">6sp</item>
+        <item name="android:textSize">8sp</item>
     </style>
 
     <style name="read_more_title" parent="sf_font_bold">

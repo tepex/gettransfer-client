@@ -25,7 +25,7 @@ data class OfferModel(
     @SerializedName(OfferEntity.DRIVER)              @Expose val driver: ProfileModel?,
     @SerializedName(OfferEntity.WHEELCHAIR)          @Expose val wheelchair: Boolean,
     @SerializedName(OfferEntity.ARMORED)             @Expose val armored: Boolean,
-    @SerializedName(OfferEntity.AVAILABLE_UNTIL)     @Expose val availableUntil: String
+    @SerializedName(OfferEntity.AVAILABLE_UNTIL)     @Expose val availableUntil: String?
 )
 
 fun OfferModel.map(transferId: Long) =

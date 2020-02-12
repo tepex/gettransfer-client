@@ -54,7 +54,7 @@ import kotlinx.android.synthetic.main.card_empty_offers.ivClock
 import kotlinx.android.synthetic.main.drivers_count.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.*
 import kotlinx.android.synthetic.main.toolbar_nav_offers.view.*
-import kotlinx.android.synthetic.main.view_limited_time_offer.*
+import kotlinx.android.synthetic.main.view_limited_time_offer.view.*
 import kotlinx.android.synthetic.main.view_offer_bottom.view.*
 import kotlinx.android.synthetic.main.view_offer_rating_details.*
 import kotlinx.android.synthetic.main.view_offer_rating_field.*
@@ -268,8 +268,8 @@ class OffersActivity : BaseActivity(), OffersView {
 
     private fun setLimitedTimeInfo(limit: String?) {
         limit?.let {
-            limitTime.isVisible = true
-            limitTime.tvLimitOffer.text = getString(R.string.LNG_OFFER_AVAILABLE_UNTIL, limit)
+            limitTimeInfo.isVisible = true
+            limitTimeInfo.tvLimitOffer.text = getString(R.string.LNG_OFFER_AVAILABLE_UNTIL, limit)
         }
     }
 

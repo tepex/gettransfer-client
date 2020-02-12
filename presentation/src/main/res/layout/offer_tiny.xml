@@ -109,7 +109,7 @@
             android:id="@+id/limitTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin5"
+            android:layout_marginTop="@dimen/margin4"
             android:visibility="gone"
             app:text_limit="@string/LNG_LIMITED_TIME_OFFER"
             app:layout_constraintStart_toStartOf="@+id/img_car_photo_tiny"

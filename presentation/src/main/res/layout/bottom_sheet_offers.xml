@@ -37,7 +37,7 @@
             android:layout_height="wrap_content">
 
             <com.kg.gettransfer.presentation.ui.custom.LimitedTimeOfferView
-                android:id="@+id/limitTime"
+                android:id="@+id/limitTimeInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin8"
@@ -86,7 +86,7 @@
                 android:layout_marginTop="@dimen/bottom_sheet_offer_details_vehicle_name_margin_top"
                 android:maxLines="3"
                 android:textSize="@dimen/bottom_sheet_offer_details_text_size_15sp"
-                app:layout_constraintEnd_toStartOf="@+id/limitTime"
+                app:layout_constraintEnd_toStartOf="@+id/limitTimeInfo"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
