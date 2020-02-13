@@ -256,6 +256,7 @@ class OffersActivity : BaseActivity(), OffersView {
                 vehiclePhotosView.setPhotos(offer.transportType.id.getImageRes())
                 view_offer_rating_bs.isVisible = false
                 offer_ratingDivider_bs.isVisible = false
+                limitTimeInfo.isVisible = false
             }
         }
 
@@ -270,7 +271,7 @@ class OffersActivity : BaseActivity(), OffersView {
         limit?.let {
             limitTimeInfo.isVisible = true
             limitTimeInfo.tvLimitOffer.text = getString(R.string.LNG_OFFER_AVAILABLE_UNTIL, limit)
-        }
+        } ?: run { limitTimeInfo.isVisible = false }
     }
 
     private fun setOfferPhoto(offer: OfferModel) {

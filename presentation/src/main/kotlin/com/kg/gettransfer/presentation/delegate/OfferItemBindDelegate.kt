@@ -57,7 +57,7 @@ object OfferItemBindDelegate {
     }
 
     private fun setLimitedTimeInfo(limitView: LimitedTimeOfferView, limit: String?) {
-        limit?.let { limitView.limitTime.isVisible = true }
+        limitView.limitTime.isVisible = limit != null
     }
 
     private fun View.setOfferPrice(offer: OfferModel) {
