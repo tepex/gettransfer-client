@@ -20,8 +20,9 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<OpenDeepLinkScreenView>()
     private val deeplinkManager: DeeplinkManager by inject()
 
     fun handleIntent(appLinkData: Uri) {
-        when(val screen = deeplinkManager.getScreenForLink(appLinkData)) {
-            is DeeplinkScreenModel.PaymentOffer -> openOfferLink(screen.transferId, screen.offerId, screen.bookNowOfferId)
+        when (val screen = deeplinkManager.getScreenForLink(appLinkData)) {
+            is DeeplinkScreenModel.PaymentOffer ->
+                openOfferLink(screen.transferId, screen.offerId, screen.bookNowOfferId)
             is DeeplinkScreenModel.Chat -> openChatLink(screen.transferId)
             is DeeplinkScreenModel.Transfer -> openTransferLink(screen.transferId)
             is DeeplinkScreenModel.RateTransfer -> openRateTransferLink(screen.transferId, screen.rate)

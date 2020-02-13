@@ -6,6 +6,7 @@ import org.koin.core.KoinComponent
 
 class DeeplinkManager : KoinComponent {
 
+    @Suppress("ComplexMethod")
     fun getScreenForLink(appLinkData: Uri): DeeplinkScreenModel<Long, String> {
         return appLinkData.path?.let { path ->
             when {

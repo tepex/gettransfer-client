@@ -163,6 +163,7 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/PaymentProcessRequestMapper.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/mapper/PaymentRequestMapper.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/DeeplinkScreenModel.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/OfferItemModel.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/PaymentProcessRequestModel.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/model/PaymentRequestModel.kt",
@@ -307,12 +308,10 @@ detekt {
 
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/AboutView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseBottomSheetView.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseHandleUrlView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseMapDialogView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/BaseView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/CarrierTripDetailsView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/CheckoutcomPaymentView.kt",
-        "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/HandleUrlView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/LogInView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/MainView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/NewTransferMainView.kt",
@@ -341,14 +340,18 @@ detekt {
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/TransferDetailsView.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/presentation/view/RequestsFragmentView.kt",
 
+        "presentation/src/main/kotlin/com/kg/gettransfer/service/OneSignalNotificationOpenedHandler.kt",
+
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/Analytics.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CardDateFormatter.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CommunicationManager.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CountryCodeManager.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/CustomCrashManagerListener.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/DeeplinkManager.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/EndlessRecyclerViewScrollListener.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/GTDownloadManager.kt",
         "presentation/src/main/kotlin/com/kg/gettransfer/utilities/LocationManager.kt",
+        "presentation/src/main/kotlin/com/kg/gettransfer/utilities/OneSignalNotificationManager.kt",
 
         "presentation/src/main/kotlin/com/kg/gettransfer/di/Modules.kt",
 

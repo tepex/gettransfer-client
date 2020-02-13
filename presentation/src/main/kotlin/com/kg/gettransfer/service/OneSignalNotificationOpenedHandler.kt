@@ -57,14 +57,16 @@ class OneSignalNotificationOpenedHandler(
         } ?: openMainActivity()
     }
 
+    @Suppress("ComplexMethod")
     private fun checkUrlData(appLinkData: Uri) {
         if (!sessionInteractor.isInitialized) {
             openHandleUrlActivity(appLinkData)
             return
         }
 
-        when(val screen = deeplinkManager.getScreenForLink(appLinkData)) {
-            is DeeplinkScreenModel.PaymentOffer -> checkPaymentOfferLink(screen.transferId, screen.offerId, screen.bookNowOfferId)
+        when (val screen = deeplinkManager.getScreenForLink(appLinkData)) {
+            is DeeplinkScreenModel.PaymentOffer ->
+                checkPaymentOfferLink(screen.transferId, screen.offerId, screen.bookNowOfferId)
             is DeeplinkScreenModel.Chat -> openChatActivity(screen.transferId)
             is DeeplinkScreenModel.Transfer -> checkTransferLink(screen.transferId)
             is DeeplinkScreenModel.RateTransfer -> openMainActivityForRateTransfer(screen.transferId, screen.rate)
@@ -75,7 +77,11 @@ class OneSignalNotificationOpenedHandler(
         }
     }
 
-    private fun checkPaymentOfferLink(transferId: Long, offerId: Long?, bookNowTransportId: String?) = worker.main.launch {
+    private fun checkPaymentOfferLink(
+        transferId: Long,
+        offerId: Long?,
+        bookNowTransportId: String?
+    ) = worker.main.launch {
         getTransfer(transferId)?.let { transfer ->
             val offerItem: OfferItem? = when {
                 offerId != null && offerId != 0L ->
@@ -167,7 +173,7 @@ class OneSignalNotificationOpenedHandler(
         openActivity(MainNavigateActivity::class)
     }
 
-    private fun <T: Any> openActivity(activity: KClass<T>, extras: Bundle? = null) {
+    private fun <T : Any> openActivity(activity: KClass<T>, extras: Bundle? = null) {
         val intent = Intent(application, activity.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             extras?.let { putExtras(it) }
