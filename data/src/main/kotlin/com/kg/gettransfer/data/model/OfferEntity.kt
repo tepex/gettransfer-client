@@ -26,7 +26,8 @@ data class OfferEntity(
     @SerialName(VEHICLE)            val vehicle: VehicleEntity,
     @SerialName(DRIVER)             val driver: ProfileEntity? = null,
     @SerialName(WHEELCHAIR)         val wheelchair: Boolean,
-    @SerialName(ARMORED)            val armored: Boolean
+    @SerialName(ARMORED)            val armored: Boolean,
+    @SerialName(AVAILABLE_UNTIL)    val availableUntil: String?
 ) {
 
     companion object {
@@ -49,6 +50,7 @@ data class OfferEntity(
         const val CHARGER            = "charger"
         const val WHEELCHAIR         = "wheelchair"
         const val ARMORED            = "armored"
+        const val AVAILABLE_UNTIL    = "available_until"
     }
 }
 
@@ -71,7 +73,8 @@ fun OfferEntity.map(dateFormat: DateFormat, url: String) =
         vehicle.map(url),
         driver?.map(),
         wheelchair,
-        armored
+        armored,
+        availableUntil?.let { dateFormat.parse(it) }
     )
 
 fun Offer.map(dateFormat: DateFormat) =
@@ -93,5 +96,6 @@ fun Offer.map(dateFormat: DateFormat) =
         vehicle.map(),
         driver?.map(),
         wheelchair,
-        armored
+        armored,
+        availableUntil?.let { dateFormat.format(it) }
     )

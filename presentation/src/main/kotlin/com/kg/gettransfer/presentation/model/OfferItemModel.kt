@@ -37,7 +37,8 @@ data class OfferModel(
     val driver: Profile?,
     val phoneToCall: String?,
     val wheelchair: Boolean,
-    val armored: Boolean
+    val armored: Boolean,
+    val availableUntil: String?
 ) : OfferItemModel()
 
 fun BookNowOffer.map() = BookNowOfferModel(amount, base, withoutDiscount, transportType.map())
@@ -60,5 +61,6 @@ fun Offer.map() = OfferModel(
     driver = driver,
     phoneToCall = phoneToCall,
     wheelchair = wheelchair,
-    armored = armored
+    armored = armored,
+    availableUntil = availableUntil?.let { SystemUtils.formatDateTime(it) }
 )

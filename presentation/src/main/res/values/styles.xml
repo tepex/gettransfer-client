@@ -107,6 +107,19 @@
         <item name="android:fontFamily">@font/sf_pro_display_bold</item>
     </style>
 
+    <style name="helvetica_bold">
+        <item name="android:fontFamily">@font/helvetica_bold</item>
+    </style>
+    <style name="helvetica_bold_black" parent="helvetica_bold">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    <style name="helvetica_bold_white" parent="helvetica_bold">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="helvetica_bold_white_small" parent="helvetica_bold_white">
+        <item name="android:textSize">8sp</item>
+    </style>
+
     <style name="read_more_title" parent="sf_font_bold">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

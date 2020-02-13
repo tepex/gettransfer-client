@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/offer_limit_height"
+    android:background="@drawable/bg_orange_rounded_10"
+    android:padding="@dimen/margin4">
+
+    <ImageView
+        android:id="@+id/ivClock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_time" />
+
+    <TextView
+        android:id="@+id/tvLimitOffer"
+        style="@style/helvetica_bold_white_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin5"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/ivClock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ivClock"
+        app:layout_constraintTop_toTopOf="@+id/ivClock"
+        tools:text="@string/LNG_LIMITED_TIME_OFFER" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

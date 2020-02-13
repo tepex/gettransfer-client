@@ -22,7 +22,8 @@ data class Offer(
     val vehicle: Vehicle,
     val driver: Profile?,
     val wheelchair: Boolean,
-    val armored: Boolean
+    val armored: Boolean,
+    val availableUntil: Date?
 ) : OfferItem() {
 
     val phoneToCall = when {

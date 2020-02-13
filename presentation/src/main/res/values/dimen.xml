@@ -348,6 +348,8 @@
 	<dimen name="toolbar_subtitle_text_size">12sp</dimen>
 	<dimen name="toolbar_nav_title_text_size">15sp</dimen>
 
+	<dimen name="offer_limit_height">30dp</dimen>
+
 	<!--bottom_sheet_offer_details-->
 	<dimen name="bottom_sheet_offer_details_top_view_width">100dp</dimen>
 	<dimen name="bottom_sheet_offer_details_top_view_height">2dp</dimen>

@@ -144,4 +144,8 @@
     <declare-styleable name="ActivationCodeView">
         <attr name="activation_code_title" format="string"/>
     </declare-styleable>
+    
+    <declare-styleable name="LimitedTimeOfferView">
+        <attr name="text_limit" format="string"/>
+    </declare-styleable>
 </resources>
